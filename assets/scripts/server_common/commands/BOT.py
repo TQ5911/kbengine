@@ -394,7 +394,7 @@ def kickAllBot(su):
         if not avatar.hasClient:
             continue
 
-        avatar.destroySelf(gameconst.AVATAR_OFFLINE_REASON_GMKICK)
+        avatar.destroySelf(gameconst.OFFLINE_REASON_GMKICK)
 
     return True, '执行成功'
 

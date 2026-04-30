@@ -73,11 +73,20 @@ message UpdateCharacterInfo
     uint32 sex = 7;
 }
 
+message AccountOnlineVal
+{
+    uint32 hostId = 1;
+    string accountName = 2;
+    uint32 accountType = 3;
+    string sessionIdStr = 4;
+}
+
 message AccountOfflineVal
 {
     uint32 hostId = 1;
     string accountName = 2;
     uint32 accountType = 3;
+    string sessionIdStr = 4;
 }
 
 message KickAccountVal
@@ -122,6 +131,7 @@ service CentralServer
     rpc onCreateCharacter(NewCharacterInfo) returns(Void);
     rpc onLoginComplete(AccountVal) returns(Void);
     rpc activeTick(Void) returns(Void);
+    rpc onAccountOnline(AccountOnlineVal) returns(Void);
     rpc onAccountOffline(AccountOfflineVal) returns(Void);
     rpc lockLoginSwitchServer(LockLoginSwitchServerVal) returns(Void);
     rpc unlockLoginSwitchServer(UnlockLoginSwitchServerVal) returns(Void);

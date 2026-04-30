@@ -19,7 +19,7 @@ class IEntityLoader(object):
         self._maxCreateIndex = {}
 
     def isSpaceLeagal(self, spaceNo):
-        _type = formula.whatSpaceType(spaceNo)
+        _type = formula.getSpaceType(spaceNo)
         return _type == gameconst.SpaceType.SpaceLine\
             or _type == gameconst.SpaceType.SpaceCube\
             or _type == gameconst.SpaceType.SpaceWonderLand\
@@ -37,7 +37,7 @@ class IEntityLoader(object):
         utils.loadLineReadyEntities(spaceNo, tmp_list, readyEntitiesList, isRefresh)
 
     def loadEntitiesBatchly(self, spaceNo, entIter, batchNum, interval, isInit=False, spaceMgrId=0, attachedHostId=0):
-        DEBUG_MSG("loadEntitiesBatchly-----------", batchNum, interval)
+        LOG_DBG("loadEntitiesBatchly-----------", batchNum, interval)
         _iter = self.loadEntitiesAsync(entIter, isInit, spaceMgrId, attachedHostId)
         self.batchlyCall(_iter, batchNum, interval)
 
@@ -54,7 +54,7 @@ class IEntityLoader(object):
 
             if attachedHostId:
                 tempMiscProps = props.setdefault('tempMiscProps', {})
-                tempMiscProps[gameconst.AvatarProps.beAttachedHostID] = attachedHostId
+                tempMiscProps[gameconst.EntityPropsEnum.beAttachedHostID] = attachedHostId
 
             while True:
                 try:
@@ -62,7 +62,7 @@ class IEntityLoader(object):
                     yield utils.emptyFunc
                     break
                 except SystemError as e:
-                    WARNING_MSG('loadEntitiesAsync::SystemError', e)
+                    LOG_WARN('loadEntitiesAsync::SystemError', e)
                     yield utils.emptyFunc
 
         if isInit:
@@ -71,7 +71,7 @@ class IEntityLoader(object):
         yield utils.emptyFunc
 
     def loadMonsterGroups(self, spaceNo, spaceMgrId):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         if not utils.isDunGroupModuleDataExist(_mapId):
             return
 
@@ -96,13 +96,13 @@ class IEntityLoader(object):
                     yield utils.emptyFunc
                     break
                 except SystemError as e:
-                    WARNING_MSG('loadMonsterGroups::SystemError', e)
+                    LOG_WARN('loadMonsterGroups::SystemError', e)
                     yield utils.emptyFunc
 
 
     def doLoadEntities(self, spaceMgrId):
         if not gameconfig.needLoadEntity():
-            WARNING_MSG('loadEntities::skip load entities')
+            LOG_WARN('loadEntities::skip load entities')
             self.doLoadEntitiesEnd()
             return
 
@@ -118,10 +118,10 @@ class IEntityLoader(object):
         self.doLoadTimerEntities(spaceMgrId)
 
     def _initEntities(self, spaceNo):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         def _iterGameEntityId():
             if self.isSpaceLeagal(spaceNo):
-                spaceConfig = utils.getDunStructureModuleData(_mapId)
+                spaceConfig = utils.getDunStructModData(_mapId)
                 datas = spaceConfig.get('InitEntities', {})
                 for entType, ents in datas.items():
                     for id_, data in ents.items():
@@ -131,7 +131,7 @@ class IEntityLoader(object):
                             continue
 
                         if not _d.get('IsOpen', True):
-                            WARNING_MSG('_initEntities::Skip not isOpen Monster', id_)
+                            LOG_WARN('_initEntities::Skip not isOpen Monster', id_)
                             continue
                         count_ = int(_d.get('RefreshNum', 1))
 
@@ -139,12 +139,12 @@ class IEntityLoader(object):
                             continue
 
                         if count_ > 999:
-                            ERROR_MSG('_initEntities::RefreshNum too large', count_)
+                            LOG_ERR('_initEntities::RefreshNum too large', count_)
                             count_ = 999
 
                         self._maxCreateIndex.setdefault(id_, 0)
                         self._maxCreateIndex[id_] += count_
-                        for i in utils.generateGameEntityId(id_, count_):
+                        for i in utils.genGameEntityId(id_, count_):
                             yield i
 
         _retList = BalancedObjectGenerator.BalancedObjectGenerator(_iterGameEntityId())
@@ -152,22 +152,22 @@ class IEntityLoader(object):
         return _retList
 
     def doLoadEntitiesEnd(self):
-        DEBUG_MSG("iEntityLoader doLoadEntitiesEnd ", self.spaceNo)
-        if formula.isWonderLandSpace(self.spaceNo):
+        LOG_DBG("iEntityLoader doLoadEntitiesEnd ", self.spaceNo)
+        if formula.inWonderLandScene(self.spaceNo):
             gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onLoadEntitiesEnd(self.spaceNo)
 
-        elif formula.spaceInWorldLine(self.spaceNo):
-            lineType = formula.getMapId(self.spaceNo)
+        elif formula.inWorldLineScene(self.spaceNo):
+            lineType = formula.fetchMapId(self.spaceNo)
             gameengine.getLineStub(lineType).onLoadEntitiesEnd(self.spaceNo)
 
-        elif formula.isCubeSpace(self.spaceNo):
+        elif formula.inCubeScene(self.spaceNo):
             gameengine.getCubeStubBySpaceNo(self.spaceNo).onLoadEntitiesEnd(self.spaceNo)
 
-        elif formula.isSiegeWarSpace(self.spaceNo):
+        elif formula.inSiegeWarScene(self.spaceNo):
             gameengine.getGlobalBase('SiegeWarSpaceStub').onLoadEntitiesEnd(self.spaceNo)
 
         else:
-            INFO_MSG('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
+            LOG_IFO('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
 
     def doEntityRefresh(self, gameEntityId, spaceMgrId, pointData):
         _entityProps = []
@@ -181,17 +181,17 @@ class IEntityLoader(object):
         self.removeEntityRefreshTimer(gameEntityId, spaceMgrId, pointData)
 
     def removeEntityRefreshTimer(self, gameEntityId, spaceMgrId, pointData):
-        DEBUG_MSG("removeEntityRefreshTimer", gameEntityId, spaceMgrId, pointData)
+        LOG_DBG("removeEntityRefreshTimer", gameEntityId, spaceMgrId, pointData)
         if not spaceMgrId:
             return
         spaceMgr = KBEngine.entities.get(spaceMgrId)
         if not spaceMgr:
             return
-        gid = utils.getGidFromGameEntityId(gameEntityId)
+        gid = utils.parseGidFromGameEntityId(gameEntityId)
         spaceMgr.onCancelEntityRefreshTimer(gid, pointData["refreshTimerId"])
 
     def _initSpecifiedEntities(self, spaceNo, gidList):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         def _iterGameEntityId():
             if self.isSpaceLeagal(spaceNo):
                 dunData = utils.getDunModuleData(_mapId)
@@ -209,19 +209,19 @@ class IEntityLoader(object):
                     id_ = int(gid)
                     _d = data.get('Props', {})
                     if not _d.get('IsOpen', True):
-                        WARNING_MSG('_initSpecifiedEntities::Skip not isOpen Monster', id_)
+                        LOG_WARN('_initSpecifiedEntities::Skip not isOpen Monster', id_)
                         continue
                     count_ = int(_d.get('RefreshNum', 1))
                     if not count_:
                         continue
 
                     if count_ > 999:
-                        ERROR_MSG('_initSpecifiedEntities::RefreshNum too large', count_)
+                        LOG_ERR('_initSpecifiedEntities::RefreshNum too large', count_)
                         count_ = 999
 
                     self._maxCreateIndex.setdefault(id_, 0)
                     self._maxCreateIndex[id_] += count_
-                    for i in utils.generateGameEntityId(id_, count_):
+                    for i in utils.genGameEntityId(id_, count_):
                         yield i
 
         _retList = BalancedObjectGenerator.BalancedObjectGenerator(_iterGameEntityId())
@@ -251,46 +251,46 @@ class IEntityLoader(object):
         if not self.isSpaceLeagal(spaceNo):
             return
 
-        _mapId = formula.getMapId(spaceNo)
-        spaceConfig = utils.getDunStructureModuleData(_mapId)
+        _mapId = formula.fetchMapId(spaceNo)
+        spaceConfig = utils.getDunStructModData(_mapId)
         datas = spaceConfig.get('TimerEntities', {})
         for id_, data in datas.items():
             className = data.get('ClassName', '')
             entityID = data.get('EntityID', 0)
             if className not in ('Monster', 'Collection'):
-                WARNING_MSG('loadTimerEntities::className error, ', className)
+                LOG_WARN('loadTimerEntities::className error, ', className)
                 continue
             
-            if formula.spaceInWorldLine(spaceNo):
-                lineNo = formula.getLineNo(spaceNo)
+            if formula.inWorldLineScene(spaceNo):
+                lineNo = formula.parseLineNo(spaceNo)
                 nameSuffixID = -1
                 if entityID in CBD.datas:
                     nameSuffixID = CBD.datas[entityID]['nameSuffixID']
 
                 if nameSuffixID in BDS.datas["Branch_creepNotRefresh"]["value"] and lineNo != 0 and lineNo != -1:
-                    DEBUG_MSG("skip create monster", spaceNo, entityID, nameSuffixID, lineNo)
+                    LOG_DBG("skip create monster", spaceNo, entityID, nameSuffixID, lineNo)
                     continue
 
             id_ = int(id_)
             _d = data.get('Props', {})
             refreshTimedID = _d.get('RefreshTimedID', 0)
             if not refreshTimedID:
-                WARNING_MSG('loadTimerEntities::refreshTimedID error, ', refreshTimedID)
+                LOG_WARN('loadTimerEntities::refreshTimedID error, ', refreshTimedID)
                 continue
 
             if not _d.get('IsOpen', True):
-                WARNING_MSG('loadTimerEntities::Skip not isOpen Monster', id_)
+                LOG_WARN('loadTimerEntities::Skip not isOpen Monster', id_)
                 continue
             count_ = int(_d.get('RefreshNum', 1))
 
             if not count_:
-                WARNING_MSG("loadTimerEntities::RefreshNum not exist",spaceNo)
+                LOG_WARN("loadTimerEntities::RefreshNum not exist",spaceNo)
                 continue
 
             if count_ > 999:
-                WARNING_MSG('loadTimerEntities::RefreshNum too large', count_)
+                LOG_WARN('loadTimerEntities::RefreshNum too large', count_)
                 count_ = 999
 
             refreshData = (id_, gameconst.className2EntityType[className], {"EntityID":entityID, "RefreshNum":count_})
             readyTimerEntitiesMap.setdefault(refreshTimedID, []).append(refreshData)
-            DEBUG_MSG("loadTimerEntities", spaceNo, id_, refreshTimedID, refreshData)
+            LOG_DBG("loadTimerEntities", spaceNo, id_, refreshTimedID, refreshData)

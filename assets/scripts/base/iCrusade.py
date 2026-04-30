@@ -15,7 +15,7 @@ import gameconst
 
 class ICrusade(object):
     def onCrusadeDailyRewardNumUpdate(self, *args):
-        INFO_MSG('onCrusadeDailyRewardNumUpdate::')
+        LOG_IFO('onCrusadeDailyRewardNumUpdate::')
         dailyRewardNum = self.crusadeInfo.dailyRewardNum
         if self.crusadeInfo.rewardNumber < dailyRewardNum:
             self.crusadeInfo.addRewardNumByDefault(dailyRewardNum - self.crusadeInfo.rewardNumber)
@@ -25,7 +25,7 @@ class ICrusade(object):
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def increaseCrusadeRewardNumber(self, exposed, coinNum, itemNum):
-        INFO_MSG('increaseCrusadeRewardNumber::', coinNum, itemNum)
+        LOG_IFO('increaseCrusadeRewardNumber::', coinNum, itemNum)
         retCoin = self._useCoinToIncreaseCrusadeRewardNumber(coinNum, {}, needMsg = False)
         retItem = self._useItemToIncreaseCrusadeRewardNumber(itemNum, {}, needMsg = False)
         if retCoin or retItem:
@@ -38,17 +38,17 @@ class ICrusade(object):
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
-        INFO_MSG('useItemToIncreaseCrusadeRewardNumber::', useNum)
+        LOG_IFO('useItemToIncreaseCrusadeRewardNumber::', useNum)
         self._useItemToIncreaseCrusadeRewardNumber(useNum, {})
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
-        INFO_MSG('useCoinToIncreaseCrusadeRewardNumber::', useNum)
+        LOG_IFO('useCoinToIncreaseCrusadeRewardNumber::', useNum)
         self._useCoinToIncreaseCrusadeRewardNumber(useNum, {})
 
     def _useItemToIncreaseCrusadeRewardNumber(self, itemNum, extra, needMsg = True):
         itemId = int(TDC_CFG.datas['rewardNumItem']['value'])
-        INFO_MSG('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra, needMsg)
+        LOG_IFO('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra, needMsg)
         if itemNum <= 0:
             return False
 
@@ -56,7 +56,7 @@ class ICrusade(object):
         deductWealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
 
         if not self.canDeductWealth(deductWealthVal):
-            ERROR_MSG('_useItemToIncreaseCrusadeRewardNumber::check failed')
+            LOG_ERR('_useItemToIncreaseCrusadeRewardNumber::check failed')
             return False
 
         opUUID = KBEngine.genUUID64()
@@ -68,19 +68,19 @@ class ICrusade(object):
         return True
     
     def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra, needMsg = True):
-        INFO_MSG('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
+        LOG_IFO('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
         self.crusadeInfo.addRewardNumByUseSpecialItem(itemNum)
         self.crusadeInfo = self.crusadeInfo
         if needMsg:
             self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(itemNum)])
 
     def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
-        INFO_MSG('_useCoinToIncreaseCrusadeRewardNumber::', useNum, extra, needMsg)
+        LOG_IFO('_useCoinToIncreaseCrusadeRewardNumber::', useNum, extra, needMsg)
         if useNum <= 0:
             return False
         
         if not self.crusadeInfo.isCanAddRewardByCoin(useNum):
-            ERROR_MSG('_useCoinToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
+            LOG_ERR('_useCoinToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
             return False
         
         rewardNumCoin = int(TDC_CFG.datas['rewardNumCoin']['value'])
@@ -88,7 +88,7 @@ class ICrusade(object):
         deductWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, rewardNumCoin * useNum)
 
         if not self.canDeductWealth(deductWealthVal):
-            ERROR_MSG('_useCoinToIncreaseCrusadeRewardNumber::check failed')
+            LOG_ERR('_useCoinToIncreaseCrusadeRewardNumber::check failed')
             return False
 
         opUUID = KBEngine.genUUID64()
@@ -100,7 +100,7 @@ class ICrusade(object):
         return True
     
     def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
-        INFO_MSG('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
+        LOG_IFO('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
         self.crusadeInfo.addRewardNumByUseCoin(useNum)
         self.crusadeInfo = self.crusadeInfo
         if needMsg:
@@ -125,4 +125,4 @@ class ICrusade(object):
             self.getRoleCacheAttr('level')
         )
         
-        INFO_MSG('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)
+        LOG_IFO('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

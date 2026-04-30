@@ -4,7 +4,7 @@
 import userType
 import itemFactory
 
-class EquipDropTakerVal(userType.UserSoleType):
+class EquipDropTakerVal(userType.UserSingleType):
     '''EQUIP_DROP_TAKER_DATA_INFO'''
     def __init__(self, uniqueId=0, equip=None, endTime=0, state=0, price=0):
         self.uniqueId = uniqueId

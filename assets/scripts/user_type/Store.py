@@ -12,7 +12,7 @@ import random
 import time
 import itemData_set as IDSD
 
-class StoreItem(userType.UserSoleType):
+class StoreItem(userType.UserSingleType):
     def __init__(self, itemId=0, buyNum=0):
         self.itemId = itemId
         self.buyNum = buyNum
@@ -32,7 +32,7 @@ class StoreItem(userType.UserSoleType):
         self.buyNum = dataDic['buyNum']
 
 
-class StoreData(userType.UserSoleType):
+class StoreData(userType.UserSingleType):
 
     def __init__(self):
         self.stores = {}
@@ -88,28 +88,28 @@ class StoreData(userType.UserSoleType):
         return
     
     def _checkAndUpdateLimitedStoreHourly(self, owner, storeId):
-        nowHour = time.localtime(utils.getNow()).tm_hour
-        DEBUG_MSG('in _checkAndUpdateLimitedStoreHourly, storeId:', storeId, nowHour)
+        nowHour = time.localtime(utils.curTS()).tm_hour
+        LOG_DBG('in _checkAndUpdateLimitedStoreHourly, storeId:', storeId, nowHour)
         storeCfgData = MSLD.datas.get(storeId)
         if not storeCfgData:
-            ERROR_MSG('updateLimitedStoreHourly, no store cfg:', storeId)
+            LOG_ERR('updateLimitedStoreHourly, no store cfg:', storeId)
             return 0
         nextRefreshTime = self.getNextRefreshTime(storeId)
         if nextRefreshTime == 0:
             return 0
         if storeId not in owner.limitStoreRefreshDict or owner.limitStoreRefreshDict[storeId] < nextRefreshTime:
-            DEBUG_MSG('updateLimitedStoreHourly, refresh store:', storeId, "nextRefreshTime:", nextRefreshTime)
+            LOG_DBG('updateLimitedStoreHourly, refresh store:', storeId, "nextRefreshTime:", nextRefreshTime)
             owner.limitStoreRefreshDict[storeId] = nextRefreshTime
             self.doUpdateStoreLimitedItemList(owner, storeId)
         return nextRefreshTime
     
     def updateLimitedStoreHourly(self, owner):
-        DEBUG_MSG('in updateLimitedStoreHourly')
+        LOG_DBG('in updateLimitedStoreHourly')
         for storeId, storeDic in self.limitedStores.items():
             self._checkAndUpdateLimitedStoreHourly(owner, storeId)
 
     def updateStoreDataDaily(self, owner):
-        DEBUG_MSG('in updateStoreDataDaily')
+        LOG_DBG('in updateStoreDataDaily')
         for storeId, storeDic in self.stores.items():
             for itemId, storeItem in storeDic.items():
                 storeItemData = self.getStoreItemData(itemId)
@@ -118,7 +118,7 @@ class StoreData(userType.UserSoleType):
         self.sendStoreList(owner, list(self.stores.keys()))
 
     def updateStoreDataWeekly(self, owner):
-        DEBUG_MSG('in updateStoreDataWeekly')
+        LOG_DBG('in updateStoreDataWeekly')
         for storeId, storeDic in self.stores.items():
             for itemId, storeItem in storeDic.items():
                 storeItemData = self.getStoreItemData(itemId)
@@ -127,7 +127,7 @@ class StoreData(userType.UserSoleType):
         self.sendStoreList(owner, list(self.stores.keys()))
 
     def updateStoreDataMonthly(self, owner):
-        DEBUG_MSG('in updateStoreDataMonthly')
+        LOG_DBG('in updateStoreDataMonthly')
         for storeId, storeDic in self.stores.items():
             for itemId, storeItem in storeDic.items():
                 storeItemData = self.getStoreItemData(itemId)
@@ -136,7 +136,7 @@ class StoreData(userType.UserSoleType):
         self.sendStoreList(owner, list(self.stores.keys()))
 
     def sendStoreList(self, owner, storeIds):
-        DEBUG_MSG('in sendStoreList:', storeIds)
+        LOG_DBG('in sendStoreList:', storeIds)
         clientStoreList = []
         for storeId in storeIds:
             storeDic = self.getStoreDic(storeId)
@@ -145,19 +145,19 @@ class StoreData(userType.UserSoleType):
                 'itemsList': list(storeDic.values()),
             }
             clientStoreList.append(clientStoreDic)
-        DEBUG_MSG('     in sendStoreList, client:', clientStoreList)
+        LOG_DBG('     in sendStoreList, client:', clientStoreList)
         owner.client.onGetStoreList(clientStoreList)
         return
 
     def getNextRefreshTime(self, storeId):
         storeCfgData = MSLD.datas.get(storeId)
-        groupRefreshTime = storeCfgData.get('groupRefreshTime', 1) * gameconst.ONE_HOUR_SECONDES
+        groupRefreshTime = storeCfgData.get('groupRefreshTime', 1) * gameconst.ONE_HOUR_COST_SECONDES
         if groupRefreshTime == 0:
             return 0
-        return utils.getNow() + groupRefreshTime - utils.getNow() % groupRefreshTime
+        return utils.curTS() + groupRefreshTime - utils.curTS() % groupRefreshTime
     
     def sendStoreLimitedItemList(self, owner, storeId):
-        DEBUG_MSG('in sendStoreLimitedItemList:', storeId)
+        LOG_DBG('in sendStoreLimitedItemList:', storeId)
         # 首日登录是不会触发daily event的，所以需要手动初始化
         nextRefreshTime = self._checkAndUpdateLimitedStoreHourly(owner, storeId)
         if nextRefreshTime == 0:
@@ -167,24 +167,24 @@ class StoreData(userType.UserSoleType):
             'storeId': storeId,
             'itemsList': list(storeDic.values()),
         }
-        DEBUG_MSG('     in sendStoreLimitedItemList, client:', clientStoreDic, nextRefreshTime)
+        LOG_DBG('     in sendStoreLimitedItemList, client:', clientStoreDic, nextRefreshTime)
         owner.client.onGetStoreLimitedItemList(clientStoreDic, nextRefreshTime)
         self.printStoreData(storeId)
     
     def doUpdateStoreLimitedItemList(self, owner, storeId):
-        DEBUG_MSG('doUpdateStoreLimitedItemList:', storeId)
+        LOG_DBG('doUpdateStoreLimitedItemList:', storeId)
         data = MSLD.datas.get(storeId)
         if not data:
-            ERROR_MSG('doUpdateStoreLimitedItemList, no store cfg:', storeId)
+            LOG_ERR('doUpdateStoreLimitedItemList, no store cfg:', storeId)
             return
         if not data['groupId']:
-            ERROR_MSG('doUpdateStoreLimitedItemList, no groupId:', storeId)
+            LOG_ERR('doUpdateStoreLimitedItemList, no groupId:', storeId)
             return
         itemNumList = []
         for weightList in data['numberWeight']:
             nums = [i + 1 for i in range(len(weightList))]
             weightedChoice = random.choices(nums, weights=weightList, k=1)[0]
-            DEBUG_MSG('weighted_choice:', weightedChoice, nums, weightList)
+            LOG_DBG('weighted_choice:', weightedChoice, nums, weightList)
             itemNumList.append(weightedChoice)
 
         self.printStoreData(storeId)
@@ -204,7 +204,7 @@ class StoreData(userType.UserSoleType):
                 resIdx = random.choices(idxList, weights=weightList, k=1)[0]
                 resIds.append(MCPD.group2ID.get(groupId)[resIdx])
                 weightList[resIdx] = 0
-            DEBUG_MSG('weighted_choice:', resIds, nums, weightList)
+            LOG_DBG('weighted_choice:', resIds, nums, weightList)
             
             for itemId in resIds:
                 limitStoreItemDict[itemId] = StoreItem(itemId, buyNum=0)
@@ -212,7 +212,7 @@ class StoreData(userType.UserSoleType):
 
     def printStoreData(self, storeId):
         for itemId, storeItem in self.limitedStores[storeId].items():
-            DEBUG_MSG('printStoreData:', storeId, itemId, storeItem.toStoreItemSavedDict())
+            LOG_DBG('printStoreData:', storeId, itemId, storeItem.toStoreItemSavedDict())
 
     def getLimitStoreDic(self, storeId):
         return self.limitedStores.get(storeId)
@@ -225,34 +225,34 @@ class StoreData(userType.UserSoleType):
         return MCPD.datas.get(itemId)
 
     def canBuyStoreItems(self, owner, storeId, itemId, itemNum):
-        DEBUG_MSG('in canBuyStoreItems:', storeId, itemId)
+        LOG_DBG('in canBuyStoreItems:', storeId, itemId)
         storeData = MSLD.datas.get(storeId)
         if not storeData:
-            ERROR_MSG('   in canBuyItems, no store cfg:', storeId)
+            LOG_ERR('   in canBuyItems, no store cfg:', storeId)
             return False
 
         isTimeLimit = storeData['isTimeLimit']
         if isTimeLimit:
-            if not utils.inTimeTuplesRange(storeData['openTime'], storeData['closeTime'], utils.getNow()):
-                ERROR_MSG('   in canBuyItems, store not open:', storeId, itemId)
+            if not utils.inTimeTuplesRange(storeData['openTime'], storeData['closeTime'], utils.curTS()):
+                LOG_ERR('   in canBuyItems, store not open:', storeId, itemId)
                 return
 
         storeItemData = self.getStoreItemData(itemId)
         if not storeItemData:
-            WARNING_MSG('   in canBuyItems, no item cfg:', storeId, itemId)
+            LOG_WARN('   in canBuyItems, no item cfg:', storeId, itemId)
             return False
 
         if itemId not in storeData['goodsList'] and storeItemData['groupId'] == 0:
-            ERROR_MSG('   in canBuyItems, store no this item:', storeId, itemId)
+            LOG_ERR('   in canBuyItems, store no this item:', storeId, itemId)
             return False
 
         if storeItemData['guildMallLv'] and storeItemData['guildMallLv'] > owner.wuHuaLevel:
-            WARNING_MSG('   in canBuyItems, guildMallLv limit:', storeId, itemId, owner.wuHuaLevel)
+            LOG_WARN('   in canBuyItems, guildMallLv limit:', storeId, itemId, owner.wuHuaLevel)
             return False
 
         if storeItemData['startTime'] and storeItemData['deleteTime']:
-            if not utils.inTimeTuplesRange(storeItemData['startTime'], storeItemData['deleteTime'], utils.getNow()):
-                WARNING_MSG('   in canBuyItems, not on sale:', storeId, itemId)
+            if not utils.inTimeTuplesRange(storeItemData['startTime'], storeItemData['deleteTime'], utils.curTS()):
+                LOG_WARN('   in canBuyItems, not on sale:', storeId, itemId)
                 # 尚未到上架时间
                 return False
 
@@ -262,7 +262,7 @@ class StoreData(userType.UserSoleType):
             if itemId not in storeDic:
                 storeDic[itemId] = StoreItem(itemId, buyNum=0)
             if itemNum > storeItemData['limitNumber'] - storeDic[itemId].buyNum:
-                WARNING_MSG('   in canBuyItems, weekBuyNum limit:',
+                LOG_WARN('   in canBuyItems, weekBuyNum limit:',
                             storeItemData['limitNumber'], storeDic[itemId].buyNum)
                 owner.onMessagePre(MMCD.datas['mall_itemSoldOut_msg']['value'], [])
                 return False
@@ -271,15 +271,15 @@ class StoreData(userType.UserSoleType):
         if storeItemData['groupId'] != 0:
             storeDic = self.getLimitStoreDic(storeId)
             if itemId not in storeDic:
-                ERROR_MSG('   in canBuyItems, no item in limited storeDic:', storeId, itemId, storeDic)
+                LOG_ERR('   in canBuyItems, no item in limited storeDic:', storeId, itemId, storeDic)
                 return False
             if itemNum > storeItemData['limitNumber'] - storeDic[itemId].buyNum:
-                WARNING_MSG('in canBuyItems, itemSoldOut:', storeId, itemId, itemNum, storeItemData['limitNumber'], storeDic[itemId].buyNum)
+                LOG_WARN('in canBuyItems, itemSoldOut:', storeId, itemId, itemNum, storeItemData['limitNumber'], storeDic[itemId].buyNum)
                 owner.onMessagePre(MMCD.datas['mall_itemSoldOut_msg']['value'], [])
                 return False
             
         if owner.checkBagItemLimit(storeItemData['itemId'], itemNum):
-            DEBUG_MSG('in canBuyItems, bag item limit:', storeItemData['itemId'])
+            LOG_DBG('in canBuyItems, bag item limit:', storeItemData['itemId'])
             owner.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(owner.drugsQuantityBase)])
             return False
 

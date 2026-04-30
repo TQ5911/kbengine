@@ -350,5 +350,53 @@ datas = _tools.RODict({
     "gearBless_textDesc": _tools.RODict({
         "ID": "gearBless_textDesc",
         "value": "攻击触发最大值概率",
+    }),
+    "Target_attribute_quantity1": _tools.RODict({
+        "ID": "Target_attribute_quantity1",
+        "value": 4,
+    }),
+    "Quantity_reminder1": _tools.RODict({
+        "ID": "Quantity_reminder1",
+        "value": 54003301,
+    }),
+    "Maximum_quantity_prompt": _tools.RODict({
+        "ID": "Maximum_quantity_prompt",
+        "value": 54003302,
+    }),
+    "Minimum_quantity_prompt": _tools.RODict({
+        "ID": "Minimum_quantity_prompt",
+        "value": 54003303,
+    }),
+    "Stop_prompt": _tools.RODict({
+        "ID": "Stop_prompt",
+        "value": 54003304,
+    }),
+    "Secondary_confirmation_condition1": _tools.RODict({
+        "ID": "Secondary_confirmation_condition1",
+        "value": 2,
+    }),
+    "Secondary_confirmation_prompt1": _tools.RODict({
+        "ID": "Secondary_confirmation_prompt1",
+        "value": 54003305,
+    }),
+    "Target_attribute_quantity2": _tools.RODict({
+        "ID": "Target_attribute_quantity2",
+        "value": 4,
+    }),
+    "Quantity_reminder2": _tools.RODict({
+        "ID": "Quantity_reminder2",
+        "value": 54003306,
+    }),
+    "Secondary_confirmation_condition2": _tools.RODict({
+        "ID": "Secondary_confirmation_condition2",
+        "value": 2,
+    }),
+    "Secondary_confirmation_prompt2": _tools.RODict({
+        "ID": "Secondary_confirmation_prompt2",
+        "value": 54003307,
+    }),
+    "Material_shortage_prompt": _tools.RODict({
+        "ID": "Material_shortage_prompt",
+        "value": 54003308,
     })
 })

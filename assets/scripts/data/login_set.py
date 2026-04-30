@@ -874,5 +874,25 @@ datas = _tools.RODict({
     "TaptaploginAnomaly": _tools.RODict({
         "ID": "TaptaploginAnomaly",
         "value": 54481007,
+    }),
+    "activationPass": _tools.RODict({
+        "ID": "activationPass",
+        "value": 54002067,
+    }),
+    "activationFail": _tools.RODict({
+        "ID": "activationFail",
+        "value": 54002068,
+    }),
+    "authFailed_tooManyAccounts": _tools.RODict({
+        "ID": "authFailed_tooManyAccounts",
+        "value": 54002112,
+    }),
+    "greenCode_wrong": _tools.RODict({
+        "ID": "greenCode_wrong",
+        "value": 54002120,
+    }),
+    "greenCode_invalid": _tools.RODict({
+        "ID": "greenCode_invalid",
+        "value": 54002121,
     })
 })

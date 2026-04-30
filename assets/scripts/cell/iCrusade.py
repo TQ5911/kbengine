@@ -16,15 +16,15 @@ class ICrusade(object):
 	@gamedecorator.checkGameconfigEnable('teamDungeon')
 	@utils.isMyself
 	def enterCrusadeDungeon(self, exposed):
-		DEBUG_MSG('enterCrusadeDungeon::')
+		LOG_DBG('enterCrusadeDungeon::')
 
 		if not self.isCaptain():
-			ERROR_MSG('enterCrusadeDungeon:: u r not captain', self.gbId)
+			LOG_ERR('enterCrusadeDungeon:: u r not captain', self.gbId)
 			return
 
 		src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
 		if not self.isInTeam(self.gbId):
-			ERROR_MSG('enterCrusadeDungeon:: not in team', self.gbId)
+			LOG_ERR('enterCrusadeDungeon:: not in team', self.gbId)
 			return
 		
 		self._enterTeamCrusadeDungeon(src)
@@ -37,20 +37,20 @@ class ICrusade(object):
 		teamTarget = self.teamInfo.teamTarget
 		targetInfo = TMACTD.datas.get(teamTarget)
 		if not targetInfo:
-			ERROR_MSG('in enterCrusadeDungeon, teamTarget error')
+			LOG_ERR('in enterCrusadeDungeon, teamTarget error')
 			return
 		dungeonNo = targetInfo['enterDunID']
 		if not dungeonNo or dungeonNo == 0:
-			ERROR_MSG('in enterCrusadeDungeon, dungeonNo 1 error')
+			LOG_ERR('in enterCrusadeDungeon, dungeonNo 1 error')
 			return
 		dunLevel = self.getTeamDunLevel(dungeonNo)
 		if dunLevel == 0:
-			ERROR_MSG('in enterCrusadeDungeon, dungeonNo 2 error')
+			LOG_ERR('in enterCrusadeDungeon, dungeonNo 2 error')
 			return
 		
 		result = self._checkEnterTeamDungeon(dungeonNo)
 		if not result:
-			WARNING_MSG('_enterTeamCrusadeDungeon::_checkEnterTeamDungeon fail')
+			LOG_WARN('_enterTeamCrusadeDungeon::_checkEnterTeamDungeon fail')
 			return
 
 		# for team, check level in dungeon checking logic

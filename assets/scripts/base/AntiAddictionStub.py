@@ -15,7 +15,7 @@ import antiAddictionSystem_config as AASC
 import antiAddictionSystem_holiday as AASCH
 import antiAddictionSystem_workday as AASCW
 
-class AntiAddictionTimeVal(userType.UserSoleType):
+class AntiAddictionTimeVal(userType.UserSingleType):
     def __init__(self):
         self.dateType = gameconst.AntiAddictionDateType.WORKDAY
         self.timeType = gameconst.AntiAddictionTimeType.PROHIBIT
@@ -30,7 +30,7 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
         self.antiAddictionTimeVal = AntiAddictionTimeVal()
         self.switchTimeTypeTimerId = 0
         self.addDatetimeTimerTick()
-        self.initAntiAddictionData(utils.getNow())
+        self.initAntiAddictionData(utils.curTS())
 
     def onTimer(self, tid, userArg):
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
@@ -42,7 +42,7 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
         super().doNext()
 
     def initAntiAddictionData(self, now):
-        INFO_MSG("_resetAntiAddictionData")
+        LOG_IFO("_resetAntiAddictionData")
 
         self.permitTimeLimitList = [[[], []], [[], []]]
         for id, holidayData in AASCH.datas.items():
@@ -78,7 +78,7 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
     def getNextTime(self, timeType, now):
         holidayTimeCron = sys.maxsize
         if self.permitTimeLimitList[gameconst.AntiAddictionDateType.HOLIDAY][timeType]:
-            holidayTimeCron, _ = utils.nextByTimeTupleList(self.permitTimeLimitList[gameconst.AntiAddictionDateType.HOLIDAY][timeType], now)
+            holidayTimeCron, _ = utils.nextByCronTupleList(self.permitTimeLimitList[gameconst.AntiAddictionDateType.HOLIDAY][timeType], now)
         nextStartHolidayTime = now + holidayTimeCron
 
         weekendTimeCron = sys.maxsize
@@ -88,7 +88,7 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
             curCnt = 1
             while True and curCnt <= cycCnt:
                 curCnt += 1
-                weekendTimeCron, _ = utils.nextByTimeTupleList(self.permitTimeLimitList[gameconst.AntiAddictionDateType.WEEKEND][timeType], nextStartWeekendTime)
+                weekendTimeCron, _ = utils.nextByCronTupleList(self.permitTimeLimitList[gameconst.AntiAddictionDateType.WEEKEND][timeType], nextStartWeekendTime)
                 nextStartWeekendTime = nextStartWeekendTime + weekendTimeCron
                 if not AntiAddictionStub.isWorkDay(nextStartWeekendTime):
                     break
@@ -102,12 +102,12 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
             self._cancelDatetimeCallback(self.switchTimeTypeTimerId, gametimer.TIMER_TAG_SWITCH_ANIT_ADDICTION_TIME_TYPE_TIMER)
             self.switchTimeTypeTimerId = 0
 
-        INFO_MSG("startSwitchTimeTypeTimer", self.antiAddictionTimeVal)
+        LOG_IFO("startSwitchTimeTypeTimer", self.antiAddictionTimeVal)
         self.switchTimeTypeTimerId = self._datetimeCallback(self.antiAddictionTimeVal.nextStartTime, 'onSwitchTimeTypeTimerCallback', (), gametimer.TIMER_TAG_SWITCH_ANIT_ADDICTION_TIME_TYPE_TIMER, 'switchTimeTypeTimerId')
 
     def onSwitchTimeTypeTimerCallback(self):
-        INFO_MSG("onSwitchTimeTypeTimerCallback", self.antiAddictionTimeVal)
-        now = utils.getNow()
+        LOG_IFO("onSwitchTimeTypeTimerCallback", self.antiAddictionTimeVal)
+        now = utils.curTS()
         if self.antiAddictionTimeVal.timeType == gameconst.AntiAddictionTimeType.PERMIT:
             permitDateType, startPermitTimeCron, nextStartPermitTime = self.getNextTime(gameconst.AntiAddictionTimeType.PERMIT, now)
             self.antiAddictionTimeVal.dateType = permitDateType
@@ -125,7 +125,7 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
 
     @staticmethod
     def isWorkDay(timestamp):
-        dateStr = utils.getTimeStrFromTimeStamp(timestamp)
+        dateStr = utils.getCommonTimeStrFromTimeStamp(timestamp)
         date = int(dateStr[:8])
-        DEBUG_MSG("isWorkDay timestamp=%d, dateStr=%s, date=%d" % (timestamp, dateStr, date))
+        LOG_DBG("isWorkDay timestamp=%d, dateStr=%s, date=%d" % (timestamp, dateStr, date))
         return date in AASCW.datas

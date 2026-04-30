@@ -14,7 +14,7 @@ import time
 import sys
 
 
-class PureItem(userType.UserSoleType):
+class PureItem(userType.UserSingleType):
     def __init__(self, dataDic):
         self.__dict__['itemId'] = dataDic['itemId']
         self.__dict__['itemNum'] = dataDic['itemNum']
@@ -109,7 +109,7 @@ class PureItem(userType.UserSoleType):
         return self.lockStatus == gameconst.ItemLockStatus.LOCKED
 
 
-class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
+class BaseItem(userType.UserSingleType, metaclass=abc.ABCMeta):
 
     @staticmethod
     def maxStackSize(itemId):
@@ -121,7 +121,7 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
     def __init__(self, itemId, itemNum, bindType=dataUtils.getItemDefaultBindType(), **kwargs):
         self.itemId = itemId
         self.setItemNum(itemNum)
-        self.createTime = utils.getNow()
+        self.createTime = utils.curTS()
         self.expireTime = 0
         self.itemType = 0
         self.itemSubType = 0
@@ -148,7 +148,7 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
 
     def setItemNum(self, itemNum):
         if itemNum > self.maxStackSize(self.itemId) or itemNum < 0:
-            gameengine.reportCritical('itemNum error', self.itemId, itemNum, self.maxStackSize(self.itemId))
+            gameengine.panicStack('itemNum error', self.itemId, itemNum, self.maxStackSize(self.itemId))
             return
         object.__setattr__(self, 'itemNum', itemNum)
 
@@ -178,13 +178,13 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
         self.expireTime = expireTime
 
     def isExpired(self):
-        if self.expireTime and self.expireTime < utils.getNow():
+        if self.expireTime and self.expireTime < utils.curTS():
             return True
 
         return False
 
     def isEnabled(self):
-        if not self.enableTime or utils.getNow() > self.enableTime:
+        if not self.enableTime or utils.curTS() > self.enableTime:
             return True
         return False
 

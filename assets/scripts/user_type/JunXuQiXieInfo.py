@@ -5,7 +5,7 @@ import userType
 import guildWarEquipment_warEquipmentUpgrate as GWE_WEUD
 
 
-class JunXuQiXieVal(userType.UserSoleType):
+class JunXuQiXieVal(userType.UserSingleType):
     '''JUN_XU_QI_XIE_DATA_INFO'''
     def __init__(self, level=0, exp=0, qixieType=0):
         self.level = level
@@ -20,7 +20,7 @@ class JunXuQiXieVal(userType.UserSoleType):
         _id = GWE_WEUD.typeLevelDic[self.qixieType][self.level]
         self.exp += GWE_WEUD.datas[_id]['assistExp']
         if self.exp > GWE_WEUD.datas[_id]['upgradeExp']:
-            WARNING_MSG('JunXuQiXieVal::addExp: exp > upgradeExp', self.exp, GWE_WEUD.datas[_id]['upgradeExp'])
+            LOG_WARN('JunXuQiXieVal::addExp: exp > upgradeExp', self.exp, GWE_WEUD.datas[_id]['upgradeExp'])
             self.exp = GWE_WEUD.datas[_id]['upgradeExp']
 
     def needJunxuLevel(self):

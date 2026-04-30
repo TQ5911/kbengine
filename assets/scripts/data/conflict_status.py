@@ -444,10 +444,20 @@ datas = _tools.RODict({
         "event": 29100111,
         "buffTag": 0,
         "popupIndex": 0
+    }),
+    47: _tools.RODict({
+        "ID": 47,
+        "varName": "posture",
+        "statusName": "表情动作",
+        "clearOnline": 1,
+        "clearTeleport": 1,
+        "event": 29100112,
+        "buffTag": 0,
+        "popupIndex": 0
     })
 })
 minKey = 0
-maxKey = 46
+maxKey = 47
 
 eventToStateDic = _tools.RODict({ 
         "29100003":0,
@@ -490,4 +500,5 @@ eventToStateDic = _tools.RODict({
         "29100105":43,
         "29100106":44,
         "29100111":46,
+        "29100112":47,
 })

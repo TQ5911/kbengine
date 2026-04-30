@@ -1455,5 +1455,5 @@ class MachineBuilder(object):
         if name in _machineDic:
             return _machineDic[name]()
         else:
-            WARNING_MSG('create ai name error:', name)
+            LOG_WARN('create ai name error:', name)
             return MachineBlank()

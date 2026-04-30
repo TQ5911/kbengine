@@ -26,24 +26,40 @@ def onInit(isReload):
     当引擎启动后初始化完所有的脚本后这个接口被调用
     """
     groupOrder = KBEngine.getComponentGroupOrder()
-    DEBUG_MSG('onInit:', isReload, groupOrder)
+    LOG_DBG('onInit:', isReload, groupOrder)
     if not isReload:
         sys.excepthook = gameengine.exceptHook
 
     buildAreaData()
     KBEngine.addTimer(1, 1, initAsyncore)
+    KBEngine.addTimer(1, 60, countCellAppAvatar)
+    KBEngine.addTimer(1, 10, broadcastCellAvatarCount)
 
-    gameglobal.avatarExposedMethods = utils.getExposedMethods()
+    gameglobal.avatarExposedMethods = utils.fetchExposedMethods()
     KBEngine.addTimer(1800, 1800, outputExposedMethodStats)
-
 
 def initAsyncore(timerId):
     asyncore.loop(0, True, None, 1)
 
+def countCellAppAvatar(timerId):
+    count = 0
+    for e in KBEngine.entities.values():
+        if e.__class__.__name__ == "Avatar":
+            count += 1
+    LOG_IFO("CellApp countAvatar", count)
+    if gameglobal.cellAvatarCount != count:
+        gameglobal.cellAvatarCount = count
+        LOG_WARN("CellApp countAvatar changed", gameglobal.cellAvatarCount, count)
+
+def broadcastCellAvatarCount(timerId):
+    if gameglobal.lastBroadcastCellAvatarCount != gameglobal.cellAvatarCount:
+        LOG_IFO("broadcastCellAvatarCount", KBEngine.getComponentGroupOrder(), gameglobal.cellAvatarCount)
+        gameengine.broadcastBaseapp('onSyncCellAvatarCount', (KBEngine.getComponentGroupOrder(), gameglobal.cellAvatarCount))
+        gameglobal.lastBroadcastCellAvatarCount = gameglobal.cellAvatarCount
 
 def checkSpecialSpaceOnNewCellappStarted(timerId):
     if not gameglobal.staticCell:
-        INFO_MSG('checkSpecialSpaceOnNewCellappStarted:', gameglobal.staticCell)
+        LOG_IFO('checkSpecialSpaceOnNewCellappStarted:', gameglobal.staticCell)
 
 
 def onGlobalData(key, value):
@@ -51,7 +67,7 @@ def onGlobalData(key, value):
     KBEngine method.
     globalData改变
     """
-    DEBUG_MSG('onGlobalData:', key, value)
+    LOG_DBG('onGlobalData:', key, value)
 
     if isinstance(key, str):
         if key.startswith(gameconst.GLOBALDATA_KEY_BASEAPP):
@@ -70,7 +86,7 @@ def onGlobalDataDel(key):
     KBEngine method.
     globalData删除
     """
-    DEBUG_MSG('onDelGlobalData:', key)
+    LOG_DBG('onDelGlobalData:', key)
 
 
 def onCellAppData(key, value):
@@ -78,7 +94,7 @@ def onCellAppData(key, value):
     KBEngine method.
     cellAppData改变
     """
-    DEBUG_MSG('onCellAppData:', key, value)
+    LOG_DBG('onCellAppData:', key, value)
     if key == gameconst.GLOBALDATA_KEY_CELLAPP_CALL:
         gameengine.onAppCall(value)
 
@@ -88,7 +104,7 @@ def onCellAppDataDel(key):
     KBEngine method.
     cellAppData删除
     """
-    DEBUG_MSG('onCellAppDataDel: %s' % key)
+    LOG_DBG('onCellAppDataDel: %s' % key)
 
 
 def onSpaceData(spaceID, key, value):
@@ -99,7 +115,7 @@ def onSpaceData(spaceID, key, value):
     @key:  被设置的key.
     @value:  被设置的值， 如果值被删除则为None.
     """
-    DEBUG_MSG('onSpaceData: spaceID=%s, key=%s, value=%s.' % (spaceID, key, value))
+    LOG_DBG('onSpaceData: spaceID=%s, key=%s, value=%s.' % (spaceID, key, value))
 
 
 def onSpaceGeometryLoaded(spaceID, mapping):
@@ -108,7 +124,7 @@ def onSpaceGeometryLoaded(spaceID, mapping):
     space 某部分或所有chunk等数据加载完毕
     具体哪部分需要由cell负责的范围决定
     """
-    DEBUG_MSG('onSpaceGeometryLoaded: spaceID=%s, mapping=%s.' % (spaceID, mapping))
+    LOG_DBG('onSpaceGeometryLoaded: spaceID=%s, mapping=%s.' % (spaceID, mapping))
 
 
 def onAllSpaceGeometryLoaded(spaceID, isBootstrap, mapping):
@@ -117,7 +133,7 @@ def onAllSpaceGeometryLoaded(spaceID, isBootstrap, mapping):
     space 某部分或所有chunk等数据加载完毕
     具体哪部分需要由cell负责的范围决定
     """
-    DEBUG_MSG('onAllSpaceGeometryLoaded: spaceID=%s, isBootstrap=%i, mapping=%s.' % (spaceID, isBootstrap, mapping))
+    LOG_DBG('onAllSpaceGeometryLoaded: spaceID=%s, isBootstrap=%i, mapping=%s.' % (spaceID, isBootstrap, mapping))
 
     if not isBootstrap:
         return
@@ -126,7 +142,7 @@ def onAllSpaceGeometryLoaded(spaceID, isBootstrap, mapping):
     if spaceEnt:
         spaceEnt.base.entireConstruct(spaceID)
     else:
-        ERROR_MSG('onAllSpaceGeometryLoaded: cannot find space', spaceID, isBootstrap, mapping)
+        LOG_ERR('onAllSpaceGeometryLoaded: cannot find space', spaceID, isBootstrap, mapping)
 
     kbeUtils.processSpaceGeometryTasks(spaceID)
 
@@ -137,24 +153,24 @@ def callGCCollect():
 
 
 def onAirWallLoadFinished():
-    DEBUG_MSG('onAirWallLoadFinished')
+    LOG_DBG('onAirWallLoadFinished')
 
 
 def outputExposedMethodStats(timerId):
     if gameconfig.enableExposedMethodStats():
-        stats = utils.getCallStats()
+        stats = utils.fetchCallStats()
         _outputExposedMethodStats(stats, 0, 20)
 
 
 def _outputExposedMethodStats(stats, fromIdx, num):
     if fromIdx == 0:
-        INFO_MSG('exposed method call stats, onlineNum={} timestamp={}'.format(
-            KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_ONLINE_NUM, 0), utils.getNow()))
+        LOG_IFO('exposed method call stats, onlineNum={} timestamp={}'.format(
+            KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_ONLINE_NUM, 0), utils.curTS()))
 
     endIdx = min(len(stats), fromIdx + num)
     for i in range(fromIdx, endIdx):
         info = stats[i]
-        INFO_MSG('call stats: {} {}'.format(info[1], info[0]))
+        LOG_IFO('call stats: {} {}'.format(info[1], info[0]))
 
     if endIdx < len(stats):
         KBEngine.addTimer(0.1, 0, lambda tid: _outputExposedMethodStats(stats, endIdx, num))
@@ -164,7 +180,7 @@ def _outputExposedMethodStats(stats, fromIdx, num):
 
 def onInited():
     gorder = KBEngine.getComponentGroupOrder()
-    INFO_MSG('cellapp onInited!!!', gorder)
+    LOG_IFO('cellapp onInited!!!', gorder)
     gameengine.setGlobalData('%s:%s' % (gameconst.GLOBALDATA_KEY_CELLAPP_INITED, gorder), gorder)
 
     if KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):

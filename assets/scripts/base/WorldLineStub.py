@@ -38,7 +38,7 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         self.pyAddTimer(5, 5, gametimer.CLEAR_WORLDLINE_ENTER_TIME_OUT)
 
     def doNext(self):
-        DEBUG_MSG('WorldLine doNext', self.lineType)
+        LOG_DBG('WorldLine doNext', self.lineType)
         super().doNext()
         return
 
@@ -55,12 +55,12 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         super().onTimer(tid, userArg)
 
     def onLoadEntitiesEnd(self, spaceNo):
-        DEBUG_MSG("WorldLineStub onLoadEntitiesEnd", spaceNo)
+        LOG_DBG("WorldLineStub onLoadEntitiesEnd", spaceNo)
         iLineStubBase.ILineStubBase.onLoadEntitiesEnd(self, spaceNo)
 
     def onLineSpaceGone(self, spaceNo, groupOrder):
         iLineStubBase.ILineStubBase.onLineSpaceGone(self, spaceNo, groupOrder)
-        lineNo = formula.getLineNo(spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
 
         # 所有线都没了，暂时禁止登录
         if not self.lineSpaces:
@@ -75,9 +75,9 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             self.lineReadRecoverList.append(lineNo)
 
     def onLineSpaceReady(self, spaceNo):
-        INFO_MSG('onLineSpaceReady', spaceNo)
+        LOG_IFO('onLineSpaceReady', spaceNo)
         iLineStubBase.ILineStubBase.onLineSpaceReady(self, spaceNo)
-        lineNo = formula.getLineNo(spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
 
         if lineNo in self.lineReadRecoverList:
             self.lineReadRecoverList.remove(lineNo)
@@ -86,11 +86,11 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         super(WorldLineStub, self).onCellappRelive(groupOrder)
 
     def enterLineSuccess(self, lineNo, box, gbId, succInfo):
-        INFO_MSG('enterLineSuccess', lineNo, box.id, gbId, succInfo)
+        LOG_IFO('enterLineSuccess', lineNo, box.id, gbId, succInfo)
         super(WorldLineStub, self).enterLineSuccess(lineNo, box, gbId, succInfo)
         playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not playerVal:
-            ERROR_MSG('enterLineSuccess:cannot find player:', self.lineType, lineNo, gbId, box.id)
+            LOG_ERR('enterLineSuccess:cannot find player:', self.lineType, lineNo, gbId, box.id)
             return
 
         _linePlayers = self.allPlayers.getLinePlayers(lineNo)
@@ -111,7 +111,7 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         super(WorldLineStub, self).updateLinePlayerInfo(lineNo, box, gbId, infoDict)
         playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not playerVal:
-            ERROR_MSG('updateLinePlayerInfo:cannot find player:', self.lineType, lineNo, gbId, box.id, infoDict)
+            LOG_ERR('updateLinePlayerInfo:cannot find player:', self.lineType, lineNo, gbId, box.id, infoDict)
             return
 
         linePlayers = self.allPlayers.getLinePlayers(lineNo)
@@ -128,16 +128,16 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def _requestCollectionPostionByCollId(self, collectionId, spaceNo):
         _m_coll = self.getCollectionSharedColl(spaceNo, collectionId, default=())
         if not _m_coll:
-            WARNING_MSG("_requestCollectionPostionByCollId:: coll not found", collectionId, spaceNo)
+            LOG_WARN("_requestCollectionPostionByCollId:: coll not found", collectionId, spaceNo)
             return (0, None), False
 
         _m_gameEntityId = random.choice(list(_m_coll))
-        _m_gid = utils.getGidFromGameEntityId(_m_gameEntityId)
+        _m_gid = utils.parseGidFromGameEntityId(_m_gameEntityId)
         _m_sGid = str(_m_gid)
 
-        m_datas = utils.getDunModuleData(formula.getMapId(spaceNo))
+        m_datas = utils.getDunModuleData(formula.fetchMapId(spaceNo))
         if _m_sGid not in m_datas:
-            WARNING_MSG("_requestCollectionPostionByCollId:: gid not in data", _m_sGid, collectionId, spaceNo)
+            LOG_WARN("_requestCollectionPostionByCollId:: gid not in data", _m_sGid, collectionId, spaceNo)
             return (0, None), False
 
         _m_prm = m_datas[_m_sGid]
@@ -146,7 +146,7 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
 
     def leaveLine(self, box, gbId, fromSpaceNo, toSpaceNo, toPosition, toDirection):
         super(WorldLineStub, self).leaveLine(box, gbId, fromSpaceNo, toSpaceNo, toPosition, toDirection)
-        lineNo = formula.getLineNo(fromSpaceNo)
+        lineNo = formula.parseLineNo(fromSpaceNo)
         _linePlayers = self.allPlayers.getLinePlayers(lineNo)
         # 进入副本，大世界需要继续占坑位
         if abs(len(_linePlayers) - _linePlayers.lastUpPlayerNum) >= gameconst.WORLD_LINE_UPDATE_WEIGHT_VAL:
@@ -169,30 +169,30 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
 
     def debugPlayerAreaInfo(self):
         lines = self.getLineNoReadyForEnter()
-        DEBUG_MSG('!!!!!!!========== debug player area info start ==========')
+        LOG_DBG('!!!!!!!========== debug player area info start ==========')
         import worldConfig_Area as wcad
         count = 0
         for areaid in iter(wcad.datas):
             info = wcad.datas[areaid]
-            DEBUG_MSG(
+            LOG_DBG(
                 '!!!!!!!area: {}, N4:{}, N5:{}'.format(info.get('Areaname', ''), info.get('N4', 0), info.get('N5', 0)))
             linen = [0] * len(lines)
             for lineNo in lines:
                 linePlayers = self.allPlayers.getLinePlayers(lineNo)
                 areaPlayers = linePlayers.playersInArea(areaid)
                 num = len(areaPlayers)
-                if num: DEBUG_MSG('!!!!!!!        line: {}, num: {}'.format(lineNo, num))
+                if num: LOG_DBG('!!!!!!!        line: {}, num: {}'.format(lineNo, num))
                 linen[lineNo] = num
                 count += num
 
             n5 = wcad.datas[areaid]['N5']
             maxx = max(linen)
             flag = False if maxx > n5 else True
-            DEBUG_MSG('!!!!!!!        check area player num under hard limit', flag)
-            DEBUG_MSG('!!!!!!!--------')
+            LOG_DBG('!!!!!!!        check area player num under hard limit', flag)
+            LOG_DBG('!!!!!!!--------')
 
-        DEBUG_MSG('!!!!!!!player area num count:', count)
-        DEBUG_MSG('!!!!!!!========== debug player area info end ==========')
+        LOG_DBG('!!!!!!!player area num count:', count)
+        LOG_DBG('!!!!!!!========== debug player area info end ==========')
 
     def notifyPlayerOffline(self, lineNo, gbId):
         super(WorldLineStub, self).notifyPlayerOffline(lineNo, gbId)
@@ -207,18 +207,18 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
                                                                                gameconst.WORLD_LINE_BASE_WEIGHT))
 
     def onLoadGroupEntities(self, info):
-        DEBUG_MSG("WorldLineStub::onLoadGroupEntities", info)
+        LOG_DBG("WorldLineStub::onLoadGroupEntities", info)
         super(WorldLineStub, self).onLoadGroupEntities(info)
 
     def onRefreshGroupEntities(self, info):
-        DEBUG_MSG("WorldLineStub::onRefreshGroupEntities", info)
+        LOG_DBG("WorldLineStub::onRefreshGroupEntities", info)
         super(WorldLineStub, self).onRefreshGroupEntities(info)
 
     def onDestroyGroupEntities(self, info):
-        DEBUG_MSG("WorldLineStub::onDestroyGroupEntities", info)
+        LOG_DBG("WorldLineStub::onDestroyGroupEntities", info)
         super(WorldLineStub, self).onDestroyGroupEntities(info)
 
     def notifyCreateWorldBoss(self, spaceNo):
-        _lineNo = formula.getLineNo(spaceNo)
+        _lineNo = formula.parseLineNo(spaceNo)
         spaceVal = self.getLineSpaceVal(_lineNo)
         spaceVal.lineSpaceBox.cell.callOnSpaceMgr('doCreateWorldBoss', ())

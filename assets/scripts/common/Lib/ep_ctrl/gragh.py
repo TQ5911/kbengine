@@ -35,7 +35,7 @@ class BaseElementGraghBuilder(object):
 {{ 
     {name} |
     {{  
-        {{ {inputs} | {ref_params} }} |
+        {{ {inputs} | {refParams} }} |
         {{ {outputs} }}
     }} |
     {params}
@@ -46,11 +46,11 @@ class BaseElementGraghBuilder(object):
 
         outputs = '|'.join(_temp_ref.format(self._trans_out(e, i))
                            for i in e._binded_dic.keys())
-        ref_params = '|'.join(_temp_ref.format(self._trans_ref_param(e, i))
+        refParams = '|'.join(_temp_ref.format(self._trans_ref_param(e, i))
                               for i in e._ref_params_dic.keys())
 
         def _pkg_params(e, i):
-                _p = e.get_param(i)
+                _p = e.fetchArgument(i)
                 if isinstance(_p, (list, dict)):
                     return '{}()'.format(_p.__class__.__name__)
                 elif isinstance(_p, str) and len(_p) > 10:
@@ -60,7 +60,7 @@ class BaseElementGraghBuilder(object):
         params = '|'.join(
             _temp_ref_v.format(
                 self._trans_param(e, i), _pkg_params(e, i))
-            for i in e._params.keys())
+            for i in e.paramsDict.keys())
         _input_set = set()
         for _be_bind_dic in e._be_bind_dic.values():
             for _be_bind_data in _be_bind_dic.values():
@@ -71,7 +71,7 @@ class BaseElementGraghBuilder(object):
         return _temp_e.format(name=e.name,
                               inputs=inputs,
                               outputs=outputs,
-                              ref_params=ref_params,
+                              refParams=refParams,
                               params=params)
 
 

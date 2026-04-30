@@ -5,7 +5,7 @@ import userType
 import LogTrackingMgr
 
 
-class LeaderBoardAvatarScoreVal(userType.UserSoleType):
+class LeaderBoardAvatarScoreVal(userType.UserSingleType):
     '''LEADER_BOARD_AVATAR_SCORE_DATA_INFO'''
     def __init__(self, gbId=0, name='', score=0, ts=0, level=0, school=0, guildName='', guildUUID=0):
         self.gbId = gbId

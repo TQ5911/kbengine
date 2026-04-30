@@ -5,17 +5,11 @@
 from KBEDebug import *
 import KBEngine
 
-import gameengine
-import gametimer
-import gamemove
 import gameconst
 import formula
 import utils
 
-import random
-import copy
 import math
-import sMath
 import Math
 
 import ep_ctrl
@@ -25,791 +19,792 @@ from ._events import *
 
 
 __all__ = [
-    'DungeonFlowControllerBuilder'
+    'DungeonFlowConstructor'
 ]
 
 
-class DungeonFlowControllerBuilder(object):
-    def __init__(self, flowController, dungeonNo, spaceNo):
-        self.controller = flowController    # type: FlowController
-        self.dungeonNo = dungeonNo
+LINK_EVENTS = {
+    'createMonster',
+    'createNPC',
+    'createCreationInFixedPosition',
+    'summonMonsterInFixedPosition',
+    'createCollection',
+    'createAirWall',
+    'createAvatarMirrorFromRandomPlayer',
+    'createDungeonTeleporter',
+    'killMonsterNum',
+    'changeAllPlayerCameraLookPos',
+    'createRebornPos',
+}
+
+
+class DungeonFlowConstructor(object):
+    def __init__(self, flowController, dunNo, spaceNo):
+        self.controller = flowController
+        self.dungeonNo = dunNo
         self.spaceNo = spaceNo
         self.events = {}
-        self.o_events_map = {}
-        self.delay_loop_map = {}
-        self.multi_events_outer_map = {}
+        self.eventsMap = {}
+        self.delayLoopMap = {}
+        self.multiEventsOuterMap = {}
         self.built = False
 
-    def build(self):
+    def construct(self):
         if self.built:
-            raise RuntimeError('DungeonFlowControllerBuilder already be build')
+            raise RuntimeError('DungeonFlowConstructor already be construct')
 
         try:
-            self._build()
+            self._construct()
         finally:
             self.built = True
 
-    def _build(self):
-        # dunData = utils.getDunModuleData(self.dungeonNo)
+    def _buildEvent(self, flowData):
+        self.controller.add_variable('dungeonNo', self.dungeonNo)
+        self.controller.add_variable('spaceNo', self.spaceNo)
+
+        for _eventId, _eventData in flowData.items():
+            _eventId = int(_eventId)
+            eventType = _eventData["type"]
+            funcName = self._getConstructFunctionName(eventType)
+            func = getattr(self, funcName, None)
+            if not callable(func):
+                LOG_ERR('_buildDungeonFlowController:: eventType not support: ',
+                            self.dungeonNo, _eventId, eventType)
+                raise TypeError('flowController eventType not support, {}'.format(eventType))
+            self.events[_eventId] = func(_eventId, _eventData)
+
+    def _linkAndTrans(self, flowData):
+        startEventId = min(self.events)
+        startEvent = self.events[startEventId]
+        _sentinelEvent = self.controller.buildElement(FlowNodeEvent, 0)
+        _sentinelEvent.bind_element(startEvent, 1, 1)
+        self.controller.add_start_node(_sentinelEvent)
+
+        for _eventId, _eventData in flowData.items():
+            srcE = self.events[int(_eventId)]
+            _transitions = _eventData['transition']
+            eventType = _eventData['type']
+
+            if eventType in LINK_EVENTS:
+                self._link_dungeonBase(srcE)
+
+            if not _transitions:
+                continue
+
+            transFn = getattr(self, self._getTransFunctionName(eventType), None)
+            if transFn is None:
+                # default
+                self._trans_default(srcE, _transitions, 1)
+            elif callable(transFn):
+                transFn(srcE, _transitions)
+
+    def _construct(self):
         flowData = utils.getDunFLowModuleData(self.dungeonNo)
-        dungeonNoGetter = self.controller.build_element(ep_ctrl.variable.VarGetter, var_name='dungeonNo')
-        spaceNoGetter = self.controller.build_element(ep_ctrl.variable.VarGetter, var_name='spaceNo')
-        self.o_events_map['dungeonNoGetter'] = dungeonNoGetter
-        self.o_events_map['spaceNoGetter'] = spaceNoGetter
+        dungeonNoGetter = self.controller.buildElement(ep_ctrl.variable.VarGetter, var_name='dungeonNo')
+        spaceNoGetter = self.controller.buildElement(ep_ctrl.variable.VarGetter, var_name='spaceNo')
+        self.eventsMap['dungeonNoGetter'] = dungeonNoGetter
+        self.eventsMap['spaceNoGetter'] = spaceNoGetter
 
-        def _build():
-            self.controller.add_variable('dungeonNo', self.dungeonNo)
-            self.controller.add_variable('spaceNo', self.spaceNo)
+        self._buildEvent(flowData)
+        self._linkAndTrans(flowData)
 
-            for eventId, eventData in flowData.items():
-                eventId = int(eventId)
-                eventType = eventData["type"]
-                funcName = self._get_build_function_name(eventType)
-                func = getattr(self, funcName, None)
-                if not callable(func):
-                    ERROR_MSG('_buildDungeonFlowController:: eventType not support: ',
-                              self.dungeonNo, eventId, eventType)
-                    raise TypeError('flowController eventType not support, {}'.format(eventType))
-                self.events[eventId] = func(eventId, eventData)
+    def _getConstructFunctionName(self, eventType):
+        return 'construct_{}'.format(eventType)
 
-        _build()
-
-        def _link_and_trans():
-            startEventId = min(self.events)
-            startEvent = self.events[startEventId]
-            _sentinelEvent = self.controller.build_element(FlowEvent, 0)
-            _sentinelEvent.bind_element(startEvent, 1, 1)
-            self.controller.add_start_node(_sentinelEvent)
-
-            for eventId, eventData in flowData.items():
-                srcE = self.events[int(eventId)]
-                transitions = eventData['transition']
-                eventType = eventData['type']
-
-                linkFn = getattr(self, self._get_link_function_name(eventType), None)
-                if callable(linkFn):
-                    linkFn(srcE)
-
-                if not transitions:
-                    continue
-
-                transFn = getattr(self, self._get_trans_function_name(eventType), None)
-                if transFn is None:
-                    # default
-                    self._trans_default(srcE, transitions, 1)
-                elif callable(transFn):
-                    transFn(srcE, transitions)
-
-        _link_and_trans()
-
-    def _get_build_function_name(self, eventType):
-        return 'build_{}'.format(eventType)
-
-    def _get_link_function_name(self, eventType):
+    def _getLinkFuncName(self, eventType):
         return 'link_{}'.format(eventType)
 
-    def _get_trans_function_name(self, eventType):
+    def _getTransFunctionName(self, eventType):
         return 'trans_{}'.format(eventType)
 
     # -------------------------------------------------------------------
     # BUILD METHODS
     # -------------------------------------------------------------------
 
-    def build_stopDelayEvent(self, eventId, eventData):
-        eventIDs = eventData['eventID']
+    def construct_stopDelayEvent(self, eventId, eventDataDic):
+        eventIDs = eventDataDic['eventID']
         return self.controller.buildStopDelayEvent(eventId, eventIDs)
 
-    def build_createMonster(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
-        overwriteProps = {}
+    def construct_createMonster(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        entityNumber = eventDataDic['num']
+        _overwriteProps = {}
         for k in ('hp', 'minAtk', 'maxAtk', 'aiName', 'hpPercent'):
-            if k in eventData:
-                owData = eventData[k]
-                if owData != 0:
-                    if k == 'hp':
-                        # 【boss创建的时候设置的血量应该是血量上限，现在是当前血量】
-                        overwriteProps['fullHp'] = owData
-                    elif k == 'hpPercent':
-                        overwriteProps['initHpPercent'] = owData
-                    overwriteProps[k] = owData
-        entityLvl = eventData.get('lv', 1)
-        ifSetBoss = bool(eventData.get('ifSetBoss', False))
-        initState = int(eventData.get('initState', 0))
+            if k not in eventDataDic:
+                continue
+
+            owData = eventDataDic[k]
+            if owData == 0:
+                continue
+
+            if k == 'hp':
+                # 【boss创建的时候设置的血量应该是血量上限，现在是当前血量】
+                _overwriteProps['fullHp'] = owData
+            elif k == 'hpPercent':
+                _overwriteProps['initHpPercent'] = owData
+            _overwriteProps[k] = owData
+
+        entityLvl = eventDataDic.get('lv', 1)
+        ifSetBoss = bool(eventDataDic.get('ifSetBoss', False))
+        initState = int(eventDataDic.get('initState', 0))
         return self.controller.buildReleaseDungeonMonsterEvent(
-            eventId, entityIds, entityNum, entityLvl, overwriteProps, ifSetBoss, initState)
+            eventId, entityIdList, entityNumber, entityLvl, _overwriteProps, ifSetBoss, initState)
 
-    def build_monsterChangeInitState(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        initState = eventData['initState']
-        return self.controller.buildMonsterChangeInitState(eventId, entityIds, initState)
+    def construct_monsterChangeInitState(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        initState = eventDataDic['initState']
+        return self.controller.buildMonsterChangeInitState(eventId, entityIdList, initState)
 
-    def build_monsterAddHateValue(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        chooseType = eventData['chooseType']
-        hateValue = eventData['hateValue']
-        return self.controller.buildMonsterAddHateValue(eventId, entityIds, chooseType, hateValue)
+    def construct_monsterAddHateValue(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        chooseType = eventDataDic['chooseType']
+        hateValue = eventDataDic['hateValue']
+        return self.controller.buildMonsterAddHateValue(eventId, entityIdList, chooseType, hateValue)
 
-    def build_removeMonster(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        return self.controller.buildRecycleDungeonMonsterEvent(eventId, entityIds)
+    def construct_removeMonster(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        return self.controller.buildRecycleDungeonMonsterEvent(eventId, entityIdList)
 
-    def build_createNPC(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
-        entityLvl = eventData.get('lv', 0)
-        ifSetBoss = bool(eventData.get('ifSetBoss', False))
+    def construct_createNPC(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        entityNumber = eventDataDic['num']
+        entityLvl = eventDataDic.get('lv', 0)
+        ifSetBoss = bool(eventDataDic.get('ifSetBoss', False))
         return self.controller.buildReleaseDungeonNPCEvent(
-            eventId, entityIds, entityNum, entityLvl, ifSetBoss)
+            eventId, entityIdList, entityNumber, entityLvl, ifSetBoss)
 
-    def build_removeNPC(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        return self.controller.buildRecycleDungeonNPCEvent(eventId, entityIds)
+    def construct_removeNPC(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        return self.controller.buildRecycleDungeonNPCEvent(eventId, entityIdList)
 
-    def build_createCollection(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
-        randomCollectionNum = eventData.get('randomCollectionNum', 0)
-        checkHaveInFixed = bool(eventData.get('checkHaveInFixed', False))
+    def construct_createCollection(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        entityNumber = eventDataDic['num']
+        randomCollectionNum = eventDataDic.get('randomCollectionNum', 0)
+        checkHaveInFixed = bool(eventDataDic.get('checkHaveInFixed', False))
 
         return self.controller.buildReleaseDungeonCollectionEvent(
-            eventId, entityIds, entityNum, randomCollectionNum, checkHaveInFixed)
+            eventId, entityIdList, entityNumber, randomCollectionNum, checkHaveInFixed)
 
-    def build_collBeCollected(self, eventId, eventData):
-        collGIDs = eventData['entityID']
-        usePrototypeID = bool(eventData.get('usePrototypeID', 0))
-        infLoop = bool(eventData['infLoop'])
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_collBeCollected(self, eventId, eventDataDic):
+        collGIDs = eventDataDic['entityID']
+        usePrototypeID = bool(eventDataDic.get('usePrototypeID', 0))
+        infLoop = bool(eventDataDic['infLoop'])
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildDungeonCollectionBeCollectedEvent(
             eventId, collGIDs, usePrototypeID, infLoop, checkNow, checkOnce)
 
-    def build_multiCollAllBeCollected(self, eventId, eventData):
-        collGIDs = eventData['entityID']
-        infLoop = bool(eventData['infLoop'])
+    def construct_multiCollAllBeCollected(self, eventId, eventDataDic):
+        collGIDs = eventDataDic['entityID']
+        infLoop = bool(eventDataDic['infLoop'])
         return self.controller.buildDungeonMultiCollectionAllBeCollectedEvent(
             eventId, collGIDs, infLoop)
 
-    def build_removeCollection(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        return self.controller.buildRecycleDungeonCollectionEvent(eventId, entityIds)
+    def construct_removeCollection(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        return self.controller.buildRecycleDungeonCollectionEvent(eventId, entityIdList)
 
-    def build_createBuffPoint(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
-        return self.controller.buildReleaseDungeonBuffPointEvent(
-            eventId, entityIds, entityNum)
-
-    def build_removeBuffPoint(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        return self.controller.buildRecycleDungeonBuffPointEvent(eventId, entityIds)
-
-    def build_createAirWall(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
+    def construct_createAirWall(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        entityNumber = eventDataDic['num']
         return self.controller.buildReleaseDungeonAirWallEvent(
-            eventId, entityIds, entityNum)
+            eventId, entityIdList, entityNumber)
 
-    def build_removeAirWall(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        return self.controller.buildRecycleDungeonAirWallEvent(eventId, entityIds)
+    def construct_removeAirWall(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        return self.controller.buildRecycleDungeonAirWallEvent(eventId, entityIdList)
 
-    def build_monsterHp(self, eventId, eventData):
-        monsterId = eventData['monsterID'][0]
-        compare = eventData['compare']
-        hpPercent = eventData['hpPercent']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_monsterHp(self, eventId, eventDataDic):
+        monsterId = eventDataDic['monsterID'][0]
+        compare = eventDataDic['compare']
+        hpPercent = eventDataDic['hpPercent']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildMonsterHpEvent(eventId, monsterId, compare, hpPercent, checkNow, checkOnce)
 
-    def build_monsterRestNum(self, eventId, eventData):
-        monsterId = eventData['monsterID'][0]
-        compare = eventData['compare']
-        restNum = eventData['restNum']
-        usePrototypeID = bool(eventData.get('usePrototypeID', 0))
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
-        return self.controller.buildMonsterRestNumEvent(eventId, monsterId, compare, restNum, usePrototypeID, checkNow, checkOnce)
+    def construct_monsterRestNum(self, eventId, eventDataDic):
+        _monsterId = eventDataDic['monsterID'][0]
+        _compare = eventDataDic['compare']
+        _restNum = eventDataDic['restNum']
+        _usePrototypeID = bool(eventDataDic.get('usePrototypeID', 0))
+        _checkNow = bool(eventDataDic.get('checkNow', False))
+        _checkOnce = bool(eventDataDic.get('checkOnce', False))
+        return self.controller.buildMonsterRestNumEvent(
+            eventId, 
+            _monsterId, 
+            _compare, 
+            _restNum, 
+            _usePrototypeID, 
+            _checkNow, 
+            _checkOnce)
 
-    def build_killMonsterNum(self, eventId, eventData):
-        monsterId = eventData['monsterID'][0]
-        compare = eventData['compare']
-        restNum = eventData['killNum']
-        usePrototypeID = bool(eventData.get('usePrototypeID', 0))
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
-        return self.controller.buildDungeonMonsterKillNumEvent(eventId, monsterId, compare, restNum, usePrototypeID, checkNow, checkOnce)
+    def construct_killMonsterNum(self, eventId, eventDataDic):
+        _monsterId = eventDataDic['monsterID'][0]
+        _compare = eventDataDic['compare']
+        _restNum = eventDataDic['killNum']
+        _usePrototypeID = bool(eventDataDic.get('usePrototypeID', 0))
+        _checkNow = bool(eventDataDic.get('checkNow', False))
+        _checkOnce = bool(eventDataDic.get('checkOnce', False))
+        return self.controller.buildDungeonMonsterKillNumEvent(
+            eventId, 
+            _monsterId, 
+            _compare, 
+            _restNum, 
+            _usePrototypeID, 
+            _checkNow, 
+            _checkOnce)
 
-    def build_alivePlayer(self, eventId, eventData):
-        compare = eventData['compare']
-        playerNum = eventData['num']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_alivePlayer(self, eventId, eventDataDic):
+        compare = eventDataDic['compare']
+        playerNum = eventDataDic['num']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildDungeonAlivePlayer(eventId, compare, playerNum, checkNow, checkOnce)
 
-    def build_playerRestNum(self, eventId, eventData):
-        compare = eventData['compare']
-        playerNum = eventData['num']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_playerRestNum(self, eventId, eventDataDic):
+        compare = eventDataDic['compare']
+        playerNum = eventDataDic['num']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildDungeonPlayerRestNum(eventId, compare, playerNum, checkNow, checkOnce)
 
 
-    def build_delayLoop(self, eventId, eventData):
-        delayTime = eventData['firstDelay']
-        loopDelayTime = eventData['loopDelay']
-        loopCount = eventData['loopNum']
-        name = '{}_{}_{{}}'.format(gameconst.DungeonFlowEventName.delayLoop, eventId)
-        e_loop = self.controller.build_element(ForLoop)
+    def construct_delayLoop(self, eventId, eventDataDic):
+        delayTime = eventDataDic['firstDelay']
+        loopDelayTime = eventDataDic['loopDelay']
+        loopCount = eventDataDic['loopNum']
+        name = '{}_{}_{{}}'.format(gameconst.DungeonFlowEventType.EVdelayLoop, eventId)
+        e_loop = self.controller.buildElement(ForLoopEvent)
         e_loop.rename(name.format('loop'), True)
-        e_loop.add_param('delayTime', loopDelayTime)
+        e_loop.putArgument('delayTime', loopDelayTime)
         e_loop.set_last_index(loopCount - 1)
         if delayTime > 0:
-            e = self.controller.build_element(
+            element = self.controller.buildElement(
                 DelayExecEvent, eventId, delay_time=delayTime)
-            e.rename(name.format('delay'), True)
-            e.bind_element(e_loop, 1, 1)
-            e.makeGroup(e_loop)
+            element.rename(name.format('delay'), True)
+            element.bind_element(e_loop, 1, 1)
+            element.makeEventGroup(e_loop)
         else:
-            e = e_loop
-            e._element_id = eventId
-            self.controller.regr_element(e)
-        self.delay_loop_map[e.id] = e_loop
-        return e
+            element = e_loop
+            element._element_id = eventId
+            self.controller.regr_element(element)
+        self.delayLoopMap[element.id] = e_loop
+        return element
 
-    def build_taskFinished(self, eventId, eventData):
-        taskID = eventData['taskID']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_taskFinished(self, eventId, eventDataDic):
+        taskID = eventDataDic['taskID']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildWaitingTaskCompleteEvent(eventId, taskID, checkNow, checkOnce)
 
-    def build_taskFailed(self, eventId, eventData):
-        taskID = eventData['taskID']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_taskFailed(self, eventId, eventDataDic):
+        taskID = eventDataDic['taskID']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildWaitingTaskFailedEvent(eventId, taskID, checkNow, checkOnce)
 
-    def build_dunStart(self, eventId, eventData):
+    def construct_dunStart(self, eventId, eventDataDic):
         return self.controller.buildStartDungeonEvent(eventId, self.dungeonNo, self.spaceNo)
 
-    def build_dunEnd(self, eventId, eventData):
-        exitTime = eventData['exitTime']
+    def construct_dunEnd(self, eventId, eventDataDic):
+        _exitTime = eventDataDic['exitTime']
         # 【【任务】副本结束逻辑调整】
         # 2.副本编辑器的副本失败和副本结束整合成一个
-        isDungeonDone = bool(eventData.get("isDungeonDone", 1))
-        return self.controller.buildEndDungeonEvent(eventId, self.dungeonNo, self.spaceNo, exitTime, isFail=not isDungeonDone)
+        isDungeonDone = bool(eventDataDic.get("isDungeonDone", 1))
+        return self.controller.buildEndDungeonEvent(
+            eventId, 
+            self.dungeonNo, 
+            self.spaceNo, 
+            _exitTime, 
+            isFail=not 
+            isDungeonDone)
 
-    def build_dunDelayEnd(self, eventId, eventData):
-        exitTime = eventData['exitTime']
-        preExitTime = eventData['preExitTime']
+    def construct_dunDelayEnd(self, eventId, eventDataDic):
+        exitTime = eventDataDic['exitTime']
+        preExitTime = eventDataDic['preExitTime']
         return self.controller.buildDelayEndDungeonEvent(eventId, self.dungeonNo, self.spaceNo,
-                                                         exitTime, preExitTime, isFail=True)
+                                                         exitTime, preExitTime, True)
 
-    def build_dunFailed(self, eventId, eventData):
-        WARNING_MSG("flowController::dunFailed is deprecated, please use 'dunEnd' node.")
-        exitTime = eventData['exitTime']
+    def construct_dunFailed(self, eventId, eventDataDic):
+        LOG_WARN("flowController::dunFailed is deprecated, please use 'dunEnd' node.")
+        exitTime = eventDataDic['exitTime']
         return self.controller.buildEndDungeonEvent(eventId, self.dungeonNo, self.spaceNo, exitTime, isFail=True)
 
-    def build_castSkill(self, eventId, eventData):
-        entityID = eventData['entityID'][0]
-        skillID = eventData['skillID']
-        skillLv = int(eventData['lv'])
-        forceToUse = bool(eventData.get('forceToUse', False))
+    def construct_castSkill(self, eventId, eventDataDic):
+        entityID = eventDataDic['entityID'][0]
+        skillID = eventDataDic['skillID']
+        skillLv = int(eventDataDic['lv'])
+        forceToUse = bool(eventDataDic.get('forceToUse', False))
         return self.controller.buildDungeonMonsterCastSkill(eventId, entityID, skillID, skillLv, forceToUse)
 
-    def build_castSkillToPlayer(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        skillID = eventData['skillID']
-        positionType = eventData['playerChooseType']
-        boardMessageID = eventData['messageID']
-        number = eventData['num']
-        rng = eventData.get('range', 0)
-        minRng = eventData.get('minRange', 0)
-        exceptHighestHate = eventData.get('exceptHighestHate', 1)
+    def construct_castSkillToPlayer(self, eventId, eventDataDic):
+        _monsterGID = eventDataDic['monsterID'][0]
+        _skillID = eventDataDic['skillID']
+        _positionType = eventDataDic['playerChooseType']
+        _boardMessageID = eventDataDic['messageID']
+        _number = eventDataDic['num']
+        _rng = eventDataDic.get('range', 0)
+        _minRng = eventDataDic.get('minRange', 0)
+        _exceptHighestHate = eventDataDic.get('exceptHighestHate', 1)
         return self.controller.buildDungeonMonsterCastSkillToPlayer(
-            eventId, monsterGID, skillID, positionType, boardMessageID, number,
-            rng, minRng, exceptHighestHate)
+            eventId, 
+            _monsterGID, 
+            _skillID, 
+            _positionType, 
+            _boardMessageID, 
+            _number,
+            _rng, 
+            _minRng, 
+            _exceptHighestHate)
 
-    def build_addBuffToMonster(self, eventId, eventData):
-        monsterIDs = eventData['monsterID']
-        buffIDs = eventData['buffID']
-        buffLevel = int(eventData['lv'])
-        buffLevelLimit = eventData.get('lvlmt', -1)
-        duration = eventData.get('duration', -1)
-        return self.controller.buildDungeonAddBuffToMonster(eventId, monsterIDs, buffIDs, buffLevel, buffLevelLimit, duration)
+    def construct_addBuffToMonster(self, eventId, eventDataDic):
+        monsterIDs = eventDataDic['monsterID']
+        buffIDs = eventDataDic['buffID']
+        buffLevel = int(eventDataDic['lv'])
+        buffMaxLevel = eventDataDic.get('lvlmt', -1)
+        duration = eventDataDic.get('duration', -1)
+        return self.controller.buildDungeonAddBuffToMonster(eventId, monsterIDs, buffIDs, buffLevel, buffMaxLevel, duration)
 
-    def build_taskUndertake(self, eventId, eventData):
-        taskID = eventData['taskID']
+    def construct_taskUndertake(self, eventId, eventDataDic):
+        taskID = eventDataDic['taskID']
         return self.controller.buildTaskUndertake(eventId, taskID)
 
-    def build_removeBuffFromMonster(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        buffID = eventData['buffID'][0]
+    def construct_removeBuffFromMonster(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        buffID = eventDataDic['buffID'][0]
         return self.controller.buildDungeonRemoveBuffFromMonster(eventId, monsterGID, buffID)
 
-    def build_addBuffToAllPlayer(self, eventId, eventData):
-        buffIDs = eventData['buffID']
-        buffLevel = int(eventData['lv'])
-        messageID = int(eventData.get('messageID', 0))  # 可选参数messageID
-        buffLevelLimit = eventData.get('lvlmt', -1)
-        duration = eventData.get('duration', -1)
-        return self.controller.buildDungeonAddBuffToAllPlayer(eventId, buffIDs, buffLevel, messageID, buffLevelLimit, duration)
+    def construct_addBuffToAllPlayer(self, eventId, eventDataDic):
+        buffIDs = eventDataDic['buffID']
+        buffLevel = int(eventDataDic['lv'])
+        messageID = int(eventDataDic.get('messageID', 0))  # 可选参数messageID
+        buffMaxLevel = eventDataDic.get('lvlmt', -1)
+        duration = eventDataDic.get('duration', -1)
+        return self.controller.buildDungeonAddBuffToAllPlayer(eventId, buffIDs, buffLevel, messageID, buffMaxLevel, duration)
 
-    def build_removeBuffFromAllPlayer(self, eventId, eventData):
-        buffID = eventData['buffID'][0]
+    def construct_removeBuffFromAllPlayer(self, eventId, eventDataDic):
+        buffID = eventDataDic['buffID'][0]
         return self.controller.buildDungeonRemoveBuffFromAllPlayer(eventId, buffID)
 
-    def build_addBuffToPlayer(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        positionType = eventData['playerChooseType']
-        buffIDs = eventData['buffID']
-        buffLevel = int(eventData['lv'])
-        number = int(eventData['num'])
-        messageID = int(eventData.get('messageID', 0))  # 可选参数messageID
-        rng = eventData.get('range', 0)
-        minRng = eventData.get('minRange', 0)
-        exceptHighestHate = eventData.get('exceptHighestHate', 1)
-        buffLevelLimit = eventData.get('lvlmt', -1)
-        duration = eventData.get('duration', -1)
+    def construct_addBuffToPlayer(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        positionType = eventDataDic['playerChooseType']
+        buffIDs = eventDataDic['buffID']
+        buffLevel = int(eventDataDic['lv'])
+        number = int(eventDataDic['num'])
+        messageID = int(eventDataDic.get('messageID', 0))  # 可选参数messageID
+        iRange = eventDataDic.get('range', 0)
+        minRng = eventDataDic.get('minRange', 0)
+        exceptHighestHate = eventDataDic.get('exceptHighestHate', 1)
+        buffMaxLevel = eventDataDic.get('lvlmt', -1)
+        duration = eventDataDic.get('duration', -1)
         return self.controller.buildDungeonAddBuffToPlayer(
-            eventId, monsterGID, positionType, buffIDs, buffLevel, buffLevelLimit, duration,
-            number, messageID, rng, minRng, exceptHighestHate)
+            eventId, monsterGID, positionType, buffIDs, buffLevel, buffMaxLevel, duration,
+            number, messageID, iRange, minRng, exceptHighestHate)
 
-    def build_summonMonsterInFixedPosition(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        summonNum = eventData['num']
+    def construct_summonMonsterInFixedPosition(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        summonNum = eventDataDic['num']
 
         # 【【任务】指定位置召唤创生物、怪物（召唤物）】
         # summonId/pos/dir变为可选参数, 优先选择summonGID中的参数(配置在地图编辑器中)
-        summonIDs = eventData.get('summonID', None)
-        pos_ = eventData.get('posX', None), eventData.get('posY', None), eventData.get('posZ', None)
-        dir_ = eventData.get('angle', None)
-        summonGIDs = eventData.get('entityID', None)
+        summonIDs = eventDataDic.get('summonID', None)
+        _pos = eventDataDic.get('posX', None), eventDataDic.get('posY', None), eventDataDic.get('posZ', None)
+        _dir = eventDataDic.get('angle', None)
+        summonGIDs = eventDataDic.get('entityID', None)
 
-        dieWithHost = bool(eventData.get('dieWithHost', 0))
-        return self.controller.buildDungeonSummonMonsterInFixedPosition(eventId, monsterGID, summonGIDs, summonIDs,
-                                                                        summonNum, pos_, dir_, dieWithHost)
+        dieWithHost = bool(eventDataDic.get('dieWithHost', 0))
+        return self.controller.buildDungeonSummonMonsterInFixedPosition(
+            eventId, 
+            monsterGID, 
+            summonGIDs, 
+            summonIDs,
+            summonNum, 
+            _pos, 
+            _dir, 
+            dieWithHost)
 
-    def build_createCreationInFixedPosition(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        creationNum = eventData['num']
+    def construct_createCreationInFixedPosition(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        creationNum = eventDataDic['num']
 
         # 【【任务】指定位置召唤创生物、怪物（召唤物）】
         # creationId/pos/dir变为可选参数, 优先选择summonGID中的参数(配置在地图编辑器中)
-        creationIDs = eventData.get('creationID', None)
-        pos_ = eventData.get('posX', None), eventData.get('posY', None), eventData.get('posZ', None)
-        dir_ = eventData.get('angle', None)
-        creationGIDs = eventData.get('entityID', None)
+        creationIDs = eventDataDic.get('creationID', None)
+        _pos = eventDataDic.get('posX', None), eventDataDic.get('posY', None), eventDataDic.get('posZ', None)
+        _dir = eventDataDic.get('angle', None)
+        creationGIDs = eventDataDic.get('entityID', None)
 
         return self.controller.buildDungeonCreateCreationInFixedPosition(eventId, monsterGID, creationGIDs, creationIDs,
-                                                                         creationNum, pos_, dir_)
+                                                                         creationNum, _pos, _dir)
 
-    def build_broadcastMsg(self, eventId, eventData):
-        messageID = eventData['messageID']
+    def construct_broadcastMsg(self, eventId, eventDataDic):
+        messageID = eventDataDic['messageID']
         return self.controller.buildDungeonBroadcastMsg(eventId, messageID)
 
-    def build_clearDungeon(self, eventId, eventData):
+    def construct_clearDungeon(self, eventId, eventDataDic):
         return self.controller.buildClearDungeon(eventId)
 
-    def build_monsterInBattle(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_monsterInBattle(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildMonsterInBattle(eventId, monsterGID, checkNow, checkOnce)
 
-    def build_monsterLeaveBattle(self, eventId, eventData):
-        monsterGIDs = eventData['monsterID']
+    def construct_monsterLeaveBattle(self, eventId, eventDataDic):
+        monsterGIDs = eventDataDic['monsterID']
         monsterGID = monsterGIDs[0]
-        delayTime = eventData['firstDelay']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
-        name = '{}_{}_{{}}'.format(gameconst.DungeonFlowEventName.monsterLeaveBattle, eventId)
-        e = self.controller.buildMonsterLeaveBattle(eventId, monsterGID, checkNow, checkOnce)
+        delayTime = eventDataDic['firstDelay']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
+        name = '{}_{}_{{}}'.format(gameconst.DungeonFlowEventType.EVmonsterLeaveBattle, eventId)
+        element = self.controller.buildMonsterLeaveBattle(eventId, monsterGID, checkNow, checkOnce)
 
         # NOTE(): 兼容原逻辑，默认填1
-        ifDestroyMonster = eventData.get('ifDestroyMonster', 1)
+        ifDestroyMonster = eventDataDic.get('ifDestroyMonster', 1)
         if not ifDestroyMonster:
-            return e
+            return element
 
-        e.rename(name.format('main'), True)
-        re = self.controller.buildRecycleDungeonMonsterEvent(ep_ctrl.utils.gen_uuid(), monsterGIDs)
-        re.rename(name.format('remove'), True)
-        e.bind_element(re, 1, 1)
-        self.multi_events_outer_map[e.id] = re
+        element.rename(name.format('main'), True)
+        _re = self.controller.buildRecycleDungeonMonsterEvent(ep_ctrl.utils.gen_uuid(), monsterGIDs)
+        _re.rename(name.format('remove'), True)
+        element.bind_element(_re, 1, 1)
+        self.multiEventsOuterMap[element.id] = _re
         if delayTime > 0:
-            de = self.controller.build_element(DelayExecEvent, delay_time=delayTime)
+            de = self.controller.buildElement(DelayExecEvent, delay_time=delayTime)
             de.rename(name.format('delay'), True)
-            re.bind_element(de, 1, 1)
-            self.multi_events_outer_map[e.id] = de
-            e.makeGroup(re, de)
+            _re.bind_element(de, 1, 1)
+            self.multiEventsOuterMap[element.id] = de
+            element.makeEventGroup(_re, de)
         else:
-            e.makeGroup(re)
-        return e
+            element.makeEventGroup(_re)
+        return element
 
-    def build_createSummonInPlayerPosition(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        summonIDs = eventData['summonID']
-        positionType = eventData['playerChooseType']
-        number = eventData['num']
-        rng = eventData['range']
-        minRng = eventData.get('minRange', 0)
-        exceptHighestHate = eventData.get('exceptHighestHate', 1)
-        dieWithHost = bool(eventData.get('dieWithHost', 0))
+    def construct_createSummonInPlayerPosition(self, eventId, eventDataDic):
+        _monsterGID = eventDataDic['monsterID'][0]
+        _summonIDs = eventDataDic['summonID']
+        _positionType = eventDataDic['playerChooseType']
+        _number = eventDataDic['num']
+        _rng = eventDataDic['range']
+        _minRng = eventDataDic.get('minRange', 0)
+        _exceptHighestHate = eventDataDic.get('exceptHighestHate', 1)
+        _dieWithHost = bool(eventDataDic.get('dieWithHost', 0))
         return self.controller.buildCreateSummonInPlayerPosition(
-            eventId, monsterGID, summonIDs, positionType, rng, minRng,
-            number, exceptHighestHate, dieWithHost)
+            eventId, 
+            _monsterGID, 
+            _summonIDs, 
+            _positionType, 
+            _rng, 
+            _minRng,
+            _number, 
+            _exceptHighestHate, 
+            _dieWithHost)
 
-    def build_createCreationInPlayerPosition(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        creationIDs = eventData['creationID']
-        positionType = eventData['playerChooseType']
-        number = eventData['num']
-        rng = eventData['range']
-        minRng = eventData.get('minRange', 0)
-        exceptHighestHate = eventData.get('exceptHighestHate', 1)
+    def construct_createCreationInPlayerPosition(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        creationIDs = eventDataDic['creationID']
+        positionType = eventDataDic['playerChooseType']
+        number = eventDataDic['num']
+        iRange = eventDataDic['range']
+        minRng = eventDataDic.get('minRange', 0)
+        exceptHighestHate = eventDataDic.get('exceptHighestHate', 1)
         return self.controller.buildCreateCreationInPlayerPosition(
             eventId, monsterGID, creationIDs, positionType,
-            rng, minRng, number, exceptHighestHate)
+            iRange, minRng, number, exceptHighestHate)
 
-    def build_createCreationInMonsterPosition(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        creationIDs = eventData['creationID']
-        targetMonsterGID = eventData['targetMonsterID'][0]
-        rng = eventData['range']
-        number = eventData['num']
+    def construct_createCreationInMonsterPosition(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        creationIDs = eventDataDic['creationID']
+        targetMonsterGID = eventDataDic['targetMonsterID'][0]
+        iRange = eventDataDic['range']
+        number = eventDataDic['num']
         return self.controller.buildCreateCreationInMonsterPosition(
-            eventId, monsterGID, creationIDs, targetMonsterGID, rng, number)
+            eventId, monsterGID, creationIDs, targetMonsterGID, iRange, number)
 
-    def build_moveEntityToFixedPosition(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        pos_ = eventData['posX'], eventData['posY'], eventData['posZ']
-        speed = eventData.get('speed', 0)
-        moveAni = eventData.get('moveAni', gameconst.DungeonFlowMoveAni.RUN01)
-        return self.controller.buildMoveDungeonEntityToFixedPos(eventId, entityGID, pos_, speed, moveAni)
+    def construct_moveEntityToFixedPosition(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        _pos = eventDataDic['posX'], eventDataDic['posY'], eventDataDic['posZ']
+        speed = eventDataDic.get('speed', 0)
+        moveAni = eventDataDic.get('moveAni', gameconst.DunFlowMoveAniEnum.RUN01)
+        return self.controller.buildMoveDungeonEntityToFixedPos(eventId, entityGID, _pos, speed, moveAni)
 
-    def build_createAvatarMirrorFromRandomPlayer(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        ratio = eventData.get('ratio', 1.0)
-        return self.controller.buildCreateAvatarMirrorFromRandomPlayer(eventId, entityGID, ratio)
+    def construct_removeCreation(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        creationID = eventDataDic['creationID'][0]
+        iRange = eventDataDic['range']
+        return self.controller.buildDungeonRemoveCreation(eventId, monsterGID, creationID, iRange)
 
-    def build_removeCreation(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        creationID = eventData['creationID'][0]
-        rng = eventData['range']
-        return self.controller.buildDungeonRemoveCreation(eventId, monsterGID, creationID, rng)
+    def construct_removeNoHostCreation(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        usePrototypeID = bool(eventDataDic.get('usePrototypeID', 0))
+        return self.controller.buildDungeonRemoveNoHostCreation(eventId, entityIdList, usePrototypeID)
 
-    def build_removeNoHostCreation(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        usePrototypeID = bool(eventData.get('usePrototypeID', 0))
-        return self.controller.buildDungeonRemoveNoHostCreation(eventId, entityIds, usePrototypeID)
+    def construct_haveCreationInRange(self, eventId, eventDataDic):
+        monsterGID = eventDataDic['monsterID'][0]
+        creationID = eventDataDic['creationID'][0]
+        iRange = eventDataDic['range']
+        return self.controller.buildDungeonHaveCreationInRange(eventId, monsterGID, creationID, iRange)
 
-    def build_haveCreationInRange(self, eventId, eventData):
-        monsterGID = eventData['monsterID'][0]
-        creationID = eventData['creationID'][0]
-        rng = eventData['range']
-        return self.controller.buildDungeonHaveCreationInRange(eventId, monsterGID, creationID, rng)
-
-    def build_dunStageSet(self, eventId, eventData):
-        dungeonStageID = eventData['stageID']
+    def construct_dunStageSet(self, eventId, eventDataDic):
+        dungeonStageID = eventDataDic['stageID']
         return self.controller.buildSetDungeonStage(eventId, dungeonStageID)
 
-    def build_showPopoverMsg(self, eventId, eventData):
-        entityID = eventData['entityID'][0]
-        messageID = eventData['messageID']
+    def construct_showPopoverMsg(self, eventId, eventDataDic):
+        entityID = eventDataDic['entityID'][0]
+        messageID = eventDataDic['messageID']
         return self.controller.buildShowPopoverMsg(eventId, entityID, messageID)
 
-    def build_popupdialog(self, eventId, eventData):
-        entityID = eventData['entityID'][0]
-        dlogID = eventData['dialogID']
+    def construct_popupdialog(self, eventId, eventDataDic):
+        entityID = eventDataDic['entityID'][0]
+        dlogID = eventDataDic['dialogID']
         return self.controller.buildPopDialog(eventId, entityID, dlogID)
 
-    def build_dungeonTaskForceComplete(self, eventId, eventData):
-        taskID = eventData['taskID']
+    def construct_dungeonTaskForceComplete(self, eventId, eventDataDic):
+        taskID = eventDataDic['taskID']
         return self.controller.buildDungeonTaskForceComplete(eventId, taskID)
 
-    def build_dungeonTaskForceFailed(self, eventId, eventData):
-        taskID = eventData['taskID']
+    def construct_dungeonTaskForceFailed(self, eventId, eventDataDic):
+        taskID = eventDataDic['taskID']
         return self.controller.buildDungeonTaskForceFailed(eventId, taskID)
 
-    def build_changeDunNPCToBattle(self, eventId, eventData):
-        npcIDs = eventData['entityID']
-        ifSetBoss = eventData.get('ifSetBoss', False)
+    def construct_changeDunNPCToBattle(self, eventId, eventDataDic):
+        npcIDs = eventDataDic['entityID']
+        ifSetBoss = eventDataDic.get('ifSetBoss', False)
         return self.controller.buildChangeDunNPCToBattle(eventId, npcIDs, ifSetBoss)
 
-    def build_changeDunNPCToNeutral(self, eventId, eventData):
-        npcIDs = eventData['entityID']
-        resetDir = bool(eventData.get('resetDir', 1))
+    def construct_changeDunNPCToNeutral(self, eventId, eventDataDic):
+        npcIDs = eventDataDic['entityID']
+        resetDir = bool(eventDataDic.get('resetDir', 1))
         return self.controller.buildChangeDunNPCToNeutral(eventId, npcIDs, resetDir)
 
-    def build_changeDunNPCToFriendly(self, eventId, eventData):
-        npcIDs = eventData['entityID']
-        resetDir = bool(eventData.get('resetDir', 1))
+    def construct_changeDunNPCToFriendly(self, eventId, eventDataDic):
+        npcIDs = eventDataDic['entityID']
+        resetDir = bool(eventDataDic.get('resetDir', 1))
         return self.controller.buildChangeDunNPCToFriendly(eventId, npcIDs, resetDir)
 
-    def build_changeDunNPCDialog(self, eventId, eventData):
-        npcID = eventData['entityID'][0]
-        dialogID = eventData['dialogID']
+    def construct_changeDunNPCDialog(self, eventId, eventDataDic):
+        npcID = eventDataDic['entityID'][0]
+        dialogID = eventDataDic['dialogID']
         return self.controller.buildChangeDunNPCDialog(eventId, npcID, dialogID)
 
-    def build_dunAnyPlayerHP(self, eventId, eventData):
-        symbol = eventData['compare']
-        hp = eventData['hpPercent']
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
+    def construct_dunAnyPlayerHP(self, eventId, eventDataDic):
+        symbol = eventDataDic['compare']
+        hp = eventDataDic['hpPercent']
+        checkNow = bool(eventDataDic.get('checkNow', False))
+        checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildDungeonAnyPlayerHpEvent(eventId, symbol, hp, checkNow, checkOnce)
 
-    def build_addEntityArrowTracker(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        priority = eventData['priority']
-        triggerType = eventData.get('triggerType', gameconst.ArrowTrackingType.NORMAL)
+    def construct_addEntityArrowTracker(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        priority = eventDataDic['priority']
+        triggerType = eventDataDic.get('triggerType', gameconst.ArrowTrackingType.NORMAL)
         return self.controller.buildAddEntityArrowTracker(eventId, entityGID, priority, triggerType)
 
-    def build_removeEntityArrowTracker(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        triggerType = eventData.get('triggerType', gameconst.ArrowTrackingType.NORMAL)
+    def construct_removeEntityArrowTracker(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        triggerType = eventDataDic.get('triggerType', gameconst.ArrowTrackingType.NORMAL)
         return self.controller.buildRemoveEntityArrowTracker(eventId, entityGID, triggerType)
 
-    def build_clearEntityHate(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
+    def construct_clearEntityHate(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
         return self.controller.buildClearEntityHate(eventId, entityGIDs)
 
-    def build_forceSelectEntityTarget(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
-        positionType = eventData.get('playerChooseType',
-                                     gameconst.DungeonFlowPlayerChooseType.RAND_IN_ALL_PLAYERS)
-        rng = eventData.get('range', 0)
-        minRng = eventData.get('minRange', 0)
-        exceptHighestHate = eventData.get('exceptHighestHate', 1)
+    def construct_forceSelectEntityTarget(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
+        positionType = eventDataDic.get('playerChooseType',
+                                     gameconst.DungeonFlowPlayerChooseEnum.RAND_IN_ALL_PLAYERS)
+        iRange = eventDataDic.get('range', 0)
+        minRng = eventDataDic.get('minRange', 0)
+        exceptHighestHate = eventDataDic.get('exceptHighestHate', 1)
         return self.controller.buildForceSelectEntityTarget(
-            eventId, entityGIDs, positionType, rng, minRng, exceptHighestHate)
+            eventId, entityGIDs, positionType, iRange, minRng, exceptHighestHate)
 
-    def build_randomTrigger(self, eventId, eventData):
-        randomArray = eventData['randomArray']
+    def construct_randomTrigger(self, eventId, eventDataDic):
+        randomArray = eventDataDic['randomArray']
         return self.controller.buildRandomTrigger(eventId, randomArray)
 
-    def build_trapBeTriggered(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        checkNow = bool(eventData.get('checkNow', False))
-        checkOnce = bool(eventData.get('checkOnce', False))
-        return self.controller.buildDungeonTrapBeTriggered(eventId, entityGID, checkNow, checkOnce)
+    def construct_teleportToPosition(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
+        pos = eventDataDic.get('posX', None), eventDataDic.get('posY', None), eventDataDic.get('posZ', None)
+        _dir = eventDataDic.get('angle', None)
+        return self.controller.buildDungeonTeleportToPosition(eventId, entityGIDs, pos, _dir)
 
-    def build_teleportToPosition(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
-        pos = eventData.get('posX', None), eventData.get('posY', None), eventData.get('posZ', None)
-        dir_ = eventData.get('angle', None)
-        return self.controller.buildDungeonTeleportToPosition(eventId, entityGIDs, pos, dir_)
-
-    def build_changeEntityForce(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
-        force = eventData['force']
+    def construct_changeEntityForce(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
+        force = eventDataDic['force']
         return self.controller.buildDungeonChangeEntityForce(eventId, entityGIDs, force)
 
-    def build_integrationEvent(self, eventId, eventData):
+    def construct_integrationEvent(self, eventId, eventDataDic):
         return self.controller.buildIntegrationEvent(eventId)
 
-    def build_changeSpaceVar(self, eventId, eventData):
-        varID = eventData['varID']
-        formula = eventData['formula']
-        paramVarIDs = eventData['paramVarIDs']
+    def construct_changeSpaceVar(self, eventId, eventDataDic):
+        varID = eventDataDic['varID']
+        formula = eventDataDic['formula']
+        paramVarIDs = eventDataDic['paramVarIDs']
         return self.controller.buildChangeSpaceVar(eventId, varID, formula, paramVarIDs)
 
-    def build_killEntities(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
+    def construct_killEntities(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
         return self.controller.buildDungeonKillEntities(eventId, entityGIDs)
 
-    def build_dungeonEntityImmuneDeath(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
+    def construct_dungeonEntityImmuneDeath(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
         return self.controller.buildDungeonEntityImmuneDeath(eventId, entityGID)
 
-    def build_checkValue(self, eventId, eventData):
-        formula = eventData['formula']
-        paramVarIDs = eventData['paramVarIDs']
-        name = '{}_{}_{{}}'.format(gameconst.DungeonFlowEventName.checkValue, eventId)
-        m_checkE = self.controller.build_element(
-            ep_ctrl.flow.Branch, eventId, event_handler=ep_ctrl.utils.EMPTY_FUNC)
+    def construct_checkValue(self, eventId, eventDataDic):
+        formula = eventDataDic['formula']
+        paramVarIDs = eventDataDic['paramVarIDs']
+        name = '{}_{}_{{}}'.format(gameconst.DungeonFlowEventType.EVcheckValue, eventId)
+        m_checkE = self.controller.buildElement(
+            ep_ctrl.flow.Branch, eventId, eventHandler=utils.emptyFunc)
         m_checkE.rename(name.format('check'), True)
-        m_checkE.add_param('__CONDITION__', conditionCheckValue(
+        m_checkE.putArgument('__CONDITION__', conditionCheckValue(
             self.controller, formula, paramVarIDs))
         m_checkE.bind_condition(m_checkE, '__CONDITION__')
 
-        m_holdE = self.controller.build_element(
+        mHoldE = self.controller.buildElement(
             DungeonValueCheckHoldEvent, varIds=paramVarIDs,
-            event_handler=ep_ctrl.utils.EMPTY_FUNC)
-        m_holdE.rename(name.format('hold'), True)
+            eventHandler=utils.emptyFunc)
+        mHoldE.rename(name.format('hold'), True)
 
-        m_checkE.bind_false_element(m_holdE, 1)
-        m_holdE.bind_element(m_checkE, 1, 1)
+        m_checkE.bind_false_element(mHoldE, 1)
+        mHoldE.bind_element(m_checkE, 1, 1)
         return m_checkE
 
-    def build_createDungeonTeleporter(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        targetEntityGID = eventData['targetEntityId'][0]
-        trapRange = eventData['range']
+    def construct_createDungeonTeleporter(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        targetEntityGID = eventDataDic['targetEntityId'][0]
+        trapRange = eventDataDic['range']
         return self.controller.buildCreateDungeonTeleporter(eventId, entityGID, targetEntityGID, trapRange)
 
-    def build_stopAiTick(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
+    def construct_stopAiTick(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
         return self.controller.buildStopAiTick(eventId, entityGIDs)
 
-    def build_startAiTick(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
+    def construct_startAiTick(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
         return self.controller.buildStartAiTick(eventId, entityGIDs)
 
-    def build_entityStartRouting(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        pathID = eventData['pathID']
-        speed = eventData['speed']
-        moveAni = eventData.get('moveAni', gameconst.DungeonFlowMoveAni.RUN01)
-        escortDistance = eventData['escortDistance']
+    def construct_entityStartRouting(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        pathID = eventDataDic['pathID']
+        speed = eventDataDic['speed']
+        moveAni = eventDataDic.get('moveAni', gameconst.DunFlowMoveAniEnum.RUN01)
+        escortDistance = eventDataDic['escortDistance']
         return self.controller.buildEntityStartRouting(eventId, entityGID, pathID, speed, moveAni, escortDistance)
 
-    def build_entityRouteFinished(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        pathID = eventData['pathID']
+    def construct_entityRouteFinished(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        pathID = eventDataDic['pathID']
         return self.controller.buildEntityRouteFinished(eventId, entityGID, pathID)
 
-    def build_entityRoutingMissingEscort(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
-        pathID = eventData['pathID']
-        infLoop = bool(eventData['infLoop'])
+    def construct_entityRoutingMissingEscort(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
+        pathID = eventDataDic['pathID']
+        infLoop = bool(eventDataDic['infLoop'])
         return self.controller.buildEntityRoutingMissingEscort(eventId, entityGID, pathID, infLoop)
 
-    def build_castCinemaPlay(self, eventId, eventData):
-        cinemaPlayID = eventData['cinemaPlayID']
+    def construct_castCinemaPlay(self, eventId, eventDataDic):
+        cinemaPlayID = eventDataDic['cinemaPlayID']
         return self.controller.buildCastCinemaPlay(eventId, cinemaPlayID)
 
-    def build_jumpCinemaPlay(self, eventId, eventData):
-        cinemaPlayID = eventData.get('cinemaPlayID', -1)
-        delay = eventData.get('exitTime', 0)
+    def construct_jumpCinemaPlay(self, eventId, eventDataDic):
+        cinemaPlayID = eventDataDic.get('cinemaPlayID', -1)
+        delay = eventDataDic.get('exitTime', 0)
         return self.controller.buildAnyPlayerCinemaPlayEnded(eventId, cinemaPlayID, delay)
 
-    def build_stopCurTrans(self, eventId, eventData):
+    def construct_stopCurTrans(self, eventId, eventDataDic):
         return self.controller.buildDungeonStopCurTrans(eventId)
 
-    def build_triggerGuide(self, eventId, eventData):
-        triggerGuideId = eventData['triggerGuideID']
+    def construct_triggerGuide(self, eventId, eventDataDic):
+        triggerGuideId = eventDataDic['triggerGuideID']
         return self.controller.buildDungeonTriggerGuide(eventId, triggerGuideId)
 
-    def build_newTransPetStart(self, eventId, eventData):
-        transPetId = eventData['transPetID']
-        triggerGuideId = eventData['triggerGuideID']
+    def construct_newTransPetStart(self, eventId, eventDataDic):
+        transPetId = eventDataDic['transPetID']
+        triggerGuideId = eventDataDic['triggerGuideID']
         return self.controller.buildNewTransPetStart(eventId, transPetId, triggerGuideId)
 
-    def build_newTransPetEnd(self, eventId, eventData):
-        transPetId = eventData['transPetID']
+    def construct_newTransPetEnd(self, eventId, eventDataDic):
+        transPetId = eventDataDic['transPetID']
         return self.controller.buildNewTransPetEnd(eventId, transPetId)
 
-    def build_changeAllPlayerCameraStatus(self, eventId, eventData):
-        cameraId = eventData['cameraId']
+    def construct_changeAllPlayerCameraStatus(self, eventId, eventDataDic):
+        cameraId = eventDataDic['cameraId']
         return self.controller.buildChangeAllPlayerCameraStatus(eventId, cameraId)
 
-    def build_changeAllPlayerCameraLookPos(self, eventId, eventData):
-        entityGID = eventData['entityID'][0]
+    def construct_changeAllPlayerCameraLookPos(self, eventId, eventDataDic):
+        entityGID = eventDataDic['entityID'][0]
         return self.controller.buildChangeAllPlayerCameraLookPos(eventId, entityGID)
 
-    def build_revertAllPlayerCameraStatus(self, eventId, eventData):
+    def construct_revertAllPlayerCameraStatus(self, eventId, eventDataDic):
         return self.controller.buildRevertAllPlayerCameraStatus(eventId)
 
-    def build_changeNPCSelectableStatus(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
-        isSelectable = bool(eventData["isSelectable"])
+    def construct_changeNPCSelectableStatus(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
+        isSelectable = bool(eventDataDic["isSelectable"])
         return self.controller.buildChangeNPCSelectableStatus(eventId, entityGIDs, isSelectable)
 
-    def build_taskInProgress(self, eventId, eventData):
-        taskID = eventData['taskID']
+    def construct_taskInProgress(self, eventId, eventDataDic):
+        taskID = eventDataDic['taskID']
         return self.controller.buildWaitingTaskInProgress(eventId, taskID)
 
-    def build_changeEntityDirection(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
-        dir_ = eventData['angle']
-        return self.controller.buildChangeEntityDirection(eventId, entityGIDs, dir_)
+    def construct_changeEntityDirection(self, eventId, eventDataDic):
+        entityGIDs = eventDataDic['entityID']
+        _dir = eventDataDic['angle']
+        return self.controller.buildChangeEntityDirection(eventId, entityGIDs, _dir)
 
-    def build_timeFreezeStart(self, eventId, *_):
+    def construct_timeFreezeStart(self, eventId, *_):
         return self.controller.buildTimeFreezeStart(eventId)
 
-    def build_timeFreezeEnd(self, eventId, *_):
+    def construct_timeFreezeEnd(self, eventId, *_):
         return self.controller.buildTimeFreezeEnd(eventId)
 
-    def build_playerForceTrans(self, eventId, eventData):
-        transPetId = eventData['transPetID']
-        chooseType = eventData['chooseType']
+    def construct_playerForceTrans(self, eventId, eventDataDic):
+        transPetId = eventDataDic['transPetID']
+        chooseType = eventDataDic['chooseType']
         return self.controller.buildDungeonPlayerForceTrans(eventId, transPetId, chooseType)
 
-    def build_createRebornPos(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
+    def construct_createRebornPos(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        entityNumber = eventDataDic['num']
         return self.controller.buildReleaseDungeonRebornPosEvent(
-            eventId, entityIds, entityNum)
+            eventId, entityIdList, entityNumber)
 
-    def build_removeRebornPos(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        return self.controller.buildRecycleDungeonRebornPosEvent(eventId, entityIds)
+    def construct_removeRebornPos(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        return self.controller.buildRecycleDungeonRebornPosEvent(eventId, entityIdList)
 
-    def build_transferToTheDesignatedMap(self, eventId, eventData):
-        lineNo = eventData['mapId']
-        x = eventData['posX']
-        y = eventData['posY']
-        z = eventData['posZ']
-        angle = eventData['angle']
+    def construct_transferToTheDesignatedMap(self, eventId, eventDataDic):
+        lineNo = eventDataDic['mapId']
+        x = eventDataDic['posX']
+        y = eventDataDic['posY']
+        z = eventDataDic['posZ']
+        angle = eventDataDic['angle']
         pos = Math.Vector3(x, y, z)
         return self.controller.buildTransferToTheDesignatedMap(eventId, lineNo, pos, angle)
     
-    def build_notifyStartBattleCD(self, eventId, eventData):
-        cdTime = eventData['cdTime']
+    def construct_notifyStartBattleCD(self, eventId, eventDataDic):
+        cdTime = eventDataDic['cdTime']
         return self.controller.buildNotifyStartBattleCD(eventId, self.dungeonNo, self.spaceNo, cdTime)
     
-    def build_createBreakAwayStuckPos(self, eventId, eventData):
-        entityIds = eventData['entityID']
-        entityNum = eventData['num']
+    def construct_createBreakAwayStuckPos(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        entityNumber = eventDataDic['num']
         return self.controller.buildCreateBreakAwayStuckPosEvent(
-            eventId, entityIds, entityNum)
+            eventId, entityIdList, entityNumber)
 
     # -------------------------------------------------------------------
 
     # -------------------------------------------------------------------
     # LINK METHODS
     # -------------------------------------------------------------------
-    def link_createMonster(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createNPC(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createCreationInFixedPosition(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_summonMonsterInFixedPosition(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createCollection(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createBuffPoint(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createAirWall(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createAvatarMirrorFromRandomPlayer(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createDungeonTeleporter(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_killMonsterNum(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_changeAllPlayerCameraLookPos(self, srcE):
-        self._link_dungeonBase(srcE)
-
-    def link_createRebornPos(self, srcE):
-        self._link_dungeonBase(srcE)
-
     def _link_dungeonBase(self, srcE):
-        dungeonNoGetter = self.o_events_map['dungeonNoGetter']
-        spaceNoGetter = self.o_events_map['spaceNoGetter']
-        srcE.ref_param(dungeonNoGetter, dungeonNoGetter.var_name, 'dungeonNo')
-        srcE.ref_param(spaceNoGetter, spaceNoGetter.var_name, 'spaceNo')
+        dungeonNoGetter = self.eventsMap['dungeonNoGetter']
+        spaceNoGetter = self.eventsMap['spaceNoGetter']
+        srcE.referenceArgument(dungeonNoGetter, dungeonNoGetter.var_name, 'dungeonNo')
+        srcE.referenceArgument(spaceNoGetter, spaceNoGetter.var_name, 'spaceNo')
 
     # -------------------------------------------------------------------
 
@@ -819,39 +814,41 @@ class DungeonFlowControllerBuilder(object):
 
     def trans_delayLoop(self, srcE, transitions):
         # fix delay loop bind
-        srcE = self.delay_loop_map[srcE.id]
-        loopBindIdx = 1
-        eventBindIdx = 2
+        srcE = self.delayLoopMap[srcE.id]
+        _loopBindIdx = 1
+        _eventBindIdx = 2
         if 'loop' in transitions:
             loopEventIds = transitions['loop']
-            self._trans_bind(loopEventIds, loopBindIdx, srcE)
-        self._trans_default(srcE, transitions, eventBindIdx)
+            self._trans_bind(loopEventIds, _loopBindIdx, srcE)
+        self._trans_default(srcE, transitions, _eventBindIdx)
 
     def trans_randomTrigger(self, srcE, transitions):
-        eventIds = transitions['finished']
-        for idx, eid in enumerate(eventIds, 1):
-            self._trans_bind([eid], idx, srcE)
+        _eventIds = transitions['finished']
+        for _idx, _eid in enumerate(_eventIds, 1):
+            self._trans_bind([_eid], _idx, srcE)
 
     def _trans_default(self, srcE, transitions, eventBindIdx=1):
-        seId = srcE.id
-        if seId in self.multi_events_outer_map:
-            srcE = self.multi_events_outer_map[seId]
+        _seId = srcE.id
+        if _seId in self.multiEventsOuterMap:
+            srcE = self.multiEventsOuterMap[_seId]
 
-        if 'finished' in transitions:
-            targetEventIds = transitions['finished']
-            if isinstance(srcE, ep_ctrl.flow.Branch):
-                self._trans_branch_bind(targetEventIds, True, srcE)
-            else:
-                self._trans_bind(targetEventIds, eventBindIdx, srcE)
+        if 'finished' not in transitions:
+            return
+
+        _targetEventIds = transitions['finished']
+        if isinstance(srcE, ep_ctrl.flow.Branch):
+            self._trans_branch_bind(_targetEventIds, True, srcE)
+        else:
+            self._trans_bind(_targetEventIds, eventBindIdx, srcE)
 
     def _trans_bind(self, _eventIDs, _bindIDX, srcE):
-        for ti in _eventIDs:
-            trgE = self.events[int(ti)]
+        for _ti in _eventIDs:
+            trgE = self.events[int(_ti)]
             srcE.bind_element(trgE, _bindIDX, 1)
 
     def _trans_branch_bind(self, _eventIDs, isTrue, srcE):
-        for ti in _eventIDs:
-            trgE = self.events[int(ti)]
+        for _ti in _eventIDs:
+            trgE = self.events[int(_ti)]
             if isTrue:
                 srcE.bind_true_element(trgE, 1)
             else:

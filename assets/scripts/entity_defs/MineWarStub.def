@@ -38,13 +38,6 @@
             <Arg>          GUILD_UUID      </Arg>
         </playerGetMineWarInfo>
 
-        <doShareGuildMineWarBonusToMember>
-            <Arg>          LINE_NO         </Arg>
-            <Arg>          PLAYER_GBID         </Arg>
-            <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
-            <Arg>          MAILBOX         </Arg>
-        </doShareGuildMineWarBonusToMember>
-
         <doGetMineWarGuildMemberScore>
             <Arg>          LINE_NO         </Arg>
             <Arg>          MAILBOX         </Arg>

@@ -53,7 +53,7 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         super(AdminStub, self).reloadScript()
 
     def gmCenterClosed(self):
-        DEBUG_MSG('in AdminStub.gmCenterClosed')
+        LOG_DBG('in AdminStub.gmCenterClosed')
         self.gmClient = {}
 
     def popGmClient(self, tag):
@@ -70,7 +70,7 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if client and client.channel.dispatcher: continue
 
             addr, port = host['addr'], int(host['port'])
-            INFO_MSG('connect admincenter:', addr, port)
+            LOG_IFO('connect admincenter:', addr, port)
             self.gmClient[key] = AdminStubService(self, (addr, port))
 
     def _checkGmCenterActive(self):
@@ -92,16 +92,16 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             client.serviceStub.replyCommand(None, cmdResult, None)
 
     def replyHttpCommand(self, tag, cmdUUID, result, retErrMsg, resultObj):
-        DEBUG_MSG('in AdminStub.replyHttpCommand ', tag, cmdUUID, result, retErrMsg, resultObj)
+        LOG_DBG('in AdminStub.replyHttpCommand ', tag, cmdUUID, result, retErrMsg, resultObj)
         try:
             if hasattr(resultObj, 'toJsonBytes'):
-                INFO_MSG('replyHttpCommand HTTPAgent toJsonBytes')
+                LOG_IFO('replyHttpCommand HTTPAgent toJsonBytes')
                 bodyBytes = resultObj.toJsonBytes()
             else:
-                INFO_MSG('replyHttpCommand HTTPAgent encode utf-8')
+                LOG_IFO('replyHttpCommand HTTPAgent encode utf-8')
                 bodyBytes = json.dumps(resultObj).encode('utf-8')
         except:
-            ERROR_MSG('replyHttpCommand: result to json err')
+            LOG_ERR('replyHttpCommand: result to json err')
             a={}
             bodyBytes = json.dumps(a).encode('utf-8')
         client = self.gmClient.get(tag, None)
@@ -194,17 +194,17 @@ class AdminStubService(GameServer):
 
     def onCheckHttpCommandSerial(self, result, rows, insertid, error, request, cmdStr):
         if error:
-            ERROR_MSG('onCheckHttpCommandSerial err:', request.seqId, request.cmd, error, cmdStr)
-            self._reportHttpCmdError(request, gameconst.GMCommandErr.DB_OP_ERR, 'internal error')
+            LOG_ERR('onCheckHttpCommandSerial err:', request.seqId, request.cmd, error, cmdStr)
+            self._reportHttpCmdError(request, gameconst.GMCommandErr.GM_RET_DB_OP_ERR, 'internal error')
             return
 
         if result:
             _, bRetCode, bRetErrMsg, bRetStr = result[0]
             retCode = int(bRetCode)
             retErrMsg = bRetErrMsg.decode('uft-8')
-            INFO_MSG("onCheckHttpCommandSerial---", bRetErrMsg, bRetStr)
+            LOG_IFO("onCheckHttpCommandSerial---", bRetErrMsg, bRetStr)
             if cmdStr == '$notifymallaction':
-                self._reportHttpCmdError(request, gameconst.GMCommandErr.CMD_SERIAL_EXISTS, 'seqId duplicated')
+                self._reportHttpCmdError(request, gameconst.GMCommandErr.GM_RET_CMD_SERIAL_EXISTS, 'seqId duplicated')
             else:
                 self._reportHttpCmd(request, retCode, retErrMsg, bRetStr)
             return
@@ -219,11 +219,11 @@ class AdminStubService(GameServer):
         try:
             cmdArgs = bytes.fromhex(request.args).decode('utf-8')
         except Exception as e:
-            ERROR_MSG('doHttpCommand: parse command args err:', e, request.args)
-            self._reportHttpCmdError(request, gameconst.GMCommandErr.ARGS_ERR, 'invalid command args')
+            LOG_ERR('doHttpCommand: parse command args err:', e, request.args)
+            self._reportHttpCmdError(request, gameconst.GMCommandErr.GM_RET_ARGS_ERR, 'invalid command args')
             return
 
-        INFO_MSG('_doHttpCommand', cmdName, cmdArgs, seqIdStr)
+        LOG_IFO('_doHttpCommand', cmdName, cmdArgs, seqIdStr)
 
         agent = gmCommand.HTTPAgent(self.adminStub, self.tag, 'HTTP', gmGroup.MANAGER_GROUP_GOD, cmdUUID, seqIdStr,
                                     cmdName.lower(), gameglobal.localBaseApp)

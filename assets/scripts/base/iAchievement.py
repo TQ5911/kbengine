@@ -11,7 +11,7 @@ class IAchievement(object):
 
     @gamedecorator.checkGameconfigEnable('achievement')
     def takeAchievementRewards(self, exposed, achievementIds):
-        INFO_MSG('takeAchievementRewards:', achievementIds)
+        LOG_IFO('takeAchievementRewards:', achievementIds)
         self.achievementInfo.takeAllAchievementRewards(achievementIds, self)
     
     def triggerAchievementWithCtx(self, achieveType, ctx):

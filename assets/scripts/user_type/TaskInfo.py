@@ -30,7 +30,7 @@ class TaskCountLimitType(object):
     TASK_LIMIT_SUBMIT_COUNT = 1  # 提交任务时检查提交次数限制
 
 
-class TaskInfo(userType.UserSoleType):
+class TaskInfo(userType.UserSingleType):
     def __init__(self):
         self.tasks = {}
         self.taskRecordDic = {}
@@ -70,7 +70,7 @@ class TaskInfo(userType.UserSoleType):
         # 任务不在当前任务列表里的情况
         taskData = dataUtils.getTaskData(taskId)
         if not taskData:
-            ERROR_MSG('_taskStateNoTaskObj task not config', taskId)
+            LOG_ERR('_taskStateNoTaskObj task not config', taskId)
             return self.taskRecordDic.get(taskId, gameconst.TaskStat.TASK_STAT_UNKNOWN)
 
         parentTaskId = dataUtils.taskFieldVal(taskData, 'FatherTaskId')
@@ -111,15 +111,15 @@ class TaskInfo(userType.UserSoleType):
 
         if len(dic['taskList']) > 100:
             # blob最多存300+任务
-            gameengine.reportCritical('attention!!! taskList num greater 100:', len(dic['taskList']))
+            gameengine.panicStack('attention!!! taskList num greater 100:', len(dic['taskList']))
 
         if len(dic['submitTaskIdList']) > 10000:
             # blob最多存 13000+ 任务
-            gameengine.reportCritical('attention!!! submitTaskIdList num greater 10000:', len(dic['submitTaskIdList']))
+            gameengine.panicStack('attention!!! submitTaskIdList num greater 10000:', len(dic['submitTaskIdList']))
 
         if len(dic['quitTaskIdList']) > 10000:
             # blob最多存 13000+ 任务
-            gameengine.reportCritical('attention!!! quitTaskIdList num greater 10000:', len(dic['quitTaskIdList']))
+            gameengine.panicStack('attention!!! quitTaskIdList num greater 10000:', len(dic['quitTaskIdList']))
 
         dic['rewardTaskCacheDic'] = self.rewardTaskCacheDic
         dic['hookRewardTaskFnsNumWeekly'] = self.hookRewardTaskFnsNumWeekly
@@ -148,7 +148,7 @@ class TaskInfo(userType.UserSoleType):
         self.tasks = {}
         for task in dataDic['taskList']:
             if not task:
-                WARNING_MSG('fromSavedDict, task is None')
+                LOG_WARN('fromSavedDict, task is None')
                 continue
             self.tasks[task.taskId] = task
             if task.parentTaskId != 0:
@@ -193,7 +193,7 @@ class TaskInfo(userType.UserSoleType):
             task = self.getTask(taskId)
             taskData = dataUtils.getTaskData(task.taskId)
             # 任务已经完结（成功或者放弃），清理任务列表的这部分数据并按需记录状态
-            if gameconst.TaskCycleType.TASK_CYCLE_NONE == task.cycleType:
+            if gameconst.TaskCycleType.CYCLE_TASK_ENUM_NONE == task.cycleType:
                 # 非周期任务
                 if task.isStat(gameconst.TaskStat.TASK_STAT_SUBMITTED):
                     if not dataUtils.taskFieldVal(taskData, 'OpenCondRepeatIfSucess'):
@@ -205,7 +205,7 @@ class TaskInfo(userType.UserSoleType):
                         # 任务放弃后不能重复开启, 记录任务状态
                         removeTaskIds.append(taskId)
                         self.recordOnceTask(taskId, task.stat)
-            elif gameconst.TaskCycleType.TASK_CYCLE_ONCE == task.cycleType:
+            elif gameconst.TaskCycleType.CYCLE_TASK_ENUM_ONCE == task.cycleType:
                 # 单次开启的任务
                 openCondTaskeState = dataUtils.taskFieldVal(taskData, 'OpenCondTaskeState')
                 if openCondTaskeState == TaskCountLimitType.TASK_LIMIT_CLAIM_COUNT and task.limitCount != 0 and task.claimCount >= task.limitCount:
@@ -217,12 +217,12 @@ class TaskInfo(userType.UserSoleType):
                     removeTaskIds.append(taskId)
                     self.recordOnceTask(taskId, task.stat)
         if removeTaskIds:
-            INFO_MSG('in dealAlreadyFinTasks, removeTaskIds:', removeTaskIds)
+            LOG_IFO('in dealAlreadyFinTasks, removeTaskIds:', removeTaskIds)
         for remTaskId in removeTaskIds:
             self.remTask(remTaskId)
         return
 
-    def _constructHookRewardTaskList(self, taskNum, taskSrcList, myLevel):
+    def _constructHookRewardTaskListWeekly(self, taskNum, taskSrcList, myLevel):
         exist_set = set()
         for taskId, task in self.tasks.items():
             if task.parentTaskId != 0:
@@ -234,7 +234,7 @@ class TaskInfo(userType.UserSoleType):
         for taskId in taskSrcList:
             taskData = RRTID.datas.get(taskId)
             if not taskData:
-                gameengine.reportCritical('getTaskData from RRTID, no taskdata:', taskId)
+                gameengine.panicStack('getTaskData from RRTID, no taskdata:', taskId)
                 continue
             ClaimCondLevelMin = taskData.get('minLevel', 0)
             ClaimCondLevelMax = taskData.get('maxLevel', 0)
@@ -246,36 +246,97 @@ class TaskInfo(userType.UserSoleType):
         result_list = random.sample(result_list, taskNum)
         result_list.extend(exist_set)
         return result_list
+    
+    def _constructHookRewardTaskListDaily(self, taskNum, taskSrcList, myLevel):
+        result_list = []
+        exist_set = set()
+        mapTaskIds = {}
+        for taskId, task in self.tasks.items():
+            if taskId in exist_set:
+                continue
+
+            if task.parentTaskId != 0:
+                continue
+            if task.taskType != gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
+                continue
+
+            taskData = RRTID.datas.get(taskId)
+            if not taskData:
+                gameengine.panicStack('getTaskData from RRTID, no taskdata:', taskId)
+                continue
+            mapId = taskData.get('mapID', 0)
+            if mapId <= 0:
+                continue
+        
+            exist_set.add(taskId)
+            taskIds = mapTaskIds.get(mapId, None)
+            if not taskIds:
+                taskIds = []
+                mapTaskIds[mapId] = taskIds
+            taskIds.append(taskId)
+
+        for taskId in taskSrcList:
+            if taskId in exist_set:
+                continue
+
+            taskData = RRTID.datas.get(taskId)
+            if not taskData:
+                gameengine.panicStack('getTaskData from RRTID, no taskdata:', taskId)
+                continue
+            ClaimCondLevelMin = taskData.get('minLevel', 0)
+            ClaimCondLevelMax = taskData.get('maxLevel', 0)
+            if myLevel < ClaimCondLevelMin or myLevel > ClaimCondLevelMax:
+                continue
+            
+            mapId = taskData.get('mapID', 0)
+            if mapId <= 0:
+                continue
+            
+            exist_set.add(taskId)
+            taskIds = mapTaskIds.get(mapId, None)
+            if not taskIds:
+                taskIds = []
+                mapTaskIds[mapId] = taskIds
+            taskIds.append(taskId)
+        
+        # 按照地图取taskNum个任务
+        for _, taskIds in mapTaskIds.items():
+            taskCount = min(taskNum, len(taskIds))
+            taskIds = random.sample(taskIds, taskCount)
+            result_list.extend(taskIds)
+        # 重新打乱一遍
+        result_list = random.sample(result_list, len(result_list))
+        return result_list
 
     def initNoviceHookRewardTask(self):
         hookRewardTaskNum = RRTIC.datas.get('dailyLimitNum', {}).get('value', 0)
         myLevel = 0
-        self.hookRewardTaskIdListDaily = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.DailyTaskList, myLevel)
+        self.hookRewardTaskIdListDaily = self._constructHookRewardTaskListDaily(hookRewardTaskNum, RRTID.DailyTaskList, myLevel)
         hookRewardTaskNum = RRTIC.datas.get('weeklyLimitNum', {}).get('value', 0)
-        self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.WeeklyTaskList, myLevel)
+        self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskListWeekly(hookRewardTaskNum, RRTID.WeeklyTaskList, myLevel)
         self.hookRewardTaskFnsNumWeekly = 0
 
     def refreshHookRewardTask(self, level):
         hookRewardTaskNum = RRTIC.datas.get('dailyLimitNum', {}).get('value', 0)
-        self.hookRewardTaskIdListDaily = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.DailyTaskList, level)
+        self.hookRewardTaskIdListDaily = self._constructHookRewardTaskListDaily(hookRewardTaskNum, RRTID.DailyTaskList, level)
         hookRewardTaskNum = RRTIC.datas.get('weeklyLimitNum', {}).get('value', 0)
-        self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.WeeklyTaskList, level)
+        self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskListWeekly(hookRewardTaskNum, RRTID.WeeklyTaskList, level)
         self.hookRewardTaskFnsNumWeekly = 0
 
     def _afterTaskUpdateRemoved(self, owner, removeTaskIds):
-        INFO_MSG("_afterTaskUpdateRemoved", removeTaskIds)
+        LOG_IFO("_afterTaskUpdateRemoved", removeTaskIds)
         for taskId in removeTaskIds:
             owner.deleteTemporarySkillByTask(taskId)
 
     def doTaskDailyUpdate(self, owner, myLevel):
         finDailyTaskIds = []
         hookRewardTaskNum = RRTIC.datas.get('dailyLimitNum', {}).get('value', 0)
-        self.hookRewardTaskIdListDaily = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.DailyTaskList, myLevel)
+        self.hookRewardTaskIdListDaily = self._constructHookRewardTaskListDaily(hookRewardTaskNum, RRTID.DailyTaskList, myLevel)
         removeTaskIds = []
         for taskId, task in self.tasks.items():
             if task.parentTaskId != 0:
                 continue
-            if gameconst.TaskCycleType.TASK_CYCLE_DAYLY != task.cycleType:
+            if gameconst.TaskCycleType.CYCLE_TASK_ENUM_DAYLY != task.cycleType:
                 continue
             if task.isInEndStat():
                 finDailyTaskIds.append(taskId)
@@ -289,19 +350,19 @@ class TaskInfo(userType.UserSoleType):
             if self.remTask(remTaskId):
                 removeTaskIds.append(remTaskId)
             removeTaskIds.extend(self.remChildTask(remTaskId))
-        INFO_MSG('in doTaskDailyUpdate, removeTaskIds:', removeTaskIds)
+        LOG_IFO('in doTaskDailyUpdate, removeTaskIds:', removeTaskIds)
         self._afterTaskUpdateRemoved(owner, removeTaskIds)
         return removeTaskIds
 
     def doTaskWeeklyUpdate(self, owner, myLevel):
         finDailyTaskIds = []
         hookRewardTaskNum = RRTIC.datas.get('weeklyLimitNum', {}).get('value', 0)
-        self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.WeeklyTaskList, myLevel)
+        self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskListWeekly(hookRewardTaskNum, RRTID.WeeklyTaskList, myLevel)
         self.hookRewardTaskFnsNumWeekly = 0
         for taskId, task in self.tasks.items():
             if task.parentTaskId != 0:
                 continue
-            if gameconst.TaskCycleType.TASK_CYCLE_WEEKLY != task.cycleType:
+            if gameconst.TaskCycleType.CYCLE_TASK_ENUM_WEEKLY != task.cycleType:
                 continue
             if task.isInEndStat():
                 finDailyTaskIds.append(taskId)
@@ -316,7 +377,7 @@ class TaskInfo(userType.UserSoleType):
             if self.remTask(remTaskId):
                 removeTaskIds.append(remTaskId)
             removeTaskIds.extend(self.remChildTask(remTaskId))
-        INFO_MSG('in doTaskWeeklyUpdate, removeTaskIds:', removeTaskIds)
+        LOG_IFO('in doTaskWeeklyUpdate, removeTaskIds:', removeTaskIds)
         self._afterTaskUpdateRemoved(owner, removeTaskIds)
         return removeTaskIds
 
@@ -328,19 +389,19 @@ class TaskInfo(userType.UserSoleType):
         self.sendUpdateTasks = {}
 
     def sendUpdatedTaskNow(self, owner, task):
-        INFO_MSG('in sendUpdatedTaskNow:', task.taskId, task.stat)
+        LOG_IFO('in sendUpdatedTaskNow:', task.taskId, task.stat)
         owner.client.onTaskUpdate([task.toTaskClientDict(), ])
         self.sendUpdateTasks.pop(task.taskId, None)
 
     def doSendUpdateTasksToClient(self, owner):
         if self.sendUpdateTasks:
-            INFO_MSG('     in doSendUpdateTasksToClient:', [(t.taskId, t.stat) for t in self.sendUpdateTasks.values()])
+            LOG_IFO('     in doSendUpdateTasksToClient:', [(t.taskId, t.stat) for t in self.sendUpdateTasks.values()])
             owner.client.onTaskUpdate([task.toTaskClientDict() for task in self.sendUpdateTasks.values()])
             self.sendUpdateTasks = {}
 
     def sendHookRewardTaskList(self, owner):
-        INFO_MSG('     in sendHookRewardTaskList daily list: ', self.hookRewardTaskIdListDaily, ' weekly list: ', self.hookRewardTaskIdListWeekly)
-        INFO_MSG('     in sendHookRewardTaskList self.hookRewardTaskFnsNumWeekly: ', self.hookRewardTaskFnsNumWeekly, 'self.hookRewardTaskNum', self.hookRewardTaskNum)
+        LOG_IFO('     in sendHookRewardTaskList daily list: ', self.hookRewardTaskIdListDaily, ' weekly list: ', self.hookRewardTaskIdListWeekly)
+        LOG_IFO('     in sendHookRewardTaskList self.hookRewardTaskFnsNumWeekly: ', self.hookRewardTaskFnsNumWeekly, 'self.hookRewardTaskNum', self.hookRewardTaskNum)
         owner.client.onHookRewardTaskRefresh(self.hookRewardTaskIdListWeekly + self.hookRewardTaskIdListDaily)
         owner.client.onHookRewardTaskWeeklyLimitRefresh(self.hookRewardTaskFnsNumWeekly)
 
@@ -367,7 +428,7 @@ class TaskInfo(userType.UserSoleType):
 
         for failedTaskId in expiredTaskIds:
             self.taskId2expiredTime.pop(failedTaskId, None)
-            INFO_MSG('in doUpdateTaskTimeout task expired:', failedTaskId)
+            LOG_IFO('in doUpdateTaskTimeout task expired:', failedTaskId)
             task = self.getTask(failedTaskId)
             not task.isInEndStat() and self.doTaskFailed(owner, failedTaskId, gameconst.TaskNotSuccReason.TIMEOUT)
         self.doSendUpdateTasksToClient(owner)
@@ -376,7 +437,7 @@ class TaskInfo(userType.UserSoleType):
     def checkExpiredTaskOnLogin(self, owner):
         self.taskId2ValidSec.clear()
         self.taskId2expiredTime.clear()
-        now = utils.getNow()
+        now = utils.curTS()
         expiredTaskIds = []
         for taskId, task in self.tasks.items():
             if task.isInEndStat():
@@ -393,7 +454,7 @@ class TaskInfo(userType.UserSoleType):
                 continue
 
         for failedTaskId in expiredTaskIds:
-            INFO_MSG('in checkExpiredTaskOnLogin, failedTaskId:', failedTaskId)
+            LOG_IFO('in checkExpiredTaskOnLogin, failedTaskId:', failedTaskId)
             self.doTaskFailed(owner, failedTaskId, gameconst.TaskNotSuccReason.TIMEOUT)
 
     def initTaskCacheOnLogin(self, owner):
@@ -409,10 +470,10 @@ class TaskInfo(userType.UserSoleType):
     def checkRewardTaskCacheOnLogin(self, owner):
         if not self.rewardTaskCacheDic:
             return
-        INFO_MSG('checkRewardTaskCacheOnLogin:', self.rewardTaskCacheDic)
+        LOG_IFO('checkRewardTaskCacheOnLogin:', self.rewardTaskCacheDic)
         for taskId in self.rewardTaskCacheDic.keys():
             owner.cell.startClaimTask(taskId, '', (),
-                                      actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.REWARD_TASK))
+                                      actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_REWARD_TASK))
 
     def removeRewardTaskCache(self, taskId):
         self.rewardTaskCacheDic.pop(taskId, None)
@@ -427,7 +488,7 @@ class TaskInfo(userType.UserSoleType):
         self.taskId2ValidSec.pop(taskId, None)
 
     def addExpiredTimeTask(self, taskId, expiredTime):
-        if utils.getNow() > expiredTime:
+        if utils.curTS() > expiredTime:
             return
         self.taskId2expiredTime[taskId] = expiredTime
 
@@ -459,7 +520,7 @@ class TaskInfo(userType.UserSoleType):
         for childTaskId in self.getChildTaskIds(taskId):
             if self.remTask(childTaskId):
                 remTaskIds.append(childTaskId)
-        remTaskIds and INFO_MSG('cleanTask, remTaskIds:', taskId, remTaskIds)
+        remTaskIds and LOG_IFO('cleanTask, remTaskIds:', taskId, remTaskIds)
         return remTaskIds
 
     def hasBagSpaceForClaimTask(self, owner, taskId):
@@ -507,7 +568,7 @@ class TaskInfo(userType.UserSoleType):
             rewardDic = validItems
         src = AAC_AACDD.datas.BONUS_SRC_CLAIM_TASK
         detail = gameclass.AwardDetail(taskId=[taskData['TaskId']])
-        INFO_MSG('in giveClaimTaskItems, rewardDic:', rewardDic)
+        LOG_IFO('in giveClaimTaskItems, rewardDic:', rewardDic)
         wealthVal = dropAward.AwardVal()
         # itemList = []
         for itemId, itemNum in rewardDic.items():
@@ -582,7 +643,7 @@ class TaskInfo(userType.UserSoleType):
                 if oneInfo['ItemId'] > 0 and oneInfo['Count'] > 0:
                     deductWealthVal.addWealthByItemId(oneInfo['ItemId'], oneInfo['Count'])
 
-            INFO_MSG('in deductClaimTaskItems itemsDic:', deductWealthVal)
+            LOG_IFO('in deductClaimTaskItems itemsDic:', deductWealthVal)
             if not owner.canDeductWealth(deductWealthVal):
                 return False
 
@@ -597,12 +658,12 @@ class TaskInfo(userType.UserSoleType):
         taskData = dataUtils.getTaskData(taskId)
         # 这里根据配置扣除物品，如果出现错误，说明是之前检查逻辑有错
         if not self.deductClaimTaskItems(owner, taskId, taskData):
-            gameengine.reportCritical('in doClaimTask, claim items deduct failed:', taskId)
+            gameengine.panicStack('in doClaimTask, claim items deduct failed:', taskId)
             return
 
         remChildTaskIds = self.remChildTask(taskId)
         if len(remChildTaskIds) > 0:
-            INFO_MSG('     in doClaimTask, remChildTaskIds:', remChildTaskIds)
+            LOG_IFO('     in doClaimTask, remChildTaskIds:', remChildTaskIds)
             owner.client.onTasksRem(remChildTaskIds)
 
         # 子任务的 seed、enemyGuild信息、 teamId 要使用根任务的
@@ -616,7 +677,7 @@ class TaskInfo(userType.UserSoleType):
 
         addTaskIds = self.addTask(owner, taskId, taskData, taskCtx)
         if not addTaskIds:
-            gameengine.reportCritical('doClaimTask, addTaskIds:', addTaskIds)
+            gameengine.panicStack('doClaimTask, addTaskIds:', addTaskIds)
             return
         self._afterTaskClaimed(owner, taskCtx, taskId, addTaskIds)
         owner.afterTaskClaimed(taskId)
@@ -630,7 +691,6 @@ class TaskInfo(userType.UserSoleType):
         for addTaskId in addTaskIds:
             tmpTask = self.getTask(addTaskId)
             client.append(tmpTask.toTaskClientDict())
-            owner.taskFlowLog(addTaskId, "TaskClaim", opUUID, claimSrc=taskCtx.claimSrc)
 
         owner.client.onClaimTask(taskId, client)
         # 先处理最下层子任务，最后处理根任务
@@ -640,13 +700,13 @@ class TaskInfo(userType.UserSoleType):
             # 领取任务发放物品
             self.giveClaimTaskItems(owner, opUUID, addTaskData)
 
-            DEBUG_MSG('in _afterTaskClaimed, addTaskId:', addTaskId, tmpTask.stat)
+            LOG_DBG('in _afterTaskClaimed, addTaskId:', addTaskId, tmpTask.stat)
             # 播放剧情动画
             storyId = addTaskData.get('ClaimTriggerStoryID')
             if storyId:
                 # 播放剧情动画
                 owner.cell.prepareStartPlayCinema(storyId)
-            if taskCtx.claimSrc!=gameconst.ClaimTaskSrc.GM_FINISH_NEWBIE:
+            if taskCtx.claimSrc!=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM_FINISH_NEWBIE:
                 self._claimEnterDungeon(owner, addTaskData, tmpTask)
 
             # 领取任务事件处理
@@ -656,9 +716,9 @@ class TaskInfo(userType.UserSoleType):
 
             # 如果是悬赏任务，则更新同时接取的限制状态
             if tmpTask.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
-                if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
-                    or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY \
-                    or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_ONCE:
+                if task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_DAYLY \
+                    or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_WEEKLY \
+                    or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_ONCE:
 
                     self.hookRewardTaskNum += 1
             # 修改变量
@@ -689,25 +749,25 @@ class TaskInfo(userType.UserSoleType):
             needConfirm = claimTransData.get('NeedConfirm')
             # 需要弹窗二次确认的，检测是否非本地图，如果是本地图就直接过去，非本地图，就等玩家主动点击，走reqTaskEnterSpace主动进行进地图切换
             if needConfirm:
-                INFO_MSG("_claimEnterDungeon, need confirm dialog to continue ", task)
+                LOG_IFO("_claimEnterDungeon, need confirm dialog to continue ", task)
                 owner.cell.checkSameMap(task.taskId)
                 return
             self._taskEnterSpace(owner, task.taskId, claimTransData)
         return
 
     def onCheckSameTaskResult(self, owner, task, isSame):
-        INFO_MSG("onCheckSameTaskResult, chek result ", task, isSame)
+        LOG_IFO("onCheckSameTaskResult, chek result ", task, isSame)
         if not isSame:
-            INFO_MSG("onCheckSameTaskResult, not same map, grant for client OP ", task)
+            LOG_IFO("onCheckSameTaskResult, not same map, grant for client OP ", task)
             return
         taskCfg = dataUtils.getTaskData(task.taskId)
         # 如果是附灵任务, 则同地图, 不主动进行切换
         if dataUtils.taskFieldVal(taskCfg, 'TaskType') == gameconst.TaskType.TASK_TYPE_SPIRIT:
-            INFO_MSG("onCheckSameTaskResult, stop spirit task telporting for same map~")
+            LOG_IFO("onCheckSameTaskResult, stop spirit task telporting for same map~")
             return
 
         if not dataUtils.taskFieldVal(taskCfg, 'ClaimCanTransIns'):
-            ERROR_MSG("onCheckSameTaskResult, wrong cfg ", taskCfg)
+            LOG_ERR("onCheckSameTaskResult, wrong cfg ", taskCfg)
             return
         claimTransData = dataUtils.taskFieldVal(taskCfg, 'ClaimTransInstance')
         self._taskEnterSpace(owner, task.taskId, claimTransData)
@@ -721,10 +781,10 @@ class TaskInfo(userType.UserSoleType):
             dstPos = (transData['X'], transData['Y'], transData['Z'])
             dstDir = (0.0, 0.0, math.pi*transData.get('Dir', 0.0)/180)
         else:
-            dstPos, dstDir = formula.whatSpaceBornPosAndDir(dungeonNo)
+            dstPos, dstDir = formula.getSpaceBornPosAndDir(dungeonNo)
 
         owner.cell.taskPreEnterSpace(taskId, dungeonNo, dstPos, dstDir)
-        self.curTryEnterDunData = {'dungeonNo':dungeonNo, 't':utils.getNow()}
+        self.curTryEnterDunData = {'dungeonNo':dungeonNo, 't':utils.curTS()}
 
     def getTaskItemIdList(self, taskId):
         itemIds = []
@@ -740,21 +800,21 @@ class TaskInfo(userType.UserSoleType):
         return itemIds
 
     def taskSpaceNoChanged(self, spaceNo):
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         self.curTryEnterDunData.pop(dungeonNo, None)
 
     def isTaskTryingEnterDungeon(self, dungeonNo):
         curDungeonNo = self.curTryEnterDunData.get('dungeonNo')
-        if curDungeonNo and curDungeonNo==dungeonNo and utils.getNow() - self.curTryEnterDunData['t'] <=1:
+        if curDungeonNo and curDungeonNo==dungeonNo and utils.curTS() - self.curTryEnterDunData['t'] <=1:
             # 任务已经触发进入副本，在此期间，客户端通过追踪面板进入副本要拦截住
-            WARNING_MSG('task is trying enter dungeon')
+            LOG_WARN('task is trying enter dungeon')
             return True
         return False
 
     def canClaimTask(self, owner, taskId):
         taskData = dataUtils.getTaskData(taskId)
         if taskId in self.taskRecordDic:
-            WARNING_MSG('       in canClaimTask, taskId in taskRecordDic')
+            LOG_WARN('       in canClaimTask, taskId in taskRecordDic')
             return gameclass.TaskCondResult(False)
 
         # 关联任务检查
@@ -768,18 +828,18 @@ class TaskInfo(userType.UserSoleType):
                     if not relTaskId:
                         continue
                     if not self.isTaskInStat(int(relTaskId), dataUtils.taskFieldVal(taskData, 'OpenCondRelateTaskState')):
-                        WARNING_MSG('     in canClaimTask, OpenCondRelateTask failed:', taskId)
+                        LOG_WARN('     in canClaimTask, OpenCondRelateTask failed:', taskId)
                         return gameclass.TaskCondResult(False)
 
         # 校验物品
         itemCondResult = self.checkClaimTaskItemsCond(owner, taskId, taskData)
         if not itemCondResult:
-            WARNING_MSG('       in canClaimTask, check items failed, taskId:', taskId)
+            LOG_WARN('       in canClaimTask, check items failed, taskId:', taskId)
             return itemCondResult
 
         # 领取任务后发放物品，检查背包空间是否足够
         if not self.hasBagSpaceForClaimTask(owner, taskId):
-            WARNING_MSG('       in canClaimTask, space not enough')
+            LOG_WARN('       in canClaimTask, space not enough')
             return gameclass.TaskCondResult(False, msgId=dataUtils.taskMsgId('taskClaimAlert_GetItem'))
 
         if dataUtils.taskFieldVal(taskData, 'TaskType') == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
@@ -787,38 +847,38 @@ class TaskInfo(userType.UserSoleType):
             if hookRewardTaskCheck:
                 data = RRTID.datas.get(taskId)
                 if not data:
-                    ERROR_MSG('       in canClaimTask, hookRewardTaskNum cfg not exist: ', taskId)
+                    LOG_ERR('       in canClaimTask, hookRewardTaskNum cfg not exist: ', taskId)
                     return gameclass.TaskCondResult(False)
 
                 myLevel = owner.getAvatarLevel()
                 ClaimCondLevelMin = data.get('minLevel', 0)
                 if myLevel < ClaimCondLevelMin:
-                    WARNING_MSG('       in canClaimTask, hookRewardTaskNum level limit, ', taskId, myLevel, ClaimCondLevelMin)
+                    LOG_WARN('       in canClaimTask, hookRewardTaskNum level limit, ', taskId, myLevel, ClaimCondLevelMin)
                     return gameclass.TaskCondResult(False)
             else:
                 hookRewardTaskCheck |= taskId in self.hookRewardTaskIdListDaily
                 hookRewardTaskCheck |= taskId in self.hookRewardTaskIdListWeekly
 
             if not hookRewardTaskCheck:
-                WARNING_MSG('       in canClaimTask, hookRewardTaskId not in hookRewardTaskIdList, taskId is ', taskId, 'daily list is ', self.hookRewardTaskIdListDaily, 'weekly list is ', self.hookRewardTaskIdListWeekly, 'task count limit ', dataUtils.taskFieldVal(taskData, 'OpenCondCountLimit'))
+                LOG_WARN('       in canClaimTask, hookRewardTaskId not in hookRewardTaskIdList, taskId is ', taskId, 'daily list is ', self.hookRewardTaskIdListDaily, 'weekly list is ', self.hookRewardTaskIdListWeekly, 'task count limit ', dataUtils.taskFieldVal(taskData, 'OpenCondCountLimit'))
                 return gameclass.TaskCondResult(False)
             if self.hookRewardTaskFnsNumWeekly > RRTIC.datas.get('weeklyMaxNum', {}).get('value', 0) :
-                WARNING_MSG('       in canClaimTask, hookRewardTaskFnsNumWeekly exceed at', self.hookRewardTaskFnsNumWeekly)
+                LOG_WARN('       in canClaimTask, hookRewardTaskFnsNumWeekly exceed at', self.hookRewardTaskFnsNumWeekly)
                 return gameclass.TaskCondResult(False)
             if self.hookRewardTaskNum > RRTIC.datas.get('currentlyMaxNum', {}).get('value', 0) :
-                WARNING_MSG('       in canClaimTask, hookRewardTaskNum exceed at', self.hookRewardTaskNum)
+                LOG_WARN('       in canClaimTask, hookRewardTaskNum exceed at', self.hookRewardTaskNum)
                 return gameclass.TaskCondResult(False)
 
         # 开启变量检查
         fmlId = dataUtils.taskFieldVal(taskData, 'OpenCondVarCheckFormID')
         if fmlId and not dataUtils.checkVariableCond(owner, fmlId, dataUtils.taskFieldVal(taskData, 'OpenCondVarCheckParam')):
-            WARNING_MSG('       in canClaimTask, open variable cond failed')
+            LOG_WARN('       in canClaimTask, open variable cond failed')
             return gameclass.TaskCondResult(False)
 
         # 领取变量条件
         fmlId = taskData.get('ClaimCondVarCheckFormID')
         if fmlId and not dataUtils.checkVariableCond(owner, fmlId, dataUtils.taskFieldVal(taskData, 'ClaimCondVarCheckParam')):
-            WARNING_MSG('       in canClaimTask, claim variable cond failed')
+            LOG_WARN('       in canClaimTask, claim variable cond failed')
             return gameclass.TaskCondResult(False)
 
         # # npc好感度条件校验
@@ -837,31 +897,31 @@ class TaskInfo(userType.UserSoleType):
 
             if not task.isInEndStat():
                 # 运行中或失败状态的任务不能重新领取
-                WARNING_MSG('     in canClaimTask, task not in end state:', taskId)
+                LOG_WARN('     in canClaimTask, task not in end state:', taskId)
                 return gameclass.TaskCondResult(False)
 
-            if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_NONE:
+            if task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_NONE:
                 # 成功后是否重复开启， 只对非周期任务有效
                 if task.isStat(gameconst.TaskStat.TASK_STAT_SUBMITTED):
                     OpenCondRepeatIfSucess = dataUtils.taskFieldVal(taskData, 'OpenCondRepeatIfSucess')
                     if not OpenCondRepeatIfSucess:
                         # 成功后不允许再次开启
-                        WARNING_MSG('     in canClaimTask, OpenCondRepeatIfSucess is False', taskId)
+                        LOG_WARN('     in canClaimTask, OpenCondRepeatIfSucess is False', taskId)
                         return gameclass.TaskCondResult(False)
                 elif task.isStat(gameconst.TaskStat.TASK_STAT_QUIT):
                     OpenCondRepeatIfQuit = dataUtils.taskFieldVal(taskData, 'OpenCondRepeatIfFail')
                     if not OpenCondRepeatIfQuit:
                         # 任务放弃后不允许再次开启
-                        WARNING_MSG('     in canClaimTask, OpenCondRepeatIfFail is False', taskId)
+                        LOG_WARN('     in canClaimTask, OpenCondRepeatIfFail is False', taskId)
                         return gameclass.TaskCondResult(False)
             elif dataUtils.taskFieldVal(taskData, 'OpenCondTaskeState') == TaskCountLimitType.TASK_LIMIT_CLAIM_COUNT and task.limitCount != 0 and task.claimCount >= task.limitCount:
                 # 领取任务领取次数已满，不能领取任务
-                WARNING_MSG('     in canClaimTask, can not claim, task.claimCount >= task.limitCount:', task.claimCount, task.limitCount)
+                LOG_WARN('     in canClaimTask, can not claim, task.claimCount >= task.limitCount:', task.claimCount, task.limitCount)
                 return gameclass.TaskCondResult(False, dataUtils.taskMsgId('taskClaimAlert_TimesCheck'))
 
             elif dataUtils.taskFieldVal(taskData, 'OpenCondTaskeState') == TaskCountLimitType.TASK_LIMIT_SUBMIT_COUNT and task.limitCount != 0 and task.alreadyCount >= task.limitCount:
                 # 提交次数已满，不能领取任务
-                WARNING_MSG('     in canClaimTask, can not claim, task.alreadyCount >= task.limitCount:', task.alreadyCount, task.limitCount)
+                LOG_WARN('     in canClaimTask, can not claim, task.alreadyCount >= task.limitCount:', task.alreadyCount, task.limitCount)
                 return gameclass.TaskCondResult(False, dataUtils.taskMsgId('taskClaimAlert_TimesCheck'))
 
         return gameclass.TaskCondResult(True)
@@ -881,7 +941,7 @@ class TaskInfo(userType.UserSoleType):
                                            claimCount=oldClaimCount,
                                            taskRewardLimitDic=taskRewardLimitDic)
         if not task:
-            gameengine.reportCritical('     in addTask, create task error:', taskId)
+            gameengine.panicStack('     in addTask, create task error:', taskId)
             return
         self.tasks[taskId] = task
         addTaskIds.append(taskId)
@@ -919,14 +979,14 @@ class TaskInfo(userType.UserSoleType):
                     self.tasks[taskId] = oldTask
                 else:
                     self.remTask(taskId)
-                gameengine.reportCritical('addTask error, addChildTaskIds:', addChildTaskIds)
+                gameengine.panicStack('addTask error, addChildTaskIds:', addChildTaskIds)
                 return None
             addTaskIds.extend(addChildTaskIds)
             task.lastChildTaskId = childTaskId
         return addTaskIds
 
     def calculateRandomTaskWithWeight(self, task, taskData):
-        INFO_MSG("calculateRandomTaskWithWeight 0", task, taskData, self.randomTaskWeights)
+        LOG_IFO("calculateRandomTaskWithWeight 0", task, taskData, self.randomTaskWeights)
         guaranteeCount = 0
         taskType = dataUtils.taskFieldVal(taskData, 'TaskType')
         if taskType == gameconst.TaskType.TASK_TYPE_SPIRIT:
@@ -943,7 +1003,7 @@ class TaskInfo(userType.UserSoleType):
             task.guaranteeCount += 1
             guaranteeCount = task.guaranteeCount
 
-        INFO_MSG("calculateRandomTaskWithWeight 1", task, self.randomTaskWeights)
+        LOG_IFO("calculateRandomTaskWithWeight 1", task, self.randomTaskWeights)
         # 到达指定次数，出保底
         if guaranteeCount >= dataUtils.taskFieldVal(taskData, 'GuaranteeCount'):
             guaranteeTaskId = dataUtils.taskFieldVal(taskData, 'GuaranteeTaskId')
@@ -956,7 +1016,7 @@ class TaskInfo(userType.UserSoleType):
                 self.randomTaskWeights.pop(task.taskId, 0)
             else:
                 task.guaranteeCount = 0
-            INFO_MSG("calculateRandomTaskWithWeight 2", task, taskId, self.randomTaskWeights)
+            LOG_IFO("calculateRandomTaskWithWeight 2", task, taskId, self.randomTaskWeights)
             return taskId
         else:
             # 子任务对应的权重配置
@@ -965,7 +1025,7 @@ class TaskInfo(userType.UserSoleType):
             randIdx = utils.randomByWeight(weights)
             # 根据索引位置取出子任务id
             taskId = task.childTaskIds[randIdx]
-            INFO_MSG("calculateRandomTaskWithWeight 3", task, taskId, self.randomTaskWeights)
+            LOG_IFO("calculateRandomTaskWithWeight 3", task, taskId, self.randomTaskWeights)
             # 抽到保底了，清零
             hasGuaranteeTaskId = False
             guaranteeTaskId = dataUtils.taskFieldVal(taskData, 'GuaranteeTaskId')
@@ -981,7 +1041,7 @@ class TaskInfo(userType.UserSoleType):
                     self.randomTaskWeights.pop(task.taskId, 0)
                 else:
                     task.guaranteeCount = 0
-                INFO_MSG("calculateRandomTaskWithWeight 4", task, taskId, self.randomTaskWeights)
+                LOG_IFO("calculateRandomTaskWithWeight 4", task, taskId, self.randomTaskWeights)
             return taskId
 
     def doRelateTaskReachStat(self, owner, relateTaskId, relateTaskStat):
@@ -998,7 +1058,7 @@ class TaskInfo(userType.UserSoleType):
             result = task.checkTgtRelateTaskStat(relateTaskId, relateTaskStat)
             if not result:
                 continue
-            INFO_MSG('     TaskInfo::doRelateTaskReachStat, taskId:', taskId, relateTaskId, relateTaskStat)
+            LOG_IFO('     TaskInfo::doRelateTaskReachStat, taskId:', taskId, relateTaskId, relateTaskStat)
             rmTasks.append(task)
         for rmTask in rmTasks:
             self.checkTaskFinished(owner, rmTask)
@@ -1020,7 +1080,7 @@ class TaskInfo(userType.UserSoleType):
                 continue
             tgtList = task.getTgtsByType(gameconst.TaskTargetType.TASK_TARGET_ITEMS)
             for tgt in tgtList:
-                DEBUG_MSG('     in doAddTgtItemByRelateAction, taskIds:', tgt.srcIdList, tgt.srcRatio)
+                LOG_DBG('     in doAddTgtItemByRelateAction, taskIds:', tgt.srcIdList, tgt.srcRatio)
                 itemCount = owner.getItemNum(tgt.tgtId)
                 if itemCount >= tgt.dstCnt:
                     continue
@@ -1028,7 +1088,7 @@ class TaskInfo(userType.UserSoleType):
                     continue
                 if tgt.srcRatio > 0:
                     rdDigit = random.randint(1, 100)
-                    DEBUG_MSG('     in doAddTgtItemByRelateAction, random digit:', rdDigit)
+                    LOG_DBG('     in doAddTgtItemByRelateAction, random digit:', rdDigit)
                     if rdDigit > tgt.srcRatio:
                         continue
                     wealthVal.addWealthByItemId(tgt.tgtId, 1, dataUtils.getItemDefaultBindType())
@@ -1051,7 +1111,7 @@ class TaskInfo(userType.UserSoleType):
         taskData = dataUtils.getTaskData(task.taskId)
         if dataUtils.taskFieldVal(taskData, 'FailCondFailIfQtInst'):
             # 离开副本任务失败
-            INFO_MSG('     TaskInfo::doTaskLeaveDungeon, task failed:', taskId)
+            LOG_IFO('     TaskInfo::doTaskLeaveDungeon, task failed:', taskId)
             self.doTaskFailed(owner, task.taskId, gameconst.TaskNotSuccReason.LEAVE_SPACE)
 
     def completeTargetAction(self, owner, taskId, actionId):
@@ -1080,13 +1140,13 @@ class TaskInfo(userType.UserSoleType):
         if not task or not task.isStat(gameconst.TaskStat.TASK_STAT_RUNNING):
             return
 
-        INFO_MSG('doTaskVariableChanged:', task.taskId, varId)
+        LOG_IFO('doTaskVariableChanged:', task.taskId, varId)
         taskData = dataUtils.getTaskData(task.taskId)
         # 触发任务失败
         fmlId = dataUtils.taskFieldVal(taskData, 'FailCondVarCheckFormID')
         if fmlId and dataUtils.checkVariableCond(owner, fmlId,
                                                  dataUtils.taskFieldVal(taskData, 'FailCondVarCheckParam')):
-            INFO_MSG('       doTaskVariableChanged, failed var is True')
+            LOG_IFO('       doTaskVariableChanged, failed var is True')
             self.doTaskFailed(owner, task.taskId, gameconst.TaskNotSuccReason.VARIABLE)
             return
 
@@ -1118,7 +1178,7 @@ class TaskInfo(userType.UserSoleType):
         return True
 
     def onTaskFinished(self, owner, task):
-        INFO_MSG('in TaskInfo::onTaskFinished, taskId:', task.taskId)
+        LOG_IFO('in TaskInfo::onTaskFinished, taskId:', task.taskId)
         taskData = dataUtils.getTaskData(task.taskId)
         task.setStat(owner, gameconst.TaskStat.TASK_STAT_FINISHED)
         self.addSendUpdatedTaskList([task, ])
@@ -1170,7 +1230,7 @@ class TaskInfo(userType.UserSoleType):
 
         # 挂机玩法任务奖励不受背包限制，背包满时，通过邮件发放奖励；
         if owner.bagData.isFull() and not dataUtils.taskFieldVal(taskData, 'IsAutoTask'):
-            WARNING_MSG('_canSubmitTaskReward, bag full:', taskId)
+            LOG_WARN('_canSubmitTaskReward, bag full:', taskId)
             if not dataUtils.taskFieldVal(taskData, 'DispHiddenTask'):
                 owner.onMessagePre(dataUtils.taskMsgId('taskSubmitAlert_BagCheck'), [])
             return False
@@ -1180,11 +1240,11 @@ class TaskInfo(userType.UserSoleType):
         task = self.getTask(taskId)
         if not task or task.isInEndStat() or not task.isStat(gameconst.TaskStat.TASK_STAT_FINISHED):
             # 必须处于 TASK_STAT_FINISHED 状态，才允许提交任务
-            WARNING_MSG('   checkSubmitBaseCond check failed, no task or task state error')
+            LOG_WARN('   checkSubmitBaseCond check failed, no task or task state error')
             return False
 
         if not self.checkTaskSubmitRewardCond(owner, task):
-            WARNING_MSG('   checkSubmitBaseCond check failed, submit reward cond failed')
+            LOG_WARN('   checkSubmitBaseCond check failed, submit reward cond failed')
             return False
 
         for childTaskId in task.childTaskIds:
@@ -1193,7 +1253,7 @@ class TaskInfo(userType.UserSoleType):
                 # 任务提交条件，不需要所有子任务都已经领取
                 continue
             if not childTask.isStat(gameconst.TaskStat.TASK_STAT_SUBMITTED):
-                gameengine.reportCritical('   checkSubmitBaseCond check failed, child task state error:',
+                gameengine.panicStack('   checkSubmitBaseCond check failed, child task state error:',
                                           childTaskId, childTask.stat)
                 return False
         return True
@@ -1201,7 +1261,7 @@ class TaskInfo(userType.UserSoleType):
     def deductTaskTgtItems(self, owner, taskId):
         task = self.getTask(taskId)
         if not task or task.isInEndStat() or task.isStat(gameconst.TaskStat.TASK_STAT_FINISHED):
-            WARNING_MSG('in deductTaskTgtItems, task error:', task, taskId)
+            LOG_WARN('in deductTaskTgtItems, task error:', task, taskId)
             return
         deductWealthVal = task.getTaskTgtItemsWealthVal()
         if not owner.canDeductWealth(deductWealthVal):
@@ -1223,15 +1283,15 @@ class TaskInfo(userType.UserSoleType):
         # do reward and submit task
         task = self.getTask(taskId)
         if not task:
-            WARNING_MSG('in doSubmitTask, no task')
+            LOG_WARN('in doSubmitTask, no task')
             return
 
         if check and not task.isStat(gameconst.TaskStat.TASK_STAT_FINISHED):
-            WARNING_MSG('in doSubmitTask, task not in target finish state:', task.stat)
+            LOG_WARN('in doSubmitTask, task not in target finish state:', task.stat)
             return
 
         if task.isStat(gameconst.TaskStat.TASK_STAT_SUBMITTED):
-            WARNING_MSG('in doSubmitTask, already submit :', task.stat)
+            LOG_WARN('in doSubmitTask, already submit :', task.stat)
             return
 
         task.setStat(owner, gameconst.TaskStat.TASK_STAT_SUBMITTED)
@@ -1240,15 +1300,15 @@ class TaskInfo(userType.UserSoleType):
 
         # 如果是悬赏任务，则更新同时接取的限制状态
         if task.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
-            if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
-                or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY:
+            if task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_DAYLY \
+                or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_WEEKLY:
 
                 self.hookRewardTaskFnsNumWeekly += 1
                 owner.client.onHookRewardTaskWeeklyLimitRefresh(self.hookRewardTaskFnsNumWeekly)
 
-            if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
-                or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY \
-                or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_ONCE:
+            if task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_DAYLY \
+                or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_WEEKLY \
+                or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_ONCE:
 
                 self.hookRewardTaskNum = max(self.hookRewardTaskNum-1, 0)
 
@@ -1258,7 +1318,7 @@ class TaskInfo(userType.UserSoleType):
         return True
 
     def _afterTaskSubmitted(self, owner, task, popRewardUUID=0):
-        INFO_MSG("_afterTaskSubmitted ", task, popRewardUUID)
+        LOG_IFO("_afterTaskSubmitted ", task, popRewardUUID)
         if task.taskId in V_VD.taskDic:
             owner.updateVisibleByList(V_VD.taskDic[task.taskId])
 
@@ -1273,7 +1333,6 @@ class TaskInfo(userType.UserSoleType):
         self.doSubmitReward(owner, task.taskId, opUUID, srcType, popRewardUUID)
         self._autoClaimRoundTask(owner, task)
         self.onTaskEnd(owner, task.taskId, opUUID, srcType)
-        owner.afterTaskSubmitted(opUUID, task.taskId)
         ctx = actionContext.AchievementCtx(taskId=task.taskId)
         if task.taskType == gameconst.TaskType.TASK_TYPE_MAINLINE:
             owner.triggerAchievement(gameconst.AchieveType.MAIN_TASK, ctx)
@@ -1289,7 +1348,7 @@ class TaskInfo(userType.UserSoleType):
                 actionContext.AchievementCtx(mapId=_data['mapID']))
 
         if 0 != task.parentTaskId:
-            INFO_MSG("_afterTaskSubmitted 1 ", task)
+            LOG_IFO("_afterTaskSubmitted 1 ", task)
             self.onChildtaskSubmitted(owner, task)
 
         return
@@ -1299,9 +1358,9 @@ class TaskInfo(userType.UserSoleType):
         roundVal, _, _, _ = dataUtils.getTaskRoundInfo(taskData)
         if roundVal > 0:
             if task.alreadyCount % roundVal != 0:
-                INFO_MSG('in autoClaimRoundTask, auto claim new task:', task.taskId, roundVal, task.alreadyCount)
+                LOG_IFO('in autoClaimRoundTask, auto claim new task:', task.taskId, roundVal, task.alreadyCount)
                 owner.cell.startClaimTask(task.taskId, '', (),
-                                          actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.ROUND_AUTO_CLAIM))
+                                          actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_ROUND_AUTO_CLAIM))
 
     def forceCompleteTask(self, owner, taskId):
         task = self.getTask(taskId)
@@ -1312,7 +1371,7 @@ class TaskInfo(userType.UserSoleType):
             childTask = self.getTask(childTaskId)
             if childTask and self.forceCompleteTask(owner, childTaskId):
                 # 正常调用不会走到这里，对于非叶节点任务，状态直接设置为已提交
-                WARNING_MSG('forceCompleteTask, childTask:', taskId, childTaskId)
+                LOG_WARN('forceCompleteTask, childTask:', taskId, childTaskId)
                 childTask.setStat(owner, gameconst.TaskStat.TASK_STAT_SUBMITTED)
                 self.sendUpdatedTaskNow(owner, childTask)
         self.onTaskFinished(owner, task)
@@ -1320,7 +1379,7 @@ class TaskInfo(userType.UserSoleType):
 
     def _rewardItemsOnTaskEnd(self, owner, taskId, rewardId, opUUID, srcType, popRewardUUID=0):
         if rewardId > 0:
-            INFO_MSG('in _rewardItemsOnTaskEnd:', taskId, rewardId, popRewardUUID)
+            LOG_IFO('in _rewardItemsOnTaskEnd:', taskId, rewardId, popRewardUUID)
             awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID)
             awardCtx = owner._getAvatarAwardCtx(rewardId, awardCtx)
 
@@ -1332,10 +1391,8 @@ class TaskInfo(userType.UserSoleType):
             wealthVal = dropAward.getAward(rewardId, 1, awardCtx)
 
             if not wealthVal.isEmpty():
-                directly = False
+                directly = True
                 taskData = dataUtils.getTaskData(taskId)
-                if not dataUtils.taskFieldVal(taskData, 'FinBlockPopReward'):
-                    directly = True
                 detail = gameclass.AwardDetail(taskId=[taskId], popRewardUUID=popRewardUUID)
                 owner.addWealth(srcType, wealthVal, opUUID, detail=detail, awardCtx=awardCtx, directly=directly)
 
@@ -1364,7 +1421,7 @@ class TaskInfo(userType.UserSoleType):
 
         #奖励进入副本 与 奖励传出当前副本， 二者同时只能有一个生效
         if dataUtils.taskFieldVal(taskData, 'FinHasRewardInst'):
-            if task.claimSrc!=gameconst.ClaimTaskSrc.GM_FINISH_NEWBIE:
+            if task.claimSrc!=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM_FINISH_NEWBIE:
             #如果是GM完成新手就不进出副本了，因为进去马上会出来，瞬间多次传送支持不了
                 self._rewardEnterDungeon(owner, taskId, dataUtils.taskFieldVal(taskData, 'FinRewardInstance'))
         else:
@@ -1392,7 +1449,7 @@ class TaskInfo(userType.UserSoleType):
         return
 
     def quitTaskReward(self, owner, taskId, opUUID, srcType):
-        # INFO_MSG('in quitTaskReward:', taskId)
+        # LOG_IFO('in quitTaskReward:', taskId)
         # 检查发奖次数是否满足
         taskData = dataUtils.getTaskData(taskId)
         # 道具和物品奖励
@@ -1413,7 +1470,7 @@ class TaskInfo(userType.UserSoleType):
         return
 
     def _rewardEnterDungeon(self, owner, taskId, newDungeonData):
-        INFO_MSG('in _rewardEnterDungeon:', taskId, newDungeonData)
+        LOG_IFO('in _rewardEnterDungeon:', taskId, newDungeonData)
         self._taskEnterSpace(owner, taskId, newDungeonData)
         return
 
@@ -1421,9 +1478,9 @@ class TaskInfo(userType.UserSoleType):
         if dataUtils.taskFieldVal(taskData, 'FinRewardLeaveInstance'):
             leaveDungeonNo = dataUtils.taskFieldVal(taskData, 'FinRewardLevInsID')
             if not leaveDungeonNo:
-                WARNING_MSG('in _rewardLeaveDungeon, no leaveDungeonNo:', taskId, leaveDungeonNo)
+                LOG_WARN('in _rewardLeaveDungeon, no leaveDungeonNo:', taskId, leaveDungeonNo)
                 return
-            INFO_MSG('_rewardLeaveDungeon, leave dungeonNo:', taskId)
+            LOG_IFO('_rewardLeaveDungeon, leave dungeonNo:', taskId)
             owner.cell.onTaskRwdLeaveDungeon(taskId, leaveDungeonNo, claimSrc)
         return
 
@@ -1437,30 +1494,30 @@ class TaskInfo(userType.UserSoleType):
             newTaskId = int(newTaskId)
             if newTaskId <= 0:
                 continue
-            self.rewardTaskCacheDic[newTaskId] = utils.getNow()
+            self.rewardTaskCacheDic[newTaskId] = utils.curTS()
             owner.cell.startClaimTask(newTaskId, '', (),
-                                      actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.REWARD_TASK))
+                                      actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_REWARD_TASK))
 
     def onChildtaskSubmitted(self, owner, task):
-        INFO_MSG("onChildtaskSubmitted ", task)
+        LOG_IFO("onChildtaskSubmitted ", task)
         parentTask = self.getTask(task.parentTaskId)
         if not parentTask:
-            ERROR_MSG('child task[Id={}] config parent task[Id={}] but not found parent task on avatar body'.format(
+            LOG_ERR('child task[Id={}] config parent task[Id={}] but not found parent task on avatar body'.format(
                 task.taskId, task.parentTaskId))
             return
 
         if gameconst.TaskStat.TASK_STAT_FINISHED == parentTask.stat:
-            INFO_MSG("onChildtaskSubmitted 1 ", parentTask)
+            LOG_IFO("onChildtaskSubmitted 1 ", parentTask)
             owner.startSubmitTask(parentTask.taskId)
             return
         if gameconst.TaskStat.TASK_STAT_RUNNING != parentTask.stat:
-            INFO_MSG("onChildtaskSubmitted 2 ", parentTask)
+            LOG_IFO("onChildtaskSubmitted 2 ", parentTask)
             return
 
         childTaskData = dataUtils.getTaskData(task.taskId)
         FaterSuccIfChildSucc = dataUtils.taskFieldVal(childTaskData, 'FaterSuccIfChildSucc')
         if FaterSuccIfChildSucc:
-            INFO_MSG("onChildtaskSubmitted 3 ", parentTask)
+            LOG_IFO("onChildtaskSubmitted 3 ", parentTask)
             # 子任务成功，则父任务也成功
             self.onTaskFinished(owner, parentTask)
             return
@@ -1483,11 +1540,11 @@ class TaskInfo(userType.UserSoleType):
         return
 
     def addNewChildTask(self, owner, childTaskId, parentTask):
-        INFO_MSG("addNewChildTask 1", childTaskId, parentTask)
+        LOG_IFO("addNewChildTask 1", childTaskId, parentTask)
         # taskData['ChildDoInSameTime'] 领取父任务时候就领取了所有子任务，所以这里不需要做检查
         taskData = dataUtils.getTaskData(parentTask.taskId)
         if dataUtils.taskFieldVal(taskData, 'ChildDoInQueue') or dataUtils.taskFieldVal(taskData, 'ChildDoInRandom'):
-            INFO_MSG("addNewChildTask 2", parentTask)
+            LOG_IFO("addNewChildTask 2", parentTask)
             taskId = -1
             if dataUtils.taskFieldVal(taskData, 'RandomWithWeight'):
                 taskId = self.calculateRandomTaskWithWeight(parentTask, taskData)
@@ -1514,13 +1571,13 @@ class TaskInfo(userType.UserSoleType):
         uptaskList = []
         task = self.getTask(taskId)
         if not task:
-            ERROR_MSG(' in doTaskFailed, task not exist:', taskId, reason)
+            LOG_ERR(' in doTaskFailed, task not exist:', taskId, reason)
             return
 
         if task.isInEndStat():
             return
 
-        INFO_MSG('in TaskInfo::doTaskFailed taskId {} reason {}'.format(taskId, reason))
+        LOG_IFO('in TaskInfo::doTaskFailed taskId {} reason {}'.format(taskId, reason))
         task.setStat(owner, gameconst.TaskStat.TASK_STAT_FAILED)
         uptaskList.append(task)
         # set flow
@@ -1563,7 +1620,7 @@ class TaskInfo(userType.UserSoleType):
     def onChildTaskFailed(self, owner, childTask):
         childTaskData = dataUtils.getTaskData(childTask.taskId)
         if dataUtils.taskFieldVal(childTaskData, 'FatherFailIfChildFail'):
-            INFO_MSG('onChildTaskFailed, FatherFailIfChildFail:', childTask.taskId, childTask.parentTaskId)
+            LOG_IFO('onChildTaskFailed, FatherFailIfChildFail:', childTask.taskId, childTask.parentTaskId)
             self.doTaskFailed(owner, childTask.parentTaskId, gameconst.TaskNotSuccReason.CHILD_FAILED)
             return
 
@@ -1576,7 +1633,7 @@ class TaskInfo(userType.UserSoleType):
             taskData = dataUtils.getTaskData(taskId)
             FailCondIfDie = dataUtils.taskFieldVal(taskData, 'FailCondIfDie')
             if FailCondIfDie:
-                INFO_MSG('in doAvatarDead, doTaskFailed:', taskId)
+                LOG_IFO('in doAvatarDead, doTaskFailed:', taskId)
                 self.doTaskFailed(owner, taskId, gameconst.TaskNotSuccReason.AVATAR_DIE)
 
     def canQuitTaskManual(self, taskId):
@@ -1590,7 +1647,7 @@ class TaskInfo(userType.UserSoleType):
             # 仅失败状态可以手动放弃该任务
             return True
 
-        INFO_MSG('canQuitTaskManual, task can not quit:', taskData['TaskId'])
+        LOG_IFO('canQuitTaskManual, task can not quit:', taskData['TaskId'])
         return False
 
     # 放弃任务
@@ -1599,7 +1656,7 @@ class TaskInfo(userType.UserSoleType):
         if not task or task.isInEndStat():
             return
         rootTaskId = task.rootTaskId
-        INFO_MSG('doQuitTask, taskId {} rootTaskId {}:'.format(taskId, rootTaskId))
+        LOG_IFO('doQuitTask, taskId {} rootTaskId {}:'.format(taskId, rootTaskId))
         uptaskList = []
         rootTask = self.getTask(rootTaskId)
         if self.getTaskCurrentState(taskId) != gameconst.TaskStat.TASK_STAT_FAILED:
@@ -1610,7 +1667,7 @@ class TaskInfo(userType.UserSoleType):
             task.setStat(owner, gameconst.TaskStat.TASK_STAT_QUIT)
             self.addSendUpdatedTaskList([task])
             self._afterTaskQuit(owner, [taskId], reason)
-            gameengine.reportCritical('in doQuitTask, no root task:', taskId, rootTaskId)
+            gameengine.panicStack('in doQuitTask, no root task:', taskId, rootTaskId)
             return
         rootTask.setStat(owner, gameconst.TaskStat.TASK_STAT_QUIT)
         quitTaskIds = set()
@@ -1631,12 +1688,12 @@ class TaskInfo(userType.UserSoleType):
 
         # 如果是悬赏任务，则更新同时接取的限制状态
         if task.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
-            if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
-                or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY \
-                or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_ONCE:
+            if task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_DAYLY \
+                or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_WEEKLY \
+                or task.cycleType == gameconst.TaskCycleType.CYCLE_TASK_ENUM_ONCE:
 
                 self.hookRewardTaskNum = max(self.hookRewardTaskNum-1, 0)
-                INFO_MSG('do quit task, self.hookRewardTaskNum is ', self.hookRewardTaskNum)
+                LOG_IFO('do quit task, self.hookRewardTaskNum is ', self.hookRewardTaskNum)
 
         self.addSendUpdatedTaskList(uptaskList)
         self._afterTaskQuit(owner, quitTaskIds, reason)
@@ -1667,8 +1724,6 @@ class TaskInfo(userType.UserSoleType):
                                           varData['ParamVar'])
 
             self.onTaskEnd(owner, taskId, opUUID, srcType)
-
-            owner.taskFlowLog(taskId, "TaskQuit", opUUID, reason=reason)
         return
 
     def onTaskEnd(self, owner, taskId, opUUID, srcType):
@@ -1704,7 +1759,7 @@ class TaskInfo(userType.UserSoleType):
 
     def getChildTaskIds(self, taskId, deep=0):
         if deep >= 5:
-            gameengine.reportCritical('getChildTaskIds, deep>=5:', taskId)
+            gameengine.panicStack('getChildTaskIds, deep>=5:', taskId)
             return []
         childTaskIds = []
         taskData = dataUtils.getTaskData(taskId)
@@ -1730,12 +1785,12 @@ class TaskInfo(userType.UserSoleType):
                 continue
             remChildTaskIds.extend(self.remChildTask(task.taskId))
         if len(remChildTaskIds) > 0:
-            INFO_MSG('     in _cleanOldChildTasks, remChildTaskIds:', remChildTaskIds)
+            LOG_IFO('     in _cleanOldChildTasks, remChildTaskIds:', remChildTaskIds)
             owner.client.onTasksRem(remChildTaskIds)
         return
 
     def onTaskStepUpdate(self, owner, targetType, taskIds, args):
-        INFO_MSG('TaskInfo::onTaskStepUpdate:', targetType, taskIds, args)
+        LOG_DBG('TaskInfo::onTaskStepUpdate:', targetType, taskIds, args)
         if taskIds:
             if type(taskIds) not in (tuple, list):
                 taskIds = (taskIds,)
@@ -1756,7 +1811,7 @@ class TaskInfo(userType.UserSoleType):
             if targetType == gameconst.TaskTargetType.TASK_TARGET_ITEMS:
                 updated = task.updateTgtItemsCount(owner)
                 if updated:
-                    INFO_MSG('TaskInfo::onTaskStepUpdate items:', taskId, args)
+                    LOG_IFO('TaskInfo::onTaskStepUpdate items:', taskId, args)
                     self.addSendUpdatedTaskList([task, ])
                     bUpdate = True
             elif targetType == gameconst.TaskTargetType.TASK_TARGET_COLLECT:
@@ -1767,7 +1822,7 @@ class TaskInfo(userType.UserSoleType):
                 self.addSendUpdatedTaskList([task, ])
                 bUpdate = True
                 if tgtArrived:
-                    INFO_MSG('TaskInfo::onTaskStepUpdate:', args)
+                    LOG_IFO('TaskInfo::onTaskStepUpdate:', args)
                     self.checkTaskFinished(owner, task)
             elif targetType == gameconst.TaskTargetType.TASK_TARGET_COUNTER:
                 if not task.addCounterNum(targetType, args):
@@ -1776,12 +1831,12 @@ class TaskInfo(userType.UserSoleType):
                 self.addSendUpdatedTaskList([task, ])
                 bUpdate = True
                 if tgtArrived:
-                    INFO_MSG('TaskInfo::onTaskStepUpdate arrived:', args)
+                    LOG_IFO('TaskInfo::onTaskStepUpdate arrived:', args)
                     self.checkTaskFinished(owner, task)
             else:
                 tgtArrived = task.onTaskStepUpdate(targetType, args)
                 if tgtArrived:
-                    INFO_MSG('TaskInfo::onTaskStepUpdate arrived:', args)
+                    LOG_IFO('TaskInfo::onTaskStepUpdate arrived:', args)
                     self.checkTaskFinished(owner, task)
                     self.addSendUpdatedTaskList([task, ])
                     bUpdate = True
@@ -1791,18 +1846,18 @@ class TaskInfo(userType.UserSoleType):
         taskInfo = dataUtils.getTaskData(task.taskId)
         # 随任务接取后自动进入的
         if not dataUtils.taskFieldVal(taskInfo, 'ClaimCanTransIns'):
-            ERROR_MSG('taskEnterSpace illegal op 1', taskInfo)
+            LOG_ERR('taskEnterSpace illegal op 1', taskInfo)
             return False
 
         claimTransData = dataUtils.taskFieldVal(taskInfo, 'ClaimTransInstance')
         if not claimTransData:
-            ERROR_MSG('taskEnterSpace wrong cfg', taskInfo)
+            LOG_ERR('taskEnterSpace wrong cfg', taskInfo)
             return False
 
         needConfirm = claimTransData.get('NeedConfirm')
         # 不需要二次确认弹窗，接取任务主动进入地图
         if not needConfirm:
-            ERROR_MSG('taskEnterSpace illegal op 2', taskInfo)
+            LOG_ERR('taskEnterSpace illegal op 2', taskInfo)
             return False
 
         self._taskEnterSpace(owner, task.taskId, claimTransData)

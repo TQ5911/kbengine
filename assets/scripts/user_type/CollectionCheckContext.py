@@ -14,7 +14,7 @@ class CollectionCheckWonderLand(object):
         return avatarCell.checkSummonWonderLandBossCell(self.bossId)
 
     def checkBase(self, avatarBase):
-        return avatarBase.checkSummonWonderLandBossBase(self.itemId, self.itemNum)
+        return avatarBase.checkSummonWonderLandBossBase(self.itemId, self.itemNum, self.bossId)
 
 class CollectionCheckSiegeWar(object):
     CHECK_TYPE = CollectionCheckType.SIEGE_WAR

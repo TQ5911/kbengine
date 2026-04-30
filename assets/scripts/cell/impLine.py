@@ -3,7 +3,7 @@ from KBEDebug import *
 
 import KBEngine
 
-from common.KBEDebug import INFO_MSG
+from common.KBEDebug import LOG_IFO
 import formula
 import gameconst
 import gameengine
@@ -23,6 +23,7 @@ import gamePlay_gamePlay as GGD
 import branchData_set as BDS
 import gametimer
 
+import branchData_switchLines as BDSL
 
 class ImpLine(object):
     def _buildEnterLineExtra(self, position, dataDic=None):
@@ -40,40 +41,40 @@ class ImpLine(object):
 
     @utils.isMyself
     def applyEnterLine(self, exposed, lineType):
-        if lineType == formula.getMapId(self.spaceNo):
+        if lineType == formula.fetchMapId(self.spaceNo):
             return
 
-        lineNo = formula.getLineNo(self.spaceNo)
-        enterPos = formula.whatSpaceBornPoint(lineType)
+        lineNo = formula.parseLineNo(self.spaceNo)
+        enterPos = formula.getSpaceBornPoint(lineType)
         if not self.onCheckMapUnlocked(lineType):
             return
 
         self.applyEnterLineInternal(lineType, lineNo, enterPos, self.direction, {"telToMainCityWhenFull": False})
 
     def enterLineByNpc(self, lineType, *args, **kwargs):
-        lineNo = formula.getLineNo(self.spaceNo)
+        lineNo = formula.parseLineNo(self.spaceNo)
         lineType = int(lineType)
         mapId = lineType
 
-        if not formula.isLineSpace(self.spaceNo):
+        if not formula.inLineScene(self.spaceNo):
             return
 
-        enterPos, direction = formula.whatSpaceBornPosAndDir(lineType)
+        enterPos, direction = formula.getSpaceBornPosAndDir(lineType)
         if not self.onCheckMapUnlocked(mapId):
             return
 
-        if formula.isDuelMapId(lineType):
+        if formula.checkDuelMapId(lineType):
             _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
             self.tryRegiTeleportOutsideRecord(self.spaceNo, _options)
 
         self.applyEnterLineInternal(lineType, lineNo, enterPos, direction, {"telToMainCityWhenFull": False})
 
     def applyEnterLineInternal(self, lineType, lineNo, position, direction, extra=None):
-        INFO_MSG('zt: applyEnterLineInternal', lineType, lineNo, position, direction, extra)
-        if formula.isDungeonSpace(self.spaceNo):
+        LOG_IFO('zt: applyEnterLineInternal', lineType, lineNo, position, direction, extra)
+        if formula.inDungeonScene(self.spaceNo):
             # 从副本进入大世界一定要走icomplexTeleport过来
             if not (isinstance(extra, dict) and extra.get('toLine')):
-                WARNING_MSG('dungeon enter line without toLine')
+                LOG_WARN('dungeon enter line without toLine')
                 return
 
         position = position or self.position
@@ -84,7 +85,7 @@ class ImpLine(object):
 
     # 已经在LineStub占了人数坑位，如果进入失败需要释放坑位
     def beginEnterLine(self, lineType, lineNo, spaceBox, position, direction, extra):
-        INFO_MSG('zt: beginEnterLine', lineType, lineNo, spaceBox.id)
+        LOG_IFO('zt: beginEnterLine', lineType, lineNo, spaceBox.id)
         cmpLineType = gameconst.TeleportLock.ENTER_LINE
 
         if extra.get('isLogin'):
@@ -97,16 +98,16 @@ class ImpLine(object):
 
             self.aquireTeleportLock(cmpLineType)
 
-            spaceNo = formula.getLineSpaceNo(lineType, lineNo)
+            spaceNo = formula.combineLineSpaceNo(lineType, lineNo)
 
-            if formula.spaceInWorldLine(self.spaceNo):
+            if formula.inWorldLineScene(self.spaceNo):
                 extra['fromSpaceMgrBox'] = self.spaceMgr
 
             self.teleportToCell(spaceBox.cell, spaceNo, position, direction, '_onEnterLine',
                                 (self.spaceNo, lineType, lineNo, extra))
 
     def _onEnterLine(self, fromSpaceNo, lineType, lineNo, extra):
-        INFO_MSG('_onEnterLine', fromSpaceNo, lineType, lineNo, extra)
+        LOG_IFO('_onEnterLine', fromSpaceNo, lineType, lineNo, extra)
 
         succInfo = {}
         succInfo['teamUUID'] = self.teamId if self.teamId else self.raidId
@@ -127,28 +128,28 @@ class ImpLine(object):
 
         gameengine.getLineStub(lineType).enterLineSuccess(lineNo, self.base, self.gbId, succInfo)
 
-        if formula.isLineSpace(fromSpaceNo):
+        if formula.inLineScene(fromSpaceNo):
             self._clearLineState(fromSpaceNo)
 
-        if formula.isDuelGround(self.spaceNo):
+        if formula.inDuelScene(self.spaceNo):
             ret = self.setPKModel(gameconst.PKModel.PEACE)
             if ret:
                 self.changePKModeResetTargetId()
 
     def _checkSwitchLine(self, toLineNo):
-        if not formula.isLineSpace(self.spaceNo):
+        if not formula.inLineScene(self.spaceNo):
             return False
 
         if toLineNo < 0:
             return False
-        if self.hasState(gameconst.State.Teleporting):
+        if self.hasState(gameconst.StateEnum.Teleporting):
             return False
 
-        lineType = formula.getMapId(self.spaceNo)
-        if toLineNo >= utils.getLineMaxNumber(lineType):
+        lineType = formula.fetchMapId(self.spaceNo)
+        if toLineNo >= utils.fetchLineMaxNumber(lineType):
             return False
 
-        if toLineNo == formula.getLineNo(self.spaceNo):
+        if toLineNo == formula.parseLineNo(self.spaceNo):
             return False
 
         return True
@@ -160,51 +161,51 @@ class ImpLine(object):
 
     def switchLineAndPosition(self, toLineNo, toPosition, src=None, extra=None, needPending=True):
         canSwitch = self._checkSwitchLine(toLineNo)
-        INFO_MSG('applySwitchLine', self.spaceNo, toLineNo, canSwitch, src, extra)
+        LOG_IFO('applySwitchLine', self.spaceNo, toLineNo, canSwitch, src, extra)
         if not canSwitch:
             return
 
-        self.checkEnterLine(formula.getMapId(self.spaceNo), toLineNo, toPosition, needPending,
+        self.checkEnterLine(formula.fetchMapId(self.spaceNo), toLineNo, toPosition, needPending,
                             'onCheckSwitchLine', (self.spaceNo, toLineNo, toPosition, src, extra))
 
     def _onCheckSwitchLineReCheckCond(self, checkCode, checksumSpaceNo, toLineNo):
-        if checkCode != gameconst.EnterLineCode.CAN_ENTER:
-            WARNING_MSG("_onCheckSwitchLineReCheckCond:: cant enter", checkCode, checksumSpaceNo, toLineNo)
+        if checkCode != gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
+            LOG_WARN("_onCheckSwitchLineReCheckCond:: cant enter", checkCode, checksumSpaceNo, toLineNo)
             return False
 
         if not self._checkSwitchLine(toLineNo):
-            WARNING_MSG("_onCheckSwitchLineReCheckCond:: checkswitchline failed", checkCode, checksumSpaceNo, toLineNo)
+            LOG_WARN("_onCheckSwitchLineReCheckCond:: checkswitchline failed", checkCode, checksumSpaceNo, toLineNo)
             return False
 
-        if not formula.isLineSpace(checksumSpaceNo):
-            WARNING_MSG("_onCheckSwitchLineReCheckCond:: checksumSpaceNo failed", checkCode, checksumSpaceNo, toLineNo)
+        if not formula.inLineScene(checksumSpaceNo):
+            LOG_WARN("_onCheckSwitchLineReCheckCond:: checksumSpaceNo failed", checkCode, checksumSpaceNo, toLineNo)
             return False
 
-        lineType = formula.getMapId(self.spaceNo)
-        checklineType = formula.getMapId(checksumSpaceNo)
+        lineType = formula.fetchMapId(self.spaceNo)
+        checklineType = formula.fetchMapId(checksumSpaceNo)
         if lineType != checklineType:
-            WARNING_MSG("_onCheckSwitchLineReCheckCond:: checklinetype failed", checkCode, checksumSpaceNo,
+            LOG_WARN("_onCheckSwitchLineReCheckCond:: checklinetype failed", checkCode, checksumSpaceNo,
                         self.spaceNo, toLineNo)
             return False
 
         return True
 
     def onCheckSwitchLine(self, checkCode, checksumSpaceNo, toLineNo, toPosition, src, extra):
-        INFO_MSG("onCheckSwitchLine::", checkCode, checksumSpaceNo, toLineNo, toPosition, src, extra)
-        if checkCode == gameconst.EnterLineCode.CAN_ENTER:
+        LOG_IFO("onCheckSwitchLine::", checkCode, checksumSpaceNo, toLineNo, toPosition, src, extra)
+        if checkCode == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
             _result = self._onCheckSwitchLineReCheckCond(checkCode, checksumSpaceNo, toLineNo)
             extra = extra if extra is not None else {}
             if not _result:
                 failFunc = extra.get("failCallback", '')
                 failArgs = extra.get("callbackArgs", ())
-                gameengine.getLineStub(formula.getMapId(checksumSpaceNo)).checkCanEnterLineFinallyFailed(
+                gameengine.getLineStub(formula.fetchMapId(checksumSpaceNo)).checkCanEnterLineFinallyFailed(
                     toLineNo, self.base, self.gbId, extra, failFunc, (checkCode, *failArgs))
                 return
             extra.update({'src': src})
             self._switchLineInternal(toLineNo, toPosition, extra=extra)
 
         else:
-            if checkCode == gameconst.EnterLineCode.FAIL_MERGE_LINE:
+            if checkCode == gameconst.EnterLineCodeEnum.ERR_MERGE_LINE:
                 self.showMsg(BDS.datas["Branch_mergeChangeMsg"]["value"], [])
             else:
                 self.showMsg(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
@@ -215,7 +216,7 @@ class ImpLine(object):
             _fn and _fn(checkCode, *failArgs)
 
     def _switchLineInternal(self, toLineNo, toPosition=None, toDir=None, extra=None):
-        INFO_MSG('_switchLineInternal', self.spaceNo, toLineNo)
+        LOG_IFO('_switchLineInternal', self.spaceNo, toLineNo)
         extra = extra or {}
         _cbfn = "_switchLineInternalAfterCast"
         _cbargs = (toLineNo, toPosition, toDir, extra if extra else {})
@@ -223,17 +224,17 @@ class ImpLine(object):
         if extra.get('hasCast'):
             getattr(self, _cbfn)(*_cbargs)
         else:
-            self._commonNeedCast(CCD.datas.teleportCast, gameconst.State.Teleporting, gameconst.CastType.teleport,
+            self._commonNeedCast(CCD.datas.teleportCast, gameconst.StateEnum.Teleporting, gameconst.CastType.teleport,
                                 _cbfn, _cbargs)
 
     def onMergeLine(self, toLineNo):
-        DEBUG_MSG("onMergeLine", self.spaceNo, toLineNo)
+        LOG_DBG("onMergeLine", self.spaceNo, toLineNo)
         self.client.beginMergeLine()
         self._switchLineInternalAfterCast(toLineNo, None, None, {})
 
     def _switchLineInternalAfterCast(self, toLineNo, toPosition, toDir, extra):
-        lineType = formula.getMapId(self.spaceNo)
-        lineNo = formula.getLineNo(self.spaceNo)
+        lineType = formula.fetchMapId(self.spaceNo)
+        lineNo = formula.parseLineNo(self.spaceNo)
 
         extra = self._buildEnterLineExtra(toPosition, extra)
 
@@ -241,12 +242,12 @@ class ImpLine(object):
             extra['dir'] = toDir
 
         # 这时候可能被传到副本里，会报错
-        if formula.isLineSpace(self.spaceNo):
+        if formula.inLineScene(self.spaceNo):
             gameengine.getLineStub(lineType).switchLine(lineNo, toLineNo, self.base, self.gbId, extra)
 
     # 已经在目标分线占了人数坑位，如果进入失败需要释放坑位
     def beginSwitchLine(self, lineType, fromLineNo, toLineNo, toSpaceBox, extra):
-        INFO_MSG('beginSwitchLine', lineType, self.spaceNo, fromLineNo, toLineNo, toSpaceBox.id)
+        LOG_IFO('beginSwitchLine', lineType, self.spaceNo, fromLineNo, toLineNo, toSpaceBox.id)
 
         if self.teleportLock and self.teleportLock!=gameconst.TeleportLock.SWITCH_LINE:
             failReason = 'locked:%s'%self.teleportLock
@@ -255,16 +256,18 @@ class ImpLine(object):
 
         self.aquireTeleportLock(gameconst.TeleportLock.SWITCH_LINE)
 
-        spaceNo = formula.getLineSpaceNo(lineType, toLineNo)
+        spaceNo = formula.combineLineSpaceNo(lineType, toLineNo)
         enterPos = extra.pop('position', self.position)
         enterDir = extra.pop('dir', self.direction)
+        if toLineNo == 0 and lineType in BDSL.datas:
+            enterPos = BDSL.datas[lineType]['position']
         extra['fromSpaceMgrBox'] = self.spaceMgr
 
         self.teleportToCell(toSpaceBox.cell, spaceNo, enterPos, enterDir, '_onSwitchLine',
                             (lineType, fromLineNo, toLineNo, extra))
 
     def _onSwitchLine(self, lineType, fromLineNo, toLineNo, extra):
-        INFO_MSG('_onSwitchLine', lineType, fromLineNo, toLineNo, extra)
+        LOG_IFO('_onSwitchLine', lineType, fromLineNo, toLineNo, extra)
         gameengine.getLineStub(lineType).switchLineSuccess(fromLineNo, toLineNo, self.base, self.gbId, extra)
 
         if self.teleportLock:
@@ -283,13 +286,13 @@ class ImpLine(object):
 
     @utils.isMyself
     def applyLeaveLine(self, exposed):
-        INFO_MSG('applyLeaveLine', self.spaceNo)
-        if formula.isDuelGround(self.spaceNo):
+        LOG_IFO('applyLeaveLine', self.spaceNo)
+        if formula.inDuelScene(self.spaceNo):
             mapId, outRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo)
             if outRecord:
                 self.applyEnterLineInternal(
                     mapId,
-                    formula.getLineNo(outRecord.spaceNo),
+                    formula.parseLineNo(outRecord.spaceNo),
                     outRecord.position,
                     outRecord.direction,
                     {"telToMainCityWhenFull": True})
@@ -297,49 +300,49 @@ class ImpLine(object):
     # 有的时候已经离开分线了，调用这个接口清除分线状态，需要传fromSpaceNo，因为self.spaceNo已经是离开后场景了
     # toSpaceNo==0时是传到了其他场景后清除源分线的状态
     def _applyLeaveLineInternal(self, fromSpaceNo, toSpaceNo, toPosition, toDirection):
-        INFO_MSG('_applyLeaveLineInternal', self.spaceNo, fromSpaceNo, toSpaceNo)
-        if toSpaceNo and not formula.isLineSpace(self.spaceNo):
+        LOG_IFO('_applyLeaveLineInternal', self.spaceNo, fromSpaceNo, toSpaceNo)
+        if toSpaceNo and not formula.inLineScene(self.spaceNo):
             return
 
-        if formula.spaceInWorldLine(self.spaceNo) and toSpaceNo:
-            updateTimer = self.popTempMiscProp(gameconst.AvatarProps.updateWorldLineAreaTimer, 0)
+        if formula.inWorldLineScene(self.spaceNo) and toSpaceNo:
+            updateTimer = self.popTempMiscProp(gameconst.EntityPropsEnum.updateWorldLineAreaTimer, 0)
             if updateTimer:
                 self.pyDelTimer(updateTimer, gametimer.AVATAR_UPDATE_AREAID)
 
-        lineType = formula.getMapId(fromSpaceNo)
+        lineType = formula.fetchMapId(fromSpaceNo)
         gameengine.getLineStub(lineType).leaveLine(self.base, self.gbId, fromSpaceNo, toSpaceNo, toPosition, toDirection)
 
     def _clearLineState(self, clearSpaceNo):
-        lineType = formula.getMapId(clearSpaceNo)
+        lineType = formula.fetchMapId(clearSpaceNo)
         gameengine.getLineStub(lineType).leaveLine(self.base, self.gbId, clearSpaceNo, 0,
                                                                 gameconst.POSITION_ZERO, gameconst.DIRECTION_ZERO)
 
     def beginLeaveLine(self, fromSpaceNo, toSpaceNo, toPosition, toDirection):
-        INFO_MSG('beginLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo, toPosition, toDirection)
+        LOG_IFO('beginLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo, toPosition, toDirection)
 
         # 可以不指定toSpaceNo，比如从分线内进入分线，已经离开老分线后才调用_applyLeaveLineInternal，这里只
         # 执行上老分线的离开函数
         if not toSpaceNo:
             pass
-        elif formula.isLineSpace(toSpaceNo):
-            toLineType = formula.getMapId(toSpaceNo)
-            toLineNo = formula.getLineNo(toSpaceNo)
+        elif formula.inLineScene(toSpaceNo):
+            toLineType = formula.fetchMapId(toSpaceNo)
+            toLineNo = formula.parseLineNo(toSpaceNo)
             extra = {'callback': '_onLeaveLine', 'callbackArgs': (fromSpaceNo, toSpaceNo), 'telToMainCityWhenFull': True}
             self.applyEnterLineInternal(toLineType, toLineNo, toPosition, toDirection, extra)
         else:
-            ERROR_MSG('teleport to %s is not supported' % toSpaceNo)
+            LOG_ERR('teleport to %s is not supported' % toSpaceNo)
 
     def _onLeaveLine(self, fromSpaceNo, toSpaceNo):
-        INFO_MSG('_onLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo)
+        LOG_IFO('_onLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo)
 
     def beginGoBackLine(self, lineSpaceNo, spaceBox, dstPos, dstDir, callback, callbackArgs):
-        INFO_MSG('beginGoBackLine', lineSpaceNo, callback, callbackArgs)
+        LOG_IFO('beginGoBackLine', lineSpaceNo, callback, callbackArgs)
         fromSpaceNo = self.spaceNo
         self.teleportToCell(spaceBox.cell, lineSpaceNo, dstPos, dstDir, '_onGoBackLine',
                             (fromSpaceNo, callback, callbackArgs))
 
     def _onGoBackLine(self, fromSpaceNo, callback, callbackArgs):
-        INFO_MSG('_onGoBackLine', fromSpaceNo, callback, callbackArgs)
+        LOG_IFO('_onGoBackLine', fromSpaceNo, callback, callbackArgs)
 
         func = getattr(self, callback)
         func and func(*callbackArgs)
@@ -354,13 +357,13 @@ class ImpLine(object):
         extra = self._buildEnterLineExtra(dstPos)
         extra['dir'] = dstDir
 
-        lineType = formula.getMapId(self.spaceNo)
+        lineType = formula.fetchMapId(self.spaceNo)
         gameengine.getLineStub(lineType).autoSwitchLine(self, self.gbId, self.spaceNo, extra, cbName, cbArgs)
 
     def onCheckAutoSwitch(self, toLineNo, toSpaceBox, position, desTelId, fromTelId, teleporter, dstSpaceNo, dstPos,
                           dstDir, src):
         dstPos = position or dstPos
-        if toLineNo >= 0 and toLineNo != formula.getLineNo(self.spaceNo):
+        if toLineNo >= 0 and toLineNo != formula.parseLineNo(self.spaceNo):
             self._switchLineInternal(toLineNo, dstPos, dstDir, extra={'src': src})
         else:
             self.showMsg(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
@@ -373,28 +376,28 @@ class ImpLine(object):
             return
 
         if lineType not in gameconst.lineStubMap():
-            ERROR_MSG('queryLineInfo invalid lineType:', lineType)
+            LOG_ERR('queryLineInfo invalid lineType:', lineType)
             return
 
         gameengine.getLineStub(lineType).doQueryLineInfo(self.spaceNo, self.base, self.gbId)
 
     def updateAreaIdInWorldLine(self):
-        if formula.spaceInWorldLine(self.spaceNo):
-            lineType = formula.getMapId(self.spaceNo)
-            lastPos = self.getTempMiscProp(gameconst.AvatarProps.lastUpdateAreaPos)
+        if formula.inWorldLineScene(self.spaceNo):
+            lineType = formula.fetchMapId(self.spaceNo)
+            lastPos = self.getTempMiscProp(gameconst.EntityPropsEnum.lastUpdateAreaPos)
             if lastPos and sMath.offset2DSum(lastPos, self.position) < 5:
                 return
-            lineNo = formula.getLineNo(self.spaceNo)
-            upData = {'areaId': utils.getAreaId(formula.getMapId(self.spaceNo), self.position)}
-            gameengine.getLineStub(formula.getMapId(self.spaceNo)).updateLinePlayerInfo(lineNo, self.base, self.gbId, upData)
-            self.setTempMiscProp(gameconst.AvatarProps.lastUpdateAreaPos, tuple(self.position))
+            lineNo = formula.parseLineNo(self.spaceNo)
+            upData = {'areaId': utils.getAreaId(formula.fetchMapId(self.spaceNo), self.position)}
+            gameengine.getLineStub(formula.fetchMapId(self.spaceNo)).updateLinePlayerInfo(lineNo, self.base, self.gbId, upData)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.lastUpdateAreaPos, tuple(self.position))
         else:
-            self.popTempMiscProp(gameconst.AvatarProps.lastUpdateAreaPos)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.lastUpdateAreaPos)
 
     def onCheckMapUnlocked(self, mapId):
         mapData = GGD.datas.get(mapId)
         if not mapData:
-            ERROR_MSG('onCheckMapUnlocked but mapData invalid:', mapId)
+            LOG_ERR('onCheckMapUnlocked but mapData invalid:', mapId)
             return False
 
         checkResult = True
@@ -404,6 +407,6 @@ class ImpLine(object):
             if not checkResult:
                 self.client.onMapUnlockMessagePre(mapId)
         else:
-            DEBUG_MSG("onCheckMapUnlocked map always locked")
+            LOG_DBG("onCheckMapUnlocked map always locked")
 
         return checkResult

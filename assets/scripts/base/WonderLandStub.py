@@ -28,7 +28,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         self.pyAddTimer(5, 5, gametimer.CLEAR_MULTI_ENTER_TIME_OUT)
 
     def doNext(self):
-        DEBUG_MSG('WonderLandStub doNext')
+        LOG_DBG('WonderLandStub doNext')
         _mapId = WL_FD.datas[self.floor]['ID']
         self._createStaticSpace(_mapId)
         return
@@ -62,7 +62,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def doEnterWonderLand(self, box, gbId, extra):
         _spaceVal = self.defaultSapceVal()
         if not _spaceVal:
-            ERROR_MSG('WonderLandStub::doEnterWonderLand: spaceVal not found')
+            LOG_ERR('WonderLandStub::doEnterWonderLand: spaceVal not found')
             return
 
         if not self.canSpaceEnter(_spaceVal.getSpaceNo()):
@@ -75,7 +75,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onEnterWonderLandSuccess(self, gbId, spaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            ERROR_MSG('WonderLandStub::onEnterWonderLandSuccess: playerVal not found', gbId)
+            LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: playerVal not found', gbId)
             return
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
@@ -84,19 +84,19 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onLeaveWonderLand(self, gbId):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            ERROR_MSG('WonderLandStub::onLeaveWonderLand: playerVal not found', gbId)
+            LOG_ERR('WonderLandStub::onLeaveWonderLand: playerVal not found', gbId)
             return
 
         self.removePlayer(gbId)
 
     def onLoadGroupEntities(self, info):
-        DEBUG_MSG("WonderLandStub::onLoadGroupEntities", info)
+        LOG_DBG("WonderLandStub::onLoadGroupEntities", info)
         super(WonderLandStub, self).onLoadGroupEntities(info)
 
     def onRefreshGroupEntities(self, info):
-        DEBUG_MSG("WonderLandStub::onRefreshGroupEntities", info)
+        LOG_DBG("WonderLandStub::onRefreshGroupEntities", info)
         super(WonderLandStub, self).onRefreshGroupEntities(info)
 
     def onDestroyGroupEntities(self, info):
-        DEBUG_MSG("WonderLandStub::onDestroyGroupEntities", info)
+        LOG_DBG("WonderLandStub::onDestroyGroupEntities", info)
         super(WonderLandStub, self).onDestroyGroupEntities(info)

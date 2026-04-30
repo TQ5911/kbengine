@@ -28,7 +28,7 @@ class BaseBag(itemContainer.ItemContainer):
         try:
             super(BaseBag, self)._lateReload()
         except TypeError as e:
-            ERROR_MSG('BaseBag', id(BaseBag), id(self.__class__), self.__class__.__name__)
+            LOG_ERR('BaseBag', id(BaseBag), id(self.__class__), self.__class__.__name__)
             raise e
         return
 
@@ -60,7 +60,7 @@ class BaseBag(itemContainer.ItemContainer):
         return containerData
 
     def isLocked(self):
-        now = utils.getNow()
+        now = utils.curTS()
         return now < self.lockedTime
 
     def unLockBag(self):
@@ -70,7 +70,7 @@ class BaseBag(itemContainer.ItemContainer):
     def tryLockBag(self, lockSecs=3, lockDesc=''):
         if self.isLocked():
             return False
-        self.lockedTime = utils.getNow() + lockSecs
+        self.lockedTime = utils.curTS() + lockSecs
         self.lockDesc = lockDesc
         return True
 
@@ -116,7 +116,7 @@ class BaseBag(itemContainer.ItemContainer):
                          srcSubType=0, idipSource=0):
         opStat, planDict = super(BaseBag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDict, notify,
                                                                  syncToClient, srcSubType, idipSource)
-        if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
             return opStat, planDict
         if src == AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
             return opStat, planDict
@@ -139,7 +139,7 @@ class BaseBag(itemContainer.ItemContainer):
         opStat, gridId = super(BaseBag, self).addItemsToNewGrid(owner, itemObj, opUUID, src, detail, gridId,
                                                                 notify=notify, syncToClient=syncToClient, srcSubType=0,
                                                                 idipSource=0)
-        if opStat == gameconst.BagOPStat.BAG_OP_STAT_OK and syncToClient:
+        if opStat == gameconst.BagOPStat.OPERATE_BAG_STAT_OK and syncToClient:
             if itemObj.isEquipmentItem():
                 owner.client.onAddBagItems(
                     self.bagType, 
@@ -191,7 +191,7 @@ class BaseBag(itemContainer.ItemContainer):
 
     @utils.checkBagLocked
     def doBagSort(self, owner, sortFunc=None):
-        now = utils.getNow()
+        now = utils.curTS()
         if now < self.lastSortBag + dataUtils.getConstVal('bankSortCooldown', 5):
             return False
         bak_gridId2GridObj = cPickle.dumps(self.gridId2GridObj)
@@ -210,16 +210,16 @@ class BaseBag(itemContainer.ItemContainer):
             opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_BAG_SORT
             opStat, _ = self.addItemsWithPlan(owner, gridObjs, opUUID, src, None, notify=False, syncToClient=False)
-            if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
+            if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 # raise Exception
-                gameengine.reportCritical('!!!!! doBagSort error:', opStat)
+                gameengine.panicStack('!!!!! doBagSort error:', opStat)
                 self.gridId2GridObj = cPickle.loads(bak_gridId2GridObj)
                 self.itemId2gridIds = cPickle.loads(bak_itemId2gridIds)
                 return
-            self.lastSortBag = utils.getNow()
+            self.lastSortBag = utils.curTS()
             return True
         except Exception as e:
-            gameengine.reportCritical('!!!!! doBagSort Exception:%s' % e)
+            gameengine.panicStack('!!!!! doBagSort Exception:%s' % e)
             self.gridId2GridObj = cPickle.loads(bak_gridId2GridObj)
             self.itemId2gridIds = cPickle.loads(bak_itemId2gridIds)
             return True

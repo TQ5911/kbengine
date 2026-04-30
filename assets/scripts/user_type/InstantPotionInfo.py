@@ -6,7 +6,7 @@ import itemData_itemData as ID_IDD
 import gameconst
 import utils
 
-class InstantPotionVal(userType.UserSoleType):
+class InstantPotionVal(userType.UserSingleType):
     '''INSTANT_POTION_DATA_INFO'''
     def __init__(self, itemId, slotId, potionState):
         self.itemId = itemId
@@ -20,7 +20,7 @@ class InstantPotionVal(userType.UserSoleType):
         return True
 
     def isAuto(self):
-        return utils.hasBit(self.potionState, gameconst.PotionState.AUTO)
+        return utils.bhas(self.potionState, gameconst.PotionState.AUTO)
 
     def isHp(self):
         itemData = ID_IDD.datas.get(self.itemId)

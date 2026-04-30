@@ -7,7 +7,7 @@
     "logLevel":0,
     "logRotateSize":500,
     "redisServer":{
-    	"addr":"192.168.10.13:6379",
+    	"addr":"192.168.10.12:6379",
     	"passwd":"",
     	"db":""
     },

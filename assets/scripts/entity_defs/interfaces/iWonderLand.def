@@ -79,6 +79,7 @@
         <checkSummonWonderLandBossBase>
             <Arg>          ITEM_ID                      </Arg>
             <Arg>          UINT32                       </Arg>
+            <Arg>          UINT32                       </Arg>
         </checkSummonWonderLandBossBase>
 
         <addWonderLandDurationFailedRewindTimes>
@@ -141,6 +142,7 @@
 
         <leaveWonderLandInternal>
             <Arg>           UINT8                       </Arg>
+            <Arg>           BOOL                        </Arg>
         </leaveWonderLandInternal>
 
         <getWonderLandLeftTime> <Exposed/>

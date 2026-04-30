@@ -634,7 +634,7 @@ datas = _tools.RODict({
     "UIRoleAuthorizationPanel": _tools.RODict({
         "function": "UIRoleAuthorizationPanel",
         "type": "roleAuthorization",
-        "level": 999,
+        "level": 0,
         "task": 86060115,
         "day": 0,
         "switch": 0
@@ -1218,7 +1218,7 @@ datas = _tools.RODict({
     "Rmb": _tools.RODict({
         "function": "Rmb",
         "type": "pay_rmb",
-        "level": 999,
+        "level": 0,
         "task": 86060115,
         "day": 0,
         "switch": 0
@@ -1251,7 +1251,7 @@ datas = _tools.RODict({
         "function": "Hotkey",
         "type": "settings_hotKey",
         "level": 0,
-        "task": 86060115,
+        "task": 0,
         "day": 0,
         "switch": 0
     }),
@@ -1293,6 +1293,14 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "switch": 1
+    }),
+    "worldLevel": _tools.RODict({
+        "function": "worldLevel",
+        "type": "worldLevel",
+        "level": 20,
+        "task": 0,
+        "day": 1,
         "switch": 1
     })
 })
@@ -1456,6 +1464,7 @@ CardChangeBtn = 154
 UIDeathPunishmentPanel = 155
 UIMainLockPanel = 156
 CurrencyExchange = 157
+worldLevel = 158
 
 
 
@@ -1618,6 +1627,7 @@ funcDic = _tools.RODict({
     "UIDeathPunishmentPanel" : 155,
     "UIMainLockPanel" : 156,
     "CurrencyExchange" : 157,
+    "worldLevel" : 158,
 })
 reverseFuncDic = _tools.RODict({
     0 : "UIBagPanel",
@@ -1778,6 +1788,7 @@ reverseFuncDic = _tools.RODict({
     155 : "UIDeathPunishmentPanel",
     156 : "UIMainLockPanel",
     157 : "CurrencyExchange",
+    158 : "worldLevel",
 })
 levelDic = _tools.RODict({
     15 : _tools.ROList([
@@ -1789,10 +1800,8 @@ levelDic = _tools.RODict({
     ]),
     999 : _tools.ROList([
         31,
-        75,
         76,
         77,
-        148,
     ]),
     4 : _tools.ROList([
         50,
@@ -1830,6 +1839,7 @@ levelDic = _tools.RODict({
         90,
         103,
         116,
+        158,
     ]),
     26 : _tools.ROList([
         91,
@@ -1921,7 +1931,6 @@ taskDic = _tools.RODict({
         148,
         150,
         151,
-        152,
         155,
     ]),
     86010014 : _tools.ROList([
@@ -2056,7 +2065,10 @@ taskDic = _tools.RODict({
     ]),
 })
 dayDic = _tools.RODict({
+    1 : _tools.ROList([
+        158,
+    ]),
 })
-maxBit = 157
+maxBit = 158
 
 typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings'}

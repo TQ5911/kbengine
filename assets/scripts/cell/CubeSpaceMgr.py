@@ -48,27 +48,27 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         if KBEngine.isShuttingDown():
             return
 
-        _mapId = formula.getMapId(self.spaceNo)
-        _dunData = utils.getDunStructureModuleData(_mapId)
+        _mapId = formula.fetchMapId(self.spaceNo)
+        _dunData = utils.getDunStructModData(_mapId)
         if not _dunData:
-            ERROR_MSG("can't find dunData for mapId:%d" % _mapId)
+            LOG_ERR("can't find dunData for mapId:%d" % _mapId)
             return
 
         _cubeData = _dunData.get('Cube')
         if not _cubeData:
-            WARNING_MSG("can't find cubeData in dunData for mapId:%d" % _mapId)
+            LOG_WARN("can't find cubeData in dunData for mapId:%d" % _mapId)
             return
 
         _space = gameglobal.localSpaceIDMap.get(self.spaceID)
         if not _space:
-            ERROR_MSG("can't find localSpace for spaceID:%d" % self.spaceID)
+            LOG_ERR("can't find localSpace for spaceID:%d" % self.spaceID)
             return
 
         _gids = []
         _pools = list(_cubeData.get('Teleporter', {}).keys())
         _pools = random.sample(_pools, min(num, len(_pools)))
         for _gid in _pools:
-            for i in utils.generateGameEntityId(int(_gid), 1):
+            for i in utils.genGameEntityId(int(_gid), 1):
                 _gids.append(int(i))
 
         _entityProps = []
@@ -105,16 +105,16 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
         _player = KBEngine.entities.get(playerEntId)
         if not _player:
-            ERROR_MSG('can not find player entity', playerEntId)
+            LOG_ERR('can not find player entity', playerEntId)
             return
 
         _buffId = self.cubeArena.getChallengerBuff(self.spaceNo)
-        DEBUG_MSG('enter arena cube', _buffId)
+        LOG_DBG('enter arena cube', _buffId)
         _player.addBuff(_buffId, 1, _player.id)
         _player.client.onArenaKing(self.cubeArena.arenaKing)
 
     def _isArenaSpace(self):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         return cube_room.datas[_mapId]['sign'] == gameconst.CUBE_SIGN_ARENA
 
     def doInteractArenaKing(self, player):
@@ -132,7 +132,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         if not _nextCBTime:
             return
 
-        INFO_MSG('next arena cb time:', _nextCBTime)
+        LOG_IFO('next arena cb time:', _nextCBTime)
         self.cubeArenaTimerId = self._datetimeCallback(
             _nextCBTime, 
             '_onArenaCB', 
@@ -152,14 +152,14 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         
     def doSendArenaKingPos(self, box):
         if not self._isArenaSpace():
-            WARNING_MSG('doSendArenaKingPos', self.spaceNo)
+            LOG_WARN('doSendArenaKingPos', self.spaceNo)
             return
 
         _king = KBEngine.entities.get(self.cubeArena.arenaKing)
         if not _king:
             return
 
-        DEBUG_MSG('_notifyArenaKingPos', _king.position)
+        LOG_DBG('_notifyArenaKingPos', _king.position)
         box.client.onArenaKingPos(_king.position)
 
     def onPlayerRelive(self, box, playerGbId):
@@ -169,7 +169,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
         _boxCell = KBEngine.entities.get(box.id)
         if not _boxCell:
-            WARNING_MSG('can not find boxCell', box.id)
+            LOG_WARN('can not find boxCell', box.id)
             return
         _boxCell.addBuff(self.cubeArena.getChallengerBuff(self.spaceNo), 1, _boxCell.id)
 
@@ -177,11 +177,11 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
     # ------------------ 神秘商人 start -----------------------------------
     def destroyChanMap(self):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         _npcId = cube_floor.datas[_floor]['chapmanID']
         _waitDestroyes = []
-        for _eid in self.taggedEntities.get('Npc', []):
+        for _eid in self.tagEntities.get('Npc', []):
             _ent = KBEngine.entities.get(_eid)
             if not _ent:
                 continue
@@ -193,7 +193,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
             _ent.safeDestroy()
 
     def createChapMan(self, position, direction):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         _npcId = cube_floor.datas[_floor]['chapmanID']
 
@@ -206,12 +206,12 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
             'position': position,
             'npcId': _npcId,
             'name': N_ND.datas[_npcId]['name'],
-            'deathTime': cube_config.datas['cube_chapmanRefreshInterval']['value'] * 10 + utils.getNow(),
+            'deathTime': cube_config.datas['cube_chapmanRefreshInterval']['value'] * 10 + utils.curTS(),
         }
 
         _space = gameglobal.localSpaceIDMap.get(self.spaceID)
         if not _space:
-            ERROR_MSG("can't find localSpace for spaceID:%d" % self.spaceID)
+            LOG_ERR("can't find localSpace for spaceID:%d" % self.spaceID)
             return
 
         _space.createCellLocally('Npc', position, _dir, _params)

@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildBuildingVal(userType.UserSoleType):
+class GuildBuildingVal(userType.UserSingleType):
     '''GUILD_BUILDING_DATA_INFO'''
     def __init__(self, juYing=None, wuHua=None, xiangFang=None, yanWu=None, cangKu=None, junXu=None):
         self.juYing = juYing

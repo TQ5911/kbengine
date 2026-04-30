@@ -8,7 +8,7 @@ from gameconst import SiegeWarMonsterType as SMT
 from gameconst import siegeWarMonsterEnumDict as siegeTpInt
 from gameconst import siegeWarMiniMapNeedSync as smNeedSync
 from gameconst import SiegeWarGameState
-from gameconst import ChatChannel
+from gameconst import ChatChannelEnum
 import utils
 import gametimer
 import cityBattle_config as CBC
@@ -131,7 +131,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
     def __init__(self):
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)
-        INFO_MSG("SiegeWarSpaceMgr __init__")
+        LOG_IFO("SiegeWarSpaceMgr __init__")
 
         self.siegewarEntityDict = {}
         self.siegewarBowDict = {}
@@ -166,18 +166,18 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         self.checkSiegeBossPos()
         self.checkSpecialMonsterHpChange()
         if self.minimapChanged:
-            if utils.getNow() >= self.lastMiniMapSyncTime + miniMapSyncMinTime or self.minimapNeedSyncImmediate:
+            if utils.curTS() >= self.lastMiniMapSyncTime + miniMapSyncMinTime or self.minimapNeedSyncImmediate:
                 jsonData = json.dumps(self.minimapChangedData)
-                DEBUG_MSG("[lj]sync minimapInfo:", jsonData)
+                LOG_DBG("[lj]sync minimapInfo:", jsonData)
                 self.syncPlayer(lambda playerEnt: playerEnt.onSiegeWarMinimapInfoUpdate(jsonData))
                 self.minimapChanged = False
                 self.minimapNeedSyncImmediate = False
                 self.minimapChangedData = {}
-                self.lastMiniMapSyncTime = utils.getNow()
+                self.lastMiniMapSyncTime = utils.curTS()
 
         if self.siegeWarState == SiegeWarGameState.SIEGE_WAR_STATE_PREPARE:
-            if utils.getNow() >= self.officalStartTime:
-                DEBUG_MSG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE)
+            if utils.curTS() >= self.officalStartTime:
+                LOG_DBG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE)
                 self.siegeWarState = SiegeWarGameState.SIEGE_WAR_STATE_BATTLE
                 gameengine.getGlobalBase("SiegeWarSpaceStub").onSiegeWarGameStateChange(self.siegeWarState, 0)
 
@@ -185,7 +185,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 if siegeTp.ATTACK_AIRWALL in self.siegewarEntityDict:
                     self.siegewarEntityDict[siegeTp.ATTACK_AIRWALL].safeDestroy()
                     self.siegewarEntityDict.pop(siegeTp.ATTACK_AIRWALL)
-                    DEBUG_MSG("[lj]remove: ATTACK_AIRWALL")
+                    LOG_DBG("[lj]remove: ATTACK_AIRWALL")
                 removeList = []
                 for customID in self.siegewarEntityDict:
                     if customID.startswith(siegeTp.DEFEND_AIRWALL):
@@ -193,23 +193,23 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 for customID in removeList:
                     self.siegewarEntityDict[customID].safeDestroy()
                     self.siegewarEntityDict.pop(customID)
-                    DEBUG_MSG("[lj]remove: DEFEND_AIRWALL", customID)
+                    LOG_DBG("[lj]remove: DEFEND_AIRWALL", customID)
         if self.siegeWarState == SiegeWarGameState.SIEGE_WAR_STATE_BATTLE:
             #战魂buff
-            if utils.getNow() >= self.lastBuffCreateTime + CBC.datas['cityBattle_buffNumsRefreshGap']['value'] * 60:
+            if utils.curTS() >= self.lastBuffCreateTime + CBC.datas['cityBattle_buffNumsRefreshGap']['value'] * 60:
                 self.recreateBuffCreation()
 
             #结算
-            if utils.getNow() >= self.officalEndTime:
+            if utils.curTS() >= self.officalEndTime:
                 self.coreAreaOffenseCnt = self.coreAreaFlag.offenseNum
                 self.coreAreaDefenseCnt = self.coreAreaFlag.defenseNum
 
-                DEBUG_MSG("[lj]updateCoreArea: ", self.coreAreaOffenseCnt, self.coreAreaDefenseCnt)
+                LOG_DBG("[lj]updateCoreArea: ", self.coreAreaOffenseCnt, self.coreAreaDefenseCnt)
                 self.winnerCamp = self.getWinnerCamp()
                 self.loserCamp = 1 if self.winnerCamp == 2 else 2
                 self.winnerGuildUUID = self.offenseGuildUUID if self.winnerCamp == 1 else self.defenseGuildUUID
                 self.loserGuildUUID = self.defenseGuildUUID if self.winnerCamp == 1 else self.offenseGuildUUID
-                DEBUG_MSG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER, "winnerCamp: ", self.winnerCamp, "loserCamp: ", self.loserCamp)
+                LOG_DBG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER, "winnerCamp: ", self.winnerCamp, "loserCamp: ", self.loserCamp)
                 self.siegeWarState = SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER
                 gameengine.getGlobalBase("SiegeWarSpaceStub").onSiegeWarGameStateChange(self.siegeWarState, self.winnerCamp)
                 #发奖励
@@ -229,7 +229,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     defenseArr,
                 ]
                 self.dataArray = copy.deepcopy(dataArray)
-                DEBUG_MSG("[lj]siegeWar dataArray", self.winnerGuildUUID, self.loserGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
+                LOG_DBG("[lj]siegeWar dataArray", self.winnerGuildUUID, self.loserGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
                 #结算后不能攻击
                 for playerId in self.players.values():
                     playerEnt = KBEngine.entities.get(playerId)
@@ -237,22 +237,22 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                         playerEnt.siegeWarCanAttack = 0
 
         if self.siegeWarState == SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER:
-            if utils.getNow() >= self.kickLoserTime:
-                DEBUG_MSG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_NO_LOSER)
+            if utils.curTS() >= self.kickLoserTime:
+                LOG_DBG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_NO_LOSER)
                 self.siegeWarState = SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_NO_LOSER
                 gameengine.getGlobalBase("SiegeWarSpaceStub").onSiegeWarGameStateChange(self.siegeWarState, 0)
 
                 self.syncPlayer(lambda playerEnt: playerEnt.onSiegeWarKickout() if playerEnt.siegeWarCamp == self.loserCamp else None)
         if self.siegeWarState == SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_NO_LOSER:
-            if utils.getNow() >= self.closeTime:
-                DEBUG_MSG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_END)
+            if utils.curTS() >= self.closeTime:
+                LOG_DBG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_END)
                 self.siegeWarState = SiegeWarGameState.SIEGE_WAR_STATE_END
                 gameengine.getGlobalBase("SiegeWarSpaceStub").onSiegeWarGameStateChange(self.siegeWarState, 0)
                 self.syncPlayer(lambda playerEnt: playerEnt.onSiegeWarKickout())
                 self.spaceInvoked = False
 
     def onGetWinnerDataFromCityOwnerMgr(self, dataList):
-        DEBUG_MSG("[lj]SiegeWarSpaceMgr onGetWinnerDataFromCityOwnerMgr", dataList)
+        LOG_DBG("[lj]SiegeWarSpaceMgr onGetWinnerDataFromCityOwnerMgr", dataList)
         self.cityOwnerId = dataList[0]
         self.cityOwnerName = dataList[1]
         self.cityOwnerSchool = dataList[6]
@@ -290,7 +290,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
     def getWinnerCamp(self):
         #如果防守方没有帮会，则进攻方获胜
         if self.defenseGuildUUID == 0 and self.coreAreaOffenseCnt == 0 and self.coreAreaDefenseCnt == 0:
-            DEBUG_MSG("[lj]getWinnerCamp: defenseGuildUUID is 0, offenseCnt is 0, defenseCnt is 0, return 1")
+            LOG_DBG("[lj]getWinnerCamp: defenseGuildUUID is 0, offenseCnt is 0, defenseCnt is 0, return 1")
             return 1
 
         if self.coreAreaOffenseCnt > self.coreAreaDefenseCnt:
@@ -301,13 +301,13 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         pass
 
     def recreateBuffCreation(self):
-        self.lastBuffCreateTime = utils.getNow()
+        self.lastBuffCreateTime = utils.curTS()
         for ent in self.buffCreationDict.values():
             ent.destroySelf()
         self.buffCreationDict.clear()
         cnt = min(CBC.datas['cityBattle_buffNumsOneTime']['value'], len(CBC.datas['cityBattle_buffPosition']['value']))
         numbers = random.sample(range(0, len(CBC.datas['cityBattle_buffPosition']['value'])), cnt)
-        DEBUG_MSG("[lj]recreateBuffCreation: numbers", numbers)
+        LOG_DBG("[lj]recreateBuffCreation: numbers", numbers)
         for i in numbers:
             pos = CBC.datas['cityBattle_buffPosition']['value'][i]
             creationId = random.choice(siegeWarCreationList)
@@ -317,24 +317,24 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     'spaceMgrId': self.id,
                     }
             ent = KBEngine.createEntity('Creation', self.spaceID, [pos[0], pos[1], pos[2]], [0, 0, 0], props)
-            DEBUG_MSG("[lj]resetSiegeWarState: createCreation", ent.id)
+            LOG_DBG("[lj]resetSiegeWarState: createCreation", ent.id)
             self.buffCreationDict[ent.id] = ent
 
         #弹msg
         if self.isFirstBuffCreate:
             self.isFirstBuffCreate = False
-            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_buffFirstRefreshMsg']['value']), []))
-            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannel.SIEGE_WAR, utils.buildChatChannelAvatarInfo(0, 0, 1, '', 1, 0, 0), MM.datas[CBC.datas['cityBattle_buffFirstRefreshMsg']['value']]['Message']))
+            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_buffFirstRefreshMsg']['value']), []))
+            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), MM.datas[CBC.datas['cityBattle_buffFirstRefreshMsg']['value']]['Message']))
         else:
-            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_buffRefreshMsg']['value']), []))
-            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannel.SIEGE_WAR, utils.buildChatChannelAvatarInfo(0, 0, 1, '', 1, 0, 0), MM.datas[CBC.datas['cityBattle_buffRefreshMsg']['value']]['Message']))
+            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_buffRefreshMsg']['value']), []))
+            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), MM.datas[CBC.datas['cityBattle_buffRefreshMsg']['value']]['Message']))
 
     def onAvatarGetBuffCreation(self, creationId, avatar, buffId):
         if not avatar.IsAvatar:
-            DEBUG_MSG("[lj]onAvatarGetBuffCreation: target is not avatar", avatar)
+            LOG_DBG("[lj]onAvatarGetBuffCreation: target is not avatar", avatar)
             return
 
-        DEBUG_MSG("[lj]onAvatarGetBuffCreation", creationId, avatar.id, buffId)
+        LOG_DBG("[lj]onAvatarGetBuffCreation", creationId, avatar.id, buffId)
         if creationId in self.buffCreationDict:
             creation = self.buffCreationDict.pop(creationId)
             creation.destroySelf()
@@ -346,7 +346,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 # x/10战报
                 msgArg4 = str(self.campWushuangBuffCnt[avatar.siegeWarCamp]) + "/" + str(CBC.datas['cityBattle_campBuffDemand']['value'])
                 msg = MM.datas[CBC.datas['cityBattle_buffObtainMsg']['value']]['Message'].format(avatar.name, buff.Buff.getBuffName(buffId), avatarCampStr, msgArg4)
-                self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannel.SIEGE_WAR, utils.buildChatChannelAvatarInfo(0, 0, 1, '', 1, 0, 0), msg))
+                self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), msg))
                 #无双
                 if self.campWushuangBuffCnt[avatar.siegeWarCamp] >= CBC.datas['cityBattle_campBuffDemand']['value']:
                     for playerId in self.players.values():
@@ -354,19 +354,19 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                         if playerEnt and playerEnt.siegeWarCamp == avatar.siegeWarCamp:
                             playerEnt.addBuff(SiegeWarBuff.WUSHUANG_BUFF, 1, playerEnt.id)
                             self.buffCacheDict.setdefault(playerEnt.gbId, {})
-                            self.buffCacheDict[playerEnt.gbId][SiegeWarBuff.WUSHUANG_BUFF] = utils.getNow()
+                            self.buffCacheDict[playerEnt.gbId][SiegeWarBuff.WUSHUANG_BUFF] = utils.curTS()
                     #激活无双buff
-                    self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_campBuffMsg']['value']), [avatarCampStr, avatarCampStr, buff.Buff.getBuffName(SiegeWarBuff.WUSHUANG_BUFF)]))
+                    self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_campBuffMsg']['value']), [avatarCampStr, avatarCampStr, buff.Buff.getBuffName(SiegeWarBuff.WUSHUANG_BUFF)]))
                     msg = MM.datas[CBC.datas['cityBattle_campBuffMsg']['value']]['Message'].format(avatarCampStr, avatarCampStr, buff.Buff.getBuffName(SiegeWarBuff.WUSHUANG_BUFF))
-                    self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannel.SIEGE_WAR, utils.buildChatChannelAvatarInfo(0, 0, 1, '', 1, 0, 0), msg))
+                    self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), msg))
                     self.campWushuangBuffCnt[avatar.siegeWarCamp] = 0
 
             #buff效果
             avatar.addBuff(buffId, 1, avatar.id)
             self.buffCacheDict.setdefault(avatar.gbId, {})
-            self.buffCacheDict[avatar.gbId][buffId] = utils.getNow()
+            self.buffCacheDict[avatar.gbId][buffId] = utils.curTS()
         else:
-            WARNING_MSG("[lj]onAvatarGetBuffCreation: creationId not in self.buffCreationDict", creationId, avatar.id, buffId)
+            LOG_WARN("[lj]onAvatarGetBuffCreation: creationId not in self.buffCreationDict", creationId, avatar.id, buffId)
 
     #todo帮会数据同步
     def resetSiegeWarState(self, guildDict):
@@ -416,7 +416,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         self.coreAreaFlag = KBEngine.createEntity('CoreAreaFlag', self.spaceID, [x, 0, z], [0, 0, 0], params)
 
         if self.offenseNum != 0 or self.defenseNum != 0:
-            WARNING_MSG("[lj]resetSiegeWarState: self.offenseNum or self.defenseNum is not 0", self.offenseNum, self.defenseNum)
+            LOG_WARN("[lj]resetSiegeWarState: self.offenseNum or self.defenseNum is not 0", self.offenseNum, self.defenseNum)
 
         self.offenseNum = 0
         self.defenseNum = 0
@@ -424,9 +424,9 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
         self.offenseGuildUUID = guildDict.get('offenseGuildUUID', 0)
         self.defenseGuildUUID = guildDict.get('defenseGuildUUID', 0)
-        DEBUG_MSG("[lj]resetSiegeWarState: self.offenseGuildUUID, self.defenseGuildUUID", self.offenseGuildUUID, self.defenseGuildUUID)
+        LOG_DBG("[lj]resetSiegeWarState: self.offenseGuildUUID, self.defenseGuildUUID", self.offenseGuildUUID, self.defenseGuildUUID)
 
-        self.startTime = guildDict.get('sceneOpenTime', utils.getNow())
+        self.startTime = guildDict.get('sceneOpenTime', utils.curTS())
         self.officalStartTime = self.startTime + CBC.datas['cityBattle_prepareTime']['value'] * 60
         self.officalEndTime = self.officalStartTime + CBC.datas['cityBattle_fightTime']['value'] * 60
         self.kickLoserTime = self.officalEndTime + CBC.datas['cityBattle_lastTime2']['value'] * 60
@@ -438,7 +438,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         self.loserCamp = 0
         self.dataArray = []
 
-        DEBUG_MSG("[lj]resetSiegeWarState: self.startTime, self.officalStartTime, self.officalEndTime, self.closeTime",
+        LOG_DBG("[lj]resetSiegeWarState: self.startTime, self.officalStartTime, self.officalEndTime, self.closeTime",
                   time.strftime("%Y.%m.%d-%H.%M.%S", time.localtime(self.startTime)),
                   time.strftime("%Y.%m.%d-%H.%M.%S", time.localtime(self.officalStartTime)),
                   time.strftime("%Y.%m.%d-%H.%M.%S", time.localtime(self.officalEndTime)),
@@ -446,10 +446,10 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                   time.strftime("%Y.%m.%d-%H.%M.%S", time.localtime(self.closeTime)))
 
 
-        _mapId = formula.getMapId(self.spaceNo)
-        _dunData = utils.getDunStructureModuleData(_mapId)
+        _mapId = formula.fetchMapId(self.spaceNo)
+        _dunData = utils.getDunStructModData(_mapId)
         if not _dunData:
-            ERROR_MSG("[lj]resetSiegeWarState: _dunData is None")
+            LOG_ERR("[lj]resetSiegeWarState: _dunData is None")
             return
 
         for i in (siegeTp.GATE_REBORN, siegeTp.ATTACK_REBORN, siegeTp.DEFEND_REBORN):
@@ -457,7 +457,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 for _data in _dunData[i].values():
                     self.revivePosDict[i] = (_data['PosX'], _data['PosY'], _data['PosZ'])
 
-        DEBUG_MSG("[lj]resetSiegeWarState: self.revivePosDict", self.revivePosDict)
+        LOG_DBG("[lj]resetSiegeWarState: self.revivePosDict", self.revivePosDict)
 
     def onMinimapInfoUpdate(self, entId, monsterType, dataType, data):
         self.minimapInfo.setdefault(entId, {SMDT.TYPE: monsterType})
@@ -466,7 +466,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         self.minimapChangedData.setdefault(entId, {})
         self.minimapChangedData[entId][dataType] = data
 
-        DEBUG_MSG("[lj]onMinimapInfoUpdate", self.minimapInfo)
+        LOG_DBG("[lj]onMinimapInfoUpdate", self.minimapInfo)
 
     #器械等级
     def getSiegeWarMonsterLevel(self, ent):
@@ -492,7 +492,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
         ent = KBEngine.entities.get(entId)
         if ent:
-            DEBUG_MSG("[lj]addEntity", ent.className)
+            LOG_DBG("[lj]addEntity", ent.className)
 
             if ent.className == 'CityBattleTeleporter':
                 cbID = ent.cbID
@@ -508,13 +508,13 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
             customId, gid = utils.getCustomIdAndGid(self.spaceNo, ent.gameEntityId)
             if customId is None:
-                DEBUG_MSG("[lj]addEntity: customId is None", ent.className, ent.gameEntityId)
+                LOG_DBG("[lj]addEntity: customId is None", ent.className, ent.gameEntityId)
                 return
 
             #采集物必须没有刷新时间！！！！！！！！！！！！不然会一直循环创建，这里检查一下
             if ent.className == 'Collection':
                 if ent.refreshTime != 0:
-                    WARNING_MSG("[lj]addEntity: SiegeWar Collection refreshTime is not 0", ent.gameEntityId)
+                    LOG_WARN("[lj]addEntity: SiegeWar Collection refreshTime is not 0", ent.gameEntityId)
                     ent.refreshTime = 0
 
             #删除重复
@@ -524,7 +524,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     self.siegewarBowDict.pop(gid)
                 self.siegewarBowDict[gid] = ent
                 self.bowAliveCnt += 1
-                DEBUG_MSG("[lj]addEntity: bowAliveCnt", self.bowAliveCnt)
+                LOG_DBG("[lj]addEntity: bowAliveCnt", self.bowAliveCnt)
             else:
                 if customId in self.siegewarEntityDict:
                     self.siegewarEntityDict[customId].safeDestroy()
@@ -558,7 +558,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         playerEnt = KBEngine.entities.get(playerId)
         if playerEnt:
             jsonData = json.dumps(self.minimapInfo)
-            DEBUG_MSG("[lj]sync minimapInfo when player enter:", playerId, jsonData, self.minimapInfo)
+            LOG_DBG("[lj]sync minimapInfo when player enter:", playerId, jsonData, self.minimapInfo)
             playerEnt.onSiegeWarMinimapInfoUpdate(jsonData)
 
     def syncSiegeWarMinimapSignalToPlayer(self, playerId):
@@ -586,7 +586,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         self.syncMinimapInfoToPlayer(playerId)
         self.syncSiegeWarMinimapSignalToPlayer(playerId)
         self.syncSiegeWarEnterDataToPlayer(playerId)
-        DEBUG_MSG("[lj]sync siegewar data to player when player relogin", playerId)
+        LOG_DBG("[lj]sync siegewar data to player when player relogin", playerId)
 
     def onPlayerEnter(self, playerId):
         self.syncMinimapInfoToPlayer(playerId)
@@ -602,11 +602,11 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
         if playerEnt.gbId in self.buffCacheDict:
             for buffId, time in self.buffCacheDict[playerEnt.gbId].items():
-                remainTime = BBD.datas[buffId]['endByTime'] - (utils.getNow() - time)
+                remainTime = BBD.datas[buffId]['endByTime'] - (utils.curTS() - time)
                 if remainTime > 0:
                     playerEnt.addBuff(buffId, 1, playerEnt.id, duration = remainTime)
         else:
-            WARNING_MSG("[lj]onPlayerEnter: playerId is already in self.players", playerId)
+            LOG_WARN("[lj]onPlayerEnter: playerId is already in self.players", playerId)
         super(SiegeWarSpaceMgr, self).onPlayerEnter(playerId)
         #确保进入排行榜
         self.onPlayerScoreChange(playerEnt, SiegeWarScoreVal.SCORE_ENTER, 0)
@@ -615,15 +615,15 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         if self.siegeWarState == SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER or self.siegeWarState == SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_NO_LOSER:
             playerEnt.onSiegeWarBattleEnd(self.winnerGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray,
                                           self.cityOwnerId, self.cityOwnerName, self.cityOwnerSchool, self.cityOwnerSex)
-            DEBUG_MSG("[lj]onPlayerEnter: playerEnt.onSiegeWarBattleEnd", self.winnerGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
+            LOG_DBG("[lj]onPlayerEnter: playerEnt.onSiegeWarBattleEnd", self.winnerGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
 
-        INFO_MSG('onPlayerEnter', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
+        LOG_IFO('onPlayerEnter', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
 
     def onPlayerLeave(self, playerGbId, playerId, box):
         if self.offenseTeleporter:
             self.offenseTeleporter.onPlayerLeave(playerGbId)
         else:
-            WARNING_MSG("[lj]onPlayerLeave: self.offenseTeleporter is None", playerGbId, playerId)
+            LOG_WARN("[lj]onPlayerLeave: self.offenseTeleporter is None", playerGbId, playerId)
         playerEnt = KBEngine.entities.get(playerId)
         if playerId in self.players:
             if playerEnt.siegeWarCamp == 1:
@@ -631,9 +631,9 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
             elif playerEnt.siegeWarCamp == 2:
                 self.defenseNum -= 1
         else:
-            WARNING_MSG("[lj]onPlayerLeave: playerId is not in self.players", playerId)
+            LOG_WARN("[lj]onPlayerLeave: playerId is not in self.players", playerId)
         super(SiegeWarSpaceMgr, self).onPlayerLeave(playerGbId, playerId, box)
-        INFO_MSG('onPlayerLeave', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
+        LOG_IFO('onPlayerLeave', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
 
     def onPlayerRelive(self, box, playerGbId):
         super(SiegeWarSpaceMgr, self).onPlayerRelive(box, playerGbId)
@@ -642,14 +642,14 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
             if avatarCell:
                 self.coreAreaFlag.onPlayerRelive(avatarCell)
             else:
-                WARNING_MSG("[lj]onPlayerRelive: avatarCell is None", playerGbId)
+                LOG_WARN("[lj]onPlayerRelive: avatarCell is None", playerGbId)
         else:
-            WARNING_MSG("[lj]onPlayerRelive: self.coreAreaFlag is None", playerGbId)
+            LOG_WARN("[lj]onPlayerRelive: self.coreAreaFlag is None", playerGbId)
         if self.offenseTeleporter:
             self.offenseTeleporter.onPlayerRelive(playerGbId)
         else:
-            WARNING_MSG("[lj]onPlayerRelive: self.offenseTeleporter is None", playerGbId)
-        DEBUG_MSG("[lj]onPlayerRelive", playerGbId)
+            LOG_WARN("[lj]onPlayerRelive: self.offenseTeleporter is None", playerGbId)
+        LOG_DBG("[lj]onPlayerRelive", playerGbId)
 
     def onPlayerDead(self, box, playerGbId):
         super(SiegeWarSpaceMgr, self).onPlayerDead(box, playerGbId)
@@ -658,33 +658,33 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
             if avatarCell:
                 self.coreAreaFlag.onPlayerDead(avatarCell)
             else:
-                WARNING_MSG("[lj]onPlayerDead: avatarCell is None", playerGbId)
+                LOG_WARN("[lj]onPlayerDead: avatarCell is None", playerGbId)
         else:
-            WARNING_MSG("[lj]onPlayerDead: self.coreAreaFlag is None", playerGbId)
+            LOG_WARN("[lj]onPlayerDead: self.coreAreaFlag is None", playerGbId)
 
     def onPlayerOffline(self, playerId, playerGbId):
         super(SiegeWarSpaceMgr, self).onPlayerOffline(playerId, playerGbId)
         if self.offenseTeleporter:
             self.offenseTeleporter.onPlayerOffline(playerGbId)
         else:
-            WARNING_MSG("[lj]onPlayerOffline: self.offenseTeleporter is None", playerGbId)
-        DEBUG_MSG("[lj]onPlayerOffline", playerGbId)
+            LOG_WARN("[lj]onPlayerOffline: self.offenseTeleporter is None", playerGbId)
+        LOG_DBG("[lj]onPlayerOffline", playerGbId)
 
     def onSiegeWarMonsterDead(self, gameEntityId, killer):
         killer = utils.getHostEntity(killer)
-        DEBUG_MSG("[lj]onSiegeWarMonsterDead", gameEntityId, killer)
+        LOG_DBG("[lj]onSiegeWarMonsterDead", gameEntityId, killer)
         if not killer:
-            DEBUG_MSG("[lj]onSiegeWarMonsterDead: killer is None", gameEntityId)
+            LOG_DBG("[lj]onSiegeWarMonsterDead: killer is None", gameEntityId)
             return
 
         customId, gid = utils.getCustomIdAndGid(self.spaceNo, gameEntityId)
         if not customId:
-            DEBUG_MSG("[lj]onSiegeWarMonsterDead: customId is None", gameEntityId)
+            LOG_DBG("[lj]onSiegeWarMonsterDead: customId is None", gameEntityId)
             return
 
         if customId == siegeTp.REINFORCE:
             msgArg1 = CBC.datas['cityBattle_attack']['value'] if killer.siegeWarCamp == 1 else CBC.datas['cityBattle_defend']['value']
-            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_occupyTips2']['value']), [msgArg1]))
+            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_occupyTips2']['value']), [msgArg1]))
             self.reinforceCamp = killer.siegeWarCamp
             self.onPlayerScoreChange(killer, SiegeWarScoreVal.SCORE_REINFORCE, 1)
         elif customId == siegeTp.MAIN_GATE:
@@ -692,45 +692,45 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
             if siegeTp.GATE_AIRWALL in self.siegewarEntityDict:
                 self.siegewarEntityDict[siegeTp.GATE_AIRWALL].safeDestroy()
                 self.siegewarEntityDict.pop(siegeTp.GATE_AIRWALL)
-            self._callback(0.1, 'siegeWarBossDelayDestroy', (), gametimer.TIMER_TAG_SIEGE_BOSS_DELAY_DESTROY)
-            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_occupyTips1']['value']), []))
+            self.addTimerCB(0.1, 'siegeWarBossDelayDestroy', (), gametimer.TIMER_TAG_SIEGE_BOSS_DELAY_DESTROY)
+            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_occupyTips1']['value']), []))
             self.onPlayerScoreChange(killer, SiegeWarScoreVal.SCORE_MAIN_GATE, 1)
         elif customId == siegeTp.ORDER_GATE:
             if siegeTp.ORDER_GATE_AIRWALL in self.siegewarEntityDict:
                 self.siegewarEntityDict[siegeTp.ORDER_GATE_AIRWALL].safeDestroy()
                 self.siegewarEntityDict.pop(siegeTp.ORDER_GATE_AIRWALL)
-            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_destroyGate2']['value']), []))
+            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_destroyGate2']['value']), []))
             self.onPlayerScoreChange(killer, SiegeWarScoreVal.SCORE_ORDER_GATE, 1)
         elif customId == siegeTp.SIEGE_BOSS:
             self.onPlayerScoreChange(killer, SiegeWarScoreVal.SCORE_SIEGE_BOSS, 1)
         elif customId == siegeTp.BOW:
             self.onPlayerScoreChange(killer, SiegeWarScoreVal.SCORE_BOW, 1)
             self.bowAliveCnt -= 1
-            DEBUG_MSG("[lj]onSiegeWarMonsterDead: bowAliveCnt", self.bowAliveCnt)
+            LOG_DBG("[lj]onSiegeWarMonsterDead: bowAliveCnt", self.bowAliveCnt)
             if self.bowAliveCnt == 0:
-                self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_breakAllBallista']['value']), []))
+                self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_breakAllBallista']['value']), []))
             else:
-                self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_breakBallista']['value']), [killer.name]))
+                self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_breakBallista']['value']), [killer.name]))
         if customId in self.siegewarEntityDict:
             self.siegewarEntityDict.pop(customId)
 
         self.minimapNeedSyncImmediate = True
 
     def siegeWarBossDelayDestroy(self):
-        DEBUG_MSG("[lj]start siegeWarBossDelayDestroy")
+        LOG_DBG("[lj]start siegeWarBossDelayDestroy")
         if siegeTp.SIEGE_BOSS in self.siegewarEntityDict:
             self.onMinimapInfoUpdate(self.siegewarEntityDict[siegeTp.SIEGE_BOSS].id, SMT.SIEGE_BOSS, SMDT.HP, 0.0)
             self.siegewarEntityDict[siegeTp.SIEGE_BOSS].safeDestroy()
             self.siegewarEntityDict.pop(siegeTp.SIEGE_BOSS)
-            DEBUG_MSG("[lj]safeDestroy siegeWarBoss over")
+            LOG_DBG("[lj]safeDestroy siegeWarBoss over")
 
     def onSiegeWarOpenGate(self, src):
-        DEBUG_MSG("[lj]onSiegeWarOpenGate", src)
+        LOG_DBG("[lj]onSiegeWarOpenGate", src)
         if siegeTp.ORDER_GATE in self.siegewarEntityDict:
             self.onSiegeWarMonsterHpChange(self.siegewarEntityDict[siegeTp.ORDER_GATE].id, SMT.ORDER_GATE, 0.0)
             self.siegewarEntityDict[siegeTp.ORDER_GATE].safeDestroy()
             self.siegewarEntityDict.pop(siegeTp.ORDER_GATE)
-            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_openSwitch']['value']), [src.name]))
+            self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_openSwitch']['value']), [src.name]))
             self.onPlayerScoreChange(src, SiegeWarScoreVal.SCORE_ORDER_GATE, 1)
         if siegeTp.ORDER_GATE_AIRWALL in self.siegewarEntityDict:
             self.siegewarEntityDict[siegeTp.ORDER_GATE_AIRWALL].safeDestroy()
@@ -742,22 +742,22 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 if siegeTp.ORDER_GATE in self.siegewarEntityDict:
                     return True
                 else:
-                    src.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_alreadyOpen']['value']), [])
+                    src.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_alreadyOpen']['value']), [])
                     return False
         elif collectionId == 16000047:
             if src.siegeWarCamp == 1:
                 if not src.siegeWarGuildCache.get('startEG', False):
-                    src.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_noPermission3']['value']), [startEGText])
+                    src.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_noPermission3']['value']), [startEGText])
                     return False
                 else:
                     openMinute = CBC.datas['cityBattle_siegeEnginesTime']['value']
                     canOpenTime = self.officalStartTime + openMinute * 60
-                    if utils.getNow() < canOpenTime:
-                        src.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_siegeEngines']['value']), [str(openMinute)])
+                    if utils.curTS() < canOpenTime:
+                        src.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_siegeEngines']['value']), [str(openMinute)])
                         return False
                     return True
             else:
-                src.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_siegeEnginesPermission']['value']), [])
+                src.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_siegeEnginesPermission']['value']), [])
                 return False
         return False
 
@@ -789,7 +789,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     lastHpPercent = self.minimapInfo[entId][SMDT.HP]
                     hpPercent = round(self.siegewarEntityDict[monsterType].hp / self.siegewarEntityDict[monsterType].fullHp, 4)
                     if hpPercent < lastHpPercent:
-                        DEBUG_MSG("[lj]checkSpecialMonsterHpChange: hpPercent < lastHpPercent", entId, monsterType, hpPercent, lastHpPercent)
+                        LOG_DBG("[lj]checkSpecialMonsterHpChange: hpPercent < lastHpPercent", entId, monsterType, hpPercent, lastHpPercent)
                         self.onMinimapInfoUpdate(entId, monsterType, SMDT.HP, hpPercent)
 
     def getSiegeWarMainGate(self):
@@ -798,7 +798,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         return None
 
     def onSiegeWarInvokeBoss(self, src):
-        DEBUG_MSG("[lj]onSiegeWarInvokeBoss", src)
+        LOG_DBG("[lj]onSiegeWarInvokeBoss", src)
         if siegeTp.SIEGE_BOSS in self.siegewarEntityDict:
             if siegeTp.MAIN_GATE in self.siegewarEntityDict:
                 self.siegewarEntityDict[siegeTp.SIEGE_BOSS].removeBuff(64000070)
@@ -806,25 +806,25 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 self.siegewarEntityDict[siegeTp.SIEGE_BOSS].siegeWarBossTargetPos = self.siegewarEntityDict[siegeTp.MAIN_GATE].position
                 self.siegeWarBossInvoked = True
                 self.onMinimapInfoUpdate(self.siegewarEntityDict[siegeTp.SIEGE_BOSS].id, SMT.SIEGE_BOSS, SMDT.INVOKED, 1)
-                self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas['cityBattle_siegeEnginesStart']['value']), []))
+                self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_siegeEnginesStart']['value']), []))
 
     def getSiegeWarRebornPos(self, src):
-        DEBUG_MSG("[lj]getSiegeWarRebornPos", src)
+        LOG_DBG("[lj]getSiegeWarRebornPos", src)
 
         if src.siegeWarCamp == 1:
             return self.revivePosDict[siegeTp.ATTACK_REBORN], 0
         elif src.siegeWarCamp == 2:
             return (self.revivePosDict[siegeTp.GATE_REBORN], 0) if not self.mainGateDestroyed else (self.revivePosDict[siegeTp.DEFEND_REBORN], 0)
         else:
-            ERROR_MSG("[lj]getSiegeWarRebornPos: src.siegeWarCamp is not 1 or 2", src.siegeWarCamp)
+            LOG_ERR("[lj]getSiegeWarRebornPos: src.siegeWarCamp is not 1 or 2", src.siegeWarCamp)
             return self.revivePosDict[siegeTp.ATTACK_REBORN], 0
 
     def onSiegeWarGateModifyHPMsg(self, gateType, msgType):
-        DEBUG_MSG("[lj]onSiegeWarGateModifyHPMsg", gateType, msgType)
+        LOG_DBG("[lj]onSiegeWarGateModifyHPMsg", gateType, msgType)
         tipCode = gateType * 10 + msgType
         tp = siegeWarGateTips[tipCode]
         args = str(siegeWarGateTipArgs[tipCode])
-        self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getNeedTranslateMsgId(CBC.datas[tp]['value']), [args, ]))
+        self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas[tp]['value']), [args, ]))
 
     #城战物件每损失5%hp会触发一次，用于minimap同步
     def onSiegeWarMonsterHpChange(self, entId, monsterType, hpPercent):
@@ -842,7 +842,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 'text': text,
                 'pos': pos
             }]) if playerEnt.siegeWarCamp == camp else None)
-            DEBUG_MSG("[lj]onSiegeWarMinimapSignalChange: tp, isAdd, text, pos, camp", tp, isAdd, text, pos, camp)
+            LOG_DBG("[lj]onSiegeWarMinimapSignalChange: tp, isAdd, text, pos, camp", tp, isAdd, text, pos, camp)
         else:
             if tp in self.siegeWarMinimapSignal[camp]:
                 self.siegeWarMinimapSignal[camp].pop(tp)
@@ -852,13 +852,13 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     'text': text,
                     'pos': pos
                 }]) if playerEnt.siegeWarCamp == camp else None)
-                DEBUG_MSG("[lj]onSiegeWarMinimapSignalChange: tp, isAdd, text, pos, camp", tp, isAdd, text, pos, camp)
+                LOG_DBG("[lj]onSiegeWarMinimapSignalChange: tp, isAdd, text, pos, camp", tp, isAdd, text, pos, camp)
             else:
-                WARNING_MSG("[lj]onSiegeWarMinimapSignalChange: tp is not in self.siegeWarMinimapSignal[camp]", tp, text, isAdd, pos, camp)
+                LOG_WARN("[lj]onSiegeWarMinimapSignalChange: tp is not in self.siegeWarMinimapSignal[camp]", tp, text, isAdd, pos, camp)
 
     def onPlayerScoreChange(self, src, val, scoreTp):
         if not src.IsAvatar:
-            DEBUG_MSG("[lj]onPlayerScoreChange: src is not Avatar", src)
+            LOG_DBG("[lj]onPlayerScoreChange: src is not Avatar", src)
             return
 
         playerGBID = src.gbId
@@ -873,11 +873,11 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         if needAppend:
             self.siegeWarscoreList[camp].append(scoreObj)
 
-        DEBUG_MSG("[lj]onPlayerScoreChange: scoreObj", scoreObj.getData(), self.siegeWarscoreList[camp])
+        LOG_DBG("[lj]onPlayerScoreChange: scoreObj", scoreObj.getData(), self.siegeWarscoreList[camp])
 
     def _getSiegeWarScoreData(self, camp):
         if camp not in self.siegeWarscoreList:
-            WARNING_MSG("[lj]getSiegeWarScoreData: camp is not in self.siegeWarscoreList", camp)
+            LOG_WARN("[lj]getSiegeWarScoreData: camp is not in self.siegeWarscoreList", camp)
             return []
         self.siegeWarscoreList[camp].sort(key=lambda x: x.totalScore, reverse=True)
         res = []
@@ -894,12 +894,12 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
     def onSiegeWarPlayerDead(self, src, killer):
         killer = utils.getHostEntity(killer)
         if not killer:
-            DEBUG_MSG("[lj]onSiegeWarPlayerDead: killer is None", src)
+            LOG_DBG("[lj]onSiegeWarPlayerDead: killer is None", src)
             return
 
         if killer.IsAvatar and src.IsAvatar:
             if killer.siegeWarCamp != src.siegeWarCamp:
-                DEBUG_MSG("[lj]onSiegeWarPlayerDead: src, killer", src, killer, src.name, killer.name)
+                LOG_DBG("[lj]onSiegeWarPlayerDead: src, killer", src, killer, src.name, killer.name)
                 self.onPlayerScoreChange(killer, SiegeWarScoreVal.SCORE_KILL, 0)
                 if killer.isCrossServerInOtherServer:
                      killer.base.syncMethodCallToLocalServerBase(
@@ -934,14 +934,14 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         self.closeTime -= minutes * 60
         self.lastBuffCreateTime -= minutes * 60
 
-        DEBUG_MSG("[lj]battle fast forward", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.officalStartTime)),
+        LOG_DBG("[lj]battle fast forward", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.officalStartTime)),
         time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.officalEndTime)),
         time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.kickLoserTime)),
         time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.closeTime)))
 
     #玩家分数依次设置为0,100,200,300...
     def onGmTestScores(self):
-        DEBUG_MSG("[lj]onGmTestScores")
+        LOG_DBG("[lj]onGmTestScores")
         score = 0
         for playerId in self.players:
             playerEnt = KBEngine.entities.get(playerId)

@@ -119,7 +119,7 @@ _CHECK_ACHIEVE_DIC = {
 }
 
 
-class AchievementValVal(userType.UserSoleType):
+class AchievementValVal(userType.UserSingleType):
     '''ACHIEVEMENT_VAL_DATA_INFO'''
     def __init__(self, achieveId=0, flag=0, step=0):
         self.achieveId = achieveId
@@ -133,7 +133,7 @@ class AchievementValVal(userType.UserSoleType):
         return self.configData()['targetType']
 
     def isFinished(self):
-        return utils.hasBit(self.flag, gameconst.AchievementFlag.FINISHED)
+        return utils.bhas(self.flag, gameconst.AchievementFlag.FINISHED)
 
     def checkCouldChangeFinishedState(self, avatar, achieveData, ctx):
         return _CHECK_ACHIEVE_DIC[achieveData['targetType']][0](avatar, achieveData, self, ctx)
@@ -145,7 +145,7 @@ class AchievementValVal(userType.UserSoleType):
         _oldIsFinished = self.isFinished()
         _oldStep = self.step
         if self.checkCouldChangeFinishedState(avatar, achieveData, ctx):
-            self.flag = utils.bitSet(self.flag, gameconst.AchievementFlag.FINISHED)
+            self.flag = utils.bset(self.flag, gameconst.AchievementFlag.FINISHED)
 
         if _oldIsFinished != self.isFinished():
             _isLog = True

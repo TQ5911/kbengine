@@ -47,15 +47,15 @@ class AvatarBuildsMixin(object):
 
     # 技能升级
     def baseLevelUpSkill(self, newSkillId, oldSkillId, levelDelta):
-        INFO_MSG('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
+        LOG_IFO('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
         _skillId = dataUtils.getSkillIdByMorphState(newSkillId, self.morphState)
         self._levelUpSkill(_skillId, oldSkillId, levelDelta)
         self.updateSkillScore()
 
     def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
-        INFO_MSG("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
+        LOG_IFO("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
         if not self.buildDic.levelUp(self, newSkillId, oldSkillId, levelDelta):
-            INFO_MSG('skill can not levelUp', newSkillId, oldSkillId)
+            LOG_IFO('skill can not levelUp', newSkillId, oldSkillId)
             return False
 
         self.achievementInfo.triggerAchieveByType(
@@ -95,7 +95,7 @@ class AvatarBuildsMixin(object):
                        self.cannelTemporarySkill(taskId, _buildSkillId)
                     else:
                         if self.unlockActiveSkill(_buildSkillId, skillId, isNotify, lv, mid):
-                            INFO_MSG('unlock skill', skillId)
+                            LOG_IFO('unlock skill', skillId)
                             unlockedSkills.append(skillId)
 
         if unlockedSkills:
@@ -157,7 +157,7 @@ class AvatarBuildsMixin(object):
     def onChangeSkill(self, fromSkillId, toSkillId, fromSkillNextCastTime):
         skillIds = self.buildDic.getSkillIds()
         if toSkillId in skillIds:
-            WARNING_MSG("onChangeSkill toSkillId was in buildDic", fromSkillId, toSkillId, skillIds)
+            LOG_WARN("onChangeSkill toSkillId was in buildDic", fromSkillId, toSkillId, skillIds)
 
         slotId = self.buildDic.getSlotId(fromSkillId)
         if slotId is None:
@@ -180,7 +180,7 @@ class AvatarBuildsMixin(object):
     # 拖技能到build
     @gamedecorator.crossServer
     def updateSkills(self, exposed, skillSlotInfos):
-        INFO_MSG("updateSkills ", skillSlotInfos)
+        LOG_IFO("updateSkills ", skillSlotInfos)
         self._updateSkills(skillSlotInfos, True, True)
 
     def _updateSkills(self, skillSlotInfos, bNotifyClient=False, isMessage=False):
@@ -247,14 +247,14 @@ class ImpCombat(AvatarBuildsMixin):
             _deductVal = dropAward.DeductWealthVal(coin=_coin) # TODO: DEAD_PENALTY
             _detail = gameclass.AwardDetail()
             self.deductWealth(_src, _deductVal, opUUID, _detail)
-            _showList = _deductVal.toShowList()
+            _showList = _deductVal.toBriefList()
 
         if expChange:
             _toClientData = self.deathPenaltyData.addDeathPenaltyExp(expChange)
             if _toClientData:
                 self.client.onDeathPenaltyExpChange(_toClientData)
 
-            _showList.append({'itemId': gameconst.ItemId.EXP, 'itemNum': expChange})
+            _showList.append({'itemId': gameconst.ItemId.EXP, 'itemNum': expChange, 'bindType': gameconst.ItemBindType.BIND})
 
         self.client.onDeathPenaltyReward(killerGbId, killerName, _showList, killerData)
 
@@ -262,21 +262,21 @@ class ImpCombat(AvatarBuildsMixin):
         self.freeRecoverDeathPenaltyTimes = GP_SD.datas['freeExpRecCount']['value']
 
     def recoverDeathPenaltyExp(self, exposed, expireTime, itemId):
-        INFO_MSG('recoverDeathPenaltyExp:', expireTime, itemId)
-        if expireTime < utils.getNow():
-            ERROR_MSG('recoverDeathPenaltyExp expireTime invalid:', expireTime, self.gbID)
+        LOG_IFO('recoverDeathPenaltyExp:', expireTime, itemId)
+        if expireTime < utils.curTS():
+            LOG_ERR('recoverDeathPenaltyExp expireTime invalid:', expireTime, self.gbID)
             return
 
         _exp = self.deathPenaltyData.getDeathPenaltyExp(expireTime)
         if not _exp:
-            ERROR_MSG('recoverDeathPenaltyExp not found:', expireTime, self.gbID)
+            LOG_ERR('recoverDeathPenaltyExp not found:', expireTime, self.gbID)
             return
 
         _opUUID = KBEngine.genUUID64()
         _ratio = 1
         if itemId == 0:
             if self.freeRecoverDeathPenaltyTimes <= 0:
-                ERROR_MSG('recoverDeathPenaltyExp freeRecoverDeathPenaltyTimes:', self.gbID)
+                LOG_ERR('recoverDeathPenaltyExp freeRecoverDeathPenaltyTimes:', self.gbID)
                 return
 
             self.freeRecoverDeathPenaltyTimes -= 1
@@ -291,14 +291,14 @@ class ImpCombat(AvatarBuildsMixin):
                 _num = F_GFD.datas[_formulaId]['serverFormula'](_exp)
                 _ratio = GP_SD.datas['advancedExpRecPct']['value']
             else:
-                ERROR_MSG('recoverDeathPenaltyExp itemId invalid:', itemId, self.gbID)
+                LOG_ERR('recoverDeathPenaltyExp itemId invalid:', itemId, self.gbID)
                 return
 
             _src = AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY_DEDUCT
             _deductVal = dropAward.DeductWealthVal()
             _deductVal.addWealthByItemId(itemId, _num)
             if not self.canDeductWealth(_deductVal, sendMsg=True):
-                ERROR_MSG('recoverDeathPenaltyExp canDeductWealth failed:', self.gbID)
+                LOG_ERR('recoverDeathPenaltyExp canDeductWealth failed:', self.gbID)
                 return
 
             self.deductWealth(_src, _deductVal, _opUUID, gameclass.AwardDetail())
@@ -312,7 +312,7 @@ class ImpCombat(AvatarBuildsMixin):
         self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
 
     def removeDeathPenaltyExp(self, exposed, expireTime):
-        INFO_MSG('removeDeathPenaltyExp:', expireTime)
+        LOG_IFO('removeDeathPenaltyExp:', expireTime)
         if self.deathPenaltyData.removeDeathPenaltyVal(expireTime):
             self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
 
@@ -328,11 +328,11 @@ class ImpCombat(AvatarBuildsMixin):
 
         self.checkUnlockBuildAndSkillByLevel(True, newLv)
 
-        self.lastLevelupTime = utils.getNow()
+        self.lastLevelupTime = utils.curTS()
         self._modifyRedisAttr({'level': newLv})
 
         self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'level', newLv)
-        self.propChangedTimes[gameconst.LeaderBoardType.AVATAR_LEVEL] = utils.getNow()
+        self.propChangedTimes[gameconst.LeaderBoardType.AVATAR_LEVEL] = utils.curTS()
 
         self.achievementInfo.onLvUpAchievement(oldLv, newLv, self)
         self.checkAndUnlockWelfareSignIn()
@@ -350,11 +350,11 @@ class ImpCombat(AvatarBuildsMixin):
         for propName, val in fightProps:
             fpData = FPDD.datas.get(propName)
             if not fpData:
-                ERROR_MSG('addAwardFightProps name invalid:', propName, val)
+                LOG_ERR('addAwardFightProps name invalid:', propName, val)
                 continue
 
             if fpData['formulaPlayer']:
-                ERROR_MSG('addAwardFightProps prop be rely on:', propName, val)
+                LOG_ERR('addAwardFightProps prop be rely on:', propName, val)
                 continue
 
             self.awardFightPropDic[propName] = self.awardFightPropDic.get(propName, 0) + val
@@ -381,7 +381,7 @@ class ImpCombat(AvatarBuildsMixin):
             'ExpChange': expChange,
             'BeforeLevel': oldLevel,
             'AfterLevel': newLevel,
-            'iTime': utils.getNow() - self.lastLevelupTime if oldLevel != newLevel else 0,
+            'iTime': utils.curTS() - self.lastLevelupTime if oldLevel != newLevel else 0,
             'Reason': srcType,
             'SubReason': srcSubType,
             'Detail': str(detail),
@@ -398,11 +398,12 @@ class ImpCombat(AvatarBuildsMixin):
         self.unlockSkill(isNotify, 0, messionId)
         self.sendCliSkillBuildInfo()
 
-    def onKillOtherAvatar(self, gbId, spaceNo):
+    
+    def onKillOtherAvatar(self, gbId, spaceNo, name, school, level, sex):
         if gbId == self.gbID:
             return
 
-        self.enemyMgr.onKillOtherAvatarRecord(self, gbId, spaceNo)
+        self.enemyMgr.onKillOtherAvatarRecord(self, gbId, spaceNo, name, school, level, sex)
 
     def unlockTemporarySkillByTask(self, taskId, skillList):
         unlockedSkills = []
@@ -426,8 +427,8 @@ class ImpCombat(AvatarBuildsMixin):
         for _buildSkillId in unlockedSkills:
             _stateSkillId = dataUtils.getSkillIdByMorphState(_buildSkillId, self.morphState)
             self.deleteTemporarySkill(_buildSkillId, _stateSkillId)
-
         self.removeSkillChangeMorphState(unlockedSkills)
+
         self.sendCliSkillBuildInfo()
 
     def initRemoveTemporarySkill(self):
@@ -474,11 +475,11 @@ class ImpCombat(AvatarBuildsMixin):
 
     @gamedecorator.checkGameconfigEnable('quickSettings')
     def setInstantPotionSlots(self, exposed, potion):
-        INFO_MSG('setInstantPotionSlots', potion)
+        LOG_IFO('setInstantPotionSlots', potion)
         _oldAutoHealHp = self.instantPotionSlots._hasAutoHealHp()
         _oldAutoHealMp = self.instantPotionSlots._hasAutoHealMp()
         if not self.instantPotionSlots.updateSlot(self, potion):
-            ERROR_MSG('setInstantPotionSlots failed', self.gbID)
+            LOG_ERR('setInstantPotionSlots failed', self.gbID)
             return
 
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetSetHp'], ())
@@ -521,7 +522,7 @@ class ImpCombat(AvatarBuildsMixin):
 
     @gamedecorator.checkGameconfigEnable('quickSettings')
     def unsetInstantPotionSlots(self, exposed, slotId):
-        INFO_MSG('unsetInstantPotionSlots', slotId)
+        LOG_IFO('unsetInstantPotionSlots', slotId)
         self.instantPotionSlots.unsetSlot(slotId)
 
         self.client.onRemoveInstantPotionSlots(slotId)
@@ -531,7 +532,7 @@ class ImpCombat(AvatarBuildsMixin):
             if not potion.isHp():
                 continue
 
-            if not utils.hasBit(potion.potionState, gameconst.PotionState.AUTO):
+            if not utils.bhas(potion.potionState, gameconst.PotionState.AUTO):
                 continue
 
             if self.useItemWithActionInternal(
@@ -545,7 +546,7 @@ class ImpCombat(AvatarBuildsMixin):
             if not potion.isMp():
                 continue
 
-            if not utils.hasBit(potion.potionState, gameconst.PotionState.AUTO):
+            if not utils.bhas(potion.potionState, gameconst.PotionState.AUTO):
                 continue
 
             if self.useItemWithActionInternal(
@@ -557,7 +558,7 @@ class ImpCombat(AvatarBuildsMixin):
     # 快捷吃药 end ---------------------------------
 
     def initSummonSlotIdx(self):
-        INFO_MSG('initSummonSlotIdx', self.summonSlotIdxBase)
+        LOG_IFO('initSummonSlotIdx', self.summonSlotIdxBase)
         self.cell.setSummonSlotIdx(self.summonSlotIdxBase)
 
     def setSummonSlotIdx(self, exposed, slotIdx):
@@ -565,22 +566,22 @@ class ImpCombat(AvatarBuildsMixin):
 
     def _setSummonSlotIdx(self, slotIdx):
         if slotIdx == self.summonSlotIdxBase:
-            INFO_MSG('base setSummonSlotIdx same idx', slotIdx)
+            LOG_IFO('base setSummonSlotIdx same idx', slotIdx)
             return
 
         school = gameglobal.roleCache[self.id]['school']
         summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
         skillLevel = self.buildDic.getSkillLevel(summonSkillId)
-        INFO_MSG('base setSummonSlotIdx', slotIdx, self.summonSlotIdxBase, school, skillLevel)
+        LOG_IFO('base setSummonSlotIdx', slotIdx, self.summonSlotIdxBase, school, skillLevel)
         if school != summonSchool:
-            ERROR_MSG('base setSummonSlotIdx school error', school, summonSchool)
+            LOG_ERR('base setSummonSlotIdx school error', school, summonSchool)
             return
         if slotIdx <= 0 or slotIdx > SRSU.maxKey:
-            ERROR_MSG('base setSummonSlotIdx slotIdx error', slotIdx)
+            LOG_ERR('base setSummonSlotIdx slotIdx error', slotIdx)
             return
         if skillLevel < SRSU.datas[slotIdx].get('UnlockLevel', 0):
-            ERROR_MSG('base setSummonSlotIdx unlock', skillLevel, SRSU.datas[slotIdx])
+            LOG_ERR('base setSummonSlotIdx unlock', skillLevel, SRSU.datas[slotIdx])
             return
 
         self.cell.setSummonSlotIdx(slotIdx)
@@ -593,7 +594,7 @@ class ImpCombat(AvatarBuildsMixin):
             return
 
         if self.summonSlotIdxBase == 0:
-            INFO_MSG('base updateSkillLevelSetSummonSlotIdx1', skillId, skillLevel)
+            LOG_IFO('base updateSkillLevelSetSummonSlotIdx1', skillId, skillLevel)
             self._setSummonSlotIdx(SRSU.minKey)
             return
 
@@ -606,11 +607,11 @@ class ImpCombat(AvatarBuildsMixin):
         if slotIdx == self.summonSlotIdxBase:
             return
 
-        INFO_MSG('base updateSkillLevelSetSummonSlotIdx2', self.summonSlotIdxBase, slotIdx, skillId, skillLevel)
+        LOG_IFO('base updateSkillLevelSetSummonSlotIdx2', self.summonSlotIdxBase, slotIdx, skillId, skillLevel)
         self.cell.setSummonSlotIdx(slotIdx)
 
     def setSummonSlotIdxAck(self, slotIdx):
-        INFO_MSG('base setSummonSlotIdxAck', self.summonSlotIdxBase, slotIdx)
+        LOG_IFO('base setSummonSlotIdxAck', self.summonSlotIdxBase, slotIdx)
         self.summonSlotIdxBase = slotIdx
 
     def removeSkillSetSummonSlotIdx(self, removedSkills):
@@ -620,7 +621,7 @@ class ImpCombat(AvatarBuildsMixin):
         if school != summonSchool or summonSkillId not in removedSkills:
             return
 
-        INFO_MSG('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
+        LOG_IFO('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
         self.summonSlotIdxBase = 0
         self.cell.setSummonSlotIdx(0)
 
@@ -633,5 +634,5 @@ class ImpCombat(AvatarBuildsMixin):
         if self.morphState == gameconst.MORPH_BUILD_STATE:
             return
 
-        INFO_MSG('base removeSkillChangeMorphState ', summonSkillId, removedSkills, self.morphState)
+        LOG_IFO('base removeSkillChangeMorphState ', summonSkillId, removedSkills, self.morphState)
         self.cell.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)

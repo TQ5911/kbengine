@@ -5,14 +5,14 @@ import gameconst
 
 class ImpRaidDungeon(object):
     def createAndEnterRaidDungeonMemberPreCheck(self, srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData):
-        INFO_MSG("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+        LOG_IFO("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
         dungeonPlayMode = extraData['dungeonPlayMode']
-        errno = gameconst.RaidDungeonErrno.RAIDDUN_REWARD_NUM_CHECK_FAIL
+        errno = gameconst.RaidDungeonErrno.ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL
         if dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
-            INFO_MSG("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+            LOG_IFO("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
             if self.chiefInfo.isCanTakeReward():
-                INFO_MSG("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
-                errno = gameconst.RaidDungeonErrno.RAIDDUN_OK
+                LOG_IFO("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+                errno = gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
         extraData.pop('dungeonPlayMode', None)
         srcPlayerBox.cell.onCreateAndEnterRaidDungeonAllMemberPreCheck(
             errno.errno, raidUUID, dungeonNo, dungeonSrc, extraData['_avatarProps']['gbId'], extraData['_avatarProps']['name'], extraData)
@@ -27,5 +27,5 @@ class ImpRaidDungeon(object):
             'gbId': self.gbID,
             'eId': self.id,
         })
-        INFO_MSG('doEnterRaidDungeonSelfCheck::', dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)
+        LOG_IFO('doEnterRaidDungeonSelfCheck::', dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)
         self.cell.doEnterRaidDungeonAfterCheck(dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)

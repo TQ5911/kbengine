@@ -26,7 +26,7 @@ class VarSetter(BaseVar):
         super().__init__(eid, controller, var_name, **kwargs)
         self._new_var_value = new_var_value
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
         self._modify_variable()
         self.trigger_all(1, obj)
 

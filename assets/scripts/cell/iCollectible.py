@@ -12,7 +12,7 @@ import collect_details as  PDETAIL
 
 class ICollectible(object):
     def onCollectAward(self, propIndexList, opUUID):
-        DEBUG_MSG('onCollectAward', propIndexList, opUUID)
+        LOG_DBG('onCollectAward', propIndexList, opUUID)
         for propIndex in propIndexList:
             propList = PDETAIL.datas.get(propIndex, {}).get('propList', {})
             propChange = self._addAwardCollectPropsCell(propList)
@@ -31,15 +31,15 @@ class ICollectible(object):
         propChange = {}
         for propName, val in syncPropDict.items():
             bef = self.getProp(propName)
-            self.addProp(propName, val, gameconst.SourceType.CollectProp)
+            self.addProp(propName, val, gameconst.SourceType.SrcTpCollectProp)
             addScore += dataUtils.calcFightPropScore(self.school, propName, val)
             aft = self.getProp(propName)
             propChange[propName] = {'bef': bef, 'aft': aft}
-            DEBUG_MSG('add prop by collect', propName, ', val', val)
+            LOG_DBG('add prop by collect', propName, ', val', val)
 
         if addScore:
             newScore = self.scoresInfo.rewardFightProp + addScore
-            DEBUG_MSG('add score by collect', self.scoresInfo.rewardFightProp, ', val', addScore)
+            LOG_DBG('add score by collect', self.scoresInfo.rewardFightProp, ', val', addScore)
             self.onUpdateRewardFightProp(newScore)
 
         return propChange

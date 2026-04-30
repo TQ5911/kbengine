@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildJoinCondVal(userType.UserSoleType):
+class GuildJoinCondVal(userType.UserSingleType):
     '''GUILD_JOIN_COND_DATA_INFO'''
     def __init__(self, level=0, score=0, auto=False):
         self.level = level

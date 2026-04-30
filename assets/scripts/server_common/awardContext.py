@@ -10,7 +10,7 @@ import sMath
 import utils
 
 
-class AwardArgs(userType.UserSoleType):
+class AwardArgs(userType.UserSingleType):
     def __init__(self, lv=0, avatarLv=0, **kwargs):
         self.lv = lv
         self.avatarLv = avatarLv
@@ -25,7 +25,7 @@ class AwardArgs(userType.UserSoleType):
         setattr(self, name, val)
 
 
-class AwardContext(userType.UserSoleType):
+class AwardContext(userType.UserSingleType):
     def __init__(self):
         self.extra = None
 

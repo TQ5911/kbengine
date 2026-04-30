@@ -13,7 +13,7 @@
 	*/
     public abstract class MessageReaderBase
     {
-			public abstract void process(byte[] datas, MessageLengthEx offset, MessageLengthEx length);
+			public abstract void process(NetworkInterfaceBase networkInterface,byte[] datas, MessageLengthEx offset, MessageLengthEx length);
 			public abstract void reset();
     }
 } 

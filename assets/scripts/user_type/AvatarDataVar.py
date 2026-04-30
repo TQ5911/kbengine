@@ -13,7 +13,7 @@ def getAvatarBaseAttrVarValue(owner, varId):
     attrName = VLVLD.datas[varId]['charProp']
     value = getattr(owner, attrName, None)
     if value is None:
-        gameengine.reportCritical('getAvatarBaseAttrVarValue error, no this attr:', varId, attrName)
+        gameengine.panicStack('getAvatarBaseAttrVarValue error, no this attr:', varId, attrName)
     return value
 
 

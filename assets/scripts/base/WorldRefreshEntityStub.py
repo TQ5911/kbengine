@@ -21,7 +21,7 @@ import worldMonsterRefresh_entityRefresh as WMR_ER
 import worldMonsterRefresh_entitykRefreshGroup as WMR_ERG
 import creep_timedRefresh as CTR
 
-class TimeLimitedGroupEntityVal(userType.UserSoleType):
+class TimeLimitedGroupEntityVal(userType.UserSingleType):
     def __init__(self, refreshTimedID, stageType, nextStartTime, interval, refreshDataList):
         self.refreshTimedID = refreshTimedID
         self.stageType = stageType
@@ -33,7 +33,7 @@ class TimeLimitedGroupEntityVal(userType.UserSoleType):
         return self.nextStartTime < other.nextStartTime
 
     def __str__(self):
-        return f'TimeLimitedGroupEntityVal(refreshTimedID={self.refreshTimedID}, stageType={self.stageType}, nextStartTime={self.nextStartTime}, interval={self.interval}, refreshDataList={self.refreshDataList}, nextStartTimeStr={utils.getTimeStrFromTimeStamp(self.nextStartTime)})'
+        return f'TimeLimitedGroupEntityVal(refreshTimedID={self.refreshTimedID}, stageType={self.stageType}, nextStartTime={self.nextStartTime}, interval={self.interval}, refreshDataList={self.refreshDataList}, nextStartTimeStr={utils.getCommonTimeStrFromTimeStamp(self.nextStartTime)})'
 
 class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
@@ -64,7 +64,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             cbFunc(groupId, isReady, *args)
 
     def loadGroupEntities(self):
-        INFO_MSG("WorldRefreshEntityStub::loadGroupEntities")
+        LOG_IFO("WorldRefreshEntityStub::loadGroupEntities")
 
         for groupId, groupCfg in WMR_ERG.datas.items():
             if groupCfg.get('RefreshTimedID', 0):
@@ -72,9 +72,9 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             initInfo = self._initGroupEntities(groupId, groupCfg)
             self.groupRefreshInfo[groupId] = initInfo
             self.groupEntityReady[groupId] = True
-            DEBUG_MSG("WorldRefreshEntityStub::loadGroupEntities group initInfo", initInfo)
+            LOG_DBG("WorldRefreshEntityStub::loadGroupEntities group initInfo", initInfo)
 
-        DEBUG_MSG("WorldRefreshEntityStub::loadGroupEntities end", self.groupRefreshInfo, self.groupEntityReady)
+        LOG_DBG("WorldRefreshEntityStub::loadGroupEntities end", self.groupRefreshInfo, self.groupEntityReady)
 
         tmpGroupRefreshInfo = copy.deepcopy(self.groupRefreshInfo)
         self.groupRefreshInfo.clear()
@@ -85,24 +85,24 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         self.doLoadTimerGroupEntities()
 
     def _initGroupEntities(self, groupId, groupCfg, refreshType=0, refreshNum=0, excludeIds=[]):
-        DEBUG_MSG("WorldRefreshEntityStub::_initGroupEntities")
+        LOG_DBG("WorldRefreshEntityStub::_initGroupEntities")
 
         initInfo = {}
         refreshNum = refreshNum if refreshNum > 0 else groupCfg.get('refreshNum', 1)
         refreshTime = groupCfg.get('refreshTime', 0)
-        DEBUG_MSG("WorldRefreshEntityStub::_initGroupEntities refreshNum, refreshTime", refreshNum, refreshTime)
+        LOG_DBG("WorldRefreshEntityStub::_initGroupEntities refreshNum, refreshTime", refreshNum, refreshTime)
 
         eidList, eidWeightList = self.getEIDWeightListByGroup(groupId, groupCfg)
-        DEBUG_MSG("WorldRefreshEntityStub::_initGroupEntities eidList, eidWeightList", eidList, eidWeightList)
+        LOG_DBG("WorldRefreshEntityStub::_initGroupEntities eidList, eidWeightList", eidList, eidWeightList)
         idList, idWeightList = self.getIDWeightListByGroup(groupId, excludeIds)
-        DEBUG_MSG("WorldRefreshEntityStub::_initGroupEntities idList, idweightList", idList, idWeightList)
+        LOG_DBG("WorldRefreshEntityStub::_initGroupEntities idList, idweightList", idList, idWeightList)
 
         if len(eidList) <= 0 or len(idList) <= 0:
-            WARNING_MSG("WorldRefreshEntityStub::_initGroupEntities eidList, idList", len(eidList), len(idList))
+            LOG_WARN("WorldRefreshEntityStub::_initGroupEntities eidList, idList", len(eidList), len(idList))
             return initInfo
 
         maxRefreshNum = min(refreshNum, len(idList))
-        DEBUG_MSG("WorldRefreshEntityStub::_initGroupEntities maxRefreshNum", maxRefreshNum)
+        LOG_DBG("WorldRefreshEntityStub::_initGroupEntities maxRefreshNum", maxRefreshNum)
         for i in range(maxRefreshNum):
             if len(idList) <= 0:
                 break
@@ -110,7 +110,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             idx = utils.randomByWeight(idWeightList)
             eIdx = utils.randomByWeight(eidWeightList)
             if idx == None or eIdx == None:
-                WARNING_MSG("WorldRefreshEntityStub::_initGroupEntities idx, eIdx", idx, eIdx)
+                LOG_WARN("WorldRefreshEntityStub::_initGroupEntities idx, eIdx", idx, eIdx)
                 continue
 
             id = idList[idx]
@@ -133,7 +133,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         return initInfo
 
     def getEIDWeightListByGroup(self, groupId, groupCfg=None):
-        DEBUG_MSG("WorldRefreshEntityStub::getEIDWeightListByGroup")
+        LOG_DBG("WorldRefreshEntityStub::getEIDWeightListByGroup")
 
         eidList = []
         eidWeightList = []
@@ -149,7 +149,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         return eidList, eidWeightList
 
     def getIDWeightListByGroup(self, groupId, excludeIds):
-        DEBUG_MSG("WorldRefreshEntityStub::getIDWeightListByGroup groupId, excludeIds", groupId, excludeIds)
+        LOG_DBG("WorldRefreshEntityStub::getIDWeightListByGroup groupId, excludeIds", groupId, excludeIds)
 
         idList = []
         idWeightList = []
@@ -168,55 +168,55 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         return idList, idWeightList
 
     def onLoadGroupEntities(self, id, info):
-        DEBUG_MSG("WorldRefreshEntityStub::onLoadGroupEntities id, info", id, info)
+        LOG_DBG("WorldRefreshEntityStub::onLoadGroupEntities id, info", id, info)
 
-        if formula.spaceInWorldLine(id):
-            gameengine.getLineStub(formula.getMapId(id)).onLoadGroupEntities(info)
+        if formula.inWorldLineScene(id):
+            gameengine.getLineStub(formula.fetchMapId(id)).onLoadGroupEntities(info)
 
-        elif formula.isCubeSpace(id):
+        elif formula.inCubeScene(id):
             gameengine.getCubeStubBySpaceNo(id).onLoadGroupEntities(info)
 
-        elif formula.isWonderLandSpace(id):
+        elif formula.inWonderLandScene(id):
             gameengine.getWonderLandStubBySpaceNo(id).onLoadGroupEntities(info)
 
     def onRefreshGroupEntities(self, id, info, pointData):
-        DEBUG_MSG("WorldRefreshEntityStub::onRefreshGroupEntities id, info", id, info)
+        LOG_DBG("WorldRefreshEntityStub::onRefreshGroupEntities id, info", id, info)
 
         self.onCancelGroupEntityRefreshTimer(info, pointData["refreshTimerId"])
 
-        if formula.spaceInWorldLine(id):
-            gameengine.getLineStub(formula.getMapId(id)).onRefreshGroupEntities(info)
+        if formula.inWorldLineScene(id):
+            gameengine.getLineStub(formula.fetchMapId(id)).onRefreshGroupEntities(info)
 
-        elif formula.isCubeSpace(id):
+        elif formula.inCubeScene(id):
             gameengine.getCubeStubBySpaceNo(id).onRefreshGroupEntities(info)
 
-        elif formula.isWonderLandSpace(id):
+        elif formula.inWonderLandScene(id):
             gameengine.getWonderLandStubBySpaceNo(id).onRefreshGroupEntities(info)
 
     def onDestroyGroupEntities(self, id, info):
-        DEBUG_MSG("WorldRefreshEntityStub::onDestroyGroupEntities id, info", id, info)
+        LOG_DBG("WorldRefreshEntityStub::onDestroyGroupEntities id, info", id, info)
 
-        if formula.spaceInWorldLine(id):
-            gameengine.getLineStub(formula.getMapId(id)).onDestroyGroupEntities(info)
+        if formula.inWorldLineScene(id):
+            gameengine.getLineStub(formula.fetchMapId(id)).onDestroyGroupEntities(info)
 
-        elif formula.isCubeSpace(id):
+        elif formula.inCubeScene(id):
             gameengine.getCubeStubBySpaceNo(id).onDestroyGroupEntities(info)
 
-        elif formula.isWonderLandSpace(id):
+        elif formula.inWonderLandScene(id):
             gameengine.getWonderLandStubBySpaceNo(id).onDestroyGroupEntities(info)
 
     def onLoadGroupEntitiesAck(self, info):
-        lineNo = formula.getLineNo(info['spaceNo'])
+        lineNo = formula.parseLineNo(info['spaceNo'])
         groupInfo = self.groupRefreshInfo.setdefault(info['gId'], {})
         lineInfo = groupInfo.setdefault(lineNo, {})
         curInfo = lineInfo.setdefault(info['id'], {})
         curInfo.update(info)
-        DEBUG_MSG("WorldRefreshEntityStub::_onLoadGroupEntitiesAck info", curInfo)
+        LOG_DBG("WorldRefreshEntityStub::_onLoadGroupEntitiesAck info", curInfo)
 
     def onGroupEntityRefresh(self, spaceNo, gameEntityId, refreshTime):
-        INFO_MSG("WorldRefreshEntityStub::onGroupEntityRefresh spaceNo, gameEntityId, refreshTime", spaceNo, gameEntityId, refreshTime)
-        lineNo = formula.getLineNo(spaceNo)
-        id = utils.getGidFromGameEntityId(gameEntityId)
+        LOG_IFO("WorldRefreshEntityStub::onGroupEntityRefresh spaceNo, gameEntityId, refreshTime", spaceNo, gameEntityId, refreshTime)
+        lineNo = formula.parseLineNo(spaceNo)
+        id = utils.parseGidFromGameEntityId(gameEntityId)
         geIds = self.gameEntityIdSet.setdefault(id, set())
         geIds.add(gameEntityId)
 
@@ -225,19 +225,19 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         curGroupInfo = None
         entityRefreshCfg = WMR_ER.datas.get(id, None)
         if not entityRefreshCfg:
-            WARNING_MSG("WorldRefreshEntityStub::onGroupEntityRefresh entityRefreshCfg", gameEntityId)
+            LOG_WARN("WorldRefreshEntityStub::onGroupEntityRefresh entityRefreshCfg", gameEntityId)
             return
         curGroupInfo = self.groupRefreshInfo.get(entityRefreshCfg['refreshGroupID'], None)
         if not curGroupInfo:
-            WARNING_MSG("WorldRefreshEntityStub::onGroupEntityRefresh curGroupInfo", gameEntityId)
+            LOG_WARN("WorldRefreshEntityStub::onGroupEntityRefresh curGroupInfo", gameEntityId)
             return
         curLineInfo = curGroupInfo.get(lineNo, None)
         if not curLineInfo:
-            WARNING_MSG("WorldRefreshEntityStub::onGroupEntityRefresh curLineInfo", gameEntityId)
+            LOG_WARN("WorldRefreshEntityStub::onGroupEntityRefresh curLineInfo", gameEntityId)
             return
         curInfo = curLineInfo.get(id, None)
         if not curInfo:
-            WARNING_MSG("WorldRefreshEntityStub::onGroupEntityRefresh curInfo", gameEntityId)
+            LOG_WARN("WorldRefreshEntityStub::onGroupEntityRefresh curInfo", gameEntityId)
             return
         groupId = curInfo['gId']
         ids = list(curLineInfo.keys())
@@ -246,7 +246,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         groupCfg = WMR_ERG.datas.get(groupId, None)
         initInfo = self._initGroupEntities(groupId, groupCfg, curInfo['refreshType'], refreshNum=1, excludeIds=ids)
         if len(initInfo) != 1:
-            WARNING_MSG("WorldRefreshEntityStub::onGroupEntityRefresh gameEntityId, excludeIds", gameEntityId, ids)
+            LOG_WARN("WorldRefreshEntityStub::onGroupEntityRefresh gameEntityId, excludeIds", gameEntityId, ids)
             return
         curLineInfo.update(initInfo)
 
@@ -260,21 +260,21 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
 
             curRefreshTime = info.get('refreshTime', refreshTime)
             pointData = {}
-            timerId = self._callback(curRefreshTime, 'onRefreshGroupEntities', (newId, info, pointData), gametimer.TIMER_TAG_LOAD_GROUP_ENTITIES_CALL_BACK)
+            timerId = self.addTimerCB(curRefreshTime, 'onRefreshGroupEntities', (newId, info, pointData), gametimer.TIMER_TAG_LOAD_GROUP_ENTITIES_CALL_BACK)
             pointData["refreshTimerId"] = timerId
             self.onAddGroupEntityRefreshTimer(info, timerId)
 
-        DEBUG_MSG("WorldRefreshEntityStub::onGroupEntityRefresh end", curLineInfo)
+        LOG_DBG("WorldRefreshEntityStub::onGroupEntityRefresh end", curLineInfo)
 ########################################################################################################
     def doLoadTimerGroupEntities(self):
-        INFO_MSG("WorldRefreshEntityStub::oLoadTimerGroupEntities")
+        LOG_IFO("WorldRefreshEntityStub::oLoadTimerGroupEntities")
 
         readyTimerGroupEntitiesMap = {}
         self.loadTimerGroupEntities(readyTimerGroupEntitiesMap)
         self.initTimerEntities(readyTimerGroupEntitiesMap)
 
     def loadTimerGroupEntities(self, readyTimerGroupEntitiesMap):
-        INFO_MSG("WorldRefreshEntityStub::loadTimerGroupEntities")
+        LOG_IFO("WorldRefreshEntityStub::loadTimerGroupEntities")
         for groupId, groupCfg in WMR_ERG.datas.items():
             refreshTimedID = groupCfg.get('RefreshTimedID', 0)
             if not refreshTimedID:
@@ -282,28 +282,28 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
 
             refreshData = (groupId,)
             readyTimerGroupEntitiesMap.setdefault(refreshTimedID, []).append(refreshData)
-            DEBUG_MSG("WorldRefreshEntityStub::loadTimerGroupEntities", groupId, refreshTimedID, refreshData)
+            LOG_DBG("WorldRefreshEntityStub::loadTimerGroupEntities", groupId, refreshTimedID, refreshData)
 
     def initTimerEntities(self, readyTimerGroupEntitiesMap):
         if not readyTimerGroupEntitiesMap:
             return
 
-        INFO_MSG("WorldRefreshEntityStub::initTimerEntities", readyTimerGroupEntitiesMap)
-        now = utils.getNow()
+        LOG_IFO("WorldRefreshEntityStub::initTimerEntities", readyTimerGroupEntitiesMap)
+        now = utils.curTS()
         for refreshTimedID, refreshDataList in readyTimerGroupEntitiesMap.items():
             refreshCfg = CTR.datas.get(refreshTimedID, {})
             if not refreshCfg:
-                WARNING_MSG("WorldRefreshEntityStub::initTimerEntities not refreshCfg")
+                LOG_WARN("WorldRefreshEntityStub::initTimerEntities not refreshCfg")
                 continue
 
             refreshType = refreshCfg['RefreshType']
             if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
-                ERROR_MSG("WorldRefreshEntityStub::initTimerEntities TIMED_INTERVALS error", refreshType)
+                LOG_ERR("WorldRefreshEntityStub::initTimerEntities TIMED_INTERVALS error", refreshType)
                 continue
             elif refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
                 self.initTimeLimitedGroupEntityVal(refreshCfg, now, refreshDataList)
             else:
-                ERROR_MSG("WorldRefreshEntityStub::initTimerEntities RefreshType error", refreshType)
+                LOG_ERR("WorldRefreshEntityStub::initTimerEntities RefreshType error", refreshType)
                 continue
 
         for refreshType, refreshQueue in enumerate(self.refreshGroupEntityQueue):
@@ -312,15 +312,15 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
 
             heapq.heapify(refreshQueue)
             if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
-                ERROR_MSG("WorldRefreshEntityStub::initTimerEntities TIMED_INTERVALS error", refreshType)
+                LOG_ERR("WorldRefreshEntityStub::initTimerEntities TIMED_INTERVALS error", refreshType)
                 continue
             elif refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
                 self.startTimeLimitedGroupEntityRefreshTimer()
 
 ########################################################################################################
     def initTimeLimitedGroupEntityVal(self, refreshCfg, now, refreshDataList, subRefreshType=1):
-        startTimeCron, _ = utils.nextByTimeTupleList(refreshCfg['initialRefresh'], now)
-        endTimeCron, _ = utils.nextByTimeTupleList(refreshCfg['EndRefresh'], now)
+        startTimeCron, _ = utils.nextByCronTupleList(refreshCfg['initialRefresh'], now)
+        endTimeCron, _ = utils.nextByCronTupleList(refreshCfg['EndRefresh'], now)
         nextStartTime = now + startTimeCron
         nextEndTime = now + endTimeCron
         tmpNextStartTime = nextStartTime
@@ -331,7 +331,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         else:
             pass
         self.refreshGroupEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED].append(TimeLimitedGroupEntityVal(refreshCfg['ID'], gameconst.TimeLimitedStageType.START, tmpNextStartTime, 86400, refreshDataList))
-        INFO_MSG("WorldRefreshEntityStub::initTimeLimitedGroupEntityVal ", self.refreshGroupEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED][-1])
+        LOG_IFO("WorldRefreshEntityStub::initTimeLimitedGroupEntityVal ", self.refreshGroupEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED][-1])
 
     def startTimeLimitedGroupEntityRefreshTimer(self):
         if self.timeLimitedGroupEntityTimerId:
@@ -342,7 +342,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             return
 
         _val = heapq.nsmallest(1, self.refreshGroupEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED])[0]
-        INFO_MSG('WorldRefreshEntityStub::startTimeLimitedGroupEntityRefreshTimer ', _val)
+        LOG_IFO('WorldRefreshEntityStub::startTimeLimitedGroupEntityRefreshTimer ', _val)
         self.timeLimitedGroupEntityTimerId = self._datetimeCallback(_val.nextStartTime, 'onTimeLimitedGroupEntityRefreshTimerCallback', (), gametimer.TIMER_TAG_TIME_LIMITED_GROUP_ENTITY_REFRESH_TIMER, 'timeLimitedGroupEntityTimerId')
 
     def onTimeLimitedGroupEntityRefreshTimerCallback(self):
@@ -350,21 +350,21 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             return
 
         _val = heapq.heappop(self.refreshGroupEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED])
-        INFO_MSG('WorldRefreshEntityStub::onTimeLimitedGroupEntityRefreshTimerCallback', _val)
-        now = utils.getNow()
+        LOG_IFO('WorldRefreshEntityStub::onTimeLimitedGroupEntityRefreshTimerCallback', _val)
+        now = utils.curTS()
         # 刷新策略
         refreshCfg = CTR.datas.get(_val.refreshTimedID, {})
         if not refreshCfg:
-            WARNING_MSG("WorldRefreshEntityStub::onTimeLimitedGroupEntityRefreshTimerCallback not refreshCfg")
+            LOG_WARN("WorldRefreshEntityStub::onTimeLimitedGroupEntityRefreshTimerCallback not refreshCfg")
             return
         if _val.stageType == gameconst.TimeLimitedStageType.START:
             self.doTimeLimitedGroupEntityRefresh(_val)
-            endTimeCron, _ = utils.nextByTimeTupleList(refreshCfg['EndRefresh'], now)
+            endTimeCron, _ = utils.nextByCronTupleList(refreshCfg['EndRefresh'], now)
             _val.nextStartTime = now + endTimeCron
             _val.stageType = gameconst.TimeLimitedStageType.END
         elif _val.stageType == gameconst.TimeLimitedStageType.END:
             self.doTimeLimitedGroupEntityDestroy(_val)
-            startTimeCron, _ = utils.nextByTimeTupleList(refreshCfg['initialRefresh'], now)
+            startTimeCron, _ = utils.nextByCronTupleList(refreshCfg['initialRefresh'], now)
             _val.nextStartTime = now + startTimeCron
             _val.stageType = gameconst.TimeLimitedStageType.START
 
@@ -373,7 +373,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         self.startTimeLimitedGroupEntityRefreshTimer()
 
     def doTimeLimitedGroupEntityRefresh(self, timeLimitedGroupEntityVal):
-        INFO_MSG("WorldRefreshEntityStub::doTimeLimitedGroupEntityRefresh", timeLimitedGroupEntityVal)
+        LOG_IFO("WorldRefreshEntityStub::doTimeLimitedGroupEntityRefresh", timeLimitedGroupEntityVal)
         for refreshData in timeLimitedGroupEntityVal.refreshDataList:
             (groupId, ) = refreshData
             groupCfg = WMR_ERG.datas[groupId]
@@ -382,14 +382,14 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
                 self.onLoadGroupEntities(id, info)
 
     def doTimeLimitedGroupEntityDestroy(self, timeLimitedGroupEntityVal):
-        INFO_MSG("WorldRefreshEntityStub::doTimeLimitedGroupEntityDestroy", timeLimitedGroupEntityVal)
+        LOG_IFO("WorldRefreshEntityStub::doTimeLimitedGroupEntityDestroy", timeLimitedGroupEntityVal)
         for refreshData in timeLimitedGroupEntityVal.refreshDataList:
             (groupId, ) = refreshData
             curGroupInfo = self.groupRefreshInfo.get(groupId, None)
             if not curGroupInfo:
-                WARNING_MSG("WorldRefreshEntityStub::doTimeLimitedGroupEntityDestroy not curGroupInfo", groupId)
+                LOG_WARN("WorldRefreshEntityStub::doTimeLimitedGroupEntityDestroy not curGroupInfo", groupId)
                 continue
-            DEBUG_MSG('WorldRefreshEntityStub::doTimeLimitedGroupEntityDestroy curGroupInfo', curGroupInfo)
+            LOG_DBG('WorldRefreshEntityStub::doTimeLimitedGroupEntityDestroy curGroupInfo', curGroupInfo)
             for lineNo, curLineInfo in curGroupInfo.items():
                 for id in list(curLineInfo.keys()):
                     info = curLineInfo.pop(id, {})
@@ -404,10 +404,10 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
     def onAddGroupEntityRefreshTimer(self, info, timerId):
         id = info['id']
         refreshType = info['refreshType']
-        INFO_MSG("WorldRefreshEntityStub::onAddGroupEntityRefreshTimer", info, timerId)
+        LOG_IFO("WorldRefreshEntityStub::onAddGroupEntityRefreshTimer", info, timerId)
 
         if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
-            ERROR_MSG("WorldRefreshEntityStub::onAddGroupEntityRefreshTimer error")
+            LOG_ERR("WorldRefreshEntityStub::onAddGroupEntityRefreshTimer error")
 
         if refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
             timerSet = info.setdefault('timerSet', set())
@@ -416,10 +416,10 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
     def onCancelGroupEntityRefreshTimer(self, info, timerId=0):
         id = info['id']
         refreshType = info['refreshType']
-        INFO_MSG("WorldRefreshEntityStub::onCancelGroupEntityRefreshTimer", info, timerId)
+        LOG_IFO("WorldRefreshEntityStub::onCancelGroupEntityRefreshTimer", info, timerId)
 
         if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
-            ERROR_MSG("WorldRefreshEntityStub::onCancelGroupEntityRefreshTimer error")
+            LOG_ERR("WorldRefreshEntityStub::onCancelGroupEntityRefreshTimer error")
 
         if refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
             timerSet = info.setdefault('timerSet', set())
@@ -427,5 +427,5 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
                 timerSet.discard(timerId)
             else:
                 for tId in timerSet:
-                    self._cancelCallback(tId, gametimer.TIMER_TAG_LOAD_GROUP_ENTITIES_CALL_BACK)
+                    self.cancelTimerCB(tId, gametimer.TIMER_TAG_LOAD_GROUP_ENTITIES_CALL_BACK)
                 info.pop('timerSet', set())

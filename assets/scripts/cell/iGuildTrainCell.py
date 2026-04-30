@@ -10,7 +10,7 @@ import formula_generalFormula as F_GFD
 
 class IGuildTrainCell(object):
     def initGuildTrainProps(self):
-        trainList = self.popTempMiscProp(gameconst.AvatarProps.guildTrainInitCell, [])
+        trainList = self.popTempMiscProp(gameconst.EntityPropsEnum.guildTrainInitCell, [])
         score = 0
         for trainId, level in trainList:
             gtData = GT_GTD.datas.get(trainId)
@@ -32,12 +32,12 @@ class IGuildTrainCell(object):
                     propVal, scoreTmp = ret
 
                 score += scoreTmp
-                self.addProp(propName, propVal, gameconst.SourceType.GuildTrain)
+                self.addProp(propName, propVal, gameconst.SourceType.SrcTpGuildTrain)
 
-        self.setTempMiscProp(gameconst.AvatarProps.guildTrainInitScore, score)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.guildTrainInitScore, score)
 
     def updateGuildScoreFromInit(self):
-        score = self.popTempMiscProp(gameconst.AvatarProps.guildTrainInitScore, 0)
+        score = self.popTempMiscProp(gameconst.EntityPropsEnum.guildTrainInitScore, 0)
         self.onUpdateGuildTrainScore(score)
 
     def onUpgradeTrainLevel(self, trainId, targetLevel, score):
@@ -52,8 +52,8 @@ class IGuildTrainCell(object):
         targetValue = func(targetLevel)
         propName = gtData['fightProp']
 
-        INFO_MSG('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel, score)
-        self.addProp(propName, targetValue - curValue, gameconst.SourceType.GuildTrain)
+        LOG_IFO('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel, score)
+        self.addProp(propName, targetValue - curValue, gameconst.SourceType.SrcTpGuildTrain)
         self.onUpdateGuildTrainScore(score)
 
     def onResetGuildTrain(self, syncDic):
@@ -62,7 +62,7 @@ class IGuildTrainCell(object):
             func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
             propVal = func(level)
             propName = gtData['fightProp']
-            self.addProp(propName, -propVal, gameconst.SourceType.GuildTrainReset)
+            self.addProp(propName, -propVal, gameconst.SourceType.SrcTpGuildTrainReset)
 
         self.client.onGuildTrainResetClient()
         self.onUpdateGuildTrainScore(0)
@@ -76,5 +76,5 @@ class IGuildTrainCell(object):
             curVal = 0
         targetVal, _ = func(targetLevel)
         propName = gtData['fightProp']
-        self.addProp(propName, targetVal - curVal, gameconst.SourceType.GuildTrain)
+        self.addProp(propName, targetVal - curVal, gameconst.SourceType.SrcTpGuildTrain)
 

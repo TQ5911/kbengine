@@ -13,7 +13,7 @@ import formula
 
 class IStaticSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
     def __init__(self):
-        INFO_MSG('IStaticSpaceMgr.__init__', self.spaceNo)
+        LOG_IFO('IStaticSpaceMgr.__init__', self.spaceNo)
         iCell.ICell.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
         self.addDatetimeTimerTick()

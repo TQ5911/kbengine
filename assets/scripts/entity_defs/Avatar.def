@@ -70,6 +70,9 @@
         <Interface>         iGuildBossChallenge         </Interface>
         <Interface>         iAvatarStatistics           </Interface>
         <Interface>         iBindPhone                  </Interface>
+        <Interface>         iBounty                     </Interface>
+        <Interface>         iWorldLevel                 </Interface>
+        <Interface>         iEmote                     </Interface>
     </Interfaces>
 
     <Properties>
@@ -262,13 +265,13 @@
             <Flags>         CELL_PRIVATE          </Flags>
         </isBotCell>
 
-        <tLastOfflineBase>
+        <tsLastOfflineBase>
             <Type>          LONGTIME             </Type>
             <Flags>         BASE                 </Flags>
             <Default>       0                    </Default>
             <Persistent>    true                 </Persistent>
             <Index>         INDEX                </Index>
-        </tLastOfflineBase>
+        </tsLastOfflineBase>
 
         <tLogin>
             <Type>          LONGTIME             </Type>
@@ -553,6 +556,54 @@
             <Flags>         BASE                        </Flags>
             <Persistent>    true                        </Persistent>
         </banLogin>
+
+        <lastSpeed>
+            <Type>          DOUBLE                      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </lastSpeed>
+
+        <lastPosition>
+            <Type>          POSITION_ARG                </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+        </lastPosition>
+
+        <continuousTickCount>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </continuousTickCount>
+
+        <continuousIllegalCount>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </continuousIllegalCount>
+
+        <isInitCheck>
+            <Type>          BOOL                        </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       1                           </Default>
+        </isInitCheck>
+
+        <speedCheckStart>
+            <Type>          DOUBLE                      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </speedCheckStart>
+
+        <isLastOverSpeed>
+            <Type>          BOOL                        </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </isLastOverSpeed>
+
+        <overSpeedCheckTimer>
+            <Type>     TIMER_ID            </Type>
+            <Flags>    CELL_PRIVATE        </Flags>
+            <Default>  0                   </Default>
+        </overSpeedCheckTimer>
+
     </Properties>
 
     <BaseMethods>
@@ -689,6 +740,10 @@
         <onKillOtherAvatar>
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   SPACE_NO     </Arg>
+            <Arg>  UNICODE       </Arg>
+            <Arg>  UINT32        </Arg>
+            <Arg>  UINT32        </Arg>
+            <Arg>  UINT8        </Arg>
         </onKillOtherAvatar>
 
         <setCliConfigData> <Exposed/>
@@ -734,6 +789,11 @@
         <CheckFuncConditions>
             <Arg>   STRING  </Arg>
         </CheckFuncConditions>
+
+        <onGetFullPlayerInfo>
+            <Arg>       PY_DICT         </Arg>
+            <Arg>       ENTITYCALL      </Arg>
+        </onGetFullPlayerInfo>
     </BaseMethods>
 
     <CellMethods>
@@ -856,10 +916,6 @@
         <onGetTargetPlayerInfo>
             <Arg>   ENTITYCALL     </Arg>
         </onGetTargetPlayerInfo>
-
-        <onGetTargetPlayerInfoOffline>
-            <Arg>   PLAYER_GBID    </Arg>
-        </onGetTargetPlayerInfoOffline>
 
         <onGetMemberJobAndGuildCache>
             <Arg>   PY_TUPLE       </Arg>

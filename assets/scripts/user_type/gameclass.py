@@ -5,7 +5,7 @@ import gameconst
 from KBEDebug import *
 
 
-class BoolResult(userType.UserSoleType):
+class BoolResult(userType.UserSingleType):
     def __init__(self, boolVal, extra=-1):
         self.boolVal = boolVal
         self.extra = extra
@@ -25,12 +25,12 @@ class TaskCondResult(BoolResult):
         self.playerName = playerName
 
 
-class DummyObject(userType.UserSoleType):
+class DummyObject(userType.UserSingleType):
     def __init__(_self, **kwargs):
         _self.__dict__.update(kwargs)
 
 
-class AwardDetail(userType.UserSoleType):
+class AwardDetail(userType.UserSingleType):
     def __init__(self, **args):
         self.__dict__.update(args)
 
@@ -38,7 +38,7 @@ class AwardDetail(userType.UserSoleType):
         try:
             return '::'.join(['{}'] * len(self.__dict__)).format(*self.__dict__.values())
         except Exception as e:
-            ERROR_MSG('AwardDetail to json err:', e, vars(self))
+            LOG_ERR('AwardDetail to json err:', e, vars(self))
             return ''
 
     def __getstate__(self):
@@ -62,7 +62,7 @@ class DuplicatedCallList(object):
 
         return func
 
-class LockMinHpInfo(userType.UserSoleType):
+class LockMinHpInfo(userType.UserSingleType):
     def __init__(self, srcType, srcId, hpPct, totalTimes, minHp):
         self.srcType = srcType
         self.srcId = srcId

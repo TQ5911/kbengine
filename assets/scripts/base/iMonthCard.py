@@ -33,13 +33,13 @@ class IMonthCard(object):
         self.monthCardTimer = 0
         self.lastMonthcardLoginTime = self.tLoginBase
         if not self.isMonthCardExpired():
-            INFO_MSG("init month card timer", self.monthCardExpireTime)
+            LOG_IFO("init month card timer", self.monthCardExpireTime)
             self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
 
     def isMonthCardExpired(self):
         if not gameconfig.visibleConfigEnabled('monthCard'):
             return True
-        return self.monthCardExpireTime < utils.getNow()
+        return self.monthCardExpireTime < utils.curTS()
     
     def addMonthCardByItem(self, monthCardId, opUUID, ctx):
         seconds = BCBCCD.datas['durationHours']['value'] * 3600
@@ -52,8 +52,8 @@ class IMonthCard(object):
 
     def checkCanAddMonthCard(self):
         durationHoursLimit = BCBCCD.datas['durationHoursLimit']['value']
-        maxTime = utils.getNow() + 3600 * durationHoursLimit
-        INFO_MSG("checkCanAddMonthCard", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(maxTime)),
+        maxTime = utils.curTS() + 3600 * durationHoursLimit
+        LOG_IFO("checkCanAddMonthCard", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(maxTime)),
                  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
         if self.monthCardExpireTime > maxTime:
             return False
@@ -64,15 +64,15 @@ class IMonthCard(object):
     #只要调用了这个，就会发一次月卡获得奖励
     def doAddMonthCard(self, seconds, monthCardId):
         self.unlockBag(gameconst.BagType.BAG_TYPE_NORMAL, 'unlock by action: doAddMonthCard')
-        INFO_MSG("before add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
+        LOG_IFO("before add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
         if self.isMonthCardExpired():
-            self.monthCardExpireTime = utils.getNow() + seconds
+            self.monthCardExpireTime = utils.curTS() + seconds
         else:
             self.monthCardExpireTime += seconds
-        INFO_MSG("after add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
+        LOG_IFO("after add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
 
         if not self.monthCardTimer:
-            INFO_MSG("add month card timer", self.monthCardExpireTime)
+            LOG_IFO("add month card timer", self.monthCardExpireTime)
             self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
 
         _detail = gameclass.AwardDetail()
@@ -93,7 +93,7 @@ class IMonthCard(object):
         LogTrackingMgr.LogTrackingMgr.MonthCard_Invoke(
             self.gbID,
             self.getAvatarLevel(),
-            utils.getNow(),
+            utils.curTS(),
             self.monthCardExpireTime,
             opUUID
         )
@@ -105,20 +105,20 @@ class IMonthCard(object):
 
     #检查并发放月卡每日奖励
     def checkMonthCardAward(self):
-        INFO_MSG("start checkMonthCardAward")
+        LOG_IFO("start checkMonthCardAward")
         if self.isMonthCardExpired():
             return
         
-        if not utils.isDiffDay(self.lastMonthCardDailyRewardTime, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
-            INFO_MSG("checkMonthCardAward", "not diff day",
+        if not utils.checkDiffDay(self.lastMonthCardDailyRewardTime, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
+            LOG_IFO("checkMonthCardAward", "not diff day",
                      time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardDailyRewardTime)),
-                     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.getNow())))
+                     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.curTS())))
             return
         
-        INFO_MSG("checkMonthCardAward", "get daily reward",
+        LOG_IFO("checkMonthCardAward", "get daily reward",
                   time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardDailyRewardTime)),
-                  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.getNow())))
-        self.lastMonthCardDailyRewardTime = utils.getNow()
+                  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.curTS())))
+        self.lastMonthCardDailyRewardTime = utils.curTS()
         
         #道具奖励
         _detail = gameclass.AwardDetail()
@@ -141,13 +141,13 @@ class IMonthCard(object):
         if self.isMonthCardExpired():
             return
         
-        if not utils.isDiffDay(self.lastMonthCardHangupGetTime, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
+        if not utils.checkDiffDay(self.lastMonthCardHangupGetTime, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
             return
         
-        INFO_MSG("lastMonthCardHangupGetTime:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardHangupGetTime)),
-                 "->", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.getNow())))
-        INFO_MSG("remainHangupMinutes:", self.remainHangupMinutes, "->", BCBCCD.datas['dailyBaseTime']['value'])
-        self.lastMonthCardHangupGetTime = utils.getNow()
+        LOG_IFO("lastMonthCardHangupGetTime:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardHangupGetTime)),
+                 "->", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.curTS())))
+        LOG_IFO("remainHangupMinutes:", self.remainHangupMinutes, "->", BCBCCD.datas['dailyBaseTime']['value'])
+        self.lastMonthCardHangupGetTime = utils.curTS()
         self.tempLastDayRemainHangupMinutes = self.remainHangupMinutes
         self.remainHangupMinutes = BCBCCD.datas['dailyBaseTime']['value']
         return True
@@ -157,9 +157,9 @@ class IMonthCard(object):
         self._doAddIdleIncome(minutes)
     
     def _deductRemainHangupMinutes(self, minutes):
-        INFO_MSG("_deductRemainHangupMinutes", "minutes", minutes, "remainHangupMinutes", self.remainHangupMinutes)
+        LOG_IFO("_deductRemainHangupMinutes", "minutes", minutes, "remainHangupMinutes", self.remainHangupMinutes)
         if minutes > self.remainHangupMinutes:
-            ERROR_MSG("deductRemainHangupMinutes", "minutes > remainHangupMinutes", minutes, self.remainHangupMinutes)
+            LOG_ERR("deductRemainHangupMinutes", "minutes > remainHangupMinutes", minutes, self.remainHangupMinutes)
             minutes = self.remainHangupMinutes
         self.remainHangupMinutes -= minutes
 
@@ -184,16 +184,16 @@ class IMonthCard(object):
                     break
         
         if idx == -1:
-            ERROR_MSG("onMonthCardTimer", "invalid powerRange", totalScore, level, G_EXP_EXP.datas[level]['powerRange'])
+            LOG_ERR("onMonthCardTimer", "invalid powerRange", totalScore, level, G_EXP_EXP.datas[level]['powerRange'])
             return 0 
 
         income = G_EXP_EXP.datas[level]['idleIncome'][idx] * expPercent * minutes
         income = int(income)
-        INFO_MSG("_calcIdleIncome", "level", level, "idx", idx, "expPercent", expPercent, "minutes", minutes, "income", income)
+        LOG_IFO("_calcIdleIncome", "level", level, "idx", idx, "expPercent", expPercent, "minutes", minutes, "income", income)
         return income
 
     def _doAddIdleIncome(self, minutes):
-        INFO_MSG("_doAddIdleIncome", "minutes", minutes)
+        LOG_IFO("_doAddIdleIncome", "minutes", minutes)
         income = self._calcIdleIncome(minutes)
         
         _opUUID = KBEngine.genUUID64()
@@ -222,13 +222,13 @@ class IMonthCard(object):
         if self.getAvatarLevel() < CC.datas["offlineTriggerMin"]["value"]:
             return
         
-        mapId = formula.getDungeonNoBySpaceNo(self.baseSpaceNo)
-        if not formula.isWorldLineType(mapId):
+        mapId = formula.parseDungeonNoBySpaceNo(self.baseSpaceNo)
+        if not formula.checkWorldLineType(mapId):
             return
         
         mapData = G_GP.datas.get(mapId)
         if not mapData:
-            WARNING_MSG("onMonthCardTimer", "mapData invalid:", mapId)
+            LOG_WARN("onMonthCardTimer", "mapData invalid:", mapId)
             return
         
         #分线大世界 and 安全区 = 主城，有挂机收益
@@ -244,7 +244,7 @@ class IMonthCard(object):
             return
         
         if not gameconfig.visibleConfigEnabled('monthCard'):
-            WARNING_MSG("checkOfflineHangup", "monthCard not enabled", self.gbID, self.tLastOfflineBase, self.offlineHangupChecked)
+            LOG_WARN("checkOfflineHangup", "monthCard not enabled", self.gbID, self.tsLastOfflineBase, self.offlineHangupChecked)
             return
 
         if self.offlineHangupChecked:
@@ -254,25 +254,25 @@ class IMonthCard(object):
         if self.getAvatarLevel() < CC.datas["offlineTriggerMin"]["value"]:
             return
 
-        endTime = min(self.monthCardExpireTime, utils.getNow())
-        if endTime <= self.tLastOfflineBase + BCBCCD.datas['offlineTimeLimit']['value'] * 60:
+        endTime = min(self.monthCardExpireTime, utils.curTS())
+        if endTime <= self.tsLastOfflineBase + BCBCCD.datas['offlineTimeLimit']['value'] * 60:
             return
         
-        if self.tLastOfflineBase <= 0:
-            WARNING_MSG("checkOfflineHangup", "tLastOfflineBase <= 0", self.tLastOfflineBase, endTime)
+        if self.tsLastOfflineBase <= 0:
+            LOG_WARN("checkOfflineHangup", "tsLastOfflineBase <= 0", self.tsLastOfflineBase, endTime)
             return
         
-        if self.lastMonthcardLoginTime >= self.tLastOfflineBase:
-            WARNING_MSG("checkOfflineHangup", "lastMonthcardLoginTime >= tLastOfflineBase", self.lastMonthcardLoginTime, self.tLastOfflineBase)
+        if self.lastMonthcardLoginTime >= self.tsLastOfflineBase:
+            LOG_WARN("checkOfflineHangup", "lastMonthcardLoginTime >= tsLastOfflineBase", self.lastMonthcardLoginTime, self.tsLastOfflineBase)
             return
 
         totalMinutes = 0
         #上次离线，没有跨天
-        if not utils.isDiffDay(self.tLastOfflineBase, endTime, gameconst.COMMON_CYCLE_TIME):
+        if not utils.checkDiffDay(self.tsLastOfflineBase, endTime, gameconst.GENERAL_CYCLE_TIME):
             #先尝试领取挂机时长
             self.checkAndGetHangupTime()
 
-            timeDelta = (endTime - self.tLastOfflineBase) // 60
+            timeDelta = (endTime - self.tsLastOfflineBase) // 60
             timeDelta = min(timeDelta, self.remainHangupMinutes)
             if timeDelta > 0:
                 totalMinutes += timeDelta
@@ -286,36 +286,36 @@ class IMonthCard(object):
             #计算最早那天的收益
             #那天的挂机时长有浪费
             timeDelta = lastRemainHangupMinutes
-            if utils.isDiffDay(self.tLastOfflineBase, self.tLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.COMMON_CYCLE_TIME):
-                timeDelta = (utils.getCurrentDayTS(self.tLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.COMMON_CYCLE_TIME) - self.tLastOfflineBase) // 60
+            if utils.checkDiffDay(self.tsLastOfflineBase, self.tsLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.GENERAL_CYCLE_TIME):
+                timeDelta = (utils.getCurDayTS(self.tsLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.GENERAL_CYCLE_TIME) - self.tsLastOfflineBase) // 60
 
             timeDelta = min(timeDelta, accumulateTime)
             totalMinutes += timeDelta
             accumulateTime -= timeDelta
-            INFO_MSG("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime, "tLastOfflineBase", self.tLastOfflineBase, "endTime", endTime)
+            LOG_IFO("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime, "tsLastOfflineBase", self.tsLastOfflineBase, "endTime", endTime)
 
             #中间天数
-            dayDelta = (utils.getCurrentDayTS(endTime - gameconst.COMMON_CYCLE_TIME, gameconst.COMMON_CYCLE_TIME) - \
-                       utils.getCurrentDayTS(self.tLastOfflineBase - gameconst.COMMON_CYCLE_TIME, gameconst.COMMON_CYCLE_TIME)) // gameconst.ONE_DAY_SECONDS - 1
+            dayDelta = (utils.getCurDayTS(endTime - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME) - \
+                       utils.getCurDayTS(self.tsLastOfflineBase - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME)) // gameconst.ONE_DAY_COST_SECONDS - 1
             if dayDelta > 0:
                 minutes = min(accumulateTime, BCBCCD.datas['dailyBaseTime']['value'] * dayDelta)
                 totalMinutes += minutes
                 accumulateTime -= minutes
-                INFO_MSG("checkOfflineHangup middle", "dayDelta", dayDelta, "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
+                LOG_IFO("checkOfflineHangup middle", "dayDelta", dayDelta, "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
 
             #今天
-            minutes = min((endTime - utils.getCurrentDayTS(endTime - gameconst.COMMON_CYCLE_TIME, gameconst.COMMON_CYCLE_TIME)) // 60, self.remainHangupMinutes)
+            minutes = min((endTime - utils.getCurDayTS(endTime - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME)) // 60, self.remainHangupMinutes)
             minutes = min(minutes, accumulateTime)
             totalMinutes += minutes
-            INFO_MSG("checkOfflineHangup end", "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
+            LOG_IFO("checkOfflineHangup end", "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
 
             #今天的要扣掉今天的时长
             self._deductRemainHangupMinutes(minutes)
 
         self.totalOfflineExp = self._calcIdleIncome(totalMinutes)
         self.totalOfflineMinute = totalMinutes
-        INFO_MSG("checkOfflineHangup", "totalMinutes", totalMinutes, "totalOfflineExp", self.totalOfflineExp,
-                 "lastMonthcardLoginTime", self.lastMonthcardLoginTime, "tLastOfflineBase", self.tLastOfflineBase)
+        LOG_IFO("checkOfflineHangup", "totalMinutes", totalMinutes, "totalOfflineExp", self.totalOfflineExp,
+                 "lastMonthcardLoginTime", self.lastMonthcardLoginTime, "tsLastOfflineBase", self.tsLastOfflineBase)
         LogTrackingMgr.LogTrackingMgr.MonthCard_Offline(
             self.gbID,
             self.remainHangupMinutes,
@@ -324,16 +324,16 @@ class IMonthCard(object):
         return True
 
     def reqOfflineHangupData(self, exposed):
-        INFO_MSG("reqOfflineHangupData")
+        LOG_IFO("reqOfflineHangupData")
         self.checkOfflineHangup()
         if self.totalOfflineExp != 0:
-            INFO_MSG("send offlineHangupData")
+            LOG_IFO("send offlineHangupData")
             self.client.onOfflineHangupData(self.totalOfflineMinute, self.totalOfflineExp)
     
     def reqGetOfflineExp(self, exposed):
-        INFO_MSG("reqGetOfflineExp", self.totalOfflineExp)
+        LOG_IFO("reqGetOfflineExp", self.totalOfflineExp)
         if self.totalOfflineExp == 0:
-            WARNING_MSG("reqGetOfflineExp", "totalOfflineExp is 0")
+            LOG_WARN("reqGetOfflineExp", "totalOfflineExp is 0")
             return
         
         exp = self.totalOfflineExp
@@ -362,7 +362,7 @@ class IMonthCard(object):
         exp = self.totalOfflineExp
         self.totalOfflineExp = 0
         self.totalOfflineMinute = 0
-        INFO_MSG("_checkMonthCardOfflineExpMail", "totalOfflineExp", exp)
+        LOG_IFO("_checkMonthCardOfflineExpMail", "totalOfflineExp", exp)
         _addVal = dropAward.MailWealthVal()
         _addVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
         opUUID = KBEngine.genUUID64()
@@ -384,10 +384,10 @@ class IMonthCard(object):
         redisUtils.SetUtils.setMaxNumber(gameconst.PrivilegeRedisKey.VIP + self.accountName, self.monthCardExpireTime, self._onUpdateRedisVIPFlag)
 
     def _onUpdateRedisVIPFlag(self, cid, err, res):
-        INFO_MSG("_onUpdateRedisVIPFlag", "cid", cid, "err", err, "res", res)
+        LOG_IFO("_onUpdateRedisVIPFlag", "cid", cid, "err", err, "res", res)
 
     def _onUpdateRedisSVIPFlag(self, cid, err, res):
-        INFO_MSG("_onUpdateRedisSVIPFlag", "cid", cid, "err", err, "res", res)
+        LOG_IFO("_onUpdateRedisSVIPFlag", "cid", cid, "err", err, "res", res)
         if res and res == 1:
             stubs = gameengine.getLoginStubsByAccountName(self.accountName)
             gameclass.DuplicatedCallList(stubs).incSVIPOnlineNumBySetSVIP()

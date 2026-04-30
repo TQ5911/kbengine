@@ -27,12 +27,12 @@ class ImpAvatarPK(object):
 
     def __init__(self):
         self.moralLevel = utils.getMoralLevel(self.moralValue)
-        current = utils.getNow()
+        current = utils.curTS()
         self.redNameKillTime = {
             k: v for k, v in self.redNameKillTime.items()
             if abs(current - v) <= PKD.datas['defeatRedPlayerCDTime']['value']
         }
-        DEBUG_MSG('redNameKillTime on init', self.redNameKillTime)
+        LOG_DBG('redNameKillTime on init', self.redNameKillTime)
 
 
     def setPKModelBefore(self, pkModelBefore):
@@ -65,23 +65,23 @@ class ImpAvatarPK(object):
 
     @utils.isMyself
     def switchPKModel(self, exposed, model):
-        DEBUG_MSG('switchPKModel', model)
-        if utils.getNow() < self.tSwitchPKModel + PKD.datas['modeCd']['value']:
+        LOG_DBG('switchPKModel', model)
+        if utils.curTS() < self.tSwitchPKModel + PKD.datas['modeCd']['value']:
             self.base.onMessagePre(MMD.datas.modeCdmsg, [])
             return
 
-        if formula.isDuelGround(self.spaceNo):
+        if formula.inDuelScene(self.spaceNo):
             self.showMsg(D_CD.datas['duel_forbitSwitchMode']['value'], [])
             return
 
         if not gameconst.PKModel.PEACE <= model <= gameconst.PKModel.MAX_PK:
-            gameengine.reportCritical("switchPKModel:: pk model error")
+            gameengine.panicStack("switchPKModel:: pk model error")
             return
 
-        self.tSwitchPKModel = utils.getNow()
+        self.tSwitchPKModel = utils.curTS()
 
         if self.backPeaceTimer:
-            self._cancelCallback(self.backPeaceTimer, gametimer.TIMER_TAG_BACK_TO_PEACE_MODEL)
+            self.cancelTimerCB(self.backPeaceTimer, gametimer.TIMER_TAG_BACK_TO_PEACE_MODEL)
             self.backPeaceTimer = 0
 
         ret = self.setPKModel(model)
@@ -96,7 +96,7 @@ class ImpAvatarPK(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def setPKProtect(self, exposed, protectType, isSet):
-        DEBUG_MSG('setPKProtect', protectType, isSet)
+        LOG_DBG('setPKProtect', protectType, isSet)
         if not (gameconst.PKProtectType.TEAM <= protectType <= gameconst.PKProtectType.UNION):
             return
 
@@ -129,7 +129,7 @@ class ImpAvatarPK(object):
             return
 
         gbId = target.gbId
-        now = utils.getNow()
+        now = utils.curTS()
         self.base.declareWarFlow({
             'GameSvrId': None,
             'dtEventTime': None,
@@ -141,7 +141,7 @@ class ImpAvatarPK(object):
             self.challengeAvatars[gbId] = now
         else:
             self.challengeAvatars[gbId] = now
-            self._callback(60, '_checkRemoveChallengeAvatar', (gbId,), gametimer.TIMER_TAG_CHECK_REMOVE_CHALLENGE_AVATAR)
+            self.addTimerCB(60, '_checkRemoveChallengeAvatar', (gbId,), gametimer.TIMER_TAG_CHECK_REMOVE_CHALLENGE_AVATAR)
             self.client.onAddChallengeAvatar([gbId])
 
             if len(self.challengeAvatars) > 50:
@@ -169,12 +169,12 @@ class ImpAvatarPK(object):
         if not challengeTime:
             return
 
-        expireTime = utils.getNow() - challengeTime
+        expireTime = utils.curTS() - challengeTime
         if expireTime >= 60:
             self._removeChallengeAvatar(gbId)
             self.client.onRemoveChallengeAvatar(gbId)
         else:
-            self._callback(60-expireTime, '_checkRemoveChallengeAvatar', (gbId,), gametimer.TIMER_TAG_CHECK_REMOVE_CHALLENGE_AVATAR)
+            self.addTimerCB(60-expireTime, '_checkRemoveChallengeAvatar', (gbId,), gametimer.TIMER_TAG_CHECK_REMOVE_CHALLENGE_AVATAR)
 
     def hasPKProtect(self, protectType):
         if self.pkProtect & (1 << protectType):
@@ -191,9 +191,9 @@ class ImpAvatarPK(object):
         if not sceneInfo:
             return True
 
-        if formula.spaceInWorldLine(self.spaceNo) or formula.isWonderLandSpace(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo) or formula.inWonderLandScene(self.spaceNo):
             if self.areaId:
-                return utils.isInWorldLinePKSafeAreaByAreaId(self.areaId)
+                return utils.isInWorldPKSafeAreaByAreaId(self.areaId)
 
         return sceneInfo['ifSafeArea']
 
@@ -205,7 +205,7 @@ class ImpAvatarPK(object):
         return sceneInfo['ifSafeArea'] == gameconst.PKMapType.DANGER
 
     def increaseMoralValue(self, delta, srcType):
-        DEBUG_MSG('increaseMoralValue', delta)
+        LOG_DBG('increaseMoralValue', delta)
         upperLimitOfMoralValues = PKD.datas['upperLimitOfMoralValues']['value']
         if self.moralValue >= upperLimitOfMoralValues:
             return
@@ -233,7 +233,7 @@ class ImpAvatarPK(object):
 
     # -1 代表完全消除
     def reduceMoralValue(self, delta, srcType):
-        DEBUG_MSG('reduceMoralValue', delta)
+        LOG_DBG('reduceMoralValue', delta)
         lowerLimitOfMoralValues = PKD.datas['lowerLimitOfMoralValues']['value']
         if self.moralValue <= lowerLimitOfMoralValues:
             return gameconst.UseItem.FALSE
@@ -263,11 +263,11 @@ class ImpAvatarPK(object):
         if not oldInRedName and self.inRedName():
             self.resetAllTargetTypeCache()
 
-        if utils.hasBit(self.cellFlags, gameconst.CELL_FLAGS_IS_AUTH):
+        if utils.bhas(self.cellFlags, gameconst.CELL_FLAGS_IS_AUTH):
             if self.moralValue <= A_ACD.datas['evilMeterLow']['value']:
                 self.showMsg(A_ACD.datas['evilMeterLowMsg']['value'], [])
                 # 这里直接下线后面流程会出问题，因为这里比较深
-                self._callback(0.1, '_offline', (gameconst.AVATAR_OFFLINE_AUTH_LOW_MORAL,), gametimer.TIMER_TAG_AUTH_MORAL_LOW)
+                self.addTimerCB(0.1, '_offline', (gameconst.OFFLINE_REASON_AUTH_LOW_MORAL,), gametimer.TIMER_TAG_AUTH_MORAL_LOW)
 
             if self.moralValue <= A_ACD.datas['evilMeterLimit']['value'] < oldLeft:
                 self.showMsg(A_ACD.datas['evilMeterLimitMsg']['value'], [])
@@ -277,16 +277,16 @@ class ImpAvatarPK(object):
     def getMoralEffectItemPercent(self):
         potion_eff_reduced = PKMVE.datas[self.moralLevel]['PotionEffReduced']
         potion_eff_reduced = max(0, min(1, potion_eff_reduced))
-        DEBUG_MSG('getMoralEffectItemPercent', self.moralLevel, potion_eff_reduced)
+        LOG_DBG('getMoralEffectItemPercent', self.moralLevel, potion_eff_reduced)
         return 1-potion_eff_reduced
 
     def getMoralEffectTransItem(self):
         trans_item = PKMVE.datas[self.moralLevel]['cantUseTransItem']
-        DEBUG_MSG('getMoralEffectTransItem', self.moralLevel, trans_item)
+        LOG_DBG('getMoralEffectTransItem', self.moralLevel, trans_item)
         return not trans_item
 
     def checkPKWithAvatar(self, target):
-        DEBUG_MSG('checkPKWithAvatar', target)
+        LOG_DBG('checkPKWithAvatar', target)
         if self.duelAttr.isDuelEnemy(target):
             return
 
@@ -303,16 +303,16 @@ class ImpAvatarPK(object):
             if target.hasBuff(gameconst.SIEGEWAR_WANTED_BUFF):
                 return False
 
-            self.tGreyNameStart = utils.getNow()
+            self.tGreyNameStart = utils.curTS()
 
     def isGreyName(self):
         if self.inRedName():
             return False
 
-        return self.tGreyNameStart and utils.getNow() - self.tGreyNameStart <= PKD.datas['grayNameDuration']['value']
+        return self.tGreyNameStart and utils.curTS() - self.tGreyNameStart <= PKD.datas['grayNameDuration']['value']
 
     def _backToPeaceModel(self):
-        DEBUG_MSG('_backToPeaceModel')
+        LOG_DBG('_backToPeaceModel')
         self.setPKModel(gameconst.PKModel.PEACE)
         self.backPeaceTimer = 0
 
@@ -339,11 +339,11 @@ class ImpAvatarPK(object):
             return not self.inPKSafeArea()
 
         if _triggerDefend():
-            DEBUG_MSG('checkBeAttackByAvatarPK trigger defend')
+            LOG_DBG('checkBeAttackByAvatarPK trigger defend')
             ret = self.setPKModel(gameconst.PKModel.JUSTICE)
             if not ret:
                 return
-            self.backPeaceTimer = self._callback(PKD.datas['fightBackTime']['value'], '_backToPeaceModel', (),
+            self.backPeaceTimer = self.addTimerCB(PKD.datas['fightBackTime']['value'], '_backToPeaceModel', (),
                                                  gametimer.TIMER_TAG_BACK_TO_PEACE_MODEL, 'backPeaceTimer')
 
     def ifMoral(self):
@@ -384,7 +384,7 @@ class ImpAvatarPK(object):
 
     # PK杀人
     def onCheckKillAvatarInPK(self, target):
-        DEBUG_MSG('onCheckKillAvatarInPK', target)
+        LOG_DBG('onCheckKillAvatarInPK', target)
 
         def checkRedTarget():
             if not self.isRedNameTarget(target) :
@@ -393,7 +393,7 @@ class ImpAvatarPK(object):
             if abs(self.level - target.level) > PKD.datas['differenceInPlayerLv']['value'] :
                 return False
 
-            current = utils.getNow()
+            current = utils.curTS()
             if abs(current - self.redNameKillTime.get(target.id, 0)) < PKD.datas['defeatRedPlayerCDTime']['value']:
                 return False
 
@@ -401,10 +401,10 @@ class ImpAvatarPK(object):
 
         if checkRedTarget():
             formulaId = PKD.datas['defeatRedPlayerMoralValues']['value']
-            increaseMoralValue = utils.getValByFormula('formula:{}'.format(formulaId), self.moralValue)
+            increaseMoralValue = utils.calcFormulaValue(formulaId, (self.moralValue,))
             self.increaseMoralValue(increaseMoralValue, gameconst.MORAL_SRC_TYPE_KILL_PLAYER)
-            self.redNameKillTime[target.id] = utils.getNow()
-            DEBUG_MSG('onCheckKillAvatarInPK checkRedTarget', increaseMoralValue, self.redNameKillTime)
+            self.redNameKillTime[target.id] = utils.curTS()
+            LOG_DBG('onCheckKillAvatarInPK checkRedTarget', increaseMoralValue, self.redNameKillTime)
 
         if not self.isMoralValueChanged(target):
             return

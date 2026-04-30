@@ -93,6 +93,12 @@
 			<Flags>			CELL_PRIVATE				</Flags>
 			<Default>		0							</Default>
 		</loopTimes>
+
+		<scopeAddRatio>
+			<Type>			DOUBLE				</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+		</scopeAddRatio>
+
 	</Properties>
 
 	<BaseMethods>

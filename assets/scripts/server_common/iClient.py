@@ -10,12 +10,12 @@ class IClient(object):
         self.allClients.popDialog(dlogId)
 
     def _showPopoverMsg(self, msgId):
-        DEBUG_MSG("_showPopoverMsg  ", msgId)
+        LOG_DBG("_showPopoverMsg  ", msgId)
         self.allClients.showPopoverMsg(msgId)
 
     def showPopoverMsg(self, target, context, msgId, delay=0.5):
         if delay:
-            self._callback(delay, '_showPopoverMsg', (msgId,), gametimer.TIMER_TAG_SHOW_POPOVER_MSG)
+            self.addTimerCB(delay, '_showPopoverMsg', (msgId,), gametimer.TIMER_TAG_SHOW_POPOVER_MSG)
         else:
             self._showPopoverMsg(msgId)
 

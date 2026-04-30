@@ -32,25 +32,25 @@ class SpaceMapStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         gameengine.setGlobalData(self.classname(), self)
 
     def regSpace(self, spaceID, mailbox):
-        INFO_MSG('SpaceMapStub.regSpace: %s %s' % (spaceID, mailbox))
+        LOG_IFO('SpaceMapStub.regSpace: %s %s' % (spaceID, mailbox))
         self.spaceMap[spaceID] = mailbox
 
         if spaceID in self.loadedSet:
-            INFO_MSG('SpaceMapStub.regSpace: loaded before regSpace: %s %s' % (spaceID, mailbox))
+            LOG_IFO('SpaceMapStub.regSpace: loaded before regSpace: %s %s' % (spaceID, mailbox))
             self.spaceMap[spaceID].entireConstruct(spaceID)
 
     def unRegSpace(self, spaceID, mailbox):
-        INFO_MSG('SpaceMapStub.unRegSpace %s %s' % (spaceID, mailbox))
+        LOG_IFO('SpaceMapStub.unRegSpace %s %s' % (spaceID, mailbox))
 
         self.spaceMap.pop(spaceID, None)
         self.loadedSet.discard(spaceID)
 
     def entireConstruct(self, spaceID):
-        INFO_MSG('SpaceMapStub.entireConstruct: %s' % spaceID)
+        LOG_IFO('SpaceMapStub.entireConstruct: %s' % spaceID)
 
         self.loadedSet.add(spaceID)
         s = self.spaceMap.get(spaceID)
         if s:
             s.entireConstruct(spaceID)
         else:
-            INFO_MSG('SpaceMapStub.entireConstruct: loaded before regSpace %s' % spaceID)
+            LOG_IFO('SpaceMapStub.entireConstruct: loaded before regSpace %s' % spaceID)

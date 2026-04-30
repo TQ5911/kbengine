@@ -207,6 +207,17 @@
                 //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SET_POSITION, id, position);
             }
         }
+        
+        public virtual void onSetDirectionSmooth()
+        {
+            if (isShifting)
+            {
+                return;
+            }
+
+            if (hasView)
+                view.OnSetDirection(direction,false,true);
+        }
 
         public virtual void onSetDirection()
         {

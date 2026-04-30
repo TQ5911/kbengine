@@ -6,21 +6,23 @@ import formula
 import gameengine
 import iStaticSpaceMgr
 import wonderLand_config as WL_CD
+import creep_base as CBD
 import utils
 import random
 import math
 import gametimer
 import iTimer
+import gameconst
 import iCollectionBossForMgr
 
 
 class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.IStaticSpaceMgr):
     def __init__(self):
-        INFO_MSG("WonderLandSpaceMgr __init__")
+        LOG_IFO("WonderLandSpaceMgr __init__")
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)
         iCollectionBossForMgr.ICollectionBossForMgr.__init__(self)
         gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
-        self._callback(1, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
+        self.addTimerCB(1, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -34,6 +36,19 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
         super().initStaticSpace()
 
     def addEntity(self, entId, tags):
+        entity = KBEngine.entities.get(entId, None)
+        if entity and entity.IsMonster:
+            eTags = CBD.datas.get(entity.creepBaseId, {}).get('tag', [])
+            eTags = [] if not eTags else eTags
+            for tag in eTags:
+                if tag == gameconst.CREEP_TAG_WONDERLAND_FIXED_BOSS:
+                    _msgId = utils.getTranslatedMsgId(WL_CD.datas['wonderLand_fixedBossAppear']['value'])
+                    _args = [utils.getTranslatedArg(entity.name)]
+                    self.syncPlayer(lambda playerEnt: playerEnt.showMsg(_msgId, _args))
+                elif tag == gameconst.CREEP_TAG_WONDERLAND_SUMMON_BOSS:
+                    _msgId = utils.getTranslatedMsgId(WL_CD.datas['wonderLand_summoningSuccess']['value'])
+                    self.syncPlayer(lambda playerEnt: playerEnt.showMsg(_msgId, []))
+
         super(WonderLandSpaceMgr, self).addEntity(entId, tags)
 
     def removeEntityById(self, entId):
@@ -51,28 +66,28 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
         super(WonderLandSpaceMgr, self).onPlayerEnter(pid)
         _ent = KBEngine.entities.get(pid)
         if not _ent:
-            ERROR_MSG("onPlayerEnter: _ent is None", pid)
+            LOG_ERR("onPlayerEnter: _ent is None", pid)
             return
 
         _bossList = list(self.collToBoss.values())
         _ent.client.onWonderLandBossInfo(_bossList)
 
     def summonRandomBoss(self):
-        INFO_MSG("summonRandomBoss")
-        _dungeonNo = formula.getMapId(self.spaceNo)
-        _dunData = utils.getDunStructureModuleData(_dungeonNo)
+        LOG_IFO("summonRandomBoss")
+        _dungeonNo = formula.fetchMapId(self.spaceNo)
+        _dunData = utils.getDunStructModData(_dungeonNo)
         if not _dunData:
-            ERROR_MSG("summonRandomBoss: _dunData is None", self.spaceNo)
+            LOG_ERR("summonRandomBoss: _dunData is None", self.spaceNo)
             return
 
         _initEntities = _dunData.get('InitEntities')
         if not _initEntities:
-            ERROR_MSG("summonRandomBoss: _initEntities is None", self.spaceNo)
+            LOG_ERR("summonRandomBoss: _initEntities is None", self.spaceNo)
             return
 
         _monsters = _initEntities.get('Monster')
         if not _monsters:
-            ERROR_MSG("summonRandomBoss: _monsters is None", self.spaceNo)
+            LOG_ERR("summonRandomBoss: _monsters is None", self.spaceNo)
             return
 
         _bossList = []
@@ -83,7 +98,7 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
             _bossList.append(_data)
 
         if not _bossList:
-            ERROR_MSG("summonRandomBoss: _bossList is None")
+            LOG_ERR("summonRandomBoss: _bossList is None")
             return
 
         _bossData = random.choice(_bossList)
@@ -104,19 +119,21 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
         self.randomBossId = _boss.id
         self.randomBossGameEntityId = _bossData['ID']
 
-        _msgId = utils.getNeedTranslateMsgId(WL_CD.datas['wonderLand_randomBossAppear']['value'])
-        _args = [utils.getNeedTranslateArg(_boss.name)]
+        '''
+        _msgId = utils.getTranslatedMsgId(WL_CD.datas['wonderLand_randomBossAppear']['value'])
+        _args = [utils.getTranslatedArg(_boss.name)]
         self.syncPlayer(lambda playerEnt: playerEnt.showMsg(_msgId, _args))
+        '''
 
     def onRandomBossDie(self):
         self.randomBossId = 0
         _gameEntityId = self.randomBossGameEntityId
         self.randomBossGameEntityId = 0
 
-        _dungeonNo = formula.getMapId(self.spaceNo)
-        _bossData = utils.getDunStructureModuleData(_dungeonNo)
+        _dungeonNo = formula.fetchMapId(self.spaceNo)
+        _bossData = utils.getDunStructModData(_dungeonNo)
         _bossData = _bossData['InitEntities']['Monster'][str(_gameEntityId)]
 
         _delay = _bossData['Props']['RefreshTime']
-        self._callback(_delay, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
+        self.addTimerCB(_delay, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
 

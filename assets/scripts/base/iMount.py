@@ -31,7 +31,7 @@ class IMount(object):
                         self.cell.updatePropByMount(outfit.outfitId, True)
 
     def doAddMount(self, pid, mountId, durationDays):
-        INFO_MSG('doAddMount:', pid, mountId, durationDays)
+        LOG_IFO('doAddMount:', pid, mountId, durationDays)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         hasUnlock = False
         if outfit:
@@ -46,10 +46,10 @@ class IMount(object):
                     return
 
         if durationDays <= 0:
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, 0, gameconst.AddOutfitReason.Mount_ITEM)
+            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, 0, gameconst.AddOutfitReason.MOUNT_ITEM)
         else:
-            expireTime = utils.getNow() + int(durationDays * gameconst.ONE_DAY_SECONDS)
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.Mount_ITEM)
+            expireTime = utils.curTS() + int(durationDays * gameconst.ONE_DAY_COST_SECONDS)
+            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_ITEM)
 
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountActivated'])
 
@@ -63,42 +63,42 @@ class IMount(object):
                 actionContext.AchievementCtx())
 
     def setCurMount(self, exposed, mountId):
-        INFO_MSG(' set cur mount:', mountId)
+        LOG_IFO(' set cur mount:', mountId)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if outfit is None:
             return
 
-        if outfit.expireTime and outfit.expireTime <= utils.getNow():
+        if outfit.expireTime and outfit.expireTime <= utils.curTS():
             return
 
         self.cell.setCurMountCell(mountId)
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountRide'])
 
     def _eventActionAddMount(self, eventActionSrc, mountId, durationDays, *args, **kwargs):
-        INFO_MSG('_eventActionAddMount:', mountId, durationDays)
-        durationSeconds = int(float(durationDays) * gameconst.ONE_DAY_SECONDS)
+        LOG_IFO('_eventActionAddMount:', mountId, durationDays)
+        durationSeconds = int(float(durationDays) * gameconst.ONE_DAY_COST_SECONDS)
         mountId = int(mountId)
         if mountId not in MOUNTS.datas:
-            ERROR_MSG('_eventActionAddMount but mount id invalid:', mountId)
+            LOG_ERR('_eventActionAddMount but mount id invalid:', mountId)
             return
 
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if outfit and not outfit.expireTime:
-            WARNING_MSG('_eventActionAddMount: but has infinity')
+            LOG_WARN('_eventActionAddMount: but has infinity')
             return
 
         if durationSeconds <= 0:
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, 0, gameconst.AddOutfitReason.Mount_EVENT)
+            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, 0, gameconst.AddOutfitReason.MOUNT_EVENT)
         else:
-            expireTime = utils.getNow() + durationSeconds
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.Mount_EVENT)
+            expireTime = utils.curTS() + durationSeconds
+            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_EVENT)
 
     def _eventActionRemoveMount(self, eventActionSrc, mountId, *args, **kwargs):
-        INFO_MSG('_eventActionRemoveMount', mountId)
+        LOG_IFO('_eventActionRemoveMount', mountId)
         mountId = int(mountId)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if not outfit:
-            WARNING_MSG('_eventActionRemoveMount mount id invalid:', mountId)
+            LOG_WARN('_eventActionRemoveMount mount id invalid:', mountId)
             return
 
         self.outfitInfo.removeOutfit(self, gameconst.OutfitType.mount, mountId)

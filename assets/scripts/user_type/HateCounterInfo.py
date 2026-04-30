@@ -7,7 +7,7 @@ import gameconst
 import const_const as C_CD
 
 
-class HateCounterVal(userType.UserSoleType):
+class HateCounterVal(userType.UserSingleType):
     '''HATE_COUNTER_DATA_INFO'''
     def __init__(self, cntList):
         # cntList = [ [time, delta], [time, delta],... ]
@@ -17,7 +17,7 @@ class HateCounterVal(userType.UserSoleType):
             self.cntList = cntList
 
     def addHateCnt(self, _hateType):
-        _now = utils.getNow()
+        _now = utils.curTS()
         if _hateType == gameconst.HATE_CNT_TYPE_MOVE:
             _delta = C_CD.datas['monsterPathingWeight']['value']
         else:
@@ -37,7 +37,7 @@ class HateCounterVal(userType.UserSoleType):
             self.cntList.pop(0)
 
     def getHateCntVal(self):
-        _now = utils.getNow()
+        _now = utils.curTS()
         _minTime = _now - C_CD.datas['monsterCombatPathingTime']['value']
         _ret = 0
         for _t, _d in reversed(self.cntList):

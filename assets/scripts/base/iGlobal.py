@@ -19,7 +19,7 @@ class IGlobal(object):
             self.entireDestroy(False, False)
             return
 
-        INFO_MSG('onGlobalBase', self.classname(), globalName)
+        LOG_IFO('onGlobalBase', self.classname(), globalName)
         if globalName:
             gameengine.setGlobalData(globalName, self)
         else:
@@ -39,9 +39,9 @@ class IGlobal(object):
         pass
 
     def _onWriteToDB(self, ok, entity):
-        DEBUG_MSG('in _onWriteToDB:', entity, entity.databaseID)
+        LOG_DBG('in _onWriteToDB:', entity, entity.databaseID)
         if not ok:
-            ERROR_MSG('zt: fail to write DB:',self.classname(), self.id)
+            LOG_ERR('zt: fail to write DB:',self.classname(), self.id)
         else:
             gamesql.recordEntityDBID(self.classname(), self.databaseID)
 

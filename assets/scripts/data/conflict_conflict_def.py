@@ -68,4 +68,5 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     RewardTask = 29100109
     PathFinding = 29100110
     Unstuck = 29100111
+    posture = 29100112
 

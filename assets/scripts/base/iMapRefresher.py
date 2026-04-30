@@ -32,20 +32,20 @@ class IMapRefresher(object):
         pass
 
     def getMapRefreshPolicyData(self, spaceNo):
-        mapId = formula.getMapId(spaceNo)
+        mapId = formula.fetchMapId(spaceNo)
         try:
             return __import__('mapRefresh_refresh%s' % mapId).datas
         except Exception as e:
-            ERROR_MSG('cannot get map refresh data for', spaceNo, mapId)
+            LOG_ERR('cannot get map refresh data for', spaceNo, mapId)
             return {}
 
     def getEntRefreshData(self, spaceNo):
-        mapId = formula.getMapId(spaceNo)
+        mapId = formula.fetchMapId(spaceNo)
         try:
             mapEntRefresh = __import__('map_entities_refresh_r%s' % mapId)
             return mapEntRefresh
         except Exception as e:
-            WARNING_MSG('cannot get entities refresh r data for', spaceNo, mapId)
+            LOG_WARN('cannot get entities refresh r data for', spaceNo, mapId)
             return None
 
     def calcValidPos(self, spaceNo, rId, posPool=[]):
@@ -70,7 +70,7 @@ class IMapRefresher(object):
         num = policyData.get('num', 1)
         poolPos = policyData.get('position', [])
         posIndexList = self.allocEntityPos(spaceNo, policyId, poolPos, num)
-        return [poolPos[formula.getPosPoolIndex(posIndex)] for posIndex in posIndexList], posIndexList
+        return [poolPos[formula.fetchPosPoolIndex(posIndex)] for posIndex in posIndexList], posIndexList
 
     def getEntityRefreshParams(self, spaceNo, policyId):
         policyData = self.getMapRefreshPolicyData(spaceNo).get(policyId, {})
@@ -87,7 +87,7 @@ class IMapRefresher(object):
                 disappearTime = utils.getIntTimestamp(disappearTimeStr)
                 return disappearTime
         except Exception:
-            ERROR_MSG("map refresh config for disappearTime error", spaceNo, policyId)
+            LOG_ERR("map refresh config for disappearTime error", spaceNo, policyId)
             return -1
 
     def preAllocEntityPos(self, spaceNo, policyId):
@@ -106,7 +106,7 @@ class IMapRefresher(object):
         return posList
 
     def recycleEntityPos(self, spaceNo, entId, posIndex):
-        # DEBUG_MSG("iMapRefresh recycleEntityPos ", spaceNo, entId, posIndex)
+        # LOG_DBG("iMapRefresh recycleEntityPos ", spaceNo, entId, posIndex)
         entInfoLst = self.collects.get(spaceNo, [])
         if (entId, posIndex) in entInfoLst:
             self.collects[spaceNo].remove((entId, posIndex))
@@ -114,18 +114,18 @@ class IMapRefresher(object):
             for gId, gp in self.groupCollects[spaceNo].items():
                 if entId in gp:
                     self.groupCollects[spaceNo][gId].remove(entId)
-                    # DEBUG_MSG("recycle group entity pos success", entId, posIndex)
+                    # LOG_DBG("recycle group entity pos success", entId, posIndex)
                     return True, gId
 
             if entId in self.nonGroupCollects[spaceNo]:
                 self.nonGroupCollects[spaceNo].remove(entId)
-                # DEBUG_MSG("recycle non group entity pos success", entId)
+                # LOG_DBG("recycle non group entity pos success", entId)
                 return True, 0
             else:
-                ERROR_MSG("MpaRefresh recycle entity pos not in mananger", spaceNo, entId, posIndex)
+                LOG_ERR("MpaRefresh recycle entity pos not in mananger", spaceNo, entId, posIndex)
                 return False, 0
 
-        ERROR_MSG("recycleEntityPos failed", spaceNo, entId, posIndex)
+        LOG_ERR("recycleEntityPos failed", spaceNo, entId, posIndex)
         return False, 0
 
     def recycleSpacePos(self, spaceNo):
@@ -135,13 +135,13 @@ class IMapRefresher(object):
         self.nonGroupCollects[spaceNo] = []
 
     def checkRefreshGroups(self, spaceNo, gId):
-        # DEBUG_MSG("checkRefreshGroups", self.groupCollects, spaceNo)
+        # LOG_DBG("checkRefreshGroups", self.groupCollects, spaceNo)
         if gId not in self.groupCollects[spaceNo] or len(self.groupCollects[spaceNo][gId]) == 0:
             return True
         return False
 
     def checkRefreshSingle(self, spaceNo, entId):
-        # DEBUG_MSG("checkRefreshSingle", spaceNo, entId)
+        # LOG_DBG("checkRefreshSingle", spaceNo, entId)
         if entId not in self.nonGroupCollects[spaceNo]:
             return True
         return False

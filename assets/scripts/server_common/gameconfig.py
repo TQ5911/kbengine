@@ -162,7 +162,7 @@ def getCrossServerId():
         data = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/crossServerInfo')
         return int(data[0]['crossServerId'])
     except:
-        WARNING_MSG('[lj]crossServerInfo load fail')
+        LOG_WARN('[lj]crossServerInfo load fail')
         return 99999
 
 @cache
@@ -177,17 +177,17 @@ def loadCustomConfig(data):
     config = {}
     KBEngine.globalData['CONFIG'] = config
 
-    DEBUG_MSG('loadCustomConfig', len(data))
+    LOG_DBG('loadCustomConfig', len(data))
 
     for name, value in data:
-        v = CONFIG.get(utils.getStringFromBytes(name))
+        v = CONFIG.get(utils.bytesToString(name))
         if not v:
-            sql = "DELETE FROM game_config WHERE name='%s'" % (utils.getStringFromBytes(name),)
+            sql = "DELETE FROM game_config WHERE name='%s'" % (utils.bytesToString(name),)
             KBEngine.executeRawDatabaseCommand(sql)
             continue
 
         configName, convFunc, default, defaultV, desc, cid, flags = v
-        config[configName] = convFunc(utils.getStringFromBytes(value))
+        config[configName] = convFunc(utils.bytesToString(value))
 
         if config[configName] != defaultV:
             setCustomConfig(configName, config[configName], isMasterBaseapp=KBEngine.component == 'baseapp',
@@ -271,7 +271,7 @@ def gmGetCutomConfig(name):
 def setCustomConfig(name, value, isMasterBaseapp=True, isInitSet=False):
     import utils
 
-    INFO_MSG('setCustomConfig', name, value)
+    LOG_IFO('setCustomConfig', name, value)
     info = CONFIG.get(name)
     if not info:
         return "cannot find config [%s]" % name, False
@@ -313,7 +313,7 @@ def setCacheConfig(name, value):
     try:
         newVal = type(oldVal)(value)
     except:
-        gameengine.reportCritical('cannot set %s to %s, type mismatch' % (name, value))
+        gameengine.panicStack('cannot set %s to %s, type mismatch' % (name, value))
         return
     CACHE[name] = newVal
     INTERFACE_CACHE_DIFF[name] = newVal
@@ -616,7 +616,7 @@ def branchLineCnt(branchType):
     try:
         cnt = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/branchLineCnt/subType' + str(branchType)))
     except:
-        ERROR_MSG('branchLineCnt load fail', branchType)
+        LOG_ERR('branchLineCnt load fail', branchType)
         cnt = 2
     return cnt
 
@@ -763,7 +763,21 @@ def serverMaximumLoginAccount():
         _val = 200 * cellAppCount()
     return _val
 
+@cache
+def maxCellAvatarCount():
+    try:
+        _val = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/maxCellAvatarCount'))
+    except:
+        _val = 500
+    return _val
 
+@cache
+def switchLineUselastLineNo():
+    try:
+        _val = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/switchLineUselastLineNo'))
+    except:
+        _val = 1
+    return _val
 
 @cache
 def shouldCheckAdminCmdSerial():
@@ -841,7 +855,7 @@ def getYidunData(tail):
         ret = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'yidun/' + tail)
     except:
         ret = ''
-        ERROR_MSG("getYidunData fail", tail)
+        LOG_ERR("getYidunData fail", tail)
     return ret
 
 @cache
@@ -999,7 +1013,7 @@ def enableWorkshop():
 def visibleConfigEnabled(configName):
     info = CONFIG.get(configName)
     if not info:
-        ERROR_MSG('gameconfig not found:', configName)
+        LOG_ERR('gameconfig not found:', configName)
         return
 
     configName, convFunc, default, defaultV, desc, cid, flags = info
@@ -1024,3 +1038,23 @@ def payConfigEnable(code, buyCreditId):
         return False
 
     return True
+
+@cache
+def speedStatConditions():
+    return [5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 75.0, 80.0, 85.0, 90.0, 95.0, 100.0]
+
+@cache
+def orderServerHost():
+    try:
+        host = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/orderServerHost')
+    except:
+        host = '192.168.10.13:2011'
+    return host
+
+@config(Bool, None, '是否开启订单服务', (ConfigFlag.CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+def enableOrderService():
+    return 1
+
+@cache
+def overSpeedCheckSwitch():
+    return 1

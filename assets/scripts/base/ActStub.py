@@ -17,7 +17,7 @@ class ActTimeType(object):
     END = 2
 
 
-class ActTimeVal(userType.UserSoleType):
+class ActTimeVal(userType.UserSingleType):
     def __init__(self, actId, fireTime, fireType):
         self.actId = actId
         self.fireTime = fireTime
@@ -45,7 +45,7 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         super().doNext()
 
     def _resetActData(self):
-        now = utils.getNow()
+        now = utils.curTS()
         actGlobalData = {}
         self.actTimeQueue = []
         for actId, actData in AC_ADD.datas.items():
@@ -55,8 +55,8 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             openTimeCron = actData['openTimeCron']
             endTimeCron = actData['endTimeCron']
 
-            nextOpenTime, _ = utils.nextByTimeTupleList(openTimeCron)
-            nextEndTime, _ = utils.nextByTimeTupleList(endTimeCron)
+            nextOpenTime, _ = utils.nextByCronTupleList(openTimeCron)
+            nextEndTime, _ = utils.nextByCronTupleList(endTimeCron)
 
             if not nextOpenTime and not nextEndTime:
                 actGlobalData[actId] = 0
@@ -65,7 +65,7 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             nextOpenTime = now + nextOpenTime
             nextEndTime = now + nextEndTime
 
-            DEBUG_MSG('init act data', actData['name'], nextOpenTime, nextEndTime)
+            LOG_DBG('init act data', actData['name'], nextOpenTime, nextEndTime)
 
             if nextOpenTime < nextEndTime:
                 self.actTimeQueue.append(ActTimeVal(actId, nextOpenTime, ActTimeType.OPEN))
@@ -96,8 +96,8 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return 0
 
         openTimeCron = actData['openTimeCron']
-        nextOpenTime, _ = utils.nextByTimeTupleList(openTimeCron)
-        return utils.getNow() + nextOpenTime
+        nextOpenTime, _ = utils.nextByCronTupleList(openTimeCron)
+        return utils.curTS() + nextOpenTime
 
     def _getActNextEndTime(self, actId):
         actData = AC_ADD.datas.get(actId)
@@ -105,15 +105,15 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return 0
 
         endTimeCron = actData['endTimeCron']
-        nextEndTime, _ = utils.nextByTimeTupleList(endTimeCron)
-        return utils.getNow() + nextEndTime
+        nextEndTime, _ = utils.nextByCronTupleList(endTimeCron)
+        return utils.curTS() + nextEndTime
 
     def onActTimerCallback(self):
         if not self.actTimeQueue:
             return
 
         _val = heapq.heappop(self.actTimeQueue)
-        DEBUG_MSG('onActTimerCallback', _val)
+        LOG_DBG('onActTimerCallback', _val)
         if _val.fireType == ActTimeType.OPEN:
             _nextEndTime = self._getActNextEndTime(_val.actId)
             heapq.heappush(self.actTimeQueue, ActTimeVal(_val.actId, _nextEndTime, ActTimeType.END))

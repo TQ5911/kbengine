@@ -8,13 +8,13 @@ ALLSIDE = 3
 
 class _DUMMY_SU():
     def feedbackCommandSucc(self, *args):
-        DEBUG_MSG('DUMMY.feedbackCommandSucc', *args)
+        LOG_DBG('DUMMY.feedbackCommandSucc', *args)
 
     def feedbackCommandFail(self, *args):
-        DEBUG_MSG('DUMMY.feedbackCommandFail', *args)
+        LOG_DBG('DUMMY.feedbackCommandFail', *args)
 
     def replyCommand(self, *args):
-        DEBUG_MSG('DUMMY.replyCommand', *args)
+        LOG_DBG('DUMMY.replyCommand', *args)
 
 
 DUMMY_SU = _DUMMY_SU()

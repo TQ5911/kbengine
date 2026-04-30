@@ -44,7 +44,7 @@
 		{
 		}
 		
-		public override void process(byte[] datas, MessageLengthEx offset, MessageLengthEx length)
+		public override void process(NetworkInterfaceBase networkInterface, byte[] datas, MessageLengthEx offset, MessageLengthEx length)
 		{
 			MessageLengthEx totallen = offset;
 			
@@ -78,6 +78,20 @@
                             try
                             {
                                 msg.handleMessage(stream);
+                                //修复明文和密文粘包问题，因为onReloginBaseappSuccessfully回调完成才会创建EncryptionFilter
+                                if (networkInterface != null && networkInterface.fileter() != null)
+                                {
+	                                state = READ_STATE.READ_STATE_MSGID;
+	                                expectSize = 2;
+#if UNITY_EDITOR
+	                                Dbg.profileEnd(msg.name);
+#endif
+	                                if (length > 0)
+	                                {
+		                                networkInterface.fileter().recv(this, datas, (uint)totallen, (uint)length);
+		                                return;
+	                                }
+                                }
                             }
                             catch(Exception e)
                             {
@@ -176,6 +190,21 @@
                         try
                         {
                             msg.handleMessage(stream);
+                            //修复明文和密文粘包问题，因为onReloginBaseappSuccessfully回调完成才会创建EncryptionFilter
+                            if (networkInterface != null && networkInterface.fileter() != null)
+                            {
+	                            stream.clear();
+	                            state = READ_STATE.READ_STATE_MSGID;
+	                            expectSize = 2;
+#if UNITY_EDITOR
+	                            Dbg.profileEnd(msg.name);
+#endif
+	                            if (length > 0)
+	                            {
+		                            networkInterface.fileter().recv(this, datas, (uint)totallen, (uint)length);
+		                            return;
+	                            }
+                            }
                         }
                         catch (Exception e)
                         {

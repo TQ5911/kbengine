@@ -31,6 +31,7 @@ import mounts_mounts as MOUNTS
 import antiAddictCategory_antiAddictCategory as AAC_AAC
 import rewardData_rewardData as RWDRWDD
 import creep_base as CBD
+import creep_coefficient as C_CD
 import gearBase_typeExplanation as GBTED
 import fightProp_define as FDD
 import petData_petData as PDPD
@@ -50,7 +51,7 @@ import fightProp_atkBlessScore as FASD
 import cube_config
 import gearEnhance_gearconst as GEGCD
 import gearEnhance_equipmentClass as GEES
-
+import mail_mail as MAMAD
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -86,7 +87,7 @@ def getVariableDefaultVal(varId):
 def checkVariableCond(owner, fmlId, paramsStr):
     paramsStr = paramsStr.strip(' ')
     params = [owner.getVariable(int(varId)) for varId in paramsStr.split('|')] if paramsStr else ()
-    DEBUG_MSG('in checkVariableCond:', fmlId, paramsStr, params)
+    LOG_DBG('in checkVariableCond:', fmlId, paramsStr, params)
     return FMLGD.datas[int(fmlId)]['serverFormula'](*params)
 
 
@@ -144,8 +145,8 @@ def getAddItemExtraDesp(srcType):
 
 
 def isInCrontabDatetimeRange(t, startList, endedList):
-    nextStart, _ = utils.nextByTimeTupleList(startList, now=t)
-    nextEnded, _ = utils.nextByTimeTupleList(endedList, now=t)
+    nextStart, _ = utils.nextByCronTupleList(startList, now=t)
+    nextEnded, _ = utils.nextByCronTupleList(endedList, now=t)
     if not nextStart and not nextEnded:
         return True
     if nextStart == sys.maxsize and nextEnded == sys.maxsize:
@@ -157,7 +158,7 @@ def isInCrontabDatetimeRange(t, startList, endedList):
 
 def getRealRewardId(rewardId, context, timeStamp=0):
     times = 1
-    now = timeStamp or utils.getNow()
+    now = timeStamp or utils.curTS()
 
     def untilGetValidRewardId(tmpId, tmpTimes):
         return tmpId
@@ -172,7 +173,7 @@ def getRealRewardId(rewardId, context, timeStamp=0):
 def getTaskData(taskId):
     taskData = TSKD.datas.get(str(taskId))
     if not taskData:
-        gameengine.reportCritical('getTaskData, no taskdata:', taskId)
+        gameengine.panicStack('getTaskData, no taskdata:', taskId)
     return taskData
 
 
@@ -216,7 +217,7 @@ def isTaskInOpenTime(taskId):
     taskGroupData = TTG.datas.get(taskGroupId, {})
     startTime = taskGroupData.get("startTime", "")
     endTime = taskGroupData.get("endTime", "")
-    now = utils.getNow()
+    now = utils.curTS()
     if startTime and utils.parseTimeStr(startTime) > now:
         return False
     if endTime and now > utils.parseTimeStr(endTime):
@@ -303,7 +304,7 @@ def calcChildTaskIds(taskData, cfgChildTaskIds, checkLevel, seed=0, excludedChil
         # 随机取任务且不是按照权重取的，那就是随机打乱子任务列表
         if taskFieldVal(taskData, 'ChildDoInRandom') and not taskFieldVal(taskData, 'RandomWithWeight'):
             shuffleChildTaskIds(seed, childTaskIds)
-            DEBUG_MSG('     in Task::calcChildTaskIds, ChildDoInRandom, childTaskIds:', childTaskIds)
+            LOG_DBG('     in Task::calcChildTaskIds, ChildDoInRandom, childTaskIds:', childTaskIds)
     return childTaskIds
 
 
@@ -433,15 +434,15 @@ def isBracelet(mType, sType):
 def equipSlot(mType, subType):
     cfgData = GBTED.datas[subType]
     if not cfgData:
-        ERROR_MSG('equipSlot gearBase_typeExplanation not found:', subType)
+        LOG_ERR('equipSlot gearBase_typeExplanation not found:', subType)
         return []
 
     if mType != cfgData['type']:
-        ERROR_MSG('equipSlot mType not match:', mType, cfgData['type'])
+        LOG_ERR('equipSlot mType not match:', mType, cfgData['type'])
         return []
 
     if subType != cfgData['SubType']:
-        ERROR_MSG('equipSlot subType not match:', subType, cfgData['subType'])
+        LOG_ERR('equipSlot subType not match:', subType, cfgData['subType'])
         return []
 
     slot = cfgData['slot']
@@ -452,15 +453,15 @@ def equipSlot(mType, subType):
 def equipRecommendClass(mType, subType):
     cfgData = GBTED.datas[subType]
     if not cfgData:
-        ERROR_MSG('equipRecommendClass gearBase_typeExplanation not found:', subType)
+        LOG_ERR('equipRecommendClass gearBase_typeExplanation not found:', subType)
         return []
 
     if mType != cfgData['type']:
-        ERROR_MSG('equipRecommendClass mType not match:', mType, cfgData['type'])
+        LOG_ERR('equipRecommendClass mType not match:', mType, cfgData['type'])
         return []
 
     if subType != cfgData['SubType']:
-        ERROR_MSG('equipRecommendClass subType not match:', subType, cfgData['subType'])
+        LOG_ERR('equipRecommendClass subType not match:', subType, cfgData['subType'])
         return []
 
     recommendClass = cfgData['recommendClass']
@@ -472,7 +473,7 @@ def getEquipItemData(itemId):
     return GBGBD.datas.get(itemId)
 
 def iterGetGearIdsByBaseInfo(quality, gearTypes, gearSubTypes, school):
-    DEBUG_MSG('in iterGetGearIdsByBaseInfo:', quality, gearTypes, gearSubTypes, school)
+    LOG_DBG('in iterGetGearIdsByBaseInfo:', quality, gearTypes, gearSubTypes, school)
     if not (quality == gameconst.ItemQuality.ALL_QUALITY or gearTypes or gearSubTypes):
         yield from GBGBD.datas.keys()
         return
@@ -487,7 +488,7 @@ def iterGetGearIdsByBaseInfo(quality, gearTypes, gearSubTypes, school):
                     yield _celldata
 
 def getGearIdsByBaseInfo(quality, gearTypes, gearSubTypes, school):
-    DEBUG_MSG('in getGearIdsByBaseInfo:', quality, gearTypes, gearSubTypes, school)
+    LOG_DBG('in getGearIdsByBaseInfo:', quality, gearTypes, gearSubTypes, school)
     return list(iterGetGearIdsByBaseInfo(quality, gearTypes, gearSubTypes, school))
 
 def _getGearIdsByBaseInfo(quality, gearType, gearSubType, school):
@@ -502,7 +503,7 @@ def getCreepMD(creepId):
 def getPropBaseScore(propName, school = 0):
     cfgData = FDD.datas.get(propName, None)
     if not cfgData:
-        ERROR_MSG("getPropScore cfgData not found:", propName)
+        LOG_ERR("getPropScore cfgData not found:", propName)
         return 0
     return cfgData['perPropertyScore']
 
@@ -517,7 +518,7 @@ def getPassiveSkillScore(school, passiveSkillId):
 def getBlessAffixIdByGearType(mainType):
     cfgData = GBTBD.datas.get(mainType)
     if not cfgData:
-        ERROR_MSG('getBlessAffixIdByGearType not in cfg', mainType)
+        LOG_ERR('getBlessAffixIdByGearType not in cfg', mainType)
         return
 
     return cfgData['blessAffixID']
@@ -545,10 +546,21 @@ def getAllCubeRooms(cubeNo):
     return _ret
 
 def getMonsterExp(monsterId, monsterLv):
-    expRatio = CBD.datas.get(monsterId).get('expRatio')
+    coefficientType = CBD.datas.get(monsterId).get('coefficientType', 0)
+    expRatio = C_CD.datas.get(coefficientType, {}).get('expRatio', 0.0)
     propCurveID = CBD.datas.get(monsterId).get('propCurveID')
     expCurve = MSPPCD.datas[propCurveID].get('expCurve')
     return int(MSPPD.datas[monsterLv].get(expCurve)*expRatio)
+
+def getMonsterRewardIds(monsterId, monsterLv):
+    coefficientType = CBD.datas.get(monsterId).get('coefficientType', 0)
+    rewardIDs = C_CD.datas.get(coefficientType, {}).get('rewardID', ()) or []
+    ids = []
+    for id in rewardIDs:
+        if not id:
+            continue
+        ids.append(id + monsterLv - 1)
+    return ids
 
 def getExpByLevel(avatarLevel,monsterLv, monsterExp):
     if avatarLevel > monsterLv:
@@ -663,7 +675,7 @@ def isCubeCow(mapId):
 def filterFightPropScore(school, propName):
     cfgData = FDD.datas.get(propName, None)
     if not cfgData:
-        WARNING_MSG("filterFightPropScore fight cfg not found:", propName)
+        LOG_WARN("filterFightPropScore fight cfg not found:", propName)
         return 0
 
     characterData = CCD.datas.get(school, None)
@@ -735,8 +747,12 @@ def calcUpgradeNeedItems(itemsDic, equipType, quality, grade):
     for val in upgradeGoldCost:
         costItemId, itemNum = val
         itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum
-    DEBUG_MSG('in calcUpgradeNeedItems:', itemsDic, equipType, quality, grade, upgradeGoldCost)
+    LOG_DBG('in calcUpgradeNeedItems:', itemsDic, equipType, quality, grade, upgradeGoldCost)
     return itemsDic
 
 def addAwardsCallBackKey():
     return "addAwardCallBack"
+
+def checkMailType(mailId, mailType):
+    mailData = MAMAD.datas[mailId]
+    return mailData and mailData['type'] == mailType

@@ -35,15 +35,6 @@
             <Arg>       UINT32      </Arg>
             <Arg>       UINT8       </Arg>
         </reqBuyItemsInStoreWithSelection>
-
-        <makeMallFlowLog>
-            <Arg>       UINT64         </Arg>
-            <Arg>       STOREID      </Arg>
-            <Arg>       ITEM_ID      </Arg>
-            <Arg>       UINT32       </Arg>
-            <Arg>       ITEM_ID      </Arg>
-            <Arg>       UINT32       </Arg>
-        </makeMallFlowLog>
     </BaseMethods>
 
 

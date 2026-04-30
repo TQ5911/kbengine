@@ -6,6 +6,9 @@ class AccountBaseEntityCall(object):
     def accountOffline(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'accountOffline', ()))
 
+    def getAuthOfflineTime(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAuthOfflineTime', (arg1, )))
+
     def getAvatarDetailForAccount(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAvatarDetailForAccount', (arg1, )))
 

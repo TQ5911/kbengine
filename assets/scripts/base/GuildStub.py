@@ -21,7 +21,7 @@ import guild_guildConst as G_GCD
 import _pickle as cPickle
 
 
-class GuildCacheVal(userType.UserSoleType):
+class GuildCacheVal(userType.UserSingleType):
     def __init__(self, guildUUID, guildName, desc, guildBox, memberCnt, guildLevel,
                  dspFlag, guildScore=0, icon=0, memberMax=0, joinCond=None):
         self.guildName = guildName
@@ -53,7 +53,7 @@ class GuildCacheVal(userType.UserSoleType):
 class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
         self.guildDic = {}
-        self._callback(0.1, '_loadGuildEntity', (), gametimer.TIMER_TAG_LOAD_GUILD_ENTITY)
+        self.addTimerCB(0.1, '_loadGuildEntity', (), gametimer.TIMER_TAG_LOAD_GUILD_ENTITY)
         utils.subscribe(gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, self, 'onGuildUnionChangeToLog')
 
     def _loadGuildEntity(self):
@@ -61,14 +61,14 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def _onLoadGuildEntity(self, ret, num, insertId, err):
         if err:
-            ERROR_MSG("GuildStub::_onLoadGuildEntity: %s" % err)
+            LOG_ERR("GuildStub::_onLoadGuildEntity: %s" % err)
             return
 
         for _dbid, _guildUUID, _guildName, _desc in ret:
             _dbid = int(_dbid)
             _guildUUID = int(_guildUUID)
-            _desc = utils.getStringFromBytes(_desc)
-            _guildName = utils.getStringFromBytes(_guildName)
+            _desc = utils.bytesToString(_desc)
+            _guildName = utils.bytesToString(_guildName)
 
             _gcVal = GuildCacheVal(_guildUUID, _guildName, _desc, None, 0, 0, 0, joinCond=GuildJoinCondInfo.GuildJoinCondVal())
             self.guildDic[_guildUUID] = _gcVal
@@ -86,7 +86,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 if not _gcVal:
                     continue
 
-                if utils.isBoxOffline(_gcVal.guildBox):
+                if utils.checkBoxOffline(_gcVal.guildBox):
                     continue
 
                 _guilds.append({
@@ -95,7 +95,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 })
         else:
             for _gcVal in self.guildDic.values():
-                if utils.isBoxOffline(_gcVal.guildBox):
+                if utils.checkBoxOffline(_gcVal.guildBox):
                     continue
 
                 _guilds.append({
@@ -107,22 +107,22 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doGetGuildList(self, box):
         _sendData = [_gcVal.toGuildListData() for _gcVal in self.guildDic.values()]
-        INFO_MSG("GuildStub::doGetGuildList:", _sendData)
+        LOG_IFO("GuildStub::doGetGuildList:", _sendData)
         box.client.onGetGuildListData(_sendData)
 
     def _onCreateGuildFromLoad(self, guildUUID, guildBox, dbid, wasActive):
-        INFO_MSG('_onCreateGuildFromLoad:', guildBox, dbid, wasActive, guildUUID)
+        LOG_IFO('_onCreateGuildFromLoad:', guildBox, dbid, wasActive, guildUUID)
         if wasActive:
-            ERROR_MSG("GuildStub::_onCreateGuildFromLoad: guildBox is active.", guildUUID)
+            LOG_ERR("GuildStub::_onCreateGuildFromLoad: guildBox is active.", guildUUID)
             return
 
         if guildBox is None:
-            ERROR_MSG("GuildStub::_onCreateGuildFromLoad: guildBox is None.", guildUUID)
+            LOG_ERR("GuildStub::_onCreateGuildFromLoad: guildBox is None.", guildUUID)
             return
 
         _gcVal = self.guildDic.get(guildUUID)
         if not _gcVal:
-            ERROR_MSG("GuildStub::_onCreateGuildFromLoad: guildUUID not in guildDic.", guildUUID)
+            LOG_ERR("GuildStub::_onCreateGuildFromLoad: guildUUID not in guildDic.", guildUUID)
             return
 
         _gcVal.guildBox = guildBox
@@ -213,9 +213,9 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         getattr(box, func)(_gcVals, *args)
 
     def _onCreateGuildBox(self, guildBox, createData, gbId, guildUUID, leaderBox, ctx):
-        INFO_MSG("GuildStub::_onCreateGuildBox:", guildBox)
+        LOG_IFO("GuildStub::_onCreateGuildBox:", guildBox)
         if not guildBox:
-            ERROR_MSG("GuildStub::_onCreateGuildBox: create guild guildBox failed.", createData, gbId, guildUUID)
+            LOG_ERR("GuildStub::_onCreateGuildBox: create guild guildBox failed.", createData, gbId, guildUUID)
             redisUtils.SetUtils.srem(gameconst.RedisKey.GUILD_NAME_TBL, createData['guildName'])
             leaderBox.onCreateGuildResult(gameconst.CreateGuildResult.CREATE_GUILD_FAILED, ctx)
             return
@@ -251,7 +251,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def broadcastToAllGuild(self, func, args):
         for _gcVal in self.guildDic.values():
-            if utils.isBoxOffline(_gcVal.guildBox):
+            if utils.checkBoxOffline(_gcVal.guildBox):
                 continue
 
             getattr(_gcVal.guildBox, func)(*args)

@@ -43,20 +43,20 @@ class SpaceMarker(iBaseWithCell.IBaseWithCell):
     def onGetCell(self):
         self._markSpaceMarkerReady()
         readyMarkers = self._getReadyMarkerSpaceNoList()
-        INFO_MSG('SpaceMarker.onGetCell:', self.spaceno, self.spaceid, self.id, readyMarkers)
-        gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_MARKER + ':' + utils.getPythonServer(),
+        LOG_IFO('SpaceMarker.onGetCell:', self.spaceno, self.spaceid, self.id, readyMarkers)
+        gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_MARKER + ':' + utils.getPythonAddr(),
                                   list(readyMarkers))
 
         return
 
     def onCreateCellFailure(self):
-        INFO_MSG('SpaceMarker.onCreateCellFailure:', self.spaceno)
+        LOG_IFO('SpaceMarker.onCreateCellFailure:', self.spaceno)
         gameglobal.localSpaceMarkers.pop(self.spaceno)
         self.entireDestroy(deleteFromDB=False, writeToDB=False)
         return
 
     def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
-        INFO_MSG('SpaceMarker.onLoseCell:', self.spaceno, self.spaceid, self.id)
+        LOG_IFO('SpaceMarker.onLoseCell:', self.spaceno, self.spaceid, self.id)
         if self.isDestroyed:
             return
 
@@ -82,6 +82,6 @@ class SpaceMarker(iBaseWithCell.IBaseWithCell):
 
     def _preEntireDestroy(self):
         gameglobal.localSpaceMarkers.pop(self.spaceno, None)
-        gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_MARKER + ':' + utils.getPythonServer(),
+        gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_MARKER + ':' + utils.getPythonAddr(),
                                   list(gameglobal.localSpaceMarkers.keys()))
         return

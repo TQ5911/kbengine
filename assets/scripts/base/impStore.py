@@ -20,61 +20,48 @@ class ImpStore(object):
         self.storeData.updateStoreDataDaily(self)
 
     def onStoreWeeklyUpdate(self, *args):
-        DEBUG_MSG('in onStoreWeeklyUpdate:', args)
+        LOG_DBG('in onStoreWeeklyUpdate:', args)
         self.storeData.updateStoreDataWeekly(self)
         return
 
     def onStoreMonthlyUpdate(self, *args):
-        DEBUG_MSG('in onStoreMonthlyUpdate:', args)
+        LOG_DBG('in onStoreMonthlyUpdate:', args)
         self.storeData.updateStoreDataMonthly(self)
         return
 
     def onLimitedStoreHourlyUpdate(self, *args):
-        DEBUG_MSG('in onLimitedStoreHourlyUpdate:', args)
+        LOG_DBG('in onLimitedStoreHourlyUpdate:', args)
         self.storeData.updateLimitedStoreHourly(self)
 
     def reqGetStoreList(self, exposed, storeIds):
-        DEBUG_MSG('in reqGetStoreList:', storeIds)
+        LOG_DBG('in reqGetStoreList:', storeIds)
         self.storeData.sendStoreList(self, storeIds)
         return
     
     def reqGetStoreLimitedItemList(self, exposed, storeId):
-        DEBUG_MSG('in reqGetStoreLimitedItemList:', exposed, storeId)
+        LOG_DBG('in reqGetStoreLimitedItemList:', exposed, storeId)
         self.storeData.sendStoreLimitedItemList(self, storeId)
 
     @gamedecorator.limitcall(1)
     # itemId: mall_coinPrice.datas.ID 不是物品ID
     def reqBuyItemsInStore(self, exposed, storeId, itemId, itemNum):
-        DEBUG_MSG('in reqBuyItemsInStore:', storeId, itemId, itemNum)
+        LOG_DBG('in reqBuyItemsInStore:', storeId, itemId, itemNum)
         self._buyItemsInStore(storeId, itemId, itemNum)
 
     @gamedecorator.limitcall(1)
     def reqBuyItemsInStoreWithSelection(self, exposed, storeId, itemId, itemNum, propSlot):
-        DEBUG_MSG('in reqBuyItemsInStoreWithSelection:', exposed, storeId, itemId, itemNum, propSlot)
+        LOG_DBG('in reqBuyItemsInStoreWithSelection:', exposed, storeId, itemId, itemNum, propSlot)
         self._buyItemsInStore(storeId, itemId, itemNum, propSlot)
 
     def _buyItemsInStore(self, storeId, itemId, itemNum, propSlot=0):
-        DEBUG_MSG('in _buyItemsInStore:', storeId, itemId, itemNum, propSlot)
+        LOG_DBG('in _buyItemsInStore:', storeId, itemId, itemNum, propSlot)
         self.buyStoreItems(storeId, itemId, itemNum, propSlot)
         return
 
-    def makeMallFlowLog(self, opUUID, cellId, itemId, itemNum, costItemId, costItemNum):
-        tlogParams = {
-            "role_id": self.gbID,
-            "role_name": self.getRoleCacheAttr('name', ''),
-            'op_nuid': opUUID,
-            'cell_id': cellId,
-            'item_id': itemId,
-            'buy_cnt': itemNum,
-            "money_type": costItemId,
-            "cost": costItemNum,
-        }
-        # gamelog.makeWLog("GameShopBuy", tlogParams)
-
     def buyStoreItems(self, storeId, itemId, itemNum, propSlot):
-        DEBUG_MSG('in buyStoreItems:', storeId, itemId, itemNum, propSlot)
+        LOG_DBG('in buyStoreItems:', storeId, itemId, itemNum, propSlot)
         if self.isDestroyed:
-            INFO_MSG('buyStoreItems: avatar is offline', storeId, itemId, itemNum)
+            LOG_IFO('buyStoreItems: avatar is offline', storeId, itemId, itemNum)
             return
 
         if not self.storeData.canBuyStoreItems(self, storeId, itemId, itemNum):
@@ -96,13 +83,13 @@ class ImpStore(object):
                     deductWealthVal.addWealthByItemId(propItemId, num*itemNum)
             elif exType == gameconst.ItemExType.SELECTION:
                 if propSlot >= len(propItem) or propSlot < 0:
-                    ERROR_MSG('buyStoreItems: propSlot out of range:', propSlot, len(propItem))
+                    LOG_ERR('buyStoreItems: propSlot out of range:', propSlot, len(propItem))
                     return
                 propItemId, num = propItem[propSlot]
                 deductWealthVal.addWealthByItemId(propItemId, num*itemNum)
 
         if not self.canDeductWealth(deductWealthVal):
-            WARNING_MSG('buyStoreItems: items not enough:', deductWealthVal)
+            LOG_WARN('buyStoreItems: items not enough:', deductWealthVal)
             return
 
         awardCtx = awardContext.CommonContext(mailId=gameconst.MailConstID.REWARD_MAIL_ID)
@@ -137,7 +124,7 @@ class ImpStore(object):
             # 商店随机物品
             storeDic = self.storeData.getLimitStoreDic(storeId)
             if itemId not in storeDic:
-                ERROR_MSG('buyStoreItems: no item in limited storeDic:', storeId, itemId, storeDic)
+                LOG_ERR('buyStoreItems: no item in limited storeDic:', storeId, itemId, storeDic)
                 return
             storeDic[itemId].buyNum += itemNum
             buyNum = storeDic[itemId].buyNum

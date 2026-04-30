@@ -1,0 +1,22 @@
+<root>
+    <Properties>
+        <boxGroupEntities>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </boxGroupEntities>
+
+        <boxGroupMonsters>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </boxGroupMonsters>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>
+

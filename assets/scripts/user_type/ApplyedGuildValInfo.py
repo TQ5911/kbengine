@@ -5,7 +5,7 @@ import userType
 import gameconst
 
 
-class ApplyedGuildValVal(userType.UserSoleType):
+class ApplyedGuildValVal(userType.UserSingleType):
     '''APPLYED_GUILD_VAL_DATA_INFO'''
     def __init__(self, guildUUID=0, ts=0, name='', score=0, dspFlag=0, icon=0):
         self.guildUUID = guildUUID

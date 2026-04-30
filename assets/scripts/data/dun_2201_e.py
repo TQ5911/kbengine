@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -57,7 +58,6 @@ datas ={
         1020,
         1021,
         1031,
-        1006,
         1061
       ]
     }
@@ -92,7 +92,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1011
+        1011,
+        1005
       ]
     }
   },
@@ -102,11 +103,7 @@ datas ={
       22010001
     ],
     "dialogID": 19021006,
-    "transition": {
-      "finished": [
-        1005
-      ]
-    }
+    "transition": {}
   },
   "1021": {
     "type": "monsterHp",

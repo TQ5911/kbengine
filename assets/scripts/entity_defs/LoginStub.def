@@ -103,6 +103,7 @@
             <Arg>       UINT8       </Arg>
             <Arg>       UINT32      </Arg>
             <Arg>       UINT8       </Arg>
+            <Arg>       STRING      </Arg>
         </onAccountDestroy>
 
         <incSVIPOnlineNumBySetSVIP>
@@ -113,6 +114,8 @@
             <Arg>       UINT8       </Arg>
             <Arg>       PYTHON      </Arg>
             <Arg>       UINT32      </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       STRING      </Arg>
         </onAccountLogin>
 
         <onAccountCreated>

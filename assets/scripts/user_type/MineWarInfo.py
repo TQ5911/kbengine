@@ -139,8 +139,8 @@ class MineWarMapVal():
         self.mineWarEvents = []  # 矿战事件列表
         self.currGuildInfo = MineWarGuildVal().initFromDict({})
 
-        self.currCollectNum = 0
-        self.allCollectNum = 0
+        self.currCollectNum = 0 # 今日矿产采集数量（每日清零
+        self.allCollectNum = 0  # 仓库所有矿产数量
         
         # 暂存
         self.ownerRankList = []
@@ -148,7 +148,7 @@ class MineWarMapVal():
         self.flagHp = 0
 
         self.lastScoreRankTime = 0
-        # INFO_MSG('MineWarMapVal.__init__: mapId={}'.format(self.mapId))
+        # LOG_IFO('MineWarMapVal.__init__: mapId={}'.format(self.mapId))
         
     def initFromDict(self, dataDic):
         self.mapId = dataDic.get('mapId', 0)
@@ -182,7 +182,7 @@ class MineWarMapVal():
 
         currGuildInfoList = dataDic.get('currGuildInfo', [])
         self.currGuildInfo = MineWarGuildVal().initFromDict(currGuildInfoList[0] if len(currGuildInfoList) > 0 else {})
-        # INFO_MSG('MineWarMapVal.initFromDict:', self.mapId, self.currGuildInfo)
+        # LOG_IFO('MineWarMapVal.initFromDict:', self.mapId, self.currGuildInfo)
 
         return self
     
@@ -212,7 +212,7 @@ class MineWarMapVal():
         }
     
     def onStartReset(self):
-        self.coreDestroyedTime = utils.getNow()
+        self.coreDestroyedTime = utils.curTS()
         self.tempGuildGbId = self.guildGbId
 
         # 上期占领时间排行 暂存
@@ -230,6 +230,9 @@ class MineWarMapVal():
         if self.currGuildInfo and self.currGuildInfo.guildGbId > 0:
             self.currGuildInfo.ownerTime = 0
             self.guildOwnerDict[self.currGuildInfo.guildGbId] = copy.deepcopy(self.currGuildInfo)
+
+        # 矿产清除
+        self.allCollectNum = 0
     
     # 主要的帮派ID
     def setGuildGbId(self, guildGbId):
@@ -245,17 +248,15 @@ class MineWarMapVal():
         lastTime = self.coreDestroyedTime
         if self.tempGuildGbId > 0 and lastTime > 0:
             guildVal = self.guildOwnerDict[self.tempGuildGbId]
-            guildVal.ownerTime += (utils.getNow() - lastTime)
+            guildVal.ownerTime += (utils.curTS() - lastTime)
             self.guildOwnerDict[self.tempGuildGbId] = guildVal
-            self.coreDestroyedTime = utils.getNow()
+            self.coreDestroyedTime = utils.curTS()
     
     def onMineWarEnd(self):
         #
         self.flagDestroyedNum = 0
         self.flagDestroyedTime = 0
         
-        # 矿产清除
-        self.allCollectNum = 0
         self.calcOwnerTime()    # 先结算，再置0
 
         # 暂存帮派排名清除
@@ -270,7 +271,7 @@ class MineWarMapVal():
                 # 归属帮派不需要该记录了 == todo=
                 # if self.guildGbId in self.guildOwnerDict:
                 #     del self.guildOwnerDict[self.guildGbId]
-                INFO_MSG('MineWarMapVal.onMineWarEnd: ', self.currGuildInfo.toSaveDict(), self.guildOwnerDict[self.tempGuildGbId].toSaveDict())
+                LOG_IFO('MineWarMapVal.onMineWarEnd: ', self.currGuildInfo.toSaveDict(), self.guildOwnerDict[self.tempGuildGbId].toSaveDict())
                 # 更新占领帮派
                 self.currGuildInfo = self.guildOwnerDict.get(self.tempGuildGbId, MineWarGuildVal().initFromDict({}))
                 self.mineWarEvents = []
@@ -310,18 +311,18 @@ class MineWarMapVal():
 
     def onFlagBeDestroyed(self):
         self.flagDestroyedNum += 1
-        self.flagDestroyedTime = utils.getNow()
+        self.flagDestroyedTime = utils.curTS()
 
     def onCoreBeKilled(self, guildInfo):
         self.calcOwnerTime()
         
         killGuildId = guildInfo['guildGbId']
-        self.coreDestroyedTime = utils.getNow() # 这里必须设置被摧毁时间
+        self.coreDestroyedTime = utils.curTS() # 这里必须设置被摧毁时间
         self.tempGuildGbId = killGuildId
         if killGuildId not in self.guildOwnerDict:
             self.guildOwnerDict[killGuildId] = MineWarGuildVal().initFromDict(guildInfo)
         # 更新占领时间
-        self.guildOwnerDict[killGuildId].ownerTimeStamp = utils.getNow()
+        self.guildOwnerDict[killGuildId].ownerTimeStamp = utils.curTS()
         # 保存当前帮派信息
         # self.currGuildInfo = self.guildOwnerDict[killGuildId]
 
@@ -343,7 +344,7 @@ class MineWarMapVal():
         scoreVal.addScore(score, scoreType)
         self.playerScoreDict[playerGbId] = scoreVal
 
-        INFO_MSG('MineWarMapVal.addMineWarScoreVal: mapId={}, playerGbId={}, score={}, scoreType={}, totalScore={}'.format(
+        LOG_IFO('MineWarMapVal.addMineWarScoreVal: mapId={}, playerGbId={}, score={}, scoreType={}, totalScore={}'.format(
             self.mapId, playerGbId, score, scoreType, scoreVal.totalScore))
         
     def addCollectNum(self, num):
@@ -353,9 +354,9 @@ class MineWarMapVal():
         revenue = MBC.datas['mineBattle_extraIncome']['value'] * 0.01
         self.allCollectNum += int(self.currCollectNum * revenue)
         self.currCollectNum = 0
-        INFO_MSG('MineWarMapVal.onCollectEnd: ', self.mapId, revenue, self.allCollectNum)
+        LOG_IFO('MineWarMapVal.onCollectEnd: ', self.mapId, revenue, self.allCollectNum)
         
-class MineWarMapInfo(userType.UserSoleType):
+class MineWarMapInfo(userType.UserSingleType):
     """MINE_WAR_MAP_INFO"""
     def createObjFromDict(self, dataDic):
         obj = MineWarMapVal(dataDic['mapId'])
@@ -380,7 +381,7 @@ class MineWarDataVal(userType.UserDictType):
             'mineWarData': list(self.values()),
         }
     
-class MineWarDataInfo(userType.UserSoleType):
+class MineWarDataInfo(userType.UserSingleType):
     """MINE_WAR_DATA_INFO"""
     def createObjFromDict(self, dataDic):
         mineWarData = dataDic.get('mineWarData', [])

@@ -724,7 +724,17 @@ datas = _tools.RODict({
         "ID": 235,
         "color2": "#55EF6B",
         "color3": "<color=#55EF6B>{0}</color>"
+    }),
+    236: _tools.RODict({
+        "ID": 236,
+        "color2": "#54e7f2",
+        "color3": "<color=#54e7f2>{0}</color>"
+    }),
+    237: _tools.RODict({
+        "ID": 237,
+        "color2": "#98cf48",
+        "color3": "<color=#98cf48>{0}</color>"
     })
 })
 minKey = 0
-maxKey = 235
+maxKey = 237

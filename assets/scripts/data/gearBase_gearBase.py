@@ -38,6 +38,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990121, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 64.0,
         "reqClass": (1001,)
     }),
     80112001: _tools.RODict({
@@ -63,6 +64,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([1, 1, 1, 1]),
         "washConsumeItem": ((30990128, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 2000.0,
         "reqClass": (1001,)
     }),
     80113001: _tools.RODict({
@@ -88,6 +90,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([3, 3, 3, 3]),
         "washConsumeItem": ((30990135, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 57276.0,
         "reqClass": (1001,)
     }),
     80114001: _tools.RODict({
@@ -113,6 +116,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([4, 4, 4, 4]),
         "washConsumeItem": ((30990142, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 1985138.0,
         "reqClass": (1001,)
     }),
     80121001: _tools.RODict({
@@ -138,6 +142,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990121, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 64.0,
         "reqClass": (1002,)
     }),
     80122001: _tools.RODict({
@@ -163,6 +168,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([1, 1, 1, 1]),
         "washConsumeItem": ((30990128, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 2000.0,
         "reqClass": (1002,)
     }),
     80123001: _tools.RODict({
@@ -188,6 +194,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([3, 3, 3, 3]),
         "washConsumeItem": ((30990135, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 57276.0,
         "reqClass": (1002,)
     }),
     80124001: _tools.RODict({
@@ -213,6 +220,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([4, 4, 4, 4]),
         "washConsumeItem": ((30990142, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 1985138.0,
         "reqClass": (1002,)
     }),
     80131001: _tools.RODict({
@@ -238,6 +246,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990121, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 64.0,
         "reqClass": (1003,)
     }),
     80132001: _tools.RODict({
@@ -263,6 +272,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([1, 1, 1, 1]),
         "washConsumeItem": ((30990128, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 2000.0,
         "reqClass": (1003,)
     }),
     80133001: _tools.RODict({
@@ -288,6 +298,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([3, 3, 3, 3]),
         "washConsumeItem": ((30990135, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 57276.0,
         "reqClass": (1003,)
     }),
     80134001: _tools.RODict({
@@ -313,6 +324,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([4, 4, 4, 4]),
         "washConsumeItem": ((30990142, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 1985138.0,
         "reqClass": (1003,)
     }),
     80211001: _tools.RODict({
@@ -338,6 +350,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990122, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001,)
     }),
     80212001: _tools.RODict({
@@ -363,6 +376,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([11, 12, 13, 14]),
         "washConsumeItem": ((30990129, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001,)
     }),
     80213001: _tools.RODict({
@@ -388,6 +402,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([31, 32, 33, 34]),
         "washConsumeItem": ((30990136, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001,)
     }),
     80214001: _tools.RODict({
@@ -410,9 +425,10 @@ datas = _tools.RODict({
         "auctionPriceDuration": (10, 9999999),
         "lockAvailable": 1,
         "sellPrice": 0,
-        "appearance": _tools.ROList([4, 4, 4, 4]),
+        "appearance": _tools.ROList([41, 42, 43, 44]),
         "washConsumeItem": ((30990143, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001,)
     }),
     80221001: _tools.RODict({
@@ -438,6 +454,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990122, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1002,)
     }),
     80222001: _tools.RODict({
@@ -463,6 +480,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([11, 12, 13, 14]),
         "washConsumeItem": ((30990129, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1002,)
     }),
     80223001: _tools.RODict({
@@ -488,6 +506,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([3, 3, 3, 3]),
         "washConsumeItem": ((30990136, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1002,)
     }),
     80224001: _tools.RODict({
@@ -513,6 +532,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([4, 4, 4, 4]),
         "washConsumeItem": ((30990143, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1002,)
     }),
     80231001: _tools.RODict({
@@ -538,6 +558,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990122, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80232001: _tools.RODict({
@@ -563,6 +584,7 @@ datas = _tools.RODict({
         "appearance": _tools.ROList([11, 12, 13, 14]),
         "washConsumeItem": ((30990129, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80233001: _tools.RODict({
@@ -585,9 +607,10 @@ datas = _tools.RODict({
         "auctionPriceDuration": (10, 9999999),
         "lockAvailable": 1,
         "sellPrice": 0,
-        "appearance": _tools.ROList([3, 3, 3, 3]),
+        "appearance": _tools.ROList([31, 32, 33, 34]),
         "washConsumeItem": ((30990136, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80234001: _tools.RODict({
@@ -610,9 +633,10 @@ datas = _tools.RODict({
         "auctionPriceDuration": (10, 9999999),
         "lockAvailable": 1,
         "sellPrice": 0,
-        "appearance": _tools.ROList([4, 4, 4, 4]),
+        "appearance": _tools.ROList([41, 42, 43, 44]),
         "washConsumeItem": ((30990143, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     }),
     80311001: _tools.RODict({
@@ -638,6 +662,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001,)
     }),
     80312001: _tools.RODict({
@@ -663,6 +688,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001,)
     }),
     80313001: _tools.RODict({
@@ -688,6 +714,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001,)
     }),
     80314001: _tools.RODict({
@@ -713,6 +740,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001,)
     }),
     80321001: _tools.RODict({
@@ -738,6 +766,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1002,)
     }),
     80322001: _tools.RODict({
@@ -763,6 +792,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1002,)
     }),
     80323001: _tools.RODict({
@@ -788,6 +818,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1002,)
     }),
     80324001: _tools.RODict({
@@ -813,6 +844,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1002,)
     }),
     80331001: _tools.RODict({
@@ -838,6 +870,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80332001: _tools.RODict({
@@ -863,6 +896,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80333001: _tools.RODict({
@@ -888,6 +922,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80334001: _tools.RODict({
@@ -913,6 +948,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     }),
     80411001: _tools.RODict({
@@ -938,6 +974,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001,)
     }),
     80412001: _tools.RODict({
@@ -963,6 +1000,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001,)
     }),
     80413001: _tools.RODict({
@@ -988,6 +1026,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001,)
     }),
     80414001: _tools.RODict({
@@ -1013,6 +1052,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001,)
     }),
     80421001: _tools.RODict({
@@ -1038,6 +1078,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1002,)
     }),
     80422001: _tools.RODict({
@@ -1063,6 +1104,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1002,)
     }),
     80423001: _tools.RODict({
@@ -1088,6 +1130,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1002,)
     }),
     80424001: _tools.RODict({
@@ -1113,6 +1156,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1002,)
     }),
     80431001: _tools.RODict({
@@ -1138,6 +1182,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80432001: _tools.RODict({
@@ -1163,6 +1208,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80433001: _tools.RODict({
@@ -1188,6 +1234,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80434001: _tools.RODict({
@@ -1213,6 +1260,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     }),
     80581001: _tools.RODict({
@@ -1238,6 +1286,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80582001: _tools.RODict({
@@ -1263,6 +1312,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80583001: _tools.RODict({
@@ -1288,6 +1338,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80584001: _tools.RODict({
@@ -1313,6 +1364,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     }),
     80591001: _tools.RODict({
@@ -1338,6 +1390,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001, 1002)
     }),
     80592001: _tools.RODict({
@@ -1363,6 +1416,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001, 1002)
     }),
     80593001: _tools.RODict({
@@ -1388,6 +1442,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001, 1002)
     }),
     80594001: _tools.RODict({
@@ -1413,6 +1468,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001, 1002)
     }),
     80681001: _tools.RODict({
@@ -1438,6 +1494,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80682001: _tools.RODict({
@@ -1463,6 +1520,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80683001: _tools.RODict({
@@ -1488,6 +1546,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80684001: _tools.RODict({
@@ -1513,6 +1572,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     }),
     80691001: _tools.RODict({
@@ -1538,6 +1598,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001, 1002)
     }),
     80692001: _tools.RODict({
@@ -1563,6 +1624,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001, 1002)
     }),
     80693001: _tools.RODict({
@@ -1588,6 +1650,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001, 1002)
     }),
     80694001: _tools.RODict({
@@ -1613,6 +1676,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001, 1002)
     }),
     80781001: _tools.RODict({
@@ -1638,6 +1702,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80782001: _tools.RODict({
@@ -1663,6 +1728,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80783001: _tools.RODict({
@@ -1688,6 +1754,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80784001: _tools.RODict({
@@ -1713,6 +1780,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     }),
     80791001: _tools.RODict({
@@ -1738,6 +1806,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001, 1002)
     }),
     80792001: _tools.RODict({
@@ -1763,6 +1832,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001, 1002)
     }),
     80793001: _tools.RODict({
@@ -1788,6 +1858,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001, 1002)
     }),
     80794001: _tools.RODict({
@@ -1813,6 +1884,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001, 1002)
     }),
     80811001: _tools.RODict({
@@ -1838,6 +1910,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1001,)
     }),
     80812001: _tools.RODict({
@@ -1863,6 +1936,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1001,)
     }),
     80813001: _tools.RODict({
@@ -1888,6 +1962,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1001,)
     }),
     80814001: _tools.RODict({
@@ -1913,6 +1988,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1001,)
     }),
     80821001: _tools.RODict({
@@ -1938,6 +2014,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1002,)
     }),
     80822001: _tools.RODict({
@@ -1963,6 +2040,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1002,)
     }),
     80823001: _tools.RODict({
@@ -1988,6 +2066,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1002,)
     }),
     80824001: _tools.RODict({
@@ -2013,6 +2092,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1002,)
     }),
     80831001: _tools.RODict({
@@ -2038,6 +2118,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": ((30000013, 200),),
+        "value": 32.0,
         "reqClass": (1003,)
     }),
     80832001: _tools.RODict({
@@ -2063,6 +2144,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": ((30000013, 5000),),
+        "value": 1000.0,
         "reqClass": (1003,)
     }),
     80833001: _tools.RODict({
@@ -2088,6 +2170,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": ((30000013, 100000),),
+        "value": 28638.0,
         "reqClass": (1003,)
     }),
     80834001: _tools.RODict({
@@ -2113,6 +2196,7 @@ datas = _tools.RODict({
         "appearance": None,
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": ((30000013, 2000000),),
+        "value": 992569.0,
         "reqClass": (1003,)
     })
 })

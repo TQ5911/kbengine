@@ -32,292 +32,640 @@ def _87010002_remove(self, target, context):
     self.removePropByPassiveSkill([["adjAntiFatal",1]])
 
 def _87010003(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmg",0.01]])
+    self.addPropByPassiveSkill([["adjMortal",0.018]])
 
 def _87010003_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmg",0.01]])
+    self.removePropByPassiveSkill([["adjMortal",0.018]])
 
 def _87010004(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.01]])
+    self.addPropByPassiveSkill([["adjAntiMortal",0.018]])
 
 def _87010004_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.01]])
+    self.removePropByPassiveSkill([["adjAntiMortal",0.018]])
 
 def _87010005(self, target, context):
-    self.addPropByPassiveSkill([["adjStunEnh",3]])
+    self.addPropByPassiveSkill([["adjIgnoreArmor",0.005]])
 
 def _87010005_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunEnh",3]])
+    self.removePropByPassiveSkill([["adjIgnoreArmor",0.005]])
 
 def _87010006(self, target, context):
-    self.addPropByPassiveSkill([["adjStunAnti",3]])
+    self.addPropByPassiveSkill([["adjDmgArmor",0.005]])
 
 def _87010006_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunAnti",3]])
+    self.removePropByPassiveSkill([["adjDmgArmor",0.005]])
 
 def _87010007(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockEnh",3]])
+    self.addPropByPassiveSkill([["adjFinalDmg",0.006]])
 
 def _87010007_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockEnh",3]])
+    self.removePropByPassiveSkill([["adjFinalDmg",0.006]])
 
 def _87010008(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockAnti",3]])
+    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.006]])
 
 def _87010008_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockAnti",3]])
+    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.006]])
 
 def _87010009(self, target, context):
-    self.addPropByPassiveSkill([["adjPushEnh",3]])
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.012]])
 
 def _87010009_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushEnh",3]])
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.012]])
 
 def _87010010(self, target, context):
-    self.addPropByPassiveSkill([["adjPushAnti",3]])
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.012]])
 
 def _87010010_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushAnti",3]])
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.012]])
 
 def _87010011(self, target, context):
-    self.addPropByPassiveSkill([["adjCopper",0.02]])
+    self.addPropByPassiveSkill([["adjPVPDmg",0.012]])
 
 def _87010011_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjCopper",0.02]])
+    self.removePropByPassiveSkill([["adjPVPDmg",0.012]])
 
 def _87010012(self, target, context):
-    self.addPropByPassiveSkill([["adjExpGrow",0.02]])
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.012]])
 
 def _87010012_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjExpGrow",0.02]])
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.012]])
 
 def _87010013(self, target, context):
-    self.addPropByPassiveSkill([["adjMedicineRate",0.015]])
+    self.addPropByPassiveSkill([["adjStunEnh",2]])
 
 def _87010013_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMedicineRate",0.015]])
+    self.removePropByPassiveSkill([["adjStunEnh",2]])
 
 def _87010014(self, target, context):
-    self.addPropByPassiveSkill([["adjFatal",2]])
+    self.addPropByPassiveSkill([["adjStunAnti",2]])
 
 def _87010014_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFatal",2]])
+    self.removePropByPassiveSkill([["adjStunAnti",2]])
 
 def _87010015(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiFatal",2]])
+    self.addPropByPassiveSkill([["adjSilentEnh",2]])
 
 def _87010015_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiFatal",2]])
+    self.removePropByPassiveSkill([["adjSilentEnh",2]])
 
 def _87010016(self, target, context):
-    self.addPropByPassiveSkill([["adjMortal",0.04]])
+    self.addPropByPassiveSkill([["adjSilentAnti",2]])
 
 def _87010016_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMortal",0.04]])
+    self.removePropByPassiveSkill([["adjSilentAnti",2]])
 
 def _87010017(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiMortal",0.04]])
+    self.addPropByPassiveSkill([["adjKnockEnh",2]])
 
 def _87010017_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiMortal",0.04]])
+    self.removePropByPassiveSkill([["adjKnockEnh",2]])
 
 def _87010018(self, target, context):
-    self.addPropByPassiveSkill([["adjFinalDmg",0.01]])
+    self.addPropByPassiveSkill([["adjKnockAnti",2]])
 
 def _87010018_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFinalDmg",0.01]])
+    self.removePropByPassiveSkill([["adjKnockAnti",2]])
 
 def _87010019(self, target, context):
-    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.01]])
+    self.addPropByPassiveSkill([["adjFrozenEnh",2]])
 
 def _87010019_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.01]])
+    self.removePropByPassiveSkill([["adjFrozenEnh",2]])
 
 def _87010020(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmg",0.02]])
+    self.addPropByPassiveSkill([["adjFrozenAnti",2]])
 
 def _87010020_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmg",0.02]])
+    self.removePropByPassiveSkill([["adjFrozenAnti",2]])
 
 def _87010021(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.02]])
+    self.addPropByPassiveSkill([["adjSlowEnh",2]])
 
 def _87010021_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.02]])
+    self.removePropByPassiveSkill([["adjSlowEnh",2]])
 
 def _87010022(self, target, context):
-    self.addPropByPassiveSkill([["adjStunEnh",6]])
+    self.addPropByPassiveSkill([["adjSlowAnti",2]])
 
 def _87010022_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunEnh",6]])
+    self.removePropByPassiveSkill([["adjSlowAnti",2]])
 
 def _87010023(self, target, context):
-    self.addPropByPassiveSkill([["adjStunAnti",6]])
+    self.addPropByPassiveSkill([["adjPushEnh",2]])
 
 def _87010023_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunAnti",6]])
+    self.removePropByPassiveSkill([["adjPushEnh",2]])
 
 def _87010024(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockEnh",6]])
+    self.addPropByPassiveSkill([["adjPushAnti",2]])
 
 def _87010024_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockEnh",6]])
+    self.removePropByPassiveSkill([["adjPushAnti",2]])
 
 def _87010025(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockAnti",6]])
+    self.addPropByPassiveSkill([["adjCopper",0.02]])
 
 def _87010025_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockAnti",6]])
+    self.removePropByPassiveSkill([["adjCopper",0.02]])
 
 def _87010026(self, target, context):
-    self.addPropByPassiveSkill([["adjPushEnh",6]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.02]])
 
 def _87010026_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushEnh",6]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.02]])
 
 def _87010027(self, target, context):
-    self.addPropByPassiveSkill([["adjPushAnti",6]])
+    self.addPropByPassiveSkill([["adjMedicineRate",0.01]])
 
 def _87010027_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushAnti",6]])
+    self.removePropByPassiveSkill([["adjMedicineRate",0.01]])
 
-def _87010028(self, target, context):
+def _87010101(self, target, context):
+    self.addPropByPassiveSkill([["adjFatal",2]])
+
+def _87010101_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFatal",2]])
+
+def _87010102(self, target, context):
+    self.addPropByPassiveSkill([["adjAntiFatal",2]])
+
+def _87010102_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjAntiFatal",2]])
+
+def _87010103(self, target, context):
+    self.addPropByPassiveSkill([["adjMortal",0.036]])
+
+def _87010103_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMortal",0.036]])
+
+def _87010104(self, target, context):
+    self.addPropByPassiveSkill([["adjAntiMortal",0.036]])
+
+def _87010104_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjAntiMortal",0.036]])
+
+def _87010105(self, target, context):
+    self.addPropByPassiveSkill([["adjIgnoreArmor",0.01]])
+
+def _87010105_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjIgnoreArmor",0.01]])
+
+def _87010106(self, target, context):
+    self.addPropByPassiveSkill([["adjDmgArmor",0.01]])
+
+def _87010106_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjDmgArmor",0.01]])
+
+def _87010107(self, target, context):
+    self.addPropByPassiveSkill([["adjFinalDmg",0.012]])
+
+def _87010107_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFinalDmg",0.012]])
+
+def _87010108(self, target, context):
+    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.012]])
+
+def _87010108_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.012]])
+
+def _87010109(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.024]])
+
+def _87010109_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.024]])
+
+def _87010110(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.024]])
+
+def _87010110_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.024]])
+
+def _87010111(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmg",0.024]])
+
+def _87010111_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmg",0.024]])
+
+def _87010112(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.024]])
+
+def _87010112_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.024]])
+
+def _87010113(self, target, context):
+    self.addPropByPassiveSkill([["adjStunEnh",4]])
+
+def _87010113_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunEnh",4]])
+
+def _87010114(self, target, context):
+    self.addPropByPassiveSkill([["adjStunAnti",4]])
+
+def _87010114_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunAnti",4]])
+
+def _87010115(self, target, context):
+    self.addPropByPassiveSkill([["adjSilentEnh",4]])
+
+def _87010115_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSilentEnh",4]])
+
+def _87010116(self, target, context):
+    self.addPropByPassiveSkill([["adjSilentAnti",4]])
+
+def _87010116_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSilentAnti",4]])
+
+def _87010117(self, target, context):
+    self.addPropByPassiveSkill([["adjKnockEnh",4]])
+
+def _87010117_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjKnockEnh",4]])
+
+def _87010118(self, target, context):
+    self.addPropByPassiveSkill([["adjKnockAnti",4]])
+
+def _87010118_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjKnockAnti",4]])
+
+def _87010119(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenEnh",4]])
+
+def _87010119_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenEnh",4]])
+
+def _87010120(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenAnti",4]])
+
+def _87010120_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenAnti",4]])
+
+def _87010121(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowEnh",4]])
+
+def _87010121_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowEnh",4]])
+
+def _87010122(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowAnti",4]])
+
+def _87010122_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowAnti",4]])
+
+def _87010123(self, target, context):
+    self.addPropByPassiveSkill([["adjPushEnh",4]])
+
+def _87010123_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushEnh",4]])
+
+def _87010124(self, target, context):
+    self.addPropByPassiveSkill([["adjPushAnti",4]])
+
+def _87010124_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushAnti",4]])
+
+def _87010125(self, target, context):
     self.addPropByPassiveSkill([["adjCopper",0.04]])
 
-def _87010028_remove(self, target, context):
+def _87010125_remove(self, target, context):
     self.removePropByPassiveSkill([["adjCopper",0.04]])
 
-def _87010029(self, target, context):
+def _87010126(self, target, context):
     self.addPropByPassiveSkill([["adjExpGrow",0.04]])
 
-def _87010029_remove(self, target, context):
+def _87010126_remove(self, target, context):
     self.removePropByPassiveSkill([["adjExpGrow",0.04]])
 
-def _87010030(self, target, context):
-    self.addPropByPassiveSkill([["adjMedicineRate",0.03]])
+def _87010127(self, target, context):
+    self.addPropByPassiveSkill([["adjMedicineRate",0.02]])
 
-def _87010030_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMedicineRate",0.03]])
+def _87010127_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMedicineRate",0.02]])
 
-def _87010031(self, target, context):
+def _87010201(self, target, context):
     self.addPropByPassiveSkill([["adjFatal",3]])
 
-def _87010031_remove(self, target, context):
+def _87010201_remove(self, target, context):
     self.removePropByPassiveSkill([["adjFatal",3]])
 
-def _87010032(self, target, context):
+def _87010202(self, target, context):
     self.addPropByPassiveSkill([["adjAntiFatal",3]])
 
-def _87010032_remove(self, target, context):
+def _87010202_remove(self, target, context):
     self.removePropByPassiveSkill([["adjAntiFatal",3]])
 
-def _87010033(self, target, context):
-    self.addPropByPassiveSkill([["adjMortal",0.06]])
+def _87010203(self, target, context):
+    self.addPropByPassiveSkill([["adjMortal",0.054]])
 
-def _87010033_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMortal",0.06]])
+def _87010203_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMortal",0.054]])
 
-def _87010034(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiMortal",0.06]])
+def _87010204(self, target, context):
+    self.addPropByPassiveSkill([["adjAntiMortal",0.054]])
 
-def _87010034_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiMortal",0.06]])
+def _87010204_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjAntiMortal",0.054]])
 
-def _87010035(self, target, context):
-    self.addPropByPassiveSkill([["adjFinalDmg",0.015]])
+def _87010205(self, target, context):
+    self.addPropByPassiveSkill([["adjIgnoreArmor",0.015]])
 
-def _87010035_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFinalDmg",0.015]])
+def _87010205_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjIgnoreArmor",0.015]])
 
-def _87010036(self, target, context):
-    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.015]])
+def _87010206(self, target, context):
+    self.addPropByPassiveSkill([["adjDmgArmor",0.015]])
 
-def _87010036_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.015]])
+def _87010206_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjDmgArmor",0.015]])
 
-def _87010037(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmg",0.03]])
+def _87010207(self, target, context):
+    self.addPropByPassiveSkill([["adjFinalDmg",0.018]])
 
-def _87010037_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmg",0.03]])
+def _87010207_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFinalDmg",0.018]])
 
-def _87010038(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.03]])
+def _87010208(self, target, context):
+    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.018]])
 
-def _87010038_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.03]])
+def _87010208_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.018]])
 
-def _87010039(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmg",0.03]])
+def _87010209(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.036]])
 
-def _87010039_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmg",0.03]])
+def _87010209_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.036]])
 
-def _87010040(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.03]])
+def _87010210(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.036]])
 
-def _87010040_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.03]])
+def _87010210_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.036]])
 
-def _87010041(self, target, context):
+def _87010211(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmg",0.036]])
+
+def _87010211_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmg",0.036]])
+
+def _87010212(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.036]])
+
+def _87010212_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.036]])
+
+def _87010213(self, target, context):
+    self.addPropByPassiveSkill([["adjStunEnh",6]])
+
+def _87010213_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunEnh",6]])
+
+def _87010214(self, target, context):
+    self.addPropByPassiveSkill([["adjStunAnti",6]])
+
+def _87010214_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunAnti",6]])
+
+def _87010215(self, target, context):
+    self.addPropByPassiveSkill([["adjSilentEnh",6]])
+
+def _87010215_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSilentEnh",6]])
+
+def _87010216(self, target, context):
+    self.addPropByPassiveSkill([["adjSilentAnti",6]])
+
+def _87010216_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSilentAnti",6]])
+
+def _87010217(self, target, context):
+    self.addPropByPassiveSkill([["adjKnockEnh",6]])
+
+def _87010217_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjKnockEnh",6]])
+
+def _87010218(self, target, context):
+    self.addPropByPassiveSkill([["adjKnockAnti",6]])
+
+def _87010218_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjKnockAnti",6]])
+
+def _87010219(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenEnh",6]])
+
+def _87010219_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenEnh",6]])
+
+def _87010220(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenAnti",6]])
+
+def _87010220_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenAnti",6]])
+
+def _87010221(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowEnh",6]])
+
+def _87010221_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowEnh",6]])
+
+def _87010222(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowAnti",6]])
+
+def _87010222_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowAnti",6]])
+
+def _87010223(self, target, context):
+    self.addPropByPassiveSkill([["adjPushEnh",6]])
+
+def _87010223_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushEnh",6]])
+
+def _87010224(self, target, context):
+    self.addPropByPassiveSkill([["adjPushAnti",6]])
+
+def _87010224_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushAnti",6]])
+
+def _87010225(self, target, context):
     self.addPropByPassiveSkill([["adjCopper",0.06]])
 
-def _87010041_remove(self, target, context):
+def _87010225_remove(self, target, context):
     self.removePropByPassiveSkill([["adjCopper",0.06]])
 
-def _87010042(self, target, context):
+def _87010226(self, target, context):
     self.addPropByPassiveSkill([["adjExpGrow",0.06]])
 
-def _87010042_remove(self, target, context):
+def _87010226_remove(self, target, context):
     self.removePropByPassiveSkill([["adjExpGrow",0.06]])
 
-def _87010043(self, target, context):
-    self.addPropByPassiveSkill([["adjMedicineRate",0.045]])
+def _87010227(self, target, context):
+    self.addPropByPassiveSkill([["adjMedicineRate",0.03]])
 
-def _87010043_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMedicineRate",0.045]])
+def _87010227_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMedicineRate",0.03]])
 
-def _87010044(self, target, context):
-    self.addPropByPassiveSkill([["adjIgnoreArmor",0.02]])
+def _87010301(self, target, context):
+    self.addPropByPassiveSkill([["adjFatal",5]])
 
-def _87010044_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjIgnoreArmor",0.02]])
+def _87010301_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFatal",5]])
 
-def _87010045(self, target, context):
-    self.addPropByPassiveSkill([["adjDmgArmor",0.02]])
+def _87010302(self, target, context):
+    self.addPropByPassiveSkill([["adjAntiFatal",5]])
 
-def _87010045_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDmgArmor",0.02]])
+def _87010302_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjAntiFatal",5]])
 
-def _87010046(self, target, context):
+def _87010303(self, target, context):
+    self.addPropByPassiveSkill([["adjMortal",0.09]])
+
+def _87010303_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMortal",0.09]])
+
+def _87010304(self, target, context):
+    self.addPropByPassiveSkill([["adjAntiMortal",0.09]])
+
+def _87010304_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjAntiMortal",0.09]])
+
+def _87010305(self, target, context):
+    self.addPropByPassiveSkill([["adjIgnoreArmor",0.025]])
+
+def _87010305_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjIgnoreArmor",0.025]])
+
+def _87010306(self, target, context):
+    self.addPropByPassiveSkill([["adjDmgArmor",0.025]])
+
+def _87010306_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjDmgArmor",0.025]])
+
+def _87010307(self, target, context):
     self.addPropByPassiveSkill([["adjFinalDmg",0.03]])
 
-def _87010046_remove(self, target, context):
+def _87010307_remove(self, target, context):
     self.removePropByPassiveSkill([["adjFinalDmg",0.03]])
 
-def _87010047(self, target, context):
+def _87010308(self, target, context):
     self.addPropByPassiveSkill([["adjFinalDmgAnti",0.03]])
 
-def _87010047_remove(self, target, context):
+def _87010308_remove(self, target, context):
     self.removePropByPassiveSkill([["adjFinalDmgAnti",0.03]])
 
-def _87010048(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmg",0.05]])
+def _87010309(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.06]])
 
-def _87010048_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmg",0.05]])
+def _87010309_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.06]])
 
-def _87010049(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.05]])
+def _87010310(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.06]])
 
-def _87010049_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.05]])
+def _87010310_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.06]])
 
-def _87010050(self, target, context):
+def _87010311(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmg",0.06]])
+
+def _87010311_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmg",0.06]])
+
+def _87010312(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.06]])
+
+def _87010312_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.06]])
+
+def _87010313(self, target, context):
+    self.addPropByPassiveSkill([["adjStunEnh",10]])
+
+def _87010313_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunEnh",10]])
+
+def _87010314(self, target, context):
+    self.addPropByPassiveSkill([["adjStunAnti",10]])
+
+def _87010314_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunAnti",10]])
+
+def _87010315(self, target, context):
+    self.addPropByPassiveSkill([["adjSilentEnh",10]])
+
+def _87010315_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSilentEnh",10]])
+
+def _87010316(self, target, context):
+    self.addPropByPassiveSkill([["adjSilentAnti",10]])
+
+def _87010316_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSilentAnti",10]])
+
+def _87010317(self, target, context):
+    self.addPropByPassiveSkill([["adjKnockEnh",10]])
+
+def _87010317_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjKnockEnh",10]])
+
+def _87010318(self, target, context):
+    self.addPropByPassiveSkill([["adjKnockAnti",10]])
+
+def _87010318_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjKnockAnti",10]])
+
+def _87010319(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenEnh",10]])
+
+def _87010319_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenEnh",10]])
+
+def _87010320(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenAnti",10]])
+
+def _87010320_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenAnti",10]])
+
+def _87010321(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowEnh",10]])
+
+def _87010321_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowEnh",10]])
+
+def _87010322(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowAnti",10]])
+
+def _87010322_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowAnti",10]])
+
+def _87010323(self, target, context):
+    self.addPropByPassiveSkill([["adjPushEnh",10]])
+
+def _87010323_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushEnh",10]])
+
+def _87010324(self, target, context):
+    self.addPropByPassiveSkill([["adjPushAnti",10]])
+
+def _87010324_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushAnti",10]])
+
+def _87010325(self, target, context):
+    self.addPropByPassiveSkill([["adjCopper",0.1]])
+
+def _87010325_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjCopper",0.1]])
+
+def _87010326(self, target, context):
     self.addPropByPassiveSkill([["adjExpGrow",0.1]])
 
-def _87010050_remove(self, target, context):
+def _87010326_remove(self, target, context):
     self.removePropByPassiveSkill([["adjExpGrow",0.1]])
+
+def _87010327(self, target, context):
+    self.addPropByPassiveSkill([["adjMedicineRate",0.05]])
+
+def _87010327_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMedicineRate",0.05]])
 
 def _87020001(self, target, context):
     self.addPropByPassiveSkill([["adjMonsterDmg",0.02]])
@@ -988,7 +1336,7 @@ def _87020111_remove(self, target, context):
 datas = _tools.RODict({ 
     87010001: _tools.RODict({
         "ID": 87010001,
-        "name": "招财荷包",
+        "name": "酒神的高脚杯",
         "level": 0,
         "action": _87010001,
         "removeAction": _87010001_remove,
@@ -998,7 +1346,7 @@ datas = _tools.RODict({
     }),
     87010002: _tools.RODict({
         "ID": 87010002,
-        "name": "聚宝盆",
+        "name": "永恒之果",
         "level": 0,
         "action": _87010002,
         "removeAction": _87010002_remove,
@@ -1008,481 +1356,1061 @@ datas = _tools.RODict({
     }),
     87010003: _tools.RODict({
         "ID": 87010003,
-        "name": "须弥葫芦",
+        "name": "忏悔者遗剑",
         "level": 0,
         "action": _87010003,
         "removeAction": _87010003_remove,
-        "propList": _tools.ROList([['adjMonsterDmg', 0.01]]),
+        "propList": _tools.ROList([['adjMortal', 0.018]]),
         "desBuff": None,
         "score": 0
     }),
     87010004: _tools.RODict({
         "ID": 87010004,
-        "name": "芙蕾的鲜花",
+        "name": "龙息水晶",
         "level": 0,
         "action": _87010004,
         "removeAction": _87010004_remove,
-        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.01]]),
+        "propList": _tools.ROList([['adjAntiMortal', 0.018]]),
         "desBuff": None,
         "score": 0
     }),
     87010005: _tools.RODict({
         "ID": 87010005,
-        "name": "巡夜人提灯",
+        "name": "龙角血珊瑚",
         "level": 0,
         "action": _87010005,
         "removeAction": _87010005_remove,
-        "propList": _tools.ROList([['adjStunEnh', 3]]),
+        "propList": _tools.ROList([['adjIgnoreArmor', 0.005]]),
         "desBuff": None,
         "score": 0
     }),
     87010006: _tools.RODict({
         "ID": 87010006,
-        "name": "酒神的高脚杯",
+        "name": "新生之泪",
         "level": 0,
         "action": _87010006,
         "removeAction": _87010006_remove,
-        "propList": _tools.ROList([['adjStunAnti', 3]]),
+        "propList": _tools.ROList([['adjDmgArmor', 0.005]]),
         "desBuff": None,
         "score": 0
     }),
     87010007: _tools.RODict({
         "ID": 87010007,
-        "name": "新生之泪",
+        "name": "无尽的金蛇",
         "level": 0,
         "action": _87010007,
         "removeAction": _87010007_remove,
-        "propList": _tools.ROList([['adjKnockEnh', 3]]),
+        "propList": _tools.ROList([['adjFinalDmg', 0.006]]),
         "desBuff": None,
         "score": 0
     }),
     87010008: _tools.RODict({
         "ID": 87010008,
-        "name": "女神的灵药",
+        "name": "戏影人假面",
         "level": 0,
         "action": _87010008,
         "removeAction": _87010008_remove,
-        "propList": _tools.ROList([['adjKnockAnti', 3]]),
+        "propList": _tools.ROList([['adjFinalDmgAnti', 0.006]]),
         "desBuff": None,
         "score": 0
     }),
     87010009: _tools.RODict({
         "ID": 87010009,
-        "name": "龙息水晶",
+        "name": "四方降魔杵",
         "level": 0,
         "action": _87010009,
         "removeAction": _87010009_remove,
-        "propList": _tools.ROList([['adjPushEnh', 3]]),
+        "propList": _tools.ROList([['adjMonsterDmg', 0.012]]),
         "desBuff": None,
         "score": 0
     }),
     87010010: _tools.RODict({
         "ID": 87010010,
-        "name": "琢石之刃",
+        "name": "荆棘牢笼",
         "level": 0,
         "action": _87010010,
         "removeAction": _87010010_remove,
-        "propList": _tools.ROList([['adjPushAnti', 3]]),
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.012]]),
         "desBuff": None,
         "score": 0
     }),
     87010011: _tools.RODict({
         "ID": 87010011,
-        "name": "流光沙漏",
+        "name": "飞鹰纹章",
         "level": 0,
         "action": _87010011,
         "removeAction": _87010011_remove,
-        "propList": _tools.ROList([['adjCopper', 0.02]]),
+        "propList": _tools.ROList([['adjPVPDmg', 0.012]]),
         "desBuff": None,
         "score": 0
     }),
     87010012: _tools.RODict({
         "ID": 87010012,
-        "name": "精灵的秘册",
+        "name": "龙鳞盾",
         "level": 0,
         "action": _87010012,
         "removeAction": _87010012_remove,
-        "propList": _tools.ROList([['adjExpGrow', 0.02]]),
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.012]]),
         "desBuff": None,
         "score": 0
     }),
     87010013: _tools.RODict({
         "ID": 87010013,
-        "name": "朵拉的宝盒",
+        "name": "海妖的低语",
         "level": 0,
         "action": _87010013,
         "removeAction": _87010013_remove,
-        "propList": _tools.ROList([['adjMedicineRate', 0.015]]),
+        "propList": _tools.ROList([['adjStunEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010014: _tools.RODict({
         "ID": 87010014,
-        "name": "丰饶的号角",
+        "name": "紫府灵珠",
         "level": 0,
         "action": _87010014,
         "removeAction": _87010014_remove,
-        "propList": _tools.ROList([['adjFatal', 2]]),
+        "propList": _tools.ROList([['adjStunAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010015: _tools.RODict({
         "ID": 87010015,
-        "name": "尘封的钥匙",
+        "name": "禁言之书",
         "level": 0,
         "action": _87010015,
         "removeAction": _87010015_remove,
-        "propList": _tools.ROList([['adjAntiFatal', 2]]),
+        "propList": _tools.ROList([['adjSilentEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010016: _tools.RODict({
         "ID": 87010016,
-        "name": "无尽的金蛇",
+        "name": "丰饶的号角",
         "level": 0,
         "action": _87010016,
         "removeAction": _87010016_remove,
-        "propList": _tools.ROList([['adjMortal', 0.04]]),
+        "propList": _tools.ROList([['adjSilentAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010017: _tools.RODict({
         "ID": 87010017,
-        "name": "幻兽尾羽",
+        "name": "古神拳套",
         "level": 0,
         "action": _87010017,
         "removeAction": _87010017_remove,
-        "propList": _tools.ROList([['adjAntiMortal', 0.04]]),
+        "propList": _tools.ROList([['adjKnockEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010018: _tools.RODict({
         "ID": 87010018,
-        "name": "迷雾香炉",
+        "name": "幻兽尾羽",
         "level": 0,
         "action": _87010018,
         "removeAction": _87010018_remove,
-        "propList": _tools.ROList([['adjFinalDmg', 0.01]]),
+        "propList": _tools.ROList([['adjKnockAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010019: _tools.RODict({
         "ID": 87010019,
-        "name": "禁言之书",
+        "name": "冰封圣杯",
         "level": 0,
         "action": _87010019,
         "removeAction": _87010019_remove,
-        "propList": _tools.ROList([['adjFinalDmgAnti', 0.01]]),
+        "propList": _tools.ROList([['adjFrozenEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010020: _tools.RODict({
         "ID": 87010020,
-        "name": "冰封圣杯",
+        "name": "不灭的火炬",
         "level": 0,
         "action": _87010020,
         "removeAction": _87010020_remove,
-        "propList": _tools.ROList([['adjMonsterDmg', 0.02]]),
+        "propList": _tools.ROList([['adjFrozenAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010021: _tools.RODict({
         "ID": 87010021,
-        "name": "古神拳套",
+        "name": "雪国幻境",
         "level": 0,
         "action": _87010021,
         "removeAction": _87010021_remove,
-        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.02]]),
+        "propList": _tools.ROList([['adjSlowEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010022: _tools.RODict({
         "ID": 87010022,
-        "name": "永恒之果",
+        "name": "远航的风帆",
         "level": 0,
         "action": _87010022,
         "removeAction": _87010022_remove,
-        "propList": _tools.ROList([['adjStunEnh', 6]]),
+        "propList": _tools.ROList([['adjSlowAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010023: _tools.RODict({
         "ID": 87010023,
-        "name": "寂静王座",
+        "name": "颂诗竖琴",
         "level": 0,
         "action": _87010023,
         "removeAction": _87010023_remove,
-        "propList": _tools.ROList([['adjStunAnti', 6]]),
+        "propList": _tools.ROList([['adjPushEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010024: _tools.RODict({
         "ID": 87010024,
-        "name": "雪国幻境",
+        "name": "秘银神灯",
         "level": 0,
         "action": _87010024,
         "removeAction": _87010024_remove,
-        "propList": _tools.ROList([['adjKnockEnh', 6]]),
+        "propList": _tools.ROList([['adjPushAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
     87010025: _tools.RODict({
         "ID": 87010025,
-        "name": "清心铃",
+        "name": "招财荷包",
         "level": 0,
         "action": _87010025,
         "removeAction": _87010025_remove,
-        "propList": _tools.ROList([['adjKnockAnti', 6]]),
+        "propList": _tools.ROList([['adjCopper', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
     87010026: _tools.RODict({
         "ID": 87010026,
-        "name": "护心宝镜",
+        "name": "精灵的秘册",
         "level": 0,
         "action": _87010026,
         "removeAction": _87010026_remove,
-        "propList": _tools.ROList([['adjPushEnh', 6]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
     87010027: _tools.RODict({
         "ID": 87010027,
-        "name": "龙角血珊瑚",
+        "name": "女神的灵药",
         "level": 0,
         "action": _87010027,
         "removeAction": _87010027_remove,
-        "propList": _tools.ROList([['adjPushAnti', 6]]),
+        "propList": _tools.ROList([['adjMedicineRate', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
-    87010028: _tools.RODict({
-        "ID": 87010028,
-        "name": "神圣的龙神像",
+    87010101: _tools.RODict({
+        "ID": 87010101,
+        "name": "酒神的高脚杯",
         "level": 0,
-        "action": _87010028,
-        "removeAction": _87010028_remove,
+        "action": _87010101,
+        "removeAction": _87010101_remove,
+        "propList": _tools.ROList([['adjFatal', 2]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010102: _tools.RODict({
+        "ID": 87010102,
+        "name": "永恒之果",
+        "level": 0,
+        "action": _87010102,
+        "removeAction": _87010102_remove,
+        "propList": _tools.ROList([['adjAntiFatal', 2]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010103: _tools.RODict({
+        "ID": 87010103,
+        "name": "忏悔者遗剑",
+        "level": 0,
+        "action": _87010103,
+        "removeAction": _87010103_remove,
+        "propList": _tools.ROList([['adjMortal', 0.036]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010104: _tools.RODict({
+        "ID": 87010104,
+        "name": "龙息水晶",
+        "level": 0,
+        "action": _87010104,
+        "removeAction": _87010104_remove,
+        "propList": _tools.ROList([['adjAntiMortal', 0.036]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010105: _tools.RODict({
+        "ID": 87010105,
+        "name": "龙角血珊瑚",
+        "level": 0,
+        "action": _87010105,
+        "removeAction": _87010105_remove,
+        "propList": _tools.ROList([['adjIgnoreArmor', 0.01]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010106: _tools.RODict({
+        "ID": 87010106,
+        "name": "新生之泪",
+        "level": 0,
+        "action": _87010106,
+        "removeAction": _87010106_remove,
+        "propList": _tools.ROList([['adjDmgArmor', 0.01]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010107: _tools.RODict({
+        "ID": 87010107,
+        "name": "无尽的金蛇",
+        "level": 0,
+        "action": _87010107,
+        "removeAction": _87010107_remove,
+        "propList": _tools.ROList([['adjFinalDmg', 0.012]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010108: _tools.RODict({
+        "ID": 87010108,
+        "name": "戏影人假面",
+        "level": 0,
+        "action": _87010108,
+        "removeAction": _87010108_remove,
+        "propList": _tools.ROList([['adjFinalDmgAnti', 0.012]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010109: _tools.RODict({
+        "ID": 87010109,
+        "name": "四方降魔杵",
+        "level": 0,
+        "action": _87010109,
+        "removeAction": _87010109_remove,
+        "propList": _tools.ROList([['adjMonsterDmg', 0.024]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010110: _tools.RODict({
+        "ID": 87010110,
+        "name": "荆棘牢笼",
+        "level": 0,
+        "action": _87010110,
+        "removeAction": _87010110_remove,
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.024]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010111: _tools.RODict({
+        "ID": 87010111,
+        "name": "飞鹰纹章",
+        "level": 0,
+        "action": _87010111,
+        "removeAction": _87010111_remove,
+        "propList": _tools.ROList([['adjPVPDmg', 0.024]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010112: _tools.RODict({
+        "ID": 87010112,
+        "name": "龙鳞盾",
+        "level": 0,
+        "action": _87010112,
+        "removeAction": _87010112_remove,
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.024]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010113: _tools.RODict({
+        "ID": 87010113,
+        "name": "海妖的低语",
+        "level": 0,
+        "action": _87010113,
+        "removeAction": _87010113_remove,
+        "propList": _tools.ROList([['adjStunEnh', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010114: _tools.RODict({
+        "ID": 87010114,
+        "name": "紫府灵珠",
+        "level": 0,
+        "action": _87010114,
+        "removeAction": _87010114_remove,
+        "propList": _tools.ROList([['adjStunAnti', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010115: _tools.RODict({
+        "ID": 87010115,
+        "name": "禁言之书",
+        "level": 0,
+        "action": _87010115,
+        "removeAction": _87010115_remove,
+        "propList": _tools.ROList([['adjSilentEnh', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010116: _tools.RODict({
+        "ID": 87010116,
+        "name": "丰饶的号角",
+        "level": 0,
+        "action": _87010116,
+        "removeAction": _87010116_remove,
+        "propList": _tools.ROList([['adjSilentAnti', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010117: _tools.RODict({
+        "ID": 87010117,
+        "name": "古神拳套",
+        "level": 0,
+        "action": _87010117,
+        "removeAction": _87010117_remove,
+        "propList": _tools.ROList([['adjKnockEnh', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010118: _tools.RODict({
+        "ID": 87010118,
+        "name": "幻兽尾羽",
+        "level": 0,
+        "action": _87010118,
+        "removeAction": _87010118_remove,
+        "propList": _tools.ROList([['adjKnockAnti', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010119: _tools.RODict({
+        "ID": 87010119,
+        "name": "冰封圣杯",
+        "level": 0,
+        "action": _87010119,
+        "removeAction": _87010119_remove,
+        "propList": _tools.ROList([['adjFrozenEnh', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010120: _tools.RODict({
+        "ID": 87010120,
+        "name": "不灭的火炬",
+        "level": 0,
+        "action": _87010120,
+        "removeAction": _87010120_remove,
+        "propList": _tools.ROList([['adjFrozenAnti', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010121: _tools.RODict({
+        "ID": 87010121,
+        "name": "雪国幻境",
+        "level": 0,
+        "action": _87010121,
+        "removeAction": _87010121_remove,
+        "propList": _tools.ROList([['adjSlowEnh', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010122: _tools.RODict({
+        "ID": 87010122,
+        "name": "远航的风帆",
+        "level": 0,
+        "action": _87010122,
+        "removeAction": _87010122_remove,
+        "propList": _tools.ROList([['adjSlowAnti', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010123: _tools.RODict({
+        "ID": 87010123,
+        "name": "颂诗竖琴",
+        "level": 0,
+        "action": _87010123,
+        "removeAction": _87010123_remove,
+        "propList": _tools.ROList([['adjPushEnh', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010124: _tools.RODict({
+        "ID": 87010124,
+        "name": "秘银神灯",
+        "level": 0,
+        "action": _87010124,
+        "removeAction": _87010124_remove,
+        "propList": _tools.ROList([['adjPushAnti', 4]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010125: _tools.RODict({
+        "ID": 87010125,
+        "name": "招财荷包",
+        "level": 0,
+        "action": _87010125,
+        "removeAction": _87010125_remove,
         "propList": _tools.ROList([['adjCopper', 0.04]]),
         "desBuff": None,
         "score": 0
     }),
-    87010029: _tools.RODict({
-        "ID": 87010029,
-        "name": "不灭的火炬",
+    87010126: _tools.RODict({
+        "ID": 87010126,
+        "name": "精灵的秘册",
         "level": 0,
-        "action": _87010029,
-        "removeAction": _87010029_remove,
+        "action": _87010126,
+        "removeAction": _87010126_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.04]]),
         "desBuff": None,
         "score": 0
     }),
-    87010030: _tools.RODict({
-        "ID": 87010030,
-        "name": "远航的风帆",
+    87010127: _tools.RODict({
+        "ID": 87010127,
+        "name": "女神的灵药",
         "level": 0,
-        "action": _87010030,
-        "removeAction": _87010030_remove,
-        "propList": _tools.ROList([['adjMedicineRate', 0.03]]),
+        "action": _87010127,
+        "removeAction": _87010127_remove,
+        "propList": _tools.ROList([['adjMedicineRate', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
-    87010031: _tools.RODict({
-        "ID": 87010031,
-        "name": "金龙照影灯",
+    87010201: _tools.RODict({
+        "ID": 87010201,
+        "name": "酒神的高脚杯",
         "level": 0,
-        "action": _87010031,
-        "removeAction": _87010031_remove,
+        "action": _87010201,
+        "removeAction": _87010201_remove,
         "propList": _tools.ROList([['adjFatal', 3]]),
         "desBuff": None,
         "score": 0
     }),
-    87010032: _tools.RODict({
-        "ID": 87010032,
-        "name": "掌心的时光",
+    87010202: _tools.RODict({
+        "ID": 87010202,
+        "name": "永恒之果",
         "level": 0,
-        "action": _87010032,
-        "removeAction": _87010032_remove,
+        "action": _87010202,
+        "removeAction": _87010202_remove,
         "propList": _tools.ROList([['adjAntiFatal', 3]]),
         "desBuff": None,
         "score": 0
     }),
-    87010033: _tools.RODict({
-        "ID": 87010033,
-        "name": "飞鹰纹章",
+    87010203: _tools.RODict({
+        "ID": 87010203,
+        "name": "忏悔者遗剑",
         "level": 0,
-        "action": _87010033,
-        "removeAction": _87010033_remove,
-        "propList": _tools.ROList([['adjMortal', 0.06]]),
+        "action": _87010203,
+        "removeAction": _87010203_remove,
+        "propList": _tools.ROList([['adjMortal', 0.054]]),
         "desBuff": None,
         "score": 0
     }),
-    87010034: _tools.RODict({
-        "ID": 87010034,
-        "name": "风神斗篷",
+    87010204: _tools.RODict({
+        "ID": 87010204,
+        "name": "龙息水晶",
         "level": 0,
-        "action": _87010034,
-        "removeAction": _87010034_remove,
-        "propList": _tools.ROList([['adjAntiMortal', 0.06]]),
+        "action": _87010204,
+        "removeAction": _87010204_remove,
+        "propList": _tools.ROList([['adjAntiMortal', 0.054]]),
         "desBuff": None,
         "score": 0
     }),
-    87010035: _tools.RODict({
-        "ID": 87010035,
-        "name": "颂诗竖琴",
+    87010205: _tools.RODict({
+        "ID": 87010205,
+        "name": "龙角血珊瑚",
         "level": 0,
-        "action": _87010035,
-        "removeAction": _87010035_remove,
-        "propList": _tools.ROList([['adjFinalDmg', 0.015]]),
+        "action": _87010205,
+        "removeAction": _87010205_remove,
+        "propList": _tools.ROList([['adjIgnoreArmor', 0.015]]),
         "desBuff": None,
         "score": 0
     }),
-    87010036: _tools.RODict({
-        "ID": 87010036,
-        "name": "战意擂鼓",
+    87010206: _tools.RODict({
+        "ID": 87010206,
+        "name": "新生之泪",
         "level": 0,
-        "action": _87010036,
-        "removeAction": _87010036_remove,
-        "propList": _tools.ROList([['adjFinalDmgAnti', 0.015]]),
+        "action": _87010206,
+        "removeAction": _87010206_remove,
+        "propList": _tools.ROList([['adjDmgArmor', 0.015]]),
         "desBuff": None,
         "score": 0
     }),
-    87010037: _tools.RODict({
-        "ID": 87010037,
+    87010207: _tools.RODict({
+        "ID": 87010207,
+        "name": "无尽的金蛇",
+        "level": 0,
+        "action": _87010207,
+        "removeAction": _87010207_remove,
+        "propList": _tools.ROList([['adjFinalDmg', 0.018]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010208: _tools.RODict({
+        "ID": 87010208,
+        "name": "戏影人假面",
+        "level": 0,
+        "action": _87010208,
+        "removeAction": _87010208_remove,
+        "propList": _tools.ROList([['adjFinalDmgAnti', 0.018]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010209: _tools.RODict({
+        "ID": 87010209,
         "name": "四方降魔杵",
         "level": 0,
-        "action": _87010037,
-        "removeAction": _87010037_remove,
-        "propList": _tools.ROList([['adjMonsterDmg', 0.03]]),
+        "action": _87010209,
+        "removeAction": _87010209_remove,
+        "propList": _tools.ROList([['adjMonsterDmg', 0.036]]),
         "desBuff": None,
         "score": 0
     }),
-    87010038: _tools.RODict({
-        "ID": 87010038,
-        "name": "紫府灵珠",
+    87010210: _tools.RODict({
+        "ID": 87010210,
+        "name": "荆棘牢笼",
         "level": 0,
-        "action": _87010038,
-        "removeAction": _87010038_remove,
-        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.03]]),
+        "action": _87010210,
+        "removeAction": _87010210_remove,
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.036]]),
         "desBuff": None,
         "score": 0
     }),
-    87010039: _tools.RODict({
-        "ID": 87010039,
-        "name": "宝相轮回牌",
+    87010211: _tools.RODict({
+        "ID": 87010211,
+        "name": "飞鹰纹章",
         "level": 0,
-        "action": _87010039,
-        "removeAction": _87010039_remove,
-        "propList": _tools.ROList([['adjPVPDmg', 0.03]]),
+        "action": _87010211,
+        "removeAction": _87010211_remove,
+        "propList": _tools.ROList([['adjPVPDmg', 0.036]]),
         "desBuff": None,
         "score": 0
     }),
-    87010040: _tools.RODict({
-        "ID": 87010040,
+    87010212: _tools.RODict({
+        "ID": 87010212,
         "name": "龙鳞盾",
         "level": 0,
-        "action": _87010040,
-        "removeAction": _87010040_remove,
-        "propList": _tools.ROList([['adjPVPDmgAnti', 0.03]]),
+        "action": _87010212,
+        "removeAction": _87010212_remove,
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.036]]),
         "desBuff": None,
         "score": 0
     }),
-    87010041: _tools.RODict({
-        "ID": 87010041,
-        "name": "兽面玉牌",
+    87010213: _tools.RODict({
+        "ID": 87010213,
+        "name": "海妖的低语",
         "level": 0,
-        "action": _87010041,
-        "removeAction": _87010041_remove,
+        "action": _87010213,
+        "removeAction": _87010213_remove,
+        "propList": _tools.ROList([['adjStunEnh', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010214: _tools.RODict({
+        "ID": 87010214,
+        "name": "紫府灵珠",
+        "level": 0,
+        "action": _87010214,
+        "removeAction": _87010214_remove,
+        "propList": _tools.ROList([['adjStunAnti', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010215: _tools.RODict({
+        "ID": 87010215,
+        "name": "禁言之书",
+        "level": 0,
+        "action": _87010215,
+        "removeAction": _87010215_remove,
+        "propList": _tools.ROList([['adjSilentEnh', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010216: _tools.RODict({
+        "ID": 87010216,
+        "name": "丰饶的号角",
+        "level": 0,
+        "action": _87010216,
+        "removeAction": _87010216_remove,
+        "propList": _tools.ROList([['adjSilentAnti', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010217: _tools.RODict({
+        "ID": 87010217,
+        "name": "古神拳套",
+        "level": 0,
+        "action": _87010217,
+        "removeAction": _87010217_remove,
+        "propList": _tools.ROList([['adjKnockEnh', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010218: _tools.RODict({
+        "ID": 87010218,
+        "name": "幻兽尾羽",
+        "level": 0,
+        "action": _87010218,
+        "removeAction": _87010218_remove,
+        "propList": _tools.ROList([['adjKnockAnti', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010219: _tools.RODict({
+        "ID": 87010219,
+        "name": "冰封圣杯",
+        "level": 0,
+        "action": _87010219,
+        "removeAction": _87010219_remove,
+        "propList": _tools.ROList([['adjFrozenEnh', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010220: _tools.RODict({
+        "ID": 87010220,
+        "name": "不灭的火炬",
+        "level": 0,
+        "action": _87010220,
+        "removeAction": _87010220_remove,
+        "propList": _tools.ROList([['adjFrozenAnti', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010221: _tools.RODict({
+        "ID": 87010221,
+        "name": "雪国幻境",
+        "level": 0,
+        "action": _87010221,
+        "removeAction": _87010221_remove,
+        "propList": _tools.ROList([['adjSlowEnh', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010222: _tools.RODict({
+        "ID": 87010222,
+        "name": "远航的风帆",
+        "level": 0,
+        "action": _87010222,
+        "removeAction": _87010222_remove,
+        "propList": _tools.ROList([['adjSlowAnti', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010223: _tools.RODict({
+        "ID": 87010223,
+        "name": "颂诗竖琴",
+        "level": 0,
+        "action": _87010223,
+        "removeAction": _87010223_remove,
+        "propList": _tools.ROList([['adjPushEnh', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010224: _tools.RODict({
+        "ID": 87010224,
+        "name": "秘银神灯",
+        "level": 0,
+        "action": _87010224,
+        "removeAction": _87010224_remove,
+        "propList": _tools.ROList([['adjPushAnti', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010225: _tools.RODict({
+        "ID": 87010225,
+        "name": "招财荷包",
+        "level": 0,
+        "action": _87010225,
+        "removeAction": _87010225_remove,
         "propList": _tools.ROList([['adjCopper', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
-    87010042: _tools.RODict({
-        "ID": 87010042,
-        "name": "道门法印",
+    87010226: _tools.RODict({
+        "ID": 87010226,
+        "name": "精灵的秘册",
         "level": 0,
-        "action": _87010042,
-        "removeAction": _87010042_remove,
+        "action": _87010226,
+        "removeAction": _87010226_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
-    87010043: _tools.RODict({
-        "ID": 87010043,
-        "name": "星轨运转仪",
+    87010227: _tools.RODict({
+        "ID": 87010227,
+        "name": "女神的灵药",
         "level": 0,
-        "action": _87010043,
-        "removeAction": _87010043_remove,
-        "propList": _tools.ROList([['adjMedicineRate', 0.045]]),
+        "action": _87010227,
+        "removeAction": _87010227_remove,
+        "propList": _tools.ROList([['adjMedicineRate', 0.03]]),
         "desBuff": None,
         "score": 0
     }),
-    87010044: _tools.RODict({
-        "ID": 87010044,
-        "name": "秘银神灯",
+    87010301: _tools.RODict({
+        "ID": 87010301,
+        "name": "酒神的高脚杯",
         "level": 0,
-        "action": _87010044,
-        "removeAction": _87010044_remove,
-        "propList": _tools.ROList([['adjIgnoreArmor', 0.02]]),
+        "action": _87010301,
+        "removeAction": _87010301_remove,
+        "propList": _tools.ROList([['adjFatal', 5]]),
         "desBuff": None,
         "score": 0
     }),
-    87010045: _tools.RODict({
-        "ID": 87010045,
-        "name": "荆棘牢笼",
+    87010302: _tools.RODict({
+        "ID": 87010302,
+        "name": "永恒之果",
         "level": 0,
-        "action": _87010045,
-        "removeAction": _87010045_remove,
-        "propList": _tools.ROList([['adjDmgArmor', 0.02]]),
+        "action": _87010302,
+        "removeAction": _87010302_remove,
+        "propList": _tools.ROList([['adjAntiFatal', 5]]),
         "desBuff": None,
         "score": 0
     }),
-    87010046: _tools.RODict({
-        "ID": 87010046,
-        "name": "梦魇的织网",
+    87010303: _tools.RODict({
+        "ID": 87010303,
+        "name": "忏悔者遗剑",
         "level": 0,
-        "action": _87010046,
-        "removeAction": _87010046_remove,
+        "action": _87010303,
+        "removeAction": _87010303_remove,
+        "propList": _tools.ROList([['adjMortal', 0.09]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010304: _tools.RODict({
+        "ID": 87010304,
+        "name": "龙息水晶",
+        "level": 0,
+        "action": _87010304,
+        "removeAction": _87010304_remove,
+        "propList": _tools.ROList([['adjAntiMortal', 0.09]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010305: _tools.RODict({
+        "ID": 87010305,
+        "name": "龙角血珊瑚",
+        "level": 0,
+        "action": _87010305,
+        "removeAction": _87010305_remove,
+        "propList": _tools.ROList([['adjIgnoreArmor', 0.025]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010306: _tools.RODict({
+        "ID": 87010306,
+        "name": "新生之泪",
+        "level": 0,
+        "action": _87010306,
+        "removeAction": _87010306_remove,
+        "propList": _tools.ROList([['adjDmgArmor', 0.025]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010307: _tools.RODict({
+        "ID": 87010307,
+        "name": "无尽的金蛇",
+        "level": 0,
+        "action": _87010307,
+        "removeAction": _87010307_remove,
         "propList": _tools.ROList([['adjFinalDmg', 0.03]]),
         "desBuff": None,
         "score": 0
     }),
-    87010047: _tools.RODict({
-        "ID": 87010047,
-        "name": "忏悔者遗剑",
+    87010308: _tools.RODict({
+        "ID": 87010308,
+        "name": "戏影人假面",
         "level": 0,
-        "action": _87010047,
-        "removeAction": _87010047_remove,
+        "action": _87010308,
+        "removeAction": _87010308_remove,
         "propList": _tools.ROList([['adjFinalDmgAnti', 0.03]]),
         "desBuff": None,
         "score": 0
     }),
-    87010048: _tools.RODict({
-        "ID": 87010048,
-        "name": "殉道者雕像",
+    87010309: _tools.RODict({
+        "ID": 87010309,
+        "name": "四方降魔杵",
         "level": 0,
-        "action": _87010048,
-        "removeAction": _87010048_remove,
-        "propList": _tools.ROList([['adjPVPDmg', 0.05]]),
+        "action": _87010309,
+        "removeAction": _87010309_remove,
+        "propList": _tools.ROList([['adjMonsterDmg', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
-    87010049: _tools.RODict({
-        "ID": 87010049,
-        "name": "戏影人假面",
+    87010310: _tools.RODict({
+        "ID": 87010310,
+        "name": "荆棘牢笼",
         "level": 0,
-        "action": _87010049,
-        "removeAction": _87010049_remove,
-        "propList": _tools.ROList([['adjPVPDmgAnti', 0.05]]),
+        "action": _87010310,
+        "removeAction": _87010310_remove,
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
-    87010050: _tools.RODict({
-        "ID": 87010050,
+    87010311: _tools.RODict({
+        "ID": 87010311,
+        "name": "飞鹰纹章",
+        "level": 0,
+        "action": _87010311,
+        "removeAction": _87010311_remove,
+        "propList": _tools.ROList([['adjPVPDmg', 0.06]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010312: _tools.RODict({
+        "ID": 87010312,
+        "name": "龙鳞盾",
+        "level": 0,
+        "action": _87010312,
+        "removeAction": _87010312_remove,
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.06]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010313: _tools.RODict({
+        "ID": 87010313,
         "name": "海妖的低语",
         "level": 0,
-        "action": _87010050,
-        "removeAction": _87010050_remove,
+        "action": _87010313,
+        "removeAction": _87010313_remove,
+        "propList": _tools.ROList([['adjStunEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010314: _tools.RODict({
+        "ID": 87010314,
+        "name": "紫府灵珠",
+        "level": 0,
+        "action": _87010314,
+        "removeAction": _87010314_remove,
+        "propList": _tools.ROList([['adjStunAnti', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010315: _tools.RODict({
+        "ID": 87010315,
+        "name": "禁言之书",
+        "level": 0,
+        "action": _87010315,
+        "removeAction": _87010315_remove,
+        "propList": _tools.ROList([['adjSilentEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010316: _tools.RODict({
+        "ID": 87010316,
+        "name": "丰饶的号角",
+        "level": 0,
+        "action": _87010316,
+        "removeAction": _87010316_remove,
+        "propList": _tools.ROList([['adjSilentAnti', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010317: _tools.RODict({
+        "ID": 87010317,
+        "name": "古神拳套",
+        "level": 0,
+        "action": _87010317,
+        "removeAction": _87010317_remove,
+        "propList": _tools.ROList([['adjKnockEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010318: _tools.RODict({
+        "ID": 87010318,
+        "name": "幻兽尾羽",
+        "level": 0,
+        "action": _87010318,
+        "removeAction": _87010318_remove,
+        "propList": _tools.ROList([['adjKnockAnti', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010319: _tools.RODict({
+        "ID": 87010319,
+        "name": "冰封圣杯",
+        "level": 0,
+        "action": _87010319,
+        "removeAction": _87010319_remove,
+        "propList": _tools.ROList([['adjFrozenEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010320: _tools.RODict({
+        "ID": 87010320,
+        "name": "不灭的火炬",
+        "level": 0,
+        "action": _87010320,
+        "removeAction": _87010320_remove,
+        "propList": _tools.ROList([['adjFrozenAnti', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010321: _tools.RODict({
+        "ID": 87010321,
+        "name": "雪国幻境",
+        "level": 0,
+        "action": _87010321,
+        "removeAction": _87010321_remove,
+        "propList": _tools.ROList([['adjSlowEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010322: _tools.RODict({
+        "ID": 87010322,
+        "name": "远航的风帆",
+        "level": 0,
+        "action": _87010322,
+        "removeAction": _87010322_remove,
+        "propList": _tools.ROList([['adjSlowAnti', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010323: _tools.RODict({
+        "ID": 87010323,
+        "name": "颂诗竖琴",
+        "level": 0,
+        "action": _87010323,
+        "removeAction": _87010323_remove,
+        "propList": _tools.ROList([['adjPushEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010324: _tools.RODict({
+        "ID": 87010324,
+        "name": "秘银神灯",
+        "level": 0,
+        "action": _87010324,
+        "removeAction": _87010324_remove,
+        "propList": _tools.ROList([['adjPushAnti', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010325: _tools.RODict({
+        "ID": 87010325,
+        "name": "招财荷包",
+        "level": 0,
+        "action": _87010325,
+        "removeAction": _87010325_remove,
+        "propList": _tools.ROList([['adjCopper', 0.1]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010326: _tools.RODict({
+        "ID": 87010326,
+        "name": "精灵的秘册",
+        "level": 0,
+        "action": _87010326,
+        "removeAction": _87010326_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.1]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87010327: _tools.RODict({
+        "ID": 87010327,
+        "name": "女神的灵药",
+        "level": 0,
+        "action": _87010327,
+        "removeAction": _87010327_remove,
+        "propList": _tools.ROList([['adjMedicineRate', 0.05]]),
         "desBuff": None,
         "score": 0
     }),

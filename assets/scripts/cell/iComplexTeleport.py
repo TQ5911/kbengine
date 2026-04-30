@@ -55,38 +55,38 @@ class IComplexTeleport(object):
     @gamedecorator.limitcall(1)
     def enterWorldLine(self, exposed, lineType, lineNo, desTelId):
         """进入大世界分线"""
-        INFO_MSG('enterWorldLine::~', lineType, lineNo, desTelId)
+        LOG_IFO('enterWorldLine::~', lineType, lineNo, desTelId)
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self._enterWorldLine(lineType, lineNo, desTelId, src)
 
     def _enterWorldLine(self, lineType, lineNo, desTelId, src, position=None, direction=None):
         """进入大世界分线"""
         if not self.canDoCompleteTeleport(canLeaveFromLine=True, noErrorMsg=True):
-            WARNING_MSG('_enterWorldLine:: can\'t enter space from current spaceNo', self.spaceNo)
+            LOG_WARN('_enterWorldLine:: can\'t enter space from current spaceNo', self.spaceNo)
             return
-        if lineNo >= utils.getLineMaxNumber(gameconst.MapIdDef.mapWorldLine):
-            WARNING_MSG("_enterWorldLine:: can\'t enter lineNo", lineNo)
+        if lineNo >= utils.fetchLineMaxNumber(gameconst.MapIdDef.mapWorldLine):
+            LOG_WARN("_enterWorldLine:: can\'t enter lineNo", lineNo)
             return
-        if formula.spaceInWorldLine(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo):
             # NOTE(): 客户端不允许在大世界接口使用·enterWorldLine·重新进入大世界
-            WARNING_MSG("_enterWorldLine:: can\'t enter line if already in worldline", lineNo, self.spaceNo)
+            LOG_WARN("_enterWorldLine:: can\'t enter line if already in worldline", lineNo, self.spaceNo)
             return
 
         self.doEnterWorldLine(lineType, lineNo, src, desTelId, position, direction)
 
     def doEnterWorldLine(self, lineType, lineNo, src, desTelId, position=None, direction=None):
-        INFO_MSG("doEnterWorldLine::", lineType, lineNo, src, desTelId, position, direction)
+        LOG_IFO("doEnterWorldLine::", lineType, lineNo, src, desTelId, position, direction)
         lContext = {'extra': {}}
         eContext = {'lineNo': lineNo, 'lineType': lineType}
         context = {'l': lContext, 'e': eContext, 'src': src}
         options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
 
-        spaceNo = formula.getLineSpaceNo(lineType, lineNo)
+        spaceNo = formula.combineLineSpaceNo(lineType, lineNo)
         if desTelId:
             telEnt = utils.getTeleporterByID(desTelId, spaceNo)
             if telEnt:
                 entityData = utils.getDunModuleData(lineType)
-                telInfo = entityData.get(str(utils.getGidFromGameEntityId(telEnt.gameEntityId)), None)
+                telInfo = entityData.get(str(utils.parseGidFromGameEntityId(telEnt.gameEntityId)), None)
                 if telInfo:
                     dstPos = (telInfo['PosX'], telInfo['PosY'], telInfo['PosZ'])
                     eContext.setdefault('overwrite', {}).update({'position': dstPos})
@@ -99,9 +99,9 @@ class IComplexTeleport(object):
         canLeave = self.packageComplexTeleportLeaveData(lContext, canLeaveFromLine=True)
         if not canLeave:
             if canLeave.extra not in gameconst.CompleteTeleportLeaveFailedReason.COLL_USEROPRERRNO:
-                gameengine.reportCritical('enterWorldLine::fatal error when try to enter world line', self.spaceNo, context)
+                gameengine.panicStack('enterWorldLine::fatal error when try to enter world line', self.spaceNo, context)
             else:
-                WARNING_MSG("enterWorldLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
+                LOG_WARN("enterWorldLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
             return
 
         if not self.onCheckMapUnlocked(lineType):
@@ -110,7 +110,7 @@ class IComplexTeleport(object):
         self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     def switchSelfLine(self, lineNo, src):
-        INFO_MSG("switchSelfLine::", lineNo, src)
+        LOG_IFO("switchSelfLine::", lineNo, src)
         assert lineNo >= 0
         lContext = {'extra': {}}
         eContext = {'lineNo': lineNo}
@@ -120,54 +120,54 @@ class IComplexTeleport(object):
         canLeave = self.packageComplexTeleportLeaveData(lContext, canLeaveFromLine=True)
         if not canLeave:
             if canLeave.extra not in gameconst.CompleteTeleportLeaveFailedReason.COLL_USEROPRERRNO:
-                gameengine.reportCritical('switchSelfLine::fatal error when try to enter world line', self.spaceNo, context)
+                gameengine.panicStack('switchSelfLine::fatal error when try to enter world line', self.spaceNo, context)
             else:
-                WARNING_MSG("switchSelfLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
+                LOG_WARN("switchSelfLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
             return
 
         fromSpaceNo = self.spaceNo
-        fromSpaceLineNo = formula.getLineNo(fromSpaceNo)
+        fromSpaceLineNo = formula.parseLineNo(fromSpaceNo)
         if fromSpaceLineNo == lineNo:
-            gameengine.reportCritical('switchSelfLine::cant enter smae lineno', fromSpaceNo, fromSpaceLineNo, lineNo)
+            gameengine.panicStack('switchSelfLine::cant enter smae lineno', fromSpaceNo, fromSpaceLineNo, lineNo)
             return
 
         if not self._checkSwitchLine(lineNo):
-            ERROR_MSG("switchSelfLine:: check switch line failed", fromSpaceNo, fromSpaceLineNo, lineNo)
+            LOG_ERR("switchSelfLine:: check switch line failed", fromSpaceNo, fromSpaceLineNo, lineNo)
             return
 
-        toSpaceNo = formula.getLineSpaceNo(formula.getMapId(fromSpaceNo), lineNo)
+        toSpaceNo = formula.combineLineSpaceNo(formula.fetchMapId(fromSpaceNo), lineNo)
         self.teleportFromSpaceToSpace(self.spaceNo, toSpaceNo, options=options, context=context)
 
     @property
     def lastTeleportSpaceNoRecord(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.lastTeleportSpaceNoRecord, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.lastTeleportSpaceNoRecord, 0)
 
     @lastTeleportSpaceNoRecord.setter
     def lastTeleportSpaceNoRecord(self, spaceNo):
-        self.setTempMiscProp(gameconst.AvatarProps.lastTeleportSpaceNoRecord, spaceNo)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.lastTeleportSpaceNoRecord, spaceNo)
 
     @property
     def lastTeleportWorldlinePosRecord(self):
-        return self.getPersistentMiscProp(gameconst.AvatarProps.lastTeleportWorldlinePosRecord, 0)
+        return self.getPersistentMiscProp(gameconst.EntityPropsEnum.lastTeleportWorldlinePosRecord, 0)
 
     @lastTeleportWorldlinePosRecord.setter
     def lastTeleportWorldlinePosRecord(self, position):
-        self.setPersistentMiscProp(gameconst.AvatarProps.lastTeleportWorldlinePosRecord, position)
+        self.setPersistentMiscProp(gameconst.EntityPropsEnum.lastTeleportWorldlinePosRecord, position)
 
     @property
     def complexTeleportTypeFnMap(self):
         return gameglobal.complexTeleportTypeFnMap
 
     def getTeleportOutsideRecord(self):
-        _m_rcdDic = self.getPersistentMiscProp(gameconst.AvatarProps.outsideRecords)
+        _m_rcdDic = self.getPersistentMiscProp(gameconst.EntityPropsEnum.outsideRecords)
         if _m_rcdDic is None or not isinstance(_m_rcdDic, collections.OrderedDict):
             _m_rcdDic = collections.OrderedDict()
-            self.setPersistentMiscProp(gameconst.AvatarProps.outsideRecords, _m_rcdDic)
+            self.setPersistentMiscProp(gameconst.EntityPropsEnum.outsideRecords, _m_rcdDic)
         return _m_rcdDic
 
     def updateTeleportOutsideRecord(self, outRcd):
         _m_rcdDic = self.getTeleportOutsideRecord()
-        _m_mapId = formula.getMapId(outRcd.spaceNo)
+        _m_mapId = formula.fetchMapId(outRcd.spaceNo)
         _m_rcdDic.pop(_m_mapId, None)
         _m_rcdDic[_m_mapId] = outRcd
         return _m_rcdDic
@@ -185,24 +185,24 @@ class IComplexTeleport(object):
             self.updateTeleportOutsideRecord(_m_outsideRecord)
 
     def tryUnRegiTeleportOutsideRecord(self, spaceNo):
-        m_mapId = formula.getMapId(spaceNo)
+        m_mapId = formula.fetchMapId(spaceNo)
         self.popTeleportOutsideRecord(m_mapId)
 
     def tryGetTeleportOutesideRecord(self, spaceNo, default=None):
-        return self.getTeleportOutsideRecord().get(formula.getMapId(spaceNo), default)
+        return self.getTeleportOutsideRecord().get(formula.fetchMapId(spaceNo), default)
 
     def _shouldRecordTeleportOutsideRecord(self, spaceNo, teleportType):
         if teleportType != gameconst.ComplexTeleportType.ENTER:
             return False
 
-        m_mapId = formula.getMapId(spaceNo)
+        m_mapId = formula.fetchMapId(spaceNo)
         if m_mapId in gameconst.MapIdDef.mapWorldSet:
             return True
 
         return False
 
     def tryGetLastTeleportOutesideRecord(self, fromSpaceNo, spaceType=0):
-        # if gameconst.DungeonType.isBigWorldDungeon(spaceType):
+        # if gameconst.DungeonTypeJudge.isBigWorldDungeon(spaceType):
         #     return gameconst.MapIdDef.mapUnknown, None
 
         _m_records = self.getTeleportOutsideRecord()
@@ -221,11 +221,11 @@ class IComplexTeleport(object):
                                         canLeaveFromSingleDungeon=True, canLeaveFromTeamDungeon=True,
                                         canLeaveFromRaidDungeon=True,
                                         noErrorMsg=False, **options):
-        DEBUG_MSG('packageComplexTeleportLeaveData::', self.spaceNo, leaveContext)
+        LOG_DBG('packageComplexTeleportLeaveData::', self.spaceNo, leaveContext)
 
         leaveFnName = self._spaceToComplexTeleportDefinedName(self.spaceNo)
         if not leaveFnName:
-            not noErrorMsg and ERROR_MSG('packageComplexTeleportLeaveData:: leave from current space un-supported', self.spaceNo)
+            not noErrorMsg and LOG_ERR('packageComplexTeleportLeaveData:: leave from current space un-supported', self.spaceNo)
             return gameclass.BoolResult(False, gameconst.CompleteTeleportLeaveFailedReason.UNDEFINED_FUNC)
         elif leaveFnName == 'worldLine':
             return gameclass.BoolResult(canLeaveFromLine, gameconst.CompleteTeleportLeaveFailedReason.ARGS_DEFINED)
@@ -263,7 +263,7 @@ class IComplexTeleport(object):
             leaveContext.update({'guildUUID': self.guildUUID, 'spaceMgrBox': self.spaceMgr.base, 'spaceMgrCell': self.spaceMgr})
             return gameclass.BoolResult(True, gameconst.CompleteTeleportLeaveFailedReason.ARGS_DEFINED)
         else:
-            not noErrorMsg and ERROR_MSG('packageComplexTeleportLeaveData:: leave from current space unknown', self.spaceNo, leaveFnName)
+            not noErrorMsg and LOG_ERR('packageComplexTeleportLeaveData:: leave from current space unknown', self.spaceNo, leaveFnName)
             return gameclass.BoolResult(False, gameconst.CompleteTeleportLeaveFailedReason.UNDEFINED_SPACE)
 
     def _fetchCommonLeavePosAndDir(self, spaceSpaceNo, toSpaceNo, options, context):
@@ -275,17 +275,17 @@ class IComplexTeleport(object):
                 return m_pos, m_dir, m_spaceNo
 
         elif options.teleportType == gameconst.ComplexTeleportType.ENTER:
-            if formula.spaceInWorldLine(toSpaceNo):
+            if formula.inWorldLineScene(toSpaceNo):
                 _m_outRecord = self.tryGetTeleportOutesideRecord(toSpaceNo)
                 if _m_outRecord:
                     m_pos, m_dir = _m_outRecord.position, _m_outRecord.direction
-                    m_spaceNo = formula.getLineSpaceNo(formula.getLineType(toSpaceNo))
+                    m_spaceNo = formula.combineLineSpaceNo(formula.parseLineType(toSpaceNo))
                     return m_pos, m_dir, m_spaceNo
 
-        m_pos = formula.whatSpaceBornPoint(toSpaceNo)
+        m_pos = formula.getSpaceBornPoint(toSpaceNo)
         m_dir = (0, 0, 0)
-        if formula.spaceInWorldLine(toSpaceNo):
-            m_spaceNo = formula.getLineSpaceNo(formula.getLineType(toSpaceNo))
+        if formula.inWorldLineScene(toSpaceNo):
+            m_spaceNo = formula.combineLineSpaceNo(formula.parseLineType(toSpaceNo))
         else:
             m_spaceNo = toSpaceNo
         return m_pos, m_dir, m_spaceNo
@@ -304,17 +304,17 @@ class IComplexTeleport(object):
             spaceType {int} -- 指明当前spaceType, 大世界副本需要使用, 一般使用默认值即可 (default: {0})
             noCheckGamePlayLeave {bool} -- 强制玩家离开, 战场场景使用 (default: {True})
         """
-        INFO_MSG("doLeaveFromSapceToSpace::", fromSpaceNo, toSpaceNo, options, context, spaceType, noCheckGamePlayLeave)
+        LOG_IFO("doLeaveFromSapceToSpace::", fromSpaceNo, toSpaceNo, options, context, spaceType, noCheckGamePlayLeave)
         lContext, eContext = context['l'], context['e']
         canLeave = self.packageComplexTeleportLeaveData(lContext, judgeLeaveSrc=context.get('src'))
         if not canLeave:
-            ERROR_MSG("doLeaveFromSapceToSpace:: can\'t package leave context", canLeave,
+            LOG_ERR("doLeaveFromSapceToSpace:: can\'t package leave context", canLeave,
                       fromSpaceNo, toSpaceNo, options, context, spaceType, noCheckGamePlayLeave,)
             return
 
         _m_mapId, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(fromSpaceNo, spaceType=spaceType)
         toSpaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else toSpaceNo
-        DEBUG_MSG('     doLeaveFromSapceToSpace, _m_outsideRecord:', _m_mapId, _m_outsideRecord)
+        LOG_DBG('     doLeaveFromSapceToSpace, _m_outsideRecord:', _m_mapId, _m_outsideRecord)
         self.teleportFromSpaceToSpace(self.spaceNo, toSpaceNo, options=options, context=context)
 
     def canDoCompleteTeleport(self, **options):
@@ -386,21 +386,21 @@ class IComplexTeleport(object):
 
     @staticmethod
     def _spaceToComplexTeleportDefinedName(spaceNo):
-        if formula.isLineSpace(spaceNo):
+        if formula.inLineScene(spaceNo):
             return 'worldLine'
-        elif formula.isSingleDungeonSpace(spaceNo):
+        elif formula.inSingleDungeonScene(spaceNo):
             return 'singleDungeon'
-        elif formula.isTeamDungeonSpace(spaceNo):
+        elif formula.inTeamDungeonScene(spaceNo):
             return 'teamDungeon'
-        elif formula.isRaidDungeonSpace(spaceNo):
+        elif formula.inRaidDungeonScene(spaceNo):
             return 'raidDungeon'
-        elif formula.isCubeSpace(spaceNo):
+        elif formula.inCubeScene(spaceNo):
             return 'cube'
-        elif formula.isWonderLandSpace(spaceNo):
+        elif formula.inWonderLandScene(spaceNo):
             return 'wonderLand'
-        elif formula.isSiegeWarSpace(spaceNo):
+        elif formula.inSiegeWarScene(spaceNo):
             return 'siegeWar'
-        elif formula.isGuildBossDungeonSpace(spaceNo):
+        elif formula.inGuildBossDungeonScene(spaceNo):
             return 'guildBossDungeon'
         else:
             return ''
@@ -410,7 +410,7 @@ class IComplexTeleport(object):
             return None
         definedName = self._spaceToComplexTeleportDefinedName(spaceNo)
         if not definedName:
-            ERROR_MSG('_getComplexTeleportSpaceMethods:: spaceNo not support', spaceNo)
+            LOG_ERR('_getComplexTeleportSpaceMethods:: spaceNo not support', spaceNo)
             return None
         complexTeleportTypeFnMap = self.complexTeleportTypeFnMap
         return {k: getattr(self, v, None) for k, v in complexTeleportTypeFnMap[definedName].items()}
@@ -420,7 +420,7 @@ class IComplexTeleport(object):
         kwargs.setdefault("castTime", 3)
         return self._commonNeedCast(
             CCD.datas.teleportCast,
-            gameconst.State.Teleporting,
+            gameconst.StateEnum.Teleporting,
             gameconst.CastType.teleport,
             callbackFn, callbackArgs,
             **kwargs)
@@ -432,25 +432,25 @@ class IComplexTeleport(object):
 
     def teleportFromSpaceToSpace(self, fromSpaceNo, toSpaceNo,
                                  options=complexTeleportOption.ComplexTeleportOptions(),
-                                 context=None):
+                                 context=None, failedFunc='', failedArgs=None):
         assert context
 
         if not utils.checkCanChangeSceneAndShowMsg(self, fromSpaceNo, toSpaceNo):
-            ERROR_MSG('teleportFromSpaceToSpace:: can\'t teleport', fromSpaceNo, toSpaceNo)
+            LOG_ERR('teleportFromSpaceToSpace:: can\'t teleport', fromSpaceNo, toSpaceNo)
             return
 
         lineNo = -1
         # NOTE(): 切换至大世界分线特殊情况处理，如果不确定切换分线，则不在这里断言
-        if formula.spaceInWorldLine(toSpaceNo):
+        if formula.inWorldLineScene(toSpaceNo):
             lineType = context['e'].get('lineType', -1)
             lineNo = context['e'].get('lineNo', -1)
             if lineNo >= 0 and lineType >= 0:
-                toSpaceNo = formula.getLineSpaceNo(lineType, lineNo)
+                toSpaceNo = formula.combineLineSpaceNo(lineType, lineNo)
 
         if fromSpaceNo == toSpaceNo:
-            gameengine.reportCritical('teleportFromSpaceToSpace:: {} == {}, can\'t teleport, lineNo={}', fromSpaceNo, toSpaceNo, lineNo)
+            gameengine.panicStack('teleportFromSpaceToSpace:: {} == {}, can\'t teleport, lineNo={}', fromSpaceNo, toSpaceNo, lineNo)
             return
-        INFO_MSG('teleportFromSpaceToSpace:: {} -> {}, options={}, context={}, lineNo={}'.format(
+        LOG_IFO('teleportFromSpaceToSpace:: {} -> {}, options={}, context={}, lineNo={}'.format(
             fromSpaceNo, toSpaceNo, options, context, context['e'].get('lineNo', -1)))
 
         src = context.get('src')
@@ -459,7 +459,7 @@ class IComplexTeleport(object):
         # 已知单人场景:
         #   1. DONE: 单人副本
         if context.get('hasCast') \
-                or not utils.isComplexTeleportNeedCast(fromSpaceNo, toSpaceNo, options.teleportType, src, owner=self):
+                or not utils.checkComplexTeleportNeedCast(fromSpaceNo, toSpaceNo, options.teleportType, src, owner=self):
             self.teleportFromSpaceToSpaceContinue(fromSpaceNo, toSpaceNo, options, context)
 
         else:
@@ -467,7 +467,7 @@ class IComplexTeleport(object):
             self.enterSpaceCommonNeedCast(
                 "teleportFromSpaceToSpaceContinue",
                 (fromSpaceNo, toSpaceNo, options, context),
-                castTime=3)
+                castTime=3, failedFunc=failedFunc, failedArgs=failedArgs)
 
     def teleportFromSpaceToSpaceContinue(self, fromSpaceNo, toSpaceNo,
                                  options=complexTeleportOption.ComplexTeleportOptions(),
@@ -477,7 +477,7 @@ class IComplexTeleport(object):
 
         if not fromSpaceMethods or not toSpaceMethods:
             if not gameconfig.isCrossServer():
-                ERROR_MSG('teleportFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', fromSpaceNo, toSpaceNo)
+                LOG_ERR('teleportFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', fromSpaceNo, toSpaceNo)
                 return
 
         _enum = gameconst.ComplexTeleportMethodTypeEnum
@@ -497,11 +497,11 @@ class IComplexTeleport(object):
                 r = fn(fromSpaceNo, toSpaceNo, options, context)
             except:
                 _gotErr = True
-                gameengine.reportCritical('teleportFromSpaceToSpace:: fn exception got')
+                gameengine.panicStack('teleportFromSpaceToSpace:: fn exception got')
             else:
                 if not r:
                     # NOTE(): errorMSg由方法内部处理并报出
-                    WARNING_MSG('teleportFromSpaceToSpace:: pre-enter failed',
+                    LOG_WARN('teleportFromSpaceToSpace:: pre-enter failed',
                                 fromSpaceNo, toSpaceNo, options, context)
                     return
 
@@ -511,11 +511,11 @@ class IComplexTeleport(object):
         # overwrite toSpaceNo to context defined
         _orgToSpaceNo = toSpaceNo
         if context['spaceNo'] != toSpaceNo:
-            WARNING_MSG("teleportFromSpaceToSpaceContinue:: overwrite toSapceNo {} => {}".format(
+            LOG_WARN("teleportFromSpaceToSpaceContinue:: overwrite toSapceNo {} => {}".format(
                 toSpaceNo, context['spaceNo']))
             toSpaceNo = context['spaceNo']
 
-        INFO_MSG('teleportFromSpaceToSpaceContinue:: {} -> {} ==> {}, lineNo={}, options={}, context={}'.format(
+        LOG_IFO('teleportFromSpaceToSpaceContinue:: {} -> {} ==> {}, lineNo={}, options={}, context={}'.format(
             fromSpaceNo, _orgToSpaceNo, toSpaceNo, context['e'].get('lineNo', -1), options, context))
 
         src = context.get('src')
@@ -525,11 +525,11 @@ class IComplexTeleport(object):
         cbArgs = (fromSpaceNo, toSpaceNo, options, context)
         failCB = 'onTeleportFromSpaceToLineSpaceFail'
 
-        if formula.isLineSpace(toSpaceNo):
-            lineType = formula.getMapId(toSpaceNo)
+        if formula.inLineScene(toSpaceNo):
+            lineType = formula.fetchMapId(toSpaceNo)
             lineNo = context['e'].get('lineNo', -1)
             # overwrite toSpaceNo
-            toSpaceNo = formula.getLineSpaceNo(lineType, lineNo=lineNo)
+            toSpaceNo = formula.combineLineSpaceNo(lineType, lineNo=lineNo)
             cbArgs = (fromSpaceNo, toSpaceNo, options, context)
             extra = {'callback': cbFn, 'callbackArgs': cbArgs, 'failCallback': failCB}
             if 'hasCast' in context:
@@ -538,7 +538,7 @@ class IComplexTeleport(object):
             if sMath.distance2D(self.position, position) < 1:
                 direction = self.direction
 
-            fromLineType = formula.getMapId(fromSpaceNo)
+            fromLineType = formula.fetchMapId(fromSpaceNo)
             if fromLineType != lineType:
                 extra['toLine'] = True # 如果从副本进入大世界只有走这里
                 extra["telToMainCityWhenFull"] = True
@@ -557,8 +557,8 @@ class IComplexTeleport(object):
             return
         srcAOI = gameconst.DEFAULT_AOI
         if fromSpaceNo != 0 or not gameconfig.isCrossServer():
-            srcAOI = GP_GP.datas[formula.getMapId(fromSpaceNo)]['AOI']
-        dstAOI = GP_GP.datas[formula.getMapId(toSpaceNo)]['AOI']
+            srcAOI = GP_GP.datas[formula.fetchMapId(fromSpaceNo)]['AOI']
+        dstAOI = GP_GP.datas[formula.fetchMapId(toSpaceNo)]['AOI']
         if dstAOI != 0 and srcAOI == dstAOI:
             return
 
@@ -573,7 +573,7 @@ class IComplexTeleport(object):
         if abs(curAOI - dstAOI) < 0.001:
             return
 
-        DEBUG_MSG('will change AOI:', curAOI, dstAOI, isBefore)
+        LOG_DBG('will change AOI:', curAOI, dstAOI, isBefore)
         self.setViewRadius(dstAOI, gameconst.DEFAULT_HYST)
 
     def onTeleportFromSpaceToSpaceSucceed(self, fromSpaceNo, toSpaceNo,
@@ -581,7 +581,7 @@ class IComplexTeleport(object):
                                           context=None):
         assert context
 
-        INFO_MSG('onTeleportFromSpaceToSpaceSucceed:: {} -> {} ==> {}, lineNo={}, options={}, context={}'.format(
+        LOG_IFO('onTeleportFromSpaceToSpaceSucceed:: {} -> {} ==> {}, lineNo={}, options={}, context={}'.format(
             fromSpaceNo, toSpaceNo, self.spaceNo, context['e'].get('lineNo', -1), options, context))
 
 
@@ -590,7 +590,7 @@ class IComplexTeleport(object):
 
         if not fromSpaceMethods or not toSpaceMethods:
             if not gameconfig.isCrossServer():
-                ERROR_MSG('teleportFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', fromSpaceNo, toSpaceNo)
+                LOG_ERR('teleportFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', fromSpaceNo, toSpaceNo)
                 return
 
         _enum = gameconst.ComplexTeleportMethodTypeEnum
@@ -614,7 +614,7 @@ class IComplexTeleport(object):
                 fn(fromSpaceNo, toSpaceNo, options, context)
             except:
                 _gotErr = True
-                gameengine.reportCritical('onTeleportFromSpaceToSpaceSucceed:: fn exception got')
+                gameengine.panicStack('onTeleportFromSpaceToSpaceSucceed:: fn exception got')
 
         for postFn in postLeaveMethods:
             if not postFn:
@@ -624,15 +624,15 @@ class IComplexTeleport(object):
                 postFn(fromSpaceNo, toSpaceNo, options, context)
             except:
                 _gotErr = True
-                gameengine.reportCritical('onTeleportFromSpaceToSpaceSucceed:: postFn exception got')
+                gameengine.panicStack('onTeleportFromSpaceToSpaceSucceed:: postFn exception got')
 
         self._changeSpacSetRadius(fromSpaceNo, toSpaceNo, False)
         self._changeSpacRecycleMount(context.get('isFromEdge', False))
 
-        _toGamePlayId = formula.getDungeonNoBySpaceNo(toSpaceNo)
-        _fromGamePlayId = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        _toGamePlayId = formula.parseDungeonNoBySpaceNo(toSpaceNo)
+        _fromGamePlayId = formula.parseDungeonNoBySpaceNo(fromSpaceNo)
         if self.tryRecoverHPAfterEnterSpace(_toGamePlayId) or self.tryRecoverHPAfterLeaveSpace(_fromGamePlayId):
-            self.modifyHP(self.fullHp, self.id, gameconst.SourceType.Teleport, self.id)
+            self.modifyHP(self.fullHp, self.id, gameconst.SourceType.SrcTpTeleport, self.id)
 
         callback = context.get('callback', None)
         callbackArgs = context.get('callbackArgs', None)
@@ -645,7 +645,7 @@ class IComplexTeleport(object):
     def onTeleportFromSpaceToLineSpaceFail(self, checkCode, fromSpaceNo, toSpaceNo,
                                           options: complexTeleportOption.ComplexTeleportOptions,
                                           context=None):
-        WARNING_MSG("onTeleportFromSpaceToLineSpaceFail::", checkCode, fromSpaceNo, toSpaceNo, options, context)
+        LOG_WARN("onTeleportFromSpaceToLineSpaceFail::", checkCode, fromSpaceNo, toSpaceNo, options, context)
         self.releaseTeleportLock(self.teleportLock)
     # ----------------------------------------------------------------------
     # RAID DUNGEON
@@ -653,8 +653,8 @@ class IComplexTeleport(object):
 
     @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
     def _beforeEnter_raidDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeEnter_raidDungeon::~')
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        LOG_IFO('_beforeEnter_raidDungeon::~')
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
 
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
@@ -663,10 +663,10 @@ class IComplexTeleport(object):
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
         if not position:
-            WARNING_MSG('_beforeEnter_raidDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
+            LOG_WARN('_beforeEnter_raidDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
             position = self.position
 
-        direction = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+        direction = self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
 
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
@@ -683,8 +683,8 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_raidDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_raidDungeon::~')
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        LOG_IFO('_afterEnter_raidDungeon::~')
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
         spaceUUID = context['e']['spaceUUID']
         spaceBox = context['e']['spaceBox']
         spaceMgrBox = context['e']['spaceMgrBox']
@@ -702,7 +702,7 @@ class IComplexTeleport(object):
         # NOTE(): 进入副本前复活会导致hp同步不到客户端导致显示问题, 先放在后面
         if self.isDie():
             self._relive()
-            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # callback base
         extra['raidId'] = self.raidId
@@ -726,24 +726,12 @@ class IComplexTeleport(object):
         dungeonStub = gameengine.getDungeonStubBySpaceNo(toSpaceNo)
         dungeonStub.enterDungeonSpaceSucc(toSpaceNo, self.base, self.gbId, self.raidUUID, extra)
 
-        # if dataUtils.isDongfuWarDungeon(dungeonNo):
-        #     actName = dataUtils.getActName(gameconst.ACT_ID_CONST.ACTIVITY_GUILD_DONGFU_WAR_ID)
-        #     detail = {
-        #         'guildUUID':self.guildUUID,
-        #         'raidUUID':self.raidUUID,
-        #         'spaceNo':toSpaceNo,
-        #     }
-        #     gamelog.makeDongfuWarActLog(self.gbId, gameconst.ACT_ID_CONST.ACTIVITY_GUILD_DONGFU_WAR_ID, actName,
-        #                                 gameconst.ActivityLogType.EnterSucc, detail)
-        #     self.base.activityComplete(gameconst.ACT_ID_CONST.ACTIVITY_GUILD_DONGFU_WAR_ID)
-        #     teamMemNum = self.teamInfo.howManyMember() if self.teamInfo else 1
-        #     self.base.onEnterDongfuWarDungeon(dungeonNo, toSpaceNo, self.teamId, teamMemNum, self.teamId==0)
         gameengine.getRaidStub(self.raidUUID).setInDungeon(self.raidUUID)
         return True
 
     def _beforeLeave_raidDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_raidDungeon::~')
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        LOG_IFO('_beforeLeave_raidDungeon::~')
+        dungeonNo = formula.parseDungeonNoBySpaceNo(fromSpaceNo)
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.onLeaveWholeAureoleSpace(self.id)
@@ -752,20 +740,20 @@ class IComplexTeleport(object):
         self.tryDisableAutoCombatWhenLeaveSpace(dungeonNo)
 
         # remove dungeon buff
-        self.removeBuffByTag(gameconst.BuffTag.Dungeon)
+        self.removeBuffByTag(gameconst.BuffTag.TagDungeon)
 
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
 
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         # fix big world position
         bigWorldDungeonLeaveType = self._getPrmBydungeonNo(dungeonNo, 'leave')
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
-        if dungeonSpaceType and gameconst.DungeonType.isBigWorldDungeon(dungeonSpaceType) \
+        if dungeonSpaceType and gameconst.DungeonTypeJudge.isBigWorldDungeon(dungeonSpaceType) \
                 and not bigWorldDungeonLeaveType:
             leave = GP_GP.datas[dungeonNo].get('leave', 0)
             if leave == 0:
@@ -782,7 +770,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_raidDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_raidDungeon::~')
+        LOG_IFO('_afterLeave_raidDungeon::~')
         raidUUID = context['l']['raidUUID']
         spaceMgrBox = context['l']['spaceMgrBox']
         extra = context['l']['extra']
@@ -798,7 +786,7 @@ class IComplexTeleport(object):
 
         if self.isDie():
             self._relive()
-            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         self.selfStopAutoCombat('leave raid dungeon')
         return True
@@ -811,28 +799,28 @@ class IComplexTeleport(object):
 
     @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
     def _beforeEnter_singleDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        WARNING_MSG('_beforeEnter_singleDungeon::~')
+        LOG_WARN('_beforeEnter_singleDungeon::~')
         extra = context['e']['extra']
 
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
 
         position = extra.get('position')
         if not position:
-            if gameconst.DungeonType.isNormalSingleDungeon(dungeonSpaceType, dungeonEnterType):
+            if gameconst.DungeonTypeJudge.isNormalSingleDungeon(dungeonSpaceType, dungeonEnterType):
                 # common dungeon un-support no entrance configs
-                gameengine.reportCritical('_beforeEnter_singleDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
+                gameengine.panicStack('_beforeEnter_singleDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
                 return
             else:
-                WARNING_MSG('_beforeEnter_singleDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
+                LOG_WARN('_beforeEnter_singleDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
                 position = self.position
 
         direction = extra.get('direction')
         if not direction:
-            direction = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+            direction = self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
         else:
@@ -847,7 +835,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_singleDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_singleDungeon::~')
+        LOG_IFO('_afterEnter_singleDungeon::~')
         spaceMgrBox = context['e']['spaceMgrBox']
         spaceMgrId = spaceMgrBox.id
         playerBox = context['e']['playerBox']
@@ -860,7 +848,7 @@ class IComplexTeleport(object):
         self.releaseGlobalTeleportLock('telsucc')
 
         # create dungeon trap
-        dungeonNo = formula.getMapId(toSpaceNo)
+        dungeonNo = formula.fetchMapId(toSpaceNo)
         self._createSingleDungeonTrap(dungeonNo)
 
         self.spaceMgrId = spaceMgrId
@@ -871,7 +859,7 @@ class IComplexTeleport(object):
         # NOTE(): 进入副本前复活会导致hp同步不到客户端导致显示问题, 先放在后面
         if self.isDie():
             self._relive()
-            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # send real end time to avatar self client
         endTime = int(spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
@@ -887,32 +875,32 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_singleDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_singleDungeon::~')
+        LOG_IFO('_beforeLeave_singleDungeon::~')
         overwrite = context['l'].get('overwrite')
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(fromSpaceNo)
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.onLeaveWholeAureoleSpace(self.id)
 
         self.tryDisableAutoCombatWhenLeaveSpace(dungeonNo)
 
-        self.removeBuffByTag(gameconst.BuffTag.Dungeon)
+        self.removeBuffByTag(gameconst.BuffTag.TagDungeon)
 
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
         _m_outRecord = self.tryGetTeleportOutesideRecord(toSpaceNo)
         if _m_outRecord and _m_outRecord.isDie:
             context['needRelive'] = False
             if not self.isDie():
-                self.modifyHP(-self.hp, self.id, gameconst.SourceType.Default, self.id)
+                self.modifyHP(-self.hp, self.id, gameconst.SourceType.SrcTpDefault, self.id)
         else:
             if self.isDie():
                 self._relive()
-                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         dungeonPlayMode = spaceMgr.dungeonPlayMode.playMode if spaceMgr else gameconst.DungeonPlayModeEnum.UNKNOWN
@@ -920,7 +908,7 @@ class IComplexTeleport(object):
         # fix big world position
         bigWorldDungeonLeaveType = self._getPrmBydungeonNo(dungeonNo, 'leave')
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
-        if dungeonSpaceType and gameconst.DungeonType.isBigWorldDungeon(dungeonSpaceType) \
+        if dungeonSpaceType and gameconst.DungeonTypeJudge.isBigWorldDungeon(dungeonSpaceType) \
                 and not bigWorldDungeonLeaveType:
             leave = GP_GP.datas[dungeonNo].get('leave', 0)
             if leave == 0:
@@ -943,9 +931,9 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_singleDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_singleDungeon::~')
+        LOG_IFO('_afterLeave_singleDungeon::~')
         spaceMgrBox = context['l']['spaceMgrBox']
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(fromSpaceNo)
 
 
         self.base.onLeaveDungeon(self.spaceNo, fromSpaceNo)
@@ -953,9 +941,9 @@ class IComplexTeleport(object):
             spaceMgrBox.cell.onPlayerLeave(self.gbId, self.id, self.base)
         self.spaceMgrId = 0
 
-        if formula.isDungeonSpace(fromSpaceNo):
+        if formula.inDungeonScene(fromSpaceNo):
             gameengine.getDungeonStubByDungeonNo(
-                dungeonNo, gameconst.DungeonEnterType.SINGLE).leaveDungeonSpaceSucc(
+                dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE).leaveDungeonSpaceSucc(
                     fromSpaceNo, self.base, self.gbId, self.teamId, {'spaceNo': self.spaceNo,
                     'spaceUUID': context['l']['spaceUUID']})
         else:
@@ -963,7 +951,7 @@ class IComplexTeleport(object):
 
         # if self.isDie():
         #     self._relive()
-        #     self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+        #     self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         self.selfStopAutoCombat('leave single dungeon')
 
@@ -977,25 +965,25 @@ class IComplexTeleport(object):
 
     @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
     def _beforeEnter_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeEnter_teamDungeon::~')
+        LOG_IFO('_beforeEnter_teamDungeon::~')
         extra = context['e']['extra']
 
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
         position = extra.get("position") or self._getPrmBydungeonNo(dungeonNo, 'entrance')
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
         if not position:
-            if gameconst.DungeonType.isNormalTeamDungeon(dungeonSpaceType, dungeonEnterType):
+            if gameconst.DungeonTypeJudge.isNormalTeamDungeon(dungeonSpaceType, dungeonEnterType):
                 # common dungeon un-support no entrance configs
-                gameengine.reportCritical('_beforeEnter_teamDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
+                gameengine.panicStack('_beforeEnter_teamDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
                 return
             else:
-                WARNING_MSG('_beforeEnter_teamDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
+                LOG_WARN('_beforeEnter_teamDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
                 position = self.position
 
-        direction = extra.get("direction") or self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+        direction = extra.get("direction") or self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
 
@@ -1008,9 +996,9 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_teamDungeon::~')
+        LOG_IFO('_afterEnter_teamDungeon::~')
         spaceMgrBox = context['e']['spaceMgrBox']
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
         teamUUID = context['e']['teamUUID']
         extra = context['e']['extra']
 
@@ -1031,7 +1019,7 @@ class IComplexTeleport(object):
         # NOTE(): 进入副本前复活会导致hp同步不到客户端导致显示问题, 先放在后面
         if self.isDie():
             self._relive()
-            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # send real end time to avatar self client
         endTime = int(self.spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
@@ -1062,38 +1050,38 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_teamDungeon::~')
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        LOG_IFO('_beforeLeave_teamDungeon::~')
+        dungeonNo = formula.parseDungeonNoBySpaceNo(fromSpaceNo)
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.onLeaveWholeAureoleSpace(self.id)
 
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
-        if not gameconst.DungeonType.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
-            ERROR_MSG('error dungeonType: {}/{}'.format(dungeonNo, dungeonSpaceType))
+        if not gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
+            LOG_ERR('error dungeonType: {}/{}'.format(dungeonNo, dungeonSpaceType))
             return
 
         self.tryDisableAutoCombatWhenLeaveSpace(dungeonNo)
 
-        self.removeBuffByTag(gameconst.BuffTag.Dungeon)
+        self.removeBuffByTag(gameconst.BuffTag.TagDungeon)
 
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
         _m_outRecord = self.tryGetTeleportOutesideRecord(toSpaceNo)
         if _m_outRecord and _m_outRecord.isDie:
             context['needRelive'] = False
             if not self.isDie():
-                self.modifyHP(-self.hp, self.id, gameconst.SourceType.Default, self.id)
+                self.modifyHP(-self.hp, self.id, gameconst.SourceType.SrcTpDefault, self.id)
         else:
             if self.isDie():
                 self._relive()
-                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # dungeonPlayMode = spaceMgr.dungeonPlayMode.playMode if spaceMgr else gameconst.DungeonPlayModeEnum.UNKNOWN
 
         bigWorldDungeonLeaveType = self._getPrmBydungeonNo(dungeonNo, 'leave')
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
-        if dungeonSpaceType and gameconst.DungeonType.isBigWorldDungeon(dungeonSpaceType) \
+        if dungeonSpaceType and gameconst.DungeonTypeJudge.isBigWorldDungeon(dungeonSpaceType) \
                 and not bigWorldDungeonLeaveType:
             leave = GP_GP.datas[dungeonNo].get('leave', 0)
             if leave == 0:
@@ -1107,7 +1095,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1116,7 +1104,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_teamDungeon::~')
+        LOG_IFO('_afterLeave_teamDungeon::~')
         teamUUID = context['l']['teamUUID']
         spaceMgrBox = context['l']['spaceMgrBox']
 
@@ -1139,17 +1127,17 @@ class IComplexTeleport(object):
     # ----------------------------------------------------------------------
 
     def _beforeEnter_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeEnter_worldLine::~')
+        LOG_IFO('_beforeEnter_worldLine::~')
         context.setdefault('position', self.position)
         context.setdefault('direction', self.direction)
         context.setdefault('spaceNo', toSpaceNo)
 
-        if formula.getMapId(fromSpaceNo) == formula.getMapId(toSpaceNo):
+        if formula.fetchMapId(fromSpaceNo) == formula.fetchMapId(toSpaceNo):
             r = self.aquireTeleportLock(gameconst.TeleportLock.SWITCH_LINE)
         else:
             r = self.aquireTeleportLock(gameconst.TeleportLock.ENTER_LINE)
         if not r:
-            ERROR_MSG("_beforeEnter_worldLine:: aquire teleportlock failed", self.teleportLock, self.teleportLockRlsT)
+            LOG_ERR("_beforeEnter_worldLine:: aquire teleportlock failed", self.teleportLock, self.teleportLockRlsT)
             return r
 
         overwrite = context['e'].get('overwrite')
@@ -1164,7 +1152,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_worldLine::~')
+        LOG_IFO('_afterEnter_worldLine::~')
 
         self.releaseTeleportLock(gameconst.TeleportLock.ENTER_LINE)
         self.releaseGlobalTeleportLock('telsucc')
@@ -1173,9 +1161,9 @@ class IComplexTeleport(object):
         self.topSpeed = gameconst.TopSpeedType.NormalTopSpeed
 
         # 【【任务】离开场景关闭自动战斗对gamePlay全部生效】
-        self.tryEnableAutoCombatAfterEnterSpace(formula.getDungeonNoBySpaceNo(toSpaceNo))
+        self.tryEnableAutoCombatAfterEnterSpace(formula.parseDungeonNoBySpaceNo(toSpaceNo))
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             # clear all records
             self.clearTeleportOutsideRecord()
         if context.get('needRelive', True):
@@ -1183,11 +1171,11 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_worldLine::~')
+        LOG_IFO('_beforeLeave_worldLine::~')
 
         # 【【任务】离开场景关闭自动战斗对gamePlay全部生效】
-        self.tryDisableAutoCombatWhenLeaveSpace(formula.getDungeonNoBySpaceNo(fromSpaceNo))
-        if not formula.isLineSpace(toSpaceNo):
+        self.tryDisableAutoCombatWhenLeaveSpace(formula.parseDungeonNoBySpaceNo(fromSpaceNo))
+        if not formula.inLineScene(toSpaceNo):
             self._applyLeaveLineInternal(fromSpaceNo, 0, gameconst.POSITION_ZERO, gameconst.DIRECTION_ZERO)
 
         context['spaceMgrCell'] = self.spaceMgr
@@ -1195,7 +1183,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_worldLine::~', fromSpaceNo, toSpaceNo)
+        LOG_IFO('_afterLeave_worldLine::~', fromSpaceNo, toSpaceNo)
         context['spaceMgrCell'].onPlayerLeave(self.gbId, self.id, self.base)
         self.spaceMgrId = 0
 
@@ -1209,23 +1197,23 @@ class IComplexTeleport(object):
 
     @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_CUBE)
     def _beforeEnter_cube(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeEnter_cube::~')
+        LOG_IFO('_beforeEnter_cube::~')
         self.aquireTeleportLock(gameconst.TeleportLock.ENTER_CUBE)
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
         _extra = context['cube']
-        _dir = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+        _dir = self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
         if _extra.get('followPos'):
             context['position'] = _extra['followPos']
         else:
-            context['position'] = self._getEntranceByDungeonNo(formula.getMapId(toSpaceNo))
+            context['position'] = self._getEntranceByDungeonNo(formula.fetchMapId(toSpaceNo))
 
         context['direction'] = (0, 0, _dir * math.pi / 180) if _dir is not None else self.direction
         context['spaceNo'] = toSpaceNo
         return True
 
     def _afterEnter_cube(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_cube::~')
+        LOG_IFO('_afterEnter_cube::~')
         self.releaseTeleportLock(gameconst.TeleportLock.ENTER_CUBE)
         self.spaceMgrId = context['e']['spaceMgrId']
         self.spaceMgr.onPlayerEnter(self.id)
@@ -1239,16 +1227,17 @@ class IComplexTeleport(object):
             _dur = cube_config.datas['cubeNumTime']['value'] * 60
             self.cubeQuota.addCubeLeftTime(self, _dur)
             self.base.afterEnterCubeDeductTimes()
-
-        if not formula.isCubeSpace(fromSpaceNo):
             self.base.activityComplete(cube_config.datas['cubeActID']['value'])
+
+        if not formula.inCubeScene(fromSpaceNo):
+            self.base.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, cube_config.datas['cubeActID']['value'], 1)
 
         self._dealWithCubeKickTimer(fromSpaceNo, toSpaceNo)
         self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
-        _toMapId = formula.getMapId(toSpaceNo)
+        _toMapId = formula.fetchMapId(toSpaceNo)
         if dataUtils.isCubeCow(_toMapId):
-            _fromMapId = formula.getMapId(fromSpaceNo)
+            _fromMapId = formula.fetchMapId(fromSpaceNo)
             self.fromCubeMapId = _fromMapId
 
             _floor = cube_room.datas[_toMapId]['floor']
@@ -1269,13 +1258,13 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_cube(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_cube::~')
+        LOG_IFO('_beforeLeave_cube::~')
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
 
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1285,23 +1274,23 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_cube(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_cube::~')
+        LOG_IFO('_afterLeave_cube::~')
         _spaceMgrCell = context['l']['spaceMgrCell']
         _spaceMgrCell.onPlayerLeave(self.gbId, self.id, self.base)
 
         self.spaceMgrId = 0
         gameengine.getCubeStubBySpaceNo(fromSpaceNo).onLeaveCube(self.gbId, fromSpaceNo, toSpaceNo)
-        if not formula.isCubeSpace(toSpaceNo):
-            if self.getTempMiscProp(gameconst.AvatarProps.cubeAutoRenewSwitch) is not None:
+        if not formula.inCubeScene(toSpaceNo):
+            if self.getTempMiscProp(gameconst.EntityPropsEnum.cubeAutoRenewSwitch) is not None:
                 self._changeCubeAutoRenewSwitch(False, {})
 
             self.clearCubeRoomRewardRecord()
 
-        if not formula.isCubeSpace(toSpaceNo):
+        if not formula.inCubeScene(toSpaceNo):
             self._dealWithCubeKickTimer(fromSpaceNo, toSpaceNo)
             self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
-        _fromMapId = formula.getMapId(fromSpaceNo)
+        _fromMapId = formula.fetchMapId(fromSpaceNo)
         _floor = cube_room.datas[_fromMapId]['floor']
         LogTrackingMgr.LogTrackingMgr.Cube_Info(
             self.gbId,
@@ -1320,19 +1309,19 @@ class IComplexTeleport(object):
 
     @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_WONDERLAND)
     def _beforeEnter_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeEnter_wonderland::~')
+        LOG_IFO('_beforeEnter_wonderland::~')
         self.aquireTeleportLock(gameconst.TeleportLock.ENTER_WONDERLAND)
 
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
-        _dir = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
-        context['position'] = self._getEntranceByDungeonNo(formula.getMapId(toSpaceNo))
+        _dir = self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
+        context['position'] = self._getEntranceByDungeonNo(formula.fetchMapId(toSpaceNo))
         context['direction'] = (0, 0, _dir * math.pi / 180) if _dir is not None else self.direction
         context['spaceNo'] = toSpaceNo
         return True
 
     def _afterEnter_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_wonderland::~')
+        LOG_IFO('_afterEnter_wonderland::~')
         self.releaseTeleportLock(gameconst.TeleportLock.ENTER_WONDERLAND)
         self.spaceMgrId = context['e']['spaceMgrId']
         self.spaceMgr.onPlayerEnter(self.id)
@@ -1342,11 +1331,12 @@ class IComplexTeleport(object):
         if context.get('enterType') == gameconst.WONDER_LAND_ENTER_TYPE_TICKET:
             self.wonderLandQuota.addWonderLandLeftTime(self, WL_CD.datas['wonderLandNumTime']['value'] * 60)
             self.base.afterEnterWonderLandDeductTimes()
+            self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
 
-        self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
+        self.base.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, WL_CD.datas['wonderLandActID']['value'], 1)
         self._dealWithWonderLandTimer(fromSpaceNo, toSpaceNo)
 
-        _mapId = formula.getMapId(toSpaceNo)
+        _mapId = formula.fetchMapId(toSpaceNo)
         LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
             self.gbId,
             gameconfig.gameId(),
@@ -1357,13 +1347,13 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_wonderland::~')
+        LOG_IFO('_beforeLeave_wonderland::~')
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
 
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1373,7 +1363,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_wonderland::~')
+        LOG_IFO('_afterLeave_wonderland::~')
         _spaceMgrCell = context['l']['spaceMgrCell']
         _spaceMgrCell.onPlayerLeave(self.gbId, self.id, self.base)
 
@@ -1381,10 +1371,10 @@ class IComplexTeleport(object):
         gameengine.getWonderLandStubBySpaceNo(fromSpaceNo).onLeaveWonderLand(self.gbId)
         self.afterLeaveWonderLand()
 
-        if not formula.isWonderLandSpace(toSpaceNo):
+        if not formula.inWonderLandScene(toSpaceNo):
             self._dealWithWonderLandTimer(fromSpaceNo, toSpaceNo)
 
-        _mapId = formula.getMapId(fromSpaceNo)
+        _mapId = formula.fetchMapId(fromSpaceNo)
 
         LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
             self.gbId,
@@ -1404,10 +1394,10 @@ class IComplexTeleport(object):
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
         camp = self.siegeWarCamp
 
-        _dir = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+        _dir = self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
 
 
-        dunSData = utils.getDunStructureModuleData(formula.getMapId(toSpaceNo))
+        dunSData = utils.getDunStructModData(formula.fetchMapId(toSpaceNo))
         if camp == 1:
             d, *_ = dunSData['attackRevive'].values()
         elif camp == 2:
@@ -1419,19 +1409,19 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_siegeWar(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_siegeWar::~')
+        LOG_IFO('_afterEnter_siegeWar::~')
         self.spaceMgrId = context['e']['spaceMgrId']
         self.spaceMgr.onPlayerEnter(self.id)
         return True
 
     def _beforeLeave_siegeWar(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_siegeWar::~')
+        LOG_IFO('_beforeLeave_siegeWar::~')
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
 
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1441,7 +1431,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_siegeWar(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_siegeWar::~')
+        LOG_IFO('_afterLeave_siegeWar::~')
         _spaceMgrCell = context['l']['spaceMgrCell']
         _spaceMgrCell.onPlayerLeave(self.gbId, self.id, self.base)
 
@@ -1454,25 +1444,25 @@ class IComplexTeleport(object):
 
     @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
     def _beforeEnter_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeEnter_guildBossDungeon::~')
+        LOG_IFO('_beforeEnter_guildBossDungeon::~')
         extra = context['e']['extra']
 
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
         position = extra.get("position") or self._getPrmBydungeonNo(dungeonNo, 'entrance')
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
         if not position:
-            if gameconst.DungeonType.isNormalTeamDungeon(dungeonSpaceType, dungeonEnterType):
+            if gameconst.DungeonTypeJudge.isNormalTeamDungeon(dungeonSpaceType, dungeonEnterType):
                 # common dungeon un-support no entrance configs
-                gameengine.reportCritical('_beforeEnter_guildBossDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
+                gameengine.panicStack('_beforeEnter_guildBossDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
                 return
             else:
-                WARNING_MSG('_beforeEnter_guildBossDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
+                LOG_WARN('_beforeEnter_guildBossDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
                 position = self.position
 
-        direction = extra.get("direction") or self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+        direction = extra.get("direction") or self._getEntranceDirByDungeonNo(formula.fetchMapId(toSpaceNo))
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
 
@@ -1485,9 +1475,9 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterEnter_guildBossDungeon::~')
+        LOG_IFO('_afterEnter_guildBossDungeon::~')
         spaceMgrBox = context['e']['spaceMgrBox']
-        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(toSpaceNo)
         guildUUID = context['e']['guildUUID']
         extra = context['e']['extra']
 
@@ -1506,7 +1496,7 @@ class IComplexTeleport(object):
         # NOTE(): 进入副本前复活会导致hp同步不到客户端导致显示问题, 先放在后面
         if self.isDie():
             self._relive()
-            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # send real end time to avatar self client
         endTime = int(self.spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
@@ -1517,36 +1507,36 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_beforeLeave_guildBossDungeon::~')
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        LOG_IFO('_beforeLeave_guildBossDungeon::~')
+        dungeonNo = formula.parseDungeonNoBySpaceNo(fromSpaceNo)
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.onLeaveWholeAureoleSpace(self.id)
 
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
-        if not gameconst.DungeonType.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
-            ERROR_MSG('error dungeonType: {}/{}'.format(dungeonNo, dungeonSpaceType))
+        if not gameconst.DungeonTypeJudge.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
+            LOG_ERR('error dungeonType: {}/{}'.format(dungeonNo, dungeonSpaceType))
             return
 
         self.tryDisableAutoCombatWhenLeaveSpace(dungeonNo)
 
-        self.removeBuffByTag(gameconst.BuffTag.Dungeon)
+        self.removeBuffByTag(gameconst.BuffTag.TagDungeon)
 
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
         _m_outRecord = self.tryGetTeleportOutesideRecord(toSpaceNo)
         if _m_outRecord and _m_outRecord.isDie:
             context['needRelive'] = False
             if not self.isDie():
-                self.modifyHP(-self.hp, self.id, gameconst.SourceType.Default, self.id)
+                self.modifyHP(-self.hp, self.id, gameconst.SourceType.SrcTpDefault, self.id)
         else:
             if self.isDie():
                 self._relive()
-                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         bigWorldDungeonLeaveType = self._getPrmBydungeonNo(dungeonNo, 'leave')
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
-        if dungeonSpaceType and gameconst.DungeonType.isBigWorldDungeon(dungeonSpaceType) \
+        if dungeonSpaceType and gameconst.DungeonTypeJudge.isBigWorldDungeon(dungeonSpaceType) \
                 and not bigWorldDungeonLeaveType:
             leave = GP_GP.datas[dungeonNo].get('leave', 0)
             if leave == 0:
@@ -1560,7 +1550,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+        if formula.inLineScene(toSpaceNo) and not formula.inYanWuScene(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1569,7 +1559,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
-        INFO_MSG('_afterLeave_guildBossDungeon::~')
+        LOG_IFO('_afterLeave_guildBossDungeon::~')
         guildUUID = context['l']['guildUUID']
         spaceMgrBox = context['l']['spaceMgrBox']
 

@@ -37,14 +37,14 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             super(TeamDungeonStub, self).onTimer(tid, userArg)
 
     def _checkDestroyDungeonSpace(self):
-        now = utils.getNow()
-        # DEBUG_MSG('_checkDestroyDungeonSpace:: {}'.format(now))
+        now = utils.curTS()
+        # LOG_DBG('_checkDestroyDungeonSpace:: {}'.format(now))
         # teamStub.destroyTeamDungeonDelay args list
         needDestroyList = []
         realDestroyList = []
         for spaceNo, sVal in self.spaces.items():
             if sVal.nDestoryCnt>3:
-                ERROR_MSG('_checkDestroyDungeonSpace: cannot destory space', spaceNo)
+                LOG_ERR('_checkDestroyDungeonSpace: cannot destory space', spaceNo)
                 continue
 
             if sVal.markCreate:
@@ -76,7 +76,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
     def onDungeonSpaceGone(self, spaceNo, reason):
         if reason == gameconst.OnLoseCellReason.CELLAPP_DEATH:
-            ERROR_MSG("TeamDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
+            LOG_ERR("TeamDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
             if spaceNo in self.spaces:
                 sVal = self.spaces[spaceNo]
                 sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
@@ -90,20 +90,20 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
                 self.spaces.pop(spaceNo)
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
-        INFO_MSG('destoryDungeonSpace', spaceNo, reason)
+        LOG_IFO('destoryDungeonSpace', spaceNo, reason)
         if spaceNo not in self.spaces:
-            WARNING_MSG('wl: destoryDungeonSpace cannot find space:', spaceNo)
+            LOG_WARN('wl: destoryDungeonSpace cannot find space:', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         if spaceUUID and sVal.spaceUUID!=spaceUUID:
-            WARNING_MSG('destoryDungeonSpace:: spaceUUID not match {}!={}'.format(sVal.spaceUUID, spaceUUID))
+            LOG_WARN('destoryDungeonSpace:: spaceUUID not match {}!={}'.format(sVal.spaceUUID, spaceUUID))
             return
 
-        now = utils.getNow()
+        now = utils.curTS()
         if not sVal.markDestroy:
             # delay destroy space
-            sVal.markDestroy = utils.getNow() + 60
+            sVal.markDestroy = utils.curTS() + 60
             # 【副本服务端报错】
             # 销毁时停止所有该space的completeCallback
             # 【【上灵试炼】组队进入单人副本，打完boss后再次进入副本，会出现报错】
@@ -112,7 +112,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
             sVal.toDestoryDungeon()
 
-            INFO_MSG('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, sVal.markDestroy)
+            LOG_IFO('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, sVal.markDestroy)
             _teamStub = gameengine.getTeamStub(sVal.teamUUID)
             _teamStub.onDestroyTeamDungeon(sVal.teamUUID, self.dungeonNo, spaceNo, spaceUUID)
             return
@@ -127,18 +127,18 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             self.spaces.pop(spaceNo)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        INFO_MSG("leaveDungeonSpaceSucc::", spaceNo, playerBox, playerGbId, teamUUID, extra)
+        LOG_IFO("leaveDungeonSpaceSucc::", spaceNo, playerBox, playerGbId, teamUUID, extra)
         if spaceNo not in self.spaces:
-            ERROR_MSG('leaveDungeonSpaceSucc::cannot get space', spaceNo)
+            LOG_ERR('leaveDungeonSpaceSucc::cannot get space', spaceNo)
             return
         sVal = self.spaces[spaceNo]
         _teamStub = gameengine.getTeamStub(sVal.teamUUID)
         _teamStub.leaveTeamDungeon(playerBox, playerGbId, sVal.teamUUID, self.dungeonNo)
 
     def onAvatarOffline(self, spaceNo, playerGbId):
-        INFO_MSG('onAvatarOffline::', spaceNo, playerGbId)
+        LOG_IFO('onAvatarOffline::', spaceNo, playerGbId)
         if spaceNo not in self.spaces:
-            ERROR_MSG('onAvatarOffline::cannot get space', spaceNo)
+            LOG_ERR('onAvatarOffline::cannot get space', spaceNo)
             return
         sVal = self.spaces[spaceNo]
         _teamStub = gameengine.getTeamStub(sVal.teamUUID)
@@ -148,45 +148,45 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
-        INFO_MSG('onDungeonStarted::', spaceNo, tCreate)
+        LOG_IFO('onDungeonStarted::', spaceNo, tCreate)
         if spaceNo not in self.spaces:
-            ERROR_MSG('onDungeonStarted::cannot get space', spaceNo)
+            LOG_ERR('onDungeonStarted::cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
-        sVal.tCreate = tCreate or utils.getNow()
+        sVal.tCreate = tCreate or utils.curTS()
         sVal.spaceMgr.cell.onDungeonStarted(sVal.tCreate)
 
     def completeTeamDungeon(self, spaceNo, teamUUID, win, delay, reasonType):
         return self._onTeamDungeonCompleted(spaceNo, teamUUID, win, delay, reasonType)
 
     def _onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, reasonType):
-        INFO_MSG('in completeTeamDungeon:', spaceNo, teamUUID, win, delay, reasonType)
+        LOG_IFO('in completeTeamDungeon:', spaceNo, teamUUID, win, delay, reasonType)
         if spaceNo not in self.spaces:
             if teamUUID:
-                WARNING_MSG('completeTeamDungeon:: cannot get space', spaceNo, teamUUID)
+                LOG_WARN('completeTeamDungeon:: cannot get space', spaceNo, teamUUID)
             else:
-                ERROR_MSG('completeTeamDungeon:: cannot get space', spaceNo)
+                LOG_ERR('completeTeamDungeon:: cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         if sVal.completeDungeonTimer:
-            WARNING_MSG('_onTeamDungeonCompleted:: finishing dungeon, skipped...', spaceNo, win, delay)
+            LOG_WARN('_onTeamDungeonCompleted:: finishing dungeon, skipped...', spaceNo, win, delay)
             return
         
         if sVal.markDestroy:
-            WARNING_MSG("_onTeamDungeonCompleted:: dungeon already mark destroy", spaceNo, teamUUID, win, delay)
+            LOG_WARN("_onTeamDungeonCompleted:: dungeon already mark destroy", spaceNo, teamUUID, win, delay)
             return
 
         if not sVal.isActive():
-            WARNING_MSG('_onTeamDungeonCompleted:: already complete', spaceNo, sVal.state)
+            LOG_WARN('_onTeamDungeonCompleted:: already complete', spaceNo, sVal.state)
             return
 
         if not teamUUID:
-            WARNING_MSG("_onTeamDungeonCompleted:: skip teamUUID check", spaceNo, teamUUID, sVal.teamUUID, win, delay)
+            LOG_WARN("_onTeamDungeonCompleted:: skip teamUUID check", spaceNo, teamUUID, sVal.teamUUID, win, delay)
 
         elif sVal.teamUUID != teamUUID:
-            WARNING_MSG("_onTeamDungeonCompleted:: taemUUID not match", spaceNo, sVal.teamUUID, teamUUID)
+            LOG_WARN("_onTeamDungeonCompleted:: taemUUID not match", spaceNo, sVal.teamUUID, teamUUID)
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
@@ -196,26 +196,26 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             sVal.spaceMgr.cell.finishGuildDungeonTask()
 
         if delay:
-            sVal.completeDungeonTimer = self._callback(
+            sVal.completeDungeonTimer = self.addTimerCB(
                 delay, '_onTeamDungeonCompletedCallback',
                 (spaceNo, sVal.spaceUUID, 'dungeon complete', win), gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
         else:
             self._onTeamDungeonCompletedCallback(spaceNo, sVal.spaceUUID, 'dungeon complete', win)
 
     def _onTeamDungeonCompletedCallback(self, spaceNo, spaceUUID, reason, win):
-        INFO_MSG('_onTeamDungeonCompletedCallback::', spaceNo, spaceUUID, reason, win)
+        LOG_IFO('_onTeamDungeonCompletedCallback::', spaceNo, spaceUUID, reason, win)
         if spaceNo not in self.spaces:
-            ERROR_MSG('_onTeamDungeonCompletedCallback::cannot get space', spaceNo)
+            LOG_ERR('_onTeamDungeonCompletedCallback::cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         sVal.completeDungeonTimer = 0
         if sVal.spaceUUID != spaceUUID:
-            ERROR_MSG('_onTeamDungeonCompletedCallback:: spaceUUID not match', sVal.spaceUUID, spaceUUID)
+            LOG_ERR('_onTeamDungeonCompletedCallback:: spaceUUID not match', sVal.spaceUUID, spaceUUID)
             return
 
         if not sVal.isActive():
-            WARNING_MSG('_onTeamDungeonCompletedCallback:: already complete', spaceNo, sVal.state)
+            LOG_WARN('_onTeamDungeonCompletedCallback:: already complete', spaceNo, sVal.state)
             return
 
         # 【副本服务端报错】
@@ -234,7 +234,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
     def doEnterDungeon(self, box, gbId, teamUUID, spaceNo, extra):
         if spaceNo not in self.spaces:
-            ERROR_MSG('spaceNo "{}" not found in spaces'.format(spaceNo))
+            LOG_ERR('spaceNo "{}" not found in spaces'.format(spaceNo))
             _teamStub = gameengine.getTeamStub(teamUUID)
             _teamStub.onEnterDungeonFailedSpaceNotFound(box, gbId, teamUUID, self.dungeonNo, spaceNo, extra)
             return
@@ -242,11 +242,11 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         spaceVal = self.spaces[spaceNo]
 
         if spaceVal.isCompleted():
-            ERROR_MSG("space already completed", spaceNo, spaceVal.spaceUUID)
+            LOG_ERR("space already completed", spaceNo, spaceVal.spaceUUID)
             return
 
         if spaceVal.markDestroy:
-            ERROR_MSG('spaceNo "{}" already be destroy delay'.format(spaceNo))
+            LOG_ERR('spaceNo "{}" already be destroy delay'.format(spaceNo))
             return
 
         # calculate tDungeonLostTime to client
@@ -271,12 +271,12 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
     def _needSpaceMgr(self, spaceNo):
         return True
 
-    def getDungeonSpaceNoRange(self):
-        enterType = DDI.datas[self.dungeonNo].get('enterType', gameconst.DungeonEnterType.SINGLE)
-        if enterType==gameconst.DungeonEnterType.BOTH:
-            return gameconst.SpaceType.getTeamDungeonSpaceNoRange(self.dungeonNo)
+    def getDungeonSpaceRange(self):
+        enterType = DDI.datas[self.dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.SINGLE)
+        if enterType==gameconst.DungeonEnterTypeEnum.BOTH:
+            return gameconst.SpaceType.getTeamDungeonSpaceRange(self.dungeonNo)
         else:
-            return gameconst.SpaceType.getCopiedSpaceNoRange(self.dungeonNo)
+            return gameconst.SpaceType.getClonedSpaceNoRange(self.dungeonNo)
 
     def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
         # ready first
@@ -286,14 +286,14 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             spaceNo, playerBox, playerGbId, teamUUID, extra)
 
     def onLoadDungeonSpaceReady(self, playerBox, spaceNo, teamUUID, extra):
-        INFO_MSG('onLoadDungeonSpaceReady::')
+        LOG_IFO('onLoadDungeonSpaceReady::')
         _teamStub = gameengine.getTeamStub(teamUUID)
         _teamStub.onCreateTeamDungeon(teamUUID, self.dungeonNo, spaceNo, self.spaces[spaceNo].spaceUUID, playerBox, extra)
 
     def leaveTeamDungeon(self, spaceNo, teamID, src, playerBox):
-        INFO_MSG("leaveTeamDungeon~ ", spaceNo, teamID, src, playerBox)
+        LOG_IFO("leaveTeamDungeon~ ", spaceNo, teamID, src, playerBox)
         if spaceNo not in self.spaces:
-            ERROR_MSG('leaveTeamDungeon:: failed, missing space data', spaceNo, src, playerBox)
+            LOG_ERR('leaveTeamDungeon:: failed, missing space data', spaceNo, src, playerBox)
             return
         dungeonVal = self.spaces[spaceNo]
         founders = len(dungeonVal.founders)

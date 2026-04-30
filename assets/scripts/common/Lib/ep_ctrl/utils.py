@@ -13,7 +13,7 @@ def __empty_fun(*args, **kwargs):
     """empty function deosn't return anything"""
 
 
-def __base_event_trigger_fun(self, src_e, obj, **kwargs):
+def __base_event_trigger_fun(self, srcE, obj, **kwargs):
     self.trigger_all(1, obj)
 
 

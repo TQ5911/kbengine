@@ -32,6 +32,8 @@ namespace KBEngine
 		
 		public UInt32 gatherCnt = 0;
 		public virtual void onGatherCntChanged(UInt32 oldValue) {}
+		public Byte groupLock = 0;
+		public virtual void onGroupLockChanged(Byte oldValue) {}
 		
 		
 
@@ -339,6 +341,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 192:
+						Byte oldval_groupLock = groupLock;
+						groupLock = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onGroupLockChanged(oldval_groupLock);
+						}
+						else
+						{
+							if(inWorld)
+								onGroupLockChanged(oldval_groupLock);
+						}
+
+						break;
 					case 44:
 						string oldval_name = name;
 						name = stream.readUnicode();
@@ -587,6 +605,27 @@ namespace KBEngine
 					else
 					{
 						onGatherCntChanged(oldval_gatherCnt);
+					}
+				}
+			}
+
+			Byte oldval_groupLock = groupLock;
+			Property prop_groupLock = pdatas[4];
+			if(prop_groupLock.isBase())
+			{
+				if(inited && !inWorld)
+					onGroupLockChanged(oldval_groupLock);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_groupLock.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onGroupLockChanged(oldval_groupLock);
 					}
 				}
 			}

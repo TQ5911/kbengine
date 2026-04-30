@@ -25,8 +25,8 @@ Entity = gmCommand.Entity
 PlayerAccount = gmCommand.PlayerAccount
 
 gm_cmd = gmCommand.gm_cmd
-forwardCommand = gmCommand.forwardCommand
-callApps = gmCommand._callApps
+forwardGMCommand = gmCommand.forwardGMCommand
+callOnApps = gmCommand._callApps
 
 RARG = gmCommand.RARG
 RSU = gmCommand.RSU
@@ -97,23 +97,23 @@ def gmRevokeMarquee(su, mid):
 # ------------------------- 离线安全 ----------
 def doOnAccounOfflineSafeByDbId(ctx, ret, num, insertId, err):
     if err or not ret:
-        ERROR_MSG('doOnAccounOfflineSafeByDbId error: %s' % err)
+        LOG_ERR('doOnAccounOfflineSafeByDbId error: %s' % err)
         return
 
     _accountName = ret[0][0].decode('utf-8')
-    DEBUG_MSG('doOnAccounOfflineSafeByDbId: accountName: %s, func: %s, args: %s' % (_accountName, ctx.func, ctx.args))
+    LOG_DBG('doOnAccounOfflineSafeByDbId: accountName: %s, func: %s, args: %s' % (_accountName, ctx.func, ctx.args))
     gamesql.recordAccountOfflineCallback(_accountName, ctx.func, ctx.args)
 
 
 def doOnAccounOfflineSafeAfterGetBox(ctx, box):
     if box == False:
-        WARNING_MSG('doOnAccounOfflineSafeAfterGetBox error: box is False')
+        LOG_WARN('doOnAccounOfflineSafeAfterGetBox error: box is False')
         return
 
     elif box == True:
         # 角色已经离线，执行离线安全操作
         _sql = f'SELECT sm_accountName FROM tbl_Account WHERE id = {ctx.dbId}'
-        DEBUG_MSG('doOnAccounOfflineSafeAfterGetBox: sql: %s' % _sql)
+        LOG_DBG('doOnAccounOfflineSafeAfterGetBox: sql: %s' % _sql)
         KBEngine.executeRawDatabaseCommand(_sql, functools.partial(doOnAccounOfflineSafeByDbId, ctx))
         return
 
@@ -122,12 +122,12 @@ def doOnAccounOfflineSafeAfterGetBox(ctx, box):
 
 def doOnAccounOfflineSafeByGbIdAfterGetParentId(ctx, ret, num, insertId, err):
     if err or not ret:
-        ERROR_MSG('doOnAccounOfflineSafeByGbIdAfterGetParentId error: %s' % err)
+        LOG_ERR('doOnAccounOfflineSafeByGbIdAfterGetParentId error: %s' % err)
         return
 
     _dbId = int(ret[0][0])
     ctx.setDbId(_dbId)
-    DEBUG_MSG('doOnAccounOfflineSafeByGbIdAfterGetParentId: dbId: %s, func: %s, args: %s' % (_dbId, ctx.func, ctx.args))
+    LOG_DBG('doOnAccounOfflineSafeByGbIdAfterGetParentId: dbId: %s, func: %s, args: %s' % (_dbId, ctx.func, ctx.args))
     KBEngine.lookUpEntityByDBID('Account', _dbId, functools.partial(doOnAccounOfflineSafeAfterGetBox, ctx))
 
 def doOnAccounOfflineSafeByGbId(gbId, func, args):
@@ -138,7 +138,7 @@ def doOnAccounOfflineSafeByGbId(gbId, func, args):
 
 def _afterBanLogin(gbId, endTime, ret, num, insertId, err):
     if err:
-        ERROR_MSG('_afterBanLogin', err, ret)
+        LOG_ERR('_afterBanLogin', err, ret)
         return
 
     KBEngine.addTimer(2, 0, functools.partial(_banAvatarAgain, gbId, endTime))
@@ -155,7 +155,7 @@ def _banAvatarAgain(gbId, endTime, *args):
 
 @gm_cmd('$banAvatar', (Player("gbId/Id", raw=True), Int('endTime')), RONE, BASE, '封禁角色', ALLSIDE, DEV_GROUPS)
 def banAvatar(su, player, endTime):
-    INFO_MSG('banAvatar', player, endTime)
+    LOG_IFO('banAvatar', player, endTime)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         gamesql.banLogin(gbId, endTime, functools.partial(_afterBanLogin, gbId, endTime))
@@ -166,20 +166,20 @@ def banAvatar(su, player, endTime):
 
 @gm_cmd('$disbanAvatar', (Int('gbId'),), RONE, BASE, '解除封禁角色', ALLSIDE, DEV_GROUPS)
 def disbanAvatar(su, gbId):
-    INFO_MSG('disbanAvatar', gbId)
-    gamesql.disbanLogin(gbId, lambda *args: INFO_MSG('disbanAvatar success', args))
+    LOG_IFO('disbanAvatar', gbId)
+    gamesql.disbanLogin(gbId, lambda *args: LOG_IFO('disbanAvatar success', args))
     return True, '执行成功'
 
 
 @gm_cmd('$addWhite', (Str('accountName'),), RONE, BASE, '添加白名单', ALLSIDE, DEV_GROUPS)
 def addWhite(su, accountName):
-    INFO_MSG('addWhite', accountName)
+    LOG_IFO('addWhite', accountName)
     gamesql.addAccountWhiteList(accountName.split(','))
     return True, '执行成功'
 
 @gm_cmd('$deleteWhite', (Str('accountName'),), RONE, BASE, '移除白名单', ALLSIDE, DEV_GROUPS)
 def deleteWhite(su, accountName):
-    INFO_MSG('deleteWhite', accountName)
+    LOG_IFO('deleteWhite', accountName)
     gamesql.deleteAccountWhiteList(accountName.split(','))
     return True, '执行成功'
 

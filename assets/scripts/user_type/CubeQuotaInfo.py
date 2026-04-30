@@ -10,7 +10,7 @@ import LogTrackingMgr
 
 import cube_room
 
-class CubeQuotaVal(userType.UserSoleType):
+class CubeQuotaVal(userType.UserSingleType):
     '''CUBE_QUOTA_DATA_INFO'''
     # 混沌回廊试炼峰共用同一个数据结构
     def __init__(self, leftTime=0, enterTime=0, quotaDurState=gameconst.QuotaDurStatus.NORMAL):
@@ -33,7 +33,7 @@ class CubeQuotaVal(userType.UserSoleType):
     def calcLeftTime(self):
         """计算剩余时间, 不改变任何数据"""
         if self.quotaDurState == gameconst.QuotaDurStatus.ENTER:
-            _cost = utils.getNow() - self.enterTime
+            _cost = utils.curTS() - self.enterTime
             return max(0, self.leftTime - _cost)
 
         return self.leftTime
@@ -42,38 +42,38 @@ class CubeQuotaVal(userType.UserSoleType):
         if self.quotaDurState != gameconst.QuotaDurStatus.ENTER:
             return
 
-        _now = utils.getNow()
+        _now = utils.curTS()
         _cost = _now - self.enterTime
         self.leftTime = max(0, self.leftTime - _cost)
         self.enterTime = _now
 
     def setCubeEnterTime(self, avatar, enterTime):
         """cube"""
-        DEBUG_MSG('setCubeEnterTime from ', self.quotaDurState)
+        LOG_DBG('setCubeEnterTime from ', self.quotaDurState)
         if self.quotaDurState != gameconst.QuotaDurStatus.PROTECT:
-            ERROR_MSG('setCubeEnterTime error, quotaDurState is enter')
+            LOG_ERR('setCubeEnterTime error, quotaDurState is enter')
 
         self.enterTime = enterTime
         self.quotaDurState = gameconst.QuotaDurStatus.ENTER
-        avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.getNow())
+        avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.curTS(), gameconst.CubeRoomEndTimeReason.ENTER)
 
     def setWonderLandEnterTime(self, avatar, enterTime):
         """wonderLand"""
         if self.quotaDurState == gameconst.QuotaDurStatus.ENTER:
-            ERROR_MSG('setCubeEnterTime error, quotaDurState is enter')
+            LOG_ERR('setCubeEnterTime error, quotaDurState is enter')
 
         self.enterTime = enterTime
         self.quotaDurState = gameconst.QuotaDurStatus.ENTER
-        avatar.client.onWonderLandLeftTime(self.calcLeftTime() + utils.getNow())
+        avatar.client.onWonderLandLeftTime(self.calcLeftTime() + utils.curTS())
 
     def addWonderLandLeftTime(self, avatar, delta):
         """wonderLand"""
         self.leftTime += delta
         self.refreshEnterTime()
 
-        avatar.client.onWonderLandLeftTime(self.calcLeftTime() + utils.getNow())
+        avatar.client.onWonderLandLeftTime(self.calcLeftTime() + utils.curTS())
 
-        _mapId = formula.getMapId(avatar.spaceNo)
+        _mapId = formula.fetchMapId(avatar.spaceNo)
         _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
         LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
             avatar.gbId,
@@ -88,9 +88,9 @@ class CubeQuotaVal(userType.UserSoleType):
         self.leftTime += delta
         self.refreshEnterTime()
 
-        avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.getNow())
+        avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.curTS(), gameconst.CubeRoomEndTimeReason.ADD_TIME)
 
-        _mapId = formula.getMapId(avatar.spaceNo)
+        _mapId = formula.fetchMapId(avatar.spaceNo)
         _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
         LogTrackingMgr.LogTrackingMgr.Cube_Info(
             avatar.gbId,
@@ -102,7 +102,7 @@ class CubeQuotaVal(userType.UserSoleType):
         )
 
     def changeProtect(self):
-        DEBUG_MSG('changeProtect from ', self.quotaDurState)
+        LOG_DBG('changeProtect from ', self.quotaDurState)
         if self.quotaDurState == gameconst.QuotaDurStatus.ENTER:
             self.checkout()
             self.quotaDurState = gameconst.QuotaDurStatus.PROTECT
@@ -114,7 +114,7 @@ class CubeQuotaVal(userType.UserSoleType):
             self.quotaDurState = gameconst.QuotaDurStatus.PROTECT
 
     def checkout(self):
-        DEBUG_MSG('checkout from ', self.quotaDurState)
+        LOG_DBG('checkout from ', self.quotaDurState)
         if self.quotaDurState == gameconst.QuotaDurStatus.PROTECT:
             self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
             return
@@ -122,8 +122,14 @@ class CubeQuotaVal(userType.UserSoleType):
         elif self.quotaDurState == gameconst.QuotaDurStatus.NORMAL:
             return
 
-        _cost = utils.getNow() - self.enterTime
+        _cost = utils.curTS() - self.enterTime
         self.leftTime = max(0, self.leftTime - _cost)
+        self.enterTime = 0
+        self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
+
+    def reset(self):
+        self.checkout()
+        self.leftTime = 0
         self.enterTime = 0
         self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
 

@@ -4,7 +4,7 @@
 import userType
 
 
-class CombatReturnIdleVal(userType.UserSoleType):
+class CombatReturnIdleVal(userType.UserSingleType):
     '''COMBAT_RETURN_IDLE_DATA_INFO'''
     def __init__(self, spaceNo=0, pos=None, switch=False, range=0):
         self.spaceNo = spaceNo

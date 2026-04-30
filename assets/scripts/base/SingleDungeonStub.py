@@ -45,7 +45,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
     def _checkDestroyDungeonSpace(self):
         spacesToDestory = []
         spacesToKickOut = []
-        now = utils.getNow()
+        now = utils.curTS()
         for spaceNo, sVal in self.spaces.items():
             if now - sVal.tCreate > 60*DDID.datas[self.dungeonNo]['timeOut'] + 2:
                 spacesToKickOut.append(spaceNo)
@@ -71,11 +71,11 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
 
     def onDungeonSpaceGone(self, spaceNo, reason):
         if reason == gameconst.OnLoseCellReason.CELLAPP_DEATH:
-            ERROR_MSG("SingleDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
+            LOG_ERR("SingleDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
             if spaceNo in self.spaces:
                 sVal = self.spaces[spaceNo]
                 if sVal.destroyTimer:
-                    self._cancelCallback(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
+                    self.cancelTimerCB(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
                 sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
                 sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
                 self.cancelSpaceEntitiesLoadingProcess(spaceNo)
@@ -87,21 +87,21 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                     self.founders.destoryFounder(sVal.ownerGbId, sVal.spaceUUID)
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
-        INFO_MSG('destoryDungeonSpace', spaceNo, spaceUUID, reason)
+        LOG_IFO('destoryDungeonSpace', spaceNo, spaceUUID, reason)
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: destoryDungeonSpace cannot find space:', spaceNo)
+            LOG_ERR('wl: destoryDungeonSpace cannot find space:', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         if sVal.spaceUUID != spaceUUID:
-            ERROR_MSG("destoryDungeonSpace:: spaceUUID not match", spaceNo, spaceUUID, sVal.spaceUUID)
+            LOG_ERR("destoryDungeonSpace:: spaceUUID not match", spaceNo, spaceUUID, sVal.spaceUUID)
             return
 
         fVal = self.founders.getFounderVal(sVal.ownerGbId, sVal.spaceUUID)
-        if fVal and sVal.spaceUUID == fVal.spaceUUID and fVal.hasAvatar() and not utils.isBoxOffline(fVal.playerBox):
+        if fVal and sVal.spaceUUID == fVal.spaceUUID and fVal.hasAvatar() and not utils.checkBoxOffline(fVal.playerBox):
             self._kickoutPlayer(spaceNo)
             if sVal.destroyTimer:
-                self._cancelCallback(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
+                self.cancelTimerCB(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
                 sVal.destroyTimer = 0
             sVal.destroyTimer = self.toCallbackAfter(2, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)._destoryDungeonSpaceDelay(spaceNo, spaceUUID,
                                                                                               reason)
@@ -122,7 +122,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             self.founders.destoryFounder(sVal.ownerGbId, sVal.spaceUUID)
 
     def _destoryDungeonSpaceDelay(self, spaceNo, spaceUUID, reason):
-        INFO_MSG("_destoryDungeonSpaceDelay::", spaceNo, spaceUUID, reason)
+        LOG_IFO("_destoryDungeonSpaceDelay::", spaceNo, spaceUUID, reason)
         if spaceNo not in self.spaces:
             return
 
@@ -131,56 +131,56 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             return
 
         if sVal.destroyTimer:
-            self._cancelCallback(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
+            self.cancelTimerCB(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
             sVal.destroyTimer = 0
 
         self.destoryDungeonSpace(spaceNo, spaceUUID, reason)
 
     def _kickoutPlayer(self, spaceNo):
-        INFO_MSG('_kickoutPlayer', spaceNo)
+        LOG_IFO('_kickoutPlayer', spaceNo)
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: _kickoutPlayer: cannot find space', spaceNo)
+            LOG_ERR('wl: _kickoutPlayer: cannot find space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         fVal = self.founders.getFounderVal(sVal.ownerGbId, sVal.spaceUUID)
-        if fVal and sVal.spaceUUID == fVal.spaceUUID and fVal.hasAvatar() and fVal.playerBox and not utils.isBoxOffline(fVal.playerBox):
+        if fVal and sVal.spaceUUID == fVal.spaceUUID and fVal.hasAvatar() and fVal.playerBox and not utils.checkBoxOffline(fVal.playerBox):
             fVal.playerBox.cell.destroyFromNewbieDungeon(self.dungeonNo)
         elif not sVal.isToDestory():
             self.destoryDungeonSpace(spaceNo, sVal.spaceUUID, 'force destroy')
 
-    def getDungeonSpaceNoRange(self):
-        enterType = DDID.datas[self.dungeonNo].get('enterType', gameconst.DungeonEnterType.SINGLE)
-        if enterType==gameconst.DungeonEnterType.BOTH:
-            return gameconst.SpaceType.getSingleDungeonSpaceNoRange(self.dungeonNo)
+    def getDungeonSpaceRange(self):
+        enterType = DDID.datas[self.dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.SINGLE)
+        if enterType==gameconst.DungeonEnterTypeEnum.BOTH:
+            return gameconst.SpaceType.getSingleDungeonSpaceRange(self.dungeonNo)
         else:
-            return gameconst.SpaceType.getCopiedSpaceNoRange(self.dungeonNo)
+            return gameconst.SpaceType.getClonedSpaceNoRange(self.dungeonNo)
 
 
     def applyCreateDungeon(self, playerBox, gbId, teamUUID, extra):
-        INFO_MSG("applyCreateDungeon::", playerBox, gbId, teamUUID, extra)
+        LOG_IFO("applyCreateDungeon::", playerBox, gbId, teamUUID, extra)
         if self.dungeonNo != extra['dungeonNo']:
-            ERROR_MSG('applyCreateDungeon: SingleDungeonStub mismatch')
+            LOG_ERR('applyCreateDungeon: SingleDungeonStub mismatch')
             return
 
         def _getEntranceByDungeonNo():
-            dunSData = utils.getDunStructureModuleData(self.dungeonNo)
+            dunSData = utils.getDunStructModData(self.dungeonNo)
             if 'BornPos' in dunSData:
                 d, *_ = dunSData['BornPos'].values()
-                return formula.bornPosFromData(d)
+                return formula.bornPosFromDunData(d)
 
         if not extra.get('position'):
             extra['position'] = _getEntranceByDungeonNo() or ()
 
         if self.founders.getFounderVal(gbId, 0):
-            ERROR_MSG("applyCreateDungeon:: try create single dungeon while creating...", playerBox, gbId, teamUUID, extra)
+            LOG_ERR("applyCreateDungeon:: try create single dungeon while creating...", playerBox, gbId, teamUUID, extra)
             return
 
         if extra.get('inSpaceUUID') and not extra.get('dungeonPlayMode', None):
             fVal = self.founders.getFounderVal(gbId, extra['inSpaceUUID'])
             if fVal and fVal.spaceNo in self.spaces and not self.spaces[fVal.spaceNo].isCompleted():
                 if fVal.hasAvatar():
-                    INFO_MSG('single dungeon not complete', gbId, self.dungeonNo)
+                    LOG_IFO('single dungeon not complete', gbId, self.dungeonNo)
                     playerBox.onMessagePre(MMD.datas.dungeonRefused, [])
                 else:
                     self.onLoadDungeonSpaceReady(fVal.spaceNo, playerBox, gbId, teamUUID, extra)
@@ -204,7 +204,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
 
     def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: createCellEntity cannot find space:', spaceNo)
+            LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
             return
         sVal = self.spaces[spaceNo]
         self.founders.destoryFounder(sVal.ownerGbId, 0)
@@ -231,24 +231,24 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                 playerBox.cell.onSingleDungeonSpaceReady(sVal.spaceBox, sVal.spaceMgr, sVal.spaceMgr.id, spaceNo, playerBox, playerGbId, teamUUID, extra)
 
     def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        INFO_MSG('wl :enterDungeonSpaceSucc', spaceNo, playerBox, playerGbId, extra['spaceUUID'])
+        LOG_IFO('wl :enterDungeonSpaceSucc', spaceNo, playerBox, playerGbId, extra['spaceUUID'])
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: enterDungeonSpaceSucc cannot find space:', spaceNo)
+            LOG_ERR('wl: enterDungeonSpaceSucc cannot find space:', spaceNo)
             return
 
         fVal = self.founders.getFounderVal(playerGbId, extra['spaceUUID'])
         if not fVal:
-            ERROR_MSG('wl: enterDungeonSpaceSucc cannot find founder', spaceNo, playerGbId, playerBox.id)
+            LOG_ERR('wl: enterDungeonSpaceSucc cannot find founder', spaceNo, playerGbId, playerBox.id)
             return
 
         fVal.onAvatarEnter(playerGbId)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        INFO_MSG('wl :leaveDungeonSpaceSucc', spaceNo, playerBox, playerGbId, teamUUID, extra)
+        LOG_IFO('wl :leaveDungeonSpaceSucc', spaceNo, playerBox, playerGbId, teamUUID, extra)
         fVal = self.founders.getFounderVal(playerGbId, extra['spaceUUID'])
         if not fVal:
             #【【服务端log】[SingleDungeonStub(22019)]
-            WARNING_MSG('wl: leaveDungeonSpaceSucc cannot find founder, reason: re-enter', spaceNo, playerGbId, playerBox.id)
+            LOG_WARN('wl: leaveDungeonSpaceSucc cannot find founder, reason: re-enter', spaceNo, playerGbId, playerBox.id)
             return
 
         fVal.onAvatarLeave(playerGbId, False)
@@ -262,15 +262,15 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                 self.completeSingleDungeonForce(spaceNo, playerGbId, False)
 
     def onAvatarOffline(self, spaceNo, playerGbId):
-        INFO_MSG('wl :onAvatarOffline', spaceNo, playerGbId)
+        LOG_IFO('wl :onAvatarOffline', spaceNo, playerGbId)
         if spaceNo not in self.spaces:
-            WARNING_MSG('wl: onAvatarOffline::cannot get space', spaceNo)
+            LOG_WARN('wl: onAvatarOffline::cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         fVal = self.founders.getFounderVal(playerGbId, sVal.spaceUUID)
         if not fVal:
-            ERROR_MSG('wl: onAvatarOffline cannot find Founder', spaceNo, playerGbId)
+            LOG_ERR('wl: onAvatarOffline cannot find Founder', spaceNo, playerGbId)
             return
 
         fVal.onAvatarLeave(playerGbId, True)
@@ -280,32 +280,32 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
-        INFO_MSG('onDungeonStarted::', spaceNo, tCreate)
+        LOG_IFO('onDungeonStarted::', spaceNo, tCreate)
         if spaceNo not in self.spaces:
-            ERROR_MSG('onDungeonStarted::cannot get space', spaceNo)
+            LOG_ERR('onDungeonStarted::cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
-        sVal.tCreate = tCreate or utils.getNow()
+        sVal.tCreate = tCreate or utils.curTS()
         sVal.spaceMgr.cell.onDungeonStarted(sVal.tCreate)
 
     def completeSingleDungeonForce(self, spaceNo, playerGbId, win):
-        INFO_MSG("completeSingleDungeonForce::", spaceNo, playerGbId, win)
+        LOG_IFO("completeSingleDungeonForce::", spaceNo, playerGbId, win)
         if spaceNo not in self.spaces:
-            WARNING_MSG('_onSingleDungeonCompleted::cannot get space', spaceNo, playerGbId)
+            LOG_WARN('_onSingleDungeonCompleted::cannot get space', spaceNo, playerGbId)
             return
 
         sVal = self.spaces[spaceNo]
         if not sVal.isActive():
-            WARNING_MSG('completeSingleDungeonForce:: already complete', spaceNo, sVal.state, playerGbId)
+            LOG_WARN('completeSingleDungeonForce:: already complete', spaceNo, sVal.state, playerGbId)
             return
 
         if sVal.ownerGbId != playerGbId:
-            WARNING_MSG("completeSingleDungeonForce:: ownerGbId not match", spaceNo, sVal.ownerGbId, playerGbId)
+            LOG_WARN("completeSingleDungeonForce:: ownerGbId not match", spaceNo, sVal.ownerGbId, playerGbId)
             return
 
         if sVal.completeDungeonTimer:
-            self._cancelCallback(sVal.completeDungeonTimer, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
+            self.cancelTimerCB(sVal.completeDungeonTimer, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
 
         sVal.spaceMgr.cell.destroyAllEntities()
         sVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, playerGbId, win, 0, sVal.getElapsedTime())
@@ -316,51 +316,51 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         return self._onSingleDungeonCompleted(spaceNo, playerGbId, win, delay)
 
     def _onSingleDungeonCompleted(self, spaceNo, playerGbId, win, delay):
-        INFO_MSG('in completeSingleDungeon:', spaceNo, playerGbId, win, delay)
+        LOG_IFO('in completeSingleDungeon:', spaceNo, playerGbId, win, delay)
         if spaceNo not in self.spaces:
             if playerGbId:
-                WARNING_MSG('_onSingleDungeonCompleted::cannot get space', spaceNo, playerGbId)
+                LOG_WARN('_onSingleDungeonCompleted::cannot get space', spaceNo, playerGbId)
             else:
-                ERROR_MSG('_onSingleDungeonCompleted::cannot get space', spaceNo)
+                LOG_ERR('_onSingleDungeonCompleted::cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         if sVal.completeDungeonTimer:
-            WARNING_MSG('_onSingleDungeonCompleted:: finishing dungeon, skipped...', spaceNo, win, delay)
+            LOG_WARN('_onSingleDungeonCompleted:: finishing dungeon, skipped...', spaceNo, win, delay)
             return
         if not sVal.isActive():
-            WARNING_MSG('_onSingleDungeonCompleted:: already complete', spaceNo, sVal.state, playerGbId)
+            LOG_WARN('_onSingleDungeonCompleted:: already complete', spaceNo, sVal.state, playerGbId)
             return
 
         if not playerGbId:
-            WARNING_MSG("_onSingleDungeonCompleted:: skip playerGbId check", spaceNo, playerGbId, sVal.ownerGbId, win, delay)
+            LOG_WARN("_onSingleDungeonCompleted:: skip playerGbId check", spaceNo, playerGbId, sVal.ownerGbId, win, delay)
         elif sVal.ownerGbId != playerGbId:
-            WARNING_MSG("_onSingleDungeonCompleted:: ownerGbId not match", spaceNo, sVal.ownerGbId, playerGbId)
+            LOG_WARN("_onSingleDungeonCompleted:: ownerGbId not match", spaceNo, sVal.ownerGbId, playerGbId)
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
         sVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, playerGbId, win, delay, sVal.getElapsedTime())
 
         if delay:
-            sVal.completeDungeonTimer = self._callback(delay, '_onSingleDungeonCompletedCallback',
+            sVal.completeDungeonTimer = self.addTimerCB(delay, '_onSingleDungeonCompletedCallback',
                                                         (spaceNo, sVal.spaceUUID, playerGbId, win), gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
         else:
             self._onSingleDungeonCompletedCallback(spaceNo, sVal.spaceUUID, playerGbId, win)
 
     def _onSingleDungeonCompletedCallback(self, spaceNo, spaceUUID, playerGbId, win):
-        INFO_MSG('_onSingleDungeonCompletedCallback::', spaceNo, spaceUUID, playerGbId, win)
+        LOG_IFO('_onSingleDungeonCompletedCallback::', spaceNo, spaceUUID, playerGbId, win)
         if spaceNo not in self.spaces:
-            ERROR_MSG('_onSingleDungeonCompletedCallback::cannot get space', spaceNo)
+            LOG_ERR('_onSingleDungeonCompletedCallback::cannot get space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         sVal.completeDungeonTimer = 0
         if sVal.spaceUUID != spaceUUID:
-            ERROR_MSG('_onSingleDungeonCompletedCallback:: spaceUUID not match', sVal.spaceUUID, spaceUUID)
+            LOG_ERR('_onSingleDungeonCompletedCallback:: spaceUUID not match', sVal.spaceUUID, spaceUUID)
             return
 
         if not sVal.isActive():
-            WARNING_MSG('_onSingleDungeonCompletedCallback:: already complete', spaceNo, sVal.state, playerGbId)
+            LOG_WARN('_onSingleDungeonCompletedCallback:: already complete', spaceNo, sVal.state, playerGbId)
             return
 
         # 【副本服务端报错】

@@ -25,31 +25,32 @@ import agent_agentFunction as A_AFD
 import guildChallenge_basicInfo as GCBI
 import guildChallenge_config as GCC
 import mineBattle_config as MBC
+import guildAuthorization_action as GA_ACT
 
 
 class IGuild(object):
     def __init__(self):
         self.guildInitStatus = 0
-        self.createTempEvent(gameconst.AvatarProps.guildInitEvent)
+        self.createTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
         if self.guildAssistTimes < G_GCD.datas['maxAssistTimes']['value']:
             self.startGuildAssistRecoverTimer()
 
         if self.qixieAssistTimes < G_GCD.datas['equipmentMaxAssistTimes']['value']:
             self.startRecoverQixieAssistTimer()
 
-        if len(self.guildTask) == 0:
+        if len(self.guildTask) != len(G_GT.datas):
             self.initGuildTask()
 
     @property
     def guildInitStatus(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.guildInitStatus, 1)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.guildInitStatus, 1)
 
     @guildInitStatus.setter
     def guildInitStatus(self, val):
         if val:
-            self.popTempMiscProp(gameconst.AvatarProps.guildInitStatus)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.guildInitStatus)
         else:
-            self.setTempMiscProp(gameconst.AvatarProps.guildInitStatus, 0)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.guildInitStatus, 0)
 
     def _loadGuildInfo(self):
         if self.isCrossServer:
@@ -58,13 +59,13 @@ class IGuild(object):
         gamesql.loadAvatarGuildInfo(self.gbID, self._onLoadGuildInfo)
 
     def onSetGuildInfoCross(self, guildUUID, guildName, isOnline):
-        INFO_MSG("IGuild::onSetGuildInfoCross:", guildUUID, guildName, isOnline)
+        LOG_IFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, isOnline)
         self.guildUUIDBase = guildUUID
         self.guildNameBase = guildName
 
         if isOnline:
             self.guildInitStatus = 1
-            self.triggerTempEvent(gameconst.AvatarProps.guildInitEvent)
+            self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
         elif guildUUID:
             self._sendAllGuildRelation()
 
@@ -82,12 +83,12 @@ class IGuild(object):
 
     def _onLoadGuildInfo(self, ret, num, insertId, err):
         if err:
-            ERROR_MSG("IGuild::_onLoadGuildInfo: %s" % err)
+            LOG_ERR("IGuild::_onLoadGuildInfo: %s" % err)
             return
 
         if not ret:
             self.guildInitStatus = 1
-            self.triggerTempEvent(gameconst.AvatarProps.guildInitEvent)
+            self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
             return
 
         self.guildUUIDBase = int(ret[0][0])
@@ -101,30 +102,30 @@ class IGuild(object):
 
     def onLoadGuildGetBox(self, guildBox):
         if guildBox is None:
-            ERROR_MSG("IGuild::onLoadGuildGetBox: guildBox is None.", self.guildUUIDBase)
+            LOG_ERR("IGuild::onLoadGuildGetBox: guildBox is None.", self.guildUUIDBase)
             self.guildUUIDBase = 0
             self.guildInitStatus = 1
-            self.triggerTempEvent(gameconst.AvatarProps.guildInitEvent)
+            self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
             return
 
         guildBox.onMemberOnline(self.gbID, self)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def createGuild(self, exposed, createData):
-        INFO_MSG("IGuild::createGuild:", createData)
+        LOG_IFO("IGuild::createGuild:", createData)
         if self.getRoleCacheAttr('level') < G_GCD.datas['guildCreateLevelRequire']['value']:
-            ERROR_MSG("IGuild::createGuild: level < guildCreateLevelRequire.")
+            LOG_ERR("IGuild::createGuild: level < guildCreateLevelRequire.")
             return
 
         _max = G_GCD.datas['guildNameMaxLength']['value']
         _min = G_GCD.datas['guildNameMinLength']['value']
         _len = len(createData['guildName'])
         if not (_min <= _len <= _max):
-            ERROR_MSG("IGuild::createGuild: len(guildName) > guildNameMaxLen.", _len)
+            LOG_ERR("IGuild::createGuild: len(guildName) > guildNameMaxLen.", _len)
             return
 
         if self.guildUUIDBase:
-            ERROR_MSG("IGuild::createGuild: already in guild.")
+            LOG_ERR("IGuild::createGuild: already in guild.")
             return
 
         _deductVal = dropAward.DeductWealthVal()
@@ -136,7 +137,7 @@ class IGuild(object):
             _deductVal.addWealthByItemId(_itemId, _num)
 
         if not self.canDeductWealth(_deductVal):
-            ERROR_MSG("IGuild::createGuild: canDeductWealth failed.")
+            LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_CREATE_GUILD
@@ -145,7 +146,7 @@ class IGuild(object):
         _dspFlag = createData['dspFlag']
         _guildName = createData['guildName']
         if _dspFlag >= len(_guildName):
-            ERROR_MSG("IGuild::createGuild: dspFlag >= len(guildName).")
+            LOG_ERR("IGuild::createGuild: dspFlag >= len(guildName).")
             return
 
         _ctx = {
@@ -155,7 +156,7 @@ class IGuild(object):
         gameengine.getGlobalBase('GuildStub').doCreateGuild(createData, self.gbID, self, _ctx)
 
     def onCreateGuildResult(self, result, ctx):
-        INFO_MSG("IGuild::onCreateGuildResult:", result)
+        LOG_IFO("IGuild::onCreateGuildResult:", result)
         if result == gameconst.CreateGuildResult.SUCCESS:
             return
 
@@ -179,13 +180,13 @@ class IGuild(object):
         self.syncGuildTaskInfoToClinet()
 
     def loadGuildButNotMember(self):
-        ERROR_MSG("IGuild::loadGuildButNotMember: guildUUIDBase not in guild.", self.guildUUIDBase)
+        LOG_ERR("IGuild::loadGuildButNotMember: guildUUIDBase not in guild.", self.guildUUIDBase)
         self.guildUUIDBase = 0
         self.guildInitStatus = 1
-        self.triggerTempEvent(gameconst.AvatarProps.guildInitEvent)
+        self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
 
     def onJoinGuild(self, guildUUID, guildBox, reason, joinGuildData):
-        INFO_MSG("IGuild::onJoinGuild:", guildUUID, guildBox, reason)
+        LOG_IFO("IGuild::onJoinGuild:", guildUUID, guildBox, reason)
         self.guildBox = guildBox
         self.guildUUIDBase = guildUUID
         self.guildNameBase = joinGuildData['guildName']
@@ -193,7 +194,7 @@ class IGuild(object):
 
         if reason == gameconst.JoinGuildReason.ONLINE:
             self.guildInitStatus = 1
-            self.triggerTempEvent(gameconst.AvatarProps.guildInitEvent)
+            self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
 
         elif reason == gameconst.JoinGuildReason.DEAL_APPLY:
             self.guildBox.onAvatarJoinGuild(self.gbID, self)
@@ -245,7 +246,7 @@ class IGuild(object):
         self.client.selfGuildNameChanged(guildName, dspFlag)
 
     def _clearApplyedGuilds(self):
-        _now = utils.getNow()
+        _now = utils.curTS()
         for _guildUUID, _val in list(self.applyedGuilds.items()):
             if _val.isTimeOut(_now):
                 self.applyedGuilds.pop(_guildUUID)
@@ -262,7 +263,7 @@ class IGuild(object):
 
     def _sendGuildInfo(self):
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, '_sendGuildInfo', ())
+            self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, '_sendGuildInfo', ())
             return
 
         self.client.onUpdateApplyedGuilds(list(self.applyedGuilds.values()))
@@ -272,21 +273,21 @@ class IGuild(object):
         self.guildBox.doSendGuildClientData(self.gbID, self)
 
     def getGuildList(self, exposed):
-        INFO_MSG("IGuild::getGuildList")
+        LOG_IFO("IGuild::getGuildList")
         gameengine.getGlobalBase('GuildStub').doGetGuildList(self)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def exitGuild(self, exposed):
-        INFO_MSG("IGuild::exitGuild", self.guildBox, self.guildInitStatus)
+        LOG_IFO("IGuild::exitGuild", self.guildBox, self.guildInitStatus)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'exitGuild', (exposed,))
+            self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, 'exitGuild', (exposed,))
             return
 
         if not self.guildBox:
-            WARNING_MSG("IGuild::exitGuild: guildBox is None.")
+            LOG_WARN("IGuild::exitGuild: guildBox is None.")
             return
         
-        INFO_MSG('exit Guild: ', self.mineWarStateBase, self.myGuildInfoBase)
+        LOG_IFO('exit Guild: ', self.mineWarStateBase, self.myGuildInfoBase)
         # 矿战检查
         if self.mineWarStateBase == gameconst.MINE_WAR_STATE.RUNNING and self.myGuildInfoBase.get('leaderGbId') == self.gbID:
             self.onMessagePre(MBC.datas['mineBattle_prohibitExit']['value'], [])
@@ -301,15 +302,15 @@ class IGuild(object):
         self.wuHuaLevel = wuHuaLevel
 
     def onExitGuild(self, guildUUIDBase, reason):
-        INFO_MSG('onExitGuild', guildUUIDBase, reason)
+        LOG_IFO('onExitGuild', guildUUIDBase, reason)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'onExitGuild', (guildUUIDBase, reason))
+            self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, 'onExitGuild', (guildUUIDBase, reason))
             return
 
         if self.guildUUIDBase != guildUUIDBase:
-            ERROR_MSG("IGuild::onExitGuild: guildUUIDBase not match.", self.guildUUIDBase, guildUUIDBase)
+            LOG_ERR("IGuild::onExitGuild: guildUUIDBase not match.", self.guildUUIDBase, guildUUIDBase)
 
-        self.setLeftGuildTS(utils.getNow())
+        self.setLeftGuildTS(utils.curTS())
         self.guildUUIDBase = 0
         self.guildBox = None
         self.guildNameBase = ""
@@ -334,7 +335,7 @@ class IGuild(object):
 
     def _sendAllGuildRelation(self):
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, '_sendAllGuildRelation', ())
+            self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, '_sendAllGuildRelation', ())
             return
 
         if not self.guildUUIDBase:
@@ -351,14 +352,14 @@ class IGuild(object):
 
     @property
     def guildJoinContext(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.guildJoinContext, None)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.guildJoinContext, None)
 
     @guildJoinContext.setter
     def guildJoinContext(self, val):
         if val is None:
-            self.popTempMiscProp(gameconst.AvatarProps.guildJoinContext)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.guildJoinContext)
         else:
-            self.setTempMiscProp(gameconst.AvatarProps.guildJoinContext, val)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.guildJoinContext, val)
 
     def _checkInGuildApply(self):
         if self.guildUUIDBase:
@@ -368,7 +369,7 @@ class IGuild(object):
             return False
 
         _ctx = self.guildJoinContext
-        if utils.getNow() - _ctx['ts'] > gameconst.GUILD_APPLY_CTX_CHECK_TIME_OUT:
+        if utils.curTS() - _ctx['ts'] > gameconst.GUILD_APPLY_CTX_CHECK_TIME_OUT:
             self.guildJoinContext = None
             return False
 
@@ -379,8 +380,8 @@ class IGuild(object):
             self.onMessagePre(G_GCD.datas['guild_applyFail_levelNotEnough_msg']['value'], [])
             return False
 
-        _now = utils.getNow()
-        _cdDur = G_GCD.datas['guildSwitchCooldown']['value'] * gameconst.ONE_HOUR_SECONDES
+        _now = utils.curTS()
+        _cdDur = G_GCD.datas['guildSwitchCooldown']['value'] * gameconst.ONE_HOUR_COST_SECONDES
         if _now - self.leftGuildTS < _cdDur:
             _left = _cdDur - (_now - self.leftGuildTS)
             _left = max(1, int(_left / 60))
@@ -391,23 +392,23 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def applyJoinGuild(self, exposed, guildUUID):
-        INFO_MSG("IGuild::applyJoinGuild:", guildUUID)
+        LOG_IFO("IGuild::applyJoinGuild:", guildUUID)
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'applyJoinGuild', 
                 (exposed, guildUUID))
             return
 
         if self.guildUUIDBase:
-            WARNING_MSG("IGuild::applyJoinGuild: already in guild.")
+            LOG_WARN("IGuild::applyJoinGuild: already in guild.")
             return
 
         if not self._checkJoinGuild():
             return
 
         if self._checkInGuildApply():
-            WARNING_MSG("IGuild::applyJoinGuild: guildJoinContext is not None.")
+            LOG_WARN("IGuild::applyJoinGuild: guildJoinContext is not None.")
             return
 
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -424,30 +425,30 @@ class IGuild(object):
                 'box': box,
                 'tp': gameconst.ApplyJoinGuildType.SINGLE
             }],
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         self._applyJoinGuild()
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def oneKeyGuildApply(self, exposed, guildUUIDs):
-        INFO_MSG("IGuild::oneKeyGuildApply")
+        LOG_IFO("IGuild::oneKeyGuildApply")
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'oneKeyGuildApply', 
                 (exposed, guildUUIDs))
             return
 
         if self.guildUUIDBase:
-            WARNING_MSG("IGuild::oneKeyGuildApply: already in guild.")
+            LOG_WARN("IGuild::oneKeyGuildApply: already in guild.")
             return
 
         if not self._checkJoinGuild():
             return
 
         if self._checkInGuildApply():
-            WARNING_MSG("IGuild::oneKeyGuildApply: guildJoinContext is not None.")
+            LOG_WARN("IGuild::oneKeyGuildApply: guildJoinContext is not None.")
             return
 
         gameengine.getGlobalBase('GuildStub').getGuildsGbIdAndBox(
@@ -459,7 +460,7 @@ class IGuild(object):
 
     def doOneKeyGuildApply(self, guilds):
         if self._checkInGuildApply():
-            WARNING_MSG("IGuild::doOneKeyGuildApply: guildJoinContext is not None.")
+            LOG_WARN("IGuild::doOneKeyGuildApply: guildJoinContext is not None.")
             return
 
         _guilds = []
@@ -471,7 +472,7 @@ class IGuild(object):
 
         self.guildJoinContext = {
             'guilds': _guilds,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         self._applyJoinGuild()
@@ -490,7 +491,7 @@ class IGuild(object):
             return
 
         _guild = _ctx['guilds'].pop()
-        if utils.isBoxOffline(_guild['box']):
+        if utils.checkBoxOffline(_guild['box']):
             self.guildJoinContext = None
             return
 
@@ -501,14 +502,14 @@ class IGuild(object):
             'school': self.getRoleCacheAttr('school'),
             'name': self.getRoleCacheAttr('name'),
             'sex': self.getRoleCacheAttr('sex'),
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
             'tp': _guild['tp'],
             'inviterGbId': _guild.get('inviterGbId', 0),
         }
         _guild['box'].doApplyJoinGuild(self.gbID, self, _joinData)
 
     def deleteApplyedGuild(self, exposed, guildUUID):
-        INFO_MSG("IGuild::deleteApplyedGuild:", guildUUID)
+        LOG_IFO("IGuild::deleteApplyedGuild:", guildUUID)
         self.applyedGuilds.pop(guildUUID, None)
         self.client.onRemoveApplyedGuilds([guildUUID])
 
@@ -523,7 +524,7 @@ class IGuild(object):
         box.removeApplyFromApplicant(self.gbID)
 
     def joinGuildCB(self, event, agVal):
-        INFO_MSG("IGuild::joinGuildCB:", event)
+        LOG_IFO("IGuild::joinGuildCB:", event)
         if event == gameconst.JoinGuildEvent.RECORD_APPLY:
             self.applyedGuilds[agVal.guildUUID] = agVal
             self.client.onUpdateApplyedGuilds([agVal])
@@ -551,10 +552,10 @@ class IGuild(object):
         self.leftGuildTS = ts
 
     def modifyJoinCond(self, exposed, joinCond):
-        INFO_MSG("IGuild::modifyJoinCond:", joinCond)
+        LOG_IFO("IGuild::modifyJoinCond:", joinCond)
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'modifyJoinCond', 
                 (exposed, joinCond,))
             return
@@ -569,10 +570,10 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildApply(self, exposed, gbId, isAgree):
-        INFO_MSG("IGuild::dealGuildApply:", gbId)
+        LOG_IFO("IGuild::dealGuildApply:", gbId)
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'dealGuildApply', 
                 (exposed, gbId, isAgree))
             return
@@ -587,7 +588,7 @@ class IGuild(object):
 
     @gamedecorator.limitcall(5, keyFunc=lambda x: '{1}'.format(*x))
     def getGuildDetailInfo(self, exposed, guildUUID):
-        INFO_MSG("IGuild::getGuildDetailInfo:", guildUUID)
+        LOG_IFO("IGuild::getGuildDetailInfo:", guildUUID)
         gameengine.getGlobalBase('GuildStub').getGuildBox(
             self,
             guildUUID,
@@ -597,26 +598,26 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def editJobPermissions(self, exposed, job, permissions):
-        INFO_MSG("IGuild::editJobPermissions:", job, permissions)
+        LOG_IFO("IGuild::editJobPermissions:", job, permissions)
         if not self.guildBox:
-            WARNING_MSG("IGuild::editJobPermissions: guildBox is None.")
+            LOG_WARN("IGuild::editJobPermissions: guildBox is None.")
             return
 
         self.guildBox.doEditJobPermissions(self.gbID, self, job, permissions)
 
     def onGetGuildDetailInfo(self, guildBox):
         if guildBox is None:
-            ERROR_MSG("IGuild::onGetGuildDetailInfo: guildBox is None.")
+            LOG_ERR("IGuild::onGetGuildDetailInfo: guildBox is None.")
             return
 
         guildBox.doSendGuildDetailInfo(self)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildDesc(self, exposed, desc):
-        INFO_MSG("IGuild::modifyGuildDesc:", desc)
+        LOG_IFO("IGuild::modifyGuildDesc:", desc)
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'modifyGuildDesc', 
                 (exposed, desc,))
             return
@@ -631,10 +632,10 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyMemberJob(self, exposed, gbId, job):
-        INFO_MSG("IGuild::modifyMemberJob:", gbId, job)
+        LOG_IFO("IGuild::modifyMemberJob:", gbId, job)
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'modifyMemberJob', 
                 (exposed, gbId, job))
             return
@@ -649,10 +650,10 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def resign(self, exposed):
-        INFO_MSG("IGuild::resign")
+        LOG_IFO("IGuild::resign")
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'resign', 
                 (exposed, ))
             return
@@ -667,10 +668,10 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def kickMember(self, exposed, gbId):
-        INFO_MSG("IGuild::kickMember:", gbId)
+        LOG_IFO("IGuild::kickMember:", gbId)
         if not self.guildInitStatus:
             self.registerTempEvent(
-                gameconst.AvatarProps.guildInitEvent, 
+                gameconst.EntityPropsEnum.guildInitEvent, 
                 'kickMember', 
                 (exposed, gbId,))
             return
@@ -682,7 +683,7 @@ class IGuild(object):
             return
 
         if gbId == self.gbID:
-            ERROR_MSG("IGuild::kickMember: gbId == self.gbID.")
+            LOG_ERR("IGuild::kickMember: gbId == self.gbID.")
             return
 
         self.guildBox.doKickMember(self.gbID, self, gbId)
@@ -695,6 +696,9 @@ class IGuild(object):
             return True
 
         self.guildContrib = int(self.guildContrib + num)
+        if self.guildBox:
+            self.guildBox.addMemberHistCond(self.gbID, num)
+
         return True
 
     def deductGuildContrib(self, num, opUUID, src, detail):
@@ -712,13 +716,30 @@ class IGuild(object):
 
     # ------------------------------------- assist start --------------------------------
     def guildAssist(self, exposed, buildingId):
-        INFO_MSG('Guild::guildAssist:', self.guildUUIDBase, buildingId)
+        LOG_IFO('Guild::guildAssist:', self.guildUUIDBase, buildingId)
         if not self.guildBox:
-            ERROR_MSG('Guild::guildAssist: guildBox is None')
+            LOG_ERR('Guild::guildAssist: guildBox is None')
             return
 
         if self.guildAssistTimes <= 0:
-            WARNING_MSG('Guild::guildAssist: guildAssistTimes <= 0')
+            LOG_WARN('Guild::guildAssist: guildAssistTimes <= 0')
+            return
+
+        self.guildBox.checkForbidNewMember(
+            self.gbID,
+            self,
+            'guildAssistAfterCheck',
+            (buildingId,),
+            GA_ACT.guildHelp,
+        )
+
+    def guildAssistAfterCheck(self, buildingId):
+        if not self.guildBox:
+            LOG_ERR('Guild::guildAssist: guildBox is None')
+            return
+
+        if self.guildAssistTimes <= 0:
+            LOG_WARN('Guild::guildAssist: guildAssistTimes <= 0')
             return
 
         _deductVal = dropAward.DeductWealthVal()
@@ -751,27 +772,26 @@ class IGuild(object):
             self.addWealth(_src, _awardVal, opUUID, _detail)
 
             if not self.recoverGuildAssistTimerId and \
-                    self.nextRecoverGuildAssistTime < utils.getNow():
+                    self.nextRecoverGuildAssistTime < utils.curTS():
 
-                self.nextRecoverGuildAssistTime = utils.getNow() + G_GCD.datas['assistTimesRecIntvl']['value']
+                self.nextRecoverGuildAssistTime = utils.curTS() + G_GCD.datas['assistTimesRecIntvl']['value']
                 self.startGuildAssistRecoverTimer()
 
         else:
             _detail = gameclass.AwardDetail()
             _src = AAC_AACDD.datas.BONUS_SRC_GUILD_ASSIST
             _awardVal = dropAward.AwardVal()
-            _itemId = gameconst.GUILD_ASSIST_DEDUCT_ITEM
-            _num = gameconst.GUILD_ASSIST_DEDUCT_NUM
+            _itemId, _num = G_GCD.datas['guildAssistCost']['value']
             _awardVal.addWealthByItemId(_itemId, _num)
             self.addWealth(_src, _awardVal, opUUID, _detail)
             self.guildAssistTimes += 1
 
     def startGuildAssistRecoverTimer(self):
         if self.recoverGuildAssistTimerId:
-            self._cancelCallback(self.recoverGuildAssistTimerId, gametimer.TIMER_TAG_RECOVER_GUILD_ASSIST)
+            self.cancelTimerCB(self.recoverGuildAssistTimerId, gametimer.TIMER_TAG_RECOVER_GUILD_ASSIST)
 
-        _delay = max(0.1, self.nextRecoverGuildAssistTime - utils.getNow())
-        self.recoverGuildAssistTimerId = self._callback(
+        _delay = max(0.1, self.nextRecoverGuildAssistTime - utils.curTS())
+        self.recoverGuildAssistTimerId = self.addTimerCB(
             _delay,
             'onRecoverGuildAssist',
             (),
@@ -789,31 +809,31 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def upgradeGuildBuilding(self, exposed, buildingId):
-        INFO_MSG('IGuild::upgradeGuildBuilding:', buildingId)
+        LOG_IFO('IGuild::upgradeGuildBuilding:', buildingId)
         if not self.guildBox:
-            ERROR_MSG('IGuild::upgradeGuildBuilding: guildBox is None')
+            LOG_ERR('IGuild::upgradeGuildBuilding: guildBox is None')
             return
 
         self.guildBox.doUpgradeGuildBuilding(self.gbID, self, buildingId)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def transformGuildMoneyToFund(self, exposed, num):
-        INFO_MSG('IGuild::transformGuildMoneyToFund:', num)
+        LOG_IFO('IGuild::transformGuildMoneyToFund:', num)
         if not self.guildBox:
-            ERROR_MSG('IGuild::transformGuildMoneyToFund: guildBox is None')
+            LOG_ERR('IGuild::transformGuildMoneyToFund: guildBox is None')
             return
 
         self.guildBox.doTransformGuildMoneyToFund(self.gbID, self, num)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildName(self, exposed, name, dspFlag):
-        INFO_MSG('IGuild::modifyGuildName:', name)
+        LOG_IFO('IGuild::modifyGuildName:', name)
         if not self.guildBox:
-            ERROR_MSG('IGuild::modifyGuildName: guildBox is None')
+            LOG_ERR('IGuild::modifyGuildName: guildBox is None')
             return
 
         if dspFlag >= len(name):
-            ERROR_MSG("IGuild::modifyGuildName: dspFlag >= len(name).")
+            LOG_ERR("IGuild::modifyGuildName: dspFlag >= len(name).")
             return
 
         _deductVal = dropAward.DeductWealthVal()
@@ -823,7 +843,7 @@ class IGuild(object):
 
         _deductVal.addWealthByItemId(_itemId, 1)
         if not self.canDeductWealth(_deductVal):
-            ERROR_MSG("IGuild::createGuild: canDeductWealth failed.")
+            LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_MODIFY_GUILD_NAME
@@ -847,18 +867,36 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildIcon(self, exposed, icon):
-        INFO_MSG('IGuild::modifyGuildIcon:', icon)
+        LOG_IFO('IGuild::modifyGuildIcon:', icon)
         if not self.guildBox:
-            ERROR_MSG('IGuild::modifyGuildIcon: guildBox is None')
+            LOG_ERR('IGuild::modifyGuildIcon: guildBox is None')
             return
 
         self.guildBox.doModifyGuildIcon(self.gbID, self, icon)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def guildDonate(self, exposed, itemId, num):
-        INFO_MSG('IGuild::guildDonate:', itemId, num)
+        LOG_IFO('IGuild::guildDonate:', itemId, num)
         if not self.guildBox:
-            ERROR_MSG('IGuild::guildDonate: guildBox is None')
+            LOG_ERR('IGuild::guildDonate: guildBox is None')
+            return
+
+        if itemId == gameconst.ItemId.COIN:
+            _actId = GA_ACT.guildDonateCoin
+        else:
+            _actId = GA_ACT.guildDonateMoney
+
+        self.guildBox.checkForbidNewMember(
+            self.gbID,
+            self,
+            'guildDonateAfterCheck',
+            (itemId, num),
+            _actId
+        )
+
+    def guildDonateAfterCheck(self, itemId, num):
+        if not self.guildBox:
+            LOG_ERR('IGuild::guildDonate: guildBox is None')
             return
 
         if itemId == gameconst.ItemId.COIN:
@@ -870,7 +908,7 @@ class IGuild(object):
         _detail = gameclass.AwardDetail()
 
         if not self.canDeductWealth(_deductVal):
-            ERROR_MSG("IGuild::createGuild: canDeductWealth failed.")
+            LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_GUILD_DONATE
@@ -924,34 +962,34 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def guildRecruit(self, exposed):
-        INFO_MSG('IGuild::guildRecruit:')
+        LOG_IFO('IGuild::guildRecruit:')
         if not self.guildBox:
-            ERROR_MSG('IGuild::guildRecruit: guildBox is None')
+            LOG_ERR('IGuild::guildRecruit: guildBox is None')
             return
 
         self.guildBox.doGuildRecruit(self.gbID, self)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildDisp(self, exposed, dispFlag):
-        INFO_MSG('IGuild::modifyGuildDisp:', dispFlag)
+        LOG_IFO('IGuild::modifyGuildDisp:', dispFlag)
         if not self.guildBox:
-            ERROR_MSG('IGuild::modifyGuildDisp: guildBox is None')
+            LOG_ERR('IGuild::modifyGuildDisp: guildBox is None')
             return
 
         self.guildBox.doModifyGuildDisp(self.gbID, self, dispFlag)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def inviteJoinGuild(self, exposed, gbId):
-        INFO_MSG('IGuild::inviteJoinGuild:', gbId)
+        LOG_IFO('IGuild::inviteJoinGuild:', gbId)
         if not self.guildBox:
-            ERROR_MSG('IGuild::inviteJoinGuild: guildBox is None')
+            LOG_ERR('IGuild::inviteJoinGuild: guildBox is None')
             return
 
         self.guildBox.doInviteJoinGuild(self.gbID, self, gbId, self.getRoleCacheAttr('name'))
 
     def onGuildInvite(self, inviteData):
         self.inviteCache[inviteData['gbId']] = inviteData
-        self._callback(
+        self.addTimerCB(
             gameconst.GUILD_INVITE_DURATION,
             '_onGuildInviteTimeOut',
             (inviteData['gbId'], inviteData['ts']),
@@ -969,14 +1007,14 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildInvite(self, exposed, gbId, isAgree):
-        INFO_MSG('IGuild::dealGuildInvite:', gbId, isAgree)
+        LOG_IFO('IGuild::dealGuildInvite:', gbId, isAgree)
         if self.guildUUIDBase:
-            WARNING_MSG('IGuild::dealGuildInvite: already in guild.')
+            LOG_WARN('IGuild::dealGuildInvite: already in guild.')
             return
 
         _data = self.inviteCache.pop(gbId, None)
         if not _data:
-            WARNING_MSG('IGuild::dealGuildInvite: inviteData is None.')
+            LOG_WARN('IGuild::dealGuildInvite: inviteData is None.')
             return
 
         if not isAgree:
@@ -986,7 +1024,7 @@ class IGuild(object):
             return
 
         if self._checkInGuildApply():
-            WARNING_MSG("IGuild::applyJoinGuild: guildJoinContext is not None.")
+            LOG_WARN("IGuild::applyJoinGuild: guildJoinContext is not None.")
             return
 
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -1004,31 +1042,31 @@ class IGuild(object):
                 'inviterGbId': inviteData['gbId'],
                 'tp': gameconst.ApplyJoinGuildType.INVITE
             }],
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         self._applyJoinGuild()
 
     # -------------------------------------- cross data start --------------------------------------
     def getGuildInfosFromCrossData(self, exposed):
-        INFO_MSG('IGuild::getGuildInfosFromCrossData:')
+        LOG_IFO('IGuild::getGuildInfosFromCrossData:')
         if not self.guildBox:
-            ERROR_MSG('IGuild::getGuildInfosFromCrossData: guildBox is None')
+            LOG_ERR('IGuild::getGuildInfosFromCrossData: guildBox is None')
             return
 
         self.guildBox.doGetGuildInfosFromCrossData(self.gbID, self)
 
     def onGetGuildInfosFromCrossData(self, guildDatas):
-        INFO_MSG('IGuild::onGetGuildInfosFromCrossData:', guildDatas)
+        LOG_IFO('IGuild::onGetGuildInfosFromCrossData:', guildDatas)
         self.client.onGuildInfoFromCrossData(guildDatas)
 
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     @gamedecorator.limitcall(1)
     def applyGuildUnion(self, exposed, guildUUID):
-        INFO_MSG('IGuild::applyGuildUnion:', guildUUID)
+        LOG_IFO('IGuild::applyGuildUnion:', guildUUID)
         if not self.guildBox:
-            ERROR_MSG('IGuild::applyGuildUnion: guildBox is None')
+            LOG_ERR('IGuild::applyGuildUnion: guildBox is None')
             return
 
         self.guildBox.doApplyGuildUnion(self.gbID, self, guildUUID)
@@ -1036,9 +1074,9 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildUnionApply(self, exposed, guildUUID, agree):
-        INFO_MSG('IGuild::dealGuildUnionApply:', guildUUID, agree)
+        LOG_IFO('IGuild::dealGuildUnionApply:', guildUUID, agree)
         if not self.guildBox:
-            ERROR_MSG('IGuild::dealGuildUnionApply: guildBox is None')
+            LOG_ERR('IGuild::dealGuildUnionApply: guildBox is None')
             return
 
         self.guildBox.doDealGuildUnionApply(self.gbID, self, guildUUID, agree)
@@ -1046,14 +1084,14 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def cancelGuildUnion(self, exposed, guildUUID):
-        INFO_MSG('IGuild::cancelGuildUnion:', guildUUID)
+        LOG_IFO('IGuild::cancelGuildUnion:', guildUUID)
         if not self.guildBox:
-            ERROR_MSG('IGuild::cancelGuildUnion: guildBox is None')
+            LOG_ERR('IGuild::cancelGuildUnion: guildBox is None')
             return
 
         #https://www.tapd.cn/tapd_fe/59721401/story/detail/1159721401001006636  【任务】城战期间，禁止解除同盟
         if self.siegeWarState == gameconst.SiegeWarState.WAR or (self.siegeWarState == gameconst.SiegeWarState.WAR_COUNT_DOWN
-                                                                 and utils.getNow() >= self.siegeWarStateEndTime - CBC.datas['cityBattle_prepareTime']['value'] * 60):
+                                                                 and utils.curTS() >= self.siegeWarStateEndTime - CBC.datas['cityBattle_prepareTime']['value'] * 60):
             self.onMessagePre(CBC.datas["cityBattle_forbidLiftAlliance"]["value"], [])
             return
 
@@ -1061,23 +1099,23 @@ class IGuild(object):
         if _curRelationType == gameconst.GuildRelationType.UNION:
             self.guildBox.doCancelGuildUnion(self.gbID, self, guildUUID)
         else:
-            WARNING_MSG('IGuild::cancelGuildUnion: guildUUID is not union', guildUUID)
+            LOG_WARN('IGuild::cancelGuildUnion: guildUUID is not union', guildUUID)
 
     def qixieAssist(self, exposed, qixieType):
-        INFO_MSG('IGuild::qixieAssist:', qixieType)
+        LOG_IFO('IGuild::qixieAssist:', qixieType)
         if not self.guildBox:
-            ERROR_MSG('IGuild::qixieAssist: guildBox is None')
+            LOG_ERR('IGuild::qixieAssist: guildBox is None')
             return
 
         if self.qixieAssistTimes <= 0:
-            ERROR_MSG('IGuild::qixieAssist: qixieAssistTimes <= 0')
+            LOG_ERR('IGuild::qixieAssist: qixieAssistTimes <= 0')
             return
 
         self.guildBox.doQixieAssistFetchCostCoin(self.gbID, self, qixieType)
 
     def onQixieAssistFetchCostCoinResult(self, qixieType, cost):
         if self.qixieAssistTimes <= 0:
-            WARNING_MSG('IGuild::onQixieAssistFetchCostCoinResult: qixieAssistTimes <= 0')
+            LOG_WARN('IGuild::onQixieAssistFetchCostCoinResult: qixieAssistTimes <= 0')
             return
 
         _deductVal = dropAward.DeductWealthVal()
@@ -1087,7 +1125,7 @@ class IGuild(object):
 
         _deductVal.addWealthByItemId(_itemId, cost)
         if not self.canDeductWealth(_deductVal):
-            ERROR_MSG("IGuild::onQixieAssistFetchCostCoinResult: canDeductWealth failed.")
+            LOG_ERR("IGuild::onQixieAssistFetchCostCoinResult: canDeductWealth failed.")
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_QIXIE_ASSIST
@@ -1110,8 +1148,8 @@ class IGuild(object):
             self.addWealth(_src, _awardVal, opUUID, _detail)
 
             if not self.recoverQixieAssistTimerId and \
-                    self.nextRecoverQixieAssistTime < utils.getNow():
-                self.nextRecoverQixieAssistTime = utils.getNow() + G_GCD.datas['equipmentAssistTimesRecIntvl']['value']
+                    self.nextRecoverQixieAssistTime < utils.curTS():
+                self.nextRecoverQixieAssistTime = utils.curTS() + G_GCD.datas['equipmentAssistTimesRecIntvl']['value']
                 self.startRecoverQixieAssistTimer()
 
         else:
@@ -1126,10 +1164,10 @@ class IGuild(object):
 
     def startRecoverQixieAssistTimer(self):
         if self.recoverQixieAssistTimerId:
-            self._cancelCallback(self.recoverQixieAssistTimerId, gametimer.TIMER_TAG_RECOVER_QIXIE_ASSIST)
+            self.cancelTimerCB(self.recoverQixieAssistTimerId, gametimer.TIMER_TAG_RECOVER_QIXIE_ASSIST)
 
-        _delay = max(0.1, self.nextRecoverQixieAssistTime - utils.getNow())
-        self.recoverQixieAssistTimerId = self._callback(
+        _delay = max(0.1, self.nextRecoverQixieAssistTime - utils.curTS())
+        self.recoverQixieAssistTimerId = self.addTimerCB(
             _delay,
             '_onRecoverQixieAssist',
             (),
@@ -1146,9 +1184,9 @@ class IGuild(object):
             self.startRecoverQixieAssistTimer()
 
     def upgradeQixie(self, exposed, qixieType):
-        INFO_MSG('IGuild::upgradeQixie:', qixieType)
+        LOG_IFO('IGuild::upgradeQixie:', qixieType)
         if not self.guildBox:
-            ERROR_MSG('IGuild::upgradeQixie: guildBox is None')
+            LOG_ERR('IGuild::upgradeQixie: guildBox is None')
             return
 
         self.guildBox.doUpgradeQixie(self.gbID, self, qixieType)
@@ -1156,18 +1194,18 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def declareEnemy(self, exposed, guildUUID):
-        INFO_MSG('IGuild::declareEnemy:', guildUUID)
+        LOG_IFO('IGuild::declareEnemy:', guildUUID)
         if not self.guildBox:
-            ERROR_MSG('IGuild::declareEnemy: guildBox is None')
+            LOG_ERR('IGuild::declareEnemy: guildBox is None')
             return
 
         self.guildBox.doDeclareEnemy(self.gbID, self, guildUUID)
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
     def getGuildInfosByRelationType(self, exposed, relationType):
-        INFO_MSG('IGuild::getGuildInfosByRelationType:', relationType)
+        LOG_IFO('IGuild::getGuildInfosByRelationType:', relationType)
         if not self.guildUUIDBase:
-            ERROR_MSG('IGuild::getGuildInfosByRelationType: guildBox is None')
+            LOG_ERR('IGuild::getGuildInfosByRelationType: guildBox is None')
             return
 
         if relationType == gameconst.GuildRelationType.ENEMY:
@@ -1188,9 +1226,9 @@ class IGuild(object):
         self.client.onGuildInfosByRelationType(guildDatas, relationType)
 
     def donateCityBattleToken(self, exposed, num):
-        INFO_MSG('IGuild::donateCityBattleToken:', num)
+        LOG_IFO('IGuild::donateCityBattleToken:', num)
         if not self.guildBox:
-            ERROR_MSG('IGuild::donateCityBattleToken: guildBox is None')
+            LOG_ERR('IGuild::donateCityBattleToken: guildBox is None')
             return
 
         _deductVal = dropAward.DeductWealthVal()
@@ -1200,7 +1238,7 @@ class IGuild(object):
 
         _deductVal.addWealthByItemId(_itemId, num)
         if not self.canDeductWealth(_deductVal):
-            ERROR_MSG("IGuild::donateCityBattleToken: canDeductWealth failed.")
+            LOG_ERR("IGuild::donateCityBattleToken: canDeductWealth failed.")
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_TOKEN
@@ -1218,9 +1256,9 @@ class IGuild(object):
         self.guildBox.doDonateCityBattleToken(self.gbID, self, _num, _opUUID)
 
     def getGuildUnionApplySender(self, exposed):
-        INFO_MSG('IGuild::getGuildUnionApplySender:')
+        LOG_IFO('IGuild::getGuildUnionApplySender:')
         if not self.guildBox:
-            ERROR_MSG('IGuild::getGuildUnionApplySender: guildBox is None')
+            LOG_ERR('IGuild::getGuildUnionApplySender: guildBox is None')
             return
 
         self.guildBox.doGetGuildUnionApplySender(self.gbID, self)
@@ -1228,16 +1266,16 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def cancelApplyGuildUnion(self, exposed, guildUUID):
-        INFO_MSG('IGuild::cancelApplyGuildUnion:', guildUUID)
+        LOG_IFO('IGuild::cancelApplyGuildUnion:', guildUUID)
         if not self.guildBox:
-            ERROR_MSG('IGuild::cancelApplyGuildUnion: guildBox is None')
+            LOG_ERR('IGuild::cancelApplyGuildUnion: guildBox is None')
             return
 
         self.guildBox.doCancelApplyGuildUnion(self.gbID, self, guildUUID)
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
     def getGuildDetailOtherServer(self, exposed, guildUUID):
-        INFO_MSG('IGuild::getGuildDetailOtherServer:', guildUUID)
+        LOG_IFO('IGuild::getGuildDetailOtherServer:', guildUUID)
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetail(
             guildUUID,
             self,
@@ -1326,7 +1364,7 @@ class IGuild(object):
         )
 
     def completeGuildTask(self, taskType, para, num=1):
-        if self.hasGuild() == False:
+        if not self.hasGuild():
             return
         #完成任务
         needSyncClient = False
@@ -1360,3 +1398,10 @@ class IGuild(object):
         self.client.syncGuildTaskInfo(TaskInfoList)
     # -------------------------------------- 帮会任务 end --------------------------------------
     
+    @gamedecorator.checkGameconfigEnable('guild')
+    def getGuildIronMine(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::getGuildIronMine: guildBox is None')
+            return
+
+        self.guildBox.doGetGuildIronMine(self.gbID, self)

@@ -1,0 +1,48 @@
+<root>
+    <Properties>
+        <emoteId>
+            <Type>          UINT32              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </emoteId>
+        <playTimerId>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </playTimerId>
+        <lastPlayTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </lastPlayTime>
+    </Properties>
+
+    <BaseMethods>
+        <checkPlayEmoteCond>
+            <Arg>       UINT16       </Arg>
+        </checkPlayEmoteCond>
+    </BaseMethods>
+
+    <CellMethods>
+        <reqPlayEmote> <Exposed/>
+            <Arg>       UINT16       </Arg>
+        </reqPlayEmote>
+
+        <reqStopPlayEmote> <Exposed/>
+        </reqStopPlayEmote>
+
+        <onCheckPlayEmoteCond>
+            <Arg>       UINT16       </Arg>
+        </onCheckPlayEmoteCond>
+    </CellMethods>
+
+    
+    <ClientMethods>
+        <onStartPlayEmote>
+            <Arg>       UINT16       </Arg>
+        </onStartPlayEmote>
+
+        <onStopPlayEmote>
+        </onStopPlayEmote>
+    </ClientMethods>
+</root>

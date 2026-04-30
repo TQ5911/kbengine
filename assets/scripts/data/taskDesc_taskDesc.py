@@ -4365,6 +4365,30 @@ datas = _tools.RODict({
         "TaskName": "引导任务测试",
         "TaskDetailDesc": "",
     }),
+    86030014: _tools.RODict({
+        "TaskId": 86030014,
+        "TaskGroup": 0,
+        "TaskName": "帮会演武场",
+        "TaskDetailDesc": "",
+    }),
+    86030015: _tools.RODict({
+        "TaskId": 86030015,
+        "TaskGroup": 0,
+        "TaskName": "工坊",
+        "TaskDetailDesc": "",
+    }),
+    86030016: _tools.RODict({
+        "TaskId": 86030016,
+        "TaskGroup": 0,
+        "TaskName": "混沌回廊",
+        "TaskDetailDesc": "",
+    }),
+    86030017: _tools.RODict({
+        "TaskId": 86030017,
+        "TaskGroup": 0,
+        "TaskName": "pk模式切换",
+        "TaskDetailDesc": "",
+    }),
     86050015: _tools.RODict({
         "TaskId": 86050015,
         "TaskGroup": 0,

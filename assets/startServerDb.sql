@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `game_player_mails`
         `srcSubType` int(20) NOT NULL,
         `desp` varchar(128) NOT NULL,
         `idipSource` int(10) NOT NULL,
+        `dueTime` int(10) NOT NULL,
          index `index_1` (`toGBID`, `createTime`),
          index `index_2` (`toGBID`, `mailGBID`)
         );
@@ -242,6 +243,7 @@ CREATE PROCEDURE gamesp_send_mail(
     IN p_mailGBID BIGINT(20),
     IN p_globalMailGBID BIGINT(20),
     IN p_readState TINYINT(2),
+    IN p_dueTime INT,
     IN p_createTime INT,
     IN p_expiredTime INT,
     IN p_fromGBID BIGINT(20),
@@ -271,10 +273,10 @@ BEGIN
         END IF;
     END IF;
 
-    INSERT INTO game_player_mails (toGBID, mailId, mailGBID, globalMailGBID, readStat, createTime,
+    INSERT INTO game_player_mails (toGBID, mailId, mailGBID, globalMailGBID, readStat, dueTime, createTime,
                                    expiredTime, fromGBID, attach, attachStat, despArgs, title, cont, opUUID,
                                    srcType, srcSubType, desp, idipSource)
-    VALUES (p_toGBID, p_mailId, p_mailGBID, p_globalMailGBID, p_readState,
+    VALUES (p_toGBID, p_mailId, p_mailGBID, p_globalMailGBID, p_readState, p_dueTime,
             p_createTime,  p_expiredTime, p_fromGBID, p_attach, p_attachState, p_despArgs,
             p_title, p_cont, p_opUUID, p_srcType, p_srcSubType, p_desc, p_source);
     SELECT r_globalMailGBID, r_createTime, r_delMailGBID;
@@ -296,3 +298,21 @@ BEGIN
     WHERE accountName=p_accountName and accountType=p_accountType;
 END;;
 DELIMITER ;
+
+SET @db_name = DATABASE();
+SET @table_name = 'game_player_mails';
+SET @column_name = 'dueTime';
+SET @column_def = 'int(10) NOT NULL';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS message'
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;

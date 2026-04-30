@@ -43,7 +43,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.checkUnVisibleTimerId = 0
         self.unVisibleList = []
         if hasattr(self, 'getAIParam') and self.getAIParam():
-            self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI)
+            self.cellFlags = utils.bset(self.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI)
 
         self.warningTimerId = 0
 
@@ -167,8 +167,8 @@ class IAICombatUnit(SkillManager.SkillManager):
     # ---------------------------------------------------
     # Monster Properties from creep_base
 
-    def initBaseProperties(self):
-        utils.initBaseProperties(self)
+    def doInitBaseProperties(self):
+        utils.doInitBaseProperties(self)
 
     @property
     def creepBaseId(self):
@@ -207,7 +207,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
             skillList.append(skillId)
             skillPropList.append(skillProp)
-            self.addSkill(skillId, 1)
+            self.addSkillInEntity(skillId, 1)
 
         if skillList:
             self.skillPropInfo = (skillList, skillPropList)
@@ -215,7 +215,7 @@ class IAICombatUnit(SkillManager.SkillManager):
             self.skillPropInfo = None
 
     def changeAllSkill(self, skillInfoList):
-        INFO_MSG('changeAllSkill', skillInfoList)
+        LOG_IFO('changeAllSkill', skillInfoList)
         self.skillPropInfo = None
         skillList = []
         skillPropList = []
@@ -225,7 +225,7 @@ class IAICombatUnit(SkillManager.SkillManager):
                 _skill.resetSkill(self)
 
         for skillId, skillProp in skillInfoList:
-            self.addSkill(skillId, 1)
+            self.addSkillInEntity(skillId, 1)
             skillList.append(skillId)
             skillPropList.append(skillProp)
 
@@ -239,7 +239,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         if self.skillPropInfo:
             propList = []
             for i,skillId in enumerate(self.skillPropInfo[0]):
-                skillVal = self.getSkill(skillId)
+                skillVal = self.skillDic.doGetSkill(skillId, False)
                 if not skillVal:
                     continue
 
@@ -258,7 +258,7 @@ class IAICombatUnit(SkillManager.SkillManager):
                 propList.append(propVal)
 
             if skillList:
-                return utils.weightChoice(skillList, propList)[0][0]
+                return utils.weightChoices(skillList, propList)[0][0]
 
         for skillId, skillVal in self.skillDic.items():
             if targetType and skillVal.getTarget(skillId) != targetType:
@@ -280,7 +280,7 @@ class IAICombatUnit(SkillManager.SkillManager):
                     minCdTime = tempCd
         else:
             for i,skillId in enumerate(self.skillPropInfo[0]):
-                skillVal = self.getSkill(skillId)
+                skillVal = self.skillDic.doGetSkill(skillId)
                 tempCd = skillVal.getLastCDTime()
                 if minCdTime == 0 or tempCd < minCdTime:
                     minCdTime = tempCd
@@ -302,20 +302,18 @@ class IAICombatUnit(SkillManager.SkillManager):
         return self.getConfigData().get('keepHate', 0)
 
     def getDeathDrop(self):
-        rewardIDList = self.getConfigData().get('rewardID', [])
+        rewardIDList = dataUtils.getMonsterRewardIds(self.creepBaseId, self.level)
         shareRewardIDList = self.getConfigData().get('shareReward', [])
         displayModeList = self.getConfigData().get('displayMode', [])
         if type(rewardIDList) == tuple:
             rewardIDList = list(rewardIDList)
         elif type(rewardIDList) == int:
             rewardIDList = [rewardIDList]
-        else:
-            rewardIDList = []
 
         goodRewardIDs = []
         for rewardID in rewardIDList:
             if rewardID not in RDRDD.datas:
-                ERROR_MSG('qw: getDeathDrop->missing reward id:', self.id, rewardID, self.getConfigData())
+                LOG_ERR('qw: getDeathDrop->missing reward id:', self.id, rewardID, self.getConfigData())
                 continue
             goodRewardIDs.append(rewardID)
 
@@ -418,25 +416,25 @@ class IAICombatUnit(SkillManager.SkillManager):
             if target and not self.isVisible(target) and target.id not in self.unVisibleList and \
                 self.aiController and not self.aiController.hateDict.isInHateList(target.id):
                 self.unVisibleList.append(target.id)
-                # INFO_MSG('IAICombatUnit::enemy_enter_unvisible_trap: {}, unVisibleList: {}'.format(self.id, self.unVisibleList))
+                # LOG_IFO('IAICombatUnit::enemy_enter_unvisible_trap: {}, unVisibleList: {}'.format(self.id, self.unVisibleList))
                 self.checkUnVisibleTimer()
 
         elif eventId == gameconst.AI_EVENT_ENENY_LEAVE_TRAP:
             targetId = args[0]
             if targetId in self.unVisibleList:
                 self.unVisibleList.remove(targetId)
-                # INFO_MSG('IAICombatUnit::enemy_leave_unvisible_trap: {}, unVisibleList: {}'.format(self.id, self.unVisibleList))
+                # LOG_IFO('IAICombatUnit::enemy_leave_unvisible_trap: {}, unVisibleList: {}'.format(self.id, self.unVisibleList))
             self.checkUnVisibleTimer()
 
     def checkUnVisibleTimer(self):
         if len(self.unVisibleList) == 0:
             if self.checkUnVisibleTimerId > 0:
                 self.pyDelTimer(self.checkUnVisibleTimerId, gametimer.ENEMY_TRAP_UNVISIBLE_CHECK)
-                # INFO_MSG('IAICombatUnit:: stop unVisibleTimer: {}'.format(self.id))
+                # LOG_IFO('IAICombatUnit:: stop unVisibleTimer: {}'.format(self.id))
                 self.checkUnVisibleTimerId = 0
         elif self.checkUnVisibleTimerId == 0:
             self.checkUnVisibleTimerId = self.pyAddTimer(5, 5, gametimer.ENEMY_TRAP_UNVISIBLE_CHECK)
-            # INFO_MSG('IAICombatUnit:: start unVisibleTimer: {}'.format(self.id))
+            # LOG_IFO('IAICombatUnit:: start unVisibleTimer: {}'.format(self.id))
 
     def checkUnVisibleTargets(self):
         if len(self.unVisibleList) == 0:
@@ -449,7 +447,7 @@ class IAICombatUnit(SkillManager.SkillManager):
             if target and self.isVisible(target):
                 reEnterList.append(targetId)
 
-        INFO_MSG('IAICombatUnit::checkUnVisibleTargets: {}, reEnterList: {}'.format(self.id, reEnterList), self.unVisibleList)
+        LOG_IFO('IAICombatUnit::checkUnVisibleTargets: {}, reEnterList: {}'.format(self.id, reEnterList), self.unVisibleList)
         if len(reEnterList) == 0:
             return
         for targetId in reEnterList:
@@ -462,7 +460,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         return eventId in self.aiEventListener
 
     def receiveAIEvent(self, srcEntId, eventId, args):
-        self.aiEvents[eventId] = ((srcEntId, args), utils.getNow())
+        self.aiEvents[eventId] = ((srcEntId, args), utils.curTS())
         self.tickAI()
 
     def tickAI(self):
@@ -473,7 +471,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
     def actWaitEvent(self, eventId):
         if eventId not in self.aiEvents:
-            self.aiEventListener[eventId]=utils.getNow()
+            self.aiEventListener[eventId]=utils.curTS()
             return None
 
         (srcId, args), timestamp = self.aiEvents.pop(eventId)
@@ -507,18 +505,18 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.setMoveController(navController)
 
         if not self.moveController:
-            WARNING_MSG('move fail', self.position, dstPos)
+            LOG_WARN('move fail', self.position, dstPos)
             return False
 
         return True
 
-    def navigateToPosition(self, pos, dis=0, userData=None):
-        navController = self.scriptNavigate(pos, self.speed, dis, userData=userData)
+    def navigateToPosition(self, pos, distance=0, userData=None):
+        navController = self.scriptNavigate(pos, self.speed, distance, userData=userData)
         self.setMoveController(navController)
 
         if not self.moveController:
             self.cancelController('Movement')
-            WARNING_MSG('navigate fail', self.spaceNo, self.position, pos)
+            LOG_WARN('navigate fail', self.spaceNo, self.position, pos)
             return False
 
         return True
@@ -546,13 +544,13 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.moveController = contoller
 
         if self.moveController:
-            if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Moving)):
-                self.setState(gameconst.State.Moving)
+            if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Moving)):
+                self.setState(gameconst.StateEnum.Moving)
         else:
-            self.removeState(gameconst.State.Moving)
+            self.removeState(gameconst.StateEnum.Moving)
 
     def isMoving(self):
-        return self.hasState(gameconst.State.Moving)
+        return self.hasState(gameconst.StateEnum.Moving)
         # return self.moveController
 
     def onMoveOver(self, controllerID, userData):
@@ -567,7 +565,7 @@ class IAICombatUnit(SkillManager.SkillManager):
             self.setMoveController(self.scriptNavigate(dstPos, self.speed))
         else:
             self.setMoveController(0)
-            if self.hasState(gameconst.State.Fighting):
+            if self.hasState(gameconst.StateEnum.Fighting):
                 self.tickAI()
                 _isTick = True
 
@@ -577,15 +575,15 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         if isinstance(userData, dict) and userData.get('type') == gamemove.FLOW_CONTROLLER_FORCE_MOVE:
             if "fc_OriginBaseSpeed" in userData:
-                self.setProp('baseSpeed', userData["fc_OriginBaseSpeed"], src=gameconst.SourceType.FlowCtrl)
+                self.setProp('baseSpeed', userData["fc_OriginBaseSpeed"], src=gameconst.SourceType.SrcTpFlowCtrl)
             if "fc_OriginAdjSpeed" in userData:
-                self.setProp('adjSpeed', userData["fc_OriginAdjSpeed"], src=gameconst.SourceType.FlowCtrl)
+                self.setProp('adjSpeed', userData["fc_OriginAdjSpeed"], src=gameconst.SourceType.SrcTpFlowCtrl)
             if "fc_OriginMoveAni" in userData:
                 self.moveAni = userData["fc_OriginMoveAni"]
             self.flowCtrlOnEntityMoveToFixPos(userData['moveUUID'], True)
 
     def onMoveFailure(self, controllerID, userData):
-        #WARNING_MSG('zt: onMoveFailure', self.position, userData)
+        #LOG_WARN('zt: onMoveFailure', self.position, userData)
         if userData == gamemove.ROUTE_NODE_MOVE:
             self.moveToRouteNodeCB(False)
             return
@@ -597,9 +595,9 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         if isinstance(userData, dict) and userData.get('type') == gamemove.FLOW_CONTROLLER_FORCE_MOVE:
             if "fc_OriginBaseSpeed" in userData:
-                self.setProp('baseSpeed', userData["fc_OriginBaseSpeed"], src=gameconst.SourceType.FlowCtrl)
+                self.setProp('baseSpeed', userData["fc_OriginBaseSpeed"], src=gameconst.SourceType.SrcTpFlowCtrl)
             if "fc_OriginAdjSpeed" in userData:
-                self.setProp('adjSpeed', userData["fc_OriginAdjSpeed"], src=gameconst.SourceType.FlowCtrl)
+                self.setProp('adjSpeed', userData["fc_OriginAdjSpeed"], src=gameconst.SourceType.SrcTpFlowCtrl)
             if "fc_OriginMoveAni" in userData:
                 self.moveAni = userData["fc_OriginMoveAni"]
             self.flowCtrlOnEntityMoveToFixPos(userData['moveUUID'], False)
@@ -616,7 +614,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         # 【【任务】副本编辑器中monsterID接入范围扩大为entityID】
         # monsterInBattle
-        self.flowCtrlMonsterInBattle(utils.getGidFromGameEntityId(self.gameEntityId))
+        self.flowCtrlMonsterInBattle(utils.parseGidFromGameEntityId(self.gameEntityId))
         if self.aiController:
             self.aiController.onOwnerEnterFightingState()
 
@@ -624,7 +622,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         if not self.isDie():
             # 【【任务】副本编辑器中monsterID接入范围扩大为entityID】
             # monsterLeaveBattle
-            self.flowCtrlMonsterLeaveBattle(utils.getGidFromGameEntityId(self.gameEntityId))
+            self.flowCtrlMonsterLeaveBattle(utils.parseGidFromGameEntityId(self.gameEntityId))
 
     def stopThink(self):
         if self.thinkTimer:
@@ -648,11 +646,11 @@ class IAICombatUnit(SkillManager.SkillManager):
     def heuristic_cost_estimate(self, fromField, toField):
         #fieldPosInfo: {fieldId:(witdh,height,pos)}
         if not self.fieldPosInfo or fromField not in self.fieldPosInfo or toField not in self.fieldPosInfo:
-            ERROR_MSG('zt: cannot calc cost:', self.id, self.fieldPosInfo, fromField, toField)
+            LOG_ERR('zt: cannot calc cost:', self.id, self.fieldPosInfo, fromField, toField)
             return float('inf')
 
         if not self.fieldJoinInfo or fromField not in self.fieldJoinInfo:
-            ERROR_MSG('zt: cannot calc cost2:', self.id, self.fieldJoinInfo, fromField, toField)
+            LOG_ERR('zt: cannot calc cost2:', self.id, self.fieldJoinInfo, fromField, toField)
             return float('inf')
 
         gatePosSet=set()
@@ -688,14 +686,14 @@ class IAICombatUnit(SkillManager.SkillManager):
         return list(self.fieldJoinInfo[feildId].keys())
 
     def _relive(self):
-        self.removeState(gameconst.State.Death)
+        self.removeState(gameconst.StateEnum.Death)
 
     def _trapInViews(self, rng_=20):
         for c in self.entitiesInRange(rng_):
             if ((c.IsMonster or c.IsSummon) and
                     sMath.distance2D(
                         self.position, c.position) <= c.getAlertDistance()):
-                c.onEnterTrap(self, 0, 0, 0, gameconst.HATE_TRAP)
+                c.onEnterTrap(self, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
 
     def onDead(self, killer, *args, **kwargs):
@@ -735,24 +733,24 @@ class IAICombatUnit(SkillManager.SkillManager):
         en.createMonstersFromGrp(props)
 
     def modifyOutVisionHateCB(self, entityId):
-        return self._callback(1.0, '_modifyOutVisionHateCB', (entityId,), gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
+        return self.addTimerCB(1.0, '_modifyOutVisionHateCB', (entityId,), gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
 
     def _modifyOutVisionHateCB(self, entityId):
         self.aiController and self.aiController.modifyOutVisionHate(entityId, 0.1)
 
-    def boardMessageToAvatarsInRange(self, mid, args=None, rng=20, lmt=50, delay=0):
+    def boardMessageToAvatarsInRange(self, mid, args=None, iRange=20, lmt=50, delay=0):
         if delay and delay > 0:
-            self._callback(delay, 'boardMessageToAvatarsInRange', (mid, args, rng, lmt, 0), gametimer.TIMER_TAG_BOARD_MESSAGE_TO_AVATARS_IN_RANGE)
+            self.addTimerCB(delay, 'boardMessageToAvatarsInRange', (mid, args, iRange, lmt, 0), gametimer.TIMER_TAG_BOARD_MESSAGE_TO_AVATARS_IN_RANGE)
             return
 
-        if rng < 0:
-            ERROR_MSG('boardMessageToAvatarsInRange:: got error range %s' % rng)
-        entities = self.entitiesInRange(rng, 'Avatar', )
+        if iRange < 0:
+            LOG_ERR('boardMessageToAvatarsInRange:: got error range %s' % iRange)
+        entities = self.entitiesInRange(iRange, 'Avatar', )
 
         idx = 0
         for ent in entities:
             if idx >= lmt:
-                WARNING_MSG('boardMessageToAvatarsInRange:: over limit %s' % lmt)
+                LOG_WARN('boardMessageToAvatarsInRange:: over limit %s' % lmt)
                 break
 
             if not ent.isDie() and ent.client:
@@ -777,7 +775,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         srcTargetHost = utils.getHostEntity(KBEngine.entities.get(dmgSrcEntityId))
 
-        if srcType == gameconst.SourceType.Skill:
+        if srcType == gameconst.SourceType.SrcTpSkill:
             skillId = srcId
             skillParams = SSD.datas.get(skillId)
             skillHateRatio = skillParams.get("skillHateRatio", 1)
@@ -790,7 +788,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         if delayTimeRange:
             delayTime = delayTimeRange[0]+random.random()*(delayTimeRange[1]-delayTimeRange[0])
         else:
-            delayTime = utils.randomDelayTime(3, 1.0)
+            delayTime = utils.randDelayTime(3, 1.0)
 
         return delayTime
 
@@ -801,7 +799,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
             target = KBEngine.entities.get(targetId, None)
             if target and target.IsCombatUnit and not target.isDie()\
-                    and utils.checkTargetType('Enemy', self, target):
+                    and utils.checkTargetTypeValid('Enemy', self, target):
                 self.aiController.hostTargetId = targetId
 
     def setSelectedTargetId(self, targetId):
@@ -815,7 +813,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         super(IAICombatUnit, self).onEnterTrap(
             entity, rangeXZ, rangeY, controllerId, userArg)
 
-        if userArg == gameconst.HATE_TRAP:
+        if userArg == gameconst.AGGRO_TRIGGER_TRAP:
             if entity.IsCombatUnit:
                 if utils.isEnemy(self, entity):
                     self.aiController and self.aiController.onEnemyEnter(entity.id)
@@ -828,11 +826,11 @@ class IAICombatUnit(SkillManager.SkillManager):
         super(IAICombatUnit, self).onLeaveTrap(
             entity, rangeXZ, rangeY, controllerID, userArg)
         
-        if userArg == gameconst.HATE_TRAP and self.IsMonster and self.aiController and entity.id in self.aiController.warningList:
-            DEBUG_MSG('remove warning target onLeave: {}, warningList: {}'.format(entity.id, self.aiController.warningList))
+        if userArg == gameconst.AGGRO_TRIGGER_TRAP and self.IsMonster and self.aiController and entity.id in self.aiController.warningList:
+            LOG_DBG('remove warning target onLeave: {}, warningList: {}'.format(entity.id, self.aiController.warningList))
             self.aiController.warningList.remove(entity.id)
 
-        if entity.IsCombatUnit and userArg == gameconst.LEAVE_AOI_TRAP:
+        if entity.IsCombatUnit and userArg == gameconst.AOI_EXIT_TRAP:
             self.aiController and self.aiController.onEnemyLeave(entity.id)
             self.removeTargetTypeCache(entity)
             allCacheSetLen = len(self.enemyCacheSet) + len(self.notEnemyCacheSet)
@@ -854,7 +852,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.killChannelingSkill(breakChannelType)
 
     def selfLeaveStatic(self):
-        self._callback(0.5, 'startThink', (), gametimer.TIMER_TAG_START_THINK)
+        self.addTimerCB(0.5, 'startThink', (), gametimer.TIMER_TAG_START_THINK)
 
     def addGoHomeBuff(self):
         monsterGoHomeBuffList = CCD.datas['monsterGoHomeBuffList']['value']
@@ -889,16 +887,16 @@ class IAICombatUnit(SkillManager.SkillManager):
         if not self.aiController or not self.aiController.warningList:
             return
         removeList = []
-        dis = self.getAlertDistance()
-        dis2 = dis * dis
+        distance = self.getAlertDistance()
+        dis2 = distance * distance
         for targetId in self.aiController.warningList:
             target = KBEngine.entities.get(targetId)
             if sMath.distance2DToCompareFrom3DPosition(self.position, target.position) < dis2:  # 小于才算进入
                 removeList.append(targetId)
                 
-        DEBUG_MSG('checkWarningList:', self.aiController.warningList)
+        LOG_DBG('checkWarningList:', self.aiController.warningList)
         for targetId in removeList:
             self.aiController.onEnemyEnter(targetId, False)
         
         if self.aiController.warningList:
-            self.warningTimerId = self._callback(0.2, 'checkWarningList', (), gametimer.TIMER_TAG_CHECK_WARNING_LIST)
+            self.warningTimerId = self.addTimerCB(0.2, 'checkWarningList', (), gametimer.TIMER_TAG_CHECK_WARNING_LIST)

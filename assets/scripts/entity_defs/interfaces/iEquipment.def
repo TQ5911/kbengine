@@ -57,6 +57,19 @@
             <Arg>       BOOL        </Arg>
         </baseEquipDeductItems>
 
+        <baseEquipDeductItemsWithBindTypes>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       BONUS_SRC   </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       ENTITYCALL  </Arg>
+            <Arg>       METHOD_NAME </Arg>
+            <Arg>       METHOD_ARGS </Arg>
+        </baseEquipDeductItemsWithBindTypes>
+
         <dressEquipment><Exposed/>
             <Arg>       UINT32      </Arg>
             <Arg>       UINT8       </Arg>
@@ -74,22 +87,6 @@
             <Arg>       UINT8                   </Arg>
             <Arg>       ITEM_VAL                </Arg>
         </replaceEquipment>
-
-        <bagEquipEnhance>
-            <Arg>       GRIDID                      </Arg>
-            <Arg>       UUID                        </Arg>
-            <Arg>       ARRAY <of> GRIDID </of>     </Arg>
-            <Arg>       ARRAY <of> UINT16 </of>     </Arg>
-            <Arg>       BOOL                        </Arg>
-        </bagEquipEnhance>
-
-        <bagEquipEnhanceDeductItemsCB>
-            <Arg>       OP_STAT     </Arg>
-            <Arg>       UINT16      </Arg>
-            <Arg>       UUID        </Arg>
-            <Arg>       GRIDID      </Arg>
-            <Arg>       UUID        </Arg>
-        </bagEquipEnhanceDeductItemsCB>
 
         <bagEquipUpgrade>
             <Arg>       UINT8                       </Arg>
@@ -129,11 +126,11 @@
         </cellUndressEquipmentSucc>
 
         <bagEquipSpiritWashing>
-            <Arg>      GRIDID                   </Arg>
-            <Arg>      UUID                     </Arg>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </bagEquipSpiritWashing>
 
         <bagEquipSpiritWashingDeductItemsCB>
@@ -146,11 +143,11 @@
         </bagEquipSpiritWashingDeductItemsCB>
 
         <bagEquipGlyphWashing>
-            <Arg>      GRIDID                   </Arg>
-            <Arg>      UUID                     </Arg>
-            <Arg>      INT8                     </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      INT8                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </bagEquipGlyphWashing>
 
         <bagEquipGlyphWashingDeductItemsCB>
@@ -162,10 +159,10 @@
         </bagEquipGlyphWashingDeductItemsCB>
 
         <bagEquipBless>
-            <Arg>      GRIDID                   </Arg>
-            <Arg>      UUID                     </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </bagEquipBless>
 
         <bagEquipBlessDeductItemsCB>
@@ -341,9 +338,12 @@
         </cellBrokenEquipment>
 
         <baseMultiEquipEnhance>
-            <Arg>   PY_LIST    </Arg>
-            <Arg>   PY_DICT    </Arg>
-            <Arg>   PYTHON     </Arg>
+            <Arg>   PY_LIST                       </Arg>
+            <Arg>   PY_DICT                       </Arg>
+            <Arg>   PYTHON                        </Arg>
+            <Arg>   ARRAY <of> ITEM_ID      </of> </Arg>
+            <Arg>   ARRAY <of> UINT8        </of> </Arg>
+            <Arg>   BOOL                          </Arg>
         </baseMultiEquipEnhance>
     </BaseMethods>
 
@@ -361,33 +361,16 @@
             <Arg>   UINT32          </Arg>
         </cellUndressEquipment>
 
-        <reqEquipEnhance> <Exposed/>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      GRIDID                   </Arg>
-            <Arg>      UINT64                   </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
-            <Arg>      BOOL                     </Arg>
-        </reqEquipEnhance>
-
-        <cellEquipEnhance>
-            <Arg>   UINT8      </Arg>
-            <Arg>   UINT16     </Arg>
-            <Arg>   UUID       </Arg>
-            <Arg>   UINT32     </Arg>
-            <Arg>   UINT32     </Arg>
-        </cellEquipEnhance>
-
         <unlockBodyEquips>
         </unlockBodyEquips>
 
         <reqEquipSpiritWashing> <Exposed/>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      UINT32                   </Arg>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      UINT64                   </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT64                       </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </reqEquipSpiritWashing>
 
         <cellEquipSpiritWashing>
@@ -401,12 +384,12 @@
         </cellEquipSpiritWashing>
 
         <reqEquipGlyphWashing> <Exposed/>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      UINT16                   </Arg>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      UINT64                   </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT16                       </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT64                       </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </reqEquipGlyphWashing>
 
         <cellEquipGlyphWashing>
@@ -419,11 +402,11 @@
         </cellEquipGlyphWashing>
 
         <reqEquipBless> <Exposed/>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      UINT32                   </Arg>
-            <Arg>      UINT64                   </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UINT64                       </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </reqEquipBless>
 
         <cellEquipBless>
@@ -521,6 +504,9 @@
             <Arg>   ARRAY <of> UINT8        </of> </Arg>
             <Arg>   ARRAY <of> UINT16       </of> </Arg>
             <Arg>   ARRAY <of> UNIQUE_ID    </of> </Arg>
+            <Arg>   ARRAY <of> ITEM_ID      </of> </Arg>
+            <Arg>   ARRAY <of> UINT8        </of> </Arg>
+            <Arg>   BOOL                          </Arg>
         </reqMultiEquipEnhance>
 
         <cellMultiEquipEnhance>
@@ -529,6 +515,7 @@
             <Arg>       PYTHON      </Arg>
             <Arg>       PYTHON      </Arg>
             <Arg>       PYTHON      </Arg>
+            <Arg>       BOOL        </Arg>
         </cellMultiEquipEnhance>
     </CellMethods>
 
@@ -541,16 +528,6 @@
         <onUndressEquipment>
             <Arg>      UINT32     </Arg>
         </onUndressEquipment>
-
-        <onEquipEnhanceSucc>
-            <Arg>      UINT8                </Arg>
-            <Arg>      GRIDID               </Arg>
-            <Arg>      UINT8                </Arg>
-            <Arg>      UINT32               </Arg>
-            <Arg>      UINT8                </Arg>
-            <Arg>      UINT8                </Arg>
-            <Arg>      UINT8                </Arg>
-        </onEquipEnhanceSucc>
 
         <onEquipEnhanceFailed>
             <Arg>      UINT8                </Arg>
@@ -685,6 +662,7 @@
             <Arg>   UINT8                                                   </Arg>
             <Arg>   ARRAY <of> CLI_MULTI_ENHANCE_EQUIP_RESULT </of>         </Arg>
             <Arg>   ARRAY <of> CLI_MULTI_ENHANCE_CONSUMED_RESULT </of>      </Arg>
+            <Arg>   BOOL                                                    </Arg>
         </onMultiEquipEnhance>
     </ClientMethods>
 </root>

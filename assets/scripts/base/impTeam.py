@@ -39,7 +39,7 @@ class ImpTeam(object):
 			extraProps['isForbidVoice'] = True
 			forbidVoiceChatTime = -2 if self.accountEntity.forbidVoiceChatType == gameconst.ForbidType.FOREVER_FORBID else self.accountEntity.forbidVoiceChatTime
 			self.onMessagePre(int(CCCC.datas['chat_banned']['value']), [self.accountEntity.forbidVoiceChatReason,
-			                                                            utils.getBanEndTimeString(forbidVoiceChatTime)])
+			                                                            utils.fetchBanEndTimeString(forbidVoiceChatTime)])
 
 		gameengine.getTeamStub(teamId).switchTeamMicsMode(self, self.gbID, teamId, mode, extraProps)
 
@@ -47,7 +47,7 @@ class ImpTeam(object):
 		if self.isForbidVoiceChat():
 			forbidVoiceChatTime = -2 if self.accountEntity.forbidVoiceChatType == gameconst.ForbidType.FOREVER_FORBID else self.accountEntity.forbidVoiceChatTime
 			self.onMessagePre(int(CCCC.datas['chat_banned']['value']), [self.accountEntity.forbidVoiceChatReason,
-			                                                            utils.getBanEndTimeString(forbidVoiceChatTime)])
+			                                                            utils.fetchBanEndTimeString(forbidVoiceChatTime)])
 			return
 
 		extraProps = {}
@@ -59,7 +59,7 @@ class ImpTeam(object):
 			extraProps['isForbidVoice'] = True
 			forbidVoiceChatTime = -2 if self.accountEntity.forbidVoiceChatType == gameconst.ForbidType.FOREVER_FORBID else self.accountEntity.forbidVoiceChatTime
 			self.onMessagePre(int(CCCC.datas['chat_banned']['value']), [self.accountEntity.forbidVoiceChatReason,
-			                                                            utils.getBanEndTimeString(forbidVoiceChatTime)])
+			                                                            utils.fetchBanEndTimeString(forbidVoiceChatTime)])
 
 		gameengine.getRaidStub(raidUUID).switchRaidMicsMode(self, self.gbID, raidUUID, mode, extraProps)
 
@@ -67,7 +67,7 @@ class ImpTeam(object):
 		if self.isForbidVoiceChat():
 			forbidVoiceChatTime = -2 if self.accountEntity.forbidVoiceChatType == gameconst.ForbidType.FOREVER_FORBID else self.accountEntity.forbidVoiceChatTime
 			self.onMessagePre(int(CCCC.datas['chat_banned']['value']), [self.accountEntity.forbidVoiceChatReason,
-			                                                            utils.getBanEndTimeString(forbidVoiceChatTime)])
+			                                                            utils.fetchBanEndTimeString(forbidVoiceChatTime)])
 			return
 
 		extraProps = {}

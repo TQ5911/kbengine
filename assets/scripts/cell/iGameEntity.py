@@ -22,20 +22,20 @@ class IGameEntity(object):
         if _dunData and 'IsOnGround' in _dunData.get('Props', {}):
             self.isOnGround = _dunData['Props']['IsOnGround']
 
-        self.createTime = utils.getNow()
-        DEBUG_MSG("iGameEntity.IGameEntity.__init__", self.disappearTime, self.createTime, self.gameEntityId)
+        self.createTime = utils.curTS()
+        LOG_DBG("iGameEntity.IGameEntity.__init__", self.disappearTime, self.createTime, self.gameEntityId)
         if self.disappearTime > self.createTime:
-            delayTime = utils.randomDelayTime(self.disappearTime,
+            delayTime = utils.randDelayTime(self.disappearTime,
                                               self.getDatetimeTimerRandomTickRange(2))
 
-            self._callback(delayTime - self.createTime, 'onDisappearTimerEnded', (),
+            self.addTimerCB(delayTime - self.createTime, 'onDisappearTimerEnded', (),
                            gametimer.TIMER_TAG_ON_ENTITY_DISAPPER)
         else:
             if self.disappearTime < 0:
-                ERROR_MSG("disappearTime < now", self.disappearTime)
+                LOG_ERR("disappearTime < now", self.disappearTime)
             else:
                 pass
-                # DEBUG_MSG("will not disappear")
+                # LOG_DBG("will not disappear")
 
         self.createAttachedEntities()
         self.beAttachedToHost()
@@ -53,23 +53,23 @@ class IGameEntity(object):
         cellSpace = self.getCurrentSpace()
         cellAvatarMgrId = getattr(self, 'spaceMgrId', 0)
         cellSpace.doLoadSpecifiedEntities(attachedGIDStrList, cellAvatarMgrId, self.id)
-        INFO_MSG("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
+        LOG_IFO("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
 
     def beAttachedToHost(self):
-        attachedHostId = self.getTempMiscProp(gameconst.AvatarProps.beAttachedHostID, 0)
+        attachedHostId = self.getTempMiscProp(gameconst.EntityPropsEnum.beAttachedHostID, 0)
         if not attachedHostId:
             return
         attachedHost = KBEngine.entities.get(attachedHostId)
         if not attachedHost:
             return
 
-        INFO_MSG("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
-        attachedIDList = attachedHost.getTempMiscProp(gameconst.AvatarProps.attachedIDList, [])
+        LOG_IFO("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
+        attachedIDList = attachedHost.getTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, [])
         attachedIDList.append(self.id)
-        attachedHost.setTempMiscProp(gameconst.AvatarProps.attachedIDList, attachedIDList)
+        attachedHost.setTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, attachedIDList)
 
     def onDisappearTimerEnded(self):
-        DEBUG_MSG('id={} gameEntityId={} over time limit, destroy'.format(self.id, self.gameEntityId))
+        LOG_DBG('id={} gameEntityId={} over time limit, destroy'.format(self.id, self.gameEntityId))
         self.safeDestroy()
 
     def initPosition(self):
@@ -92,11 +92,11 @@ class IGameEntity(object):
         if _l:
             return True, Math.Vector3(_l[0])
 
-        ERROR_MSG("engine can't find navigate point, use origin:",
+        LOG_ERR("engine can't find navigate point, use origin:",
                   self.gameEntityId, self.creepBaseId, self.spaceNo, self.position, radius)
         return False, self.position
 
     @property
     def cfgGameEntityId(self):
-        return utils.getGidFromGameEntityId(self.gameEntityId)
+        return utils.parseGidFromGameEntityId(self.gameEntityId)
 

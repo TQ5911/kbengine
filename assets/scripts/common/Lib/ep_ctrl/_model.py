@@ -54,11 +54,11 @@ class _BasicElement(object):
     组件触发关系如下
         PE -Out-> -In-> E -Out-> ...
 
-    :cvar tuple __self_params__: 自检参数元组, 写入该元组中的参数在调用
+    :cvar tuple __selfParams__: 自检参数元组, 写入该元组中的参数在调用
         :py:meth:`_BasicElement.self_check` 时会被强制检查是否被赋值, 没有赋值会抛出
         :py:exc:`ep_ctrl.exceptions.EP_ElementCheckerError` 异常
     :cvar tuple __ref_params__: 自检引用参数元组, 使用方法同 
-            :py:attr:`_BasicElement.__self_params__` 相同
+            :py:attr:`_BasicElement.__selfParams__` 相同
 
     :ivar int _element_id: Element唯一标识.
     :ivar str _element_name: Element名字
@@ -74,23 +74,23 @@ class _BasicElement(object):
     :varType _binded_dic: dict[e_idx, dict[eid, :py:class:`_BindData` ]]
     """
 
-    __self_params__ = ()
+    __selfParams__ = ()
     __ref_params__ = ()
 
-    def __init__(self, event_id, controller, name=None, **kwargs):
+    def __init__(self, eventId, controller, name=None, **kwargs):
 
         def _get_name():
             if not name:
                 return "{}_{}".format(
-                        self.__class__.__name__, event_id)
+                        self.__class__.__name__, eventId)
             return name
 
         name = _get_name()
         # general attributes
-        self._element_id = event_id
+        self._element_id = eventId
         self._element_name = name
         self.rename(name)
-        self._params = dict()
+        self.paramsDict = dict()
         self._controller = controller
         # inputside __init__
         self._be_bind_dic = {}
@@ -147,36 +147,36 @@ class _BasicElement(object):
             return False
         return self._controller.stopped
 
-    def add_param(self, key, getter):
+    def putArgument(self, key, getter):
         """ Add an element param
         
         :param str key: param name
         :param getter: param value
         :type getter: variable or function/method
         """
-        self._params[key] = getter
+        self.paramsDict[key] = getter
 
-    def get_param(self, key, default=None):
+    def fetchArgument(self, key, default=None):
         """ Get an element param
         
         :param str key: param name
         :param default: default value
         :return: param value or default
         """
-        if key not in self._params:
+        if key not in self.paramsDict:
             return default
-        getter = self._params.get(key, EMPTY_FUNC)
+        getter = self.paramsDict.get(key, EMPTY_FUNC)
         r = getter() if callable(getter) else getter
         return r
 
-    def has_param(self, key):
+    def hasArgument(self, key):
         """ Check has param in element
 
         :param str key: param key
         :return: is param key in element params
         :rtype: bool
         """
-        return key in self._params
+        return key in self.paramsDict
 
     def bind_element(self, e, idx, e_idx):
         """Bind Element which need to be triggered by self::
@@ -199,10 +199,10 @@ class _BasicElement(object):
         e._be_binded_element(self, idx, e_idx)
         self._binded_dic[idx][e.id] = _BindData(idx, e, e_idx)
 
-    def _be_binded_element(self, src_e, src_idx, idx):
-        self._be_bind_dic.setdefault(src_idx, {})
-        self._be_bind_dic[src_idx][src_e.id] \
-            = _BindData(idx, src_e, src_idx) 
+    def _be_binded_element(self, srcE, srcIdx, idx):
+        self._be_bind_dic.setdefault(srcIdx, {})
+        self._be_bind_dic[srcIdx][srcE.id] \
+            = _BindData(idx, srcE, srcIdx) 
 
     def is_binded(self, eid, idx=None):
         """ Check eid has binded
@@ -277,12 +277,12 @@ class _BasicElement(object):
         e = self._binded_dic[idx].pop(eid, None)
         e and e.element._be_unbinded_element(self.id, idx, e.element_idx)
 
-    def _be_unbinded_element(self, src_eid, src_idx, idx):
-        if src_idx not in self._be_bind_dic:
+    def _be_unbinded_element(self, src_eid, srcIdx, idx):
+        if srcIdx not in self._be_bind_dic:
             return 
-        self._be_bind_dic[src_idx].pop(src_eid, None)
+        self._be_bind_dic[srcIdx].pop(src_eid, None)
 
-    def ref_param(self, src, src_key, key):
+    def referenceArgument(self, src, src_key, key):
         """ Reference param to self::
 
              <TRIGGERED_E> ----------+
@@ -302,13 +302,13 @@ class _BasicElement(object):
             raise EP_ElementError(
                 'Cannot bind param, duplicate key define: {}'.format(key),
                 self)
-        if not src.has_param(src_key):
+        if not src.hasArgument(src_key):
             raise EP_ElementError(
                 'Cannot bind param, src param not define, {}'.format(src_key),
                 self)
         self._ref_params_dic[key] = (src, src_key)
    
-    def unref_param(self, key):
+    def unReferenceArgument(self, key):
         """ Un-reference param
         
         :param str key: unref key
@@ -325,16 +325,16 @@ class _BasicElement(object):
         src, src_key = self._ref_params_dic.get(key, (None, None))
         if src is None:
             return default
-        return src.get_param(src_key, default)
+        return src.fetchArgument(src_key, default)
 
     def has_ref_param(self, key):
-        """ Check ref key defined in ``ref_params`` """
+        """ Check ref key defined in ``refParams`` """
         return key in self._ref_params_dic
 
     def _pkg_all_ref_params(self):
         result = {}
         for key, (src, src_key) in self._ref_params_dic.items():
-            val = src.get_param(src_key)
+            val = src.fetchArgument(src_key)
             result.update({key: val})
         return result
 
@@ -365,42 +365,42 @@ class _BasicElement(object):
         e.element.be_triggered(self, e.org_idx, e.element_idx, obj)
 
     @stopped_cancel_trigger
-    def be_triggered(self, src_e, src_idx, idx, obj):
-        if not self.is_be_bind(src_e.id, src_idx):
+    def be_triggered(self, srcE, srcIdx, idx, obj):
+        if not self.is_be_bind(srcE.id, srcIdx):
             raise EP_ElementError(
-                'Cannot be triggered, src is not be bind, {}'.format(src_e.id),
+                'Cannot be triggered, src is not be bind, {}'.format(srcE.id),
                 self)
-        return self.handle_be_triggered(
-            src_e, src_idx, idx, obj, **self._pkg_all_ref_params())
+        return self.handleProcessActivated(
+            srcE, srcIdx, idx, obj, **self._pkg_all_ref_params())
 
     @api_need_implement
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
         """be triggered handler, implement in subclass::
 
-            src_e ------+           +-----------------
+            srcE ------+           +-----------------
                   src_idx1 --+      |        e -> handle_be_triggerd
                   src_idx2   +--obj---> idx1 ---> idx |
                   ....  |           |   idx2          |
             ------------+           |  ...            +--+
-                               +-----> ref_1| ref_params |
+                               +-----> ref_1| refParams |
                     ref_d------+  +--> ref_2|
                                   | |  ...
                                   | +-------------------
                                 ...
 
-        :param src_e: source element
-        :type src_e: :py:class:`_BasicElement` or its subclass
-        :param int src_idx: source element pool idx
+        :param srcE: source element
+        :type srcE: :py:class:`_BasicElement` or its subclass
+        :param int srcIdx: source element pool idx
         :param int idx: self element idx
         :param BaseContext obj: triggered context
-        :param **ref_params: kv pairs of reference params
+        :param **refParams: kv pairs of reference params
         """
 
     def self_check(self):
         """ Check self is valid 
         
         :raise EP_ElementCheckerError: if param define in 
-            :py:attr:`_BasicElement.__self_params__` or ref_param define in 
+            :py:attr:`_BasicElement.__selfParams__` or referenceArgument define in 
             :py:attr:`_BasicElement.__ref_params__` not found.
         :return: self element id
         :rtype: :py:attr:`_BasicElement.id`
@@ -410,8 +410,8 @@ class _BasicElement(object):
         return self._element_id
 
     def _check_params(self):
-        for p in self.__self_params__:
-            if p not in self._params:
+        for p in self.__selfParams__:
+            if p not in self.paramsDict:
                 raise EP_ElementCheckerError(
                     'check params failed, {} not found'.format(p), self)
 
@@ -448,7 +448,7 @@ class OptionInputParamMixin(object):
               +--------E--------
           +--------p_key->d(param)
           |   |
-          +->op_key(ref_param)
+          +->op_key(referenceArgument)
               +-----------------
 
           - src:
@@ -463,31 +463,31 @@ class OptionInputParamMixin(object):
         :type src: :py:class:`_BasicElement` or its subclass
         :param str src_key: source element key
         """
-        self.unref_param(op_key)
-        self.ref_param(src, src_key, op_key) if src else \
+        self.unReferenceArgument(op_key)
+        self.referenceArgument(src, src_key, op_key) if src else \
             self._set_op_ref_param(d, p_key, op_key)
 
     def _set_op_ref_param(self, d, p_key, op_key):
-        self.add_param(p_key, d)
-        self.ref_param(self, p_key, op_key)
+        self.putArgument(p_key, d)
+        self.referenceArgument(self, p_key, op_key)
 
 
 class OverOneTickMixin(object):
     
-    def next(self, ctx, **ref_params):
+    def next(self, ctx, **refParams):
         """ Next triggered API
 
         ``next`` 方法适用于多帧操作情况, 根据不同逻辑实现next方法, 达到
         多帧操作Element.
 
-        E.G. 令全局方法 ``_callback`` 可以将设置X秒后回调, 实现方法:
+        E.G. 令全局方法 ``addTimerCB`` 可以将设置X秒后回调, 实现方法:
 
-            def next(self, ctx, **ref_params):
-                _callback(delay=1, obj=self, func_name='handle_be_triggered',
-                          func_args=(self, 1, 1, ctx), func_kwargs=ref_params)
+            def next(self, ctx, **refParams):
+                addTimerCB(delay=1, obj=self, func_name='handleProcessActivated',
+                          func_args=(self, 1, 1, ctx), func_kwargs=refParams)
 
         :param BaseContext ctx: element context
-        :param **ref_params: kv pairs for reference params values
+        :param **refParams: kv pairs for reference params values
         """
         raise NotImplementedError('loop next action not define')
 
@@ -498,7 +498,7 @@ class _SingleHandlerMixin(object):
         if not callable(handler):
             raise TypeError(
                 '{} handle must be callable'.format(self.__class__.__name__))
-        self._handler = handler
+        self._handlerFunc = handler
 
 
 class BaseEvent(_BasicElement, _SingleHandlerMixin):
@@ -507,7 +507,7 @@ class BaseEvent(_BasicElement, _SingleHandlerMixin):
        
       INPUT:
         1. ref params: when be triggered, those params will be package 
-           as ``**kwargs`` and be afferent into ``handle_be_triggered`` method.
+           as ``**kwargs`` and be afferent into ``handleProcessActivated`` method.
         2. be_binded map: record be binded elements
 
       ORIGIN:
@@ -520,39 +520,39 @@ class BaseEvent(_BasicElement, _SingleHandlerMixin):
     
     :cvar EVENT_BIND_IDX: event bind idx
     
-    :ivar function _handler: event handler function
+    :ivar function _handlerFunc: event handler function
     
     E.G. handler function::
 
-        def something_handler(this_element, source_element, context, **ref_params):
+        def something_handler(this_element, source_element, context, **refParams):
             ...
         
     """
 
     EVENT_BIND_IDX = 1
 
-    def __init__(self, event_id, controller, event_handler=None, **kwargs):
-        super().__init__(event_id, controller, **kwargs)
-        self._handler = EMPTY_FUNC
-        if event_handler is not None:
-            self.regr_event_handler(event_handler)
+    def __init__(self, eventId, controller, eventHandler=None, **kwargs):
+        super().__init__(eventId, controller, **kwargs)
+        self._handlerFunc = EMPTY_FUNC
+        if eventHandler is not None:
+            self.regr_event_handler(eventHandler)
 
-    def regr_event_handler(self, event_handler):
+    def regr_event_handler(self, eventHandler):
         """ registry event handler
         
-        event_handler must have these params::
+        eventHandler must have these params::
 
             - self_e
-            - src_e
+            - srcE
             - context
-            - **ref_params
+            - **refParams
 
-        :param event_handler: callbale object
+        :param eventHandler: callbale object
         """
-        self._regr_handler(event_handler)
+        self._regr_handler(eventHandler)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        self._handler(self, src_e, obj, **ref_params)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        self._handlerFunc(self, srcE, obj, **refParams)
 
 
 class _MultiHandlersMixin(object):
@@ -569,8 +569,8 @@ class BaseFlow(_BasicElement, _MultiHandlersMixin):
        this basic class
     """ 
 
-    def __init__(self, event_id, controller, **kwargs):
-        super().__init__(event_id, controller, **kwargs)
+    def __init__(self, eventId, controller, **kwargs):
+        super().__init__(eventId, controller, **kwargs)
         self._handlers = {}
 
     def regr_flow_handler(self, flow_handler, inputing_idx):
@@ -587,12 +587,12 @@ class BaseFlow(_BasicElement, _MultiHandlersMixin):
         """
         self._regr_handler(flow_handler, inputing_idx)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
         if idx not in self._handlers:
             raise AttributeError(
                 'Cannot be triggered flow, handler not found '
-                '{} -> {}'.format(src_idx, idx))
-        self._handlers[idx](self, src_e, obj, **ref_params)
+                '{} -> {}'.format(srcIdx, idx))
+        self._handlers[idx](self, srcE, obj, **refParams)
 
 
 class BaseVar(_BasicElement):
@@ -607,7 +607,7 @@ class BaseVar(_BasicElement):
                 '{} must set controller'.format(self.__class__.__name__))
         super().__init__(eid, controller, **kwargs)
         self._var_name = var_name
-        self.add_param(var_name, self._get_variable)
+        self.putArgument(var_name, self._get_variable)
 
     @property
     def var_name(self):
@@ -615,13 +615,13 @@ class BaseVar(_BasicElement):
 
     @property
     def var_value(self):
-        if not self.has_param(self._var_name):
+        if not self.hasArgument(self._var_name):
             raise KeyError(
                 'var {} not in self param'.format(self._var_name))
         if not self._controller.has_variable(self._var_name):
             raise KeyError(
                 'var {} not define in global'.format(self._var_name))
-        return self.get_param(self._var_name)
+        return self.fetchArgument(self._var_name)
 
     def _get_variable(self):
         return self._controller.get_variable(self._var_name)

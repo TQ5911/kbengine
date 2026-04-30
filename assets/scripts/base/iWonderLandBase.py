@@ -16,6 +16,7 @@ import activityControl_config as AC_CD
 import gamedecorator
 import LogTrackingMgr
 import visible_visible as V_VD
+import creep_base as CBD
 
 
 class IWonderLandBase(object):
@@ -37,7 +38,7 @@ class IWonderLandBase(object):
 
     def checkAndEnterWonderLand(self, floor):
         if self.sumWonderLandTicket() <= 0:
-            WARNING_MSG('IWonderLandBase::checkAndEnterWonderLand: self.sumWonderLandTicket <= 0')
+            LOG_WARN('IWonderLandBase::checkAndEnterWonderLand: self.sumWonderLandTicket <= 0')
             return
 
         mapId = WL_FD.datas[floor]['ID']
@@ -51,7 +52,7 @@ class IWonderLandBase(object):
 
     @gamedecorator.checkGameconfigEnable('wonderLand')
     def addWonderLandTicket(self, exposed, itemId, num, isAddDuration):
-        INFO_MSG('IWonderLandBase::addWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}'.format(itemId, num, isAddDuration))
+        LOG_IFO('IWonderLandBase::addWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}'.format(itemId, num, isAddDuration))
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])
             return
@@ -59,7 +60,7 @@ class IWonderLandBase(object):
         _opUUID = KBEngine.genUUID64()
         if not itemId:
             if self.sumWonderLandTicket() <= 0:
-                ERROR_MSG('IWonderLandBase::addWonderLandTicket: sumWonderLandTicket <= 0')
+                LOG_ERR('IWonderLandBase::addWonderLandTicket: sumWonderLandTicket <= 0')
                 return
 
             self.modifyWonderLandTicket(-1, AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES, _opUUID)
@@ -91,9 +92,9 @@ class IWonderLandBase(object):
         )
 
     def doAddWonderLandTicket(self, itemId, num, isAddDuration, hasCheckCell, reason, opUUID):
-        INFO_MSG('IWonderLandBase::doAddWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(itemId, num, isAddDuration, hasCheckCell, reason))
+        LOG_IFO('IWonderLandBase::doAddWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(itemId, num, isAddDuration, hasCheckCell, reason))
         if isAddDuration and num != 1:
-            ERROR_MSG('IWonderLandBase::addWonderLandTicket: invalid num: {}'.format(num))
+            LOG_ERR('IWonderLandBase::addWonderLandTicket: invalid num: {}'.format(num))
             return
 
         if isAddDuration and not hasCheckCell:
@@ -103,7 +104,7 @@ class IWonderLandBase(object):
         _award = dropAward.DeductWealthVal()
         if itemId == gameconst.ItemId.MONEY:
             if num > self.wonderLandAddTimes:
-                ERROR_MSG('IWonderLandBase::addWonderLandTicket: num > wonderLandAddTimes')
+                LOG_ERR('IWonderLandBase::addWonderLandTicket: num > wonderLandAddTimes')
                 return
 
             _award.addWealthByItemId(itemId, num * WL_CD.datas['wonderLandNumCoin']['value'])
@@ -112,11 +113,11 @@ class IWonderLandBase(object):
             _award.addWealthByItemId(itemId, num)
 
         else:
-            ERROR_MSG('IWonderLandBase::addWonderLandTicket: invalid itemId: {}'.format(itemId))
+            LOG_ERR('IWonderLandBase::addWonderLandTicket: invalid itemId: {}'.format(itemId))
             return
 
         if not self.canDeductWealth(_award):
-            ERROR_MSG('IWonderLandBase::addWonderLandTicket: can not deduct wealth')
+            LOG_ERR('IWonderLandBase::addWonderLandTicket: can not deduct wealth')
             return
 
         if itemId == gameconst.ItemId.MONEY:
@@ -144,13 +145,14 @@ class IWonderLandBase(object):
 
         self.addWealth(_src, _award, opUUID, _detail)
 
-    def checkSummonWonderLandBossBase(self, itemId, itemNum):
+    def checkSummonWonderLandBossBase(self, itemId, itemNum, bossId):
         _deductAward = dropAward.DeductWealthVal()
         _deductAward.addWealthByItemId(itemId, itemNum)
 
         if not self.canDeductWealth(_deductAward):
             _msgId = WL_CD.datas['wonderLand_summoningFailed']['value']
-            _args = [str(itemId), str(itemNum)]
+            _bossName = CBD.datas[bossId]['name']
+            _args = [str(itemId), str(itemNum), utils.getTranslatedArg(_bossName)]
             self.onMessagePre(_msgId, _args)
             return False
 
@@ -161,7 +163,7 @@ class IWonderLandBase(object):
         _deductAward.addWealthByItemId(itemId, itemNum)
 
         if not self.canDeductWealth(_deductAward):
-            ERROR_MSG('IWonderLandBase::summonWonderLandBossBase: can not deduct wealth')
+            LOG_ERR('IWonderLandBase::summonWonderLandBossBase: can not deduct wealth')
             return False
 
         _src = AAC_AACDD.datas.BONUS_SRC_SUMMON_BOOSS
@@ -184,7 +186,7 @@ class IWonderLandBase(object):
 
     def autoRenewWonderLand(self, switchData):
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']):
-            INFO_MSG('IWonderLandBase::autoRenewWonderLand: wonderLandActID not open')
+            LOG_IFO('IWonderLandBase::autoRenewWonderLand: wonderLandActID not open')
             return
 
         _opUUID = KBEngine.genUUID64()

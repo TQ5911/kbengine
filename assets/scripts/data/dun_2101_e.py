@@ -188,7 +188,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1118
+        1118,
+        1120
       ]
     }
   },
@@ -309,7 +310,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1014
+        1014,
+        1006
       ]
     }
   },
@@ -348,11 +350,7 @@ datas ={
       21010051
     ],
     "dialogID": 19019001,
-    "transition": {
-      "finished": [
-        1120
-      ]
-    }
+    "transition": {}
   },
   "1011": {
     "type": "popupdialog",
@@ -406,11 +404,7 @@ datas ={
       21010082
     ],
     "dialogID": 19900195,
-    "transition": {
-      "finished": [
-        1006
-      ]
-    }
+    "transition": {}
   },
   "1015": {
     "type": "popupdialog",

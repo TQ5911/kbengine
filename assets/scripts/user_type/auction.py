@@ -43,13 +43,13 @@ class AuctionItem(userType.UserSTDSoleType):
                 try:
                     setattr(self, k, self.json2extra(v))
                 except Exception as e:
-                    gameengine.reportCritical("AuctionItem::create item with Dict Error - extraInfo", e)
+                    gameengine.panicStack("AuctionItem::create item with Dict Error - extraInfo", e)
                     setattr(self, k, {})
             elif k == 'itemData':
                 try:
                     setattr(self, k, itemFactory.ItemFactory.createItemWithSavedDict(v))
                 except Exception as e:
-                    gameengine.reportCritical("AuctionItem::create item with Dict Error - itemData", e)
+                    gameengine.panicStack("AuctionItem::create item with Dict Error - itemData", e)
                     setattr(self, k, None)
             else:
                 setattr(self, k, v)
@@ -88,8 +88,8 @@ class AuctionItem(userType.UserSTDSoleType):
     def __init__(self, auctionType=gameconst.AuctionType.UNKNOWN, auctionItemUUID=0, addTime=0,
                  itemData=None, price=0, number=0, bagType=gameconst.BagType.BAG_TYPE_NORMAL,
                  source=gameconst.AuctionSource.UNKNOWN,
-                 status=gameconst.AuctionItemStatus.INIT, locked=False, extraInfo=None,
-                 tCreate=utils.getNow()):
+                 status=gameconst.AuctionItemStatus.ENUM_INIT, locked=False, extraInfo=None,
+                 tCreate=utils.curTS()):
         self.auctionType = auctionType
         self.auctionItemUUID = auctionItemUUID
         self.addTime = addTime
@@ -108,7 +108,7 @@ class AuctionItem(userType.UserSTDSoleType):
     def canBeSearched(self):
         # if not self.isNotifyExpired():
         #     return False
-        return self.status == gameconst.AuctionItemStatus.SELLING
+        return self.status == gameconst.AuctionItemStatus.ENUM_SELLING
 
     @property
     def totalPrice(self):
@@ -148,13 +148,13 @@ class AuctionItem(userType.UserSTDSoleType):
         self.extraInfo.setdefault('playerTlogProps', {}).update(newVal)
 
     def setStatusSelling(self):
-        self.status = gameconst.AuctionItemStatus.SELLING
+        self.status = gameconst.AuctionItemStatus.ENUM_SELLING
 
     def setStatusNotify(self):
-        self.status = gameconst.AuctionItemStatus.NOTIFY
+        self.status = gameconst.AuctionItemStatus.ENUM_NOTIFY
 
     def setStatusExpired(self):
-        self.status = gameconst.AuctionItemStatus.EXPIRED
+        self.status = gameconst.AuctionItemStatus.ENUM_EXPIRED
 
     @property
     def notifyExpiredSecond(self):
@@ -165,9 +165,9 @@ class AuctionItem(userType.UserSTDSoleType):
         return (self.notifyExpiredSecond or 0) + self.tCreate
 
     def isNotifyExpired(self, now=None):
-        if self.status != gameconst.AuctionItemStatus.NOTIFY:
+        if self.status != gameconst.AuctionItemStatus.ENUM_NOTIFY:
             return True
-        now = now if now is not None else utils.getNow()
+        now = now if now is not None else utils.curTS()
         return now > self.notifyExpiredTime
 
     @property
@@ -181,9 +181,9 @@ class AuctionItem(userType.UserSTDSoleType):
         return (self.itemExpiredSecond or 0) + self.addTime
 
     def isItemExpired(self, now=None):
-        if self.status == gameconst.AuctionItemStatus.EXPIRED:
+        if self.status == gameconst.AuctionItemStatus.ENUM_EXPIRED:
             return True
-        now = now if now is not None else utils.getNow()
+        now = now if now is not None else utils.curTS()
         return now > self.itemExpiredTime
 
     def buildIndexKeyFromAttrsName(self, *indexKeys):
@@ -191,13 +191,13 @@ class AuctionItem(userType.UserSTDSoleType):
         for i in indexKeys:
             _m_value = getattr(self, i)
             if _m_value is None:
-                # WARNING_MSG("buildIndexKeyFromAttrsName:: value is None --> ", i, _m_value)
+                # LOG_WARN("buildIndexKeyFromAttrsName:: value is None --> ", i, _m_value)
                 return None
             _m_datas.append(str(_m_value))
         return G_INDEX_SPLIT_KEY.join(_m_datas)
 
     def lock(self, timeout=0, now=None):
-        now = now if now is not None else utils.getNow()
+        now = now if now is not None else utils.curTS()
         if self.isLocked(now):
             return False
         self.locked = timeout + now
@@ -207,7 +207,7 @@ class AuctionItem(userType.UserSTDSoleType):
         self.locked = 0
 
     def isLocked(self, now=None):
-        now = now if now is not None else utils.getNow()
+        now = now if now is not None else utils.curTS()
         return self.locked > now
 
     def itemCanMerge(self, withInAuctionItem):
@@ -262,7 +262,7 @@ class Auction(userType.UserSTDSoleType):
         self.auctionItemData = {i.auctionItemUUID: i for i in dataDic['auctionItemData'] if i.itemData}
         # checksum
         if len(dataDic['auctionItemData']) != len(self.auctionItemData):
-            WARNING_MSG("Auction::itemdata dict checksum failed")
+            LOG_WARN("Auction::itemdata dict checksum failed")
         self.defaultIndexSortKey = dataDic["defaultIndexSortKey"]
         self.defaultIndexSortReversed = dataDic["defaultIndexSortReversed"]
         self.refreshAuctionIndexData()
@@ -327,21 +327,21 @@ class Auction(userType.UserSTDSoleType):
     def addAuctionIndex(self, indexKeyList, syncNow=True):
         m_indexKey = self.joinAuctionIndex(indexKeyList)
         if m_indexKey in self.auctionIndexInfo:
-            return None, gameconst.AuctionErrno.AUCTION_INDEX_ALREADY_ADDED.initkvbody()()
+            return None, gameconst.AuctionErrno.ERR_AUCTION_INDEX_ALREADY_ADDED.initkvbody()()
         if not self.isAuctionIndexKeyValidated(indexKeyList):
-            return None, gameconst.AuctionErrno.AUCTION_ITEM_ATTR_NOT_DEFINED.initkvbody()()
+            return None, gameconst.AuctionErrno.ERR_AUCTION_ITEM_ATTR_NOT_DEFINED.initkvbody()()
         self.auctionIndexInfo.add(m_indexKey)
         if syncNow:
             self.refreshAuctionIndexData()
-        return m_indexKey, gameconst.AuctionErrno.AUCTION_OK
+        return m_indexKey, gameconst.AuctionErrno.ERR_AUCTION_OK
 
     def removeAuctionIndex(self, indexKey, syncNow=True):
         if indexKey not in self.auctionIndexInfo:
-            return False, gameconst.AuctionErrno.AUCTION_INDEX_NOT_FOUND.initkvbody()()
+            return False, gameconst.AuctionErrno.ERR_AUCTION_INDEX_NOT_FOUND.initkvbody()()
         self.auctionIndexInfo.remove(indexKey)
         if syncNow:
             self.refreshAuctionIndexData()
-        return True, gameconst.AuctionErrno.AUCTION_OK
+        return True, gameconst.AuctionErrno.ERR_AUCTION_OK
 
     def hasAuctionIndex(self, indexKey):
         return indexKey in self.auctionIndexInfo
@@ -383,7 +383,7 @@ class Auction(userType.UserSTDSoleType):
         m_indexKeyList = self.splitAuctionIndex(indexKey)
         m_indexItemKey = auctionItem.buildIndexKeyFromAttrsName(*m_indexKeyList)
         if m_indexItemKey is None:
-            # WARNING_MSG("Auction::_syncAddItemInAuctionIndex:: indexKey skipped",
+            # LOG_WARN("Auction::_syncAddItemInAuctionIndex:: indexKey skipped",
             #             auctionItem.auctionItemUUID, m_indexKeyList)
             return
 
@@ -404,21 +404,21 @@ class Auction(userType.UserSTDSoleType):
 
     def putItemInAuction(self, auctionItem: AuctionItem):
         if auctionItem.auctionType != self.auctionType:
-            return False, gameconst.AuctionErrno.AUCTION_TYPE_ERR.initkvbody()()
+            return False, gameconst.AuctionErrno.ERR_AUCTION_TYPE_ERR.initkvbody()()
         if auctionItem.auctionItemUUID in self.auctionItemData:
-            return False, gameconst.AuctionErrno.AUCTION_ALREADY_IN_AUCTION.initkvbody()()
+            return False, gameconst.AuctionErrno.ERR_AUCTION_ALREADY_IN_AUCTION.initkvbody()()
         self.auctionItemData[auctionItem.auctionItemUUID] = auctionItem
         self._syncAddItemInAuctionIndex(auctionItem, sortBy=self.defaultIndexSortKey,
                                         reversed=self.defaultIndexSortReversed)
         self.refreshAuctionDefaultSortData()
-        return True, gameconst.AuctionErrno.AUCTION_OK
+        return True, gameconst.AuctionErrno.ERR_AUCTION_OK
 
     def _syncRemoveItemFromAuctionIndex(self, auctionItem, sortBy='', reversed=False):
         for m_indexKey, _m_auctionItemIndexDic in self._auctionItemIndex.items():
             m_indexKeyList = self.splitAuctionIndex(m_indexKey)
             m_indexItemKey = auctionItem.buildIndexKeyFromAttrsName(*m_indexKeyList)
             if m_indexItemKey is None:
-                # WARNING_MSG("Auction::_syncRemoveItemFromAuctionIndex:: indexKey skipped",
+                # LOG_WARN("Auction::_syncRemoveItemFromAuctionIndex:: indexKey skipped",
                 #             auctionItem.auctionItemUUID, m_indexKeyList)
                 continue
 
@@ -437,12 +437,12 @@ class Auction(userType.UserSTDSoleType):
 
     def popItemFromAuction(self, auctionItemUUID):
         if auctionItemUUID not in self.auctionItemData:
-            return None, gameconst.AuctionErrno.AUCTION_NOT_IN_AUCTION.initkvbody()()
+            return None, gameconst.AuctionErrno.ERR_AUCTION_NOT_IN_AUCTION.initkvbody()()
         m_auctionItem = self.auctionItemData.pop(auctionItemUUID)
         self._syncRemoveItemFromAuctionIndex(m_auctionItem, sortBy=self.defaultIndexSortKey,
                                              reversed=self.defaultIndexSortReversed)
         self.refreshAuctionDefaultSortData()
-        return m_auctionItem, gameconst.AuctionErrno.AUCTION_OK
+        return m_auctionItem, gameconst.AuctionErrno.ERR_AUCTION_OK
 
     def getItemFromAuctionByUUID(self, auctionItemUUID, default=None):
         return self.auctionItemData.get(auctionItemUUID, default)
@@ -451,7 +451,7 @@ class Auction(userType.UserSTDSoleType):
         m_rmKeys = []
         for k, v in searchOptions.items():
             if v is None:
-                WARNING_MSG("_validateSearchOptions:: None value in search kv", k, v)
+                LOG_WARN("_validateSearchOptions:: None value in search kv", k, v)
                 m_rmKeys.append(k)
         for _i in m_rmKeys:
             searchOptions.pop(_i)
@@ -462,8 +462,8 @@ class Auction(userType.UserSTDSoleType):
         self._validateSearchOptions(searchOptions)
         m_searchAttrs = list(searchOptions)
         if not self.isAuctionIndexKeyValidated(m_searchAttrs):
-            return [], _m_errno.AUCTION_ITEM_ATTR_NOT_DEFINED.initkvbody()()
-        _hasMultipleOptVal = any(utils.canIterable(i) for i in searchOptions.values())
+            return [], _m_errno.ERR_AUCTION_ITEM_ATTR_NOT_DEFINED.initkvbody()()
+        _hasMultipleOptVal = any(utils.checkCanIterable(i) for i in searchOptions.values())
 
         m_indexKey = self.joinAuctionIndex(m_searchAttrs)
         m_searchAttrs = self.splitAuctionIndex(m_indexKey)
@@ -471,13 +471,13 @@ class Auction(userType.UserSTDSoleType):
         if not _hasMultipleOptVal and self.hasAuctionIndex(m_indexKey):
             m_indexItemKey = self.joinAuctionIndex(
                 map(lambda i: searchOptions[i], m_searchAttrs), nosort=True)
-            return self._iterGetItemsFromAuctionWithIndex(m_indexKey, m_indexItemKey, filterFn), _m_errno.AUCTION_OK
+            return self._iterGetItemsFromAuctionWithIndex(m_indexKey, m_indexItemKey, filterFn), _m_errno.ERR_AUCTION_OK
 
         else:
-            return self._iterGetItemsFromAuctionNoIndex(searchOptions, filterFn), _m_errno.AUCTION_OK
+            return self._iterGetItemsFromAuctionNoIndex(searchOptions, filterFn), _m_errno.ERR_AUCTION_OK
 
     def _iterGetItemsFromAuctionWithIndex(self, indexKey, indexItemKey, filterFn):
-        INFO_MSG("_iterGetItemsFromAuctionWithIndex::", indexKey, indexItemKey)
+        LOG_IFO("_iterGetItemsFromAuctionWithIndex::", indexKey, indexItemKey)
         self._sortAuctionItemIndex(indexKey, indexItemKey)
 
         if not filterFn:
@@ -507,12 +507,12 @@ class Auction(userType.UserSTDSoleType):
                 self._auctionItemIndex.get(indexKey, {})[indexItemKey] = headData
 
     def _iterGetItemsFromAuctionNoIndex(self, searchOptions, filterFn=None):
-        # DEBUG_MSG("_iterGetItemsFromAuctionNoIndex::", searchOptions)
+        # LOG_DBG("_iterGetItemsFromAuctionNoIndex::", searchOptions)
         for m_auctionItemData in self._defaultAuctionSortedData:
             _skipped = False
             for k, v in searchOptions.items():
                 m_attrVal = getattr(m_auctionItemData, k)
-                if utils.canIterable(v):
+                if utils.checkCanIterable(v):
                     if m_attrVal in v:
                         continue
                     else:
@@ -605,12 +605,12 @@ class AuctionPlayerCache(userType.UserSTDSoleType):
         return self._lastSyncTime > t
 
     def isLocked(self, now=None):
-        return self._locked > (now or utils.getNow())
+        return self._locked > (now or utils.curTS())
 
     def lock(self, timeout=3, now=None):
-        now = now or utils.getNow()
+        now = now or utils.curTS()
         if self.isLocked(now):
-            WARNING_MSG("AuctionPlayerCache::lock::already locked", self.auctionType)
+            LOG_WARN("AuctionPlayerCache::lock::already locked", self.auctionType)
         self._locked = now + timeout
 
     def unlock(self):
@@ -626,7 +626,7 @@ class AuctionPlayerCache(userType.UserSTDSoleType):
 
     def updatePlayerCache(self, itemIdList=None, cacheSyncT=0):
         if self.isSyncTimeOutdate(cacheSyncT):
-            WARNING_MSG("updatePlayerCache:: sync time outdate {}(from) < {}(cached)".format(
+            LOG_WARN("updatePlayerCache:: sync time outdate {}(from) < {}(cached)".format(
                 cacheSyncT, self._lastSyncTime))
             return False
 

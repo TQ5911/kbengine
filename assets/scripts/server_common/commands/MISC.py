@@ -39,32 +39,20 @@ import actionContext
 import iRouter
 import gearBase_gearConst as GBGCD
 
-BASE = gameconst.BASE
-CELL = gameconst.CELL
-ALL = gameconst.ALL
-INSIDE = gmAdmin.INSIDE
-ALLSIDE = gmAdmin.ALLSIDE
 
-Int = gmCommand.Int
-Str = gmCommand.Str
-Float = gmCommand.Float
-Player = gmCommand.Player
-Entity = gmCommand.Entity
-PlayerAccount = gmCommand.PlayerAccount
+BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
+    gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
 
-gm_cmd = gmCommand.gm_cmd
-forwardCommand = gmCommand.forwardCommand
-callApps = gmCommand._callApps
+Int, Str, Float, Player, Entity, PlayerAccount = gmCommand.Int, gmCommand.Str,\
+    gmCommand.Float, gmCommand.Player, gmCommand.Entity, gmCommand.PlayerAccount
 
-RARG = gmCommand.RARG
-RSU = gmCommand.RSU
-RSTUB = gmCommand.RSTUB
-RONE = gmCommand.RONE
-RALL = gmCommand.RALL
-SELF = gmCommand.SELF
+gm_cmd, forwardGMCommand, callOnApps = gmCommand.gm_cmd, gmCommand.forwardGMCommand,\
+    gmCommand._callApps
 
-GOD_GROUPS = gmCommand.GOD_GROUPS
-DEV_GROUPS = gmCommand.DEV_GROUPS
+RARG, RSU, RSTUB, RONE, RALL, SELF = gmCommand.RARG, gmCommand.RSU, gmCommand.RSTUB,\
+    gmCommand.RONE, gmCommand.RALL, gmCommand.SELF
+
+GOD_GROUPS, DEV_GROUPS = gmCommand.GOD_GROUPS, gmCommand.DEV_GROUPS
 
 IS_CELL = (KBEngine.component == 'cellapp')
 IS_BASE = (KBEngine.component == 'baseapp')
@@ -101,7 +89,7 @@ def dynamic_import(module_name: str, class_name: str = None):
         return None
 
 @gm_cmd('$gmsetstate', (Player("gbId/Id"), Int("state"),Int("Pylance"),), RARG(0), gameconst.CELL, '设置状态', ALLSIDE, GOD_GROUPS, minArgs=2)
-def gmsetstate(su, player, state, Pylance = 1):
+def gm_gmsetstate(su, player, state, Pylance = 1):
     if Pylance == 1:
         player.setState(state)
     elif Pylance == 0:
@@ -112,7 +100,7 @@ def gmsetstate(su, player, state, Pylance = 1):
 
 @gm_cmd('$gotomapdataid', (Player("gbId/Id"), Int("mapdataid")), RARG(0), CELL,
         '传送到地图实体位置', ALLSIDE, GOD_GROUPS, minArgs=2)
-def gotomapdataid(su, player, mapdataid):
+def gm_gotomapdataid(su, player, mapdataid):
     if mapdataid and mapdataid > 10000000:
         mapid = str(mapdataid)[:4]
         modleName = "dun_" + mapid
@@ -132,8 +120,8 @@ def gotomapdataid(su, player, mapdataid):
     else:
         return False, '执行失败,id小于10000000，不是地图编辑器里的ID'
 
-@gm_cmd('$sethp', (Player("gbId/Id"), Int("hp"),), RARG(0), gameconst.CELL, '设置血量', ALLSIDE, GOD_GROUPS)
-def setPlayerHp(su, player, hp):
+@gm_cmd('$sethp', (Player("gbId or Id"), Int("hp"),), RARG(0), gameconst.CELL, 'set hp', ALLSIDE, GOD_GROUPS)
+def gm_setPlayerHp(su, player, hp):
     if hp < 0:
         return False, '血量不能小于0'
 
@@ -142,24 +130,21 @@ def setPlayerHp(su, player, hp):
 
 
 @gm_cmd('$adjfullHp', (Player("gbId/Id"), Int("fullhp"),), RARG(0), gameconst.CELL, '添加总血量', ALLSIDE, GOD_GROUPS)
-def setPlayerFullHp(su, player, addfullhp):
+def gm_setPlayerFullHp(su, player, addfullhp):
     if addfullhp < 0:
         return False, '血量不能小于0'
-    player.setProp('adjFullHp', addfullhp, gameconst.SourceType.Default)
-    player.setProp('adjFullMp', addfullhp, gameconst.SourceType.Default)
+    player.setProp('adjFullHp', addfullhp, gameconst.SourceType.SrcTpDefault)
+    player.setProp('adjFullMp', addfullhp, gameconst.SourceType.SrcTpDefault)
     player.addBuff(64000069,1,player.id)
     return True, '执行成功'
 
-
-
-
 @gm_cmd('$setultraSkillPower', (Player("gbId/Id"), Int("ultraSkillPower"),), RARG(0), gameconst.CELL, '设置大招充能值', ALLSIDE, GOD_GROUPS)
-def setPlayerultraSkillPower(su, player, ultraSkillPower):
+def gm_setPlayerultraSkillPower(su, player, ultraSkillPower):
     player.ultraSkillPower = ultraSkillPower
     return True, '执行成功'
 
 @gm_cmd('$reliveToPos', (Player("gbId/Id"), Str("position"), Int("hp")), RARG(0), CELL, '复活', ALLSIDE, GOD_GROUPS)
-def reliveToPos(su, player, position_str, hp):
+def gm_reliveToPos(su, player, position_str, hp):
     if position_str == 'None' or not position_str:
         position = None
     else:
@@ -173,25 +158,25 @@ def reliveToPos(su, player, position_str, hp):
 
 
 @gm_cmd('$showprop', (Int("entityId"),), RSU, CELL, '显示实体属性', INSIDE, GOD_GROUPS)
-def showEntityProp(su, entityId):
+def gm_showEntityProp(su, entityId):
     if entityId <= 0:
         return False, '非法的实体ID'
 
-    target = KBEngine.entities.get(entityId, None)
-    if not target:
+    _target = KBEngine.entities.get(entityId, None)
+    if not _target:
         return False, '没有找到ID为%s实体' % entityId
 
-    print('-------------------- prop start --------------------')
+    print('-------------------- [prop start] --------------------')
     import fightProp_define as FDD
-    for propName in FDD.datas.keys():
-        if hasattr(target, propName):
-            print('{0}: {1}'.format(propName, getattr(target, propName)))
-    print('-------------------- prop end   --------------------')
+    for _propName in FDD.datas.keys():
+        if hasattr(_target, _propName):
+            print('{0}: {1}'.format(_propName, getattr(_target, _propName)))
+    print('-------------------- [prop end]   --------------------')
 
     return True, '执行成功'
 
 @gm_cmd('$deducthp', (Player("gbId/Id"), Int('damage'), Int('entity id'),), RARG(0), CELL, '扣除目标血量', ALLSIDE, GOD_GROUPS, minArgs=1)
-def deductHp(su, player, damage, eid=0):
+def gm_deductHp(su, player, damage, eid=0):
     # 如果没有指定目标实体ID，则使用玩家当前选中的目标
     eid = eid or player.selectedTargetId
     # 获取目标实体
@@ -203,13 +188,13 @@ def deductHp(su, player, damage, eid=0):
     # 确保扣除的血量不会超过目标当前血量
     actual_damage = min(damage, e.hp)
     # 修改目标血量，从当前血量中扣除指定数值
-    e.modifyHP(-actual_damage, player.id, gameconst.SourceType.Skill, 0)
+    e.modifyHP(-actual_damage, player.id, gameconst.SourceType.SrcTpSkill, 0)
     # 返回执行成功的消息，包含实际扣除的血量
     return True, '成功扣除%d点血量，目标剩余血量: %d' % (actual_damage, e.hp)
 
 @gm_cmd('$createmonster', (Player("gbId/Id"), Int('monster id'), Int('level'), Int('monsterNum'), Float('radius'), Int('force')), RARG(0), CELL,
         '创建怪物，可指定数量和半径', ALLSIDE, GOD_GROUPS, minArgs=3)
-def createMonster(su, player, monsterId, level, monsterNum=1, radius=0, force=0):
+def gm_createMonster(su, player, monsterId, level, monsterNum=1, radius=0, force=0):
     # 检查怪物ID和等级是否有效
     if monsterId not in MD.datas or level < 1 or monsterNum < 1:
         return False, '执行失败'
@@ -265,22 +250,22 @@ def createMonster(su, player, monsterId, level, monsterNum=1, radius=0, force=0)
 
 
 @gm_cmd('$addcoin', (Player("gbId/Id", raw=True), Float("num"),), RARG(0), BASE, '增加货币', ALLSIDE, GOD_GROUPS)
-def addCoin(su, player, num):
-    opUUID = KBEngine.genUUID64()
+def gm_addCoin(su, player, num):
+    _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
     detail = gameclass.AwardDetail(gm_cmd='$addcoin', num=num)
 
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         if num > 0:
-            gamesql.recordAvatarOfflineCallback(gbId, 'addCoin', (num, opUUID, src, detail))
+            gamesql.recordAvatarOfflineCallback(gbId, 'addCoin', (num, _opUUID, src, detail))
         elif num < 0:
             gamesql.recordAvatarOfflineCallback(gbId, 'gmDeleteItems', (gameconst.ItemId.COIN, abs(num), detail))
     else:
         if num > 0:
-            player.addCoin(num, opUUID, src, detail)
+            player.addCoin(num, _opUUID, src, detail)
         elif num < 0:
-            player.deductCoinNoLimit(abs(num), opUUID, src, detail)
+            player.deductCoinNoLimit(abs(num), _opUUID, src, detail)
 
     su.onCommandResult(0, '', {})
 
@@ -289,8 +274,8 @@ def addCoin(su, player, num):
 
 @gm_cmd('$deductcoin', (Player("gbId/Id", raw=True), Float("num"),), RARG(0), BASE, '扣除货币，不够时失败', ALLSIDE,
         GOD_GROUPS)
-def deductcoinCompletely(su, player, num):
-    opUUID = KBEngine.genUUID64()
+def gm_deductcoinCompletely(su, player, num):
+    _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
     num = abs(num)
     detail = gameclass.AwardDetail(gm_cmd='$addcoin', num=num)
@@ -307,34 +292,34 @@ def deductcoinCompletely(su, player, num):
 
         gamesql.checkOfflineDeductWealth(gbId, gameconst.ItemId.COIN, num, _onCheckDeduct)
     else:
-        if player.deductCoin(num, opUUID, src, detail, bMsg=False):
+        if player.deductCoin(num, _opUUID, src, detail, bMsg=False):
             su.onCommandResult(0, '', {})
         else:
-            su.onCommandResult(gameconst.GMCommandErr.INSUFFICIENT, 'insufficient', {'coin': player.coin})
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_INSUFFICIENT, 'insufficient', {'coin': player.coin})
 
     return True, '执行成功'
 
 
 @gm_cmd('$setvar', (Player("gbId/Id"), Int("varId"), Int("value"),), RARG(0), BASE, '设置变量值', ALLSIDE, GOD_GROUPS)
-def setVar(su, player, varId, value):
-    opUUID = KBEngine.genUUID64()
+def gm_setVar(su, player, varId, value):
+    _opUUID = KBEngine.genUUID64()
     varSrc = gameconst.VarChangeSrc.VAR_SRC_GM
     desc = 'gm_cmd:$setvar {} {}'.format(varId, value)
-    player.gmSetVar(varId, value, opUUID, varSrc, desc)
+    player.gmSetVar(varId, value, _opUUID, varSrc, desc)
     return True, '执行成功'
 
 
 @gm_cmd('$getvar', (Player("gbId/Id"), Int("varId"),), RARG(0), BASE, '读取变量值', ALLSIDE, GOD_GROUPS)
-def getVar(su, player, varId):
+def gm_getVar(su, player, varId):
     result, desc = player.gmGetVar(varId)
     return result, desc
 
 
 @gm_cmd('$clearspace', (Str('clearType'),), RSU, CELL, '清除当前场景实体', INSIDE, GOD_GROUPS, minArgs=0)
-def clearspace(su, clearType):
+def gm_clearspace(su, clearType):
     if clearType == "":
-        lineType = formula.getLineType(su.spaceNo)
-        typeList = utils.getDunStructureModuleData(lineType)['InitEntities'].keys()
+        lineType = formula.parseLineType(su.spaceNo)
+        typeList = utils.getDunStructModData(lineType)['InitEntities'].keys()
         for e in KBEngine.entities.values():
             if e.__class__.__name__ in typeList:
                 e.safeDestroy()
@@ -347,7 +332,7 @@ def clearspace(su, clearType):
 
 @gm_cmd('$crtbyid', (Str('game entity id'),), RSU, CELL, '根据唯一标识创建实体', INSIDE,
         GOD_GROUPS)
-def createEntityById(su, gameEntityId):
+def gm_createEntityById(su, gameEntityId):
     spaceBase = gameengine.getSpaceBase(su.spaceNo)
 
     if not spaceBase:
@@ -362,7 +347,7 @@ def createEntityById(su, gameEntityId):
 
 @gm_cmd('$crtherebyid', (Str('game entity id'),), RSU, CELL,
         '根据唯一标识在当前位置创建实体', INSIDE, GOD_GROUPS)
-def createEntityHereById(su, gameEntityId):
+def gm_createEntityHereById(su, gameEntityId):
     spaceBase = gameengine.getSpaceBase(su.spaceNo)
 
     if not spaceBase:
@@ -377,7 +362,7 @@ def createEntityHereById(su, gameEntityId):
 
 @gm_cmd('$rmbyid', (Str('game entity id'),), RSU, CELL,
         '根据唯一标识删除创建的实体', INSIDE, GOD_GROUPS)
-def removeEntityById(su, gameEntityId):
+def gm_removeEntityById(su, gameEntityId):
     spaceBase = gameengine.getSpaceBase(su.spaceNo)
 
     if not spaceBase:
@@ -390,7 +375,7 @@ def removeEntityById(su, gameEntityId):
 
 @gm_cmd('$createRobot', (Player("gbId/Id"), Int('robotDataId'), Int('level')), RARG(0), CELL, '创建机器人', ALLSIDE,
         GOD_GROUPS)
-def createRobot(su, player, robotDataId, level):
+def gm_createRobot(su, player, robotDataId, level):
     import utils
     import skillInfo
     import gameconst
@@ -416,7 +401,7 @@ def createRobot(su, player, robotDataId, level):
 
         props = utils.getRobotPropDict(randomTempBotId, name, school, level)
 
-        props['force'] = gameconst.ForceType.Monster
+        props['force'] = gameconst.ForceTypeEnum.Monster
         props['sex'] = utils.getRandomSex()
 
         props.update(extraProps)
@@ -427,7 +412,7 @@ def createRobot(su, player, robotDataId, level):
     try:
         e = _createEntity()
     except:
-        gameengine.reportCritical('gm create Robot error')
+        gameengine.panicStack('gm create Robot error')
         return False, '执行失败, 创建中出错, 请联系管理员排查'
     if not e:
         return False, '执行失败'
@@ -435,7 +420,7 @@ def createRobot(su, player, robotDataId, level):
 
 
 @gm_cmd('$createnpc', (Player("gbId/Id"), Int('npc_id'), Int('level')), RARG(0), CELL, '创建NPC', ALLSIDE, GOD_GROUPS)
-def createNPC(su, player, npcId, level):
+def gm_createNPC(su, player, npcId, level):
     import NPC_NPC as NPC_D
     import creep_base as CB
     if npcId not in NPC_D.datas or level < 1:
@@ -464,7 +449,7 @@ def createNPC(su, player, npcId, level):
 
 @gm_cmd('$createTeleporter', (Player("gbId/Id"), Int('teleportId'), Int('type'), Str('mapIds')), RARG(0), CELL, '创建传送门', ALLSIDE,
         GOD_GROUPS)
-def createTeleporter(su, player, teleportId, teleportType, mapsIds):
+def gm_createTeleporter(su, player, teleportId, teleportType, mapsIds):
     _mapIds = mapsIds.split(',')
     _mapIds = [int(i) for i in _mapIds]
     props = {
@@ -490,7 +475,7 @@ def createTeleporter(su, player, teleportId, teleportType, mapsIds):
 
 @gm_cmd('$createcollection', (Player("gbId/Id"), Int('collection id'),), RARG(0), CELL, '创建采集物', ALLSIDE,
         GOD_GROUPS)
-def createCollection(su, player, collectionId):
+def gm_createCollection(su, player, collectionId):
     import NPC_Pick
     if collectionId not in NPC_Pick.datas:
         return False, '执行失败'
@@ -517,9 +502,9 @@ def createCollection(su, player, collectionId):
 
 @gm_cmd('$goto', (Player("gbId/Id"), Float('x'), Float('y'), Float('z'), Int('spaceNo')), RARG(0), CELL,
         '传送到目标位置', ALLSIDE, GOD_GROUPS, minArgs=4)
-def gotoPosition(su, player, x, y, z, spaceNo=0):
+def gm_gotoPosition(su, player, x, y, z, spaceNo=0):
     if spaceNo and spaceNo != player.spaceNo:
-        if not formula.isStaticSpace(player.spaceNo) or not formula.isStaticSpace(spaceNo):
+        if not formula.inStaticScene(player.spaceNo) or not formula.inStaticScene(spaceNo):
             return False, '只能在大世界使用'
         player.base.teleportByNo(spaceNo, (x, y, z), player.direction, '', ())
     else:
@@ -528,7 +513,7 @@ def gotoPosition(su, player, x, y, z, spaceNo=0):
 
 
 @gm_cmd('$gotoid', (Entity('entity id'),), RARG(0), CELL, '传送到目标实体位置', INSIDE, GOD_GROUPS)
-def gotoById(su, e):
+def gm_gotoById(su, e):
     if su.spaceNo == e.spaceNo:
         su.telToPos(e.position)
         return True, '执行成功'
@@ -538,13 +523,13 @@ def gotoById(su, e):
 
 
 @gm_cmd('$getpos', (Entity('entity id'),), RARG(0), CELL, '获得目标实体位置', INSIDE, GOD_GROUPS)
-def getPosition(su, e):
+def gm_getPosition(su, e):
     return True, '执行成功：%s %s' % (e.spaceNo, str(e.position))
 
 
 @gm_cmd('$recordpos', (Entity('entity id'), Int('invaild'),), RARG(0), CELL, '记录目标实体位置和面向', INSIDE,
         GOD_GROUPS, minArgs=1)
-def recordPos(su, e, invaild=1):
+def gm_recordPos(su, e, invaild=1):
     writeStr = "recordpos %s %s %s,%s,%s\n" % (
         e.position[0], e.position[1], e.position[2], str(e.direction[2]), invaild)
     print("%s " % writeStr)
@@ -556,7 +541,7 @@ def recordPos(su, e, invaild=1):
 
 @gm_cmd('$debugai', (Entity('entity id'), Int('log ai'), Int('log hate')), RARG(0), CELL, '打开对应实体的ai日志',
         ALLSIDE, GOD_GROUPS)
-def toggleAIDebug(su, e, enableLogAITrace, enableLogHate):
+def gm_toggleAIDebug(su, e, enableLogAITrace, enableLogHate):
     if not hasattr(e, 'aiController'):
         return False, '执行失败，实体没有aiController'
 
@@ -571,7 +556,7 @@ def toggleAIDebug(su, e, enableLogAITrace, enableLogHate):
 
 
 @gm_cmd('$speed', (Player('entity id'), Float('speed')), RARG(0), CELL, '设置玩家速度', ALLSIDE, GOD_GROUPS)
-def setSpeed(su, player, speed):
+def gm_setSpeed(su, player, speed):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
 
@@ -581,7 +566,7 @@ def setSpeed(su, player, speed):
 
 
 @gm_cmd('$moralValue', (Player('entity id'), Int('moralValue')), RARG(0), CELL, '设置玩家善恶值', ALLSIDE, GOD_GROUPS)
-def setmoralValue(su, player, moralValue):
+def gm_setmoralValue(su, player, moralValue):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
 
@@ -590,14 +575,14 @@ def setmoralValue(su, player, moralValue):
     return True, '执行成功'
 
 @gm_cmd('$setRewardNumber', (Player('gbId/Id'), Int('RewardNumber')), RARG(0), BASE, '设置讨伐次数', ALLSIDE, GOD_GROUPS)
-def setRewardNumber(su, player, RewardNumber):
+def gm_setRewardNumber(su, player, RewardNumber):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
     player.crusadeInfo.rewardNumber = RewardNumber
     return True, '执行成功'
 
 @gm_cmd('$topspeed', (Player('entity id'), Float('speed')), RARG(0), CELL, '设置玩家最大速度', ALLSIDE, GOD_GROUPS)
-def setTopSpeed(su, player, speed):
+def gm_setTopSpeed(su, player, speed):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
 
@@ -606,7 +591,7 @@ def setTopSpeed(su, player, speed):
 
 
 @gm_cmd('$getSpeed', (Player('entity id'),), RARG(0), CELL, 'get玩家速度', ALLSIDE, GOD_GROUPS)
-def getSpeed(su, player):
+def gm_getSpeed(su, player):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
 
@@ -616,7 +601,7 @@ def getSpeed(su, player):
 
 @gm_cmd('$setpos', (Player('palyer id'), Float('x'), Float('y'), Float('z'), Float('dir'), Int('spaceNo')), RARG(0),
         CELL, '设置玩家位置', ALLSIDE, GOD_GROUPS, True, minArgs=4)
-def setPosition(su, player, x, y, z, direction=0, spaceNo=0):
+def gm_setPosition(su, player, x, y, z, direction=0, spaceNo=0):
     spaceNo = spaceNo or player.spaceNo
     tgtDirection = player.direction
     if direction:
@@ -627,7 +612,7 @@ def setPosition(su, player, x, y, z, direction=0, spaceNo=0):
 
 @gm_cmd('$getrandomitems', (Player("gbId/Id"), Int('bagType'), Int('itemNum'), Int('bindType')), RARG(0), BASE,
         '获取随机物品', ALLSIDE, GOD_GROUPS)
-def getRandomItems(su, player, bagType, itemNum, bindType):
+def gm_getRandomItems(su, player, bagType, itemNum, bindType):
     if itemNum < 1 or itemNum > 99:
         return False, '执行失败'
     itemsFilter = filter(lambda data: bagType == data['type'], ITEM_DATA.datas.values())
@@ -675,13 +660,13 @@ def getRandomItems(su, player, bagType, itemNum, bindType):
 @gm_cmd('$getfixedbox',
         (Player("gbId/Id", raw=True), Int('bagType'), Int('itemId'), Int('bindType'), Str('boxItemsJson')), RARG(0),
         BASE, '获取固定内容宝箱', ALLSIDE, GOD_GROUPS)
-def getFixedItemsBox(su, player, bagType, itemId, bindType, boxItemsJson):
+def gm_getFixedItemsBox(su, player, bagType, itemId, bindType, boxItemsJson):
     if bagType not in (0, 1, 2, 3):
         return False, '执行失败, 无法添加此物品ID, 背包类型错误, {}-{}--{}'.format(itemId, bagType, bindType)
     try:
         boxItems = json.loads(boxItemsJson)
     except Exception as e:
-        su.onCommandResult(gameconst.GMCommandErr.ARGS_ERR, '', {})
+        su.onCommandResult(gameconst.GMCommandErr.GM_RET_ARGS_ERR, '', {})
         return False, '执行失败'
 
     boxWealth = dropAward.AwardVal()
@@ -694,19 +679,19 @@ def getFixedItemsBox(su, player, bagType, itemId, bindType, boxItemsJson):
     wval = dropAward.AwardVal().addWealthByObjList([fixedBox])
 
     detail = 'gm_cmd:$getitems %s %s %s' % (itemId, itemNum, bindType)
-    opUUID = KBEngine.genUUID64()
+    _opUUID = KBEngine.genUUID64()
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        gamesql.recordAvatarOfflineCallback(gbId, 'gmAddWealth', (bagType, wval, opUUID, detail))
+        gamesql.recordAvatarOfflineCallback(gbId, 'gmAddWealth', (bagType, wval, _opUUID, detail))
     else:
-        player.gmAddWealth(bagType, wval, opUUID, detail)
+        player.gmAddWealth(bagType, wval, _opUUID, detail)
 
     su.onCommandResult(0, '', {})
     return True, '执行成功'
 
 @gm_cmd('$getitems', (Player("gbId/Id", raw=True), Int('bagType'), Int('itemNum'), Float('_bindType'), Int('itemId_Start'), Int('itemId_End')),
         RARG(0), BASE, '获取指定物品', ALLSIDE, GOD_GROUPS, minArgs=4)
-def getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End = 0):
+def gm_getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End = 0):
     if itemId_End == 0 and itemId_Start != 0:
         itemId_End = itemId_Start
     if bagType not in (0, 1, 2, 3):
@@ -739,7 +724,7 @@ def getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End =
                     # 记录离线玩家的回调，当玩家上线时执行gmAddItems操作
                     gamesql.recordAvatarOfflineCallback(gbId, 'gmAddItems', (bagType, itemId, itemNum, detail, bindType))
                 else:
-                    DEBUG_MSG('gmAddItems:', bagType, itemId, itemNum, detail,bindType)
+                    LOG_DBG('gmAddItems:', bagType, itemId, itemNum, detail,bindType)
                     # 如果是在线玩家，直接调用gmAddItems方法添加物品
                     player.gmAddItems(bagType, itemId, itemNum, detail,bindType)
             else:
@@ -752,7 +737,7 @@ def getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End =
         Player("gbId/Id", raw=True), Int('itemId'), Int('itemNum'),
         Int('bindType', default=gameconst.ItemBindType.BIND)),
         RARG(0), BASE, '删除指定物品', ALLSIDE, GOD_GROUPS, minArgs=3)
-def deleteItems(su, player, itemId, itemNum, bindType=gameconst.ItemBindType.BIND):
+def gm_deleteItems(su, player, itemId, itemNum, bindType=gameconst.ItemBindType.BIND):
     detail = ''
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
@@ -765,7 +750,7 @@ def deleteItems(su, player, itemId, itemNum, bindType=gameconst.ItemBindType.BIN
 
 
 @gm_cmd('$cleanbag', (Player("gbId/Id"), Int('bagType'),), RARG(0), BASE, '清空背包', ALLSIDE, GOD_GROUPS)
-def clenBag(su, player, bagType):
+def gm_clenBag(su, player, bagType):
     ret = player.gmCleanBag(bagType)
     if ret:
         return True, '执行成功'
@@ -773,28 +758,28 @@ def clenBag(su, player, bagType):
         return False, '执行失败'
 
 @gm_cmd('$getGearbaseEquipItem', (Player("gbId/Id"), Int('templateId'), Int('bindType'), Int('grade')), RARG(0), BASE, '获取装备', ALLSIDE, GOD_GROUPS)
-def getGear(su, player, templateId, bindType, grade):
+def gm_getGear(su, player, templateId, bindType, grade):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
     ret = player.gmAddGearbaseEquipItem(templateId, bindType, grade)
-    if ret == gameconst.BagOPStat.BAG_OP_STAT_OK:
+    if ret == gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
         return True, '执行成功'
     else:
         return False, '执行失败'
 
 
 @gm_cmd('$getReward', (Player("gbId/Id"), Int('dropId'), Int('num'),), RARG(0), BASE, '获取奖励', ALLSIDE, GOD_GROUPS)
-def getReward(su, player, dropId, num):
+def gm_getReward(su, player, dropId, num):
     awardCtx = awardContext.CommonContext(0, {'lv': player.getRoleCacheAttr('level', 0)})
-    opUUID = KBEngine.genUUID64()
-    ret = player.addAwards(AAC_AACDD.datas.BONUS_SRC_GM, dropId, num, opUUID, '', awardCtx)
+    _opUUID = KBEngine.genUUID64()
+    ret = player.addAwards(AAC_AACDD.datas.BONUS_SRC_GM, dropId, num, _opUUID, '', awardCtx)
     if ret:
         return True, '执行成功'
     else:
         return False, '执行失败'
 
 @gm_cmd('$getDropid', (Player("gbId/Id"), Int('dropId'), Int('num'),), RARG(0), BASE, '执行掉落', ALLSIDE, GOD_GROUPS)
-def getDropid(su, player, dropId, num):
+def gm_getDropid(su, player, dropId, num):
     for i in range(num):
         awardCtx = awardContext.CommonContext(0, {'lv': player.getRoleCacheAttr('level', 0)})
         awardCtx.addContextVar('avatarId', player.id)
@@ -802,7 +787,7 @@ def getDropid(su, player, dropId, num):
         awardCtx.addContextVar('isMonthCardExpired', player.getRoleCacheAttr('monthCardExpired', True))
         awardCtx.addContextVar('avatarScoreRank', player.avatarScoreRank)
         awardCtx.addContextVar('isCrossServer', player.isCrossServer)
-        opUUID = KBEngine.genUUID64()
+        _opUUID = KBEngine.genUUID64()
         awardVal = dropAward._getDropAward([dropId], awardCtx)
         autoDisassemble = player.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY,
                                                 gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL)
@@ -817,14 +802,14 @@ def getDropid(su, player, dropId, num):
                 equipList.remove(it)
             awardVal.itemWealth.addItemObjs(equipList)
             disassembleEquips and player.onMessagePre(GBGCD.datas['disassembleChatMsg']['value'], [])
-        ret = player.addWealth(AAC_AACDD.datas.BONUS_SRC_GM, awardVal, opUUID, None, awardCtx, notify=True, popWindow=False)
+        ret = player.addWealth(AAC_AACDD.datas.BONUS_SRC_GM, awardVal, _opUUID, None, awardCtx, notify=True, popWindow=False)
     if ret:
         return True, '执行成功'
     else:
         return False, '执行失败'
 
 @gm_cmd('$gmenterDungeon', (Player("gbId/Id"),Int('dungeonNo'), ), RARG(0), CELL, '管理员进入副本', ALLSIDE, GOD_GROUPS)
-def gmEnterDungeon(su,player, dungeonNo):
+def gm_gmEnterDungeon(su,player, dungeonNo):
     import gamePlay_gamePlay
     import dungeonSrc
     if dungeonNo not in gamePlay_gamePlay.datas:
@@ -834,29 +819,29 @@ def gmEnterDungeon(su,player, dungeonNo):
 
     dungeonSpaceType = gamePlay_gamePlay.datas[dungeonNo]['type']
     dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
-    if gameconst.DungeonType.isBothDungeon(dungeonSpaceType, dungeonEnterType):
+    if gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
         if player.isInTeam(player.gbId):
             player.gmEnterTeamDungeon(dungeonNo, src)
             return True, '执行成功, gm正在尝试进入全类型副本(组队)'
         else:
             player.gmEnterSingleDungeon(dungeonNo, src)
             return True, '执行成功, gm正在尝试进入全类型副本(单人)'
-    elif gameconst.DungeonType.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
+    elif gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
         if not player.isInTeam(player.gbId):
             return False, '執行失敗, gm-组队副本必须组队进入'
         player.gmEnterTeamDungeon(dungeonNo, src)
         return True, '执行成功, gm正在尝试进入组队副本'
-    elif gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
+    elif gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
         player.gmEnterSingleDungeon(dungeonNo, src)
         return True, '执行成功, gm正在尝试进入单人副本'
-    elif gameconst.DungeonType.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
+    elif gameconst.DungeonTypeJudge.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
         player.gmEnterRaidDungeon(dungeonNo, src)
         return True, '执行成功, gm正在尝试进入团队副本'
     else:
         return False, '执行失败, gm-不支持的副本类型'
 
 @gm_cmd('$enterDungeon', (Player("gbId/Id"),Int('dungeonNo'), ), RARG(0), CELL, '进入副本', ALLSIDE, GOD_GROUPS)
-def enterDungeon(su,player, dungeonNo):
+def gm_enterDungeon(su,player, dungeonNo):
     import gamePlay_gamePlay
     import dungeonSrc
     if dungeonNo not in gamePlay_gamePlay.datas:
@@ -866,29 +851,29 @@ def enterDungeon(su,player, dungeonNo):
 
     dungeonSpaceType = gamePlay_gamePlay.datas[dungeonNo]['type']
     dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
-    if gameconst.DungeonType.isBothDungeon(dungeonSpaceType, dungeonEnterType):
+    if gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
         if player.isInTeam(player.gbId):
             player.selfEnterTeamDungeon(dungeonNo, src)
             return True, '执行成功, 正在尝试进入全类型副本(组队)'
         else:
             player.selfEnterSingleDungeon(dungeonNo, src)
             return True, '执行成功, 正在尝试进入全类型副本(单人)'
-    elif gameconst.DungeonType.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
+    elif gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
         if not player.isInTeam(player.gbId):
             return False, '執行失敗, 组队副本必须组队进入'
         player.selfEnterTeamDungeon(dungeonNo, src)
         return True, '执行成功, 正在尝试进入组队副本'
-    elif gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
+    elif gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
         player.selfEnterSingleDungeon(dungeonNo, src)
         return True, '执行成功, 正在尝试进入单人副本'
-    elif gameconst.DungeonType.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
+    elif gameconst.DungeonTypeJudge.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
         player.selfEnterRaidDungeon(dungeonNo, src)
     else:
         return False, '执行失败, 不支持的副本类型'
 
 @gm_cmd('$setgmmode', (Player("gbId/Id"), Int("mode"),), RARG(0), gameconst.BASE, '设置gm模式', ALLSIDE, GOD_GROUPS)
-def setGmMode(su, player, gmMode):
-    if gmMode not in gameconst.GmMode.ALL_MODES:
+def gm_setGmMode(su, player, gmMode):
+    if gmMode not in gameconst.GmModeEnum.ALL_MODES:
         return False, '无效的mode：%s' % (gmMode,)
 
     player.gmMode = gmMode
@@ -896,21 +881,21 @@ def setGmMode(su, player, gmMode):
     return True, '执行成功'
 
 
-@gm_cmd('$sendmail', (Str("toGBID"), Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont')),
+@gm_cmd('$sendmail', (Str("toGBID"), Int('mailId'), Int('dueTime'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont')),
         RSU, gameconst.BASE, '向指定玩家发送一封邮件', INSIDE, GOD_GROUPS)
-def sendMail(su, toGBID, mailId, attachStr, despArgsStr, title, cont):
+def gm_sendMail(su, toGBID, mailId, dueTime, attachStr, despArgsStr, title, cont):
     toGBID = int(toGBID)
     attach = mailAssistor.parseAttachStr(attachStr)
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    mailAssistor.sendMailToPlayers([toGBID], mailId, extraAttach=attach, despArgs=despArgs, title=title, cont=cont, srcType=AAC_AACDD.datas.BONUS_SRC_GM)
+    mailAssistor.sendMailToPlayers([toGBID], mailId, dueTime=dueTime, extraAttach=attach, despArgs=despArgs, title=title, cont=cont, srcType=AAC_AACDD.datas.BONUS_SRC_GM)
     return True, '执行成功'
 
-@gm_cmd('$sendMailByGBIDNoMailId', (Player("gbId/Id", raw=True), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
+@gm_cmd('$sendMailByGBIDNoMailId', (Player("gbId/Id", raw=True), Int('dueTime'), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
         '向指定玩家发送一封自定义邮件', ALLSIDE, GOD_GROUPS)
-def sendMailByGBIDNoMailId(su, player, attachStr, title, cont):
-    DEBUG_MSG('sendMailByGBIDNoMailId:', attachStr, title, cont)
+def gm_sendMailByGBIDNoMailId(su, player, dueTime, attachStr, title, cont):
+    LOG_DBG('sendMailByGBIDNoMailId:', dueTime, attachStr, title, cont)
     if gmCommand.isRawPlayer(player):
         toGBID = gmCommand.getGbIdFromRawPlayer(player)
     else:
@@ -920,15 +905,16 @@ def sendMailByGBIDNoMailId(su, player, attachStr, title, cont):
     attach = mailAssistor.parseAttachStr(attachStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    mailAssistor.sendIDIPMailByGBID(su, toGBID, attach, title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
+    mailAssistor.sendIDIPMailByGBID(su, toGBID, dueTime, attach, title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
     return True, '执行成功'
 
-@gm_cmd('$sendB64MailByGBIDNoMailId', (Player("gbId/Id", raw=True), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
+@gm_cmd('$sendB64MailByGBIDNoMailId', (Player("gbId/Id", raw=True), Int('dueTime'), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
         '向指定玩家发送一封自定义邮件, base64编码', ALLSIDE, GOD_GROUPS)
-def sendB64MailByGBIDNoMailId(su, player, attachStr, b64title, b64cont):
+def gm_sendB64MailByGBIDNoMailId(su, player, dueTime, attachStr, b64title, b64cont):
+    LOG_DBG('sendB64MailByGBIDNoMailId:', dueTime, attachStr, b64title, b64cont)
     title = base64.b64decode(b64title.encode('ascii'), b'_-').decode('utf-8')
     cont = base64.b64decode(b64cont.encode('ascii'), b'_-').decode('utf-8')
-    DEBUG_MSG('sendMailByGBIDNoMailId:', attachStr, title, cont)
+    LOG_DBG('sendMailByGBIDNoMailId:', attachStr, title, cont)
     if gmCommand.isRawPlayer(player):
         toGBID = gmCommand.getGbIdFromRawPlayer(player)
     else:
@@ -938,12 +924,12 @@ def sendB64MailByGBIDNoMailId(su, player, attachStr, b64title, b64cont):
     attach = mailAssistor.parseAttachStr(attachStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    mailAssistor.sendIDIPMailByGBID(su, toGBID, attach, title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
+    mailAssistor.sendIDIPMailByGBID(su, toGBID, dueTime, attach, title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
     return True, '执行成功'
 
-@gm_cmd('$sendmailByAvatarId', (Str("toId"), Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont')),
+@gm_cmd('$sendmailByAvatarId', (Str("toId"), Int('mailId'), Int('dueTime'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont')),
         RSU, gameconst.BASE, '向指定玩家发送一封邮件', INSIDE, GOD_GROUPS)
-def sendMailByAvatarId(su, toId, mailId, attachStr, despArgsStr, title, cont):
+def gm_sendMailByAvatarId(su, toId, mailId, dueTime, attachStr, despArgsStr, title, cont):
     toId = int(toId)
     attach = mailAssistor.parseAttachStr(attachStr)
     despArgs = mailAssistor.parseDespStr(despArgsStr)
@@ -951,35 +937,35 @@ def sendMailByAvatarId(su, toId, mailId, attachStr, despArgsStr, title, cont):
         toId = su.id
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    gameengine.broadcastBaseapp('gmSendMailByEntityId', (toId, mailId, attach, despArgs, title, cont, AAC_AACDD.datas.BONUS_SRC_GM))
+    gameengine.broadcastBaseapp('gmSendMailByEntityId', (toId, mailId, dueTime, attach, despArgs, title, cont, AAC_AACDD.datas.BONUS_SRC_GM))
     return True, '执行成功'
 
-@gm_cmd('$sendglobalmail', (Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont'),
-                            Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
+@gm_cmd('$sendglobalmail', (Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont'), Int('minRoleTime'), Int('maxRoleTime'),
+                            Int('dueTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
         RONE, gameconst.BASE, '发送一封全服邮件', ALLSIDE, GOD_GROUPS)
-def gmSendGlobalMail(su, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, channel):
+def gm_gmSendGlobalMail(su, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel):
     # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
     attach = mailAssistor.parseAttachStr(attachStr)
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = base64.b64decode(title.encode('ascii'), b'_-').decode('utf-8')
     cont = base64.b64decode(cont.encode('ascii'), b'_-').decode('utf-8')
     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime, 
-                                                              minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM)
+                                                              dueTime, minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM)
     return True, '执行成功'
 
 @gm_cmd('$getGlobalMailList', (Player("gbId/Id"), Int("mailNum")), RSU, gameconst.BASE, '查看最近mailNum封全服邮件列表', INSIDE, GOD_GROUPS)
-def getGlobalMailList(su, player, mailNum):
+def gm_getGlobalMailList(su, player, mailNum):
     gameengine.getGlobalBase('GlobalMailStub').gmGetGlobalMailList(player, player._getChatChannelAvatarInfo(), mailNum)
     return True, '执行成功'
 
 @gm_cmd('$deleteGlobalMail', (Int("mailGBID"), ), RSU, gameconst.BASE, '删除一封全服邮件', INSIDE, GOD_GROUPS)
-def delectGlobalMail(su, mailGBID):
+def gm_delectGlobalMail(su, mailGBID):
     gameengine.getGlobalBase('GlobalMailStub').gmDeleteOneGlobalMail(mailGBID)
     return True, '执行成功'
 
 @gm_cmd('$sendBroadcast', (Int("messageId"), Str("args")), RONE, gameconst.BASE, '发放公告', ALLSIDE, GOD_GROUPS,
         minArgs=1)
-def sendBroadcast(su, messageId, args):
+def gm_sendBroadcast(su, messageId, args):
     if args:
         gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onMessage', (messageId, args.split(','))))
     else:
@@ -989,7 +975,7 @@ def sendBroadcast(su, messageId, args):
 
 @gm_cmd('$officialMessage', (Int("type"), Str("content"), Int("repeatCount")), RONE, gameconst.BASE, '普通公告',
         ALLSIDE, GOD_GROUPS, minArgs=2)
-def officialMessage(su, type, content, repeatCount):
+def gm_officialMessage(su, type, content, repeatCount):
     if not repeatCount:
         repeatCount = 1
 
@@ -1001,12 +987,12 @@ def officialMessage(su, type, content, repeatCount):
         Int("type"), Str("content"), Int("singleRepeatCount"), Str("startTime"), Int("interval"),
         Int("totalExecuteCount")),
         RONE, gameconst.BASE, '定时公告', ALLSIDE, GOD_GROUPS)
-def officialMessageRegularTime(su, type, content, singleRepeatCount, startTime, interval, totalExecuteCount):
+def gm_officialMessageRegularTime(su, type, content, singleRepeatCount, startTime, interval, totalExecuteCount):
     startTimeArgs = startTime.split(':')
     startTimeHour = int(startTimeArgs[0])
     startTimeMinute = int(startTimeArgs[1])
     startTimeTuple = [[[startTimeMinute], [startTimeHour], [], [], [], []]]
-    nextStart, _ = utils.nextByTimeTupleList(startTimeTuple)
+    nextStart, _ = utils.nextByCronTupleList(startTimeTuple)
 
     gameglobal.localBaseApp.sendOfficialMessage(nextStart, type, content, singleRepeatCount, interval * 60,
                                                 totalExecuteCount)
@@ -1014,21 +1000,21 @@ def officialMessageRegularTime(su, type, content, singleRepeatCount, startTime, 
 
 
 @gm_cmd('$onEventTips', (Player("gbId/Id"),), RARG(0), BASE, 'eventTips', ALLSIDE, GOD_GROUPS)
-def gmOnEventTips(su, player):
+def gm_gmOnEventTips(su, player):
     itemId = 30040001
     wealthVal = dropAward.AwardVal()
     wealthVal.addWealthByItemId(itemId, 1)
     awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID, eventTipId=10000002)
-    opUUID = KBEngine.genUUID64()
+    _opUUID = KBEngine.genUUID64()
     srcType = 302
     detail = gameclass.AwardDetail(rankPos=1)
-    player.addWealth(srcType, wealthVal, opUUID, detail, awardCtx)
+    player.addWealth(srcType, wealthVal, _opUUID, detail, awardCtx)
 
 
 @gm_cmd('$onBroadAllEventTips',
         (Int("itemId"), Int("itemNum"), Int("templateId"), Int("srcType"), Str("avatarName"), Str("serverId")), RALL,
         BASE, '全服eventTips', ALLSIDE, GOD_GROUPS)
-def onBroadAllEventTips(su, itemId, itemNum, templateId, srcType, avatarName, serverId):
+def gm_onBroadAllEventTips(su, itemId, itemNum, templateId, srcType, avatarName, serverId):
     if serverId == gameconfig.serverId():
         return
 
@@ -1042,16 +1028,16 @@ def onBroadAllEventTips(su, itemId, itemNum, templateId, srcType, avatarName, se
 
 
 @gm_cmd('$stopOfficialMessage', (), RALL, gameconst.BASE, '停止公告', ALLSIDE, GOD_GROUPS)
-def stopOfficialMessage(su):
+def gm_stopOfficialMessage(su):
     gameglobal.localBaseApp.stopOfficialMessage()
     return True, '执行成功'
 
 
 @gm_cmd('$enterline', (Player("gbId/Id"), Int("lineType"),), RARG(0), gameconst.CELL, '进入分线', ALLSIDE, GOD_GROUPS)
-def enterLine(su, player, lineType):
-    lineNo = formula.getLineNo(player.spaceNo)
+def gm_enterLine(su, player, lineType):
+    lineNo = formula.parseLineNo(player.spaceNo)
     pos, _ = utils.getPlayerBornInfo()
-    if formula.getMapId(player.spaceNo) == lineType:
+    if formula.fetchMapId(player.spaceNo) == lineType:
         return False, '执行失败'
 
     player.applyEnterLineInternal(lineType, lineNo, pos, player.direction, False)
@@ -1059,14 +1045,14 @@ def enterLine(su, player, lineType):
 
 
 @gm_cmd('$leaveline', (Player("gbId/Id"),), RARG(0), gameconst.CELL, '离开分线', ALLSIDE, GOD_GROUPS)
-def leaveLine(su, player):
-    if formula.spaceInWorldLine(player.spaceNo):
+def gm_leaveLine(su, player):
+    if formula.inWorldLineScene(player.spaceNo):
         return False, '不能离开大世界分线'
 
-    lineType = formula.getLineType(player.spaceNo)
-    lineNo = random.randint(0, utils.getLineMaxNumber(lineType) - 1)
-    pos = formula.whatSpaceBornPoint(formula.getLineSpaceNo(lineType, lineNo))
-    if formula.getMapId(player.spaceNo) == lineType:
+    lineType = formula.parseLineType(player.spaceNo)
+    lineNo = random.randint(0, utils.fetchLineMaxNumber(lineType) - 1)
+    pos = formula.getSpaceBornPoint(formula.combineLineSpaceNo(lineType, lineNo))
+    if formula.fetchMapId(player.spaceNo) == lineType:
         return False, '执行失败'
 
     player.applyEnterLineInternal(lineType, lineNo, pos, player.direction, False)
@@ -1074,19 +1060,19 @@ def leaveLine(su, player):
 
 
 @gm_cmd('$claimtask', (Player("gbId/Id"), Int('taskId'), Int('check')), RARG(0), BASE, '领取任务', ALLSIDE, GOD_GROUPS)
-def gmClaimTask(su, player, taskId, check):
+def gm_gmClaimTask(su, player, taskId, check):
     if taskId <= 0:
         return False, '执行失败， 任务id错误'
     import actionContext
     if check:
-        player.cell.startClaimTask(taskId, '', (), actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM))
+        player.cell.startClaimTask(taskId, '', (), actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM))
     else:
-        player.baseTaskClaim(taskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM), needCheck=False)
+        player.baseTaskClaim(taskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM), needCheck=False)
     return True, '执行成功'
 
 
 @gm_cmd('$submittask', (Player("gbId/Id"), Int('taskId'),), RARG(0), BASE, '提交任务', ALLSIDE, GOD_GROUPS)
-def gmSubmitTask(su, player, taskId):
+def gm_gmSubmitTask(su, player, taskId):
     if taskId <= 0:
         return False, '执行失败, 任务ID错误'
     player.gmForceSubmitTask(taskId)
@@ -1094,7 +1080,7 @@ def gmSubmitTask(su, player, taskId):
 
 
 @gm_cmd('$resetTask', (Player("gbId/Id"), Int('taskId'),), RARG(0), BASE, '重置任务', ALLSIDE, GOD_GROUPS)
-def gmResetTask(su, player, taskId):
+def gm_gmResetTask(su, player, taskId):
     if taskId <= 0:
         return False, '执行失败, 任务ID错误'
     player.gmResetTask(taskId)
@@ -1103,12 +1089,12 @@ def gmResetTask(su, player, taskId):
 
 @gm_cmd('$settaskstate', (Player("gbId/Id"), Int('taskId'), Int('state'), Int('childState')), RARG(0), BASE,
         '设置taskId及其子任务的状态', ALLSIDE, GOD_GROUPS, minArgs=3)
-def gmSetTaskState(su, player, taskId, state, childState=0):
+def gm_gmSetTaskState(su, player, taskId, state, childState=0):
     if taskId <= 0:
         return False, '执行失败, 任务ID错误'
 
     if state > gameconst.TaskStat.TASK_STAT_QUIT:
-        ERROR_MSG('invalid task state', state)
+        LOG_ERR('invalid task state', state)
         return False, '执行失败, 任务state错误'
 
     player.gmSetTaskState(taskId, state, childState)
@@ -1116,31 +1102,31 @@ def gmSetTaskState(su, player, taskId, state, childState=0):
 
 
 @gm_cmd('$playcinema', (Player("gbId/Id"), Int('cinemaId'),), RARG(0), CELL, '播放剧情动画', ALLSIDE, GOD_GROUPS)
-def gmPlaycinema(su, player, cinemaId):
+def gm_gmPlaycinema(su, player, cinemaId):
     player.prepareStartPlayCinema(cinemaId)
     return True, '执行成功'
 
 
 @gm_cmd('$addAllTitle', (Player("gbId/Id"),), RARG(0), BASE, '激活所有的称号', ALLSIDE, GOD_GROUPS)
-def addAllTitle(su, player):
+def gm_addAllTitle(su, player):
     player.gmAddAllTitle()
     return True, '执行成功'
 
 
 @gm_cmd('$killent', (Player("gbId/Id"), Int('entity id'),), RARG(0), CELL, 'kill目标', ALLSIDE, GOD_GROUPS, minArgs=1)
-def killEnt(su, player, eid=0):
+def gm_killEnt(su, player, eid=0):
     eid = eid or player.selectedTargetId
     e = KBEngine.entities.get(eid)
     if not e or not e.IsCombatUnit:
         return False, '%s不存在或者不是战斗单位' % eid
 
-    e.modifyHP(-e.hp, player.id, gameconst.SourceType.Skill, 0)
+    e.modifyHP(-e.hp, player.id, gameconst.SourceType.SrcTpSkill, 0)
     return True, '执行成功'
 
 
 @gm_cmd('$destroyent', (Player("gbId/Id"), Int('entity id'),), RARG(0), CELL, '销毁目标', ALLSIDE, GOD_GROUPS,
         minArgs=1)
-def destroyEnt(su, player, eid=0):
+def gm_destroyEnt(su, player, eid=0):
     eid = eid or player.selectedTargetId
     e = KBEngine.entities.get(eid)
     if not e:
@@ -1153,7 +1139,7 @@ def destroyEnt(su, player, eid=0):
 
 
 @gm_cmd('$setcfg', (Str('name'), Str('value')), RONE, BASE, '修改数据库中的游戏开关配置', ALLSIDE, DEV_GROUPS)
-def setGameConfig(su, name, value):
+def gm_setGameConfig(su, name, value):
     # 这里输入的string 是经过xml转义的 &apos;是' &quot;是"
     if value == '&apos;&apos;' or value == '&quot;&quot;':
         newValue = ''
@@ -1167,35 +1153,40 @@ def setGameConfig(su, name, value):
 
 
 @gm_cmd('$getcfg', (Str('cfgName'),), RONE, BASE, '获取数据库中的游戏开关配置', ALLSIDE, DEV_GROUPS)
-def getGameConfig(su, cfgName):
+def gm_getGameConfig(su, cfgName):
     value = gameconfig.gmGetCutomConfig(cfgName)
 
     return True, '执行成功：%s' % str(value)
 
 
 @gm_cmd('$setcachecfg', (Str('name'), Str('value')), RONE, BASE, '修改xml中配置的游戏开关配置', ALLSIDE, DEV_GROUPS)
-def setGameCacheConfig(su, name, value):
+def gm_setGameCacheConfig(su, name, value):
     # 这里输入的string 是经过xml转义的 &apos;是' &quot;是"
     if value == '&apos;&apos;' or value == '&quot;&quot;':
         newValue = ''
     else:
         newValue = value
 
-    callApps(gameconst.BASE, 'gameconfig.setCacheConfig', (name, newValue))
-    callApps(gameconst.CELL, 'gameconfig.setCacheConfig', (name, newValue))
+    callOnApps(gameconst.BASE, 'gameconfig.setCacheConfig', (name, newValue))
+    callOnApps(gameconst.CELL, 'gameconfig.setCacheConfig', (name, newValue))
     gameglobal.localBaseApp.notifyInterfaceCacheConfigChanged(name, value)
 
+    if name == 'permitLogin':
+        # permitLogin要更新redis
+        key = gameconst.RedisKey.SERVER_OPEN_STATE + str(gameconfig.serverId())
+        redisUtils.RedisUtils.set(key, str(newValue))
+        LOG_IFO('update redis server open state: ', key, str(newValue))
     return True, '执行成功'
 
 
 @gm_cmd('$getcachecfg', (Str('cfgName'),), RONE, BASE, '读取xml中配置的游戏开关配置', ALLSIDE, DEV_GROUPS)
-def getGameCacheConfig(su, cfgName):
+def gm_getGameCacheConfig(su, cfgName):
     value = gameconfig.getCacheConfig(cfgName)
     return True, '执行成功：%s' % str(value)
 
 
 @gm_cmd('$gmCleanAllTasks', (Player("gbId/Id"),), RARG(0), BASE, '清除身上所有任务', ALLSIDE, GOD_GROUPS)
-def gmCleanAllTasks(su, player):
+def gm_gmCleanAllTasks(su, player):
     import tutorConst_guideConfig as TCGCD
     player.taskInfo.tasks.clear()
     player.taskInfo.taskRecordDic.clear()
@@ -1205,46 +1196,46 @@ def gmCleanAllTasks(su, player):
 
 
 @gm_cmd('$botFinishNewbie', (Player("gbId/Id"),), RARG(0), BASE, '机器人完成新手', ALLSIDE, GOD_GROUPS)
-def botFinishNewbie(su, player):
+def gm_botFinishNewbie(su, player):
     player.gmBotFinishedNewbie()
     return True, '执行成功'
 
 
 @gm_cmd('$findEntity', (Int('entity id'),), RONE, CELL, '实体所在进程', ALLSIDE, GOD_GROUPS)
-def findEntity(su, eid):
-    forwardCommand(su, '$_findEntity-cell', eid)
-    forwardCommand(su, '$_findEntity-base', eid)
+def gm_findEntity(su, eid):
+    forwardGMCommand(su, '$_findEntity-cell', eid)
+    forwardGMCommand(su, '$_findEntity-base', eid)
 
 
 @gm_cmd('$_findEntity-cell', (Int('entity id'),), RALL, CELL, '实体所在进程', ALLSIDE, GOD_GROUPS)
-def findEntityCell(su, eid):
+def gm_findEntityCell(su, eid):
     import utils
     e = KBEngine.entities.get(eid)
     if not e:
         return
 
-    processIp = utils.getPythonServer()
+    processIp = utils.getPythonAddr()
     return True, 'findEntity-cell执行成功,进程IP：cellapp{:0>2}-{}'.format(KBEngine.getComponentGroupOrder(), processIp)
 
 
 @gm_cmd('$_findEntity-base', (Int('entity id'),), RALL, BASE, '实体所在进程', ALLSIDE, GOD_GROUPS)
-def findEntityBase(su, eid):
+def gm_findEntityBase(su, eid):
     import utils
     e = KBEngine.entities.get(eid)
     if not e:
         return
 
-    processIp = utils.getPythonServer()
+    processIp = utils.getPythonAddr()
     return True, 'findEntity-base执行成功,进程IP：baseapp{:0>2}-{}'.format(KBEngine.getComponentGroupOrder(), processIp)
 
 
 @gm_cmd('$findStub', (Str('stub name'),), RONE, BASE, 'stub所在进程', ALLSIDE, GOD_GROUPS)
-def findStub(su, stubName):
-    forwardCommand(su, '$_findStub-base', stubName)
+def gm_findStub(su, stubName):
+    forwardGMCommand(su, '$_findStub-base', stubName)
 
 
 @gm_cmd('$_findStub-base', (Str('stub name'),), RALL, BASE, 'stub所在进程', ALLSIDE, GOD_GROUPS)
-def findStubBase(su, stubName):
+def gm_findStubBase(su, stubName):
     import utils
 
     baseStub = gameengine.getGlobalBase(stubName)
@@ -1256,18 +1247,18 @@ def findStubBase(su, stubName):
         if not e:
             return
 
-        processIp = utils.getPythonServer()
+        processIp = utils.getPythonAddr()
         return True, '执行成功,进程IP：baseapp{:0>2}-{}，stub id ：{}'.format(KBEngine.getComponentGroupOrder(), processIp,
                                                                            baseStub.id)
 
 
 @gm_cmd('$getlinest', (Int('lineType'),), RONE, BASE, '获取分线状态', ALLSIDE, GOD_GROUPS)
-def getlinest(su, lineType):
-    forwardCommand(su, '$_getlinest-base', lineType)
+def gm_getlinest(su, lineType):
+    forwardGMCommand(su, '$_getlinest-base', lineType)
 
 
 @gm_cmd('$_getlinest-base', (Int('lineType'),), RALL, BASE, '获取分线状态', INSIDE, GOD_GROUPS)
-def getlinestBase(su, lineType):
+def gm_getlinestBase(su, lineType):
     import utils
 
     line = gameengine.getLineStub(lineType)
@@ -1288,10 +1279,10 @@ def getlinestBase(su, lineType):
 
 
 @gm_cmd('$me', (Player('player id'),), RARG(0), CELL, '获取玩家自己信息', ALLSIDE, GOD_GROUPS)
-def me(su, e):
+def gm_me(su, e):
     import utils
 
-    processIp = utils.getPythonServer()
+    processIp = utils.getPythonAddr()
     playerName = e.name
     playerId = e.id
     playerGbId = e.gbId
@@ -1304,10 +1295,10 @@ def me(su, e):
 
 
 @gm_cmd('$findavatar', (Player("gbId/Id"),), RARG(0), CELL, '通过玩家名字找到avatar', ALLSIDE, GOD_GROUPS)
-def findavatar(su, player):
+def gm_findavatar(su, player):
     import utils
 
-    processIp = utils.getPythonServer()
+    processIp = utils.getPythonAddr()
     playerName = player.name
     playerId = player.id
     playerGbId = player.gbId
@@ -1321,12 +1312,12 @@ def findavatar(su, player):
 
 
 @gm_cmd('$findclient', (Player("gbId/Id"),), RARG(0), BASE, '查看client', ALLSIDE, GOD_GROUPS)
-def findClient(su, player):
+def gm_findClient(su, player):
     return True, 'client:{}'.format(player.client)
 
 
 @gm_cmd('$getpropCell', (Entity('entity'), Str("propName")), RARG(0), CELL, '输出CELL实体属性值', ALLSIDE, GOD_GROUPS)
-def getpropCell(su, ent, propName):
+def gm_getpropCell(su, ent, propName):
     if not hasattr(ent, propName):
         return
 
@@ -1334,14 +1325,14 @@ def getpropCell(su, ent, propName):
 
 
 @gm_cmd('$getpropBase', (Entity('entity'), Str("propName")), RARG(0), BASE, '输出BASE实体属性值', ALLSIDE, GOD_GROUPS)
-def getpropBase(su, ent, propName):
+def gm_getpropBase(su, ent, propName):
     if not hasattr(ent, propName):
         return
 
     su.feedbackCommandSucc('执行成功,{}:{}'.format(propName, str(getattr(ent, propName, ''))))
 
 @gm_cmd('$statAvatarNum', (), RALL, ALL, '统计Avatar数量', ALLSIDE, GOD_GROUPS)
-def statAvatarNum(su):
+def gm_statAvatarNum(su):
     componentNo = KBEngine.getComponentGroupOrder()
     avatarNumber = len(utils.getEntityList('Avatar'))
     if IS_BASE:
@@ -1352,7 +1343,7 @@ def statAvatarNum(su):
 
 
 @gm_cmd('$_statAvatarNum-cell', (), RALL, CELL, '统计Avatar数量', ALLSIDE, GOD_GROUPS)
-def statAvatarNumCell(su):
+def gm_statAvatarNumCell(su):
     componentNo = KBEngine.getComponentGroupOrder()
     baseAppNum = gameconfig.baseAppCount()
     delayTime = baseAppNum * 5 + componentNo * 2
@@ -1365,7 +1356,7 @@ def statAvatarNumCell(su):
 
 
 @gm_cmd('$_statAvatarNum-base', (), RALL, BASE, '统计Avatar数量', ALLSIDE, GOD_GROUPS)
-def statAvatarNumBase(su):
+def gm_statAvatarNumBase(su):
     componentNo = KBEngine.getComponentGroupOrder()
     delayTime = componentNo
 
@@ -1377,14 +1368,14 @@ def statAvatarNumBase(su):
 
 
 @gm_cmd('$spaceWeightStat', (), RALL, CELL, 'spaceWeight统计', ALLSIDE, GOD_GROUPS)
-def spaceWeightStat(su):
+def gm_spaceWeightStat(su):
     spaceList = utils.getEntityList('Space')
     totalWeight = 0
     spaceDic = {}
     for spaceEntity in spaceList:
         spaceWeight = spaceEntity.getSpaceWeight(spaceEntity.spaceID)
         totalWeight += spaceWeight
-        mapId = formula.getMapId(spaceEntity.spaceNo)
+        mapId = formula.fetchMapId(spaceEntity.spaceNo)
         spaceDic.setdefault(mapId, 0)
         spaceDic[mapId] += spaceWeight
 
@@ -1393,36 +1384,36 @@ def spaceWeightStat(su):
 
 
 @gm_cmd('$doEval', (Str("componentGroupOrder"), Str("evalStr"),), RONE, BASE, 'eval', ALLSIDE, GOD_GROUPS)
-def doEval(su, componentGroupOrder, evalStr):
-    forwardCommand(su, '$_doEval-cell', componentGroupOrder, evalStr)
-    forwardCommand(su, '$_doEval-base', componentGroupOrder, evalStr)
+def gm_doEval(su, componentGroupOrder, evalStr):
+    forwardGMCommand(su, '$_doEval-cell', componentGroupOrder, evalStr)
+    forwardGMCommand(su, '$_doEval-base', componentGroupOrder, evalStr)
     return
 
 
 @gm_cmd('$_doEval-cell', (Str("componentGroupOrder"), Str("evalStr"),), RALL, CELL, 'eval', ALLSIDE, GOD_GROUPS)
-def doEvalCell(su, componentGroupOrder, evalStr):
-    DEBUG_MSG('cellapp{:0>2}'.format(KBEngine.getComponentGroupOrder()))
+def gm_doEvalCell(su, componentGroupOrder, evalStr):
+    LOG_DBG('cellapp{:0>2}'.format(KBEngine.getComponentGroupOrder()))
     if 'cellapp{:0>2}'.format(KBEngine.getComponentGroupOrder()) == componentGroupOrder:
         result = str(eval(evalStr))
         su.feedbackCommandSucc('执行成功,{}'.format(result))
 
 
 @gm_cmd('$_doEval-base', (Str("componentGroupOrder"), Str("evalStr"),), RALL, BASE, 'eval', ALLSIDE, GOD_GROUPS)
-def doEvalBase(su, componentGroupOrder, evalStr):
-    DEBUG_MSG('BASEAPP{:0>2}'.format(KBEngine.getComponentGroupOrder()))
+def gm_doEvalBase(su, componentGroupOrder, evalStr):
+    LOG_DBG('BASEAPP{:0>2}'.format(KBEngine.getComponentGroupOrder()))
     if 'baseapp{:0>2}'.format(KBEngine.getComponentGroupOrder()) == componentGroupOrder:
         result = str(eval(evalStr))
         su.feedbackCommandSucc('执行成功,{}'.format(result))
 
 
 @gm_cmd('$switchline', (Player("gbId/Id"), Int('lineNo')), RARG(0), CELL, '切换分线', ALLSIDE, GOD_GROUPS)
-def switchline(su, player, lineNo):
+def gm_switchline(su, player, lineNo):
     player.applySwitchLine(player.id, lineNo)
     return True, '执行成功'
 
 
 @gm_cmd('$setgmgroup', (Player("gbId/Id", raw=True), Int('group')), RARG(0), BASE, '设置gm组', ALLSIDE, GOD_GROUPS)
-def setgmgroup(su, player, group):
+def gm_setgmgroup(su, player, group):
     if gmCommand.isRawPlayer(player):
         sql = "update tbl_Avatar set sm_gmGroup = %d where sm_gbID =%s" % (
             group, gmCommand.getGbIdFromRawPlayer(player))
@@ -1434,7 +1425,7 @@ def setgmgroup(su, player, group):
 
 @gm_cmd('$loadentity', (Player('player id'), Str('class name'), Int('object id'), Int('entity id'), Int('num')),
         RARG(0), CELL, '创建entity实体', ALLSIDE, GOD_GROUPS)
-def loadentity(su, player, className, objId, entityId, num):
+def gm_loadentity(su, player, className, objId, entityId, num):
     '''
     className, 对应实体类型 如Npc, Collection, Carrier
     objId, 对应实体类型表中的ID，比如 objId就是对应数据表种中的ID
@@ -1474,11 +1465,11 @@ def loadentity(su, player, className, objId, entityId, num):
             # 'name': _mPrm['Name'],
         })
 
-        for i in utils.generateGameEntityId(entityId, count_):
+        for i in utils.genGameEntityId(entityId, count_):
             params.update({
                 'gameEntityId': i,
             })
-            gid, gct = utils.splitGameEntityId(i)
+            gid, gct = utils.splitFromGameEntityId(i)
             tmpProps['createIndex'] = gct
             player.base.callMethod('gmCreateEntityHasBase', (className, params))
 
@@ -1494,11 +1485,11 @@ def loadentity(su, player, className, objId, entityId, num):
             'type': gameconst.CollectionType.NORMAL,
             'collectionId': collectionId,
         })
-        for i in utils.generateGameEntityId(entityId, count_):
+        for i in utils.genGameEntityId(entityId, count_):
             params.update({
                 'gameEntityId': i,
             })
-            gid, gct = utils.splitGameEntityId(i)
+            gid, gct = utils.splitFromGameEntityId(i)
             tmpProps['createIndex'] = gct
             # KBEngine.createEntityLocally(className, params)
             player.base.callMethod('gmCreateEntityHasBase', (className, params))
@@ -1509,17 +1500,17 @@ def loadentity(su, player, className, objId, entityId, num):
 
 
 @gm_cmd('$delentity', (Int('entity id'),), RSU, CELL, '删除实体', INSIDE, GOD_GROUPS)
-def delentity(su, entityId):
+def gm_delentity(su, entityId):
     for e in KBEngine.entities.values():
         if hasattr(e, 'gameEntityId'):
-            if entityId == utils.getGidFromGameEntityId(e.gameEntityId):
+            if entityId == utils.parseGidFromGameEntityId(e.gameEntityId):
                 e.safeDestroy()
 
     return True, '执行成功'
 
 
 @gm_cmd('$loadallentity', (Player('player id'),), RARG(0), CELL, '创建实体', ALLSIDE, GOD_GROUPS)
-def loadallentity(su, player):
+def gm_loadallentity(su, player):
     import utils
     import Npc as _Npc
     import CNpc as _CNpc
@@ -1528,7 +1519,7 @@ def loadallentity(su, player):
     import creep_base as CB
     import math
 
-    entDatas = utils.getDunModuleData(formula.getMapId(player.spaceNo))
+    entDatas = utils.getDunModuleData(formula.fetchMapId(player.spaceNo))
 
     for entityId, _mPrm in entDatas.items():
         entityId = int(entityId)
@@ -1570,7 +1561,7 @@ def loadallentity(su, player):
                     tmpProps['createRadius'] = radius
 
             count_ = 1
-            if formula.spaceInWorldLine(player.spaceNo) and entityId in WMR.datas:
+            if formula.inWorldLineScene(player.spaceNo) and entityId in WMR.datas:
                 _pP = WMR.datas[entityId]
 
                 if 'refreshNum' in _pP:
@@ -1587,11 +1578,11 @@ def loadallentity(su, player):
 
                 count_ = _pP.get('refreshNum', 1) or 1
 
-            for i in utils.generateGameEntityId(entityId, count_):
+            for i in utils.genGameEntityId(entityId, count_):
                 params.update({
                     'gameEntityId': i,
                 })
-                gid, gct = utils.splitGameEntityId(i)
+                gid, gct = utils.splitFromGameEntityId(i)
                 tmpProps['createIndex'] = gct
                 # KBEngine.createEntityLocally(className, params)
                 player.base.callMethod('gmCreateEntityHasBase', (className, params))
@@ -1619,7 +1610,7 @@ def loadallentity(su, player):
 
             count_ = 1
 
-            if formula.spaceInWorldLine(player.spaceNo) and entityId in WMR.datas:
+            if formula.inWorldLineScene(player.spaceNo) and entityId in WMR.datas:
 
                 _pP = WMR.datas[entityId]
 
@@ -1628,14 +1619,14 @@ def loadallentity(su, player):
 
                 count_ = _pP.get('refreshNum', 1) or 1
 
-            for i in utils.generateGameEntityId(entityId, count_):
+            for i in utils.genGameEntityId(entityId, count_):
                 params.update({
 
                     'gameEntityId': i,
 
                 })
 
-                gid, gct = utils.splitGameEntityId(i)
+                gid, gct = utils.splitFromGameEntityId(i)
 
                 tmpProps['createIndex'] = gct
 
@@ -1672,14 +1663,14 @@ def loadallentity(su, player):
 
                     count_ = 1
 
-                    for i in utils.generateGameEntityId(entityId, count_):
+                    for i in utils.genGameEntityId(entityId, count_):
                         params.update({
 
                             'gameEntityId': i,
 
                         })
 
-                        gid, gct = utils.splitGameEntityId(i)
+                        gid, gct = utils.splitFromGameEntityId(i)
 
                         tmpProps['createIndex'] = gct
 
@@ -1711,12 +1702,12 @@ def loadallentity(su, player):
 
             count_ = 1
 
-            for i in utils.generateGameEntityId(entityId, count_):
+            for i in utils.genGameEntityId(entityId, count_):
                 params.update({
                     'gameEntityId': i,
                 })
 
-                gid, gct = utils.splitGameEntityId(i)
+                gid, gct = utils.splitFromGameEntityId(i)
 
                 tmpProps['createIndex'] = gct
 
@@ -1741,16 +1732,16 @@ def loadallentity(su, player):
                     tmpProps['createRadius'] = params['bornRadius'] = float(_pP['Radius'])
 
             count_ = 1
-            if formula.spaceInWorldLine(spaceNo) and collectionId in WMSP.datas:
+            if formula.inWorldLineScene(spaceNo) and collectionId in WMSP.datas:
                 _pP = WMSP.datas[collectionId]
 
                 if 'refreshTime' in _pP:
                     params['spawnSpan'] = _pP['refreshTime']
-            for i in utils.generateGameEntityId(entityId, count_):
+            for i in utils.genGameEntityId(entityId, count_):
                 params.update({
                     'gameEntityId': i,
                 })
-                gid, gct = utils.splitGameEntityId(i)
+                gid, gct = utils.splitFromGameEntityId(i)
                 tmpProps['createIndex'] = gct
                 # KBEngine.createEntityLocally(className, params)
                 player.base.callMethod('gmCreateEntityHasBase', (className, params))
@@ -1769,14 +1760,14 @@ def loadallentity(su, player):
 
             count_ = 1
 
-            for i in utils.generateGameEntityId(entityId, count_):
+            for i in utils.genGameEntityId(entityId, count_):
                 params.update({
 
                     'gameEntityId': i,
 
                 })
 
-                gid, gct = utils.splitGameEntityId(i)
+                gid, gct = utils.splitFromGameEntityId(i)
 
                 tmpProps['createIndex'] = gct
 
@@ -1799,14 +1790,14 @@ def loadallentity(su, player):
 
             count_ = 1
 
-            for i in utils.generateGameEntityId(entityId, count_):
+            for i in utils.genGameEntityId(entityId, count_):
                 params.update({
 
                     'gameEntityId': i,
 
                 })
 
-                gid, gct = utils.splitGameEntityId(i)
+                gid, gct = utils.splitFromGameEntityId(i)
 
                 tmpProps['createIndex'] = gct
 
@@ -1816,20 +1807,20 @@ def loadallentity(su, player):
 
 
 @gm_cmd('$modifyServertime', (Str('modifyTime'),), RONE, BASE, '修改服务器时间', ALLSIDE, GOD_GROUPS)
-def modifyServertime(su, modifyTime):
+def gm_modifyServertime(su, modifyTime):
     if KBEngine.publish():
         return False, 'modify on dev only'
     if '.' and '-' not in modifyTime:
         return False, '时间格式错误'
-    forwardCommand(su, '$modifyServertime-cell', modifyTime)
-    forwardCommand(su, '$modifyServertime-base', modifyTime)
+    forwardGMCommand(su, '$modifyServertime-cell', modifyTime)
+    forwardGMCommand(su, '$modifyServertime-base', modifyTime)
     return True, '$modifyServertime执行成功'
 
 @gm_cmd('$modifyAllServertimeInCrossGroup', (Str('modifyTime'),), RONE, BASE, '修改跨服组服务器时间', ALLSIDE, GOD_GROUPS)
-def modifyAllServertimeInCrossGroup(su, modifyTime):
+def gm_modifyAllServertimeInCrossGroup(su, modifyTime):
     if KBEngine.publish():
         return False, 'modify on dev only'
-    DEBUG_MSG("modifyAllServertimeInCrossGroup", modifyTime)
+    LOG_DBG("modifyAllServertimeInCrossGroup", modifyTime)
     import iRouter
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossServerStub')
     _stub.onGmModifyAllServertimeInCrossGroup(su, modifyTime)
@@ -1837,8 +1828,8 @@ def modifyAllServertimeInCrossGroup(su, modifyTime):
 
 
 @gm_cmd('$modifyServertime-cell', (Str('modifyTime'),), RALL, CELL, '修改服务器时间', ALLSIDE, GOD_GROUPS)
-def modifyServertimeCell(su, modifyTime):
-    DEBUG_MSG('modifyServertimeCell')
+def gm_modifyServertimeCell(su, modifyTime):
+    LOG_DBG('modifyServertimeCell')
     import datetime
     import time
 
@@ -1852,8 +1843,8 @@ def modifyServertimeCell(su, modifyTime):
     time.time = lambda: utils.tempTime() + timeDelta
 
 @gm_cmd('$modifyServertime-base', (Str('modifyTime'),), RALL, BASE, '修改服务器时间', ALLSIDE, GOD_GROUPS)
-def modifyServertimeBase(su, modifyTime):
-    DEBUG_MSG('modifyServertimeBase')
+def gm_modifyServertimeBase(su, modifyTime):
+    LOG_DBG('modifyServertimeBase')
     import datetime
     import time
 
@@ -1868,10 +1859,10 @@ def modifyServertimeBase(su, modifyTime):
 
 
 @gm_cmd('$getServertime', (Player('gbId/Id'),), RARG(0), BASE, '获取服务器时间', ALLSIDE, GOD_GROUPS)
-def getServertime(su,player):
+def gm_getServertime(su,player):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
-    DEBUG_MSG('getServertime')
+    LOG_DBG('getServertime')
     import time
     import datetime
     timestamp = time.time()
@@ -1883,34 +1874,34 @@ def getServertime(su,player):
 
 
 @gm_cmd('$recoverServertime', (), RONE, BASE, '恢复服务器时间', ALLSIDE, GOD_GROUPS)
-def recoverServertime(su):
-    forwardCommand(su, '$recoverServertime-cell')
-    forwardCommand(su, '$recoverServertime-base')
+def gm_recoverServertime(su):
+    forwardGMCommand(su, '$recoverServertime-cell')
+    forwardGMCommand(su, '$recoverServertime-base')
     return True, 'recoverServertime执行成功'
 
 
 @gm_cmd('$recoverServertime-cell', (), RALL, CELL, '恢复服务器时间', ALLSIDE, GOD_GROUPS)
-def recoverServertimeCell(su):
-    DEBUG_MSG('recoverServertimeCell')
+def gm_recoverServertimeCell(su):
+    LOG_DBG('recoverServertimeCell')
     import time
     time.time = utils.tempTime
 
 
 @gm_cmd('$recoverServertime-base', (), RALL, BASE, '恢复服务器时间', ALLSIDE, GOD_GROUPS)
-def recoverServertimeBase(su):
-    DEBUG_MSG('recoverServertimeBase')
+def gm_recoverServertimeBase(su):
+    LOG_DBG('recoverServertimeBase')
     import time
     time.time = utils.tempTime
 
 
 @gm_cmd('$onlinenum', (), RSTUB('PlayerStub'), BASE, '获取在线人数', ALLSIDE, GOD_GROUPS)
-def getOnlineNum(su, playerStub):
+def gm_getOnlineNum(su, playerStub):
     return True, '%s' % playerStub.getOnlineNum()
 
 
 @gm_cmd('$showmsg', (Player("gbId/Id"), Int('msgId'), Str('模板参数'), Str('分隔符', default='|')), RARG(0),
         gameconst.BASE, '发送测试消息到客户端', ALLSIDE, DEV_GROUPS, minArgs=2)
-def showClientMsg(su, player, msgId, argStr: str, seperator):
+def gm_showClientMsg(su, player, msgId, argStr: str, seperator):
     if argStr:
         args = argStr.split(seperator)
     else:
@@ -1922,7 +1913,7 @@ def showClientMsg(su, player, msgId, argStr: str, seperator):
 
 @gm_cmd('$exportAvatarData', (Player("gbId/Id"), Int('serverId'), Str('playerName')), RARG(0), CELL, '导出数据',
         ALLSIDE, GOD_GROUPS)
-def exportAvatarData(su, player, serverId, playerName):
+def gm_exportAvatarData(su, player, serverId, playerName):
     blacklistPro = ['brothersList', 'coinAuctionInfo', 'friendsInfo', 'marriage', 'moneyAuctionInfo']
     persistProList = KBEngine.getPersistentProperties('Avatar')
     avatarDict = player.__dict__
@@ -1937,7 +1928,7 @@ def exportAvatarData(su, player, serverId, playerName):
 
 
 @gm_cmd('$importAvatarData', (Player("gbId/Id"), Str("data"),), RARG(0), BASE, '导入数据', ALLSIDE, GOD_GROUPS)
-def importAvatarData(su, player, data):
+def gm_importAvatarData(su, player, data):
     import pickle
     import functools
     import base64
@@ -2005,12 +1996,12 @@ def importAvatarData(su, player, data):
     gbId = utils.generateUniqGlobalId()
     # avatarProp.update({'gbID':gbId,
     #               'name': avatarProp['name']+'B',
-    #               'spaceNo': formula.getLineSpaceNo(gameconst.MapIdDef.mapWorldLine,random.choice(range(gameconst.MAX_LINE_CNT))),
+    #               'spaceNo': formula.combineLineSpaceNo(gameconst.MapIdDef.mapWorldLine,random.choice(range(gameconst.MAX_LINE_CNT))),
     #               'position' : TCGCD.datas['playerBornPosition']['value']
     #               })
     avatarProp.update({'gbID': gbId,
-                       'spaceNo': formula.getLineSpaceNo(gameconst.MapIdDef.mapWorldLine, random.choice(
-                           range(utils.getLineMaxNumber(gameconst.MapIdDef.mapWorldLine)))),
+                       'spaceNo': formula.combineLineSpaceNo(gameconst.MapIdDef.mapWorldLine, random.choice(
+                           range(utils.fetchLineMaxNumber(gameconst.MapIdDef.mapWorldLine)))),
                        "position": TCGCD.datas['playerBornPosition']['value']})
     avatar = KBEngine.createEntityLocally('Avatar', avatarProp)
     accountEnt = player.accountEntity
@@ -2023,7 +2014,7 @@ def importAvatarData(su, player, data):
 
 
 @gm_cmd('$importAvatar', (Int("targetAvatarGbId"), Str("accountName"),), RONE, BASE, '导入角色', ALLSIDE, GOD_GROUPS)
-def importAvatar(su, targetAvatarGbId, accountName):
+def gm_importAvatar(su, targetAvatarGbId, accountName):
     import const_const
 
     def _func(result, rows, insertid, error):
@@ -2048,13 +2039,13 @@ def importAvatar(su, targetAvatarGbId, accountName):
 
 # 测试专用GM 测试后删除
 @gm_cmd('$testAccountGM', (PlayerAccount("accountName"),), RONE, BASE, '测试账号GM', ALLSIDE, GOD_GROUPS)
-def testAccountGM(su, account):
-    DEBUG_MSG("testAccountGM", account)
+def gm_testAccountGM(su, account):
+    LOG_DBG("testAccountGM", account)
     return True, '执行成功'
 
 
 @gm_cmd('$getaccountinfo', (Player("gbId/Id", raw=True),), RARG(0), BASE, '获取角色的账号信息', ALLSIDE, GOD_GROUPS)
-def getAccountInfo(su, player):
+def gm_getAccountInfo(su, player):
     if gmCommand.isRawPlayer(player):
         gbId = gmCommand.getGbIdFromRawPlayer(player)
         accSql = 'select ta.sm_accountType from tbl_Account as ta,tbl_Account_characters_characters as tacc where ta.id=tacc.parentID and tacc.sm_gbId=%s' % gbId
@@ -2069,7 +2060,7 @@ def getAccountInfo(su, player):
 
 def _onGetAccountInfo(ret, num, insertId, err, su):
     if err:
-        ERROR_MSG('get account info err:', err)
+        LOG_ERR('get account info err:', err)
         return
 
     accoutType, accountName = ret[0]
@@ -2079,7 +2070,7 @@ def _onGetAccountInfo(ret, num, insertId, err, su):
 
 
 @gm_cmd('$paotu', (Player("gbId/Id"), Int('rideFlag'), Int('pathId')), RARG(0), CELL, '跑图', ALLSIDE, GOD_GROUPS)
-def paotu(su, player, rideFlag, pathId):
+def gm_paotu(su, player, rideFlag, pathId):
     import path_path
 
     if rideFlag:
@@ -2088,131 +2079,16 @@ def paotu(su, player, rideFlag, pathId):
         player.exitRiding(player.id)
     firstPosition = path_path.datas[pathId]['pointList'][0]
     player.position = firstPosition
-    player._callback(5, 'setRoute', (pathId,), gametimer.TIMER_TAG_SET_ROUTE)
-    return True, '执行成功'
-
-
-@gm_cmd('$checkRandomName', (), RONE, BASE, '随机姓名检测敏感词', ALLSIDE, GOD_GROUPS)
-def checkRandomName(su):
-    import randomName_playerName as RNP
-
-    surnameList = RNP.datas.get('surname')
-    femaleNameList = RNP.datas.get('femaleName')
-    maleNameList = RNP.datas.get('maleName')
-    nameList = maleNameList + femaleNameList
-
-    sensitiveWordSet = set()
-
-    ff = open('checkResult.txt', 'a')
-    ff.seek(0)
-    ff.truncate()
-
-    def func(name, resultFlag, dirtyLevel, resultMsg):
-        DEBUG_MSG("####func", name)
-        if resultFlag != gameconst.CheckUserInputResult.normal:
-            ff.write('%s is sensitive word;result is %s\n' % (name, resultMsg))
-            sensitiveWordSet.add(name[resultMsg.find('*'):resultMsg.rfind('*') + 1])
-
-        if name == surnameList[-1] + nameList[-1]:
-            ff.close()
-            su.feedbackCommandSucc("随机玩家姓名敏感词：{}".format(sensitiveWordSet))
-
-    def checkName():
-        for surname in surnameList:
-            for name in nameList:
-                yield lambda: docheck(surname + name)
-
-    def docheck(name):
-        DEBUG_MSG("#####", name)
-        utils.miscCheckUserInput(name, functools.partial(func, name))
-
-    gameglobal.localBaseApp.batchlyCall(checkName(), 40, 1)
-
-    return True, '执行成功'
-
-
-@gm_cmd('$checkRandomBotName', (), RONE, BASE, '随机机器人姓名检测敏感词', ALLSIDE, GOD_GROUPS)
-def checkRandomBotName(su):
-    import randomName_robotName as RNR
-
-    surnameList = RNR.datas.get('surname')
-    femaleNameList = RNR.datas.get('femaleName')
-    maleNameList = RNR.datas.get('maleName')
-    nameList = maleNameList + femaleNameList
-
-    sensitiveWordSet = set()
-
-    ff = open('checkBotResult.txt', 'a')
-    ff.seek(0)
-    ff.truncate()
-
-    def func(name, resultFlag, dirtyLevel, resultMsg):
-        DEBUG_MSG("####func", name)
-        if resultFlag != gameconst.CheckUserInputResult.normal:
-            ff.write('%s is sensitive word;result is %s\n' % (name, resultMsg))
-            sensitiveWordSet.add(name[resultMsg.find('*'):resultMsg.rfind('*') + 1])
-
-        if name == surnameList[-1] + nameList[-1]:
-            ff.close()
-            su.feedbackCommandSucc("随机机器人姓名敏感词：{}".format(sensitiveWordSet))
-
-    def checkName():
-        for surname in surnameList:
-            for name in nameList:
-                yield lambda: docheck(surname + name)
-
-    def docheck(name):
-        DEBUG_MSG("#####", name)
-        utils.miscCheckUserInput(name, functools.partial(func, name))
-
-    gameglobal.localBaseApp.batchlyCall(checkName(), 800, 1)
-
-    return True, '执行成功'
-
-
-@gm_cmd('$checkItemName', (), RONE, BASE, '道具名称检测敏感词', ALLSIDE, GOD_GROUPS)
-def checkItemName(su):
-    import itemData_itemData as IDIDD
-
-    itemKeyList = IDIDD.datas.keys()
-    sensitiveWordSet = set()
-    checkNum = 0
-
-    ff = open('checkResult.txt', 'a')
-    ff.seek(0)
-    ff.truncate()
-
-    def func(name, resultFlag, dirtyLevel, resultMsg):
-        DEBUG_MSG("####func", name)
-        nonlocal checkNum
-        if resultFlag != gameconst.CheckUserInputResult.normal:
-            ff.write('%s is sensitive word;result is %s\n' % (name, resultMsg))
-            sensitiveWordSet.add(name[resultMsg.find('*'):resultMsg.rfind('*') + 1])
-
-        checkNum += 1
-        if checkNum == len(IDIDD.datas):
-            ff.close()
-            su.feedbackCommandSucc("道具名称敏感词：{}".format(sensitiveWordSet))
-
-    def checkName():
-        for itemId in itemKeyList:
-            yield lambda: docheck(IDIDD.datas[itemId]['name'])
-
-    def docheck(name):
-        DEBUG_MSG("#####", name)
-        utils.miscCheckUserInput(name, functools.partial(func, name))
-
-    gameglobal.localBaseApp.batchlyCall(checkName(), 40, 1)
-
+    player.addTimerCB(5, 'setRoute', (pathId,), gametimer.TIMER_TAG_SET_ROUTE)
     return True, '执行成功'
 
 
 @gm_cmd('$checkRandomNameZk', (), RONE, BASE, '随机姓名检测字库', ALLSIDE, GOD_GROUPS)
-def checkRandomNameZk(su):
+def gm_checkRandomNameZk(su):
     import randomName_playerName as RNP
     import validate_chars
 
-    surnameList = RNP.datas.get('surname')
+    surnamesList = RNP.datas.get('surname')
     femaleNameList = RNP.datas.get('femaleName')
     maleNameList = RNP.datas.get('maleName')
     nameList = maleNameList + femaleNameList
@@ -2220,7 +2096,7 @@ def checkRandomNameZk(su):
     ilegalList = []
     charSet = set()
 
-    for surname in surnameList:
+    for surname in surnamesList:
         for name in nameList:
             nameSet = set(surname + name)
             charSet = charSet | nameSet
@@ -2235,11 +2111,11 @@ def checkRandomNameZk(su):
 
 
 @gm_cmd('$checkRandomBotNameZk', (), RONE, BASE, '随机机器人姓名检测字库', ALLSIDE, GOD_GROUPS)
-def checkRandomBotNameZk(su):
+def gm_checkRandomBotNameZk(su):
     import randomName_robotName as RNR
     import validate_chars
 
-    surnameList = RNR.datas.get('surname')
+    surnamesList = RNR.datas.get('surname')
     femaleNameList = RNR.datas.get('femaleName')
     maleNameList = RNR.datas.get('maleName')
     nameList = maleNameList + femaleNameList
@@ -2247,7 +2123,7 @@ def checkRandomBotNameZk(su):
     ilegalList = []
     charSet = set()
 
-    for surname in surnameList:
+    for surname in surnamesList:
         for name in nameList:
             nameSet = set(surname + name)
             charSet = charSet | nameSet
@@ -2263,37 +2139,37 @@ def checkRandomBotNameZk(su):
 
 @gm_cmd('$gmBlockExposedMethod', (Int('isAdd'), Str('funcName'), Int('msgId')), RONE, BASE, '禁止对外接口', ALLSIDE,
         GOD_GROUPS)
-def gmBlockExposedMethod(su, isAdd, method, msgId):
+def gm_gmBlockExposedMethod(su, isAdd, method, msgId):
     gameengine.callAllApps('gameengine.modifyGlobalExposedFunc', (isAdd, method, msgId))
     return True, '执行成功'
 
 
 @gm_cmd('$gmAutoRunTask', (Player("gbId/Id"), Int('taskId')), RARG(0), BASE, '自动进行任务', ALLSIDE, GOD_GROUPS)
-def gmAutoRunTask(su, player, taskId):
+def gm_gmAutoRunTask(su, player, taskId):
     player.gmAutoRunTask(taskId)
     return True, '执行成功'
 
 @gm_cmd('$getItemUniqueId', (Player("gbId/Id"), Int('itemId'),), RONE, BASE, 'get item uniqueId', ALLSIDE, GOD_GROUPS)
-def getItemUniqueId(su, player, itemId):
+def gm_getItemUniqueId(su, player, itemId):
     uId = player.getItemUniqueId(itemId)
     return True, '' + str(uId)
 
 
 @gm_cmd('$gmSignIn', (Player("gbId/Id"), Int('activityId'),), RONE, BASE, 'sign in', ALLSIDE, GOD_GROUPS)
-def gmSignIn(su, player, aId):
+def gm_gmSignIn(su, player, aId):
     player.reqSignInfo(aId)
     player.reqSignIn(aId)
     return True, '执行成功'
 
 
 @gm_cmd('$offline', (Player("entity id"),), RARG(0), CELL, 'offline', ALLSIDE, GOD_GROUPS)
-def gmOffline(su, player):
-    player.offline(player.id, gameconst.AVATAR_OFFLINE_REASON_MANNUALLY)
+def gm_gmOffline(su, player):
+    player.offline(player.id, gameconst.OFFLINE_REASON_MANNUALLY)
     return True, '执行成功'
 
 
 @gm_cmd('$modifyName', (Player("gbId/Id", raw=True), Str('newName')), RARG(0), BASE, '改名', ALLSIDE, GOD_GROUPS)
-def modifyName(su, player, newName):
+def gm_modifyName(su, player, newName):
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         gamesql.recordAvatarOfflineCallback(gbId, 'IDIPModifyName', (newName,))
@@ -2302,7 +2178,7 @@ def modifyName(su, player, newName):
     return True, '执行成功'
 
 @gm_cmd('$modifyscore', (Player("gbId/Id", raw=True), Int('newScore')), RARG(0), CELL, '修改战力', ALLSIDE, GOD_GROUPS)
-def modifyscore(su, player, newScore):
+def gm_modifyscore(su, player, newScore):
     player._changeScore("rewardFightProp", newScore)
     return True, '执行成功'
 
@@ -2310,7 +2186,7 @@ def modifyscore(su, player, newScore):
 
 @gm_cmd('$modifyNameByItem', (Player("entity id"), Str('newName'), Int("gridId")), RARG(0), CELL, '道具改名', ALLSIDE,
         GOD_GROUPS)
-def modifyNameByItem(su, player, newName, gridId):
+def gm_modifyNameByItem(su, player, newName, gridId):
     itemId = 30010100
     player.reqUseItems(player.id, 0, gridId, itemId, None, 1, [newName, ])
     return True, '执行成功'
@@ -2319,14 +2195,14 @@ def modifyNameByItem(su, player, newName, gridId):
 @gm_cmd('$testPickupExtractItem',
         (Player("gbId/Id", raw=True), Int('boxId'), Int('boxNum'), Int('tarNum'), Int('fillId')), RARG(0), BASE,
         '拆解奖励接口测试', ALLSIDE, GOD_GROUPS)
-def testPickupExtractItem(su, player, boxId, boxNum, tarNum, fillId):
-    DEBUG_MSG('GM testPickupExtractItem~')
+def gm_testPickupExtractItem(su, player, boxId, boxNum, tarNum, fillId):
+    LOG_DBG('GM testPickupExtractItem~')
     itemGroup = player.pickExtractItems(boxId, boxNum, tarNum, fillId, dataUtils.getItemDefaultBindType())
     return True, '执行成功_%s' % str(itemGroup)
 
 
 @gm_cmd('$deleteAvatar', (Player("gbId"),), RARG(0), BASE, 'set did limit', ALLSIDE, GOD_GROUPS)
-def deleteAvatar(su, player):
+def gm_deleteAvatar(su, player):
     player.reqDeleteAvatar()
 
 
@@ -2334,15 +2210,15 @@ def deleteAvatar(su, player):
 
 @gm_cmd('$addPlayerCalendarPoint', (Player("gbId"), Int('point'),), RARG(0), BASE, 'add player calendar point', ALLSIDE,
         GOD_GROUPS)
-def addPlayerCalendarPoint(su, player, point):
+def gm_addPlayerCalendarPoint(su, player, point):
     player.calendarPoint += point
     return True, '执行成功'
 
 
 @gm_cmd('$setforbiddenflag', (Player("gbId/Id", raw=True), Int('flagType'), Int('forbiddenTime'), Str('reason')),
         RARG(0), BASE, '封禁指定功能', ALLSIDE, GOD_GROUPS)
-def setForbiddenFlag(su, player, forbiddenType, forbidTime, reason):
-    tEnd = utils.getNow() + forbidTime
+def gm_setForbiddenFlag(su, player, forbiddenType, forbidTime, reason):
+    tEnd = utils.curTS() + forbidTime
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         gamesql.recordAvatarOfflineCallback(gbId, 'setForbiddenFlag', (forbiddenType, (tEnd, reason)))
@@ -2354,7 +2230,7 @@ def setForbiddenFlag(su, player, forbiddenType, forbidTime, reason):
 
 
 @gm_cmd('$addWPWhiteList', (Player("gbId/Id", raw=True),), RARG(0), BASE, '添加白名单', ALLSIDE, GOD_GROUPS)
-def addWPWhiteList(su, player):
+def gm_addWPWhiteList(su, player):
     if not gmCommand.isRawPlayer(player):
         playerGbId = player.gbID
         isOffline = False
@@ -2367,15 +2243,15 @@ def addWPWhiteList(su, player):
             su.onCommandResult(0, '', {})
         else:
             valueStr = ','.join(value)
-            su.onCommandResult(gameconst.GMCommandErr.REDIS_OP_ERR, '', {"values": valueStr})
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_REDIS_OP_ERR, '', {"values": valueStr})
 
     def _onOfflineSetWpList(ret, num, insertId, err):
         if not err:
             gbIds = [playerGbId, ]
             redisUtils.SetUtils.sadd(gameconst.RedisKey.WP_WHITE_LSIT_KEY, gbIds, _onAdd)
         else:
-            INFO_MSG("_onOfflineSetWpList failed", ret, num, err, playerGbId)
-            su.onCommandResult(gameconst.GMCommandErr.DB_OP_ERR, '', {})
+            LOG_IFO("_onOfflineSetWpList failed", ret, num, err, playerGbId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_DB_OP_ERR, '', {})
 
     if isOffline:
         sql = f'update tbl_Avatar set sm_isWpWhiteList=1 where sm_gbID={playerGbId}'
@@ -2388,7 +2264,7 @@ def addWPWhiteList(su, player):
 
 
 @gm_cmd('$remWPWhiteList', (Player("gbId/Id", raw=True),), RARG(0), BASE, '删除白名单', ALLSIDE, GOD_GROUPS)
-def remWPWhiteList(su, player):
+def gm_remWPWhiteList(su, player):
     if not gmCommand.isRawPlayer(player):
         playerGbId = player.gbID
         isOffline = False
@@ -2400,19 +2276,19 @@ def remWPWhiteList(su, player):
         if success:
             su.onCommandResult(0, '', {})
         else:
-            su.onCommandResult(gameconst.GMCommandErr.REDIS_OP_ERR, '', {"values": str(value)})
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_REDIS_OP_ERR, '', {"values": str(value)})
 
     def _onOfflineDelWpList(ret, num, insertId, err):
-        INFO_MSG('_onOfflineDelWpList', ret, num, err)
+        LOG_IFO('_onOfflineDelWpList', ret, num, err)
         if not err:
             redisUtils.SetUtils.srem(gameconst.RedisKey.WP_WHITE_LSIT_KEY, playerGbId, _onDel)
         else:
-            INFO_MSG("_onOfflineDelWpList failed", ret, num, err, playerGbId)
-            su.onCommandResult(gameconst.GMCommandErr.DB_OP_ERR, '', {})
+            LOG_IFO("_onOfflineDelWpList failed", ret, num, err, playerGbId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_DB_OP_ERR, '', {})
 
     if isOffline:
         sql = f'update tbl_Avatar set sm_isWpWhiteList=0 where sm_gbID={playerGbId}'
-        INFO_MSG('_onOfflineDelWpList', sql)
+        LOG_IFO('_onOfflineDelWpList', sql)
         KBEngine.executeRawDatabaseCommand(sql,
                                            lambda ret, num, insertId, err: _onOfflineDelWpList(ret, num, insertId, err))
     else:
@@ -2421,30 +2297,30 @@ def remWPWhiteList(su, player):
 
 
 @gm_cmd('$queryWPWhiteList', (), RONE, BASE, '查询白名单', ALLSIDE, GOD_GROUPS)
-def queryWPWhiteList(su):
+def gm_queryWPWhiteList(su):
     def _onLoadAll(success, values):
         if success:
             valuesStr = ','.join(values)
             su.onCommandResult(0, '', {"values": valuesStr})
         else:
-            su.onCommandResult(gameconst.GMCommandErr.REDIS_OP_ERR, '', {})
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_REDIS_OP_ERR, '', {})
 
     redisUtils.SetUtils.loadAllFromRedis(gameconst.RedisKey.WP_WHITE_LSIT_KEY, _onLoadAll)
 
 
 @gm_cmd('$setChatForbidden', (Player("gbId/Id", raw=True), Int("seconds"),), RARG(0), BASE, '设置聊天禁止', ALLSIDE,
         GOD_GROUPS)
-def setChatForbidden(su, player, seconds):
+def gm_setChatForbidden(su, player, seconds):
     # 离线玩家处理
-    _args = (gameconst.IDIPBanType.CHAT, utils.getNow() + seconds)
+    _args = (gameconst.IDIPBanType.CHAT, utils.curTS() + seconds)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        INFO_MSG(f"gm offline setChatForbidden, gbID:{gbId}")
+        LOG_IFO(f"gm offline setChatForbidden, gbID:{gbId}")
         gamesql.recordAvatarOfflineCallback(gbId, 'IDIPBanState', _args)
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
     # 在线玩家处理
     else:
-        INFO_MSG(f"gm online setChatForbidden, gbID:{player.gbID}")
+        LOG_IFO(f"gm online setChatForbidden, gbID:{player.gbID}")
         if not player.IDIPBanState(*_args):
             su.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': player.gbID, 'isOffline': False})
             return False, '执行失败'
@@ -2453,17 +2329,17 @@ def setChatForbidden(su, player, seconds):
 
 
 @gm_cmd('$removeChatForbidden', (Player("gbId/Id", raw=True),), RARG(0), BASE, '移除聊天禁止', ALLSIDE, GOD_GROUPS)
-def removeChatForbidden(su, player):
+def gm_removeChatForbidden(su, player):
     # 离线玩家处理
     _args = (gameconst.IDIPBanType.CHAT,)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        INFO_MSG(f"gm offline removeChatForbidden, gbID:{gbId}")
+        LOG_IFO(f"gm offline removeChatForbidden, gbID:{gbId}")
         gamesql.recordAvatarOfflineCallback(gbId, 'IDIPRemoveBanState', _args)
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
     # 在线玩家处理
     else:
-        INFO_MSG(f"gm online removeChatForbidden, gbID:{player.gbID}")
+        LOG_IFO(f"gm online removeChatForbidden, gbID:{player.gbID}")
         if not player.IDIPRemoveBanState(*_args):
             su.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': player.gbID, 'isOffline': False})
             return False, '执行失败'
@@ -2472,31 +2348,31 @@ def removeChatForbidden(su, player):
 
 
 @gm_cmd('$queryChatForbidden', (Player("gbId/Id", raw=True),), RARG(0), BASE, '查询聊天禁止', ALLSIDE, GOD_GROUPS)
-def queryChatForbidden(su, player):
+def gm_queryChatForbidden(su, player):
     # 离线玩家处理
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        INFO_MSG(f"gm offline queryChatForbidden, gbID:{gbId}")
+        LOG_IFO(f"gm offline queryChatForbidden, gbID:{gbId}")
 
         def onGetForbiddenInfo(ret, num, insertId, err, su, gbId):
             if err:
                 su.onCommandResult(gameconst.ChatSysGMErr.DBERR, '',
                                    {'gbId': gbId, 'isOffline': True, 'forbiddenExpireTime': 0, 'forbiddenCount': 0})
-                ERROR_MSG("gm offline queryChatForbidden fail, ", gbId, num, insertId, err)
+                LOG_ERR("gm offline queryChatForbidden fail, ", gbId, num, insertId, err)
             else:
                 forbiddenExpireTime = int(ret[0][0].decode())
                 forbiddenCount = int(ret[0][1].decode())
                 su.onCommandResult(gameconst.ChatSysGMErr.OK, '',
                                    {'gbId': gbId, 'isOffline': True, 'forbiddenExpireTime': forbiddenExpireTime,
                                     'forbiddenCount': forbiddenCount})
-                INFO_MSG("gm offline queryChatForbidden success, ", gbId, num, insertId, err)
+                LOG_IFO("gm offline queryChatForbidden success, ", gbId, num, insertId, err)
 
         gamesql.queryForbiddenInfo(player[0],
                                    lambda ret, num, insert, err: onGetForbiddenInfo(ret, num, insert, err, su, gbId))
 
     # 在线玩家处理
     else:
-        INFO_MSG(f"gm online queryChatForbidden, gbID:{player.gbID}")
+        LOG_IFO(f"gm online queryChatForbidden, gbID:{player.gbID}")
         forbiddenExpireTime, forbiddenCount = player.getChatForbiddenInfo()
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '',
                            {'gbId': player.gbID, 'isOffline': False, 'forbiddenExpireTime': forbiddenExpireTime,
@@ -2505,12 +2381,12 @@ def queryChatForbidden(su, player):
 
 
 @gm_cmd('$setPKModel', (Player('gbId/Id'), Int('mode')), RARG(0), CELL, '设置战斗模式', ALLSIDE, GOD_GROUPS)
-def setPKModel(su, player, pkMode):
+def gm_setPKModel(su, player, pkMode):
     player.setPKModel(pkMode)
 
 
 @gm_cmd('$setAllPKModel', (Int('mode'), ), RONE, BASE, '设置所有战斗模式', ALLSIDE, GOD_GROUPS)
-def setAllPKModel(su, pkMode):
+def gm_setAllPKModel(su, pkMode):
     gameengine.broadcastBaseapp(
         'broadcastToAllAvatar',
         (
@@ -2520,7 +2396,7 @@ def setAllPKModel(su, pkMode):
 
 
 @gm_cmd('$addBuff', (Entity('entity id'), Int('buffId'), Int('lv'), Int('duration')), RARG(0), CELL, '添加buff', ALLSIDE, GOD_GROUPS, minArgs=2)
-def addBuff(su, e, buffId, buffLv=1, duration=-1):
+def gm_addBuff(su, e, buffId, buffLv=1, duration=-1):
     if buffId in BBD.datas and e.IsCombatUnit:
         e.addBuff(buffId, buffLv, e.id, duration)
         return True, '执行成功'
@@ -2529,18 +2405,18 @@ def addBuff(su, e, buffId, buffLv=1, duration=-1):
 
 
 @gm_cmd('$setlv', (Player("gbId/Id"), Int("lv"),), RARG(0), gameconst.CELL, '设置人物等级', ALLSIDE, GOD_GROUPS)
-def setPlayerlv(su, player, lv):
+def gm_setPlayerlv(su, player, lv):
     if lv < player.level:
         return False, '等级不能降低'
-    opUUID = KBEngine.genUUID64()
+    _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
     detail = gameclass.AwardDetail(gm_cmd='$setlv', level=lv)
     import utils
-    player.levelUp(min(utils.getPlayerMaxLevel(), lv), opUUID, src, detail)
+    player.levelUp(min(utils.getPlayerMaxLevel(), lv), _opUUID, src, detail)
     return True, '执行成功'
 
 @gm_cmd('$clearCD', (Player("gbId/Id"),), RARG(0), CELL, '清除技能CD', ALLSIDE, GOD_GROUPS)
-def clearCD(su, player ):
+def gm_clearCD(su, player ):
     if not player.skillDic:
         return False, '执行失败，没有装备任何技能'
 
@@ -2549,17 +2425,17 @@ def clearCD(su, player ):
     return True, '执行成功'
 
 @gm_cmd('$getAllSkills', (Player("gbId/Id"),), RARG(0), CELL, '获得所有技能', ALLSIDE, GOD_GROUPS)
-def getAllSkills(su, player ):
+def gm_getAllSkills(su, player ):
     if not player.skillDic:
         return False, '执行失败，没有装备任何技能'
 
     for skillID, skillData in player.skillDic.items():
-        INFO_MSG('getAllSkills:', skillID, skillData)
-    INFO_MSG('getAllSkills:', player.skillDic.skillSwitches)
+        LOG_IFO('getAllSkills:', skillID, skillData)
+    LOG_IFO('getAllSkills:', player.skillDic.skillSwitches)
     return True, '执行成功'
 
 @gm_cmd('$destroyEntity', (Entity('entity id'), ), RARG(0), CELL, '销毁实体', INSIDE, GOD_GROUPS)
-def destroyEntity(su, e):
+def gm_destroyEntity(su, e):
     if e:
         e.safeDestroy()
         return True, '执行成功'
@@ -2568,54 +2444,54 @@ def destroyEntity(su, e):
 
 
 @gm_cmd('$switchServer', (Player("gbId"), Int('serverId')), RARG(0), BASE, '转服', ALLSIDE, GOD_GROUPS)
-def switchServer(su, player, serverId):
+def gm_switchServer(su, player, serverId):
     player.switchAvatarServer(serverId)
     return True, '执行成功'
 
 
 @gm_cmd('$enterMap', (Player("gbId/Id"), Int("mapId")), RARG(0), CELL, '进入地图', ALLSIDE, GOD_GROUPS)
-def enterMap(su, player, mapId):
+def gm_enterMap(su, player, mapId):
 
     player.applyEnterLine(player.id, mapId)
     return True, '执行成功'
 
 @gm_cmd('$EnterWonderLand', (Player("gbId/Id"), Int("mapId")), RARG(0), BASE, '进入秘境峰', ALLSIDE, GOD_GROUPS)
-def EnterWonderLand(su, player, mapId):
+def gm_EnterWonderLand(su, player, mapId):
     gameengine.getWonderLandStub(mapId).doEnterWonderLand(player, player.gbID, {})
     return True, '执行成功'
 
 @gm_cmd('$enterCube', (Player("gbId/Id"), Int("floor")), RARG(0), CELL, '进入魔方阵', ALLSIDE, GOD_GROUPS)
-def enterCube(su, player, floor):
+def gm_enterCube(su, player, floor):
     player.enterCubeInternal(floor)
     return True, '执行成功'
 
 @gm_cmd('$enterYanwu', (Player("gbId/Id"), Int("mapId")), RARG(0), CELL, '进入演武场', ALLSIDE, GOD_GROUPS)
-def enterYanwu(su, player, mapId):
+def gm_enterYanwu(su, player, mapId):
     player.enterLineByNpc(mapId)
     return True, '执行成功'
 
 @gm_cmd('$leaveSingleDungeon', (Player("gbId/Id"),), RARG(0), CELL, '离开当前副本', ALLSIDE, GOD_GROUPS)
-def leaveSingleDungeon(su, player):
+def gm_leaveSingleDungeon(su, player):
     import gamePlay_gamePlay as GGD
     import dungeonSrc
     import tutorConst_newbieStep as TCNSD
     lockdun = []
     for _,v in TCNSD.datas.items():
         lockdun.append(v.get('lockDun'))
-    dungeonNo = formula.getDungeonNoBySpaceNo(player.spaceNo)
+    dungeonNo = formula.parseDungeonNoBySpaceNo(player.spaceNo)
 
     if  GGD.datas[dungeonNo].get('sceneType') not in [1,2]:
         return False,f'{dungeonNo}不是副本'
 
     if dungeonNo in lockdun:     #如果是新手副本，先跳过新手任务，在离开副本。
-        forwardCommand(su,"$SkipNewbieTask",player.id)
+        forwardGMCommand(su,"$SkipNewbieTask",player.id)
 
     src = dungeonSrc.DungeonFromClientSrc(player.base, player.gbId)
     player.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
     return True, '执行成功'
 
 @gm_cmd('$SkipNewbieTask', (Player("gbId/Id"),), RARG(0), BASE, '跳过新手任务', ALLSIDE, GOD_GROUPS)
-def SkipNewbieTask(su, player):
+def gm_SkipNewbieTask(su, player):
     import tutorConst_newbieStep as TCNSD
     stepLimit = max(TCNSD.datas.keys())
     for step, data in TCNSD.datas.items():
@@ -2632,7 +2508,7 @@ def SkipNewbieTask(su, player):
 
 
 @gm_cmd('$AllPlayerEnterMap', (Player("gbId/Id"), Int("mapId"), Int("floor")), RARG(0), gameconst.CELL, '所有人进入指定地图', ALLSIDE, GOD_GROUPS,minArgs=2)
-def AllPlayerEnterMap(su,player,mapId,floor=1):
+def gm_AllPlayerEnterMap(su,player,mapId,floor=1):
     import gamePlay_gamePlay as GGD
     mapInfo = GGD.datas[mapId]
     sceneType = mapInfo.get('sceneType')
@@ -2643,23 +2519,23 @@ def AllPlayerEnterMap(su,player,mapId,floor=1):
     if (sceneType == 4 or sceneType == 7) and type == 6:  #大世界场景
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
-                forwardCommand(su,"$enterMap",e.id,mapId)
+                forwardGMCommand(su,"$enterMap",e.id,mapId)
     elif (sceneType == 1 or sceneType == 2) and (type == 1 or type == 2): #副本场景
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
-                forwardCommand(su,"$gmenterDungeon",e.id,mapId)
+                forwardGMCommand(su,"$gmenterDungeon",e.id,mapId)
     elif sceneType == 3 and type == 3:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
-                forwardCommand(su,"$enterCube",e.id,floor)
+                forwardGMCommand(su,"$enterCube",e.id,floor)
     elif sceneType == 5 and type == 7:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
-                forwardCommand(su,"$EnterWonderLand",e.id,mapId)
+                forwardGMCommand(su,"$EnterWonderLand",e.id,mapId)
     elif sceneType == 6 and type == 8:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
-                forwardCommand(su,"$enterCityBattle",e.id)
+                forwardGMCommand(su,"$enterCityBattle",e.id)
     elif sceneType == 7 and type == 6:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
@@ -2668,14 +2544,14 @@ def AllPlayerEnterMap(su,player,mapId,floor=1):
 
 
 @gm_cmd('$finishNewbie', (Player("gbId/Id"), Int('step')), RARG(0), BASE, '完成新手', ALLSIDE, GOD_GROUPS)
-def finishNewbie(su,player, step):
+def gm_finishNewbie(su,player, step):
     # if not player.newbieStep :
     #     return False, '已跳过新手'
     player.gmFinishedNewbie(step)
     return True, '执行成功'
 
 @gm_cmd('$ALLfinishNewbie', (Player("gbId/Id"), Int('step')), RARG(0), BASE, '所有人完成新手', ALLSIDE, GOD_GROUPS)
-def ALLfinishNewbie(su,player, step):
+def gm_ALLfinishNewbie(su,player, step):
     for e in KBEngine.entities.values():
         if e.className == 'Avatar':
             e.gmFinishedNewbie(step)
@@ -2683,7 +2559,7 @@ def ALLfinishNewbie(su,player, step):
 
 
 @gm_cmd('$createDuelFlag', (Player("gbId/Id"),), RARG(0), CELL, '创建决斗旗子', ALLSIDE, GOD_GROUPS)
-def createDuelFlag(su, player):
+def gm_createDuelFlag(su, player):
     params = {
         'position': player.position,
         'direction': player.direction,
@@ -2697,92 +2573,92 @@ def createDuelFlag(su, player):
 
 
 @gm_cmd('$finishAchievement', (Player("gbId/Id"), Int('AchievementID')), RARG(0), BASE, '完成指定成就', ALLSIDE, GOD_GROUPS)
-def finishAchievement(su,player, AchievementID):
+def gm_finishAchievement(su,player, AchievementID):
     if AchievementID in player.achievementInfo.finishedIds:
-            WARNING_MSG('AchievementID already exists', AchievementID)
+            LOG_WARN('AchievementID already exists', AchievementID)
     else:
         player.achievementInfo.finishedIds.add(AchievementID)
     player.achievementInfo.sendInitDataToClient(player)
     return True, '执行成功'
 
 @gm_cmd('$AddGuildExp', (Player("gbId/Id"), Int('GuildExp')), RARG(0), BASE, '增加当前帮会经验', ALLSIDE, GOD_GROUPS)
-def addguildexp(su, player,exp):
-    opUUID = KBEngine.genUUID64()
+def gm_addguildexp(su, player,exp):
+    _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
     detail = gameclass.AwardDetail(gm_cmd='$SetGuildLevel', exp=exp)
     if exp < 1:
         return False, '执行失败，经验不能小于1'
     elif player.guildBox is None:
         return False, '当前玩家没有帮会'
-    player.guildBox.addGuildExp(exp, src, opUUID, detail)
+    player.guildBox.addGuildExp(exp, src, _opUUID, detail)
     player._sendGuildInfo()
     return True, '执行成功'
 
 @gm_cmd('$modifyBuildingExp', (Player("gbId/Id"),Int('building'),Int('Exp')), RARG(0), BASE, '增加帮会建筑经验', ALLSIDE, GOD_GROUPS)
-def modifybuildingexp(su, player,building,exp):
+def gm_modifybuildingexp(su, player,building,exp):
     if building not in (gameconst.GuildBuilding.JU_YING,gameconst.GuildBuilding.WU_HUA,gameconst.GuildBuilding.XIANG_FANG,gameconst.GuildBuilding.YAN_WU,gameconst.GuildBuilding.CANG_KU, gameconst.GuildBuilding.JUN_XU):
         return False, '执行失败，帮会建筑不存在'
-    opUUID = KBEngine.genUUID64()
+    _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
     detail = gameclass.AwardDetail(gm_cmd='$modifyBuildingExp', building=building,exp=exp)
     if exp < 1:
         return False, '执行失败，经验不能小于1'
     elif player.guildBox is None:
         return False, '当前玩家没有帮会'
-    player.guildBox.modifyBuildingExp(building,exp,src,opUUID,detail)
+    player.guildBox.modifyBuildingExp(building,exp,src,_opUUID,detail)
     player._sendGuildInfo()
     return True, '执行成功'
 
 @gm_cmd('$welfareSignInDay', (Player("gbId/Id"), Int("flag"), Str('welfareType')), RARG(0), gameconst.BASE, '福利签到天数累计', ALLSIDE, GOD_GROUPS)
-def welfareSignInDay(su, player, flag, welfareType):
+def gm_welfareSignInDay(su, player, flag, welfareType):
     flag %= 2
     return player.gmUpdateWelfareSignIn(flag, welfareType)
 
 @gm_cmd('$enterCityBattle', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '进城战场景', ALLSIDE, GOD_GROUPS)
-def enterCityBattle(su, player):
+def gm_enterCityBattle(su, player):
     return player.cell.gmEnterSiegeWarSpace()
 
 @gm_cmd('$fastBidding', (Player("gbId/Id"), Int('cnt')), RARG(0), gameconst.BASE, '快速报名+竞拍', ALLSIDE, GOD_GROUPS)
-def fastBidding(su, player, cnt):
+def gm_fastBidding(su, player, cnt):
     player.gmFastBidding(cnt)
     return True, '执行成功'
 
 @gm_cmd('$clearCityRecentRecord', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '清空城池操作记录', ALLSIDE, GOD_GROUPS)
-def clearCityRecentRecord(su, player):
+def gm_clearCityRecentRecord(su, player):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
     _stub.clearCityRecentRecord()
 
 @gm_cmd('$addCityMoney', (Player("gbId/Id"), Int('money')), RARG(0), gameconst.BASE, '城池加钱', ALLSIDE, GOD_GROUPS)
-def addCityMoney(su, player, money):
+def gm_addCityMoney(su, player, money):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
     _stub.gmAddCityMoney(money)
     return True, '执行成功'
 
 @gm_cmd('$clearCityOwner', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '清空城池归属', ALLSIDE, GOD_GROUPS)
-def clearCityOwner(su, player):
+def gm_clearCityOwner(su, player):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
     _stub.gmClearCityOwner()
     return True, '执行成功'
 
 @gm_cmd('$RemoveCityOwnerFlag', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '移除帮会标记', ALLSIDE, GOD_GROUPS)
-def RemoveCityOwnerFlag(su, player):
+def gm_RemoveCityOwnerFlag(su, player):
     player.guildBox.onChangeCityOwnerFlag(False)
     return True, '执行成功'
 
 @gm_cmd('$changeSiegeWarState', (Player("gbId/Id"), Int('state'), Int('endTime')), RARG(0), gameconst.BASE, '修改城战状态', ALLSIDE, GOD_GROUPS)
-def gmChangeSiegeWarState(su, player, state, endTime):
+def gm_gmChangeSiegeWarState(su, player, state, endTime):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
     _stub.gmChangeSiegeWarState(state, endTime, 0)
     return True, '执行成功'
 
 @gm_cmd('$changeSiegeWarStateOfficial', (Player("gbId/Id"), Int('state'), Int('endTime')), RARG(0), gameconst.BASE, '修改城战状态(线上用)', ALLSIDE, GOD_GROUPS)
-def gmChangeSiegeWarStateOfficial(su, player, state, endTime):
+def gm_gmChangeSiegeWarStateOfficial(su, player, state, endTime):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
     _stub.gmChangeSiegeWarState(state, endTime, (0, 1))
     return True, '执行成功'
 
 @gm_cmd('$siegeWarBattleFastForward', (Player("gbId/Id"), Int('minutes')), RARG(0), gameconst.BASE, '城战战斗快进', ALLSIDE, GOD_GROUPS)
-def gmSiegeWarBattleFastForward(su, player, minutes):
+def gm_gmSiegeWarBattleFastForward(su, player, minutes):
     gameengine.getGlobalBase("SiegeWarSpaceStub").onGmAddTime(minutes)
     player.sendWorldChatMsg(player, "城战战斗快进"+str(minutes)+"分钟")
 
@@ -2791,20 +2667,20 @@ def gmSiegeWarBattleFastForward(su, player, minutes):
     return True, '执行成功'
 
 @gm_cmd('$siegeWarTestScores', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '城战测试分数', ALLSIDE, GOD_GROUPS)
-def siegeWarTestScores(su, player):
+def gm_siegeWarTestScores(su, player):
     gameengine.getGlobalBase("SiegeWarSpaceStub").onGmTestScores()
     return True, '执行成功'
 
 @gm_cmd('$resetMailStubTime', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '改数据库重置邮件lasttime', ALLSIDE, GOD_GROUPS)
-def resetMailStubTime(su, player):
-    now = utils.getNow()
+def gm_resetMailStubTime(su, player):
+    now = utils.curTS()
     sql = "UPDATE tbl_GlobalMailStub SET sm_lastSendTime = %s WHERE id = 1;" % (now)
     KBEngine.executeRawDatabaseCommand(sql)
     player.sendWorldChatMsg(player, "邮件数据库lasttime已重置:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now)))+"重启服务器生效")
     return True, '执行成功'
 
 @gm_cmd('$createCreationByFixedPosition', (Player("gbId/Id"), Int('creationId'), Int('x'),Int('y'),Int('z')), RARG(0), CELL, '创建固定位置的创建物', ALLSIDE, GOD_GROUPS)
-def createCreationByFixedPosition(su, player, creationId, x,y,z):
+def gm_createCreationByFixedPosition(su, player, creationId, x,y,z):
     context = actionContext.ActionContext()
     context.actionType = actionContext.ACTION_USE_SKILL
     context.skillId = 0
@@ -2814,10 +2690,10 @@ def createCreationByFixedPosition(su, player, creationId, x,y,z):
     return True,'执行成功'
 
 
-@gm_cmd('$sendrewardIDglobalmail', (Int('mailId'), Int('rewardID'), Str('despArgsStr'), Str('title'), Str('cont'),
-                            Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
+@gm_cmd('$sendrewardIDglobalmail', (Int('mailId'), Int('rewardID'), Str('despArgsStr'), Str('title'), Str('cont'), Int('minRoleTime'), Int('maxRoleTime'),
+                                    Int('dueTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
         RSU, gameconst.BASE, '发送一封全服邮件', INSIDE, GOD_GROUPS)
-def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, channel):
+def gm_sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel):
     # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
     import dropAward
     import awardContext
@@ -2854,13 +2730,13 @@ def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRo
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
+    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime, dueTime, 
                                                               minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM)
     return True, '执行成功'
 
 
 @gm_cmd('$changeAllSkill', (Player("gbId/Id"), Str('skillList')),RARG(0), gameconst.CELL, '指定怪物替换技能', ALLSIDE, GOD_GROUPS)
-def changeAllSkill(su, player,skillList):
+def gm_changeAllSkill(su, player,skillList):
     import ast
     newSkillList = ast.literal_eval(skillList)
     eid = player.selectedTargetId
@@ -2871,22 +2747,22 @@ def changeAllSkill(su, player,skillList):
     return su.onCommandResult(0, 'ok,怪物技能替换成功', {})
 
 @gm_cmd('$setProp', (Player("gbId/Id"),Str("propName"), Float("value"),), RARG(0), gameconst.CELL, '设置人物属性', ALLSIDE, GOD_GROUPS)
-def setProp(su, player,propName,value):
+def gm_setProp(su, player,propName,value):
     if value or propName:
-        player.setProp(f'{propName}', value, gameconst.SourceType.Default)
+        player.setProp(f'{propName}', value, gameconst.SourceType.SrcTpDefault)
         return True, '执行成功'
     return False, f'检查propName:{propName}'
 
 @gm_cmd('$enterCubeRoom', (Player("gbId/Id"), Int("mapId"),), RARG(0), gameconst.CELL, '进入魔方阵指定房间', ALLSIDE, GOD_GROUPS)
-def enterCubeRoom(su, player, mapId):
+def gm_enterCubeRoom(su, player, mapId):
     if player.gmEnterCubeRoom(mapId):
         return True, '执行成功'
     else:
         return False, '执行失败'
 
 @gm_cmd('$createCubeCowTeleport', (Player("gbId/Id"), ), RARG(0), gameconst.CELL, '创建进入魔方阵的传送门', ALLSIDE, GOD_GROUPS)
-def createCubeCowTeleport(su, player):
-    if not formula.isCubeSpace(player.spaceNo):
+def gm_createCubeCowTeleport(su, player):
+    if not formula.inCubeScene(player.spaceNo):
         return False, '当前不在魔方空间'
 
     player.spaceMgr.createTeleporterToCow(player.position)
@@ -2894,8 +2770,8 @@ def createCubeCowTeleport(su, player):
 
 
 @gm_cmd('$changeSceneStates', (Player("gbId/Id"), Str("states")), RARG(0), gameconst.CELL, '设置场景状态', ALLSIDE, GOD_GROUPS)
-def changeSceneStates(su, player, states):
-    if not formula.isWolrdBossSpace(player.spaceNo):
+def gm_changeSceneStates(su, player, states):
+    if not formula.inWolrdBossScene(player.spaceNo):
         return False, '当前不在boss场景'
 
     _state = []
@@ -2904,13 +2780,13 @@ def changeSceneStates(su, player, states):
         if _st:
             _state.append(i)
 
-    DEBUG_MSG('setSceneStates', _state)
+    LOG_DBG('setSceneStates', _state)
     player.setSceneStates(_state)
     return True, '执行成功'
 
 
 @gm_cmd('$levelUpSkill', (Player("gbId/Id"), Int("skillId"), Int("level")), RARG(0), gameconst.BASE, '升级指定技能到指定等级', ALLSIDE, GOD_GROUPS)
-def levelUpSkill(su, player, skillId, level):
+def gm_levelUpSkill(su, player, skillId, level):
     if not player:
         return False, "玩家不存在"
 
@@ -2936,7 +2812,7 @@ def levelUpSkill(su, player, skillId, level):
 
 @gm_cmd('$gotoLinePos', (Player("gbId/Id"), Int('spaceNo'),  Float('x'), Float('y'), Float('z')), RARG(0), CELL,
         '传送到大世界地图指定位置', ALLSIDE, GOD_GROUPS, minArgs=2)
-def gotoLinePos(su, player, spaceNo=0, x=0, y=0, z=0):
+def gm_gotoLinePos(su, player, spaceNo=0, x=0, y=0, z=0):
     if spaceNo == 0:
         spaceNo = player.spaceNo
 
@@ -2945,26 +2821,26 @@ def gotoLinePos(su, player, spaceNo=0, x=0, y=0, z=0):
         pos, _ = utils.getPlayerBornInfo()
 
     try:
-        lineNo = formula.getLineNo(spaceNo)
-        lineType = formula.getLineType(spaceNo)
-        if formula.getMapId(player.spaceNo) == lineType:
+        lineNo = formula.parseLineNo(spaceNo)
+        lineType = formula.parseLineType(spaceNo)
+        if formula.fetchMapId(player.spaceNo) == lineType:
             return False, '执行失败'
 
         player.applyEnterLineInternal(lineType, lineNo, pos, player.direction, False)
     except:
-        gameengine.reportCritical('gm gotoLinePos error')
+        gameengine.panicStack('gm gotoLinePos error')
         return False, '执行失败'
     return True, '执行成功'
 
 @gm_cmd('$applyFinishGather', (Player("gbId/Id"),), RARG(0), gameconst.CELL, '主动结束采集', ALLSIDE, GOD_GROUPS)
-def applyFinishGather(su, player):
-    gatherTarget = player.getTempMiscProp(gameconst.AvatarProps.gatherTarget, None)
+def gm_applyFinishGather(su, player):
+    gatherTarget = player.getTempMiscProp(gameconst.EntityPropsEnum.gatherTarget, None)
     if not gatherTarget or 'timer' not in gatherTarget:
         return False, '当前没有采集物体'
     player.applyFinishGather(player.id, gatherTarget['targetId'])
 
 @gm_cmd('$clearPickedCollections', (Player("gbId/Id"), Int("collection id"),), RARG(0), gameconst.CELL, '主动结束采集', ALLSIDE, GOD_GROUPS)
-def clearPickedCollections(su, player, collectionId):
+def gm_clearPickedCollections(su, player, collectionId):
     curAOI = player.getViewRadius()
     for m in player.entitiesInRange(curAOI, 'Collection'):
         if m.collectionId != collectionId:
@@ -2979,17 +2855,17 @@ def clearPickedCollections(su, player, collectionId):
     return True, '执行成功'
 
 @gm_cmd('$setVIP', (Player("gbId/Id"), Str("account"),), RARG(0), gameconst.BASE, '设置特权', ALLSIDE, GOD_GROUPS)
-def setVIP(su, player, account):
+def gm_setVIP(su, player, account):
     redisUtils.RedisUtils.set(gameconst.PrivilegeRedisKey.VIP + account, "1")
     return True, '执行成功'
 
 @gm_cmd('$setSVIP', (Player("gbId/Id"), Str("account"),), RARG(0), gameconst.BASE, '设置特权', ALLSIDE, GOD_GROUPS)
-def setSVIP(su, player, account):
+def gm_setSVIP(su, player, account):
     redisUtils.RedisUtils.set(gameconst.PrivilegeRedisKey.SVIP + account, "1")
     return True, '执行成功'
 
 @gm_cmd('$gmOpForbiddenTaskIds', (Int('opType'), Int('taskId')), RONE, BASE, '禁止任务', ALLSIDE, GOD_GROUPS)
-def gmOpForbiddenTaskIds(su, opType, taskId):
+def gm_gmOpForbiddenTaskIds(su, opType, taskId):
     if opType != gameconst.ForbiddenTaskIdOpType.QUERY and str(taskId) not in TDD.datas:
         return False, '执行失败'
     if opType == gameconst.ForbiddenTaskIdOpType.QUERY:
@@ -3002,3 +2878,38 @@ def gmOpForbiddenTaskIds(su, opType, taskId):
         gameengine.callAllApps('gameengine.removeForbiddenTaskIds', (taskId,))
         return True, '执行成功'
     return False, '执行失败'
+
+@gm_cmd('$showBountyInfo', (Player("gbId/Id"),), RARG(0), BASE, '显示当前悬赏列表', ALLSIDE, GOD_GROUPS)
+def gm_showBountyInfo(su, player):
+    gameengine.getGlobalBase('BountyStub').gmShowBountyInfo()
+    return True, '执行成功'
+
+@gm_cmd('$reqPublishBounty', (Player("gbId/Id"),), RARG(0), BASE, '发布悬赏', ALLSIDE, GOD_GROUPS)
+def gm_reqPublishBounty(su, player):
+    player.reqPublishBounty(player.gbID, "", 100, 0, "")
+    return True, '执行成功'
+
+@gm_cmd('$reqAcceptBounty', (Player("gbId/Id"), Int('uuid'),), RARG(0), BASE, '揭取悬赏', ALLSIDE, GOD_GROUPS)
+def gm_reqAcceptBounty(su, player, uuid):
+    player.reqAcceptBounty(player.gbID, uuid)
+    return True, '执行成功'
+
+@gm_cmd('$reqGetAvatarBountyInfo', (Player("gbId/Id"), Int('type'),), RARG(0), BASE, '获取与玩家相关的悬赏单信息', ALLSIDE, GOD_GROUPS)
+def gm_reqGetAvatarBountyInfo(su, player, type):
+    player.reqGetAvatarBountyInfo(player.gbID, type)
+    return True, '执行成功'
+
+@gm_cmd('$reqReplyAssignedHunter', (Player("gbId/Id"), Int('uuid'), Int('res'),), RARG(0), BASE, '被指定杀手玩家回复', ALLSIDE, GOD_GROUPS)
+def gm_reqReplyAssignedHunter(su, player, uuid, res):
+    player.reqReplyAssignedHunter(player.gbID, uuid, res)
+    return True, '执行成功'
+
+@gm_cmd('$reqGetPublicRankList', (Player("gbId/Id"), Int('type'), Int('vid'),), RARG(0), BASE, '获取排行榜数据', ALLSIDE, GOD_GROUPS)
+def gm_reqGetPublicRankList(su, player, type, vid):
+    player.reqGetPublicRankList(player.gbID, type, vid)
+    return True, '执行成功'
+
+@gm_cmd('$reqGetPublicBountyList', (Player("gbId/Id"), Int('startIdx'),), RARG(0), BASE, '获取悬赏列表', ALLSIDE, GOD_GROUPS)
+def gm_reqGetPublicBountyList(su, player, startIdx):
+    player.reqGetPublicBountyList(player.gbID, startIdx)
+    return True, '执行成功'

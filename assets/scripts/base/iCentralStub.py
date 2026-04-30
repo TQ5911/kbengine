@@ -18,7 +18,7 @@ class ICentralStub(object):
         self.csClients = {}
 
     def initCentralServers(self, configName, idName):
-        INFO_MSG('ICentralStub initCentralServers', configName, idName)
+        LOG_IFO('ICentralStub initCentralServers', configName, idName)
         _configFunc = getattr(gameconfig, configName)
         for _info in _configFunc():
             _csInfo = CentralServerInfo(_info[idName], _info['ip'], _info['port'])
@@ -27,7 +27,7 @@ class ICentralStub(object):
 
     def connectCentralServer(self, centralServerId):
         if centralServerId not in self.centralServerDic:
-            ERROR_MSG('connectCentralServer centralServerId not in centralServerDic', centralServerId,
+            LOG_ERR('connectCentralServer centralServerId not in centralServerDic', centralServerId,
                       self.centralServerDic)
             return
 

@@ -13,27 +13,27 @@ from .context import WaitingEventContext
 
 class Event(BaseEvent):
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super().handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        super().handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
         self.trigger_all(self.EVENT_BIND_IDX, obj)
 
 
 class RandomEvent(BaseEvent):
 
-    def __init__(self, event_id, controller, event_handler=None,
+    def __init__(self, eventId, controller, eventHandler=None,
                  probability=None, prec=2, **kwargs):
         """Random Choosen Event
 
-        :param event_id: element id
-        :type event_id: int
+        :param eventId: element id
+        :type eventId: int
         :param controller: element controller
         :type controller: Controller
-        :param event_handler: event handler function, defaults to None
-        :type event_handler: object, optional
+        :param eventHandler: event handler function, defaults to None
+        :type eventHandler: object, optional
         :param probability: random probability define, defaults to None
         :type probability: dict[element_id:int,probability:float], optional
         """
-        super().__init__(event_id, controller, event_handler=event_handler,
+        super().__init__(eventId, controller, eventHandler=eventHandler,
                          **kwargs)
         self._prec = int(prec)
         self._probabilities = self._build_probabilities(probability)
@@ -84,54 +84,54 @@ class RandomEvent(BaseEvent):
                 return _eid
         return random.choice(list(self._binded_dic))
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super().handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        super().handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
         eid = self._choose_random_element()
         self.trigger_all(eid, obj)
 
 
 class BaseDelayedEvent(BaseEvent, OverOneTickMixin):
 
-    def __init__(self, event_id, controller, event_handler=None,
+    def __init__(self, eventId, controller, eventHandler=None,
                  delay_time=0, **kwargs):
-        super().__init__(event_id, controller, event_handler=event_handler,
+        super().__init__(eventId, controller, eventHandler=eventHandler,
                          **kwargs)
         self._delay_time = delay_time
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super().handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
-        self.next(obj, **ref_params)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        super().handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
+        self.next(obj, **refParams)
 
-    def handle_be_triggered_after_delay(self, obj):
+    def handleBeTriggeredAfterDelay(self, obj):
         self.trigger_all(self.EVENT_BIND_IDX, obj)
 
 
-class BaseWaitingEvent(BaseEvent):
+class BaseAwaitEvent(BaseEvent):
 
-    def get_waiting_key(self, ctx):
+    def fetchWaitingKey(self, ctx):
         return self.__class__.__name__
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
-        ctx = WaitingEventContext(obj.tid, waiting_e=self,
-                                  waiting_args=_w_args,
-                                  waiting_kwargs=_w_kwargs)
-        key = self.get_waiting_key(obj)
-        self._controller.waiting_for_trigger(key, self, ctx)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
+        ctx = WaitingEventContext(obj.tid, waitingE=self,
+                                  waitingArgs=_w_args,
+                                  waitingKwargs=_w_kwargs)
+        key = self.fetchWaitingKey(obj)
+        self._controller.waitingForTrigger(key, self, ctx)
 
-    def re_handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
-        ctx = WaitingEventContext(obj.tid, waiting_e=self,
-                                  waiting_args=_w_args,
-                                  waiting_kwargs=_w_kwargs)
-        key = self.get_waiting_key(obj)
+    def reHandleBeTriggered(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
+        ctx = WaitingEventContext(obj.tid, waitingE=self,
+                                  waitingArgs=_w_args,
+                                  waitingKwargs=_w_kwargs)
+        key = self.fetchWaitingKey(obj)
         self._controller.waiting_for_retrigger(key, self, ctx)
 
-    def continue_handle_be_triggered(self, ctx):
-        self._con_handle_be_triggered(*ctx.waiting_args, **ctx.waiting_kwargs)
+    def continueHandleBeTriggered(self, ctx):
+        self._con_handle_be_triggered(*ctx.waitingArgs, **ctx.waitingKwargs)
 
-    def _con_handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super().handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+    def _con_handle_be_triggered(self, srcE, srcIdx, idx, obj, **refParams):
+        super().handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
         self.trigger_all(self.EVENT_BIND_IDX, obj)

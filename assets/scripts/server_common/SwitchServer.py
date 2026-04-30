@@ -107,7 +107,7 @@ class SwitchServerUtils(object):
     @classmethod
     def modifyGbId(cls, ctx, times):
         if times == 0:
-            ERROR_MSG('modifyGbId times=0', ctx.gbId)
+            LOG_ERR('modifyGbId times=0', ctx.gbId)
             return
 
         _newGbId = utils.generateUniqGlobalId()
@@ -120,16 +120,16 @@ class SwitchServerUtils(object):
     @classmethod
     def afterModifyGbId(cls, ret, num, insertId, err, ctx, times):
         if err:
-            ERROR_MSG("afterModifyGbId error={}".format(err))
+            LOG_ERR("afterModifyGbId error={}".format(err))
             cls.modifyGbId(ctx, times - 1)
             return
 
         # dump data finish
 
         _data = ctx.toDumpData()
-        ERROR_MSG('dump data len={}'.format(len(_data)))
+        LOG_ERR('dump data len={}'.format(len(_data)))
         _data = gzip.compress(_data)
-        ERROR_MSG('dump data compress len={}'.format(len(_data)))
+        LOG_ERR('dump data compress len={}'.format(len(_data)))
         base64Data = base64.b64encode(_data).decode('utf-8')
         redisUtils.RedisUtils.saveTestStr(base64Data)
         redisUtils.FriendUtils.deleteAllFriendRedis(ctx.gbId)
@@ -155,7 +155,7 @@ class SwitchServerUtils(object):
     @classmethod
     def onGetFriends(cls, ctx, ret, num, insertId, err):
         if err:
-            ERROR_MSG("onGetFriends error={}".format(err))
+            LOG_ERR("onGetFriends error={}".format(err))
             return
 
         _friends = []
@@ -170,7 +170,7 @@ class SwitchServerUtils(object):
     @classmethod
     def onDeleteFriends(cls, ctx, friends, ret, num, insertId, err):
         if err:
-            ERROR_MSG("onDeleteFriends error={}".format(err))
+            LOG_ERR("onDeleteFriends error={}".format(err))
             return
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -250,9 +250,9 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onGetAvatarOnlineInfo(cls, ret, num, insertId, err, ctx):
-        INFO_MSG("onGetAvatarOnlineInfo ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
+        LOG_IFO("onGetAvatarOnlineInfo ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
         if err:
-            ERROR_MSG("onGetAvatarOnlineInfo error={}".format(err))
+            LOG_ERR("onGetAvatarOnlineInfo error={}".format(err))
             return
 
         if len(ret) > 0:
@@ -274,7 +274,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def switchServer(cls, gbId, dbId, serverId, accountName, accountType):
-        INFO_MSG('switchServer gbId={}, dbId={}'.format(gbId, dbId))
+        LOG_IFO('switchServer gbId={}, dbId={}'.format(gbId, dbId))
         _ctx = SwitchContext(gbId, dbId, 'tbl_Avatar', serverId, accountName, accountType)
         _entityType = KBEngine.getUTType('Avatar')
         gamesql.queryAvatarOnline(
@@ -285,7 +285,7 @@ class SwitchServerUtils(object):
     # ---------------------------------- save data start -------------------------
     @classmethod
     def saveData(cls, dataBytes):
-        DEBUG_MSG('saveData len={}'.format(len(dataBytes)))
+        LOG_DBG('saveData len={}'.format(len(dataBytes)))
         _data = gzip.decompress(dataBytes)
         _ctx = SwitchContext.fromDbDataCache(_data)
 
@@ -320,7 +320,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def afterSaveSwitchServerRecord(cls, accountName, *args):
-        INFO_MSG('afterSaveSwitchServerRecord args={}'.format(args))
+        LOG_IFO('afterSaveSwitchServerRecord args={}'.format(args))
 
         gameglobal.localLoginStub.unlockLoginSwitchServer(accountName)
 
@@ -358,12 +358,12 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onSaveMailsData(cls, ret, num, insertId, err, ctx):
-        INFO_MSG("onSaveMailsData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
+        LOG_IFO("onSaveMailsData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
         if err:
-            ERROR_MSG("onSaveMailsData error={}".format(err))
+            LOG_ERR("onSaveMailsData error={}".format(err))
             return
 
-        _accountName = utils.getRealAccountName(ctx.accountType, ctx.accountName)
+        _accountName = utils.mixRealAccountName(ctx.accountType, ctx.accountName)
         gamesql.addSwitchServerRecord(
             _accountName,
             ctx.newDbId(),
@@ -373,9 +373,9 @@ class SwitchServerUtils(object):
     @classmethod
     def saveTableData(cls, ctx):
         _tbName = next(ctx.writeIter, None)
-        DEBUG_MSG('saveTableData', _tbName)
+        LOG_DBG('saveTableData', _tbName)
         if _tbName is None:
-            WARNING_MSG('saveTableData finish')
+            LOG_WARN('saveTableData finish')
             # save common data finish
             # will save mail
             cls.saveMailData(ctx)
@@ -426,9 +426,9 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onSaveTableData(cls, ret, num, insertId, err, ctx):
-        INFO_MSG("onSaveTableData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
+        LOG_IFO("onSaveTableData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
         if err:
-            ERROR_MSG("onSaveTableData error={} {}".format(err, ctx.curWriteTbName))
+            LOG_ERR("onSaveTableData error={} {}".format(err, ctx.curWriteTbName))
             return
 
         _tbCache = ctx.tbDataCache[ctx.curWriteTbName]
@@ -452,9 +452,9 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onGetTestSaveData(cls, cid, err, ret):
-        INFO_MSG('onGetTestSaveData cid={}, err={}, ret={}'.format(cid, err, ret))
+        LOG_IFO('onGetTestSaveData cid={}, err={}, ret={}'.format(cid, err, ret))
         if err:
-            ERROR_MSG('onGetTestSaveData error={}'.format(err))
+            LOG_ERR('onGetTestSaveData error={}'.format(err))
             return
 
         baseData = base64.b64decode(ret)

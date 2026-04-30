@@ -2,7 +2,7 @@ from rpc import RpcChannel, TcpClient
 
 import gameglobal
 from proto.gameServerLogin_pb2 import GameServerInfo, VerifyAccountRequest, GameServer, CentralServer_Stub, \
-    VerifyAccountReply, UpdateCharacterInfo, NewCharacterInfo, Void, AccountVal, AccountOfflineVal, LockLoginSwitchServerVal, UnlockLoginSwitchServerVal,\
+    VerifyAccountReply, UpdateCharacterInfo, NewCharacterInfo, Void, AccountVal, AccountOfflineVal, AccountOnlineVal, LockLoginSwitchServerVal, UnlockLoginSwitchServerVal,\
     DeleteCharacterRequest
 
 import proto.centralLogin_pb2 as centralLogin
@@ -56,14 +56,14 @@ class LoginService(GameServer):
                                           banAccountReason, banPostReason, otherData)
 
     def onKickAccount(self, rpc_controller, reply, done):
-        INFO_MSG("onKickAccount", reply.accountName)
+        LOG_IFO("onKickAccount", reply.accountName)
         accountType = reply.accountType
         accountName = reply.accountName
         kickReason = reply.kickReason
         self.loginMgr.onKickAccount(accountType, accountName, kickReason)
 
     def onLockedLogin(self, rpc_controller, reply, done):
-        INFO_MSG("onLockedLogin", reply.accountName)
+        LOG_IFO("onLockedLogin", reply.accountName)
 
         SwitchServer.SwitchServerUtils.switchServer(
             reply.gbId,
@@ -117,7 +117,7 @@ class ICentralLogin(object):
             return
 
         if centralServerId not in self.centralServerDic:
-            ERROR_MSG("connectCentralServer centralServerId not in centralServerDic", centralServerId,
+            LOG_ERR("connectCentralServer centralServerId not in centralServerDic", centralServerId,
                       self.centralServerDic)
             return
 
@@ -130,7 +130,7 @@ class ICentralLogin(object):
             return
 
         csInfo = self.centralServerDic.get(centralServerId)
-        DEBUG_MSG('ICentralLogin connecting central server:', csInfo.ip, csInfo.port, csInfo.serverId)
+        LOG_DBG('ICentralLogin connecting central server:', csInfo.ip, csInfo.port, csInfo.serverId)
         self.loginClientDic[centralServerId] = LoginService(self, (csInfo.ip, csInfo.port), csInfo.serverId)
 
     def onCentralServerConnected(self, centralServerId):
@@ -139,32 +139,70 @@ class ICentralLogin(object):
     def onCentralServerDisonnected(self):
         pass
 
+    def tagTypeCheck(self, otherData, extra, realAccountName):
+        tagTypeStr = otherData["tagType"] if "tagType" in otherData else "1"
+        tagTypeSet = set(tagTypeStr.split(","))
+
+        # 白名单一律放行
+        if str(gameconst.UserTagType.WHITE_LIST) in tagTypeSet:
+            return True
+
+        # 注册上限
+        if extra and "isOverRegLimit" in extra:
+            if extra["isOverRegLimit"]:
+                LOG_IFO('check server limit error.')
+                KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_MEET_REG_MAX)
+                return False
+            
+        # 未开服
+        nowTime = utils.curTS()
+        openTime = gameconfig.serverOpenTime()
+        if nowTime < openTime:
+            LOG_IFO('check server open time limit.', nowTime, openTime, str(openTime - nowTime))
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, 
+                    bytes(str(openTime - nowTime), encoding='utf-8'), 
+                    0, gameconst.GAME_SERVER_ERR_SERVER_OPEN_TIME)
+            return False
+
+        tagTypeCode = 0b1
+        for tagType in tagTypeSet:
+            tagTypeCode |= 1 << (int(tagType) - 1)
+        # 激活码用户允许进入封闭服务器
+        permitLogin = gameconfig.permitLogin()
+        LOG_IFO('check permit login', bin(tagTypeCode), bin(permitLogin), bin((tagTypeCode << 32) | permitLogin))
+        if tagTypeCode & permitLogin:
+            return True
+
+
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(str((tagTypeCode << 32) | permitLogin), encoding='utf-8'), 0, gameconst.GAME_SERVER_ERR_PERMIT)
+        return False
+
     # 将在interfaces进程上执行账号验证相关逻辑
     def onVerifyPlayerLogin(self, accountType, userId, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
                             banAccountReason="", banPostReason="", otherData={}):
-        realAccountName = utils.getRealAccountName(accountType, accountName)
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:
             return
 
-        INFO_MSG('onVerifyLogin:', accountType, userId, accountName, resCode, userInfo, otherData)
+        LOG_IFO('onVerifyLogin:', accountType, userId, accountName, resCode, userInfo, otherData)
 
-        tid, token, dataBytes = userInfo
+        tid, token, dataBytes, extra = userInfo
 
         banAccountReason = urllib.parse.unquote(banAccountReason)
         banPostReason = urllib.parse.unquote(banPostReason)
-        clientData = utils.decodeClientData(dataBytes)
+        clientData = utils.decClientData(dataBytes)
         clientData.pop("banPostTime", None)
         clientData.pop("banPostReason", None)
         clientData.update({"channelId": channelId, "banAccountTime": banAccountTime, "userId": userId, "otherData": otherData})
         if banPostTime != 0:
             clientData.update({"banPostTime": banPostTime, "banPostReason": banPostReason})
-        dataBytes = utils.encodeClientData(clientData)
+        dataBytes = utils.encClientData(clientData)
 
         tid and KBEngine.delTimer(tid)
         _forceCompId = utils.getForceComponentID(realAccountName)
 
-        if banAccountTime and (banAccountTime > utils.getNow() or banAccountTime == -1):
+        if banAccountTime and (banAccountTime > utils.curTS() or banAccountTime == -1):
             fmtMessage = MMD.datas[LSD.datas['idip_accountBanned_msg']['value']]['Message']
             if banAccountTime == -1:
                 KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
@@ -180,13 +218,17 @@ class ICentralLogin(object):
 
         curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
         antiAddictionSwitch = AASC.datas.get('antiAddictSwitchAge18', {}).get('value', 0)
-        INFO_MSG('onVerifyLogin: antiAddictionData', antiAddictionSwitch, gameglobal.antiAddictionData, curAge)
+        LOG_IFO('onVerifyLogin: antiAddictionData', antiAddictionSwitch, gameglobal.antiAddictionData, curAge)
         if utils.isMinorAccount(curAge) and (antiAddictionSwitch or gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT):
             #fmtMessage = MMD.datas[AASC.datas['antiAddictForbiddenTime']['value']]['Message']
             fmtMessage = ""
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'),
                                               _forceCompId,
                                               gameconst.GAME_SERVER_ERR_ANTI_ADDICT)
+            return
+
+        #白名单、激活码用户
+        if not self.tagTypeCheck(otherData, extra, realAccountName):
             return
 
         if resCode == VerifyAccountReply.VERIFY_ACCOUNT_OK:
@@ -201,29 +243,29 @@ class ICentralLogin(object):
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, gameconst.GAME_SERVER_ERR_VERIFY_FAIL)
 
     # 将在interfaces进程上执行账号验证相关逻辑
-    def checkPlayerLogin(self, realAccountName, data, centralServerId):
-        self._checkPlayerLoginOnCentralServer(realAccountName, data, centralServerId)
+    def checkPlayerLogin(self, realAccountName, data, centralServerId, extra=None):
+        self._checkPlayerLoginOnCentralServer(realAccountName, data, centralServerId, extra)
 
-    def _checkPlayerLoginOnCentralServer(self, realAccountName, data, centralServerId):
-        accountType, accountName = utils.getAccountTypeAndName(realAccountName)
-        cacheKeyName = utils.getRealAccountName(accountType, accountName)
+    def _checkPlayerLoginOnCentralServer(self, realAccountName, data, centralServerId, extra=None):
+        accountType, accountName = utils.fetchAccountTypeAndName(realAccountName)
+        cacheKeyName = utils.mixRealAccountName(accountType, accountName)
         if not gameconfig.enableCentralLogin():
-            self.accountCache[cacheKeyName] = (0, '', data)
+            self.accountCache[cacheKeyName] = (0, '', data, extra)
             self.onVerifyPlayerLogin(accountType, "NOT:"+cacheKeyName, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
             return
 
         if accountType == centralLogin.ACCOUNT_UNKNOW:
             if gameconfig.enableBotLogin():
-                self.accountCache[cacheKeyName] = (0, '', data)
+                self.accountCache[cacheKeyName] = (0, '', data, extra)
                 self.onVerifyPlayerLogin(accountType, "BOT:"+cacheKeyName, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
                 return
             else:
-                ERROR_MSG('check login err:', accountName)
-                self.accountCache[cacheKeyName] = (0, '', data)
+                LOG_ERR('check login err:', accountName)
+                self.accountCache[cacheKeyName] = (0, '', data, extra)
                 self.onVerifyPlayerLogin(accountType, "", accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
                 return
 
-        clientData = utils.decodeClientData(data)
+        clientData = utils.decClientData(data)
         token = clientData.get('token', '')
 
         self.connectCentralServer(centralServerId)
@@ -236,9 +278,9 @@ class ICentralLogin(object):
 
         loginClient = self.loginClientDic.get(centralServerId)
         if not loginClient:
-            ERROR_MSG("_checkPlayerLoginOnCentralServer:: invalid centralServerId", accountName, centralServerId,
+            LOG_ERR("_checkPlayerLoginOnCentralServer:: invalid centralServerId", accountName, centralServerId,
                       clientData)
-            self.accountCache[cacheKeyName] = (0, token, data)
+            self.accountCache[cacheKeyName] = (0, token, data, extra)
             self.onVerifyPlayerLogin(accountType, "", accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
             return
 
@@ -246,18 +288,18 @@ class ICentralLogin(object):
 
         tid = KBEngine.addTimer(7, 0, lambda tid: self._checkPlayerLoginTimeout(accountType, accountName))
 
-        self.accountCache[cacheKeyName] = (tid, token, data)
+        self.accountCache[cacheKeyName] = (tid, token, data, extra)
 
     # 将在interfaces进程上执行账号验证相关逻辑
     def _checkPlayerLoginTimeout(self, accountType, accountName):
-        realAccountName = utils.getRealAccountName(accountType, accountName)
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:
-            ERROR_MSG('_checkPlayerLoginTimeout: invalid accountName', accountName)
+            LOG_ERR('_checkPlayerLoginTimeout: invalid accountName', accountName)
             return
 
-        tid, token, data = userInfo
-        realAccountName = utils.getRealAccountName(accountType, accountName)
+        tid, token, data, extra = userInfo
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_VERIFY_TIMEOUT)
 
     def registerServer(self, centralServerId):
@@ -265,7 +307,7 @@ class ICentralLogin(object):
         if not serverId:
             return
 
-        INFO_MSG('register server on login:', serverId, centralServerId)
+        LOG_IFO('register server on login:', serverId, centralServerId)
 
         serverInfo = GameServerInfo()
         serverInfo.hostId = serverId
@@ -355,14 +397,31 @@ class ICentralLogin(object):
         loginClient = self.loginClientDic.get(centralServerId)
         loginClient.centralServerStub.onLoginComplete(None, account, None)
 
-    def notifyCentralServerOffline(self, accountName, accountType, centralServerId):
-        INFO_MSG("notifyCentralServerOffline", accountName, accountType, centralServerId)
+    def notifyCentralServerOnline(self, accountName, accountType, centralServerId, sessionIdStr):
+        LOG_IFO("notifyCentralServerOnline", accountName, accountType, centralServerId, sessionIdStr)
+        self.connectCentralServer(centralServerId)
+
+        account = AccountOnlineVal()
+        account.hostId = gameconfig.serverId()
+        account.accountName = accountName
+        account.accountType = accountType
+        account.sessionIdStr = sessionIdStr
+
+        loginClient = self.loginClientDic.get(centralServerId)
+        if not loginClient:
+            return
+        
+        loginClient.centralServerStub.onAccountOnline(None, account, None)
+
+    def notifyCentralServerOffline(self, accountName, accountType, centralServerId, sessionIdStr):
+        LOG_IFO("notifyCentralServerOffline", accountName, accountType, centralServerId, sessionIdStr)
         self.connectCentralServer(centralServerId)
 
         account = AccountOfflineVal()
         account.hostId = gameconfig.serverId()
         account.accountName = accountName
         account.accountType = accountType
+        account.sessionIdStr = sessionIdStr
 
         loginClient = self.loginClientDic.get(centralServerId)
         if not loginClient:
@@ -379,7 +438,7 @@ class ICentralLogin(object):
 
         _loginClient = self.loginClientDic.get(centralServerId)
         if not _loginClient:
-            ERROR_MSG("deleteCharacter:: invalid centralServerId", gbId, centralServerId)
+            LOG_ERR("deleteCharacter:: invalid centralServerId", gbId, centralServerId)
             return
 
         _loginClient.centralServerStub.deleteCharacter(None, _req, None)

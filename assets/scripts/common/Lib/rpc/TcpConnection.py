@@ -69,17 +69,17 @@ class TcpConnection(asyncore.dispatcher):
         return self.peername
 
     def handle_close(self):
-        DEBUG_MSG('Attention!!! TcpConnection.handle_close')
+        LOG_DBG('Attention!!! TcpConnection.handle_close')
         asyncore.dispatcher.handle_close(self)
         self.disconnect()
 
     def handle_expt(self):
-        DEBUG_MSG('Attention!!! TcpConnection.handle_expt')
+        LOG_DBG('Attention!!! TcpConnection.handle_expt')
         asyncore.dispatcher.handle_expt(self)
         self.disconnect()
 
     def handle_error(self):
-        DEBUG_MSG('Attention!!! TcpConnection.handle_error')
+        LOG_DBG('Attention!!! TcpConnection.handle_error')
         asyncore.dispatcher.handle_error(self)
         self.disconnect()
 

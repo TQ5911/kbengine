@@ -8,10 +8,10 @@ import userType
 import gametimer
 
 
-class GloalDataCounter(userType.UserSoleType):
+class GloalDataCounter(userType.UserSingleType):
     def __init__(self, cd=1):
         self.changeCD = cd
-        self.tLastChanged = utils.getNow()
+        self.tLastChanged = utils.curTS()
         self.counter = 0
         self.changeTimer = 0
 
@@ -21,13 +21,13 @@ class GloalDataCounter(userType.UserSoleType):
         return
 
     def _setGlobalData(self, owner, globalKey, forceSet=False):
-        now = utils.getNow()
+        now = utils.curTS()
 
         if forceSet or now - self.tLastChanged >= self.changeCD:
             KBEngine.globalData[globalKey] = self.counter
             self.tLastChanged = now
         elif not self.changeTimer:
-            self.changeTimer = owner._callback(self.changeCD, 'globalDataCounterCallback',
+            self.changeTimer = owner.addTimerCB(self.changeCD, 'globalDataCounterCallback',
                                                (self, 'onTimerSetGlobalCounter', (globalKey,)),
                                                gametimer.TIMER_TAG_GLOBALDATA_COUNTER)
 
@@ -47,7 +47,7 @@ class GloalDataCounter(userType.UserSoleType):
 
     def onTimerSetGlobalCounter(self, globalKey):
         self.changeTimer = 0
-        now = utils.getNow()
+        now = utils.curTS()
         if now - self.tLastChanged >= self.changeCD:
             KBEngine.globalData[globalKey] = self.counter
             self.tLastChanged = now

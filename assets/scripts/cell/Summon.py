@@ -47,10 +47,10 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         self.name = CBD.datas[self.summonId].get('name', '无名怪')
         hostEnt = self.getHost()
         if hostEnt and hostEnt.IsAvatar:
-            self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
+            self.cellFlags = utils.bset(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
 
         if not self.hostId or (hostEnt and not hostEnt.IsAvatar and not hostEnt.isBot()):
-            self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_IGNORE
+            self.isWitnessComplete = gameconst.WitnessTypeEnum.WITNESS_ENUM_IGNORE
 
         if not self.force:
             if hostEnt:
@@ -76,8 +76,8 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
 
         spaceMgr = self.spaceMgr
         if spaceMgr:
-            gid = utils.getGidFromGameEntityId(self.gameEntityId)
-            if formula.isDungeonSpace(self.spaceNo):
+            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
+            if formula.inDungeonScene(self.spaceNo):
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.summonId),
                                              'gid_{}'.format(gid), self.__class__.__name__,))
             else:
@@ -98,7 +98,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         ifBornState = CBD.datas[self.summonId]['ifBornState']
         if ifBornState:
             self.changeBornState(gameconst.BornStateType.invisible)
-            self._callback(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
+            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
                            (gameconst.BornStateType.static, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
             self.changeBornState(gameconst.BornStateType.move)
@@ -110,7 +110,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
     def initBornAction(self):
         bornAction = self.getBornAction()
         if bornAction:
-            bornAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
+            bornAction(self, self, self.createContext)
 
     def getHost(self):
         en = KBEngine.entities.get(self.hostId)
@@ -153,21 +153,21 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             return CBD.datas[self.creepBaseId].get('inheritMaxAtkRatio', 1.0)
         return super(Summon, self).baseMaxAtkRatio()
 
-    def initBaseProperties(self):
+    def doInitBaseProperties(self):
         owner = self.getHost()
         if owner:
             self.setProp('adjAtkBless', owner.getProp('adjAtkBless'))
 
-        super().initBaseProperties()
+        super().doInitBaseProperties()
 
     def onInitPropsCompleted(self):
         owner = self.getHost()
         if self.inheritPropRatio>0 and owner and not owner.isDestroyed:
-            self.setProp('baseFullHp', int(owner.getProp('baseFullHp')*self.baseFullHpRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMinPhysicalArmor', int(owner.getProp('baseMinPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMinMagicArmor', int(owner.getProp('baseMinMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMaxPhysicalArmor', int(owner.getProp('baseMaxPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMaxMagicArmor', int(owner.getProp('baseMaxMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            self.setProp('baseFullHp', int(owner.getProp('baseFullHp')*self.baseFullHpRatio()*self.inheritPropRatio), gameconst.SourceType.SrcTpInit)
+            self.setProp('baseMinPhysicalArmor', int(owner.getProp('baseMinPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.SrcTpInit)
+            self.setProp('baseMinMagicArmor', int(owner.getProp('baseMinMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.SrcTpInit)
+            self.setProp('baseMaxPhysicalArmor', int(owner.getProp('baseMaxPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.SrcTpInit)
+            self.setProp('baseMaxMagicArmor', int(owner.getProp('baseMaxMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.SrcTpInit)
 
             otherProps = [
                             'adjFullHp', 'adjFullHpAbs', 'mulFullHp', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs', 'adjMinMagicAtk', 'adjMinMagicAtkAbs', 
@@ -181,7 +181,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             for propName in otherProps:
                 propVal = owner.getProp(propName)
                 tp = type(propVal)
-                self.setProp(propName, tp(propVal*self.inheritPropRatio), gameconst.SourceType.Init)
+                self.setProp(propName, tp(propVal*self.inheritPropRatio), gameconst.SourceType.SrcTpInit)
 
 
     # --------------------------------------------------------------------------------------------
@@ -209,30 +209,30 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         radii = self.getAlertDistance()
         if radii<=0:
             return
-        self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
+        self.hateTrapId = self.addProximity(radii, radii, gameconst.AGGRO_TRIGGER_TRAP)
         leaveAoiRange = self.getLeaveAlertDistance()
-        self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
+        self.addProximity(leaveAoiRange, 0.0, gameconst.AOI_EXIT_TRAP)
 
     def onGetWitness(self):
         """
         KBEngine method.
         绑定了一个观察者(客户端)
         """
-        DEBUG_MSG("Avatar::onGetWitness: %i." % self.id)
+        LOG_DBG("Avatar::onGetWitness: %i." % self.id)
 
     def onLoseWitness(self):
         """
         KBEngine method.
         解绑定了一个观察者(客户端)
         """
-        DEBUG_MSG("Avatar::onLoseWitness: %i." % self.id)
+        LOG_DBG("Avatar::onLoseWitness: %i." % self.id)
 
     def _preSafeDestory(self):
         """
         KBEngine method.
         entity销毁
         """
-        DEBUG_MSG("summon::onDestroy: %i." % self.id)
+        LOG_DBG("summon::onDestroy: %i." % self.id)
         self.aiController and self.aiController.inheritSourceHate(self.hostId)
         if self.spaceMgr :
             self.spaceMgr.removeEntityById(self.id)
@@ -249,7 +249,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         pass
 
     def onDead(self, killer, *args, **kwargs):
-        DEBUG_MSG('Summon::onDead', killer)
+        LOG_DBG('Summon::onDead', killer)
         super(Summon, self).onDead(killer, hostId=self.hostId)
         self.removeAllBuff()
         self.cancelMoveController()
@@ -286,10 +286,10 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if newState == gameconst.BornStateType.static:
             ifBornState = CBD.datas[self.summonId].get('ifBornState', 1)
             nextState = gameconst.BornStateType.move
-            self._callback(CBSD.datas[ifBornState]['bornStateTime'], 'changeBornState', (nextState, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
+            self.addTimerCB(CBSD.datas[ifBornState]['bornStateTime'], 'changeBornState', (nextState, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         elif newState == gameconst.BornStateType.move:
             self.setAI(self.aiName)
-            self._callback(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
+            self.addTimerCB(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
         elif newState == gameconst.BornStateType.reMove:
             newState = gameconst.BornStateType.move
 
@@ -297,28 +297,28 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
 
     def addSkillByPlunderLingzhu(self, skillIds):
         for skillId in skillIds:
-            self.addSkill(skillId, 1)
+            self.addSkillInEntity(skillId, 1)
 
     def enterFightingState(self):
         super(Summon, self).enterFightingState()
         if self.isMoving():
             self.cancelMoveController()
         self.setProp('adjSpeed', self.getProp('adjSpeed') + CBD.datas[self.summonId].get('adjSpeed', 0),
-                     gameconst.SourceType.Fight)
+                     gameconst.SourceType.SrcTpFight)
 
     def leaveFightingState(self):
         super(Summon, self).leaveFightingState()
         if self.isDie() or self.getProp('adjSpeed') == 0:
             return
         self.setProp('adjSpeed', self.getProp('adjSpeed') - CBD.datas[self.summonId].get('adjSpeed', 0),
-                     gameconst.SourceType.Fight)
+                     gameconst.SourceType.SrcTpFight)
         return
 
     def getAIParam(self):
         return dataUtils.getAIParameters(self.summonId)
 
     def checkCombatRangeY(self, target):
-        if utils.hasBit(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR) and target.IsMonster:
+        if utils.bhas(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR) and target.IsMonster:
             underAttackHeightLimit = CBD.datas[target.monsterId]['underAttackHeightLimit']
             if underAttackHeightLimit:
                 heightLimit = underAttackHeightLimit

@@ -33,6 +33,7 @@
             <Arg>         OP_UUID       </Arg>
             <Arg>         UNICODE       </Arg>
             <Arg>         UINT32        </Arg>
+            <Arg>         BOOL          </Arg>
         </onNewMailInsertSucc>
         <sendOneGlobalMail>
             <Arg>         GLOBAL_MAIL_VAL        </Arg>
@@ -54,10 +55,14 @@
     </BaseMethods>
     <ClientMethods>
         <onGetMailList>
-            <Arg>   ARRAY <of>  CLIENT_MAIL_VAL </of>  </Arg>
+            <Arg>         ARRAY <of>  CLIENT_MAIL_VAL </of>     </Arg>
+            <Arg>         UINT8                                 </Arg>
+            <Arg>         UINT8                                 </Arg>
         </onGetMailList>
         <onGetNewMail>
-            <Arg>   ARRAY <of>  CLIENT_MAIL_VAL </of>  </Arg>
+            <Arg>         ARRAY <of>  CLIENT_MAIL_VAL </of>     </Arg>
+            <Arg>         UINT8                                 </Arg>
+            <Arg>         UINT8                                 </Arg>
         </onGetNewMail>
 
         <onReadOneMail>
@@ -68,6 +73,8 @@
         </onGetMailAttach>
         <onDelMails>
             <Arg>         ARRAY <of>  MAIL_GBID  </of>        </Arg>
+            <Arg>         UINT8                               </Arg>
+            <Arg>         UINT8                               </Arg>
         </onDelMails>
     </ClientMethods>
 </root>

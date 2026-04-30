@@ -15,7 +15,7 @@ import taskClass_taskTarget as TCTTD
 MAX_JSON_STR_LENGTH = 1024
 
 
-class BaseTarget(userType.UserSoleType):
+class BaseTarget(userType.UserSingleType):
     tgtType = gameconst.TaskTargetType.TARGET_UNKNOWN
 
     def __init__(self):
@@ -41,7 +41,7 @@ class BaseTarget(userType.UserSoleType):
         try:
             return json.loads(extraStr)
         except Exception as e:
-            gameengine.reportCritical('in loadsExtraJson:', e, extraStr)
+            gameengine.panicStack('in loadsExtraJson:', e, extraStr)
             return {}
 
     def fromExtraDic(self, extraStr):
@@ -56,7 +56,7 @@ class BaseTarget(userType.UserSoleType):
     def toTgtSavedDict(self):
         extraStr = self.genExtraStr()
         if len(extraStr) >= MAX_JSON_STR_LENGTH:
-            gameengine.reportCritical('toTgtSavedDict, json str reach max limit:', self.__dict__)
+            gameengine.panicStack('toTgtSavedDict, json str reach max limit:', self.__dict__)
         return {
             'tgtType': self.tgtType,
             'tgtId': self.tgtId,
@@ -83,7 +83,7 @@ class BaseTarget(userType.UserSoleType):
             extraDic = self.loadsExtraJson(dataDic['extraStr'])
             self.fromExtraDic(extraDic)
         except Exception as e:
-            gameengine.reportCritical('in BaseTarget.fromSavedDict:', e)
+            gameengine.panicStack('in BaseTarget.fromSavedDict:', e)
         return
 
     def initFromTgtObj(self, tgt):
@@ -151,8 +151,8 @@ class TaskTargetMonsters(BaseTarget):
         return
 
     def killOneMonster(self, spaceNo, monsterId, monsterGBId):
-        mapId = formula.getMapId(spaceNo)
-        INFO_MSG('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
+        mapId = formula.fetchMapId(spaceNo)
+        LOG_IFO('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
         opResult = False
         completed = False
         if mapId != self.mapId:
@@ -180,7 +180,7 @@ class TaskTargetMonsters(BaseTarget):
                 opResult = True
 
         completed = self.isTargetCompleted()
-        INFO_MSG('in TargetMonsters::killOneMonster:end, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode, opResult, completed)
+        LOG_IFO('in TargetMonsters::killOneMonster:end, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode, opResult, completed)
 
         return opResult, completed
 
@@ -235,7 +235,7 @@ class TaskTargetItems(BaseTarget):
         return
 
     def gottenItems(self, itemId, num):
-        INFO_MSG('in TargetItems::gottenItems:', self.tgtId, self.dstCnt, self.stepCnt)
+        LOG_IFO('in TargetItems::gottenItems:', self.tgtId, self.dstCnt, self.stepCnt)
         opResult = False
         completed = False
         if itemId != self.tgtId:
@@ -281,7 +281,7 @@ class TaskTargetTalkToNPC(BaseTarget):
         self.dialogIdList = dialogIdList
 
     def doTgtTalkToNpc(self, npcId, dialogId):
-        INFO_MSG('in TargetTalkToNPC::doTgtTalkToNpc:', npcId, dialogId, self.tgtId)
+        LOG_IFO('in TargetTalkToNPC::doTgtTalkToNpc:', npcId, dialogId, self.tgtId)
         dialogId = dialogId // 1000
         if npcId not in self.npcIdList or dialogId not in self.dialogIdList:
             return False
@@ -340,11 +340,11 @@ class TaskTargetCollect(BaseTarget):
         self.mapId = tgt.mapId
 
     def addCollectNum(self, collectId, gameEntityId, spaceNo=0):
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         if self.tgtId != collectId:
             return False
         if dungeonNo and self.mapId and dungeonNo != self.mapId:
-            WARNING_MSG('   in Task::addCollectNum, mapId mismatch:', dungeonNo, self.mapId)
+            LOG_WARN('   in Task::addCollectNum, mapId mismatch:', dungeonNo, self.mapId)
             return False
 
         self.stepCnt += 1
@@ -395,7 +395,7 @@ class TaskTargetReachArea(BaseTarget):
         super(TaskTargetReachArea, self).initFromTgtObj(tgt)
         self.mapId = tgt.mapId
         if 0 == self.mapId:
-            gameengine.reportCritical('TASK_TARGET_REACH_AREA, initFromTgtObj mapId is 0')
+            gameengine.panicStack('TASK_TARGET_REACH_AREA, initFromTgtObj mapId is 0')
         self.posX = tgt.posX
         self.posZ = tgt.posZ
         self.width = tgt.width
@@ -471,14 +471,14 @@ class TaskTargetAvatarLevel(BaseTarget):
         self.dstCnt = 0
 
     def initTarget(self, dstLv):
-        DEBUG_MSG('in initTargetAvatarLevel:', dstLv)
+        LOG_DBG('in initTargetAvatarLevel:', dstLv)
         if dstLv <= 0:
             return
         self.dstCnt = dstLv
         self.stepCnt = 1
 
     def avatarLevelUp(self, newLv):
-        INFO_MSG('in TargetAvatarLevel::avatarLevelUp:', self.dstCnt, newLv)
+        LOG_IFO('in TargetAvatarLevel::avatarLevelUp:', self.dstCnt, newLv)
         if newLv >= self.stepCnt:
             self.stepCnt = newLv
         return self.isTargetCompleted()
@@ -500,7 +500,7 @@ class TaskTargetCount(BaseTarget):
         super(TaskTargetCount, self).__init__()
 
     def initTarget(self, tgtId, dstCnt, compType):
-        DEBUG_MSG('in initTargetCount:', tgtId, dstCnt, compType)
+        LOG_DBG('in initTargetCount:', tgtId, dstCnt, compType)
         self.tgtId = tgtId
         self.stepCnt = 0
         self.dstCnt = dstCnt
@@ -731,7 +731,7 @@ class BaseTargetFactory(object):
     def createTarget(cls, tgtType, *args):
         tgtClass = cls.TgtType2TgtClassMap.get(tgtType)
         if not tgtClass:
-            ERROR_MSG('in createTarget, tgtType error:', tgtType, args)
+            LOG_ERR('in createTarget, tgtType error:', tgtType, args)
             return
         tgt = tgtClass()
         tgt.initTarget(*args)
@@ -741,7 +741,7 @@ class BaseTargetFactory(object):
     def createTargetBySavedDic(cls, savedData):
         tgtClass = cls.TgtType2TgtClassMap.get(savedData['tgtType'])
         if not tgtClass:
-            gameengine.reportCritical('in createTargetBySavedDic, tgtType error:', savedData)
+            gameengine.panicStack('in createTargetBySavedDic, tgtType error:', savedData)
             return
         tgt = tgtClass()
         tgt.fromSavedDict(savedData)
@@ -751,7 +751,7 @@ class BaseTargetFactory(object):
     def createTargetByObj(cls, tgtObj):
         tgtClass = cls.TgtType2TgtClassMap.get(tgtObj.tgtType)
         if not tgtClass:
-            ERROR_MSG('in createTargetByObj, tgtType error:', tgtObj.tgtType)
+            LOG_ERR('in createTargetByObj, tgtType error:', tgtObj.tgtType)
             return
         tgt = tgtClass()
         tgt.initFromTgtObj(tgtObj)

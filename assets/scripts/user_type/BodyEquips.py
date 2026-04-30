@@ -10,7 +10,7 @@ import gameengine
 import dataUtils
 import gearEnhance_blessEffect as GEBE
 
-class BodyEquips(userType.UserSoleType):
+class BodyEquips(userType.UserSingleType):
     EQUIPS_LOCK_TIME = 5
     def __init__(self):
         self.equips_map ={}
@@ -50,9 +50,9 @@ class BodyEquips(userType.UserSoleType):
                 if equipItem:
                     self.loadEquipItem(equipDic['gridId'], equipItem)
                 else:
-                    WARNING_MSG('equipment template id is missing', equipDic)
+                    LOG_WARN('equipment template id is missing', equipDic)
             except Exception as e:
-                ERROR_MSG('ERRRRRRRRROR!!! in initObjFromSavedDict:', e, equipDic)
+                LOG_ERR('ERRRRRRRRROR!!! in initObjFromSavedDict:', e, equipDic)
                 continue
         self.lockData = dataDic.get('lockData', {})
         self.setInfo = dataDic.get('setInfo', {})
@@ -85,7 +85,7 @@ class BodyEquips(userType.UserSoleType):
                 equipDic = equipObj.toClientBodyEquipItemDict(slotId)
                 bodyEquipList.append(equipDic)
             except Exception as e:
-                ERROR_MSG('ERRRRRRRRROR!!! in toBodyEquipsSavedDict:', slotId, e)
+                LOG_ERR('ERRRRRRRRROR!!! in toBodyEquipsSavedDict:', slotId, e)
                 continue
         return bodyEquipList
 
@@ -105,19 +105,19 @@ class BodyEquips(userType.UserSoleType):
         return bool(self.equips_map)
 
     def applyBodyEquipsProps(self, owner, isLogin=False):
-        INFO_MSG("BodyEquips-->applyBodyEquipsProps, begin~ islogin:", isLogin)
+        LOG_IFO("BodyEquips-->applyBodyEquipsProps, begin~ islogin:", isLogin)
         self.addSkillLvDic = {}
         for slotId, equipItem in self.equips_map.items():
             equipItem.applyEquipEffectToAvatar(owner, isLogin=isLogin)
         self.modifyAvatarAttrs(owner, 1)
-        INFO_MSG("BodyEquips-->applyBodyEquipsProps, end~ ")
+        LOG_IFO("BodyEquips-->applyBodyEquipsProps, end~ ")
 
     def tryLockBodyEquips(self, desp=''):
         if self.isBodyEquipsBeLocked():
-            WARNING_MSG('   tryLockBodyEquips failed:', self.lockedDesp)
+            LOG_WARN('   tryLockBodyEquips failed:', self.lockedDesp)
             return False
-        INFO_MSG('tryLockBodyEquips:', desp)
-        self.lockedTime = utils.getNow() + self.EQUIPS_LOCK_TIME
+        LOG_IFO('tryLockBodyEquips:', desp)
+        self.lockedTime = utils.curTS() + self.EQUIPS_LOCK_TIME
         self.lockedDesp = desp
         return True
 
@@ -129,27 +129,27 @@ class BodyEquips(userType.UserSoleType):
         return None, None
 
     def isBodyEquipsBeLocked(self):
-        return self.lockedTime > utils.getNow()
+        return self.lockedTime > utils.curTS()
 
     def doUnlockBodyEquips(self):
-        INFO_MSG('doUnlockBodyEquips')
+        LOG_IFO('doUnlockBodyEquips')
         self.lockedTime = 0
         self.lockedDesp= ''
 
     def _removeSetEffect(self, owner, oldSetLv):
-        INFO_MSG('in _removeSetEffect:', self.setInfo)
+        LOG_IFO('in _removeSetEffect:', self.setInfo)
         if oldSetLv == 0:
             return
         for attrName, val in self.setInfo['propVal'].items():
-            owner.addProp(attrName, -1*val, gameconst.SourceType.Equip)
+            owner.addProp(attrName, -1*val, gameconst.SourceType.SrcTpEquip)
         self.setInfo = {'setLv':0, 'propVal':{}}
         return
 
     def addPropBySet(self, owner, propList, valList, startIdx=0, endIdx=-1):
-        INFO_MSG('in addPropBySet:', propList, valList)
+        LOG_IFO('in addPropBySet:', propList, valList)
         valsNum = len(valList)
         if endIdx >= valsNum:
-            gameengine.reportCritical('addPropBySet, param error:', startIdx, endIdx, valList)
+            gameengine.panicStack('addPropBySet, param error:', startIdx, endIdx, valList)
             return
 
         for idx, attrName in enumerate(propList):
@@ -161,8 +161,8 @@ class BodyEquips(userType.UserSoleType):
                 val = valList[valueIdx] if valueIdx < endIdx else valList[endIdx]
 
             self.setInfo['propVal'][attrName] += val
-            owner.addProp(attrName, val, gameconst.SourceType.Equip)
-        INFO_MSG('     in addPropBySet, after:', self.setInfo)
+            owner.addProp(attrName, val, gameconst.SourceType.SrcTpEquip)
+        LOG_IFO('     in addPropBySet, after:', self.setInfo)
         return
 
     def getDressSlotInfo(self, bagEquipItem, dstSlotId=0):
@@ -240,10 +240,10 @@ class BodyEquips(userType.UserSoleType):
             owner.appearance.setEquip(owner, slotId, equipItem.itemId, equipItem.getGrade())
 
     def doBodyUndressEquip(self, owner, slotId):
-        INFO_MSG('in doBodyUndressEquip, slotId:', slotId)
+        LOG_IFO('in doBodyUndressEquip, slotId:', slotId)
         equipItem = self.removeEquipItem(owner, slotId)
         if not equipItem:
-            ERROR_MSG(' in doBodyUndressEquip, data err, no equip:', slotId)
+            LOG_ERR(' in doBodyUndressEquip, data err, no equip:', slotId)
             return
 
         equipItem.removeEquipEffectToAvatar(owner)
@@ -254,7 +254,7 @@ class BodyEquips(userType.UserSoleType):
         return equipItem
     
     def changeAvatarAttrs(self, owner):
-        INFO_MSG('in _changeAvatarAttrs')
+        LOG_IFO('in _changeAvatarAttrs')
         # 先移除
         self.modifyAvatarAttrs(owner, -1)
         # 重新计算
@@ -267,7 +267,7 @@ class BodyEquips(userType.UserSoleType):
     def modifyAvatarAttrs(self, owner, factor):
         for attrName, attrValue in itertools.chain.from_iterable([self.blessAttrs.items()]):
             attrValue *= factor
-            owner.addProp(attrName, attrValue, gameconst.SourceType.Equip)
+            owner.addProp(attrName, attrValue, gameconst.SourceType.SrcTpEquip)
 
     def getAllEquipItems(self):
         return self.equips_map
@@ -289,19 +289,19 @@ class BodyEquips(userType.UserSoleType):
         equipItem = self.equips_map.pop(slotId, None)
         if not equipItem:
             return equipItem
-        INFO_MSG("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
+        LOG_IFO("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
         self.recalculateAllInscriptionEffects(owner)
-        INFO_MSG("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
+        LOG_IFO("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
         return equipItem
     
     def addEquipItem(self, owner, slotId, equipItem):
-        INFO_MSG("BodyEquips-->addEquipItem, begin~")
+        LOG_IFO("BodyEquips-->addEquipItem, begin~")
         self.equips_map[slotId] = equipItem
         self.recalculateAllInscriptionEffects(owner)
-        INFO_MSG("BodyEquips-->addEquipItem, end~")
+        LOG_IFO("BodyEquips-->addEquipItem, end~")
 
     def recalculateAllInscriptionEffects(self, owner):
-        INFO_MSG("recalculateAllInscriptionEffects")
+        LOG_IFO("recalculateAllInscriptionEffects")
         owner.glyphEquipData.cleanInscriptionEffects(owner)
         for equipItem in self.equips_map.values():
             owner.glyphEquipData.calculateAllInscriptionEffects(owner, equipItem.getGlyphAffixes())
@@ -315,12 +315,12 @@ class BodyEquips(userType.UserSoleType):
         return self.addSkillLvDic.get(skillId, 0) + self.addSkillLvDic.get(gameconst.ClassSkillID, 0) + inscriptionAddLevel
 
     def addSkillLv(self, owner, skillIdList, addLvList, isLogin=False):
-        INFO_MSG('in bodyEquips:addSkillLv:', skillIdList, addLvList, self.addSkillLvDic)
+        LOG_IFO('in bodyEquips:addSkillLv:', skillIdList, addLvList, self.addSkillLvDic)
         newSkillLv = []
         for skillId, addLv in zip(skillIdList, addLvList):
             self.addSkillLvDic[skillId] = self.addSkillLvDic.get(skillId, 0) + addLv
             if self.addSkillLvDic[skillId] < 0:
-                gameengine.reportCritical('ERROR!!addSkillLv:', self.addSkillLvDic, skillId, addLv)
+                gameengine.panicStack('ERROR!!addSkillLv:', self.addSkillLvDic, skillId, addLv)
                 self.addSkillLvDic[skillId] = 0
             newSkillLv.append(self.addSkillLvDic[skillId])
         if not isLogin:

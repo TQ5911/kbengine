@@ -6,7 +6,7 @@ from KBEDebug import *
 class IEventBase(object):
     def createTempEvent(self, eventKey):
         if self.getTempMiscProp(eventKey):
-            ERROR_MSG("IEventBase::createTempEvent tempMiscProp is not empty", _eventKey)
+            LOG_ERR("IEventBase::createTempEvent tempMiscProp is not empty", _eventKey)
             return
 
         self.setTempMiscProp(eventKey, [])
@@ -14,7 +14,7 @@ class IEventBase(object):
     def registerTempEvent(self, eventKey, func, args):
         _eventList = self.getTempMiscProp(eventKey, None)
         if _eventList is None:
-            ERROR_MSG("IEventBase::registerTempEvent tempMiscProp is None", eventKey, func)
+            LOG_ERR("IEventBase::registerTempEvent tempMiscProp is None", eventKey, func)
             return
 
         _eventList.append((func, args))

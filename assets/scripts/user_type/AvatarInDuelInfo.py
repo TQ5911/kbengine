@@ -4,7 +4,7 @@
 import userType
 
 
-class AvatarInDuelVal(userType.UserSoleType):
+class AvatarInDuelVal(userType.UserSingleType):
     '''AVATAR_IN_DUEL_DATA_INFO'''
     def __init__(self, gbId=0, box=None, eid=0, leaveCnt=0, name=''):
         self.gbId = gbId

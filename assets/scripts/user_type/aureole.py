@@ -12,7 +12,7 @@ import userType
 import sMath
 import utils
 
-class AureoleFromOtherVal(userType.UserSoleType):
+class AureoleFromOtherVal(userType.UserSingleType):
     def __init__(self, aid, level, srcEntId, srcHostEntId=None):
         self.aureoleId = aid
         self.level = level
@@ -33,7 +33,7 @@ class AureolesFromOhters(userType.UserDictType):
 
         return
 
-class ClientAureoleVal(userType.UserSoleType):
+class ClientAureoleVal(userType.UserSingleType):
     def __init__(self, aid, level):
         self.aureoleId = aid
         self.level = int(level)
@@ -81,7 +81,7 @@ class ServerAureoles(userType.UserDictType):
 
     def addAureole(self, owner, aureoleId, level):
         if owner.IsAvatar:
-            ERROR_MSG('addAureole owner could not support Avatar')
+            LOG_ERR('addAureole owner could not support Avatar')
             return
 
         aureole = Aureole(aureoleId, level)
@@ -94,7 +94,7 @@ class ServerAureoles(userType.UserDictType):
                 self._wholeAreaAureoleList.append(aureoleId)
         owner.allClients.onAddAureole(ClientAureoleVal(aureoleId, level).getClientData())
 
-    def removeAureole(self, owner, aureoleId):
+    def removeAureola(self, owner, aureoleId):
         #0 to remove all aureoles
         disabledAureoleIds = self.disableAureole(owner, aureoleId)
 
@@ -143,7 +143,7 @@ class ServerAureoles(userType.UserDictType):
         id_ = self._ctrlIdToIdMap.get(ctrlId, None)
         return self.get(id_, default)
 
-class Aureole(userType.UserSoleType):
+class Aureole(userType.UserSingleType):
     def __init__(self, aureoleId, level, tStartTime=0):
         self.aureoleId = aureoleId
         self.level = int(level)
@@ -181,7 +181,7 @@ class Aureole(userType.UserSoleType):
         return int(aureola_aureola.datas[self.aureoleId].get('loopIntervalTime') or 0)
 
     def initAureole(self, owner):
-        DEBUG_MSG('init aureole', self.aureoleId)
+        LOG_DBG('init aureole', self.aureoleId)
         if self.areaAction:
             loopIntervalTime = self.loopIntervalTime if self.loopIntervalTime else 1
             self.loopTimeId = owner.pyAddTimer(0.1, loopIntervalTime, gametimer.AUREOLE_LOOP)
@@ -189,11 +189,11 @@ class Aureole(userType.UserSoleType):
         if owner.isWholeAreaAureole(self.aureoleId):
             self.addWholeAreaAureole(owner)
         else :
-            owner._callback(0.1, 'addTAureoleTrap', (self.aureoleId,), gametimer.TIMER_TAG_ADD_AUREOLE_TRAP)
+            owner.addTimerCB(0.1, 'addTAureoleTrap', (self.aureoleId,), gametimer.TIMER_TAG_ADD_AUREOLE_TRAP)
 
         remainTime = self.getRemainTime()
         if remainTime > 0:
-            owner._callback(remainTime, 'removeAureole', (self.aureoleId,), gametimer.TIMER_TAG_REMOVE_AUREOLE)
+            owner.addTimerCB(remainTime, 'removeAureola', (self.aureoleId,), gametimer.TIMER_TAG_REMOVE_AUREOLE)
 
     def getRemainTime(self):
         return self.tStartTime+self.duration-time.time()
@@ -202,7 +202,7 @@ class Aureole(userType.UserSoleType):
         owner.aureoleDic._pendingTrapAureoId = self.aureoleId
         # 在添加trap的一瞬间会触发身边所有人的trap，但是这时候trapId还没生成
         # 所以这里加个pending，类似于一个状态，表示处于加trap中
-        self.aureoleTrapId = owner.addProximity(self.radius, self.radius, gameconst.AUREOLE_TRAP)
+        self.aureoleTrapId = owner.addProximity(self.radius, self.radius, gameconst.AURA_TRAP)
 
         if owner.aureoleDic._pendingTrapAureoId is None:
             # 走到这里说明 trap 添加时候触发了
@@ -214,21 +214,21 @@ class Aureole(userType.UserSoleType):
 
         # if self.radius != -1 :
         #     for e in owner.entitiesInRange(self.radius+0.1):
-        #         if e.IsCombatUnit and sMath.distance2D(owner.position, e.position) <= self.radius and utils.checkTargetType(self.effectTarget, owner, e):
-        #             owner.onEnterTrap(e, 0, 0, self.aureoleTrapId, gameconst.AUREOLE_TRAP)
+        #         if e.IsCombatUnit and sMath.distance2D(owner.position, e.position) <= self.radius and utils.checkTargetTypeValid(self.effectTarget, owner, e):
+        #             owner.onEnterTrap(e, 0, 0, self.aureoleTrapId, gameconst.AURA_TRAP)
         #
-        #     DEBUG_MSG('add aureole trap done', self)
+        #     LOG_DBG('add aureole trap done', self)
 
     def addWholeAreaAureole(self, owner):
         owner.aureoleDic._wholeAreaAureoleList.append(self.aureoleId)
 
         for eid in list(owner.spaceMgr.spaceEntities.keys()):
             e = KBEngine.entities.get(eid)
-            if e and not e.isDestroyed and e.IsCombatUnit and utils.checkTargetType(self.effectTarget, owner, e):
+            if e and not e.isDestroyed and e.IsCombatUnit and utils.checkTargetTypeValid(self.effectTarget, owner, e):
                 self.addAureoleTarget(owner,e.id)
         for eid in list(owner.spaceMgr.players.keys()):
             e = KBEngine.entities.get(eid)
-            if e and not e.isDestroyed and e.IsCombatUnit and utils.checkTargetType(self.effectTarget, owner, e):
+            if e and not e.isDestroyed and e.IsCombatUnit and utils.checkTargetTypeValid(self.effectTarget, owner, e):
                 self.addAureoleTarget(owner,e.id)
 
     def addAureoleTarget(self, owner, targetId):
@@ -253,7 +253,7 @@ class Aureole(userType.UserSoleType):
 
         self.aureoleTargetIds.remove(targetId)
         if reachMax and owner.id not in self.aureoleTargetIds:
-            owner.onEnterTrap(owner, 0, 0, self.aureoleTrapId, gameconst.AUREOLE_TRAP)
+            owner.onEnterTrap(owner, 0, 0, self.aureoleTrapId, gameconst.AURA_TRAP)
 
     def doDisableAureole(self, owner):
         if self.loopTimeId > 0:

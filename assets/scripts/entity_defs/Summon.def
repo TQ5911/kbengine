@@ -94,6 +94,10 @@
             <Default>       0               </Default>
             <WitnessName>   true            </WitnessName>
         </mineWarCamp>
+        <createContext>
+            <Type>      PYTHON        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </createContext>
     </Properties>
 
     <BaseMethods>

@@ -109,7 +109,7 @@ datas = _tools.RODict({
     }),
     "autoFightTick": _tools.RODict({
         "ID": "autoFightTick",
-        "value": 1.0,
+        "value": 0.5,
     }),
     "autoFightRange": _tools.RODict({
         "ID": "autoFightRange",
@@ -217,7 +217,7 @@ datas = _tools.RODict({
     }),
     "leaveFightStateTime": _tools.RODict({
         "ID": "leaveFightStateTime",
-        "value": 6.0,
+        "value": 8.0,
     }),
     "leaveLockTargerTime": _tools.RODict({
         "ID": "leaveLockTargerTime",
@@ -373,7 +373,7 @@ datas = _tools.RODict({
     }),
     "refreshGoalListcd": _tools.RODict({
         "ID": "refreshGoalListcd",
-        "value": 0.5,
+        "value": 3.0,
     }),
     "autoChooseTarget_FxID": _tools.RODict({
         "ID": "autoChooseTarget_FxID",
@@ -827,6 +827,10 @@ datas = _tools.RODict({
         "ID": "copyNameSuccess",
         "value": 54000380,
     }),
+    "homepageRank": _tools.RODict({
+        "ID": "homepageRank",
+        "value": "第{0}名",
+    }),
     "messageDelayAfterDeath": _tools.RODict({
         "ID": "messageDelayAfterDeath",
         "value": 600,
@@ -1079,8 +1083,188 @@ datas = _tools.RODict({
         "ID": "functionNotAvailable",
         "value": 54481006,
     }),
-    "areaCannotJump": _tools.RODict({
-        "ID": "areaCannotJump",
+    "conflictSkill": _tools.RODict({
+        "ID": "conflictSkill",
+        "value": 54000003,
+    }),
+    "fallFastEndTime": _tools.RODict({
+        "ID": "fallFastEndTime",
+        "value": 1.2,
+    }),
+    "fallEndTime": _tools.RODict({
+        "ID": "fallEndTime",
+        "value": 0.0,
+    }),
+    "EpCannotFly": _tools.RODict({
+        "ID": "EpCannotFly",
+        "value": 54481011,
+    }),
+    "areaCannotFly": _tools.RODict({
+        "ID": "areaCannotFly",
         "value": 54481008,
+    }),
+    "rewardDeposit": _tools.RODict({
+        "ID": "rewardDeposit",
+        "value": 100,
+    }),
+    "InitialAmount": _tools.RODict({
+        "ID": "InitialAmount",
+        "value": 100,
+    }),
+    "InitialTopAmount": _tools.RODict({
+        "ID": "InitialTopAmount",
+        "value": 999999,
+    }),
+    "rewardLimit": _tools.RODict({
+        "ID": "rewardLimit",
+        "value": 5,
+    }),
+    "listCD": _tools.RODict({
+        "ID": "listCD",
+        "value": 3,
+    }),
+    "killTime": _tools.RODict({
+        "ID": "killTime",
+        "value": 1,
+    }),
+    "specifyKillTime": _tools.RODict({
+        "ID": "specifyKillTime",
+        "value": 1,
+    }),
+    "killerRefreshTime": _tools.RODict({
+        "ID": "killerRefreshTime",
+        "value": 7,
+    }),
+    "BountyTaxRate": _tools.RODict({
+        "ID": "BountyTaxRate",
+        "value": 10,
+    }),
+    "Bounty_KillingSuccess": _tools.RODict({
+        "ID": "Bounty_KillingSuccess",
+        "value": 37002001,
+    }),
+    "Bounty_OrderSuccess": _tools.RODict({
+        "ID": "Bounty_OrderSuccess",
+        "value": 37002002,
+    }),
+    "Bounty_OrderFailed": _tools.RODict({
+        "ID": "Bounty_OrderFailed",
+        "value": 37002003,
+    }),
+    "Bounty_KillingFailed": _tools.RODict({
+        "ID": "Bounty_KillingFailed",
+        "value": 37002004,
+    }),
+    "Bounty_OrderAccept": _tools.RODict({
+        "ID": "Bounty_OrderAccept",
+        "value": 37002005,
+    }),
+    "Bounty_KillingAccept": _tools.RODict({
+        "ID": "Bounty_KillingAccept",
+        "value": 37002006,
+    }),
+    "Bounty_OrderDue": _tools.RODict({
+        "ID": "Bounty_OrderDue",
+        "value": 37002007,
+    }),
+    "Bounty_DepositRefund": _tools.RODict({
+        "ID": "Bounty_DepositRefund",
+        "value": 37002008,
+    }),
+    "Bounty_DepositReturn": _tools.RODict({
+        "ID": "Bounty_DepositReturn",
+        "value": 37002009,
+    }),
+    "Bounty_AllMoneyGet": _tools.RODict({
+        "ID": "Bounty_AllMoneyGet",
+        "value": 37002011,
+    }),
+    "Bounty_MoneyGet": _tools.RODict({
+        "ID": "Bounty_MoneyGet",
+        "value": 37002012,
+    }),
+    "Bounty_RefuseOrder": _tools.RODict({
+        "ID": "Bounty_RefuseOrder",
+        "value": 37002013,
+    }),
+    "Bounty_CantOrderSelf": _tools.RODict({
+        "ID": "Bounty_CantOrderSelf",
+        "value": 54002225,
+    }),
+    "Bounty_CantBeSelfKiller": _tools.RODict({
+        "ID": "Bounty_CantBeSelfKiller",
+        "value": 54002226,
+    }),
+    "Bounty_CantDoOrderSelf": _tools.RODict({
+        "ID": "Bounty_CantDoOrderSelf",
+        "value": 54002227,
+    }),
+    "Bounty_CantOrderSelfOrder": _tools.RODict({
+        "ID": "Bounty_CantOrderSelfOrder",
+        "value": 54002228,
+    }),
+    "Bounty_NoMoney": _tools.RODict({
+        "ID": "Bounty_NoMoney",
+        "value": 54002229,
+    }),
+    "Bounty_KillerBuff": _tools.RODict({
+        "ID": "Bounty_KillerBuff",
+        "value": 64008001,
+    }),
+    "Bounty_LoserDebuff": _tools.RODict({
+        "ID": "Bounty_LoserDebuff",
+        "value": 64008002,
+    }),
+    "autoPathStop": _tools.RODict({
+        "ID": "autoPathStop",
+        "value": 54001520,
+    }),
+    "autoGatherStop": _tools.RODict({
+        "ID": "autoGatherStop",
+        "value": 54001521,
+    }),
+    "autoFightStop": _tools.RODict({
+        "ID": "autoFightStop",
+        "value": 54001522,
+    }),
+    "autoQuestStop": _tools.RODict({
+        "ID": "autoQuestStop",
+        "value": 54001523,
+    }),
+    "showMousePopup": _tools.RODict({
+        "ID": "showMousePopup",
+        "value": (1, 8, 14, 19, 33, 34, 53),
+    }),
+    "triggerAutoCounter": _tools.RODict({
+        "ID": "triggerAutoCounter",
+        "value": (3116, 3121, 3216, 3221, 3316, 3321, 3421, 3521),
+    }),
+    "flyEpMax": _tools.RODict({
+        "ID": "flyEpMax",
+        "value": 4,
+    }),
+    "flyEpCostRate": _tools.RODict({
+        "ID": "flyEpCostRate",
+        "value": 1,
+    }),
+    "flyEpRate": _tools.RODict({
+        "ID": "flyEpRate",
+        "value": 8.0,
+    }),
+    "ControlflyCheating": _tools.RODict({
+        "ID": "ControlflyCheating",
+        "value": -5,
+    }),
+    "speedCheckTimeUnit": _tools.RODict({
+        "ID": "speedCheckTimeUnit",
+        "value": 1,
+    }),
+    "speedCheckContinuousUnit": _tools.RODict({
+        "ID": "speedCheckContinuousUnit",
+        "value": 30,
+    }),
+    "speedCheckillegallyOverRate": _tools.RODict({
+        "ID": "speedCheckillegallyOverRate",
+        "value": 30.0,
     })
 })

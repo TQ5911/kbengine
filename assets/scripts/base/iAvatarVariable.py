@@ -52,7 +52,7 @@ class ImpAvatarVariable(object):
             for varId in VLVLD.clientValueSet:
                 value = self.getVariable(varId)
                 if value is None:
-                    gameengine.reportCritical('sendVariableData, variable is None:', varId)
+                    gameengine.panicStack('sendVariableData, variable is None:', varId)
                     continue
                 varIdList.append(varId)
                 varValueList.append(value)
@@ -76,14 +76,14 @@ class ImpAvatarVariable(object):
             return default
 
     def incAvatarVariableByTag(self, varName, deltaVal, opUUID, valueSrc, desc):
-        INFO_MSG('in incAvatarVariableByTag:', varName, deltaVal, valueSrc, desc)
+        LOG_IFO('in incAvatarVariableByTag:', varName, deltaVal, valueSrc, desc)
         valIdList = VLVLD.varTagDic.get(varName, [])
         for valId in valIdList:
             self.incAvatarVariable(valId, deltaVal, opUUID, valueSrc, desc)
         return
 
     def setAvatarVariableByTag(self, varName, newVal, opUUID, valueSrc, desc):
-        INFO_MSG('in setAvatarVariableByTag:', varName, newVal, valueSrc, desc)
+        LOG_IFO('in setAvatarVariableByTag:', varName, newVal, valueSrc, desc)
         valIdList = VLVLD.varTagDic.get(varName, [])
         for valId in valIdList:
             self.setAvatarVariable(valId, newVal, opUUID, valueSrc, desc)
@@ -91,13 +91,13 @@ class ImpAvatarVariable(object):
 
     def incAvatarVariable(self, varId, deltaVal, opUUID, valueSrc, desc):
         # 变量值累加
-        INFO_MSG('in incAvatarVariable:', varId, deltaVal, valueSrc, desc)
+        LOG_IFO('in incAvatarVariable:', varId, deltaVal, valueSrc, desc)
         oldVal = self.getVariable(varId)
         self.setAvatarVariable(varId, oldVal + deltaVal, opUUID, valueSrc, desc)
         return
 
     def setAvatarVariable(self, varId, newVal, opUUID, varSrc, desc):
-        INFO_MSG('in setAvatarVariable:', varId, newVal, varSrc, desc)
+        LOG_IFO('in setAvatarVariable:', varId, newVal, varSrc, desc)
         # avatarVarDic 保存 avatar私有变量，包括avatar的非base属性及数据关联的变量；
         # avatar的base属性及数据关联的变量不需要保存在 avatarVarDic
         if not dataUtils.isAvatarVar(varId):
@@ -108,20 +108,20 @@ class ImpAvatarVariable(object):
             # 与角色数据关联的变量
             varFunc = AvatarDataVar.AvatarDataVarFunDic.get(charDataName)
             if not varFunc:
-                gameengine.reportCritical('   setAvatarVariable, charprop var has not varFunc')
+                gameengine.panicStack('   setAvatarVariable, charprop var has not varFunc')
                 return
 
         oldVal = self.getVariable(varId)
         if oldVal == newVal:
             return
         self.avatarVarDic[varId] = newVal
-        INFO_MSG('     setAvatarVariable, varId:{} {} ==> {}'.format(varId, oldVal, newVal))
+        LOG_IFO('     setAvatarVariable, varId:{} {} ==> {}'.format(varId, oldVal, newVal))
         self.onAvatarVarValueChanged([varId], [newVal])
         return
 
     def onAvatarVarValueChanged(self, varIdList, varValueList):
         # avatar变量发生变化的回调， space变量不要调该接口
-        INFO_MSG('in onAvatarVarValueChanged:', varIdList, varValueList)
+        LOG_IFO('in onAvatarVarValueChanged:', varIdList, varValueList)
         cliValIdList = []
         cliValValueList = []
         for varId, varValue in zip(varIdList, varValueList):
@@ -151,7 +151,7 @@ class ImpAvatarVariable(object):
         return
 
     def updateHomeAdvMonsterNumAvatarVar(self, newMonsterNumber, src, opUUID=None, desc=None):
-        INFO_MSG("updateHomeAdvMonsterNumAvatarVar::", newMonsterNumber)
+        LOG_IFO("updateHomeAdvMonsterNumAvatarVar::", newMonsterNumber)
         m_varId = VLVLD_DEF.datas.amountPillarSpirits
         m_newMonsterNum = self.getVariable(m_varId, -1)
         if m_newMonsterNum < 0:
@@ -172,7 +172,7 @@ class ImpAvatarVariable(object):
                                                                         gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED)])
 
     def updateFengLingZhouSpHelpCountAvatarVar(self, fengLingZhouSpHelpCount, src, opUUID=None, desc=None):
-        INFO_MSG("updateFengLingZhouSpHelpCountAvatarVar::", fengLingZhouSpHelpCount)
+        LOG_IFO("updateFengLingZhouSpHelpCountAvatarVar::", fengLingZhouSpHelpCount)
         m_varId = VLVLD_DEF.datas.fengLingZhouSpecialTask
         m_newHelpCount = self.getVariable(m_varId, -1)
         if m_newHelpCount < 0 or src in (
@@ -187,8 +187,8 @@ class ImpAvatarVariable(object):
 
     #################################### space 变量 #################################
     def syncSpaceVariable(self, spaceNo, varDic):
-        INFO_MSG('in syncSpaceVariable:', spaceNo, varDic)
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        LOG_IFO('in syncSpaceVariable:', spaceNo, varDic)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         self.spaceVarDic.setdefault(dungeonNo, {})
         varIdList = []
         varValueList = []
@@ -207,8 +207,8 @@ class ImpAvatarVariable(object):
         return
 
     def clearSpaceVariable(self, dungeonNo):
-        INFO_MSG('in clearSpaceVariable:', dungeonNo)
-        # dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        LOG_IFO('in clearSpaceVariable:', dungeonNo)
+        # dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         varDic = self.spaceVarDic.pop(dungeonNo, None)
         if not varDic:
             return
@@ -217,14 +217,14 @@ class ImpAvatarVariable(object):
         for varId, newVal in varDic.items():
             varIdList.append(varId)
             varValueList.append(0)
-        INFO_MSG('in clearSpaceVariable:', varIdList, varValueList)
+        LOG_IFO('in clearSpaceVariable:', varIdList, varValueList)
         self.client.onVariableChanged(varIdList, varValueList)
 
     #################################### space 变量 end #################################
 
     #################################### gm 指令 #################################
     def gmSetVar(self, varId, newVar, opUUID, varSrc, desc):
-        INFO_MSG('in gmSetVar:', varId, newVar)
+        LOG_IFO('in gmSetVar:', varId, newVar)
         if dataUtils.isAvatarVar(varId):
             self.setAvatarVariable(varId, newVar, opUUID, varSrc, '')
 

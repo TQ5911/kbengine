@@ -44,7 +44,7 @@ class LogTrackingMgr:
 
     # 用户登录事件
     @staticmethod
-    def Server_Login(accountId, deviceModel, ipAddress, operatingSystem, accountType, channelSource, packageSource, device, lastLoginTime, loginTime, appVersion, userInfoId, **kwargs):
+    def Server_Login(accountId, deviceModel, ipAddress, operatingSystem, accountType, channelSource, packageSource, device, lastLoginTime, loginTime, appVersion, userInfoId, patch, **kwargs):
         args = {}
         args["trackName"] = "Server_Login"
         args["accountId"] = str(accountId)
@@ -59,6 +59,7 @@ class LogTrackingMgr:
         args["loginTime"] = loginTime
         args["appVersion"] = str(appVersion)
         args["userInfoId"] = str(userInfoId)
+        args["patch"] = str(patch)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 角色登录事件
@@ -681,19 +682,20 @@ class LogTrackingMgr:
 
     # 道具工坊
     @staticmethod
-    def Work_Shop(opUUID, gbId, normalItems, luckyItems, finalItems, **kwargs):
+    def Work_Shop(opUUID, gbId, itemId, batchCount, normalItems, luckyItems, **kwargs):
         args = {}
         args["trackName"] = "Work_Shop"
         args["opUUID"] = opUUID
         args["gbId"] = gbId
+        args["itemId"] = itemId
+        args["batchCount"] = batchCount
         args["normalItems"] = str(normalItems)
         args["luckyItems"] = str(luckyItems)
-        args["finalItems"] = str(finalItems)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 等级有礼事件
     @staticmethod
-    def Level_Reward(gbId, level, welfareId, levelLimit, school, **kwargs):
+    def Level_Reward(gbId, level, welfareId, levelLimit, school, opUUID, **kwargs):
         args = {}
         args["trackName"] = "Level_Reward"
         args["gbId"] = gbId
@@ -701,6 +703,7 @@ class LogTrackingMgr:
         args["welfareId"] = welfareId
         args["levelLimit"] = levelLimit
         args["school"] = school
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     # 七日签到事件
@@ -1274,11 +1277,12 @@ class LogTrackingMgr:
 
     # 邮件发送
     @staticmethod
-    def Mail_Send(toGBID, mailID, mailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
+    def Mail_Send(toGBID, mailID, mailType, mailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
         args = {}
         args["trackName"] = "Mail_Send"
         args["toGBID"] = toGBID
         args["mailID"] = mailID
+        args["mailType"] = mailType
         args["mailGBID"] = mailGBID
         args["srcType"] = srcType
         args["srcSubType"] = srcSubType
@@ -1289,9 +1293,10 @@ class LogTrackingMgr:
 
     # 邮件查看
     @staticmethod
-    def Mail_Read(fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
+    def Mail_Read(toGBID, fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
         args = {}
         args["trackName"] = "Mail_Read"
+        args["toGBID"] = toGBID
         args["fromGBID"] = fromGBID
         args["mailID"] = mailID
         args["mailGBID"] = mailGBID
@@ -1305,9 +1310,10 @@ class LogTrackingMgr:
 
     # 邮件领取
     @staticmethod
-    def Mail_Get(fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
+    def Mail_Get(toGBID, fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
         args = {}
         args["trackName"] = "Mail_Get"
+        args["toGBID"] = toGBID
         args["fromGBID"] = fromGBID
         args["mailID"] = mailID
         args["mailGBID"] = mailGBID
@@ -1321,9 +1327,10 @@ class LogTrackingMgr:
 
     # 邮件删除
     @staticmethod
-    def Mail_Delete(fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, deleteSrcType, **kwargs):
+    def Mail_Delete(toGBID, fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, deleteSrcType, **kwargs):
         args = {}
         args["trackName"] = "Mail_Delete"
+        args["toGBID"] = toGBID
         args["fromGBID"] = fromGBID
         args["mailID"] = mailID
         args["mailGBID"] = mailGBID
@@ -1432,6 +1439,34 @@ class LogTrackingMgr:
         args["num"] = num
         args["paid"] = paid
         args["opUUID"] = opUUID
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 速度统计
+    @staticmethod
+    def Speed_Stat(gbId, entityId, playerName, spaceNo, position, datas, **kwargs):
+        args = {}
+        args["trackName"] = "Speed_Stat"
+        args["gbId"] = gbId
+        args["entityId"] = entityId
+        args["playerName"] = str(playerName)
+        args["spaceNo"] = spaceNo
+        args["position"] = str(position)
+        args["datas"] = str(datas)
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 非法速度统计
+    @staticmethod
+    def Illegal_Speed_Stat(gbId, entityId, playerName, spaceNo, position, speed, overRate, continuousCount, **kwargs):
+        args = {}
+        args["trackName"] = "Illegal_Speed_Stat"
+        args["gbId"] = gbId
+        args["entityId"] = entityId
+        args["playerName"] = str(playerName)
+        args["spaceNo"] = spaceNo
+        args["position"] = str(position)
+        args["speed"] = speed
+        args["overRate"] = overRate
+        args["continuousCount"] = continuousCount
         LogTrackingMgr.LOG(args, kwargs)
 
     @staticmethod

@@ -36,9 +36,9 @@ class BaseContext(object):
 
 
 class WaitingEventContext(BaseContext):
-    def __init__(self, tid=0, waiting_e=None, waiting_args=None,
-                 waiting_kwargs=None, **kwargs):
+    def __init__(self, tid=0, waitingE=None, waitingArgs=None,
+                 waitingKwargs=None, **kwargs):
         super().__init__(tid, **kwargs)
-        self.waiting_e = waiting_e
-        self.waiting_args = waiting_args or ()
-        self.waiting_kwargs = waiting_kwargs or {}
+        self.waitingE = waitingE
+        self.waitingArgs = waitingArgs or ()
+        self.waitingKwargs = waitingKwargs or {}

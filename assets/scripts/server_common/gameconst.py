@@ -6,7 +6,7 @@ import random
 import time
 import re
 import functools
-
+import enum
 import itemData_set as IDSD
 import const_const as CSTD
 import gearBase_gearConst as GBGCD
@@ -48,6 +48,7 @@ GLOBAL_BASE_STUB_ARCHIVE = [
     'WorldBossStub',
     'RedBagStub',
     'MineWarStub',
+    'BountyStub',
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
     'PlayerStub',
@@ -95,34 +96,33 @@ SPACE_TYPE_WORLD = 1
 
 MIN_LEVEL = 1
 
-GLOBAL_SERVER_SHIFT = 22
-GLOBAL_TIME_SHIFT = 26
+SERVER_ID_BIT_SHIFT = 22
+SERVER_TIMESTAMP_BIT_SHIFT = 26
 GBID_TIME_BASE = 1517907600
 GBID_TIME_INTERVAL = 5 * 60
 GBID_TIME_UPDATE_INTERVAL = GBID_TIME_INTERVAL + 10
-GBID_BASE = 2 ** (GLOBAL_SERVER_SHIFT + GLOBAL_TIME_SHIFT)
+GBID_BASE = 2 ** (SERVER_ID_BIT_SHIFT + SERVER_TIMESTAMP_BIT_SHIFT)
 
-AVATAR_OFFLINE_REASON_CLIENT_DEATH = 1
-AVATAR_OFFLINE_REASON_DESTORY = 2
-AVATAR_OFFLINE_REASON_MANNUALLY = 3
-AVATAR_OFFLINE_REASON_GMKICK = 4
-AVATAR_OFFLINE_CREATE_CELL_ERROR = 5
-AVATAR_OFFLINE_NO_CLIENT_NEW_CHAR = 6
-AVATAR_OFFLINE_REASON_SELECT_CHARACTER = 7
-AVATAR_OFFLINE_REASON_LOSE_CELL = 8
-AVATAR_OFFLINE_REASON_SPACE_GONE = 9
-AVATAR_OFFLINE_REASON_INIT_ERR = 11
-AVATAR_OFFLINE_REASON_CELLAPP_DEATH = 12
-AVATAR_OFFLINE_REASON_KICK_BY_CENTRAL_SERVER = 14
-AVATAR_OFFLINE_REASON_END_CROSS_SERVER = 15
-AVATAR_OFFLINE_REASON_IDIP_DELETE_ACCOUNT = 17
-AVATAR_OFFLINE_REASON_IDIP_PLAT_AUTHOR_CHANGE = 18
-AVATAR_OFFLINE_REASON_SWITCH_SERVER = 19
-AVATAR_OFFLINE_REASON_NEWBIE_KICKOUT = 20
-AVATAR_OFFLINE_REASON_STOP_AUTH = 21
-AVATAR_OFFLINE_AUTH_NEED_RECONNECT = 22
-AVATAR_OFFLINE_AUTH_LOW_MORAL = 23 # 善恶值太低，并且是代理状态
-AVATAR_OFFLINE_REASON_ANIT_ADDICTION = 24
+OFFLINE_REASON_CLIENT_DEATH = 1
+OFFLINE_REASON_DESTORY = 2
+OFFLINE_REASON_MANNUALLY = 3
+OFFLINE_REASON_GMKICK = 4
+OFFLINE_REASON_CREATE_CELL_ERROR = 5
+OFFLINE_REASON_NO_CLIENT_NEW_CHAR = 6
+OFFLINE_REASON_SELECT_CHARACTER = 7
+OFFLINE_REASON_LOSE_CELL = 8
+OFFLINE_REASON_SPACE_GONE = 9
+OFFLINE_REASON_INIT_ERR = 11
+OFFLINE_REASON_CELLAPP_DEATH = 12
+OFFLINE_REASON_KICK_BY_CENTRAL_SERVER = 14
+OFFLINE_REASON_END_CROSS_SERVER = 15
+OFFLINE_REASON_IDIP_DELETE_ACCOUNT = 17
+OFFLINE_REASON_IDIP_PLAT_AUTHOR_CHANGE = 18
+OFFLINE_REASON_SWITCH_SERVER = 19
+OFFLINE_REASON_NEWBIE_KICKOUT = 20
+OFFLINE_REASON_AUTH_NEED_RECONNECT = 22
+OFFLINE_REASON_AUTH_LOW_MORAL = 23 # 善恶值太低，并且是代理状态
+OFFLINE_REASON_ANIT_ADDICTION = 24
 
 CENTRAL_SERVER_HEARTBEAT_INTERVAL = 10
 
@@ -136,42 +136,75 @@ GAME_CONFIG_TYPE_AUTO_COMBAT = 4
 
 LEGAL_AGE_OF_MAJORITY = 18
 
+
+# ======================
+# 角色基础信息表 a
+# 无任何前缀！纯字段名
+# ======================
+class AvatarFieldsEnum(enum.Enum):
+    NAME = "sm_name"
+    LEVEL = "sm_level"
+    SCHOOL = "sm_school"
+    TOTAL_SCORE = "sm_totalScore"
+    SEX = "sm_sex"
+
+    # 外观
+    APPEARANCE_WEAPON = "sm_appearance_weapon"
+    APPEARANCE_BREAST = "sm_appearance_breast"
+    APPEARANCE_HAIR_ID = "sm_appearance_outfitData_hairId"
+    APPEARANCE_CLOTHES_ID = "sm_appearance_outfitData_clothesId"
+    APPEARANCE_PIC_FRAME_ID = "sm_appearance_outfitData_picFrameId"
+    APPEARANCE_WING_ID = "sm_appearance_outfitData_wingId"
+    APPEARANCE_MOUNT_ID = "sm_appearance_outfitData_mountId"
+    APPEARANCE_FACE_SUIT_ID = "sm_appearance_faceData_suitId"
+    APPEARANCE_FACE_HAIR_ID = "sm_appearance_faceData_hairIdFaceId"
+    APPEARANCE_FACE_COLOR = "sm_appearance_faceData_hairColorIdSkinColorId"
+
+# ======================
+# 装备表 eq
+# 无任何前缀！纯字段名
+# ======================
+class EquipFieldsEnum(enum.Enum):
+    GRID_ID = "sm_gridId"
+    ATTR_JSON = "sm_attrJson"
+    ITEM_ID = "sm_itemId"
+    CREATE_TIME = "sm_createTime"
+    EXPIRE_TIME = "sm_expireTime"
+    UNIQUE_ID = "sm_uniqueId"
+    BIND_TYPE = "sm_bindType"
+    LOCK_STATUS = "sm_lockStatus"
+
+
 class UniqueIntEnum(type):
     def __new__(cls, name, bases, dct):
-        __blocklist__ = dct.get('__blocklist__', ())
-        __whitelist__ = dct.get('__whitelist__', ())
-        _unimap = dict()
-        for k, v in dct.items():
-            if k.startswith('__'):
+        __excluded_fields__ = dct.get('__excluded_fields__', ())
+        __include_fields__ = dct.get('__include_fields__', ())
+        _unimap = {}
+        for _key, _value in dct.items():
+            if _key.startswith('__'):
                 continue
-            if not isinstance(v, int):
+            if not isinstance(_value, int):
                 continue
-            if __whitelist__ and k not in __whitelist__:
+            if __include_fields__ and _key not in __include_fields__:
                 continue
-            if __blocklist__ and k in __blocklist__:
+            if __excluded_fields__ and _key in __excluded_fields__:
                 continue
-            if v in _unimap:
-                _errstr = f"class {name} setattr err, {k}/{_unimap[v]}={v}"
+            if _value in _unimap:
+                _errstr = f"class {name} setattr err, {_key}/{_unimap[_value]}={_value}"
                 raise AttributeError(_errstr)
-            _unimap[v] = k
+            _unimap[_value] = _key
         return type.__new__(cls, name, bases, dct)
 
-HATE_TRAP = 1
-AUREOLE_TRAP = 2
-CAPTURE_TRAP = 3
-LEAVE_AOI_TRAP = 4
-NPC_GUIDE_START = 5
-HOME_CONSTRUCT = 6
-BELONG_RAID_TRAP = 7
-DUN_TEL_TRAP = 8
-LARGE_ENT_WITNESS = 9
-LARGE_ENT_HYST = 10
-NPC_GUIDE_STOP = 11
-ROUTE_ESCORT_TRAP = 12
-WHALE_FOLLOW_TRAP = 13
+AGGRO_TRIGGER_TRAP = 1
+AURA_TRAP = 2
+CATCH_TRAP = 3
+AOI_EXIT_TRAP = 4
+LARGE_ENTITY_VISIBILITY_TRAP = 9
+LARGE_ENTITY_HYSTERESIS_TRAP = 10
+ESCORT_ROUTE_TRAP = 12
 
 
-class State(metaclass=UniqueIntEnum):
+class StateEnum(metaclass=UniqueIntEnum):
     Idle = 0
     Moving = 1
     Shifting = 2
@@ -202,11 +235,11 @@ class State(metaclass=UniqueIntEnum):
     Teleporting = 27
     Flying = 28
     bePushed = 31
-    TeamFollowing = 32
     riding = 33
     Teleport = 34
     autoFight = 37
     serverControl = 43
+    posture = 47
 
     _stateValMap = {}
 
@@ -223,28 +256,6 @@ class State(metaclass=UniqueIntEnum):
                 realAttrs[attrName] = getattr(State, attrName)
         return realAttrs
 
-    @staticmethod
-    def getStateByVal(stateVal):
-        return State._stateValMap[stateVal]
-
-    @staticmethod
-    def buildStateValMap():
-        for state in range(32):
-            State._stateValMap[1 << state] = state
-
-    @staticmethod
-    def getMoveConflictState():
-        import conflict_conflict as CCD
-        moveEvent = CCD.datas[29100004]
-        for state, val in moveEvent.items():
-            if val == 3 and int(state) not in (State.UsingSkill, State.speicalSkill):
-                State._moveConflictState.append(int(state))
-
-    @staticmethod
-    @functools.lru_cache(128)
-    def isMoveConflictState(state):
-        return state in State._moveConflictState
-
 
 class RemoveStateReason(metaclass=UniqueIntEnum):
     NORMAL = 0  # 逻辑手动调用的
@@ -253,6 +264,7 @@ class RemoveStateReason(metaclass=UniqueIntEnum):
     TELEPORT = 3
     EXIT_DUEL = 4
     SKILL_DONE = 5
+    CANCEL_GATHER = 6
 
 
 class LineSubType(metaclass=UniqueIntEnum):
@@ -281,22 +293,22 @@ class SpaceType(metaclass=UniqueIntEnum):
     SpaceGuild = 9
 
     @staticmethod
-    def getCopiedSpaceNoRange(mapId):
+    def getClonedSpaceNoRange(mapId):
         start = mapId * SPACE_NO_INTERVAL
         return (start, start + SPACE_NO_INTERVAL)
 
     @staticmethod
-    def getSingleDungeonSpaceNoRange(mapId):
+    def getSingleDungeonSpaceRange(mapId):
         start = mapId * SPACE_NO_HOME_INTERVAL
         return (start, start + SPACE_NO_HOME_SINGLE_DUNGEON)
 
     @staticmethod
-    def getTeamDungeonSpaceNoRange(mapId):
+    def getTeamDungeonSpaceRange(mapId):
         start = mapId * SPACE_NO_HOME_INTERVAL + SPACE_NO_HOME_SINGLE_DUNGEON
         return (start, start + SPACE_NO_HOME_TEAM_DUNNGEON)
 
     @staticmethod
-    def getDungeonSpaceNoRange():
+    def getDungeonSpaceRange():
         start = SPACE_NO_DUNGEON_START*SPACE_NO_HOME_INTERVAL
         end = SPACE_NO_DUNGEON_END*SPACE_NO_HOME_INTERVAL
         return (start, end)
@@ -342,12 +354,12 @@ INIT_CLIENT_SEND = (
         ('sendDrawCardInfo', True),
         ('sendGuildTrains', True),
         ('_sendAchievementInitData', True),
-        ('sendEnemyRecordDatas', True),
+        ('sendAllEnemyDatas', True),
         ('_sendDropEquipInfo', True),
         ('sendCollectInfo', True),
         ('sendWonderLandLoginData', True),
         ('sendSiegeWarLoginData', True),
-        ('sendAllWelfareSignInInfo', True),
+        ('sendAllWelfareSignInInfo', False),
         ('avatarLogin', True),
         ('_sendAllGuildRelation', True),
         ('redbagOnLogin', True),
@@ -355,12 +367,14 @@ INIT_CLIENT_SEND = (
         ('onMineWarLogin', True),
         ('updateRedisVIPFlag', True),
         ('sendClaimPcLoginRewardInfo', True),
+        ('sendAvatarBountyInfo', True),
 )
 
 class ItemType(object):
     Normal = 0
     LingShou = 1
     Resource = 2
+    Title = 4
 
 
 class ItemSubType(object):
@@ -377,7 +391,7 @@ class LingShouSubType(object):
     Egg = 0
     Equipment = 1
 
-class AvatarProps(metaclass=UniqueIntEnum):
+class EntityPropsEnum(metaclass=UniqueIntEnum):
     commonCastCtx = 4
     callbackTmpInfo = 5
     channelSkillTimer = 6
@@ -386,7 +400,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
 
     lastTeleportSpaceNoRecord = 10
     backAccount = 11
-    timebackSkillData = 13
 
     equipDressTempData = 14
     useBagItemData = 15
@@ -432,7 +445,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
     raidDungeonCheckRecord = 81
     chongfengData = 84
     lockMinHp = 96
-    followNotRideFlag = 97
     mountIllegalTimer = 104
     teamPlayerUploadCacheDict = 112
     lungeSkillData = 130
@@ -485,7 +497,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
     newbieCreateCellCB = 312
     blazeStartTime = 313
     blazeId = 314
-    unlockBountyTaskFlag = 315
     petEquipNumCache = 316
     isLightningArea = 317
 
@@ -525,6 +536,12 @@ class AvatarProps(metaclass=UniqueIntEnum):
     cellExperience = 393
     cellMapId = 394
 
+    publishBounty = 400
+    acceptBounty = 401
+    bountyInfoInited = 402
+    waitForBountyInfoInitedTimer = 403
+    waitForBountyInfoInitedTimer1 = 404
+
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
     ShiftingSkillTopSpeed = 1000.0
@@ -540,8 +557,8 @@ CLIENT = 3
 DEFAULT_AOI = 30.0
 DEFAULT_HYST = 5.0
 HOME_AOI = 30.0
-LARGE_ENT_WITNESS = 9
-LARGE_ENT_HYST = 10
+LARGE_ENTITY_VISIBILITY_TRAP = 9
+LARGE_ENTITY_HYSTERESIS_TRAP = 10
 
 DEFAULT_DIRECTION = (0, 0, 0)
 
@@ -578,36 +595,38 @@ class ItemExType(object):
     NORMAL = 1
     SELECTION = 2
 
-class GmMode(object):
+
+class GmModeEnum(object):
     ALL_MODES = []
 
-    _modeGen = (i for i in range(20))
+    _modeIdGen = (i for i in range(20))
 
     @staticmethod
-    def generateMode(modes, gen):
+    def generateModeId(modes, gen):
         m = next(gen)
         modes.append(m)
         return m
 
-    GM_NONE = generateMode.__func__(ALL_MODES, _modeGen)
-    GM_NORAML = generateMode.__func__(ALL_MODES, _modeGen)
-    GM_NO_SKILLCD = generateMode.__func__(ALL_MODES, _modeGen)
+    GM_NONE = generateModeId.__func__(ALL_MODES, _modeIdGen)
+    GM_NORAML = generateModeId.__func__(ALL_MODES, _modeIdGen)
+    GM_NO_SKILLCD = generateModeId.__func__(ALL_MODES, _modeIdGen)
 
 
-class EnterLineCode(object):
-    CAN_ENTER = 0
-    FAIL_REACH_MAX_MEMBER = 1
-    FAIL_ONLY_TEAM_MEMBER = 2
-    FAIL_EXLUDE = 3
-    FAIL_COMMON = 4
-    FAIL_NOT_GUILD_MEMBER = 5
-    FAIL_REACH_MAX_GUILD_MEMBER = 6
-    FAIL_SPACE_IS_NOT_READY = 7
-    FAIL_CANNOT_AUTO_ENTER = 9
-    FAIL_REACH_AREAM_MAX = 10
-    FAIL_REACH_AREAM_LIMIT = 11
-    FAIL_REACH_SEC_LIMIT = 12
-    FAIL_MERGE_LINE = 13
+class EnterLineCodeEnum(object):
+    ENTER_CHECK_SUCCESS = 0
+    ERR_REACH_MAX_MEMBER = 1
+    ERR_ONLY_TEAM_MEMBER = 2
+    ERR_EXLUDE = 3
+    ERR_COMMON = 4
+    ERR_NOT_GUILD_MEMBER = 5
+    ERR_REACH_MAX_GUILD_MEMBER = 6
+    ERR_SPACE_IS_NOT_READY = 7
+    ERR_CANNOT_AUTO_ENTER = 9
+    ERR_REACH_AREAM_MAX = 10
+    ERR_REACH_AREAM_LIMIT = 11
+    ERR_REACH_SEC_LIMIT = 12
+    ERR_MERGE_LINE = 13
+    ERR_REACH_MAX_AVATAR_COUNT = 14
 
 class StreamStringID(object):
     NIL = 0
@@ -626,6 +645,7 @@ class StreamStringID(object):
     PET_DRAW_CARD_RECORD = 26
     ACHIEVEMENT_DATA = 27
     PLAYER_INFO_DATA = 28
+    BOUNTY_RANK_DATA = 29
 
 
 class UseItem(object):
@@ -647,43 +667,41 @@ class BagType(object):
 
 
 class BagOPStat(object):
-    BAG_OP_STAT_OK = 0
-    BAG_OP_DATA_ERR = 1
-    BAG_OP_STAT_ERR = 2
-    BAG_OP_NO_SPACE = 3
-    BAG_OP_BAG_TYPE_ERR = 4
-    BAG_OP_ITEMS_NOT_ENOUGH = 5
-    BAG_OP_ITEM_EXPIRED = 6
-    BAG_OP_LEVEL_ERR = 7
-    BAG_OP_CD_ERR = 8
-    BAG_OP_ADD_NUM_ERR = 9
-    BAG_OP_CANT_BE_DROP = 10
-    BAG_OP_BAG_LOCKED = 11
-    BAG_OP_DAILY_LIMIT = 14
-    BAG_OP_PENDING = 15
-    BAG_OP_MAIL_ITEM_REACH_LIMIT = 18
-    BAG_OP_REUSE_ITEM_USE_TIMES_FAILED = 19
-    BAG_OP_ITEM_DISABLED = 20
-    BAG_OP_ITEM_LOCKED = 21
-    BAG_OP_ARG_ERR = 22
+    OPERATE_BAG_STAT_OK = 0
+    OPERATE_BAG_DATA_ERR = 1
+    OPERATE_BAG_STAT_ERR = 2
+    OPERATE_BAG_NO_SPACE = 3
+    OPERATE_BAG_BAG_TYPE_ERR = 4
+    OPERATE_BAG_ITEMS_NOT_ENOUGH = 5
+    OPERATE_BAG_ITEM_EXPIRED = 6
+    OPERATE_BAG_LEVEL_ERR = 7
+    OPERATE_BAG_CD_ERR = 8
+    OPERATE_BAG_ADD_NUM_ERR = 9
+    OPERATE_BAG_CANT_BE_DROP = 10
+    OPERATE_BAG_BAG_LOCKED = 11
+    OPERATE_BAG_DAILY_LIMIT = 14
+    OPERATE_BAG_PENDING = 15
+    OPERATE_BAG_MAIL_ITEM_REACH_LIMIT = 18
+    OPERATE_BAG_REUSE_ITEM_USE_TIMES_FAILED = 19
+    OPERATE_BAG_ITEM_DISABLED = 20
+    OPERATE_BAG_ITEM_LOCKED = 21
+    OPERATE_BAG_ARG_ERR = 22
 
 class BagOpPlan(object):
-    BAG_OP_NO_PLAN = 1
-    BAG_OP_OK = 2
+    OPERATE_BAG_NO_PLAN = 1
+    OPERATE_BAG_OK = 2
 
 
 GAME_REFRESH_OCLOCK = 5
 
-ONE_MINUTE_SECONDS = 60
-ONE_DAY_SECONDS = 86400
-ONE_HOUR_SECONDES = 3600
-HALF_HOUR_SECONDS = 1800
-ONE_WEEK_SECONDS = 7 * ONE_DAY_SECONDS
-WEEK_SENCONDS = ONE_DAY_SECONDS * 7
-FIFTEEN_MINUTES = 900
-COMMON_CYCLE_TIME = GAME_REFRESH_OCLOCK * 3600
-CORRECT_TIME = time.localtime(0).tm_hour
-CORRECT_TIME_SECONDS = CORRECT_TIME * 3600
+ONE_MINUTE_COST_SECONDS = 60
+ONE_DAY_COST_SECONDS = 86400
+ONE_HOUR_COST_SECONDES = 3600
+HALF_HOUR_COST_SECONDS = 1800
+ONE_WEEK_COST_SECONDS = 7 * ONE_DAY_COST_SECONDS
+GENERAL_CYCLE_TIME = GAME_REFRESH_OCLOCK * 3600
+FIX_TIME = time.localtime(0).tm_hour
+FIX_TIME_SECONDS = FIX_TIME * 3600
 
 
 # 玩家角色状态，
@@ -711,36 +729,24 @@ class SignInClientState(object):
     delete = 3
 
 
-class NavCost(object):
-    costBlock = 0
-    costPass = 1
-    costBorder = 2
-    costWater = 3
-    costEnd = 4
-
-    COST_COLL_AVATAR = (costPass,)
-    COST_COLL_ENTITY = (costPass, costBorder)
-
-
-class WitnessType(object):
-    WITNESS_TYPE_HIDE = 0
-    WITNESS_TYPE_ALL = 1
-    WITNESS_TYPE_NAME = 2
-    WITNESS_TYPE_IGNORE = 3
+class WitnessTypeEnum(object):
+    WITNESS_ENUM_HIDE = 0
+    WITNESS_ENUM_ALL = 1
+    WITNESS_ENUM_NAME = 2
+    WITNESS_ENUM_IGNORE = 3
 
 
 class CreateAvatarRes(object):
     OK = 0
-    NAME_DUPLIATED = 1
-    NAME_INVALID = 2
-    ADDICT_JUDGE_FAILED = 3
-    NAME_LENGTH_OVERLIMIT = 4
-    DATABASE_OPR_ERROR = 5
-    GEN_GBID_FAILED = 6
-    CREATE_ENTITY_ERR = 7
-    WRITE_ENTITY_ERR = 8
-    GBID_ERR = 9
-    NEED_DID = 10
+    CRS_NAME_DUPLIATED = 1
+    CRS_NAME_INVALID = 2
+    CRS_ADDICT_JUDGE_FAILED = 3
+    CRS_NAME_LENGTH_OVERLIMIT = 4
+    CRS_DATABASE_OPR_ERROR = 5
+    CRS_GEN_GBID_FAILED = 6
+    CRS_CREATE_ENTITY_ERR = 7
+    CRS_WRITE_ENTITY_ERR = 8
+    CRS_GBID_ERR = 9
 
 
 class ReourceValType(object):
@@ -783,30 +789,19 @@ class KBEDebugLogLevel(object):
     ERROR = FATAL = 4
 
 
-WeekDayDic = {
-    0: "Monday",
-    1: "Tuesday",
-    2: "Wednesday",
-    3: "Thursday",
-    4: "Friday",
-    5: "Saturday",
-    6: "Sunday"
-}
-
-
-class ClaimTaskSrc(object):
-    UNKNOWN = 0
-    NORMAL = 1
-    GM_FINISH_NEWBIE = 2
-    GM = 3
-    JUMP_GAME = 4
-    MONSTER_NEARBY = 5
-    ROUND_AUTO_CLAIM = 6
-    ENTRUST_ACTIVITY = 7
-    REWARD_TASK = 8
-    INIT_NEWBIE_TASK = 9
-    FROM_ACTION = 10
-    NPC_DIALOG = 11
+class ClaimTaskSrcEnum(object):
+    TASK_SRC_UNKNOWN = 0
+    TASK_SRC_NORMAL = 1
+    TASK_SRC_GM_FINISH_NEWBIE = 2
+    TASK_SRC_GM = 3
+    TASK_SRC_JUMP_GAME = 4
+    TASK_SRC_MONSTER_NEARBY = 5
+    TASK_SRC_ROUND_AUTO_CLAIM = 6
+    TASK_SRC_ENTRUST_ACTIVITY = 7
+    TASK_SRC_REWARD_TASK = 8
+    TASK_SRC_INIT_NEWBIE_TASK = 9
+    TASK_SRC_FROM_ACTION = 10
+    TASK_SRC_NPC_DIALOG = 11
 
 
 class EntNumPerPlayerInAOI(object):
@@ -834,17 +829,11 @@ WORLD_LINE_BASE_WEIGHT = 50
 WORLD_LINE_UPDATE_WEIGHT_VAL = 10
 
 
-class TaskOpStat(object):
-    TASK_OP_OK = 0
-    TASK_OP_CLAIM_ERR = 1
-    TASK_OP_TEAM_PLAYER_ALREADY_HAS = 2
-
-
 class TaskCycleType(object):
-    TASK_CYCLE_NONE = -1
-    TASK_CYCLE_DAYLY = 0
-    TASK_CYCLE_WEEKLY = 1
-    TASK_CYCLE_ONCE = 2
+    CYCLE_TASK_ENUM_NONE = -1
+    CYCLE_TASK_ENUM_DAYLY = 0
+    CYCLE_TASK_ENUM_WEEKLY = 1
+    CYCLE_TASK_ENUM_ONCE = 2
 
 
 TASK_EVENT_CLAIM = 1
@@ -960,7 +949,7 @@ class EventActionSrc(object):
     SRC_ROUND_TASK = 6
 
 
-class ForceType(object):
+class ForceTypeEnum(object):
     UnKownForceType = 0
     Player = 1
     Monster = 2
@@ -969,15 +958,21 @@ class ForceType(object):
     Neutrality = 5
     NPC = 6
 
-    forceTypes = ("UnKownForceType", "Player", "Monster", "Friend", "Guild", "Neutrality", "NPC")
+    forceEnums = ("UnKownForceType", "Player", "Monster", "Friend", "Guild", "Neutrality", "NPC")
+    dunForce = (
+        Monster,
+        NPC,
+        Neutrality,
+        Friend
+    )
 
     @staticmethod
     @functools.lru_cache(8, typed=False)
     def getForceType(typeId):
-        if ForceType.Player <= typeId <= ForceType.NPC:
-            return ForceType.forceTypes[typeId]
+        if ForceTypeEnum.Player <= typeId <= ForceTypeEnum.NPC:
+            return ForceTypeEnum.forceEnums[typeId]
         else:
-            return ForceType.forceTypes[0]
+            return ForceTypeEnum.forceEnums[0]
 
 
 class CollectionType(object):
@@ -1007,29 +1002,29 @@ class IDIPBanType(object):
 
 
 class GMCommandErr(object):
-    OK = 0
-    TARGET_NOT_EXISTS = 1
-    DB_OP_ERR = -3
-    ARGS_ERR = -101
-    INVALID_CMD = -102
-    INVALID_JSON_RESPONSE = -103
-    TARGET_OFFLINE = -104
-    CMD_SERIAL_EXISTS = -105
-    BAN_TYPE_INVALID = -106
-    WRITE_TO_DB_ERROR = -107
-    MODIFY_TEXT_CHECK_FAILED = -108
-    NAME_DUPLICATE = -110
-    ACCOUNT_INVALID = -111
-    ALREADY_DONE = -112
-    INSUFFICIENT = -113
-    INTERNAL_ERROR = -114
-    NO_COIN = -115
-    DB_STATUS_ERR = -118
-    REDIS_OP_ERR = -119
-    MAX_LIMIT_ERR = -120
-    ADD_WEALTH_FAILED = -121
-    AFTER_SALE_ERR = -122
-    SEND_MAIL_ERR = -123
+    GM_RET_OK = 0
+    GM_RET_TARGET_NOT_EXISTS = 1
+    GM_RET_DB_OP_ERR = -3
+    GM_RET_ARGS_ERR = -101
+    GM_RET_INVALID_CMD = -102
+    GM_RET_INVALID_JSON_RESPONSE = -103
+    GM_RET_TARGET_OFFLINE = -104
+    GM_RET_CMD_SERIAL_EXISTS = -105
+    GM_RET_BAN_TYPE_INVALID = -106
+    GM_RET_WRITE_TO_DB_ERROR = -107
+    GM_RET_MODIFY_TEXT_CHECK_FAILED = -108
+    GM_RET_NAME_DUPLICATE = -110
+    GM_RET_ACCOUNT_INVALID = -111
+    GM_RET_ALREADY_DONE = -112
+    GM_RET_INSUFFICIENT = -113
+    GM_RET_INTERNAL_ERROR = -114
+    GM_RET_NO_COIN = -115
+    GM_RET_DB_STATUS_ERR = -118
+    GM_RET_REDIS_OP_ERR = -119
+    GM_RET_MAX_LIMIT_ERR = -120
+    GM_RET_ADD_WEALTH_FAILED = -121
+    GM_RET_AFTER_SALE_ERR = -122
+    GM_RET_SEND_MAIL_ERR = -123
 
 
 GM_RAW_PLAYER_FIELDS = 4
@@ -1091,6 +1086,8 @@ class RedisKey(object):
     PRIVILEGE_TBL = 'g:vip'
     LEVEL_RUSH_RANK_DATA_KEY = 'g:alrr'
     NORMAL_ONLINE_NUM = 'g:normal_online_num'
+    SERVER_OPEN_TIME = 'g:server_open_time'
+    SERVER_OPEN_STATE = 'g:server_open_state'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1112,8 +1109,8 @@ class ClientUploadDataType(object):
     TYPE_END = 2
 
 
-READ_MAIL_EXPIRE_TIME = 7 * ONE_DAY_SECONDS
-NEW_MAIL_EXPIRE_TIME = 30 * ONE_DAY_SECONDS
+READ_MAIL_EXPIRE_TIME = 7 * ONE_DAY_COST_SECONDS
+NEW_MAIL_EXPIRE_TIME = 30 * ONE_DAY_COST_SECONDS
 
 
 class MailDeleteReason(object):
@@ -1163,6 +1160,8 @@ class ChatSysGMErr:
 CREEP_TAG_LARGE_ENT = 1 # 超大视野的实体
 CREEP_TAG_DEATH_MSG = 2 # 死亡会喊话
 CREEP_TAG_WARNING_RANGE = 4 # 有预警范围
+CREEP_TAG_WONDERLAND_FIXED_BOSS = 5 # 天劫崖固定boss
+CREEP_TAG_WONDERLAND_SUMMON_BOSS = 6 # 天劫崖召唤boss
 CREEP_TAG_ANTI_TAUNT = 98 # 嘲讽反制
 CREEP_TAG_ANTI_MOVE = 99 # 推拉反制
 
@@ -1175,20 +1174,16 @@ class SkillTag(metaclass=UniqueIntEnum):
     NeedNoTargetInCasting = 27
     TeleportSkill = 40
     ShiftSkill = 46
-    EndTimebackSkill = 47
     IgnoreImmortal = 54
     MulStageSkill = 58
     Chongfeng = 55
     Lunge = 56
     BlinkToTarget = 57
-    ZedSkill = 60
-    ResetCDZedSkill = 61
     AutoCombat = 63
     DoActionTogether = 64  # 技能action就执行一次,在action里结算各个目标
     FightStateSkill = 75
     HealSkill = 76
     LingzhuSkill = 80
-    lzSpecialSkill = 95
     revolveSkill = 97
     randomTarget = 98
     GeneralSkill = 99
@@ -1198,29 +1193,26 @@ class SkillTag(metaclass=UniqueIntEnum):
     DodgeSkill = 146
 
 class BuffTag(object):
-    SeeHiddenEnt = 41
-    GuildLeague = 48
-    GuildLeagueCollectionBuff = 49
-    Home = Dungeon = BTFDungeon = 50
-    BattleFieldSpaceTag = 45
-    GuildBattleTempPointTag = 46
-    BTFSLPDungeonRebornTag = 47
-    DisableSelfHiddenTag = 98
+    TagSeeHiddenEnt = 41
+    TagGuildLeague = 48
+    TagGuildLeagueCollectionBuff = 49
+    TagDungeon = 50
+    TagBattleFieldSpaceTag = 45
+    TagGuildBattleTempPointTag = 46
+    TagBTFSLPDungeonRebornTag = 47
+    TagDisableSelfHiddenTag = 98
 
 
 class BuffKind(object):
-    Negative = -1
-    Controlled = -2
-    PhysicalDoT = -3
-    MagicalDoT = -4
-
-    KIND_COLL = (Negative, Controlled, PhysicalDoT, MagicalDoT)
+    KindNegative = -1
+    KindControlled = -2
+    KindPhysicalDoT = -3
+    KindMagicalDoT = -4
 
 
-class BuffSrcType(object):
+class BuffSrcTypeEnum(object):
     Unknow = 0
     Combat = 1
-    Crystal = 2
 
 
 class SkillScope(metaclass=UniqueIntEnum):
@@ -1241,19 +1233,40 @@ class SkillScope(metaclass=UniqueIntEnum):
     MULTI_SECTOR = 15  # 15=以自身为圆心的多个扇形 参数=direction
 
 class EffecType(object):
-    EFFECT_UNKNOW = 0
-    EFFECT_BASIC = 1
-    EFFECT_BY_EVENT = 2
-    EFFECT_BY_TIMER = 3
+    ENUM_EFFECT_UNKNOW = 0
+    ENUM_EFFECT_BASIC = 1
+    ENUM_EFFECT_BY_EVENT = 2
+    ENUM_EFFECT_BY_TIMER = 3
 
 
 class SkillCategory(object):
-    GENERAL_SKILL = 0
-    CAST_SKILL_WITHOUT_ACTION = 1
-    CAST_SKILL_WITH_ACTION = 2
+    CATEGORY_GENERAL_SKILL = 0
+    CATEGORY_CAST_SKILL_WITHOUT_ACTION = 1
+    CATEGORY_CAST_SKILL_WITH_ACTION = 2
 
 class SkillTempDataKey(object):
-    CHANGE_SKILL_CD_STATUS = 'CHANGE_SKILL_CD_STATUS'
+    CHANGE_SKILL_CD_STATUS = 1
+    NEXT_CAST = 2
+    RESTORE_CD_TIMER = 3
+    DURATION = 4 # 'duration'
+    MUL_ATTACK_ACT_TIMER = 5
+    SKILL_DONE_TIMER = 6
+    CASTING_CHECK_TIMER = 7
+    IS_CHANNELING_EMPTY = 8
+    CHANNELING_BULLET_TIMER = 9
+    CHANNELING_CALC_TIMER = 10
+    T_CHANNELING_START = 11
+    CHANNELING_END_TIMER = 12
+    CASTING_SKILL_TIMER = 13
+    STAGE_CHILD = 14
+    STAGE_CD_TIMER = 15
+    BEGIN_SKILL_POSITION = 16
+    DELAY_CALC_TIMER = 17
+    RELEASED_CNT = 18
+    TOTAL_RELEASE_CNT = 19
+    RELEASE_TIME = 20
+    SKILL_ARGS = 21
+
 
 class SkillCDStatus(object):
     DEFAULT = 0
@@ -1273,81 +1286,80 @@ class SkillAttackType(object):
     ATTACK_CRIT = 2
 
 class SourceType(metaclass=UniqueIntEnum):
-    All=-1
-    Default = 0
-    Skill = 1
-    Aureole = 2
-    Buff = 3
-    Creation = 4
-    Item = 5
-    PassiveSkill = 6
-    BuffPoint = 7
-    Equip = 8
-    Title = 9
-    GuildTrain = 10
-    MonsterManual = 11
-    Score = 12
-    HomeBuilding = 13
-    Init = 14
-    LevelUp = 15
-    DungeonAdj = 16
-    SoulCard = 17
-    DropWater = 18
-    WhaleLevel = 19
-    Plunder = 20
-    PlunderWhale = 21
-    Patrol = 22
-    Escort = 23
-    Possessed = 24
-    HonorPK = 26
-    awardFightProp = 27
-    Fight = 28
-    EventAction = 29
-    Teleport = 30
-    LoseFighting = 31
-    TowerStage = 32
-    FlowCtrl = 33
-    DungeonPlaying = 34
-    DailyDraw = 35
-    AvatarChange = 36
-    SchoolPK = 37
-    GuildTrainReset = 38
-    MountProp = 39
-    PetProp = 40
-    CollectProp = 41
-    DuelEnd = 42
-    DropDeath = 43
-    MeridianProp = 44
-    HealWounds = 45
+    SrcTpAll=-1
+    SrcTpDefault = 0
+    SrcTpSkill = 1
+    SrcTpAureole = 2
+    SrcTpBuff = 3
+    SrcTpCreation = 4
+    SrcTpItem = 5
+    SrcTpPassiveSkill = 6
+    SrcTpEquip = 8
+    SrcTpTitle = 9
+    SrcTpGuildTrain = 10
+    SrcTpMonsterManual = 11
+    SrcTpScore = 12
+    SrcTpHomeBuilding = 13
+    SrcTpInit = 14
+    SrcTpLevelUp = 15
+    SrcTpDungeonAdj = 16
+    SrcTpSoulCard = 17
+    SrcTpDropWater = 18
+    SrcTpWhaleLevel = 19
+    SrcTpPlunder = 20
+    SrcTpPlunderWhale = 21
+    SrcTpPatrol = 22
+    SrcTpEscort = 23
+    SrcTpPossessed = 24
+    SrcTpHonorPK = 26
+    SrcTpawardFightProp = 27
+    SrcTpFight = 28
+    SrcTpEventAction = 29
+    SrcTpTeleport = 30
+    SrcTpLoseFighting = 31
+    SrcTpTowerStage = 32
+    SrcTpFlowCtrl = 33
+    SrcTpDungeonPlaying = 34
+    SrcTpDailyDraw = 35
+    SrcTpAvatarChange = 36
+    SrcTpSchoolPK = 37
+    SrcTpGuildTrainReset = 38
+    SrcTpMountProp = 39
+    SrcTpPetProp = 40
+    SrcTpCollectProp = 41
+    SrcTpDuelEnd = 42
+    SrcTpDropDeath = 43
+    SrcTpMeridianProp = 44
+    SrcTpHealWounds = 45
 
 MAX_BUFF_COUNT = 50
 
 class ChannelingBreak(object):
-    BE_ATK = 1
-    LOSE_TARGET = 2
-    LACK_OF_MP = 3
-    TARGET_DIE = 4
-    CONFLICT_STATE = 5
-    MOVE = 6
-    CAPTURE = 7
-    TELEPORT = 8
-    SELF_DIE = 9
-    IMMUNE_DEATH = 10
-    NORMAR_END = 11
+    BREAK_TP_BE_ATK = 1
+    BREAK_TP_LOSE_TARGET = 2
+    BREAK_TP_LACK_OF_MP = 3
+    BREAK_TP_TARGET_DIE = 4
+    BREAK_TP_CONFLICT_STATE = 5
+    BREAK_TP_MOVE = 6
+    BREAK_TP_CAPTURE = 7
+    BREAK_TP_TELEPORT = 8
+    BREAK_TP_SELF_DIE = 9
+    BREAK_TP_IMMUNE_DEATH = 10
+    BREAK_TP_NORMAR_END = 11
 
 class EndCasting(object):
-    Finished = 1
-    ClientCancel=2
-    Dead = 3
-    OtherSkill = 4
-    MissingTarget=5
-    CaptureMonster=6
-    BeAttacked = 7
-    ConflictState=8
-    Move=9
-    ImmuneDeath=10
-    Teleporting=11
-    clientPick=12
+    ECEnumFinished = 1
+    ECEnumClientCancel=2
+    ECEnumDead = 3
+    ECEnumOtherSkill = 4
+    ECEnumMissingTarget=5
+    ECEnumCaptureMonster=6
+    ECEnumBeAttacked = 7
+    ECEnumConflictState=8
+    ECEnumMove=9
+    ECEnumImmuneDeath=10
+    ECEnumTeleporting=11
+    ECEnumclientPick=12
 
 class ImmuneDeathState(object):
     IMMUNE_VALID = 1
@@ -1355,49 +1367,48 @@ class ImmuneDeathState(object):
     IMMUNE_FINISHED = 3
 
 class UseSkillCheck(object):
-    CHEKC_OK = 0
-    IN_CD = 1
-    LACK_OF_MP = 1<<1
-    INVALID_OWNER = 1<<2
-    STATE_CONFLICT = 1<<3
-    INVALID_TARGET = 1<<4
-    INVISIBLE_TARGET = 1<<5
-    CROSS_SPACE = 1<<6
-    OUT_OF_RANGE = 1<<7
-    NEED_CAST = 1<<8
-    SELF_DIE = 1<<9
-    SINGLE_HEAL_OUT_OF_RANGE = 1<<10
-    SHOOTER_SKILL_CANNOT_USE = 1<<11
-    ULTRA_SKILL_POWER_NOT_ENOUGH = 1<<12
+    USC_ENUM_CHEKC_OK = 0
+    USC_ENUM_IN_CD = 1
+    USC_ENUM_LACK_OF_MP = 1<<1
+    USC_ENUM_INVALID_OWNER = 1<<2
+    USC_ENUM_STATE_CONFLICT = 1<<3
+    USC_ENUM_INVALID_TARGET = 1<<4
+    USC_ENUM_INVISIBLE_TARGET = 1<<5
+    USC_ENUM_CROSS_SPACE = 1<<6
+    USC_ENUM_OUT_OF_RANGE = 1<<7
+    USC_ENUM_NEED_CAST = 1<<8
+    USC_ENUM_SELF_DIE = 1<<9
+    USC_ENUM_SINGLE_HEAL_OUT_OF_RANGE = 1<<10
+    USC_ENUM_SHOOTER_SKILL_CANNOT_USE = 1<<11
+    USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH = 1<<12
 
     #起手延迟结算时检查需要忽略的条件
-    DELAY_CHECK_IGNORES = IN_CD | LACK_OF_MP | OUT_OF_RANGE | STATE_CONFLICT | INVALID_TARGET | ULTRA_SKILL_POWER_NOT_ENOUGH
-    BIGWORLD_DUEL_DELAY_CHECK_IGNORES = IN_CD | LACK_OF_MP | OUT_OF_RANGE | STATE_CONFLICT | ULTRA_SKILL_POWER_NOT_ENOUGH
+    USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
     #连击技能（例如风入松放一次可以砍出4刀，每刀单独结算）分阶段结算时，每个阶段的检查
-    MUL_ATTACK_CHECK_IGNORES = IN_CD | LACK_OF_MP | STATE_CONFLICT | ULTRA_SKILL_POWER_NOT_ENOUGH
+    USC_MUL_ATTACK_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_STATE_CONFLICT | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
 
 class ResetSkillReason(object):
-    Default = 0
-    SkillDone=1
-    StageEnd = 2
-    EndCasting = 3
-    TimeRefreshDone=4
-    Teleport = 5
-    DuelComplete = 6
-    GeneralSkillBreak = 7
-    Transform = 8
-    CleintEnd = 9
-    DodgeSkill = 10
-    UltraSkill = 11
-    SkillStateRemove = 12
-    Freeze = 13
-    BreakByState = 14
+    ReasonDefault = 0
+    ReasonSkillDone=1
+    ReasonStageEnd = 2
+    ReasonEndCasting = 3
+    ReasonTimeRefreshDone=4
+    ReasonTeleport = 5
+    ReasonDuelComplete = 6
+    ReasonGeneralSkillBreak = 7
+    ReasonTransform = 8
+    ReasonCleintEnd = 9
+    ReasonDodgeSkill = 10
+    ReasonUltraSkill = 11
+    ReasonSkillStateRemove = 12
+    ReasonFreeze = 13
+    ReasonBreakByState = 14
 
 
 class SkillActionType(object):
     StagedAct=1
 
-class ActionProgressType(object):
+class ActionProgressEnum(object):
     startActionDoing = 1
     startActionDone = 2
     actionDoing = 3
@@ -1472,18 +1483,18 @@ class HitType(metaclass=UniqueIntEnum):
 
     @staticmethod
     @functools.lru_cache(32)
-    def isInClientIgnoreList(hitType):
+    def checkInClientIgnoreList(hitType):
         return hitType in HitType.clientIgnoreList
 
 class RemoveType(metaclass=UniqueIntEnum):
-    Default = 0
-    EndByTime = 1
-    EndByAtt = 2
-    EndByBeat = 3
-    EndBySkill = 4
-    EndByDead = 5
-    EndByAction = 6
-    RestoreRemove = 7
+    RTEnumDefault = 0
+    RTEnumEndByTime = 1
+    RTEnumEndByAtt = 2
+    RTEnumEndByBeat = 3
+    RTEnumEndBySkill = 4
+    RTEnumEndByDead = 5
+    RTEnumEndByAction = 6
+    RTEnumRestoreRemove = 7
 
 class PKModel(object):
     PEACE = 0
@@ -1505,7 +1516,7 @@ class ForceRelation(object):
     Neutrality = 3
     NPC = 4
 
-class RaceType(object):
+class RaceTypeEnum(object):
     none = 0
     avatar = 1
     monster = 2
@@ -1522,7 +1533,13 @@ class CampType(object):
     Friend = 3
     CreationMaster = 4
     EnemyExTarget = 5
-    Team = 6
+    Team = 6    # 已弃用
+
+class TeamCampType(object):
+    All = 0
+    Self = 1
+    Team = 2
+    Raid = 3
 
 class UnsetAllHateReason(object):
     destory = 1
@@ -1599,13 +1616,13 @@ class ScriptNone(object):
 scriptNone = ScriptNone()
 
 class AIDefine(object):
-    PatrolTick      = 3  # 巡逻间隔
-    PatrolProb      = 75 # 巡逻概率
-    SummonDis       = 5  # 召唤物跟随最大距离
-    SummonDisEx     = 30 # 召唤物战斗最大距离
-    SummonDisAd     = 3  # 召唤物调整最佳距离
-    SummonDisYL     = 8  # 特殊召唤物（应龙）距离
-    GoHomeSpeed     = 5  # 脱战回家移速调整
+    AIEnumPatrolTick      = 3  # 巡逻间隔
+    AIEnumPatrolProb      = 75 # 巡逻概率
+    AIEnumSummonDis       = 5  # 召唤物跟随最大距离
+    AIEnumSummonDisEx     = 30 # 召唤物战斗最大距离
+    AIEnumSummonDisAd     = 3  # 召唤物调整最佳距离
+    AIEnumSummonDisYL     = 8  # 特殊召唤物（应龙）距离
+    AIEnumGoHomeSpeed     = 5  # 脱战回家移速调整
 
 AI_EVENT_ENENY_ENTER_TRAP = 'enemyEnter'
 AI_EVENT_ENENY_LEAVE_TRAP = 'enemyLeave'
@@ -1633,6 +1650,8 @@ class RouteState(object):
 
 class MailConstID(object):
     REWARD_MAIL_ID = CSTD.datas['getRewardAndBagFull_mailID']['value']
+    MAX_GLOBAL_MAIL_SAVE_COUNT = 100
+    MAX_GLOBAL_MAIL_OVER_RATE = 90
 
 class JumpType(object):
     FIRST_JUMP = 1
@@ -1644,7 +1663,6 @@ class DungeonSrcEnum(object):
     DEFAULT = 0                                   # 默认
     FROM_CLIENT = 1                               # 客户端
     FROM_CLIENT_GM = 2                            # GM命令
-    FROM_FOLLOW_CAPTAIN = 3                       # 跟随队长
     FROM_TASK = 4                                 # 任务流程触发传送
     FROM_KICKOUT_DUNGEON = 5                      # 踢出副本
     FROM_TIME_OUT = 6                             # 副本超时
@@ -1705,13 +1723,13 @@ RAID_MEMBER_MAX_NUM = 15
 RAID_APPLY_JOIN_MAX_NUM = 20
 STATISTICSTUB_CONFIG_NUM = 5
 
-class TeamMicsMode(object):
+class TeamMicsModeEnum(object):
     OFF = 0
     FREE = 1
 
     COLL_ALL = (OFF, FREE)
 
-class RaidMicsMode(object):
+class RaidMicsModeEnum(object):
 
     OFF = 0
     FREE = 1
@@ -1756,111 +1774,109 @@ class TeamStatisticType(object):
 class _RaidErrno(object):
     from userType import Error as _errno
 
+    def _lateReload(self):
+        for _value in self.__class__.__dict__.values():
+            if _value.__class__.__name__ == 'Error':
+                _value.reloadScript()
+
     def reloadScript(self):
         import utils
         utils.resetCls(self)
         self._lateReload()
-        return
 
-    def _lateReload(self):
-        for k, v in self.__class__.__dict__.items():
-            if v.__class__.__name__ == 'Error':
-                v.reloadScript()
+    ENUM_UNKNOWN                                 = _errno(0)         # 未知错误
+    ENUM_RAID_OK                                 = _errno(1)         # 正常
+    ENUM_RAID_PARAM_ERR                          = _errno(2)         # 参数错误
+    ENUM_RAID_NOT_IN_TEAM                        = _errno(10000)     # 不在小队中
+    ENUM_RAID_ALREADY_IN_TEAM                    = _errno(10001)     # 已经在小队中
+    ENUM_RAID_RAID_ID_REPEAT                     = _errno(10002)     # 团队ID重复
+    ENUM_RAID_TEAM_ID_REPEAT                     = _errno(10003)     # 小队ID重复(teamId)
+    ENUM_RAID_PLAYER_GBID_REPEAT                 = _errno(10004)     # 玩家ID重复
+    ENUM_RAID_TEAM_NOT_FOUND                     = _errno(10005)     # 小队ID未找到(teamId)
+    ENUM_RAID_PLAYER_GBID_NOT_FOUND              = _errno(10006)     # 玩家ID位找到
+    ENUM_RAID_NOT_TEAM_CAPTAIN                   = _errno(10007)     # 不是小队队长
+    ENUM_RAID_NOT_IN_RAID                        = _errno(10008)     # 不在团队中
+    ENUM_RAID_NOT_RAID_LEADER                    = _errno(10009)     # 不是团长
+    ENUM_RAID_RAID_ID_NOT_FOUND                  = _errno(10010)     # 团队ID未找到
+    ENUM_RAID_TEAM_IDX_REPEAT                    = _errno(10011)     # 小队IDX重复
+    ENUM_RAID_TEAM_IDX_NOT_FOUND                 = _errno(10012)     # 小队IDX未找到
+    ENUM_RAID_RAID_ID_NOT_MATCH                  = _errno(10013)     # 团队ID不匹配
+    ENUM_RAID_ALREADY_IN_RAID                    = _errno(10014)     # 已经在团队中
+    ENUM_RAID_RAID_IS_FULL                       = _errno(10015)     # 团队已满
+    ENUM_RAID_ALREADY_APPLY_JOIN                 = _errno(10016)     # 已经申请加入该团队
+    ENUM_RAID_APPLY_JOIN_NOT_FOUND               = _errno(10017)     # 申请记录没有找到
+    ENUM_RAID_APPLY_JOIN_RECORD_NOT_FOUND        = _errno(10018)     # 申请记录(玩家缓存)没有找到
+    ENUM_RAID_UNKNOWN_CAPACITY                   = _errno(10019)     # 不支持的团队人数
+    ENUM_RAID_CREATE_RAID_OFR                    = _errno(10020)     # 创建团对时超出人数上限
+    ENUM_RAID_TEAM_NUM_NOT_MATCH                 = _errno(10021)     # 小队人物数量没有匹配
+    ENUM_RAID_TEAM_MEMBER_NOT_MATCH              = _errno(10022)     # 小队人员没有匹配
+    ENUM_RAID_RAID_NOT_ENOUGH_SIT                = _errno(10023)     # 团队不足以加入新的小队
+    ENUM_RAID_CHECKING_TEAM_JOIN_FAILED          = _errno(10024)     # 团队检查加入失败(申请)
+    ENUM_RAID_AVATAR_REJECTED_ACT                = _errno(10025)     # 玩家主动拒绝操作
+    ENUM_RAID_PLAYER_GBID_NOT_MATCH              = _errno(10026)     # 玩家ID不匹配
+    ENUM_RAID_JOIN_TYPE_NOT_MATCH                = _errno(10027)     # 团队加入(检查)类型不匹配
+    ENUM_RAID_RAID_TEAM_IS_FULL                  = _errno(10028)     # 小队已满
+    ENUM_RAID_TEAM_IDX_CHANGED                   = _errno(10029)     # 小队ID变化
+    ENUM_RAID_TEAM_ID_CHANGED                    = _errno(10030)     # 小队ID变化(teamId)
+    ENUM_RAID_APPLY_BE_INVITED_RECORD_NOT_FOUND  = _errno(10031)     # 邀请记录未找到
+    ENUM_RAID_CHECKING_TEAM_INVITE_FAILED        = _errno(10032)     # 团队检查加入失败(邀请)
+    ENUM_RAID_TEAM_IS_EMPTY                      = _errno(10033)     # 小队为空
+    ENUM_RAID_KICKOUT_SELF                       = _errno(10034)     # 尝试移除自己(self.gbId==gbId)
+    ENUM_RAID_LEADER_TEAM_CANT_TRANS_CAPTAIN     = _errno(10035)     # 团长所在队伍不能转移队长
+    ENUM_RAID_AWARD_SELF                         = _errno(10036)     # 尝试对自己任命(团长不能对自己小队进行一些任命操作)
+    ENUM_RAID_AWARD_SELF_TEAM                    = _errno(10037)     # 尝试对自己所在团队任命
+    ENUM_RAID_ALREADY_BE_TEAM_CAPTAIN            = _errno(10038)     # 已经是小队队长
+    ENUM_RAID_IS_SAME_TEAM                       = _errno(10039)     # 小队相同
+    ENUM_RAID_IS_SAME_PLAYER                     = _errno(10040)     # 玩家相同
+    ENUM_RAID_RAID_TEAM_IDX_OFR                  = _errno(10041)     # 创建小队IDX超出上限
+    ENUM_RAID_SAME_RAID_TARGET_ID                = _errno(10042)     # 相同目标ID
+    ENUM_RAID_DURING_STANDBY_CHECK               = _errno(10043)     # 团队正在进行检查
+    ENUM_RAID_STANDBY_RECORD_NOT_FOUND           = _errno(10044)     # 团队检查记录未找到
+    ENUM_RAID_STANDBY_ALREADY_CHECKED            = _errno(10045)     # 已经check过
+    ENUM_RAID_RAID_LEADER_CHANGED                = _errno(10046)     # 团队已经变更
+    ENUM_RAID_TEAM_MEMBER_OFFLINE                = _errno(10047)     # 团队成员离线
+    ENUM_RAID_APPLY_JOIN_STUB_VAL_NOT_FOUND      = _errno(10048)     # 申请记录没有找到(RaidStub记录)
+    ENUM_RAID_APPLY_JOIN_NUMBER_OFR              = _errno(10049)     # 当前团队申请记录超过上限
+    ENUM_RAID_INVITE_SELF_TEAM                   = _errno(10050)     # 玩家尝试邀请自己的小队加入团队
+    ENUM_RAID_MICS_NUM_OUT_OF_RANGE              = _errno(10051)     # 麦克风人数到达上限
+    ENUM_RAID_MICS_BLOCK                         = _errno(10052)     # 麦克风被强制禁用
+    ENUM_RAID_MICS_SWITCH_OFF                    = _errno(10053)     # 麦克风总开关关闭
+    ENUM_RAID_MISC_FREE_MODE_LIMIT               = _errno(10054)     # Free模式限制麦克风相关功能
+    ENUM_RAID_MISC_LEADER_MODE_LIMIT             = _errno(10054)     # leader模式限制麦克风相关功能
+    ENUM_RAID_LEADER_CANT_TURN_OFF_MICS          = _errno(10056)     # 团长禁止关闭麦克风
+    ENUM_RAID_MICS_MODE_ERR                      = _errno(10057)     # 团队麦克风模式错误
+    ENUM_RAID_INVITED_SAME_PLAYER_INCD           = _errno(10058)     # 同一团队邀请CD
+    ENUM_RAID_IS_RAID_LEADER                     = _errno(10059)     # 操作对象是团长A
+    ENUM_RAID_TEAM_CANT_DISBAND                  = _errno(10061)     # 小队无法被解散
+    ENUM_RAID_UI_DENIED                          = _errno(10062)     # 团队接口被UI相关判断阻止
+    ENUM_RAID_ALL_MICS_BLOCKED                   = _errno(10063)     # 已经全员禁麦
+    ENUM_RAID_TEAM_MEMBER_DUOHUN                 = _errno(10064)     # 被夺魂
+    ENUM_RAID_NOT_RAID_DEPUTY                    = _errno(10065)     # 不是副团长
+    ENUM_RAID_NOT_RAID_LEADER_OR_DEPUTY          = _errno(10066)     # 不是团长/副团长
+    ENUM_RAID_NOT_RAID_CANNOT_KICK_LEADER        = _errno(10067)     # 不能踢团长
+    ENUM_RAID_NOT_RAID_CANNOT_KICK_DEPUTY        = _errno(10068)     # 不能踢副团长
+    ENUM_RAID_NOT_RAID_CANNOT_MOVE_LEADER        = _errno(10069)     # 不能移动团长
+    ENUM_RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER       = _errno(10070)     # 小队人数不支持
+    ENUM_RAID_NOT_SAME_SIEGEWAR_CAMP             = _errno(10071)     # 城战不同阵营
 
-    UNKNOWN                                 = _errno(0)         # 未知错误
-    RAID_OK                                 = _errno(1)         # 正常
-    RAID_PARAM_ERR                          = _errno(2)         # 参数错误
-    RAID_NOT_IN_TEAM                        = _errno(10000)     # 不在小队中
-    RAID_ALREADY_IN_TEAM                    = _errno(10001)     # 已经在小队中
-    RAID_RAID_ID_REPEAT                     = _errno(10002)     # 团队ID重复
-    RAID_TEAM_ID_REPEAT                     = _errno(10003)     # 小队ID重复(teamId)
-    RAID_PLAYER_GBID_REPEAT                 = _errno(10004)     # 玩家ID重复
-    RAID_TEAM_NOT_FOUND                     = _errno(10005)     # 小队ID未找到(teamId)
-    RAID_PLAYER_GBID_NOT_FOUND              = _errno(10006)     # 玩家ID位找到
-    RAID_NOT_TEAM_CAPTAIN                   = _errno(10007)     # 不是小队队长
-    RAID_NOT_IN_RAID                        = _errno(10008)     # 不在团队中
-    RAID_NOT_RAID_LEADER                    = _errno(10009)     # 不是团长
-    RAID_RAID_ID_NOT_FOUND                  = _errno(10010)     # 团队ID未找到
-    RAID_TEAM_IDX_REPEAT                    = _errno(10011)     # 小队IDX重复
-    RAID_TEAM_IDX_NOT_FOUND                 = _errno(10012)     # 小队IDX未找到
-    RAID_RAID_ID_NOT_MATCH                  = _errno(10013)     # 团队ID不匹配
-    RAID_ALREADY_IN_RAID                    = _errno(10014)     # 已经在团队中
-    RAID_RAID_IS_FULL                       = _errno(10015)     # 团队已满
-    RAID_ALREADY_APPLY_JOIN                 = _errno(10016)     # 已经申请加入该团队
-    RAID_APPLY_JOIN_NOT_FOUND               = _errno(10017)     # 申请记录没有找到
-    RAID_APPLY_JOIN_RECORD_NOT_FOUND        = _errno(10018)     # 申请记录(玩家缓存)没有找到
-    RAID_UNKNOWN_CAPACITY                   = _errno(10019)     # 不支持的团队人数
-    RAID_CREATE_RAID_OFR                    = _errno(10020)     # 创建团对时超出人数上限
-    RAID_TEAM_NUM_NOT_MATCH                 = _errno(10021)     # 小队人物数量没有匹配
-    RAID_TEAM_MEMBER_NOT_MATCH              = _errno(10022)     # 小队人员没有匹配
-    RAID_RAID_NOT_ENOUGH_SIT                = _errno(10023)     # 团队不足以加入新的小队
-    RAID_CHECKING_TEAM_JOIN_FAILED          = _errno(10024)     # 团队检查加入失败(申请)
-    RAID_AVATAR_REJECTED_ACT                = _errno(10025)     # 玩家主动拒绝操作
-    RAID_PLAYER_GBID_NOT_MATCH              = _errno(10026)     # 玩家ID不匹配
-    RAID_JOIN_TYPE_NOT_MATCH                = _errno(10027)     # 团队加入(检查)类型不匹配
-    RAID_RAID_TEAM_IS_FULL                  = _errno(10028)     # 小队已满
-    RAID_TEAM_IDX_CHANGED                   = _errno(10029)     # 小队ID变化
-    RAID_TEAM_ID_CHANGED                    = _errno(10030)     # 小队ID变化(teamId)
-    RAID_APPLY_BE_INVITED_RECORD_NOT_FOUND  = _errno(10031)     # 邀请记录未找到
-    RAID_CHECKING_TEAM_INVITE_FAILED        = _errno(10032)     # 团队检查加入失败(邀请)
-    RAID_TEAM_IS_EMPTY                      = _errno(10033)     # 小队为空
-    RAID_KICKOUT_SELF                       = _errno(10034)     # 尝试移除自己(self.gbId==gbId)
-    RAID_LEADER_TEAM_CANT_TRANS_CAPTAIN     = _errno(10035)     # 团长所在队伍不能转移队长
-    RAID_AWARD_SELF                         = _errno(10036)     # 尝试对自己任命(团长不能对自己小队进行一些任命操作)
-    RAID_AWARD_SELF_TEAM                    = _errno(10037)     # 尝试对自己所在团队任命
-    RAID_ALREADY_BE_TEAM_CAPTAIN            = _errno(10038)     # 已经是小队队长
-    RAID_IS_SAME_TEAM                       = _errno(10039)     # 小队相同
-    RAID_IS_SAME_PLAYER                     = _errno(10040)     # 玩家相同
-    RAID_RAID_TEAM_IDX_OFR                  = _errno(10041)     # 创建小队IDX超出上限
-    RAID_SAME_RAID_TARGET_ID                = _errno(10042)     # 相同目标ID
-    RAID_DURING_STANDBY_CHECK               = _errno(10043)     # 团队正在进行检查
-    RAID_STANDBY_RECORD_NOT_FOUND           = _errno(10044)     # 团队检查记录未找到
-    RAID_STANDBY_ALREADY_CHECKED            = _errno(10045)     # 已经check过
-    RAID_RAID_LEADER_CHANGED                = _errno(10046)     # 团队已经变更
-    RAID_TEAM_MEMBER_OFFLINE                = _errno(10047)     # 团队成员离线
-    RAID_APPLY_JOIN_STUB_VAL_NOT_FOUND      = _errno(10048)     # 申请记录没有找到(RaidStub记录)
-    RAID_APPLY_JOIN_NUMBER_OFR              = _errno(10049)     # 当前团队申请记录超过上限
-    RAID_INVITE_SELF_TEAM                   = _errno(10050)     # 玩家尝试邀请自己的小队加入团队
-    RAID_MICS_NUM_OUT_OF_RANGE              = _errno(10051)     # 麦克风人数到达上限
-    RAID_MICS_BLOCK                         = _errno(10052)     # 麦克风被强制禁用
-    RAID_MICS_SWITCH_OFF                    = _errno(10053)     # 麦克风总开关关闭
-    RAID_MISC_FREE_MODE_LIMIT               = _errno(10054)     # Free模式限制麦克风相关功能
-    RAID_MISC_LEADER_MODE_LIMIT             = _errno(10054)     # leader模式限制麦克风相关功能
-    RAID_LEADER_CANT_TURN_OFF_MICS          = _errno(10056)     # 团长禁止关闭麦克风
-    RAID_MICS_MODE_ERR                      = _errno(10057)     # 团队麦克风模式错误
-    RAID_INVITED_SAME_PLAYER_INCD           = _errno(10058)     # 同一团队邀请CD
-    RAID_IS_RAID_LEADER                     = _errno(10059)     # 操作对象是团长A
-    RAID_FOLLOW_IN_BTF_DUN_FORBID           = _errno(10060)     # 战场内无法跟随
-    RAID_TEAM_CANT_DISBAND                  = _errno(10061)     # 小队无法被解散
-    RAID_UI_DENIED                          = _errno(10062)     # 团队接口被UI相关判断阻止
-    RAID_ALL_MICS_BLOCKED                   = _errno(10063)     # 已经全员禁麦
-    RAID_TEAM_MEMBER_DUOHUN                 = _errno(10064)     # 被夺魂
-    RAID_NOT_RAID_DEPUTY                    = _errno(10065)     # 不是副团长
-    RAID_NOT_RAID_LEADER_OR_DEPUTY          = _errno(10066)     # 不是团长/副团长
-    RAID_NOT_RAID_CANNOT_KICK_LEADER        = _errno(10067)     # 不能踢团长
-    RAID_NOT_RAID_CANNOT_KICK_DEPUTY        = _errno(10068)     # 不能踢副团长
-    RAID_NOT_RAID_CANNOT_MOVE_LEADER        = _errno(10069)     # 不能移动团长
-    RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER       = _errno(10070)     # 小队人数不支持
-    RAID_NOT_SAME_SIEGEWAR_CAMP             = _errno(10071)     # 城战不同阵营
-
-    RAID_CHECKING_TEAM_JOIN                 = _errno(50000)     # 团队正在检查组队加入(申请通过)
-    RAID_CHECKING_TEAM_INVITE               = _errno(50001)     # 团队正在检查组队加入(邀请通过)
-    RAID_CHECKING_STANDBY_CHECK             = _errno(50002)     # 团队正在进行整团检查(团长发起)
-    RAID_INVITE_TO_JOIN                     = _errno(50100)     # 团队邀请转变为申请
-    RAID_TARGET_IS_ILLEGAL                  = _errno(50101)     # 团队目标不合法
-    RAID_PASSWORD_IS_WRONG                  = _errno(50102)     # 密码不对
-    RAID_LEVEL_IS_LIMITED                   = _errno(50103)     # 等级不足
-    RAID_SCORE_LIMITED                      = _errno(50104)     # 战力不足
-    RAID_SOCRE_IS_ILLEGAL                   = _errno(50105)     # 战力不合法
-    RAID_LEVEL_IS_ILLEGAL                   = _errno(50106)     # 等级不合法
-    RAID_PASSWORD_IS_ILLEGAL                = _errno(50107)     # 密码不合法
-    RAID_PASSWORD_IS_EMPTY                  = _errno(50108)     # 密码为空
-    RAID_RECRUIT_IS_ILLEGAL                 = _errno(50109)     # 招募不合法
-    RAID_AUTO_EXPEDITION_IS_ILLEGAL         = _errno(50110)     # 自动开启远征不合法
-    RAID_SET_TARGET_ILLEGAL                 = _errno(50111)     # 设置目标不合法
-    RAID_IS_IN_DUNGEON                      = _errno(50112)     # 团队已进入副本
-    RAID_APPLY_LIST_IS_FULL                 = _errno(50113)     # 团队申请列表满了
-    RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
+    ENUM_RAID_CHECKING_TEAM_JOIN                 = _errno(50000)     # 团队正在检查组队加入(申请通过)
+    ENUM_RAID_CHECKING_TEAM_INVITE               = _errno(50001)     # 团队正在检查组队加入(邀请通过)
+    ENUM_RAID_CHECKING_STANDBY_CHECK             = _errno(50002)     # 团队正在进行整团检查(团长发起)
+    ENUM_RAID_INVITE_TO_JOIN                     = _errno(50100)     # 团队邀请转变为申请
+    ENUM_RAID_TARGET_IS_ILLEGAL                  = _errno(50101)     # 团队目标不合法
+    ENUM_RAID_PASSWORD_IS_WRONG                  = _errno(50102)     # 密码不对
+    ENUM_RAID_LEVEL_IS_LIMITED                   = _errno(50103)     # 等级不足
+    ENUM_RAID_SCORE_LIMITED                      = _errno(50104)     # 战力不足
+    ENUM_RAID_SOCRE_IS_ILLEGAL                   = _errno(50105)     # 战力不合法
+    ENUM_RAID_LEVEL_IS_ILLEGAL                   = _errno(50106)     # 等级不合法
+    ENUM_RAID_PASSWORD_IS_ILLEGAL                = _errno(50107)     # 密码不合法
+    ENUM_RAID_PASSWORD_IS_EMPTY                  = _errno(50108)     # 密码为空
+    ENUM_RAID_RECRUIT_IS_ILLEGAL                 = _errno(50109)     # 招募不合法
+    ENUM_RAID_AUTO_EXPEDITION_IS_ILLEGAL         = _errno(50110)     # 自动开启远征不合法
+    ENUM_RAID_SET_TARGET_ILLEGAL                 = _errno(50111)     # 设置目标不合法
+    ENUM_RAID_IS_IN_DUNGEON                      = _errno(50112)     # 团队已进入副本
+    ENUM_RAID_APPLY_LIST_IS_FULL                 = _errno(50113)     # 团队申请列表满了
+    ENUM_RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
 
 
 RaidErrno = _RaidErrno()
@@ -1876,12 +1892,15 @@ class RaidPermission(object):
     LEADER = 4
 
     @classmethod
-    def havePermission(cls, permission, needPermission, onlyMode=False, exluce=()):
-        if permission in exluce:
+    def haveRaidPermission(cls, perm, needPermission, onlyMode=False, exluce=()):
+        if perm in exluce:
             return False
+
         if onlyMode:
-            return permission == needPermission
-        return permission >= needPermission
+            return perm == needPermission
+
+        else:
+            return perm >= needPermission
 
 class RaidDungeonStandbyCheckSrcEnum(object):
     """全团检查check"""
@@ -1890,24 +1909,9 @@ class RaidDungeonStandbyCheckSrcEnum(object):
     DEFAULT = 1
     ENTER_DUNGEON = 2
 
-class TeamFollowState(object):
-    Idle = 0
-    Follow = 1
-    Suspending = 2
-
-class SuspendFollowReason(object):
-    Default = 0
-    ClientBreak = 1
-    ApplyGather = 2
-    Teleport = 3
-    Riding = 4
-    RouteErr = 5
-    StateBreak = 6
-    AutoCombat = 7
 
 class ControlledByReason(object):
     Idle = 0
-    Follow = 1
     AutoCombat = 2
     UseSkill = 3
     ControlledState = 4
@@ -1928,10 +1932,9 @@ class SuspendAutoCombatReason(object):
     Riding = 4
     RouteErr = 5
     StateBreak = 6
-    Follow = 7
-    ForceFollow = 8
     RemoveMove = 9
     DoubleBar = 10
+    PlayEmote = 11
 
 
 class ChangeAutoCombatReason(object):
@@ -1959,7 +1962,7 @@ class PKMapType(object):
     SAFE = 1
 
 # 需要与客户端同步
-class ChatChannel(object):
+class ChatChannelEnum(object):
     SYSTEM = 1
     WORLD = 2
     GUILD = 3
@@ -1972,33 +1975,21 @@ class ChatChannel(object):
     MAX = 10
 
     initExcludeChannel = ()
-
-    @staticmethod
-    def DEFAULT():
-        channel = 0
-        for i in range(ChatChannel.MAX):
-            if i in ChatChannel.initExcludeChannel:
-                continue
-            channel = channel | (1 << i)
-
-        return channel
-
     avatarChannel = (WORLD, GUILD, TEAM, NEARBY)
-
     voiceChannel = (WORLD, GUILD, TEAM, NEARBY)
 
 class SilentSpeakScene(object):
-    FRIEND_CHAT = 1             #私聊
-    CHAT = 2                    #公告聊天
-    ALL = 99                    #全部
+    ENUM_FRIEND_CHAT = 1             #私聊
+    ENUM_CHAT = 2                    #公告聊天
+    ENUM_ALL = 99                    #全部
 
 class SilentSpeakState(object):
-    SET_FRIEND_CHAT = 2
-    REMOVE_FRIEND_CHAT = 13
-    SET_CHAT = 4
-    REMOVE_CHAT = 11
-    SET_ALL = 6
-    REMOVE_ALL = 9
+    ENUM_SET_FRIEND_CHAT = 2
+    ENUM_REMOVE_FRIEND_CHAT = 13
+    ENUM_SET_CHAT = 4
+    ENUM_REMOVE_CHAT = 11
+    ENUM_SET_ALL = 6
+    ENUM_REMOVE_ALL = 9
 
 class DungeonEntityLoadStatus(object):
     UNLOAD = 0
@@ -2023,19 +2014,19 @@ class DungeonTicketType(metaclass=UniqueIntEnum):
     ITEM = 3
 
 class DungeonSpaceMgrProps(object):
-    dungeonRewardBossID = 1000
-    singleDungeonBelongPlayerGBID = 1001
-    teamDungeonBelongTeamUUID = 1002
-    raidDungeonBelongRaidUUID = 1003
-    dungeonWinFlagSpaceMgrCache = 1004
-    transPetId = 1005
-    triggerGuideId = 1006
-    dungeonTimeFreezeSpaceMgrFlag = 1007 # linkeed: AvatarProps. dungeonTimeFreezeEntityFlag
-    guildBossDungeonBelongGuildUUID = 1008
-    breakStuckPos = 1009
-    breakStuckDir = 1010
+    DSMPEnumdungeonRewardBossID = 1000
+    DSMPEnumsingleDungeonBelongPlayerGBID = 1001
+    DSMPEnumteamDungeonBelongTeamUUID = 1002
+    DSMPEnumraidDungeonBelongRaidUUID = 1003
+    DSMPEnumdungeonWinFlagSpaceMgrCache = 1004
+    DSMPEnumtransPetId = 1005
+    DSMPEnumtriggerGuideId = 1006
+    DSMPEnumdungeonTimeFreezeSpaceMgrFlag = 1007 # linkeed: EntityPropsEnum. dungeonTimeFreezeEntityFlag
+    DSMPEnumguildBossDungeonBelongGuildUUID = 1008
+    DSMPEnumbreakStuckPos = 1009
+    DSMPEnumbreakStuckDir = 1010
 
-class DungeonSpaceType(object):
+class DungeonSpaceTypeEnum(object):
     """
     NOTE: 同时修改 SpaceType 中的类型
     """
@@ -2048,7 +2039,7 @@ class DungeonSpaceType(object):
 
     COLL_DUNGEON = (BIG_WORLD, COMMON, BATTLE_FIELD, SIEGE_WAR, GUILD_BOSS)
 
-class DungeonEnterType(object):
+class DungeonEnterTypeEnum(object):
     UNKNOWN = 0
     SINGLE = 1
     TEAM = 2
@@ -2067,13 +2058,13 @@ class DungeonEnterType(object):
 _DUNGEON_TYPE_LRU_CACHE_SIZE = 4 * 4
 
 
-class DungeonType(object):
+class DungeonTypeJudge(object):
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isTeamDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
-                and dungeonEnterType in DungeonEnterType.COLL_TEAM:
+        if dungeonSpaceType in DungeonSpaceTypeEnum.COLL_DUNGEON \
+                and dungeonEnterType in DungeonEnterTypeEnum.COLL_TEAM:
             return True
         return False
 
@@ -2081,75 +2072,75 @@ class DungeonType(object):
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isNormalTeamDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.COMMON \
-                and dungeonEnterType in DungeonEnterType.COLL_TEAM:
+        if dungeonSpaceType == DungeonSpaceTypeEnum.COMMON \
+                and dungeonEnterType in DungeonEnterTypeEnum.COLL_TEAM:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isBigWorldTeamDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.BIG_WORLD \
-                and dungeonEnterType in DungeonEnterType.COLL_TEAM:
+        if dungeonSpaceType == DungeonSpaceTypeEnum.BIG_WORLD \
+                and dungeonEnterType in DungeonEnterTypeEnum.COLL_TEAM:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isSingleDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
-                and dungeonEnterType in DungeonEnterType.COLL_SINGLE:
+        if dungeonSpaceType in DungeonSpaceTypeEnum.COLL_DUNGEON \
+                and dungeonEnterType in DungeonEnterTypeEnum.COLL_SINGLE:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isNormalSingleDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.COMMON \
-                and dungeonEnterType in DungeonEnterType.COLL_SINGLE:
+        if dungeonSpaceType == DungeonSpaceTypeEnum.COMMON \
+                and dungeonEnterType in DungeonEnterTypeEnum.COLL_SINGLE:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isBigWorldSingleDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.BIG_WORLD \
-                and dungeonEnterType in DungeonEnterType.COLL_SINGLE:
+        if dungeonSpaceType == DungeonSpaceTypeEnum.BIG_WORLD \
+                and dungeonEnterType in DungeonEnterTypeEnum.COLL_SINGLE:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isBothDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
-                and dungeonEnterType == DungeonEnterType.BOTH:
+        if dungeonSpaceType in DungeonSpaceTypeEnum.COLL_DUNGEON \
+                and dungeonEnterType == DungeonEnterTypeEnum.BOTH:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isRaidDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
-                and dungeonEnterType == DungeonEnterType.RAID:
+        if dungeonSpaceType in DungeonSpaceTypeEnum.COLL_DUNGEON \
+                and dungeonEnterType == DungeonEnterTypeEnum.RAID:
             return True
         return False
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isGuildBossDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
-                and dungeonSpaceType == DungeonSpaceType.GUILD_BOSS \
-                and dungeonEnterType == DungeonEnterType.GUILD:
+        if dungeonSpaceType in DungeonSpaceTypeEnum.COLL_DUNGEON \
+                and dungeonSpaceType == DungeonSpaceTypeEnum.GUILD_BOSS \
+                and dungeonEnterType == DungeonEnterTypeEnum.GUILD:
             return True
         return False
 
     @classmethod
     def isDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON
+        return dungeonSpaceType in DungeonSpaceTypeEnum.COLL_DUNGEON
 
     @classmethod
     def isBigWorldDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.BIG_WORLD
+        return dungeonSpaceType == DungeonSpaceTypeEnum.BIG_WORLD
 
 class _ACT_ID_CONST_META(UniqueIntEnum):
     pass
@@ -2161,45 +2152,44 @@ class ACT_ID_CONST(metaclass=_ACT_ID_CONST_META):
 class _RaidDungeonErrno(object):
     from userType import Error as _errno
 
+    def _lateReload(self):
+        for _v in self.__class__.__dict__.values():
+            if _v.__class__.__name__ == 'Error':
+                _v.reloadScript()
+
     def reloadScript(self):
         import utils
         utils.resetCls(self)
         self._lateReload()
-        return
 
-    def _lateReload(self):
-        for k, v in self.__class__.__dict__.items():
-            if v.__class__.__name__ == 'Error':
-                v.reloadScript()
-
-    UNKNOWN                                 = _errno(0)         # 未知错误
-    RAIDDUN_OK                              = _errno(1)         # 正常
-    RAIDDUN_SKIP                            = _errno(2)         # 跳过
-    RAIDDUN_DUNGEON_ID_NOT_FOUND            = _errno(20000)     # 团队副本ID未找到
-    RAIDDUN_NOT_IN_RAID                     = _errno(20001)     # 不在团队中
-    RAIDDUN_DUNGEON_NO_NOT_MATCH            = _errno(20002)     # 团队副本不匹配
-    RAIDDUN_NOT_RAID_LEADER                 = _errno(20003)     # 不是团队Leader
-    RAIDDUN_RAID_ID_NOT_MATCH               = _errno(20004)     # 团队ID不匹配
-    RAIDDUN_DUNGEON_VAL_NOT_FOUND           = _errno(20005)     # 团队副本val没有找到(RaidDungeonStub)
-    RAIDDUN_DUNGEON_ALREADY_BE_DESTROYED    = _errno(20006)     # 团队副本已经被销毁(包括标记删除)
-    RAIDDUN_RAID_ID_NOT_FOUND               = _errno(20007)     # 团队ID没有找到
-    RAIDDUN_RAID_ALREADY_EXIST_DUNGEON      = _errno(20008)     # 团队已经存在副本
-    RAIDDUN_NOT_IN_AVAILABLE_SPACE          = _errno(20009)     # 不在合法space中
-    RAIDDUN_FOUNDER_VAL_NOT_FOUND           = _errno(20010)     # 副本成员没有找到(dungeonRaidStub)
-    RAIDDUN_NOT_IN_RAID_DUNGEON             = _errno(20011)     # 不在团队副本中
-    RAIDDUN_DUNGEON_IS_NOT_ACTIVE           = _errno(20012)     # 团队副本不活跃(可能是已经完成或者已经标记销毁)
-    RAIDDUN_SPACE_UUID_NOT_MATCH            = _errno(20013)     # 团队space唯一ID不相同
-    RAIDDUN_FOUNDER_IN_DUNGEON              = _errno(20014)     # space中存在玩家
-    RAIDDUN_GUILD_LEVEL_LOWER               = _errno(20015)     # 帮会等级不够
-    RAIDDUN_PLAYER_NUM_NOT_MATCH            = _errno(20016)     # 团队副本人数不满足要求
-    RAIDDUN_PLAYER_IN_FIGHT_STATE           = _errno(20017)     # 团队中有成员在战斗状态
-    RAIDDUN_PLAYER_NOT_IN_GUILD             = _errno(20018)     # 团本玩家不在帮会中
-    RAIDDUN_LEADER_LEVEL_LOWER              = _errno(20019)     # 团长等级不足
-    RAIDUN_REPEAT_ENTER_SAME_DUNGEON        = _errno(20020)     # 副本内尝试进入同一个副本
-    RAIDDUN_MEMBER_LEVEL_LOWER              = _errno(20021)     # 团员等级不足
-    RAIDDUN_ENTER_BLOCK_BY_COMBAT           = _errno(20022)     # 副本内正在战斗无法进入
-    RAIDDUN_TELGLOBAL_LOCKED                = _errno(20023)     # 传送锁
-    RAIDDUN_REWARD_NUM_CHECK_FAIL           = _errno(20024)     # 副本可挑战次数不足
+    ENUM_UNKNOWN                                 = _errno(0)         # 未知错误
+    ENUM_RAIDDUN_OK                              = _errno(1)         # 正常
+    ENUM_RAIDDUN_SKIP                            = _errno(2)         # 跳过
+    ENUM_RAIDDUN_DUNGEON_ID_NOT_FOUND            = _errno(20000)     # 团队副本ID未找到
+    ENUM_RAIDDUN_NOT_IN_RAID                     = _errno(20001)     # 不在团队中
+    ENUM_RAIDDUN_DUNGEON_NO_NOT_MATCH            = _errno(20002)     # 团队副本不匹配
+    ENUM_RAIDDUN_NOT_RAID_LEADER                 = _errno(20003)     # 不是团队Leader
+    ENUM_RAIDDUN_RAID_ID_NOT_MATCH               = _errno(20004)     # 团队ID不匹配
+    ENUM_RAIDDUN_DUNGEON_VAL_NOT_FOUND           = _errno(20005)     # 团队副本val没有找到(RaidDungeonStub)
+    ENUM_RAIDDUN_DUNGEON_ALREADY_BE_DESTROYED    = _errno(20006)     # 团队副本已经被销毁(包括标记删除)
+    ENUM_RAIDDUN_RAID_ID_NOT_FOUND               = _errno(20007)     # 团队ID没有找到
+    ENUM_RAIDDUN_RAID_ALREADY_EXIST_DUNGEON      = _errno(20008)     # 团队已经存在副本
+    ENUM_RAIDDUN_NOT_IN_AVAILABLE_SPACE          = _errno(20009)     # 不在合法space中
+    ENUM_RAIDDUN_FOUNDER_VAL_NOT_FOUND           = _errno(20010)     # 副本成员没有找到(dungeonRaidStub)
+    ENUM_RAIDDUN_NOT_IN_RAID_DUNGEON             = _errno(20011)     # 不在团队副本中
+    ENUM_RAIDDUN_DUNGEON_IS_NOT_ACTIVE           = _errno(20012)     # 团队副本不活跃(可能是已经完成或者已经标记销毁)
+    ENUM_RAIDDUN_SPACE_UUID_NOT_MATCH            = _errno(20013)     # 团队space唯一ID不相同
+    ENUM_RAIDDUN_FOUNDER_IN_DUNGEON              = _errno(20014)     # space中存在玩家
+    ENUM_RAIDDUN_GUILD_LEVEL_LOWER               = _errno(20015)     # 帮会等级不够
+    ENUM_RAIDDUN_PLAYER_NUM_NOT_MATCH            = _errno(20016)     # 团队副本人数不满足要求
+    ENUM_RAIDDUN_PLAYER_IN_FIGHT_STATE           = _errno(20017)     # 团队中有成员在战斗状态
+    ENUM_RAIDDUN_PLAYER_NOT_IN_GUILD             = _errno(20018)     # 团本玩家不在帮会中
+    ENUM_RAIDDUN_LEADER_LEVEL_LOWER              = _errno(20019)     # 团长等级不足
+    ENUM_RAIDDUN_REPEAT_ENTER_SAME_DUNGEON        = _errno(20020)     # 副本内尝试进入同一个副本
+    ENUM_RAIDDUN_MEMBER_LEVEL_LOWER              = _errno(20021)     # 团员等级不足
+    ENUM_RAIDDUN_ENTER_BLOCK_BY_COMBAT           = _errno(20022)     # 副本内正在战斗无法进入
+    ENUM_RAIDDUN_TELGLOBAL_LOCKED                = _errno(20023)     # 传送锁
+    ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL           = _errno(20024)     # 副本可挑战次数不足
 
 
 RaidDungeonErrno = _RaidDungeonErrno()
@@ -2211,144 +2201,140 @@ class TeamDungeonCheckConditionErrno(object):
     NEED_ITEM_FAIL = 4
     PRE_TASK_FAIL = 5
     NEARBY_FAIL = 6
-    FOLLOW_CAP_FAIL = 7
     SC_LEVEL_CHECK_FAIL = 8
     TELEPORT_COND_FAIL = 9
     REWARD_NUM_CHECK_FAIL = 10
 
-class DungeonFlowCompareSymbol(object):
-    un = 0     # unknown
-    eq = 1      # ==
-    lt = 2      # <
-    gt = 3      # >
-    ge = 4      # >=
-    le = 5      # <=
+class DungeonFlowCompSym(object):
+    un = 0
+    eq = 1
+    lt = 2
+    gt = 3
+    ge = 4
+    le = 5
+
+    _COMPARE_MAP = {
+        eq: lambda a, b: a == b,
+        gt: lambda a, b: a > b,
+        lt: lambda a, b: a < b,
+        le: lambda a, b: a <= b,
+        ge: lambda a, b: a >= b,
+    }
 
     @classmethod
     def compare(cls, symbol, val1, val2):
-        if symbol == cls.eq:
-            return val1 == val2
-        if symbol == cls.lt:
-            return val1 < val2
-        if symbol == cls.gt:
-            return val1 > val2
-        if symbol == cls.ge:
-            return val1 >= val2
-        if symbol == cls.le:
-            return val1 <= val2
-        return False
+        # 找不到符号返回 False
+        return cls._COMPARE_MAP.get(symbol, lambda a, b: False)(val1, val2)
 
-class DungeonFlowEventName(object):
-    dunStart = 'dunStart'       # 副本开始
-    dunEnd = 'dunEnd'           # 副本结束
-    dunDelayEnd = 'dunDelayEnd' # 副本延迟结束
-    dunFailed = 'dunFailed'     # 副本失败
-    createMonster = 'createMonster'     # 创建怪物
-    removeMonster = 'removeMonster'     # 回收怪物
-    createNPC = 'createNPC'     # 创建NPC
-    removeNPC = 'removeNPC'     # 回收NPC
-    createCollection = 'createCollection'       # 创建采集物
-    collBeCollected = 'collBeCollected'         # 采集物被采集事件
-    multiCollAllBeCollected = 'multiCollAllBeCollected'     # 多个采集物全部被采集触发事件
-    removeCollection = 'removeCollection'       # 回收采集物
-    createAirWall = 'createAirWall'             # 创建空气墙
-    removeAirWall = 'removeAirWall'             # 回收空气墙
-    createBuffPoint = 'createBuffPoint'         # 创建buff点
-    removeBuffPoint = 'removeBuffPoint'         # 回收buff点
-    delayLoop = 'delayLoop'                     # 带延迟的循环
-    taskFinished = 'taskFinished'               # 等待任务完成
-    taskFailed = 'taskFailed'                   # 等待任务失败
-    taskInProgress = 'taskInProgress'           # 等待人物进行中
-    monsterHp = 'monsterHp'                     # 等待怪物血量变化值一定条件
-    killMonsterNum = 'killMonsterNum'           # 等待杀怪量变化值达到一定条件
-    monsterRestNum = 'monsterRestNum'           # 等待怪物数量变化值达到一定条件
-    castSkill = 'castSkill'     # 副本内特定怪物释放
-    createCreationInFixedPosition = 'createCreationInFixedPosition' # 特定位置釋放创生物
-    summonMonsterInFixedPosition = 'summonMonsterInFixedPosition'   # 特定位置释放召唤物
-    addBuffToMonster = 'addBuffToMonster'                   # 副本内怪物加buff
-    removeBuffFromMonster = 'removeBuffFromMonster'         # 副本内怪物去buff
-    addBuffToAllPlayer = 'addBuffToAllPlayer'               # 副本内所有玩家加buff
-    removeBuffFromAllPlayer = 'removeBuffFromAllPlayer'     # 副本内所有玩家去buff
-    broadcastMsg = 'broadcastMsg'               # 副本内广播消息给所有玩家
-    clearDungeon = 'clearDungeon'               # 移除副本内所有实体
-    alivePlayer = 'alivePlayer'                 # 检测副本内活着的玩家数量
-    monsterInBattle = 'monsterInBattle'         # 怪物进入战斗
-    monsterLeaveBattle = 'monsterLeaveBattle'   # 怪物离开战斗
-    stopDelayEvent = 'stopDelayEvent'
-    createCreationInPlayerPosition = 'createCreationInPlayerPosition'       # 玩家附近创建创生物
-    createCreationInMonsterPosition = 'createCreationInMonsterPosition'     # 怪物附近创建创生物
-    addBuffToPlayer = 'addBuffToPlayer'         # 玩家添加buff
-    castSkillToPlayer = 'castSkillToPlayer'     # 向指定类型玩家释放技能
-    haveCreationInRange = 'haveCreationInRange'     # 判断指定怪物内是否存在召唤物
-    removeCreation = 'removeCreation'               # 回收特定怪物放出的召唤物
-    removeNoHostCreation = 'removeNoHostCreation'   # 回收无主召唤物
-    dunStageSet = 'dunStageSet'                     # 设置副本阶段
-    showPopoverMsg = 'showPopoverMsg'           # 实体弹出气泡消息
-    popupdialog = 'popupdialog'                 # 实体弹出其他消息
-    dungeonTaskForceComplete = 'dungeonTaskForceComplete'   # 副本所有玩家任务强制完成
-    dungeonTaskForceFailed = 'dungeonTaskForceFailed'       # 副本所有玩家任务强制失败
-    changeDunNPCToBattle = 'changeDunNPCToBattle'           # 将副本内NPC切换为可攻击状态
-    changeDunNPCToNeutral = 'changeDunNPCToNeutral'         # 将副本内NPC置为中立
-    changeDunNPCToFriendly = 'changeDunNPCToFriendly'       # 将副本内NPC置为友善
-    changeDunNPCDialog = 'changeDunNPCDialog'               # 更改副本内NPC对话ID
-    dunAnyPlayerHP = 'dunAnyPlayerHP'           # 等待副本内任一玩家血量变化值达到一定条件
-    addEntityArrowTracker = 'addEntityArrowTracker'         # 创建一个指示箭头
-    removeEntityArrowTracker = 'removeEntityArrowTracker'   # 移除一个指示箭头
-    moveEntityToFixedPosition = 'moveEntityToFixedPosition' # 将副本内实体移动到指定位置
-    createAvatarMirrorFromRandomPlayer = 'createAvatarMirrorFromRandomPlayer'   # 副本内随机玩家创建镜像
-    clearEntityHate = "clearEntityHate"         # 清除副本内指定Entity仇恨
-    createSummonInPlayerPosition = "createSummonInPlayerPosition"   # 玩家附近创建召唤物
-    forceSelectEntityTarget = "forceSelectEntityTarget"         # 强制选择目标
-    randomTrigger = 'randomTrigger'             # 随机节点
-    trapBeTriggered = 'trapBeTriggered'         # 陷阱被触发
-    teleportToPosition = 'teleportToPosition'   # 副本传送至特定位置
-    changeEntityForce = 'changeEntityForce'     # 副本内改变阵营
-    integrationEvent = 'integrationEvent'       # 副本整合节点
-    changeSpaceVar = 'changeSpaceVar'           # 修改space变量
-    killEntities = 'killEntities'               # 副本内强制杀死实体节点
-    dungeonEntityImmuneDeath = 'dungeonEntityImmuneDeath'           # 副本内Entity进入濒死状态触发
-    ifAllSelectEntityImmuneDeath = 'ifAllSelectEntityImmuneDeath'   # 全部配置ID实体濒死则执行下面节点
-    checkValue = 'checkValue'                   # 副本检查变量
-    createDungeonTeleporter = 'createDungeonTeleporter'     # 创建副本传送门
-    monsterChangeInitState = 'monsterChangeInitState'
-    monsterAddHateValue = 'monsterAddHateValue'
-    stopAiTick = 'stopAiTick'                   # 停止特定EntityAI
-    startAiTick = 'startAiTick'                 # 开始特定EntityAI
-    entityStartRouting = 'entityStartRouting'                   # 实体开始使用路点寻路
-    entityRouteFinished = 'entityRouteFinished'                 # 实体路点寻路完成
-    entityRoutingMissingEscort = 'entityRoutingMissingEscort'   # 实体路点寻路中附近没有护卫（没有玩家在distance内）
-    anyPlayerCinemaPlayEnded = 'anyPlayerCinemaPlayEnded'       # 副本内任一玩家动画播放结束触发
-    castCinemaPlay = 'castCinemaPlay'           # 开始播放指定ID动画
-    playerRestNum = 'playerRestNum'             # 剩余玩家数量
 
-    stopCurTrans = 'stopCurTrans'  # 结束当前副本内所有玩家的变身效果
-    triggerGuide = 'triggerGuide'  # 触发新手引导
-    newTransPetStart = 'newTransPetStart'  # 小世界战斗/新手变身开始
-    newTransPetEnd = 'newTransPetEnd'  # 小世界战斗/新手变身结束
+class DungeonFlowEventType(object):
+    EVdunStart = 'dunStart'       # 副本开始
+    EVdunEnd = 'dunEnd'           # 副本结束
+    EVdunDelayEnd = 'dunDelayEnd' # 副本延迟结束
+    EVdunFailed = 'dunFailed'     # 副本失败
+    EVcreateMonster = 'createMonster'     # 创建怪物
+    EVremoveMonster = 'removeMonster'     # 回收怪物
+    EVcreateNPC = 'createNPC'     # 创建NPC
+    EVremoveNPC = 'removeNPC'     # 回收NPC
+    EVcreateCollection = 'createCollection'       # 创建采集物
+    EVcollBeCollected = 'collBeCollected'         # 采集物被采集事件
+    EVmultiCollAllBeCollected = 'multiCollAllBeCollected'     # 多个采集物全部被采集触发事件
+    EVremoveCollection = 'removeCollection'       # 回收采集物
+    EVcreateAirWall = 'createAirWall'             # 创建空气墙
+    EVremoveAirWall = 'removeAirWall'             # 回收空气墙
+    EVdelayLoop = 'delayLoop'                     # 带延迟的循环
+    EVtaskFinished = 'taskFinished'               # 等待任务完成
+    EVtaskFailed = 'taskFailed'                   # 等待任务失败
+    EVtaskInProgress = 'taskInProgress'           # 等待人物进行中
+    EVmonsterHp = 'monsterHp'                     # 等待怪物血量变化值一定条件
+    EVkillMonsterNum = 'killMonsterNum'           # 等待杀怪量变化值达到一定条件
+    EVmonsterRestNum = 'monsterRestNum'           # 等待怪物数量变化值达到一定条件
+    EVcastSkill = 'castSkill'     # 副本内特定怪物释放
+    EVcreateCreationInFixedPosition = 'createCreationInFixedPosition' # 特定位置釋放创生物
+    EVsummonMonsterInFixedPosition = 'summonMonsterInFixedPosition'   # 特定位置释放召唤物
+    EVaddBuffToMonster = 'addBuffToMonster'                   # 副本内怪物加buff
+    EVremoveBuffFromMonster = 'removeBuffFromMonster'         # 副本内怪物去buff
+    EVaddBuffToAllPlayer = 'addBuffToAllPlayer'               # 副本内所有玩家加buff
+    EVremoveBuffFromAllPlayer = 'removeBuffFromAllPlayer'     # 副本内所有玩家去buff
+    EVbroadcastMsg = 'broadcastMsg'               # 副本内广播消息给所有玩家
+    EVclearDungeon = 'clearDungeon'               # 移除副本内所有实体
+    EValivePlayer = 'alivePlayer'                 # 检测副本内活着的玩家数量
+    EVmonsterInBattle = 'monsterInBattle'         # 怪物进入战斗
+    EVmonsterLeaveBattle = 'monsterLeaveBattle'   # 怪物离开战斗
+    EVstopDelayEvent = 'stopDelayEvent'
+    EVcreateCreationInPlayerPosition = 'createCreationInPlayerPosition'       # 玩家附近创建创生物
+    EVcreateCreationInMonsterPosition = 'createCreationInMonsterPosition'     # 怪物附近创建创生物
+    EVaddBuffToPlayer = 'addBuffToPlayer'         # 玩家添加buff
+    EVcastSkillToPlayer = 'castSkillToPlayer'     # 向指定类型玩家释放技能
+    EVhaveCreationInRange = 'haveCreationInRange'     # 判断指定怪物内是否存在召唤物
+    EVremoveCreation = 'removeCreation'               # 回收特定怪物放出的召唤物
+    EVremoveNoHostCreation = 'removeNoHostCreation'   # 回收无主召唤物
+    EVdunStageSet = 'dunStageSet'                     # 设置副本阶段
+    EVshowPopoverMsg = 'showPopoverMsg'           # 实体弹出气泡消息
+    EVpopupdialog = 'popupdialog'                 # 实体弹出其他消息
+    EVdungeonTaskForceComplete = 'dungeonTaskForceComplete'   # 副本所有玩家任务强制完成
+    EVdungeonTaskForceFailed = 'dungeonTaskForceFailed'       # 副本所有玩家任务强制失败
+    EVchangeDunNPCToBattle = 'changeDunNPCToBattle'           # 将副本内NPC切换为可攻击状态
+    EVchangeDunNPCToNeutral = 'changeDunNPCToNeutral'         # 将副本内NPC置为中立
+    EVchangeDunNPCToFriendly = 'changeDunNPCToFriendly'       # 将副本内NPC置为友善
+    EVchangeDunNPCDialog = 'changeDunNPCDialog'               # 更改副本内NPC对话ID
+    EVdunAnyPlayerHP = 'dunAnyPlayerHP'           # 等待副本内任一玩家血量变化值达到一定条件
+    EVaddEntityArrowTracker = 'addEntityArrowTracker'         # 创建一个指示箭头
+    EVremoveEntityArrowTracker = 'removeEntityArrowTracker'   # 移除一个指示箭头
+    EVmoveEntityToFixedPosition = 'moveEntityToFixedPosition' # 将副本内实体移动到指定位置
+    EVcreateAvatarMirrorFromRandomPlayer = 'createAvatarMirrorFromRandomPlayer'   # 副本内随机玩家创建镜像
+    EVclearEntityHate = "clearEntityHate"         # 清除副本内指定Entity仇恨
+    EVcreateSummonInPlayerPosition = "createSummonInPlayerPosition"   # 玩家附近创建召唤物
+    EVforceSelectEntityTarget = "forceSelectEntityTarget"         # 强制选择目标
+    EVrandomTrigger = 'randomTrigger'             # 随机节点
+    EVteleportToPosition = 'teleportToPosition'   # 副本传送至特定位置
+    EVchangeEntityForce = 'changeEntityForce'     # 副本内改变阵营
+    EVintegrationEvent = 'integrationEvent'       # 副本整合节点
+    EVchangeSpaceVar = 'changeSpaceVar'           # 修改space变量
+    EVkillEntities = 'killEntities'               # 副本内强制杀死实体节点
+    EVdungeonEntityImmuneDeath = 'dungeonEntityImmuneDeath'           # 副本内Entity进入濒死状态触发
+    EVifAllSelectEntityImmuneDeath = 'ifAllSelectEntityImmuneDeath'   # 全部配置ID实体濒死则执行下面节点
+    EVcheckValue = 'checkValue'                   # 副本检查变量
+    EVcreateDungeonTeleporter = 'createDungeonTeleporter'     # 创建副本传送门
+    EVmonsterChangeInitState = 'monsterChangeInitState'
+    EVmonsterAddHateValue = 'monsterAddHateValue'
+    EVstopAiTick = 'stopAiTick'                   # 停止特定EntityAI
+    EVstartAiTick = 'startAiTick'                 # 开始特定EntityAI
+    EVentityStartRouting = 'entityStartRouting'                   # 实体开始使用路点寻路
+    EVentityRouteFinished = 'entityRouteFinished'                 # 实体路点寻路完成
+    EVentityRoutingMissingEscort = 'entityRoutingMissingEscort'   # 实体路点寻路中附近没有护卫（没有玩家在distance内）
+    EVanyPlayerCinemaPlayEnded = 'anyPlayerCinemaPlayEnded'       # 副本内任一玩家动画播放结束触发
+    EVcastCinemaPlay = 'castCinemaPlay'           # 开始播放指定ID动画
+    EVplayerRestNum = 'playerRestNum'             # 剩余玩家数量
 
-    changeAllPlayerCameraStatus = 'changeAllPlayerCameraStatus'         # 副本内所有玩家切换镜头状态
-    changeAllPlayerCameraLookPos = 'changeAllPlayerCameraLookPos'       # 副本内所有玩家镜头朝向某处
-    revertAllPlayerCameraStatus = 'revertAllPlayerCameraStatus'       # 恢复副本内玩家的上一个镜头状态
+    EVstopCurTrans = 'stopCurTrans'  # 结束当前副本内所有玩家的变身效果
+    EVtriggerGuide = 'triggerGuide'  # 触发新手引导
+    EVnewTransPetStart = 'newTransPetStart'  # 小世界战斗/新手变身开始
+    EVnewTransPetEnd = 'newTransPetEnd'  # 小世界战斗/新手变身结束
 
-    changeNPCSelectableStatus = 'changeNPCSelectableStatus'     # 切换NPC的可选择状态
-    changeEntityDirection = 'changeEntityDirection'             # 切换Entity朝向
+    EVchangeAllPlayerCameraStatus = 'changeAllPlayerCameraStatus'         # 副本内所有玩家切换镜头状态
+    EVchangeAllPlayerCameraLookPos = 'changeAllPlayerCameraLookPos'       # 副本内所有玩家镜头朝向某处
+    EVrevertAllPlayerCameraStatus = 'revertAllPlayerCameraStatus'       # 恢复副本内玩家的上一个镜头状态
 
-    timeFreezeStart = 'timeFreezeStart'     # 时间定格开始
-    timeFreezeEnd = 'timeFreezeEnd'         # 时间定格结束
-    playerForceTrans = 'playerForceTrans'   # 状态改变/副本内指定玩家强制变身
-    taskUndertake = 'taskUndertake'         # 副本内接任务
+    EVchangeNPCSelectableStatus = 'changeNPCSelectableStatus'     # 切换NPC的可选择状态
+    EVchangeEntityDirection = 'changeEntityDirection'             # 切换Entity朝向
 
-    createRandomAppearanceNPC = 'createRandomAppearanceNPC'     # 幻化探险/创建随机外观NPC
+    EVtimeFreezeStart = 'timeFreezeStart'     # 时间定格开始
+    EVtimeFreezeEnd = 'timeFreezeEnd'         # 时间定格结束
+    EVplayerForceTrans = 'playerForceTrans'   # 状态改变/副本内指定玩家强制变身
+    EVtaskUndertake = 'taskUndertake'         # 副本内接任务
 
-    createRebornPos = 'createRebornPos'     # 创建出生点
-    removeRebornPos = 'removeRebornPos'     # 回收出生点
+    EVcreateRandomAppearanceNPC = 'createRandomAppearanceNPC'     # 幻化探险/创建随机外观NPC
 
-    transferToTheDesignatedMap = 'transferToTheDesignatedMap'
+    EVcreateRebornPos = 'createRebornPos'     # 创建出生点
+    EVremoveRebornPos = 'removeRebornPos'     # 回收出生点
 
-    notifyStartBattleCD = 'notifyStartBattleCD' # 开始战斗前的倒计时
-    createBreakAwayStuckPos = 'createBreakAwayStuckPos'                     # 脱离卡点
+    EVtransferToTheDesignatedMap = 'transferToTheDesignatedMap'
 
-class DungeonFlowPlayerChooseType(object):
+    EVnotifyStartBattleCD = 'notifyStartBattleCD' # 开始战斗前的倒计时
+    EVcreateBreakAwayStuckPos = 'createBreakAwayStuckPos'                     # 脱离卡点
+
+class DungeonFlowPlayerChooseEnum(object):
     UNKNOWN = 0
     MONSTER_CURRENT_TARGET = 1
     RAND_IN_MONSTER_HATRED_LIST = 2
@@ -2356,27 +2342,10 @@ class DungeonFlowPlayerChooseType(object):
     RAND_IN_ALL_PLAYERS = 4
     MONSTER_HATRED_LIST_MONSTER = 5
 
-class FlowAddHateType(object):
+class FlowAddHateEnum(object):
     all = 1
     rand = 2
 
-class FriendUnreadState(object):
-    mine = 0  # 自己发给别人的信息处于未读状态
-    other = 1  # 别人发给自己的信息处于未读状态
-
-    ALL_READ = 0b0000_0000  # 所有状态位皆置位0(mine, other 位都reset 为0),总状态
-    OTHER_UNREAD = 0b0000_0010  # 其他人的消息未读
-
-
-class FriendRequestType(object):
-    notDeal = 1
-    delete = 2
-    accept = 3
-    reject = 4
-
-class FriendSendDirection(object):
-    send = 0
-    recv = 1
 
 class GamePlayMapCheckEnum(object):
     DENY = 0
@@ -2412,16 +2381,26 @@ def lineStubMap():
 
     return _dic
 
-spaceDict = {
+worldLineMapCellIdxDict = {}
+def getWorldLineCellIdx(mapId):
+    if len(worldLineMapCellIdxDict) == 0:
+        idx = 0
+        for mapId in MapIdDef.mapWorldSet:
+            worldLineMapCellIdxDict[mapId] = idx
+            idx += 1
+        worldLineMapCellIdxDict[7000] = idx
+    return worldLineMapCellIdxDict[mapId]
+
+gSpaceDict = {
 }
 
 import gamePlay_gamePlay as GGD
 import gamePlay_singleSceneData as GPSSD
 
 for mapId, mapConfig in GGD.datas.items():
-    spaceDict.setdefault(mapId, {})
-    spaceDict[mapId]['map'] = GPSSD.datas.get(mapConfig['sceneRes'], {}).get('tmxRes') \
-                              or spaceDict[mapId].get('map') \
+    gSpaceDict.setdefault(mapId, {})
+    gSpaceDict[mapId]['map'] = GPSSD.datas.get(mapConfig['sceneRes'], {}).get('tmxRes') \
+                              or gSpaceDict[mapId].get('map') \
                               or 'big_world'
 
     if mapConfig.get('type') == SpaceType.SpaceLine:
@@ -2456,8 +2435,8 @@ class MountExitType(object):
     fly = 3
 
 class AddOutfitReason(object):
-    Mount_ITEM = 1
-    Mount_EVENT = 2
+    MOUNT_ITEM = 1
+    MOUNT_EVENT = 2
     BUY = 3
     EXP_CARD = 4
     GM = 5
@@ -2482,15 +2461,15 @@ class AddLingShouReason(object):
     moveFromWarehouse = 7
 
 class CreationHostType(object):
-    NoHost = 0
-    Avatar = 1
-    Monster = 2
-    Summon = 3
-    Creation = 4
-    Pet = 5
-    AvatarMirror = 6
-    NPC = 7
-    Other = 8
+    EnumNoHost = 0
+    EnumAvatar = 1
+    EnumMonster = 2
+    EnumSummon = 3
+    EnumCreation = 4
+    EnumPet = 5
+    EnumAvatarMirror = 6
+    EnumNPC = 7
+    EnumOther = 8
 
 class EntityType(object):
     OTHER = 0
@@ -2640,21 +2619,21 @@ class AUTO_DISA_QUALITY_KEY(object):
     AUTOS_WITCH = 8
 
 class MessageType(object):
-    MESSAGE_TYPE_1 = 1
-    MESSAGE_TYPE_8 = 8
-    MESSAGE_TYPE_9 = 9
-    MESSAGE_TYPE_13 = 13
-    MESSAGE_TYPE_14 = 14
-    MESSAGE_TYPE_16 = 16
-    MESSAGE_TYPE_17 = 17
-    MESSAGE_TYPE_18 = 18
-    MESSAGE_TYPE_19 = 19
-    MESSAGE_TYPE_20 = 20
-    MESSAGE_TYPE_21 = 21
-    MESSAGE_TYPE_22 = 22
-    MESSAGE_TYPE_23 = 23
+    MSG_TYPE_1 = 1
+    MSG_TYPE_8 = 8
+    MSG_TYPE_9 = 9
+    MSG_TYPE_13 = 13
+    MSG_TYPE_14 = 14
+    MSG_TYPE_16 = 16
+    MSG_TYPE_17 = 17
+    MSG_TYPE_18 = 18
+    MSG_TYPE_19 = 19
+    MSG_TYPE_20 = 20
+    MSG_TYPE_21 = 21
+    MSG_TYPE_22 = 22
+    MSG_TYPE_23 = 23
 
-    COLL_BUTTON_MESSAGE = (MESSAGE_TYPE_8, MESSAGE_TYPE_13, MESSAGE_TYPE_16, MESSAGE_TYPE_23)
+    COLL_BUTTON_MESSAGE = (MSG_TYPE_8, MSG_TYPE_13, MSG_TYPE_16, MSG_TYPE_23)
 
 class TeammateConfirmFailedReason(object):
     REJECT = 1
@@ -2731,7 +2710,7 @@ LEADER_BOARD_PAGE_SIZE = 10
 LEADER_BOARD_MAX_LOG_SIZE = 100
 
 GUILD_APPLY_CTX_CHECK_TIME_OUT = 60
-GUILD_APPLY_TIME_OUT_DUR = 2 * ONE_DAY_SECONDS
+GUILD_APPLY_TIME_OUT_DUR = 2 * ONE_DAY_COST_SECONDS
 GUILD_MEMBER_SEND_MAX = 20
 GUILD_BATCH_NUM = 20
 GUILD_EVENT_LOG_MAX_NUM = 100
@@ -2744,7 +2723,7 @@ GUILD_ASSIST_ADD_BUILD_EXP = 1
 GUILD_ASSIST_ADD_GUILD_EXP = 1
 GUILD_ASSIST_ADD_GUILD_FUND = 1
 GUILD_ASSIST_ADD_GUILD_CONTRIBUTION = 1
-GUILD_APPLY_EXPIRED_TIME = ONE_DAY_SECONDS
+GUILD_APPLY_EXPIRED_TIME = ONE_DAY_COST_SECONDS
 
 GUILD_DONATE_EXP = 1
 GUILD_DONATE_FUND = 1
@@ -2833,16 +2812,16 @@ class JoinGuildEvent(object):
     HAS_APPLY = 7
 
 class CrossServerState(object):
-    IN_CURRENT_SERVER = 1
-    GOTO_CROSS_SERVER = 2
-    IN_CROSS_SERVER = 3
-    GOBACK_FROM_CROSS_SERVER = 4
+    ENUM_IN_CURRENT_SERVER = 1
+    ENUM_GOTO_CROSS_SERVER = 2
+    ENUM_IN_CROSS_SERVER = 3
+    ENUM_GOBACK_FROM_CROSS_SERVER = 4
 
-class CrossServerCallbackComponent(object):
-    NONE = 0
-    BASE = 1
-    CELL = 2
-    CLIENT = 3
+class CrossServerCBComponent(object):
+    ENUM_NONE = 0
+    ENUM_BASE = 1
+    ENUM_CELL = 2
+    ENUM_CLIENT = 3
 
 class CrossServerReasonNo(object):
     DEFAULT = 0
@@ -2913,6 +2892,10 @@ CUBE_CB_TIME_OUT = 2 # 这个回调是超时踢出副本
 CUBE_CB_PROTECT = 3 # 这个回调是保护结束
 
 
+class CubeRoomEndTimeReason(object):
+    ENTER = 1
+    ADD_TIME = 2
+
 class RenewDurStatus(object):
     NONE = 0
     # 等待自动续费, 自动续费通常是提前一分钟执行
@@ -2936,7 +2919,14 @@ TABLE_NAME_GAME_MAIL = 'game_player_mails'
 
 
 class WriteToDBResult(object):
-    ARCHIVING = -2
+    # 保存失败
+    FAILED                  = 0
+    # 保存成功
+    SUCCESS                 = 1
+    # 找不到数据库
+    MISSING_DB_INTERFACE    = -1
+    # 正在归档中
+    ARCHIVING               = -2
 
 class StoreLimitType(object):
     PERMANENT = 1
@@ -2970,68 +2960,66 @@ class UserForbiddenFlag(object):
 class _AuctionErrno(object):
     from userType import Error as _errno
 
+    def _lateReload(self):
+        for _v in self.__class__.__dict__.values():
+            if _v.__class__.__name__ == 'Error':
+                _v.reloadScript()
+
     def reloadScript(self):
         import utils
         utils.resetCls(self)
         self._lateReload()
-        return
 
-    def _lateReload(self):
-        for k, v in self.__class__.__dict__.items():
-            if v.__class__.__name__ == 'Error':
-                v.reloadScript()
 
-    UNKNOWN_ERR                             = _errno(0)
-    AUCTION_OK                              = _errno(1)
-    PARAM_ERROR                             = _errno(2)         # 参数错误
+    ERR_AUCTION_UNKNOWN                             = _errno(0)
+    ERR_AUCTION_OK                              = _errno(1)
 
-    AUCTION_TYPE_ERR                        = _errno(20000)     # 交易行类型错误
-    AUCTION_ALREADY_IN_AUCTION              = _errno(20001)     # 交易物品已经在交易行
-    AUCTION_ITEM_ATTR_NOT_DEFINED           = _errno(20002)     # 交易物品属性没有定义
-    AUCTION_INDEX_ALREADY_ADDED             = _errno(20003)     # 交易行索引已经存在
-    AUCTION_INDEX_NOT_FOUND                 = _errno(20004)     # 交易行索引没有找到
-    AUCTION_NOT_IN_AUCTION                  = _errno(20005)     # 交易行物品没有找见
-    AUCTION_CACHE_NOT_INIT                  = _errno(20006)     # 玩家交易数据没有初始化完毕
-    AUCTION_AVATAR_GRID_FULL                = _errno(20007)     # 玩家可交易数量已满
-    AUCTION_DEDUCT_ITEM_ERROR               = _errno(20008)     # 玩家(出售时)尝试扣除物品失败
-    AUCTION_DEDUCT_ITEM_NOT_FOUND           = _errno(20009)     # 玩家(出售时候)没有找到物品
-    AUCTION_BUY_ITEM_NOT_ENOUGH             = _errno(20010)     # 玩家购买物品时物品交易行数量不足
-    AUCTION_COIN_NOU_ENOUGH                 = _errno(20011)     # 玩家铜贝不足
-    AUCTION_ITEM_IS_LOCKED                  = _errno(20012)     # 交易行物品被锁住(暂时有其他交易进行)
-    AUCTION_BUY_MUST_NOT_BE_STACKED         = _errno(20013)     # 交易物品必须不可堆叠
-    AUCTION_BUY_MUST_BE_STACKED             = _errno(20014)     # 交易物品必须可堆叠
-    AUCTION_SALE_ITEM_NUM_ERROR             = _errno(20015)     # 交易物品數量错误
-    AUCTION_ITEM_ALREADY_BE_BINDED          = _errno(20016)     # 交易物品被绑定
-    AUCTION_IS_IN_NOTIFY                    = _errno(20017)     # 交易物品在公示期
-    # AUCTION_CANNOT_CANCEL_SALE              = _errno(20018)     # 交易物品暂时无法下架
-    AUCTION_REVIEW_NOT_FOUND                = _errno(20019)     # 审核物品(铜贝/金丝玉贝)未找到
-    AUCTION_REVIEWED_NUMBER_NOT_ENOUGH      = _errno(20020)     # 已审核物品不足
-    AUCTION_ITEM_IN_COOLDOWN                = _errno(20021)     # 交易物品正在冷却
-    AUCTION_PLAYER_BAG_GRID_NOT_ENOUGH      = _errno(20022)     # 玩家背包剩余格子不足
-    AUCTION_CANCEL_SALE_ITEM_NOT_FOUND      = _errno(20023)     # 下架物品没有找到
-    AUCTION_CANCEL_SALE_GBID_NOT_MATCH      = _errno(20024)     # 下架物品PlayerGBID不匹配
-    AUCTION_ITEM_CANNOT_CANCEL_SALE         = _errno(20025)     # 物品无法被下架
-    AUCTION_IS_EXPIRED                      = _errno(20026)     # 物品已经过期
-    AUCTION_PLAYER_BAG_IS_LOCKED            = _errno(20027)     # 玩家背包被锁住, 无法交易
-    AUCTION_BUY_CHECK_NOT_MATCH             = _errno(20028)     # 玩家购买时校验不通过
-    AUCTION_FOLLOWED_ITEM_MAXIMUM           = _errno(20029)     # 玩家关注物品到达上限
-    AUCTION_SALE_RECOMMAND_PRICE_NOT_DEF    = _errno(20030)     # itemId没有对应推荐定价
-    AUCTION_SALE_RECOMMAND_PRICE_OOF        = _errno(20031)     # itemId定价超过推荐百分比
-    AUCTION_UNLOCK_GRID_MAXIMUN             = _errno(20032)     # 交易行解锁格子到达上限
-    AUCTION_UNLOCK_COST_NOT_ENOUGH          = _errno(20033)     # 交易行解锁格子扣除物品不足
-    AUCTION_MONEY_NOU_ENOUGH                = _errno(20034)     # 玩家金币不足
-    AUCTION_PLAYER_NOT_IN_GUILD             = _errno(20035)     # 玩家不在对应帮会中
-    AUCTION_HOMECOMP_ITEM_UN_IDENTIFIED     = _errno(20037)     # 出售家具未鉴定
-    AUCTION_PLAYER_BAG_TYPE_UNKNOWN         = _errno(20038)     # 交易行背包类型未知
-    AUCTION_CANNOT_BUY_SELF_ITEM            = _errno(20039)     # 交易行无法购买自己卖出的商品
-    AUCTION_PLAYER_MAIL_SPACE_FULL          = _errno(20040)     # 玩家邮件剩余空间不足
-    AUCTION_SALED_ITEM_REJECTED             = _errno(20041)     # 交易行对应物品无法出售
-    AUCTION_EQUIP_IN_DROP_REPAIR            = _errno(20042)     # 玩家装备处于掉落修复状态
-    AUCTION_ITEM_IN_BAG_LOCKED_STATUS       = _errno(20043)     # 交易行物品处于背包锁住状态
-    AUCTION_ITEM_IS_FORBIDDEN               = _errno(20044)     # 交易行物品不允许上架
-    AUCTION_SALE_ITEM_ID_ERROR              = _errno(20045)     # 交易物品ID错误
+    ERR_AUCTION_TYPE_ERR                        = _errno(20000)     # 交易行类型错误
+    ERR_AUCTION_ALREADY_IN_AUCTION              = _errno(20001)     # 交易物品已经在交易行
+    ERR_AUCTION_ITEM_ATTR_NOT_DEFINED           = _errno(20002)     # 交易物品属性没有定义
+    ERR_AUCTION_INDEX_ALREADY_ADDED             = _errno(20003)     # 交易行索引已经存在
+    ERR_AUCTION_INDEX_NOT_FOUND                 = _errno(20004)     # 交易行索引没有找到
+    ERR_AUCTION_NOT_IN_AUCTION                  = _errno(20005)     # 交易行物品没有找见
+    ERR_AUCTION_CACHE_NOT_INIT                  = _errno(20006)     # 玩家交易数据没有初始化完毕
+    ERR_AUCTION_AVATAR_GRID_FULL                = _errno(20007)     # 玩家可交易数量已满
+    ERR_AUCTION_DEDUCT_ITEM_ERROR               = _errno(20008)     # 玩家(出售时)尝试扣除物品失败
+    ERR_AUCTION_DEDUCT_ITEM_NOT_FOUND           = _errno(20009)     # 玩家(出售时候)没有找到物品
+    ERR_AUCTION_BUY_ITEM_NOT_ENOUGH             = _errno(20010)     # 玩家购买物品时物品交易行数量不足
+    ERR_AUCTION_COIN_NOU_ENOUGH                 = _errno(20011)     # 玩家铜贝不足
+    ERR_AUCTION_ITEM_IS_LOCKED                  = _errno(20012)     # 交易行物品被锁住(暂时有其他交易进行)
+    ERR_AUCTION_BUY_MUST_NOT_BE_STACKED         = _errno(20013)     # 交易物品必须不可堆叠
+    ERR_AUCTION_BUY_MUST_BE_STACKED             = _errno(20014)     # 交易物品必须可堆叠
+    ERR_AUCTION_SALE_ITEM_NUM_ERROR             = _errno(20015)     # 交易物品數量错误
+    ERR_AUCTION_ITEM_ALREADY_BE_BINDED          = _errno(20016)     # 交易物品被绑定
+    ERR_AUCTION_IS_IN_NOTIFY                    = _errno(20017)     # 交易物品在公示期
+    ERR_AUCTION_REVIEW_NOT_FOUND                = _errno(20019)     # 审核物品(铜贝/金丝玉贝)未找到
+    ERR_AUCTION_REVIEWED_NUMBER_NOT_ENOUGH      = _errno(20020)     # 已审核物品不足
+    ERR_AUCTION_ITEM_IN_COOLDOWN                = _errno(20021)     # 交易物品正在冷却
+    ERR_AUCTION_PLAYER_BAG_GRID_NOT_ENOUGH      = _errno(20022)     # 玩家背包剩余格子不足
+    ERR_AUCTION_CANCEL_SALE_ITEM_NOT_FOUND      = _errno(20023)     # 下架物品没有找到
+    ERR_AUCTION_CANCEL_SALE_GBID_NOT_MATCH      = _errno(20024)     # 下架物品PlayerGBID不匹配
+    ERR_AUCTION_ITEM_CANNOT_CANCEL_SALE         = _errno(20025)     # 物品无法被下架
+    ERR_AUCTION_IS_EXPIRED                      = _errno(20026)     # 物品已经过期
+    ERR_AUCTION_PLAYER_BAG_IS_LOCKED            = _errno(20027)     # 玩家背包被锁住, 无法交易
+    ERR_AUCTION_BUY_CHECK_NOT_MATCH             = _errno(20028)     # 玩家购买时校验不通过
+    ERR_AUCTION_FOLLOWED_ITEM_MAXIMUM           = _errno(20029)     # 玩家关注物品到达上限
+    ERR_AUCTION_SALE_RECOMMAND_PRICE_NOT_DEF    = _errno(20030)     # itemId没有对应推荐定价
+    ERR_AUCTION_SALE_RECOMMAND_PRICE_OOF        = _errno(20031)     # itemId定价超过推荐百分比
+    ERR_AUCTION_UNLOCK_GRID_MAXIMUN             = _errno(20032)     # 交易行解锁格子到达上限
+    ERR_AUCTION_UNLOCK_COST_NOT_ENOUGH          = _errno(20033)     # 交易行解锁格子扣除物品不足
+    ERR_AUCTION_MONEY_NOU_ENOUGH                = _errno(20034)     # 玩家金币不足
+    ERR_AUCTION_PLAYER_NOT_IN_GUILD             = _errno(20035)     # 玩家不在对应帮会中
+    ERR_AUCTION_HOMECOMP_ITEM_UN_IDENTIFIED     = _errno(20037)     # 出售家具未鉴定
+    ERR_AUCTION_PLAYER_BAG_TYPE_UNKNOWN         = _errno(20038)     # 交易行背包类型未知
+    ERR_AUCTION_CANNOT_BUY_SELF_ITEM            = _errno(20039)     # 交易行无法购买自己卖出的商品
+    ERR_AUCTION_PLAYER_MAIL_SPACE_FULL          = _errno(20040)     # 玩家邮件剩余空间不足
+    ERR_AUCTION_SALED_ITEM_REJECTED             = _errno(20041)     # 交易行对应物品无法出售
+    ERR_AUCTION_EQUIP_IN_DROP_REPAIR            = _errno(20042)     # 玩家装备处于掉落修复状态
+    ERR_AUCTION_ITEM_IN_BAG_LOCKED_STATUS       = _errno(20043)     # 交易行物品处于背包锁住状态
+    ERR_AUCTION_ITEM_IS_FORBIDDEN               = _errno(20044)     # 交易行物品不允许上架
+    ERR_AUCTION_SALE_ITEM_ID_ERROR              = _errno(20045)     # 交易物品ID错误
 
-    AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
+    ERR_AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
 
 AuctionErrno = _AuctionErrno()
 
@@ -3043,17 +3031,17 @@ class AuctionItemStatus(object):
                                                                |============> EXPIRED
     """
 
-    INIT = 0
-    NOTIFY = 1
-    SELLING = 2
-    REVIEW = 3
-    SELLED = 4
-    CANCELD = 5
-    EXPIRED = 6
+    ENUM_INIT = 0
+    ENUM_NOTIFY = 1
+    ENUM_SELLING = 2
+    ENUM_REVIEW = 3
+    ENUM_SELLED = 4
+    ENUM_CANCELD = 5
+    ENUM_EXPIRED = 6
 
-    COLL_INAUCTION = (NOTIFY, SELLING, EXPIRED)
-    COLL_CAN_BEFOLLOWED = (NOTIFY, SELLING)
-    COLL_CAN_BE_TYPEDFOLLOWED = (SELLING, )
+    COLL_INAUCTION = (ENUM_NOTIFY, ENUM_SELLING, ENUM_EXPIRED)
+    COLL_CAN_BEFOLLOWED = (ENUM_NOTIFY, ENUM_SELLING)
+    COLL_CAN_BE_TYPEDFOLLOWED = (ENUM_SELLING, )
 
 class AuctionSource(object):
     UNKNOWN = 0
@@ -3144,15 +3132,15 @@ class DungeonCustomAreaType(object):
     LINE = 2
 
     @staticmethod
-    def getRectangleVal(data):
+    def fetchRectVal(data):
         return data['Length'], data['Width']
 
     @staticmethod
-    def getCircleRadius(data):
+    def fetchCircleRadius(data):
         return data['Radius']
 
     @staticmethod
-    def getLineVal(data):
+    def fetchLineVal(data):
         return data['Length']
 
 
@@ -3398,6 +3386,8 @@ class GuildTaskType(object):
     DONATION = 2    #帮会捐献
     ENTERMAP = 3    #进入地图
     COMPLETEMAP = 4 #完成地图
+    DUEL = 5 # 完成切磋
+
 #雷击区域buff
 LIGHTNINGAREABUFF = 64004952
 
@@ -3798,12 +3788,14 @@ class MineWarMonsterCustomId(object):
     MINE_CORE = 'mineCore'      #矿战核心
     MINE_FLAG = 'mineFlag'      #矿战旗帜
     MINE_BROKEN_FLAG = 'mineBrokenFlag' #矿战被毁旗帜
+    MINE_HUB = 'mineHub'       #矿战枢纽
 
 class MineWarMonsterType(object):
     MINE_NONE = 0
     MINE_CORE = 1      #矿战核心
     MINE_FLAG = 2      #矿战旗帜
     MINE_BROKEN_FLAG = 3 #矿战被毁旗帜
+    MINE_HUB = 4       #矿战枢纽
 
 class MINE_WAR_CAMP(object):
     CAMP_DEFEND = 1
@@ -3813,6 +3805,7 @@ mineWarMonsterEnumDict = {
     MineWarMonsterCustomId.MINE_CORE: MineWarMonsterType.MINE_CORE,
     MineWarMonsterCustomId.MINE_FLAG: MineWarMonsterType.MINE_FLAG,
     MineWarMonsterCustomId.MINE_BROKEN_FLAG: MineWarMonsterType.MINE_BROKEN_FLAG,
+    MineWarMonsterCustomId.MINE_HUB: MineWarMonsterType.MINE_HUB,
 }
 
 class GiftKeyType(object):
@@ -4030,6 +4023,7 @@ TIMER_CANCEL_RET_ZERO_TIMER = 1
 TIMER_CANCEL_RET_NOT_DATA = 2
 TIMER_CANCEL_RET_DESTROY = 3
 TIMER_CANCEL_RET_MISMATCH = 4
+TIMER_CANCEL_ARG_INVALID = 5
 
 
 SKILL_LOG_OPR_SET_TIMER = 1
@@ -4118,3 +4112,204 @@ class EquipUpgradeType(object):
 SERVER_LOG_TYPE_LOGIN = 1
 SERVER_LOG_TYPE_DAILY = 2
 
+class UserTagType(object):
+    WHITE_LIST = 0
+    NORMAL = 1
+    ACTIVATION_CODE = 2
+    GREEN_CODE = 3
+    
+class MailLoadType(object):
+    DEFAULT = 0
+    GLOBAL_MAIL = 1
+    PLAYER_MAIL = 2
+    GLOBAL_AND_PLAYER_MAIL = 3
+
+class BountyType(object):
+    PUBLIC = 0
+    ASSIGN = 1
+
+    VALID_BOUNTY_TYPE = (PUBLIC, ASSIGN)
+
+class PublishBountyResType(object):
+    SUCCESS = 0
+    PUBLISH_CNT_LIMIT = 1
+    ALERADY_PREY = 2
+    ALERADY_HUNTER = 3
+    PUBLISHER_NOT_ENOUGH_MONEY = 4
+    HUNTER_NOT_ONLINE = 5
+    PUBLISHER_CHECK_TIME_OUT = 6
+    HUNTER_CHECK_TIME_OUT = 7
+    HUNTER_REFUSE = 8
+
+class AcceptBountyResType(object):
+    SUCCESS = 0
+    ALERADY_HUNTER = 1
+    NOT_EXIST = 2
+    NOT_PUBLIC_TYPE = 3
+    NOT_PUBLISHED_STATE = 4
+    HUNTER_NOT_ENOUGH_MONEY = 5
+    NOT_ASSIGN_HUNTER = 6
+    NOT_PRE_PUBLISH_STATE = 7
+    PUBLISHER_CHECK_TIME_OUT = 8
+    HUNTER_CHECK_TIME_OUT = 9
+    HUNTER_REFUSE = 10
+    PUBLISHER_NOT_ENOUGH_MONEY = 11
+    PUBLISHER_IS_SELF = 12
+    PREY_IS_SELF = 13
+
+PUBLISH_BOUNTY_RES_2_ACCEPT_BOUNTY_RES = {
+    PublishBountyResType.PUBLISHER_CHECK_TIME_OUT: AcceptBountyResType.PUBLISHER_CHECK_TIME_OUT,
+    PublishBountyResType.PUBLISHER_NOT_ENOUGH_MONEY: AcceptBountyResType.PUBLISHER_NOT_ENOUGH_MONEY,
+}
+
+ACCEPT_BOUNTY_RES_RES_2_PUBLISH_BOUNTY_RES = {
+    AcceptBountyResType.HUNTER_CHECK_TIME_OUT: PublishBountyResType.HUNTER_CHECK_TIME_OUT,
+    AcceptBountyResType.HUNTER_REFUSE: PublishBountyResType.HUNTER_REFUSE,
+}
+
+class BountyFlag(object):
+    NULL = 0
+    PREY = 1
+    PREY_HUNTER = 2
+
+class BountyState(object):
+    NULL = 0
+    PRE_PUBLISH = 1
+    PUBLISHED = 2
+    PRE_ACCEPT = 3
+    ACCEPTED = 4
+    PRE_COMPLATE = 5
+    COMPLATED = 6
+
+    PUBLISHED_SET = (PUBLISHED, PRE_ACCEPT, ACCEPTED)
+    INVALID_CELL_SET_PREY_TYPE = (NULL, COMPLATED)
+    INVALID_CELL_SET_HUNTER_TYPE = (NULL, COMPLATED, PUBLISHED)
+    VALID_CELL_CLEAR_SET_HUNTER_TYPE = (NULL, ACCEPTED, COMPLATED, PUBLISHED)
+    PUBLIC_BOUNTY_NEED_CHECK_EXPIRED_TYPE = (PUBLISHED, ACCEPTED)
+
+class UpdatePreyBuffFlag(object):
+    NONE = 0
+    ADD = 1
+    REMOVE = 2
+
+class UpdateHunterBuffFlag(object):
+    NONE = 0
+    ADD = 1
+    REMOVE = 2
+
+class AvatarBountyInfoType(object):
+    PUBLISH = 0
+    PREY = 1
+    HUNTER = 2
+
+    VALID_AVATAR_BOUNTY_TYPE = (PUBLISH, PREY, HUNTER)
+
+class DeathPenaltyType(object):
+    SAFE = 1
+    DUNGEON = 2
+    NORMAL = 3
+    SPECIAL = 4
+    DANGEROUS = 5
+    INTENSE_BATTLE = 6
+    VALID_HUNTER_KILL_PREY_TYPE = (NORMAL, SPECIAL, DANGEROUS)
+
+class BountyAvatarType(object):
+    PUBLISHER = 0
+    PREY = 1
+    HUNTER = 2
+
+class BountyExpiredType(object):
+    PUBLIC_PUBLISHED_DOWN = 0
+    PUBLIC_ACCEPTED_TO_PUBLISHED = 1
+    ASSIGN_ACCEPTED_DOWN = 2
+
+class BountyRankType(object):
+    PUBLISHER = 0
+    PREY = 1
+    HUNTER = 2
+    MAX = HUNTER + 1
+    ALL_VALID_RANK_TYPE=(HUNTER,)
+
+class AvatarBountyInfoUpdateType(object):
+    LOGIN = 0
+    CLIENT = 1
+    ACCEPTED_UPDATE = 2
+    COMPLATED_DELETE = 3
+    EXPIRED_DELETE = 4
+    ACCEPT_EXPIRE_UPDATE = 5
+    ACCEPT_EXPIRE_DELETE = 6
+    PUBLISHED = 7
+    ACCEPTED = 8
+
+class UpdateBountyAvatarKey(object):
+    ONLINE = "online"
+    NAME = "name"
+
+    PERSISTENT_KEYS = (NAME,)
+
+class UpdateBountyInfoProp(object):
+    PUBLISHER_NAME = "name"
+    PREY_ONLINE = "preyOnline"
+    PREY_NAME = "preyName"
+    HUNTER_NAME = "hunterName"
+
+BOUNTY_AVATAR_KEY_2_BOUNTY_PUBLISHER_PROP = {
+    UpdateBountyAvatarKey.NAME : UpdateBountyInfoProp.PUBLISHER_NAME,
+}
+
+BOUNTY_AVATAR_KEY_2_BOUNTY_PREY_PROP = {
+    UpdateBountyAvatarKey.ONLINE : UpdateBountyInfoProp.PREY_ONLINE,
+    UpdateBountyAvatarKey.NAME : UpdateBountyInfoProp.PREY_NAME,
+}
+
+BOUNTY_AVATAR_KEY_2_BOUNTY_HUNTER_PROP = {
+    UpdateBountyAvatarKey.NAME : UpdateBountyInfoProp.HUNTER_NAME,
+}
+BOUNTY_AVATAR_TYPE_2_CONVERSION_DICT = {
+    BountyAvatarType.PUBLISHER : BOUNTY_AVATAR_KEY_2_BOUNTY_PUBLISHER_PROP,
+    BountyAvatarType.PREY : BOUNTY_AVATAR_KEY_2_BOUNTY_PREY_PROP,
+    BountyAvatarType.HUNTER : BOUNTY_AVATAR_KEY_2_BOUNTY_HUNTER_PROP,
+}
+########################################
+class UpdateHunterRankProp(object):
+    HUNTER_ONLINE = "online"
+    HUNTER_NAME = "hunterName"
+
+BOUNTY_AVATAR_KEY_2_HUNTER_RANK_PROP = {
+    UpdateBountyAvatarKey.ONLINE : UpdateHunterRankProp.HUNTER_ONLINE,
+    UpdateBountyAvatarKey.NAME : UpdateHunterRankProp.HUNTER_NAME,
+}
+
+BOUNTY_RANK_TYPE_2_CONVERSION_DICT = {
+    BountyRankType.PUBLISHER : {},
+    BountyRankType.PREY : {},
+    BountyRankType.HUNTER : BOUNTY_AVATAR_KEY_2_HUNTER_RANK_PROP,
+}
+
+BOUNTY_PAGE_SIZE = 20
+
+class EmoteTimeType(object):
+    ONE_SHOT = 0
+    LOOP = 1
+
+class StopPlayEmoteReason(object):
+    Client = 0
+    Teleport = 1
+    BeDamaged = 2
+    CrossServer = 3
+    TimeOut = 4
+
+class FlyTimerArgs(object):
+    Delay = 2.5
+    Interval = 2.5
+
+class RemodelingArgs(object):
+    INCLUDE = 0
+    EXCLUDE = 1
+
+class RemodelingPetResult(object):
+    SUCCESS = 0
+    FAIL = 1
+    WRONG_ARGS = 2
+    ITEM_NOT_ENOUGH = 3
+    BAG_IS_FULL = 4

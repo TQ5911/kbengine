@@ -82,6 +82,13 @@
             <Default>       0               </Default>
         </guildMoney>
 
+        <guildIronMine>
+            <Type>          INT32           </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+            <Default>       0               </Default>
+        </guildIronMine>
+
         <guildUUID>
             <Type>          GUILD_UUID      </Type>
             <Flags>         BASE            </Flags>
@@ -781,5 +788,27 @@
             <Arg>       MAILBOX          </Arg>
             <Arg>       UINT16           </Arg>
         </getGuildBossHP>
+
+        <addMemberHistCond>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       HIST_COND           </Arg>
+        </addMemberHistCond>
+
+        <checkForbidNewMember>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       STRING              </Arg>
+            <Arg>       PYTHON              </Arg>
+            <Arg>       UINT8               </Arg>
+        </checkForbidNewMember>
+
+        <doAddGuildIronMineFromStub>
+            <Arg>       INT32                   </Arg>
+        </doAddGuildIronMineFromStub>
+
+        <doGetGuildIronMine>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </doGetGuildIronMine>
     </BaseMethods>
 </root>

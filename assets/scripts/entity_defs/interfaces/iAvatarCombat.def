@@ -229,6 +229,26 @@
             <Type>          SKILL_TIMER_LOG_QUEUE_DATA_INFO         </Type>
             <Flags>         CELL_PRIVATE                            </Flags>
         </skillTimerLogQueue>
+
+        <flyResumeTimer>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </flyResumeTimer>
+        <flyValue>
+            <Type>          INT8           </Type>
+            <Flags>         OWN_CLIENT    </Flags>
+            <Default>       0               </Default>
+        </flyValue>
+        <flyResumeValue>
+            <Type>          INT8           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+            <Default>       0               </Default>
+        </flyResumeValue>
+
+        <flyCheckTimer>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </flyCheckTimer>
     </Properties>
 
     <CellMethods>
@@ -368,6 +388,7 @@
 
         <jump> <Exposed/>
             <Arg>       UINT8           </Arg>
+            <Arg>       SPACE_NO        </Arg>
         </jump>
 
         <setSkillAutoCombat> <Exposed/>

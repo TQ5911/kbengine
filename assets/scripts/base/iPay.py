@@ -39,7 +39,7 @@ class IPay(object):
             deductWealthVal.addWealthByItemId(priceID, quantity)
 
             if not self.canDeductWealth(deductWealthVal):
-                WARNING_MSG('clientBuyGoods: items not enough:', deductWealthVal)
+                LOG_WARN('clientBuyGoods: items not enough:', deductWealthVal)
                 return
 
             detail = gameclass.AwardDetail(buyCreditId=buyCreditId)
@@ -59,20 +59,20 @@ class IPay(object):
 
     @gamedecorator.checkGameconfigEnable('pay')
     def clientBuyGoods(self, exposed, buyCreditId):
-        INFO_MSG('clientBuyGoods', buyCreditId)
+        LOG_IFO('clientBuyGoods', buyCreditId)
         cfgData = BC_BCD.datas.get(buyCreditId)
         if not cfgData:
-            ERROR_MSG('clientBuyGoods buyCreditId not in config', buyCreditId)
+            LOG_ERR('clientBuyGoods buyCreditId not in config', buyCreditId)
             return
         
         if not gameconfig.payConfigEnable("pay", buyCreditId):
-            WARNING_MSG('clientBuyGoods payConfigEnable is False', buyCreditId)
+            LOG_WARN('clientBuyGoods payConfigEnable is False', buyCreditId)
             return
         
         creditType = cfgData.get('type')
         
         if not gameconfig.payConfigEnable("buyCreditType", creditType):
-            WARNING_MSG('clientBuyGoods payConfigEnable is False, buyCreditType', creditType)
+            LOG_WARN('clientBuyGoods payConfigEnable is False, buyCreditType', creditType)
             self.onMessagePre(MMD.datas.systemSwitchClose, [])
             return
 
@@ -86,7 +86,7 @@ class IPay(object):
                 wealthVal.addWealthByItemId(gameconst.ItemId.MONEY, credit)
             # 只有直充点券需要额外赠送玉贝
             if buyCreditId not in self.firstBuyCreditDic:
-                self.firstBuyCreditDic[buyCreditId] = utils.getNow()
+                self.firstBuyCreditDic[buyCreditId] = utils.curTS()
                 self.client.onAddFirstBuyCredit(buyCreditId)
                 extraItemId = cfgData['firstBuyExRewardType']
                 extraItemNum = BC_BCD.datas[buyCreditId]['firstBuyExReward']
@@ -112,7 +112,7 @@ class IPay(object):
                 deductWealthVal.addWealthByItemId(priceID, quantity)
 
                 if not self.canDeductWealth(deductWealthVal):
-                    WARNING_MSG('clientBuyGoods: items not enough:', deductWealthVal)
+                    LOG_WARN('clientBuyGoods: items not enough:', deductWealthVal)
                     return
 
                 detail = gameclass.AwardDetail(buyCreditId=buyCreditId)
@@ -123,7 +123,7 @@ class IPay(object):
             if limitNumber:
                 buyNum = self.buyCreditNumDic.get(buyCreditId, 0)
                 if buyNum >= limitNumber:
-                    ERROR_MSG('clientBuyGoods over limitNumber', buyCreditId, buyNum, limitNumber)
+                    LOG_ERR('clientBuyGoods over limitNumber', buyCreditId, buyNum, limitNumber)
                     return
                 self.buyCreditNumDic[buyCreditId] = buyNum+1
                 self.client.onUpdateCreditNum([buyCreditId], [buyNum+1])
@@ -138,7 +138,7 @@ class IPay(object):
                 deductWealthVal.addWealthByItemId(priceID, quantity)
 
                 if not self.canDeductWealth(deductWealthVal):
-                    WARNING_MSG('clientBuyGoods: items not enough:', deductWealthVal)
+                    LOG_WARN('clientBuyGoods: items not enough:', deductWealthVal)
                     return
 
                 detail = gameclass.AwardDetail(buyCreditId=buyCreditId)
@@ -149,7 +149,7 @@ class IPay(object):
             self._addCreditConfigReward(buyCreditId, opUUID, srcType, cfgData)
         elif creditType == gameconst.BuyCreditType.monthCard:
             if not self.clientBuyMonthCard(buyCreditId):
-                WARNING_MSG('clientBuyMonthCard failed', buyCreditId)
+                LOG_WARN('clientBuyMonthCard failed', buyCreditId)
                 return
 
         self.client.onBuyCreditSuccess(buyCreditId)

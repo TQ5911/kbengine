@@ -22,9 +22,9 @@ class Controller(object):
 
     def __init__(self, start_node=None):
         self._variables = {}
-        self._elements = {}
-        self._waitings = {}
-        self._re_waitings_cache = {}
+        self.elementsDic = {}
+        self.waitingsDict = {}
+        self._reAwaitCache = {}
         self._start_node = None     # start node must be an event
         start_node and self.add_start_node(start_node)
         self._stopped = False
@@ -33,7 +33,7 @@ class Controller(object):
     def stopped(self):
         return self._stopped
 
-    def build_element(self, element_cls, element_id=None, **kwargs):
+    def buildElement(self, element_cls, element_id=None, **kwargs):
         element_id = element_id if element_id is not None else gen_uuid()
         return element_cls(element_id, self, **kwargs)
 
@@ -70,37 +70,37 @@ class Controller(object):
         ctx = ctx or BaseContext(tid=gen_uuid())
         self._start_node.trigger_all(self.TRIGGER_NODE_START_IDX, ctx)
 
-    def waiting_for_trigger(self, key, e, e_ctx):
-        self._waitings.setdefault(key, [])
-        self._waitings[key].append((e, e_ctx))
+    def waitingForTrigger(self, key, e, eCtx):
+        self.waitingsDict.setdefault(key, [])
+        self.waitingsDict[key].append((e, eCtx))
 
-    def waiting_for_retrigger(self, key, e, e_ctx):
-        self._re_waitings_cache.setdefault(key, [])
-        self._re_waitings_cache[key].append((e, e_ctx))
+    def waiting_for_retrigger(self, key, e, eCtx):
+        self._reAwaitCache.setdefault(key, [])
+        self._reAwaitCache[key].append((e, eCtx))
 
-    def to_be_trigger(self, key):
-        if key not in self._waitings:
+    def toBeTrigger(self, key):
+        if key not in self.waitingsDict:
             return
-        events = self._waitings[key]
+        events = self.waitingsDict[key]
         copy_events = copy.copy(events)
         events.clear()
         try:
-            for e, e_ctx in copy_events:
-                e.continue_handle_be_triggered(e_ctx)
+            for e, eCtx in copy_events:
+                e.continueHandleBeTriggered(eCtx)
         finally:
-            del self._waitings[key]
-            if key in self._re_waitings_cache:
-                for e, e_ctx in self._re_waitings_cache[key]:
-                    self.waiting_for_trigger(key, e, e_ctx)
-                del self._re_waitings_cache[key]
+            del self.waitingsDict[key]
+            if key in self._reAwaitCache:
+                for e, eCtx in self._reAwaitCache[key]:
+                    self.waitingForTrigger(key, e, eCtx)
+                del self._reAwaitCache[key]
 
     def cancel_trigger_events(self, key, ids=None):
-        if key not in self._waitings:
+        if key not in self.waitingsDict:
             return
         if not ids:
-            del self._waitings[key]
+            del self.waitingsDict[key]
         else:
-            _events = self._waitings[key]
+            _events = self.waitingsDict[key]
             _rm_events = []
             for _idx, (e, _) in enumerate(_events):
                 if ids and e.id in ids:
@@ -110,21 +110,21 @@ class Controller(object):
                 _events.pop(_rm_idx)
 
     def get_trigger_events(self, key, default=None):
-        return self._waitings.get(key, default)
+        return self.waitingsDict.get(key, default)
 
     def check_all(self):
         for _ in self.iter_check_all():
             pass
 
     def iter_check_all(self):
-        for e in self._elements.values():
+        for e in self.elementsDic.values():
             yield e.self_check()
 
     def regr_element(self, e):
-        self._elements[e.id] = e
+        self.elementsDic[e.id] = e
 
     def unregr_element(self, eid):
-        e = self._elements.pop(eid, None)
+        e = self.elementsDic.pop(eid, None)
         if e:
             # remove controller afrer un regr element
             e._controller = None
@@ -135,7 +135,7 @@ class Controller(object):
     def export_gragh_view(self, fd=None, builder=None):
         builder = builder or BaseElementGraghBuilder()
         results = {}
-        for eid, e in self._elements.items():
+        for eid, e in self.elementsDic.items():
             name, data, r_binds, r_refs = builder.build(e)
             results[eid] = dict(name=name, data=data,
                                 bind_relations=r_binds,

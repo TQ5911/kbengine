@@ -5,7 +5,7 @@ import userType
 import gameconst
 
 
-class AccountCacheVal(userType.UserSoleType):
+class AccountCacheVal(userType.UserSingleType):
     '''ACCOUNT_CACHE_DATA_INFO'''
     def __init__(self, eid=0, actHostType=gameconst.AccountHostType.NONE):
         self.eid = eid

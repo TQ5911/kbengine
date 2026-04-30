@@ -16,7 +16,7 @@ INSIDE = gmAdmin.INSIDE
 ALLSIDE = gmAdmin.ALLSIDE
 
 gm_cmd = gmCommand.gm_cmd
-forwardCommand = gmCommand.forwardCommand
+forwardGMCommand = gmCommand.forwardGMCommand
 
 Int = gmCommand.Int
 Player = gmCommand.Player

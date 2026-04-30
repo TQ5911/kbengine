@@ -4,7 +4,7 @@ import gameconst
 import gamePlay_set as GP_SD
 
 
-class DeathPenaltyVal(userType.UserSoleType):
+class DeathPenaltyVal(userType.UserSingleType):
     def __init__(self, exp=0, expireTime=0):
         self.exp = exp
         self.expireTime = expireTime
@@ -13,7 +13,7 @@ class DeathPenaltyVal(userType.UserSoleType):
         return {"exp": self.exp, "expireTime": self.expireTime}
 
 
-class DeathPenalty(userType.UserSoleType):
+class DeathPenalty(userType.UserSingleType):
     def __init__(self, deathPenaltyList=()):
         self.deathPenaltyList = []
         for _data in deathPenaltyList:
@@ -54,12 +54,12 @@ class DeathPenalty(userType.UserSoleType):
         return False
 
     def toClientDataAll(self):
-        now = utils.getNow()
+        now = utils.curTS()
         self._clear(now)
         return [x.toSavedDict() for x in self.deathPenaltyList]
 
     def addDeathPenaltyExp(self, exp):
-        _now = utils.getNow()
+        _now = utils.curTS()
         _expireTime = _now + GP_SD.datas['maxExpRecTime']['value']
         while self._isInExpire(_expireTime):
             _expireTime += 1

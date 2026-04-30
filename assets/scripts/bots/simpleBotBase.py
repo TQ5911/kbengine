@@ -3,6 +3,7 @@ import KBEngine
 from KBEDebug import *
 import utils
 import formula
+import time
 
 import threading
 import random
@@ -31,8 +32,12 @@ class AITimer(threading.Thread):
             self.onTimerCall()
 
 class AIState:
+    def __init__(self):
+        self.stateTime = time.time()
+
     def enter(self, owner):
-        pass
+        pass    
+    
     def execute(self, owner):
         pass
     def exit(self, owner):
@@ -58,6 +63,8 @@ class SimpleBotBase(object):
         self.aiState = 0
         self.aiStateMap = {}
         self.botIdx = self.getBotIndx()
+        self.useRandomTimeDelay = False
+        self.dstMapId = None
         self.matchTargetId = None
         
         
@@ -141,13 +148,27 @@ class SimpleBotBase(object):
         """错误输出方法"""
         ERROR_MSG(f"[bot]{self.botName}({self.player.id}): {msg}")
 
+    def changeRandomTimeDelay(self, useRandom=None):
+        if useRandom is None:
+            self.useRandomTimeDelay = not self.useRandomTimeDelay
+        else:
+            self.useRandomTimeDelay = useRandom
+
+    def getRandomTimeDelay(self, minDelay=0, maxDelay=5):
+        if self.useRandomTimeDelay:
+            return random.randint(minDelay, maxDelay)
+        return 0
+
+
     def regBotAI(self, initState):
         self.debug("regBotAI")
-        if not self.aiTimer:
+        self.changeAIState(initState)
+        self.aiStopEvent.clear()
+        if not self.aiTimer:    
             self.aiTimer = AITimer(1.0, 1.0, self.botUpdate, self.aiStopEvent)
             self.aiTimer.setDaemon(True)
             self.aiTimer.start()
-            self.changeAIState(initState)
+        
 
     def unregBotAI(self):
         self.debug("unregBotAI")
@@ -155,6 +176,9 @@ class SimpleBotBase(object):
         if self.aiTimer:
             self.aiStopEvent.set()
             self.aiTimer = None
+
+    def pauseBotAI(self):
+        self.aiStopEvent.set()
 
     def changeAIState(self, state):
         if self.aiState == state:
@@ -315,19 +339,27 @@ class SimpleBotBase(object):
         elif self.isInRaid():
             self.cell.leaveRaid()
 
-    def _getMatchData(self):
-        return TMACTD.datas.get(self.matchTargetId, {})
+    def enterDungeon(self):
+        self.debug(f"enterDungeon: {self.dstMapId}")
+        if self.isInTeam():
+            self.cell.enterCrusadeDungeon()
+        elif self.isInRaid():
+            self.cell.enterChiefDungeon()
+
+    def _getMatchData(self, matchTargetId=None):
+        matchTargetId = matchTargetId or self.matchTargetId
+        return TMACTD.datas.get(matchTargetId, {})
 
     def setMatchInfo(self, matchTargetId=None):
         if matchTargetId:
             self.matchTargetId = matchTargetId
-        matchData = self._getMatchData()
+        matchData = self._getMatchData(matchTargetId)
         self.dstMapId = matchData.get("enterDunID", 0)
         self.dstPos, _ = self.getMapMonsterPos(self.dstMapId)
 
     def createTeamOrRaidByMatchTargetId(self, matchTargetId=None):
         matchTargetId = matchTargetId or self.matchTargetId
-        teamTargetInfo = self._getMatchData()
+        teamTargetInfo = self._getMatchData(matchTargetId)
         actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
         teamType = int(actData['needTeam'])
         membersRequire = actData['membersRequire'] or 1

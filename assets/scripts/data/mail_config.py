@@ -27,13 +27,21 @@ datas = _tools.RODict({
         "ID": "msgId_mailNum_warn",
         "value": 54000051,
     }),
-    "mailNumMax": _tools.RODict({
-        "ID": "mailNumMax",
-        "value": 70,
+    "msgId_mailNum_warn2": _tools.RODict({
+        "ID": "msgId_mailNum_warn2",
+        "value": 54003269,
+    }),
+    "msgId_mailNum_warn3": _tools.RODict({
+        "ID": "msgId_mailNum_warn3",
+        "value": 54003270,
     }),
     "mailNum_warn": _tools.RODict({
         "ID": "mailNum_warn",
-        "value": 55,
+        "value": 130,
+    }),
+    "mailNum_warn2": _tools.RODict({
+        "ID": "mailNum_warn2",
+        "value": 40,
     }),
     "mailItemsNumMax": _tools.RODict({
         "ID": "mailItemsNumMax",
@@ -42,5 +50,21 @@ datas = _tools.RODict({
     "mailDelete_Fail": _tools.RODict({
         "ID": "mailDelete_Fail",
         "value": 54003126,
+    }),
+    "mailSystemType": _tools.RODict({
+        "ID": "mailSystemType",
+        "value": (1, 3, 4),
+    }),
+    "mailPersonType": _tools.RODict({
+        "ID": "mailPersonType",
+        "value": 2,
+    }),
+    "mailNumMax": _tools.RODict({
+        "ID": "mailNumMax",
+        "value": 150,
+    }),
+    "mailNumMax2": _tools.RODict({
+        "ID": "mailNumMax2",
+        "value": 50,
     })
 })

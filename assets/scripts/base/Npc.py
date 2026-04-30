@@ -12,7 +12,7 @@ class Npc(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace):
 
     def __init__(self):
         super(Npc, self).__init__()
-        DEBUG_MSG("--------create npc", self.id)
+        LOG_DBG("--------create npc", self.id)
         return
 
     def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):

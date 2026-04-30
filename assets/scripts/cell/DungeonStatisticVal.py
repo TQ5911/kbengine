@@ -7,6 +7,6 @@ import userType
 import utils
 import gameconst
 
-class DungeonStatisticVal(userType.UserSoleType):
+class DungeonStatisticVal(userType.UserSingleType):
     def __init__(self):
         pass

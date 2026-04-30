@@ -16,16 +16,16 @@ class IGuildBossChallenge(object):
         pass
     
     def enterBossChallengeDungeon(self, openId):
-        INFO_MSG('IGuildBossChallenge::enterBossChallengeDungeon:', openId)
+        LOG_IFO('IGuildBossChallenge::enterBossChallengeDungeon:', openId)
 
         dungeoncfg = GCBI.datas.get(openId, None)
         if not dungeoncfg:
-            WARNING_MSG('IGuildBossChallenge::enterBossChallengeDungeon: wrong dungeon cfg 1', openId)
+            LOG_WARN('IGuildBossChallenge::enterBossChallengeDungeon: wrong dungeon cfg 1', openId)
             return
         
         dungeonNo = dungeoncfg['dunID']
         if not dungeonNo:
-            WARNING_MSG('IGuildBossChallenge::enterBossChallengeDungeon: wrong dungeon cfg 2', openId)
+            LOG_WARN('IGuildBossChallenge::enterBossChallengeDungeon: wrong dungeon cfg 2', openId)
             return
         
         currentScore = self.getTotalScore()
@@ -33,7 +33,7 @@ class IGuildBossChallenge(object):
         needScore = dungeoncfg['minScore']
         if currentScore < needScore:
             self.client.onEnterGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_SCORE, openId)
-            WARNING_MSG('IGuildBossChallenge::enterBossChallengeDungeon: score is not enough', openId, currentScore, needScore)
+            LOG_WARN('IGuildBossChallenge::enterBossChallengeDungeon: score is not enough', openId, currentScore, needScore)
             return
         
         extra = {}

@@ -5,6 +5,7 @@
         <Interface>     iFlowControllerBase     </Interface>
         <Interface>     iMapMonsterRefresh      </Interface>
         <Interface>     iTimerEntityRefresh     </Interface>
+        <Interface>     iBoxGroupRefresh        </Interface>
     </Interfaces>
 
     <Properties>
@@ -14,11 +15,11 @@
             <Default>         {}                 </Default>
         </spaceEntities>
 
-        <taggedEntities>
+        <tagEntities>
             <Type>            PYTHON              </Type>
             <Flags>           CELL_PRIVATE        </Flags>
             <Default>         {}                 </Default>
-        </taggedEntities>
+        </tagEntities>
 
         <players>
             <Type>            PYTHON              </Type>

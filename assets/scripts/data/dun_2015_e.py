@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -76,7 +77,6 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1006,
         1145,
         1021,
         1031,

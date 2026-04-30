@@ -50,7 +50,7 @@ class StructLogBasic(object):
         try:
             s = json.dumps(data, ensure_ascii=False)
         except Exception as e:
-            ERROR_MSG('StructLogBasic json dump err:', e, getattr(self, 'log_id', 0))
+            LOG_ERR('StructLogBasic json dump err:', e, getattr(self, 'log_id', 0))
             s = ''
         return s
 

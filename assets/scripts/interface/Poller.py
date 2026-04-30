@@ -50,14 +50,14 @@ class Poller:
             sock, addr = self._socket.accept()
             self._clients[sock.fileno()] = (sock, addr)
             KBEngine.registerReadFileDescriptor(sock.fileno(), self.onRecv)
-            DEBUG_MSG("Poller::onRecv: new channel[%s/%i]" % (addr, sock.fileno()))
+            LOG_DBG("Poller::onRecv: new channel[%s/%i]" % (addr, sock.fileno()))
         else:
             sock, addr = self._clients.get(fileno, None)
             if sock is None:
                 return
 
             data = sock.recv(2048)
-            DEBUG_MSG("Poller::onRecv: %s/%i get data, size=%i" % (addr, sock.fileno(), len(data)))
+            LOG_DBG("Poller::onRecv: %s/%i get data, size=%i" % (addr, sock.fileno(), len(data)))
             self.processData(sock, data)
             KBEngine.deregisterReadFileDescriptor(sock.fileno())
             sock.close()

@@ -90,7 +90,7 @@ class EventTaskCtrl(object):
         skilllevel = task.data['level']
         targetid = task.data['target']
         messageid = task.data['message']
-        if owner.hasSkill(skillid) or owner.addSkill(skillid, skilllevel):
+        if owner.hasSkill(skillid) or owner.addSkillInEntity(skillid, skilllevel):
             self.skillId = skillid
         self.targetId = targetid
         self.useRandomSkill(msgid=messageid)
@@ -112,6 +112,30 @@ class BehaveCtrl(object):
     提供给状态机调用的函数
     '''
 
+    def InvalidTargetTag(self):
+        return "invalidTarget"
+    
+    def InvalidTargetTagWithTarget(self, targetId):
+        return self.InvalidTargetTag() + str(targetId)
+    
+    def checkInvalidTargetTimeExpire(self, targetId):
+        owner = self.owner
+        _invalidTargetTag = self.InvalidTargetTagWithTarget(targetId)
+        nTime = owner.actGetVar(_invalidTargetTag, None)
+        if nTime and nTime + CONST.datas['monsterResetTimer']['value'] < utils.curTS():
+            return True
+        return False
+
+    def clearInvalidTargetTimes(self):
+        LOG_DBG('clearInvalidTargetTimes')
+        owner = self.owner
+        delList = []
+        for key in owner.aiVars:
+            if key.startswith(self.InvalidTargetTag()):
+                delList.append(key)
+        for key in delList:
+            owner.actDelVar(key)
+
     def navigationTimeTag(self):
         return "navTime"
 
@@ -122,7 +146,7 @@ class BehaveCtrl(object):
         owner = self.owner
         _navigationTimeTag = self.navigationTimeTagWithTarget(targetId)
         nTime = owner.actGetVar(_navigationTimeTag, None)
-        if nTime and nTime + CONST.datas['monsterResetTimer']['value'] < utils.getNow():
+        if nTime and nTime + CONST.datas['monsterResetTimer']['value'] < utils.curTS():
             return True
         return False
 
@@ -143,14 +167,20 @@ class BehaveCtrl(object):
         owner = self.owner
         flag = False
         removeEnt = []
+        invalidTargetLeave = False
         for eid in self.hateDict._hateDict.keys():
             target = KBEngine.entities.get(eid)
             if target and not target.isDie() and owner.spaceNo == target.spaceNo and utils.isEnemy(owner, target):
-                if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt):
+                if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt):
                     if not self.checkNavigationTimeExpire(eid):
                         flag = True
                     else:
                         removeEnt.append(eid)
+                if self.checkInvalidTargetTimeExpire(eid):
+                    invalidTargetLeave = True
+                    if eid not in removeEnt:
+                        removeEnt.append(eid)
+                        
             else:
                 removeEnt.append(eid)
         for eid in removeEnt:
@@ -158,6 +188,11 @@ class BehaveCtrl(object):
         if self.checkNavigationTimeExpire(0):
             self.hateDict._hateDict.clear()
             flag = False
+
+        if invalidTargetLeave:
+            self.clearInvalidTargetTimes()
+            flag = False
+
         return flag
 
     def haveSkill(self):
@@ -171,7 +206,7 @@ class BehaveCtrl(object):
         owner = self.owner
         host = owner.getHost()
         hostTarget = KBEngine.entities.get(self.hostTargetId)
-        if host and host.hasState(gameconst.State.Fighting) and hostTarget and not hostTarget.isDie() and utils.isEnemy(
+        if host and host.hasState(gameconst.StateEnum.Fighting) and hostTarget and not hostTarget.isDie() and utils.isEnemy(
                 owner, hostTarget):
             return True
         return False
@@ -180,11 +215,11 @@ class BehaveCtrl(object):
         host = owner.getHost()
         if not host:
             return False
-        if host.hasState(gameconst.State.Fighting):
+        if host.hasState(gameconst.StateEnum.Fighting):
             return True
         return False
     def inSelfStateFighting(self):
-        return self.owner.hasState(gameconst.State.Fighting)
+        return self.owner.hasState(gameconst.StateEnum.Fighting)
 
     def getHome(self):
         owner = self.owner
@@ -210,9 +245,9 @@ class BehaveCtrl(object):
         # 触发一下主动怪的intrap
         if self.isActive:
             owner = self.owner
-            rng = owner.getAlertDistance()
-            for ent in owner.entitiesInRange(min(rng, 30)):
-                owner.onEnterTrap(ent, 0, 0, 0, gameconst.HATE_TRAP)
+            iRange = owner.getAlertDistance()
+            for ent in owner.entitiesInRange(min(iRange, 30)):
+                owner.onEnterTrap(ent, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
     def turnAndRestart(self):
         self.clearHate()
@@ -223,9 +258,9 @@ class BehaveCtrl(object):
         # 触发一下主动怪的intrap
         if self.isActive:
             owner = self.owner
-            rng = owner.getAlertDistance()
-            for ent in owner.entitiesInRange(min(rng, 30)):
-                owner.onEnterTrap(ent, 0, 0, 0, gameconst.HATE_TRAP)
+            iRange = owner.getAlertDistance()
+            for ent in owner.entitiesInRange(min(iRange, 30)):
+                owner.onEnterTrap(ent, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
     def stand(self, reDir=True):
         owner = self.owner
@@ -240,7 +275,7 @@ class BehaveCtrl(object):
     def inRoutePatrolTime(self):
         owner = self.owner
         if hasattr(owner, 'nextRouteTime'):
-            return utils.getNow() <= owner.nextRouteTime
+            return utils.curTS() <= owner.nextRouteTime
         return False
 
     def routePatrol(self):
@@ -275,7 +310,7 @@ class BehaveCtrl(object):
         owner.setSelectedTargetId(0)
 
         # 重置技能状态
-        skillVal = owner.getSkill(self.skillId)
+        skillVal = owner.skillDic.doGetSkill(self.skillId, False)
         if skillVal:
             skillVal.resetSkill(owner)
         skillVals = []
@@ -298,7 +333,7 @@ class BehaveCtrl(object):
 
     def clearHateAndTelBackWithBroadcast(self, needSync=True):
         self.owner.cancelController('Movement')
-        self.owner.removeState(gameconst.State.Moving)
+        self.owner.removeState(gameconst.StateEnum.Moving)
         self.clearHateAndResetSkill()
         self.owner.allClients.onTelBack(tuple(self.owner.position))
         self.owner.telToPos(self.owner.bornPosition, self.owner.bornDirection)
@@ -332,7 +367,7 @@ class BehaveCtrl(object):
 
     def goSelfStateFighting(self):
         owner = self.owner
-        owner.setState(gameconst.State.Fighting, False)
+        owner.setState(gameconst.StateEnum.Fighting, False)
 
     def turnOnBeAttacked(self):
         owner = self.owner
@@ -365,18 +400,11 @@ class BehaveCtrl(object):
                 if not owner.actGetVar(_navigationTimeTag, None):
                     # 先把其他的全部清除
                     self.clearNavigationTimes()
-                    owner.actDefVar(_navigationTimeTag, utils.getNow())
+                    owner.actDefVar(_navigationTimeTag, utils.curTS())
 
             return
-        if owner.IsPet:
-            host = owner.getHost()
-            dis = PDS.datas['petFollowDistanceInCombat']['value']
-            if host and sMath.distance2DToCompareFrom3DPosition(host.position, target.position) <= math.pow(dis, 2):
-                self.attackTarget(skill, target, msgid)
-            else:
-                self.hateDict.removeHate(target.id)
-        else:
-            self.attackTarget(skill, target, msgid)
+        
+        self.attackTarget(skill, target, msgid)
 
         return self.selectTarget()
 
@@ -388,9 +416,9 @@ class BehaveCtrl(object):
         return self.useRandomSkill()
 
     def patrolTickSkip(self):
-        self.patrolTick = (self.patrolTick + 1) % gameconst.AIDefine.PatrolTick
+        self.patrolTick = (self.patrolTick + 1) % gameconst.AIDefine.AIEnumPatrolTick
         if self.patrolTick == 0:
-            return random.randint(1, 100) > gameconst.AIDefine.PatrolProb
+            return random.randint(1, 100) > gameconst.AIDefine.AIEnumPatrolProb
         return True
 
     def chooseDungeonTarget(self):
@@ -408,7 +436,7 @@ class BehaveCtrl(object):
         if not owner or owner.isDie() or not target or target.isDie():
             return
 
-        if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt):
+        if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt):
             isFirstHate = True if self.hateDict.length == 0 else False
             self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
 
@@ -421,17 +449,17 @@ class BehaveCtrl(object):
 
         host = owner.getHost()
         if host:
-            dis = sMath.distance2DToCompareFrom3DPosition(owner.position, host.position)
-            if dis > tel * tel:
+            distance = sMath.distance3DToCompare(owner.position, host.position)
+            if distance > tel * tel:
                 pos = self.getGoodPos(host, adj)
                 if pos:
                     owner.cancelMoveController()
                     owner.telToPos(pos, host.direction)
                 self.clearHate()
-            elif dis > max_ * max_:
+            elif distance > max_ * max_:
                 self.moveToHost(adj)
                 self.clearHate()
-            elif dis < min_ * min_:
+            elif distance < min_ * min_:
                 self.moveToHost(adj)
 
     def adjustPetDistanceAttack(self):
@@ -443,17 +471,17 @@ class BehaveCtrl(object):
 
         host = owner.getHost()
         if host:
-            dis = sMath.distance2DToCompareFrom3DPosition(owner.position, host.position)
-            if dis > tel * tel:
+            distance = sMath.distance3DToCompare(owner.position, host.position)
+            if distance > tel * tel:
                 pos = self.getGoodPos(host, adj)
                 if pos:
                     owner.cancelMoveController()
                     owner.telToPos(pos, host.direction)
                 self.clearHate()
-            elif dis > max_ * max_:
+            elif distance > max_ * max_:
                 self.moveToHost(adj)
                 self.clearHate()
-            elif dis < min_ * min_:
+            elif distance < min_ * min_:
                 self.moveToHost(adj)
 
     def isOccupied(self):
@@ -511,25 +539,25 @@ class BehaveCtrl(object):
 
     def summonFarFromHostNormal(self):
         owner = self.owner
-        dis = gameconst.AIDefine.SummonDis
+        distance = gameconst.AIDefine.AIEnumSummonDis
         host = owner.getHost()
-        if host and sMath.distance2DToCompareFrom3DPosition(owner.position, host.position) >= math.pow(dis, 2):
+        if host and sMath.distance3DToCompare(owner.position, host.position) >= math.pow(distance, 2):
             return True
         return False
 
     def summonFarFromHostAttack(self):
         owner = self.owner
-        dis = gameconst.AIDefine.SummonDisEx
+        distance = gameconst.AIDefine.AIEnumSummonDisEx
         host = owner.getHost()
-        if host and sMath.distance2DToCompareFrom3DPosition(owner.position, host.position) >= math.pow(dis, 2):
+        if host and sMath.distance3DToCompare(owner.position, host.position) >= math.pow(distance, 2):
             return True
         return False
 
     def summonFarFromHostYL(self):
         owner = self.owner
-        dis = gameconst.AIDefine.SummonDisYL
+        distance = gameconst.AIDefine.AIEnumSummonDisYL
         host = owner.getHost()
-        if host and sMath.distance2DToCompareFrom3DPosition(owner.position, host.position) >= math.pow(dis, 2):
+        if host and sMath.distance3DToCompare(owner.position, host.position) >= math.pow(distance, 2):
             return True
         return False
 
@@ -541,16 +569,17 @@ class BehaveCtrl(object):
         if not host:
             return
 
-        dis = sMath.distance2DToCompareFrom3DPosition(owner.position, host.position)
-        if dis > CONST.datas['summonBcakRange']['value'] * CONST.datas['summonBcakRange']['value']:
+        distance = sMath.distance3DToCompare(owner.position, host.position)
+        if distance > CONST.datas['summonBcakRange']['value'] * CONST.datas['summonBcakRange']['value']:
+            LOG_DBG("goBackToHost distance:", CONST.datas['summonBcakRange']['value'], distance)
             _posList = host.getRandomPoints(host.position, 1, 1, 0)
             if _posList:
                 owner.telToPos(_posList[0])
             else:
-                WARNING_MSG("goBackToHost: can't find good pos", host.position)
+                LOG_WARN("goBackToHost: can't find good pos", host.position)
 
         else:
-            self.moveToHost(gameconst.AIDefine.SummonDisAd)
+            self.moveToHost(gameconst.AIDefine.AIEnumSummonDisAd)
 
     def hasGiveTimes(self):
         return self.owner.ifHasGiveTimes()
@@ -565,7 +594,7 @@ class BehaveCtrl(object):
         owner = self.owner
         host = owner.followPlayer()
 
-        if host and host.hasState(gameconst.State.Fighting):
+        if host and host.hasState(gameconst.StateEnum.Fighting):
             return True
         return False
 
@@ -585,7 +614,7 @@ class BehaveCtrl(object):
                 return
 
         host = owner.followPlayer()
-        if host and host.hasState(gameconst.State.Fighting):
+        if host and host.hasState(gameconst.StateEnum.Fighting):
             hostTarget = KBEngine.entities.get(self.hostTargetId)
             if hostTarget and not hostTarget.isDie():
                 self.increaseHate(hostTarget.id)
@@ -598,7 +627,7 @@ class BehaveCtrl(object):
         if owner.fullHp != owner.hp:
             percentage = CONST.datas['backBattleRecoveryPer']['value'] if CONST.datas['backBattleRecoveryPer'] else 100
             recoverPer = int(owner.fullHp * percentage / 100)
-            owner.modifyHP(recoverPer, owner.id, gameconst.SourceType.Default, 0)
+            owner.modifyHP(recoverPer, owner.id, gameconst.SourceType.SrcTpDefault, 0)
 
     def starRoutePatrol(self):
         owner = self.owner
@@ -642,7 +671,7 @@ class BehaveCtrl(object):
         if not owner or owner.isDie() or not target or target.isDie():
             return False
 
-        if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt):
+        if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt):
             self.targetId = targetId
             return True
 
@@ -664,14 +693,14 @@ class BehaveCtrl(object):
             target = KBEngine.entities.get(self.targetId)
         if not target or target.isDie(): return False
 
-        dis = CSD.datas['teshuAIpeizhi']['value'][owner.creepBaseId][0]
-        if sMath.distance2DToCompareFrom3DPosition(target.position, owner.position) > math.pow(dis, 2):
+        distance = CSD.datas['teshuAIpeizhi']['value'][owner.creepBaseId][0]
+        if sMath.distance2DToCompareFrom3DPosition(target.position, owner.position) > math.pow(distance, 2):
             return True
 
         return False
 
     def addAdjSpeed(self):
-        self.owner.setState(gameconst.State.Fighting)
+        self.owner.setState(gameconst.StateEnum.Fighting)
 
     def recoverAdjSpeed(self):
         pass
@@ -701,7 +730,7 @@ class BehaveCtrl(object):
             try:
                 aiActionFunc(owner, actionContext.AiActionCtx(owner.creepBaseId))
             except Exception as e:
-                gameengine.reportCritical('doAiAction aiActionFunc error:', owner.id, str(e))
+                gameengine.panicStack('doAiAction aiActionFunc error:', owner.id, str(e))
 
 
 class AuxFunc(object):
@@ -712,7 +741,7 @@ class AuxFunc(object):
     def canUseSkill(self, skill):
         owner = self.owner
 
-        if skill.hasTag(gameconst.SkillTag.GeneralSkill):
+        if skill.hasSkillTag(gameconst.SkillTag.GeneralSkill):
             if not owner.checkConflictState(CCD.datas.useGeneralSkill, False): return False
         else:
             if not owner.checkConflictState(CCD.datas.useSkill, False): return False
@@ -758,11 +787,11 @@ class AuxFunc(object):
             self.owner.actDefVar(lastTag, _pos)
         return self.moveToPos(_pos, 0)
 
-    def moveToPos(self, pos, dis=0, extra=None):
+    def moveToPos(self, pos, distance=0, extra=None):
         owner = self.owner
         if not owner or not pos or not owner.checkConflictState(CCD.datas.move, False): return False
 
-        return owner.navigateToPosition(pos, dis, extra)
+        return owner.navigateToPosition(pos, distance, extra)
 
     def attackTarget(self, skill, target, msgid=0, moveOver=False):
         owner = self.owner
@@ -796,14 +825,14 @@ class AuxFunc(object):
             if _needNavTime and not owner.actGetVar(_navigationTimeTag, None):
                 # 先把其他的全部清除
                 self.clearNavigationTimes()
-                owner.actDefVar(_navigationTimeTag, utils.getNow())
+                owner.actDefVar(_navigationTimeTag, utils.curTS())
         else:
             self.clearNavigationTimes()
 
             if not self.canUseSkill(skill):
                 return
 
-            _now = utils.getNow()
+            _now = utils.curTS()
             if self.machine.moveable and skillRange <= CONST.datas['monsterSkillRange']['value']\
                     and _now >= owner.nextKeepDistanceTime:
                 mDis = max(0.5, skillRange * CONST.datas['monsterSkillRangeCoefficient']['value'])
@@ -834,10 +863,25 @@ class AuxFunc(object):
                 skillArgs = skillArgs + positionArgs
 
             target.beHateCounter.addHateCnt(gameconst.HATE_CNT_TYPE_ATTACK)
-            if skill.hasTag(gameconst.SkillTag.Casting):
-                owner.castingSkillInternal(skill.skillId, targetId, skillArgs)
+
+            actionCtx = actionContext.UseSkillCtx(
+                owner.id,
+                skill.skillId,
+                skillArgs,
+                targetId,
+                skillObj=skill,
+            )
+            ret = owner.doUseSkill(skill, actionCtx)
+
+            if ret is not None and ret != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
+                LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId, owner.aiVars, self.hateDict._hateDict.keys())
+                invaildTag = self.InvalidTargetTagWithTarget(targetId)
+                if not owner.actGetVar(invaildTag, None):
+                    LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId)
+                    owner.actDefVar(invaildTag, utils.curTS())
             else:
-                owner.doUseSkill(skill.skillId, targetId, skillArgs)
+                self.clearInvalidTargetTimes()
+            
 
         self.machine.transform(self, State.ANGRY)
 
@@ -910,13 +954,13 @@ class AuxFunc(object):
         owner = self.owner
 
         if self.skillId:
-            skill = owner.getSkill(self.skillId)
+            skill = owner.skillDic.doGetSkill(self.skillId, False)
             if not skill or skill.inCDTime():
                 self.skillId = 0
 
         if not self.skillId:
             self.skillId = owner.getRandomSkill()
-        return owner.getSkill(self.skillId)
+        return owner.skillDic.doGetSkill(self.skillId, False)
 
     def selectSkillByTargetType(self, targetType):
         skillId = self.owner.getRandomSkill(targetType)
@@ -959,7 +1003,7 @@ class AuxFunc(object):
                 owner.setSelectedTargetId(target.id)
                 return target
 
-        _skill = self.owner.getSkill(self.skillId)
+        _skill = self.owner.skillDic.doGetSkill(self.skillId)
         _range = _skill.getRange(owner, _skill.skillId, _skill.skillLv)
 
         x, y, z, dx, dz, dy = CBC.datas["cityBattle_cityGatePassageArea"]["value"]
@@ -977,7 +1021,7 @@ class AuxFunc(object):
     def selectTarget(self):
         owner = self.owner
 
-        skill = owner.getSkill(self.skillId)
+        skill = owner.skillDic.doGetSkill(self.skillId, False)
         if not skill:
             # owner.setSelectedTargetId(0)
             return None
@@ -985,7 +1029,7 @@ class AuxFunc(object):
         if self.isSiegeWarMonster():
             return self.selectSiegeWarTarget()
 
-        if skill.hasTag(gameconst.SkillTag.randomTarget):
+        if skill.hasSkillTag(gameconst.SkillTag.randomTarget):
             randomTargetId = self.hateDict.getRandomHateTarget()
             target = KBEngine.entities.get(randomTargetId)
             owner.setSelectedTargetId(randomTargetId)
@@ -994,15 +1038,15 @@ class AuxFunc(object):
         if self.targetId:
             target = KBEngine.entities.get(self.targetId)
             if target and not target.isDie() and owner.spaceNo == target.spaceNo and utils.isEnemy(owner, target) \
-                    and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt)):
+                    and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)):
                 owner.setSelectedTargetId(self.targetId)
                 return target
 
-        if self.tempForceTargetId:
-            target = KBEngine.entities.get(self.tempForceTargetId)
+        if self.tmpForceTargetId:
+            target = KBEngine.entities.get(self.tmpForceTargetId)
             targetType = skill.getTarget(skill.skillId)
-            if target and not target.isDie() and utils.checkTargetType(targetType, owner, target):
-                owner.setSelectedTargetId(self.tempForceTargetId)
+            if target and not target.isDie() and utils.checkTargetTypeValid(targetType, owner, target):
+                owner.setSelectedTargetId(self.tmpForceTargetId)
                 return target
 
         targetType = skill.getTarget(skill.skillId)
@@ -1016,14 +1060,14 @@ class AuxFunc(object):
                 self.selectHateTarget()
 
         else:
-            _entityIds = owner.getTargetIdsByTargetType(targetType)
+            _entityIdList = owner.getTargetIdsByTargetType(targetType)
             _es = []
-            for _eid in _entityIds:
+            for _eid in _entityIdList:
                 _e = KBEngine.entities.get(_eid)
                 if not _e:
                     continue
 
-                if not utils.checkTargetType(targetType, owner, _e):
+                if not utils.checkTargetTypeValid(targetType, owner, _e):
                     continue
 
                 _es.append(_e)
@@ -1042,7 +1086,7 @@ class AuxFunc(object):
         if self.machine.moveable:
             maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTarget()
         else:
-            _skill = self.owner.getSkill(self.skillId)
+            _skill = self.owner.skillDic.doGetSkill(self.skillId)
             _range = _skill.getRange(owner, _skill.skillId, _skill.skillLv)
             maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTargetByRange(_range)
 
@@ -1054,7 +1098,7 @@ class AuxFunc(object):
 
         target = KBEngine.entities.get(owner.selectedTargetId)
         if owner.selectedTargetId != maxHateTargetId and \
-                ((target and not owner.isVisible(target) and not owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))
+                ((target and not owner.isVisible(target) and not owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt))
                  or not currentTargetHate or maxHateTargetHate.currentHate > currentTargetHate.currentHate * otRatio):
             owner.setSelectedTargetId(maxHateTargetId)
 
@@ -1062,10 +1106,10 @@ class AuxFunc(object):
         owner = self.owner
         host = owner.getHost()
         petAntiCCSkillId = PDS.datas['petAntiCCSkill']['value']
-        if petAntiCCSkillId and host and (host.hasState(gameconst.State.Frozen) or host.hasState(gameconst.State.Snare)
-                                          or host.hasState(gameconst.State.Silenced) or host.hasState(
-                    gameconst.State.Stunned)):
-            skill = owner.getSkill(petAntiCCSkillId, False)
+        if petAntiCCSkillId and host and (host.hasState(gameconst.StateEnum.Frozen) or host.hasState(gameconst.StateEnum.Snare)
+                                          or host.hasState(gameconst.StateEnum.Silenced) or host.hasState(
+                    gameconst.StateEnum.Stunned)):
+            skill = owner.skillDic.doGetSkill(petAntiCCSkillId, False)
             if skill and not skill.inCDTime():
                 self.skillId = petAntiCCSkillId
                 return skill
@@ -1078,7 +1122,7 @@ class AuxFunc(object):
             self.skillId = random.choice(skillList)
         else:
             self.skillId = 0
-        return owner.getSkill(self.skillId)
+        return owner.skillDic.doGetSkill(self.skillId)
 
     def petSelectTarget(self):
         owner = self.owner
@@ -1095,12 +1139,12 @@ class AuxFunc(object):
         if not host:
             return self.selectTarget()
 
-        skill = owner.getSkill(self.skillId)
+        skill = owner.skillDic.doGetSkill(self.skillId, False)
         if not skill:
             # owner.setSelectedTargetId(0)
             return None
 
-        if skill.hasTag(gameconst.SkillTag.randomTarget):
+        if skill.hasSkillTag(gameconst.SkillTag.randomTarget):
             randomTargetId = self.hateDict.getRandomHateTarget()
             target = KBEngine.entities.get(randomTargetId)
             owner.setSelectedTargetId(randomTargetId)
@@ -1111,12 +1155,12 @@ class AuxFunc(object):
         if targetType == 'Self':
             owner.setSelectedTargetId(owner.id)
         elif targetType == 'Friend':
-            if owner.IsAvatarMirror or owner.IsPet:
+            if owner.IsAvatarMirror:
                 owner.setSelectedTargetId(owner.id)
             else:
                 es = []
-                entityIds = owner.getTargetIdsByTargetType(targetType)
-                for eId in entityIds:
+                entityIdList = owner.getTargetIdsByTargetType(targetType)
+                for eId in entityIdList:
                     entity = KBEngine.entities.get(eId)
                     entity and es.append(entity)
                 if es:
@@ -1126,8 +1170,8 @@ class AuxFunc(object):
                     owner.setSelectedTargetId(0)
         elif targetType == 'FriendExS':
             es = []
-            entityIds = owner.getTargetIdsByTargetType(targetType)
-            for eId in entityIds:
+            entityIdList = owner.getTargetIdsByTargetType(targetType)
+            for eId in entityIdList:
                 if eId != owner.id:
                     entity = KBEngine.entities.get(eId)
                     entity and es.append(entity)
@@ -1151,25 +1195,28 @@ class AuxFunc(object):
                         owner.setSelectedTargetId(oldTargetId)
         else:
             hostTarget = KBEngine.entities.get(host.selectedTargetId)
-            if hostTarget and not hostTarget.isDie() and utils.isEnemy(owner,hostTarget):
+            if hostTarget and hostTarget.IsCombatUnit and not hostTarget.isDie() and utils.isEnemy(owner,hostTarget):
                 owner.setSelectedTargetId(host.selectedTargetId)
             else:
                 oldTargetId = owner.selectedTargetId
                 oldTarget = KBEngine.entities.get(owner.selectedTargetId)
                 self.selectHateTarget()
-                if owner.selectedTargetId == 0 and oldTarget and not oldTarget.isDie():
-                    owner.setSelectedTargetId(oldTargetId)
+                if owner.selectedTargetId == 0:
+                    if oldTarget and oldTarget.IsCombatUnit and not oldTarget.isDie():
+                        owner.setSelectedTargetId(oldTargetId)
+                    else:
+                        owner.setSelectedTargetId(0)
 
 
         return KBEngine.entities.get(owner.selectedTargetId)
 
-    def moveToHost(self, dis):
+    def moveToHost(self, distance):
         owner = self.owner
         host = owner.getHost()
-        if not owner.hasState(gameconst.State.Casting) \
-                and not owner.hasState(gameconst.State.Channeling) \
+        if not owner.hasState(gameconst.StateEnum.Casting) \
+                and not owner.hasState(gameconst.StateEnum.Channeling) \
                 and owner.checkConflictState(CCD.datas.move, False):
-            pos = sMath.posByOffset(host.position, sMath.getDirFromYaw(host.direction[2] + 3.14) * dis)
+            pos = sMath.posByOffset(host.position, sMath.getDirFromYaw(host.direction[2] + 3.14) * distance)
             self.moveToPos(pos)
 
     def chooseRandomTransPoint(self):
@@ -1254,10 +1301,7 @@ class AuxFunc(object):
         if self.curForce and self.curForce.type == Event.ATTACK:
             msgid = self.curForce.data['message']
 
-        if owner.IsPet:
-            skill = self.petSelectSkill()
-            target = self.petSelectTarget()
-        elif owner.IsSummon:
+        if owner.IsSummon:
             skill = self.selectSkill()
             target = self.summonHostSelectTarget()
         else:
@@ -1268,15 +1312,7 @@ class AuxFunc(object):
             self.useSkillFail(self.skillId)
             return
 
-        if owner.IsPet:
-            host = owner.getHost()
-            dis = PDS.datas['petFollowDistanceInCombat']['value']
-            if host and sMath.distance2DToCompareFrom3DPosition(host.position, target.position) <= math.pow(dis, 2):
-                self.attackTarget(skill, target, msgid, True)
-            else:
-                self.hateDict.removeHate(target.id)
-        else:
-            self.attackTarget(skill, target, msgid, True)
+        self.attackTarget(skill, target, msgid, True)
 
 
 class HateCtrl(object):
@@ -1299,7 +1335,7 @@ class HateCtrl(object):
         fromSync = kwargs.pop('fromSync', False)
 
         if isInList:
-            if target.IsPet or target.IsAvatarMirror or target.IsSummon:
+            if target.IsAvatarMirror or target.IsSummon:
                 if not target.isAttackable(owner):
                     self.increaseTargetHostHate(target, damage)
                 else:
@@ -1311,7 +1347,7 @@ class HateCtrl(object):
             if isVisionTrigger and damage <= 0:
                 self.hateDict.addToHateListByVisionTrigger(targetId, targetLevel, **kwargs)
             else:
-                if target.IsPet or target.IsAvatarMirror or target.IsSummon:
+                if target.IsAvatarMirror or target.IsSummon:
                     if not target.isAttackable(owner):
                         self.increaseTargetHostHate(target, damage)
                     else:
@@ -1328,13 +1364,13 @@ class HateCtrl(object):
                                          **kwargs)
 
         if hasattr(owner, 'getConfigData'):
-            rng = owner.getConfigData().get('syncHate', 0)
+            iRange = owner.getConfigData().get('syncHate', 0)
             activeattack = owner.getConfigData().get('activeAttack', 0)
-            if rng > 0 and damage > 0:
+            if iRange > 0 and damage > 0:
                 if isFirstHate:
-                    self.synMonsterHateInRange(rng)
+                    self.synMonsterHateInRange(iRange)
                 elif activeattack == 1 and (damage + owner.hp) == owner.fullHp :
-                    self.synMonsterHateInRange(rng)
+                    self.synMonsterHateInRange(iRange)
 
     def decreaseHate(self, targetId, value, byPercentage=False, **kwargs):
         if byPercentage:
@@ -1374,10 +1410,10 @@ class HateCtrl(object):
 
     def luckyGroupTick(self):
         if not self.luckyGroupLastTickTime:
-            self.luckyGroupLastTickTime = utils.getNow()
+            self.luckyGroupLastTickTime = utils.curTS()
         
         patrolStayDelay = CSD.datas["patrolStayDelay"]["value"]
-        if utils.getNow() - self.luckyGroupLastTickTime > patrolStayDelay:
+        if utils.curTS() - self.luckyGroupLastTickTime > patrolStayDelay:
             self.luckyGroupLastTickTime = 0
             self.clearHateAndTelBackWithBroadcast()
             self.restart()
@@ -1391,18 +1427,18 @@ class HateCtrl(object):
         self.stand(False)
 
     def syncTelBackCB(self, *args, **kwargs):
-        DEBUG_MSG("syncTelBackCB", self.owner.bornPosition, self.owner.bornDirection)
+        LOG_DBG("syncTelBackCB", self.owner.bornPosition, self.owner.bornDirection)
         self.luckyGroupLastTickTime = 0
         self.clearHateAndTelBackWithBroadcast(False)
         self.restart()
         self.changeBornState(gameconst.BornStateType.reMove)
 
-    def synMonsterHateInRange(self, rng):
+    def synMonsterHateInRange(self, iRange):
         owner = self.owner
-        for entity in owner.entitiesInRange(rng, 'Monster'):
+        for entity in owner.entitiesInRange(iRange, 'Monster'):
             if not entity or entity.isDie() or entity.spaceNo != owner.spaceNo or entity.id == owner.id:
                 continue
-            if entity.hasState(gameconst.State.Fighting):
+            if entity.hasState(gameconst.StateEnum.Fighting):
                 continue
             for targetId in self.hateDict._hateDict:
                 if entity.aiController \
@@ -1461,7 +1497,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         self.hateDict = monsterHate.MonsterHate(self.owner)
         self.isActive = active
         self.speedState = gameconst.SpeedState.Normal
-        self.patrolTick = gameconst.AIDefine.PatrolTick - 1
+        self.patrolTick = gameconst.AIDefine.AIEnumPatrolTick - 1
 
         self.forceQue = []  # 强制事件队列
         self.curForce = None  # 正在处理事件
@@ -1470,7 +1506,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         self.targetId = 0
 
         self.iTimerDict = {}
-        self.tempForceTargetId = 0
+        self.tmpForceTargetId = 0
         self.tauntTimerId = 0
         self.hostTargetId = 0
         self.luckyGroupLastTickTime = 0
@@ -1500,7 +1536,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             return False
 
         if owner.IsMonster and CB.datas[owner.monsterId].get('checkWitness', 0):
-            if not formula.isSiegeWarSpace(owner.spaceNo) or (spaceMgr and spaceMgr.players):
+            if not formula.inSiegeWarScene(owner.spaceNo) or (spaceMgr and spaceMgr.players):
                 return True
 
         # 战斗和脱战时总是tick
@@ -1528,20 +1564,20 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
                 self.warningList.append(targetId)
                 if owner.warningTimerId == 0:
                     owner.checkWarningList()
-            DEBUG_MSG('add warning target onEnter: {}, warningList: {}'.format(targetId, self.warningList))
+            LOG_DBG('add warning target onEnter: {}, warningList: {}'.format(targetId, self.warningList))
             return
         if targetId in self.warningList:
-            DEBUG_MSG('remove warning target onEnter: {}, warningList: {}'.format(targetId, self.warningList))
+            LOG_DBG('remove warning target onEnter: {}, warningList: {}'.format(targetId, self.warningList))
             self.warningList.remove(targetId)
 
         if targetId in self.iTimerDict:
-            owner._cancelCallback(self.iTimerDict[targetId], gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
+            owner.cancelTimerCB(self.iTimerDict[targetId], gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
             self.iTimerDict.pop(targetId, None)
-        if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
+        if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
             isFirstHate = True if self.hateDict.length == 0 else False
             if self.machine.testEvent(Event.HATE):
                 self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
-                owner.setState(gameconst.State.Fighting, False)
+                owner.setState(gameconst.StateEnum.Fighting, False)
 
             self.doForceTask(Task(Event.ATTACK, False, False, None))
 
@@ -1673,13 +1709,13 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def forceHateTo(self, targetId, damage):
         owner = self.owner
         self.increaseHate(targetId, damage)
-        owner.setState(gameconst.State.Fighting, False)
+        owner.setState(gameconst.StateEnum.Fighting, False)
         self.doForceTask(Task(Event.ATTACK, False, False, None))
 
     def syncHateTo(self, *args, **kwargs):
         owner = self.owner
         self.increaseHate(*args, **kwargs)
-        owner.setState(gameconst.State.Fighting, False)
+        owner.setState(gameconst.StateEnum.Fighting, False)
         self.doForceTask(Task(Event.ATTACK, False, False, None))
 
     def forceRemoveHate(self, targetId):
@@ -1691,8 +1727,8 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         owner = self.owner
 
         if interruptCrt:
-            owner.killCastingSkill(gameconst.EndCasting.ImmuneDeath)
-            owner.killChannelingSkill(gameconst.ChannelingBreak.IMMUNE_DEATH)
+            owner.killCastingSkill(gameconst.EndCasting.ECEnumImmuneDeath)
+            owner.killChannelingSkill(gameconst.ChannelingBreak.BREAK_TP_IMMUNE_DEATH)
 
         self.doForceTask(Task(Event.SKILL, bool(forceUse), False, {
             'skill': skillId,
@@ -1705,22 +1741,22 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         target = KBEngine.entities.get(targetId, None)
         if not target:
             return
-        self.tempForceTargetId = targetId
+        self.tmpForceTargetId = targetId
 
     def beCaught(self, targetId):
         owner = self.owner
         # self.increaseHate(targetId, damage=SPEEL.datas['addHate']['value'])
         self.increaseHate(targetId, damage=100)
-        owner.setState(gameconst.State.Fighting, False)
+        owner.setState(gameconst.StateEnum.Fighting, False)
         self.doForceTask(Task(Event.ATTACK, False, False, None))
 
-    def boardAvatarsPopDialog(self, dlogId, rng):
+    def boardAvatarsPopDialog(self, dlogId, iRange):
         owner = self.owner
-        for i in owner.entitiesInRange(rng, 'Avatar'):
+        for i in owner.entitiesInRange(iRange, 'Avatar'):
             i.clientPopDialog(owner.id, dlogId)
 
-    def distributeTaskToAvatarInRange(self, rng, taskId):
-        ents = self.owner.entitiesInRange(rng, 'Avatar')
+    def distributeTaskToAvatarInRange(self, iRange, taskId):
+        ents = self.owner.entitiesInRange(iRange, 'Avatar')
         for ent in ents:
             ent.startClaimTask(taskId)
 
@@ -1735,7 +1771,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         paramsStr = paramsStr.strip(' ')
         paramVarIdList = [int(paramValId) for paramValId in paramsStr.split('|')] if paramsStr else []
         paramVarList = [spaceMgr.getSpaceVar(paramVarId) for paramVarId in paramVarIdList]
-        newVal = utils.calcFormulaValue(f'formula:{fmlId}', paramVarList)
+        newVal = utils.calcFormulaValue(fmlId, paramVarList)
         opUUID = KBEngine.genUUID64()
         varSrc = gameconst.VarChangeSrc.VAR_SRC_AI
         desc = 'AI:setvar {} {}'.format(varId, newVal)
@@ -1751,7 +1787,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             owner.cancelMoveController()
 
         # 重置技能状态
-        skillVal = owner.getSkill(self.skillId)
+        skillVal = owner.skillDic.doGetSkill(self.skillId)
         if skillVal:
             skillVal.resetSkill(owner)
         skillVals = []
@@ -1762,9 +1798,9 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
         # 移除控制技能
         owner.removeStates([
-            gameconst.State.Frozen,
-            gameconst.State.Stunned,
-            gameconst.State.Snare,
+            gameconst.StateEnum.Frozen,
+            gameconst.StateEnum.Stunned,
+            gameconst.StateEnum.Snare,
         ])
 
         self.doForceTask(Task(Event.MOVE, True, True, {
@@ -1829,7 +1865,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def spawnSummon(self):
         _owner = self.owner
         _spawnList = _owner.getSpawnSummonList()
-        _now = utils.getNow()
+        _now = utils.curTS()
         _needSummonList = [v for v in _spawnList if v['ts'] <= _now]
         _spawnList = [v for v in _spawnList if v['ts'] > _now]
         _summonId = _owner.getAIParam().get('summonID', 0)
@@ -1875,14 +1911,14 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def cancelTickCallBack(self, timer):
         if not timer:
             return
-        self.owner._cancelCallback(timer, gametimer.TIMER_TAG_TICK_CALL_BACK)
+        self.owner.cancelTimerCB(timer, gametimer.TIMER_TAG_TICK_CALL_BACK)
         self.machine.setChangeTimer(0)
 
     def getTickCallBackTimer(self):
         return self.machine.getChangeTimer()
 
     def setTickCallBack(self, t):
-        self.machine.setChangeTimer(self.owner._callback(t, 'tickCallBack', (), gametimer.TIMER_TAG_TICK_CALL_BACK))
+        self.machine.setChangeTimer(self.owner.addTimerCB(t, 'tickCallBack', (), gametimer.TIMER_TAG_TICK_CALL_BACK))
 
     def tickCallBack(self):
         self.cancelTickCallBack(self.getTickCallBackTimer())
@@ -1892,7 +1928,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         return self.machine.getChangeTimer() != 0
 
     def checkSpecialMonsterHasBuff(self):
-        if not utils.hasBit(self.owner.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
+        if not utils.bhas(self.owner.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
             return False
 
         owner = self.owner

@@ -29,7 +29,7 @@ datas = _tools.RODict({
     }),
     "pickInteractAlert_TaskCheck": _tools.RODict({
         "ID": "pickInteractAlert_TaskCheck",
-        "value": 54000263,
+        "value": 54002171,
     }),
     "pickInteractAlert_ToolCheck": _tools.RODict({
         "ID": "pickInteractAlert_ToolCheck",

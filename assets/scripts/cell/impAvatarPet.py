@@ -25,16 +25,16 @@ class ImpAvatarPet(object):
             petData = PDPDD.datas[petId]
             propList = petData['prop']
             for propName, val in propList:
-                self.addProp(propName, val, gameconst.SourceType.PetProp)
-                DEBUG_MSG('onInitPetProps, base prop init:', petId, propName, val)
+                self.addProp(propName, val, gameconst.SourceType.SrcTpPetProp)
+                LOG_DBG('onInitPetProps, base prop init:', petId, propName, val)
             petLevel = petLevels[idx]
             levelPropList = petData['levelProp']
             for propName, val in levelPropList:
                 lowLevel += 1
                 if lowLevel > petLevel:
                     break
-                self.addProp(propName, val, gameconst.SourceType.PetProp)
-                DEBUG_MSG('onInitPetProps, level prop init:', petId, petLevel, propName, val)
+                self.addProp(propName, val, gameconst.SourceType.SrcTpPetProp)
+                LOG_DBG('onInitPetProps, level prop init:', petId, petLevel, propName, val)
 
     def updateLevelProps(self, petId, oldLevel, newLevel):
         if oldLevel >= newLevel:
@@ -48,8 +48,8 @@ class ImpAvatarPet(object):
                 continue
             if minLevel > newLevel:
                 break
-            self.addProp(propName, val, gameconst.SourceType.PetProp)
-            DEBUG_MSG('updateLevelProps, level prop add:', petId, oldLevel, newLevel, propName, val)
+            self.addProp(propName, val, gameconst.SourceType.SrcTpPetProp)
+            LOG_DBG('updateLevelProps, level prop add:', petId, oldLevel, newLevel, propName, val)
 
     # ---------------------------      item  action  ------------------------------------
     def checkLingShouEggItemCond(self, gridId, itemId, useNum, ctx):
@@ -81,10 +81,10 @@ class ImpAvatarPet(object):
         else:
             self.lingShouId = 0
 
-        LogTrackingMgr.LogTrackingMgr.Pet_Follow(self.gbId, formula.getMapId(self.spaceNo), petId, followData[0], followData[1], followData[2], followType)
+        LogTrackingMgr.LogTrackingMgr.Pet_Follow(self.gbId, formula.fetchMapId(self.spaceNo), petId, followData[0], followData[1], followData[2], followType)
 
     def onSetLingShouBattleList(self, battleList, battleIdx, battleData):
-        INFO_MSG('onSetLingShouBattleList', battleList)
+        LOG_IFO('onSetLingShouBattleList', battleList)
         if self.lingShouBattleList:
             for petId, equipList in self.lingShouBattleList:
                 skills = self.getPetSkills(petId)
@@ -110,10 +110,10 @@ class ImpAvatarPet(object):
                         action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList = battleList
-        LogTrackingMgr.LogTrackingMgr.Pet_ChangeTeam(self.gbId, formula.getMapId(self.spaceNo), battleIdx, battleData)
+        LogTrackingMgr.LogTrackingMgr.Pet_ChangeTeam(self.gbId, formula.fetchMapId(self.spaceNo), battleIdx, battleData)
 
     def onUpdateLingShouBattleList(self, petInfo, slotId):
-        INFO_MSG('onUpdateLingShouBattleList', petInfo, slotId)
+        LOG_IFO('onUpdateLingShouBattleList', petInfo, slotId)
         petId, equipList = petInfo
         oldPetId, oldEquipList = self.lingShouBattleList[slotId]
         if oldPetId:

@@ -16,18 +16,6 @@ def _make_validator(orig, name):
     return _wrapper
 
 
-def authClsWraper(clsName):
-    def _decorator(cls):
-        for name in KBEngine.getExposedMethods(clsName):
-            orig = getattr(cls, name)
-            if not callable(orig):
-                raise TypeError(f'{cls.__name__}.{name} 不是可调用方法')
-            # 用工厂函数生成新函数，避免循环闭包
-            setattr(cls, name, _make_validator(orig, name))
-        return cls
-    return _decorator
-
-
 def onlyHost(fn):
     @wraps(fn)
     def __(self, exposed, *args, **kwargs):

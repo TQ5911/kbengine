@@ -25,7 +25,7 @@ def onBaseAppReady(isBootstrap):
     @param isBootstrap: 是否为第一个启动的baseapp
     @type isBootstrap: BOOL
     """
-    INFO_MSG('onBaseAppReady: isBootstrap=%s' % isBootstrap)
+    LOG_IFO('onBaseAppReady: isBootstrap=%s' % isBootstrap)
 
     groupOrder = KBEngine.getComponentGroupOrder()
 
@@ -36,7 +36,7 @@ def onBaseAppReady(isBootstrap):
     gameglobal.isBaseAppReady = True
 
     if KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
-        INFO_MSG('baseapp relive', groupOrder)
+        LOG_IFO('baseapp relive', groupOrder)
         gameglobal.isRelivedBaseapp = True
         checkGameConfigReady()
     elif isBootstrap:
@@ -48,7 +48,7 @@ def onBaseAppReady(isBootstrap):
 
 def checkGameConfigReady():
     if not gameconfig.isReady():
-        WARNING_MSG('gameconfig is not ready, waiting...')
+        LOG_WARN('gameconfig is not ready, waiting...')
         KBEngine.addTimer(1, 0, lambda tid: checkGameConfigReady())
     else:
         onGameConfigLoaded()
@@ -66,7 +66,7 @@ def onGameConfigLoaded():
     for k, v in KBEngine.baseAppData.items():
         onBaseAppData(k, v)
 
-    gameglobal.avatarExposedMethods = utils.getExposedMethods()
+    gameglobal.avatarExposedMethods = utils.fetchExposedMethods()
     KBEngine.addTimer(1800, 1800, outputExposedMethodStats)
 
 
@@ -77,7 +77,7 @@ def onReadyForShutDown():
     如果返回True，则进程会进入shutdown的流程，其它值会使得进程在过一段时间后再次询问。
     用户可以在收到消息时进行脚本层的数据清理工作，以让脚本层的工作成果不会因为shutdown而丢失。
     """
-    INFO_MSG('onReadyForShutDown()')
+    LOG_IFO('onReadyForShutDown()')
     return True
 
 
@@ -90,7 +90,7 @@ def onBaseAppShutDown(state):
                          2 : 所有entity被写入数据库之后
     @type state: int
     """
-    INFO_MSG('onBaseAppShutDown: state=%i' % state)
+    LOG_IFO('onBaseAppShutDown: state=%i' % state)
 
 
 def onReadyForLogin(isBootstrap):
@@ -105,17 +105,17 @@ def onReadyForLogin(isBootstrap):
     if isBootstrap and not KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
         return 0.0
 
-    INFO_MSG('initProgress: completed!')
+    LOG_IFO('initProgress: completed!')
     return True
 
 
 def onBaseAppDeath(groupOrder, compId):
-    INFO_MSG('onBaseAppDeath', groupOrder, compId)
+    LOG_IFO('onBaseAppDeath', groupOrder, compId)
     stubIndex = groupOrder
 
     for k, v in gameglobal.baseAppCache.items():
         if ' component=baseapp[%s]' % compId in str(v):
-            INFO_MSG('onBaseAppDeath: remove baseapp cache', k, v)
+            LOG_IFO('onBaseAppDeath: remove baseapp cache', k, v)
             gameglobal.baseAppCache.pop(k)
             gameengine.delGlobalAppData(gameconst.GLOBALDATA_KEY_BASEAPP_IDX + ':' + str(stubIndex))
             break
@@ -128,7 +128,7 @@ def onAutoLoadEntityCreate(entityType, dbid):
     自动加载的entity创建方法，引擎允许脚本层重新实现实体的创建，如果脚本不实现这个方法
     引擎底层使用createEntityAnywhereFromDBID来创建实体
     """
-    INFO_MSG('onAutoLoadEntityCreate: entityType=%s, dbid=%i' % (entityType, dbid))
+    LOG_IFO('onAutoLoadEntityCreate: entityType=%s, dbid=%i' % (entityType, dbid))
     KBEngine.createEntityAnywhereFromDBID(entityType, dbid)
 
 
@@ -139,7 +139,7 @@ def onInit(isReload):
     @param isReload: 是否是被重写加载脚本后触发的
     @type isReload: bool
     """
-    INFO_MSG('onInit::isReload:%s' % isReload)
+    LOG_IFO('onInit::isReload:%s' % isReload)
     if not isReload:
         import gameengine
         sys.excepthook = gameengine.exceptHook
@@ -150,7 +150,7 @@ def onFini():
     KBEngine method.
     引擎正式关闭
     """
-    INFO_MSG('onFini()')
+    LOG_IFO('onFini()')
 
 
 def onCellAppDeath(addr, cid, groupOrder):
@@ -158,9 +158,9 @@ def onCellAppDeath(addr, cid, groupOrder):
     KBEngine method.
     某个cellapp死亡
     """
-    WARNING_MSG('onCellAppDeath:', cid, groupOrder, addr)
+    LOG_WARN('onCellAppDeath:', cid, groupOrder, addr)
     if gameglobal.isBootstrap and not KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
-        ERROR_MSG('cellapp dead in starting, shutdown...')
+        LOG_ERR('cellapp dead in starting, shutdown...')
         KBEngine.shutdownServer()
     else:
         for lineType in gameconst.lineStubMap():
@@ -174,7 +174,7 @@ def onGlobalData(key, val):
     KBEngine method.
     globalData有改变
     """
-    INFO_MSG('onGlobalData:', key, val)
+    LOG_IFO('onGlobalData:', key, val)
     if isinstance(key, str):
         if key.startswith(gameconst.GLOBALDATA_KEY_BASEAPP):
             # 每起一个baseapp，都会通知一下全局，记录新起的baseapp名字到其BaseApp的mailbox的映射
@@ -204,9 +204,9 @@ def onGlobalData(key, val):
             prefix, groupOrderStr = key.split(':')
             groupOrder = int(groupOrderStr)
             if groupOrder in gameglobal.deadBaseapps:
-                INFO_MSG('got relived baseapp', groupOrder, val)
+                LOG_IFO('got relived baseapp', groupOrder, val)
                 box = val
-                hostName = utils.getPythonServer()
+                hostName = utils.getPythonAddr()
                 selfOrder = KBEngine.getComponentGroupOrder()
                 accountNum = gameglobal.localLoginStub.accountNumCounter.dataSum
                 avatarNum = accountNum
@@ -227,7 +227,7 @@ def onGlobalDataDel(key):
     globalData有删除
     """
 
-    INFO_MSG('onGlobalDataDel:', key)
+    LOG_IFO('onGlobalDataDel:', key)
     if isinstance(key, str):
         if key.startswith(gameconst.GLOBALDATA_KEY_SPACENO_TO_SPACEID):
             # 任何静态地图或者副本地图创建了，都会全局通知，记录一下spaceId到spaceNo的映射
@@ -269,7 +269,7 @@ def onBaseAppDataDel(key):
     KBEngine method.
     baseAppData有删除
     """
-    DEBUG_MSG('onBaseAppDataDel: %s' % key)
+    LOG_DBG('onBaseAppDataDel: %s' % key)
 
 
 def onLoseChargeCB(ordersID, dbid, success, datas):
@@ -278,29 +278,29 @@ def onLoseChargeCB(ordersID, dbid, success, datas):
     有一个不明订单被处理， 可能是超时导致记录被billing
     清除， 而又收到第三方充值的处理回调
     """
-    DEBUG_MSG('onLoseChargeCB: ordersID=%s, dbid=%i, success=%i, datas=%s' % \
+    LOG_DBG('onLoseChargeCB: ordersID=%s, dbid=%i, success=%i, datas=%s' % \
               (ordersID, dbid, success, datas))
 
 
 def callGCCollect():
-    DEBUG_MSG('baseapp: gc.collect():', gc.collect())
+    LOG_DBG('baseapp: gc.collect():', gc.collect())
 
 
 def outputExposedMethodStats(timerId):
     if gameconfig.enableExposedMethodStats():
-        stats = utils.getCallStats()
+        stats = utils.fetchCallStats()
         _outputExposedMethodStats(stats, 0, 20)
 
 
 def _outputExposedMethodStats(stats, fromIdx, num):
     if fromIdx == 0:
-        INFO_MSG('exposed method call stats, onlineNum={} timestamp={}'.format(
-            gameglobal.localLoginStub.getGlobalAccountNum(), utils.getNow()))
+        LOG_IFO('exposed method call stats, onlineNum={} timestamp={}'.format(
+            gameglobal.localLoginStub.getGlobalAccountNum(), utils.curTS()))
 
     endIdx = min(len(stats), fromIdx + num)
     for i in range(fromIdx, endIdx):
         info = stats[i]
-        INFO_MSG('call stats: {} {}'.format(info[1], info[0]))
+        LOG_IFO('call stats: {} {}'.format(info[1], info[0]))
 
     if endIdx < len(stats):
         KBEngine.addTimer(0.1, 0, lambda tid: _outputExposedMethodStats(stats, endIdx, num))

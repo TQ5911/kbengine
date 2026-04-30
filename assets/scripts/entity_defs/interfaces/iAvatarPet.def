@@ -74,6 +74,10 @@
             <Arg>   ARRAY <of> GRIDID </of>     </Arg>
             <Arg>   PETID                       </Arg>
         </levelUpPet>
+
+        <remodelingPet> <Exposed/>
+            <Arg>   GRIDID      </Arg>
+        </remodelingPet>
     
     </BaseMethods>
 
@@ -140,5 +144,11 @@
             <Arg>   UINT16      </Arg>
             <Arg>   BOOL        </Arg>
         </onLevelUpPet>
+
+        <onRemodelingPet>
+            <Arg>   UINT8        </Arg>
+            <Arg>   ITEMID       </Arg>
+            <Arg>   UINT8        </Arg>
+        </onRemodelingPet>
     </ClientMethods>
 </root>

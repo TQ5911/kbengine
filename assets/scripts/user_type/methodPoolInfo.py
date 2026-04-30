@@ -16,7 +16,7 @@ class MethodPoolInfo(object):
     def getDictFromObj(self, obj):
         mVals = {'methodName': [], 'callTime': [], }
 
-        now = utils.getNow()
+        now = utils.curTS()
         for methodName, callTime in obj.items():
             if callTime <= now:
                 continue

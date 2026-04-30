@@ -4,7 +4,7 @@
 import userType
 import itemFactory
 
-class EquipDropVal(userType.UserSoleType):
+class EquipDropVal(userType.UserSingleType):
     '''EQUIP_DROP_DATA_INFO'''
     def __init__(self, uniqueId=0, price=0, state=0, mapId=0, pos=None, equip=None, collEndTime=0, killerName='', endTime=0):
         self.uniqueId = uniqueId

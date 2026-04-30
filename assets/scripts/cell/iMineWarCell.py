@@ -36,17 +36,17 @@ class IMineWarCell(object):
         获取矿战公会信息回调
         """
         self.myGuildInfo = guildInfo
-        INFO_MSG('iMineWarCell.onCellPlayerGetGuildInfo called for player:', self.id, guildInfo)
+        LOG_IFO('iMineWarCell.onCellPlayerGetGuildInfo called for player:', self.id, guildInfo)
 
     # 同步矿战信息
     def syncMineWarInfo(self, state, myMineList):
-        INFO_MSG('iMineWarCell.syncMineWarInfo:', self.id, 'state:', state, 'myMineList:', myMineList)
+        LOG_IFO('iMineWarCell.syncMineWarInfo:', self.id, 'state:', state, 'myMineList:', myMineList)
         self.mineWarState = state
         self.myMineList = myMineList
 
         # 同步怪物信息
-        if formula.isMineWarSpace(self.spaceNo):
-            self._callback(1, 'syncMineWarMonsterInfo', (), gametimer.TIMER_TAG_MINE_WAR_SYNC_MONSTER)
+        if formula.inMineWarScene(self.spaceNo):
+            self.addTimerCB(1, 'syncMineWarMonsterInfo', (), gametimer.TIMER_TAG_MINE_WAR_SYNC_MONSTER)
             if state == gameconst.MINE_WAR_STATE.RUNNING:
                 self.spaceMgr.checkAndChangeCamp(self)
 
@@ -56,8 +56,8 @@ class IMineWarCell(object):
         """
         同步矿战怪物信息
         """
-        if not formula.isMineWarSpace(self.spaceNo):
-            DEBUG_MSG('iMineWarCell.syncMineWarMonsterInfo called for player:', self.id, self.spaceNo)
+        if not formula.inMineWarScene(self.spaceNo):
+            LOG_DBG('iMineWarCell.syncMineWarMonsterInfo called for player:', self.id, self.spaceNo)
             return
         self.spaceMgr.sendMineWarMonsterInfo(self)
         
@@ -74,11 +74,11 @@ class IMineWarCell(object):
         
         startOffset = utils.getMineWarStartOffsetSec()
         prepareNeedSec = MBC.datas['mineBattle_transferPersonnelTime']['value'] * 60
-        startTime = utils.getCurrentWeekTS(offsetSec=startOffset)
-        nowTime = utils.getNow()
+        startTime = utils.getCurWeekTS(offsetSec=startOffset)
+        nowTime = utils.curTS()
         if nowTime > startTime or nowTime < startTime - prepareNeedSec:
             return True
-        # INFO_MSG('iMineWarCell.onMineWarTeleportCheck called for player:', self.id, lineType, self.mineWarState, self.myMineList)
+        # LOG_IFO('iMineWarCell.onMineWarTeleportCheck called for player:', self.id, lineType, self.mineWarState, self.myMineList)
         # 通知
         self.base.onMessagePre(MBC.datas['mineBattle_forbidTeleportMsg']['value'], [])
         return False
@@ -88,12 +88,12 @@ class IMineWarCell(object):
         矿战玩家死亡回调
         """
         
-        if not formula.isMineWarSpace(self.spaceNo):
+        if not formula.inMineWarScene(self.spaceNo):
             return
         
         killerId = event.triggerRoleId
         selfId = event.targetRoleId
-        INFO_MSG('iMineWarCell.onMineWarPlayerDead called for player:', selfId, 'killerId:', killerId)
+        LOG_IFO('iMineWarCell.onMineWarPlayerDead called for player:', selfId, 'killerId:', killerId)
         if killerId == selfId:
             return
         # 通知矿战stub
@@ -105,7 +105,7 @@ class IMineWarCell(object):
         进入矿战场景回调（战斗期间）
         """
         
-        INFO_MSG('iMineWarCell.onEnterMineWarSpace called for player:', self.id)
+        LOG_IFO('iMineWarCell.onEnterMineWarSpace called for player:', self.id)
         # self.base.onMessagePre(MBC.datas['mineBattle_teleportSafeZoneMsg']['value'], [])
         takePartScore = MBC.datas['mineBattle_takePartScore']['value']
         self.scoreTimer = self.pyAddTimer(0, takePartScore[0], gametimer.MINE_WAR_PLAYER_GET_SCORE)
@@ -115,14 +115,14 @@ class IMineWarCell(object):
         离开矿战场景回调
         """
         
-        INFO_MSG('iMineWarCell.onLeaveMineWarSpace called for player:', self.id, self.spaceNo)
+        LOG_IFO('iMineWarCell.onLeaveMineWarSpace called for player:', self.id, self.spaceNo)
         self.cancelMineWarScoreTimer()
 
     def mineWarPlayerGetScoreTick(self):
         """
         矿战玩家定时获取积分
         """
-        if not formula.isMineWarSpace(self.spaceNo):
+        if not formula.inMineWarScene(self.spaceNo):
             return
         if not hasattr(self.spaceMgr, 'onMineWarPlayerTakePartAward'):
             self.cancelMineWarScoreTimer()
@@ -139,7 +139,7 @@ class IMineWarCell(object):
         """
         if hasattr(self, 'scoreTimer'):
             if self.scoreTimer:
-                DEBUG_MSG('iMineWarCell.cancelMineWarScoreTimer called for player:', self.id, self.spaceNo)
+                LOG_DBG('iMineWarCell.cancelMineWarScoreTimer called for player:', self.id, self.spaceNo)
                 self.pyDelTimer(self.scoreTimer, gametimer.MINE_WAR_PLAYER_GET_SCORE)
                 self.scoreTimer = 0
 
@@ -147,11 +147,11 @@ class IMineWarCell(object):
         """
         矿战复活点
         """
-        dunSData = utils.getDunStructureModuleData(mapId)
+        dunSData = utils.getDunStructModData(mapId)
         if posType not in dunSData:
             return None, None
         _data = random.choice(list(dunSData[posType].values()))
-        _enterPos, _enterDir = formula.bornPosFromData(_data), (0, 0, _data['Dir'])
+        _enterPos, _enterDir = formula.bornPosFromDunData(_data), (0, 0, _data['Dir'])
         if _enterDir is not None:
             _enterDir = (0, 0, _enterDir[2] * math.pi / 180)
 
@@ -161,11 +161,18 @@ class IMineWarCell(object):
         """
         矿战尝试复活
         """
-        if not formula.isMineWarSpace(self.spaceNo):
+        return self.doMineWarRelive()
+
+    def doMineWarRelive(self, passive=False):
+        """
+        矿战复活"""
+        if not formula.inMineWarScene(self.spaceNo):
             return False
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         reliveHp = int(self.fullHp * GP_SD.datas['resurrectHP']['value'] / 100)
         if self.spaceMgr.mineWarGuildId > 0 and self.myGuildInfo.get('guildGbId', 0) == self.spaceMgr.mineWarGuildId:
+            if not passive:
+                return True # 不让主动复活了
             _pos, _dir = self.getMineWarRebornPos(_mapId, 'RebornPos')
             if not _pos:
                 return False
@@ -189,11 +196,11 @@ class IMineWarCell(object):
         """
         # 非战斗期间
         startOffset = utils.getMineWarStartOffsetSec()
-        startTime = utils.getCurrentWeekTS(offsetSec=startOffset)
+        startTime = utils.getCurWeekTS(offsetSec=startOffset)
         endOffset = utils.getMineWarEndOffsetSec()
-        endTime = utils.getCurrentWeekTS(offsetSec=endOffset)
+        endTime = utils.getCurWeekTS(offsetSec=endOffset)
         prepareNeedSec = MBC.datas['mineBattle_transferPersonnelTime']['value'] * 60
-        nowTime = utils.getNow()
+        nowTime = utils.curTS()
         if nowTime < startTime - prepareNeedSec or nowTime > endTime:
             return
 
@@ -206,7 +213,7 @@ class IMineWarCell(object):
 
         if not mapId:
             return
-        destSpaceNo = formula.getLineSpaceNo(i_mapId)
+        destSpaceNo = formula.combineLineSpaceNo(i_mapId)
         mineWarArea = formula.getMineWarMineArea(destSpaceNo)
         if not mineWarArea:
             return
@@ -214,14 +221,14 @@ class IMineWarCell(object):
         _pos, _dir = self.getMineWarRebornPos(destSceneId, 'AttackRebornPos')
         record = _m_records[mapId]
         _m_records[destSceneId] = outsideRecord.OutsideRecord(
-            formula.getLineSpaceNo(destSceneId), _pos, _dir, record.hp, record.mp, record.isDie
+            formula.combineLineSpaceNo(destSceneId), _pos, _dir, record.hp, record.mp, record.isDie
         )
         _m_records.pop(mapId)
         self.base.onMessagePre(MBC.datas['mineBattle_teleportMsg']['value'], [])
     
     @gamedecorator.checkGameconfigEnable('mineBattle')
     def getMineWarMonsterInfo(self, exposed):
-        if not formula.isMineWarSpace(self.spaceNo):
+        if not formula.inMineWarScene(self.spaceNo):
             return
          
         self.spaceMgr.sendMineWarMonsterInfo(self)

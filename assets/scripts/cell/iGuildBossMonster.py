@@ -15,31 +15,31 @@ import guildWarEquipment_warEquipmentUpgrate as GWED
 
 class IGuildBossMonster(object):
 	def __init__(self):
-		if not formula.isGuildBossDungeonSpace(self.spaceNo):
+		if not formula.inGuildBossDungeonScene(self.spaceNo):
 			return
 		self.syncHPTimer = self.pyAddTimer(0, 1, gametimer.GUILD_BOSS_SYNC_HP)
 		self.lastSyncHP = 0
 		self.lastSyncFullHP = 0
 			
 	def notifyGuildBossOnDead(self, killer):
-		if not formula.isGuildBossDungeonSpace(self.spaceNo):
+		if not formula.inGuildBossDungeonScene(self.spaceNo):
 			return
 		self.pyDelTimer(self.syncHPTimer, gametimer.GUILD_BOSS_SYNC_HP)
 		self.syncHPTimer = 0
 	
 	def notifyGuildBossOnModifyHP(self, hpVal):
-		if not formula.isGuildBossDungeonSpace(self.spaceNo):
+		if not formula.inGuildBossDungeonScene(self.spaceNo):
 			return
 
 	def onTimerSyncGuildBossHP(self):
-		if not formula.isGuildBossDungeonSpace(self.spaceNo):
+		if not formula.inGuildBossDungeonScene(self.spaceNo):
 			return
 		
 		if self.lastSyncHP != self.hp or self.lastSyncFullHP != self.fullHp:
 			self.lastSyncHP = self.hp
 			self.lastSyncFullHP = self.fullHp
-			dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
-			dungeonStub = gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterType.GUILD)
+			dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
+			dungeonStub = gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterTypeEnum.GUILD)
 			dungeonStub.syncGuildBossHP(self.spaceNo, self.hp, self.fullHp)
 		
 

@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildArchitectureVal(userType.UserSoleType):
+class GuildArchitectureVal(userType.UserSingleType):
     '''GUILD_ARCHITECTURE_DATA_INFO'''
     def __init__(self, level=0, exp=0):
         self.level = level

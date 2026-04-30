@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package OrderService;
+option go_package = "../service";
+option py_generic_services = true;
+option optimize_for = LITE_RUNTIME;
+
+message Void {
+}
+
+message ServerInfoMessage
+{
+  uint32 serverId = 1;  //serverId
+  uint32 compId = 2;
+  string serverName = 3;  //serverName
+}
+
+enum ERRCODE
+{
+    SUCCESS = 0;
+    FAIL = 1;
+    PROCESSING = 2;
+}
+
+message OrderRequest
+{
+  int32 serverId = 1;
+  string outTradeNo = 2;
+  int64 gbId = 3;
+  int32 itemId = 4;
+  int32 itemCount = 5;
+}
+
+message OrderResponse
+{
+  string outTradeNo = 1;
+  int32 result = 2;
+}
+
+//中心服务器向游戏服提供的rpc
+service OrderService
+{
+  rpc registerServer(ServerInfoMessage) returns(Void);
+  rpc activeTick(Void) returns(Void);
+  rpc finishOrder(OrderResponse) returns(Void);
+}
+
+//游戏服向中心服的rpc
+service GameServer
+{
+  rpc activeTickCallback(Void) returns(Void);
+  rpc notifyOrder(OrderRequest) returns(Void);
+}

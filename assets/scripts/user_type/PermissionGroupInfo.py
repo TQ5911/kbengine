@@ -6,7 +6,7 @@ import guildAuthorization_authorizationID as GA_AID
 import guildAuthorization_authorization as GA_AD
 
 
-class PermissionGroupVal(userType.UserSoleType):
+class PermissionGroupVal(userType.UserSingleType):
     def __init__(self, job=0, permission=0):
         self.job = job
         self.permission = permission

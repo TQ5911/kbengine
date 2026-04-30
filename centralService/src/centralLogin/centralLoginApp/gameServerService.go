@@ -5,14 +5,23 @@ import (
 	"centralService/src/common"
 	"centralService/src/trpc"
 	sqllib "database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
 	"time"
+	"net/http"
+	"bytes"
+	"crypto/aes"
+	"encoding/base64"
+	"crypto/sha256"
+	"crypto/cipher"
+	"io"
 
 	"github.com/garyburd/redigo/redis"
 
 	gameServerService "centralService/src/centralLogin/centralLoginApp/gameServerService"
+	clientService "centralService/src/centralLogin/centralLoginApp/clientService"
 )
 
 // 给游戏服务器提供的接口
@@ -93,6 +102,37 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 	return gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_OK
 }
 
+func (self *GameServerService) mergeOfficialTagIntoOtherJson(accountName, otherJson string) string {
+	conn := self.app.redisPool.Get()
+	defer conn.Close()
+
+	tagType, err := redis.String(conn.Do("get", "officialTagType_"+accountName))
+	if err != nil {
+		appLog.Warn("verifyLogin get officialTagType_ failed", accountName, err.Error())
+		return otherJson
+	}
+	newJson, err := AddKVToJson(otherJson, "tagType", tagType)
+	if err != nil {
+		appLog.Error("tagType fail", err.Error())
+		return otherJson
+	}
+	return newJson
+}
+
+func AddKVToJson(oldJson string, key, value string) (string, error) {
+	var m map[string]interface{}
+	if err := json.Unmarshal([]byte(oldJson), &m); err != nil {
+		return "", err
+	}
+
+	// 塞入 KV
+	m[key] = value
+
+	// 序列化
+	newBytes, err := json.Marshal(m)
+	return string(newBytes), err
+}
+
 func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRequest) (*gameServerService.Void, error) {
 	res := gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_UNKNOWN
 	isLogin, channelId, userId, otherJsonData := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
@@ -119,6 +159,8 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		}
 	}
 
+	otherJsonData = self.mergeOfficialTagIntoOtherJson(in.AccountName, otherJsonData)
+
 	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, UserId=%s, AccountName=%s, OtherJsonData=%s, Token=%s, channelId=%d", res, in.AccountType, userId, in.AccountName, otherJsonData, in.Token, channelId))
 	result := gameServerService.VerifyAccountReply{
 		Result: res, AccountName: in.AccountName,
@@ -128,7 +170,7 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		BanPostTime:      banPostTime,
 		BanAccountReason: banAccountReason,
 		BanPostReason:    banPostReason,
-		UserId:			  userId,
+		UserId:           userId,
 		OtherJsonData:    otherJsonData}
 	self.Client.(*gameServerService.GameServerClient).OnVerifyLogin(&result)
 
@@ -237,8 +279,171 @@ func (self *GameServerService) OnLoginComplete(in *gameServerService.AccountVal)
 	return nil, nil
 }
 
+func deriveKeyAndIV(password string) (secretKey []byte, iv []byte) {
+	hash := sha256.Sum256([]byte(password))
+	secretKey = hash[:]
+
+	iv = make([]byte, aes.BlockSize)
+
+	return secretKey, iv
+}
+
+func pKCS7Unpadding(data []byte) ([]byte, error) {
+	length := len(data)
+	if length == 0 {
+		return nil, errors.New("empty data")
+	}
+	paddingLen := int(data[length-1])
+	if paddingLen > length || paddingLen > aes.BlockSize {
+		return nil, errors.New("invalid padding")
+	}
+	return data[:length-paddingLen], nil
+}
+
+func pKCS7Padding(data []byte, blockSize int) []byte {
+	padding := blockSize - len(data)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(data, padText...)
+}
+
+func encryptDatas(origData string, secret string) (string, error) {
+	secretKey, iv := deriveKeyAndIV(secret)
+
+	block, err := aes.NewCipher(secretKey)
+	if err != nil {
+		return "", err
+	}
+
+	data := pKCS7Padding([]byte(origData), block.BlockSize())
+
+	dst := make([]byte, len(data))
+	mode := cipher.NewCBCEncrypter(block, iv)
+	mode.CryptBlocks(dst, data)
+
+	return base64.StdEncoding.EncodeToString(dst), nil
+}
+
+func decryptDatas(origData string, secret string) ([]byte, error) {
+	data, err := base64.StdEncoding.DecodeString(origData)
+	if err != nil {
+		return nil, err
+	}
+	dst := make([]byte, len(data))
+	secretKey, iv := deriveKeyAndIV(secret)
+	block, err := aes.NewCipher([]byte(secretKey))
+	if err != nil {
+		return nil, err
+	}
+	mode := cipher.NewCBCDecrypter(block, iv)
+	mode.CryptBlocks(dst, data)
+	dst, err = pKCS7Unpadding(dst)
+	if err != nil {
+		return nil, err
+	}
+	return dst, nil
+}
+
+func (self *GameServerService) doBehaviorReport(accountType, online uint32, accountName, sessionIdStr string) {
+	appLog.Info(fmt.Sprintf("doBehaviorReport: accountType=%d, online=%d, accountName=%s, sessionIdStr=%s", accountType, online, accountName, sessionIdStr))
+
+	if accountType != uint32(clientService.AccountType_ACCOUNT_OFFICIAL) {
+		appLog.Info("doBehaviorReport not official account", clientService.AccountType_ACCOUNT_OFFICIAL)
+		return
+	}
+	userId, err := strconv.ParseUint(accountName, 10, 64)
+	if err != nil {
+		appLog.Warn("doBehaviorReport accountName type error", accountName)
+		return
+	} 
+	var reqHost string
+	if value, ok := LoginConfig.Official["reqhost"]; ok {
+		reqHost = value.(string)
+	} else {
+		appLog.Error("doBehaviorReport LoginConfig.Official[reqHost]")
+		return
+	}
+	var secret string
+	if value, ok := LoginConfig.Official["behaviorreportsecret"]; ok {
+		secret = value.(string)
+	} else {
+		appLog.Error("doBehaviorReport LoginConfig.Official[behaviorreportsecret]")
+		return
+	}
+	
+
+	var behaviorReport string
+	if value, ok := LoginConfig.Official["behaviorreport"]; ok {
+		behaviorReport = value.(string)
+	} else {
+		appLog.Error("doBehaviorReport LoginConfig.Official[behaviorreport]")
+		return
+	}
+	reqURL := reqHost + behaviorReport
+	curTime := time.Now().Unix()
+
+	body := map[string] interface{} {
+		"userId": 	uint64(userId),
+		"si":       sessionIdStr,
+		"bt":		 uint32(online),
+		"ot":		 uint32(curTime),
+	}
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		appLog.Warn("doBehaviorReport jsonBody marshalIndent error ",err.Error())
+		return
+	}
+	decryptData, err := encryptDatas(string(jsonBody), secret)
+	if err != nil {
+		appLog.Warn("doBehaviorReport AESEncrypt jsonBody error ",err.Error())
+		return
+	}
+	appLog.Info(fmt.Sprintf("doBehaviorReport reqURL=%s, userId=%d, si=%s, online=%d, time=%d", reqURL, userId, sessionIdStr, online, curTime))
+	appLog.Info(fmt.Sprintf("doBehaviorReport jsonBody=%s, encodeStr=%s", jsonBody, string(decryptData)))
+	
+	newBody := map[string] interface{} {
+		"encryptedData": 	string(decryptData),
+	}
+	newJsonBody, err := json.Marshal(newBody)
+	if err != nil {
+		appLog.Warn("doBehaviorReport newBody marshalIndent error ",err.Error())
+		return
+	}
+	appLog.Info(fmt.Sprintf("doBehaviorReport newJsonBody=%s", newJsonBody))
+
+	// 到时候该生产消费
+	go func() {
+		client := http.Client{}
+		req, err := http.NewRequest(http.MethodPost, reqURL, bytes.NewReader(newJsonBody))
+		if err != nil {
+			appLog.Warn(fmt.Sprintf("doBehaviorReport NewRequest: %s", err.Error()))
+			return
+		}
+		req.Header.Set("Content-Type", "application/json")
+		resp, err := client.Do(req)
+		if err != nil {
+			appLog.Warn(fmt.Sprintf("doBehaviorReport DoRequest: %s", err.Error()))
+			return 
+		}
+		defer resp.Body.Close()
+
+		respBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			appLog.Warn(fmt.Sprintf("doBehaviorReport ReadAll: %s", err.Error()))
+			return
+		}
+		appLog.Info(fmt.Sprintf("doBehaviorReport end,  respBody=%s", string(respBody)))
+	}()
+}
+
+func (self *GameServerService) OnAccountOnline(in *gameServerService.AccountOnlineVal) (*gameServerService.Void, error) {
+	appLog.Info("OnAccountOnline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr)
+	self.doBehaviorReport(in.AccountType, 1, in.AccountName, in.SessionIdStr)
+	return nil, nil
+}
+
 func (self *GameServerService) OnAccountOffline(in *gameServerService.AccountOfflineVal) (*gameServerService.Void, error) {
-	appLog.Info("OnAccountOffline:", in.AccountName, in.AccountType, in.HostId)
+	appLog.Info("OnAccountOffline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr)
+	self.doBehaviorReport(in.AccountType, 0, in.AccountName, in.SessionIdStr)
 	conn := self.app.redisPool.Get()
 	defer conn.Close()
 	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+in.AccountName))

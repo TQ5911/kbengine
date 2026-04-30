@@ -163,21 +163,13 @@ datas = _tools.RODict({
         "ID": "enemySearchCD",
         "value": 600,
     }),
-    "enemyNumLimit": _tools.RODict({
-        "ID": "enemyNumLimit",
-        "value": 30,
-    }),
-    "enemyRecordNumLimit": _tools.RODict({
-        "ID": "enemyRecordNumLimit",
-        "value": 100,
-    }),
     "enemyCurrentNum": _tools.RODict({
         "ID": "enemyCurrentNum",
         "value": "仇敌：{0}/{1}",
     }),
     "enemyResearchFontColor": _tools.RODict({
         "ID": "enemyResearchFontColor",
-        "value": "<color=#038304>{0}</color>\n<color=#9e9886>{1}</color>",
+        "value": "<color=#54e7f2>{0}</color>\n<color=#9e9886>{1}</color>",
     }),
     "enemyNotResearch": _tools.RODict({
         "ID": "enemyNotResearch",
@@ -218,5 +210,57 @@ datas = _tools.RODict({
     "relationSentFriendRequest": _tools.RODict({
         "ID": "relationSentFriendRequest",
         "value": 54000433,
+    }),
+    "relationSearch_tryLater": _tools.RODict({
+        "ID": "relationSearch_tryLater",
+        "value": 54000434,
+    }),
+    "enemyPositionRefreshTime": _tools.RODict({
+        "ID": "enemyPositionRefreshTime",
+        "value": 60,
+    }),
+    "enemyNumLimit": _tools.RODict({
+        "ID": "enemyNumLimit",
+        "value": 30,
+    }),
+    "enemyRecordNumLimit": _tools.RODict({
+        "ID": "enemyRecordNumLimit",
+        "value": 100,
+    }),
+    "enemyPositionCrossServer": _tools.RODict({
+        "ID": "enemyPositionCrossServer",
+        "value": "跨服场景",
+    }),
+    "enemyReserachName": _tools.RODict({
+        "ID": "enemyReserachName",
+        "value": "<color=#d35a66>{0}</color>",
+    }),
+    "enemyReserachNameOffline": _tools.RODict({
+        "ID": "enemyReserachNameOffline",
+        "value": "<color=#727272>{0}({1})</color>",
+    }),
+    "enemyReserachPlace": _tools.RODict({
+        "ID": "enemyReserachPlace",
+        "value": "<color=#54e7f2>{0}</color>",
+    }),
+    "enemyReserachNamePlaceOffline": _tools.RODict({
+        "ID": "enemyReserachNamePlaceOffline",
+        "value": "<color=#727272>{0}</color>",
+    }),
+    "enemyReserachNPC": _tools.RODict({
+        "ID": "enemyReserachNPC",
+        "value": 18000504,
+    }),
+    "enemyReserachText": _tools.RODict({
+        "ID": "enemyReserachText",
+        "value": "离线",
+    }),
+    "enemyReserachPlaceUpdate": _tools.RODict({
+        "ID": "enemyReserachPlaceUpdate",
+        "value": "<color=#d35a66>{0}</color>位置已更新至<color=#54e7f2>{1}</color>",
+    }),
+    "enemyReserachText2": _tools.RODict({
+        "ID": "enemyReserachText2",
+        "value": "持续探索中，每{0}秒探查一次仇敌位置",
     })
 })

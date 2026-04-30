@@ -27,8 +27,8 @@ import visible_visible as UVVD
 import actionContext
 import gamerefresh
 
-callApps = gmCommand._callApps
-forwardCommand = gmCommand.forwardCommand
+callOnApps = gmCommand._callApps
+forwardGMCommand = gmCommand.forwardGMCommand
 
 
 @gm_cmd('$getAllGMCmds', (), RONE, BASE, '获取所有指令', ALLSIDE, GOD_GROUPS)
@@ -36,7 +36,7 @@ def getAllGMCmds(su):
     if KBEngine.publish():
         su.onCommandResult(0, 'can not run in publish server', {})
         return
-    data = utils.man_gm_cmds()
+    data = utils.man_outside_gm_cmds()
     su.onCommandResult(0, 'ok' , {"data": data})
 
 @gm_cmd('$getAllPlayers', (), RONE, BASE, '获取所有在线用户', ALLSIDE, GOD_GROUPS)
@@ -86,7 +86,7 @@ def setEntProp(su, ent, propName, value):
             newvalue = int(value)
         else:
             newvalue = float(value)
-        ent.setProp(f'{propName}', newvalue, gameconst.SourceType.Default)
+        ent.setProp(f'{propName}', newvalue, gameconst.SourceType.SrcTpDefault)
         return su.onCommandResult(0, f'ok,{ent.name} 的 {propName} 属性从 {curVal} 修改为 {value}',{} )
 
 @gm_cmd('$getEntSkillDic', (Entity('entid'),), RARG(0), gameconst.CELL, '获取实体技能信息', ALLSIDE, GOD_GROUPS)
@@ -251,7 +251,7 @@ def _gmGetEquipment(player, school, quality, grade, enhanceLv):
     if school == 0:
         school = player.getRoleCacheAttr('school', 0)
         if school == 0:
-            DEBUG_MSG('gmGetEquipment: failed to fetch school from role cache, school=0')
+            LOG_DBG('gmGetEquipment: failed to fetch school from role cache, school=0')
             return False, '执行失败，玩家门派未知', []
     if quality not in gameconst.ItemQuality.COLL_QUALITY:
         return False, '执行失败，无效品质', []
@@ -289,7 +289,7 @@ def enhanceRole(su, player, enhanceLevel=0):
     import gearEnhance_gearconst as GEGCD
     # 等级设置
     maxRoleLevel = utils.getPlayerMaxLevel()
-    forwardCommand(su,"$setlv", player.id, maxRoleLevel)
+    forwardGMCommand(su,"$setlv", player.id, maxRoleLevel)
     # 装备获取
     maxQuality = 4
     maxClassLevel = GEGCD.datas['equipmentClassLevel']['value']
@@ -307,7 +307,7 @@ def enhanceRole(su, player, enhanceLevel=0):
                 affixId2 = affixIds.pop(0) if affixIds else 0
                 player.gmGlyphWashingEquips(equipItem.itemId, glyphPos, affixId1, affixId2)
             
-    # forwardCommand(su, "$glyphWashingEquipmentsInEquip", player.id)
+    # forwardGMCommand(su, "$glyphWashingEquipmentsInEquip", player.id)
     # 2.祝福
     # 3.穿戴
     dressSlotIds = list(range(gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT, gameconst.BodyEquipSlot.EQUIP_BELT_SLOT + 1))
@@ -381,7 +381,7 @@ def modifyAttrByLevel(su, player, level):
             attrList.append((prefix + attrName[0].upper() + attrName[1:], delta))
         else:
             attrList.append((attrName, delta))
-    forwardCommand(su, '$addAwardFightProps', player.id, str(attrList))
+    forwardGMCommand(su, '$addAwardFightProps', player.id, str(attrList))
 
 @gm_cmd('$setskillLv', (Player("gbId/Id"), Int("skillLevel"),), RARG(0), gameconst.BASE, '设置技能等级', ALLSIDE, GOD_GROUPS, minArgs=0)
 def setskillLv(su, player, skillLevel=0):
@@ -394,7 +394,7 @@ def addAwardFightProps(su, player, attrList):
         attrList = eval(attrList)
     except Exception as e:
         return False, f'执行失败，attrList格式错误: {str(e)}'
-    player.addAwardFightProps(attrList, gameconst.SourceType.Item, 0, 0, "_gmAddAwardFightProps")
+    player.addAwardFightProps(attrList, gameconst.SourceType.SrcTpItem, 0, 0, "_gmAddAwardFightProps")
     return su.onCommandResult(0, 'ok,替换成功', {'attrList': attrList})
 
 @gm_cmd('$Alladdbuff', (Int("buffid"),), RALL, gameconst.CELL, '所有人添加buff', ALLSIDE, GOD_GROUPS)
@@ -449,7 +449,7 @@ def getEntBuffinfo(su, player,entid):
             'bufflv': int(buffdict.level),  # 确保是普通int
             'time': float(buffdict.getBuffDuration()),  # 确保是普通float
             'starttime': float(buffdict.tStartTime),  # 确保是普通float
-            'servertime':int(utils.getNow())
+            'servertime':int(utils.curTS())
             # 'effectlist': effectlist_normal
         }
 
@@ -571,7 +571,7 @@ def unlockAllFunc(su, player, onlyTask=0):
     import actionContext
     import tutorConst_newbieStep as TCNSD
     import visible_visible as V_VD
-    import tutorConst_triggerGuide as TTGD
+    import tutorConst_triggerReleat as TTRD
     maxLv = 0
     roleMaxLv = utils.getPlayerMaxLevel()
     needCompleteTasks = set()
@@ -583,7 +583,7 @@ def unlockAllFunc(su, player, onlyTask=0):
         if lvLimit > maxLv and lvLimit <= roleMaxLv:
             maxLv = lvLimit
     if maxLv > 0 and onlyTask == 0:
-        forwardCommand(su,"$setlv", player.id, maxLv)
+        forwardGMCommand(su,"$setlv", player.id, maxLv)
     # 整理出根任务及其子任务即可，否则会因为根任务后完成清掉子任务的状态
     finishedRootTasks = []
     for taskId in needCompleteTasks:
@@ -591,7 +591,7 @@ def unlockAllFunc(su, player, onlyTask=0):
         if rootTaskId in finishedRootTasks:
             continue
         finishedRootTasks.append(rootTaskId)
-        player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM), needCheck=False)
+        player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM), needCheck=False)
         taskData = dataUtils.getTaskData(rootTaskId)
         for subTaskId in taskData.get('ChildTaskIds', []):
             player.taskInfo.tasks.pop(subTaskId, None)
@@ -604,9 +604,8 @@ def unlockAllFunc(su, player, onlyTask=0):
         if taskId in V_VD.taskDic:
             player.updateVisibleByList(V_VD.taskDic[taskId])
     player.unlockSkill(True, 0, 0)
-    for newbieGuideId in TTGD.datas.keys():
-        if newbieGuideId not in player.newbieGuideIds:
-            player.newbieGuideIds.append(newbieGuideId)
+    for newbieGuideId in TTRD.datas.keys():
+        player.setNewbieGuideId(player.id, newbieGuideId, 1)
     player.gmFinishedNewbie(0)
 
     return True, '执行成功'
@@ -715,7 +714,7 @@ def setMemoryData(su, moduleName, key, attrName, value, isBase64=0):
 def _translateValue(value, valueType, module_dict=None):
     """根据valueType转换value"""
     try:
-        DEBUG_MSG(f'_translateValue:: {value} {type(value)} to {valueType}')
+        LOG_DBG(f'_translateValue:: {value} {type(value)} to {valueType}')
         import ast
         if valueType == 'int':
             if type(value) is bool:
@@ -875,17 +874,17 @@ def getMemoryData(su, moduleName, key, attrName=None):
             new_data = {k: _getTableValue(v) for k, v in target_data._data.items()}
         else:
             new_data = {k: _getTableValue(v) for k, v in target_data.items()}
-        DEBUG_MSG("GM: getMemoryData ~ ", new_data)
+        LOG_DBG("GM: getMemoryData ~ ", new_data)
         return su.onCommandResult(0, 'ok', new_data)
 
 @gm_cmd('$reqWorkshopSetAutoMF', (Player("gbId/Id"), Int('autoMF')), RARG(0), gameconst.BASE, '测试开启自动合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopSetAutoMF(su, player, autoMF):
-    INFO_MSG("GM: reqWorkshopSetAutoMF ~ ", autoMF)
+    LOG_IFO("GM: reqWorkshopSetAutoMF ~ ", autoMF)
     return player.reqWorkshopSetAutoMF(autoMF)
 
 @gm_cmd('$reqWorkshopMF', (Player("gbId/Id"), Int('itemID'), Int('batchCount')), RARG(0), gameconst.BASE, '测试合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopMF(su, player, itemID, batchCount):
-    INFO_MSG("GM: reqWorkshopMF ~ ", itemID, batchCount)
+    LOG_IFO("GM: reqWorkshopMF ~ ", itemID, batchCount)
     return player.reqWorkshopMF(itemID, batchCount)
 
 @gm_cmd('$getServerAllEntities', (), RALL, ALL, '获取服务器所有实体', ALLSIDE, GOD_GROUPS)
@@ -1153,7 +1152,7 @@ def broadcastSystemMsg(su, message):
         # 只在一个BaseApp进程中执行，然后向所有BaseApp广播
         gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                     (gameconst.BASE, 'onRecvChannelMsg',
-                                     (gameconst.ChatChannel.SYSTEM, system_avatar_info, strmessage), ()))
+                                     (gameconst.ChatChannelEnum.SYSTEM, system_avatar_info, strmessage), ()))
         
         return su.onCommandResult(0, f'系统消息广播成功: {strmessage}', {})
         
@@ -1442,4 +1441,25 @@ def testBagLock(su, player):
     player.bagData.tryLockBag(lockDesc='testBagLock', lockSecs=30)
     player.petBag.tryLockBag(lockDesc='testBagLock', lockSecs=30)
     return True, '执行成功'
+
+@gm_cmd('$testcurrencyexchange', (Player("gbId/Id"),Int('cid'),Int('cost')), RARG(0), gameconst.BASE, '测试货币兑换', ALLSIDE, GOD_GROUPS)
+def testcurrencyexchange(su, player, cid, cost):
+    player.exchangeCurrency(player.id, cid, cost)
+    return True, '执行成功'
+
+@gm_cmd('$testspeedStatsConditions', (Player("gbId/Id"), Str('values')), RARG(0), gameconst.CELL, '测试设置引擎参数', ALLSIDE, GOD_GROUPS)
+def testspeedStatsConditions(su, player, values):
+    if player is None:
+        return False, '执行失败'
+    datas = [float(item) for item in values.split(',')]
+    player.gmTestSpeedStatConditions(datas)
+    return True, '执行成功'
+
+@gm_cmd('$testremodelingPet', (Player("gbId/Id"), Int('gridId')), RARG(0), gameconst.BASE, '测试重塑', ALLSIDE, GOD_GROUPS)
+def remodelingPet(su, player, gridId):
+    if player is None:
+        return False, '执行失败'
+    player.remodelingPet(player.id, gridId)
+    return True, '执行成功'
+
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

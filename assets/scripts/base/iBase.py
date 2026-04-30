@@ -16,7 +16,7 @@ class IBase(KBEngine.Entity):
     def __init__(self):
         super(IBase, self).__init__()
 
-        self.birthInMem = utils.getNow()
+        self.birthInMem = utils.curTS()
 
         self.shouldAutoBackup = False
 
@@ -71,7 +71,7 @@ class IBase(KBEngine.Entity):
         try:
             self.createCellEntity(cellMailbox)
         except Exception as e:
-            ERROR_MSG('createCellNearHere: fail to create cellEntity', cellMailbox, e)
+            LOG_ERR('createCellNearHere: fail to create cellEntity', cellMailbox, e)
             self.entireDestroy(False, False)
         return
 
@@ -96,7 +96,7 @@ class IBase(KBEngine.Entity):
 
             callObj()
 
-        self._callback(interval, 'batchlyCall', (it, batchNum, interval, callback), gametimer.TIMER_TAG_BATCHLY_CALL)
+        self.addTimerCB(interval, 'batchlyCall', (it, batchNum, interval, callback), gametimer.TIMER_TAG_BATCHLY_CALL)
 
     def getCellData(self, key, defaultValue):
         return self.cellData.get(key, defaultValue)

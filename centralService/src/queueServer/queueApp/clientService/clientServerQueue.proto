@@ -30,6 +30,8 @@ message QueueReply
         QUEUE_SUCCESS = 0;
         QUEUE_IN_PROCESS = 1;
         QUEUE_FAILED = 2;
+        BEFORE_OPENTIME = 3;
+        MAINTENANCE = 4;
     }
 
     QueueState state=1;

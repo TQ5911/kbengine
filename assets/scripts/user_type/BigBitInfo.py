@@ -4,7 +4,7 @@
 import userType
 
 
-class BigBitVal(userType.UserSoleType):
+class BigBitVal(userType.UserSingleType):
     '''BIG_BIT_DATA_INFO'''
     def __init__(self, stateList=()):
         if stateList is None:
@@ -46,7 +46,7 @@ class BigBitVal(userType.UserSoleType):
         # 初始化stateList为全0
         self.stateList = [0] * num_bytes
 
-    def setBit(self, state, value=True):
+    def bset(self, state, value=True):
         """
         设置指定位的值。
 
@@ -80,7 +80,7 @@ class BigBitVal(userType.UserSoleType):
         Args:
             state: 位的位置（从0开始计数）。
         """
-        self.setBit(state, False)
+        self.bset(state, False)
 
     def toBigBitSavedDict(self):
         return {

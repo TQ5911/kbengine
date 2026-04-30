@@ -29,17 +29,17 @@ class WarehouseBag(BaseBag.BaseBag):
 
     @utils.checkBagLocked
     def doUnlockWarehouseGrids(self, owner, gridNum):
-        INFO_MSG('in doUnlockWarehouseGrids', gridNum)
+        LOG_IFO('in doUnlockWarehouseGrids', gridNum)
         bankCapacity = BagDataSet.datas['bankCapacity']['value']
         if self.capacity >= bankCapacity:
-            WARNING_MSG('   in doUnlockWarehouseGrids, reach limit:', self.capacity)
+            LOG_WARN('   in doUnlockWarehouseGrids, reach limit:', self.capacity)
             return
         
         oldCapacity = self.capacity
         newCapacity = self.capacity + gridNum
         initGridNum = BagDataSet.datas['initBankCapacity']['value']
         if newCapacity > bankCapacity:
-            WARNING_MSG('   in doUnlockWarehouseGrids, reach limit:', newCapacity)
+            LOG_WARN('   in doUnlockWarehouseGrids, reach limit:', newCapacity)
             return
         
         startGrid = self.capacity - initGridNum + 1
@@ -50,10 +50,10 @@ class WarehouseBag(BaseBag.BaseBag):
             needItemId = BGBUD.datas[gridId]['itemNeeded']
             itemNum = BGBUD.datas[gridId]['itemNum']
             deductWealthVal.addWealthByItemId(needItemId, itemNum, dataUtils.getItemDefaultBindType())
-            DEBUG_MSG('     in doUnlockWarehouseGrids:', needItemId, itemNum)
+            LOG_DBG('     in doUnlockWarehouseGrids:', needItemId, itemNum)
 
         if not owner.canDeductWealth(deductWealthVal, sendMsg=True):
-            WARNING_MSG('       in doUnlockWarehouseGrids, items not enough:', deductWealthVal)
+            LOG_WARN('       in doUnlockWarehouseGrids, items not enough:', deductWealthVal)
             return
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_UNLOCK_GRIDS

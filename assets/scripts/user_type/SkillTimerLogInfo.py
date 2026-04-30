@@ -4,9 +4,9 @@
 import userType
 
 
-class SkillTimerLogVal(userType.UserSoleType):
+class SkillTimerLogVal(userType.UserSingleType):
     '''SKILL_TIMER_LOG_DATA_INFO'''
-    def __init__(self, objId=0, timerId=0, opr=0, key='', skillId=0, ts=0):
+    def __init__(self, objId=0, timerId=0, opr=0, key=0, skillId=0, ts=0):
         self.objId = objId
         self.timerId = timerId
         self.opr = opr

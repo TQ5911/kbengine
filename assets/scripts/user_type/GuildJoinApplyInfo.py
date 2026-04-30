@@ -6,7 +6,7 @@ import gameconst
 import guild_guildConst as G_GCD
 
 
-class GuildJoinApplyVal(userType.UserSoleType):
+class GuildJoinApplyVal(userType.UserSingleType):
     '''GUILD_JOIN_APPLY_DATA_INFO'''
     def __init__(self, gbId=0, level=0, score=0, ts=0, sex=0, school=0, name=''):
         self.gbId = gbId

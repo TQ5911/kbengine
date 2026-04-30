@@ -28,9 +28,9 @@ class INewbie(object):
                 break
 
         if isFinished:
-            delay > 0 and self._callback(delay, '_gmNewbieFinishOffline', (), gametimer.TIMER_TAG_GM_NEWBIE_FINISH_OFFLINE)
+            delay > 0 and self.addTimerCB(delay, '_gmNewbieFinishOffline', (), gametimer.TIMER_TAG_GM_NEWBIE_FINISH_OFFLINE)
         else:
-            self._callback(0.1, '_gmFinishedNewbie', (gen, delay, stepLimit), gametimer.TIMER_TAG_NEWBIE_GM_ITER)
+            self.addTimerCB(0.1, '_gmFinishedNewbie', (gen, delay, stepLimit), gametimer.TIMER_TAG_NEWBIE_GM_ITER)
 
     def newbieIter(self, stepLimit):
         import dropAward
@@ -80,7 +80,7 @@ class INewbie(object):
         if not stepId:
             return
 
-        DEBUG_MSG('onTaskFinishedForNewbieStep:', stepId)
+        LOG_DBG('onTaskFinishedForNewbieStep:', stepId)
         if stepId > self.newbieStep:
             self.newbieStep = stepId
             self.cell.onNewbieStepModify(self.newbieStep)
@@ -90,27 +90,27 @@ class INewbie(object):
         return stepData['lockDun'] if stepData else 0
 
     def _enterNewbieDungeon(self):
-        DEBUG_MSG('newbie will enter', self.newbieStep)
+        LOG_DBG('newbie will enter', self.newbieStep)
         cellData = self.cellData
         dungeonNo = self.getNewbieLockDun()
         dunData = GPGPD.datas.get(dungeonNo)
         if not dunData:
-            ERROR_MSG('_enterNewbieDungeon but dun invalid:', dungeonNo)
+            LOG_ERR('_enterNewbieDungeon but dun invalid:', dungeonNo)
             return False
 
-        if not gameconst.DungeonType.isSingleDungeon(dunData['type'], dunData['enterType']):
-            ERROR_MSG('_enterNewbieDungeon but dun invalid:', dungeonNo)
+        if not gameconst.DungeonTypeJudge.isSingleDungeon(dunData['type'], dunData['enterType']):
+            LOG_ERR('_enterNewbieDungeon but dun invalid:', dungeonNo)
             return False
 
         extra = {'dungeonNo': dungeonNo, 'isNewbie': True, 'spaceLevel': cellData.get("level", 1)}
-        gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterType.SINGLE)\
+        gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE)\
             .applyCreateDungeon(self, self.gbID, 0, extra)
         return True
 
     def onNewbieDungeonReady(self, spaceBox, spaceMgrBox, spaceMgrId, spaceNo):
-        DEBUG_MSG('onNewbieDungeonReady:', spaceMgrId, spaceNo)
+        LOG_DBG('onNewbieDungeonReady:', spaceMgrId, spaceNo)
         if self.isDestroyed:
-            WARNING_MSG('dungeon ready but self destroyed')
+            LOG_WARN('dungeon ready but self destroyed')
             return
 
         context = {'e': {'spaceMgrBox': spaceMgrBox,
@@ -121,25 +121,25 @@ class INewbie(object):
         options = complexTeleportOption.ComplexTeleportOptions()
         callback1, args1 = '_afterEnter_singleDungeon', (spaceNo, spaceNo, options, context)
         self.cellData.setdefault('tempMiscProps', {})
-        self.cellData['tempMiscProps'][gameconst.AvatarProps.newbieCreateCellCB] = ((callback1, args1),)
-        dstPos, dstDir = self._getNewbieEntrance(formula.getMapId(spaceNo))
+        self.cellData['tempMiscProps'][gameconst.EntityPropsEnum.newbieCreateCellCB] = ((callback1, args1),)
+        dstPos, dstDir = self._getNewbieEntrance(formula.fetchMapId(spaceNo))
         self.cellData['position'] = dstPos
         self.cellData['direction'] = dstDir
         self.cellData['spaceNo'] = spaceNo
         spaceBox.createCellNearSelf(self)
 
     def _getNewbieEntrance(self, dungeonNo):
-        dunSData = utils.getDunStructureModuleData(dungeonNo)
+        dunSData = utils.getDunStructModData(dungeonNo)
         stepData = TCNSD.datas.get(self.newbieStep)
         if stepData and stepData['taskTag'] and not self.isTaskComplete(stepData['taskTag']) and stepData.get('bornPos'):
-            DEBUG_MSG('_getNewbieEntrance, step taskTag not complete:', stepData)
+            LOG_DBG('_getNewbieEntrance, step taskTag not complete:', stepData)
             bornRotation = stepData['bornRotation']
             return stepData.get('bornPos'), (0, 0, bornRotation * math.pi / 180)
         elif 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
-            return formula.bornPosFromData(d), (0, 0, d['Dir'] * math.pi / 180)
+            return formula.bornPosFromDunData(d), (0, 0, d['Dir'] * math.pi / 180)
         else:
-            gameengine.reportCritical('_getNewbieEntrance but not has pos and dir:', dungeonNo)
+            gameengine.panicStack('_getNewbieEntrance but not has pos and dir:', dungeonNo)
             return self.cellData['position'], self.cellData['direction']
 
     def _claimTaskByNewbieStep(self):
@@ -151,17 +151,21 @@ class INewbie(object):
         if not startTask:
             return
 
-        DEBUG_MSG('_claimTaskByNewbieStep:', startTask)
+        LOG_DBG('_claimTaskByNewbieStep:', startTask)
         self.baseTaskClaim(startTask, None, False)
 
-    def addNewbieGuideId(self, exposed, newbieGuideId):
-        if len(self.newbieGuideIds) > 1000:
-            ERROR_MSG('addNewbieGuideId meet max')
-            return
+    def setNewbieGuideId(self, exposed, newbieGuideId, val):
+        if len(self.newbieGuideIds) > 100:
+            LOG_ERR('setNewbieGuideId meet max')
 
-        if newbieGuideId in self.newbieGuideIds:
-            WARNING_MSG('addNewbieGuideId has added')
-            return
+        for _idx, _id in enumerate(self.newbieGuideIds):
+            if _id == newbieGuideId:
+                self.newbieGuideVals[_idx] = val
+                break
 
-        self.newbieGuideIds.append(newbieGuideId)
-        self.client.onNewbieGuideId(newbieGuideId)
+        else:
+            self.newbieGuideIds.append(newbieGuideId)
+            self.newbieGuideVals.append(val)
+
+
+        self.client.onNewbieGuideId(newbieGuideId, val)

@@ -14,7 +14,7 @@ class IMeridian(object):
     """
     
     def onMeridianAward(self, propIndexList):
-        DEBUG_MSG('onMeridianAward', propIndexList)
+        LOG_DBG('onMeridianAward', propIndexList)
 
         propDict = {}
         for index in propIndexList:
@@ -38,10 +38,10 @@ class IMeridian(object):
     def _addAwardMeridianPropsCell(self, syncPropDict):
         addScore = 0
         for propName, val in syncPropDict.items():
-            self.addProp(propName, val, gameconst.SourceType.MeridianProp)
+            self.addProp(propName, val, gameconst.SourceType.SrcTpMeridianProp)
             addScore += dataUtils.calcFightPropScore(self.school, propName, val)
-            # DEBUG_MSG('add prop by meridian', propName, ', val', val)
+            # LOG_DBG('add prop by meridian', propName, ', val', val)
 
         newScore = self.scoresInfo.meridian + addScore
-        DEBUG_MSG('add score by meridian', self.scoresInfo.meridian, ', val', addScore)
+        LOG_DBG('add score by meridian', self.scoresInfo.meridian, ', val', addScore)
         self.onUpdateMeridianScore(newScore)

@@ -126,7 +126,7 @@ class ElasticUtils(object):
         uri = cls.join(cls.uriBase(), cls.indexName, cls.typeName, str(obId))
 
         def _func(httpcode, data, headers, success, url):
-            DEBUG_MSG('ckz: elastic add:', httpcode, data, headers, success, url)
+            LOG_DBG('ckz: elastic add:', httpcode, data, headers, success, url)
 
         KBEngine.urlopenv2(uri, _func, method='POST',
                            headers=cls.methodPOSTHeaders(),
@@ -138,7 +138,7 @@ class ElasticUtils(object):
         uri = cls.join(cls.uriBase(), cls.indexName, cls.typeName, str(dbId))
 
         def _func(*args):
-            DEBUG_MSG('delete:', *args)
+            LOG_DBG('delete:', *args)
 
         KBEngine.urlopenv2(uri, _func, method='DELETE',
                     headers=cls.methodGETHeaders(),
@@ -157,7 +157,7 @@ class ElasticUtils(object):
                 jsonData = json.loads(data)
                 callback(True, jsonData)
             except Exception as e:
-                WARNING_MSG('indexAvatarObId failed:', e)
+                LOG_WARN('indexAvatarObId failed:', e)
                 failedFunc()
 
         KBEngine.urlopenv2(uri, _func, method='GET',
@@ -204,7 +204,7 @@ class ElasticUtils(object):
                 hits = jsonData['hits']['hits']
                 callback(hits)
             except Exception as e:
-                WARNING_MSG('reqSearchAvatarName:', e)
+                LOG_WARN('reqSearchAvatarName:', e)
                 failedFunc('search avatar meet exception', e)
 
         KBEngine.urlopenv2(uri, _func, method='POST', postData=data.encode('utf-8'), headers=cls.methodPOSTHeaders(), timeoutSec=timeoutSec)
@@ -218,7 +218,7 @@ class ElasticUtils(object):
     @classmethod
     def searchAvatarByName(cls, name, cb):
         def _failedFunc(*args):
-            ERROR_MSG('searchAvatarByName failed:', args)
+            LOG_ERR('searchAvatarByName failed:', args)
 
         if name.isdigit():
             cls.indexAvatarObId(
@@ -236,7 +236,7 @@ class ElasticUtils(object):
             _list = [retData['gbId']]
 
         def _failedFunc(*args):
-            ERROR_MSG('_searchAvatarByNameAfterIndex failed:', args)
+            LOG_ERR('_searchAvatarByNameAfterIndex failed:', args)
 
         cls.reqSearchAvatarName(
             name,
@@ -265,7 +265,7 @@ class ElasticUtils(object):
     #
     #         box.onGetSearchFriendResult(sendList)
     #
-    #     def _callback(hits):
+    #     def addTimerCB(hits):
     #         for data in hits:
     #             retData = cls._getRetData(data)
     #             if name not in retData['name']:
@@ -281,7 +281,7 @@ class ElasticUtils(object):
     #
     #         redisUtils.RedisUtils.getUsersInfo(list(retDict.keys()), _userInfoCB)
     #
-    #     cls.reqSearchAvatarName(name, _callback, failedFunc)
+    #     cls.reqSearchAvatarName(name, addTimerCB, failedFunc)
 
     # idip按照名字分词搜索部分
     @classmethod

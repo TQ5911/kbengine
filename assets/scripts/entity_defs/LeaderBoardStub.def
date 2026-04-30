@@ -3,6 +3,7 @@
         <Interface> iBaseNoCell                 </Interface>
         <Interface> iGlobal                     </Interface>
         <Interface> iTimerBase                  </Interface>
+        <Interface> iCycleEvent                 </Interface>
     </Interfaces>
 
     <Properties>
@@ -11,6 +12,12 @@
             <Flags>         BASE                                            </Flags>
             <Persistent>    true                                            </Persistent>
         </leaderBoardType>
+
+        <dynamicWorldLevel>
+            <Type>          LEVEL                                           </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+        </dynamicWorldLevel>
 
         <leaderBoardCache>
             <Type>          PY_DICT         </Type>
@@ -51,5 +58,9 @@
             <Arg>           SCHOOL                                  </Arg>
             <Arg>           LEADER_BOARD_PAGE                       </Arg>
         </doGetLeaderBoardList>
+
+        <getDynamicWorldLevel>
+            <Arg>          ENTITYCALL                  </Arg>
+        </getDynamicWorldLevel>
     </BaseMethods>
 </root>

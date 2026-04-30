@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import time
 import os
@@ -8,7 +9,7 @@ from datetime import datetime
 import random
 from botUtils.faceData_CtoDict import FACE_DATA
 import botUtils.http_service as http_service
-
+import re
 # 初始化环境变量
 cur_path = os.path.realpath(__file__)
 bot_dir = os.path.dirname(cur_path)
@@ -25,6 +26,10 @@ const_workspace_id_h1 = "59721401"
 const_url_Alluser = f'https://api.tapd.cn/workspaces/users?workspace_id={const_workspace_id_h1}'
 const_api_username = "GLdhcEyf"
 const_api_password = "503E42F4-C403-B92C-A28C-2856A7178963"
+
+#在企业微信 拿成员名单 re取一下，如果人员变更多，需要这里改一下
+AllUserstr = "徐方磊;包航;曹逸凡(关卡);柴东月;陈成伟(特效);陈科争(服务端);陈拓;陈周平(场景原画);陈子琪(交互);车子豪(特效);崔国标(角色模型);戴诚磊(客户端);郭宁(交互);顾倩倩(GUI);黄晓洁(角色模型);胡阳;胡宇萌（角色原画）;纪萱;柯臣;廖作嘉;李崇(场景模型);李均(服务端);李蒙;凌乔亚(TA);林湉;李启迪(PM);李奇育;李胜楠(WEB-前端);李帅(地编);刘昊(战斗);刘建锋(TA);刘莫(GUI);刘晓龙(特效);李小秋;李子晗(WEB-后端);陆佳毅(场景原画);吕冬;马俊捷(数值);毛耀华;梅天杰;钱伟;邱伟(服务端);任凯(场景模型);沈翔(QA);沈锡生;司乾义(地编);斯羿涵;隋云峰;唐政(QA);田净雨(关卡);王萌辉(场景模型);王鹏(QA);王文涛(地编);王悦(QA);王云龙(客户端);温浩(地编);巫顶峰;吴焱斌(QA);肖建强(特效);肖明(场景模型);谢崇伦;郗浩钦(场景模型);许耿腾(系统);徐银燕(地编);杨乐;杨雅琼(场景模型);闫明(场景模型);颜敏捷(角色模型);严伟铭(QA);严毅;叶飞帆（地编）;游先毅;于森森(场景模型);张典;张浩杰(角色原画);张帅;张武建;张新辉(角色动作);张昕雅;张一晔(角色模型);张灼(地编);占星豪(QA);赵睿(战斗);赵文唯（QA）;郑炜（动作）;庄超(系统);祝天奇(服务端);朱子阳(角色模型);资萱梓(角色原画);"
+
 name_dict = {}
 
 if modName.endswith('.py'):
@@ -38,19 +43,24 @@ if not hasattr(mod, 'DELEGATE_CLS'):
     exit(-1)
 
 def GetAllUsers():
-    url = const_url_Alluser
-    req = requests.get(url, auth=(const_api_username, const_api_password))
-    if req.status_code != 200:
-        print(f"请求用户列表失败: {req.text}")
-    else:
-        print("请求用户列表成功")
-    data = req.json()
-    Allusers = [item["UserWorkspace"]["user"] for item in data["data"]]
+    # url = const_url_Alluser
+    # req = requests.get(url, auth=(const_api_username, const_api_password))
+    # if req.status_code != 200:
+    #     print(f"请求用户列表失败: {req.text}")
+    # else:
+    #     print("请求用户列表成功")
+    # data = req.json()
+    #Allusers = [item["UserWorkspace"]["user"] for item in data["data"]]
+    Allusers = Username_RE()
     for name in Allusers:
         pinyin_name = ''.join(lazy_pinyin(name))
         name_dict[name] = pinyin_name
     print(name_dict)
     return name_dict
+
+def Username_RE():
+    Allusers = re.findall(r'[\u4e00-\u9fa5]+', AllUserstr)
+    return Allusers
 
 
     # return Allusers

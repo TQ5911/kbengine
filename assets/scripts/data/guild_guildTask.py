@@ -63,7 +63,14 @@ datas = _tools.RODict({
         "num": 1,
         "para": 32000004,
         "reward": 40020233
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "type": 5,
+        "num": 1,
+        "para": 0,
+        "reward": 40020233
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 8

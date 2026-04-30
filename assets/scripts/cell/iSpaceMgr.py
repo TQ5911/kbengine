@@ -11,6 +11,7 @@ import dataUtils
 import gamelog
 import iMapMonsterRefresh
 import iTimerEntityRefresh
+import iBoxGroupRefresh
 
 class PlayerInfo(int):
     def __init__(self, *args, **kwargs):
@@ -26,10 +27,10 @@ class PlayerInfo(int):
         self._isDead = False
 
 
-class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh, iTimerEntityRefresh.ITimerEntityRefresh):
+class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh, iTimerEntityRefresh.ITimerEntityRefresh, iBoxGroupRefresh.IBoxGroupRefresh):
 
     def __init__(self):
-        DEBUG_MSG('ISpaceMgr.__init__', self.id, self.spaceNo)
+        LOG_DBG('ISpaceMgr.__init__', self.id, self.spaceNo)
         self.initFlowController()
         iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
         iTimerEntityRefresh.ITimerEntityRefresh.__init__(self)
@@ -50,9 +51,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             playerEnt = KBEngine.entities.get(pid)
             playerEnt and func(playerEnt)
 
-    def initAIController(self):
-        pass
-
     def initFlowController(self):
         pass
 
@@ -60,7 +58,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         return False
 
     def beNotifiedSpaceEvent(self, srcEntId, eventId, args):
-        DEBUG_MSG('zt: beNotifiedSpaceEvent', srcEntId, eventId, args)
+        LOG_DBG('zt: beNotifiedSpaceEvent', srcEntId, eventId, args)
         for entId in list(self.spaceEntities.keys()):
             e = self.getEntityById(entId)
             if e and e.checkEventListened(eventId):
@@ -79,7 +77,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         pass
 
     def receiveAIEvent(self, srcEntId, eventId, args):
-        self.aiEvents[eventId] = ((srcEntId, args), utils.getNow())
+        self.aiEvents[eventId] = ((srcEntId, args), utils.curTS())
         self.tickAI()
 
     def checkEventListened(self, eventId):
@@ -87,7 +85,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def actWaitEvent(self, eventId):
         if eventId not in self.aiEvents:
-            self.aiEventListener[eventId]=utils.getNow()
+            self.aiEventListener[eventId]=utils.curTS()
             return None
 
         (srcId, args), timestamp = self.aiEvents.pop(eventId)
@@ -113,19 +111,19 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         self.spaceEntities[entId] = tags
 
         for tag in tags:
-            self.taggedEntities.setdefault(tag, []).append(entId)
+            self.tagEntities.setdefault(tag, []).append(entId)
 
         # �������񡿸����༭����monsterID���뷶Χ����ΪentityID��
         ent = KBEngine.entities.get(entId)
         if not ent:
             return
 
-        if formula.isMineWarSpace(self.spaceNo) and not ent.IsMonster:
+        if formula.inMineWarScene(self.spaceNo) and not ent.IsMonster:
             self.addMineWarEntity(ent)
 
         if ent.IsMonster:
             if ent.lightPillar != 0:
-                DEBUG_MSG('zt: lightPillar', ent.lightPillar)
+                LOG_DBG('zt: lightPillar', ent.lightPillar)
                 if entId not in self.lightPillarDict:
                     self.lightPillarDict[entId] = ent.lightPillar
                     self.syncPlayer(lambda box: box.client.onLightPillarUpdate([ent.lightPillar], [True]))
@@ -133,11 +131,13 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         #     attrId = CBD.datas[ent.monsterId]['attribute']
             # self._doActionByAttrKey(ent, utils.getMonsterAttrKey(attrId))
 
+        self.addBoxGroupEntity(ent)
+
     def setBossEntity(self, entId):
         tag = 'boss'
-        bossList = self.taggedEntities.setdefault(tag, [])
+        bossList = self.tagEntities.setdefault(tag, [])
         if entId in bossList:
-            WARNING_MSG("setBossEntity:: already set boss", entId)
+            LOG_WARN("setBossEntity:: already set boss", entId)
             return
         bossList.append(entId)
         if entId in self.spaceEntities:
@@ -148,9 +148,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def unsetBossEntity(self, entId):
         tag = 'boss'
-        bossList = self.taggedEntities.setdefault(tag, [])
+        bossList = self.tagEntities.setdefault(tag, [])
         if entId not in bossList:
-            WARNING_MSG("unsetBossEntity:: boss not be setted", entId)
+            LOG_WARN("unsetBossEntity:: boss not be setted", entId)
             return
         bossList.remove(entId)
         _tags = self.spaceEntities[entId]
@@ -168,9 +168,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
         return e
 
-    def getEntitiesByTag(self, tag):
+    def listEntitiesByTag(self, tag):
         ents = []
-        for eid in self.taggedEntities.get(tag, []):
+        for eid in self.tagEntities.get(tag, []):
             ent = self.getEntityById(eid)
             if ent:
                 ents.append(ent)
@@ -178,17 +178,17 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         return ents
 
     def getEntitiyByTag(self, tag):
-        for eid in self.taggedEntities.get(tag, []):
+        for eid in self.tagEntities.get(tag, []):
             ent = self.getEntityById(eid)
             return ent
 
     def removeEntityById(self, entId):
         if entId not in self.spaceEntities:
-            ERROR_MSG('removeEntityById: entity does not exist', entId)
+            LOG_ERR('removeEntityById: entity does not exist', entId)
             return
 
         for tag in self.spaceEntities[entId]:
-            tagList = self.taggedEntities[tag]
+            tagList = self.tagEntities[tag]
             tagList.remove(entId)
 
         self.spaceEntities.pop(entId)
@@ -196,16 +196,20 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             pillar = self.lightPillarDict.pop(entId)
             self.syncPlayer(lambda box: box.client.onLightPillarUpdate([pillar], [False]))
 
+        ent = KBEngine.entities.get(entId)
+        if ent:
+            self.removeBoxGroupEntity(ent)
+
     def removeEntitiesByTag(self, tag):
-        if tag not in self.taggedEntities:
-            ERROR_MSG('removeEntitiesByTag: tag does not exist', tag)
+        if tag not in self.tagEntities:
+            LOG_ERR('removeEntitiesByTag: tag does not exist', tag)
             return
 
-        entIdList = list(self.taggedEntities[tag])
+        entIdList = list(self.tagEntities[tag])
         for eid in entIdList:
             self.removeEntityById(eid)
 
-        self.taggedEntities.pop(tag)
+        self.tagEntities.pop(tag)
         gid = 0
         if tag.startswith('gid_'):
             _, gid = tag.split('_')
@@ -301,7 +305,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         return ents
 
     def _getEntitiesByTag(self, tag):
-        entIds = self.taggedEntities.get(tag)
+        entIds = self.tagEntities.get(tag)
         if not entIds:
             return []
 
@@ -316,18 +320,18 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def onPlayerDead(self, box, playerGbId):
         if box.id not in self.players:
-            ERROR_MSG("onPlayerDead:: player not found", box, box.id, playerGbId)
+            LOG_ERR("onPlayerDead:: player not found", box, box.id, playerGbId)
             return
         self.players[box.id].onPlayerDead()
 
     def onPlayerRelive(self, box, playerGbId):
         if box.id not in self.players:
-            ERROR_MSG("onPlayerRelive:: player not found", box, box.id, playerGbId)
+            LOG_ERR("onPlayerRelive:: player not found", box, box.id, playerGbId)
             return
         self.players[box.id].onPlayerRelive()
 
     def onCollectionBeCollect(self, entityGID, collectionId):
-        DEBUG_MSG("onCollectionBeCollect::", entityGID, collectionId)
+        LOG_DBG("onCollectionBeCollect::", entityGID, collectionId)
         self.collBeCollectedDict.setdefault(entityGID, 0)
         self.collBeCollectedDict[entityGID] += 1
 
@@ -347,7 +351,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             e.aiTriggerEvent(src.id, eventId, args)
 
     def innerSetSpaceVar(self, opUUID, varSrc, desc, varId, fmlId, paramVarIdList, avatarVarDic):
-        DEBUG_MSG('innerSetSpaceVar:', varSrc, varId, fmlId, paramVarIdList, avatarVarDic)
+        LOG_DBG('innerSetSpaceVar:', varSrc, varId, fmlId, paramVarIdList, avatarVarDic)
         paramList = []
         for varId in paramVarIdList:
             if dataUtils.isAvatarVar(varId):
@@ -355,15 +359,15 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             elif dataUtils.isSpaceVar(varId):
                 paramList.append(self.getSpaceVar(varId))
 
-        newVal = utils.calcFormulaValue(f'formula:{fmlId}', paramList)
+        newVal = utils.calcFormulaValue(fmlId, paramList)
         self.setSpaceVar(varId, newVal, opUUID, varSrc, desc)
         return
 
     def setSpaceVar(self, varId, newVal, opUUID, varSrc, desc):
         varData = dataUtils.getVariableData(varId)
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if varData['cntGamePlay'] != dungeonNo:
-            WARNING_MSG('setSpaceVar, not belong to the space:', varId, dungeonNo)
+            LOG_WARN('setSpaceVar, not belong to the space:', varId, dungeonNo)
             return
         oldVal = self.getSpaceVar(varId)
         if oldVal == newVal:
@@ -383,9 +387,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def addSpaceVar(self, varId, addVal, opUUID, varSrc, desc):
         varData = dataUtils.getVariableData(varId)
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if varData['cntGamePlay'] != dungeonNo:
-            WARNING_MSG('addSpaceVar, not belong to the space:', varId, dungeonNo)
+            LOG_WARN('addSpaceVar, not belong to the space:', varId, dungeonNo)
             return
         oldVal = self.getSpaceVar(varId)
         self.spaceVars[varId] = oldVal + addVal
@@ -402,9 +406,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def getSpaceVar(self, varId):
         varData = dataUtils.getVariableData(varId)
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if varData['cntGamePlay'] != dungeonNo:
-            WARNING_MSG('getSpaceVar, not belong to the space:', varId, dungeonNo)
+            LOG_WARN('getSpaceVar, not belong to the space:', varId, dungeonNo)
             return
         return self.spaceVars.get(varId, dataUtils.getVariableDefaultVal(varId))
 
@@ -428,7 +432,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         if not self.notifyNearPosList:
             return
 
-        mons = self.getEntitiesByTag('Monster')
+        mons = self.listEntitiesByTag('Monster')
         for avatarId in self.notifyNearPosList:
             avatar = self.getEntityById(avatarId)
             if not avatar:
@@ -440,15 +444,15 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
                 if not mon:
                     continue
 
-                if mon.hasState(gameconst.State.Death):
+                if mon.hasState(gameconst.StateEnum.Death):
                     continue
 
-                dis = self._getDistance(avatar, mon)
-                if self.isNearMonIgnore(mon, dis):
+                distance = self._getDistance(avatar, mon)
+                if self.isNearMonIgnore(mon, distance):
                     continue
 
-                if dis < nearDis:
-                    nearDis = dis
+                if distance < nearDis:
+                    nearDis = distance
                     nearMon = mon
 
             if nearMon:
@@ -474,7 +478,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
     # ----------------------------------------------------------------------
     # CINEMA
     def cinemaPlay(self, cinemaPlayID):
-        DEBUG_MSG("cinemaPlay::", cinemaPlayID)
+        LOG_DBG("cinemaPlay::", cinemaPlayID)
         self.syncPlayer(lambda box: box.prepareStartPlayCinema(cinemaPlayID))
     # ----------------------------------------------------------------------
 
@@ -489,8 +493,8 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             self.getCurrentSpace().createCellLocally(_className, _pos, _dir, _params)
 
     def doDungeonStartBattleCD(self, spaceNo, dungeonNo, cdTime):
-        ts = utils.getNow() + cdTime
-        if formula.isGuildBossDungeonSpace(spaceNo):
+        ts = utils.curTS() + cdTime
+        if formula.inGuildBossDungeonScene(spaceNo):
             self.getGuildBox().onGuildChallengeDungeonStartBattleCD(ts)
         self.syncPlayer(lambda box: box.client.onNotifyStartBattleCD(dungeonNo, ts))
         

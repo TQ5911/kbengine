@@ -89,7 +89,7 @@ datas = _tools.RODict({
     }),
     "customSort": _tools.RODict({
         "ID": "customSort",
-        "value": (30000001, 30000002, 30000013, 30000100),
+        "value": (30000001, 30000002, 30000013, 30000021),
     }),
     "agentVisible": _tools.RODict({
         "ID": "agentVisible",

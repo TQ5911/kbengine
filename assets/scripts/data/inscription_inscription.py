@@ -165,8 +165,8 @@ datas = _tools.RODict({
         "tag": 5,
         "rarity": 2,
         "skill_id": 90010005,
-        "type": (22,),
-        "effect_value": _tools.ROList([(0.08, 0.08)]),
+        "type": (16,),
+        "effect_value": _tools.ROList([(5, 5)]),
     }),
     105301: _tools.RODict({
         "ID": 105301,

@@ -127,7 +127,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 5400.0,
+            "RefreshTime": [
+              5400.0,
+              6300.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -157,7 +160,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 5400.0,
+            "RefreshTime": [
+              5400.0,
+              6300.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -187,7 +193,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3600.0,
+            "RefreshTime": [
+              3600.0,
+              4500.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -217,7 +226,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3600.0,
+            "RefreshTime": [
+              3600.0,
+              4500.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -247,7 +259,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": [
+              1800.0,
+              2400.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -277,7 +292,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": [
+              1800.0,
+              2400.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -307,7 +325,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": [
+              1800.0,
+              2400.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -337,7 +358,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": [
+              1800.0,
+              2400.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,

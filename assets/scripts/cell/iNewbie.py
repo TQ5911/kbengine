@@ -6,29 +6,29 @@ import tutorConst_newbieStep as TCNSD
 
 class INewbie(object):
     def _initNewbieCell(self):
-        ret = self.popTempMiscProp(gameconst.AvatarProps.newbieCreateCellCB)
+        ret = self.popTempMiscProp(gameconst.EntityPropsEnum.newbieCreateCellCB)
         if ret is None:
             return
 
-        DEBUG_MSG('_initNewbieCell:', ret)
+        LOG_DBG('_initNewbieCell:', ret)
         for callback, args in ret:
             getattr(self, callback)(*args)
 
     def destroyFromNewbieDungeon(self, dungeonNo):
         lockNo = self.getNewbieStepDungeonNo()
-        INFO_MSG('destroyFromNewbieDungeon', self.gbId, lockNo, dungeonNo, self.getNewbieStepCell())
+        LOG_IFO('destroyFromNewbieDungeon', self.gbId, lockNo, dungeonNo, self.getNewbieStepCell())
         if lockNo and lockNo == dungeonNo:
-            self.offline(self.id, gameconst.AVATAR_OFFLINE_REASON_NEWBIE_KICKOUT)
+            self.offline(self.id, gameconst.OFFLINE_REASON_NEWBIE_KICKOUT)
             return
 
         src = dungeonSrc.BasicDungeonSrc()
         self.doLeaveSingleDungeon(dungeonNo, src, 'dungeon timeout')
 
     def onNewbieStepModify(self, step):
-        self.setTempMiscProp(gameconst.AvatarProps.newbieStepCellCache, step)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.newbieStepCellCache, step)
 
     def getNewbieStepCell(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.newbieStepCellCache, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.newbieStepCellCache, 0)
 
     def getNewbieStepDungeonNo(self):
         newbieStep = self.getNewbieStepCell()

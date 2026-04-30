@@ -22,15 +22,15 @@ class ICrossServer(object):
         pass
 
     def putCrossServerMethodSyncToLocalServer(self, fnname, args=None):
-        if not self.hasTempMiscProp(gameconst.AvatarProps.crossServerMethodSyncToLocalServerBase):
-            self.setTempMiscProp(gameconst.AvatarProps.crossServerMethodSyncToLocalServerBase, dict())
-        _tempDict = self.getTempMiscProp(gameconst.AvatarProps.crossServerMethodSyncToLocalServerBase)
+        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase):
+            self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase, dict())
+        _tempDict = self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase)
         _tempDict.setdefault(fnname, collections.deque()).append(args)
 
     def popleftCrossServerMethodSyncToLocalServer(self, fnname):
-        if not self.hasTempMiscProp(gameconst.AvatarProps.crossServerMethodSyncToLocalServerBase):
-            self.setTempMiscProp(gameconst.AvatarProps.crossServerMethodSyncToLocalServerBase, dict())
-        _tempDict = self.getTempMiscProp(gameconst.AvatarProps.crossServerMethodSyncToLocalServerBase)
+        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase):
+            self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase, dict())
+        _tempDict = self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase)
         _fnqueue = _tempDict.setdefault(fnname, collections.deque())
         if not _fnqueue:
             return ()
@@ -90,7 +90,7 @@ class ICrossServer(object):
 
     @property
     def isCrossServer(self):
-        return self.crossServerState != gameconst.CrossServerState.IN_CURRENT_SERVER
+        return self.crossServerState != gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER
 
     @property
     def isCrossServerInOtherServer(self):
@@ -121,41 +121,41 @@ class ICrossServer(object):
 
     def crossServerHeartbeat(self):
         if not self.otherServerAvatarBox:
-            ERROR_MSG("crossServerHeartbeat no otherServerAvatarBox")
+            LOG_ERR("crossServerHeartbeat no otherServerAvatarBox")
             self.stopCrossServerHeartbeat()
-            self.destroySelf(gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER, False)
+            self.destroySelf(gameconst.OFFLINE_REASON_END_CROSS_SERVER, False)
             return
 
         if self.crossServerTickStartTime > 0 and self.crossServerTickBackTime < self.crossServerTickStartTime:
-            WARNING_MSG("crossServerHeartbeat overTime", self.crossServerTickStartTime, self.crossServerTickBackTime)
+            LOG_WARN("crossServerHeartbeat overTime", self.crossServerTickStartTime, self.crossServerTickBackTime)
             self.stopCrossServerHeartbeat()
-            self.destroySelf(gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER, False)
+            self.destroySelf(gameconst.OFFLINE_REASON_END_CROSS_SERVER, False)
             return
 
-        self.crossServerTickStartTime = utils.getNow()
+        self.crossServerTickStartTime = utils.curTS()
         self.otherServerAvatarBox.onCrossServerHeartbeat()
-        DEBUG_MSG('[lj]crossServerHeartbeat', self.crossServerTickStartTime, self.crossServerTickBackTime)
+        LOG_DBG('[lj]crossServerHeartbeat', self.crossServerTickStartTime, self.crossServerTickBackTime)
 
     def onCrossServerHeartbeat(self):
         if not self.otherServerAvatarBox:
-            ERROR_MSG("onCrossServerHeartbeat no otherServerAvatarBox")
+            LOG_ERR("onCrossServerHeartbeat no otherServerAvatarBox")
             return
 
         self.otherServerAvatarBox.onCrossServerHeartbeatBack()
 
     def onCrossServerHeartbeatBack(self):
-        self.crossServerTickBackTime = utils.getNow()
-        DEBUG_MSG('[lj]onCrossServerHeartbeatBack', self.crossServerTickBackTime)
+        self.crossServerTickBackTime = utils.curTS()
+        LOG_DBG('[lj]onCrossServerHeartbeatBack', self.crossServerTickBackTime)
 
     def reqCrossServer(self, toServerId, reasonNo, callbackComponent, callbackName, args, goBackTime=0):
-        INFO_MSG("reqGotoServer",toServerId, reasonNo, callbackComponent, callbackName, args, goBackTime, self.crossServerState)
-        if self.crossServerState != gameconst.CrossServerState.IN_CURRENT_SERVER:
-            ERROR_MSG("reqCrossServer repeat", self.crossServerState)
+        LOG_IFO("reqGotoServer",toServerId, reasonNo, callbackComponent, callbackName, args, goBackTime, self.crossServerState)
+        if self.crossServerState != gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER:
+            LOG_ERR("reqCrossServer repeat", self.crossServerState)
             return
 
         self.cell.beforeReqCrossServer(toServerId, reasonNo)
 
-        self.setCrossServerState(gameconst.CrossServerState.GOTO_CROSS_SERVER)
+        self.setCrossServerState(gameconst.CrossServerState.ENUM_GOTO_CROSS_SERVER)
         self.crossServerDic = {
             'crossServerId': toServerId,
             'reasonNo': reasonNo,
@@ -167,17 +167,17 @@ class ICrossServer(object):
 
         r = iRouter.RemoteServerStubEntityCall(toServerId, "CrossServerStub")
         r.onReqCrossServer(self.accountEntity.accountName, reasonNo, self.crossServerEntityCall)
-        self.endCrossServerTimerId = self._callback(self.CROSSSERVER_TIMEOUT, '_endCrossServer', (),
+        self.endCrossServerTimerId = self.addTimerCB(self.CROSSSERVER_TIMEOUT, '_endCrossServer', (),
                        gametimer.TIMER_TAG_END_CROSS_SERVER, 'endCrossServerTimerId')
 
     def _endCrossServer(self):
-        self.setCrossServerState(gameconst.CrossServerState.IN_CURRENT_SERVER)
+        self.setCrossServerState(gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER)
         toServerId = self.crossServerDic['crossServerId']
         r = iRouter.RemoteServerStubEntityCall(toServerId, "CrossServerStub")
         r.onEndCrossServer(self.accountEntity.accountName)
 
     def onCrossServerResp(self, ret, token, reasonNo):
-        INFO_MSG("onCrossServerResp", ret, token, reasonNo)
+        LOG_IFO("onCrossServerResp", ret, token, reasonNo)
         if ret:
             spaceNo = 0
             if reasonNo == gameconst.CrossServerReasonNo.ENTER_CROSS_SIEGE_WAR:
@@ -186,17 +186,17 @@ class ICrossServer(object):
             self.crossServerDic['token'] = token
             self.crossServerDic['spaceNo'] = spaceNo
             self.client.onCrossServerTokenResp(token, spaceNo, crossServerId)
-            DEBUG_MSG('[lj]onCrossServerResp', token, spaceNo, crossServerId)
+            LOG_DBG('[lj]onCrossServerResp', token, spaceNo, crossServerId)
 
     def onReqGetAvatarPorperties(self, token, otherServerAccountBox):
-        INFO_MSG("onReqGetAvatarPorperties", token, otherServerAccountBox)
+        LOG_IFO("onReqGetAvatarPorperties", token, otherServerAccountBox)
         if token != self.crossServerDic.get("token"):
-            ERROR_MSG("onReqGetAvatarPorperties token error", token, self.crossServerDic.get("token"))
+            LOG_ERR("onReqGetAvatarPorperties token error", token, self.crossServerDic.get("token"))
             otherServerAccountBox and otherServerAccountBox.onGetAvatarPorpertiesFail()
             return
 
         if self.endCrossServerTimerId:
-            self._cancelCallback(self.endCrossServerTimerId, gametimer.TIMER_TAG_END_CROSS_SERVER)
+            self.cancelTimerCB(self.endCrossServerTimerId, gametimer.TIMER_TAG_END_CROSS_SERVER)
             self.endCrossServerTimerId = 0
 
         self.crossServerDic['otherServerAccountBox'] = otherServerAccountBox
@@ -204,54 +204,54 @@ class ICrossServer(object):
 
     def onGetAllProperties(self, baseMemoryStream, cellMemoryStream):
         otherServerAccountBox = self.crossServerDic.get('otherServerAccountBox')
-        INFO_MSG("onGetAllProperties", otherServerAccountBox, len(baseMemoryStream), len(cellMemoryStream))
+        LOG_IFO("onGetAllProperties", otherServerAccountBox, len(baseMemoryStream), len(cellMemoryStream))
         otherServerAccountBox and otherServerAccountBox.onGetAvatarPorpertiesResp(baseMemoryStream, cellMemoryStream)
 
     def crossServerSuccess(self):
-        INFO_MSG("crossServerSuccess")
+        LOG_IFO("crossServerSuccess")
         self.otherServerAvatarBox and self.otherServerAvatarBox.onCrossServerSuc(self.crossServerEntityCall)
         self.startCrossServerHeartbeat()
 
     def onCrossServerSuc(self, otherServerAvatarBox):
-        INFO_MSG("onCrossServerSuc", otherServerAvatarBox)
-        if self.crossServerState != gameconst.CrossServerState.GOTO_CROSS_SERVER:
-            WARNING_MSG("onCrossServerSuc state is not GOTO_CROSS_SERVER", self.crossServerState)
+        LOG_IFO("onCrossServerSuc", otherServerAvatarBox)
+        if self.crossServerState != gameconst.CrossServerState.ENUM_GOTO_CROSS_SERVER:
+            LOG_WARN("onCrossServerSuc state is not GOTO_CROSS_SERVER", self.crossServerState)
 
-        self.setCrossServerState(gameconst.CrossServerState.IN_CROSS_SERVER)
+        self.setCrossServerState(gameconst.CrossServerState.ENUM_IN_CROSS_SERVER)
         self.otherServerAvatarBox = otherServerAvatarBox
         self.crossServerSyncOtherInitedDataFromLocalServer(None)
         if self.endCrossServerTimerId:
-            self._cancelCallback(self.endCrossServerTimerId, gametimer.TIMER_TAG_END_CROSS_SERVER)
+            self.cancelTimerCB(self.endCrossServerTimerId, gametimer.TIMER_TAG_END_CROSS_SERVER)
             self.endCrossServerTimerId = 0
         self.disconnect(gameconst.ClientCallChannel.MAIN_CHANNEL)
         self.cell.onCrossServerSuc(self.crossServerDic["reasonNo"])
 
     def crossServerCallBack(self, callbackComponent, callbackName, args, extra):
-        INFO_MSG("crossServerCallBack", callbackComponent, callbackName, args, extra)
+        LOG_IFO("crossServerCallBack", callbackComponent, callbackName, args, extra)
         crossData = extra.get('crossData')
         baseInitData = extra.get('baseInitData')
         cellInitData = extra.get('cellInitData')
         self.onCrossServerSyncOtherInitedDataToCrossServer(crossData, baseInitData, cellInitData)
 
-        if callbackComponent == gameconst.CrossServerCallbackComponent.BASE:
+        if callbackComponent == gameconst.CrossServerCBComponent.ENUM_BASE:
             getattr(self, callbackName)(*args)
-        elif callbackComponent == gameconst.CrossServerCallbackComponent.CELL:
+        elif callbackComponent == gameconst.CrossServerCBComponent.ENUM_CELL:
             self.cell and getattr(self.cell, callbackName)(*args)
 
         goBackTime = extra.get('goBackTime', 0)
         if goBackTime:
-            self.goBackServerTimerId = self._callback(goBackTime, 'gobackServer',
-                                                      (gameconst.CrossServerCallbackComponent.NONE, '', ()),
+            self.goBackServerTimerId = self.addTimerCB(goBackTime, 'gobackServer',
+                                                      (gameconst.CrossServerCBComponent.ENUM_NONE, '', ()),
                                                         gametimer.TIMER_TAG_GOBACK_SERVER, 'goBackServerTimerId')
 
     def gobackServer(self, callbackComponent, callbackName, args):
-        INFO_MSG("gobackServer", callbackComponent, callbackName, args)
+        LOG_IFO("gobackServer", callbackComponent, callbackName, args)
         if self.goBackServerTimerId:
-            self._cancelCallback(self.goBackServerTimerId, gametimer.TIMER_TAG_GOBACK_SERVER)
+            self.cancelTimerCB(self.goBackServerTimerId, gametimer.TIMER_TAG_GOBACK_SERVER)
             self.goBackServerTimerId = 0
 
         if not self.otherServerAvatarBox:
-            ERROR_MSG("gobackServer has no otherServerAvatarBox")
+            LOG_ERR("gobackServer has no otherServerAvatarBox")
             return
 
         self.otherServerAvatarBox.onCrossServerEnd(callbackComponent, callbackName, args)
@@ -260,55 +260,55 @@ class ICrossServer(object):
         self.client.onGobackServer(gameconst.SIEGEWAR_GO_BACK_LINENO)
         gameengine.getGlobalBase('CrossServerStub').onGobackServer(self.accountEntity.accountName)
 
-        self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER)
+        self.cell.offline(gameconst.OFFLINE_REASON_END_CROSS_SERVER)
 
     def onCrossServerEnd(self, callbackComponent, callbackName, args):
-        INFO_MSG("onCrossServerEnd", callbackComponent, callbackName, args)
-        if self.crossServerState != gameconst.CrossServerState.IN_CROSS_SERVER:
-            ERROR_MSG("onCrossServerSuc state is not IN_CROSS_SERVER", self.crossServerState)
+        LOG_IFO("onCrossServerEnd", callbackComponent, callbackName, args)
+        if self.crossServerState != gameconst.CrossServerState.ENUM_IN_CROSS_SERVER:
+            LOG_ERR("onCrossServerSuc state is not IN_CROSS_SERVER", self.crossServerState)
             return
 
-        self.setCrossServerState(gameconst.CrossServerState.IN_CURRENT_SERVER)
+        self.setCrossServerState(gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER)
         self.crossServerDic = {}
 
-        if callbackComponent == gameconst.CrossServerCallbackComponent.BASE:
+        if callbackComponent == gameconst.CrossServerCBComponent.ENUM_BASE:
             getattr(self, callbackName)(*args)
-        elif callbackComponent == gameconst.CrossServerCallbackComponent.CELL:
+        elif callbackComponent == gameconst.CrossServerCBComponent.ENUM_CELL:
             self.cell and getattr(self.cell, callbackName)(*args)
 
     def onReloginInCrossServerState(self):
-        INFO_MSG("onReloginInCrossServerState", self.crossServerDic['crossServerId'], self.crossServerDic['token'])
+        LOG_IFO("onReloginInCrossServerState", self.crossServerDic['crossServerId'], self.crossServerDic['token'])
         r = iRouter.RemoteServerStubEntityCall(self.crossServerDic['crossServerId'], "CrossServerStub")
         r.onCheckCrossServerToken(self.accountEntity.accountName, self.crossServerDic['token'],
                                   self.crossServerEntityCall)
 
-        self.checkCSTokenTimerId = self._callback(120, '_onCheckCSTokenTimeout', (),
+        self.checkCSTokenTimerId = self.addTimerCB(120, '_onCheckCSTokenTimeout', (),
                                                     gametimer.TIMER_TAG_CHECK_CROSS_SERVER_TOKEN, 'checkCSTokenTimerId')
 
     def _onCheckCSTokenTimeout(self):
-        INFO_MSG("_onCheckCSTokenTimeout")
-        self.setCrossServerState(gameconst.CrossServerState.IN_CURRENT_SERVER)
+        LOG_IFO("_onCheckCSTokenTimeout")
+        self.setCrossServerState(gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER)
 
     def onCheckCrossServerTokenResp(self, ret):
-        INFO_MSG("onCheckCrossServerTokenResp", ret, self.isCrossServerInLocalServer)
+        LOG_IFO("onCheckCrossServerTokenResp", ret, self.isCrossServerInLocalServer)
         if self.checkCSTokenTimerId:
-            self._cancelCallback(self.checkCSTokenTimerId, gametimer.TIMER_TAG_CHECK_CROSS_SERVER_TOKEN)
+            self.cancelTimerCB(self.checkCSTokenTimerId, gametimer.TIMER_TAG_CHECK_CROSS_SERVER_TOKEN)
             self.checkCSTokenTimerId = 0
 
         if ret:
             if self.isCrossServerInLocalServer:
                 self.client.onCrossServerTokenResp(self.crossServerDic['token'], self.crossServerDic['spaceNo'], self.crossServerDic['crossServerId'])
         else:
-            self.setCrossServerState(gameconst.CrossServerState.IN_CURRENT_SERVER)
+            self.setCrossServerState(gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER)
 
     # localServer
     def crossServerSyncOtherInitedDataFromLocalServer(self, crossData):
-        WARNING_MSG("crossServerSyncOtherInitedDataFromLocalServer::", crossData)
+        LOG_WARN("crossServerSyncOtherInitedDataFromLocalServer::", crossData)
         self.cell.crossServerSyncOtherInitedDataFromLocalServerCell(crossData)
 
     # localServer
     def onCrossServerSyncOtherInitedDataFromLocalServer(self, crossData, cellInitData):
-        WARNING_MSG("onCrossServerSyncOtherInitedDataFromLocalServer::", crossData, cellInitData)
+        LOG_WARN("onCrossServerSyncOtherInitedDataFromLocalServer::", crossData, cellInitData)
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
             baseInitData = dict(
                 scoresInfo=AvatarScores.avatarScoresInstance.getDictFromObj(self.baseScoreInfo),
@@ -328,40 +328,40 @@ class ICrossServer(object):
 
     # CrossServer
     def onCrossServerSyncOtherInitedDataToCrossServer(self, crossData, baseInitData, cellInitData):
-        WARNING_MSG("onCrossServerSyncOtherInitedDataToCrossServer::", crossData, baseInitData, cellInitData)
+        LOG_WARN("onCrossServerSyncOtherInitedDataToCrossServer::", crossData, baseInitData, cellInitData)
         self.scoresInfo = AvatarScores.avatarScoresInstance.createObjFromDict(baseInitData["scoresInfo"])
         self.cell.onCrossServerSyncOtherInitedDataToCrossServerCell(crossData, cellInitData)
         self.onSetGuildInfoCross(baseInitData['guildUUID'], baseInitData['guildName'], True)
 
     # CrossServer
     def syncMethodCallToLocalServerBase(self, fnname, fnargs):
-        DEBUG_MSG("syncMethodCallToLocalServerBase::", fnname, fnargs)
+        LOG_DBG("syncMethodCallToLocalServerBase::", fnname, fnargs)
         if self.isCrossServerInOtherServer and self.otherServerAvatarBox:
             self.otherServerAvatarBox.beSyncMethodCallFromCrossServerBase(fnname, fnargs)
 
     # localServer
     def beSyncMethodCallFromCrossServerBase(self, fnname, fnargs):
-        DEBUG_MSG("beSyncMethodCallFromCrossServerBase::", fnname, fnargs)
+        LOG_DBG("beSyncMethodCallFromCrossServerBase::", fnname, fnargs)
         getattr(self, fnname)(*fnargs)
 
     # CrossServer
     def syncMethodCallToLocalServerCell(self, fnname, fnargs):
-        DEBUG_MSG("syncMethodCallToLocalServerCell::", fnname, fnargs)
+        LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
         if self.isCrossServerInOtherServer and self.otherServerAvatarBox:
             self.otherServerAvatarBox.beSyncMethodCallFromCrossServerCell(fnname, fnargs)
 
     # localServer
     def beSyncMethodCallFromCrossServerCell(self, fnname, fnargs):
-        DEBUG_MSG("beSyncMethodCallFromCrossServerCell::", fnname, fnargs)
+        LOG_DBG("beSyncMethodCallFromCrossServerCell::", fnname, fnargs)
         getattr(self.cell, fnname)(*fnargs)
 
     def onMessagePre_localCross(self, msgId, args):
-        INFO_MSG("onMessagePre_localCross::", msgId, args)
+        LOG_IFO("onMessagePre_localCross::", msgId, args)
         self.localCrossBase.onMessagePre(msgId, args)
 
     def onPlayerGetExp_localCrossClient(self, src, expVal, realExpVal, chaseExp):
-        INFO_MSG("onPlayerGetExp_localCrossClient::", src, expVal, realExpVal, chaseExp)
+        LOG_IFO("onPlayerGetExp_localCrossClient::", src, expVal, realExpVal, chaseExp)
         self.localCrossClient.onPlayerGetExp(src, expVal, realExpVal, chaseExp)
 
     def onAvatarLevelUp_localCrossClient(self, oldLevel, level):
-        INFO_MSG("onAvatarLevelUp_localCrossClient::", oldLevel, level)
+        LOG_IFO("onAvatarLevelUp_localCrossClient::", oldLevel, level)

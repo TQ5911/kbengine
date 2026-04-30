@@ -4,7 +4,7 @@ import userType
 import gameconst
 import AffixInfo
 
-class GlyphInfo(userType.UserSoleType):
+class GlyphInfo(userType.UserSingleType):
     def __init__(self, glyphPos = 0):
         self.glyphPos = glyphPos
         self.glyphAffixes = []

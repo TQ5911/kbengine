@@ -15,7 +15,7 @@ import gearBase_gearBase as GBGBD
 def getDefaultAppearanceEquipPartId():
     return 0, 0
 
-class FaceDataVal(userType.UserSoleType):
+class FaceDataVal(userType.UserSingleType):
     def __init__(self, suitId=0, hairIdFaceId=0, hairColorIdSkinColorId=0):
         self.suitId = suitId
         self.hairIdFaceId = hairIdFaceId
@@ -61,7 +61,7 @@ class FaceDataVal(userType.UserSoleType):
         return json.dumps(self.toSavedDict())
 
 
-class OutfitDataVal(userType.UserSoleType):
+class OutfitDataVal(userType.UserSingleType):
     def __init__(self, hairId=0, clothesId=0, picFrameId=0, wingId=0, mountId=0):
         self.hairId = hairId
         self.clothesId = clothesId
@@ -98,7 +98,7 @@ class OutfitDataVal(userType.UserSoleType):
         return json.dumps(self.toSavedDict())
 
 
-class AvatarPhotoDataVal(userType.UserSoleType):
+class AvatarPhotoDataVal(userType.UserSingleType):
     def __init__(self, avatarId=0, avatarFrameId=0):
         self.avatar = avatarId
         self.avatarFrame = avatarFrameId
@@ -122,7 +122,7 @@ class AvatarPhotoDataVal(userType.UserSoleType):
         self.avatarFrame = avatarFrameId
 
 
-class Appearance(userType.UserSoleType):
+class Appearance(userType.UserSingleType):
     def __init__(self, weapon=0, breast=0, outfitData=None, faceData=None):
         self.weapon = weapon
         self.breast = breast
@@ -164,7 +164,7 @@ class Appearance(userType.UserSoleType):
         return self
 
     def updateFromAvatarAppearanceDBData(self, data, startIdx):
-        DEBUG_MSG('updateFromAvatarAppearanceDBData:', data, startIdx)
+        LOG_DBG('updateFromAvatarAppearanceDBData:', data, startIdx)
         self.weapon = int(data[startIdx])
         self.breast = int(data[startIdx+1])
         suitId = int(data[startIdx+2])
@@ -180,7 +180,7 @@ class Appearance(userType.UserSoleType):
         return
 
     def setEquip(self, owner, part, val, grade):
-        INFO_MSG("setEquip ", part, val, grade)
+        LOG_IFO("setEquip ", part, val, grade)
         realVal = 0
         if val > 0 and grade > 0:
             appearance = GBGBD.datas.get(val, {}).get('appearance', None)
@@ -204,7 +204,7 @@ class Appearance(userType.UserSoleType):
 
     def setOutfitId(self, owner, outfitType, outfitId):
         if self.checkOutfitIdSetup(outfitType, outfitId):
-            WARNING_MSG("setOutfitId ", outfitId, outfitType)
+            LOG_WARN("setOutfitId ", outfitId, outfitType)
             return
         if outfitType == gameconst.OutfitType.wing:
             self.outfitData.wingId = outfitId
@@ -223,13 +223,13 @@ class Appearance(userType.UserSoleType):
             self.outfitData.mountId = outfitId
             outfitName = 'mountId'
         else:
-            ERROR_MSG("setOutfitId wrong type", outfitId)
+            LOG_ERR("setOutfitId wrong type", outfitId)
             return
         owner.allClients.onAppearanceOutfitUpdated(outfitName, outfitId)
         return
 
     def getOutFitId(self, school, sex, outfitType, outfitId):
-        DEBUG_MSG("getOutFitId", school, sex, outfitType, outfitId)
+        LOG_DBG("getOutFitId", school, sex, outfitType, outfitId)
         return school * 100000 + sex * 10000 + outfitType * 1000 + outfitId
 
     def updateOutFit(self, owner, outFitIdList):
@@ -241,7 +241,7 @@ class Appearance(userType.UserSoleType):
         for outFitId in outFitIdList:
             outfitType = int(outFitId / 1000 % 10)
             outfitId = int(outFitId % 1000)
-            DEBUG_MSG("updateOutFit", outFitId, outfitType, outfitId)
+            LOG_DBG("updateOutFit", outFitId, outfitType, outfitId)
             if outfitType == gameconst.OutfitType.wing:
                 self.outfitData.wingId = outfitId
                 outfitName = 'wingId'
@@ -265,7 +265,7 @@ class Appearance(userType.UserSoleType):
                 self.outfitData.mountId = outfitId
                 outfitName = 'mountId'
             else:
-                ERROR_MSG("setOutfitId wrong type", outfitId)
+                LOG_ERR("setOutfitId wrong type", outfitId)
                 return
             owner.allClients.onAppearanceOutfitUpdated(outfitName, outfitId)
 
@@ -323,7 +323,7 @@ class Appearance(userType.UserSoleType):
             self.outfitData.mountId = 0
             outfitName = 'mountId'
         else:
-            ERROR_MSG("setOutfitId wrong type", outfitId, outfitType)
+            LOG_ERR("setOutfitId wrong type", outfitId, outfitType)
             return
         owner.allClients.onAppearanceOutfitUpdated(outfitName, 0)
         owner.base.updateAccountCharacterOutfit(outfitName, 0)
@@ -348,7 +348,7 @@ class Appearance(userType.UserSoleType):
         return False
 
     def removeAccountOutfitId(self, outfitType, outfitId):
-        DEBUG_MSG("removeAccountOutfitId ", outfitType, outfitId)
+        LOG_DBG("removeAccountOutfitId ", outfitType, outfitId)
         if outfitType == gameconst.OutfitType.wing:
             self.outfitData.wingId = 0
         elif outfitType == gameconst.OutfitType.hair:
@@ -360,13 +360,13 @@ class Appearance(userType.UserSoleType):
         elif outfitType == gameconst.OutfitType.mount:
             self.outfitData.mountId = 0
         else:
-            ERROR_MSG("removeAccountOutfitId wrong type", outfitId, outfitType)
+            LOG_ERR("removeAccountOutfitId wrong type", outfitId, outfitType)
             return
 
     def resetOutfitData(self, outfitType, outfitId, expireTime):
         if not self.checkOutfitIdSetup(outfitType, outfitId):
             return
-        if expireTime and utils.getNow() >= expireTime:
+        if expireTime and utils.curTS() >= expireTime:
             self.removeAccountOutfitId(outfitType, outfitId)
         return True
 
@@ -376,12 +376,12 @@ class Appearance(userType.UserSoleType):
         elif avatarType == gameconst.AvatarPhotoType.AvatarFrame:
             avatarName = 'avatarFrame'
         else:
-            ERROR_MSG("useAvatar wrong type", avatarId, avatarType)
+            LOG_ERR("useAvatar wrong type", avatarId, avatarType)
             return
         owner.allClients.onAppearanceOutfitUpdated(avatarName, avatarId)
 
 
-class AvatarOutfit(userType.UserSoleType):
+class AvatarOutfit(userType.UserSingleType):
     def __init__(self, outfitType=0, outfitId=0, expireTime=0, isNew=True):
         self.outfitType = outfitType
         self.outfitId = outfitId
@@ -414,15 +414,15 @@ class AvatarOutfit(userType.UserSoleType):
 
     def setExpireTime(self, expireTime):
         if not self.expireTime:
-            WARNING_MSG("outfit is forever", self.outfitId)
+            LOG_WARN("outfit is forever", self.outfitId)
             return
         if expireTime and self.expireTime > expireTime:
-            WARNING_MSG("outfit is longer", self.outfitId, self.expireTime, expireTime)
+            LOG_WARN("outfit is longer", self.outfitId, self.expireTime, expireTime)
             return
         self.expireTime = expireTime
 
 
-class AvatarOutfitInfo(userType.UserSoleType):
+class AvatarOutfitInfo(userType.UserSingleType):
     def __init__(self):
         self.outfitDict = {}
 
@@ -465,7 +465,7 @@ class AvatarOutfitInfo(userType.UserSoleType):
         return outfitList
 
     def addOutfit(self, owner, outfitType, outfitId, expireTime, isNew=True):
-        INFO_MSG("addOutfit ", outfitType, outfitId, expireTime)
+        LOG_IFO("addOutfit ", outfitType, outfitId, expireTime)
         outfit = self.getOutfitInfo(outfitType, outfitId)
         if not outfit:
             outfit = AvatarOutfit(outfitType, outfitId, expireTime, isNew)
@@ -480,7 +480,7 @@ class AvatarOutfitInfo(userType.UserSoleType):
             outfit.setExpireTime(expireTime)
 
     def removeOutfit(self, owner, outfitType, outfitId):
-        INFO_MSG("removeOutfit ", outfitType, outfitId)
+        LOG_IFO("removeOutfit ", outfitType, outfitId)
         outfit = self.getOutfitInfo(outfitType, outfitId)
         if not outfit:
             return
@@ -503,7 +503,7 @@ class AvatarOutfitInfo(userType.UserSoleType):
     def setClickOutfit(self, outfitType, outfitId):
         outfitKey = self.getOutfitKey(outfitType, outfitId)
         if not self.outfitDict.get(outfitKey, None):
-            ERROR_MSG("setClickOutfit ", outfitType, outfitId)
+            LOG_ERR("setClickOutfit ", outfitType, outfitId)
             return
         self.outfitDict[outfitKey].isNew = False
         return True

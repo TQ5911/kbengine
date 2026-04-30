@@ -20,7 +20,7 @@ import actionContext
 class IScore(object):
 
     def initAvatarBaseScores(self):
-        DEBUG_MSG('initAvatarBaseScores')
+        LOG_DBG('initAvatarBaseScores')
         data = {'mount': math.floor(self.getTotalMountScore()),
                 'pet': math.floor(self.getTotalPetScore()),
                 'skill': math.floor(self.getTotalSkillScore())}
@@ -32,14 +32,14 @@ class IScore(object):
         skillScore = 0
         school = self.getAvatarSchool()
         for skillId, skillLv in self.buildDic.skillLevels.items():
-            DEBUG_MSG('getTotalSkillScore', skillId, skillLv)
+            LOG_DBG('getTotalSkillScore', skillId, skillLv)
             if skillId in CHAR_CD.datas[school]['build']:
                 skillScore += SKILL_PP.datas[skillLv]['score']
 
-            elif utils.hasSkillTag(skillId, gameconst.SkillTag.UltraSkill):
+            elif utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill):
                 skillScore += SKILL_PP.datas[skillLv]['score2']
                 
-        DEBUG_MSG('getTotalSkillScore ', skillScore)
+        LOG_DBG('getTotalSkillScore ', skillScore)
         return skillScore
     # --------------------------------------------------------------
 
@@ -68,15 +68,15 @@ class IScore(object):
             self._notifyScoreChange()
 
         self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'score', totalScore)
-        self.propChangedTimes[gameconst.LeaderBoardType.AVATAR_SCORE] = utils.getNow()
+        self.propChangedTimes[gameconst.LeaderBoardType.AVATAR_SCORE] = utils.curTS()
 
 
     def _notifyScoreChange(self):
         self.updateScoreTimerId = 0
-        now = utils.getNow()
+        now = utils.curTS()
 
         if self.lastNotifyScoreTime + 55 > now:
-            self.updateScoreTimerId = self._callback(
+            self.updateScoreTimerId = self.addTimerCB(
                 self.lastNotifyScoreTime + 60 - now,
                 '_notifyScoreChange',
                 (),
@@ -94,7 +94,7 @@ class IScore(object):
         if not self.updateScoreTimerId:
             return
 
-        self._cancelCallback(self.updateScoreTimerId, gametimer.TIMER_TAG_UPDATE_SCORE)
+        self.cancelTimerCB(self.updateScoreTimerId, gametimer.TIMER_TAG_UPDATE_SCORE)
         self.updateScoreTimerId = 0
 
         totalScore = self.getTotalScore()
@@ -103,7 +103,7 @@ class IScore(object):
         #     self.guildBoxBase.onUpdateAttrAndDiffNotify(self.gbID, {
         #         'battleEffect': totalScore
         #     })
-        self.lastNotifyScoreTime = utils.getNow()
+        self.lastNotifyScoreTime = utils.curTS()
 
     def updateScoreToRedis(self, battleEffect):
         self._modifyRedisAttr({
@@ -120,6 +120,6 @@ class IScore(object):
 
     def updateSkillScore(self):
         newScore = math.floor(self.getTotalSkillScore())
-        DEBUG_MSG('updateSkillScore ', newScore)
+        LOG_DBG('updateSkillScore ', newScore)
         self.cell.onUpdateSkillScore(newScore)
     # --------------------------------------------------------------

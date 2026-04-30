@@ -4,7 +4,7 @@
 import userType
 import LogTrackingMgr
 
-class LeaderBoardAvatarCacheVal(userType.UserSoleType):
+class LeaderBoardAvatarCacheVal(userType.UserSingleType):
     '''LEADER_BOARD_AVATAR_CACHE_DATA_INFO'''
     def __init__(self, gbId=0, name='', level=0, school=0, ts=0, guildName='', guildUUID=0):
         self.gbId = gbId

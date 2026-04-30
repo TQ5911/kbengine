@@ -17,15 +17,15 @@
             <Arg>   UINT32      </Arg>
         </addKillCount>
 
-        <createEntityInDungeonByGameEntityId>
+        <spawnDungeonEntityByGameEntityId>
             <Arg>   DUNGEON_NO  </Arg>
             <Arg>   PY_LIST       </Arg>
             <Arg>   UINT32  </Arg>
             <Arg>   PYTHON   </Arg>
             <Arg>   PYTHON   </Arg>
-        </createEntityInDungeonByGameEntityId>
+        </spawnDungeonEntityByGameEntityId>
 
-        <flowCtrlCheckDungeonEntityKillNumber>
+        <flowCheckDungeonKillCount>
             <Arg> SPACE_NO </Arg>
             <Arg> UINT64 </Arg>
             <Arg> FLOW_CTRL_SYMBOL </Arg>
@@ -34,16 +34,16 @@
             <Arg> FLOW_CTRL_EID </Arg>
             <Arg> PYTHON </Arg>
             <Arg> BOOL </Arg>
-        </flowCtrlCheckDungeonEntityKillNumber>
+        </flowCheckDungeonKillCount>
 
-        <flowCtrlCheckDungeonAllEntityKillNumber>
+        <flowCheckDungeonAllKillCount>
             <Arg> SPACE_NO </Arg>
             <Arg> FLOW_CTRL_SYMBOL </Arg>
             <Arg> UINT32 </Arg>
             <Arg> FLOW_CTRL_EID </Arg>
             <Arg> PYTHON </Arg>
             <Arg> BOOL </Arg>
-        </flowCtrlCheckDungeonAllEntityKillNumber>
+        </flowCheckDungeonAllKillCount>
     </BaseMethods>
 
     <CellMethods>

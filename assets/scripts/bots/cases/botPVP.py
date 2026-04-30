@@ -118,18 +118,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
 
         
         
-
-    def changeRandomTimeDelay(self, useRandom=None):
-        if useRandom is None:
-            self.useRandomTimeDelay = not self.useRandomTimeDelay
-        else:
-            self.useRandomTimeDelay = useRandom
-
-    def getRandomTimeDelay(self, minDelay=0, maxDelay=5):
-        if self.useRandomTimeDelay:
-            return random.randint(minDelay, maxDelay)
-        return 0
-
     def randompos(self):
         randomspeed = random.randint(-5, 5)
         return randomspeed

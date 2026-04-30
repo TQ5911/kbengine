@@ -4,7 +4,7 @@
 import userType
 
 
-class AutoHealVal(userType.UserSoleType):
+class AutoHealVal(userType.UserSingleType):
     '''AUTO_HEAL_DATA_INFO'''
     def __init__(self, healItem=0, healRatio=0.0):
         self.healItem = healItem

@@ -255,6 +255,7 @@ datas ={
       "GroupID": "",
       "InitLoad": 0,
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -262,7 +263,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 0.0,
-      "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11011030,11011031,11011032]",
+      "RefreshTimedID": 0,
+      "Remark": "\u8ba1\u657075\u6b21\u5237\u65b0[11011030,11011031,11011032]",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "1"
     }
   },
@@ -488,6 +491,7 @@ datas ={
       "GroupID": "",
       "InitLoad": 0,
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -495,7 +499,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 0.0,
-      "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11011030,11011031,11011032]",
+      "RefreshTimedID": 0,
+      "Remark": "\u8ba1\u657075\u6b21\u5237\u65b0[11011030,11011031,11011032]",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "2"
     }
   },
@@ -546,6 +552,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -553,7 +560,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 12.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "3"
     }
   },
@@ -1157,6 +1166,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1164,7 +1174,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 12.0,
+      "RefreshTimedID": 0,
       "Remark": "\u4e3b\u52a8\u7cbe\u82f1",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "5"
     }
   },
@@ -1187,6 +1199,7 @@ datas ={
       "GroupID": "",
       "InitLoad": 0,
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1194,7 +1207,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 0.0,
-      "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11011040,11011041,11011042]",
+      "RefreshTimedID": 0,
+      "Remark": "\u8ba1\u6570125\u6b21\u5237\u65b0[11011040,11011041,11011042]",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "5"
     }
   },
@@ -1274,6 +1289,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1281,7 +1297,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 12.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "6"
     }
   },
@@ -1420,6 +1438,7 @@ datas ={
       "GroupID": "",
       "InitLoad": 0,
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1427,7 +1446,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 0.0,
-      "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11011040,11011041,11011042]",
+      "RefreshTimedID": 0,
+      "Remark": "\u8ba1\u6570125\u6b21\u5237\u65b0[11011040,11011041,11011042]",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "6"
     }
   },
@@ -1449,6 +1470,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1456,7 +1478,9 @@ datas ={
       "Radius": 12.0,
       "RefreshNum": 0,
       "RefreshTime": 12.0,
+      "RefreshTimedID": 0,
       "Remark": "\u5360\u4f4d",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "7"
     }
   },

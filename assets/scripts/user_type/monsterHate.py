@@ -138,7 +138,7 @@ class MonsterHate(object):
         return False if self._hateDict else True
 
     def _isEmptySkipVisible(self):
-        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt)
+        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
         for tid in self._hateDict:
             ent = KBEngine.entities.get(tid)
             if ent:
@@ -148,7 +148,7 @@ class MonsterHate(object):
 
     def getFirstVisibleHateTargetByRange(self, skillRange, withOutArea = None):
         _square = skillRange * skillRange
-        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt)
+        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
         _maxHate = None
         _maxTid = 0
         for tid, hateVal in self._hateDict.items():
@@ -175,7 +175,7 @@ class MonsterHate(object):
 
     def getFirstVisibleHateTarget(self):
         entDic = {}
-        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt)
+        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
         for tid, hateVal in self._hateDict.items():
             ent = KBEngine.entities.get(tid)
             if not ent or not self.owner:
@@ -216,7 +216,7 @@ class MonsterHate(object):
             _rList.append(v.targetId)
         return _rList
 
-    def getMaxHaterdMonsterTarget(self):
+    def pickMaxHaterdMonsterTarget(self):
         maxHate = 0
         monsterId = 0
         for tid, hateVal in self._hateDict.items():
@@ -233,7 +233,7 @@ class MonsterHate(object):
             return []
         return [monsterId, ]
 
-    def getRandomHatredTargetIds(self, exceptHighest=0, number=1, minRange=0, maxRange=0):
+    def pickRandomHatredTargetIds(self, exceptHighest=0, number=1, minRange=0, maxRange=0):
         if not exceptHighest:
             return self._getRandomHatredTargetIds(number, minRange=minRange, maxRange=maxRange)
         return self._getRandomHatredTargetIdsExceptNHighest(exceptHighest, number, minRange=minRange, maxRange=maxRange)
@@ -298,13 +298,13 @@ class MonsterHate(object):
         if self.isInHateList(targetId):
             self._hateDict[targetId].modify(value)
             # if getattr(self.owner.aiController, 'logHate', 0):
-            #     DEBUG_MSG("MonsterHate setHate modify targetId value ~~~~~~~~~~~~~~~~~~~~~~", targetId, value, self.__repr__)
+            #     LOG_DBG("MonsterHate setHate modify targetId value ~~~~~~~~~~~~~~~~~~~~~~", targetId, value, self.__repr__)
         else:
             _targetHate = TargetHate(targetId, value)
             self._hateDict[targetId] = _targetHate
             self.owner.setTargetHateRecord(targetId)
             # if getattr(self.owner.aiController, 'logHate', 0):
-            #     DEBUG_MSG("MonsterHate setHate targetId value ~~~~~~~~~~~~~~~~~~~~~~", targetId, value, self.__repr__)
+            #     LOG_DBG("MonsterHate setHate targetId value ~~~~~~~~~~~~~~~~~~~~~~", targetId, value, self.__repr__)
 
     def syncHateList(self, owner):
         rmIds = []
@@ -316,7 +316,7 @@ class MonsterHate(object):
 
         for targetId in rmIds:
             # if getattr(self.owner.aiController, 'logHate', 0):
-            #     DEBUG_MSG("MonsterHate syncHateList pop ~~~~~~~~~~~~~~~~~~~~~~", _)
+            #     LOG_DBG("MonsterHate syncHateList pop ~~~~~~~~~~~~~~~~~~~~~~", _)
             self.removeHate(targetId)
 
     def getTarget(self, targetId):
@@ -325,7 +325,7 @@ class MonsterHate(object):
     def increaseHateByAttack(self, targetId, damage, **kwargs):
         value = self._calcIncreaseHate(damage, **kwargs)
         currentHate = self._hateDict[targetId].increase(value)
-        # DEBUG_MSG("MonsterHate increaseHateByAttack targetId, targetLevel, value",
+        # LOG_DBG("MonsterHate increaseHateByAttack targetId, targetLevel, value",
         #           targetId, damage, value, self.__repr__())
         return currentHate
 
@@ -335,7 +335,7 @@ class MonsterHate(object):
     def addDmgSrc(self, targetId):
         target = KBEngine.entities.get(targetId)
         if not target:
-            ERROR_MSG('in addDmgSrc, not found target:', targetId)
+            LOG_ERR('in addDmgSrc, not found target:', targetId)
         target = utils.getEntityRealEntity(target)
         target and target.IsAvatar and self._dmgSrcSet.add(target.gbId)
 
@@ -394,31 +394,31 @@ class MonsterHate(object):
 
     def removeHate(self, targetId):
         # if getattr(self.owner.aiController, 'logHate', 0):
-        #     DEBUG_MSG("MonsterHate removeHate targetId~~~~~~~~~~~~~~~~~~~~~~", targetId)
+        #     LOG_DBG("MonsterHate removeHate targetId~~~~~~~~~~~~~~~~~~~~~~", targetId)
         if self.isInHateList(targetId):
             self.owner and self.owner.unsetTargetHateRecord(targetId)
             d = self._hateDict.pop(targetId, None)
 
             if self.isEmpty():
-                self.owner and self.owner.removeState(gameconst.State.Fighting)
+                self.owner and self.owner.removeState(gameconst.StateEnum.Fighting)
             return d
 
     def clearHate(self, owner):
         # if getattr(self.owner.aiController, 'logHate', 0):
-        #     DEBUG_MSG("MonsterHate clearHate ~~~~~~~~~~~~~~~~~~~~~~")
+        #     LOG_DBG("MonsterHate clearHate ~~~~~~~~~~~~~~~~~~~~~~")
         for targetId in self._hateDict:
             self.owner and self.owner.unsetTargetHateRecord(targetId)
         self._hateDict.clear()
-        owner.removeState(gameconst.State.Fighting)
+        owner.removeState(gameconst.StateEnum.Fighting)
 
     def inheritHate(self, inheritorId):
-        DEBUG_MSG("inheritHate inheritor ", inheritorId, self._hateDict)
+        LOG_DBG("inheritHate inheritor ", inheritorId, self._hateDict)
         inheritor = KBEngine.entities.get(inheritorId)
         if not inheritor or not inheritor.IsAvatar:
             return
         for targetId in list(self._hateDict):
             target = KBEngine.entities.get(targetId)
-            DEBUG_MSG("inheritHate target", targetId, target)
+            LOG_DBG("inheritHate target", targetId, target)
             if not target or not hasattr(target, 'aiController') or not target.aiController:
                 continue
             targetHate = target.aiController.hateDict.getHate(self.owner.id)
@@ -426,13 +426,13 @@ class MonsterHate(object):
                 continue
             if targetHate.currentHate <= 0:
                 continue
-            DEBUG_MSG("inheritHate increaseHate", inheritor.id, targetHate.currentHate)
+            LOG_DBG("inheritHate increaseHate", inheritor.id, targetHate.currentHate)
             target.aiController.increaseHate(inheritor.id, targetHate.currentHate)
 
     def clearSourceHate(self, owner):
         for targetId in self._hateDict:
             self.owner and self.owner.unsetTargetHateRecord(targetId)
-        owner.removeState(gameconst.State.Fighting)
+        owner.removeState(gameconst.StateEnum.Fighting)
 
     def getRandomHateTarget(self):
         if not self.length: return 0

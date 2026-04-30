@@ -47,7 +47,7 @@ staticCell = None
 
 
 gbIdSeqId = 0
-gbIdTimestampIdx = 0
+gbIdTSIdx = 0
 
 hotfix = ''
 
@@ -73,8 +73,8 @@ avatarExposedMethods = {}
 # interface 注册人数
 registerCount = 0
 
-genObIdTs = 0
-genObIdSeqId = 0
+globalObIdTs = 0
+globalObIdSeqId = 0
 
 localSpaceNoMap = {}
 localSpaceIDMap = {}
@@ -84,8 +84,12 @@ localBaseApp = None
 localAdminStub = None
 localLoginStub = None
 localAuctionStub = None
+localOrderStub = None
+cellAvatarCountDict = {}
 
 # cell
+cellAvatarCount = 0
+lastBroadcastCellAvatarCount = 0
 cellSpaceDungeonMap = {}
 
 requiredClientVersion = {}
@@ -95,7 +99,6 @@ def onLineEntityReady(spaceNo):
 
 
 globalMailsCacheList = []
-globalDeleteMailsCacheList = []
 
 switchGlobalVal = None
 

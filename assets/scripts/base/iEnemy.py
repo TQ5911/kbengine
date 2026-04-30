@@ -8,11 +8,16 @@ import gameconst
 import gameengine
 import dropAward
 import gameclass
+import gametimer
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import relationConfig_relationConfig as RC_RCD
 
 class IEnemy(object):
+    def __init__(self):
+        #
+        self.enemyScheduleTimerId = 0
+
     def onDeadAddEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score):
         self.enemyMgr.addEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score)
 
@@ -23,36 +28,40 @@ class IEnemy(object):
 
     @gamedecorator.limitcall(60)
     def getEnemyFreshInfo(self, exposed):
-        INFO_MSG('getEnemyFreshInfo')
+        LOG_IFO('getEnemyFreshInfo')
         _gbIds = self.enemyMgr.getEnemyGbIds()
 
         redisUtils.RedisUtils.getUsersInfo(_gbIds, self._onGetEnemyFreshInfo)
 
     def _onGetEnemyFreshInfo(self, usersInfo):
-        DEBUG_MSG('usersInfo:', usersInfo)
+        LOG_DBG('usersInfo:', usersInfo)
         self.enemyMgr.updateByFcVals(usersInfo)
+        # LOG_IFO('onGetEnemyFreshInfo, enemy fresh info:', self.enemyMgr.getEnemyFreshInfo())
         self.client.onGetEnemyFreshInfo(self.enemyMgr.getEnemyFreshInfo())
 
     @gamedecorator.checkGameconfigEnable('enemy')
     def getEnemyPosInfo(self, exposed, gbId):
         if not self.enemyMgr.isEnemy(gbId):
-            self.client.sendEnemyPosInfoToClient(gbId, False, 0)
+            self.client.sendEnemyPosInfoToClient(gbId, False, 0, True)
             return
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [gbId],
             'onGetEnemyPosInfo',
-            (self, ),
+            (self, False),
             self,
             'onGetEnemyPosInfoResult',
             (False, None))
 
     def onGetEnemyPosInfoResult(self, otherGbId, find, posInfo):
         if not find:
-            INFO_MSG('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
-            self.client.sendEnemyPosInfoToClient(otherGbId, find, 0)
+            LOG_IFO('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
+            self.client.sendEnemyPosInfoToClient(otherGbId, find, self.enemyMgr.getEnemyLastSpaceNo(otherGbId), True)
             self.enemyMgr.updateEnemyOfflineTime(otherGbId)
             return
+        
+        if self.enemyScheduleTimerId == 0:
+            self.enemyScheduleTimerId = self.pyAddTimer(2, 2, gametimer.ENEMY_SCHEDULE)
 
         _deductVal = dropAward.DeductWealthVal()
         _deductVal.addWealthByItemId(
@@ -61,8 +70,8 @@ class IEnemy(object):
         )
 
         if not self.canDeductWealth(_deductVal, sendMsg=True):
-            WARNING_MSG('in onGetEnemyPosInfoResult, items not enough:', _deductVal)
-            self.client.sendEnemyPosInfoToClient(otherGbId, find, 0)
+            LOG_WARN('in onGetEnemyPosInfoResult, items not enough:', _deductVal)
+            self.client.sendEnemyPosInfoToClient(otherGbId, find, 0, True)
             return
 
         _opUUID = KBEngine.genUUID64()
@@ -71,8 +80,61 @@ class IEnemy(object):
         self.deductWealth(_src, _deductVal, _opUUID, _detail)
 
         _spaceNo = posInfo[0]
-        self.client.sendEnemyPosInfoToClient(otherGbId, find, _spaceNo)
+        self.client.sendEnemyPosInfoToClient(otherGbId, find, _spaceNo, True)
         self.enemyMgr.updateEnemyLastFindInfo(otherGbId, _spaceNo)
+        self.client.showEnemyIcon(True)
+
+    @gamedecorator.checkGameconfigEnable('enemy')
+    @gamedecorator.limitcall(2)
+    def switchEnemySchedule(self, exposed, flag):
+        self.enemyScheduleTag = flag
+        if flag:
+            self.scheduleEnemyPosInfo()
+
+    def scheduleEnemyPosInfo(self, login=False):
+        activeList, updateList = self.enemyMgr.getNeedUpdateEnemyIds(login)
+        # LOG_DBG('scheduleEnemyPosInfo, activeList:', activeList, 'updateList:', updateList)
+        if not activeList:
+            # 关闭图标
+            self.client.showEnemyIcon(False)
+            self.pyDelTimer(self.enemyScheduleTimerId, gametimer.ENEMY_SCHEDULE)
+            self.enemyScheduleTimerId = 0
+            self.enemyScheduleTag = False
+            LOG_DBG('scheduleEnemyPosInfo: close')
+            return
+
+        # 重登之后定时器可能没了，重新开启
+        if self.enemyScheduleTimerId == 0:
+            self.enemyScheduleTimerId = self.pyAddTimer(2, 2, gametimer.ENEMY_SCHEDULE)
+
+        # 未开启实时更新
+        # if not self.enemyScheduleTag:
+        #     return
+        # 无需要更新的敌人
+        if not updateList:
+            return
+        self.client.showEnemyIcon(True)
+        
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+            updateList,
+            'onGetEnemyPosInfo',
+            (self, True),
+            self,
+            'onScheduleEnemyPosInfoResult',
+            (False, None))
+            
+    def onScheduleEnemyPosInfoResult(self, otherGbId, find, posInfo):
+        lastSpaceNo = self.enemyMgr.getEnemyLastSpaceNo(otherGbId)
+        if not find:
+            LOG_IFO('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
+            self.client.sendEnemyPosInfoToClient(otherGbId, find, lastSpaceNo, False)
+            self.enemyMgr.updateEnemyOfflineTime(otherGbId)
+            return
+        
+        _spaceNo = posInfo[0]
+        self.enemyMgr.scheduleEnemyLastFindInfo(otherGbId, _spaceNo)
+        self.client.sendEnemyPosInfoToClient(otherGbId, find, _spaceNo, False)
+        LOG_DBG('onScheduleEnemyPosInfoResult, find enemy pos info:', otherGbId, posInfo)
 
     def doSendEnemyRecordDatas(self):
         _datas = self.enemyMgr.getRecordDatas()
@@ -89,5 +151,38 @@ class IEnemy(object):
 
     def sendEnemyRecordDatas(self):
         _iter = self.doSendEnemyRecordDatas()
+        self.batchlyCall(_iter, gameconst.SEND_ENEMY_RECORD_BATCH_NUM, 0.1)
+
+    def sendAllEnemyDatas(self):
+        LOG_DBG('sendAllEnemyDatas')
+        self.client.onEnemyDatas(self.enemyMgr.getAllEnemyies())
+        self.scheduleEnemyPosInfo(True)
+
+    def getEnemyRecord(self, exposed, gbId):
+        _recordData = self.enemyMgr.getRecordByGbId(gbId)
+        if not _recordData:
+            LOG_WARN('getEnemyRecord record not found', gbId)
+            return
+
+        LOG_DBG('on get record', gbId, _recordData)
+        self.client.onEnemyRecord(_recordData.toEnemyRecordListSavedDict())
+
+    def doSendRecordList(self, recordList):
+        while recordList:
+            _sendList = recordList[:10]
+            recordList = recordList[10:]
+
+            if recordList:
+                self.client.onRecordList(False, _sendList)
+            else:
+                self.client.onRecordList(True, _sendList)
+            # LOG_IFO('doSendRecordList, send record list:', _sendList)
+            yield lambda : True
+
+    @gamedecorator.checkGameconfigEnable('enemy')
+    def getRecordList(self, exposed):
+        recordList = self.enemyMgr.getAllRecordList()
+        recordList = recordList[::-1]
+        _iter = self.doSendRecordList(recordList)
         self.batchlyCall(_iter, gameconst.SEND_ENEMY_RECORD_BATCH_NUM, 0.1)
 

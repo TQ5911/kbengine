@@ -27,7 +27,7 @@ class ImpTalk(object):
         # if the npc talk is not being interrupted, then continue the process
         if not isNPCTalkDone:
             self.doNPCTalk(npcEntityID, npcId, taskId, dialogId, idx)
-            INFO_MSG('in _doTalkToNPC, doNPCTalk:', npcEntityID, npcId, taskId, dialogId, idx)
+            LOG_IFO('in _doTalkToNPC, doNPCTalk:', npcEntityID, npcId, taskId, dialogId, idx)
 
     def makeTalkToNPC(self, npcEntityId, npcId, taskId, dialogId, idx):
         self._doTalkToNPC(npcEntityId, npcId, taskId, dialogId, idx)
@@ -39,36 +39,31 @@ class ImpTalk(object):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToNpc(self, exposed, npcEntityId, taskId, dialogId, idx):
-        INFO_MSG('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
+        LOG_IFO('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
         npcId = 0
         if npcEntityId:
             ent = KBEngine.entities.get(npcEntityId)
             if not ent or not ent.IsNpc:
-                WARNING_MSG('talkToNpc but invalid targetId:', npcEntityId)
+                LOG_WARN('talkToNpc but invalid targetId:', npcEntityId)
                 return
             
             if self.spaceNo != ent.spaceNo:
-                WARNING_MSG('talkToNpc but invalid targetId spaceNo:', npcEntityId)
+                LOG_WARN('talkToNpc but invalid targetId spaceNo:', npcEntityId)
                 return
             
             # 这里判断下和npc的距离，暂定为5把
             if sMath.distance2D(self.position, ent.position) > 5:
-                WARNING_MSG('talkToNpc but invalid targetId distance:', npcEntityId)
+                LOG_WARN('talkToNpc but invalid targetId distance:', npcEntityId)
                 return
 
             npcId = ent.npcId
-
-        # if npcId and dialogId:
-        #     if not self._checkDialogIdValid(npcId, dialogId):
-        #         WARNING_MSG('talkToNpc but invalid dialogId:', npcId, dialogId)
-        #         return
 
         self.makeTalkToNPC(npcEntityId, npcId, taskId, dialogId, idx)
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToClientNpc(self, exposed, npcId, taskId, dialogId, idx):
-        INFO_MSG('in talkToClientNpc:', taskId, npcId, dialogId, idx)
+        LOG_IFO('in talkToClientNpc:', taskId, npcId, dialogId, idx)
         self.makeTalkToNPC(0, npcId, taskId, dialogId, idx)
 
     # npc talk
@@ -93,18 +88,18 @@ class ImpTalk(object):
 
         param_str = dialogData.get('parm')
         param_list = param_str.split('|')
-        INFO_MSG('in _checkDialogEventConfig:', event_list, param_list)
+        LOG_IFO('in _checkDialogEventConfig:', event_list, param_list)
         if 0 < len(event_list) < idx:
-            ERROR_MSG('in _checkDialogEventConfig, event idx error:', idx)
+            LOG_ERR('in _checkDialogEventConfig, event idx error:', idx)
             return None, None
 
         if 0 < len(param_list) < idx:
-            ERROR_MSG('in _checkDialogEventConfig, param idx error:', idx)
+            LOG_ERR('in _checkDialogEventConfig, param idx error:', idx)
             return None, None
 
         eventName = event_list[idx]
         if not eventName:
-            WARNING_MSG('_checkDialogEventConfig, no eventName, dailog config error:', dialogId)
+            LOG_WARN('_checkDialogEventConfig, no eventName, dailog config error:', dialogId)
             return None, None
 
         return event_list, param_list
@@ -121,7 +116,7 @@ class ImpTalk(object):
         # 检查任务奖励数据
         taskID = param_list[idx]
         if not taskID:
-            WARNING_MSG('_checkGetTaskEvent, no taskID, dailog config error:', dialogId)
+            LOG_WARN('_checkGetTaskEvent, no taskID, dailog config error:', dialogId)
             return False
         return True
 
@@ -133,7 +128,7 @@ class ImpTalk(object):
                 if str(self.areaId) in worldAreaIds:
                     # self._doTaskTalkToNPC(targetId, taskId, npcId, dialogId, idx)
                     return True
-        INFO_MSG('_checkTaskFollowNPC failed', taskId, npcId, dialogId)
+        LOG_IFO('_checkTaskFollowNPC failed', taskId, npcId, dialogId)
         return False
     
     def _checkEventNpc(self, npcId, eventName):
@@ -161,13 +156,8 @@ class ImpTalk(object):
         eventName = event_list[idx]
 
         if not self._checkEventNpc(npcId, eventName):
-            ERROR_MSG('_doTaskTalkToNPC, eventName not match:', eventName, taskId, npcId, dialogId)
+            LOG_ERR('_doTaskTalkToNPC, eventName not match:', eventName, taskId, npcId, dialogId)
             return
-
-        # fromType = EAED.datas[eventName]['sendType']
-        # if fromType and fromType != gameconst.CommActionSrcType.DIALOG:
-        #     ERROR_MSG('_doTaskTalkToNPC, not support dailog action:', eventName, taskId, npcId, dialogId)
-        #     return
 
         eventArgs, eventKwargs = utils.parseCommEventParams(param_list[idx])
         eventKwargs['_targetId'] = targetId
@@ -195,9 +185,9 @@ class ImpTalk(object):
         else:
             newTaskId = kwargs.get('_srcTaskId')
 
-        self.startClaimTask(newTaskId, taskCtx=actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.FROM_ACTION))
+        self.startClaimTask(newTaskId, taskCtx=actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_FROM_ACTION))
 
     def _eventActionAddUltraSkillPower(self, eventActionSrc, *args, **kwargs):
-        INFO_MSG('_eventActionAddUltraSkillPower:', eventActionSrc, args, kwargs)
+        LOG_IFO('_eventActionAddUltraSkillPower:', eventActionSrc, args, kwargs)
 
         self.addUltraSkillPower(int(args[0]))

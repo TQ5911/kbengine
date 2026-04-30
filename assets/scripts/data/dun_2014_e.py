@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -179,11 +180,7 @@ datas ={
     "buffID": [
       64004904
     ],
-    "transition": {
-      "finished": [
-        1006
-      ]
-    }
+    "transition": {}
   },
   "1021": {
     "type": "popupdialog",

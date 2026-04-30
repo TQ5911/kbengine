@@ -141,7 +141,7 @@ datas = _tools.RODict({
     }),
     "mainRedPacketMsgShow": _tools.RODict({
         "ID": "mainRedPacketMsgShow",
-        "value": "<color=#00000000><quad name=48 size=24/></color><color=#C4971D>{0}</color>",
+        "value": "<color=#00000000><sprite name=\"48_00\"></color><color=#C4971D>{0}</color>",
     }),
     "sendPacketNumLimitMsg": _tools.RODict({
         "ID": "sendPacketNumLimitMsg",
@@ -150,5 +150,13 @@ datas = _tools.RODict({
     "chat_banned": _tools.RODict({
         "ID": "chat_banned",
         "value": 54001558,
+    }),
+    "thankMsgLimit": _tools.RODict({
+        "ID": "thankMsgLimit",
+        "value": 7,
+    }),
+    "thankMsgRate": _tools.RODict({
+        "ID": "thankMsgRate",
+        "value": 0.1,
     })
 })

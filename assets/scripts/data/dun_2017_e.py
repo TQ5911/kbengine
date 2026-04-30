@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -251,11 +252,7 @@ datas ={
     "skillID": 91020032,
     "lv": "1",
     "forceToUse": 1,
-    "transition": {
-      "finished": [
-        1006
-      ]
-    }
+    "transition": {}
   },
   "1051": {
     "type": "addBuffToMonster",

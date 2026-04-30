@@ -45,7 +45,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             # 如果城战状态为空，则请求跨服
             if not self.stateSynced:
                 crossSiegeWarServerInfo = gameconfig.crossSiegeWarServerInfo()
-                DEBUG_MSG('[lj]request cross siege war state', crossSiegeWarServerInfo, self.serverId)
+                LOG_DBG('[lj]request cross siege war state', crossSiegeWarServerInfo, self.serverId)
                 _stub = iRouter.RemoteServerStubEntityCall(crossSiegeWarServerInfo['crossServerId'], 'CrossSiegeWarStub')
                 _stub.getSiegeWarState(self.serverId)
                 self.pyAddTimer(5, 0, gametimer.SIEGE_WAR_STUB_GET_STATE)
@@ -54,18 +54,18 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     #跨服同步城战状态
     def setSiegeWarState(self, state, timestamp):
-        DEBUG_MSG('[lj]set siege war state from cross server', state, timestamp)
+        LOG_DBG('[lj]set siege war state from cross server', state, timestamp)
         #广播
         if self.siegeWarState != state or self.siegeWarStateEndTime != timestamp or not self.stateSynced:
-            DEBUG_MSG('[lj]do broadcast siege war state', state, self.siegeWarStateEndTime, timestamp)
+            LOG_DBG('[lj]do broadcast siege war state', state, self.siegeWarStateEndTime, timestamp)
             gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.BASE, 'onUpdateSiegeWarState',
                                         (state, timestamp), ()))
             if self.siegeWarState != state:
-                DEBUG_MSG('[lj]siege war state update', self.siegeWarState, '->', state, 'end time:', timestamp, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp)))
+                LOG_DBG('[lj]siege war state update', self.siegeWarState, '->', state, 'end time:', timestamp, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp)))
                 #转为报名阶段发全服邮件
                 if state == gameconst.SiegeWarState.SIGN_UP:
-                    DEBUG_MSG('[lj]send siege war start mail to all players')
+                    LOG_DBG('[lj]send siege war start mail to all players')
                     mailId = CBC.datas['cityBattle_mailBiddingStart']['value']
                     rewardId = MAMAD.datas[mailId]['rewardId']
                     attach = None
@@ -79,7 +79,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                     if self.cityDefenseDeclaration != "":
                         declaration = ownerName + ': ' + self.cityDefenseDeclaration
                     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
-                        mailId, attach, [ownerName, declaration], title, content, 0, timestamp, 1,
+                        mailId, attach, [ownerName, declaration], title, content, 0, timestamp, 0, 1,
                         utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_SIGNUP)
 
                     content = content.replace('{0}', ownerName)
@@ -98,7 +98,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     #玩家登录请求同步城战状态
     def getSiegeWarState(self, box):
-        DEBUG_MSG('[lj]player login get siege war state', self.siegeWarState, self.siegeWarStateEndTime)
+        LOG_DBG('[lj]player login get siege war state', self.siegeWarState, self.siegeWarStateEndTime)
 
         #持久化了，直接发
         if self.cityOwnerGuildName != '':
@@ -106,13 +106,13 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         #请求跨服还没返回，返回会统一广播
         if not self.stateSynced:
-            DEBUG_MSG('[lj]siege war state not ready')
+            LOG_DBG('[lj]siege war state not ready')
             return
         box.onUpdateSiegeWarState(self.siegeWarState, self.siegeWarStateEndTime)
 
     #玩家发起竞拍
     def doBidding(self, box, avatarGBID, name, cnt, guildName, guildUUID):
-        DEBUG_MSG('[lj]do bidding', avatarGBID, name, cnt, guildName, guildUUID)
+        LOG_DBG('[lj]do bidding', avatarGBID, name, cnt, guildName, guildUUID)
         #已经是当前帮会弹个框，请求跨服是因为还要返还所以不当场return
         if guildUUID == self.firstBiddingGuildUUID:
             box.onMessagePre(CBC.datas["cityBattle_guildAlreadyBidding"]["value"], [])
@@ -125,7 +125,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     #跨服返回竞拍结果(被人抢拍也走这个)
     #数据更新走另一条协议
     def onBiddingResult(self, guildUUID, cnt, success, ec):
-        DEBUG_MSG('[lj]on bidding result', guildUUID, cnt, success, ec)
+        LOG_DBG('[lj]on bidding result', guildUUID, cnt, success, ec)
         #竞拍失败，帮会返还
         if not success:
             gameengine.getGlobalBase('GuildStub').callOnGuild(
@@ -139,7 +139,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onSiegeWarBiddingAvatarSubscribed(self, avatarGBID, isSubscribed):
         if isSubscribed:
-            self.subscribedAvatarGBIDs[avatarGBID] = utils.getNow()
+            self.subscribedAvatarGBIDs[avatarGBID] = utils.curTS()
             #订阅主动发一下
             playerStub = gameengine.getGlobalBase('PlayerStub')
             playerStub.doOnOthersBase([avatarGBID], 'onSiegeWarBiddingDataUpdate', (self.guildNameList, self.nameList, self.cntList, self.signUpDelayTime), None, '', ())
@@ -157,16 +157,16 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.firstBiddingGuildUUID = guildUUID
         #一分钟不订阅的自动剔除
         for avatarGBID, timestamp in list(self.subscribedAvatarGBIDs.items()):
-            if utils.getNow() - timestamp > 60:
+            if utils.curTS() - timestamp > 60:
                 self.subscribedAvatarGBIDs.pop(avatarGBID)
 
         playerStub = gameengine.getGlobalBase('PlayerStub')
         avatarGBIDs = list(self.subscribedAvatarGBIDs.keys())
-        DEBUG_MSG('[lj]on siege war bidding data update list len:', len(guildNameList), 'avatarGBIDs len:', len(avatarGBIDs))
+        LOG_DBG('[lj]on siege war bidding data update list len:', len(guildNameList), 'avatarGBIDs len:', len(avatarGBIDs))
         playerStub.doOnOthersBase(avatarGBIDs, 'onSiegeWarBiddingDataUpdate', (guildNameList, nameList, cntList, self.signUpDelayTime), None, '', ())
 
     def handleBiddingResult(self, firstBiddingGuildName, firstBiddingGuildUUID, firstBiddingAvatarName, firstBiddingPrice, firstBiddingServerName):
-        DEBUG_MSG('[lj]handle bidding result', firstBiddingGuildName, firstBiddingGuildUUID, firstBiddingAvatarName, firstBiddingPrice, firstBiddingServerName)
+        LOG_DBG('[lj]handle bidding result', firstBiddingGuildName, firstBiddingGuildUUID, firstBiddingAvatarName, firstBiddingPrice, firstBiddingServerName)
 
         #清空帮会攻城令
         gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onResetSiegeWarCityBattleToken', ())
@@ -181,7 +181,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             title = MAMAD.datas[mailId]['title']
             content = MAMAD.datas[mailId]['content']
             gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
-                mailId, attach, [], title, content, 0, utils.getNow(), 1,
+                mailId, attach, [], title, content, 0, utils.curTS(), 0, 1,
                 utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_FAILED)
             return
 
@@ -195,7 +195,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         content = MAMAD.datas[mailId]['content']
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
             mailId, attach, [firstBiddingServerName, firstBiddingGuildName, firstBiddingAvatarName, str(firstBiddingPrice)], 
-            title, content, 0, utils.getNow(), 1, utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS)
+            title, content, 0, utils.curTS(), 0, 1, utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS)
 
         #玉玺
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -207,17 +207,17 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
 
     def handleBiddingResultGetGuildBox(self, guildBox):
-        DEBUG_MSG('[lj]handle bidding result get guild box', guildBox)
+        LOG_DBG('[lj]handle bidding result get guild box', guildBox)
         if guildBox:
             guildBox.onSiegeWarBiddingWin()
 
     def onSiegeWarDeclareWar(self, box, isOffensive, gbId, guildName, guildUUID, declaration, srcName):
-        DEBUG_MSG('[lj]on siege war declare war', box, isOffensive, gbId, guildName, guildUUID, declaration, srcName)
+        LOG_DBG('[lj]on siege war declare war', box, isOffensive, gbId, guildName, guildUUID, declaration, srcName)
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.onSiegeWarDeclareWar(self.serverId, box, isOffensive, gbId, guildName, guildUUID, declaration, srcName)
 
     def onSiegeWarDeclareWarCrossServerResult(self, box, success, ec, srcGbId):
-        DEBUG_MSG('[lj]on siege war declare war cross server result', box, success, ec, srcGbId)
+        LOG_DBG('[lj]on siege war declare war cross server result', box, success, ec, srcGbId)
         playerStub = gameengine.getGlobalBase('PlayerStub')
         playerStub.doOnOthersBase([srcGbId], 'onSiegeWarDeclareWarCrossServerResult', (success, ec), None, '', ())
 
@@ -230,7 +230,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.offensiveJunXuQiXieLevelData = {}
         self.defensiveJunXuQiXieLevelData = {}
         self.officialWarStartTime = officialWarStartTime
-        DEBUG_MSG('[lj]on siege war declare war official', CBC.datas['cityBattle_mailDeclare']['value'])
+        LOG_DBG('[lj]on siege war declare war official', CBC.datas['cityBattle_mailDeclare']['value'])
         mailId = CBC.datas['cityBattle_mailDeclare']['value'][0]
         self.cityOffensiveDeclaration = self.cityOffensiveDeclaration if self.cityOffensiveDeclaration else ""
         declaration = ""
@@ -251,9 +251,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             attach = mailAssistor.parseAttachStr(str(rewardId))
         title = MAMAD.datas[mailId]['title']
         content = MAMAD.datas[mailId]['content']
-        DEBUG_MSG('[lj]on siege war declare war official mail id:', mailId, 'args:', args, content)
+        LOG_DBG('[lj]on siege war declare war official mail id:', mailId, 'args:', args, content)
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
-            mailId, attach, args, title, content, 0, utils.getNow(), 1,
+            mailId, attach, args, title, content, 0, utils.curTS(), 0, 1,
             utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_NOTICE_BATTLE)
 
         for i in range(len(args)):
@@ -292,13 +292,13 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             box.onQuerySiegeWarBiddingWinnerDataResult(0, '', '', 0)
 
     def onCrossSiegeWarGetGuildInfos(self, guildUUID):
-        DEBUG_MSG('[lj]on cross siege war get guild infos', guildUUID)
+        LOG_DBG('[lj]on cross siege war get guild infos', guildUUID)
 
     def onCrossSiegeWarEnd(self, combatResult, winnerGuildUUID, loserGuildUUID, lastCityOwnerGuildUUID):
         if gameconfig.isCrossServer():
-            DEBUG_MSG('[lj]ignore SiegeWarEnd in cross server')
+            LOG_DBG('[lj]ignore SiegeWarEnd in cross server')
             return
-        DEBUG_MSG('[lj]on cross siege war end', combatResult, winnerGuildUUID, loserGuildUUID, lastCityOwnerGuildUUID)
+        LOG_DBG('[lj]on cross siege war end', combatResult, winnerGuildUUID, loserGuildUUID, lastCityOwnerGuildUUID)
         rewardLevels = []
         for key, value in CBRR.datas.items():
             arr = []
@@ -331,7 +331,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 else:
                     _addVal.addWealthByItemId(rewardLevels[lv][2], 1)
                 mailAssistor.sendMailToPlayers([gbId], CBC.datas['cityBattle_mailPointRank']['value'], extraAttach=_addVal, despArgs=(score,), srcType=AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_REWARD_MVP)
-            DEBUG_MSG('[lj]send points award', gbId, isWinner, score, lv)
+            LOG_DBG('[lj]send points award', gbId, isWinner, score, lv)
 
         #获取胜利方详细信息
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -372,7 +372,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onSiegeWarWinnerGetGuildBox(self, guildBox):
         if not guildBox:
             return
-        DEBUG_MSG('[lj]on siege war winner get guild box', guildBox)
+        LOG_DBG('[lj]on siege war winner get guild box', guildBox)
         guildBox.onSiegeWarGetWinnerData(self)
         guildBox.onChangeCityOwnerFlag(True)
 
@@ -380,16 +380,16 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if guildBox:
             guildBox.onChangeCityOwnerFlag(False)
         else:
-            DEBUG_MSG('[lj]first time city owner change')
+            LOG_DBG('[lj]first time city owner change')
 
     def onSiegeWarGuildWinnerData(self, data):
         data.append(gameglobal.curServerName)
-        DEBUG_MSG('[lj]on siege war guild winner data', data)
+        LOG_DBG('[lj]on siege war guild winner data', data)
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.cityOwnerChange(self.serverId, data)
 
     def onCityOfficerChange(self, addOfficerList, removeOfficerList):
-        DEBUG_MSG('[lj]on city officer change', addOfficerList, removeOfficerList)
+        LOG_DBG('[lj]on city officer change', addOfficerList, removeOfficerList)
 
         for val in removeOfficerList:
             officerId, officerType = val
@@ -441,35 +441,35 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     #给玩家发奖励
     def onCitySendReward(self, rewardId, targetGbId):
-        DEBUG_MSG('[lj]on city send reward', rewardId, targetGbId)
+        LOG_DBG('[lj]on city send reward', rewardId, targetGbId)
         _addVal = dropAward.MailWealthVal()
         _addVal.addWealthByRewardId(rewardId)
         mailAssistor.sendMailToPlayers([targetGbId], CBC.datas['cityBattle_mailReward']['value'], extraAttach=_addVal, srcType=AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_REWARD_LEADER)
 
-        DEBUG_MSG('[lj]on city send reward success', rewardId, targetGbId)
+        LOG_DBG('[lj]on city send reward success', rewardId, targetGbId)
 
     #给目标玩家加buff(目前只作用于通缉， 会发通缉邮件)
     def onCityAddBuffToTarget(self, buffId, endTime, targetGbId):
-        DEBUG_MSG('[lj]on city add buff to target', buffId, endTime, targetGbId)
+        LOG_DBG('[lj]on city add buff to target', buffId, endTime, targetGbId)
 
         playerStub = gameengine.getGlobalBase('PlayerStub')
         playerStub.doOnOthersCell([targetGbId], 'onAddCityBuff', (buffId, endTime), self, 'addCityBuffOffline', (buffId, endTime, targetGbId))
         mailAssistor.sendMailToPlayers([targetGbId], CBC.datas['cityBattle_mailWanted']['value'])
 
-        DEBUG_MSG('[lj]on city add buff to target success', buffId, endTime, targetGbId)
+        LOG_DBG('[lj]on city add buff to target success', buffId, endTime, targetGbId)
 
     def addCityBuffOffline(self, otherGbId, buffId, endTime, targetGbId):
         self.offlineBuffCache.setdefault(targetGbId, []).append((buffId, endTime))
-        DEBUG_MSG('[lj]add city buff offline cache len:', len(self.offlineBuffCache), 'targetGbId:', targetGbId, 'buffId:', buffId, 'endTime:', endTime)
+        LOG_DBG('[lj]add city buff offline cache len:', len(self.offlineBuffCache), 'targetGbId:', targetGbId, 'buffId:', buffId, 'endTime:', endTime)
 
     def onCityDataChange(self, dataList, cityFundUseRecord):
-        DEBUG_MSG('[lj]on city data change', len(dataList), dataList, cityFundUseRecord)
+        LOG_DBG('[lj]on city data change', len(dataList), dataList, cityFundUseRecord)
         self.cityDataList = dataList
         self.cityFundUseRecord = cityFundUseRecord
 
         if len(dataList) >= 16:
             if dataList[0] != self.cityOwnerUUID:
-                DEBUG_MSG('[lj]city owner change', self.cityOwnerUUID, dataList[0])
+                LOG_DBG('[lj]city owner change', self.cityOwnerUUID, dataList[0])
                 buffId = CBF.datas[1]['buff']
                 playerStub = gameengine.getGlobalBase('PlayerStub')
                 if self.cityOwnerUUID in self.officerBuffDict:
@@ -486,7 +486,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 title = MAMAD.datas[mailId]['title']
                 content = MAMAD.datas[mailId]['content']
                 gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
-                    mailId, None, [str(dataList[-1]), str(dataList[6]), str(dataList[1])], title, content, 0, utils.getNow(), 1,
+                    mailId, None, [str(dataList[-1]), str(dataList[6]), str(dataList[1])], title, content, 0, utils.curTS(), 0, 1,
                     utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BROATCAST_LEADER)
             lastCityOwnerGuildName = self.cityOwnerGuildName
             self.cityOwnerUUID = dataList[0]
@@ -495,7 +495,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self.cityOwnerGuildName = dataList[6]
             self.lastSiegeWarEndTime = dataList[15]
             if self.cityOwnerGuildName != lastCityOwnerGuildName:
-                DEBUG_MSG('[lj]do sync city simple data', lastCityOwnerGuildName, self.cityOwnerGuildName)
+                LOG_DBG('[lj]do sync city simple data', lastCityOwnerGuildName, self.cityOwnerGuildName)
                 gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.BASE, 'syncCitySimpleData',
                                         (self.cityOwnerName, self.cityOwnerGuildName, self.cityOwnerGuildUUID, self.lastSiegeWarEndTime), ()))
@@ -521,21 +521,21 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         )
 
     def doChangeCityMoneyToGuildMoney(self, guildBox, srcGbId, val):
-        DEBUG_MSG('[lj]doChangeCityMoneyToGuildMoney', val)
+        LOG_DBG('[lj]doChangeCityMoneyToGuildMoney', val)
         guildBox.doChangeCityMoneyToGuildMoney(srcGbId, val)
 
     def querySiegeWarCityFundUseRecord(self, box):
-        DEBUG_MSG('[lj]query siege war city fund use record', self.cityFundUseRecord)
+        LOG_DBG('[lj]query siege war city fund use record', self.cityFundUseRecord)
         box.client.onQuerySiegeWarCityFundUseRecordResult(self.cityFundUseRecord)
 
     def onJunXuQiXieLevelSync(self, guildUUID, data):
         if self.offensiveGuildUUID == guildUUID:
             self.offensiveJunXuQiXieLevelData = data
-            DEBUG_MSG('[lj]is offensive')
+            LOG_DBG('[lj]is offensive')
         elif self.defensiveGuildUUID == guildUUID:
             self.defensiveJunXuQiXieLevelData = data
-            DEBUG_MSG('[lj]is defensive')
-        DEBUG_MSG('[lj]onJunXuQiXieLevelSync', guildUUID, data)
+            LOG_DBG('[lj]is defensive')
+        LOG_DBG('[lj]onJunXuQiXieLevelSync', guildUUID, data)
         self.syncJunXuQiXieLevel()
 
     #定时上报城战器械等级

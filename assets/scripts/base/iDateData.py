@@ -47,16 +47,16 @@ class IDateData(object):
         self.dateTimeDataDict[DateType.WEEK] = self._calcWeeklyUpdateTime(tNow)
 
     def _calcDailyUpdateTime(self, tNow):
-        tUpdate = utils.getCurrentDayTS(offsetSec=gameconst.COMMON_CYCLE_TIME)
+        tUpdate = utils.getCurDayTS(offsetSec=gameconst.GENERAL_CYCLE_TIME)
         if tUpdate <= tNow:
-            tUpdate += gameconst.ONE_DAY_SECONDS
+            tUpdate += gameconst.ONE_DAY_COST_SECONDS
 
         return tUpdate
 
     def _calcWeeklyUpdateTime(self, tNow):
-        tUpdate = utils.getCurrentWeekTS(offsetSec=gameconst.COMMON_CYCLE_TIME)
+        tUpdate = utils.getCurWeekTS(offsetSec=gameconst.GENERAL_CYCLE_TIME)
         if tUpdate <= tNow:
-            tUpdate += gameconst.WEEK_SENCONDS
+            tUpdate += gameconst.ONE_WEEK_COST_SECONDS
 
         return tUpdate
    
@@ -72,33 +72,33 @@ class IDateData(object):
 
 
     def onDayChanged(self, lastUpdateTime, now):
-        INFO_MSG("IDateData::onDayChanged: %i => %i" % (lastUpdateTime, now))
+        LOG_IFO("IDateData::onDayChanged: %i => %i" % (lastUpdateTime, now))
         try:
             for key, val in self.dateDailyDataDict.items():
                 self.onExpireDailyData(key, val)
         except Exception as e:
-            ERROR_MSG("IDateData::onDayChanged error: %s" % e)
+            LOG_ERR("IDateData::onDayChanged error: %s" % e)
 
         self.dateTimeDataDict[DateType.DAY] = self._calcDailyUpdateTime(now)
         self.dateDailyDataDict.clear()
     
     def onExpireDailyData(self, key, val):
-        INFO_MSG('dateData daily expire')
+        LOG_IFO('dateData daily expire')
         
 
     def onWeekChanged(self, lastUpdateTime, now):
-        INFO_MSG("IDateData::onWeekChanged: %i => %i" % (lastUpdateTime, now))
+        LOG_IFO("IDateData::onWeekChanged: %i => %i" % (lastUpdateTime, now))
         try:
             for key, val in self.dateWeeklyDataDict.items():
                 self.onExpireWeeklyData(key, val)
         except Exception as e:
-            ERROR_MSG("IDateData::onWeekChanged error: %s" % e)
+            LOG_ERR("IDateData::onWeekChanged error: %s" % e)
 
         self.dateTimeDataDict[DateType.WEEK] = self._calcWeeklyUpdateTime(now)
         self.dateWeeklyDataDict.clear()
     
     def onExpireWeeklyData(self, key, val):
-        INFO_MSG('dateData weekly expire')
+        LOG_IFO('dateData weekly expire')
 
     def checkKeyValid(self, key):
         if key not in gameconst.AvatarDailyProps.__dict__.values():
@@ -131,7 +131,7 @@ class IDateData(object):
         self.dateWeeklyDataDict[key] = newVal
 
     def gmGetDateData(self):
-        INFO_MSG('dateTimeDataDict: ', self.dateTimeDataDict)
-        INFO_MSG('dayUpdateTimeStamp: ', utils.getTimeStr(self.dateTimeDataDict[DateType.DAY]), utils.getTimeStr(self.dateTimeDataDict[DateType.WEEK]))
-        INFO_MSG('dateDailyDataDict: ', self.dateDailyDataDict)
-        INFO_MSG('dateWeeklyDataDict: ', self.dateWeeklyDataDict)
+        LOG_IFO('dateTimeDataDict: ', self.dateTimeDataDict)
+        LOG_IFO('dayUpdateTimeStamp: ', utils.getCommonTimeStr(self.dateTimeDataDict[DateType.DAY]), utils.getCommonTimeStr(self.dateTimeDataDict[DateType.WEEK]))
+        LOG_IFO('dateDailyDataDict: ', self.dateDailyDataDict)
+        LOG_IFO('dateWeeklyDataDict: ', self.dateWeeklyDataDict)

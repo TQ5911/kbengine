@@ -82,10 +82,10 @@
         </onDeathPenaltyExpChange>
 
         <onDeathPenaltyReward>
-            <Arg>   PLAYER_GBID             </Arg>
-            <Arg>   UNICODE                 </Arg>
+            <Arg>   PLAYER_GBID                         </Arg>
+            <Arg>   UNICODE                             </Arg>
             <Arg>   ARRAY   <of>    REWARD_VAL  </of>   </Arg>
-            <Arg>   KILLER_DATA             </Arg>
+            <Arg>   KILLER_DATA                         </Arg>
         </onDeathPenaltyReward>
     </ClientMethods>
 </root>

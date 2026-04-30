@@ -4,7 +4,7 @@ import userType
 import gameconst
 import AffixInfo
 
-class SpiritInfo(userType.UserSoleType):
+class SpiritInfo(userType.UserSingleType):
     def __init__(self):
         self.spiritAffixes = []
 

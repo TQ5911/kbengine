@@ -27,17 +27,17 @@ class IRelive(object):
         specialPenalty = 'specialDeathPenaltyID'
 
         penaltyType = normalPenalty
-        if srcType == gameconst.SourceType.DropDeath:
+        if srcType == gameconst.SourceType.SrcTpDropDeath:
             penaltyType = specialPenalty
-            DEBUG_MSG('dropdeathtype', self.id, penaltyType)
+            LOG_DBG('dropdeathtype', self.id, penaltyType)
 
         # special 针对地图里所有特殊死亡的情况，会忽略子区域信息
-        if penaltyType != specialPenalty and formula.spaceInWorldLine(self.spaceNo) and self.areaId:
+        if penaltyType != specialPenalty and formula.inWorldLineScene(self.spaceNo) and self.areaId:
             _areaData = WC_AD.datas[self.areaId]
             #_dpId = _areaData[penaltyType]
         else:
-            _areaData = GP_GPD.datas[formula.getMapId(self.spaceNo)]
-            #_dpId = GP_GPD.datas[formula.getMapId(self.spaceNo)][penaltyType]
+            _areaData = GP_GPD.datas[formula.fetchMapId(self.spaceNo)]
+            #_dpId = GP_GPD.datas[formula.fetchMapId(self.spaceNo)][penaltyType]
 
         _dpId = _areaData[penaltyType]
         return GP_DPD.datas[_dpId]
@@ -52,7 +52,7 @@ class IRelive(object):
         _beCritInjuredBuffID = GP_SD.datas['beCritInjuredBuffID']['value']
         if self.hasBuff(_buffId):
             _lv = self.getBuffLv(_buffId)
-            DEBUG_MSG('buff lv', _lv)
+            LOG_DBG('buff lv', _lv)
             _newLv = _lv + _beInjuredBuffLevel
             if _newLv >= GP_SD.datas['beInjuredBuffLimit']['value']:
                 self.removeBuff(_buffId)
@@ -69,8 +69,8 @@ class IRelive(object):
             self.addBuff(_buffId, _beInjuredBuffLevel, self.id)
 
     def _onDeadPenalty(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
-        DEBUG_MSG('_onDeadPenalty', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
-        _now = utils.getNow()
+        LOG_DBG('_onDeadPenalty', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
+        _now = utils.curTS()
         self.lastDeadTime = _now # 上次死亡时间
 
         _dpData = self._spaceDeathPenaltyData(srcType)
@@ -115,7 +115,7 @@ class IRelive(object):
 
         if _dpData['beInjured']:
             self._deathPenaltyBeInjured()
-        DEBUG_MSG('addDeathPenaltyVal', killerId, creationId, srcType)
+        LOG_DBG('addDeathPenaltyVal', killerId, creationId, srcType)
         self.base.addDeathPenaltyVal(_deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType})
 
     @property
@@ -123,11 +123,11 @@ class IRelive(object):
         return self.lastDeadTime + self.curReliveCD
 
     def getRebornPosAndDir(self):
-        if formula.isSiegeWarSpace(self.spaceNo):
+        if formula.inSiegeWarScene(self.spaceNo):
             return self.getSiegeWarRebornPos()
 
-        _mapId = formula.getMapId(self.spaceNo)
-        _dunData = utils.getDunStructureModuleData(_mapId)
+        _mapId = formula.fetchMapId(self.spaceNo)
+        _dunData = utils.getDunStructModData(_mapId)
 
         _posData = _dunData.get('RebornPos', None)
         if not _posData:
@@ -136,7 +136,7 @@ class IRelive(object):
         _posList = []
         _dirList = []
         for _data in _posData.values():
-            _posList.append(formula.bornPosFromData(_data))
+            _posList.append(formula.bornPosFromDunData(_data))
             _dirList.append((0.0, 0.0, _data['Dir'] * math.pi / 180))
 
         if len(_posList) == 0:
@@ -148,7 +148,7 @@ class IRelive(object):
         _rebornPos = None
         _dir = None
         for _idx, _pos in enumerate(_posList):
-            _dis = utils.getDistanceSquare(self.position, _pos)
+            _dis = utils.getDisSquare(self.position, _pos)
             if _dis < _minDis:
                 _minDis = _dis
                 _rebornPos = _pos
@@ -161,10 +161,10 @@ class IRelive(object):
             self.doRelive(gameconst.RELIVE_TYPE_DIRECTLY)
 
     def _reliveToOtherScene(self, resSceneId):
-        _type = formula.whatSpaceType(resSceneId)
+        _type = formula.getSpaceType(resSceneId)
         if _type == gameconst.SpaceType.SpaceLine:
             _src = dungeonSrc.BasicDungeonSrc()
-            _enterPos, _enterDir = formula.whatSpaceBornPosAndDir(resSceneId)
+            _enterPos, _enterDir = formula.getSpaceBornPosAndDir(resSceneId)
             if _enterDir is not None:
                 _enterDir = (0, 0, _enterDir[2] * math.pi / 180)
             self.doEnterWorldLine(resSceneId, 0, _src, 0, _enterPos, _enterDir)
@@ -177,10 +177,10 @@ class IRelive(object):
 
 
     def doRelive(self, reliveType):
-        INFO_MSG('in doRelive:', reliveType, self.spaceNo, self.gbId)
-        _mapId = formula.getMapId(self.spaceNo)
+        LOG_IFO('in doRelive:', reliveType, self.spaceNo, self.gbId)
+        _mapId = formula.fetchMapId(self.spaceNo)
 
-        if formula.isMineWarSpace(self.spaceNo) \
+        if formula.inMineWarScene(self.spaceNo) \
               and self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
             if self.mineWarTryRelive():
                 return
@@ -189,7 +189,7 @@ class IRelive(object):
         _dir = None
         if reliveType == gameconst.RELIVE_TYPE_TO_NEAR:
             _resSceneId = GP_GPD.datas[_mapId]['resSceneId']
-            if not _resSceneId or _resSceneId == formula.getMapId(self.spaceNo):
+            if not _resSceneId or _resSceneId == formula.fetchMapId(self.spaceNo):
                 _pos, _dir = self.getRebornPosAndDir()
 
             elif self._reliveToOtherScene(_resSceneId):
@@ -199,10 +199,10 @@ class IRelive(object):
                 _pos, _dir = self.getRebornPosAndDir()
 
         reliveHp = int(self.fullHp * GP_SD.datas['resurrectHP']['value'] / 100)
-        if formula.isSiegeWarSpace(self.spaceNo):
+        if formula.inSiegeWarScene(self.spaceNo):
             reliveHp = self.fullHp
 
-        if formula.isDungeonSpace(self.spaceNo) and reliveType == gameconst.RELIVE_TYPE_TO_NEAR:
+        if formula.inDungeonScene(self.spaceNo) and reliveType == gameconst.RELIVE_TYPE_TO_NEAR:
             stub = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
             stub.onReliveInDungeon(self.spaceNo, self.base, self.gbId, reliveType, reliveHp)
         else:
@@ -215,19 +215,19 @@ class IRelive(object):
     @utils.isMyself
     @gamedecorator.limitcall(2)
     def relive(self, exposed, reliveType):
-        INFO_MSG('relive', reliveType, self.spaceNo)
+        LOG_IFO('relive', reliveType, self.spaceNo)
         if not self._isMyself(exposed):
             return
 
         if not self.isDie():
             return
 
-        _now = utils.getNow()
+        _now = utils.curTS()
         if _now < self.reliveCDEndTime:
-            WARNING_MSG('reliveCD:', self.reliveCDEndTime, _now)
+            LOG_WARN('reliveCD:', self.reliveCDEndTime, _now)
             return
 
-        DEBUG_MSG('relive1', reliveType, self.spaceNo)
+        LOG_DBG('relive1', reliveType, self.spaceNo)
         if reliveType == gameconst.RELIVE_TYPE_DIRECTLY:
             self.doRelive(reliveType)
         else:

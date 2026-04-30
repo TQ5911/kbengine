@@ -7,7 +7,7 @@ import gameconst
 import KBEngine
 
 
-class DuelAttrVal(userType.UserSoleType):
+class DuelAttrVal(userType.UserSingleType):
     '''DUEL_ATTR_DATA_INFO'''
     def __init__(self, duelFlags=0, targetId=0, duelFlagId=0):
         self.duelFlags = duelFlags
@@ -35,22 +35,22 @@ class DuelAttrVal(userType.UserSoleType):
         return True
 
     def inDuel(self):
-        return utils.hasBit(self.duelFlags, gameconst.DuelFlag.IN_DUEL)
+        return utils.bhas(self.duelFlags, gameconst.DuelFlag.IN_DUEL)
     
     def inReady(self):
-        return utils.hasBit(self.duelFlags, gameconst.DuelFlag.READY)
+        return utils.bhas(self.duelFlags, gameconst.DuelFlag.READY)
     
     def inFight(self):
-        return utils.hasBit(self.duelFlags, gameconst.DuelFlag.FIGHT)
+        return utils.bhas(self.duelFlags, gameconst.DuelFlag.FIGHT)
     
     def readyDuel(self, targetId):
-        self.duelFlags = utils.bitSet(self.duelFlags, gameconst.DuelFlag.IN_DUEL)
-        self.duelFlags = utils.bitSet(self.duelFlags, gameconst.DuelFlag.READY)
+        self.duelFlags = utils.bset(self.duelFlags, gameconst.DuelFlag.IN_DUEL)
+        self.duelFlags = utils.bset(self.duelFlags, gameconst.DuelFlag.READY)
         self.targetId = targetId
 
     def startFight(self):
-        self.duelFlags = utils.bitSet(self.duelFlags, gameconst.DuelFlag.FIGHT)
-        self.duelFlags = utils.bitReset(self.duelFlags, gameconst.DuelFlag.READY)
+        self.duelFlags = utils.bset(self.duelFlags, gameconst.DuelFlag.FIGHT)
+        self.duelFlags = utils.breset(self.duelFlags, gameconst.DuelFlag.READY)
 
     def setDuelFlagId(self, duelFlagId):
         self.duelFlagId = duelFlagId

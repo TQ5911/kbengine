@@ -16,7 +16,7 @@ class ISiegeWarMonster(object):
 		self.isSiegeWarBossInvoked = False
 		self.siegeWarBossTargetPos = None
 		self.siegeWarMonsterPropId = None
-		if formula.isSiegeWarSpace(self.spaceNo):
+		if formula.inSiegeWarScene(self.spaceNo):
 			customId, gid = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
 			if customId:
 				if customId in siegeTpInt:
@@ -28,20 +28,20 @@ class ISiegeWarMonster(object):
 							dataId = GWED.typeLevelDic[tp].get(lv)
 							if dataId:
 								self.siegeWarMonsterPropId = GWED.datas[dataId].get('prop')
-								DEBUG_MSG("[lj]ISiegeWarMonster: self.siegeWarMonsterPropId", self.siegeWarMonsterPropId)
+								LOG_DBG("[lj]ISiegeWarMonster: self.siegeWarMonsterPropId", self.siegeWarMonsterPropId)
 				else:
-					DEBUG_MSG("[lj]ISiegeWarMonster: customId is not in siegeTpInt", customId)
+					LOG_DBG("[lj]ISiegeWarMonster: customId is not in siegeTpInt", customId)
 
 	def notifySiegeWarOnDead(self, killer):
-		if not formula.isSiegeWarSpace(self.spaceNo):
+		if not formula.inSiegeWarScene(self.spaceNo):
 			return
 
 		if not killer:
-			DEBUG_MSG("[lj]notifySiegeWarOnDead: killer is None monsterId", self.gameEntityId)
+			LOG_DBG("[lj]notifySiegeWarOnDead: killer is None monsterId", self.gameEntityId)
 			return
 		
 		if not self.spaceMgr:
-			DEBUG_MSG("[lj]notifySiegeWarOnDead: self.spaceMgr is None monsterId", self.gameEntityId)
+			LOG_DBG("[lj]notifySiegeWarOnDead: self.spaceMgr is None monsterId", self.gameEntityId)
 			return
 
 		self.spaceMgr.onSiegeWarMonsterDead(self.gameEntityId, killer)
@@ -60,7 +60,7 @@ class ISiegeWarMonster(object):
 	
 	#高频
 	def notifySiegeWarOnModifyHP(self, hpVal):
-		if not formula.isSiegeWarSpace(self.spaceNo):
+		if not formula.inSiegeWarScene(self.spaceNo):
 			return
 		
 		if hpVal >= 0:
@@ -73,7 +73,7 @@ class ISiegeWarMonster(object):
 			oldCount = int(percentOld / syncPercent)
 			nowCount = int(percentNow / syncPercent)
 			if oldCount != nowCount or self.hp <= 0:
-				DEBUG_MSG("[lj]notifySiegeWarOnModifyHP: ", oldCount, nowCount, self.hp, hpVal)
+				LOG_DBG("[lj]notifySiegeWarOnModifyHP: ", oldCount, nowCount, self.hp, hpVal)
 				self.spaceMgr.onSiegeWarMonsterHpChange(self.id, self.siegeWarMonsterType, percentNow)
 
 			if self.isSiegeWarMainGate() or self.isSiegeWarOrderGate():

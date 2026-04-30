@@ -2,7 +2,7 @@
 import userType
 
 
-class MeridianPointVal(userType.UserSoleType):
+class MeridianPointVal(userType.UserSingleType):
     """MERIDIAN_POINT_VAL"""
     def __init__(self, pointIdx=0):
         self.pointIdx = pointIdx
@@ -41,7 +41,7 @@ class MeridianPointVal(userType.UserSoleType):
         self.level += 1
         return self.level
 
-class MeridianSlotVal(userType.UserSoleType):
+class MeridianSlotVal(userType.UserSingleType):
     """MERIDIAN_SLOT_VAL"""
     def __init__(self, slotIdx=0):
         self.slotIdx = slotIdx
@@ -115,7 +115,7 @@ class MeridianSlotVal(userType.UserSoleType):
             return True
         return False
 
-class MeridianVal(userType.UserSoleType):
+class MeridianVal(userType.UserSingleType):
     """MERIDIAN_VAL"""
     def __init__(self):
         self.curSlot = 1

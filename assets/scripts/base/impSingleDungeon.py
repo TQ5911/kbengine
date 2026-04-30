@@ -25,7 +25,7 @@ class ImpSingleDungeon(object):
                 return prm[pName]
 
     def checkSingleDungeonCondition(self, dungeonNo, extra):
-        INFO_MSG('checkSingleDungeonCondition::', dungeonNo, extra)
+        LOG_IFO('checkSingleDungeonCondition::', dungeonNo, extra)
         checkBox, reason = self._checkSingleDungeonCondition(dungeonNo, extra)
         reasonDic = {}
         return self.cell.onCheckSingleDungeonCondition(
@@ -36,12 +36,12 @@ class ImpSingleDungeon(object):
 
     def useItemAndEnterSingleDungeon(self, needDic, spaceBox, spaceMgrBox, spaceMgrId,
                                      spaceNo, playerBox, playerGbId, teamUUID, extra):
-        INFO_MSG('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
+        LOG_IFO('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
                   spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemDict(needDic)
         if not self.canDeductWealth(deductWealthVal):
-            ERROR_MSG('Enter singleDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
+            LOG_ERR('Enter singleDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
             return
 
         opUUID = KBEngine.genUUID64()
@@ -49,5 +49,5 @@ class ImpSingleDungeon(object):
         detail = gameclass.AwardDetail(spaceNo=spaceNo)
         self.deductWealth(src, deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterSingleDungeon(
-            gameconst.BagOPStat.BAG_OP_STAT_OK, spaceBox, spaceMgrBox,
+            gameconst.BagOPStat.OPERATE_BAG_STAT_OK, spaceBox, spaceMgrBox,
             spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)

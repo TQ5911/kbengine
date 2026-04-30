@@ -19,11 +19,6 @@
             <Flags>         BASE            </Flags>
         </teamIdBase>
 
-        <followCaptain>
-            <Type>          UINT8           </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-        </followCaptain>
-
         <teammateEntIdInAoiSet>
             <Type>          PY_SET          </Type>
             <Flags>         CELL_PRIVATE    </Flags>
@@ -48,22 +43,10 @@
             <Default>       0               </Default>
         </replyTeamCaptainTimer>
 
-        <replyFollowCaptainTimer>
-            <Type>          TIMER_ID        </Type>
-            <Flags>         CELL_PRIVATE    </Flags>
-            <Default>       0               </Default>
-        </replyFollowCaptainTimer>
-
         <teamInfo>
             <Type>          TEAM_INFO_CACHE </Type>
             <Flags>         CELL_PRIVATE    </Flags>
         </teamInfo>
-
-        <followInfo>
-            <Type>          PY_DICT         </Type>
-            <Flags>         CELL_PRIVATE    </Flags>
-            <Default>       {}              </Default>
-        </followInfo>
 
         <teamFriends>
             <Type>          PY_LIST         </Type>
@@ -265,27 +248,9 @@
         <cancelFollowTeamCaptain> <Exposed/>
         </cancelFollowTeamCaptain>
 
-        <selfCancelFollowTeamCaptain>
-            <Arg>   STRING  </Arg>
-        </selfCancelFollowTeamCaptain>
-
         <replyFollowTeamCaptain> <Exposed/>
             <Arg>           BOOL            </Arg>
         </replyFollowTeamCaptain>
-
-        <onCaptainCancleFollowTeam>
-        </onCaptainCancleFollowTeam>
-
-        <requestCaptainFollowProps>
-            <Arg>           MAILBOX         </Arg>
-        </requestCaptainFollowProps>
-
-        <onRequestCaptainFollowProps>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           SPACE_NO        </Arg>
-            <Arg>           POSITION_ARG    </Arg>
-            <Arg>           DUNGEON_SRC          </Arg>
-        </onRequestCaptainFollowProps>
 
         <onAddTeamMemberCell>
             <Arg>           PLAYER_GBID     </Arg>
@@ -308,11 +273,6 @@
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           ENTITYCALL      </Arg>
         </onUpdateOnlineCell>
-
-        <onFollowCaptainChangedCell>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           BOOL            </Arg>
-        </onFollowCaptainChangedCell>
 
         <onUpdateTeamMemberCell>
             <Arg>           PLAYER_GBID     </Arg>
@@ -570,7 +530,6 @@
             <Arg>           LEVEL           </Arg>
             <Arg>           SCORE           </Arg>
             <Arg>           SCHOOL          </Arg>
-            <Arg>           BOOL            </Arg>
             <Arg>           BOOL            </Arg>
             <Arg>           OUTFIT_ID       </Arg>
         </onUpdateMemberAttr>

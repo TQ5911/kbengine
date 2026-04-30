@@ -8,7 +8,7 @@ class ICollectionBossForMgr(object):
         self.collToBoss = {}
 
     def checkHasBoss(self, bossId):
-        if self.taggedEntities.get(str(bossId)):
+        if self.tagEntities.get(str(bossId)):
             return True
         return False
 

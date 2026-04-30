@@ -86,7 +86,7 @@ class SwitchGlobalVal(object):
     @classmethod
     def onGetLevelData(cls, ret, num, insertId, err, cache, cb):
         if err:
-            ERROR_MSG('SwitchGlobalVal::onGetLevelData query db err.', err)
+            LOG_ERR('SwitchGlobalVal::onGetLevelData query db err.', err)
             return
 
         _tbNames = []

@@ -5,9 +5,9 @@ import utils
 import gameconst
 
 
-class GuildMemberVal(userType.UserSoleType):
+class GuildMemberVal(userType.UserSingleType):
     # GUILD_MEMBER_DATA_INFO
-    def __init__(self, gbId=0, job=0, name='', level=0, school=0, sex=0, score=0, tmpFlag=0, offlineTime=0, fund=0):
+    def __init__(self, gbId=0, job=0, name='', level=0, school=0, sex=0, score=0, tmpFlag=0, offlineTime=0, fund=0, joinTime=0, histCond=0):
         self.gbId = gbId
         self.box = None
         self.job = job
@@ -19,17 +19,19 @@ class GuildMemberVal(userType.UserSoleType):
         self.tmpFlag = tmpFlag
         self.offlineTime = offlineTime
         self.fund = fund # 公会资金
+        self.joinTime = joinTime
+        self.histCond = histCond
 
     def setProperty(self, propName, propValue):
         setattr(self, propName, propValue)
         if propName == 'box':
             if propValue is None:
-                self.offlineTime = utils.getNow()
-                self.tmpFlag = utils.bitReset(self.tmpFlag, gameconst.GuildTmpFlag.ONLINE)
+                self.offlineTime = utils.curTS()
+                self.tmpFlag = utils.breset(self.tmpFlag, gameconst.GuildTmpFlag.ONLINE)
             else:
-                self.tmpFlag = utils.bitSet(self.tmpFlag, gameconst.GuildTmpFlag.ONLINE)
+                self.tmpFlag = utils.bset(self.tmpFlag, gameconst.GuildTmpFlag.ONLINE)
 
-        self.tmpFlag = utils.bitSet(self.tmpFlag, gameconst.GuildTmpFlag.DIRTY)
+        self.tmpFlag = utils.bset(self.tmpFlag, gameconst.GuildTmpFlag.DIRTY)
 
     def updateFromFcVal(self, fcVal):
         self.name = fcVal.name
@@ -51,6 +53,8 @@ class GuildMemberVal(userType.UserSoleType):
             'tmpFlag': self.tmpFlag,
             'offlineTime': self.offlineTime,
             'fund': self.fund,
+            'joinTime': self.joinTime,
+            'histCond': self.histCond,
         }
 
 

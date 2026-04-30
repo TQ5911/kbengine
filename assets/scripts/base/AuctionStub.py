@@ -63,7 +63,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         host = gameconfig.auctionServerHost()
         if not (self.auctionService and self.auctionService.channel.dispatcher):
-            INFO_MSG('connect auctionCenter---------:', host)
+            LOG_IFO('connect auctionCenter---------:', host)
             self.auctionService = AuctionStubService(self, host)
 
     def _checkAuctionCenterActive(self):
@@ -81,7 +81,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def saleItem(self, playerGBID, itemDict, totalPrice, number, bagType, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("saleItem auctionCenter is not active")
+            LOG_IFO("saleItem auctionCenter is not active")
             return
 
         request = SaleItemReq()
@@ -96,7 +96,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doSaleItem(self, auctionItemUUID, playerGBID, extra, result):
         if not self.isAuctionCenterActive(False):
-            INFO_MSG("doSaleItem auctionCenter is not active")
+            LOG_IFO("doSaleItem auctionCenter is not active")
             return
 
         request = DoSaleItemReq()
@@ -109,7 +109,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def buyItem(self, playerGBID, auctionItemUUID, number, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("buyItem auctionCenter is not active")
+            LOG_IFO("buyItem auctionCenter is not active")
             return
 
         request = BuyItemReq()
@@ -122,7 +122,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doBuyItem(self, auctionItemUUID, playerGBID, errno, price, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("doBuyItem auctionCenter is not active")
+            LOG_IFO("doBuyItem auctionCenter is not active")
             return
 
         request = DoBuyItemReq()
@@ -136,7 +136,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def cancelSaleItem(self, playerGBID, auctionItemUUID, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("cancelSaleItem auctionCenter is not active")
+            LOG_IFO("cancelSaleItem auctionCenter is not active")
             return
 
         request = CancelSaleItemReq()
@@ -148,7 +148,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doCancelSaleItem(self, auctionItemUUID, playerGBID, extra):
         if not self.isAuctionCenterActive(False):
-            INFO_MSG("doCancelSaleItem auctionCenter is not active")
+            LOG_IFO("doCancelSaleItem auctionCenter is not active")
             return
 
         request = DoCancelSaleItemReq()
@@ -160,7 +160,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def searchItemsByItemId(self, playerGBID, itemIds, limit, offset, isPublicity, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("searchItemsByItemId auctionCenter is not active")
+            LOG_IFO("searchItemsByItemId auctionCenter is not active")
             return
 
         request = SearchItemsByItemIdReq()
@@ -176,7 +176,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getItemLastAndAvgPrice(self, playerGBID, itemId, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("getItemLastAndAvgPrice auctionCenter is not active")
+            LOG_IFO("getItemLastAndAvgPrice auctionCenter is not active")
             return
 
         request = GetItemLastAndAvgPriceReq()
@@ -188,7 +188,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getCurrentSaleItemInfo(self, playerGBID, itemId, isPublicity, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("getCurrentSaleItemInfo auctionCenter is not active")
+            LOG_IFO("getCurrentSaleItemInfo auctionCenter is not active")
             return
 
         request = GetCurrentSaleItemInfoReq()
@@ -201,7 +201,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getPlayerAuctionItems(self, playerGBID, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("getPlayerAuctionItems auctionCenter is not active")
+            LOG_IFO("getPlayerAuctionItems auctionCenter is not active")
             return
 
         request = GetPlayerAuctionItemsReq()
@@ -212,7 +212,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def loadPlayerAuctionItem(self, playerGBID, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("loadPlayerAuctionItem auctionCenter is not active")
+            LOG_IFO("loadPlayerAuctionItem auctionCenter is not active")
             return
 
         request = LoadPlayerAuctionItemReq()
@@ -223,7 +223,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doCommand(self, command, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("doCommand auctionCenter is not active")
+            LOG_IFO("doCommand auctionCenter is not active")
             return
 
         request = DoCommandReq()
@@ -234,7 +234,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getAuctionItemNumByCategoryId(self, playerGBID, categoryId, itemIdList, isPublicity):
         if not self.isAuctionCenterActive():
-            INFO_MSG("getAuctionItemNumByCategoryId auctionCenter is not active")
+            LOG_IFO("getAuctionItemNumByCategoryId auctionCenter is not active")
             return
 
         request = GetItemNumByCategoryIdReq()
@@ -248,7 +248,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def buyItemByItemId(self, playerGBID, itemId, number, price, extra):
         if not self.isAuctionCenterActive():
-            INFO_MSG("buyItemByItemId auctionCenter is not active")
+            LOG_IFO("buyItemByItemId auctionCenter is not active")
             return
 
         request = BuyItemByItemIdReq()
@@ -263,7 +263,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def doBuyItemByItemId(self, playerGBID, errno, itemId, number, price, remainNum, auctionItemUUIDs, totalPrice,
                           extra):
         if not self.isAuctionCenterActive(False):
-            INFO_MSG("doBuyItemByItemId auctionCenter is not active")
+            LOG_IFO("doBuyItemByItemId auctionCenter is not active")
             return
 
         request = DoBuyItemByItemIdReq()
@@ -282,7 +282,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getAuctionItemsByAuctionIdList(self, playerGBID, categoryId, auctionIdList):
         if not self.isAuctionCenterActive():
-            INFO_MSG("getAuctionItemsByAuctionIdList auctionCenter is not active")
+            LOG_IFO("getAuctionItemsByAuctionIdList auctionCenter is not active")
             return
 
         request = GetAuctionItemByAuctionIdsReq()
@@ -308,7 +308,7 @@ class AuctionStubService(GameServer):
         self._reportServerId()
 
     def on_disconnected(self):
-        INFO_MSG("disconnected from auction service:", self.address)
+        LOG_IFO("disconnected from auction service:", self.address)
 
     def _reportServerId(self):
         request = ServerInfoMessage()
@@ -388,7 +388,7 @@ class AuctionStubService(GameServer):
         auctionItem = request.auctionItem
         extra = json.loads(request.extra)
         auctionItem = self.transAuctionItem(auctionItem)
-        INFO_MSG("replySaleItem", playerGBID, auctionItem, extra)
+        LOG_IFO("replySaleItem", playerGBID, auctionItem, extra)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [playerGBID], "doSaleItemInCoinAuction", (auctionItem, extra),
             None, '', ())
@@ -397,7 +397,7 @@ class AuctionStubService(GameServer):
         playerGBID = request.playerGBID
         auctionItem = self.transAuctionItem(request.auctionItem)
         extra = json.loads(request.extra)
-        INFO_MSG("replyDoSaleItem", playerGBID, auctionItem, extra)
+        LOG_IFO("replyDoSaleItem", playerGBID, auctionItem, extra)
         if playerGBID:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                 [playerGBID], "onSaleItemInCoinAuction", (auctionItem, extra),
@@ -412,7 +412,7 @@ class AuctionStubService(GameServer):
         price = request.price
         extra = json.loads(request.extra)
         extra['code'] = request.code
-        INFO_MSG("replyBuyItem", playerGBID, auctionItemUUID, price, extra)
+        LOG_IFO("replyBuyItem", playerGBID, auctionItemUUID, price, extra)
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                 [playerGBID], "doBuyItemInCoinAuctionByAuctionItemUUID", (auctionItemUUID, price, extra),
@@ -422,7 +422,7 @@ class AuctionStubService(GameServer):
         playerGBID = request.playerGBID
         extra = json.loads(request.extra)
         auctionItem = self.transAuctionItem(request.auctionItem)
-        INFO_MSG("replyDoBuyItem", playerGBID, auctionItem, extra)
+        LOG_IFO("replyDoBuyItem", playerGBID, auctionItem, extra)
         isOK = extra.get('isOK')
         if not isOK:
             pass
@@ -432,7 +432,7 @@ class AuctionStubService(GameServer):
                 opUUID = extra.get('opUUID')
                 price = auctionItem.price
                 if price > 0:
-                    now = utils.getNow()
+                    now = utils.curTS()
                     redisUtils.PlayerBuyAuctionItemRecord.recordMessage(
                         now, playerGBID, auctionItem.itemId, number, price,
                         auctionItem.itemData.toItemSavedDict(), opUUID)
@@ -449,12 +449,12 @@ class AuctionStubService(GameServer):
         playerGBID = request.playerGBID
         auctionItem = self.transAuctionItem(request.auctionItem)
         extra = json.loads(request.extra)
-        INFO_MSG("replyCancelSaleItem", playerGBID, auctionItem, extra)
+        LOG_IFO("replyCancelSaleItem", playerGBID, auctionItem, extra)
         gameengine.broadcastBaseapp('onSyncNewAuctionItemCache', (playerGBID, auctionItem.auctionItemUUID, auctionItem.itemData.itemId))
         if playerGBID != 0:
             errno = extra.get('errno')
             errno = gameconst.AuctionErrno._errno(errno)
-            if not auctionItem or errno != gameconst.AuctionErrno.AUCTION_OK:
+            if not auctionItem or errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
                 auctionItemUUID = extra.get('auctionItemUUID', -1)
                 gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                     [playerGBID], "onCancelSaleItemInCoinAuctionFail", (errno.errno, auctionItemUUID, extra),
@@ -469,11 +469,11 @@ class AuctionStubService(GameServer):
         errno = request.errno
         auctionItem = self.transAuctionItem(request.auctionItem)
         extra = json.loads(request.extra)
-        INFO_MSG("replyDoCancelSaleItem", playerGBID, errno, auctionItem, extra)
+        LOG_IFO("replyDoCancelSaleItem", playerGBID, errno, auctionItem, extra)
 
         if playerGBID:
             retCode = gameconst.AuctionErrno._errno(errno)
-            if not auctionItem or retCode != gameconst.AuctionErrno.AUCTION_OK:
+            if not auctionItem or retCode != gameconst.AuctionErrno.ERR_AUCTION_OK:
                 auctionItemUUID = extra.get('auctionItemUUID', -1)
                 m_playerStub = gameengine.getGlobalBase('PlayerStub')
                 m_playerStub.doOnOthersBase(
@@ -504,7 +504,7 @@ class AuctionStubService(GameServer):
         for item in auctionItems:
             searchResults.append(self.transAuctionItem(item))
         isPublicity = request.isPublicity
-        INFO_MSG("replySearchItemsByItemId", playerGBID, itemIds, limit, offset, totalNum, extra, isPublicity)
+        LOG_IFO("replySearchItemsByItemId", playerGBID, itemIds, limit, offset, totalNum, extra, isPublicity)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -518,7 +518,7 @@ class AuctionStubService(GameServer):
         lastPrice = request.lastPrice
         avgPrice = request.avgPrice
         extra = json.loads(request.extra)
-        INFO_MSG("replyGetItemLastAndAvgPrice", playerGBID, itemId, lastPrice, avgPrice, extra)
+        LOG_IFO("replyGetItemLastAndAvgPrice", playerGBID, itemId, lastPrice, avgPrice, extra)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -533,7 +533,7 @@ class AuctionStubService(GameServer):
             auctionItems.append(self.transAuctionItem(item))
 
         extra = json.loads(request.extra)
-        INFO_MSG("replyGetPlayerAuctionItems", playerGBID, auctionItems, extra)
+        LOG_IFO("replyGetPlayerAuctionItems", playerGBID, auctionItems, extra)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -547,7 +547,7 @@ class AuctionStubService(GameServer):
         for auctionItemUUID in request.auctionItemUUIDs:
             auctionItemUUIDs.append(auctionItemUUID)
         extra = json.loads(request.extra)
-        INFO_MSG("replyLoadPlayerAuctionItem", playerGBID, auctionItemUUIDs, extra)
+        LOG_IFO("replyLoadPlayerAuctionItem", playerGBID, auctionItemUUIDs, extra)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -559,16 +559,16 @@ class AuctionStubService(GameServer):
         command = request.command
         extra = request.extra
 
-        INFO_MSG("replyDoCommand", command, extra)
+        LOG_IFO("replyDoCommand", command, extra)
 
     def onItemBeSaled(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         auctionItem = self.transAuctionItem(request.auctionItem)
         number = request.number
         extra = json.loads(request.extra)
-        INFO_MSG("onItemBeSaled", playerGBID, auctionItem, number, extra)
+        LOG_IFO("onItemBeSaled", playerGBID, auctionItem, number, extra)
 
-        now = utils.getNow()
+        now = utils.curTS()
         opUUID = extra.get('opUUID', 0)
 
         totalPrice = extra.get('totalPrice')
@@ -611,7 +611,7 @@ class AuctionStubService(GameServer):
         for price in request.prices:
             prices.append(price)
         isPublicity = request.isPublicity
-        INFO_MSG("replyGetAuctionItemNumByCategoryId", playerGBID, categoryId, itemIds, itemNums, prices, isPublicity)
+        LOG_IFO("replyGetAuctionItemNumByCategoryId", playerGBID, categoryId, itemIds, itemNums, prices, isPublicity)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -630,7 +630,7 @@ class AuctionStubService(GameServer):
         for auctionItemUUID in request.auctionItemUUIDs:
             auctionItemUUIDs.append(auctionItemUUID)
         totalPrice = request.totalPrice
-        INFO_MSG("replyBuyItemByItemId", playerGBID, itemId, number, price, extra, remainNum, auctionItemUUIDs,
+        LOG_IFO("replyBuyItemByItemId", playerGBID, itemId, number, price, extra, remainNum, auctionItemUUIDs,
                   totalPrice)
 
         if playerGBID != 0:
@@ -649,11 +649,11 @@ class AuctionStubService(GameServer):
         itemData = self.transItemData(request.itemData)
         totalPrice = request.totalPrice
         extra = json.loads(request.extra)
-        INFO_MSG("replyDoBuyItemByItemId", playerGBID, errno, itemId, number, price, remainNum, itemData, totalPrice,
+        LOG_IFO("replyDoBuyItemByItemId", playerGBID, errno, itemId, number, price, remainNum, itemData, totalPrice,
                   extra)
         if playerGBID != 0:
             if totalPrice > 0:
-                now = utils.getNow()
+                now = utils.curTS()
                 opUUID = extra.get('opUUID')
                 buyNum = number - remainNum
                 redisUtils.PlayerBuyAuctionItemRecord.recordMessage(
@@ -677,7 +677,7 @@ class AuctionStubService(GameServer):
         auctionItems = []
         for item in request.auctionItems:
             auctionItems.append(self.transAuctionItem(item))
-        INFO_MSG("replyGetCurrentSaleItemInfo", playerGBID, itemId, lastPrice, avgPrice, extra, auctionItems)
+        LOG_IFO("replyGetCurrentSaleItemInfo", playerGBID, itemId, lastPrice, avgPrice, extra, auctionItems)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -692,7 +692,7 @@ class AuctionStubService(GameServer):
         for item in request.auctionItems:
             auctionItems.append(self.transAuctionItem(item))
 
-        INFO_MSG("replyGetAuctionItemsByAuctionIds", playerGBID, categoryId, auctionItems)
+        LOG_IFO("replyGetAuctionItemsByAuctionIds", playerGBID, categoryId, auctionItems)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(

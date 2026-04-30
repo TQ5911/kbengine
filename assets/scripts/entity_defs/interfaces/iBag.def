@@ -109,6 +109,19 @@
             <Default>       {}          </Default>
             <Persistent>    true        </Persistent>
         </currencyRecordDic>
+
+        <title>
+            <Type>          INT32         </Type>
+            <Flags>         ALL_CLIENTS   </Flags>
+            <Default>       0              </Default>
+            <Persistent>    true            </Persistent>
+        </title>
+        <titleList>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+            <Persistent>    true            </Persistent>
+        </titleList>
     </Properties>
 
     <BaseMethods>
@@ -168,12 +181,6 @@
             <Arg>       BOOL        </Arg>
         </addMallWealth>
 
-        <pickUpItems><Exposed/>
-            <Arg>      INT32    </Arg>
-            <Arg>      ITEMID   </Arg>
-            <Arg>      INT32    </Arg>
-        </pickUpItems>
-
         <dropAwards>
             <Arg>      BONUS_SRC    </Arg>
             <Arg>      INT32        </Arg>
@@ -216,6 +223,7 @@
             <Arg>       OBJECT_ID  </Arg>
             <Arg>       UNIQUE_ID  </Arg>
             <Arg>       PYTHON     </Arg>
+            <Arg>       BOOL     </Arg>
         </checkGatherCond>
 
         <doApplyGatherPreCheck>
@@ -423,8 +431,15 @@
 
         <exchangeCurrency> <Exposed/>
             <Arg>       UINT32      </Arg>
-            <Arg>       INT64      </Arg>
+            <Arg>       UINT64      </Arg>
         </exchangeCurrency>
+
+        <getAllTitle><Exposed/>
+        </getAllTitle>
+
+        <setTitle><Exposed/>
+            <Arg>       UINT32         </Arg>
+        </setTitle>
     </BaseMethods>
 
     <CellMethods>
@@ -472,6 +487,7 @@
 
         <cancelGather>
             <Exposed/>
+            <Arg>   UINT8       </Arg>
         </cancelGather>
 
         <giveGatherAwardCell>
@@ -571,6 +587,7 @@
         </onApplyGather>
 
         <onCancelGather>
+            <Arg>      UINT8  </Arg>
         </onCancelGather>
 
         <onGatherSucc>
@@ -643,5 +660,8 @@
 
         <onCheckGatherCondFailed>
         </onCheckGatherCondFailed>
+        <onGetAllTitle>
+            <Arg>       ARRAY <of> TITLE_VAL_INFO </of>     </Arg>
+        </onGetAllTitle>
     </ClientMethods>
 </root>

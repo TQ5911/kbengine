@@ -10,13 +10,6 @@
             <Default>       0                   </Default>
         </autoCombat>
 
-        <followtSuspendReason>
-            <Type>          UINT8               </Type>
-            <Flags>         CELL_PRIVATE        </Flags>
-            <Default>       0                   </Default>
-            <Persistent>    False                    </Persistent>
-        </followtSuspendReason>
-
         <autoCombatSuspendReason>
             <Type>          UINT8               </Type>
             <Flags>         CELL_PRIVATE        </Flags>
@@ -97,17 +90,6 @@
     </BaseMethods>
 
     <CellMethods>
-        <tryChangeCombatStateFollowTeamCaptain>
-            <Arg>   UINT8     </Arg>
-        </tryChangeCombatStateFollowTeamCaptain>
-
-        <enterTeamCaptainTrap>
-            <Arg>   UINT8     </Arg>
-        </enterTeamCaptainTrap>
-
-        <captainEnterFightingStateChangeAutoCombat>
-        </captainEnterFightingStateChangeAutoCombat>
-
         <startAutoCombat><Exposed/>
             <Arg>   BOOL      </Arg>
         </startAutoCombat>
@@ -132,6 +114,7 @@
 
         <onGetEnemyPosInfo>
             <Arg>        ENTITYCALL             </Arg>
+            <Arg>        UINT8             </Arg>
         </onGetEnemyPosInfo>
 
         <setAutoCombatSkillFrequent> <Exposed/>

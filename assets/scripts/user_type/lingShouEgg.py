@@ -14,7 +14,7 @@ class LingShouEggItem(Item.Item):
         super(LingShouEggItem, self).__init__(itemId, itemNum, bindType)
         self.petId = IDID.datas[itemId].get('indexID', 0)
         if not self.petId:
-            ERROR_MSG('petId is invalid:', itemId, itemNum)
+            LOG_ERR('petId is invalid:', itemId, itemNum)
 
     @staticmethod
     def isLingShouEggItem():

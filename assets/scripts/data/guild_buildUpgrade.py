@@ -19,31 +19,31 @@ datas = _tools.RODict({
         "ID": 1,
         "upgradeExp": 15000,
         "upgradeCost": 7000,
-        "juYingGeLv": 1
+        "juYingGeLv": 2
     }),
     2: _tools.RODict({
         "ID": 2,
         "upgradeExp": 100000,
         "upgradeCost": 45000,
-        "juYingGeLv": 2
+        "juYingGeLv": 3
     }),
     3: _tools.RODict({
         "ID": 3,
         "upgradeExp": 300000,
         "upgradeCost": 140000,
-        "juYingGeLv": 3
+        "juYingGeLv": 4
     }),
     4: _tools.RODict({
         "ID": 4,
         "upgradeExp": 750000,
         "upgradeCost": 360000,
-        "juYingGeLv": 4
+        "juYingGeLv": 5
     }),
     5: _tools.RODict({
         "ID": 5,
         "upgradeExp": 1400000,
         "upgradeCost": 700000,
-        "juYingGeLv": 5
+        "juYingGeLv": 6
     })
 })
 minKey = 1

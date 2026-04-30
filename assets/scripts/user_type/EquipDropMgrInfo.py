@@ -10,7 +10,7 @@ import EquipDropTakerInfo
 import gearBase_gearConst as GB_GCD
 
 
-class EquipDropMgrTimerData(userType.UserSoleType):
+class EquipDropMgrTimerData(userType.UserSingleType):
     def __init__(self, uniqueId=0, endTime=0):
         self.uniqueId = uniqueId
         self.endTime = endTime
@@ -22,7 +22,7 @@ class EquipDropMgrTimerData(userType.UserSoleType):
         }
 
 
-class EquipDropMgrVal(userType.UserSoleType):
+class EquipDropMgrVal(userType.UserSingleType):
     '''EQUIP_DROP_MGR_DATA_INFO'''
     def __init__(self, dropList=(), takerList=(), takerWaitList=(), lockTime=0, timerData=None):
         self.dropDic = {}
@@ -115,7 +115,7 @@ class EquipDropMgrVal(userType.UserSoleType):
         return list(self.dropDic.keys())
     
     def clearEndTimeVals(self):
-        _now = utils.getNow()
+        _now = utils.curTS()
         for _dropVal in list(self.dropDic.values()):
             if _dropVal.state not in (gameconst.DropType.TYPE_DROP, gameconst.DropType.TYPE_TAKE):
                 continue
@@ -161,7 +161,7 @@ class EquipDropMgrVal(userType.UserSoleType):
         return _takerWaitVal
     
     def doDealDropEquipExpire(self, avatar):
-        _endTime = utils.getNow() + 5
+        _endTime = utils.curTS() + 5
         for _dropVal in list(self.dropDic.values()):
             if _dropVal.endTime < _endTime:
                 gameengine.getGlobalBase('DropStub').doCheckDropExpire(_dropVal.uniqueId, avatar.gbID, avatar)
@@ -191,7 +191,7 @@ class EquipDropMgrVal(userType.UserSoleType):
         return _dropVal
 
     def tryLock(self):
-        _now = utils.getNow()
+        _now = utils.curTS()
         if self.lockTime > _now:
             return False
 

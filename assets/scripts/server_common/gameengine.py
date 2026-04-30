@@ -45,12 +45,12 @@ def getGlobalBase(key, reportErr=True):
             return ent
         return box
     else:
-        reportErr and reportCritical('Warning:Impossible for global stub in baseApp:', key)
+        reportErr and panicStack('Warning:Impossible for global stub in baseApp:', key)
         return utils.Swallower()
 
 
 def getCubeStubBySpaceNo(spaceNo):
-    _mapId = formula.getMapId(spaceNo)
+    _mapId = formula.fetchMapId(spaceNo)
     return getGlobalBase('CubeStub%d' % cube_room.datas[_mapId]['floor'])
 
 
@@ -59,7 +59,7 @@ def getCubeStub(floor):
 
 
 def getWonderLandStubBySpaceNo(spaceNo):
-    _mapId = formula.getMapId(spaceNo)
+    _mapId = formula.fetchMapId(spaceNo)
     _floor = wonderLand_floor.id2floor[_mapId]
     return getGlobalBase('WonderLandStub%d' % _floor)
 
@@ -70,7 +70,7 @@ def getWonderLandStub(mapId):
 
 
 def getSiegeWarStubBySpaceNo(spaceNo):
-    _mapId = formula.getMapId(spaceNo)
+    _mapId = formula.fetchMapId(spaceNo)
     return getGlobalBase('SiegeWarSpaceStub')
 
 
@@ -87,7 +87,7 @@ def getBaseAppData(key):
     if isBase():
         return KBEngine.baseAppData.get(key, None)
     else:
-        ERROR_MSG('cannot get baseapp data on cell')
+        LOG_ERR('cannot get baseapp data on cell')
 
 
 def setCellAppData(key, val):
@@ -175,15 +175,15 @@ def chooseAllSpace():
     return gameglobal.spaceNOIDCache
 
 
-def reportCritical(*args):
+def panicStack(*args):
     msg = ' '.join([str(args) for args in args])
     if sys.exc_info()[0]:
-        ERROR_MSG('{}\n{}'.format(msg, traceback.format_exc()))
+        LOG_ERR('{}\n{}'.format(msg, traceback.format_exc()))
     else:
-        ERROR_MSG('{}\n{}'.format(msg, ' '.join(traceback.format_stack())))
+        LOG_ERR('{}\n{}'.format(msg, ' '.join(traceback.format_stack())))
 
 
-RpcChannel.REPORT_ERR_FUNC = reportCritical
+RpcChannel.REPORT_ERR_FUNC = panicStack
 
 
 def chooseGoodBaseApp():
@@ -209,25 +209,25 @@ def getSpaceEntity(spaceNo):
     return KBEngine.entities[id_]
 
 def getDungeonStubByDungeonNo(dungeonNo, dungeonEnterType):
-    return getGlobalBase(formula.getDungeonStubGlobalName(dungeonNo, dungeonEnterType))
+    return getGlobalBase(formula.fetchDungeonStubGlobalName(dungeonNo, dungeonEnterType))
 
 def getDungeonEnterTypeBySpaceNo(spaceNo):
     dungeonNo = spaceNo // gameconst.SPACE_NO_HOME_INTERVAL
-    dunEnterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.SINGLE)
+    dunEnterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.SINGLE)
 
-    if dunEnterType==gameconst.DungeonEnterType.BOTH:
-        sStart, sEnd = gameconst.SpaceType.getSingleDungeonSpaceNoRange(dungeonNo)
+    if dunEnterType==gameconst.DungeonEnterTypeEnum.BOTH:
+        sStart, sEnd = gameconst.SpaceType.getSingleDungeonSpaceRange(dungeonNo)
         if sStart <= spaceNo < sEnd:
-            return gameconst.DungeonEnterType.SINGLE
+            return gameconst.DungeonEnterTypeEnum.SINGLE
         else:
-            return gameconst.DungeonEnterType.TEAM
+            return gameconst.DungeonEnterTypeEnum.TEAM
     else:
         return dunEnterType
 
 
 def getDungeonStubBySpaceNo(spaceNo):
     et = getDungeonEnterTypeBySpaceNo(spaceNo)
-    return getDungeonStubByDungeonNo(formula.getMapId(spaceNo), et)
+    return getDungeonStubByDungeonNo(formula.fetchMapId(spaceNo), et)
 
 def _fromTelnetException(trace):
     for msg in trace.strip().split('\n'):
@@ -249,7 +249,7 @@ def exceptHook(ty, val, tb):
                 outputMethod = EXCEPT_WARNING_MSG
                 outputList.append('~~~~~~~ TELNET Exception ~~~~~~')
             else:
-                outputMethod = ERROR_MSG
+                outputMethod = LOG_ERR
                 outputList.append('~~~~~~~ SCRIPT Exception ~~~~~~')
             tbNext = tb
             while tbNext.tb_next:
@@ -332,7 +332,7 @@ def _realCallApp(func, args):
 
 def onAppCall(val):
     _, python_server, func, args = val
-    if python_server == 'all' or python_server == utils.getPythonServer():
+    if python_server == 'all' or python_server == utils.getPythonAddr():
         _realCallApp(func, args)
 
 
@@ -450,11 +450,11 @@ def updateAntiAddictionData(timeType, nextStartTime):
         doCellAntiAddiction()
 
 def doBaseAntiAddiction():
-    #DEBUG_MSG("doBaseAntiAddiction", gameglobal.antiAddictionData)
+    #LOG_DBG("doBaseAntiAddiction", gameglobal.antiAddictionData)
     gameglobal.localBaseApp.doAntiAddiction()
 
 def doCellAntiAddiction():
-    #DEBUG_MSG("doCellAntiAddiction", gameglobal.antiAddictionData)
+    #LOG_DBG("doCellAntiAddiction", gameglobal.antiAddictionData)
     pass
 
 def resetGuildRelation(relationDic, version):
@@ -491,10 +491,10 @@ def subscribeEvent(tag, eId, func):
     if tag not in gameglobal.hookDict:
         gameglobal.hookDict[tag] = {}
     if eId in gameglobal.hookDict[tag]:
-        ERROR_MSG('subscribe tag {} box {} already exists'.format(tag, eId))
+        LOG_ERR('subscribe tag {} box {} already exists'.format(tag, eId))
         return
 
-    DEBUG_MSG('subscribe tag {} box {} func {}'.format(tag, eId, func))
+    LOG_DBG('subscribe tag {} box {} func {}'.format(tag, eId, func))
     gameglobal.hookDict[tag][eId] = func
 
 # 不要直接使用，请通过 utils.unsubscribe 使用
@@ -514,11 +514,11 @@ def callEvent(tag, *args):
         ent = KBEngine.entities.get(eId)
         if not ent:
             continue
-        DEBUG_MSG('callEvent tag {} args {}'.format(tag, *args))
+        LOG_DBG('callEvent tag {} args {}'.format(tag, *args))
         try:
             hasattr(ent, func) and getattr(ent, func)(*args)
         except Exception as e:
-            ERROR_MSG('hookOn {} exception: {}'.format(tag, e))
+            LOG_ERR('hookOn {} exception: {}'.format(tag, e))
     return
     
 def hasBaseEvent(tag):
@@ -550,15 +550,15 @@ def callAppsByEventTag(tag, *args):
 
 def addForbiddenTaskIds(taskId):
     gameglobal.forbiddenTaskIds[taskId] = True
-    INFO_MSG("addForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
+    LOG_IFO("addForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
 
 def removeForbiddenTaskIds(taskId):
     gameglobal.forbiddenTaskIds.pop(taskId, None)
-    INFO_MSG("removeForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
+    LOG_IFO("removeForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
 
 def quertForbiddenTaskIds():
     taskIds = list(gameglobal.forbiddenTaskIds.keys())
-    INFO_MSG("quertForbiddenTaskIds,", gameglobal.forbiddenTaskIds)
+    LOG_IFO("quertForbiddenTaskIds,", gameglobal.forbiddenTaskIds)
     return taskIds
 
 def checkForbiddenTaskId(taskId):

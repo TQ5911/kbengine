@@ -22,4 +22,4 @@ class EP_ControllerError(RuntimeError):
 
 
 class EP_ElementCheckerError(EP_ElementError):
-    """raise for check params/ref_params fail"""
+    """raise for check params/refParams fail"""

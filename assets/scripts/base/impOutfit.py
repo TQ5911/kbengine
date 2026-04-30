@@ -17,38 +17,38 @@ import appearance_config as AC
 
 class ImpOutfit(object):
     def sendOutfitData(self):
-        DEBUG_MSG("sendOutfitData")
+        LOG_DBG("sendOutfitData")
         self.client.onUpdateOutfitData(self.outfitInfo.toClientData())
 
     @gamedecorator.limitcall(0.5)
     def reqEnableOutfit(self, exposed, outfitType, outfitId):
-        DEBUG_MSG('reqEnableOutfit:', outfitType, outfitId)
+        LOG_DBG('reqEnableOutfit:', outfitType, outfitId)
         outfit = self.outfitInfo.getOutfitInfo(outfitType, outfitId)
         if not outfit:
-            WARNING_MSG('   reqEnableOutfit, no outfit:', outfitType, outfitId)
+            LOG_WARN('   reqEnableOutfit, no outfit:', outfitType, outfitId)
             return
         self.cell.enableOutfit(outfitType, outfitId)
         return
 
     def reqExpOutfit(self, exposed, outfitType, outfitId, itemId):
-        DEBUG_MSG('reqExpOutfit:', outfitType, outfitId, itemId)
+        LOG_DBG('reqExpOutfit:', outfitType, outfitId, itemId)
         if not dataUtils.checkOutfitOpen(outfitType, outfitId):
-            WARNING_MSG('reqExpOutfit, not open', outfitId, outfitType)
+            LOG_WARN('reqExpOutfit, not open', outfitId, outfitType)
             return
         outfit = self.outfitInfo.getOutfitInfo(outfitType, outfitId)
         if outfit and not outfit.expireTime:
-            WARNING_MSG('   reqEnableOutfit, no outfit:', outfitType, outfitId)
+            LOG_WARN('   reqEnableOutfit, no outfit:', outfitType, outfitId)
             return
 
     def addOutfitByReason(self, outfitType, outfitId, expireTime, addReason):
-        DEBUG_MSG("addOutfitByReason ", outfitType, outfitId, expireTime, addReason)
+        LOG_DBG("addOutfitByReason ", outfitType, outfitId, expireTime, addReason)
         configData = dataUtils.getOutfitConfigData(outfitType, outfitId)
         if not configData:
-            ERROR_MSG("addOutfitByReason outfitId ", outfitId)
+            LOG_ERR("addOutfitByReason outfitId ", outfitId)
             return
         isNew = True
         # autoEnable = False
-        if addReason in (gameconst.AddOutfitReason.Mount_ITEM, gameconst.AddOutfitReason.Mount_EVENT,
+        if addReason in (gameconst.AddOutfitReason.MOUNT_ITEM, gameconst.AddOutfitReason.MOUNT_EVENT,
                          gameconst.AddOutfitReason.BUY, gameconst.AddOutfitReason.EXP_CARD, gameconst.AddOutfitReason.WEDDING_PARTY):
             isNew = False
             # autoEnable = True
@@ -73,13 +73,13 @@ class ImpOutfit(object):
         return costItemNum
 
     def reqBuyOutfit(self, exposed, outfitType, outfitId):
-        DEBUG_MSG('reqBuyOutfit:', outfitType, outfitId)
+        LOG_DBG('reqBuyOutfit:', outfitType, outfitId)
         if not dataUtils.checkOutfitOpen(outfitType, outfitId):
-            WARNING_MSG('reqBuyOutfit, not open', outfitId, outfitType)
+            LOG_WARN('reqBuyOutfit, not open', outfitId, outfitType)
             return
         outfit = self.outfitInfo.getOutfitInfo(outfitType, outfitId)
         if outfit and outfit.expireTime == 0:
-            WARNING_MSG('reqBuyOutfit, already has outfit:', outfitId, outfitType)
+            LOG_WARN('reqBuyOutfit, already has outfit:', outfitId, outfitType)
             return
         configData = dataUtils.getOutfitConfigData(outfitType, outfitId)
         if not configData:
@@ -87,12 +87,12 @@ class ImpOutfit(object):
         costItemId = configData.get('currency')
         costItemNum = self.getBuyOutfitPrice(configData)
         if not costItemNum:
-            WARNING_MSG('reqBuyOutfit, no price outfit:', outfitId)
+            LOG_WARN('reqBuyOutfit, no price outfit:', outfitId)
             return
 
         deductWealth = dropAward.DeductWealthVal().addWealthByItemId(costItemId, costItemNum)
         if not self.canDeductWealth(deductWealth, sendMsg=True):
-            DEBUG_MSG("reqBuyOutfit failed, not enouth itemId:", deductWealth)
+            LOG_DBG("reqBuyOutfit failed, not enouth itemId:", deductWealth)
             return
 
         opUUID = KBEngine.genUUID64()
@@ -109,11 +109,11 @@ class ImpOutfit(object):
         self.client.onUpdateOutfitData(self.outfitInfo.toClientData([(outfitType, outfitId), ]))
 
     def addOutfitByReward(self, outfitList):
-        now = utils.getNow()
+        now = utils.curTS()
         for outfitType, outfitId in outfitList:
             configData = dataUtils.getOutfitConfigData(outfitType, outfitId)
             if not configData:
-                ERROR_MSG("addOutfit outfitId ", outfitId)
+                LOG_ERR("addOutfit outfitId ", outfitId)
                 continue
             dayLimit = configData.get('timeLimit', 0)
             expiredTime = now+dayLimit*3600*24 if dayLimit else 0
@@ -123,10 +123,10 @@ class ImpOutfit(object):
 
     def startOutfitTimer(self):
         if self.outfitExpireTimerId:
-            self._cancelCallback(self.outfitExpireTimerId, gametimer.TIMER_TAG_START_OUTFIT_TIMER)
+            self.cancelTimerCB(self.outfitExpireTimerId, gametimer.TIMER_TAG_START_OUTFIT_TIMER)
             self.outfitExpireTimerId=0
 
-        now = utils.getNow()
+        now = utils.curTS()
         expiredOutfitList = []
         expiredOutfitClient = []
         minLeftSec = 0
@@ -147,11 +147,11 @@ class ImpOutfit(object):
         if expiredOutfitList:
             self.cell.checkOutfitExpired(expiredOutfitList)
 
-        if minLeftSec > gameconst.ONE_HOUR_SECONDES+gameconst.DelayCallOffsetSec:
-            self.outfitExpireTimerId = self._callback(gameconst.ONE_HOUR_SECONDES, 'startOutfitTimer', (),
+        if minLeftSec > gameconst.ONE_HOUR_COST_SECONDES+gameconst.DelayCallOffsetSec:
+            self.outfitExpireTimerId = self.addTimerCB(gameconst.ONE_HOUR_COST_SECONDES, 'startOutfitTimer', (),
                                                       gametimer.TIMER_TAG_START_OUTFIT_TIMER, 'outfitExpireTimerId')
         elif minLeftSec > 0:
-            self.outfitExpireTimerId = self._callback(minLeftSec, 'startOutfitTimer', (),
+            self.outfitExpireTimerId = self.addTimerCB(minLeftSec, 'startOutfitTimer', (),
                                                       gametimer.TIMER_TAG_START_OUTFIT_TIMER, 'outfitExpireTimerId')
         return
 
@@ -165,12 +165,12 @@ class ImpOutfit(object):
     def gmAddOutfit(self, outfitType, outfitId):
         configData = dataUtils.getOutfitConfigData(outfitType, outfitId)
         dayLimit = configData.get('timeLimit', 0)
-        expiredTime = utils.getNow() + dayLimit * 3600 * 24 if dayLimit else 0
+        expiredTime = utils.curTS() + dayLimit * 3600 * 24 if dayLimit else 0
         self.addOutfitByReason(outfitType, outfitId, expiredTime, gameconst.AddOutfitReason.GM)
 
 
     def onGetToplistWing(self, gbId2TitleDict):
-        DEBUG_MSG('onGetToplistWing:', gbId2TitleDict)
+        LOG_DBG('onGetToplistWing:', gbId2TitleDict)
         wingArgs = gbId2TitleDict.get(self.gbID,None)
         if not wingArgs:
             return
@@ -194,14 +194,14 @@ class ImpOutfit(object):
         self.addWingByToplist(wingArgs[0], wingArgs[1], wingArgs[2])
 
     def addWingByToplist(self, wingId, getTime, msgId):
-        DEBUG_MSG('addWingByToplist ', wingId, getTime, msgId)
+        LOG_DBG('addWingByToplist ', wingId, getTime, msgId)
         configData = dataUtils.getOutfitConfigData(gameconst.OutfitType.wing, wingId)
         if not configData:
-            ERROR_MSG("onGetToplistWing wingId ", wingId)
+            LOG_ERR("onGetToplistWing wingId ", wingId)
             return
         dayLimit = configData.get('timeLimit', 0)
         expiredTime = getTime + dayLimit * 3600 * 24 if dayLimit else 0
-        if expiredTime and expiredTime < utils.getNow():
+        if expiredTime and expiredTime < utils.curTS():
             return
         self.addOutfitByReason(gameconst.OutfitType.wing, wingId, expiredTime, gameconst.AddOutfitReason.TOP_LIST)
         self.onMessagePre(msgId, [configData["name"], ])

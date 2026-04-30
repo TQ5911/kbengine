@@ -4,7 +4,7 @@
 import userType
 import LogTrackingMgr
 
-class LeaderBoardGuildVal(userType.UserSoleType):
+class LeaderBoardGuildVal(userType.UserSingleType):
     '''LEADER_BOARD_GUILD_DATA_INFO'''
     def __init__(self, guildUUID=0, guildName="", leaderName="", guildLevel=0, guildScore=0, ts=0):
         self.guildUUID = guildUUID

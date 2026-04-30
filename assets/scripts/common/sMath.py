@@ -55,6 +55,12 @@ try:
 except AttributeError:
     distance = __script_distance
 
+def distance3DToCompare(p1, p2):
+    dx = p1[0] - p2[0]
+    dy = p1[1] - p2[1]
+    dz = p1[2] - p2[2]
+    return dx * dx + dy * dy + dz * dz
+
 ################################################
 def __script_distance2D(p1, p2):
     dx = p1[0] - p2[0]
@@ -374,8 +380,8 @@ def getYawFromDirection(direction):
 def getDirFromYaw(yaw):
     return Math.Vector3(math.sin(yaw), 0, math.cos(yaw))
 
-def getForwardPos(fromPos, toDirYaw, dis):
-    return Math.Vector3(fromPos)+Math.Vector3(math.sin(toDirYaw), 0, math.cos(toDirYaw))*dis
+def getForwardPos(fromPos, toDirYaw, distance):
+    return Math.Vector3(fromPos)+Math.Vector3(math.sin(toDirYaw), 0, math.cos(toDirYaw))*distance
 
 #z周朝下，x轴朝右，知道矩形左下角坐标和长宽，判断点是否在矩形内
 def inRectangle(leftBottom, w, h, p):

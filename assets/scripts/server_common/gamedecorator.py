@@ -37,7 +37,7 @@ def _limitcall(interval, intervalOnHighLoad, bMsg, msgId, keyFunc=None, msgArgs=
                 self.methodPoolBase[keyName] = now + _interval
                 return f(self, *args, **kwargs)
 
-            if bMsg and msgId and (utils.instanceof(self, 'Avatar') or utils.instanceof(self, 'Account')):
+            if bMsg and msgId and (utils.isinstanceof(self, 'Avatar') or utils.isinstanceof(self, 'Account')):
                 self.onMessagePre(msgId, list(msgArgs))
 
             return None
@@ -62,10 +62,10 @@ def _limitcall(interval, intervalOnHighLoad, bMsg, msgId, keyFunc=None, msgArgs=
                 self.methodPool[keyName] = now + _interval
                 return f(self, *args, **kwargs)
 
-            isAvatar = utils.instanceof(self, 'Avatar')
+            isAvatar = utils.isinstanceof(self, 'Avatar')
             if not isAvatar:
                 caller = KBEngine.entities.get(args[0])
-                isCallerAvatar = utils.instanceof(caller, 'Avatar')
+                isCallerAvatar = utils.isinstanceof(caller, 'Avatar')
 
             if bMsg and msgId and (isAvatar or isCallerAvatar):
                 self.showMsg(msgId, list(msgArgs))
@@ -84,9 +84,9 @@ def limitcall(interval, bMsg=True, msgId=0, keyFunc=None, msgArgs=()):
 
 def _checkTeleportLock(lockReason):
     def fwrap(f, self, *args, **kwargs):
-        _now = utils.getNow()
+        _now = utils.curTS()
         if self.isTeleportLocked(lockReason, _now):
-            WARNING_MSG(
+            LOG_WARN(
                 f"_checkTeleportLock::teleport locked, {lockReason} -> org:{self.teleportLock}, {self.teleportLockRlsT}",
                 _now)
             return None
@@ -169,7 +169,7 @@ def checkGameconfigEnable(name):
         def wrapper(*args):
             info = gameconfig.CONFIG.get(name)
             if not info:
-                ERROR_MSG('gameconfig not found: 1', name)
+                LOG_ERR('gameconfig not found: 1', name)
                 return
             configName, convFunc, default, defaultV, desc, cid, flags = info
             v = KBEngine.globalData['CONFIG'][configName]
@@ -178,7 +178,7 @@ def checkGameconfigEnable(name):
                     args[0].showMsg(C_CD.datas['systemSwitch']['value'], [])
                 else:
                     args[0].onMessagePre(C_CD.datas['systemSwitch']['value'], [])
-                #WARNING_MSG('gameconfig not enable: 2', name)
+                #LOG_WARN('gameconfig not enable: 2', name)
                 return
             
             # 检查是否存在主从系统开关
@@ -187,12 +187,12 @@ def checkGameconfigEnable(name):
                 if name != mainSwitch:
                     info = gameconfig.CONFIG.get(mainSwitch)
                     if not info:
-                        ERROR_MSG('gameconfig not found: 3', mainSwitch)
+                        LOG_ERR('gameconfig not found: 3', mainSwitch)
                         return
                     configName, convFunc, default, defaultV, desc, cid, flags = info
                     v = KBEngine.globalData['CONFIG'][configName]
                     if not v:
-                        WARNING_MSG('gameconfig not enable: 4', name)
+                        LOG_WARN('gameconfig not enable: 4', name)
                         return 
             return func(*args)
 
@@ -212,7 +212,7 @@ def prevent_instance_reentry(method):
     def wrapper(self, *args, **kwargs):
         attr = f"_reentry_flag_{method.__name__}"
         if getattr(self, attr, False):
-            DEBUG_MSG(f"[重入拦截] {method.__name__} 正在执行，跳过")
+            LOG_DBG(f"[重入拦截] {method.__name__} 正在执行，跳过")
             return None
         setattr(self, attr, True)
         try:
@@ -226,7 +226,7 @@ def teleportInQueue(f):
     @functools.wraps(f)
     def wrapper(self, *args, **kwargs):
         if self.teleportInfoDict:
-            WARNING_MSG(f"{f.__name__}::teleportInQueue::teleporting, skip")
+            LOG_WARN(f"{f.__name__}::teleportInQueue::teleporting, skip")
             self.teleportQueue.append((
                 f.__name__,
                 args,

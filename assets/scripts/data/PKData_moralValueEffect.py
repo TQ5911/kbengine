@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     5: _tools.RODict({
         "ID": 5,
-        "lowerLimit": -99999,
+        "lowerLimit": -50000,
         "upperLimit": -10000,
         "PVPDmgReduced": 0.5,
         "DmgFromOtherPVPIncreased": 0.5,

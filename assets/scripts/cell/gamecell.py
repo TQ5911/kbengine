@@ -8,6 +8,6 @@ def loadAirWalls():
     try:
         KBEngine.loadAirWalls(gameconst.BARRIER_PATH)
     except AttributeError:
-        ERROR_MSG('Space:: load air walls failed')
+        LOG_ERR('Space:: load air walls failed')
         import traceback
         traceback.print_exc()

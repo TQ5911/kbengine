@@ -32,7 +32,7 @@ class MonsterGrp(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace,
             self._onTimerCallback(tid)
 
     def createMonstersFromGrp(self, p):
-        DEBUG_MSG('MonsterGrp::createMonstersFromGrp')
+        LOG_DBG('MonsterGrp::createMonstersFromGrp')
         self._monsterIDs = []
 
         _gP = CRG.datas.get(p['groupId'])
@@ -59,7 +59,7 @@ class MonsterGrp(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace,
             }
 
             if _idx > 0:
-                self._callback(
+                self.addTimerCB(
                     _idx, '_createMonstersFromGrp',
                     (params, 0, gameconst.INIT_EACH_EN_LOOP_COUNT, _mcount), gametimer.TIMER_TAG_CREATE_MONSTERS_FROM_GRP)
             else:
@@ -73,11 +73,6 @@ class MonsterGrp(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace,
             if i >= totalCount:
                 return
 
-            # randPos = utils.monsterRandomPos(
-            #     params['position'], params['bornRadius'], totalCount, i)
-            #
-            # params.update({'position': randPos})
-
             params.update({'tmpProps': {'createCount': totalCount,
                                         'createRadius': params['bornRadius'],
                                         'createIndex': i}})
@@ -86,13 +81,13 @@ class MonsterGrp(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace,
 
             self._monsterIDs.append(en.id)
 
-        self._callback(0.2, '_createMonstersFromGrp',
+        self.addTimerCB(0.2, '_createMonstersFromGrp',
                        (params, idx + loopCount, loopCount, totalCount), gametimer.TIMER_TAG_CREATE_MONSTERS_FROM_GRP)
 
     def syncCreatedMonstersToCell(self, ids, totalCount):
         if not self.cell or len(ids) < totalCount:
-            INFO_MSG('Still waiting for creating monsters.')
-            self._callback(0.5, 'syncCreatedMonstersToCell', (ids, totalCount), gametimer.TIMER_TAG_SYNC_CREATED_MONSTERS_TO_CELL)
+            LOG_IFO('Still waiting for creating monsters.')
+            self.addTimerCB(0.5, 'syncCreatedMonstersToCell', (ids, totalCount), gametimer.TIMER_TAG_SYNC_CREATED_MONSTERS_TO_CELL)
             return
 
         self.cell.initFromBase(ids)

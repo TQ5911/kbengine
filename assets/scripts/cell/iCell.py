@@ -18,7 +18,6 @@ class ICell(KBEngine.Entity):
     IsMonster = False
     IsCombatUnit = False
     IsAICombatUnit = False
-    IsPet = False
     IsSummon = False
     IsCreation = False
     IsTeleporter = False
@@ -40,12 +39,12 @@ class ICell(KBEngine.Entity):
     def __init__(self):
         KBEngine.Entity.__init__(self)
 
-        self.birthInMem = utils.getNow()
+        self.birthInMem = utils.curTS()
 
         return
 
     def onSpaceGone(self):
-        DEBUG_MSG('onSpaceGone', self.base, self.isDestroyed)
+        LOG_DBG('onSpaceGone', self.base, self.isDestroyed)
         # 这里不再销毁base了，让base在onLoseCell里自己去销毁，否则base销毁时会先destroyCellEntity，这个时候cell已经被引擎自动销毁了
         # cellapp会出现EntityApp::destroyEntity: not found的报错
         self.safeDestroy()
@@ -74,7 +73,7 @@ class ICell(KBEngine.Entity):
                 return
 
         if getattr(self, '_no_destroy', False):
-            gameengine.reportCritical("%s(%d) destroy mistakenly" % (self.__class__.__name__, self.id))
+            gameengine.panicStack("%s(%d) destroy mistakenly" % (self.__class__.__name__, self.id))
 
         self._preSafeDestory()
         self.destroy()
@@ -86,11 +85,11 @@ class ICell(KBEngine.Entity):
         if self.base and hasattr(self.base, 'onCellSafeDestroy'):
             self.base.onCellSafeDestroy()
 
-        attachedIDList = self.getTempMiscProp(gameconst.AvatarProps.attachedIDList, [])
+        attachedIDList = self.getTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, [])
         for attachedID in attachedIDList:
             attachedEntity = KBEngine.entities.get(attachedID)
             if attachedEntity:
-                DEBUG_MSG("iCell.ICell _preSafeDestory", attachedEntity.id)
+                LOG_DBG("iCell.ICell _preSafeDestory", attachedEntity.id)
                 attachedEntity.delaySafeDestroy()
 
     def _postSafeDestory(self):
@@ -119,7 +118,7 @@ class ICell(KBEngine.Entity):
 
     def callMethod(self, methodName, methodArgs):
         if not hasattr(self, methodName):
-            ERROR_MSG('callMethod:: methodName {} not found'.format(methodName), methodArgs)
+            LOG_ERR('callMethod:: methodName {} not found'.format(methodName), methodArgs)
             return
 
         getattr(self, methodName)(*methodArgs)
@@ -153,11 +152,13 @@ class ICell(KBEngine.Entity):
         try:
             self.beforeTeleport(spaceNo)
         except:
-            gameengine.reportCritical('error occured during _beforeTeleport', self.id, self.gbId, spaceNo)
+            gameengine.panicStack('error occured during _beforeTeleport', self.id, self.gbId, spaceNo)
         self.teleport(dstCell, pos, dir)
         return
 
     def onTeleportNear(self, fromCell, pos, dir, spaceNo):
+        gameglobal.cellAvatarCount += 1
+        LOG_IFO("add avatar cnt when teleport", gameglobal.cellAvatarCount)
         fromCell.safeTeleport(self, pos, dir, spaceNo)
         return
 
@@ -220,7 +221,7 @@ class ICell(KBEngine.Entity):
         if self.isDestroyed:
             return
         if getattr(self, '_no_destroy', False):
-            gameengine.reportCritical("%s(%d) destroy mistakenly" % (self.__class__.__name__, self.id))
+            gameengine.panicStack("%s(%d) destroy mistakenly" % (self.__class__.__name__, self.id))
 
         self._preDelaySafeDestroy(delay)
 
@@ -238,7 +239,7 @@ class ICell(KBEngine.Entity):
 
     def setTempMiscProp(self, propId, value):
         if type(propId) is not int:
-            ERROR_MSG('setPersistentMiscProp: propId must be int')
+            LOG_ERR('setPersistentMiscProp: propId must be int')
             return
 
         self.tempMiscProps[propId] = value
@@ -254,7 +255,7 @@ class ICell(KBEngine.Entity):
 
     def setPersistentMiscProp(self, propId, value):
         if type(propId) is not int:
-            ERROR_MSG('setPersistentMiscProp: propId must be int')
+            LOG_ERR('setPersistentMiscProp: propId must be int')
             return
 
         self.miscProps[propId] = value
@@ -302,10 +303,10 @@ class ICell(KBEngine.Entity):
         if toDir:
             self.direction = toDir
 
-    def scriptNavigate(self, dstPos, speed, dis=0, faceMovement=True, layer=gameconst.SpaceLayer.DEFAULT,
+    def scriptNavigate(self, dstPos, speed, distance=0, faceMovement=True, layer=gameconst.SpaceLayer.DEFAULT,
                        userData=None):
         maxDis = 128  # 引擎预留参数，暂时没有意义
-        navController = self.navigate(dstPos, speed, dis, maxDis, maxDis, faceMovement, layer, True, userData)
+        navController = self.navigate(dstPos, speed, distance, maxDis, maxDis, faceMovement, layer, True, userData)
         return navController
 
     def __repr__(self):
@@ -321,24 +322,24 @@ class ICell(KBEngine.Entity):
         self.methodPool.clear()
 
     def setToBattle(self, **kwargs):
-        WARNING_MSG(f"Class::{self.__class__.__name__} setToBattle not implement", kwargs)
+        LOG_WARN(f"Class::{self.__class__.__name__} setToBattle not implement", kwargs)
 
     def setToNeutral(self, **kwargs):
-        WARNING_MSG(f"Class::{self.__class__.__name__} setToNeutral not implement", kwargs)
+        LOG_WARN(f"Class::{self.__class__.__name__} setToNeutral not implement", kwargs)
 
     def setToFriendly(self, **kwargs):
-        WARNING_MSG(f"Class::{self.__class__.__name__} setToFriendly not implement", kwargs)
+        LOG_WARN(f"Class::{self.__class__.__name__} setToFriendly not implement", kwargs)
 
     def setBaseGlobalIdx(self, idx):
         self.baseGlobalIdx = idx
 
     def dunData(self):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         if not _dunData:
             return None
 
-        gid, gct = utils.splitGameEntityId(self.gameEntityId)
+        gid, gct = utils.splitFromGameEntityId(self.gameEntityId)
         gid = str(gid)
         return _dunData.get(gid, None)
 
@@ -352,7 +353,7 @@ class ICell(KBEngine.Entity):
             try:
                 callObj()
             except Exception as e:
-                ERROR_MSG('batchlyCall error', e)
+                LOG_ERR('batchlyCall error', e)
                 continue
 
-        self._callback(interval, 'batchlyCall', (it, batchNum, interval, callback), gametimer.TIMER_TAG_BATCHLY_CALL)
+        self.addTimerCB(interval, 'batchlyCall', (it, batchNum, interval, callback), gametimer.TIMER_TAG_BATCHLY_CALL)

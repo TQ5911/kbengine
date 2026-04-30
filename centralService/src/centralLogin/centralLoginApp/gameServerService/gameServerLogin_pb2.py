@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='CentralLoginGameServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x15gameServerLogin.proto\x12\x16\x43\x65ntralLoginGameServer\"\x06\n\x04Void\"_\n\x14VerifyAccountRequest\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\x12\x0e\n\x06hostId\x18\x04 \x01(\r\"\xfb\x02\n\x12VerifyAccountReply\x12G\n\x06result\x18\x01 \x01(\x0e\x32\x37.CentralLoginGameServer.VerifyAccountReply.VerifyResult\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x03 \x01(\r\x12\x11\n\tchannelId\x18\x04 \x01(\r\x12\x16\n\x0e\x62\x61nAccountTime\x18\x05 \x01(\x03\x12\x13\n\x0b\x62\x61nPostTime\x18\x06 \x01(\x03\x12\x18\n\x10\x62\x61nAccountReason\x18\x07 \x01(\t\x12\x15\n\rbanPostReason\x18\x08 \x01(\t\x12\x0e\n\x06userId\x18\t \x01(\t\x12\x15\n\rotherJsonData\x18\n \x01(\t\"Z\n\x0cVerifyResult\x12\x1a\n\x16VERIFY_ACCOUNT_UNKNOWN\x10\x00\x12\x15\n\x11VERIFY_ACCOUNT_OK\x10\x01\x12\x17\n\x13VERIFY_ACCOUNT_FAIL\x10\x02\"6\n\nAccountVal\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\"3\n\x0eGameServerInfo\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x11\n\tonlineNum\x18\x02 \x01(\r\"\xa2\x01\n\x10NewCharacterInfo\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\r\n\x05level\x18\x05 \x01(\r\x12\x0e\n\x06school\x18\x06 \x01(\r\x12\x0c\n\x04gens\x18\x07 \x01(\r\x12\x0b\n\x03sex\x18\x08 \x01(\r\x12\x0e\n\x06hostId\x18\t \x01(\r\"\x81\x01\n\x13UpdateCharacterInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05level\x18\x03 \x01(\r\x12\x0e\n\x06school\x18\x04 \x01(\r\x12\x12\n\ntLastLogin\x18\x05 \x01(\r\x12\x0e\n\x06\x64\x65lete\x18\x06 \x01(\x08\x12\x0b\n\x03sex\x18\x07 \x01(\r\"M\n\x11\x41\x63\x63ountOfflineVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x03 \x01(\r\"\xd2\x01\n\x0eKickAccountVal\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12I\n\nkickReason\x18\x03 \x01(\x0e\x32\x35.CentralLoginGameServer.KickAccountVal.KickReasonType\"K\n\x0eKickReasonType\x12\n\n\x06UNKNOW\x10\x00\x12\x15\n\x11LOGIN_VERIFY_FAIL\x10\x0e\x12\x16\n\x12\x43\x41PTCHA_CHECK_FAIL\x10\x13\"r\n\x18LockLoginSwitchServerVal\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x62Id\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x04 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x05 \x01(\r\"1\n\x1aUnlockLoginSwitchServerVal\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\"&\n\x16\x44\x65leteCharacterRequest\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x32\x8a\x08\n\rCentralServer\x12Y\n\x0bverifyLogin\x12,.CentralLoginGameServer.VerifyAccountRequest\x1a\x1c.CentralLoginGameServer.Void\x12V\n\x0eregisterServer\x12&.CentralLoginGameServer.GameServerInfo\x1a\x1c.CentralLoginGameServer.Void\x12X\n\x10updateServerInfo\x12&.CentralLoginGameServer.GameServerInfo\x1a\x1c.CentralLoginGameServer.Void\x12\\\n\x0fupdateCharacter\x12+.CentralLoginGameServer.UpdateCharacterInfo\x1a\x1c.CentralLoginGameServer.Void\x12[\n\x11onCreateCharacter\x12(.CentralLoginGameServer.NewCharacterInfo\x1a\x1c.CentralLoginGameServer.Void\x12S\n\x0fonLoginComplete\x12\".CentralLoginGameServer.AccountVal\x1a\x1c.CentralLoginGameServer.Void\x12H\n\nactiveTick\x12\x1c.CentralLoginGameServer.Void\x1a\x1c.CentralLoginGameServer.Void\x12[\n\x10onAccountOffline\x12).CentralLoginGameServer.AccountOfflineVal\x1a\x1c.CentralLoginGameServer.Void\x12g\n\x15lockLoginSwitchServer\x12\x30.CentralLoginGameServer.LockLoginSwitchServerVal\x1a\x1c.CentralLoginGameServer.Void\x12k\n\x17unlockLoginSwitchServer\x12\x32.CentralLoginGameServer.UnlockLoginSwitchServerVal\x1a\x1c.CentralLoginGameServer.Void\x12_\n\x0f\x64\x65leteCharacter\x12..CentralLoginGameServer.DeleteCharacterRequest\x1a\x1c.CentralLoginGameServer.Void2\xf1\x02\n\nGameServer\x12Y\n\ronVerifyLogin\x12*.CentralLoginGameServer.VerifyAccountReply\x1a\x1c.CentralLoginGameServer.Void\x12P\n\x12\x61\x63tiveTickCallback\x12\x1c.CentralLoginGameServer.Void\x1a\x1c.CentralLoginGameServer.Void\x12U\n\ronKickAccount\x12&.CentralLoginGameServer.KickAccountVal\x1a\x1c.CentralLoginGameServer.Void\x12_\n\ronLockedLogin\x12\x30.CentralLoginGameServer.LockLoginSwitchServerVal\x1a\x1c.CentralLoginGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x15gameServerLogin.proto\x12\x16\x43\x65ntralLoginGameServer\"\x06\n\x04Void\"_\n\x14VerifyAccountRequest\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\x12\x0e\n\x06hostId\x18\x04 \x01(\r\"\xfb\x02\n\x12VerifyAccountReply\x12G\n\x06result\x18\x01 \x01(\x0e\x32\x37.CentralLoginGameServer.VerifyAccountReply.VerifyResult\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x03 \x01(\r\x12\x11\n\tchannelId\x18\x04 \x01(\r\x12\x16\n\x0e\x62\x61nAccountTime\x18\x05 \x01(\x03\x12\x13\n\x0b\x62\x61nPostTime\x18\x06 \x01(\x03\x12\x18\n\x10\x62\x61nAccountReason\x18\x07 \x01(\t\x12\x15\n\rbanPostReason\x18\x08 \x01(\t\x12\x0e\n\x06userId\x18\t \x01(\t\x12\x15\n\rotherJsonData\x18\n \x01(\t\"Z\n\x0cVerifyResult\x12\x1a\n\x16VERIFY_ACCOUNT_UNKNOWN\x10\x00\x12\x15\n\x11VERIFY_ACCOUNT_OK\x10\x01\x12\x17\n\x13VERIFY_ACCOUNT_FAIL\x10\x02\"6\n\nAccountVal\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\"3\n\x0eGameServerInfo\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x11\n\tonlineNum\x18\x02 \x01(\r\"\xa2\x01\n\x10NewCharacterInfo\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\r\n\x05level\x18\x05 \x01(\r\x12\x0e\n\x06school\x18\x06 \x01(\r\x12\x0c\n\x04gens\x18\x07 \x01(\r\x12\x0b\n\x03sex\x18\x08 \x01(\r\x12\x0e\n\x06hostId\x18\t \x01(\r\"\x81\x01\n\x13UpdateCharacterInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05level\x18\x03 \x01(\r\x12\x0e\n\x06school\x18\x04 \x01(\r\x12\x12\n\ntLastLogin\x18\x05 \x01(\r\x12\x0e\n\x06\x64\x65lete\x18\x06 \x01(\x08\x12\x0b\n\x03sex\x18\x07 \x01(\r\"b\n\x10\x41\x63\x63ountOnlineVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x03 \x01(\r\x12\x14\n\x0csessionIdStr\x18\x04 \x01(\t\"c\n\x11\x41\x63\x63ountOfflineVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x03 \x01(\r\x12\x14\n\x0csessionIdStr\x18\x04 \x01(\t\"\xd2\x01\n\x0eKickAccountVal\x12\x13\n\x0b\x61\x63\x63ountType\x18\x01 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x02 \x01(\t\x12I\n\nkickReason\x18\x03 \x01(\x0e\x32\x35.CentralLoginGameServer.KickAccountVal.KickReasonType\"K\n\x0eKickReasonType\x12\n\n\x06UNKNOW\x10\x00\x12\x15\n\x11LOGIN_VERIFY_FAIL\x10\x0e\x12\x16\n\x12\x43\x41PTCHA_CHECK_FAIL\x10\x13\"r\n\x18LockLoginSwitchServerVal\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x62Id\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x13\n\x0b\x61\x63\x63ountName\x18\x04 \x01(\t\x12\x13\n\x0b\x61\x63\x63ountType\x18\x05 \x01(\r\"1\n\x1aUnlockLoginSwitchServerVal\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\"&\n\x16\x44\x65leteCharacterRequest\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x32\xe5\x08\n\rCentralServer\x12Y\n\x0bverifyLogin\x12,.CentralLoginGameServer.VerifyAccountRequest\x1a\x1c.CentralLoginGameServer.Void\x12V\n\x0eregisterServer\x12&.CentralLoginGameServer.GameServerInfo\x1a\x1c.CentralLoginGameServer.Void\x12X\n\x10updateServerInfo\x12&.CentralLoginGameServer.GameServerInfo\x1a\x1c.CentralLoginGameServer.Void\x12\\\n\x0fupdateCharacter\x12+.CentralLoginGameServer.UpdateCharacterInfo\x1a\x1c.CentralLoginGameServer.Void\x12[\n\x11onCreateCharacter\x12(.CentralLoginGameServer.NewCharacterInfo\x1a\x1c.CentralLoginGameServer.Void\x12S\n\x0fonLoginComplete\x12\".CentralLoginGameServer.AccountVal\x1a\x1c.CentralLoginGameServer.Void\x12H\n\nactiveTick\x12\x1c.CentralLoginGameServer.Void\x1a\x1c.CentralLoginGameServer.Void\x12Y\n\x0fonAccountOnline\x12(.CentralLoginGameServer.AccountOnlineVal\x1a\x1c.CentralLoginGameServer.Void\x12[\n\x10onAccountOffline\x12).CentralLoginGameServer.AccountOfflineVal\x1a\x1c.CentralLoginGameServer.Void\x12g\n\x15lockLoginSwitchServer\x12\x30.CentralLoginGameServer.LockLoginSwitchServerVal\x1a\x1c.CentralLoginGameServer.Void\x12k\n\x17unlockLoginSwitchServer\x12\x32.CentralLoginGameServer.UnlockLoginSwitchServerVal\x1a\x1c.CentralLoginGameServer.Void\x12_\n\x0f\x64\x65leteCharacter\x12..CentralLoginGameServer.DeleteCharacterRequest\x1a\x1c.CentralLoginGameServer.Void2\xf1\x02\n\nGameServer\x12Y\n\ronVerifyLogin\x12*.CentralLoginGameServer.VerifyAccountReply\x1a\x1c.CentralLoginGameServer.Void\x12P\n\x12\x61\x63tiveTickCallback\x12\x1c.CentralLoginGameServer.Void\x1a\x1c.CentralLoginGameServer.Void\x12U\n\ronKickAccount\x12&.CentralLoginGameServer.KickAccountVal\x1a\x1c.CentralLoginGameServer.Void\x12_\n\ronLockedLogin\x12\x30.CentralLoginGameServer.LockLoginSwitchServerVal\x1a\x1c.CentralLoginGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -73,8 +73,8 @@ _KICKACCOUNTVAL_KICKREASONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1157,
-  serialized_end=1232,
+  serialized_start=1279,
+  serialized_end=1354,
 )
 _sym_db.RegisterEnumDescriptor(_KICKACCOUNTVAL_KICKREASONTYPE)
 
@@ -486,6 +486,58 @@ _UPDATECHARACTERINFO = _descriptor.Descriptor(
 )
 
 
+_ACCOUNTONLINEVAL = _descriptor.Descriptor(
+  name='AccountOnlineVal',
+  full_name='CentralLoginGameServer.AccountOnlineVal',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='hostId', full_name='CentralLoginGameServer.AccountOnlineVal.hostId', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='accountName', full_name='CentralLoginGameServer.AccountOnlineVal.accountName', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='accountType', full_name='CentralLoginGameServer.AccountOnlineVal.accountType', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sessionIdStr', full_name='CentralLoginGameServer.AccountOnlineVal.sessionIdStr', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=942,
+  serialized_end=1040,
+)
+
+
 _ACCOUNTOFFLINEVAL = _descriptor.Descriptor(
   name='AccountOfflineVal',
   full_name='CentralLoginGameServer.AccountOfflineVal',
@@ -514,6 +566,13 @@ _ACCOUNTOFFLINEVAL = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sessionIdStr', full_name='CentralLoginGameServer.AccountOfflineVal.sessionIdStr', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -526,8 +585,8 @@ _ACCOUNTOFFLINEVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=942,
-  serialized_end=1019,
+  serialized_start=1042,
+  serialized_end=1141,
 )
 
 
@@ -572,8 +631,8 @@ _KICKACCOUNTVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1022,
-  serialized_end=1232,
+  serialized_start=1144,
+  serialized_end=1354,
 )
 
 
@@ -631,8 +690,8 @@ _LOCKLOGINSWITCHSERVERVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1234,
-  serialized_end=1348,
+  serialized_start=1356,
+  serialized_end=1470,
 )
 
 
@@ -662,8 +721,8 @@ _UNLOCKLOGINSWITCHSERVERVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1350,
-  serialized_end=1399,
+  serialized_start=1472,
+  serialized_end=1521,
 )
 
 
@@ -693,8 +752,8 @@ _DELETECHARACTERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1401,
-  serialized_end=1439,
+  serialized_start=1523,
+  serialized_end=1561,
 )
 
 _VERIFYACCOUNTREPLY.fields_by_name['result'].enum_type = _VERIFYACCOUNTREPLY_VERIFYRESULT
@@ -708,6 +767,7 @@ DESCRIPTOR.message_types_by_name['AccountVal'] = _ACCOUNTVAL
 DESCRIPTOR.message_types_by_name['GameServerInfo'] = _GAMESERVERINFO
 DESCRIPTOR.message_types_by_name['NewCharacterInfo'] = _NEWCHARACTERINFO
 DESCRIPTOR.message_types_by_name['UpdateCharacterInfo'] = _UPDATECHARACTERINFO
+DESCRIPTOR.message_types_by_name['AccountOnlineVal'] = _ACCOUNTONLINEVAL
 DESCRIPTOR.message_types_by_name['AccountOfflineVal'] = _ACCOUNTOFFLINEVAL
 DESCRIPTOR.message_types_by_name['KickAccountVal'] = _KICKACCOUNTVAL
 DESCRIPTOR.message_types_by_name['LockLoginSwitchServerVal'] = _LOCKLOGINSWITCHSERVERVAL
@@ -764,6 +824,13 @@ UpdateCharacterInfo = _reflection.GeneratedProtocolMessageType('UpdateCharacterI
   ))
 _sym_db.RegisterMessage(UpdateCharacterInfo)
 
+AccountOnlineVal = _reflection.GeneratedProtocolMessageType('AccountOnlineVal', (_message.Message,), dict(
+  DESCRIPTOR = _ACCOUNTONLINEVAL,
+  __module__ = 'gameServerLogin_pb2'
+  # @@protoc_insertion_point(class_scope:CentralLoginGameServer.AccountOnlineVal)
+  ))
+_sym_db.RegisterMessage(AccountOnlineVal)
+
 AccountOfflineVal = _reflection.GeneratedProtocolMessageType('AccountOfflineVal', (_message.Message,), dict(
   DESCRIPTOR = _ACCOUNTOFFLINEVAL,
   __module__ = 'gameServerLogin_pb2'
@@ -808,8 +875,8 @@ _CENTRALSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1442,
-  serialized_end=2476,
+  serialized_start=1564,
+  serialized_end=2689,
   methods=[
   _descriptor.MethodDescriptor(
     name='verifyLogin',
@@ -875,9 +942,18 @@ _CENTRALSERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='onAccountOnline',
+    full_name='CentralLoginGameServer.CentralServer.onAccountOnline',
+    index=7,
+    containing_service=None,
+    input_type=_ACCOUNTONLINEVAL,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='onAccountOffline',
     full_name='CentralLoginGameServer.CentralServer.onAccountOffline',
-    index=7,
+    index=8,
     containing_service=None,
     input_type=_ACCOUNTOFFLINEVAL,
     output_type=_VOID,
@@ -886,7 +962,7 @@ _CENTRALSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='lockLoginSwitchServer',
     full_name='CentralLoginGameServer.CentralServer.lockLoginSwitchServer',
-    index=8,
+    index=9,
     containing_service=None,
     input_type=_LOCKLOGINSWITCHSERVERVAL,
     output_type=_VOID,
@@ -895,7 +971,7 @@ _CENTRALSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='unlockLoginSwitchServer',
     full_name='CentralLoginGameServer.CentralServer.unlockLoginSwitchServer',
-    index=9,
+    index=10,
     containing_service=None,
     input_type=_UNLOCKLOGINSWITCHSERVERVAL,
     output_type=_VOID,
@@ -904,7 +980,7 @@ _CENTRALSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='deleteCharacter',
     full_name='CentralLoginGameServer.CentralServer.deleteCharacter',
-    index=10,
+    index=11,
     containing_service=None,
     input_type=_DELETECHARACTERREQUEST,
     output_type=_VOID,
@@ -922,8 +998,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=2479,
-  serialized_end=2848,
+  serialized_start=2692,
+  serialized_end=3061,
   methods=[
   _descriptor.MethodDescriptor(
     name='onVerifyLogin',

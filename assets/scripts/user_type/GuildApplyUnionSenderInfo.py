@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildApplyUnionSenderVal(userType.UserSoleType):
+class GuildApplyUnionSenderVal(userType.UserSingleType):
     '''GUILD_APPLY_UNION_SENDER_DATA_INFO'''
     def __init__(self, guildUUID, guildName, guildIcon, flag, guildScore, endTime):
         self.guildUUID = guildUUID

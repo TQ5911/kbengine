@@ -649,7 +649,7 @@ datas = _tools.RODict({
         "endActionToEffectObject": _10010531_end,
         "areaAction": None,
         "loopIntervalTime": 1.0,
-        "effect": "TeamPlayer",
+        "effect": "TeamExCorpse",
         "maxEffectObjectNum": 15,
         "endByTime": -1,
     })

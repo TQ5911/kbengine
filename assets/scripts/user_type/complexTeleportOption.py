@@ -7,7 +7,7 @@ import gameconst
 import userType
 
 
-class ComplexTeleportOptions(userType.UserSoleType):
+class ComplexTeleportOptions(userType.UserSingleType):
     def __init__(self,
                  beforeEnterFirst=False,
                  afterLeaveFirst=True,

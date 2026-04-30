@@ -114,7 +114,7 @@
                 int length = packLen - padSize;
                 if (reader != null)
                 {
-                    reader.process(buffer, rpos + 3, (UInt32)length);
+                    reader.process(null, buffer, rpos + 3, (UInt32)length);
                 }
 
                 return true;
@@ -177,7 +177,7 @@
                 // 如果有多余的包数据会放在_recvStream
                 if (reader != null)
                 {
-                    reader.process(_packet.data(), (UInt32)_packet.rpos, _packet.length());
+                    reader.process(null, _packet.data(), (UInt32)_packet.rpos, _packet.length());
                 }
 
                 if (currLen > 0)

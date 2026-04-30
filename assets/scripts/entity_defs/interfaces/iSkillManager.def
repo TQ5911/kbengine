@@ -774,6 +774,11 @@
             <Type>          INT32           </Type>
             <Flags>         CELL_PRIVATE    </Flags>
         </baseEvasion>
+
+        <skillTimerDic>
+            <Type>          PY_DICT         </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </skillTimerDic>
     </Properties>
 
     <CellMethods>
@@ -1010,5 +1015,9 @@
             <Arg>        DOUBLETIME      </Arg>
             <Arg>        UINT8           </Arg>
         </onShooterSkillCanUse>
+
+        <onExitShiftByConflict>
+            <Arg>        POSITION3D         </Arg>
+        </onExitShiftByConflict>
     </ClientMethods>
 </root>

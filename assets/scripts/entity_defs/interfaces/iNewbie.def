@@ -11,6 +11,12 @@
             <Flags>         BASE_AND_CLIENT         </Flags>
             <Persistent>    true                    </Persistent>
         </newbieGuideIds>
+
+        <newbieGuideVals>
+            <Type>          ARRAY   <of>    UINT8       </of>  </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </newbieGuideVals>
     </Properties>
 
     <BaseMethods>
@@ -21,9 +27,10 @@
             <Arg>           SPACE_NO                </Arg>
         </onNewbieDungeonReady>
 
-        <addNewbieGuideId> <Exposed/>
+        <setNewbieGuideId> <Exposed/>
             <Arg>           OBJECT_ID               </Arg>
-        </addNewbieGuideId>
+            <Arg>           UINT8                   </Arg>
+        </setNewbieGuideId>
     </BaseMethods>
 
     <CellMethods>
@@ -39,6 +46,7 @@
     <ClientMethods>
         <onNewbieGuideId>
             <Arg>       OBJECT_ID       </Arg>
+            <Arg>       UINT8           </Arg>
         </onNewbieGuideId>
     </ClientMethods>
 </root>

@@ -27,7 +27,7 @@ class ItemFactory(object):
     def getItemTypes(itemId):
         itemData = dataUtils.getCommItemData(itemId)
         if not itemData:
-            gameengine.reportCritical('itemFactor::getItemTypes, no itemId:', itemId)
+            gameengine.panicStack('itemFactor::getItemTypes, no itemId:', itemId)
             return None, None
         return itemData['type'], itemData['subType']
 
@@ -39,13 +39,13 @@ class ItemFactory(object):
         elif itemType == gameconst.ItemType.LingShou:
             return cls.LingShouItemClassMap.get(subType, Item.Item)
         else:
-            ERROR_MSG("getItemClass, no itemType:", itemType, itemId)
+            LOG_ERR("getItemClass, no itemType:", itemType, itemId)
 
     @classmethod
     def _createItem(cls, itemId, itemNum=1, bindType=dataUtils.getItemDefaultBindType(), **kwargs):
         itemClass = cls.getItemClass(itemId)
         if not itemClass:
-            gameengine.reportCritical('_createItem, no itemClass:', itemId, itemClass)
+            gameengine.panicStack('_createItem, no itemClass:', itemId, itemClass)
             return
         return itemClass(itemId, itemNum=itemNum, bindType=bindType, **kwargs)
 

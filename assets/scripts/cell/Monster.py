@@ -54,7 +54,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     MOVE_METHOD_MOVE = 2
 
     def __init__(self):
-        DEBUG_MSG("Monster::__init__", self.instanceId, self.dungeonFlagId)
+        LOG_DBG("Monster::__init__", self.instanceId, self.dungeonFlagId)
         if not self.level:
             self.level = gameconst.MIN_LEVEL
         elif self.level > utils.getPlayerMaxLevel():
@@ -76,7 +76,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.collidable = monData.get('collisionDiameter', True)
 
         if self.force == 0:
-            self.force = monData.get('force', gameconst.ForceType.Monster)
+            self.force = monData.get('force', gameconst.ForceTypeEnum.Monster)
 
         self.initEntitySkills(monData)
         self.initBornAction()
@@ -94,7 +94,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         self.initPosition()
 
-        if formula.spaceInWorldLine(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo):
             self.spaceMgrId = self.getCurrentSpace().spaceMgrId
 
         spaceMgr = self.spaceMgr
@@ -103,8 +103,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             _isLarge = True
             self.setBodySize((gameconst.LARGE_ENTITY_DEFAULT_AOI, gameconst.LARGE_ENTITY_DEFAULT_AOI))
 
-        gid = utils.getGidFromGameEntityId(self.gameEntityId)
-        if formula.isDungeonSpace(self.spaceNo):
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
+        if formula.inDungeonScene(self.spaceNo):
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.monsterId),
                                              'gid_{}'.format(gid), self.__class__.__name__))
@@ -129,9 +129,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         pathId = monData.get('pathID', 0) or self.pathId
         if pathId:
-            self._callback(1, 'setRoute', (pathId, True if self.aiController else False), gametimer.TIMER_TAG_SET_ROUTE)
+            self.addTimerCB(1, 'setRoute', (pathId, True if self.aiController else False), gametimer.TIMER_TAG_SET_ROUTE)
 
-        INFO_MSG('on create', self.spaceNo, self.gameEntityId, self.creepBaseId, self.aiName, self.position)
+        LOG_IFO('on create', self.spaceNo, self.gameEntityId, self.creepBaseId, self.aiName, self.position)
         self.overwriteProps()
         self.lastClearBeAttackAvatarsTime = 0
 
@@ -147,7 +147,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             if self.isNeedRefresh():
                 self.monsterGroup.hasMonsterNeedRefresh = True
 
-        elif formula.isDungeonSpace(self.spaceNo):
+        elif formula.inDungeonScene(self.spaceNo):
             self._createMonsterGrpInDungeon()
         # 初始化战斗区
         self._initCombatAreas()
@@ -158,7 +158,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.teamMarkDict = {}
         self.raidMarkDict = {}
 
-        if formula.isTeamDungeonSpace(self.spaceNo) or formula.isRaidDungeonSpace(self.spaceNo):
+        if formula.inTeamDungeonScene(self.spaceNo) or formula.inRaidDungeonScene(self.spaceNo):
             self.spaceMgr.doDungeonMonsterBorn(self.monsterId, self.createTime)
 
     def _checkCombatArea(self, combatAreaData):
@@ -171,10 +171,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         areaType = dunPropsData["AreaType"]
         propsData = None
         if areaType == gameconst.DungeonCustomAreaType.CIRCLE:
-            radius = gameconst.DungeonCustomAreaType.getCircleRadius(dunPropsData)
+            radius = gameconst.DungeonCustomAreaType.fetchCircleRadius(dunPropsData)
             propsData = (targetPos, rotate, areaType, radius)
         elif areaType == gameconst.DungeonCustomAreaType.RECTANGLE:
-            length, width = gameconst.DungeonCustomAreaType.getRectangleVal(dunPropsData)
+            length, width = gameconst.DungeonCustomAreaType.fetchRectVal(dunPropsData)
             propsData = (targetPos, rotate, areaType, length, width)
 
         if propsData:
@@ -184,8 +184,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         return False, propsData
 
     def _checkCombatAreas(self, combatAreaIDs = None):
-        mapId = formula.getMapId(self.spaceNo)
-        dunData = utils.getDunStructureModuleData(mapId)
+        mapId = formula.fetchMapId(self.spaceNo)
+        dunData = utils.getDunStructModData(mapId)
 
         initEntities = dunData.get('InitEntities', None)
         if not initEntities:
@@ -221,7 +221,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def _initCountRefresh(self):
         # 地图没有配置刷新，就不刷新
-        mapID = formula.getMapId(self.spaceNo)
+        mapID = formula.fetchMapId(self.spaceNo)
         dataKeys = self.spaceMgr.getRefreshDataKeys(mapID)
         if not dataKeys:
             return
@@ -252,7 +252,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                     self.refreshDataKey = dataKey
                     self.combatAreaID = combatAreaID
                     self.combatRefreshID = '{}_{}'.format(combatAreaID, dataKey)
-                    INFO_MSG("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
+                    LOG_IFO("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
                     break
 
     def _createMonsterGrpInDungeon(self):
@@ -291,7 +291,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             pass
         elif ifBornState:
             self.changeBornState(gameconst.BornStateType.invisible)
-            self._callback(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
+            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
                            (gameconst.BornStateType.static,), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
             self.changeBornState(gameconst.BornStateType.move)
@@ -309,26 +309,26 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if newState == gameconst.BornStateType.static:
             ifBornState = creep_base.datas[self.monsterId].get('ifBornState', 1)
             nextState = gameconst.BornStateType.move
-            self._callback(CBSD.datas[ifBornState]['bornStateTime'], 'changeBornState', (nextState,),
+            self.addTimerCB(CBSD.datas[ifBornState]['bornStateTime'], 'changeBornState', (nextState,),
                            gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         elif newState == gameconst.BornStateType.move:
             if self.bornState in gameconst.BornStateType.bornDoNothing:
                 self.initBornAction()
             self.setAI(self.aiName)
-            self._callback(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
+            self.addTimerCB(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
         elif newState == gameconst.BornStateType.reMove:
             newState = gameconst.BornStateType.move
 
         self.bornState = newState
 
     def reset(self):
-        DEBUG_MSG('monster::reset')
+        LOG_DBG('monster::reset')
         # reset states
         self._relive()
         # reset AI
         self.aiController.reset()
         # clear buff
-        self.removeAureole(0)
+        self.removeAureola(0)
         self.removeAllBuff()
         # reset controller
         self.cancelMoveController()
@@ -346,7 +346,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         # call enterTrap
         for c in self.entitiesInRange(8):
-            self.onEnterTrap(c, 0, 0, 0, gameconst.HATE_TRAP)
+            self.onEnterTrap(c, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
     @property
     def creepBaseId(self):
@@ -416,23 +416,23 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         radii = self.getAlertDistance()
         if radii <= 0:
             return
-        self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
+        self.hateTrapId = self.addProximity(radii, radii, gameconst.AGGRO_TRIGGER_TRAP)
         leaveAoiRange = self.getLeaveAlertDistance()
-        self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
+        self.addProximity(leaveAoiRange, 0.0, gameconst.AOI_EXIT_TRAP)
 
     def onGetWitness(self):
         """
         KBEngine method.
         绑定了一个观察者(客户端)
         """
-        DEBUG_MSG("Avatar::onGetWitness: %i." % self.id)
+        LOG_DBG("Avatar::onGetWitness: %i." % self.id)
 
     def onLoseWitness(self):
         """
         KBEngine method.
         解绑定了一个观察者(客户端)
         """
-        DEBUG_MSG("Avatar::onLoseWitness: %i." % self.id)
+        LOG_DBG("Avatar::onLoseWitness: %i." % self.id)
 
     def onWitnessed(self, isWitnessed):
         if self.aiController and self.aiController.needTickOnce():
@@ -454,7 +454,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         KBEngine method.
         entity销毁
         """
-        DEBUG_MSG("monster::onDestroy: %i." % self.id)
+        LOG_DBG("monster::onDestroy: %i." % self.id)
         super(Monster, self)._preSafeDestory()
         spaceMgr = self.spaceMgr
         if spaceMgr:
@@ -484,7 +484,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if self.isMoving():
             self.cancelMoveController()
         self.setProp('adjSpeed', self.getProp('adjSpeed') + creep_base.datas[self.monsterId].get('adjSpeed', 0),
-                     gameconst.SourceType.Fight)
+                     gameconst.SourceType.SrcTpFight)
 
     def leaveFightingState(self):
         super(Monster, self).leaveFightingState()
@@ -493,18 +493,14 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             return
 
         self.setProp('adjSpeed', self.getProp('adjSpeed') - creep_base.datas[self.monsterId].get('adjSpeed', 0),
-                     gameconst.SourceType.Fight)
+                     gameconst.SourceType.SrcTpFight)
         return
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         super(Monster, self).onEnterTrap(entity, rangeXZ, rangeY, controllerId, userArg)
-        if userArg == gameconst.CAPTURE_TRAP:
+        if userArg == gameconst.CATCH_TRAP:
             if entity.IsAvatar and self.base:
                 self.updateCaptureFlag(entity.base, entity.gbId)
-        elif userArg == gameconst.BELONG_RAID_TRAP:
-            if not entity.IsAvatar:
-                return
-            self._addBelongRaidInfo(entity)
         return
 
     def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
@@ -529,10 +525,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if self.isMonsterInGroup():
             self.rmFromMonsterGroup()
 
+        if self.spaceMgr:
+            self.spaceMgr.removeBoxGroupEntity(self)
+
     def onDead(self, killer, *args, **kwargs):
-        DEBUG_MSG("Monster-->onDead 1 ", killer, args, kwargs)
+        LOG_DBG("Monster-->onDead 1 ", killer, args, kwargs)
         super(Monster, self).onDead(killer)
-        if formula.isTeamDungeonSpace(self.spaceNo) or formula.isRaidDungeonSpace(self.spaceNo):
+        if formula.inTeamDungeonScene(self.spaceNo) or formula.inRaidDungeonScene(self.spaceNo):
             self.spaceMgr.doDungeonMonsterDead(self.monsterId, self.createTime)
         self.doMonsterDestroy()
     
@@ -550,7 +549,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             detail = gameclass.AwardDetail(monsterId=self.monsterId, spaceNo=self.spaceNo)
             rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
             factor = 1.0
-            if formula.isLineSpace(self.spaceNo) and self.getConfigData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.NORMAL:
+            if formula.inLineScene(self.spaceNo) and self.getConfigData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.NORMAL:
                 host = utils.getEntityRealEntity(killer)
                 if host and host.IsAvatar:
                     factor = host.getKillMonsterAwardFactor(self.level)
@@ -602,7 +601,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             for raidId in self.raidMarkDict.keys():
                 gameengine.getRaidStub(raidId).onMarkMonsterDead(self.id)
         except Exception as e:
-            ERROR_MSG("Error in onDead for clear team record: ", e)
+            LOG_ERR("Error in onDead for clear team record: ", e)
 
         _suffixId = creep_base.datas.get(self.monsterId, {}).get('nameSuffixID', 0)
         if _suffixId not in gameconst.MonsterSuffix.NEED_LOG_SUFFIX:
@@ -610,22 +609,22 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         LogTrackingMgr.LogTrackingMgr.Kill_Monster(
             self.monsterId,
-            formula.getMapId(self.spaceNo),
+            formula.fetchMapId(self.spaceNo),
             self.gameEntityId,
             _suffixId,
         )
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
-        DEBUG_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
+        LOG_DBG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
         if killer:
             if killer.IsAvatar:
                 killer.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
-            elif killer.IsPet or killer.IsSummon or killer.IsCreation:
+            elif killer.IsSummon or killer.IsCreation:
                 hostRole = KBEngine.entities.get(killer.hostId, None)
                 if hostRole and hostRole.IsAvatar:
                     hostRole.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
             elif killer.IsAvatarMirror:
-                hostKiller, _ = utils.getRealAvatarEnt(killer)
+                hostKiller, _ = utils.getRealAvatarEntity(killer)
                 if hostKiller:
                     if hostKiller.IsAvatar:
                         hostKiller.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
@@ -634,17 +633,17 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                         if teamRobotHost:
                             teamRobotHost.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
                 else:
-                    ERROR_MSG('AvatarMirror kill monster, no reward entity:', deathDropIds, shareRewardIds, displayModes, hostKiller)
+                    LOG_ERR('AvatarMirror kill monster, no reward entity:', deathDropIds, shareRewardIds, displayModes, hostKiller)
 
     def onBeAttacked(self, arg):
         self._addAttackAvatarId(arg.triggerRoleId)
         #self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
 
     def triggerAllAttackerTask(self):
-        aoi = GP_GP.datas[formula.getMapId(self.spaceNo)]['AOI']
+        aoi = GP_GP.datas[formula.fetchMapId(self.spaceNo)]['AOI']
         aoi = aoi if aoi else gameconst.DEFAULT_AOI
         triggerTaskAvatars = {}
-        _isDungeon = formula.isDungeonSpace(self.spaceNo)
+        _isDungeon = formula.inDungeonScene(self.spaceNo)
         for attackerId in self.beAttackAvatarIds:
             if attackerId in triggerTaskAvatars:
                 continue
@@ -696,14 +695,14 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if not host.IsAvatar:
             return
 
-        self.beAttackAvatarIds[host.id] = utils.getNow()
-        _now = utils.getNow()
+        self.beAttackAvatarIds[host.id] = utils.curTS()
+        _now = utils.curTS()
         if _now - self.lastClearBeAttackAvatarsTime > gameconst.MONSTER_BE_ATTACK_CLEAR_DUR:
             self._clearBeAttackAvatarIds()
             self.lastClearBeAttackAvatarsTime = _now
 
     def _clearBeAttackAvatarIds(self):
-        now = utils.getNow()
+        now = utils.curTS()
         for entId, t in list(self.beAttackAvatarIds.items()):
             if now - t > gameconst.MONSTER_BE_ATTACK_CLEAR_DUR: # 超过5分钟 清除
                 self.beAttackAvatarIds.pop(entId)
@@ -738,7 +737,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         summon = KBEngine.createEntity('Summon', self.spaceID, pos, self.direction, props)
         if not summon:
-            ERROR_MSG('addSummon Error', id, pos, hostId)
+            LOG_ERR('addSummon Error', id, pos, hostId)
             return
 
         if buffId and buffLv:
@@ -751,7 +750,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         return summon
 
     def setCanBeAttack(self, canBeAttack):
-        INFO_MSG("setCanBeAttack", canBeAttack)
+        LOG_IFO("setCanBeAttack", canBeAttack)
         self.canBeAttack = canBeAttack
 
     def modifyHP(self, hpVal, releaseRoleId, srcType, srcId, forceDead=False, context=None):
@@ -766,15 +765,15 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def calculateRefreshTimeMonster(self):
         _refreshTime = self.calculateRefreshTime()
-        if formula.isMineWarSpace(self.spaceNo) and gameconfig.visibleConfigEnabled('mineBattle'):
+        if formula.inMineWarScene(self.spaceNo) and gameconfig.visibleConfigEnabled('mineBattle'):
             startOffsetSec = utils.getMineWarStartOffsetSec()
-            startTime = utils.getCurrentWeekTS(offsetSec=startOffsetSec)
+            startTime = utils.getCurWeekTS(offsetSec=startOffsetSec)
             endOffsetSec = utils.getMineWarEndOffsetSec()
-            entTime = utils.getCurrentWeekTS(offsetSec=endOffsetSec)
-            if entTime > utils.getNow():
-                if startTime <= utils.getNow() + _refreshTime < entTime:
-                    _refreshTime = max(0, entTime - utils.getNow())
-                DEBUG_MSG('IEntityRefresh.calculateRefreshTime: mine war refresh time calculated, refreshTime=%d' % _refreshTime)
+            entTime = utils.getCurWeekTS(offsetSec=endOffsetSec)
+            if entTime > utils.curTS():
+                if startTime <= utils.curTS() + _refreshTime < entTime:
+                    _refreshTime = max(0, entTime - utils.curTS())
+                LOG_DBG('IEntityRefresh.calculateRefreshTime: mine war refresh time calculated, refreshTime=%d' % _refreshTime)
 
         return _refreshTime
 
@@ -782,7 +781,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # 解耦，spaceNo在iCell， posIndex 在iGameEntity
         _refreshTime = self.calculateRefreshTimeMonster()
         if self.monsterGroupId:
-            self.monsterGroup._callback(_refreshTime, 'doEntityRefreshGrp', (self.gameEntityId,), gametimer.TIMER_TAG_MONSTER_GRP_DO_REFRESH)
+            boxGroupId = utils.getEntityBoxGroupId(self, self.spaceNo)
+            self.monsterGroup.addTimerCB(_refreshTime, 'doEntityRefreshGrp', (boxGroupId, self.gameEntityId,), gametimer.TIMER_TAG_MONSTER_GRP_DO_REFRESH)
             return
 
         super().onEntityRefresh(self.spaceNo, _refreshTime)
@@ -792,7 +792,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.teamMarkDict[teamId] = index
         elif teamType == gameconst.TeamType.RAID:
             self.raidMarkDict[teamId] = index
-        DEBUG_MSG("Monster::onBeMarkedAsEnemy: {}, {}, {}, {}".format(self.id, teamId, teamType, index))
+        LOG_DBG("Monster::onBeMarkedAsEnemy: {}, {}, {}, {}".format(self.id, teamId, teamType, index))
 
     def delBeMarkedAsEnemy(self, teamId, teamType):
         if teamType == gameconst.TeamType.TEAM:
@@ -801,7 +801,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         elif teamType == gameconst.TeamType.RAID:
             if teamId in self.raidMarkDict:
                 self.raidMarkDict.pop(teamId)
-        DEBUG_MSG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
+        LOG_DBG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
 
     def checkCombatRangeY(self, target):
         attackHeightLimit = creep_base.datas[self.monsterId]['attackHeightLimit']

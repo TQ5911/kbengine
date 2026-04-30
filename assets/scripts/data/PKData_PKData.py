@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     "lowerLimitOfMoralValues": _tools.RODict({
         "ID": "lowerLimitOfMoralValues",
-        "value": -99999,
+        "value": -50000,
     }),
     "deductingMoralValues": _tools.RODict({
         "ID": "deductingMoralValues",

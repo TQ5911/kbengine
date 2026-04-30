@@ -29,7 +29,7 @@ class WorldBossStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimer(tid, userArg)
 
     def addCreateWorldBossTimer(self, spaceNo, createTime):
-        DEBUG_MSG('addCreateWorldBossTimer', spaceNo, createTime)
+        LOG_DBG('addCreateWorldBossTimer', spaceNo, createTime)
         self._datetimeCallback(
             createTime,
             '_notifyCreateWorldBoss',
@@ -37,7 +37,7 @@ class WorldBossStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             gametimer.TIMER_TAG_CREATE_WORLD_BOSS)
 
     def _notifyCreateWorldBoss(self, spaceNo):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         gameengine.getLineStub(_mapId).notifyCreateWorldBoss(spaceNo)
 
     def onWorldBossDeadAddTimer(self, spaceNo, nextCreateTime):

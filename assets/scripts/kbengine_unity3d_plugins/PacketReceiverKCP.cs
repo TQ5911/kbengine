@@ -84,7 +84,7 @@
                     }
                     else
                     {
-                        _messageReader.process(_buffer, 0, (MessageLengthEx)length);
+                        _messageReader.process(_networkInterface, _buffer, 0, (MessageLengthEx)length);
                     }
                 }
 			}

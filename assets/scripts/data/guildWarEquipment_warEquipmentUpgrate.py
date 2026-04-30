@@ -344,10 +344,65 @@ datas = _tools.RODict({
         "assistExp": 10,
         "upgradeCoinCost": 400,
         "buildingLvReq": 5
+    }),
+    31: _tools.RODict({
+        "ID": 31,
+        "type": 8,
+        "level": 1,
+        "prop": 52004026,
+        "upgradeCost": 5000,
+        "upgradeExp": 15000,
+        "assistExp": 10,
+        "upgradeCoinCost": 400,
+        "buildingLvReq": 1
+    }),
+    32: _tools.RODict({
+        "ID": 32,
+        "type": 8,
+        "level": 2,
+        "prop": 52004027,
+        "upgradeCost": 30000,
+        "upgradeExp": 100000,
+        "assistExp": 10,
+        "upgradeCoinCost": 400,
+        "buildingLvReq": 2
+    }),
+    33: _tools.RODict({
+        "ID": 33,
+        "type": 8,
+        "level": 3,
+        "prop": 52004028,
+        "upgradeCost": 100000,
+        "upgradeExp": 300000,
+        "assistExp": 10,
+        "upgradeCoinCost": 400,
+        "buildingLvReq": 3
+    }),
+    34: _tools.RODict({
+        "ID": 34,
+        "type": 8,
+        "level": 4,
+        "prop": 52004029,
+        "upgradeCost": 240000,
+        "upgradeExp": 750000,
+        "assistExp": 10,
+        "upgradeCoinCost": 400,
+        "buildingLvReq": 4
+    }),
+    35: _tools.RODict({
+        "ID": 35,
+        "type": 8,
+        "level": 5,
+        "prop": 52004030,
+        "upgradeCost": 480000,
+        "upgradeExp": 1500000,
+        "assistExp": 10,
+        "upgradeCoinCost": 400,
+        "buildingLvReq": 5
     })
 })
 minKey = 1
-maxKey = 30
+maxKey = 35
 
 typeLevelDic = _tools.RODict({
     1 : _tools.RODict({
@@ -391,5 +446,12 @@ typeLevelDic = _tools.RODict({
         3 : 28,
         4 : 29,
         5 : 30,
+    }),
+    8 : _tools.RODict({
+        1 : 31,
+        2 : 32,
+        3 : 33,
+        4 : 34,
+        5 : 35,
     }),
 })

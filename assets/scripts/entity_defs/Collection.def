@@ -1,4 +1,12 @@
 <root>
+    <Volatile>
+        <position/>
+        <!--<position> 0 </position> Don't update-->
+        <yaw/>
+        <!--<pitch> 20 </pitch>-->
+        <optimized> false </optimized>
+    </Volatile>
+
     <Interfaces>
         <Interface>	   iCell            </Interface>
         <Interface>	   iBaseWithCell    </Interface>
@@ -72,6 +80,11 @@
             <Default>   0                   </Default>
             <Flags>     OTHER_CLIENTS       </Flags>
         </dropEquipItemId>
+        <groupLock>
+            <Type>      UINT8              </Type>
+            <Default>   0                   </Default>
+            <Flags>     ALL_CLIENTS       </Flags>
+        </groupLock>
     </Properties>
 
     <BaseMethods>

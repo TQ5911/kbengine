@@ -32,8 +32,8 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             self.name = NPC_T.datas[self.teleporterId].get('name', '未知传送门')
 
         spaceMgr = self.spaceMgr
-        if formula.isDungeonSpace(self.spaceNo) or formula.isMineWarSpace(self.spaceNo):
-            gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        if formula.inDungeonScene(self.spaceNo) or formula.inMineWarScene(self.spaceNo):
+            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.teleporterId),
                                              'gid_{}'.format(gid), self.__class__.__name__,))
@@ -45,7 +45,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         if self.ttl:
             self.pyAddTimer(self.ttl, 0, gametimer.TIMER_CELL_TTL_DESTROY)
 
-    # self._callback(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
+    # self.addTimerCB(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
 
     def _postSafeDestory(self):
         gameglobal.teleporterGIDToEntIdMap.get(self.spaceNo, {}).pop(self.teleporterId, None)
@@ -71,17 +71,17 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             pass
 
     def userDoTeleport(self, userId, desTelId, lineNo=-1, src=None):
-        INFO_MSG("selfDoTeleport::", userId, desTelId, lineNo, src)
+        LOG_IFO("selfDoTeleport::", userId, desTelId, lineNo, src)
         user = KBEngine.entities.get(userId)
         if self._checkBadEnt(user):
             return
         self._doTeleport(user, desTelId, lineNo, src)
 
 
-    @gamedecorator.limitcall(1)
+    @gamedecorator.limitcall(1, keyFunc=lambda x: '{0}'.format(*x))
     def doTeleport(self, exposed, desTelId, lineNo=-1):
         lineNo = -1
-        INFO_MSG('doTeleport::~', exposed, desTelId, lineNo)
+        LOG_IFO('doTeleport::~', exposed, desTelId, lineNo)
         user = KBEngine.entities.get(exposed)
         if self._checkBadEnt(user):
             return
@@ -101,8 +101,8 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         src = dungeonSrc.DungeonFromClientSrc(user.base, user.gbId)
         lineType = utils.getLineTypeFromCfgGameEntityId(desTelId)
 
-        spaceNo = formula.getLineSpaceNo(lineType, 0)
-        if formula.isCubeSpace(spaceNo):
+        spaceNo = formula.combineLineSpaceNo(lineType, 0)
+        if formula.inCubeScene(spaceNo):
             user.enterCubeByMapIds([lineType])
             return
 
@@ -116,20 +116,20 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         return int(customeId)
 
     def _doTeleport(self, user, desTelId, lineType, lineNo=-1, src=None):
-        DEBUG_MSG('_doTeleport:', user, src, desTelId, lineType, lineNo)
+        LOG_DBG('_doTeleport:', user, src, desTelId, lineType, lineNo)
         user.teleportByTeleporter(desTelId, self.cfgGameEntityId, self, lineNo, lineType, src)
 
     def _checkBadEnt(self, ent):
         if not ent or ent.isDestroyed:
-            INFO_MSG('Teleporter._checkBadEnt: invalid entity')
+            LOG_IFO('Teleporter._checkBadEnt: invalid entity')
             return True
 
         if not ent.IsAvatar:
-            INFO_MSG('Teleporter._checkBadEnt: not Avatar')
+            LOG_IFO('Teleporter._checkBadEnt: not Avatar')
             return True
 
         if ent.spaceNo != self.spaceNo:
-            INFO_MSG('Teleporter._checkBadEnt: not in same space')
+            LOG_IFO('Teleporter._checkBadEnt: not in same space')
             return True
 
     def _ttlDestroy(self):

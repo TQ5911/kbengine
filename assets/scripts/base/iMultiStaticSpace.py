@@ -18,8 +18,8 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet = set()
 
     def _createStaticSpace(self, mapId, spaceWeight=10, lineNo=0):
-        INFO_MSG('_createStaticSpace:', mapId, lineNo)
-        _spaceNo = formula.getLineSpaceNo(mapId, lineNo)
+        LOG_IFO('_createStaticSpace:', mapId, lineNo)
+        _spaceNo = formula.combineLineSpaceNo(mapId, lineNo)
         _spaceVal = StaticSpaceVal.StaticSpaceVal(
             mapId,
             lineNo)
@@ -39,7 +39,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet.add(_spaceNo)
 
     def _onCraeteLineSpace(self, spaceBox, spaceNo):
-        INFO_MSG('_onCraeteLineSpace', spaceNo)
+        LOG_IFO('_onCraeteLineSpace', spaceNo)
         _spaceVal = self.staticSpaces[spaceNo]
         _spaceVal.lineSpaceBox = spaceBox
 
@@ -54,7 +54,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         return _spaceVal.spaceMgrBoxCell is not None
 
     def onStaticSpaceReady(self, spaceNo):
-        INFO_MSG('onStaticSpaceReady', spaceNo)
+        LOG_IFO('onStaticSpaceReady', spaceNo)
         self.staticSpaces[spaceNo].lineSpaceReady()
 
         _pos = gameconst.SPACE_FIX_POS
@@ -80,7 +80,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         _spaceVal.lineSpaceBox.cell.doLoadEntities(_spaceVal.spaceMgrBoxCell.id)
 
     def loadSingleEntity(self, spaceNo, clsName, needCreateBase, pos, direction, props):
-        # DEBUG_MSG("--- iLineSpaceStub loadSingleEntity", spaceNo, clsName, pos, direction, props)
+        # LOG_DBG("--- iLineSpaceStub loadSingleEntity", spaceNo, clsName, pos, direction, props)
         _spaceVal = self.staticSpaces[spaceNo]
         props['spaceMgrId'] = _spaceVal.spaceMgrBoxCell.id
 
@@ -88,65 +88,65 @@ class IMultiStaticSpace(iGlobal.IGlobal):
 
     def onLoadGroupEntities(self, info):
         spaceNoList = list(self.staticSpaces.keys())
-        DEBUG_MSG("IMultiStaticSpace::onLoadGroupEntities", info, spaceNoList)
+        LOG_DBG("IMultiStaticSpace::onLoadGroupEntities", info, spaceNoList)
         if len(spaceNoList) <= 0:
-            WARNING_MSG('IMultiStaticSpace::onLoadGroupEntities: no spaceNo found')
+            LOG_WARN('IMultiStaticSpace::onLoadGroupEntities: no spaceNo found')
             return
         else:
-            mapId = formula.getMapId(info['id'])
+            mapId = formula.fetchMapId(info['id'])
             for spaceNo in spaceNoList:
-                if formula.getMapId(spaceNo) == mapId:
+                if formula.fetchMapId(spaceNo) == mapId:
                     info['spaceNo'] = spaceNo
                     break
             if not info.get('spaceNo', None):
-                WARNING_MSG('IMultiStaticSpace::onLoadGroupEntities: spaceNo not found', mapId, spaceNoList)
+                LOG_WARN('IMultiStaticSpace::onLoadGroupEntities: spaceNo not found', mapId, spaceNoList)
                 return
 
-        DEBUG_MSG("IMultiStaticSpace::onLoadGroupEntities spaceNo", info['spaceNo'])
+        LOG_DBG("IMultiStaticSpace::onLoadGroupEntities spaceNo", info['spaceNo'])
         _spaceVal = self.staticSpaces[info['spaceNo']]
         _spaceVal.lineSpaceBox.cell.callOnSpace('onLoadGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onRefreshGroupEntities(self, info):
         spaceNoList = list(self.staticSpaces.keys())
-        DEBUG_MSG("IMultiStaticSpace::onRefreshGroupEntities", info, spaceNoList)
+        LOG_DBG("IMultiStaticSpace::onRefreshGroupEntities", info, spaceNoList)
         if len(spaceNoList) <= 0:
-            WARNING_MSG('IMultiStaticSpace::onRefreshGroupEntities: no spaceNo found')
+            LOG_WARN('IMultiStaticSpace::onRefreshGroupEntities: no spaceNo found')
             return
         else:
             lineNo = info['lineNo']
-            mapId = formula.getMapId(info['id'])
+            mapId = formula.fetchMapId(info['id'])
             for spaceNo in spaceNoList:
-                if formula.getMapId(spaceNo) == mapId:
+                if formula.fetchMapId(spaceNo) == mapId:
                     info['spaceNo'] = spaceNo
                     break
             if not info.get('spaceNo', None):
-                WARNING_MSG('IMultiStaticSpace::onRefreshGroupEntities: spaceNo not found', mapId, spaceNoList)
+                LOG_WARN('IMultiStaticSpace::onRefreshGroupEntities: spaceNo not found', mapId, spaceNoList)
                 return
 
-        DEBUG_MSG("IMultiStaticSpace::onRefreshGroupEntities spaceNo", info['spaceNo'])
+        LOG_DBG("IMultiStaticSpace::onRefreshGroupEntities spaceNo", info['spaceNo'])
         _spaceVal = self.staticSpaces[info['spaceNo']]
         _spaceVal.lineSpaceBox.cell.callOnSpace('onRefreshGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onDestroyGroupEntities(self, info):
         spaceNoList = list(self.staticSpaces.keys())
-        DEBUG_MSG("IMultiStaticSpace::onDestroyGroupEntities", info, spaceNoList)
+        LOG_DBG("IMultiStaticSpace::onDestroyGroupEntities", info, spaceNoList)
 
         if not info.get('spaceNo', None):
-            WARNING_MSG('IMultiStaticSpace::onDestroyGroupEntities: spaceNo not found', info, spaceNoList)
+            LOG_WARN('IMultiStaticSpace::onDestroyGroupEntities: spaceNo not found', info, spaceNoList)
             return
 
         _spaceVal = self.staticSpaces[info['spaceNo']]
         _spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onLoadEntitiesEnd(self, spaceNo):
-        INFO_MSG('onLoadEntitiesEnd:', spaceNo)
+        LOG_IFO('onLoadEntitiesEnd:', spaceNo)
         self.loadWaitSet.remove(spaceNo)
         if not self.loadWaitSet and not self.doNextFlag:
             self.doNextFlag = 1
             iGlobal.IGlobal.doNext(self)
 
     def onSpaceCellAppDeath(self, spaceNo):
-        INFO_MSG('onSpaceCellAppDeath', spaceNo)
-        _mapId = formula.getMapId(spaceNo)
+        LOG_IFO('onSpaceCellAppDeath', spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         self._createStaticSpace(_mapId)
 

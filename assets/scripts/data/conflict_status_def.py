@@ -59,4 +59,5 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     duel = 44
     silenceImmunity = 45
     unstuck = 46
+    posture = 47
 

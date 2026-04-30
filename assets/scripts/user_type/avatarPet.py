@@ -16,7 +16,7 @@ import itemData_itemData_set as IDIDS
 import dataUtils
 import LogTrackingMgr
 
-class LingShou(userType.UserSoleType):
+class LingShou(userType.UserSingleType):
     def __init__(self, *args, **kwargs):
         super(LingShou, self).__init__(*args, **kwargs)
         self._score = 0
@@ -162,7 +162,7 @@ class LingShou(userType.UserSoleType):
         owner.updatePetScore()
         owner.cell.updateLevelProps(self.petId, oldLevel, self.level)       
 
-class LingShouBattleListVal(userType.UserSoleType):
+class LingShouBattleListVal(userType.UserSingleType):
     def __init__(self, battleName, petIdList):
         self.battleName = battleName
         self.petIdList = petIdList
@@ -199,7 +199,7 @@ class LingShouBattleListVal(userType.UserSoleType):
                 return True
         return False 
 
-class LingShouInfo(userType.UserSoleType):
+class LingShouInfo(userType.UserSingleType):
     def __init__(self):
         self.pets = {}
         self.battleList = []
@@ -264,9 +264,9 @@ class LingShouInfo(userType.UserSoleType):
             if not key:
                 owner._sendLingShouData(petList)
             else:
-                owner._callback(key * 0.1, '_sendLingShouData', (petList,), gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
+                owner.addTimerCB(key * 0.1, '_sendLingShouData', (petList,), gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
 
-        owner._callback((int(sendNum / 10) + 1) * 0.1, '_sendBattleListData', (),
+        owner.addTimerCB((int(sendNum / 10) + 1) * 0.1, '_sendBattleListData', (),
                         gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
 
     def sendBattleListData(self, owner):
@@ -328,7 +328,7 @@ class LingShouInfo(userType.UserSoleType):
         return index < petTeamNum
 
     def updateBattleList(self, owner, battleIndex, slotId, petId):
-        INFO_MSG("updateBattleList", battleIndex, slotId, petId)
+        LOG_IFO("updateBattleList", battleIndex, slotId, petId)
         oldPetId = self.battleList[battleIndex].getPetIdBySlot(slotId)
         self.battleList[battleIndex].setPetIdBySlot(petId, slotId)
         battleType = gameconst.PetMakeTeamType.LEAVE
@@ -362,6 +362,6 @@ class LingShouInfo(userType.UserSoleType):
         return self.battleList[battleListIndex].petIdList.index(petId)
     
     def checkBattlePetRepeat(self, battleIndex, slotId, petId):
-        INFO_MSG("checkBattlePetRepeat", battleIndex, slotId, petId)
+        LOG_IFO("checkBattlePetRepeat", battleIndex, slotId, petId)
         return self.battleList[battleIndex].checkPet(petId)
     # --------------- battle list -------------------

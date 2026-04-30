@@ -15,7 +15,7 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1006
       ]
     }
   },
@@ -88,11 +88,7 @@ datas ={
       20190001
     ],
     "dialogID": 19019001,
-    "transition": {
-      "finished": [
-        1006
-      ]
-    }
+    "transition": {}
   },
   "1011": {
     "type": "popupdialog",

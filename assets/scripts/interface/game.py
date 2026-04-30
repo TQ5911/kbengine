@@ -53,7 +53,7 @@ def onInterfaceAppReady():
     KBEngine method.
     interfaces已经准备好了
     """
-    INFO_MSG('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
+    LOG_IFO('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
              (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
 
     KBEngine.globalData = {}
@@ -85,7 +85,7 @@ def onInterfaceAppShutDown():
     KBEngine method.
     这个interfaces被关闭前的回调函数
     """
-    INFO_MSG('onInterfaceAppShutDown()')
+    LOG_IFO('onInterfaceAppShutDown()')
 
 
 def onRequestCreateAccount(registerName, password, datas):
@@ -101,7 +101,7 @@ def onRequestCreateAccount(registerName, password, datas):
     @param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
     @type  datas: bytes
     """
-    INFO_MSG('onRequestCreateAccount: registerName=%s' % (registerName))
+    LOG_IFO('onRequestCreateAccount: registerName=%s' % (registerName))
 
     commitName = registerName
 
@@ -117,34 +117,9 @@ def onRequestCreateAccount(registerName, password, datas):
     KBEngine.createAccountResponse(commitName, realAccountName, datas, KBEngine.SERVER_SUCCESS)
 
 
-def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, dataBytes):
-    INFO_MSG('_onCheckWhiteList: registerName', result, realAccountName)
-    if not result:
-        nowNum = gameglobal.registerCount
-        cfgNum = int(gameconfig.getServerRegLimit())
-        if isNewAccount and nowNum >= cfgNum:
-            INFO_MSG('_onCheckWhiteList check server limit error.', nowNum, cfgNum)
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_MEET_REG_MAX)
-            return
-        nowTime = utils.getNow()
-        openTime = gameconfig.serverOpenTime()
-        if nowTime < openTime:
-            INFO_MSG('_onCheckWhiteList check server open time limit.', nowTime, openTime, str(openTime - nowTime))
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, 
-                    bytes(str(openTime - nowTime), encoding='utf-8'), 
-                    0, gameconst.GAME_SERVER_ERR_SERVER_OPEN_TIME)
-            return
-
-        if not gameconfig.permitLogin():
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_PERMIT)
-            return
-
-    _requestAccountLogin(realAccountName, password, dataBytes)
-
-
 def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
-    INFO_MSG('_onCheckBanAccount: registerName', result, realAccountName)
-    accountType, accountName = utils.getAccountTypeAndName(realAccountName)
+    LOG_IFO('_onCheckBanAccount: registerName', result, realAccountName)
+    accountType, accountName = utils.fetchAccountTypeAndName(realAccountName)
     isNewAccount = False
     if len(result) == 0:
         isNewAccount = True
@@ -154,7 +129,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
 
         switch = int(gameconfig.getServerRegSwitch())
         if not switch:
-            INFO_MSG('_onCheckBanAccount check server switch error.', switch)
+            LOG_IFO('_onCheckBanAccount check server switch error.', switch)
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_REG_SWITCH)
             return
     else:
@@ -164,16 +139,20 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
         # forbidLoginReason = str(result[0][3].decode())
         isDelete = int(result[0][0])
         if isDelete:
-            INFO_MSG('reject login,account delete', isDelete, realAccountName)
+            LOG_IFO('reject login,account delete', isDelete, realAccountName)
             fmtMessage = MMD.datas[LSD.datas['accountCancellation']['value']]['Message']
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'), 0,
                                           gameconst.GAME_SERVER_ERR_REJECT_LOGIN)
             return
 
-    gamesql.checkAccountWhiteList(accountName,
-                                  lambda ret, nRow, insertid, error: _onCheckWhiteList(ret, error, isNewAccount,
-                                                                                       realAccountName, password,
-                                                                                       dataBytes))
+
+    isOverRegLimit = isNewAccount and gameglobal.registerCount > int(gameconfig.getServerRegLimit())
+
+    extra = {
+        'isOverRegLimit': isOverRegLimit,
+    }
+
+    _requestAccountLogin(realAccountName, password, dataBytes, extra)
 
 
 def onRequestAccountLogin(realAccountName, password, dataBytes):
@@ -189,18 +168,18 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
     @param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
     @type  datas: bytes
     """
-    INFO_MSG('onRequestAccountLogin: registerName', realAccountName, dataBytes)
-    accountType, accountName = utils.getAccountTypeAndName(realAccountName)
+    LOG_IFO('onRequestAccountLogin: registerName', realAccountName, dataBytes)
+    accountType, accountName = utils.fetchAccountTypeAndName(realAccountName)
     _forceCompId = utils.getForceComponentID(realAccountName)
 
-    clientData = utils.decodeClientData(dataBytes)
+    clientData = utils.decClientData(dataBytes)
     if accountType == centralLogin.ACCOUNT_CROSS_SERVER and clientData.get('crossServerToken'):
         KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, _forceCompId, KBEngine.SERVER_SUCCESS)
         return
 
     if not gameconfig.interfaceEnableLogin():
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, KBEngine.SERVER_ERR_SRV_STARTING)
-        INFO_MSG('reject login, recovring cellapps')
+        LOG_IFO('reject login, recovring cellapps')
         return
 
     gamesql.getForbidLoginProp(realAccountName,
@@ -217,14 +196,14 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
     # KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_SUCCESS)
 
 
-def _requestAccountLogin(realAccountName, password, dataBytes):
-    clientData = utils.decodeClientData(dataBytes)
+def _requestAccountLogin(realAccountName, password, dataBytes, extra=None):
+    clientData = utils.decClientData(dataBytes)
     centralServerId = clientData.get('loginServerId', 0)
     if not loginManager:
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_NO_LOGIN_MGR2)
         return
 
-    loginManager.checkPlayerLogin(realAccountName, dataBytes, centralServerId)
+    loginManager.checkPlayerLogin(realAccountName, dataBytes, centralServerId, extra)
 
 
 def onRequestCharge(ordersID, entityDBID, datas):

@@ -12,6 +12,7 @@ class CreationBase(KBEngine.Entity):
     def onAddSkill(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onBreakCastingSkill(self, arg0, arg1, arg2): pass
     def onBreakChannelingSkill(self, arg0, arg1, arg2): pass
+    def onExitShiftByConflict(self, arg0): pass
     def onGetAureoleInfo(self, arg0, arg1): pass
     def onGetBuffInfo(self, arg0, arg1): pass
     def onMessage(self, arg0, arg1): pass

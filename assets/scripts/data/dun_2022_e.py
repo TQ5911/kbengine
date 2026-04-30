@@ -4,7 +4,7 @@ datas ={
     "entityID": [
       20220001
     ],
-    "num": 0,
+    "num": 1,
     "lv": "28",
     "initState": 0,
     "hp": 0,
@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -55,9 +56,8 @@ datas ={
     "transition": {
       "finished": [
         1020,
-        1021,
-        1031,
-        1006
+        1032,
+        1031
       ]
     }
   },
@@ -107,7 +107,7 @@ datas ={
       ]
     }
   },
-  "1021": {
+  "1032": {
     "type": "monsterHp",
     "monsterID": [
       20220001
@@ -118,7 +118,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1022,
+        1033,
         1102
       ]
     }
@@ -208,7 +208,7 @@ datas ={
     ],
     "transition": {}
   },
-  "1022": {
+  "1033": {
     "type": "addBuffToMonster",
     "monsterID": [
       20220001
@@ -219,7 +219,11 @@ datas ={
     "lv": "1",
     "lvlmt": -1,
     "duration": -1.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1035
+      ]
+    }
   },
   "1102": {
     "type": "popupdialog",
@@ -243,6 +247,58 @@ datas ={
       20220001
     ],
     "dialogID": 19021001,
+    "transition": {}
+  },
+  "1035": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20220001
+    ],
+    "buffID": [
+      64004967
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {
+      "finished": [
+        1060
+      ]
+    }
+  },
+  "1060": {
+    "type": "castSkill",
+    "entityID": [
+      20220001
+    ],
+    "skillID": 91036012,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1061
+      ]
+    }
+  },
+  "1061": {
+    "type": "delayLoop",
+    "firstDelay": 15.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "loop": [
+        1021
+      ]
+    }
+  },
+  "1021": {
+    "type": "removeBuffFromMonster",
+    "monsterID": [
+      20220001
+    ],
+    "buffID": [
+      64004967
+    ],
     "transition": {}
   }
 }

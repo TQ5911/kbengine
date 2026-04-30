@@ -4,7 +4,7 @@ import copy
 import userType
 
 
-class MaxHeap(userType.UserSoleType):
+class MaxHeap(userType.UserSingleType):
     def __init__(self, array: list=None):
         self._data = copy.copy(array) if array is not None else []
         self.rebuild()

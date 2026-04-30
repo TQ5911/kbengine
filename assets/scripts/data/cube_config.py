@@ -235,6 +235,10 @@ datas = _tools.RODict({
         "ID": "cube_ticketAutoLimitMsg",
         "value": 54003265,
     }),
+    "cube_prayMutualExclusion": _tools.RODict({
+        "ID": "cube_prayMutualExclusion",
+        "value": 54003275,
+    }),
     "cube_ticketAutoLimit": _tools.RODict({
         "ID": "cube_ticketAutoLimit",
         "value": 200,

@@ -13,10 +13,10 @@ import gameglobal
 
 class IEntityRefresh(object):
     def __init__(self):
-        DEBUG_MSG("IEntityRefresh.__init__", self.refreshTime, self.isGroupRefresh, self.gameEntityId, self.spaceNo, self.position)
+        LOG_DBG("IEntityRefresh.__init__", self.refreshTime, self.isGroupRefresh, self.gameEntityId, self.spaceNo, self.position)
 
     def _onEntityRefresh(self):
-        DEBUG_MSG('_onEntityRefresh')
+        LOG_DBG('_onEntityRefresh')
         self.onEntityRefresh()
         self.safeDestroy()
 
@@ -49,19 +49,19 @@ class IEntityRefresh(object):
             return
 
         if self.isGroupRefresh:
-            DEBUG_MSG("onGroupEntityRefresh ---", spaceNo, self.gameEntityId, self.position, refreshTime)
+            LOG_DBG("onGroupEntityRefresh ---", spaceNo, self.gameEntityId, self.position, refreshTime)
             gameengine.getGlobalBase('WorldRefreshEntityStub').onGroupEntityRefresh(spaceNo, self.gameEntityId, refreshTime)
             return
 
         _space = self.getCurrentSpace()
         if not _space:
-            ERROR_MSG('IEntityRefresh.onEntityRefresh: space not found, spaceID=%d' % self.spaceID)
+            LOG_ERR('IEntityRefresh.onEntityRefresh: space not found, spaceID=%d' % self.spaceID)
             return
 
         pointData = {}
-        timerId = _space._callback(refreshTime, 'doEntityRefresh', (self.gameEntityId, self.spaceMgrId, pointData), gametimer.TIMER_TAG_SPACE_DO_REFRESH)
+        timerId = _space.addTimerCB(refreshTime, 'doEntityRefresh', (self.gameEntityId, self.spaceMgrId, pointData), gametimer.TIMER_TAG_SPACE_DO_REFRESH)
         pointData["refreshTimerId"] = timerId
-        gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.onAddEntityRefreshTimer(gid, timerId)

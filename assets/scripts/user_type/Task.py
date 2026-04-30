@@ -16,7 +16,7 @@ import LogTrackingMgr
 
 import rewardTask_taskInfo as RRTID
 
-class TaskExtraAttr(userType.UserSoleType):
+class TaskExtraAttr(userType.UserSingleType):
 
     def __init__(self):
         self.gameEntityDict = {}
@@ -67,7 +67,7 @@ class TaskExtraAttr(userType.UserSoleType):
         self.gameEntityDict = {}
 
 
-class Task(userType.UserSoleType):
+class Task(userType.UserSingleType):
     def __init__(self, taskId, taskData=None):
         self.taskId = taskId
         taskData = taskData or dataUtils.getTaskData(taskId)
@@ -77,7 +77,7 @@ class Task(userType.UserSoleType):
             self.cycleType = dataUtils.taskFieldVal(taskData, 'OpenCondCountCycle')
             self.limitCount = dataUtils.taskFieldVal(taskData, 'OpenCondCountLimit')
         else:
-            self.cycleType = gameconst.TaskCycleType.TASK_CYCLE_NONE
+            self.cycleType = gameconst.TaskCycleType.CYCLE_TASK_ENUM_NONE
             self.limitCount = 0
         self.rootTaskId = dataUtils.getRootTaskId(taskId)
         self.parentTaskId = dataUtils.taskFieldVal(taskData, 'FatherTaskId')
@@ -88,7 +88,7 @@ class Task(userType.UserSoleType):
         self.claimCount = 0
         self.alreadyCount = 0
         self.teamId = 0
-        self.claimSrc = gameconst.ClaimTaskSrc.UNKNOWN
+        self.claimSrc = gameconst.ClaimTaskSrcEnum.TASK_SRC_UNKNOWN
         self.seed = 0  # 计算随机子任务使用
         self.startTime = 0
         self.validSec = 0  # 只有在线时候才会计时的任务
@@ -117,7 +117,7 @@ class Task(userType.UserSoleType):
         if self.expiredTime > 0:
             expiredTime = self.expiredTime
         elif self.validSec > 0:
-            expiredTime = utils.getNow() + self.validSec
+            expiredTime = utils.curTS() + self.validSec
 
         tgts = []
         for tgt in self.getAllTargets():
@@ -182,7 +182,7 @@ class Task(userType.UserSoleType):
         self.extraAttr = TaskExtraAttr()
         extraJson = dataDic.get('extraJson', '')
         self.extraAttr.fromTaskExtraAttrSavedJson(extraJson)
-        self.claimSrc = dataDic.get('claimSrc', gameconst.ClaimTaskSrc.UNKNOWN)
+        self.claimSrc = dataDic.get('claimSrc', gameconst.ClaimTaskSrcEnum.TASK_SRC_UNKNOWN)
         self.guaranteeCount = dataDic.get('guaranteeCount', 0)
 
         self.resetTargetDic()
@@ -191,7 +191,7 @@ class Task(userType.UserSoleType):
             self.addNewTarget(tgt)
 
     def updateFromTaskObj(self, owner, task):
-        DEBUG_MSG('in Task::updateFromTaskObj, taskId:', task.taskId)
+        LOG_DBG('in Task::updateFromTaskObj, taskId:', task.taskId)
         # if newTask:
         # #以下几个属性不要被覆盖
         #     self.limitCount = task.limitCount
@@ -274,7 +274,7 @@ class Task(userType.UserSoleType):
             dstIdx = dstIdx + gap[gapIdx]
             if dstIdx >= src_num:
                 dstIdx = dstIdx % src_num
-        DEBUG_MSG('in listShuffle:', seed, srcList, result)
+        LOG_DBG('in listShuffle:', seed, srcList, result)
         return result
 
     def initTaskFromData(self, owner, taskId, taskCtx, alreadyCount=0, claimCount=0, taskRewardLimitDic=None):
@@ -283,12 +283,12 @@ class Task(userType.UserSoleType):
         self.seed = taskCtx.seed
 
         taskData = dataUtils.getTaskData(taskId)
-        # DEBUG_MSG('in Task::initTaskFromData, taskId:', taskId, alreadyCount, claimCount, taskCtx.extra)
+        # LOG_DBG('in Task::initTaskFromData, taskId:', taskId, alreadyCount, claimCount, taskCtx.extra)
         self.setStat(owner, gameconst.TaskStat.TASK_STAT_RUNNING)
         self.claimCount = claimCount
         self.alreadyCount = alreadyCount
         self.taskRewardLimitDic = taskRewardLimitDic or {}
-        self.startTime = utils.getNow()
+        self.startTime = utils.curTS()
 
         pointsDic = taskCtx.extra.get("pointsDic", {})
         self.pointsDic = {taskId: (pos[0], pos[1], pos[2]) for taskId, pos in pointsDic.items()}
@@ -308,7 +308,7 @@ class Task(userType.UserSoleType):
             if not childTaskIds:
                 # 到这里说明配置错误(浮戏苍灵出现过)：父任务领取条件最低等级为0，但是所有子任务最低等级至少为20级，
                 # 小于20级的玩家会出现没有可以领取的子任务的情况
-                gameengine.reportCritical('initTaskFromData, config error!!! no match child task:', taskId,
+                gameengine.panicStack('initTaskFromData, config error!!! no match child task:', taskId,
                                           cfgChildTaskIds)
                 return False
             self.childTaskIds = childTaskIds
@@ -319,7 +319,7 @@ class Task(userType.UserSoleType):
             failedSec = int(failedSec)
             if dataUtils.taskFieldVal(taskData, 'FailCondTimingOffline'):
                 # 下线后依旧计时的任务
-                self.expiredTime = utils.getNow() + failedSec
+                self.expiredTime = utils.curTS() + failedSec
                 taskInfo.addExpiredTimeTask(taskId, self.expiredTime)
             else:
                 # 下线以后不再计时
@@ -372,7 +372,7 @@ class Task(userType.UserSoleType):
                     if monsterId <= 0 or killMonstersTotalCount <= 0:
                         continue
                 else:
-                    ERROR_MSG('in task, initTaskFromData, invalid arg 3:', killMonstersMode, monsterId, dstCnt)
+                    LOG_ERR('in task, initTaskFromData, invalid arg 3:', killMonstersMode, monsterId, dstCnt)
                     continue
 
                 tgt = TaskTargetInfo.TaskTgtFactory.createTarget(gameconst.TaskTargetType.TASK_TARGET_MONSTERS,
@@ -522,7 +522,7 @@ class Task(userType.UserSoleType):
 
     def setStat(self, owner, stat):
         if self.stat != stat:
-            INFO_MSG('Task::setStat, taskId {}, {} ==> {}'.format(self.taskId, self.stat, stat))
+            LOG_IFO('Task::setStat, taskId {}, {} ==> {}'.format(self.taskId, self.stat, stat))
 
             self.stat = stat
             owner.onTaskStateChanged(self.taskId, stat)
@@ -543,12 +543,12 @@ class Task(userType.UserSoleType):
         return self.stat in [gameconst.TaskStat.TASK_STAT_SUBMITTED, gameconst.TaskStat.TASK_STAT_QUIT]
 
     def isTaskExpired(self):
-        return 0 < self.expiredTime <= utils.getNow()
+        return 0 < self.expiredTime <= utils.curTS()
 
     def canAddRewardId(self, taskId, rewardId, rewardMaxNum=1):
         hasRewardTimes = self.taskRewardLimitDic.get(taskId, {}).get(rewardId, 0)
         if hasRewardTimes >= rewardMaxNum:
-            INFO_MSG('in canAddRewardId, hasRewardTimes > rewardMaxNum:', taskId, rewardId, hasRewardTimes,
+            LOG_IFO('in canAddRewardId, hasRewardTimes > rewardMaxNum:', taskId, rewardId, hasRewardTimes,
                       rewardMaxNum)
             return False
         else:
@@ -559,7 +559,7 @@ class Task(userType.UserSoleType):
         self.taskRewardLimitDic[taskId][rewardId] = self.taskRewardLimitDic[taskId].get(rewardId, 0) + 1
 
     def updateTgtItemsCount(self, owner):
-        DEBUG_MSG('in Task::updateItemsCount')
+        LOG_DBG('in Task::updateItemsCount')
         update = False
         tgtList = self.getTgtsByType(gameconst.TaskTargetType.TASK_TARGET_ITEMS)
         for tgt in tgtList:
@@ -588,18 +588,18 @@ class Task(userType.UserSoleType):
         return target and target.relateTaskReachStat(relateTaskId, relateTaskStat)
 
     def updateTaskTgtCnt(self, idx, timeList):
-        DEBUG_MSG('in updateTaskTgtCnt:', idx, timeList)
+        LOG_DBG('in updateTaskTgtCnt:', idx, timeList)
         target = self.findTargetByTypeAndId(gameconst.TaskTargetType.TASK_TARGET_COUNT, idx)
         if target is None:
-            WARNING_MSG('       in updateTaskTgtCnt, no count target:', idx, timeList)
+            LOG_WARN('       in updateTaskTgtCnt, no count target:', idx, timeList)
             return
         return target.addMultiCnt(idx, timeList)
 
     def updateCounterTarget(self, targetId, params):
-        DEBUG_MSG('in updateTaskTgtCnt:', targetId, params)
+        LOG_DBG('in updateTaskTgtCnt:', targetId, params)
         target = self.findTargetByTypeAndId(gameconst.TaskTargetType.TASK_TARGET_COUNTER, targetId)
         if target is None:
-            WARNING_MSG('       in updateCounterTarget, no counter target:', self.taskId, targetId)
+            LOG_WARN('       in updateCounterTarget, no counter target:', self.taskId, targetId)
             return
         return target.counter(targetId, params)
 
@@ -628,7 +628,7 @@ class Task(userType.UserSoleType):
         return updated, tgtArrived
 
     def setAllTargetsReached(self, owner):
-        INFO_MSG('in Task::setAllTargetsReached:', self.taskId)
+        LOG_IFO('in Task::setAllTargetsReached:', self.taskId)
         for tgt in self.getAllTargets():
             tgt.setTargetCompleted()
 
@@ -674,7 +674,7 @@ class Task(userType.UserSoleType):
             result = tgt.checkTargetCompleted(*args)
             if not result:
                 continue
-            DEBUG_MSG('onTaskProgressUpdate', result, targetTye, self.taskId, args)
+            LOG_DBG('onTaskProgressUpdate', result, targetTye, self.taskId, args)
             tgtArrived = True
         return tgtArrived
 
@@ -684,11 +684,11 @@ class TaskFactory(object):
     @classmethod
     def createTask(cls, owner, taskId, taskCtx, alreadyCount=0, claimCount=0, taskRewardLimitDic=None):
         if not taskId:
-            gameengine.reportCritical('invalid taskId:', taskId)
+            gameengine.panicStack('invalid taskId:', taskId)
             return
         taskData = dataUtils.getTaskData(taskId)
         if not taskData:
-            gameengine.reportCritical('no taskdata:', taskId)
+            gameengine.panicStack('no taskdata:', taskId)
             return
         task = Task(taskId)
         task.initTaskFromData(owner, taskId, taskCtx, alreadyCount=alreadyCount, claimCount=claimCount,
@@ -699,7 +699,7 @@ class TaskFactory(object):
     def createTaskBySavedDict(cls, savedDict):
         taskData = dataUtils.getTaskData(savedDict['taskId'])
         if not taskData:
-            gameengine.reportCritical('invalid taskId:', savedDict['taskId'])
+            gameengine.panicStack('invalid taskId:', savedDict['taskId'])
             return
         task = Task(savedDict['taskId'], taskData=taskData)
         task.fromSavedDict(savedDict)
@@ -709,7 +709,7 @@ class TaskFactory(object):
     def createTaskByTaskObj(cls, owner, taskObj):
         taskData = dataUtils.getTaskData(taskObj.taskId)
         if not taskData:
-            gameengine.reportCritical('invalid taskId:', taskObj.taskId)
+            gameengine.panicStack('invalid taskId:', taskObj.taskId)
             return
         task = Task(taskObj.taskId)
         task.updateFromTaskObj(owner, taskObj)

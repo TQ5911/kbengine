@@ -17,13 +17,13 @@ def checkProperty(owner):
     propDic = KBEngine.getUserTypeProperties('Avatar')
     for pName in propDic:
         if hasattr(owner, pName):
-            # DEBUG_MSG("checkProperty            pName ", pName)
+            # LOG_DBG("checkProperty            pName ", pName)
             pObj = getattr(owner, pName)
             dict = propDic[pName].getDictFromObj(pObj)
             checkObj = propDic[pName].createObjFromDict(dict)
             checkObjProperty([pName], pObj, checkObj)
 
-    DEBUG_MSG("const time is ", time.time() - tempCostTime)
+    LOG_DBG("const time is ", time.time() - tempCostTime)
 
 
 def getCheckObj(typeClass, pObj):
@@ -53,8 +53,8 @@ def checkObjProperty(pNameList, propObj, checkObj):
 
 
 def checkIterProperty(pNameList, value, checkValue):
-    # DEBUG_MSG("checkIterProperty value ", type(value), value)
-    # DEBUG_MSG("checkIterProperty checkValue ",  type(checkValue), checkValue)
+    # LOG_DBG("checkIterProperty value ", type(value), value)
+    # LOG_DBG("checkIterProperty checkValue ",  type(checkValue), checkValue)
     if type(value) != type(checkValue):
         valueModuleClass = value.__module__ + "." + value.__class__.__name__
         checkValueModuleClass = checkValue.__module__ + "." + value.__class__.__name__
@@ -96,13 +96,13 @@ def checkIterProperty(pNameList, value, checkValue):
 
 
 def checkValueProperty(pNameList, value, checkValue):
-    # DEBUG_MSG("checkValueProperty value ", type(value), value)
-    # DEBUG_MSG("checkValueProperty checkValue ",  type(checkValue), checkValue)
+    # LOG_DBG("checkValueProperty value ", type(value), value)
+    # LOG_DBG("checkValueProperty checkValue ",  type(checkValue), checkValue)
     if isinstance(value, Iterable):
         checkIterProperty(pNameList, value, checkValue)
     elif isinstance(value, userType.UserType):
         checkObjProperty(pNameList, value, checkValue)
-    elif value.__class__.__base__.__name__ == 'UserSoleType':
+    elif value.__class__.__base__.__name__ == 'UserSingleType':
         checkObjProperty(pNameList, value, checkValue)
     elif callable(value):
         return
@@ -124,8 +124,8 @@ def sendCheckError(pNameList, value, checkValue):
     for pName in pNameList:
         errMsg = "{} => {}".format(errMsg, pName)
     errMsg = "{} not same value ".format(errMsg)
-    ERROR_MSG(errMsg)
+    LOG_ERR(errMsg)
     errMsg = "value : {}".format(value)
-    ERROR_MSG(errMsg)
+    LOG_ERR(errMsg)
     errMsg = "checkValue : {}".format(checkValue)
-    ERROR_MSG(errMsg)
+    LOG_ERR(errMsg)

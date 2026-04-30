@@ -192,6 +192,10 @@ namespace KBEngine
 					Int32 onDead_arg1 = stream.readInt32();
 					onDead(onDead_arg1);
 					break;
+				case 464:
+					Vector3 onExitShiftByConflict_arg1 = stream.readVector3();
+					onExitShiftByConflict(onExitShiftByConflict_arg1);
+					break;
 				case 549:
 					Int32 onGetAureoleInfo_arg1 = stream.readInt32();
 					CLIENT_AUREOLES onGetAureoleInfo_arg2 = ((DATATYPE_CLIENT_AUREOLES)method.args[1]).createFromStreamEx(stream);

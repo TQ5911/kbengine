@@ -13,7 +13,7 @@ import LogTrackingMgr
 
 class ICollectible(object):
     def collectOnLogin(self):
-        INFO_MSG('call collectOnLogin')
+        LOG_IFO('call collectOnLogin')
         self._refreshProperty()
 
     def _refreshProperty(self):
@@ -33,7 +33,7 @@ class ICollectible(object):
             propIndexList.append(propIndex)
 
         self.cell.onCollectAward(propIndexList, 0)
-        INFO_MSG('call _refreshProperty done')
+        LOG_IFO('call _refreshProperty done')
 
     def sendCollectInfo(self):
         # 发送当前属性信息和收集情况
@@ -43,15 +43,15 @@ class ICollectible(object):
                 item.toSavedDict()
             )
         self.client.onGetCollectInfo(clientData)
-        INFO_MSG('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
+        LOG_IFO('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
 
     @gamedecorator.checkGameconfigEnable('collection')
     def reqMark(self, exposed, collectID, isMark):
         # 标记收集项高亮显示
-        INFO_MSG('begin reqMark collectID', collectID, ' isMark', isMark)
+        LOG_IFO('begin reqMark collectID', collectID, ' isMark', isMark)
         info = PDETAIL.datas.get(collectID, None)
         if not info:
-            gameengine.reportCritical('in reqMark, collectID not exist in table, id :', collectID)
+            gameengine.panicStack('in reqMark, collectID not exist in table, id :', collectID)
             return
         if self._checkInUnavailableClass(info, collectID):
             return
@@ -59,15 +59,15 @@ class ICollectible(object):
         self.collectibleData.collectibleDict.setdefault(collectID, collectItem(collectID))
         self.collectibleData.collectibleDict[collectID].onMark(isMark)
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
-        INFO_MSG('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
+        LOG_IFO('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
 
     @gamedecorator.checkGameconfigEnable('collection')
     def reqCollect(self, exposed, bagType, bagGridID, itemUniqueID, useBind, collectID, collectGridID):
         # 获取收集项的要求
-        INFO_MSG('begin reqCollect bagType', bagType, ' bagGridID', bagGridID, ' itemUniqueID', itemUniqueID, ' collectID', collectID, ' collectGridID', collectGridID)
+        LOG_IFO('begin reqCollect bagType', bagType, ' bagGridID', bagGridID, ' itemUniqueID', itemUniqueID, ' collectID', collectID, ' collectGridID', collectGridID)
         info = PDETAIL.datas.get(collectID, None)
         if not info:
-            gameengine.reportCritical('in reqCollect, collectID not exist in table, id :', collectID)
+            gameengine.panicStack('in reqCollect, collectID not exist in table, id :', collectID)
             return
 
         if self._checkInUnavailableClass(info, collectID):
@@ -84,26 +84,26 @@ class ICollectible(object):
             itemID = info['props'][propGridID]
             enhanceLevel =  None
         else:
-            WARNING_MSG('in reqCollect, propGridID not exist in table, id :', propGridID, ' collectGridID: ', collectGridID)
+            LOG_WARN('in reqCollect, propGridID not exist in table, id :', propGridID, ' collectGridID: ', collectGridID)
             return
         self.collectibleData.collectibleDict.setdefault(collectID, collectItem(collectID))
         if self.collectibleData.collectibleDict[collectID].isCompleteAt(collectGridID):
-            WARNING_MSG('in reqCollect, already complete ??? id :', itemID, ' itemUniqueID: ', itemUniqueID, ' collectGridID', collectGridID)
+            LOG_WARN('in reqCollect, already complete ??? id :', itemID, ' itemUniqueID: ', itemUniqueID, ' collectGridID', collectGridID)
             return
         if self.collectibleData.collectibleDict[collectID].isCompleteAll(equipment_len + prop_len):
-            WARNING_MSG('in reqCollect, already complete ??? id :', itemID, ' itemUniqueID: ', itemUniqueID)
+            LOG_WARN('in reqCollect, already complete ??? id :', itemID, ' itemUniqueID: ', itemUniqueID)
             return
         # 进行收集，扣除物品
         opUUID = KBEngine.genUUID64()
         success = self._completeCollect(bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, opUUID)
         if not success:
-            WARNING_MSG('in reqCollect, _completeCollect not succeed, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
+            LOG_WARN('in reqCollect, _completeCollect not succeed, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
             return
         # 更新收集进度
-        INFO_MSG('before update, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+        LOG_IFO('before update, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
         self.collectibleData.collectibleDict[collectID].onComplete(collectGridID)
         if not self.collectibleData.collectibleDict[collectID].isCompleteAll(equipment_len + prop_len):
-            INFO_MSG('reqCollect not Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+            LOG_IFO('reqCollect not Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
             self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
             LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
                 self.gbID,
@@ -119,67 +119,67 @@ class ICollectible(object):
         self._onScore(collectProp, opUUID)
         # 发送进度信息给客户端
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
-        INFO_MSG('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+        LOG_IFO('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
 
     def _completeCollect(self, bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, opUUID):
         itemCount = 1
         # 检查需要物品itemID是否存在
         bag = self.getBagByType(bagType)
         if not bag:
-            WARNING_MSG('in _completeCollect, bag not found, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
+            LOG_WARN('in _completeCollect, bag not found, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
             return False
         if bag.isLocked():
-            WARNING_MSG('in _completeCollect, bag is locked, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
+            LOG_WARN('in _completeCollect, bag is locked, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
             return False
         # 检查需要物品itemID是否存在
         if bagGridID < 0:
-            WARNING_MSG('in _completeCollect, can NOT UseGridItem, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel, 'reason',  bag.canUseGridItem(self, bagGridID, itemID, itemCount))
+            LOG_WARN('in _completeCollect, can NOT UseGridItem, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel, 'reason',  bag.canUseGridItem(self, bagGridID, itemID, itemCount))
             return False
         deductWealthVal = dropAward.DeductWealthVal()
         # 是否是装备，是否达到了强化的等级
         bagItem = bag.getItemObjByGridId(bagGridID)
         if not bagItem:
-            WARNING_MSG('     in _completeCollect, item not found:', bagGridID)
+            LOG_WARN('     in _completeCollect, item not found:', bagGridID)
             return False
 
         if bagItem.uniqueId != itemUniqueID:
-            WARNING_MSG('     in _completeCollect, uniqueId not matched:', bagItem.uniqueId, 'given ', itemUniqueID)
+            LOG_WARN('     in _completeCollect, uniqueId not matched:', bagItem.uniqueId, 'given ', itemUniqueID)
             return False
 
         if bagItem.isLocked():
-            WARNING_MSG('     in _completeCollect, item is locked:', bagGridID)
+            LOG_WARN('     in _completeCollect, item is locked:', bagGridID)
             return False
 
         if bagItem.isEquipmentItem():
             if not bagItem.isGood():
-                WARNING_MSG('     in _completeCollect, item is not good:', bagGridID)
+                LOG_WARN('     in _completeCollect, item is not good:', bagGridID)
                 return False
 
             if enhanceLevel is None:
-                WARNING_MSG('     in _completeCollect, item level is none:', bagGridID)
+                LOG_WARN('     in _completeCollect, item level is none:', bagGridID)
                 return False
 
             if bagItem.getEnhanceLevel() != enhanceLevel:
-                WARNING_MSG('     in _completeCollect, getEnhanceLevel() not matched:', bagItem.getEnhanceLevel(), ' item level', enhanceLevel)
+                LOG_WARN('     in _completeCollect, getEnhanceLevel() not matched:', bagItem.getEnhanceLevel(), ' item level', enhanceLevel)
                 return False
             # 装备每个格子都只有一个
             if bagItem.itemNum != itemCount:
-                WARNING_MSG('     in _completeCollect, bagItem.itemCount() not matched:', bagItem.itemNum, ' itemCount', itemCount)
+                LOG_WARN('     in _completeCollect, bagItem.itemCount() not matched:', bagItem.itemNum, ' itemCount', itemCount)
                 return False
             deductWealthVal.addWealthByObjList([bagItem])
         else:
-            INFO_MSG(' try use item ', itemID, ' itemCount ', itemCount, ' useBind', useBind)
+            LOG_IFO(' try use item ', itemID, ' itemCount ', itemCount, ' useBind', useBind)
             if useBind == gameconst.ItemBindType.BIND:
                 deductWealthVal.addWealthByItemId(itemID, itemCount, gameconst.ItemBindType.BIND)
             elif useBind == gameconst.ItemBindType.NORMAL:
                 deductWealthVal.addWealthByItemId(itemID, itemCount, gameconst.ItemBindType.NORMAL)
             else:
-                WARNING_MSG('     in _completeCollect, useBind not matched:', useBind)
+                LOG_WARN('     in _completeCollect, useBind not matched:', useBind)
                 return False
 
         # 扣除物品（要求物品必须一次扣除，不存在扣除一部分的情况）
         if not self.canDeductWealth(deductWealthVal):
-            WARNING_MSG('     in _completeCollect, canDeductWealth fail')
+            LOG_WARN('     in _completeCollect, canDeductWealth fail')
             return False
         srcType = AAC_AACDD.datas.BONUS_SRC_COLLECTIBLE
         detail = gameclass.AwardDetail(costItemId=itemID, costItemNum=itemCount)
@@ -190,7 +190,7 @@ class ICollectible(object):
         propIndexList = [collectProp] if collectProp else []
 
         self.cell.onCollectAward(propIndexList, opUUID)
-        INFO_MSG('_onScore propList ', propIndexList)
+        LOG_IFO('_onScore propList ', propIndexList)
 
 
     def _checkInUnavailableClass(self, info, collectID):
@@ -199,7 +199,7 @@ class ICollectible(object):
             return False
         school = self.getAvatarSchool()
         if school in unavailableClass:
-            WARNING_MSG('in _checkInUnavailableClass, school in unavailableClass:', collectID, school, unavailableClass)
+            LOG_WARN('in _checkInUnavailableClass, school in unavailableClass:', collectID, school, unavailableClass)
             return True
 
         return False

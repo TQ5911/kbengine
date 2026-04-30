@@ -15,6 +15,7 @@ import utils
 import userType
 import gameengine
 import formula
+import weakref
 
 import skill_skill as SSD
 import message_Message_def as MMD
@@ -48,15 +49,20 @@ class ServerSkills(userType.UserDictType):
                     # autoFightUseSkill设置1表示不会自动释放
                     if SSD.datas.get(skillId, {}).get("autoFightUseSkill", 0) == gameconst.SkillSwitchStatus.MANUAL:
                         switchStatus = gameconst.SkillSwitchStatus.MANUAL
-                    DEBUG_MSG("initial skill switch status 0 ", skillId, switchStatus)
+                    LOG_DBG("initial skill switch status 0 ", skillId, switchStatus)
                 self.skillSwitches[skillId] = switchStatus
         return self[skillId]
 
     def doRemoveSkill(self, skillId):
         self.pop(skillId, None)
 
-    def doGetSkill(self, skillId):
-        return self.get(skillId, None)
+    def doGetSkill(self, skillId, reportErr=True):
+        _skill = self.get(skillId, None)
+        if not _skill and reportErr:
+            gameengine.panicStack('doGetSkill with out skillId', skillId)
+            return None
+
+        return _skill
 
     def getClientData(self, owner):
         skills = []
@@ -118,10 +124,10 @@ class ServerSkills(userType.UserDictType):
     def setSkillSwitch(self, owner, skillID, status):
         skillID, _ = owner.glyphEquipData.getInscriptionSrcSkillId(skillID)
         if not SSD.datas.get(skillID, None):
-            ERROR_MSG("setSkillSwitch illeagal skill id", skillID, status)
+            LOG_ERR("setSkillSwitch illeagal skill id", skillID, status)
             return
         if status not in gameconst.SkillSwitchStatus.VALID_STATUS:
-            ERROR_MSG("setSkillSwitch illeagal switch status", skillID, status)
+            LOG_ERR("setSkillSwitch illeagal switch status", skillID, status)
             return
         self.skillSwitches[skillID] = status
 
@@ -132,14 +138,14 @@ class ServerSkills(userType.UserDictType):
 
         return
 
-class SkillDamageVal(userType.UserSoleType):
+class SkillDamageVal(userType.UserSingleType):
     def __init__(self, targetId, hurt, hitType):
         self.targetId = targetId
         self.hurt = int(hurt)
         self.hitType = hitType
 
 
-class SkillDamges(userType.UserSoleType):
+class SkillDamges(userType.UserSingleType):
     def __init__(self, casterId=0, sourceType=0, sourceId=0, damageInfo=None):
         self.casterId = casterId
         self.sourceId = sourceId
@@ -155,7 +161,7 @@ class SkillDamges(userType.UserSoleType):
         return
 
 
-class DamageResult(userType.UserSoleType):
+class DamageResult(userType.UserSingleType):
     def __init__(self, dmg=0, hpSuck=0, atkType=0, calcShield=True, hurtDmg=0):
         self.dmg = dmg  # 输出伤害
         self.atkType = atkType
@@ -164,14 +170,14 @@ class DamageResult(userType.UserSoleType):
         self.hurtDmg = hurtDmg  # 受伤害值，用于承伤统计，实际结算数值用dmg
 
 
-class HealResult(userType.UserSoleType):
+class HealResult(userType.UserSingleType):
     def __init__(self, healVal=0, isCrit=False, doSkillHealCorrection=False):
         self.healVal = healVal
         self.isCrit = isCrit
         self.doSkillHealCorrection = doSkillHealCorrection
 
 
-class AntiControlResult(userType.UserSoleType):
+class AntiControlResult(userType.UserSingleType):
     RES_NOT_HIT = 0
     RES_HIT = 1
     RES_IMMUNE = 2
@@ -188,7 +194,7 @@ class AntiControlResult(userType.UserSoleType):
         self.antiDuration = antiDuration
 
 
-class ControlState(userType.UserSoleType):
+class ControlState(userType.UserSingleType):
     def __init__(self, controlLv, tStart):
         self.controlLv = controlLv
         self.tStart = tStart
@@ -196,9 +202,9 @@ class ControlState(userType.UserSoleType):
 
     def refreshAntiTimer(self, owner, antiControlState, antiDuration):
         if self.removeTimerId:
-            owner._cancelCallback(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_COMBAT_CONTROL_STATE)
+            owner.cancelTimerCB(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_COMBAT_CONTROL_STATE)
 
-        self.removeTimerId = owner._callback(antiDuration, 'removeCombatControlState', (antiControlState,),
+        self.removeTimerId = owner.addTimerCB(antiDuration, 'removeCombatControlState', (antiControlState,),
                                              gametimer.TIMER_TAG_REMOVE_COMBAT_CONTROL_STATE)
 
     def addControlLv(self, val):
@@ -208,7 +214,7 @@ class ControlState(userType.UserSoleType):
         self.removeTimerId = 0
 
 
-class SkillBase(userType.UserSoleType):
+class SkillBase(userType.UserSingleType):
     def __init__(self, skillId, skillLv, tNextCast=0.0, cdDelta=0.0, parentSkill=0, targetIds=None):
         self.skillId = skillId
         self.skillLv = int(skillLv)
@@ -342,14 +348,14 @@ class SkillBase(userType.UserSoleType):
         gcd = self.getGlobalCD(owner)
         totalCD = max(realCD, gcd)
         host = owner.getAvatar()
-        DEBUG_MSG("in getCD ", owner, self.skillId, owner.IsAvatar, host)
+        LOG_DBG("in getCD ", owner, self.skillId, owner.IsAvatar, host)
         if host:
             addValue = 0
             ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.MODIFY_CD)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
-                    DEBUG_MSG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.MODIFY_CD, datas)
+                    LOG_DBG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.MODIFY_CD, datas)
             totalCD -= addValue
             if totalCD < 0:
                 totalCD = 0
@@ -360,7 +366,7 @@ class SkillBase(userType.UserSoleType):
                         addValue = datas[0]
                         if random.uniform(0, 1) <= addValue:
                             totalCD = 0
-                            DEBUG_MSG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, datas)
+                            LOG_DBG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, datas)
         return totalCD
 
     # 修改cd时长
@@ -369,13 +375,13 @@ class SkillBase(userType.UserSoleType):
         self.cdDelta += delta
 
         owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
-                                                        False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
+                                                        False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
     # 修改本次cd的结束时间点
     def changeNextCast(self, owner, delta):
         self.tNextCast += delta
         realCD = self.tNextCast - time.time() if self.tNextCast > time.time() else self.getCD(owner)
         owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(realCD), float(self.tNextCast),
-                                                        False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
+                                                        False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
 
     def inCDTime(self):
         if time.time() < self.tNextCast:
@@ -431,14 +437,14 @@ class SkillBase(userType.UserSoleType):
     def getMaxTargetNum(self, owner, skillId, context):
         defaultMaxTagretNum = self.getMaxTargetData(skillId)
         host = owner.getAvatar()
-        DEBUG_MSG("in getMaxTargetNum 1", owner, skillId, owner.IsAvatar, host, context)
+        LOG_DBG("in getMaxTargetNum 1", owner, skillId, owner.IsAvatar, host, context)
         if host:
             ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
                     defaultMaxTagretNum += addValue
-                    DEBUG_MSG("in getMaxTargetNum 2, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, datas)
+                    LOG_DBG("in getMaxTargetNum 2, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, datas)
             else:
                 if context:
                     ctx = context.getTopCtxFromActionQueue(actionContext.ACTION_USE_SKILL)
@@ -448,7 +454,7 @@ class SkillBase(userType.UserSoleType):
                             if len(datas) == 1:
                                 addValue = datas[0]
                                 defaultMaxTagretNum += addValue
-                                DEBUG_MSG("in getMaxTargetNum 3, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, datas)
+                                LOG_DBG("in getMaxTargetNum 3, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, datas)
         return defaultMaxTagretNum
 
     @staticmethod
@@ -480,12 +486,12 @@ class SkillBase(userType.UserSoleType):
             if type(scopeParam) not in (list, tuple):
                 scopeParam = (scopeParam,)
             host = owner.getAvatar()
-            DEBUG_MSG("in getScopeParam 1 ", owner, skillId, owner.IsAvatar, host)
+            LOG_DBG("in getScopeParam 1 ", owner, skillId, owner.IsAvatar, host)
             if host:
                 ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
                 if ret:
                     if len(datas) == 1:
-                        DEBUG_MSG("in getScopeParam 2", owner, skillId, owner.IsAvatar, host, scopeParam, datas)
+                        LOG_DBG("in getScopeParam 2", owner, skillId, owner.IsAvatar, host, scopeParam, datas)
                         return scopeParam, datas[0]
                 else:
                     if context:
@@ -494,7 +500,7 @@ class SkillBase(userType.UserSoleType):
                             ret, datas = host.getInscriptionEffects(ctx.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
                             if ret:
                                 if len(datas) == 1:
-                                    DEBUG_MSG("in getScopeParam 3", owner, skillId, owner.IsAvatar, host, scopeParam, datas)
+                                    LOG_DBG("in getScopeParam 3", owner, skillId, owner.IsAvatar, host, scopeParam, datas)
                                     return scopeParam, datas[0]
             return scopeParam, None
 
@@ -518,7 +524,7 @@ class SkillBase(userType.UserSoleType):
 
         originalConsumeMP = mp
         host = owner.getAvatar()
-        DEBUG_MSG("in getCostMp ", owner, skillId, owner.IsAvatar, host)
+        LOG_DBG("in getCostMp ", owner, skillId, owner.IsAvatar, host)
         if host:
             if originalConsumeMP > 0:
                 ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE)
@@ -529,7 +535,7 @@ class SkillBase(userType.UserSoleType):
                             originalConsumeMP = 0
                         else:
                             originalConsumeMP -= addValue
-                        DEBUG_MSG("in getCostMp, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE, datas)
+                        LOG_DBG("in getCostMp, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE, datas)
         return factor * float(originalConsumeMP)
 
     @staticmethod
@@ -552,14 +558,14 @@ class SkillBase(userType.UserSoleType):
         rangeData = self.getRangeData(skillId)
         defaultRange = rangeData[-1] if skillLv > len(rangeData) else rangeData[skillLv - 1]
         host = owner.getAvatar()
-        DEBUG_MSG("in getRange ", owner, skillId, owner.IsAvatar, host)
+        LOG_DBG("in getRange ", owner, skillId, owner.IsAvatar, host)
         if host:
             ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
                     defaultRange += addValue
-                    DEBUG_MSG("in getRange, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE, datas)
+                    LOG_DBG("in getRange, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE, datas)
         return defaultRange
 
     @staticmethod
@@ -716,7 +722,7 @@ class SkillBase(userType.UserSoleType):
         return True
 
     def isMultiCastSkill(self, owner, context):
-        return self.hasTag(gameconst.SkillTag.Casting) and self.getMaxTargetNum(owner, self.skillId, context) > 1
+        return self.hasSkillTag(gameconst.SkillTag.Casting) and self.getMaxTargetNum(owner, self.skillId, context) > 1
 
     def needCharge(self):
         return self.getChargetimeMin() > 0 and self.getChargetimeMax(self.skillId) > 0
@@ -727,7 +733,7 @@ class SkillBase(userType.UserSoleType):
     @staticmethod
     @functools.lru_cache(1024)
     def getEffectTarget(skillId):
-        DEBUG_MSG("getEffectTarget", skillId)
+        LOG_DBG("getEffectTarget", skillId)
         return SkillBase.getSkillData(skillId).get('effectTarget', '')
 
     @staticmethod
@@ -756,6 +762,18 @@ class SkillBase(userType.UserSoleType):
         return SkillBase.getSkillData(skillId).get('protectRange', 0)
 
     def hasTag(self, tag):
+        """
+        由于策划那边还保留有旧的接口，这个就作为兼容用吧
+        """
+        tags = self.getTag(self.skillId)
+        if not tags:
+            return False
+
+        if tag in tags:
+            return True
+        return False
+
+    def hasSkillTag(self, tag):
         tags = self.getTag(self.skillId)
         if not tags:
             return False
@@ -778,25 +796,25 @@ class SkillBase(userType.UserSoleType):
     @functools.lru_cache(1024)
     def isChangePositionSkill(skillId):
         tags = SkillBase.getTag(skillId)
-        return gameconst.SkillTag.ShiftSkill in tags or gameconst.SkillTag.DodgeSkill in tags or gameconst.SkillTag.Lunge in tags or gameconst.SkillTag.Chongfeng in tags or gameconst.SkillTag.TeleportSkill in tags or gameconst.SkillTag.BlinkToTarget in tags or gameconst.SkillTag.EndTimebackSkill in tags
+        return gameconst.SkillTag.ShiftSkill in tags or gameconst.SkillTag.DodgeSkill in tags or gameconst.SkillTag.Lunge in tags or gameconst.SkillTag.Chongfeng in tags or gameconst.SkillTag.TeleportSkill in tags or gameconst.SkillTag.BlinkToTarget in tags
 
     def clearCD(self, owner):
         oldInCD = self.inCDTime()
         self.tNextCast = 0.0
 
         if oldInCD and owner.IsAvatar:
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
+            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
 
     def getOneNearest(self, pos, targetsList):
         if not targetsList or len(targetsList) == 0:
             return
-        dis = 10000
+        distance = 10000
         minIndex = -1
         for idx, target in enumerate(targetsList):
             curDis = sMath.distance2DToCompareFrom3DPosition(pos, target.position)
-            if curDis < dis:
+            if curDis < distance:
                 minIndex = idx
-                dis = curDis
+                distance = curDis
         return targetsList[minIndex]
 
     def getOneHPLowest(self, caster):
@@ -814,7 +832,7 @@ class SkillBase(userType.UserSoleType):
 
                 if not player:
                     continue
-                if utils.checkTargetType(self.getEffectTarget(self.skillId), caster, player) and self.inEffectRange(
+                if utils.checkTargetTypeValid(self.getEffectTarget(self.skillId), caster, player) and self.inEffectRange(
                         caster, player):
                     targetsList.append(player)
 
@@ -829,7 +847,7 @@ class SkillBase(userType.UserSoleType):
 
                     if not player:
                         continue
-                    if utils.checkTargetType(self.getEffectTarget(self.skillId), caster, player) and self.inEffectRange(
+                    if utils.checkTargetTypeValid(self.getEffectTarget(self.skillId), caster, player) and self.inEffectRange(
                             caster, player):
                         targetsList.append(player)
 
@@ -1075,7 +1093,7 @@ class SkillBase(userType.UserSoleType):
             percent = arr[3]
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
-            position = caster.position + direction * percent * self.getRange(caster, self.skillId, self.skillLv)
+            position = caster.position + direction * percent * (self.getRange(caster, self.skillId, self.skillLv)+0.1) # 加0.1是为了容错，避免因为客户端和服务端距离计算误差导致明明在范围内却打不到的情况
         elif scopeType == gameconst.SkillScope.MI_CENTER_SELF:
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
@@ -1148,44 +1166,44 @@ class SkillBase(userType.UserSoleType):
         return arr
 
     def getSkillDesPosition(self, caster, target, skillArgs):
-        if self.hasTag(gameconst.SkillTag.TeleportSkill):
-            dis = self.getRange(caster, self.skillId, self.skillLv)
-            dstPosition = sMath.getForwardPos(caster.position, caster.direction[2], dis)
+        if self.hasSkillTag(gameconst.SkillTag.TeleportSkill):
+            distance = self.getRange(caster, self.skillId, self.skillLv)
+            dstPosition = sMath.getForwardPos(caster.position, caster.direction[2], distance)
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             # scope其他时取技能朝向，scope为6时取双摇杆选的坐标
             if self.getScope(self.skillId) == gameconst.SkillScope.USER_DEFINED_CIRCLE:
                 dstPosition = skillPos
             else:
-                dstPosition = caster.position + skillDir * dis
+                dstPosition = caster.position + skillDir * distance
 
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
-            realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
+            realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(realDstPos)
 
-        elif self.hasTag(gameconst.SkillTag.BlinkToTarget):
+        elif self.hasSkillTag(gameconst.SkillTag.BlinkToTarget):
             offset = 2.0
             yaw = sMath.getYawFromPoints(caster.position, target.position)
             targetPos = sMath.getForwardPos(target.position, yaw, offset)
 
             targetPos = utils.getSurfacePos(caster.spaceID, targetPos)
-            realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, targetPos)
+            realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, targetPos)
             desPosition = list(realDstPos)
-        elif self.hasTag(gameconst.SkillTag.Chongfeng):
-            dis = 2.0
+        elif self.hasSkillTag(gameconst.SkillTag.Chongfeng):
+            distance = 2.0
             if target and hasattr(target, 'creepBaseId'):
-                dis = utils.getCollisionDistance(target.creepBaseId, dis)
+                distance = utils.getCollisionDistance(target.creepBaseId, distance)
 
-            if sMath.inRange2D(dis, caster.position, target.position):
+            if sMath.inRange2D(distance, caster.position, target.position):
                 dstPosition = caster.position
             else:
-                offset = dis
+                offset = distance
                 yaw = sMath.getYawFromPoints(caster.position, target.position)
                 dstPosition = sMath.getForwardPos(target.position, yaw, offset)
 
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
-            dstPosition = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
+            dstPosition = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(dstPosition)
-        elif self.hasTag(gameconst.SkillTag.Lunge):
+        elif self.hasSkillTag(gameconst.SkillTag.Lunge):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             skillRange = self.getRange(caster, self.skillId, self.skillLv)
             # 根据target的碰撞距离处理
@@ -1193,21 +1211,22 @@ class SkillBase(userType.UserSoleType):
                 collisionDis = 2.0
                 if hasattr(target, 'creepBaseId'):
                     collisionDis = utils.getCollisionDistance(target.creepBaseId, collisionDis)
-                dis = sMath.distance2D(caster.position, target.position)
+                distance = sMath.distance2D(caster.position, target.position)
                 # 距离超过碰撞距离，需要减去碰撞距离。否则原地不动
-                dis = dis - collisionDis if dis > collisionDis else 0
-                if skillRange > dis:
-                    skillRange = dis
+                distance = distance - collisionDis if distance > collisionDis else 0
+                if skillRange > distance:
+                    skillRange = distance
 
             dstPosition = caster.position + skillDir * skillRange
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
-            realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
+            realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(realDstPos)
-        elif self.hasTag(gameconst.SkillTag.DodgeSkill) or self.hasTag(gameconst.SkillTag.ShiftSkill):
+        elif self.hasSkillTag(gameconst.SkillTag.DodgeSkill) or self.hasSkillTag(gameconst.SkillTag.ShiftSkill):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
-            realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
+            realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
+            LOG_DBG('dodgeGetPos', caster.spaceID, caster.position, dstPosition, realDstPos)
             desPosition = list(realDstPos)
 
         return desPosition
@@ -1215,7 +1234,7 @@ class SkillBase(userType.UserSoleType):
     def getEffectTargets(self, caster, targetId, arr, forceTarget=False, positionSkillArgs=None, context = None):
         if not caster:
             return []
-        if self.getTempData('isChannelingEmpty', False):
+        if self.getTempData(gameconst.SkillTempDataKey.IS_CHANNELING_EMPTY, False):
             return []
 
         if self.targetIds:
@@ -1226,7 +1245,7 @@ class SkillBase(userType.UserSoleType):
                     invalidIds.append(i)
                     continue
 
-                if not utils.checkTargetType(
+                if not utils.checkTargetTypeValid(
                         self.getEffectTarget(self.skillId),
                         caster,
                         target):
@@ -1250,18 +1269,18 @@ class SkillBase(userType.UserSoleType):
         scopes = self.getScope(self.skillId)
         scopeParams, scopeAddRatio = self.getScopeParam(caster, self.skillId, context)
 
-        DEBUG_MSG("in _internalGetEffectTargets ", scopes, self.skillId, scopeParams, scopeAddRatio)
+        LOG_DBG("in _internalGetEffectTargets ", scopes, self.skillId, scopeParams, scopeAddRatio)
 
         if not scopes or scopes == gameconst.SkillScope.TARGET_AUTO:
-            if self.hasTag(gameconst.SkillTag.SingleHeal) and hasattr(caster,
+            if self.hasSkillTag(gameconst.SkillTag.SingleHeal) and hasattr(caster,
                                                                       'commonFlagCell') and caster.getCommonFlagCell(
                 gameconst.CommonFlagCellType.IsHealHPLow) and (
-                    not target or targetId == caster.id or not utils.checkTargetType(self.getEffectTarget(self.skillId),
+                    not target or targetId == caster.id or not utils.checkTargetTypeValid(self.getEffectTarget(self.skillId),
                                                                                      caster, target)):
                 targetNearest = self.getOneHPLowest(caster)
             else:
                 if target and (caster.isVisible(target) or caster.hasBuffTag(
-                        gameconst.BuffTag.SeeHiddenEnt)) and utils.checkTargetType(self.getEffectTarget(self.skillId),
+                        gameconst.BuffTag.TagSeeHiddenEnt)) and utils.checkTargetTypeValid(self.getEffectTarget(self.skillId),
                                                                                    caster, target):
                     if self.inEffectRange(caster, target):
                         return [target.id]
@@ -1274,17 +1293,17 @@ class SkillBase(userType.UserSoleType):
                 if not targetId:
                     return []
 
-                if self.getTempData('beginSkillPosition'):
+                if self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION):
                     targetsList = caster.getTargets(caster, targetId, self.getEffectTarget(self.skillId),
                                                     self.getServerEffectRange(caster), forceTarget,
-                                                    self.getTempData('beginSkillPosition'))
-                    targetNearest = self.getOneNearest(self.getTempData('beginSkillPosition'), targetsList)
+                                                    self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION))
+                    targetNearest = self.getOneNearest(self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION), targetsList)
                 else:
                     targetsList = caster.getTargets(caster, targetId, self.getEffectTarget(self.skillId),
                                                     self.getServerEffectRange(caster), forceTarget)
                     targetNearest = self.getOneNearest(caster.position, targetsList)
             if targetNearest and (caster.isVisible(targetNearest) or caster.hasBuffTag(
-                    gameconst.BuffTag.SeeHiddenEnt)) and self.inEffectRange(caster, targetNearest):
+                    gameconst.BuffTag.TagSeeHiddenEnt)) and self.inEffectRange(caster, targetNearest):
                 return [targetNearest.id]
             else:
                 return []
@@ -1342,14 +1361,14 @@ class SkillBase(userType.UserSoleType):
                 length *= (1+scopeAddRatio)
                 width *= (1+scopeAddRatio)
             if positionSkillArgs:
-                beginSkillPosition = self.getTempData('beginSkillPosition') if self.getTempData(
-                    'beginSkillPosition') else caster.position
+                beginSkillPosition = self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION) if self.getTempData(
+                    gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION) else caster.position
                 distance = sMath.distance2D(beginSkillPosition, positionSkillArgs)
                 range = min(self.getEffectRange(caster, self.skillId, self.skillLv), distance + self.getProtectRange(self.skillId))
             else:
                 range = self.getServerEffectRange(caster) + self.getProtectRange(self.skillId)
-            if self.getTempData('beginSkillPosition'):
-                checkScopeFun = lambda target: self.isInAttackRectAngle(target, self.getTempData('beginSkillPosition'),
+            if self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION):
+                checkScopeFun = lambda target: self.isInAttackRectAngle(target, self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION),
                                                                         skillDir, length, width, range)
                 return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), range,
                                                 self.getMaxTargetNum(caster, self.skillId, context), checkScopeFun)
@@ -1362,8 +1381,8 @@ class SkillBase(userType.UserSoleType):
         elif scopes == gameconst.SkillScope.USER_DEFINED_CIRCLE:
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             percent = arr[3]
-            beginSkillPosition = self.getTempData('beginSkillPosition') if self.getTempData('beginSkillPosition') else caster.position
-            center = beginSkillPosition + direction * percent * self.getEffectRange(caster, self.skillId, self.skillLv)
+            beginSkillPosition = self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION) if self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION) else caster.position
+            center = beginSkillPosition + direction * percent * (self.getRange(caster, self.skillId, self.skillLv)+0.1) # 加0.1是为了容错，避免因为客户端和服务端距离计算误差导致明明在范围内却打不到的情况
             radius = float(scopeParams[0])
             if scopeAddRatio:
                 radius *= (1+scopeAddRatio)
@@ -1440,33 +1459,33 @@ class SkillBase(userType.UserSoleType):
         return []
 
     def _checkUseSkillOwner(self, owner, targetId, ignoreReasons=0, checkInRange=True):
-        DEBUG_MSG('_checkUseSkillOwner', self.skillId, targetId, ignoreReasons, checkInRange)
-        code = gameconst.UseSkillCheck.IN_CD
+        LOG_DBG('_checkUseSkillOwner', self.skillId, targetId, ignoreReasons, checkInRange)
+        code = gameconst.UseSkillCheck.USC_ENUM_IN_CD
         if not code & ignoreReasons and self.inCDTime():
             owner.combatDebugMsg('_checkUseSkillOwner cannot use inCDTime: skillId:%s, tNextCast:%s, now:%s', self.getSkillId(), self.tNextCast, time.time())
             return code
 
-        code = gameconst.UseSkillCheck.LACK_OF_MP
+        code = gameconst.UseSkillCheck.USC_ENUM_LACK_OF_MP
         if not code & ignoreReasons and owner.IsAvatar and owner.mp < self.getCostMp(owner, self.skillId, owner.mpCostRatio):
             owner.combatDebugMsg('_checkUseSkillOwner fail to use lack of mp: skillId:%s', self.skillId)
             return code
 
-        code = gameconst.UseSkillCheck.INVALID_OWNER
+        code = gameconst.UseSkillCheck.USC_ENUM_INVALID_OWNER
         if not code & ignoreReasons and not owner:
-            ERROR_MSG('skill %s caster error' % (self.getSkillId()))
+            LOG_ERR('skill %s caster error' % (self.getSkillId()))
             return code
 
-        code = gameconst.UseSkillCheck.SELF_DIE
+        code = gameconst.UseSkillCheck.USC_ENUM_SELF_DIE
         if not code & ignoreReasons and owner.isDie():
             return code
 
-        if utils.hasSkillTag(self.skillId, gameconst.SkillTag.UltraSkill):
-            code = gameconst.UseSkillCheck.ULTRA_SKILL_POWER_NOT_ENOUGH
+        if utils.hasSkillTagById(self.skillId, gameconst.SkillTag.UltraSkill):
+            code = gameconst.UseSkillCheck.USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
             if not code & ignoreReasons and not owner.isUltraSkillPowerMax():
                 owner.combatDebugMsg('_checkUseSkillOwner fail to use ultra skill power not enough: skillId:%s', self.getSkillId())
                 return code
 
-        code = gameconst.UseSkillCheck.STATE_CONFLICT
+        code = gameconst.UseSkillCheck.USC_ENUM_STATE_CONFLICT
         if not code & ignoreReasons:
             extraEventId = self.getSkillEvent(self.skillId)
             if extraEventId:
@@ -1478,7 +1497,7 @@ class SkillBase(userType.UserSoleType):
                     owner.combatDebugMsg('_checkUseSkillOwner fail to use skill conflict state useSkill: skillId:%s', self.getSkillId())
                     return code
 
-                if utils.hasSkillTag(self.skillId, gameconst.SkillTag.GeneralSkill) and not owner.checkConflictState(
+                if utils.hasSkillTagById(self.skillId, gameconst.SkillTag.GeneralSkill) and not owner.checkConflictState(
                         CCD.datas.useGeneralSkill, False):
                     return code
 
@@ -1488,61 +1507,65 @@ class SkillBase(userType.UserSoleType):
                     owner.combatDebugMsg('_checkUseSkillOwner fail to use skil conflict state eventId: skillId:%s, eventId:%s', self.getSkillId(), eventId)
                     return code
 
-        return gameconst.UseSkillCheck.CHEKC_OK
+        return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
 
     def _checkUseSkillTarget(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         needReleaseTarget = self.needReleaseTarget()
-        DEBUG_MSG('_checkUseSkillTarget', self.skillId, targetId, needReleaseTarget)
+        LOG_DBG('_checkUseSkillTarget', self.skillId, targetId, needReleaseTarget)
         owner.combatDebugMsg('_checkUseSkillTarget: skillId:%s, targetId:%s, needReleaseTarget:%s', self.skillId, targetId, needReleaseTarget)
-        if self.hasTag(gameconst.SkillTag.SingleHeal):
+        if self.hasSkillTag(gameconst.SkillTag.SingleHeal):
             target = KBEngine.entities.get(targetId)
             if not target:
-                return gameconst.UseSkillCheck.CHEKC_OK
-            if not utils.checkTargetType(self.getEffectTarget(self.skillId), owner, target):
-                return gameconst.UseSkillCheck.CHEKC_OK
+                return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
+            if not utils.checkTargetTypeValid(self.getEffectTarget(self.skillId), owner, target):
+                return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
             if checkInRange:
                 res = self.inRange(owner, target)
             else:
                 res = self.inEffectRange(owner, target)
             if not res:
-                if self.hasTag(gameconst.SkillTag.Channel) or self.hasTag(gameconst.SkillTag.Casting):
+                if self.hasSkillTag(gameconst.SkillTag.Channel) or self.hasSkillTag(gameconst.SkillTag.Casting):
                     owner.showMsg(CONST.datas['targetIsOutOfRange_butCasted']['value'], [])
                 else:
                     owner.showMsg(CONST.datas['targetIsOutOfRange']['value'], [])
-                    return gameconst.UseSkillCheck.SINGLE_HEAL_OUT_OF_RANGE
+                    return gameconst.UseSkillCheck.USC_ENUM_SINGLE_HEAL_OUT_OF_RANGE
         if needReleaseTarget:
             target = KBEngine.entities.get(targetId)
             if not target:
-                return gameconst.UseSkillCheck.INVALID_TARGET
+                if ignoreReasons & gameconst.UseSkillCheck.USC_ENUM_INVALID_TARGET:
+                    return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
 
-            code = gameconst.UseSkillCheck.INVALID_TARGET
-            if not code & ignoreReasons and not utils.checkTargetType(self.getTarget(self.skillId), owner, target):
-                owner.combatDebugMsg('_checkUseSkillTarget skill cannot use because checkTargetType fail: skillId:%s, targetType:%s, targetId:%s', self.skillId, self.getTarget(self.skillId),
+                else:
+                    return gameconst.UseSkillCheck.USC_ENUM_INVALID_TARGET
+
+            code = gameconst.UseSkillCheck.USC_ENUM_INVALID_TARGET
+            if not code & ignoreReasons and not utils.checkTargetTypeValid(self.getTarget(self.skillId), owner, target):
+                owner.combatDebugMsg('_checkUseSkillTarget skill cannot use because checkTargetTypeValid fail: skillId:%s, targetType:%s, targetId:%s', self.skillId, self.getTarget(self.skillId),
                                      target.id)
                 return code
 
-            code = gameconst.UseSkillCheck.INVISIBLE_TARGET
+            code = gameconst.UseSkillCheck.USC_ENUM_INVISIBLE_TARGET
             if not code & ignoreReasons and not owner.isVisible(target) and not owner.hasBuffTag(
-                    gameconst.BuffTag.SeeHiddenEnt):
+                    gameconst.BuffTag.TagSeeHiddenEnt):
                 owner.combatDebugMsg('_checkUseSkillTarget skill cannot use because target is invisible: skillId:%s, targetId:%s', self.skillId, target.id)
                 return code
 
-            code = gameconst.UseSkillCheck.CROSS_SPACE
+            code = gameconst.UseSkillCheck.USC_ENUM_CROSS_SPACE
             if not code & ignoreReasons and target.spaceNo != owner.spaceNo:
                 owner.combatDebugMsg('_checkUseSkillTarget skill cannot use because cross space: skillId:%s, targetSpaceNo:%s, ownerSpaceNo:%s', self.skillId, target.spaceNo, owner.spaceNo)
                 return code
 
-            code = gameconst.UseSkillCheck.OUT_OF_RANGE
+            code = gameconst.UseSkillCheck.USC_ENUM_OUT_OF_RANGE
             if not code & ignoreReasons and not self.inRange(owner, target):
                 owner.combatDebugMsg('_checkUseSkillTarget skill cannot use because needReleaseTarget and not inRange: skillId:%s, ownerPosition:%s, targetPosition:%s, distance:%s',
                                      self.getSkillId(), owner.position, target.position, sMath.distance2D(owner.position, target.position))
                 return code
 
-        return gameconst.UseSkillCheck.CHEKC_OK
+        return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
 
     def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         code = self._checkUseSkillOwner(owner, targetId, ignoreReasons, checkInRange)
-        if code != gameconst.UseSkillCheck.CHEKC_OK:
+        if code != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
             return code
 
         return self._checkUseSkillTarget(owner, targetId, ignoreReasons, checkInRange)
@@ -1550,7 +1573,7 @@ class SkillBase(userType.UserSoleType):
     # 延迟结算时间
     def getSkillResultDelay(self, owner, targetId, skillArgs, compensateTime):
         delayTime = self.getFxDelay(self.skillId) - (compensateTime / 1000.0)
-        if self.hasTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTag.Channel):
             return sMath.limit(delayTime, 0.0, 9999.0)
         if self.getBulletFx(self.skillId):
             timeEx = self.calBulletTime(owner, targetId)
@@ -1563,7 +1586,7 @@ class SkillBase(userType.UserSoleType):
         raise NotImplementedError()
 
     def enterCDTime(self, owner, delayCd=0):
-        DEBUG_MSG('enterCDTime 1', self.skillId, self.tNextCast, delayCd)
+        LOG_DBG('enterCDTime 1', self.skillId, self.tNextCast, delayCd)
         addCD = 0
         if delayCd > 0:
             addCD = delayCd
@@ -1571,161 +1594,46 @@ class SkillBase(userType.UserSoleType):
         else:
             addCD = self.getCD(owner)
             self.tNextCast = time.time() + addCD - 0.1
-        DEBUG_MSG('enterCDTime 2', self.skillId, self.tNextCast, addCD, delayCd)
-
-    def _cancelTempTimer(self, owner, timerName, timerTag=''):
-        tid = self.popTempData(timerName, 0)
-        if owner.IsAvatar:
-            owner.skillTimerLogQueue.addSkillTimerLog(
-                id(self), 
-                tid, 
-                gameconst.SKILL_LOG_OPR_REMOVE_TIMER, 
-                timerName,
-                self.skillId
-            )
-
-        if tid:
-            if owner._cancelCallback(tid, timerTag) == gameconst.TIMER_CANCEL_RET_MISMATCH and owner.IsAvatar:
-                owner.skillTimerLogQueue.errReportLogQueue()
-            return True
-        return False
+        LOG_DBG('enterCDTime 2', self.skillId, self.tNextCast, addCD, delayCd)
 
     def refreshSkillCD(self, owner, duration):
         owner.combatDebugMsg('refreshSkillCD: skillId:%s, duration:%s', self.skillId, duration)
-        self._cancelTempTimer(owner, 'restoreCDTimer', gametimer.TIMER_TAG_RESTORE_CD)
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.RESTORE_CD_TIMER, gametimer.TIMER_TAG_RESTORE_CD)
 
-        if self.hasTempData('changeToSkill'):
-            owner.IsAvatar and owner.client.onUseStageSkill(self.skillId, 1, time.time())
-
-        if not self.hasTempData('tNextCast'):
-            self.setTempData(owner, 'tNextCast', self.tNextCast)
+        if not self.hasTempData(gameconst.SkillTempDataKey.NEXT_CAST):
+            self.setTempData(owner, gameconst.SkillTempDataKey.NEXT_CAST, self.tNextCast)
         self.tNextCast = time.time() - 0.1
-        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), True, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
-        tid = owner._callback(duration, '_onSkillCallback', (self, 'invalidateRefreshCD', ()),
+        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), True, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
+        tid = owner.addTimerCB(duration, '_onSkillCallback', (self, 'invalidateRefreshCD', ()),
                               gametimer.TIMER_TAG_RESTORE_CD)
-        self.setTempData(owner, 'restoreCDTimer', tid)
+        self.setTimerTempData(owner, gameconst.SkillTempDataKey.RESTORE_CD_TIMER, tid)
 
     def invalidateRefreshCD(self, owner, doReset=True, notifyClient=True):
         owner.combatDebugMsg('invalidateRefreshCD: skillId:%s, tempData:%s', self.skillId, self.tempData)
         self.tNextCast = self.getTempData('tNextCast', time.time())
-        self.popTempData('restoreCDTimer')
+        self.popTempData(gameconst.SkillTempDataKey.RESTORE_CD_TIMER)
 
         notifyClient and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
-                                                      False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
-        doReset and self.resetSkill(owner, gameconst.ResetSkillReason.TimeRefreshDone)
-
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        self.isInSkill = True
-        self.setTempData(owner, 'skillArgs', skillArgs)
-        owner.combatDebugMsg('SkillBase.beginUseSkill: skillId:%s, targetId:%s, skillArgs:%s', self.skillId, targetId, skillArgs)
-        target = KBEngine.entities.get(targetId)
-        startAction = self.getStartAction(self.skillId)
-        startActionFail = False
-        startActionResult = gameconst.StartActionResult.Success
-
-        if self.hasTempData('restoreCDTimer'):
-            self._cancelTempTimer(owner, 'restoreCDTimer', gametimer.TIMER_TAG_RESTORE_CD)
-            self.invalidateRefreshCD(owner, doReset=False)
-
-        extraEventId = self.getSkillEvent(self.skillId)
-        if extraEventId:
-            owner.checkConflictState(extraEventId, remConflctState=True)
-
-        if doSetState:
-            skillState = self.getSkillState()
-            owner.setState(skillState)
-
-        realSkillArgs = skillArgs
-        positionSkillArgs = None
-        if self.isChangePositionSkill(self.skillId):
-            realSkillArgs = list(skillArgs)[:-3]
-            positionSkillArgs = tuple(skillArgs[-3:])
-
-        effectedEntIds = self.getEffectTargets(owner, targetId, realSkillArgs, positionSkillArgs=positionSkillArgs, context = parentCtx)
-        skillResult = SkillDamges(owner.id)
-        actionCtx = actionContext.UseSkillCtx(owner.id, self.skillId, skillArgs, targetId, effectedEntIds, self,
-                                              skillResult, parentCtx=parentCtx)
-
-        actionCtx.actionProgress = gameconst.ActionProgressType.startActionDone
-        if startAction:
-            # start action先不给传effectedEntIds，因为可能还没开始结算
-            # start action里加的buff什么的不能依赖在技能action里解除,技能可能在延迟后不能执行action
-            # 例如旋风斩开始加的无敌需要在end action去删除
-            ctxFunc = lambda r: actionCtx
-            if owner.doCombatActions(startAction, owner, target, owner.id, ctxFunc) is False:
-                startActionFail = True
-                startActionResult = gameconst.StartActionResult.Fail
-
-        if startActionFail:
-            owner.combatDebugMsg('SkillBase.beginUseSkill do startAction fail: skillId:%s, targetId:%s, ownerPosition:%s', self.skillId, targetId, owner.position)
-            self.useSkillDone(owner, targetId, skillArgs, isSucc=False, startActionFail=startActionFail)
-            return startActionResult, None, None
-        elif utils.hasSkillTag(self.skillId, gameconst.SkillTag.UltraSkill):
-            owner.ultraSkillPower = 0
-
-        if (not owner.IsAvatar or owner.gmModeCell != gameconst.GmMode.GM_NO_SKILLCD) and enterCD and not self.hasTag(
-                gameconst.SkillTag.Channel):
-            host = owner.getAvatar()
-            INFO_MSG("in beginUseSkill ", owner, self.skillId, owner.IsAvatar, host, targetId, skillArgs)
-            if host:
-                addValue = 0
-                ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)
-                if ret:
-                    if len(datas) == 1:
-                        addValue = datas[0]
-                        INFO_MSG("in beginUseSkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT, datas)
-
-                releasedCount = self.getTempData('releasedCount', 0)
-                totalReleaseCount = self.getTempData('totalReleaseCount', 0)
-                # 激活条件
-                if releasedCount == 0 or releasedCount != totalReleaseCount:
-                    self.setTempData(owner, 'releasedCount', addValue + 1)
-                    self.setTempData(owner, 'totalReleaseCount', addValue + 1)
-                    self.setTempData(owner, 'releaseTime', time.time())
-                # 消耗一次
-                if releasedCount > 0:
-                    self.setTempData(owner, 'releasedCount', releasedCount - 1)
-            self.enterCDTime(owner)
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
-
-        owner.IsAvatar and owner.modifyMP(-self.getCostMp(owner, self.skillId, owner.mpCostRatio))
-
-        # if self.needReleaseTarget():
-        #   target and owner.sendCombatMsg(MBD.datas.releaseSkillToTarget,
-        #                                    [target.name, self.getSkillName(self.skillId)])
-        # else:
-        #   owner.sendCombatMsg(MBD.datas.releaseSkill, [self.getSkillName(self.skillId)])
-
-        if self.hasTempData('changedFromSkill'):
-            skillVal = owner.getSkill(self.getTempData('changedFromSkill'))
-            skillVal.onChangedSkillBegin(owner)
-
-        # startAction里可能会攻击别人然后被反噬死。。
-        if owner.isDie():
-            owner.combatDebugMsg('SkillBase.beginUseSkill die after startAction: skillId:%s, ownerId:%s, targetId:%s, ownerPosition:%s', self.skillId, owner.id, targetId,
-                                 owner.position)
-            self.useSkillDone(owner, targetId, skillArgs, isSucc=False, startActionFail=startActionFail)
-            return gameconst.StartActionResult.Fail, None, None
-
-        return startActionResult, actionCtx, effectedEntIds
+                                                      False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
+        doReset and self.resetSkill(owner, gameconst.ResetSkillReason.ReasonTimeRefreshDone)
 
     # 支持callAfterDelay配出来的分阶段action
     def setupMulAttackAction(self, owner, context, delay, firstStageCalcDelay, duration):
         context.actionStage += 1
         if context.actionStage >= 50:
-            gameengine.reportCritical('skill action stage reach max', context.actionStage, self.skillId)
+            gameengine.panicStack('skill action stage reach max', context.actionStage, self.skillId)
 
-        self.setTempData(owner, 'duration', duration)
+        self.setTempData(owner, gameconst.SkillTempDataKey.DURATION, duration)
         if delay <= 0:
             owner.doSkillAction(self.skillId, context, firstStageCalcDelay, True,
-                                gameconst.UseSkillCheck.MUL_ATTACK_CHECK_IGNORES, duration)
+                                gameconst.UseSkillCheck.USC_MUL_ATTACK_CHECK_IGNORES, duration)
         else:
-            tid = owner._callback(delay, 'doSkillAction', (self.skillId, context, firstStageCalcDelay, True,
-                                                           gameconst.UseSkillCheck.MUL_ATTACK_CHECK_IGNORES, duration),
+            tid = owner.addTimerCB(delay, 'doSkillAction', (self.skillId, context, firstStageCalcDelay, True,
+                                                           gameconst.UseSkillCheck.USC_MUL_ATTACK_CHECK_IGNORES, duration),
                                   gametimer.TIMER_TAG_DO_SKILL_ACTION)
 
-            self._cancelTempTimer(owner, 'mulAttackActionTimer', gametimer.TIMER_TAG_DO_SKILL_ACTION)
-            self.setTempData(owner, 'mulAttackActionTimer', tid)
+            self._cancelTempTimer(owner, gameconst.SkillTempDataKey.MUL_ATTACK_ACT_TIMER, gametimer.TIMER_TAG_DO_SKILL_ACTION)
+            self.setTimerTempData(owner, gameconst.SkillTempDataKey.MUL_ATTACK_ACT_TIMER, tid)
 
     def applySkillEffect(self, owner, targetId, skillArgs, actionCtx, calcDelay, doRemoveState=True):
         realSkillArgs = skillArgs
@@ -1749,7 +1657,7 @@ class SkillBase(userType.UserSoleType):
             actResult = owner.doSkillAction(self.skillId, actionCtx, calcDelay, doRemoveState=doRemoveState)
         except Exception as e:
             actResult = gameclass.BoolResult(False)
-            gameengine.reportCritical('applySkillEffect error:', owner.id, self.skillId, targetId, str(e))
+            gameengine.panicStack('applySkillEffect error:', owner.id, self.skillId, targetId, str(e))
 
         self.targetIds = []
         owner.combatDebugMsg('applySkillEffect: skillId:%s, targetId:%s, skillArgs:%s, effectedEntIds:%s, actResult:%s', self.skillId, targetId, skillArgs, effectedEntIds, actResult)
@@ -1762,39 +1670,34 @@ class SkillBase(userType.UserSoleType):
         # 引导技能在引导结束后再执行skillDone，其他技能结算完就可以skillDone了
         if not self.isInSkill:
             return
-        if not self.hasTag(
-                gameconst.SkillTag.Channel) and context.actionProgress == gameconst.ActionProgressType.actionDone:
+        if not self.hasSkillTag(
+                gameconst.SkillTag.Channel) and context.actionProgress == gameconst.ActionProgressEnum.actionDone:
             remainTime = self.getSkillTime(self.skillId) - calcDelay - actionDuration
             if remainTime <= 0:
                 self.useSkillDone(owner, targetId, skillArgs, doRemoveState=doRemoveState)
             else:
-                tid = owner._callback(remainTime, '_onSkillCallback',
+                tid = owner.addTimerCB(remainTime, '_onSkillCallback',
                                       (self, 'useSkillDone', (targetId, skillArgs, True, False, doRemoveState)),
                                       gametimer.TIMER_TAG_SKILL_DONE)
 
-                self._cancelTempTimer(owner, 'skillDoneTimer', gametimer.TIMER_TAG_SKILL_DONE)
-                self.setTempData(owner, 'skillDoneTimer', tid)
+                self._cancelTempTimer(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, gametimer.TIMER_TAG_SKILL_DONE)
+                self.setTimerTempData(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, tid)
 
-    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True):
-        self._cancelTempTimer(owner, 'skillDoneTimer', gametimer.TIMER_TAG_SKILL_DONE)
+    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True, forceResetSkill=False):
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, gametimer.TIMER_TAG_SKILL_DONE)
         owner.combatDebugMsg('useSkillDone: skillId:%s, targetId:%s, isSucc:%s', self.skillId, targetId, isSucc)
         if doRemoveState:
-            self._cancelTempTimer(owner, 'removeSkillStateTimer', gametimer.TIMER_TAG_REMOVE_SKILL_STATE)
             skillState = self.getSkillState()
             owner.removeState(skillState, removeReason=gameconst.RemoveStateReason.SKILL_DONE)
 
-        if self.hasTempData('changedFromSkill'):
-            fromSkillId = self.getTempData('changedFromSkill')
-            owner.IsAvatar and owner.allClients.onUseStageSkill(fromSkillId, 0, time.time())
+        if self.hasTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION):
+            self.popTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION)
 
-        if self.hasTempData('beginSkillPosition'):
-            self.popTempData('beginSkillPosition')
+        if self.hasTempData(gameconst.SkillTempDataKey.SKILL_ARGS):
+            self.popTempData(gameconst.SkillTempDataKey.SKILL_ARGS)
 
-        if self.hasTempData('skillArgs'):
-            self.popTempData('skillArgs')
-
-        if self.needResetOnSkillDone(owner):
-            self.resetSkill(owner, gameconst.ResetSkillReason.SkillDone, doRemoveState)
+        if self.needResetOnSkillDone(owner) or forceResetSkill:
+            self.resetSkill(owner, gameconst.ResetSkillReason.ReasonSkillDone, doRemoveState)
         else:
             self.isInSkill = False
             self.targetIds = []
@@ -1809,19 +1712,22 @@ class SkillBase(userType.UserSoleType):
             if self.isChangePositionSkill(self.skillId):
                 realSkillArgs = skillArgs[:-3]
             effectedEntIds = self.getEffectTargets(owner, targetId, realSkillArgs)
-            actionCtx = actionContext.UseSkillCtx(owner.id, self.skillId, skillArgs, targetId, effectedEntIds, self,
-                                                  None, isSucc=isSucc)
+            actionCtx = actionContext.UseSkillCtx(
+                owner.id, 
+                self.skillId, 
+                skillArgs, 
+                targetId, 
+                effectedEntIds, 
+                self,
+                None, 
+                isSucc=isSucc)
             endAction(owner, target, actionCtx)
 
         # 在aiController的useSkillDone里面会把当前这个skillId pop掉，改为放在最后把
         owner.IsAICombatUnit and owner.aiController and owner.aiController.useSkillDone(self.skillId)
 
     def getRealSkillVal(self, owner):
-        if self.hasTempData('changeToSkill'):
-            toSkillId = self.getTempData('changeToSkill')
-            skillVal = owner.getSkillByCategory(toSkillId, self.getLevel(owner))
-            skillVal.setTempData(owner, 'changedFromSkill', self.skillId)
-            return skillVal, True
+        # 目前只有StageSkill实现了这个方法
         return self, False
 
     def doActionOnChangeSlot(self, owner, bActive):
@@ -1845,27 +1751,12 @@ class SkillBase(userType.UserSoleType):
     def loadSavedDict(self, data):
         pass
 
-    def changeToSkill(self, toSkillId):
-        self.setTempData(None, 'changeToSkill', toSkillId)
-
     def onChangedSkillBegin(self, owner):
-        if self.hasTempData('restoreCDTimer'):
-            self._cancelTempTimer(owner, 'restoreCDTimer', gametimer.TIMER_TAG_RESTORE_CD)
+        if self.hasTempData(gameconst.SkillTempDataKey.RESTORE_CD_TIMER):
+            self._cancelTempTimer(owner, gameconst.SkillTempDataKey.RESTORE_CD_TIMER, gametimer.TIMER_TAG_RESTORE_CD)
             self.invalidateRefreshCD(owner, doReset=False, notifyClient=False)
         self.enterCDTime(owner)
-        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
-
-    def setTempData(self, owner, name, val):
-        if name.endswith('Timer') and owner.IsAvatar:
-            owner.skillTimerLogQueue.addSkillTimerLog(
-                id(self),
-                val,
-                gameconst.SKILL_LOG_OPR_SET_TIMER,
-                name,
-                self.skillId,
-            )
-
-        self.tempData[name] = val
+        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
 
     def isSkillCDStatusFrozen(self):
         return self.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED
@@ -1878,7 +1769,41 @@ class SkillBase(userType.UserSoleType):
 
     def popTempData(self, name, default=None):
         return self.tempData.pop(name, default)
+
+    def setTempData(self, owner, name, val):
+        self.tempData[name] = val
+
+    def setTimerTempData(self, owner, name, val):
+        if owner.IsAvatar:
+            owner.skillTimerLogQueue.addSkillTimerLog(
+                id(self),
+                val,
+                gameconst.SKILL_LOG_OPR_SET_TIMER,
+                name,
+                self.skillId,
+            )
+
+        owner.skillTimerDic[val] = name
+        self.tempData[name] = val
     
+    def _cancelTempTimer(self, owner, timerName, timerTag=''):
+        tid = self.popTempData(timerName, 0)
+        if owner.IsAvatar:
+            owner.skillTimerLogQueue.addSkillTimerLog(
+                id(self), 
+                tid, 
+                gameconst.SKILL_LOG_OPR_REMOVE_TIMER, 
+                timerName,
+                self.skillId
+            )
+
+        if tid:
+            if owner.cancelTimerCB(tid, timerTag) == gameconst.TIMER_CANCEL_RET_MISMATCH and owner.IsAvatar:
+                owner.skillTimerLogQueue.errReportLogQueue()
+            owner.skillTimerDic.pop(tid, None)
+            return True
+        return False
+
     def clearTempData(self):
         changeSkillCDStatus = self.tempData.get(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, None)
         self.tempData.clear()
@@ -1888,11 +1813,11 @@ class SkillBase(userType.UserSoleType):
     def needResetOnSkillDone(self, owner):
         # 如果是限时刷新技能先不reset，等超时没使用或刷新的技能用完了再reset
 
-        if self.hasTempData('restoreCDTimer'):
+        if self.hasTempData(gameconst.SkillTempDataKey.RESTORE_CD_TIMER):
             return False
         return True
 
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
         owner.combatDebugMsg('resetSkill: skillId:%s, resetSkillReason:%s, doRemoveState:%s', self.skillId, reason, doRemoveState)
         self.isInSkill = False
         owner.removeUseSkillRecord(self.skillId)
@@ -1900,44 +1825,36 @@ class SkillBase(userType.UserSoleType):
         if owner.hasState(skillState) and doRemoveState:
             owner.removeState(skillState)
 
-        if self.hasTag(gameconst.SkillTag.Channel):
-            owner.removeState(gameconst.State.UsingSkill)
+        if self.hasSkillTag(gameconst.SkillTag.Channel):
+            owner.removeState(gameconst.StateEnum.UsingSkill)
 
-        if self._cancelTempTimer(owner, 'restoreCDTimer', gametimer.TIMER_TAG_RESTORE_CD):
+        if self._cancelTempTimer(owner, gameconst.SkillTempDataKey.RESTORE_CD_TIMER, gametimer.TIMER_TAG_RESTORE_CD):
             self.invalidateRefreshCD(owner, doReset=False)
 
-        self._cancelTempTimer(owner, 'delayCalcTimer', gametimer.TIMER_TAG_SKILL_DELAY_CALC)
-        self._cancelTempTimer(owner, 'removeSkillStateTimer', gametimer.TIMER_TAG_REMOVE_SKILL_STATE)
-        self._cancelTempTimer(owner, 'skillDoneTimer', gametimer.TIMER_TAG_SKILL_DONE)
-        self._cancelTempTimer(owner, 'mulAttackActionTimer', gametimer.TIMER_TAG_DO_SKILL_ACTION)
-        changeFromSkillId = 0 if not self.hasTempData('changedFromSkill') else self.getTempData('changedFromSkill')
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.DELAY_CALC_TIMER, gametimer.TIMER_TAG_SKILL_DELAY_CALC)
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, gametimer.TIMER_TAG_SKILL_DONE)
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.MUL_ATTACK_ACT_TIMER, gametimer.TIMER_TAG_DO_SKILL_ACTION)
         self.clearTempData()
-        
         self.targetIds = []
 
-        if changeFromSkillId:
-            skillVal = owner.getSkill(changeFromSkillId)
-            if skillVal:
-                skillVal.resetSkill(owner, reason, doRemoveState)
-
-    def childSkill(self):
-        return None
+    def childSkills(self):
+        return ()
 
 # 普通技能
 class CommonSkillVal(SkillBase):
     def getSkillState(self):
-        if self.hasTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTag.Channel):
             if self.isMovingSkill(self.skillId):
-                return gameconst.State.moveChannel
+                return gameconst.StateEnum.moveChannel
 
-            return gameconst.State.Channeling
-        elif self.hasTag(gameconst.SkillTag.GeneralSkill):
-            return gameconst.State.GeneralAttack
+            return gameconst.StateEnum.Channeling
+        elif self.hasSkillTag(gameconst.SkillTag.GeneralSkill):
+            return gameconst.StateEnum.GeneralAttack
         else:
             if self.isMovingSkill(self.skillId):
-                return gameconst.State.moveSkill
+                return gameconst.StateEnum.moveSkill
 
-            return gameconst.State.UsingSkill
+            return gameconst.StateEnum.UsingSkill
 
     # 获得最底层的skill，也就是存在skillDic里的技能对象
     # parentSkill指向：
@@ -1953,14 +1870,127 @@ class CommonSkillVal(SkillBase):
         return self.skillId, self.skillLv
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        isSucc, actionCtx, effectTargetIds = super(CommonSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
-                                                                                       compensateTime,
-                                                                                       doSetState, enterCD, parentCtx)
+        isSucc = self.doBeginUseSkill(
+            owner, 
+            targetId, 
+            skillArgs,
+            compensateTime,
+            doSetState, 
+            enterCD, 
+            parentCtx)
+
+        if not isSucc:
+            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
+
+        return isSucc
+
+    def beginUseSkillStartAction(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
+        self.isInSkill = True
+        self.setTempData(owner, gameconst.SkillTempDataKey.SKILL_ARGS, skillArgs)
+        owner.combatDebugMsg('SkillBase.beginUseSkillStartAction: skillId:%s, targetId:%s, skillArgs:%s', self.skillId, targetId, skillArgs)
+        target = KBEngine.entities.get(targetId)
+        startAction = self.getStartAction(self.skillId)
+        startActionFail = False
+        startActionResult = gameconst.StartActionResult.Success
+
+        if self.hasTempData(gameconst.SkillTempDataKey.RESTORE_CD_TIMER):
+            self._cancelTempTimer(owner, gameconst.SkillTempDataKey.RESTORE_CD_TIMER, gametimer.TIMER_TAG_RESTORE_CD)
+            self.invalidateRefreshCD(owner, doReset=False)
+
+        extraEventId = self.getSkillEvent(self.skillId)
+        if extraEventId:
+            owner.checkConflictState(extraEventId, remConflctState=True)
+
+        if doSetState:
+            skillState = self.getSkillState()
+            owner.setState(skillState)
+
+        realSkillArgs = skillArgs
+        positionSkillArgs = None
+        if self.isChangePositionSkill(self.skillId):
+            realSkillArgs = list(skillArgs)[:-3]
+            positionSkillArgs = tuple(skillArgs[-3:])
+
+        effectedEntIds = self.getEffectTargets(owner, targetId, realSkillArgs, positionSkillArgs=positionSkillArgs, context = parentCtx)
+        skillResult = SkillDamges(owner.id)
+        actionCtx = actionContext.UseSkillCtx(
+            owner.id, 
+            self.skillId, 
+            skillArgs, 
+            targetId, 
+            effectedEntIds, 
+            self,
+            skillResult, 
+            parentCtx=parentCtx)
+
+        actionCtx.actionProgress = gameconst.ActionProgressEnum.startActionDone
+        if startAction:
+            # start action先不给传effectedEntIds，因为可能还没开始结算
+            # start action里加的buff什么的不能依赖在技能action里解除,技能可能在延迟后不能执行action
+            # 例如旋风斩开始加的无敌需要在end action去删除
+            ctxFunc = lambda r: actionCtx
+            if owner.doCombatActions(startAction, owner, target, owner.id, ctxFunc) is False:
+                startActionFail = True
+                startActionResult = gameconst.StartActionResult.Fail
+
+        if startActionFail:
+            owner.combatDebugMsg('SkillBase.beginUseSkillStartAction do startAction fail: skillId:%s, targetId:%s, ownerPosition:%s', self.skillId, targetId, owner.position)
+            self.useSkillDone(owner, targetId, skillArgs, isSucc=False, startActionFail=startActionFail)
+            return startActionResult, None, None
+        elif utils.hasSkillTagById(self.skillId, gameconst.SkillTag.UltraSkill):
+            owner.ultraSkillPower = 0
+
+        if (not owner.IsAvatar or owner.gmModeCell != gameconst.GmModeEnum.GM_NO_SKILLCD) and enterCD and not self.hasSkillTag(
+                gameconst.SkillTag.Channel):
+            host = owner.getAvatar()
+            LOG_DBG("in beginUseSkillStartAction ", owner, self.skillId, owner.IsAvatar, host, targetId, skillArgs)
+            if host:
+                addValue = 0
+                ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)
+                if ret:
+                    if len(datas) == 1:
+                        addValue = datas[0]
+                        LOG_IFO("in beginUseSkillStartAction, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT, datas)
+
+                releasedCount = self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0)
+                totalReleaseCount = self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0)
+                # 激活条件
+                if releasedCount == 0 or releasedCount != totalReleaseCount:
+                    self.setTempData(owner, gameconst.SkillTempDataKey.RELEASED_CNT, addValue + 1)
+                    self.setTempData(owner, gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, addValue + 1)
+                    self.setTempData(owner, gameconst.SkillTempDataKey.RELEASE_TIME, time.time())
+                # 消耗一次
+                if releasedCount > 0:
+                    self.setTempData(owner, gameconst.SkillTempDataKey.RELEASED_CNT, releasedCount - 1)
+            self.enterCDTime(owner)
+            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
+
+        owner.IsAvatar and owner.modifyMP(-self.getCostMp(owner, self.skillId, owner.mpCostRatio))
+
+        # startAction里可能会攻击别人然后被反噬死。。
+        if owner.isDie():
+            owner.combatDebugMsg('SkillBase.beginUseSkillStartAction die after startAction: skillId:%s, ownerId:%s, targetId:%s, ownerPosition:%s', self.skillId, owner.id, targetId,
+                                 owner.position)
+            self.useSkillDone(owner, targetId, skillArgs, isSucc=False, startActionFail=startActionFail)
+            return gameconst.StartActionResult.Fail, None, None
+
+        return startActionResult, actionCtx, effectedEntIds
+
+    def doBeginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
+        isSucc, actionCtx, effectTargetIds = self.beginUseSkillStartAction(
+            owner, 
+            targetId, 
+            skillArgs,
+            compensateTime,
+            doSetState, 
+            enterCD, 
+            parentCtx)
+
         skillId, skillLv = self.getNotifyClientSkillId()
         skillArgsExtra = [self.getRange(owner, skillId, skillLv), self.getEffectRange(owner, skillId, skillLv)]
         if not isSucc:
             owner.client.onUseSkill(False, skillId, targetId, [], [], [])
-            return isSucc, None, effectTargetIds
+            return isSucc
 
         if self.isChangePositionSkill(self.skillId):
             if len(skillArgs) <= 3:
@@ -1970,27 +2000,23 @@ class CommonSkillVal(SkillBase):
 
         calcDelay = self.getSkillResultDelay(owner, targetId, skillArgs, compensateTime)
         # ChannelingSkillVal废除，因为吟唱后也需要可以引导，所以把引导合并到CommonSkillVal
-        if self.hasTag(gameconst.SkillTag.Channel):
-            owner.setTempMiscProp(gameconst.AvatarProps.currentChannelSkill, self)
+        if self.hasSkillTag(gameconst.SkillTag.Channel):
+            owner.setTempMiscProp(gameconst.EntityPropsEnum.currentChannelSkill, self)
 
-            owner.combatDebugMsg('CommonSkillVal.beginUseSkill channel skill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, calcDelay:%s, ownerPosition:%s', self.skillId, targetId, skillArgs, compensateTime, calcDelay, owner.position)
+            owner.combatDebugMsg('CommonSkillVal.doBeginUseSkill channel skill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, calcDelay:%s, ownerPosition:%s', self.skillId, targetId, skillArgs, compensateTime, calcDelay, owner.position)
             self.startChanneling(owner, targetId, skillArgs, calcDelay, actionCtx)
             owner.allClients.onUseSkill(isSucc, skillId, targetId, skillArgs, effectTargetIds, skillArgsExtra)
         else:
-            owner.combatDebugMsg('CommonSkillVal.beginUseSkill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, calcDelay:%s', self.skillId, targetId, skillArgs, compensateTime, calcDelay)
+            owner.combatDebugMsg('CommonSkillVal.doBeginUseSkill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, calcDelay:%s', self.skillId, targetId, skillArgs, compensateTime, calcDelay)
 
-            if actionCtx.actionProgress == gameconst.ActionProgressType.startActionDone:
+            if actionCtx.actionProgress == gameconst.ActionProgressEnum.startActionDone:
                 if calcDelay > 0:
                     if self.needReleaseTarget() and not (owner.IsMonster and self.isMultiCastSkill(owner, actionCtx)):
                         self.targetIds = effectTargetIds
 
-                    if self.hasTag(gameconst.SkillTag.EndTimebackSkill):
-                        bkData = owner.getTempMiscProp(gameconst.AvatarProps.timebackSkillData)
-                        if bkData:
-                            skillArgs.extend(list(bkData.position))
-                    self.setTempData(owner, 
-                        'delayCalcTimer',
-                        owner._callback(
+                    self.setTimerTempData(owner, 
+                        gameconst.SkillTempDataKey.DELAY_CALC_TIMER,
+                        owner.addTimerCB(
                             calcDelay + 0.1,
                             'delayCalcSkill',
                             (
@@ -2006,24 +2032,20 @@ class CommonSkillVal(SkillBase):
                 else:
                     # 保证onUseSkill在_doUseSkill前
                     self.targetIds = effectTargetIds
-                    if self.hasTag(gameconst.SkillTag.EndTimebackSkill):
-                        bkData = owner.getTempMiscProp(gameconst.AvatarProps.timebackSkillData)
-                        if bkData:
-                            skillArgs.extend(list(bkData.position))
                     if owner.isReal():
                         owner.allClients.onUseSkill(True, skillId, targetId, skillArgs,
                                                     effectTargetIds, skillArgsExtra)
                     owner._doUseSkill(self, targetId, skillArgs, actionCtx, calcDelay, doSetState)
 
-        return isSucc, actionCtx, effectTargetIds
+        return isSucc
 
     def startChanneling(self, caster, targetID, arr, delayTime, actionCtx):
         self.channelCount = 0
-        timerId = caster._callback(delayTime, 'channelingSkillTick',
+        timerId = caster.addTimerCB(delayTime, 'channelingSkillTick',
                                    (self, targetID, arr, tuple(caster.position), actionCtx),
                                    gametimer.TIMER_TAG_CHANNELING_CALC)
-        self.setTempData(caster, 'channelingCalcTimer', timerId)
-        self.setTempData(caster, 'tChannelingStart', time.time() + delayTime)
+        self.setTimerTempData(caster, gameconst.SkillTempDataKey.CHANNELING_CALC_TIMER, timerId)
+        self.setTempData(caster, gameconst.SkillTempDataKey.T_CHANNELING_START, time.time() + delayTime)
 
     def calBulletTime(self, owner, targetId):
         target = KBEngine.entities.get(targetId)
@@ -2038,61 +2060,42 @@ class CommonSkillVal(SkillBase):
 
     def onChannelingEnd(self, owner, isFinished):
         owner._endChannelingSkill(isFinished)
-        self.useSkillDone(owner, 0, self.popTempData('skillArgs', []))
+        self.useSkillDone(owner, 0, self.popTempData(gameconst.SkillTempDataKey.SKILL_ARGS, []))
 
     def onChannlingEffectEnd(self, owner):
         postSkillTime = self.getSkillTime(self.skillId)
-        owner.removeState(self.getSkillState(), removeReason=gameconst.ChannelingBreak.NORMAR_END)
+        owner.removeState(self.getSkillState(), removeReason=gameconst.ChannelingBreak.BREAK_TP_NORMAR_END)
         self.enterCDTime(owner)
-        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
+        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
         if postSkillTime > 0:
-            owner.setState(gameconst.State.UsingSkill)
-            endTimer = owner._callback(postSkillTime, '_onSkillCallback', (self, 'onChannelingEnd', (True,)),
+            owner.setState(gameconst.StateEnum.UsingSkill)
+            endTimer = owner.addTimerCB(postSkillTime, '_onSkillCallback', (self, 'onChannelingEnd', (True,)),
                                        gametimer.TIMER_TAG_ON_CHANNELING_END)
-            self.setTempData(owner, 'channelingEndTimer', endTimer)
+            self.setTimerTempData(owner, gameconst.SkillTempDataKey.CHANNELING_END_TIMER, endTimer)
         else:
             self.onChannelingEnd(owner, True)
 
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        if self.hasTag(gameconst.SkillTag.Channel):
-            self._cancelTempTimer(owner, 'channelingCalcTimer', gametimer.TIMER_TAG_CHANNELING_CALC)
-            self._cancelTempTimer(owner, 'channelingBulletTimer', gametimer.TIMER_TAG_CHANNELING_SKILL_EFFECT)
-            self._cancelTempTimer(owner, 'channelingEndTimer', gametimer.TIMER_TAG_ON_CHANNELING_END)
-            self.popTempData('isChannelingEmpty', False)
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
+        if self.hasSkillTag(gameconst.SkillTag.Channel):
+            self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CHANNELING_CALC_TIMER, gametimer.TIMER_TAG_CHANNELING_CALC)
+            self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CHANNELING_BULLET_TIMER, gametimer.TIMER_TAG_CHANNELING_SKILL_EFFECT)
+            self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CHANNELING_END_TIMER, gametimer.TIMER_TAG_ON_CHANNELING_END)
+            self.popTempData(gameconst.SkillTempDataKey.IS_CHANNELING_EMPTY, False)
             self.channelCount = 0
-        if self.hasTag(gameconst.SkillTag.Lunge) and owner.hasState(gameconst.State.Shifting):
+        if self.hasSkillTag(gameconst.SkillTag.Lunge) and owner.hasState(gameconst.StateEnum.Shifting):
             owner.endLunge(self, 0, [])
         super(CommonSkillVal, self).resetSkill(owner, reason, doRemoveState)
-
-    def triggerRefreshSkillCD(self, owner):
-        linkedSkillInfo = self.getSkillData(self.skillId).get('refreshSkillAndTime')
-        WARNING_MSG('triggerRefreshSkillCD', owner.id, self.skillId, linkedSkillInfo)
-        if not linkedSkillInfo:
-            return
-
-        linkedSkillId, duration = eval(linkedSkillInfo)
-        owner.limitRefreshSkill(None, None, self.skillId, duration, linkedSkillId)
 
 
 class ChongfengSkillVal(CommonSkillVal):
     def getSkillState(self):
         if self.isMovingSkill(self.skillId):
-            return gameconst.State.moveSkill
+            return gameconst.StateEnum.moveSkill
 
-        return gameconst.State.UsingSkill
+        return gameconst.StateEnum.UsingSkill
 
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        isSucc, actionCtx, effectTargetIds = super(ChongfengSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
-                                                                                          compensateTime,
-                                                                                          doSetState, enterCD,
-                                                                                          parentCtx)
-        if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
-
-        return isSucc, actionCtx, effectTargetIds
-
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        if owner.hasState(gameconst.State.Shifting):
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
+        if owner.hasState(gameconst.StateEnum.Shifting):
             owner.endChongfeng(self, 0, [])
         super(ChongfengSkillVal, self).resetSkill(owner, reason, doRemoveState)
 
@@ -2101,21 +2104,12 @@ class ChongfengSkillVal(CommonSkillVal):
 class LungeSkillVal(CommonSkillVal):
     def getSkillState(self):
         if self.isMovingSkill(self.skillId):
-            return gameconst.State.moveSkill
+            return gameconst.StateEnum.moveSkill
 
-        return gameconst.State.UsingSkill
+        return gameconst.StateEnum.UsingSkill
 
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        isSucc, actionCtx, effectTargetIds = super(LungeSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
-                                                                                      compensateTime,
-                                                                                      doSetState, enterCD, parentCtx)
-        if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
-
-        return isSucc, actionCtx, effectTargetIds
-
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        if owner.hasState(gameconst.State.Shifting):
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
+        if owner.hasState(gameconst.StateEnum.Shifting):
             owner.endLunge(self, 0, [])
         super(LungeSkillVal, self).resetSkill(owner, reason, doRemoveState)
 
@@ -2123,20 +2117,16 @@ class LungeSkillVal(CommonSkillVal):
 # 闪避技能
 class DodgeSkillVal(CommonSkillVal):
     def getSkillState(self):
-        return gameconst.State.Dodging
+        return gameconst.StateEnum.Dodging
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        owner.resetUsingSkills(gameconst.ResetSkillReason.DodgeSkill)
-        isSucc, actionCtx, effectTargetIds = super(DodgeSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
+        owner.resetUsingSkills(gameconst.ResetSkillReason.ReasonDodgeSkill)
+        return super(DodgeSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
                                                                                       compensateTime,
                                                                                       doSetState, enterCD, parentCtx)
-        if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
 
-        return isSucc, None, effectTargetIds
-
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        if owner.hasState(gameconst.State.Dodging):
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
+        if owner.hasState(gameconst.StateEnum.Dodging):
             owner.endDodge(self, 0, [])
         super(DodgeSkillVal, self).resetSkill(owner, reason, doRemoveState)
 
@@ -2152,7 +2142,7 @@ class CastingSkillVal(CommonSkillVal):
 
     def onChangedFromSkill(self, fromSkillVal):
         super(CastingSkillVal, self).onChangedFromSkill(fromSkillVal)
-        if fromSkillVal.hasTag(gameconst.SkillTag.Casting):
+        if fromSkillVal.hasSkillTag(gameconst.SkillTag.Casting):
             self.castingStartTime = fromSkillVal.castingStartTime
 
     def checkUseSkill(self, owner, targetID, ignoreReasons=0, checkInRange=True):
@@ -2162,60 +2152,60 @@ class CastingSkillVal(CommonSkillVal):
         else:
             castingSucc = self.isCastingSucc()
             if castingSucc:
-                ignoreReasons |= gameconst.UseSkillCheck.OUT_OF_RANGE
+                ignoreReasons |= gameconst.UseSkillCheck.USC_ENUM_OUT_OF_RANGE
 
             ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange)
 
             if not castingSucc:
-                code = gameconst.UseSkillCheck.NEED_CAST
+                code = gameconst.UseSkillCheck.USC_ENUM_NEED_CAST
                 if not code & ignoreReasons:
-                    INFO_MSG('use casting skill before finishing casting', self.skillId, time.time(),
+                    LOG_IFO('use casting skill before finishing casting', self.skillId, time.time(),
                               self.castingStartTime, self.getCastingtimeMax(self.skillId))
                     return code | ret
 
-            elif ret == gameconst.UseSkillCheck.CHEKC_OK:
+            elif ret == gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
                 target = KBEngine.entities.get(targetID)
                 if target and self.needReleaseTarget() and not sMath.inRange2D(gameconst.DEFAULT_AOI, owner.position,
                                                                                target.position):
-                    code = gameconst.UseSkillCheck.OUT_OF_RANGE
+                    code = gameconst.UseSkillCheck.USC_ENUM_OUT_OF_RANGE
                     if not code & ignoreReasons:
                         return code
 
         return ret
 
-    def getEffectTargets(self, caster, targetId, arr, forceTarget=False, positionSkillArgs=None, context = None):
+    def getEffectTargets(self, caster, targetId, arr, forceTarget=False, positionSkillArgs=None, context=None):
         target = KBEngine.entities.get(targetId)
         if (targetId > 0 and not target) or not caster:
             targetId = 0
 
         forceTarget = self.needReleaseTarget()
 
-        targetIds = super(CastingSkillVal, self).getEffectTargets(caster, targetId, arr, forceTarget, context)
+        targetIds = super(CastingSkillVal, self).getEffectTargets(caster, targetId, arr, forceTarget, positionSkillArgs, context)
 
         return targetIds
 
-    def startCasting(self, caster, targetID, arr):
+    def startCasting(self, caster, actionCtx):
         if caster.IsAvatar and caster.mp < self.getCostMp(caster, self.skillId, caster.mpCostRatio):
             return
 
         self.castingStartTime = time.time()
 
-        tid = caster._callback(1, 'castingSkillCheck', (targetID, arr, tuple(caster.position)),
+        tid = caster.addTimerCB(1, 'castingSkillCheck', (actionCtx.useTargetId, actionCtx.skillArgs, tuple(caster.position)),
                                gametimer.TIMER_TAG_CASTING_CHECK)
-        self.setTempData(caster, 'castingCheckTimer', tid)
-        # caster.setTempMiscProp(gameconst.AvatarProps.castingCheckTimer, checkTimer)
+        self.setTimerTempData(caster, gameconst.SkillTempDataKey.CASTING_CHECK_TIMER, tid)
+        # caster.setTempMiscProp(gameconst.EntityPropsEnum.castingCheckTimer, checkTimer)
 
         # #主角由客户端发起释放，其他实体服务器自动放
         # if not caster.IsAvatar or caster._castSkillByServer():
         # 可能是action里cast的技能，直接用技能对象放
         castingTime = self.getCastingtimeMax(self.skillId)
-        useTimer = caster._callback(castingTime, '_useSkillBySkillObj', (self, targetID, arr),
+        useTimer = caster.addTimerCB(castingTime, '_useSkillBySkillObj', (self, actionCtx),
                                     gametimer.TIMER_TAG_CASTING_SKILL)
-        self.setTempData(caster, 'castingSkillTimer', useTimer)
+        self.setTimerTempData(caster, gameconst.SkillTempDataKey.CASTING_SKILL_TIMER, useTimer)
 
         castingAction = self.getSkillData(self.skillId).get('castingAction')
         if castingAction:
-            target = KBEngine.entities.get(targetID)
+            target = KBEngine.entities.get(actionCtx.useTargetId)
             castingAction(caster, target, actionContext.SkillCommonCtx(self.skillId))
 
     def isCastingSucc(self, delta=0.5):
@@ -2230,8 +2220,8 @@ class CastingSkillVal(CommonSkillVal):
         needCd = False
         if cdType == gameconst.CastingSkillCDType.IgnoreMove:
             if reason not in (
-                    gameconst.EndCasting.Move, gameconst.EndCasting.ClientCancel, gameconst.EndCasting.MissingTarget,
-                    gameconst.EndCasting.Dead, gameconst.EndCasting.Teleporting, gameconst.EndCasting.clientPick):
+                    gameconst.EndCasting.ECEnumMove, gameconst.EndCasting.ECEnumClientCancel, gameconst.EndCasting.ECEnumMissingTarget,
+                    gameconst.EndCasting.ECEnumDead, gameconst.EndCasting.ECEnumTeleporting, gameconst.EndCasting.ECEnumclientPick):
                 needCd = True
         elif cdType == gameconst.CastingSkillCDType.EnterCD:
             needCd = True
@@ -2240,132 +2230,32 @@ class CastingSkillVal(CommonSkillVal):
 
         if needCd:
             super(CastingSkillVal, self).enterCDTime(owner)
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
+            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
 
         owner.IsAICombatUnit and owner.aiController and owner.aiController.onCastingInterrupted(self.skillId)
 
-    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True):
-        super(CastingSkillVal, self).useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail)
+    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True, forceResetSkill=False):
+        super(CastingSkillVal, self).useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill)
         self.castingStartTime = 0
 
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        if reason != gameconst.ResetSkillReason.EndCasting:
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
+        if reason != gameconst.ResetSkillReason.ReasonEndCasting:
             castingSkillVal = owner.getCastingSkillInfo()
             if castingSkillVal and castingSkillVal.skillId == self.skillId:
-                owner.removeState(gameconst.State.Casting)
-        self._cancelTempTimer(owner, 'removeSkillStateTimer', gametimer.TIMER_TAG_REMOVE_SKILL_STATE)
-        self._cancelTempTimer(owner, 'castingCheckTimer', gametimer.TIMER_TAG_CASTING_CHECK)
-        self._cancelTempTimer(owner, 'castingSkillTimer', gametimer.TIMER_TAG_CASTING_SKILL)
+                owner.removeState(gameconst.StateEnum.Casting)
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CASTING_CHECK_TIMER, gametimer.TIMER_TAG_CASTING_CHECK)
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CASTING_SKILL_TIMER, gametimer.TIMER_TAG_CASTING_SKILL)
         # self.castingStartTime = 0      #这个只能在startCasting时重置或使用成功后重置
         super(CastingSkillVal, self).resetSkill(owner, reason, doRemoveState)
 
 
-# 刺客技能:有zedPoint时可能使用的是一个加强版的技能
-class ZedSkillVal(CommonSkillVal):
-    def __init__(self, skillId, skillLv, tNextCast=0.0, cdDelta=0.0, parentSkill=0):
-        super(ZedSkillVal, self).__init__(skillId, skillLv, tNextCast, cdDelta, parentSkill)
-        self.enhanceZedSkill = None
-
-    def _lateReload(self):
-        super(ZedSkillVal, self)._lateReload()
-        if self.enhanceZedSkill:
-            self.enhanceZedSkill.reloadScript()
-
-    # 劫强化技能客户端要求onUseSkill里发未强化的技能id
-    # A技能被强化为B技能，onUseSkill里总是发A技能id
-    def getNotifyClientSkillId(self):
-        rootSkillVal = self.getRootSkillVal()
-        return rootSkillVal.skillId, rootSkillVal.skillLv
-
-    def enhancedZedSkillId(self, owner):
-        sd = self.getSkillData(self.skillId)
-        if owner.zedPoint >= sd.get('zedBuffNum', 0) and sd.get('zedBuffSkillID'):
-            return sd['zedBuffSkillID']
-        return 0
-
-    def getEnhancedZedSkill(self, owner):
-        if self.enhanceZedSkill:
-            return self.enhanceZedSkill
-        enhanceSkillId = self.enhancedZedSkillId(owner)
-        if enhanceSkillId:
-            enhanceZedSkill = self.__class__(enhanceSkillId, self.skillLv, parentSkill=self)
-            owner.combatDebugMsg('getEnhancedZedSkill: skillId:%s, enhanceSkillId:%s', self.skillId, enhanceSkillId)
-            return enhanceZedSkill
-        return None
-
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
-        realSkillVal, _ = self.getRealSkillVal(owner)
-        if realSkillVal != self:
-            if self.inCDTime():
-                code = super(ZedSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
-                if code != gameconst.UseSkillCheck.CHEKC_OK:
-                    return code
-            return realSkillVal.checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
-        else:
-            return super(ZedSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
-
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        enhancedSkill = self.getEnhancedZedSkill(owner)
-        if enhancedSkill:
-            self.enhanceZedSkill = enhancedSkill
-            return self.enhanceZedSkill.beginUseSkill(owner, targetId, skillArgs, compensateTime, doSetState, enterCD,
-                                                      parentCtx)
-        else:
-            return super(ZedSkillVal, self).beginUseSkill(owner, targetId, skillArgs, compensateTime, doSetState,
-                                                          enterCD, parentCtx)
-
-    def enterCDTime(self, owner, delayCd=0):
-        if self.parentSkill:
-            self.parentSkill.enterCDTime(owner, delayCd)
-        super(ZedSkillVal, self).enterCDTime(owner, delayCd)
-
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        self.enhanceZedSkill = None
-        if self.parentSkill:
-            self.parentSkill.enhanceZedSkill = None
-            self.parentSkill.resetSkill(owner, reason, doRemoveState)
-        super(ZedSkillVal, self).resetSkill(owner, reason, doRemoveState)
-
-    def getRealSkillVal(self, owner):
-        enhancedSkill = self.getEnhancedZedSkill(owner)
-        if enhancedSkill:
-            return enhancedSkill, False
-        return self, False
-
-
-class ZedCastingSkillVal(ZedSkillVal, CastingSkillVal):
-    def getEnhancedZedSkill(self, owner):
-        enhancedSkill = super(ZedCastingSkillVal, self).getEnhancedZedSkill(owner)
-
-        if enhancedSkill and enhancedSkill.hasTag(gameconst.SkillTag.Casting):
-            enhancedSkill.castingStartTime = self.castingStartTime
-
-        return enhancedSkill
-
-
-class ResetCDZedSkillVal(ZedSkillVal):
-
-    def triggerRefreshSkillCD(self, owner):
-        super(ResetCDZedSkillVal, self).triggerRefreshSkillCD(owner)
-
-
-class StagedSkill(ZedSkillVal):
+class StagedSkill(CommonSkillVal):
     def __init__(self, skillId, skillLv, tNextCast=0.0, cdDelta=0.0, parentSkill=0):
         super(StagedSkill, self).__init__(skillId, skillLv, tNextCast, cdDelta, parentSkill)
         self.stageIndex = 0
 
     def canRemoveFromBuild(self):
         return self.stageIndex == 0 and super(StagedSkill, self).canRemoveFromBuild()
-
-    # 劫强化技能客户端要求onUseSkill里发未强化的技能id
-    # A技能被强化为B技能，下发的skillId可能为：
-    # A->A1->A2
-    # A->B1->B2
-    def getNotifyClientSkillId(self):
-        rootSkillVal = self.getRootSkillVal()
-        if rootSkillVal.enhanceZedSkill and rootSkillVal.stageIndex == 0:
-            return rootSkillVal.skillId, rootSkillVal.skillLv
-        return self.skillId, self.skillLv
 
     def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         realSkillVal, _ = self.getRealSkillVal(owner)
@@ -2374,24 +2264,34 @@ class StagedSkill(ZedSkillVal):
 
         return realSkillVal.checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
-    def getRealSkillVal(self, owner):
-        enhancedSkill = self.getEnhancedZedSkill(owner)
-        if enhancedSkill:
-            return enhancedSkill.getRealSkillVal(owner)
+    def childSkills(self):
+        _dic = self.getTempData(gameconst.SkillTempDataKey.STAGE_CHILD, {})
+        _retList = []
+        for _skill in _dic.values():
+            if not _skill():
+                continue
 
+            _retList.append(_skill())
+
+        return _retList
+
+    def getRealSkillVal(self, owner):
         if self.stageIndex == 0:
             return self, False
         else:
             curStageSkillId = self.getSkillIdForStage(self.stageIndex)
-            curStageSKill = self.getTempData('stageChild')
-            if curStageSKill and curStageSKill.skillId == curStageSkillId:
-                return curStageSKill, False
-
             if not curStageSkillId:
                 return self, False
-            curStageSKill = StagedSkill(curStageSkillId, self.skillLv, parentSkill=self)
-            self.setTempData(owner, 'stageChild', curStageSKill)
-            return curStageSKill, False
+
+            childDic = self.getTempData(gameconst.SkillTempDataKey.STAGE_CHILD, {})
+            if curStageSkillId in childDic and childDic[curStageSkillId]():
+                return childDic[curStageSkillId](), False
+
+            curStageSkill = StagedSkill(curStageSkillId, self.skillLv, parentSkill=self)
+            childDic[curStageSkillId] = weakref.ref(curStageSkill)
+
+            self.setTempData(owner, gameconst.SkillTempDataKey.STAGE_CHILD, childDic)
+            return curStageSkill, False
 
     def getSkillIdForStage(self, stageIndex):
         if stageIndex == 0:
@@ -2402,72 +2302,59 @@ class StagedSkill(ZedSkillVal):
         return 0
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        enhancedSkill = self.getEnhancedZedSkill(owner)
         rootSkillVal = self.getRootSkillVal()
-        owner.combatDebugMsg('StageSkill.beginUseSkill: skillId:%s, stageIndex:%s, targetId:%s, skillArgs:%s, doSetState:%s, rootSkillId:%s, enhancedSkillId:%s',
+        owner.combatDebugMsg('StageSkill.beginUseSkill: skillId:%s, stageIndex:%s, targetId:%s, skillArgs:%s, doSetState:%s, rootSkillId:%s',
                              self.skillId, self.stageIndex, targetId, skillArgs,
-                             doSetState, rootSkillVal.skillId, getattr(enhancedSkill, 'skillId', 0))
-        if enhancedSkill:
-            self.enhanceZedSkill = enhancedSkill
-            if self is rootSkillVal:
-                self.gotoNextStage(owner)
+                             doSetState, rootSkillVal.skillId)
+        nextStageSkillId = self.getSkillIdForStage(self.stageIndex + 1)
 
-            isSucc, actionCtx, effectTargetIds = self.enhanceZedSkill.beginUseSkill(owner, targetId, skillArgs,
-                                                                                    compensateTime, doSetState, enterCD,
-                                                                                    parentCtx)
-
-            if self is rootSkillVal:
-                self.enhanceZedSkill.gotoNextStage(owner)
-            return isSucc, actionCtx, effectTargetIds
+        # 如果有下一段就不进入cd
+        enterCD = (nextStageSkillId == 0)
+        if self.stageIndex == 0:
+            self is rootSkillVal and self.gotoNextStage(owner)
+            isSucc = self.doBeginUseSkill(
+                owner, 
+                targetId, 
+                skillArgs,
+                compensateTime, 
+                doSetState,
+                enterCD, 
+                parentCtx)
         else:
-            isEnhancedStage = bool(rootSkillVal.enhanceZedSkill)
+            curStageSkill, _ = self.getRealSkillVal(owner)
+            if curStageSkill is self:
+                raise Exception('ckz curStageSkill is self', self.skillId, self.stageIndex, owner.gbId)
 
-            nextStageSkillId = self.getSkillIdForStage(self.stageIndex + 1)
+            self is rootSkillVal and self.gotoNextStage(owner)
+            isSucc = curStageSkill.beginUseSkill(owner, targetId, skillArgs,
+                                                                                compensateTime, doSetState, enterCD,
+                                                                                parentCtx)
 
-            # 如果有下一段就不进入cd
-            enterCD = (nextStageSkillId == 0)
-            if self.stageIndex == 0:
-                self is rootSkillVal and self.gotoNextStage(owner)
-                isSucc, actionCtx, effectTargetIds = super(StagedSkill, self).beginUseSkill(owner, targetId, skillArgs,
-                                                                                            compensateTime, doSetState,
-                                                                                            enterCD, parentCtx)
-            else:
-                curStageSKill, _ = self.getRealSkillVal(owner)
-                if curStageSKill is self:
-                    raise Exception('ckz curStageSKill is self', self.skillId, self.stageIndex, owner.gbId)
+        if isSucc:
+            if self.hasTempData(gameconst.SkillTempDataKey.STAGE_CD_TIMER):
+                self._cancelTempTimer(owner, gameconst.SkillTempDataKey.STAGE_CD_TIMER, gametimer.TIMER_TAG_ON_STAGE_END)
+                self.popTempData(gameconst.SkillTempDataKey.STAGE_CD_TIMER)
+        else:
+            return gameconst.StartActionResult.Fail
 
-                self is rootSkillVal and self.gotoNextStage(owner)
-                isSucc, actionCtx, effectTargetIds = curStageSKill.beginUseSkill(owner, targetId, skillArgs,
-                                                                                 compensateTime, doSetState, enterCD,
-                                                                                 parentCtx)
+        if nextStageSkillId:
+            # 只有root技能才能走到这里，子技能是走不到的，所以onStageEnd是只有root才会调用
+            stageDuration = SSD.datas[nextStageSkillId]['mulSkillCD']
+            cdTimer = owner.addTimerCB(stageDuration, '_onSkillCallback', (self, 'onStageEnd', (True,)),
+                                        gametimer.TIMER_TAG_ON_STAGE_END)
+            self.setTimerTempData(owner, gameconst.SkillTempDataKey.STAGE_CD_TIMER, cdTimer)
 
-            if isSucc:
-                if self.hasTempData('stageCDTimer'):
-                    self._cancelTempTimer(owner, 'stageCDTimer', gametimer.TIMER_TAG_ON_STAGE_END)
-                    self.popTempData('stageCDTimer')
-            else:
-                return gameconst.StartActionResult.Fail, None, effectTargetIds
+            clientStageIdx = self.stageIndex
+        else:
+            clientStageIdx = 0
 
-            if nextStageSkillId:
-                stageDuration = SSD.datas[nextStageSkillId]['mulSkillCD']
-                cdTimer = owner._callback(stageDuration, '_onSkillCallback', (self, 'onStageEnd', (True,)),
-                                          gametimer.TIMER_TAG_ON_STAGE_END)
-                self.setTempData(owner, 'stageCDTimer', cdTimer)
+        ##阶段技能只有普通技能的第一段以及强化后的第一段可以给客户端提交相关数据
+        stageSkillIds = self.getSkillData(self.skillId).get('mulSkillID')
+        curTime = time.time()
+        stageSkillIds and owner.IsAvatar and owner.allClients.onUseStageSkill(rootSkillVal.skillId, clientStageIdx,
+                                                                                curTime)
 
-                clientStageIdx = self.stageIndex
-                if isEnhancedStage and nextStageSkillId:
-                    stageSkillIds = SSD.datas[rootSkillVal.skillId].get('mulSkillID')
-                    clientStageIdx += len(stageSkillIds)
-            else:
-                clientStageIdx = 0
-
-            ##阶段技能只有普通技能的第一段以及强化后的第一段可以给客户端提交相关数据
-            stageSkillIds = self.getSkillData(self.skillId).get('mulSkillID')
-            curTime = time.time()
-            stageSkillIds and owner.IsAvatar and owner.allClients.onUseStageSkill(rootSkillVal.skillId, clientStageIdx,
-                                                                                  curTime)
-
-            return isSucc, actionCtx, effectTargetIds
+        return isSucc
 
     def gotoNextStage(self, owner):
         self.stageIndex += 1
@@ -2480,123 +2367,63 @@ class StagedSkill(ZedSkillVal):
 
     # 超时或放完最后一段结束多段技能
     def onStageEnd(self, owner, endByTimeout=False):
-        self._cancelTempTimer(owner, 'stageCDTimer', gametimer.TIMER_TAG_ON_STAGE_END)
+        # 目前只有root才会走到这里
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.STAGE_CD_TIMER, gametimer.TIMER_TAG_ON_STAGE_END)
         rootSkillVal = self.getRootSkillVal()
-        owner.combatDebugMsg('StageSkill.onStageEnd: skillId:%s, rootSkillId:%s, rootSkillEnhanceZedSkill:%s, rootSkillStageIndex:%s',
-                             self.skillId, rootSkillVal.skillId, rootSkillVal.enhanceZedSkill, rootSkillVal.stageIndex)
+        owner.combatDebugMsg('StageSkill.onStageEnd: skillId:%s, rootSkillId:%s, rootSkillStageIndex:%s',
+                             self.skillId, rootSkillVal.skillId, rootSkillVal.stageIndex)
         rootSkillVal.enterCDTime(owner)
         owner.client.onSetAddSkillCd(rootSkillVal.skillId, float(rootSkillVal.getCD(owner)),
-                                     float(rootSkillVal.tNextCast), False, rootSkillVal.getTempData('releaseTime', 0), rootSkillVal.getTempData('totalReleaseCount', 0), rootSkillVal.getTempData('releasedCount', 0), not rootSkillVal.isSkillCDStatusFrozen())
+                                     float(rootSkillVal.tNextCast), False, rootSkillVal.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), rootSkillVal.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), rootSkillVal.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not rootSkillVal.isSkillCDStatusFrozen())
 
         if endByTimeout:
             self.resetSkill(owner)
-            rootSkillVal.resetSkill(owner)
 
-    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True):
+    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True, forceResetSkill=False):
         rootSkillVal = self.getRootSkillVal()
-        rootSkillVal.onStageSkillDone(owner)
+        # 获取子技能列表一定要放前面，因为reset之后 tempData就变成空的了
+        _children = self.childSkills()
+        CommonSkillVal.useSkillDone(self, owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill)
+        if forceResetSkill:
+            # 如果是force情况下，一定是自上而下的
+            if self is rootSkillVal:
+                for _child in _children:
+                    _child.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill)
 
-        CommonSkillVal.useSkillDone(self, owner, targetId, skillArgs, isSucc, startActionFail)
-        # 多段技能结束，通知父技能Done
-        if self is not rootSkillVal and rootSkillVal.isLastStage(owner):
-            rootSkillVal.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail)
-
-    def onStageSkillDone(self, owner):
-        pass
-
-    def childSkill(self):
-        return self.getTempData('stageChild')
+        else:
+            if self is not rootSkillVal and rootSkillVal.isLastStage(owner):
+            # 多段技能结束，通知父技能Done, 多段的技能不能设置force，不然可能会无限循环
+                rootSkillVal.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=False)
 
     def needResetOnSkillDone(self, owner):
         # 如果技能使用成功且还有下一段就先不reset，否则被reset到第一段了,等着onStageEnd里去reset
+        rootSkillVal = self.getRootSkillVal()
         if self.isLastStage(owner):
             return True
-        return False
 
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        if reason == gameconst.ResetSkillReason.Teleport or reason == gameconst.ResetSkillReason.Transform or reason == gameconst.ResetSkillReason.DuelComplete:
+        if self is rootSkillVal:
+            return False
+
+        return True
+
+    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
+        if reason == gameconst.ResetSkillReason.ReasonTeleport or reason == gameconst.ResetSkillReason.ReasonTransform or reason == gameconst.ResetSkillReason.ReasonDuelComplete:
             if self.stageIndex > 0:
                 self.enterCDTime(owner)
-                owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
+                owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
                 rootSkillVal = self.getRootSkillVal()
                 owner.IsAvatar and owner.client.onUseStageSkill(rootSkillVal.skillId, 0, time.time())
 
         self.stageIndex = 0
-        self.enhanceZedSkill = None
-        self.popTempData('stageChild', None)
-        self._cancelTempTimer(owner, 'stageCDTimer', gametimer.TIMER_TAG_ON_STAGE_END)
+        self._cancelTempTimer(owner, gameconst.SkillTempDataKey.STAGE_CD_TIMER, gametimer.TIMER_TAG_ON_STAGE_END)
 
         super(StagedSkill, self).resetSkill(owner, reason, doRemoveState)
 
 
-# 射手特殊技能
-class ShooterSkillVal(CommonSkillVal):
-    def __init__(self, skillId, skillLv, tNextCast=0.0, cdDelta=0.0, parentSkill=0):
-        super(ShooterSkillVal, self).__init__(skillId, skillLv, tNextCast, cdDelta, parentSkill)
-        self.tCanUseEndTime = 0
-        self.canUseAllTime = 0
-
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        isSucc, actionCtx, effectTargetIds = super(ShooterSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
-                                                                                        compensateTime,
-                                                                                        doSetState, enterCD, parentCtx)
-        if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
-
-        endTime = self.tCanUseEndTime - time.time()
-        cdTimer = owner._callback(endTime, '_onSkillCallback', (self, 'resetSkill', (owner,)),
-                                  gametimer.TIMER_TAG_SHOOTER_SKILL_END)
-        self.setTempData(owner, 'shooterCDTimer', cdTimer)
-
-        return isSucc, None, effectTargetIds
-
-    def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
-        self._cancelTempTimer(owner, 'shooterCDTimer', gametimer.TIMER_TAG_SHOOTER_SKILL_END)
-        super(ShooterSkillVal, self).resetSkill(owner, reason, doRemoveState)
-
-    def enterCanUseState(self, owner, canUseAllTime=0):
-        INFO_MSG("enterCanUseState", canUseAllTime)
-        if not owner.hasBuff(SRSC.datas['tag95SkillCheckBuff']['valueCN']):
-            return
-
-        if time.time() <= self.tCanUseEndTime:
-            return
-
-        if not canUseAllTime:
-            canUseAllTime = SRSC.datas['tag95DefaultTime'].get('valueCN')
-
-        self.tCanUseEndTime = time.time() + canUseAllTime
-        self.canUseAllTime = canUseAllTime
-        owner.addBuff(SRSC.datas['tag95SkillAddBuff']['valueCN'], 1, owner.id, canUseAllTime)
-        INFO_MSG("enterCanUseState2", self.tCanUseEndTime, self.canUseAllTime)
-        owner.client.onShooterSkillCanUse(self.skillId, self.tCanUseEndTime, self.canUseAllTime)
-
-    def checkCanUse(self):
-        return time.time() < self.tCanUseEndTime
-
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
-        code = gameconst.UseSkillCheck.SHOOTER_SKILL_CANNOT_USE
-        if not code & ignoreReasons and not self.checkCanUse():
-            owner.combatDebugMsg('checkUseSkill because cannot use: skillId:%s, tNextCast:%s, time:%s' % (self.getSkillId(), self.tNextCast, time.time()))
-            return code
-
-        return super(ShooterSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
-
-
 # 超级技能
 class UltraSkillVal(CommonSkillVal):
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
-        isSucc, actionCtx, effectTargetIds = super(UltraSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
-                                                                                      compensateTime,
-                                                                                      doSetState, enterCD, parentCtx)
-        if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
-
-
-        return isSucc, actionCtx, effectTargetIds
-
     def getSkillState(self):
-        return gameconst.State.speicalSkill
+        return gameconst.StateEnum.speicalSkill
 
     def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         return super(UltraSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
@@ -2608,14 +2435,8 @@ def getSkillClass(skillId):
         return
     tags = SkillBase.getTag(skillId)
 
-    if gameconst.SkillTag.Casting in tags and gameconst.SkillTag.ZedSkill in tags:
-        return ZedCastingSkillVal
-    elif gameconst.SkillTag.Casting in tags:
+    if gameconst.SkillTag.Casting in tags:
         return CastingSkillVal
-    elif gameconst.SkillTag.ResetCDZedSkill in tags:
-        return ResetCDZedSkillVal
-    elif gameconst.SkillTag.ZedSkill in tags:
-        return ZedSkillVal
     elif gameconst.SkillTag.MulStageSkill in tags:
         return StagedSkill
     elif gameconst.SkillTag.Chongfeng in tags:
@@ -2624,8 +2445,6 @@ def getSkillClass(skillId):
         return LungeSkillVal
     elif gameconst.SkillTag.DodgeSkill in tags:
         return DodgeSkillVal
-    elif gameconst.SkillTag.lzSpecialSkill in tags:
-        return ShooterSkillVal
     elif gameconst.SkillTag.UltraSkill in tags:
         return UltraSkillVal
     else:

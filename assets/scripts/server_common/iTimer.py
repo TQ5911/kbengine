@@ -105,7 +105,7 @@ class DatetimeTimerMixin(object):
                 return j
             self.datetimeTimerIdCnt += 1
 
-        gameengine.reportCritical(f"{self.__class__.__name__}::_getNextDatetimeTimerId:: timerId full!!!",
+        gameengine.panicStack(f"{self.__class__.__name__}::_getNextDatetimeTimerId:: timerId full!!!",
                                   _crtDatetimeTimerIdCnt, len(datetimeTimerProp))
         return 0
 
@@ -131,12 +131,12 @@ class DatetimeTimerMixin(object):
     def _setDatetimeTimerData(self, timerId, data):
         datetimeTimerProp = self.getDatetimeTimerProp()
         if timerId in datetimeTimerProp:
-            gameengine.reportCritical(f"{self.__class__.__name__}::_setDatetimeTimerData:: timerId already exists!!!",
+            gameengine.panicStack(f"{self.__class__.__name__}::_setDatetimeTimerData:: timerId already exists!!!",
                                       timerId, data, datetimeTimerProp[timerId])
 
-        if not (hasattr(self, 'getTempMiscProp') and self.getTempMiscProp(gameconst.AvatarProps.disableTimerNumErrMsg)) \
+        if not (hasattr(self, 'getTempMiscProp') and self.getTempMiscProp(gameconst.EntityPropsEnum.disableTimerNumErrMsg)) \
                 and len(datetimeTimerProp) >= self.getCallbackNumThreshold():
-            gameengine.reportCritical(f"{self.__class__.__name__}::_setDatetimeTimerData:: too many callbacks!!!",
+            gameengine.panicStack(f"{self.__class__.__name__}::_setDatetimeTimerData:: too many callbacks!!!",
                                       timerId, data, len(datetimeTimerProp), self.IsAvatar, datetimeTimerProp)
 
         datetimeTimerProp[timerId] = data
@@ -170,7 +170,7 @@ class DatetimeTimerMixin(object):
 
     def _datetimeCallback(self, tFire: int, funcName, funcArgs, tag, varTimerID='', **kwargs):
         if not self.datetimeTimerId:
-            gameengine.reportCritical(f"{self.__class__.__name__}::_datetimeCallback:: tick timer unregr. !!!",
+            gameengine.panicStack(f"{self.__class__.__name__}::_datetimeCallback:: tick timer unregr. !!!",
                                       tFire, funcName, funcArgs, tag, varTimerID, kwargs)
             return 0
 
@@ -186,7 +186,7 @@ class DatetimeTimerMixin(object):
         if funcArgs is None:
             funcArgs = ()
 
-        if tFire < utils.getNow():
+        if tFire < utils.curTS():
             getattr(self, funcName)(*funcArgs)
             return 0
 
@@ -205,18 +205,18 @@ class DatetimeTimerMixin(object):
 
         data = self._getDatetimeTimerData(timerId)
         if not data:
-            ERROR_MSG(f'{self.__class__.__name__}::_cancelDatetimeCallback:: cancel timer timerID not in timerData',
+            LOG_ERR(f'{self.__class__.__name__}::_cancelDatetimeCallback:: cancel timer timerID not in timerData',
                       timerId, '|', tag, '|', data, self.getDatetimeTimerProp())
             for line in traceback.format_stack():
-                ERROR_MSG(line)
+                LOG_ERR(line)
             return
 
         funcName, funcArgs, varTimerId, timerTag, endT, *_ = data
         if tag not in (gametimer.TIMER_TAG_NONE, timerTag):
-            ERROR_MSG(f'{self.__class__.__name__}::_cancelDatetimeCallback:: cancel timer mismatch',
+            LOG_ERR(f'{self.__class__.__name__}::_cancelDatetimeCallback:: cancel timer mismatch',
                       timerId, '|', tag, '|', data, self.getDatetimeTimerProp())
             for line in traceback.format_stack():
-                ERROR_MSG(line)
+                LOG_ERR(line)
             return
 
         if varTimerId:
@@ -244,7 +244,7 @@ class DatetimeTimerMixin(object):
         tick = self.getDatetimeTimerTickInterval()
         start = random.random() * tick
         if self.datetimeTimerId:
-            gameengine.reportCritical(f"{self.__class__.__name__}::addDatetimeTimerTick:: already get timerId!!!",
+            gameengine.panicStack(f"{self.__class__.__name__}::addDatetimeTimerTick:: already get timerId!!!",
                                       self.datetimeTimerId)
             self.pyDelTimer(self.datetimeTimerId, gametimer.TIMER_DATETIME_ITIMER_CALLBACK)
         self.datetimeTimerId = self.pyAddTimer(start, tick, gametimer.TIMER_DATETIME_ITIMER_CALLBACK)
@@ -260,13 +260,13 @@ class DatetimeTimerMixin(object):
     #             self._popDatetimeTimerData(timerId)
     #             continue
 
-    #         if utils.getNow() < data.endT:
+    #         if utils.curTS() < data.endT:
     #             continue
 
     #         self._onTimerDatetimeCallback(timerId)
     def _onDatetimeTimerTick(self):
-        # ERROR_MSG("DEBUG:_onDatetimeTimerTick:START:", self.datetimeTimerDataNextT)
-        now = utils.getNow()
+        # LOG_ERR("DEBUG:_onDatetimeTimerTick:START:", self.datetimeTimerDataNextT)
+        now = utils.curTS()
         datetimeTimerProp = self.getDatetimeTimerProp()
         datetimeTimerTimeCache = self.getDatetimeTimerDataTimeCache()
 
@@ -293,10 +293,10 @@ class DatetimeTimerMixin(object):
             self.datetimeTimerDataNextT = min(datetimeTimerTimeCache) if datetimeTimerTimeCache else 0
 
         if _depth >= _depthAlert:
-            gameengine.reportCritical(f"{self.__class__.__name__}::_onDatetimeTimerTick:: timerId depth alert!!!",
+            gameengine.panicStack(f"{self.__class__.__name__}::_onDatetimeTimerTick:: timerId depth alert!!!",
                                       _depth, _depthAlert, self.datetimeTimerDataNextT, now,
                                       now - self.datetimeTimerDataNextT, len(datetimeTimerProp))
-        # ERROR_MSG("DEBUG:_onDatetimeTimerTick:ENDED:", self.datetimeTimerDataNextT)
+        # LOG_ERR("DEBUG:_onDatetimeTimerTick:ENDED:", self.datetimeTimerDataNextT)
     # endregion
 
 
@@ -304,15 +304,15 @@ class ITimer(DatetimeTimerMixin):
     def _setTimerData(self, timerID, data):
         timerProp = getattr(self, TIMER_PROP)
         if timerID in timerProp:
-            gameengine.reportCritical('timer id already exists!!!', timerID, data, timerProp[timerID])
+            gameengine.panicStack('timer id already exists!!!', timerID, data, timerProp[timerID])
 
         if len(timerProp) >= gameconfig.callbackNumThreshold():
             if not hasattr(self, 'getTempMiscProp') or not hasattr(self, 'setTempMiscProp'):
-                gameengine.reportCritical('too many callbacks!!!', self.id, self.__class__.__name__, timerID, data,
+                gameengine.panicStack('too many callbacks!!!', self.id, self.__class__.__name__, timerID, data,
                                           len(timerProp))
-            elif not self.getTempMiscProp(gameconst.AvatarProps.disableTimerNumErrMsg) and self.getTempMiscProp(
-                    gameconst.AvatarProps.timerNumErrMsgTS, 0) < utils.getNow():
-                self.setTempMiscProp(gameconst.AvatarProps.timerNumErrMsgTS, utils.getNow() + 1800)
+            elif not self.getTempMiscProp(gameconst.EntityPropsEnum.disableTimerNumErrMsg) and self.getTempMiscProp(
+                    gameconst.EntityPropsEnum.timerNumErrMsgTS, 0) < utils.curTS():
+                self.setTempMiscProp(gameconst.EntityPropsEnum.timerNumErrMsgTS, utils.curTS() + 1800)
 
                 num = 0
                 funcDic = {}
@@ -323,7 +323,7 @@ class ITimer(DatetimeTimerMixin):
                         break
 
                 funcList = sorted([(v, k) for k, v in funcDic.items()], reverse=True)
-                gameengine.reportCritical('too many callbacks!!!', self.id, self.__class__.__name__, timerID, data,
+                gameengine.panicStack('too many callbacks!!!', self.id, self.__class__.__name__, timerID, data,
                                           len(timerProp), funcList[:5])
 
         timerProp[timerID] = data
@@ -357,9 +357,9 @@ class ITimer(DatetimeTimerMixin):
         timerProp = getattr(self, TIMER_PROP)
         return timerID in timerProp
 
-    def _callback(self, t, funcName, funcArgs, tag, varTimerID='', clearTimerIdFunc='', clearTimerIdArgs=()):
+    def addTimerCB(self, t, funcName, funcArgs, tag, varTimerID='', clearTimerIdFunc='', clearTimerIdArgs=()):
         if not utils.isBelongTimerTag(tag):
-            gameengine.reportCritical('callback tag error', tag)
+            gameengine.panicStack('callback tag error', tag)
             return 0
 
         if not funcName:
@@ -388,12 +388,12 @@ class ITimer(DatetimeTimerMixin):
         return _CallbackCalled(t, varTimeID, fnName, tag, self)
 
     def flowControllerDelayExecEventCallback(self, delayEvent, context):
-        delayEvent.handle_be_triggered_after_delay(context)
+        delayEvent.handleBeTriggeredAfterDelay(context)
 
     def flowControllerDelayCallback(self, delayEvent, cbFuncName, cbArgs, cbKwArgs):
         getattr(delayEvent, cbFuncName)(*cbArgs, **cbKwArgs)
 
-    def _cancelCallback(self, timerID, tag):
+    def cancelTimerCB(self, timerID, tag):
         if not timerID:
             return gameconst.TIMER_CANCEL_RET_ZERO_TIMER
 
@@ -404,11 +404,14 @@ class ITimer(DatetimeTimerMixin):
         if self.isDestroyed:
             return gameconst.TIMER_CANCEL_RET_DESTROY
 
+        if len(data) < 6:
+            return gameconst.TIMER_CANCEL_ARG_INVALID
+
         funcName, funcArgs, varTimerId, timerTag, clearTimerIdFunc, clearTimerIdArgs = data
         if tag != gametimer.TIMER_TAG_NONE and tag != timerTag:
-            ERROR_MSG('cancel timer mismatch', timerID, '|', tag, '|', data, self.getControllers())
+            LOG_ERR('cancel timer mismatch', timerID, '|', tag, '|', data, self.getControllers())
             for line in traceback.format_stack():
-                ERROR_MSG(line)
+                LOG_ERR(line)
             return gameconst.TIMER_CANCEL_RET_MISMATCH
         else:
             self.__popTimerData(timerID)
@@ -421,16 +424,16 @@ class ITimer(DatetimeTimerMixin):
             getattr(self, clearTimerIdFunc)(*clearTimerIdArgs)
 
         if self.delTimer(timerID) < 0:
-            ERROR_MSG('invalid timerId', timerID, '|', tag, '|', data, self.getControllers())
+            LOG_ERR('invalid timerId', timerID, '|', tag, '|', data, self.getControllers())
             for line in traceback.format_stack():
-                ERROR_MSG(line)
+                LOG_ERR(line)
 
         return gameconst.TIMER_CANCEL_RET_SUCCESS
 
     def _cancelAllCallbacks(self):
         timerProp = getattr(self, TIMER_PROP)
         for timerId in list(timerProp.keys()):
-            self._cancelCallback(timerId, gametimer.TIMER_TAG_NONE)
+            self.cancelTimerCB(timerId, gametimer.TIMER_TAG_NONE)
 
     def _onTimerCallback(self, timerID):
         data = self.__popTimerData(timerID)
@@ -456,7 +459,7 @@ class ITimer(DatetimeTimerMixin):
 
     def pyAddTimer(self, start, interval, userData):
         if not utils.isBelongTimerIdTag(userData):
-            gameengine.reportCritical('pyAddTimer wrong userData range', userData)
+            gameengine.panicStack('pyAddTimer wrong userData range', userData)
 
         timerId = self.addTimer(start, interval, userData)
         self._setTimerData(timerId, ('', interval, '', userData))
@@ -468,22 +471,22 @@ class ITimer(DatetimeTimerMixin):
 
         data = self.__popTimerData(timerID)
         if not data:
-            ERROR_MSG('pyDelTimer timerID not exist', timerID, '|', tag)
+            LOG_ERR('pyDelTimer timerID not exist', timerID, '|', tag)
             return
 
         if self.isDestroyed:
             return
 
         if tag != data[3]:
-            ERROR_MSG('pyDelTimer mismatch', timerID, '|', tag, '|', data, self.getControllers())
+            LOG_ERR('pyDelTimer mismatch', timerID, '|', tag, '|', data, self.getControllers())
             for line in traceback.format_stack():
-                ERROR_MSG(line)
+                LOG_ERR(line)
             return
 
         if self.delTimer(timerID) < 0:
-            ERROR_MSG('pyDelTimer invalid timerID', timerID, '|', tag, '|', data, self.getControllers())
+            LOG_ERR('pyDelTimer invalid timerID', timerID, '|', tag, '|', data, self.getControllers())
             for line in traceback.format_stack():
-                ERROR_MSG(line)
+                LOG_ERR(line)
 
     def clearTimerId(self, obj, funcName, funcArgs):
         if obj:
@@ -526,7 +529,7 @@ class _CallbackCalled(object):
     def __call__(self, *args):
         if not self.fnName:
             raise TypeError("special function name '{}' not define".format(self.fnName))
-        return self.owner._callback(self.delayTime, self.fnName, args, self.tag, self.varTimeID)
+        return self.owner.addTimerCB(self.delayTime, self.fnName, args, self.tag, self.varTimeID)
 
     def __getattr__(self, fnName):
         if self.fnName and fnName != self.fnName:
@@ -536,5 +539,5 @@ class _CallbackCalled(object):
         fn = getattr(self.owner, fnName)
         if not callable(fn):
             raise TypeError("'{}' object is not callable".format(type(fn).__name__))
-        return lambda *args: self.owner._callback(self.delayTime, fnName, args, self.tag,
+        return lambda *args: self.owner.addTimerCB(self.delayTime, fnName, args, self.tag,
                                                   varTimerID=self.varTimeID)

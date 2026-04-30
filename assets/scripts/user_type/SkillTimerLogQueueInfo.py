@@ -8,20 +8,20 @@ from collections import deque
 import utils
 
 
-class SkillTimerLogQueueVal(userType.UserSoleType):
+class SkillTimerLogQueueVal(userType.UserSingleType):
     '''SKILL_TIMER_LOG_QUEUE_DATA_INFO'''
     def __init__(self, logQueue=()):
         self.logQueue = deque(logQueue)
 
     def addSkillTimerLog(self, objId, timerId, opr, key, skillId):
-        _val = SkillTimerLogInfo.SkillTimerLogVal(objId, timerId, opr, key, skillId, utils.getNow())
+        _val = SkillTimerLogInfo.SkillTimerLogVal(objId, timerId, opr, key, skillId, utils.curTS())
         self.logQueue.append(_val)
         while len(self.logQueue) > gameconst.SKILL_TIMER_LOG_QUEUE_MAX_CNT:
             self.logQueue.popleft()
 
     def errReportLogQueue(self):
         for log in self.logQueue:
-            ERROR_MSG(f"errReportLogQueue: {log}")
+            LOG_ERR(f"errReportLogQueue: {log}")
 
     def toSkillTimerLogQueueSavedDict(self):
         return {

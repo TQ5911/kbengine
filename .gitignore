@@ -21,3 +21,4 @@ centralService/bin/login/centralLogin.exe
 centralService/bin/login/testLogin
 centralService/bin/maple/maple
 centralService/bin/router/router
+centralService/bin/orderService/orderService

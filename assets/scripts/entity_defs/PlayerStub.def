@@ -161,8 +161,8 @@
         </getFriendsBox>
 
         <getPlayerInfoOffline>
-            <Arg>           ENTITYCALL      </Arg>
             <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           ENTITYCALL      </Arg>
         </getPlayerInfoOffline>
 
         <onGetMemberJobAndGuildCache>

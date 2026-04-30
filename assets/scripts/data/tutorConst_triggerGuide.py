@@ -219,9 +219,6 @@ datas = _tools.RODict({
     24201104: _tools.RODict({
         "conditionArgs": "",
     }),
-    24201105: _tools.RODict({
-        "conditionArgs": "",
-    }),
     24201201: _tools.RODict({
         "conditionArgs": "",
     }),
@@ -393,12 +390,6 @@ datas = _tools.RODict({
     24202104: _tools.RODict({
         "conditionArgs": "",
     }),
-    24202105: _tools.RODict({
-        "conditionArgs": "",
-    }),
-    24202106: _tools.RODict({
-        "conditionArgs": "",
-    }),
     24202201: _tools.RODict({
         "conditionArgs": "",
     }),
@@ -448,6 +439,9 @@ datas = _tools.RODict({
         "conditionArgs": "",
     }),
     24202404: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24202500: _tools.RODict({
         "conditionArgs": "",
     }),
     24110001: _tools.RODict({

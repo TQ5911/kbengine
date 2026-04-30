@@ -427,33 +427,6 @@ namespace KBEngine
 		}
 	}
 
-	public struct PYTHON
-	{
-		byte[] value;
-
-		PYTHON(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](PYTHON value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator PYTHON(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new PYTHON(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
-		}
-	}
-
 	public struct BLOB
 	{
 		byte[] value;
@@ -592,33 +565,6 @@ namespace KBEngine
 			{
 				return UInt64.MinValue;
 			}
-		}
-	}
-
-	public struct UID1
-	{
-		byte[] value;
-
-		UID1(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](UID1 value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator UID1(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new UID1(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -957,33 +903,6 @@ namespace KBEngine
 		{
 			string tvalue = (string)value;
 			return new METHOD_NAME(tvalue);
-		}
-	}
-
-	public struct METHOD_ARGS
-	{
-		byte[] value;
-
-		METHOD_ARGS(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](METHOD_ARGS value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator METHOD_ARGS(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new METHOD_ARGS(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -1455,33 +1374,6 @@ namespace KBEngine
 		{
 			string tvalue = (string)value;
 			return new PATH(tvalue);
-		}
-	}
-
-	public struct PY_SET
-	{
-		byte[] value;
-
-		PY_SET(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](PY_SET value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator PY_SET(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new PY_SET(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -2820,33 +2712,6 @@ namespace KBEngine
 		}
 	}
 
-	public struct ERROR
-	{
-		byte[] value;
-
-		ERROR(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](ERROR value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator ERROR(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new ERROR(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
-		}
-	}
-
 	public struct ERRNO
 	{
 		UInt32 value;
@@ -2881,33 +2746,6 @@ namespace KBEngine
 			{
 				return UInt32.MinValue;
 			}
-		}
-	}
-
-	public struct DUNGEON_SRC
-	{
-		byte[] value;
-
-		DUNGEON_SRC(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](DUNGEON_SRC value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator DUNGEON_SRC(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new DUNGEON_SRC(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -3426,33 +3264,6 @@ namespace KBEngine
 			{
 				return Int32.MinValue;
 			}
-		}
-	}
-
-	public struct CROSS_ENTITYCALL
-	{
-		byte[] value;
-
-		CROSS_ENTITYCALL(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](CROSS_ENTITYCALL value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator CROSS_ENTITYCALL(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new CROSS_ENTITYCALL(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -5554,6 +5365,43 @@ namespace KBEngine
 		}
 	}
 
+	public struct HIST_COND
+	{
+		UInt32 value;
+
+		HIST_COND(UInt32 value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator UInt32(HIST_COND value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator HIST_COND(UInt32 value)
+		{
+			UInt32 tvalue = (UInt32)value;
+			return new HIST_COND(tvalue);
+		}
+
+		public static UInt32 MaxValue
+		{
+			get
+			{
+				return UInt32.MaxValue;
+			}
+		}
+
+		public static UInt32 MinValue
+		{
+			get
+			{
+				return UInt32.MinValue;
+			}
+		}
+	}
+
 	public class FACE_DATA
 	{
 		public UInt16 suitId = 0;
@@ -5566,6 +5414,7 @@ namespace KBEngine
 	{
 		public UInt32 itemId = 0;
 		public UInt32 itemNum = 0;
+		public Byte bindType = 0;
 
 	}
 
@@ -5882,7 +5731,6 @@ namespace KBEngine
 		public UInt16 school = 0;
 		public Byte sex = 0;
 		public Byte picFrameId = 0;
-		public Byte bFollow = 0;
 		public Byte bOnline = 0;
 		public UInt32 spaceNo = 0;
 		public Vector3 position = new Vector3(0f, 0f, 0f);
@@ -6293,6 +6141,8 @@ namespace KBEngine
 		public Byte tmpFlag = 0;
 		public UInt32 offlineTime = 0;
 		public UInt32 fund = 0;
+		public UInt32 joinTime = 0;
+		public UInt32 histCond = 0;
 
 	}
 
@@ -6716,6 +6566,7 @@ namespace KBEngine
 		public UInt32 addTime = 0;
 		public UInt32 lastFindSpaceNo = 0;
 		public UInt32 lastFindTime = 0;
+		public UInt32 lastScheduleTime = 0;
 
 	}
 
@@ -6725,13 +6576,6 @@ namespace KBEngine
 		public UInt32 offlineTime = 0;
 		public Int32 score = 0;
 		public UInt32 level = 0;
-
-	}
-
-	public class ENEMY_MGR_DATA_INFO
-	{
-		public List<RELATION_ENEMY_DATA_INFO> enemyList = new List<RELATION_ENEMY_DATA_INFO>();
-		public List<byte[]> recordList = new List<byte[]>();
 
 	}
 
@@ -6909,6 +6753,7 @@ namespace KBEngine
 		public UInt32 oldLevel = 0;
 		public float oldExp = 0f;
 		public Int32 oldScore = 0;
+		public UInt64 oldBindMoney = 0;
 		public UInt64 oldMoney = 0;
 		public UInt64 oldCoin = 0;
 		public Int64 oldDarkIron = 0;
@@ -6919,6 +6764,7 @@ namespace KBEngine
 		public UInt64 dailyUseMoney = 0;
 		public List<AWARD_ITEM_VAL> items = new List<AWARD_ITEM_VAL>();
 		public UInt32 hostOffline = 0;
+		public UInt32 authOffline = 0;
 		public UInt32 authLogin = 0;
 
 	}
@@ -7078,6 +6924,68 @@ namespace KBEngine
 		public UInt32 itemId = 0;
 		public UInt32 itemNum = 0;
 		public Byte bindType = 0;
+
+	}
+
+	public class CLI_RECORD_DATA_INFO
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt16 school = 0;
+		public UInt32 level = 0;
+		public Byte sex = 0;
+		public UInt32 ts = 0;
+		public Byte type = 0;
+		public UInt32 spaceNo = 0;
+
+	}
+
+	public class BOUNTY_ITEM_VAL
+	{
+		public UInt64 uuid = 0;
+		public UInt32 timestamp = 0;
+		public UInt32 leftTime = 0;
+		public UInt32 acceptedLeftTime = 0;
+		public Byte bountyType = 0;
+		public UInt32 publishMoney = 0;
+		public UInt32 depositMoney = 0;
+		public UInt32 totalMoney = 0;
+		public Byte flag = 0;
+		public Byte state = 0;
+		public UInt64 gbid = 0;
+		public string name = "";
+		public UInt16 school = 0;
+		public UInt64 preyGbId = 0;
+		public string preyName = "";
+		public UInt16 preySchool = 0;
+		public UInt64 hunterGbId = 0;
+		public string hunterName = "";
+		public UInt16 hunterSchool = 0;
+
+	}
+
+	public class BOUNTY_ITEM_SYNC_VAL
+	{
+		public BOUNTY_ITEM_VAL baseInfo = new BOUNTY_ITEM_VAL();
+		public Byte preyOnline = 0;
+
+	}
+
+	public class BOUNTY_ITEM_CLIENT_VAL
+	{
+		public BOUNTY_ITEM_VAL baseInfo = new BOUNTY_ITEM_VAL();
+		public Byte preyOnline = 0;
+		public UInt32 preyLevel = 0;
+		public Int32 preyScore = 0;
+		public Vector3 preyPos = new Vector3(0f, 0f, 0f);
+		public UInt32 preySpaceNo = 0;
+
+	}
+
+	public class TITLE_VAL_INFO
+	{
+		public UInt32 titleId = 0;
+		public UInt32 expireTime = 0;
 
 	}
 

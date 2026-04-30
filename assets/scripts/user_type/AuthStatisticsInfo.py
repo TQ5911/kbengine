@@ -9,12 +9,12 @@ import itemData_itemData as ID_IDD
 import ActTimesInfo
 
 
-class AuthStatisticsVal(userType.UserSoleType):
+class AuthStatisticsVal(userType.UserSingleType):
     '''AUTH_STATISTICS_DATA_INFO'''
     def __init__(self, oldLevel=0, oldMoney=0, otherGbId=0, authExpire=0,
                  oldScore=0, itemUniqueIds=(), actTimes=(), dailyUseMoney=0,
                  oldExp=0.0, items=(), hostOffline=0, authLogin=0, oldCoin=0,
-                 oldDarkIron=0):
+                 oldDarkIron=0, authOffline=0, oldBindMoney=0):
         self.oldLevel = oldLevel
         self.oldMoney = oldMoney
         self.oldCoin = oldCoin
@@ -29,6 +29,8 @@ class AuthStatisticsVal(userType.UserSoleType):
         self.oldExp = oldExp
         self.hostOffline = hostOffline
         self.authLogin = authLogin
+        self.authOffline = authOffline
+        self.oldBindMoney = oldBindMoney
 
         # 可堆叠道具用这个
         self.itemsDic = {i['itemId']: i['itemNum'] for i in items}
@@ -45,11 +47,7 @@ class AuthStatisticsVal(userType.UserSoleType):
             self.itemsDic[itemId] = self.itemsDic.get(itemId, 0) + num
 
         for it in awardVal.itemObjIter():
-            _itemData = dataUtils.getCommItemData(it.itemId)
-            if not _itemData:
-                continue
-
-            if _itemData['quality'] < gameconst.ItemQuality.PURPLE:
+            if it.quality < gameconst.ItemQuality.PURPLE:
                 continue
 
             if it.uniqueId not in self.itemUniqueIds:
@@ -67,7 +65,10 @@ class AuthStatisticsVal(userType.UserSoleType):
         return True
 
     def onAuthLogin(self):
-        self.authLogin = utils.getNow()
+        self.authLogin = utils.curTS()
+
+    def onAuthOffline(self):
+        self.authOffline = utils.curTS()
 
     def saveOnOffline(self, owner):
         self.oldLevel = owner.getAvatarLevel()
@@ -75,9 +76,11 @@ class AuthStatisticsVal(userType.UserSoleType):
         self.oldCoin = owner.coin
         self.oldDarkIron = owner.darkIron
         self.oldScore = owner.getTotalScore()
+        self.oldBindMoney = owner.bindMoney
         self.itemUniqueIds = []
         self.actTimesDic = {}
-        self.hostOffline = utils.getNow()
+        self.hostOffline = utils.curTS()
+        self.itemsDic = {}
 
     def addUseMoney(self, owner, delta):
         self.dailyUseMoney += delta
@@ -104,7 +107,9 @@ class AuthStatisticsVal(userType.UserSoleType):
             'hostOffline': self.hostOffline,
             'authLogin': self.authLogin,
             'oldCoin': self.oldCoin,
-            'oldDarkIron': self.oldDarkIron
+            'oldDarkIron': self.oldDarkIron,
+            'authOffline': self.authOffline,
+            'oldBindMoney': self.oldBindMoney,
         }
 
 

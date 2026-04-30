@@ -20,7 +20,7 @@
 
         <raidTeamMembersInviteRecordDic>
             <Type>  PY_DICT     </Type>
-            <Flags> BASE    </Flags>
+            <Flags> BASE        </Flags>
             <Default>   {}      </Default>
         </raidTeamMembersInviteRecordDic>
 
@@ -33,31 +33,32 @@
 
     <BaseMethods>
         <refreshRaidCache>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID             </Arg>
             <Arg>   AVATARGBID_LIST     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   PYTHON              </Arg>
         </refreshRaidCache>
 
         <clearRaidJoinRecords>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   PY_LIST     </Arg>
+            <Arg>   PY_LIST         </Arg>
         </clearRaidJoinRecords>
 
         <getRaidApplyJoinDic>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID         </Arg>
         </getRaidApplyJoinDic>
 
         <clearRaidApplyJoinDic>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID         </Arg>
         </clearRaidApplyJoinDic>
 
         <updateRaidMemberCacheVal>
             <Arg>   RAID_ID         </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   PY_DICT         </Arg>
         </updateRaidMemberCacheVal>
@@ -490,18 +491,6 @@
             <Arg>   PY_LIST     </Arg>
         </broadRaidMemMessage_localCross>
 
-        <followRaidLeader>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       RAID_ID         </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-        </followRaidLeader>
-
-        <cancelFollowRaidLeader>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       RAID_ID         </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-        </cancelFollowRaidLeader>
-
         <askAllMemberFollow>
             <Arg>       MAILBOX         </Arg>
             <Arg>       RAID_ID         </Arg>
@@ -509,29 +498,6 @@
             <Arg>       SPACE_NO        </Arg>
             <Arg>       POSITION_ARG    </Arg>
         </askAllMemberFollow>
-
-        <cancelAllMemberFollow>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       RAID_ID         </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-        </cancelAllMemberFollow>
-
-        <checkDuoHunItemRaidMemberIds>
-            <Arg>           ENTITYCALL       </Arg>
-            <Arg>           RAID_ID          </Arg>
-            <Arg>           PLAYER_GBID         </Arg>
-            <Arg>           UNICODE         </Arg>
-            <Arg>           UINT8         </Arg>
-            <Arg>           UINT8         </Arg>
-            <Arg>           ENTITYCALL         </Arg>
-        </checkDuoHunItemRaidMemberIds>
-
-        <getRaidLeaderName>
-            <Arg>       RAID_ID         </Arg>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       UNICODE         </Arg>
-            <Arg>       ENTITY_ID       </Arg>
-        </getRaidLeaderName>
 
         <raidPrepareAutoMatch>
             <Arg>           RAID_ID       </Arg>

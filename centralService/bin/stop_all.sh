@@ -1,28 +1,25 @@
 #!/bin/bash
 
-cd login
-./game_login.sh stop
+# 定义所有服务目录
+SERVICES="login admin router maple dropServer auction crossDataServer queueServer orderService"
 
-cd ../admin
-./game_admin.sh stop
+# 遍历每个目录
+for dir in $SERVICES; do
+    echo "Stopping service in $dir..."
+    if [ -d "$dir" ]; then
+        cd "$dir"
+        # 动态查找该目录下唯一的 .sh 脚本
+        script=$(ls *.sh 2>/dev/null | head -n 1)
+        if [ -n "$script" ]; then
+            ./"$script" stop
+        else
+            echo "Warning: No .sh script found in $dir"
+        fi
+        cd ..
+    else
+        echo "Error: Directory $dir not found"
+    fi
+done
 
-cd ../router
-./game_router.sh stop
-
-cd ../maple
-./game_maple.sh stop
-
-cd ../dropServer
-./game_drop_server.sh stop
-
-cd ../auction
-./game_auction.sh stop
-
-cd ../crossDataServer
-./game_cross_data_server.sh stop
-
-cd ../queueServer
-./game_queue_server.sh stop
-
-
-ps -ef |grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|crossDataServer'
+# 最后检查进程状态
+ps -ef | grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|crossDataServer|queueServer|orderService'

@@ -17,6 +17,7 @@ from decimal import Decimal
 from KBEDebug import *
 from types import ModuleType, FunctionType
 import sys
+import pickle
 
 import randomName_robotName as RND
 import formula_generalFormula as FGFD
@@ -65,6 +66,9 @@ import localizeConst_localizeConst as LC_LCD
 import mineBattle_config as MBC
 import antiAddictionSystem_config as AASC
 import gameconst
+import experience_config as EC
+import experience_global_EXP_Multiplier as EGM
+import visible_visible as V_VD
 
 tempTime = time.time
 ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
@@ -76,18 +80,18 @@ ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', '
 
 class Swallower(object):
     def __getattribute__(self, name):
-        if name.startswith('__') and name.endswith('__'):
+        if name.endswith('__') and name.startswith('__'):
             return super().__getattribute__(name)
         return self
-
-    def __call__(self, *args, **kw):
-        pass
 
     def __bool__(self):
         return False
 
+    def __call__(self, *args, **kw):
+        return
 
-def getNow():
+
+def curTS():
     return int(time.time())
 
 def getTimestamp64(t=None):
@@ -98,8 +102,8 @@ def getTimestamp64(t=None):
 def getIntTimestamp64(sDate):
     if sDate == '':
         return 0
-    timeArr = time.strptime(sDate, "%Y%m%d%H%M%S")
-    return int(round(int(time.mktime(timeArr)) * 1000))
+    _timeArr = time.strptime(sDate, "%Y%m%d%H%M%S")
+    return int(round(int(time.mktime(_timeArr)) * 1000))
 
 
 def getNowTimeStr(now=None):
@@ -110,7 +114,7 @@ def getNowTimeStr(now=None):
 
 
 # 1136185445 -> '20060102150405'
-def getTimeStrFromTimeStamp(timeStamp=0):
+def getCommonTimeStrFromTimeStamp(timeStamp=0):
     timeStamp = timeStamp or int(time.time())
     return time.strftime('%Y%m%d%H%M%S', time.localtime(timeStamp))
 
@@ -118,8 +122,8 @@ def getTimeStrFromTimeStamp(timeStamp=0):
 def getIntTimestamp(sDate):
     if sDate == '':
         return 0
-    timeArr = time.strptime(sDate, "%Y%m%d%H%M%S")
-    return int(time.mktime(timeArr))
+    _timeArr = time.strptime(sDate, "%Y%m%d%H%M%S")
+    return int(time.mktime(_timeArr))
 
 
 def getTodayZeroSec():
@@ -134,46 +138,37 @@ def getCurrentTimeFmt():
 
 
 def getTodayFiveSec():
-    todayFive = getTodayZeroSec() + 18000
-    if getNow() < todayFive:
-        return todayFive - 24 * 3600
+    _todayFive = getTodayZeroSec() + 18000
+    if curTS() < _todayFive:
+        return _todayFive - 24 * 3600
     else:
-        return todayFive
+        return _todayFive
 
 
-__builtin_mapping__ = builtins.__dict__
-
-
-def getBuiltin(builtinName):
-    if builtinName in __builtin_mapping__:
-        return __builtin_mapping__[builtinName]
-
-
-def instanceof(ent, entType):
+def isinstanceof(ent, entType):
     return ent.__class__.__name__ == entType
 
 
-def getPythonServer():
+def getPythonAddr():
     import socket, struct
-    ipInt, port = KBEngine.address()
-
-    return '%s:%s' % (socket.inet_ntoa(struct.pack("I", ipInt)), port)
+    _ipInt, _port = KBEngine.address()
+    return '%s:%s' % (socket.inet_ntoa(struct.pack("I", _ipInt)), _port)
 
 
 # |16bit-serverId|22bit-timestamp|26bit-seqId|
 def generateUniqGlobalId():
     import gameconfig
     serverId = int(gameconfig.serverId())
-    gbId = serverId << gameconst.GLOBAL_SERVER_SHIFT
-    nowTime = getNow()
+    gbId = serverId << gameconst.SERVER_ID_BIT_SHIFT
+    nowTime = curTS()
 
     timestampIdx = int((nowTime - gameconst.GBID_TIME_BASE) / gameconst.GBID_TIME_INTERVAL)
     gbId = gbId + timestampIdx
-    gbId = gbId << gameconst.GLOBAL_TIME_SHIFT
+    gbId = gbId << gameconst.SERVER_TIMESTAMP_BIT_SHIFT
 
-    if gameglobal.gbIdTimestampIdx != timestampIdx:
+    if gameglobal.gbIdTSIdx != timestampIdx:
         gameglobal.gbIdSeqId = gameglobal.localBaseApp.getStartGbId()
-        gameglobal.gbIdTimestampIdx = timestampIdx
+        gameglobal.gbIdTSIdx = timestampIdx
 
     gameglobal.gbIdSeqId += 1
     return gbId + gameglobal.gbIdSeqId
@@ -183,37 +178,37 @@ def generateUniqGlobalId():
 def generateObId():
     import gameconfig
     serverId = int(gameconfig.serverId())
-    gid = KBEngine.getComponentGroupOrder()
-    ts = getNow() - 1640163600  # seconds since 2021-12-22 17:00
-    if gameglobal.genObIdTs != ts:
-        gameglobal.genObIdTs = ts
-        gameglobal.genObIdSeqId = 0
+    _gid = KBEngine.getComponentGroupOrder()
+    _ts = curTS() - 1640163600  # seconds since 2021-12-22 17:00
+    if gameglobal.globalObIdTs != _ts:
+        gameglobal.globalObIdTs = _ts
+        gameglobal.globalObIdSeqId = 0
 
-    gameglobal.genObIdSeqId += 1
-    seqId = gameglobal.genObIdSeqId
+    gameglobal.globalObIdSeqId += 1
+    seqId = gameglobal.globalObIdSeqId
     if seqId >= 2 ** 11:
         seqId = 2 ** 11 - 1
-        ERROR_MSG('generateObId reach max', )
+        LOG_ERR('genObId reach max', )
 
-    return int(str(serverId) + str((gid << 40) + (ts << 11) + seqId))
+    return int(str(serverId) + str((_gid << 40) + (_ts << 11) + seqId))
 
 
 def getEntity(entityClass):
     module = __import__(entityClass)
-    clazz = getattr(module, entityClass)
-    for k, v in KBEngine.entities.items():
-        if type(v).__name__ == clazz.__name__:
-            return v
+    _class = getattr(module, entityClass)
+    for k, _v in KBEngine.entities.items():
+        if type(_v).__name__ == _class.__name__:
+            return _v
 
 
 def getEntityList(entityClass):
     module = __import__(entityClass)
-    clazz = getattr(module, entityClass)
+    _class = getattr(module, entityClass)
 
     res = []
-    for k, v in KBEngine.entities.items():
-        if type(v).__name__ == clazz.__name__:
-            res.append(v)
+    for k, _v in KBEngine.entities.items():
+        if type(_v).__name__ == _class.__name__:
+            res.append(_v)
 
     return res
 
@@ -221,9 +216,10 @@ def getEntityList(entityClass):
 def getAllAvatarByGm(su, box):
     res = getEntityList("Avatar")
     data = []
+    groupOrder = KBEngine.getComponentGroupOrder()
     for ent in res:
-        data.append({'entityId': ent.id, 'roleName': ent.getRoleCacheAttr('name'), 'gbId': ent.gbID})
-    box.onGetAllPlayer(su, {KBEngine.getComponentGroupOrder(): data})
+        data.append({'entityId': ent.id, 'roleName': ent.getRoleCacheAttr('name'), 'gbId': str(ent.gbID), 'componentInfo': "baseapp%s-%s" % (groupOrder, str(ent.cell))})
+    box.onGetAllPlayer(su, {groupOrder: data})
 
 
 def getAvatar():
@@ -234,16 +230,16 @@ def getAvatarByGbId(gbId):
     eid = gameglobal.roleGBIDToEntId.get(gbId, 0)
     return KBEngine.entities.get(eid)
 
-def bitSet(val, bit):
-    return val | (1 << bit)
+def bset(val, bit):
+    return (1 << bit) | val
 
 
-def hasBit(val, bit):
-    return val & (1 << bit)
+def bhas(val, bit):
+    return (1 << bit) & val
 
 
-def bitReset(val, bit):
-    return val & (~(1 << bit))
+def breset(val, bit):
+    return (~(1 << bit)) & val
 
 
 
@@ -254,7 +250,7 @@ def isJoinCombat(entity, src):
 
     if entity.IsAICombatUnit and entity.aiController and entity.aiController.machine.speialAICombatTup and entity.bornState in \
             gameconst.BornStateType.speialAIInvalidCombatTup\
-            and hasBit(entity.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
+            and bhas(entity.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
         return False
 
     if entity.hasState(C_S_DD.datas.relive) or src.hasState(C_S_DD.datas.relive):
@@ -263,1209 +259,824 @@ def isJoinCombat(entity, src):
     return True
 
 
-def turnPos(pos, angle):
-    angle = 360 - angle
-    angle = angle * math.pi / 180
-    cosTheta = math.cos(angle)
-    sinTheta = math.sin(angle)
-    x, y = pos
-    x, y = (cosTheta * x - sinTheta * y, sinTheta * x + cosTheta * y)
-    return x, y
-
-
-# 简单随机下，非均匀
 def getRandomPos(center, radii):
-    r = radii * random.random()
-    theta = 2 * math.pi * random.random()
+    _r = radii * random.random()
+    _theta = 2 * math.pi * random.random()
 
-    return Math.Vector3(center) + Math.Vector3(r * math.sin(theta), 0, r * math.cos(theta))
-
-
-def _iterPushAroundPoint(position: Math.Vector3, layer: int):
-    position.x -= layer
-    position.z -= layer
-    _orgX = position.x
-    _orgZ = position.z
-    _layerOffset = layer * 2
-    for _xOffset in range(_layerOffset + 1):
-        position.x = _orgX + _xOffset
-        if 0 < _xOffset < _layerOffset:
-            position.z = _orgZ
-            yield position
-            position.z = _orgZ + _layerOffset
-            yield position
-        for _zOffset in range(_layerOffset + 1):
-            position.z = _orgZ + _zOffset
-            yield position
+    return Math.Vector3(center) + Math.Vector3(_r * math.sin(_theta), 0, _r * math.cos(_theta))
 
 
-def monsterRandomPos(center, radii, count, idx):
-    eachPi = 2 * math.pi / count
-    r = radii * math.sqrt(random.random())
-    theta = eachPi * idx + eachPi * random.random()
-    return Math.Vector3(center) + Math.Vector3(r * math.sin(theta), 0, r * math.cos(theta))
-
-
-def getStringFromBytes(s, encoding='utf-8'):
+def bytesToString(s, encoding='utf-8'):
     return str(s, encoding)
 
 
-def getStringFromBytesRedis(s, encoding='utf-8'):
-    ret = str(s, encoding)
-    if ret == '""':
+def bytesToStringRedis(origin, encoding='utf-8'):
+    _ret = str(origin, encoding)
+    if _ret == '""':
         return ''
     else:
-        return ret
+        return _ret
 
 
-def isHitByRate(rate):
-    if rate <= 0 or rate > 1:
-        return False
-    result = random.uniform(0, 1)
-    return result <= rate
-
-
-def weightChoice(seq, weights, num=1):
+def weightChoices(seq, weights, num=1):
+    """
+    带权重的不放回随机选择
+    :param seq: 候选元素列表
+    :param weights: 每个元素对应的权重（权重越大，选中概率越高）
+    :param num: 要随机选择的数量，默认1
+    :return: (选中的元素列表, 选中的下标列表)，参数非法时返回空列表
+    """
     if len(seq) != len(weights):
         return [], []
 
     if num > len(seq):
         return [], []
 
-    choices = []
-    for n in range(num):
-        sumP = 0
+    _choices = []
+    for _ in range(num):
+        _sumP = 0
 
         for i in range(len(weights)):
-            if i in choices:
+            if i in _choices:
                 continue
-            sumP += weights[i]
+            _sumP += weights[i]
 
-        randProp = random.randint(1, sumP)
+        _randProp = random.randint(1, _sumP)
         for i, p in enumerate(weights):
-            if i in choices:
+            if i in _choices:
                 continue
 
-            randProp = randProp - p
-            if randProp <= 0:
-                choices.append(i)
+            _randProp = _randProp - p
+            if _randProp <= 0:
+                _choices.append(i)
                 break
 
-    return [seq[i] for i in choices], choices
+    return [seq[i] for i in _choices], _choices
 
 
 def reloadCls(cls):
-    if not hasattr(cls, '__bases__') or not cls.__bases__ or cls.__name__ in gameglobal.reloadedCls \
+    if not hasattr(cls, '__bases__') \
+            or not cls.__bases__ \
+            or cls.__name__ in gameglobal.reloadedCls \
             or cls.__module__ == 'builtins':
         return
 
-    oldBases = cls.__bases__
-    newBases = []
-    for bs in oldBases:
+    _oldBases = cls.__bases__
+    _newBases = []
+    for bs in _oldBases:
         reloadCls(bs)
 
-        mod = importlib.import_module(bs.__module__)
-        newBs = getattr(mod, bs.__name__)
-        newBases.append(newBs)
+        _mod = importlib.import_module(bs.__module__)
+        _newBs = getattr(_mod, bs.__name__)
+        _newBases.append(_newBs)
 
-    cls.__bases__ = tuple(newBases)
+    cls.__bases__ = tuple(_newBases)
     gameglobal.reloadedCls[cls.__name__] = 1
 
 
 def resetCls(obj):
-    oldCls = obj.__class__
-    clsName = oldCls.__name__
+    _oldCls = obj.__class__
+    _clsName = _oldCls.__name__
 
-    mod = importlib.import_module(oldCls.__module__)
+    __mod = importlib.import_module(_oldCls.__module__)
 
-    newCls = getattr(mod, clsName)
-    reloadCls(newCls)
-    obj.__class__ = newCls
+    _newCls = getattr(__mod, _clsName)
+    reloadCls(_newCls)
+    obj.__class__ = _newCls
 
 
-def isInteger(s):
+def isInteger(intStr):
     try:
-        int(s)
+        int(intStr)
     except:
         return False
     return True
 
 
-def isEntityId(s):
-    if isInteger(s) and int(s) < gameconst.GBID_BASE:
+def isEntityId(intStr):
+    if isInteger(intStr) and int(intStr) < gameconst.GBID_BASE:
         return True
     return False
 
 
-def isGbId(s):
-    if isInteger(s) and int(s) > gameconst.GBID_BASE:
+def isGbId(intStr):
+    if isInteger(intStr) and int(intStr) > gameconst.GBID_BASE:
         return True
-    return False
+    else:
+        return False
 
 
-def isRoleName(player):
+def checkRoleName(player):
     return not isInteger(player) and type(player) is str
 
 
-def isBaseMailBox(ent):
+def checkBaseMailBox(ent):
     return 'baseapp' in str(ent)
 
 
-def isCellMailBox(ent):
+def checkCellMailBox(ent):
     return 'cellapp' in str(ent)
 
 
-def getUUID():
+def generateUUID():
     return str(uuid.uuid1())
 
 
-def generateGameEntityId(orgGameEntityId: int, count: int):
+def genGameEntityId(orgGameEntityId: int, count: int):
     _id = orgGameEntityId * 1000
     for i in range(count):
         _id += 1
         yield _id
 
-def generateGameEntityIdFrom(orgGameEntityId: int, count: int, fromIdx: int):
+def genGameEntityIdFrom(orgGameEntityId: int, count: int, fromIdx: int):
     _id = orgGameEntityId * 1000 + fromIdx
-    for i in range(count):
+    for _ in range(count):
         _id += 1
         yield _id
 
-def getGidFromGameEntityId(gameEntityId: int):
+def parseGidFromGameEntityId(gameEntityId: int):
     return gameEntityId // 1000
 
 
-def splitGameEntityId(gameEntityId: int):
-    gid = getGidFromGameEntityId(gameEntityId)
-    gct = gameEntityId - gid * 1000
-    return gid, gct
+def splitFromGameEntityId(gameEntityId: int):
+    _gid = parseGidFromGameEntityId(gameEntityId)
+    _gct = gameEntityId - _gid * 1000
+    return _gid, _gct
 
 
-def randomDelayTime(T, rdmRange=1.0):
-    rdmVal = random.random() * rdmRange
-
-    _r = round(T + rdmVal, 2)
-
+def randDelayTime(T, rdmRange=1.0):
+    _rdmVal = random.random() * rdmRange
+    _r = round(T + _rdmVal, 2)
     return _r if _r > 0.00 else 0.00
 
 
-def isDiffHour(nowTime, lastTime, cycleTime):
-    nowTime += gameconst.ONE_HOUR_SECONDES - cycleTime
-    lastTime += gameconst.ONE_HOUR_SECONDES - cycleTime
-    stNowTime = time.localtime(nowTime)
-    stLastTime = time.localtime(lastTime)
+def checkDiffHour(nowTime, lastTime, cycleTime):
+    stLastTime = time.localtime(lastTime + gameconst.ONE_HOUR_COST_SECONDES - cycleTime)
+    stNowTime = time.localtime(nowTime + gameconst.ONE_HOUR_COST_SECONDES - cycleTime)
     if stNowTime.tm_hour == stLastTime.tm_hour:
         return False
     return True
 
-def isDiffDay(nowTime, lastTime, cycleTime):
-    # 这里如果-cycleTime,如果碰到lastTime传0,则会变为负值,会导致localTime报错,所以都往后进行推算
-    nowTime += gameconst.ONE_DAY_SECONDS - cycleTime
-    lastTime += gameconst.ONE_DAY_SECONDS - cycleTime
-    stNowTime = time.localtime(nowTime)
-    stLastTime = time.localtime(lastTime)
-    if stNowTime.tm_year == stLastTime.tm_year and stNowTime.tm_mon == stLastTime.tm_mon and stNowTime.tm_mday == stLastTime.tm_mday:
+
+def checkDiffDay(nowTime, lastTime, cycleTime):
+    stLastTime = time.localtime(lastTime + gameconst.ONE_DAY_COST_SECONDS - cycleTime)
+    stNowTime = time.localtime(nowTime + gameconst.ONE_DAY_COST_SECONDS - cycleTime)
+    if stNowTime.tm_year == stLastTime.tm_year \
+            and stNowTime.tm_mon == stLastTime.tm_mon \
+            and stNowTime.tm_mday == stLastTime.tm_mday:
         return False
     return True
 
 
-def isDiffWeek(nowTime, lastTime, cycleTime):
-    nowTime -= cycleTime
-    lastTime -= cycleTime
-    stNowTime = time.localtime(nowTime)
-    stLastTime = time.localtime(lastTime)
+def checkDiffWeek(nowTime, lastTime, cycleTime):
+    stLastTime = time.localtime(lastTime - cycleTime)
+    stNowTime = time.localtime(nowTime - cycleTime)
     if time.strftime('%W', stNowTime) == time.strftime('%W', stLastTime):
         return False
     return True
 
 
-def isDiffMonth(nowTime, lastTime, cycleTime):
-    nowTime -= cycleTime
-    lastTime -= cycleTime
-    stNowTime = time.localtime(nowTime)
-    stLastTime = time.localtime(lastTime)
+def checkDiffMonth(nowTime, lastTime, cycleTime):
+    stNowTime = time.localtime(nowTime - cycleTime)
+    stLastTime = time.localtime(lastTime - cycleTime)
     if stNowTime.tm_year == stLastTime.tm_year and stNowTime.tm_mon == stLastTime.tm_mon:
         return False
     return True
 
 
-# 从epoch开始到now，计算经历了多少天
-def getDayOffsetFromEpoch(now=None):
-    now = getNow() if now is None else now
-    return now // gameconst.ONE_DAY_SECONDS
-
-
-# 上面的逆计算
-def getTimestampFromDayOffset(dayOffset):
-    return dayOffset * gameconst.ONE_DAY_SECONDS
-
-
-# 获取当月1日0点后offset秒时间戳
 def getCurrentMonthTS(now=None, offsetSec=0):
-    now = getNow() if now is None else now
-    tNow = time.localtime(now)
+    if now is None:
+        now = curTS()
+
+    _tNow = time.localtime(now)
     ts = now - (
-            tNow.tm_mday - 1) * gameconst.ONE_DAY_SECONDS - tNow.tm_hour * gameconst.ONE_HOUR_SECONDES - tNow.tm_min * 60 - tNow.tm_sec + offsetSec
+            _tNow.tm_mday - 1) * gameconst.ONE_DAY_COST_SECONDS - _tNow.tm_hour * gameconst.ONE_HOUR_COST_SECONDES - _tNow.tm_min * 60 - _tNow.tm_sec + offsetSec
     return ts
 
 
-# 获取下一月1日0点后offset秒时间戳
 def getNextMonthTS(now=None, offsetSec=0):
-    now = getNow() if now is None else now
-    tNow = time.localtime(now)
-    if tNow.tm_mon == 12:
-        tRet = (tNow.tm_year + 1, 1, 1, 0, 0, 0, 0, 0, 0)
+    now = curTS() if now is None else now
+    _tNow = time.localtime(now)
+    if _tNow.tm_mon == 12:
+        _tRet = (_tNow.tm_year + 1, 1, 1, 0, 0, 0, 0, 0, 0)
     else:
-        tRet = (tNow.tm_year, tNow.tm_mon + 1, 1, 0, 0, 0, 0, 0, 0)
+        _tRet = (_tNow.tm_year, _tNow.tm_mon + 1, 1, 0, 0, 0, 0, 0, 0)
 
-    return time.mktime(tRet) + offsetSec
-
-
-# 获取当前的星期[1,7]
-def getWeek(now=None):
-    now = getNow() if now is None else now
-    time_now = time.localtime(now)
-    return time_now.tm_wday + 1
+    return time.mktime(_tRet) + offsetSec
 
 
-# 获取当周周一0点后offset秒时间戳
-def getCurrentWeekTS(now=None, offsetSec=0):
-    now = getNow() if now is None else now
-    tNow = time.localtime(now)
-    ts = now - tNow.tm_wday * gameconst.ONE_DAY_SECONDS - tNow.tm_hour * gameconst.ONE_HOUR_SECONDES - tNow.tm_min * 60 - tNow.tm_sec + offsetSec
+
+def getCurWeekTS(now=None, offsetSec=0):
+    now = curTS() if now is None else now
+    _tNow = time.localtime(now)
+    ts = now - _tNow.tm_wday * gameconst.ONE_DAY_COST_SECONDS - _tNow.tm_hour * gameconst.ONE_HOUR_COST_SECONDES - _tNow.tm_min * 60 - _tNow.tm_sec + offsetSec
+    return ts
+
+def getCurDayTS(now=None, offsetSec=0):
+    now = curTS() if now is None else now
+    _tNow = time.localtime(now)
+    ts = now - _tNow.tm_hour * gameconst.ONE_HOUR_COST_SECONDES - _tNow.tm_min * 60 - _tNow.tm_sec + offsetSec
     return ts
 
 
-# 获取当日0点后offset秒时间戳
-def getCurrentDayTS(now=None, offsetSec=0):
-    now = getNow() if now is None else now
-    tNow = time.localtime(now)
-    ts = now - tNow.tm_hour * gameconst.ONE_HOUR_SECONDES - tNow.tm_min * 60 - tNow.tm_sec + offsetSec
-    return ts
+def getCurHourTS(now=None, offsetSec=0):
+    now = curTS() if now is None else now
+    return gameconst.ONE_HOUR_COST_SECONDES * (now // gameconst.ONE_HOUR_COST_SECONDES) + offsetSec
 
 
-# 获取当前小时0分0秒后offset秒时间戳
-def getCurrentHourTS(now=None, offsetSec=0):
-    now = getNow() if now is None else now
-    return gameconst.ONE_HOUR_SECONDES * (now // gameconst.ONE_HOUR_SECONDES) + offsetSec
-
-
-# 获取当前时间戳(按游戏偏移量)归属年,月
 def getNowYearMonth(now=None):
-    now = getNow() if now is None else now
-    tNow = time.localtime(now - 3600 * 5)
-    return tNow.tm_year, tNow.tm_mon
+    now = curTS() if now is None else now
+    _tNow = time.localtime(now - 3600 * 5)
+    return _tNow.tm_year, _tNow.tm_mon
 
 
 def getTsFiveSec(ts):
-    day_time = ts - ts % 86400 + time.timezone
-    day_time += gameconst.COMMON_CYCLE_TIME
-    return day_time
+    dayTime = ts - ts % 86400 + time.timezone
+    dayTime += gameconst.GENERAL_CYCLE_TIME
+    return dayTime
 
 
 def countIntersDay(startTs):
     days = 0
-    if not isDiffDay(startTs, getNow(), gameconst.COMMON_CYCLE_TIME):
+    if not checkDiffDay(startTs, curTS(), gameconst.GENERAL_CYCLE_TIME):
         days = 1
     else:
-        openFiveTs = getCurrentDayTS(startTs, gameconst.COMMON_CYCLE_TIME)
-        todayFiveTs = getCurrentDayTS(getNow(), gameconst.COMMON_CYCLE_TIME)
-        tNow = time.localtime(getNow())
+        openFiveTs = getCurDayTS(startTs, gameconst.GENERAL_CYCLE_TIME)
+        todayFiveTs = getCurDayTS(curTS(), gameconst.GENERAL_CYCLE_TIME)
+        _tNow = time.localtime(curTS())
 
         days = (todayFiveTs - openFiveTs) // 86400
-        INFO_MSG('countIntersDay', todayFiveTs, openFiveTs, days)
-        if tNow.tm_hour >= gameconst.GAME_REFRESH_OCLOCK:
+        LOG_IFO('countIntersDay', todayFiveTs, openFiveTs, days)
+        if _tNow.tm_hour >= gameconst.GAME_REFRESH_OCLOCK:
             days += 1
-        INFO_MSG('countIntersDay111', todayFiveTs, openFiveTs, days)
+        LOG_IFO('countIntersDay111', todayFiveTs, openFiveTs, days)
     return days
 
 
-def getAccountAge(birthDate):
-    if birthDate == 19000101:  # 1900010为默认生日值 可认为无生日
-        return None
-    birthYear = birthDate // 10000
-    birthMon = (birthDate % 10000) // 100
-    birthDay = birthDate % 100
-
-    stNow = time.localtime(getNow())
-    age = stNow.tm_year - birthYear
-    if stNow.tm_mon == birthMon:
-        if stNow.tm_mday < birthDay:
-            age -= 1
-    elif stNow.tm_mon < birthMon:
-        age -= 1
-
-    return age
-
-
-def getAgeRangeData(age):
-    import buyCredit_underAgeLimit as BCUAL
-    ageRange = ''
-    for key, ualDatas in BCUAL.datas.items():
-        if age >= ualDatas['minAge'] and age < ualDatas['maxAge']:
-            ageRange = key
-            break
-    return ageRange
-
-
 def getRandomName(sex=gameconst.Sex.FEMALE):
-    surnameList = RND.datas.get('surname')
-    index = random.randint(0, len(surnameList) - 1)
-    surname = surnameList[index]
+    _surnamesList = RND.datas.get('surname')
+    _index = random.randint(0, len(_surnamesList) - 1)
+    _surname = _surnamesList[_index]
 
     if sex == gameconst.Sex.FEMALE:
-        secondNameList = RND.datas.get('femaleName')
+        _secondNameList = RND.datas.get('femaleName')
     else:
-        secondNameList = RND.datas.get('maleName')
-    index = random.randint(0, len(secondNameList) - 1)
-    secondName = secondNameList[index]
-    return surname + secondName
+        _secondNameList = RND.datas.get('maleName')
+    _index = random.randint(0, len(_secondNameList) - 1)
+    _secondName = _secondNameList[_index]
+    return _surname + _secondName
 
 
 def getRandomSex():
-    sexes = [gameconst.Sex.MALE, gameconst.Sex.FEMALE]
-    return random.choice(sexes)
+    _sexes = [gameconst.Sex.MALE, gameconst.Sex.FEMALE]
+    return random.choice(_sexes)
 
 
 unichr = chr
-_escape_table = [unichr(x) for x in range(128)]
-_escape_table[0] = u'\\0'
-_escape_table[ord('\\')] = u'\\\\'
-_escape_table[ord('\n')] = u'\\n'
-_escape_table[ord('\r')] = u'\\r'
-_escape_table[ord('\032')] = u'\\Z'
-_escape_table[ord('"')] = u'\\"'
-_escape_table[ord("'")] = u"\\'"
+_ESCAPE_TABLE = [unichr(x) for x in range(128)]
+_ESCAPE_TABLE[0] = u'\\0'
+_ESCAPE_TABLE[ord('\\')] = u'\\\\'
+_ESCAPE_TABLE[ord('\n')] = u'\\n'
+_ESCAPE_TABLE[ord('\r')] = u'\\r'
+_ESCAPE_TABLE[ord('\032')] = u'\\Z'
+_ESCAPE_TABLE[ord('"')] = u'\\"'
+_ESCAPE_TABLE[ord("'")] = u"\\'"
 
 
-def escape_string(value, mapping=None):
-    """escapes *value* without adding quote.
-
-    Value should be unicode
-    """
-    return "'%s'" % value.translate(_escape_table)
+def escape_string(val, mapping=None):
+    return "'%s'" % val.translate(_ESCAPE_TABLE)
 
 
 def isMyself(fn):
     @functools.wraps(fn)
-    def __(self, *args, **kwargs):
+    def _inner(self, *args, **kwargs):
         if self.id != abs(args[0]):
             return
         return fn(self, *args, **kwargs)
 
-    return __
+    return _inner
 
 
 def needInTeam(fn):
     @functools.wraps(fn)
-    def __(self, *args, **kwargs):
+    def _inner(self, *args, **kwargs):
         if not hasattr(self, 'teamId'):
-            ERROR_MSG('AttributeError, no teamId in instance.')
-            return
+            LOG_ERR('AttributeError, no teamId in instance.')
+            return None
 
         if self.teamId:
             return fn(self, *args, **kwargs)
         else:
-            WARNING_MSG('Called fn must in a team: {}'.format(fn))
-            return
+            LOG_WARN('Called fn must in a team: {}'.format(fn))
+            return None
 
-    return __
+    return _inner
 
 
 def checkBagLocked(fn):
     @functools.wraps(fn)
-    def __(bag, *args, **kwargs):
+    def _inner(bag, *args, **kwargs):
         if bag.isLocked():
-            ERROR_MSG('bag is locked:', fn.__name__, bag.lockedTime, bag.lockDesc)
-            return
+            LOG_ERR('bag is locked:', fn.__name__, bag.lockedTime, bag.lockDesc)
+            return None
         else:
             return fn(bag, *args, **kwargs)
 
-    return __
+    return _inner
 
 
-def getRaycastPos(spaceId, srcPosition, dstPosition, includeFollowEdge=False):
+def getRaycastPosition(spaceId, srcPosition, dstPosition, includeFollowEdge=False):
     posList = KBEngine.raycast(spaceId, gameconst.SpaceLayer.DEFAULT, srcPosition, dstPosition)
     if not posList:
         return dstPosition
 
     for pos in posList:
         if sMath.postion3DTo2DCell(pos) == sMath.postion3DTo2DCell(dstPosition):
-            realDstPos = dstPosition
-            break
+            return pos
+
     else:
         realDstPos = sMath.getNearestPoint(dstPosition, posList)
-        if sMath.postion3DTo2DCell(realDstPos) == sMath.postion3DTo2DCell(dstPosition):
-            realDstPos = dstPosition
 
     return realDstPos
 
 def getSurfacePos(spaceId, srcPosition, x=10, y=20, z=10):
     posList = KBEngine.getSurface(spaceId, gameconst.SpaceLayer.DEFAULT, srcPosition, x, y, z)
     if not posList:
-        WARNING_MSG('getSurfacePos not find surface', spaceId, srcPosition, x, y, z)
+        LOG_WARN('getSurfacePos not find surface', spaceId, srcPosition, x, y, z)
         return srcPosition
     if posList[0][1] == 0:
-        WARNING_MSG('getSurfacePos y is zero', spaceId, srcPosition, x, y, z)
+        LOG_WARN('getSurfacePos y is zero', spaceId, srcPosition, x, y, z)
         return srcPosition
     return posList[0]
 
-def getNaviDistance(owner, dstPosition, includeBorder=True):
-    m_posList = owner.navigatePathPoints(dstPosition, 100, gameconst.SpaceLayer.DEFAULT, includeBorder)
-    if not m_posList:
-        return float('inf')
 
-    m_dis = 0
-    m_seedPos = owner.position
-    for i_pos in m_posList:
-        m_dis += sMath.distance2D(m_seedPos, i_pos)
-        m_seedPos = i_pos
-
-    return m_dis
+def checkDunFlowModuleDataExist(dunNo: int):
+    return _checkDunXModuleDataExist(dunNo, 'e')
 
 
-def getMinNaviDistance(owner, dstPositionList, includeBorder=True):
-    assert dstPositionList
-    minIdx, minDis = None, float('inf')
-    for idx, dstPosition in enumerate(dstPositionList):
-        if not dstPosition:
-            continue
-        _dis = getNaviDistance(owner, dstPosition, includeBorder=includeBorder)
-        if minIdx is None or _dis < minDis:
-            minIdx, minDis = idx, _dis
-
-    return minIdx, minDis
-
-
-def getMinDirectDistance(position, dstPositionList):
-    assert dstPositionList
-    minIdx, minDis = None, float('inf')
-    for idx, dstPosition in enumerate(dstPositionList):
-        _dis = sMath.distance2DToCompareFrom3DPosition(position, dstPosition)
-        if minIdx is None or _dis < minDis:
-            minIdx, minDis = idx, _dis
-
-    return minIdx
-
-
-def getRandomGoodPosition(ownerPosition, targetPosition, skillRange):
-    randomDistance = random.random() * skillRange
-    randomYaw = random.random() * math.pi - math.pi / 2  # -pi/2~pi/2
-    target2selfYaw = sMath.getYawFromPoints(ownerPosition, targetPosition)
-    dstYaw = target2selfYaw + randomYaw
-
-    dir = sMath.getDirFromYaw(dstYaw)
-
-    dstPos = sMath.posByOffset(targetPosition, dir * randomDistance)
-    return dstPos
-
-
-def isDunFlowModuleDataExist(dungeonNo: int):
-    return _isDunXModuleDataExist(dungeonNo, 'e')
-
-
-def _isDunXModuleDataExist(dungeonNo: int, suffix: str = ''):
-    if not dungeonNo or dungeonNo < 0:
-        raise TypeError('dungeonNo must be value higher than zero, got {}'.format(dungeonNo))
+def _checkDunXModuleDataExist(dunNo: int, suffix: str = ''):
+    if not dunNo or dunNo < 0:
+        raise TypeError('dunNo must be value higher than zero, got {}'.format(dunNo))
 
     try:
-        __import__(_getDunXModuleName(dungeonNo, suffix)).datas
+        __import__(_getDunXModuleName(dunNo, suffix)).datas
         return True
     except (ImportError, AttributeError) as err:
         return False
 
 
-def getDunModuleData(dungeonNo: int):
+def getDunModuleData(dunNo: int):
     """get module datas in dun_xxx"""
-    return _getDunXModuleData(dungeonNo)
+    return _getDunXModuleData(dunNo)
 
 
-def getDunFLowModuleData(dungeonNo: int):
+def getDunFLowModuleData(dunNo: int):
     """get module datas in dun_xxx_e"""
-    return _getDunXModuleData(dungeonNo, 'e')
+    return _getDunXModuleData(dunNo, 'e')
 
-def isDunGroupModuleDataExist(dungeonNo: int):
-    return _isDunXModuleDataExist(dungeonNo, 'g')
+def isDunGroupModuleDataExist(dunNo: int):
+    return _checkDunXModuleDataExist(dunNo, 'g')
 
-def getDunGroupModuleData(dungeonNo: int):
+def getDunGroupModuleData(dunNo: int):
     """get module datas in dun_xxx_g"""
-    return _getDunXModuleData(dungeonNo, 'g')
+    return _getDunXModuleData(dunNo, 'g')
 
 
-def getDunStructureModuleData(dungeonNo: int, actId: int = 0):
+def getDunStructModData(dunNo: int, actId: int = 0):
     """get module datas in dun_xxx_s"""
     if actId:
         key = 'Act%s' % actId
     else:
         key = 'SpaceConfig'
 
-    datas = _getDunXModuleData(dungeonNo, 's', False)
+    datas = _getDunXModuleData(dunNo, 's', False)
     return datas[key]
 
 
-getGamePlayModuleData = getDunModuleData
-getGamePlayFlowModuleData = getDunFLowModuleData
-getGamePlayStructureModuleData = getDunStructureModuleData
-
-
-def _getDunXModuleData(dungeonNo: int, suffix: str = '', showErrMsg=True):
-    if not dungeonNo or dungeonNo < 0:
-        raise TypeError('dungeonNo must be value higher than zero, got {}'.format(dungeonNo))
+def _getDunXModuleData(dunNo: int, suffix: str = '', showErrMsg=True):
+    if not dunNo or dunNo < 0:
+        raise TypeError('dunNo must be value higher than zero, got {}'.format(dunNo))
 
     try:
-        return __import__(_getDunXModuleName(dungeonNo, suffix)).datas
+        return __import__(_getDunXModuleName(dunNo, suffix)).datas
     except (ImportError, AttributeError) as err:
-        showErrMsg and ERROR_MSG('_getDunXModuleData::', dungeonNo, suffix, err)
+        showErrMsg and LOG_ERR('_getDunXModuleData::', dunNo, suffix, err)
         return {}
 
 
-def getDunModuleName(dungeonNo: int):
-    return _getDunXModuleName(dungeonNo)
+def getDunModuleName(dunNo: int):
+    return _getDunXModuleName(dunNo)
 
 
-def getDunFlowModuleName(dungeonNo: int):
-    return _getDunXModuleName(dungeonNo, 'e')
-
-
-def getDunStructureModuleName(dungeonNo: int):
-    return _getDunXModuleName(dungeonNo, 's')
-
-
-def _getDunXModuleName(dungeonNo: int, suffix: str = ''):
+def _getDunXModuleName(dunNo: int, suffix: str = ''):
     module_template = 'dun_{{}}_{}'.format(suffix) if suffix else 'dun_{}'
-
-    # if formula.spaceInWorldLine(dungeonNo):
-    #     module_name = module_template.format('bigWorld')
-    # else:
-    module_name = module_template.format(dungeonNo)
+    module_name = module_template.format(dunNo)
 
     return module_name
 
+def getEntityBoxGroupId(ent, spaceNo):
+    _dunData = getDunModuleData(formula.fetchMapId(spaceNo))
+    _gid = parseGidFromGameEntityId(ent.gameEntityId)
+    _params = _dunData.get(str(_gid), None)
+    if not _params:
+        return 0
+    _chestGroupID = _params['Props'].get('ChestGroupID', 0) or 0
+    return _chestGroupID
+
 
 def getEntitiesByIds(entIdList):
-    ents = []
-    for eid in entIdList:
-        e = KBEngine.entities.get(eid)
-        if e and not e.isDestroyed:
-            ents.append(e)
-    return ents
+    _ents = []
+    for _eid in entIdList:
+        _ent = KBEngine.entities.get(_eid)
+        if _ent and not _ent.isDestroyed:
+            _ents.append(_ent)
+    return _ents
 
 
-def getBuffEffectKey(effectId, effectIndex):
+def fetchBuffEffectKey(effectId, effectIndex):
     return effectId * 100 + effectIndex
-
-def mustInSpecialSpace(type_):
-    def _wrapper(fn):
-        @functools.wraps(fn)
-        def __wrapper(self, *args, **kwargs):
-            if formula.whatSpaceType(self.spaceNo) != type_:
-                ERROR_MSG('must call this function in special type', type_)
-                return
-            return fn(self, *args, **kwargs)
-
-        return __wrapper
-
-    return _wrapper
 
 
 _severFormulaComplie = re.compile(r'formula:\s*(\d{8})')
 
 
-def _getFuncByFormula(formulaStr, *args):
-    """根据公式计算结构
-
-    Arguments:
-        formulaStr {str} -- 公式ID, 传入格式 "formula:[formulaId, 8]', e.g. formula:12345678
-        default {python} -- 默认值, 传入后如果没有取值则返回默认值, 否则抛出异常
-
-    Raises:
-        TypeError: 没有在配表里找到对应的公式
-
-    Returns:
-        obj -- 公式计算结果
-    """
-    raiseExc = True
-    if len(args) > 0:
-        default = args[0]
-        raiseExc = False
-
+def _getFuncByFormula(formulaStr):
     try:
-        idStr = _severFormulaComplie.search(formulaStr)
-        return FGFD.datas[int(idStr.group(1))]['serverFormula']
+        _idStr = _severFormulaComplie.search(formulaStr)
+        return FGFD.datas[int(_idStr.group(1))]['serverFormula']
     except Exception as e:
-        if not raiseExc:
-            WARNING_MSG(
-                f"_getFuncByFormula::use default value, formula={formulaStr}, default={args[0]}, exc={type(e).__name__}: {e}")
-            return default
         raise e
 
 
-def getValByFormula(formulaStr, param, *default):
-    fn = _getFuncByFormula(formulaStr, *default)
+def getValByFormula(formulaStr, param):
+    fn = _getFuncByFormula(formulaStr)
     if not callable(fn):
-        WARNING_MSG("getValByFormula:: value not callable", formulaStr, fn, default)
+        LOG_WARN("getValByFormula:: value not callable", formulaStr, fn)
         return fn
 
     return fn(param)
 
 
-def calcFormulaValue(formulaStr, params, *default):
-    fn = _getFuncByFormula(formulaStr, *default)
-    if not callable(fn):
-        WARNING_MSG("calcFormulaValue:: value not callable", formulaStr, fn, default)
-        return fn
+def calcFormulaValue(formulaId, params):
+    _fn = FGFD.datas[formulaId]['serverFormula']
+    if not callable(_fn):
+        LOG_WARN("calcFormulaValue:: value not callable", formulaId, _fn)
+        return _fn
 
-    return fn(*params)
+    return _fn(*params)
 
 
 def randomByWeight(weight_list):
-    sumWeight = sum(weight_list)
-    randomWeight = random.uniform(0, sumWeight)
-    flagVal = 0
-    for idx, weight in enumerate(weight_list):
-        flagVal += weight
-        if randomWeight < flagVal:
-            return idx
+    _sumWeight = sum(weight_list)
+    _randomWeight = random.uniform(0, _sumWeight)
+    _flagVal = 0
+    for _idx, _weight in enumerate(weight_list):
+        _flagVal += _weight
+        if _randomWeight < _flagVal:
+            return _idx
     return None
 
 
-def man_gm_cmds():
-    max_name_len = max_desc_len = 0
+def man_outside_gm_cmds():
+    import gmAdmin
+    _max_name_len = _max_desc_len = 0
 
     def __yield():
-        nonlocal max_desc_len, max_name_len
+        nonlocal _max_desc_len, _max_name_len
 
-        for cmd in gameglobal.GM_CMDS.values():
-            name = cmd.name
-            if "_" in name:
+        for _cmd in gameglobal.GM_CMDS.values():
+            _name = _cmd.name
+            if "_" in _name:
                 continue
-            desc = cmd.desc
-            args = ((i.__class__.__name__, i.desc) for i in cmd.args)
+            if not _cmd.checkSide(gmAdmin.OUTSIDE):
+                continue
+            _desc = _cmd.desc
+            args = ((i.__class__.__name__, i.getDesc()) for i in _cmd.args)
 
-            len_name = len(name)
-            len_desc = len(desc)
-            max_name_len = len_name if len_name > max_name_len else max_name_len
-            max_desc_len = len_desc if len_desc > max_desc_len else max_desc_len
+            _len_name = len(_name)
+            _len_desc = len(_desc)
+            _max_name_len = _len_name if _len_name > _max_name_len else _max_name_len
+            _max_desc_len = _len_desc if _len_desc > _max_desc_len else _max_desc_len
 
-            yield name, desc, args
+            yield _name, _desc, args
 
-    data = [_ for _ in __yield()]
-    # tmp = '{{:{}}} | {{:{}}} | {{}}'.format(max_name_len, max_desc_len * 2)
-    result = []
-    for i in data:
-        args = i[2]
-        _args = ['{}({})'.format(i[1], i[0]) for i in args]
-        # print(tmp.format(i[0], i[1], _args))
-        tmp = {"name": i[0], "desc": i[1], "args": _args}
+    _data = [_ for _ in __yield()]
+    _result = []
+    for i in _data:
+        _args = i[2]
+        _args = ['{}({})'.format(i[1], i[0]) for i in _args]
+        _tmp = {"name": i[0], "desc": i[1], "args": _args}
 
-        result.append(tmp)
-    return result
+        _result.append(_tmp)
+    return _result
 
 
-def getRealAvatarEnt(ent, height=2):
-    orgEnt = ent
+def getRealAvatarEntity(entity, height=2):
+    orgEnt = entity
     for _ in range(height):
-        if not ent:
+        if not entity:
             return None, True
 
-        if ent.IsAvatar:
-            return ent, False
+        if entity.IsAvatar:
+            return entity, False
 
-        if ent.IsAvatarMirror and (ent.isNoOnwerMirror() or ent.isBot()):
-            return ent, True
+        if entity.IsAvatarMirror and (entity.isNoOnwerMirror() or entity.isBot()):
+            return entity, True
 
-        if not hasattr(ent, 'hostId'):
+        if not hasattr(entity, 'hostId'):
             return None, True
 
-        ent = ent.getHost()
-    else:
-        ERROR_MSG('getRealAvatarEnt:: ent not found', orgEnt, height)
-        return None, True
+        entity = entity.getHost()
+
+    LOG_ERR('getRealAvatarEntity:: ent not found', orgEnt, height)
+    return None, True
 
 
-def bytes2hex(bVal):
-    bVal = ''.join(['%02x' % b for b in bVal])
-    return '0x' + bVal
+def bytesToHex(bytesVal):
+    bytesVal = ''.join(['%02x' % b for b in bytesVal])
+    return '0x' + bytesVal
 
 
-def getMyDeleteGlobalsMails(lastGBMailTime):
-    DEBUG_MSG('in getMyDeleteGlobalsMails, lastGBMailTime:', lastGBMailTime)
-    delGBMailList = []
-    for (gbMailGBID, delTime) in reversed(gameglobal.globalDeleteMailsCacheList):
-        if lastGBMailTime >= delTime:
-            break
-        delGBMailList.append((gbMailGBID, delTime))
-    return delGBMailList
-
-
-mask1 = 0x00550055
-d1 = 5
-mask2 = 0x0000cccc
-d2 = 10
-
-d3 = 3
-d4 = 6
-
-
-def encodeGuildShuffle(x):
-    t = (x ^ (x >> d3)) & mask1;
-    u = x ^ t ^ (t << d3);
-    t = (u ^ (u >> d4)) & mask2;
-    y = u ^ t ^ (t << d4);
-    return y
-
-
-def decodeGuildShuffle(y):
-    t = (y ^ (y >> d4)) & mask2;
-    u = y ^ t ^ (t << d4);
-    t = (u ^ (u >> d3)) & mask1;
-    z = u ^ t ^ (t << d3);
-    return z
-
-
-def encodeShuffle(x):
-    t = (x ^ (x >> d1)) & mask1;
-    u = x ^ t ^ (t << d1);
-    t = (u ^ (u >> d2)) & mask2;
-    y = u ^ t ^ (t << d2);
-    return y
-
-
-def decodeShuffle(y):
-    t = (y ^ (y >> d2)) & mask2;
-    u = y ^ t ^ (t << d2);
-    t = (u ^ (u >> d1)) & mask1;
-    z = u ^ t ^ (t << d1);
-    return z
-
-
-def encodeParity(x):
-    t = (x ^ (x >> 1)) & 0x44444444
-    u = (x ^ (x << 2)) & 0xcccccccc
-    y = ((x & 0x88888888) >> 3) | (t >> 1) | u
-    return y
-
-
-def decodeParity(y):
-    t = ((y & 0x11111111) << 3) | (((y & 0x11111111) << 2) ^ ((y & 0x22222222) << 1));
-    z = t | ((t >> 2) ^ ((y >> 2) & 0x33333333));
-    return z
-
-
-OB_ADD_NUM = 10000000
-
-
-# 最大不能超4194304
-
-def obfuscateGuild(dbid):
-    return encodeParity(encodeGuildShuffle(dbid)) + OB_ADD_NUM
-
-
-def restoreGuild(dbid):
-    return decodeGuildShuffle(decodeParity(dbid - OB_ADD_NUM))
-
-
-def obfuscateDBID(dbid):
-    return encodeParity(encodeShuffle(dbid))
-
-
-def restoreDBID(dbid):
-    return decodeShuffle(decodeParity(dbid))
-
-
-def transferDBID(dbid):
-    import gameconfig
-
-    return int(str(gameconfig.serverId()) + '%05d' % obfuscateDBID(dbid))
-
-
-def reTransferDBID(obid):
-    import gameconfig
-
-    id = int(str(obid)[len(str(gameconfig.serverId())):])
-    return restoreDBID(id)
-
-
-def getAreaId(mapId, position, scaleSize=1):
-    if not gameglobal.areaData or not position:
+def getAreaId(mapId, pos, scaleSize=1):
+    if not gameglobal.areaData or not pos:
         return 0
 
-    x = int(position[0])//scaleSize
-    z = int(position[2])//scaleSize
+    _x = int(pos[0])//scaleSize
+    _z = int(pos[2])//scaleSize
 
-    curAreaDataInfo = gameglobal.areaData.get(mapId)
-    if not curAreaDataInfo:
+    _curAreaDataInfo = gameglobal.areaData.get(mapId)
+    if not _curAreaDataInfo:
         return 0
 
-    height, areaData = curAreaDataInfo
+    _height, _areaData = _curAreaDataInfo
 
-    return areaData.get(z*height+x, 0)
+    return _areaData.get(_z * _height + _x, 0)
 
 
 def getSvrOpenDayFiveTS():
     import gameconfig
     svrOpenTime = gameconfig.serverOpenTime()
-    timeArr = list(time.localtime(svrOpenTime))
-    if 0 <= timeArr[3] < 5:
-        offset = gameconst.ONE_DAY_SECONDS
+    _timeArr = list(time.localtime(svrOpenTime))
+    if 0 <= _timeArr[3] < 5:
+        offset = gameconst.ONE_DAY_COST_SECONDS
     else:
         offset = 0
-    timeArr[3] = 5
-    timeArr[4] = 0
-    timeArr[5] = 0
-    return int(time.mktime(tuple(timeArr))) - offset
+    _timeArr[3] = 5
+    _timeArr[4] = 0
+    _timeArr[5] = 0
+    return int(time.mktime(tuple(_timeArr))) - offset
 
 
 def getSvrOpenDays(now=None):
     svrOpenTime = getSvrOpenDayFiveTS()
-    return math.floor(((now or getNow()) - svrOpenTime) / gameconst.ONE_DAY_SECONDS) + 1
-
-
-def getIntervalDaysFromTime(tLastOffline):
-    # 指定时间到今天凌晨5点的间隔天数
-    if tLastOffline == 0:
-        return 0
-    return max((getTodayFiveSec() - tLastOffline) // (3600 * 24), 0)
+    return math.floor(((now or curTS()) - svrOpenTime) / gameconst.ONE_DAY_COST_SECONDS) + 1
 
 
 def getHostEntity(entity):
     if not entity:
         return
-    target = entity
-    if entity.IsCreation or entity.IsSummon:
-        if entity.hostId:
-            target = entity.getHost() or entity
 
-    return target
+    _target = entity
+    if not (entity.IsCreation or entity.IsSummon):
+        return _target
+
+    if not entity.hostId:
+        return _target
+
+    return entity.getHost() or entity
 
 
 def parseCrontabPattern(express):
-    ct = crontab.CronTab(express)
-    return [sorted(list(c.allowed)) for c in ct.matchers[:5]]
+    _ct = crontab.CronTab(express)
+    return [sorted(list(_c.allowed)) for _c in _ct.matchers[:5]]
 
 
-def getLastDayOfMonth(year, month):
-    nextMonth = month + 1 if 0 < month < 12 else 1
-    t = time.mktime((year, nextMonth, 1, 0, 0, 0, 0, 0, 0))
+def fetchLastDayOfMonth(year, month):
+    _nextMonth = month + 1 if 0 < month < 12 else 1
+    _t = time.mktime((year, _nextMonth, 1, 0, 0, 0, 0, 0, 0))
 
-    tplSec = time.localtime(t - 3600 * 24)
+    __tplSec = time.localtime(_t - 3600 * 24)
 
-    return tplSec[2]
-
-
-def timeTupleIsAny(tp):
-    if not any(tp):
-        return True
-    return False
+    return __tplSec[2]
 
 
-allMinutes = range(60)
-allHours = range(24)
-allMonths = range(1, 13)
-allWeekdays = range(7)
+_ALL_MINUTES = range(60)
+_ALL_HOURS = range(24)
+_ALL_MONTHS = range(1, 13)
+_ALL_WEEK_DAYS = range(7)
 
 
-# tp: parseCrontabPattern return value
-def nextByTimeTuple(tp, now=None):
-    if len(tp) not in (5, 6):
+def nextByTimeTuple(tup, now=None):
+    if len(tup) not in (5, 6):
         return sys.maxsize
 
-    if timeTupleIsAny(tp):
+    if not any(tup):
         return 0
 
-    now = now or getNow()
-    nowDatetime = datetime.datetime.fromtimestamp(now)
-    tplSec = nowDatetime.timetuple()
-    curYear, curMonth, curDay, curHour, curMin, curSec, curWeekDay = tplSec[0:7]
-    years = []
-    if len(tp) == 5:
-        minutes, hours, days, months, weekdays = tp
+    now = now or curTS()
+    _nowDatetime = datetime.datetime.fromtimestamp(now)
+    _tplSec = _nowDatetime.timetuple()
+    curYear, _curMonth, _curDay, _curHour, curMin, curSec, curWeekDay = _tplSec[0:7]
+    _years = []
+    if len(tup) == 5:
+        _minutes, _hours, _days, _months, _weekdays = tup
     else:
-        minutes, hours, days, months, weekdays, years = tp
+        _minutes, _hours, _days, _months, _weekdays, _years = tup
 
-    if days and weekdays:
+    if _days and _weekdays:
         return sys.maxsize
 
-    minutes = minutes or allMinutes
-    hours = hours or allHours
-    months = months or allMonths
-    weekdays = weekdays or allWeekdays
-    # years = years or allYears
+    _minutes = _minutes or _ALL_MINUTES
+    _hours = _hours or _ALL_HOURS
+    _months = _months or _ALL_MONTHS
+    _weekdays = _weekdays or _ALL_WEEK_DAYS
+    # _years = _years or allYears
 
-    if not years or curYear in years:
-        for month in months:
-            if month < curMonth:
+    if not _years or curYear in _years:
+        for month in _months:
+            if month < _curMonth:
                 continue
 
-            allDays = range(1, getLastDayOfMonth(curYear, month) + 1)
-            mDays = days or allDays
-            if mDays[-1] > allDays[-1]:
+            allDays = range(1, fetchLastDayOfMonth(curYear, month) + 1)
+            _mDays = _days or allDays
+            if _mDays[-1] > allDays[-1]:
                 return sys.maxsize
 
-            for day in mDays:
-                if month == curMonth and day < curDay:
+            for day in _mDays:
+                if month == _curMonth and day < _curDay:
                     continue
 
                 dt = datetime.datetime(curYear, month, day)
-                if dt.isoweekday() % 7 not in weekdays:
+                if dt.isoweekday() % 7 not in _weekdays:
                     continue
 
-                for hour in hours:
-                    if month == curMonth and day == curDay and hour < curHour:
+                for hour in _hours:
+                    if month == _curMonth and day == _curDay and hour < _curHour:
                         continue
-                    for minute in minutes:
+                    for minute in _minutes:
                         dt = datetime.datetime(curYear, month, day, hour, minute)
-                        if dt > nowDatetime:
-                            return (dt - nowDatetime).total_seconds()
+                        if dt > _nowDatetime:
+                            return (dt - _nowDatetime).total_seconds()
 
-    years = years or range(curYear + 1, curYear + 10)
-    for year in years:
+    _years = _years or range(curYear + 1, curYear + 10)
+    for year in _years:
         if year <= curYear:
             continue
 
-        for month in months:
-            allDays = range(1, getLastDayOfMonth(curYear, month) + 1)
-            mDays = days or allDays
-            for day in mDays:
+        for month in _months:
+            allDays = range(1, fetchLastDayOfMonth(curYear, month) + 1)
+            _mDays = _days or allDays
+            for day in _mDays:
                 dt = datetime.datetime(curYear + 1, month, day)
-                if dt.isoweekday() % 7 not in weekdays:
+                if dt.isoweekday() % 7 not in _weekdays:
                     continue
 
-                dt = datetime.datetime(year, month, day, hours[0], minutes[0])
-                return (dt - nowDatetime).total_seconds()
+                dt = datetime.datetime(year, month, day, _hours[0], _minutes[0])
+                return (dt - _nowDatetime).total_seconds()
 
     return sys.maxsize
 
 
-def previousByTimeTuple(tp, now=None):
-    if len(tp) not in (5, 6):
+def previousByTimeTuple(tup, now=None):
+    if len(tup) not in (5, 6):
         return sys.maxsize
 
-    if timeTupleIsAny(tp):
+    if not any(tup):
         return 0
 
-    now = now or getNow()
-    nowDatetime = datetime.datetime.fromtimestamp(now)
-    tplSec = nowDatetime.timetuple()
-    curYear, curMonth, curDay, curHour, curMin, curSec, curWeekDay = tplSec[0:7]
-    years = []
-    if len(tp) == 5:
-        minutes, hours, days, months, weekdays = tp
+    now = now or curTS()
+    _nowDatetime = datetime.datetime.fromtimestamp(now)
+    _tplSec = _nowDatetime.timetuple()
+    curYear, _curMonth, _curDay, _curHour, curMin, curSec, curWeekDay = _tplSec[0:7]
+    _years = []
+    if len(tup) == 5:
+        _minutes, _hours, _days, _months, _weekdays = tup
     else:
-        minutes, hours, days, months, weekdays, years = tp
+        _minutes, _hours, _days, _months, _weekdays, _years = tup
 
-    if days and weekdays:
+    if _days and _weekdays:
         return sys.maxsize
 
-    minutes = minutes or allMinutes
-    hours = hours or allHours
-    months = months or allMonths
-    weekdays = weekdays or allWeekdays
-    # years = years or allYears
+    _minutes = _minutes or _ALL_MINUTES
+    _hours = _hours or _ALL_HOURS
+    _months = _months or _ALL_MONTHS
+    _weekdays = _weekdays or _ALL_WEEK_DAYS
+    # _years = _years or allYears
 
-    if not years or curYear in years:
-        for month in reversed(months):
-            if month > curMonth:
+    if not _years or curYear in _years:
+        for month in reversed(_months):
+            if month > _curMonth:
                 continue
 
-            allDays = range(1, getLastDayOfMonth(curYear, month) + 1)
-            mDays = days or allDays
-            if mDays[-1] > allDays[-1]:
+            allDays = range(1, fetchLastDayOfMonth(curYear, month) + 1)
+            _mDays = _days or allDays
+            if _mDays[-1] > allDays[-1]:
                 return sys.maxsize
 
-            for day in reversed(mDays):
-                if month == curMonth and day > curDay:
+            for day in reversed(_mDays):
+                if month == _curMonth and day > _curDay:
                     continue
 
                 dt = datetime.datetime(curYear, month, day)
-                if dt.isoweekday() % 7 not in weekdays:
+                if dt.isoweekday() % 7 not in _weekdays:
                     continue
 
-                for hour in reversed(hours):
-                    if month == curMonth and day == curDay and hour > curHour:
+                for hour in reversed(_hours):
+                    if month == _curMonth and day == _curDay and hour > _curHour:
                         continue
-                    for minute in reversed(minutes):
+                    for minute in reversed(_minutes):
                         dt = datetime.datetime(curYear, month, day, hour, minute)
-                        if dt <= nowDatetime:
-                            return (nowDatetime - dt).total_seconds()
+                        if dt <= _nowDatetime:
+                            return (_nowDatetime - dt).total_seconds()
 
-    years = years or range(curYear - 10, curYear)
-    for year in reversed(years):
+    _years = _years or range(curYear - 10, curYear)
+    for year in reversed(_years):
         if year >= curYear:
             continue
-        for month in reversed(months):
-            allDays = range(1, getLastDayOfMonth(curYear, month) + 1)
-            mDays = days or allDays
-            for day in reversed(mDays):
+        for month in reversed(_months):
+            allDays = range(1, fetchLastDayOfMonth(curYear, month) + 1)
+            _mDays = _days or allDays
+            for day in reversed(_mDays):
                 dt = datetime.datetime(year, month, day)
-                if dt.isoweekday() % 7 not in weekdays:
+                if dt.isoweekday() % 7 not in _weekdays:
                     continue
 
-                dt = datetime.datetime(year, month, day, hours[-1], minutes[-1])
-                return (nowDatetime - dt).total_seconds()
+                dt = datetime.datetime(year, month, day, _hours[-1], _minutes[-1])
+                return (_nowDatetime - dt).total_seconds()
 
     return sys.maxsize
 
 
-def nextByTimeTupleList(tps, now=None):
-    nextStart = -1
-    cronTuple = None
-    for i, tp in enumerate(tps):
+def nextByCronTupleList(tps, now=None):
+    _nextStart = -1
+    _cronTuple = None
+    for _, tp in enumerate(tps):
         tNext = nextByTimeTuple(tp, now)
-        if nextStart < 0 or tNext < nextStart:
-            nextStart = tNext
-            cronTuple = tp
+        if _nextStart < 0 or tNext < _nextStart:
+            _nextStart = tNext
+            _cronTuple = tp
 
-    return nextStart, cronTuple
+    return _nextStart, _cronTuple
 
 
-# start: parseCrontabPattern return value
-# end: parseCrontabPattern return value
-_TFLAG_SRT = 1
+_TFLAG_START = 1
 _TFLAG_END = 2
 
 
-def _inTimeTupleRange(srt, end, now):
-    tNextSrt = nextByTimeTuple(srt, now)
-    tNextEnd = nextByTimeTuple(end, now)
-    tPrevSrt = previousByTimeTuple(srt, now)
-    tPrevEnd = previousByTimeTuple(end, now)
-    timeline = sorted(((now - tPrevSrt if tPrevSrt < sys.maxsize else math.inf, _TFLAG_SRT),
-                       (now - tPrevEnd if tPrevEnd < sys.maxsize else math.inf, _TFLAG_END),
-                       (now + tNextSrt if tNextSrt < sys.maxsize else math.inf, _TFLAG_SRT),
-                       (now + tNextEnd if tNextEnd < sys.maxsize else math.inf, _TFLAG_END)),
+def _inTimeTupleRange(start, end, now):
+    _tNextSrt = nextByTimeTuple(start, now)
+    _tNextEnd = nextByTimeTuple(end, now)
+    _tPrevSrt = previousByTimeTuple(start, now)
+    _tPrevEnd = previousByTimeTuple(end, now)
+    _timeline = sorted(((now - _tPrevSrt if _tPrevSrt < sys.maxsize else math.inf, _TFLAG_START),
+                       (now - _tPrevEnd if _tPrevEnd < sys.maxsize else math.inf, _TFLAG_END),
+                       (now + _tNextSrt if _tNextSrt < sys.maxsize else math.inf, _TFLAG_START),
+                       (now + _tNextEnd if _tNextEnd < sys.maxsize else math.inf, _TFLAG_END)),
                       key=lambda x: x[0])
-    # | TIMELINE: -------- a --- b --- c --- d -----
+    # | _TIMELINE: -------- a --- b --- c --- d -----
     # | NOW:      ----------- x --------------------
     # L&R Closed Interval
-    DEBUG_MSG("_inTimeTupleRange::", srt, end, now, timeline)
-    if now > timeline[-1][0]:
-        return timeline[-1][1] == _TFLAG_SRT
+    LOG_DBG("_inTimeTupleRange::", start, end, now, _timeline)
+    if now > _timeline[-1][0]:
+        return _timeline[-1][1] == _TFLAG_START
 
-    for i in reversed(range(len(timeline) - 1)):
-        if timeline[i][0] <= now:
-            if timeline[i][1] == _TFLAG_SRT:
+    for i in reversed(range(len(_timeline) - 1)):
+        if _timeline[i][0] <= now:
+            if _timeline[i][1] == _TFLAG_START:
                 return True
-            if timeline[i][1] == _TFLAG_END:
+            if _timeline[i][1] == _TFLAG_END:
                 return False
             return False
 
-    if now < timeline[0][0]:
-        return timeline[0][1] == _TFLAG_END
+    if now < _timeline[0][0]:
+        return _timeline[0][1] == _TFLAG_END
 
     return False
 
 
-def inTimeTupleRange(srt, end, now=None):
-    now = now if now is not None else getNow()
-    DEBUG_MSG("inTimeTupleRange::START", srt, end, now)
-    r = _inTimeTupleRange(srt, end, now)
-    DEBUG_MSG("inTimeTupleRange::ENDED", r, srt, end, now)
+def inTimeTupleRange(start, end, now=None):
+    now = now if now is not None else curTS()
+    LOG_DBG("inTimeTupleRange::START", start, end, now)
+    r = _inTimeTupleRange(start, end, now)
+    LOG_DBG("inTimeTupleRange::ENDED", r, start, end, now)
     return r
 
 
-# starts: list of parseCrontabPattern return value
-# ends: list of parseCrontabPattern return value
-def inTimeTuplesRange(starts, ends, now=None):
-    if not starts or not ends or len(starts) != len(ends):
+def inTimeTuplesRange(startsList, endsList, now=None):
+    if not startsList or not endsList or len(startsList) != len(endsList):
         return False
 
-    for idx, startCron in enumerate(starts):
-        endCron = ends[idx]
+    for idx, startCron in enumerate(startsList):
+        endCron = endsList[idx]
         if inTimeTupleRange(startCron, endCron, now):
             return True
 
     return False
 
 
-def inCrontabRange(start, end, now=None):
-    now = now or getNow()
-    startCT = crontab.CronTab(start)
-    endCT = crontab.CronTab(end)
-
-    sNext = startCT.next(now)
-    eNext = endCT.next(now)
-    if not eNext:
-        return False
-
-    if not sNext:
-        return True
-
-    if sNext < eNext:
-        return False
-
-    return True
-
-
-def inCrontabsRange(starts, ends, now=None):
-    now = now or getNow()
-    nextStartTime = min([crontab.CronTab(s).next(now) for s in starts])
-    nextEndTime = min([crontab.CronTab(s).next(now) for s in ends])
-
-    if nextStartTime < nextEndTime:
-        return False
-    return True
-
-
-MINUTE = 0
-HOUR = 1
-DAY = 2
-MONTH = 3
-WEEKEND = 4
-YEAR = 5
-
-TRANS_TAB = {
-    MINUTE: 4,
-    HOUR: 3,
-    DAY: 2,
-    MONTH: 1,
-    WEEKEND: 6,
-    YEAR: 0,
-}
-
-
-# matchList: parseCrontabPattern返回的格式
-def checkCrontabs(current, matchList):
-    timeWrap = time.localtime(current)
-
-    if matchList is None:
-        return False
-
-    match = True
-    for index, matchedList in enumerate(matchList):
-
-        if len(matchedList) == 0:
-            continue
-        if index == 4:
-            result = timeWrap[TRANS_TAB[index]] + 1 % 7
-        else:
-            result = timeWrap[TRANS_TAB[index]]
-
-        if result not in matchedList:
-            match = False
-            break
-
-    return match
-
-
-def getTodayFiveSec():
-    todayFive = getTodayZeroSec() + 18000
-    if getNow() < todayFive:
-        return todayFive - 24 * 3600
-    else:
-        return todayFive
-
-
-def getIntervalDaysFromTime(tLastOffline):
-    # 指定时间到今天凌晨5点的间隔天数
-    if tLastOffline == 0:
-        return 0
-    return max((getTodayFiveSec() - tLastOffline) // (3600 * 24), 0)
-
-
 def getRemainTimeStr(timestamp):
-    hours = timestamp // gameconst.ONE_HOUR_SECONDES
-    mins = timestamp % gameconst.ONE_HOUR_SECONDES // 60
+    hours = timestamp // gameconst.ONE_HOUR_COST_SECONDES
+    mins = timestamp % gameconst.ONE_HOUR_COST_SECONDES // 60
     seconds = timestamp % 60
     if hours:
         return '{}小时{}分{}秒'.format(hours, mins, seconds)
@@ -1476,59 +1087,42 @@ def getRemainTimeStr(timestamp):
     return '{}秒'.format(seconds)
 
 
-def immutableMeta(name, bases, dct):
-    class MetaCls(type):
-        def __init__(cls, name, bases, dct):
-            type.__init__(cls, name, bases, dct)
-
-        def __setattr__(cls, attr, value):
-            raise AttributeError("Cannot assign attributes to this class")
-
-        def __getattr__(cls, name):
-            try:
-                return cls.__dict__[name]
-            except:
-                WARNING_MSG('%s is not defined, return 0 instead.' % name)
-                return 0
-
-    return MetaCls(name, bases, dct)
-
-
 def isBeyondOneDay(timestamp):
-    return timestamp + gameconst.ONE_DAY_SECONDS < getNow()
+    return timestamp + gameconst.ONE_DAY_COST_SECONDS < curTS()
 
 
-def decodeClientData(dataBytes):
+def decClientData(dataBytes):
     try:
-        data = json.loads(dataBytes.decode('utf-8'), encoding='utf-8')
+        _data = json.loads(dataBytes.decode('utf-8'), encoding='utf-8')
     except:
-        data = {}
+        _data = {}
 
-    return data
+    return _data
 
 
-def encodeClientData(clientData):
+def encClientData(clientData):
     try:
-        dataBytes = json.dumps(clientData).encode('utf-8')
+        _dataBytes = json.dumps(clientData).encode('utf-8')
     except:
-        dataBytes = ''
+        _dataBytes = ''
 
-    return dataBytes
+    return _dataBytes
 
 
-def getRealAccountName(accountType, accountName):
+def mixRealAccountName(accountType, accountName):
     import proto.centralLogin_pb2 as centralLogin
     if accountType == centralLogin.ACCOUNT_UNKNOW:
         return accountName
-    return '%s:%s' % (accountType, accountName)
+    else:
+        return '%s:%s' % (accountType, accountName)
 
 
-def getAccountTypeAndName(accountName):
+def fetchAccountTypeAndName(accountName):
     import proto.centralLogin_pb2 as centralLogin
-    parts = accountName.split(':')
-    if len(parts) > 1:
-        return int(parts[0]), parts[1]
-    return centralLogin.ACCOUNT_UNKNOW, parts[0]
+    _parts = accountName.split(':')
+    if len(_parts) > 1:
+        return int(_parts[0]), _parts[1]
+    return centralLogin.ACCOUNT_UNKNOW, _parts[0]
 
 
 def checkAvatarNameLength(name):
@@ -1556,8 +1150,8 @@ def getPlayerBornMapId():
     return CCT.datas['createConst_BornGamePlayID']['value']
 
 def getPlayerBreakAwayStuckPos(spaceNo, position, needBornPos=False):
-    mapId = formula.getMapId(spaceNo)
-    data = getDunStructureModuleData(mapId)
+    mapId = formula.fetchMapId(spaceNo)
+    data = getDunStructModData(mapId)
     posDatas = data.get('BreakAwayStuckPos', {})
     if not posDatas or needBornPos:
         posDatas = data.get('BornPos', {})
@@ -1573,218 +1167,110 @@ def getPlayerBreakAwayStuckPos(spaceNo, position, needBornPos=False):
     return random.choice(resList)
 
 
-def getGeneratorEntItems(spaceNo, keyName, entName="", actId=0, dictLayer=3):
-    entItems = {}
-    datas = getDunStructureModuleData(formula.getMapId(spaceNo), actId)
-    for k, v in datas[keyName].items():
-        if not entName or v.get('ClassName', "") == entName:
-            if dictLayer == 3:
-                for eId, eItem in v.items():
-                    entItems[eItem["ID"]] = eItem
-            else:
-                entItems[v["ID"]] = v
-    return entItems
-
-
-def getCrtMapCanEnterDungeonFlag(mapId):
+def fetchCrtMapCanEnterDungeonFlag(mapId):
     """是否可以进入副本"""
-    return GPGP.datas.get(mapId, {}).get(
-        'ifEnterDun', gameconst.GamePlayMapCheckEnum.DENY)
+    return GPGP.datas\
+        .get(mapId, {})\
+        .get('ifEnterDun', gameconst.GamePlayMapCheckEnum.DENY)
 
 
-# --------------------------------------------------------------------------
-# todo, 编写自定义比较规则,调用时读取策划所配置的相关属性进行按规则排序
-def specialCmpToKey(reverseRule=None):
-    def specialSortCmp(x, y, reverseRule=reverseRule):
-        """
-        根据 specialSortCmp 自定义的排序规则
-        :param x:
-        :param y:
-        :param reverseRule: 用来排序的key:reverse (1:升序 -1:倒序 0:默认)读取策划所配置
-        :return: x > y: 1, x < y: -1, x == y: 0
-
-        """
-        for (attr, rule) in reverseRule:
-            if getattr(x, attr, 0) == getattr(y, attr, 0):
-                continue
-            elif getattr(x, attr, 0) > getattr(y, attr, 0):
-                return rule
-            else:
-                return -rule
-        return rule
-
-    return specialSortCmp
-
-
-def isNeedUpdateTopList(primaryKeyValue, curValue, ts, valueRule, tsRule, tailValue, tailTs, topListDt):
-    # 已经在队列中
-    if primaryKeyValue in topListDt:
-        return True
-    else:
-        # 非序列tail成员
-        # 降序
-        if valueRule == -1:
-            if curValue > tailValue:
-                return True
-            elif curValue == tailValue:
-                # 降序
-                if tsRule == -1:
-                    if ts > tailTs:
-                        return True
-                # 升序
-                elif tsRule == 1:
-                    if ts < tailTs:
-                        return True
-        # 升序
-        elif valueRule == 1:
-            if curValue < tailValue:
-                return True
-            elif curValue == tailValue:
-                # 降序
-                if tsRule == -1:
-                    if ts > tailTs:
-                        return True
-                # 升序
-                elif tsRule == 1:
-                    if ts < tailTs:
-                        return True
-        return False
-
-def canIterable(val):
+def checkCanIterable(val):
     return hasattr(val, '__iter__') or hasattr(val, '__getitem__')
 
 
 def parseCommEventParams(paramStr):
-    parsmsList = paramStr.split(';')
-    args = parsmsList[0].split(',') if parsmsList[0] else []
-    kwargs = {}
-    if len(parsmsList) == 2:
-        kwargs = json.loads(parsmsList[1])
-    return args, kwargs
+    _parsmsList = paramStr.split(';')
+    _args = _parsmsList[0].split(',') if _parsmsList[0] else []
+    _kwargs = {}
+    if len(_parsmsList) == 2:
+        _kwargs = json.loads(_parsmsList[1])
+    return _args, _kwargs
 
 
-def deduplicateList(m):
-    return functools.reduce(lambda x, y: x if y in x else x + [y], [[], ] + m)
-
-
-def isBoxOffline(box):
+def checkBoxOffline(box):
     # 先删除isDestroying判断，正常情况应该在下线销毁时就从stub注销自己，而不是持有一个isDestroyed的对象再判断
     if isinstance(box, KBEngine.Proxy):
         if box.isDestroyed:
-            gameengine.reportCritical('use of destroyed box')
-        return box.isDestroyed
+            gameengine.panicStack('use of destroyed box')
+        else:
+            return box.isDestroyed
 
     return box is None
 
 
-def getSpaceNameBySpaceNo(spaceNo, default=""):
-    return GPGP.datas.get(formula.getDungeonNoBySpaceNo(spaceNo), {}).get("name", default)
 
-
-def getRecordLogData(owner, dataKey, default=None):
-    return owner.getPersistentMiscProp(gameconst.AvatarProps.RecordLogData, {}).get(dataKey, default)
-
-
-def setRecordLogData(owner, dataKey, dataVal):
-    logDataDic = owner.getPersistentMiscProp(gameconst.AvatarProps.RecordLogData)
-    if not logDataDic:
-        logDataDic = {}
-        owner.setPersistentMiscProp(gameconst.AvatarProps.RecordLogData, logDataDic)
-    logDataDic[dataKey] = dataVal
-    return
-
-
-def getTimeStr(now):
+def getCommonTimeStr(now):
     tTime = time.localtime(now)
     return ' {}年{}月{}日 {:0>2d}:{:0>2d} '.format(tTime.tm_year, tTime.tm_mon, tTime.tm_mday, tTime.tm_hour,
                                                    tTime.tm_min)
 
 
 def setCallbackTmpInfo(owner, opUUID, callbackData):
-    callbackInfoDic = owner.getTempMiscProp(gameconst.AvatarProps.callbackTmpInfo)
-    if not callbackInfoDic:
-        callbackInfoDic = {}
-    callbackInfoDic[opUUID] = callbackData
-    owner.setTempMiscProp(gameconst.AvatarProps.callbackTmpInfo, callbackInfoDic)
+    _callbackInfoDic = owner.getTempMiscProp(gameconst.EntityPropsEnum.callbackTmpInfo)
+    if not _callbackInfoDic:
+        _callbackInfoDic = {}
+    _callbackInfoDic[opUUID] = callbackData
+    owner.setTempMiscProp(gameconst.EntityPropsEnum.callbackTmpInfo, _callbackInfoDic)
     return
 
 
-def getCallbackTmpInfo(owner, opUUID, default=None):
-    return owner.getTempMiscProp(gameconst.AvatarProps.callbackTmpInfo, {}).get(opUUID, default)
-
-
 def popCallbackTmpInfo(owner, opUUID):
-    callbackInfoDic = owner.getTempMiscProp(gameconst.AvatarProps.callbackTmpInfo)
-    if not callbackInfoDic:
+    _callbackInfoDic = owner.getTempMiscProp(gameconst.EntityPropsEnum.callbackTmpInfo)
+    if not _callbackInfoDic:
         return None
-    return callbackInfoDic.pop(opUUID, None)
+    return _callbackInfoDic.pop(opUUID, None)
 
 
-def getSpaceEnterScene(crtSpaceType, enterSpaceType, default=gameconst.SpaceEnterScene.DENY):
-    return GPES.datas.get(crtSpaceType, {}).get(str(enterSpaceType), default)
+def fetchSpaceEnterScene(crtSpaceTp, enterSpaceTp, default=gameconst.SpaceEnterScene.DENY):
+    return GPES.datas.get(crtSpaceTp, {}).get(str(enterSpaceTp), default)
 
 
-def getMonsterAttrKey(attrId):
-    return 'attr_{}'.format(attrId)
+def fetchLineMaxNumber(lineType):
+    return gameconst.lineStubMap()\
+        .get(lineType, {})\
+        .get('lineCount', 0)
 
 
-# key不能为-1
-def getRankBySortedList(sortList, keyFunc):
-    rank = 0
-    curRank = 0
-    lastVal = -1
-    for i in sortList:
-        rank += 1
-        val = keyFunc(i)
-        if val != lastVal:
-            lastVal = val
-            curRank = rank
-
-        yield curRank
-
-
-def getLineMaxNumber(lineType):
-    return gameconst.lineStubMap().get(lineType, {}).get('lineCount', 0)
-
-
-def isInWorldLinePKSafeAreaByAreaId(areaId):
+def isInWorldPKSafeAreaByAreaId(areaId):
     import worldConfig_Area
 
     if not areaId:
         return False
-    areaConf = worldConfig_Area.datas.get(areaId, None)
-    if not areaConf:
+
+    _areaData = worldConfig_Area.datas.get(areaId, None)
+    if not _areaData:
         return False
 
-    if not areaConf['ifSafeArea']:
+    if not _areaData['ifSafeArea']:
         return False
 
     return True
 
-def addResourceVal(oldVal, delta, valType):
-    newVal = oldVal + delta
-    if valType == gameconst.ReourceValType.UINT32:
-        maxVal = 0xFFFFFFFF
-    elif valType == gameconst.ReourceValType.INT32:
-        maxVal = 0x7FFFFFFF
-    elif valType == gameconst.ReourceValType.UINT64:
-        maxVal = 0xFFFFFFFFFFFFFFFF
-    elif valType == gameconst.ReourceValType.INT64:
-        maxVal = 0x7FFFFFFFFFFFFFFF
-    elif valType == gameconst.ReourceValType.UINT8:
-        maxVal = 0xFF
-    else:
-        return newVal
 
-    if newVal < 0:
+def addResourceVal(oldVal, delta, valType):
+    _newVal = oldVal + delta
+    if valType == gameconst.ReourceValType.UINT32:
+        _maxVal = 0xFFFFFFFF
+    elif valType == gameconst.ReourceValType.INT32:
+        _maxVal = 0x7FFFFFFF
+    elif valType == gameconst.ReourceValType.UINT64:
+        _maxVal = 0xFFFFFFFFFFFFFFFF
+    elif valType == gameconst.ReourceValType.INT64:
+        _maxVal = 0x7FFFFFFFFFFFFFFF
+    elif valType == gameconst.ReourceValType.UINT8:
+        _maxVal = 0xFF
+    else:
+        return _newVal
+
+    if _newVal < 0:
         if valType in (
                 gameconst.ReourceValType.UINT32, gameconst.ReourceValType.UINT64, gameconst.ReourceValType.UINT8,):
-            gameengine.reportCritical('checkResourceValLimit, minus source val:', newVal, valType)
-            newVal = 0
-    elif newVal > maxVal:
-        gameengine.reportCritical('checkResourceValLimit, exceed max val:', newVal, valType, maxVal)
-        newVal = maxVal
-    return newVal
+            gameengine.panicStack('checkResourceValLimit, minus source val:', _newVal, valType)
+            _newVal = 0
+    elif _newVal > _maxVal:
+        gameengine.panicStack('checkResourceValLimit, exceed max val:', _newVal, valType, _maxVal)
+        _newVal = _maxVal
+    return _newVal
 
 
 def getFraction(val, len=100):
@@ -1798,11 +1284,7 @@ def addFraction(val, addVal, maxValue=gameconst.UINT8_MAX):
         return val + addVal, 0
 
 
-def getPlantGid(plantType, slot):
-    return plantType * 1000 + slot
-
-
-def getAccountTypeByPlatId(platId):
+def fetchAccountTypeByPlatId(platId):
     import proto.centralLogin_pb2 as centralLogin
 
     if platId == gameconst.TssAccountPlatId.TSSPLAT_ID_IOS:
@@ -1833,106 +1315,20 @@ def getGameAppId(channelId):
 
 
 @functools.lru_cache(maxsize=1)
-def getShowCompleteModelNum():
+def fetchShowCompleteModelNum():
     return PLSD.datas["showCompleteModelNum"].get("value")
 
 
 @functools.lru_cache(maxsize=1)
-def getShowNameNum():
+def fetchShowNameNum():
     return PLSD.datas["showNameNum"].get("value")
 
 
-@functools.lru_cache(maxsize=1)
-def getShowCompletePetModelNum():
-    return PLSD.datas["showCompletePetModelNum"].get("value")
-
-
-def _testCheckAvatarName():
-    _tests = [('asdASD', True),  # 英文
-              ('你好', True),  # 中文
-              ('あ', True),  # 平假名
-              ('ウ', True),  # 片假名
-              ('0123456789', True),  # 数字
-              ('你好0123HJzasHJd9Sライオ1oOン', True),
-              ('asd 你好', False),
-              ('ちほり', True),
-              ('asd-dkk', False),
-              ('你好 世界', False),
-              ('你好，世界', False),
-              ('你好　世界', False)]
-
-    for k, v in _tests:
-        _r = checkAvatarName(k)
-        assert _r is v
-
-
-# _testCheckAvatarName()
-
-def getWholeBits(*bits):
-    val = 0
-    for bit in bits:
-        val = bitSet(val, bit)
-
-    return val
-
-
-def getBanEndTimeString(banTime):
-    if banTime == -1:
-        return LGS.datas['foreverText']['value']
-    else:
+def fetchBanEndTimeString(banTime):
+    if banTime != -1:
         return time.strftime("%Y年%m月%d日%H时%M分%S秒", time.localtime(banTime))
-
-
-def checkIDIPModifyName(name):
-    if not checkAvatarNameLength(name):
-        return False
-
-    if not checkAvatarName(name):
-        return False
-
-    if name.isdigit():
-        return False
-
-    return True
-
-
-def getTlogHeaderList(avatar):
-    import gameconfig
-    roleInfo = gameglobal.roleCache[avatar.id]
-    return [
-        getGameAppId(avatar.accountEntity.channelId),
-        avatar.accountEntity.devicePlatId,
-        gameconfig.serverId(),
-        avatar.accountName,
-        avatar.gbID,
-        roleInfo['name'],
-        roleInfo['level'],
-        0,  # vip level
-        roleInfo['battlePoint'],
-    ]
-
-
-def getSecTlogHeaderList(avatar):
-    roleInfo = gameglobal.roleCache[avatar.id]
-    import gameconfig
-    return [
-        getGameAppId(avatar.accountEntity.channelId),
-        avatar.accountEntity.devicePlatId,
-        avatar.accountEntity.channelId,
-        gameconfig.serverId(),
-        avatar.accountEntity.accountName,
-        '',
-        roleInfo.get('SecReportData', ''),
-        avatar.getClientIp(),
-        str(avatar.gbID),
-        roleInfo['name'],
-        roleInfo['school'],
-        roleInfo['level'],
-        roleInfo.get('battlePoint', 0),
-        '',
-        str(avatar.guildUUIDBase),
-        avatar.guildNameBase,
-    ]
+    else:
+        return LGS.datas['foreverText']['value']
 
 
 def calcSpaceWeight(playerNum, withPet, otherEntNumPerPlayer, baseWeight=0):
@@ -1951,121 +1347,31 @@ def calcSpaceWeight(playerNum, withPet, otherEntNumPerPlayer, baseWeight=0):
 def getServerLevel():
     serverLevelInfo = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_DAILY_SERVER_LEVEL_DATA)
     if not serverLevelInfo:
-        gameengine.reportCritical('getServerLevel, no serverLevelInfo')
+        gameengine.panicStack('getServerLevel, no serverLevelInfo')
         return 1
     return serverLevelInfo[1]
 
 
-######## AES begin ########
-aes_pad = lambda s, bs: s + chr(bs - len(s) % bs) * (bs - len(s) % bs)
-aes_unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+def fetchExposedMethods():
+    _methods = KBEngine.getExposedMethods('Avatar')
+    _uidMethodMap = KBEngine.getUidMethodMap('Avatar')
+    _methodUidMap = {v: k for k, v in _uidMethodMap.items()}
+    _result = {}
+    for m in _methods:
+        _result[_methodUidMap[m]] = m
+
+    return _result
 
 
-def encryptAES(data: str, key: str):
-    cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
-    data = aes_pad(data, cipher.block_size)
-    return base64.b64encode(cipher.encrypt(data.encode('utf-8'))).decode('utf-8')
-
-
-def decryptAES(data: str, key: str):
-    cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
-    data = base64.b64decode(data.encode('utf-8'))
-    return aes_unpad(cipher.decrypt(data)).decode('utf-8')
-
-
-def encryptAES_CBC(data: str, key: str, vi: str):
-    cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC, vi.encode('utf-8'))
-    data = aes_pad(data, cipher.block_size)
-    return base64.b64encode(cipher.encrypt(data.encode('utf-8'))).decode('utf-8')
-
-
-def decryptAES_CBC(data: str, key: str, vi: str):
-    cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC, vi.encode('utf-8'))
-    data = base64.b64decode(data.encode('utf-8'))
-    return aes_unpad(cipher.decrypt(data)).decode('utf-8')
-
-
-######## AES end ########
-
-def getExposedMethods():
-    methods = KBEngine.getExposedMethods('Avatar')
-    uidMethodMap = KBEngine.getUidMethodMap('Avatar')
-    methodUidMap = {v: k for k, v in uidMethodMap.items()}
-    result = {}
-    for m in methods:
-        result[methodUidMap[m]] = m
-
-    return result
-
-
-def getCallStats():
-    results = []
+def fetchCallStats():
+    _results = []
     for uid, methodName in gameglobal.avatarExposedMethods.items():
         num = KBEngine.getCallNum('Avatar', uid)
         if num:
-            results.append((num, methodName))
+            _results.append((num, methodName))
 
-    results.sort(reverse=True)
-    return results
-
-
-def _onGetAvatarInfos(ctx, ret, num, insertId, err):
-    import redisUtils
-    if type(err) is str and err:
-        ERROR_MSG('_onGetAvatarInfos error:', err, ctx)
-        return
-
-    for gbId, dbId, obId in ret:
-        gbId = int(gbId)
-        dbId = int(dbId)
-        obId = int(obId)
-
-        redisUtils.RedisUtils.onRemoveAvatar(gbId, obId)
-
-
-def miscCheckUserInput(msg, func):
-    KBEngine.checkUserInput(
-        1,
-        'accountName',
-        1,
-        'roleName',
-        1,
-        gameconst.CheckUserInputContentType.CONTENT_CATEGORY_MATERIAL,
-        msg,
-        func,
-        0,
-        1,
-        0,
-        gameconfig.serverId(),
-        ''
-    )
-
-
-def changeTextInJune():
-    """
-    每年六月有个时间段不能改名字
-    :return:
-    """
-    _start = 1654257600  # 2022/6/3 20:00:00
-    _end = 1654430400  # 2022/6/5 20:00:00
-    return _start < getNow() < _end
-
-
-def judgeHitWithProbabilityArr(valOrderArr, valMax, valMin=0):
-    randomVal = random.randint(valMin, valMax)
-    for i in range(len(valOrderArr)):
-        if randomVal <= valOrderArr[i]:
-            return i
-    return -1
-
-
-def cellGetLineStubIdx(spaceNo):
-    spaceEnt = gameglobal.localSpaceNoMap.get(spaceNo)
-    if not spaceEnt:
-        ERROR_MSG('cannot get spaceNo:', spaceNo)
-        return -1
-
-    return spaceEnt.lineStubIdx
+    _results.sort(reverse=True)
+    return _results
 
 
 @functools.lru_cache(100)
@@ -2076,12 +1382,12 @@ def parseTimeStr(timeStr):
 @functools.lru_cache(100)
 def parseDayCycleTimeStr(timeStr):
     _ = timeStr.split(':')  # timeStr : '20:00:00'
-    return int(_[0]) * gameconst.ONE_HOUR_SECONDES + int(_[1]) * gameconst.ONE_MINUTE_SECONDS + int(_[2])
+    return int(_[0]) * gameconst.ONE_HOUR_COST_SECONDES + int(_[1]) * gameconst.ONE_MINUTE_COST_SECONDS + int(_[2])
 
 
 def parseDayTimeStr(timeStr, now=None):
     tss = parseDayCycleTimeStr(timeStr)
-    return getCurrentDayTS(now, tss)
+    return getCurDayTS(now, tss)
 
 
 chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -2162,10 +1468,10 @@ def isAdult(birth):
     birthMon = int(birthStr[4:6])
     birthDay = int(birthStr[6:8])
 
-    now = getNow()
+    now = curTS()
     nDate = time.localtime(now)
 
-    DEBUG_MSG('isAdult', birthYear, birthMon, birthDay, nDate)
+    LOG_DBG('isAdult', birthYear, birthMon, birthDay, nDate)
     if nDate.tm_year - birthYear > 18:
         return True
     elif nDate.tm_year - birthYear < 18:
@@ -2195,7 +1501,7 @@ def encodeEquityJson(uniqueId, serialNumber):
     }
     extraJsonStr = json.dumps(extra, separators=(',', ':')).encode('utf-8')
     extraJson = bytes.hex(extraJsonStr)
-    DEBUG_MSG('encodeEquityJson--', extraJson)
+    LOG_DBG('encodeEquityJson--', extraJson)
     return extraJson
 
 
@@ -2228,7 +1534,7 @@ def isEnemyInPK(src, target):
     if src.pkModel == gameconst.PKModel.PEACE:
         return False
 
-    if utils.hasBit(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE) or utils.hasBit(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE):
+    if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE) or utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE):
         return False
 
     if src.inPKProtect(target):
@@ -2247,98 +1553,90 @@ def isEnemyInPK(src, target):
     return True
 
 
-_isEnemyFuncDic = {}
+def getEntityRealEntity(entity):
+    if entity and (entity.IsAvatarMirror or entity.IsCreation or entity.IsSummon):
+        if entity.hostId:
+            entity = entity.getHost() or entity
+
+    return entity
 
 
-def getEntityRealEntity(ent):
-    if ent and (ent.IsAvatarMirror or ent.IsCreation or ent.IsPet or ent.IsSummon):
-        if ent.hostId:
-            ent = ent.getHost() or ent
-
-    return ent
-
-
-def isEnemy(src, target):
-    if src.isDestroyed or target.isDestroyed:
+def isEnemy(src, tgt):
+    if src.isDestroyed or tgt.isDestroyed:
         return False
 
-    if src.id == target.id:
+    if src.id == tgt.id:
         return False
-
-    # if (src.IsAvatar and src.isCrossServerInLocalServer) or (target.IsAvatar and target.isCrossServerInLocalServer):
-    #     return False
 
     if src.IsAvatar and src.guildRelationVersion != gameglobal.guildRelationVersion:
         src.resetAllTargetTypeCache()
 
-    if target.id in src.enemyCacheSet:
+    if tgt.id in src.enemyCacheSet:
         return True
 
-    elif target.id in src.notEnemyCacheSet:
+    elif tgt.id in src.notEnemyCacheSet:
         return False
 
-    if not (src.isReal() and target.isReal()):
+    if not (src.isReal() and tgt.isReal()):
         return False
 
-    bIsEnemy = _isEnemy(src, target)
-    if bIsEnemy:
-        src.enemyCacheSet.add(target.id)
+    _bIsEnemy = _isEnemy(src, tgt)
+    if _bIsEnemy:
+        src.enemyCacheSet.add(tgt.id)
     else:
-        src.notEnemyCacheSet.add(target.id)
+        src.notEnemyCacheSet.add(tgt.id)
 
-    target.cacheSelfSet.add(src.id)
+    tgt.cacheSelfSet.add(src.id)
 
-    return bIsEnemy
+    return _bIsEnemy
 
 
-# 参数顺序很重要，只有target是不可攻击的才不是enemy
-
-def _isEnemy(src, target):
-    if (not src.IsCombatUnit and not src.IsCreation) or not target.IsCombatUnit:
+def _isEnemy(src, tgt):
+    if (not src.IsCombatUnit and not src.IsCreation) or not tgt.IsCombatUnit:
         return False
 
-    src, target = getEntityRealEntity(src), getEntityRealEntity(target)
-    if src.id == target.id:
+    src, tgt = getEntityRealEntity(src), getEntityRealEntity(tgt)
+    if src.id == tgt.id:
         return False
 
     # 切磋状态下，只能攻击切磋对象
     if src.IsAvatar:
         if src.duelAttr.inFight():
-            if not target.IsAvatar:
+            if not tgt.IsAvatar:
                 return False
 
-            return src.duelAttr.isDuelEnemy(target)
+            return src.duelAttr.isDuelEnemy(tgt)
 
         elif src.duelAttr.inReady():
             return False
 
-    if formula.isSiegeWarSpace(src.spaceNo):
-        if formula.isSiegeWarSpace(target.spaceNo):
-            if src.IsAvatar and target.IsAvatar:
+    if formula.inSiegeWarScene(src.spaceNo):
+        if formula.inSiegeWarScene(tgt.spaceNo):
+            if src.IsAvatar and tgt.IsAvatar:
                 if not src.siegeWarCanAttack:
                     return False
-            return src.siegeWarCamp != target.siegeWarCamp
+            return src.siegeWarCamp != tgt.siegeWarCamp
 
-    _enemy, needReturn = isMineWarEnemy(src, target)
+    _enemy, needReturn = isMineWarEnemy(src, tgt)
     if needReturn:
         return _enemy
 
     # pk规则判断
-    if src.IsAvatar and target.IsAvatar:
+    if src.IsAvatar and tgt.IsAvatar:
         # 【野外PK
         # A开戮斗模式攻击B，客户端可以放技能没有伤害，客户端判断能打，但是服务端判断不能打】
 
-        if isEnemyInPK(src, target):
+        if isEnemyInPK(src, tgt):
             return True
 
-    if getForceRelation(src, target) == gameconst.ForceRelation.Enemy:
+    if fetchForceRelation(src, tgt) == gameconst.ForceRelation.Enemy:
         return True
 
     return False
 
 def isMineWarEnemy(src, target):
-    if utils.hasBit(src.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
-        if utils.hasBit(target.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
+    if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
+        if utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
             if target.IsMonster:
                 if not target.mineWarCanAttack:
                     return False, True
@@ -2352,14 +1650,16 @@ def isMineWarEnemy(src, target):
                 else:
                     result = True
                 return result, True
+            if src.IsCreation and target.IsAvatar:
+                return True, True
     return False, False
 
-def isPVP(src, target):
-    srcHost = getHostEntity(src)
-    targetHost = getHostEntity(target)
-    if srcHost and targetHost:
-        if srcHost.IsAvatar or (srcHost.IsAvatarMirror and not srcHost.guildLeader):
-            if targetHost.IsAvatar or (targetHost.IsAvatarMirror and not targetHost.guildLeader):
+def isPVP(src, tgt):
+    _srcHost = getHostEntity(src)
+    _targetHost = getHostEntity(tgt)
+    if _srcHost and _targetHost:
+        if _srcHost.IsAvatar or (_srcHost.IsAvatarMirror and not _srcHost.guildLeader):
+            if _targetHost.IsAvatar or (_targetHost.IsAvatarMirror and not _targetHost.guildLeader):
                 return True
 
     return False
@@ -2368,39 +1668,39 @@ def isPVP(src, target):
 _isFriendFunDic = {}
 
 
-def isFriend(src, target):
-    if src.isDestroyed or target.isDestroyed:
+def isFriend(src, tgt):
+    if src.isDestroyed or tgt.isDestroyed:
         return False
 
-    if src.id == target.id:
+    if src.id == tgt.id:
         return False
 
-    if target.id in src.friendCacheSet:
+    if tgt.id in src.friendCacheSet:
         return True
 
-    elif target.id in src.notFriendCacheSet:
+    elif tgt.id in src.notFriendCacheSet:
         return False
 
-    if not (src.isReal() and target.isReal()):
+    if not (src.isReal() and tgt.isReal()):
         return False
 
-    bIsFriend = _isFriend(src, target)
+    bIsFriend = _isFriend(src, tgt)
     if bIsFriend:
-        src.friendCacheSet.add(target.id)
+        src.friendCacheSet.add(tgt.id)
     else:
-        src.notFriendCacheSet.add(target.id)
+        src.notFriendCacheSet.add(tgt.id)
 
-    target.cacheSelfSet.add(src.id)
+    tgt.cacheSelfSet.add(src.id)
 
     return bIsFriend
 
 
-def _isFriend(src, target):
-    if src.id == target.id:
+def _isFriend(src, tgt):
+    if src.id == tgt.id:
         return False
 
-    src, target = getEntityRealEntity(src), getEntityRealEntity(target)
-    if src.id == target.id:
+    src, tgt = getEntityRealEntity(src), getEntityRealEntity(tgt)
+    if src.id == tgt.id:
         return True
 
     # 切磋状态下，不能影响任何人
@@ -2409,241 +1709,283 @@ def _isFriend(src, target):
     if src.IsAvatar and src.duelAttr.inFight():
         return False
 
-    spaceType = formula.getMapId(src.spaceNo)
+    spaceType = formula.fetchMapId(src.spaceNo)
 
     if spaceType in _isFriendFunDic:
-        ret = _isFriendFunDic[spaceType](src, target)
+        ret = _isFriendFunDic[spaceType](src, tgt)
         if ret == gameconst.IsRelationEnum.TRUE:
             return True
         elif ret == gameconst.IsRelationEnum.FALSE:
             return False
 
-    if src.IsAvatar and target.IsAvatar:
-        # if isEnemyInPK(src, target):
-        #     return False
-        #
-        # if src.isInRaid() and target.isInRaid() and src.raidInfo.raidUUID == target.raidInfo.raidUUID:
-        #     # 双方在同一团队则不能攻击
-        #     return True
-
-        return not isEnemy(src, target)
-
-    # if getForceRelation(src, target) == gameconst.ForceRelation.Friend:
-    #     return True
+    if src.IsAvatar and tgt.IsAvatar:
+        return not isEnemy(src, tgt)
 
     return False
 
 
-def isFriendIncS(src, target):
-    if src.id == target.id:
+def isFriendIncS(src, tgt):
+    if src.id == tgt.id:
         return True
 
-    return isFriend(src, target)
+    return isFriend(src, tgt)
 
 
-def getForceRelation(src, target):
-    if not src or not target:
+def fetchForceRelation(src, tgt):
+    if not src or not tgt:
         return gameconst.ForceRelation.UnKnownForceRelation
 
-    datas = creep_force.datas
-    force = src.force
+    _datas = creep_force.datas
+    _force = src.force
 
-    if force not in datas:
+    if _force not in _datas:
         return gameconst.ForceRelation.UnKnownForceRelation
 
-    subforceRelation = datas[force]
+    _subforceRelation = _datas[_force]
 
-    targetForceType = gameconst.ForceType.getForceType(target.force)
+    _targetForceType = gameconst.ForceTypeEnum.getForceType(tgt.force)
 
-    if targetForceType in subforceRelation:
-        return subforceRelation[targetForceType]
+    if _targetForceType in _subforceRelation:
+        return _subforceRelation[_targetForceType]
     else:
         return gameconst.ForceRelation.UnKnownForceRelation
 
 
-def getRaceType(entity):
+def getRaceTypeEnum(entity):
     if entity.IsAvatar:
-        return gameconst.RaceType.avatar
+        return gameconst.RaceTypeEnum.avatar
 
     elif entity.IsMonster:
-        return gameconst.RaceType.monster
+        return gameconst.RaceTypeEnum.monster
 
     elif entity.IsSummon:
-        return gameconst.RaceType.summon
+        return gameconst.RaceTypeEnum.summon
 
     elif entity.IsAvatarMirror:
         if entity.isBot():
-            return gameconst.RaceType.bot
+            return gameconst.RaceTypeEnum.bot
         else:
-            return gameconst.RaceType.avatar
+            return gameconst.RaceTypeEnum.avatar
 
     else:
-        return gameconst.RaceType.none
+        return gameconst.RaceTypeEnum.none
 
 
-def entIsAll(src, e, *args):
+def _entIsAll(src, e, *args):
     return e is not None
 
 
-def entIsEnemy(src, e, *args):
+def _entIsEnemy(src, e, *args):
     return isEnemy(src, e)
 
 
-def entIsFriend(src, e, *args):
+def _entIsFriend(src, e, *args):
     return isFriend(src, e)
 
 
-def entIsSelf(src, e, *args):
+def _entIsSelf(src, e, *args):
     return src.id == e.id
 
 
-def entIsCreationMaster(src, e, *args):
+def _entIsCreationMaster(src, e, *args):
     return src.IsCreation and src.hostId == e.id
 
 
-def entIsEnemyExTarget(src, e, target):
-    return e.id != target.id and isEnemy(src, e)
+def _entIsEnemyExTarget(src, e, tgt):
+    return e.id != tgt.id and isEnemy(src, e)
 
 
-def entIsCacheEnemy(src, e, *args):
+def _entIsCacheEnemy(src, e, *args):
     return True
 
 
-def entIsCacheFriend(src, e, *args):
+def _entIsCacheFriend(src, e, *args):
     return True
 
 
-def entIsCacheEnemyExTarget(src, e, target):
-    return e.id != target.id
+def _entIsCacheEnemyExTarget(src, e, tgt):
+    return e.id != tgt.id
 
-def entIsTeam(src, e, target):
+def _entIsTeam(src, e, tgt):
     # 不包括自己
-    if src.id == target.id:
+    if src.id == tgt.id:
         return False
 
     src = getEntityRealEntity(src)
-    if src.id == target.id:
+    if src.id == tgt.id:
         return True
 
-    if not (src.isReal() and target.isReal()):
+    if not (src.isReal() and tgt.isReal()):
         return False
 
-    if src.IsAvatar and target.IsAvatar:
-        if isEnemy(src, target):
+    if src.IsAvatar and tgt.IsAvatar:
+        if isEnemy(src, tgt):
             return False
 
-        if src.teamId != 0 and src.teamId == target.teamId:
-            return True
-        if src.raidId != 0 and src.raidId == target.raidId:
+        if src.teamId != 0 and src.teamId == tgt.teamId:
             return True
 
     return False
 
-TARGET_FUNC_MAP = {gameconst.CampType.All: entIsAll,
-                   gameconst.CampType.Enemy: entIsEnemy,
-                   gameconst.CampType.Friend: entIsFriend,
-                   gameconst.CampType.Self: entIsSelf,
-                   gameconst.CampType.CreationMaster: entIsCreationMaster,
-                   gameconst.CampType.EnemyExTarget: entIsEnemyExTarget,
-                   gameconst.CampType.Team: entIsTeam}
+def _entIsRaid(src, e, tgt):
+    # 不包括自己
+    if src.id == tgt.id:
+        return False
 
-CACHE_TARGET_FUNC_MAP = {gameconst.CampType.All: entIsAll,
-                         gameconst.CampType.Enemy: entIsCacheEnemy,
-                         gameconst.CampType.Friend: entIsCacheFriend,
-                         gameconst.CampType.Self: entIsSelf,
-                         gameconst.CampType.CreationMaster: entIsCreationMaster,
-                         gameconst.CampType.EnemyExTarget: entIsCacheEnemyExTarget,
-                         gameconst.CampType.Team: entIsTeam}
+    src = getEntityRealEntity(src)
+    if src.id == tgt.id:
+        return True
+
+    if not (src.isReal() and tgt.isReal()):
+        return False
+
+    if src.IsAvatar and tgt.IsAvatar:
+        if isEnemy(src, tgt):
+            return False
+
+        if src.raidId != 0 and src.raidId == tgt.raidId:
+            return True
+
+    return False
+
+def _entIsSelfCamp(src, e, tgt):
+    # 包括自己
+    if src.id == tgt.id:
+        return True
+
+    src = getEntityRealEntity(src)
+    if src.id == tgt.id:
+        return True
+    
+    if not (src.isReal() and tgt.isReal()):
+        return False
+    
+    return False
+
+TEAM_TARGET_FUNC_MAP = {
+    gameconst.TeamCampType.Self: _entIsSelfCamp,
+    gameconst.TeamCampType.Team: _entIsTeam,
+    gameconst.TeamCampType.Raid: _entIsRaid,
+}
+
+TARGET_FUNC_MAP = {gameconst.CampType.All: _entIsAll,
+                   gameconst.CampType.Enemy: _entIsEnemy,
+                   gameconst.CampType.Friend: _entIsFriend,
+                   gameconst.CampType.Self: _entIsSelf,
+                   gameconst.CampType.CreationMaster: _entIsCreationMaster,
+                   gameconst.CampType.EnemyExTarget: _entIsEnemyExTarget,
+                   gameconst.CampType.Team: _entIsTeam}
+
+CACHE_TARGET_FUNC_MAP = {gameconst.CampType.All: _entIsAll,
+                         gameconst.CampType.Enemy: _entIsCacheEnemy,
+                         gameconst.CampType.Friend: _entIsCacheFriend,
+                         gameconst.CampType.Self: _entIsSelf,
+                         gameconst.CampType.CreationMaster: _entIsCreationMaster,
+                         gameconst.CampType.EnemyExTarget: _entIsCacheEnemyExTarget,
+                         gameconst.CampType.Team: _entIsTeam}
 
 
 @functools.lru_cache(16)
-def getFightTargetTypeCfgData(typeName):
+def getFightTargetTypeFromCfgData(typeName):
     return FPFTTD.datas.get(typeName, {}).get('value')
 
 
-# 可能涉及三方关系，所以可能需要三个entity参数，例如选择敌人周围的敌人
-def checkTargetType(typeName, src, e, target=None):
+def checkTargetTypeValid(typeName, src, e, tgt=None):
     if typeName == 'Any' or typeName == 'None':
         return True
 
-    if not target:
-        target = e
+    if not tgt:
+        tgt = e
 
     if not e.isAttackable(src):
         return False
-    value = getFightTargetTypeCfgData(typeName)
-    if not value or len(value) < 3:
-        ERROR_MSG('checkTargetType err in fightProp_fightTargetType', typeName)
+    _value = getFightTargetTypeFromCfgData(typeName)
+    if not _value or len(_value) < 3:
+        LOG_ERR('checkTargetTypeValid err in fightProp_fightTargetType', typeName)
         return False
 
-    for targetType in value[2]:
-        if TARGET_FUNC_MAP[targetType](src, e, target):
+    for targetType in _value[2]:
+        if TARGET_FUNC_MAP[targetType](src, e, tgt):
             break
     else:
         return False
+    
+    if len(_value) > 3:
+        for targetType in _value[3]:
+            func = TEAM_TARGET_FUNC_MAP.get(targetType, None)
+            if not func or func(src, e, tgt):
+                break
+        else:
+            return False
 
-    if 1 in value[1] and not e.isDie():
+    if 1 in _value[1] and not e.isDie():
         return False
-    if 2 in value[1] and e.isDie():
+    if 2 in _value[1] and e.isDie():
         return False
 
-    if 0 not in value[0] and getRaceType(e) not in value[0]:
+    if 0 not in _value[0] and getRaceTypeEnum(e) not in _value[0]:
         return False
 
     return True
 
 
 # 可能涉及三方关系，所以可能需要三个entity参数，例如选择敌人周围的敌人
-def checkCachedTargetType(typeName, src, e, target=None):
+def checkCachedTargetType(typeName, src, e, tgt=None):
     if typeName == 'Any' or typeName == 'None':
         return True
 
-    if not target:
-        target = e
+    if not tgt:
+        tgt = e
 
     if not e.isAttackable(src):
         return False
 
-    value = getFightTargetTypeCfgData(typeName)
-    if not value or len(value) < 3:
-        ERROR_MSG('checkTargetType err in fightProp_fightTargetType', typeName)
+    _value = getFightTargetTypeFromCfgData(typeName)
+    if not _value or len(_value) < 3:
+        LOG_ERR('checkTargetTypeValid err in fightProp_fightTargetType', typeName)
         return False
 
-    for targetType in value[2]:
-        if CACHE_TARGET_FUNC_MAP[targetType](src, e, target):
+    for targetType in _value[2]:
+        if CACHE_TARGET_FUNC_MAP[targetType](src, e, tgt):
             break
     else:
         return False
 
-    if 1 in value[1] and not e.isDie():
+    if len(_value) > 3:
+        for targetType in _value[3]:
+            func = TEAM_TARGET_FUNC_MAP.get(targetType, None)
+            if not func or func(src, e, tgt):
+                break
+        else:
+            return False
+
+    if 1 in _value[1] and not e.isDie():
         return False
-    if 2 in value[1] and e.isDie():
+    if 2 in _value[1] and e.isDie():
         return False
 
-    if 0 not in value[0] and getRaceType(e) not in value[0]:
+    if 0 not in _value[0] and getRaceTypeEnum(e) not in _value[0]:
         return False
 
     return True
 
 @functools.lru_cache(1024, typed=False)
-def hasSkillTag(skillId, tag):
-    tags = combatSkill.SkillBase.getTag(skillId)
-    if not tags:
+def hasSkillTagById(skillId, tag):
+    _tags = combatSkill.SkillBase.getTag(skillId)
+    if not _tags:
         return False
 
-    if tag in tags:
+    if tag in _tags:
         return True
     return False
 
-def initBaseProperties(entity, propCurveID=0):
-    if not propCurveID:
-        propCurveID = entity.getConfigData().get('propCurveID')
+def doInitBaseProperties(entity, propCurveId=0):
+    if not propCurveId:
+        propCurveId = entity.getConfigData().get('propCurveID')
 
-    if not propCurveID:
-        raise RuntimeError('creep base entity must set propCurveID, {}'.format(entity.creepBaseId))
+    if not propCurveId:
+        raise RuntimeError('creep base entity must set propCurveId, {}'.format(entity.creepBaseId))
 
-    # import monsterStandardProp_prop as MSPD
-    import monsterStandardProp_propCurve as MSPCD
     import prop_fightprop as PFPD
     import creep_base as CBD
 
@@ -2654,17 +1996,17 @@ def initBaseProperties(entity, propCurveID=0):
         if propType == 1:
            propId = propId + entity.level - 1
         elif propType == 2:
-            if formula.isSiegeWarSpace(entity.spaceNo):
+            if formula.inSiegeWarScene(entity.spaceNo):
                 if entity.siegeWarMonsterPropId:
                     propId = entity.siegeWarMonsterPropId
-            if formula.isMineWarSpace(entity.spaceNo):
+            if formula.inMineWarScene(entity.spaceNo):
                 if entity.junxuPropId:
                     propId = entity.junxuPropId
 
         propData = PFPD.datas.get(propId)
         cfgPropType = propData.get('type')
         if propType != cfgPropType:
-            ERROR_MSG('initBaseProperties propType error', entity.creepBaseId, propType, cfgPropType)
+            LOG_ERR('doInitBaseProperties propType error', entity.creepBaseId, propType, cfgPropType)
             return
 
         _coefficientType = creepData['coefficientType']
@@ -2677,52 +2019,49 @@ def initBaseProperties(entity, propCurveID=0):
             setattr(entity, prop, _func(val * _coefficientDic.get(prop, 1)))
 
     entity.baseSpeed = float(entity.getConfigData().get('baseSpeed', 0))
-    entity.jobHealModify = entity.getConfigData().get('jobHealModify', 0.0)
-    entity.jobAvoidanceModify = entity.getConfigData().get('jobAvoidanceModify', 0.0)
     entity.baseStateRate = entity.getConfigData().get('baseStateRate', 0.0)
-    entity.shareMasterDmg = entity.getConfigData().get('shareMasterDmg', 0.0)
 
     entity.speedStateRatio = gameconst.SpeedState.Normal
 
-def getSpaceEnterSceneBySpaceNo(crtSpaceNo, enterSpaceNo, default=gameconst.SpaceEnterScene.DENY):
+def fetchSpaceEnterSceneBySpaceNo(crtSpaceNo, enterSpaceNo, default=gameconst.SpaceEnterScene.DENY):
     _crtSpaceType = GPGP.datas.get(
-        formula.getDungeonNoBySpaceNo(crtSpaceNo), {}).get(
-            'type', gameconst.SpaceType.UnKownSpaceType)
+        formula.parseDungeonNoBySpaceNo(crtSpaceNo), {}).get(
+            'sceneType', 0)
     _enterSpaceType = GPGP.datas.get(
-        formula.getDungeonNoBySpaceNo(enterSpaceNo), {}).get(
-            'type', gameconst.SpaceType.UnKownSpaceType)
-    return getSpaceEnterScene(_crtSpaceType, _enterSpaceType, default)
+        formula.parseDungeonNoBySpaceNo(enterSpaceNo), {}).get(
+            'sceneType', 0)
+    return fetchSpaceEnterScene(_crtSpaceType, _enterSpaceType, default)
 
 
 def isComplexTeleportAllowed(fromSpaceNo, toSpaceNo):
-    r = getSpaceEnterSceneBySpaceNo(fromSpaceNo, toSpaceNo)
+    r = fetchSpaceEnterSceneBySpaceNo(fromSpaceNo, toSpaceNo)
     if r == gameconst.SpaceEnterScene.DENY:
         return False
     return True
 
 
-def getTeleporterByID(teleportId, spaceNo, default=None):
-    telIds = gameglobal.teleporterGIDToEntIdMap.get(spaceNo, {}).get(
-        teleportId, None)
+def getTeleporterByID(teleportId, spaceNo):
+    telIds = gameglobal.teleporterGIDToEntIdMap\
+        .get(spaceNo, {})\
+        .get(teleportId, None)
+
     if telIds is not None:
-        return KBEngine.entities.get(telIds[0], default)
-    return default
+        return KBEngine.entities.get(telIds[0], None)
+
+    return None
 
 
-def isComplexTeleportNeedCast(fromSpaceNo, toSpaceNo, teleportType, src, owner):
+def checkComplexTeleportNeedCast(fromSpaceNo, toSpaceNo, teleportType, src, owner):
     if owner.isDie():
         return False
 
     if fromSpaceNo == toSpaceNo:
         return False
 
-    if src and src.srcId == gameconst.DungeonSrcEnum.FROM_FOLLOW_CAPTAIN:
-        return src.needCast
-
-    if teleportType == gameconst.ComplexTeleportType.LEAVE and formula.isDungeonSpace(fromSpaceNo):
+    if teleportType == gameconst.ComplexTeleportType.LEAVE and formula.inDungeonScene(fromSpaceNo):
         return False
 
-    r = getSpaceEnterSceneBySpaceNo(fromSpaceNo, toSpaceNo)
+    r = fetchSpaceEnterSceneBySpaceNo(fromSpaceNo, toSpaceNo)
     if r == gameconst.SpaceEnterScene.ALLOW_CAST:
         return True
 
@@ -2734,19 +2073,33 @@ def getLineTypeFromCfgGameEntityId(cfgGameEntityId):
 def getMoralLevel(moralValue):
     for k, v in PKMVE.datas.items():
         if moralValue >= v['lowerLimit'] and moralValue <= v['upperLimit']:
-            DEBUG_MSG('getMoralLevel, level:', k, 'moralValue:', moralValue)
+            LOG_DBG('getMoralLevel, level:', k, 'moralValue:', moralValue)
             return k
-    WARNING_MSG('getMoralLevel, level not found:', moralValue)
+    LOG_WARN('getMoralLevel, level not found:', moralValue)
     return 0
 
-def getExpDecayRate(level):
+def getExpDecayRate(level, playerLevel, worldLevelDelta, src):
+    LOG_IFO("getExpDecayRate", level, playerLevel, worldLevelDelta, src)
+
+    worldLevelRatio = 1.0
+    if getSvrOpenDays() <= EC.datas["activateWorldLevel"]["value"] or src not in EC.datas["bonus_EXP_Sources"]["value"] \
+        or worldLevelDelta <= 0 or playerLevel <= V_VD.datas["worldLevel"]["level"]:
+        worldLevelRatio = 1.0
+    else:
+        for i in range(1, EGM.maxKey+1):
+            if worldLevelDelta <= EGM.datas[i]['levelDifference']:
+                worldLevelRatio = 1.0 + EGM.datas[i]['multiplier']
+                break
+    LOG_IFO("worldLevelRatio", worldLevelRatio)
+
     datas = PKMVE.datas.get(level, None)
     if datas:
         expRate = 1 - datas['ExpGainReduced']
-        DEBUG_MSG('getExpDecayRate, level:', level, 'rate:', expRate)
+        expRate *= worldLevelRatio
+        LOG_DBG('getExpDecayRate, level:', level, 'rate:', expRate)
         return expRate
     else:
-        WARNING_MSG('getExpDecayRate, level not found:', level)
+        LOG_WARN('getExpDecayRate, level not found:', level)
         return 1.0
 
 def getTeamExpBonus(teammateNum):
@@ -2755,54 +2108,50 @@ def getTeamExpBonus(teammateNum):
     teamExpBonus = TMMCD.datas['teamExperienceBonus']['value']
     return teamExpBonus[teammateNum-1]
 
-def buildChatChannelAvatarInfo(entityId, playerGBID, school, name, level, sex, picFrameId, *args):
+def buildChatChannelAvatarData(entityId, playerGBID, school, name, level, sex, picFrameId, *args):
     return {
         'id': entityId,
-        'gbId': playerGBID,
-        'school': school,
-        'name': name,
-        'level': level,
         'sex': sex,
-        'picFrameId': picFrameId}
+        'name': name,
+        'gbId': playerGBID,
+        'level': level,
+        'school': school,
+        'picFrameId': picFrameId
+    }
 
-def getConfirmMessageCooldown(mid, default=-1):
-    _md = MSG.datas.get(mid, {})
-    _to1 = _md.get('minDisplayTime', 0)
+def getConfirmMsgCooldown(mid, default=-1):
+    _messageData = MSG.datas.get(mid, {})
+    _to1 = _messageData.get('minDisplayTime', 0)
     if _to1 > 0:
         return _to1
 
-    if _md['DisplayMode'] in gameconst.MessageType.COLL_BUTTON_MESSAGE:
-        _to2 = _md.get('defaultCountdown', 0)
+    if _messageData['DisplayMode'] in gameconst.MessageType.COLL_BUTTON_MESSAGE:
+        _to2 = _messageData.get('defaultCountdown', 0)
         if _to2 > 0:
             return _to2
 
     return default
 
-def getDistanceSquare(pos1, pos2):
+def getDisSquare(pos1, pos2):
     return (pos1[0] - pos2[0]) ** 2 + (pos1[2] - pos2[2]) ** 2
 
 
-def getNeedTranslateMsgId(msgId):
+def getTranslatedMsgId(msgId):
     msgId |= (1 << 30)
     return msgId
 
-def decodeTranslateMsgId(msgId):
-    msgId &= ~(1 << 30)
-    return msgId
-
-def getNeedTranslateArg(arg):
+def getTranslatedArg(arg):
     return '^{}'.format(arg)
 
 
-# 二分找到第一个大于target的位置
-def binarySearchFirstGreater(arr, target):
+def binarySearchFirstGreater(arr, tgt):
     left, right = 0, len(arr) - 1
 
     while left <= right:
         mid = (left + right) // 2
         val = arr[mid]
 
-        if val <= target:
+        if val <= tgt:
             left = mid + 1
         else:
             right = mid - 1
@@ -2815,20 +2164,20 @@ def isActOpen(actId):
 
 
 def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
-    DEBUG_MSG('checkCanChangeSceneAndShowMsg 0 ', fromSpaceNo, toSpaceNo)
+    LOG_DBG('checkCanChangeSceneAndShowMsg 0 ', fromSpaceNo, toSpaceNo)
     # 1. 任何一个副本可以进组队副本，团队副本除外
-    isRaidFromSpace = formula.isRaidDungeonSpace(fromSpaceNo)
-    isTeamToSpace = formula.isTeamDungeonSpace(toSpaceNo)
-    DEBUG_MSG('checkCanChangeSceneAndShowMsg 1 ', fromSpaceNo, toSpaceNo)
+    isRaidFromSpace = formula.inRaidDungeonScene(fromSpaceNo)
+    isTeamToSpace = formula.inTeamDungeonScene(toSpaceNo)
+    LOG_DBG('checkCanChangeSceneAndShowMsg 1 ', fromSpaceNo, toSpaceNo)
     if isRaidFromSpace and isTeamToSpace:
         return False
     if isTeamToSpace:
         return True
 
     # 2. 任何一个副本可以进团队副本，组队副本除外
-    isTeamFromSpace = formula.isTeamDungeonSpace(fromSpaceNo)
-    isRaidToSpace = formula.isRaidDungeonSpace(toSpaceNo)
-    DEBUG_MSG('checkCanChangeSceneAndShowMsg 2 ', fromSpaceNo, toSpaceNo)
+    isTeamFromSpace = formula.inTeamDungeonScene(fromSpaceNo)
+    isRaidToSpace = formula.inRaidDungeonScene(toSpaceNo)
+    LOG_DBG('checkCanChangeSceneAndShowMsg 2 ', fromSpaceNo, toSpaceNo)
     if isTeamFromSpace and isRaidToSpace:
         return False
     if isRaidToSpace:
@@ -2838,8 +2187,8 @@ def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
     if fromSpaceNo == 0 and gameconfig.isCrossServer():
         return True
 
-    _fromMapId = formula.getMapId(fromSpaceNo)
-    _toMapId = formula.getMapId(toSpaceNo)
+    _fromMapId = formula.fetchMapId(fromSpaceNo)
+    _toMapId = formula.fetchMapId(toSpaceNo)
     _fromSceneType = GPGP.datas[_fromMapId]['sceneType']
     _toSceneType = GPGP.datas[_toMapId]['sceneType']
 
@@ -2864,33 +2213,33 @@ def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
                 continue
             startTimestamp = getIntTimestamp(poolData['startTime'])
             endTimestamp = getIntTimestamp(poolData['endTime'])
-            #DEBUG_MSG('poolData id:%i, groupId:%i, timeLimit:%i, startTime:%s(%i), endTime:%s(%i)' %
+            #LOG_DBG('poolData id:%i, groupId:%i, timeLimit:%i, startTime:%s(%i), endTime:%s(%i)' %
             #            (pool, poolData['poolGroupId'],  poolData['timeLimit'],
             #            getNowTimeStr(startTimestamp), startTimestamp,
             #            getNowTimeStr(endTimestamp), endTimestamp))
             if not startTimestamp and not endTimestamp:
-                #DEBUG_MSG('checkDrawCardPoolTimeLimit not TimeLimit', curTimestamp, pool, endTimestamp)
+                #LOG_DBG('checkDrawCardPoolTimeLimit not TimeLimit', curTimestamp, pool, endTimestamp)
                 continue
             if startTimestamp <= curTimestamp and curTimestamp <= endTimestamp:
-                #DEBUG_MSG('checkDrawCardPoolTimeLimit in TimeLimit', curTimestamp, pool, endTimestamp)
+                #LOG_DBG('checkDrawCardPoolTimeLimit in TimeLimit', curTimestamp, pool, endTimestamp)
                 continue
 
             if startTimestamp > curTimestamp:
-                #DEBUG_MSG('checkDrawCardPoolTimeLimit before TimeLimit', curTimestamp, pool, endTimestamp)
+                #LOG_DBG('checkDrawCardPoolTimeLimit before TimeLimit', curTimestamp, pool, endTimestamp)
                 continue
 
-            INFO_MSG('checkDrawCardPoolTimeLimit after TimeLimit', curTimestamp, pool, endTimestamp)
+            LOG_IFO('checkDrawCardPoolTimeLimit after TimeLimit', curTimestamp, pool, endTimestamp)
             poolsInfo[pool] = endTimestamp
 
         gameglobal.expiredDrawCardPoolCache.update(poolsInfo)
-    #DEBUG_MSG('checkDrawCardPoolTimeLimit', curTimestamp, poolsInfo, gameglobal.expiredDrawCardPoolCache, checkType)
+    #LOG_DBG('checkDrawCardPoolTimeLimit', curTimestamp, poolsInfo, gameglobal.expiredDrawCardPoolCache, checkType)
     return poolsInfo
 
 def getSiegeWarFirstTimeInfo():
     firstTime = 0
     firstTimeValid = False
     if not gameconfig.serverId() in gameglobal.mapleServerInfo:
-        WARNING_MSG('[lj]get siege war first time info, server id not found:', gameconfig.serverId())
+        LOG_WARN('[lj]get siege war first time info, server id not found:', gameconfig.serverId())
         return firstTime, firstTimeValid, 0
     crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
     GroupServerList = utils.group2ServerIds(crossServerGroupID)
@@ -2903,7 +2252,7 @@ def getSiegeWarFirstTimeInfo():
             lastestOpenTime = _openTime
 
     if CBFT.datas.get(crossServerGroupID, None) is None:
-        ERROR_MSG('[lj]cross siege war start time not found group id:', crossServerGroupID)
+        LOG_ERR('[lj]cross siege war start time not found group id:', crossServerGroupID)
         firstTimeValid = False
     else:
         _startTimeStr = str(CBFT.datas[crossServerGroupID]['StartTime'])
@@ -2919,7 +2268,7 @@ def getSiegeWarFirstTimeInfo():
     limitTime = lastestOpenTime + limitDay * 24 * 60 * 60
     #检查第一次是否合法
     if firstTime < limitTime:
-        WARNING_MSG('[lj]first time config warning, first time:', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(firstTime)), 'limit time:', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(limitTime)))
+        LOG_WARN('[lj]first time config warning, first time:', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(firstTime)), 'limit time:', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(limitTime)))
         firstTimeValid = False
     else:
         firstTimeValid = True
@@ -2928,7 +2277,7 @@ def getSiegeWarFirstTimeInfo():
 
 
 def getSiegeWarMonthlyStartTime(monthAdd):
-    now = getNow()
+    now = curTS()
     startDayEveryMonth = CBC.datas['cityBattle_FirstStartTime']['value']
     y, m, d = time.strftime("%Y-%m-%d", time.localtime(now)).split('-')
     m = int(m) + monthAdd
@@ -2942,17 +2291,17 @@ def getSiegeWarMonthlyStartTime(monthAdd):
     return nowStartTime
 
 def getNextSiegeWarMonthlyExpireTime(addTime):
-    now = getNow()
+    now = curTS()
 
     for i in (-1, 0, 1):
         t = getSiegeWarMonthlyStartTime(i) + addTime
         if now < t:
             return t
-    ERROR_MSG('[lj]getNextSiegeWarMonthlyExpireTime failed, now:', now, 'addTime:', addTime)
+    LOG_ERR('[lj]getNextSiegeWarMonthlyExpireTime failed, now:', now, 'addTime:', addTime)
     return getSiegeWarMonthlyStartTime(1) + addTime
 
 def getNextBiddingStartTime():
-    now = getNow()
+    now = curTS()
     firstTime, firstTimeValid, limitTime = getSiegeWarFirstTimeInfo()
     if firstTimeValid and now < firstTime:
         return firstTime
@@ -2964,14 +2313,14 @@ def getNextBiddingStartTime():
 
 def getSiegeWarBiddingEndTime():
     if gameglobal.globalSiegeWarData.get('expireTime', None) is not None:
-        if getNow() < gameglobal.globalSiegeWarData['expireTime']:
+        if curTS() < gameglobal.globalSiegeWarData['expireTime']:
             return gameglobal.globalSiegeWarData['expireTime']
 
     firstTime, firstTimeValid, limitTime = getSiegeWarFirstTimeInfo()
     addTime = CBC.datas['cityBattle_biddingTime']['value'] * 24 * 60 * 60 + CBC.datas['cityBattle_biddingDelayed']['value'][2] * 60 + CBC.datas['cityBattle_BiddingEndTime']['value'] * 60 * 60
     if firstTimeValid:
         expireTime = firstTime + addTime
-        if getNow() < expireTime:
+        if curTS() < expireTime:
             gameglobal.globalSiegeWarData['expireTime'] = expireTime
             return expireTime
 
@@ -2987,7 +2336,7 @@ def getSiegeWarItemExpireTime():
     addTime = CBC.datas['cityBattle_biddingTime']['value'] * 24 * 60 * 60 + CBC.datas['cityBattle_biddingDelayed']['value'][2] * 60 + CBC.datas['cityBattle_BiddingEndTime']['value'] * 60 * 60
     biddingStartTime = t - addTime
     #竞拍时间外直接过期
-    if getNow() < biddingStartTime:
+    if curTS() < biddingStartTime:
         return 0
     return t
 
@@ -2996,13 +2345,13 @@ def getGuildRelation(guildUUID1, guildUUID2):
     return gameglobal.guildRelationDic.get(_pair, gameconst.GuildRelationType.NONE)
 
 def getCustomIdAndGid(spaceNo, gameEntityId):
-    _mapId = formula.getMapId(spaceNo)
+    _mapId = formula.fetchMapId(spaceNo)
     _dunData = getDunModuleData(_mapId)
     if not _dunData:
-        ERROR_MSG("[lj]getSiegeWarEntityCustomId: _dunData is None")
+        LOG_ERR("[lj]getSiegeWarEntityCustomId: _dunData is None")
         return None, None
 
-    gid, gct = splitGameEntityId(gameEntityId)
+    gid, gct = splitFromGameEntityId(gameEntityId)
     gid = str(gid)
     if gid not in _dunData:
         return None, None
@@ -3086,7 +2435,7 @@ def getForceComponentID(accountName):
     if not _cache:
         return 0
 
-    if getNow() > _cache[0]:
+    if curTS() > _cache[0]:
         return 0
 
     return _cache[1]
@@ -3097,8 +2446,8 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
 
     RandomRegionAtLeastInfo = {}
     for gameEntityId in entityIDs:
-        gid, gct = splitGameEntityId(gameEntityId)
-        datas = getDunModuleData(formula.getMapId(spaceNo))
+        gid, gct = splitFromGameEntityId(gameEntityId)
+        datas = getDunModuleData(formula.fetchMapId(spaceNo))
 
         if str(gid) not in datas:
             continue
@@ -3185,14 +2534,14 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
 
         if className == 'Monster':
             _monsterId = int(_mPrm['EntityID'])
-            if formula.spaceInWorldLine(spaceNo):
-                lineNo = formula.getLineNo(spaceNo)
+            if formula.inWorldLineScene(spaceNo):
+                lineNo = formula.parseLineNo(spaceNo)
                 nameSuffixID = -1
                 if _monsterId in CBD.datas:
                     nameSuffixID = CBD.datas[_monsterId]['nameSuffixID']
 
                 if nameSuffixID in BDS.datas["Branch_creepNotRefresh"]["value"] and lineNo != 0 and lineNo != -1:
-                    DEBUG_MSG("skip create monster", spaceNo, _monsterId, nameSuffixID, lineNo)
+                    LOG_DBG("skip create monster", spaceNo, _monsterId, nameSuffixID, lineNo)
                     continue
             
             params.update({
@@ -3271,12 +2620,12 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
             })
 
         else:
-            WARNING_MSG('could not create entity type', className)
+            LOG_WARN('could not create entity type', className)
             continue
 
         needCreateBase = 0
         data = (gameEntityId, spaceNo, className, needCreateBase, bornPosition, bornDirection, params, 0)
-        DEBUG_MSG("loadLineEntities for single ", spaceNo, className, gameEntityId)
+        LOG_DBG("loadLineEntities for single ", spaceNo, className, gameEntityId)
         readyEntitiesList.append(data)
 
 
@@ -3318,7 +2667,7 @@ def calculatePointIn2DCircle(monsterID, x, z, x1, z1, r, precision=1e-10):
     dz = z-z1
     r1 = (dx *dx + dz * dz)
     r2 = (r * r - precision)
-    DEBUG_MSG("calculatePointIn2DCircle ", monsterID, x, z, x1, z1, r, precision, r1, r2)
+    LOG_DBG("calculatePointIn2DCircle ", monsterID, x, z, x1, z1, r, precision, r1, r2)
     return r1 < r2
 
 def calculatePointIn2DRectangle(monsterID, x, z, x1, z1, l, w, t, precision=1e-10):
@@ -3335,7 +2684,7 @@ def calculatePointIn2DRectangle(monsterID, x, z, x1, z1, l, w, t, precision=1e-1
 
     absX = abs(rotated_x)
     absZ = abs(rotated_z)
-    DEBUG_MSG("calculatePointIn2DRectangle ", monsterID, x, z, x1, z1, l, w, t, precision, absX, absZ, half_length, half_width)
+    LOG_DBG("calculatePointIn2DRectangle ", monsterID, x, z, x1, z1, l, w, t, precision, absX, absZ, half_length, half_width)
     return absX < half_length and absZ < half_width
 
 @functools.lru_cache(maxsize=256)
@@ -3388,7 +2737,7 @@ def getNextHoursTimestamp(curTimestamp):
 
 def callLimitAdd(callType):
     _ts, _times = gameglobal.callLimitDic.get(callType, (0, 0))
-    _now = getNow()
+    _now = curTS()
     if _ts == _now:
         gameglobal.callLimitDic[callType] = (_now, _times+1)
     else:
@@ -3397,24 +2746,24 @@ def callLimitAdd(callType):
 
 def getCallLimitNum(callType):
     _ts, _times = gameglobal.callLimitDic.get(callType, (0, 0))
-    _now = getNow()
+    _now = curTS()
     if _ts == _now:
         return _times
     else:
         return 0
 
 def getCrtMapNeedStatisticFlag(spaceNo):
-    mapId = formula.getMapId(spaceNo)
+    mapId = formula.fetchMapId(spaceNo)
     mapData = GPGP.datas.get(mapId, {})
     return mapData.get('dpsActive', 0) == 1
 
 
-def isInAttackArea(target, center, radius):
-    if target.IsMonster:
-        radius += target.getConfigData().get('attackDistanceCompensation', 0)
+def isInAttackArea(tgt, center, radius):
+    if tgt.IsMonster:
+        radius += tgt.getConfigData().get('attackDistanceCompensation', 0)
 
-    dis = sMath.distance2DToCompareFrom3DPosition(target.position, center)
-    return dis <= radius * radius
+    distance = sMath.distance2DToCompareFrom3DPosition(tgt.position, center)
+    return distance <= radius * radius
 
 def isMinorAccount(userAge):
     adultAge = AASC.datas.get('userAge', {}).get('value', gameconst.LEGAL_AGE_OF_MAJORITY)
@@ -3459,12 +2808,12 @@ def printMemUsage(memList, sumSet, warnLow):
         _size = sizeof(val, sumSet)
         _sumSize += _size
         if _size > warnLow:
-            WARNING_MSG('[memDebug]mem beyond warnLow', i, _size)
+            LOG_WARN('[memDebug]mem beyond warnLow', i, _size)
         _cnt += 1
 
         yield True
 
-    WARNING_MSG('[memDebug]sum size is ', _sumSize, _cnt)
+    LOG_WARN('[memDebug]sum size is ', _sumSize, _cnt)
 
 
 def _debugMemOnce(memIter, batchNum, *args):
@@ -3476,13 +2825,28 @@ def _debugMemOnce(memIter, batchNum, *args):
     KBEngine.addTimer(1, 0, functools.partial(_debugMemOnce, memIter, batchNum))
 
 def debugMemUsage(memList, sumSet, warnLow, batchNum):
-    WARNING_MSG('[memDebug]sum len is ', len(memList))
+    LOG_WARN('[memDebug]sum len is ', len(memList))
     _iter = printMemUsage(memList, sumSet, warnLow)
     _debugMemOnce(_iter, batchNum)
 
 
-def emptyFunc(*args):
+def emptyFunc(*args, **kwargs):
     pass
+
+def checkPosValid(pos):
+    if not pos:
+        return False
+
+    if pos[0] is None:
+        return False
+
+    if pos[1] is None:
+        return False
+
+    if pos[2] is None:
+        return False
+
+    return True
 
 
 def isInAttackLine(targetPos, vCenter, direction, length, width, fixCenter=False):
@@ -3629,7 +2993,7 @@ def subscribe(tag, box, func):
     else:
         # avatar 的cell上不要使用
         if box and box.IsAvatar:
-            ERROR_MSG('subscribe event failed, avatar in cell  cannot use:', box, tag)
+            LOG_ERR('subscribe event failed, avatar in cell  cannot use:', box, tag)
             return
         gameengine.callCellApps(
             'gameengine.subscribeEvent',
@@ -3654,6 +3018,64 @@ def distribute(tag, *args):
     gameengine.callAppsByEventTag(tag, *args)
 
 
+@functools.lru_cache(1)
+def getAvatarFieldsInfo():
+    _fields = []
+    _kv = {}
+    for _idx, _val in enumerate(gameconst.AvatarFieldsEnum):
+        _kv[_val.name] = _idx
+        _fields.append(_val.value)
+
+    return {
+        'kv': _kv,
+        'fields': _fields
+    }
+
+
+def getAvatarFieldVal(name, data):
+    _dic = getAvatarFieldsInfo()
+    _idx = _dic['kv'][name]
+    return data[_idx]
+
+@functools.lru_cache(1)
+def getAvatarFieldsDOTStr():
+    """
+    _str1: a.sm_name, a.sm_level, a.sm_school ...
+    _str2: sm_name, sm_level, sm_school ...
+    """
+
+    _fields = getAvatarFieldsInfo()['fields']
+    _str1 = ','.join('a.{}'.format(i) for i in _fields)
+    _str2 = ','.join(_fields)
+
+    return _str1, _str2
+
+
+@functools.lru_cache(1)
+def getEquipSqlInfo():
+    _fields = []
+    _kv = {}
+    for _idx, _val in enumerate(gameconst.EquipFieldsEnum):
+        _kv[_val.name] = _idx
+        _fields.append(_val.value)
+
+    return {
+        'fields': _fields,
+        'kv': _kv
+    }
+
+
+def getEquipFieldsVal(name, data):
+    _idx = getEquipSqlInfo()['kv'][name]
+    return data[_idx + len(getAvatarFieldsInfo()['fields'])]
+
+
+@functools.lru_cache(1)
+def getEquipSQLStr():
+    _fields = getEquipSqlInfo()['fields']
+    return ','.join('eq.{}'.format(i) for i in _fields)
+
+
 """
     从 posList 中选出 m 个点，使得选出的点两两距离不小于 radius。
     如果无法找到足够的点，则随机补充直到有 m 个点。
@@ -3661,7 +3083,7 @@ def distribute(tag, *args):
 def select_positions(posList, m, radius):
     n = len(posList)
     if m > n:
-        gameengine.reportCritical('select_positions: not enough points to select', m, n)
+        gameengine.panicStack('select_positions: not enough points to select', m, n)
         return []
     
     maxVaildNum = 0
@@ -3691,7 +3113,7 @@ def select_positions(posList, m, radius):
         vaildNum = len(selected)
         # 如果已选点数不足 m，从剩余点中随机补充
         if len(selected) < m:
-            DEBUG_MSG('select_positions: not enough valid points, selected:', len(selected), 'need:', m, 'all:', len(shuffled))
+            LOG_DBG('select_positions: not enough valid points, selected:', len(selected), 'need:', m, 'all:', len(shuffled))
             # 找出未被选中的点
             remaining = [p for p in shuffled if p not in selected]
             # 如果剩余点数不够，从所有点中补充（包括已选点，避免重复使用同一个点）

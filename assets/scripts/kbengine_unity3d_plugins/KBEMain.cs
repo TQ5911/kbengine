@@ -110,6 +110,7 @@ public class KBEMain : MonoBehaviour
         paramDic.Add("deviceUniqueIdentifier", GetDeviceUniqueIdentifier());
         paramDic.Add("devicePlatId", devicePlatId);
         paramDic.Add("appVersion", MainStart.GetAppVersion());
+        paramDic.Add("patch", MainStart.GetPatchVersion());
         paramDic.Add("vClientIPv6", "");
         paramDic.Add("UA", "");
         paramDic.Add("imei", "");
@@ -198,7 +199,7 @@ public class KBEMain : MonoBehaviour
         {
             return MyUtils.GetAndroidDeviceIMEI();
         }
-#elif UNITY_EDITOR || UNITY_STANDALONE_WIN
+#elif UNITY_EDITOR || UNITY_STANDALONE
         return SystemInfo.deviceUniqueIdentifier;
 #endif
         return "";

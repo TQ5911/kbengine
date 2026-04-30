@@ -16,6 +16,7 @@ datas ={
           "PosY": 235.78,
           "PosZ": 271.74,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 1,
             "LightPillar": "",
@@ -46,6 +47,7 @@ datas ={
           "PosY": 235.5373,
           "PosZ": 263.58,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 1,
             "LightPillar": "",
@@ -76,6 +78,7 @@ datas ={
           "PosY": 247.9807,
           "PosZ": 119.1313,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 46,
             "LightPillar": "",
@@ -3816,6 +3819,7 @@ datas ={
           "PosY": 249.8528,
           "PosZ": 368.5797,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 49,
             "LightPillar": "",
@@ -3830,6 +3834,37 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
+          }
+        },
+        "10280148": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "mineHub",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 11238020,
+          "ID": 10280148,
+          "PosX": 171.8284,
+          "PosY": 252.1678,
+          "PosZ": 374.1014,
+          "Props": {
+            "ChestGroupID": "",
+            "GroupID": "",
+            "Level": 1,
+            "LightPillar": "",
+            "MapEntityScale": 0,
+            "MapEntityType": "28",
+            "MonsterGroupID": "",
+            "PathID": "",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 9999999.0,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
           }
         }
       },
@@ -3949,6 +3984,7 @@ datas ={
         "PosY": 247.9807,
         "PosZ": 119.1313,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "Level": 46,
           "LightPillar": "",

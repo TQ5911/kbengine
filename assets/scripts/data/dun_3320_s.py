@@ -251,7 +251,7 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 0.0,
             "RefreshTimedID": 0,
-            "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11013030,11013031,11013032]",
+            "Remark": "\u8ba1\u657075\u6b21\u5237\u65b0[11013030,11013031,11013032]",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "1"
           }
@@ -471,7 +471,7 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 0.0,
             "RefreshTimedID": 0,
-            "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11013030,11013031,11013032]",
+            "Remark": "\u8ba1\u657075\u6b21\u5237\u65b0[11013030,11013031,11013032]",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "2"
           }
@@ -1140,7 +1140,7 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 0.0,
             "RefreshTimedID": 0,
-            "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11013040,11013041,11013042]",
+            "Remark": "\u8ba1\u6570125\u6b21\u5237\u65b0[11013040,11013041,11013042]",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "5"
           }
@@ -1320,12 +1320,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11013040,
           "ID": 33200136,
-          "PosX": 51.7891846,
+          "PosX": 51.78918,
           "PosY": 3.650003,
-          "PosZ": 119.416992,
+          "PosZ": 119.417,
           "Props": {
             "GroupID": "",
             "Level": 48,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -1333,7 +1334,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 12.0,
+            "RefreshTimedID": 0,
             "Remark": "\u4e3b\u52a8\u7cbe\u82f1",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "6"
           }
         },
@@ -1363,7 +1366,7 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 0.0,
             "RefreshTimedID": 0,
-            "Remark": "\u8ba1\u6570100\u6b21\u5237\u65b0[11013040,11013041,11013042]",
+            "Remark": "\u8ba1\u6570125\u6b21\u5237\u65b0[11013040,11013041,11013042]",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "6"
           }
@@ -1989,6 +1992,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 48,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -1996,7 +2000,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 12.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u6563"
           }
         },

@@ -42,5 +42,25 @@ datas = _tools.RODict({
     "initialGainValue": _tools.RODict({
         "ID": "initialGainValue",
         "value": (2, 1.5),
+    }),
+    "activateWorldLevel": _tools.RODict({
+        "ID": "activateWorldLevel",
+        "value": 2,
+    }),
+    "bonus_EXP_Sources": _tools.RODict({
+        "ID": "bonus_EXP_Sources",
+        "value": (1, 2, 15, 17, 98, 100, 101, 102, 103, 114, 145),
+    }),
+    "EXP_Multiplier": _tools.RODict({
+        "ID": "EXP_Multiplier",
+        "value": "经验获取加成：{0}",
+    }),
+    "currentLevel": _tools.RODict({
+        "ID": "currentLevel",
+        "value": "当前角色等级：{0}",
+    }),
+    "visibleWorldLevel": _tools.RODict({
+        "ID": "visibleWorldLevel",
+        "value": "worldLevel",
     })
 })

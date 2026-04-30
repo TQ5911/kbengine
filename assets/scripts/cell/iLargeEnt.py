@@ -13,18 +13,18 @@ class ILargeEnt(object):
         if self.bodySize:
             self.unsetBodySize()
 
-        self._callback(0.1, '_setLargeEntBodySize', (sz, avatarViewSize,), gametimer.TIMER_TAG_SET_LARGE_ENT_BODY_SIZE)
+        self.addTimerCB(0.1, '_setLargeEntBodySize', (sz, avatarViewSize,), gametimer.TIMER_TAG_SET_LARGE_ENT_BODY_SIZE)
 
     def unsetBodySize(self):
         self._cancelWitnessProximity()
         self.bodySize = None
 
     def _cancelWitnessProximity(self):
-        witnessId, hystId, viewSize, avatarViewSize = self.popTempMiscProp(gameconst.AvatarProps.largeEntTrapId,
+        witnessId, hystId, viewSize, avatarViewSize = self.popTempMiscProp(gameconst.EntityPropsEnum.largeEntTrapId,
                                                                            (0, 0, 0, 0))
         if witnessId or hystId:
             for e in self.entitiesInRange(viewSize + gameconst.DEFAULT_HYST + 0.1, 'Avatar'):
-                self.onLeaveTrap(e, 0, 0, 0, gameconst.LARGE_ENT_HYST)
+                self.onLeaveTrap(e, 0, 0, 0, gameconst.LARGE_ENTITY_HYSTERESIS_TRAP)
 
             for e in self.entitiesInRange(avatarViewSize - 0.1, 'Avatar'):
                 e.scriptEnterView(self.id, 0)
@@ -37,9 +37,9 @@ class ILargeEnt(object):
 
         mSize = max(self.bodySize) + avatarViewSize
 
-        witnessId = self.addProximity(mSize, 0.0, gameconst.LARGE_ENT_WITNESS)
-        hystId = self.addProximity(mSize + gameconst.DEFAULT_HYST, 0.0, gameconst.LARGE_ENT_HYST)
-        self.setTempMiscProp(gameconst.AvatarProps.largeEntTrapId, (witnessId, hystId, mSize, avatarViewSize))
+        witnessId = self.addProximity(mSize, 0.0, gameconst.LARGE_ENTITY_VISIBILITY_TRAP)
+        hystId = self.addProximity(mSize + gameconst.DEFAULT_HYST, 0.0, gameconst.LARGE_ENTITY_HYSTERESIS_TRAP)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.largeEntTrapId, (witnessId, hystId, mSize, avatarViewSize))
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         if hasattr(super(), 'onEnterTrap'):
@@ -48,7 +48,7 @@ class ILargeEnt(object):
         if not entity.IsAvatar:
             return
 
-        if userArg == gameconst.LARGE_ENT_WITNESS:
+        if userArg == gameconst.LARGE_ENTITY_VISIBILITY_TRAP:
             entity.scriptEnterView(self.id, 1)
 
     def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
@@ -58,7 +58,7 @@ class ILargeEnt(object):
         if not entity.IsAvatar:
             return
 
-        if userArg == gameconst.LARGE_ENT_WITNESS:
+        if userArg == gameconst.LARGE_ENTITY_VISIBILITY_TRAP:
             entity.scriptLeaveView(self.id, 0)
-        elif userArg == gameconst.LARGE_ENT_HYST:
+        elif userArg == gameconst.LARGE_ENTITY_HYSTERESIS_TRAP:
             entity.scriptLeaveView(self.id, 1)

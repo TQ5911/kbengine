@@ -9,7 +9,7 @@ EVENT_SKILL = 2
 EVENT_BUFF = 3
 EVENT_ADD_SKILL = 4
 
-class EffectEventContext(userType.UserSoleType):
+class EffectEventContext(userType.UserSingleType):
     eventType = EVENT_UNKNOWN
     def __str__(self):
         return '%s %s'%(self.eventType, str(vars(self)))

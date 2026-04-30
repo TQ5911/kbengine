@@ -18,13 +18,13 @@ class IRoute(object):
 
     @property
     def escortSpeedOverwriteData(self):
-        if not self.hasTempMiscProp(gameconst.AvatarProps.escortSpeedOverwriteData):
-            self.setTempMiscProp(gameconst.AvatarProps.escortSpeedOverwriteData, {})
-        return self.getTempMiscProp(gameconst.AvatarProps.escortSpeedOverwriteData)
+        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.escortSpeedOverwriteData):
+            self.setTempMiscProp(gameconst.EntityPropsEnum.escortSpeedOverwriteData, {})
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.escortSpeedOverwriteData)
 
     @escortSpeedOverwriteData.setter
     def escortSpeedOverwriteData(self, newVal):
-        self.setTempMiscProp(gameconst.AvatarProps.escortSpeedOverwriteData, newVal)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.escortSpeedOverwriteData, newVal)
 
     @property
     def IsHuacheNpc(self):
@@ -33,14 +33,14 @@ class IRoute(object):
 
     @gamedecorator.limitcall(0.5)
     def setRoute(self, pathId, routeByAI=False, escortDistance=0, escortLeaveDistance=0, speedOverwrite: dict=None):
-        DEBUG_MSG('setRoute', pathId, routeByAI, speedOverwrite)
+        LOG_DBG('setRoute', pathId, routeByAI, speedOverwrite)
         speedOverwrite = speedOverwrite if speedOverwrite is not None else {}
         if pathId not in path_path.datas:
-            INFO_MSG('setRoute: invalid pathId {}'.format(pathId))
+            LOG_IFO('setRoute: invalid pathId {}'.format(pathId))
             return False
 
         if len(path_path.datas[pathId]['pointList']) < 2:
-            INFO_MSG('setRoute: invalid pointList {}'.format(path_path.datas[pathId]['pointList']))
+            LOG_IFO('setRoute: invalid pointList {}'.format(path_path.datas[pathId]['pointList']))
             return False
 
         self.cancelRouting()
@@ -50,16 +50,16 @@ class IRoute(object):
         self.escortDistance = escortDistance
         self.escortLeaveDistance = escortLeaveDistance if escortLeaveDistance > 0 else self.escortDistance
         if escortDistance > 0:
-            self.escortTrapId = self.addProximity(self.escortDistance, 0.0, gameconst.ROUTE_ESCORT_TRAP)
+            self.escortTrapId = self.addProximity(self.escortDistance, 0.0, gameconst.ESCORT_ROUTE_TRAP)
 
         escortSpeedOverwriteData = self.escortSpeedOverwriteData
         escortSpeedOverwriteData.clear()
         if "baseSpeed" in speedOverwrite:
             escortSpeedOverwriteData['baseSpeed'] = self.baseSpeed
-            self.setProp('baseSpeed', speedOverwrite['baseSpeed'], src=gameconst.SourceType.Escort)
+            self.setProp('baseSpeed', speedOverwrite['baseSpeed'], src=gameconst.SourceType.SrcTpEscort)
         if "adjSpeed" in speedOverwrite:
             escortSpeedOverwriteData['adjSpeed'] = self.adjSpeed
-            self.setProp('adjSpeed', speedOverwrite['adjSpeed'], src=gameconst.SourceType.Escort)
+            self.setProp('adjSpeed', speedOverwrite['adjSpeed'], src=gameconst.SourceType.SrcTpEscort)
         if "moveAni" in speedOverwrite:
             escortSpeedOverwriteData['moveAni'] = self.moveAni
             self.moveAni = speedOverwrite["moveAni"]
@@ -80,10 +80,10 @@ class IRoute(object):
             self.continueRouting()
 
     def cancelRouting(self):
-        DEBUG_MSG('cancelRouting')
+        LOG_DBG('cancelRouting')
         if self.routeState == gameconst.RouteState.ROUTE_STATE_MOVING:
             self.cancelController('Movement')
-            self.removeState(gameconst.State.Moving)
+            self.removeState(gameconst.StateEnum.Moving)
 
         self.routeState = gameconst.RouteState.ROUTE_STATE_IDLE
         self.routeSuspendReason = gameconst.RouteSuspendReason.UNKNOWN
@@ -100,9 +100,9 @@ class IRoute(object):
         self.escortTrapId = 0
         escortSpeedOverwriteData = self.escortSpeedOverwriteData
         if "baseSpeed" in escortSpeedOverwriteData:
-            self.setProp('baseSpeed', escortSpeedOverwriteData['baseSpeed'], src=gameconst.SourceType.Escort)
+            self.setProp('baseSpeed', escortSpeedOverwriteData['baseSpeed'], src=gameconst.SourceType.SrcTpEscort)
         if "adjSpeed" in escortSpeedOverwriteData:
-            self.setProp('adjSpeed', escortSpeedOverwriteData['adjSpeed'], src=gameconst.SourceType.Escort)
+            self.setProp('adjSpeed', escortSpeedOverwriteData['adjSpeed'], src=gameconst.SourceType.SrcTpEscort)
         if "moveAni" in escortSpeedOverwriteData:
             self.moveAni = escortSpeedOverwriteData["moveAni"]
         escortSpeedOverwriteData.clear()
@@ -112,11 +112,11 @@ class IRoute(object):
             return
 
         self.cancelController('Movement')
-        self.removeState(gameconst.State.Moving)
+        self.removeState(gameconst.StateEnum.Moving)
         self.routeState = gameconst.RouteState.ROUTE_STATE_SUSPEND
         self.routeSuspendReason = reason
         if reason == gameconst.RouteSuspendReason.ESCORT_NO_PLAYER_IN_DISTANCE:
-            entityGID = utils.getGidFromGameEntityId(self.gameEntityId)
+            entityGID = utils.parseGidFromGameEntityId(self.gameEntityId)
             self.flowCtrlEntityRoutingMissingEscort(entityGID, self.pathId)
 
     def continueRouting(self):
@@ -126,8 +126,8 @@ class IRoute(object):
         return self.startRouting()
 
     def onRouteFinished(self):
-        DEBUG_MSG("onRouteFinished::")
-        entityGID = utils.getGidFromGameEntityId(self.gameEntityId)
+        LOG_DBG("onRouteFinished::")
+        entityGID = utils.parseGidFromGameEntityId(self.gameEntityId)
         self.flowCtrlEntityRouteFinished(entityGID, self.pathId)
 
         if self.IsHuacheNpc:
@@ -163,7 +163,7 @@ class IRoute(object):
                 self.pointIndex = next_pointIndex
             else:
                 if self.pointIndex >= len(path_path.datas[self.pathId]['pointList']) - 1:
-                    INFO_MSG('startRouting: already in end point')
+                    LOG_IFO('startRouting: already in end point')
                     self.routeState = gameconst.RouteState.ROUTE_STATE_COMPLETE
                     self.onRouteFinished()
                     self._resetRoute()
@@ -190,7 +190,7 @@ class IRoute(object):
         return (posInfo[0], posInfo[1], posInfo[2])
 
     def moveToRouteNode(self, onNode, dstPos, failCnt, faceMovement = True):
-        # DEBUG_MSG('moveToRouteNode', onNode, dstPos, failCnt, faceMovement)
+        # LOG_DBG('moveToRouteNode', onNode, dstPos, failCnt, faceMovement)
         if self.routeState != gameconst.RouteState.ROUTE_STATE_MOVING:
             return
         if onNode:
@@ -201,29 +201,29 @@ class IRoute(object):
             moveController = self.scriptNavigate(dstPos, self.speed, faceMovement=faceMovement, userData=gamemove.ROUTE_NODE_MOVE)
 
         if moveController:
-            if not self.hasState(gameconst.State.Moving):
-                self.setState(gameconst.State.Moving)
+            if not self.hasState(gameconst.StateEnum.Moving):
+                self.setState(gameconst.StateEnum.Moving)
 
         else:
-            WARNING_MSG('moveToRouteNode: move failed, failCnt:', failCnt)
+            LOG_WARN('moveToRouteNode: move failed, failCnt:', failCnt)
             # if self.IsAvatar:
             #     self.controlledBy = self.base
             if failCnt < 10:
-                self._callback((failCnt+1)*random.random(), 'moveToRouteNode', (onNode, dstPos, failCnt+1,
+                self.addTimerCB((failCnt+1)*random.random(), 'moveToRouteNode', (onNode, dstPos, failCnt+1,
                                                                                 faceMovement), gametimer.TIMER_TAG_MOVE_TO_ROUTE_NODE)
             else:
                 self.cancelRouting()
 
     def luckMonsterPatrol(self, success=True):
         pointInfo = path_path.datas[self.pathId]['pointList'][self.pointIndex]
-        self.nextRouteTime = utils.getNow() + round(random.uniform(pointInfo[4], pointInfo[5]), 2)
+        self.nextRouteTime = utils.curTS() + round(random.uniform(pointInfo[4], pointInfo[5]), 2)
         self.interruptRouting()
 
     def moveToRouteNodeCB(self, isSucceed):
-        # DEBUG_MSG('moveToRouteNodeCB', isSucceed, self.position, self.state)
+        # LOG_DBG('moveToRouteNodeCB', isSucceed, self.position, self.state)
         moveOver = self._moveToRouteNodeCB(isSucceed)
         if moveOver:
-            self.removeState(gameconst.State.Moving)
+            self.removeState(gameconst.StateEnum.Moving)
             return
 
         if self.checkConflictState(CCD.datas.move):
@@ -233,7 +233,7 @@ class IRoute(object):
                 self.moveToRouteNode(True, self.nextPoint(), 0)
 
         else:
-            WARNING_MSG('moveToRouteNodeCB: conflict state, interrupt routing')
+            LOG_WARN('moveToRouteNodeCB: conflict state, interrupt routing')
             self.interruptRouting()
 
     def _moveToRouteNodeCB(self, isSucceed):
@@ -244,13 +244,13 @@ class IRoute(object):
             for i in range(2, 10, 2):
                 posList = self.getRandomPoints(self.nextPoint(), i, 1, 0)
                 if posList:
-                    INFO_MSG('moveToRouteNodeCB: choice accessible point', i, posList[0])
-                    self._callback(random.random(), 'moveToRouteNode', (False, posList[0], 0, False), gametimer.TIMER_TAG_MOVE_TO_ROUTE_NODE)
+                    LOG_IFO('moveToRouteNodeCB: choice accessible point', i, posList[0])
+                    self.addTimerCB(random.random(), 'moveToRouteNode', (False, posList[0], 0, False), gametimer.TIMER_TAG_MOVE_TO_ROUTE_NODE)
                     break
                 # FIXME()(ROUTE): 这里似乎想延时防止调用速度过快，需要看看，先删掉，sleep太危险了
                 # time.sleep(1)
             else:
-                WARNING_MSG('moveToRouteNodeCB: [%s] -> [%s] failed' % self.position, self.nextPoint())
+                LOG_WARN('moveToRouteNodeCB: [%s] -> [%s] failed' % self.position, self.nextPoint())
                 self.routeState = gameconst.RouteState.ROUTE_STATE_IDLE
                 self._resetRoute()
             return True

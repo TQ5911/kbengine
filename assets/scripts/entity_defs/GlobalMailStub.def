@@ -11,11 +11,6 @@
             <Flags>         BASE                </Flags>
             <Persistent>    true                </Persistent>
         </mailList>
-        <deleteMailsList>
-            <Type>          PY_LIST             </Type>
-            <Flags>         BASE                </Flags>
-            <Persistent>    true                </Persistent>
-        </deleteMailsList>
         <lastSendTime>
             <Type>          LONGTIME            </Type>
             <Flags>         BASE                </Flags>
@@ -37,29 +32,12 @@
             <Arg>   UNICODE                     </Arg>
             <Arg>   LONGTIME                    </Arg>
             <Arg>   LONGTIME                    </Arg>
+            <Arg>   LONGTIME                    </Arg>
             <Arg>   LEVEL                       </Arg>
             <Arg>   LEVEL                       </Arg>
             <Arg>   CHANNEL                     </Arg>
             <Arg>   UINT16                      </Arg>
         </sendGlobalMail>
-
-        <sendIDIPGlobalMail>
-            <Arg>   PYTHON      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   MAILID      </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   LEVEL       </Arg>
-            <Arg>   LEVEL       </Arg>
-            <Arg>   UINT8       </Arg>
-        </sendIDIPGlobalMail>
 
         <gmGetGlobalMailList>
             <Arg>   ENTITYCALL  </Arg>

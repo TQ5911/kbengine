@@ -15,7 +15,7 @@ class DuelFlag(iCell.ICell, iTimer.ITimer):
     IsDuelFlag = True
 
     def __init__(self):
-        self._callback(D_CD.datas['duel_prepareTime']['value'], '_onReadyFinish', (), gametimer.TIMER_TAG_DUEL_PREPARE)
+        self.addTimerCB(D_CD.datas['duel_prepareTime']['value'], '_onReadyFinish', (), gametimer.TIMER_TAG_DUEL_PREPARE)
         interval = 1
         self.checkTimer = self.pyAddTimer(interval, interval, gametimer.DUEL_FLAG_CHECK_TICK)
         self.isFinished = False
@@ -85,7 +85,7 @@ class DuelFlag(iCell.ICell, iTimer.ITimer):
         self.finishReason = reason
 
     def onAvatarDuelFailed(self, avatarEid):
-        INFO_MSG('onAvatarDuelFailed', avatarEid)
+        LOG_IFO('onAvatarDuelFailed', avatarEid)
         if self.checkTimer:
             self.pyDelTimer(self.checkTimer, gametimer.DUEL_FLAG_CHECK_TICK)
             self.checkTimer = 0

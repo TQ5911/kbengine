@@ -6,7 +6,7 @@ import gameconst
 
 import relationConfig_relationConfig as RC_RCD
 
-class MessageVal(userType.UserSoleType):
+class MessageVal(userType.UserSingleType):
     def __init__(self, msg='', ts=0):
         self.msg = msg
         self.ts = ts
@@ -17,7 +17,7 @@ class MessageVal(userType.UserSoleType):
             "ts": self.ts
         }
 
-class MessageListVal(userType.UserSoleType):
+class MessageListVal(userType.UserSingleType):
     def __init__(self, msgList=(), lastRecvTS=0, lastSendTS=0, gbId=0):
         self.lastRecvTS = lastRecvTS
         self.lastSendTS = lastSendTS
@@ -51,7 +51,7 @@ class MessageListVal(userType.UserSoleType):
                 return
 
             elif ts == self.msgList[i-1].ts:
-                ERROR_MSG("MessageListVal::addMsg: ts is same", msg, ts)
+                LOG_ERR("MessageListVal::addMsg: ts is same", msg, ts)
                 return
 
         else:
@@ -65,7 +65,7 @@ class MessageListVal(userType.UserSoleType):
             return
 
         _, _minTS = redisUtils.FriendUtils.decodeMsg(msgList[-1])
-        DEBUG_MSG('_minTS:', _minTS)
+        LOG_DBG('_minTS:', _minTS)
 
         while self.msgList:
             if self.msgList[-1].ts >= _minTS:

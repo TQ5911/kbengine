@@ -33,7 +33,7 @@ class TableColumn(object):
     @classmethod
     def onLoadColumns(cls, ret, num, insertId, err, cb, tbName):
         if err:
-            ERROR_MSG('TableColumn::onLoadColumns query db err.', err)
+            LOG_ERR('TableColumn::onLoadColumns query db err.', err)
             return
 
         _columns = []
@@ -67,7 +67,7 @@ class TableColumn(object):
 
     def onLoadData(self, ret, num, insertId, err, cb):
         if err:
-            ERROR_MSG('TableColumn::onLoadData query db err.', err)
+            LOG_ERR('TableColumn::onLoadData query db err.', err)
             return
 
         _rows = []

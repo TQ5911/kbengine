@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildChallengeDataInfoVal(userType.UserSoleType):
+class GuildChallengeDataInfoVal(userType.UserSingleType):
     '''GUILD_CHALLENGE_DATA_INFO'''
     def __init__(self, openedId = 0, openedFundCount = 0, openedMoneyCount = 0, openedTime = 0, openedType = 0, consumedType = 0, openedDungeonId = 0, \
                  openedDungeonStatus = 0, settleTs = 0, opUUID = 0):

@@ -31,14 +31,14 @@ class IMultiStaticSpacePlayer(object):
 
         _linePlayers = self.allLines.get(_spaceNo)
 
-        _timeoutTime = utils.getNow() - timeOutDuration
+        _timeoutTime = utils.curTS() - timeOutDuration
         if not _linePlayers:
-            WARNING_MSG('onClearEnterTimeOut:spaceNo={}, _linePlayers is None'.format(_spaceNo))
+            LOG_WARN('onClearEnterTimeOut:spaceNo={}, _linePlayers is None'.format(_spaceNo))
             return
         
         _clearList = _linePlayers.clearTimeOutInfo(_timeoutTime)
         if _clearList:
-            ERROR_MSG('onClearEnterTimeOut:spaceNo={}, clearList={}'.format(_spaceNo, _clearList))
+            LOG_ERR('onClearEnterTimeOut:spaceNo={}, clearList={}'.format(_spaceNo, _clearList))
             for _gbId in _clearList:
                 self.allPlayers.pop(_gbId, None)
 
@@ -60,19 +60,19 @@ class IMultiStaticSpacePlayer(object):
     def addPendingEnterPlayer(self, spaceNo, gbId):
         _linePlayers = self.allLines.get(spaceNo)
         if not _linePlayers:
-            _linePlayers = linePlayers.LinePlayers(formula.getLineNo(spaceNo))
+            _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(spaceNo))
             self.allLines[spaceNo] = _linePlayers
 
         _linePlayers.addPendingEnterPlayer(None, gbId)
 
     def addEnterPlayer(self, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo):
         if gbId in self.allPlayers:
-            ERROR_MSG('addEnterPlayer:already in allPlayers', gbId)
+            LOG_ERR('addEnterPlayer:already in allPlayers', gbId)
             return
 
         _linePlayers = self.allLines.get(curSpaceNo)
         if not _linePlayers:
-            _linePlayers = linePlayers.LinePlayers(formula.getLineNo(curSpaceNo))
+            _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(curSpaceNo))
             self.allLines[curSpaceNo] = _linePlayers
 
         _linePlayers.doAddLinePlayer(None, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo)
@@ -85,7 +85,7 @@ class IMultiStaticSpacePlayer(object):
 
         _linePlayers = self.allLines.get(_playerVal.curSpaceNo)
         if not _linePlayers:
-            ERROR_MSG('removePlayer:linePlayers not found', _playerVal.curSpaceNo)
+            LOG_ERR('removePlayer:linePlayers not found', _playerVal.curSpaceNo)
             return
 
         _linePlayers.doRemoveLinePlayer(None, gbId)
@@ -93,11 +93,11 @@ class IMultiStaticSpacePlayer(object):
     def switchStaticSpace(self, gbId, toSpaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            ERROR_MSG('switchStaticSpace:player not found', gbId)
+            LOG_ERR('switchStaticSpace:player not found', gbId)
             return
 
         if _playerVal.curSpaceNo == toSpaceNo:
-            ERROR_MSG('switchStaticSpace:spaceNo same', toSpaceNo)
+            LOG_ERR('switchStaticSpace:spaceNo same', toSpaceNo)
             return
 
         _isLeader = False
@@ -110,7 +110,7 @@ class IMultiStaticSpacePlayer(object):
         _playerVal.curSpaceNo = toSpaceNo
         _linePlayers = self.allLines.get(toSpaceNo)
         if not _linePlayers:
-            _linePlayers = linePlayers.LinePlayers(formula.getLineNo(toSpaceNo))
+            _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(toSpaceNo))
             self.allLines[toSpaceNo] = _linePlayers
 
         _linePlayers.doAddLinePlayerVal(_playerVal, _isLeader)

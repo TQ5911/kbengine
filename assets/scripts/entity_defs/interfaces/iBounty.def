@@ -1,0 +1,178 @@
+<root>
+    <Properties>
+        <publishList>
+            <Type>          PY_LIST             </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       []              </Default>
+        </publishList>
+
+        <preyInfo>
+            <Type>          PYTHON              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       None                    </Default>
+        </preyInfo>
+
+        <hunterInfo>
+            <Type>          PYTHON              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       None                </Default>
+        </hunterInfo>
+
+        <cellPreyInfo>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       None                </Default>
+        </cellPreyInfo>
+
+        <cellHunterInfo>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       None                </Default>
+        </cellHunterInfo>
+
+        <preyFlag>
+            <Type>          UINT8               </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <Default>       0                   </Default>
+            <WitnessName>   true                </WitnessName>
+        </preyFlag>
+
+        <hunterDamageSet>
+            <Type>          PY_SET              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       set()               </Default>
+        </hunterDamageSet>
+    </Properties>
+
+    <BaseMethods>
+        <updateBountyRes>
+            <Arg>           PY_DICT       </Arg>
+        </updateBountyRes>
+
+        <initQueryBountyInfoRes>
+            <Arg>           ARRAY <of> BOUNTY_ITEM_SYNC_VAL  </of>       </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL                         </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL                         </Arg>
+        </initQueryBountyInfoRes>
+
+        <publishBountyRes>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </publishBountyRes>
+        
+        <onPublisherPrePublishBounty>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+        </onPublisherPrePublishBounty>
+
+        <onNoticeBecomePrey>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+        </onNoticeBecomePrey>
+
+        <onNoticeBecomePreyHunter>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+        </onNoticeBecomePreyHunter>
+
+        <onNoticeHasAccepted>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+        </onNoticeHasAccepted>
+
+        <acceptBountyRes>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </acceptBountyRes>
+        
+        <onHunterPreAcceptBounty>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+        </onHunterPreAcceptBounty>
+
+        <onGetPreyInfoFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+        </onGetPreyInfoFailed>
+
+        <onNoticeComplateBounty>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onNoticeComplateBounty>
+
+        <onNoticeExpiredBounty>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onNoticeExpiredBounty>
+
+        <onNoticeNeedUpdateBounty>
+            <Arg>           PY_DICT         </Arg>
+        </onNoticeNeedUpdateBounty>
+
+        <onNoticeAssignedHunter>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           MAILBOX                 </Arg>
+            <Arg>           MAILBOX                 </Arg>
+        </onNoticeAssignedHunter>
+
+        <reqGetAvatarBountyInfo> <Exposed/>
+            <Arg>       UINT8           </Arg>
+        </reqGetAvatarBountyInfo>
+
+        <reqPublishBounty> <Exposed/>
+            <Arg>       UNICODE         </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UNICODE         </Arg>
+        </reqPublishBounty>
+
+        <reqReplyAssignedHunter> <Exposed/>
+            <Arg>           UUID            </Arg>
+            <Arg>           BOOL            </Arg>
+        </reqReplyAssignedHunter>
+
+        <reqAcceptBounty> <Exposed/>
+            <Arg>       UUID            </Arg>
+        </reqAcceptBounty>
+
+        <reqGetPublicRankList> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT32          </Arg>
+        </reqGetPublicRankList>
+    
+        <reqGetPublicBountyList> <Exposed/>
+            <Arg>       UINT32          </Arg>
+            <Arg>       UINT32          </Arg>
+        </reqGetPublicBountyList>
+    </BaseMethods>
+
+    <CellMethods>
+        <setPreyInfo>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+        </setPreyInfo>
+
+        <setHunterInfo>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+            <Arg>           UINT8     </Arg>
+        </setHunterInfo>
+
+        <onGetPreyInfo>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           UUID            </Arg>
+        </onGetPreyInfo>
+    </CellMethods>
+
+    <ClientMethods>
+        <onGetPublicBountyList>
+            <Arg>           UINT32          </Arg>
+            <Arg>           ARRAY <of> BOUNTY_ITEM_CLIENT_VAL  </of>       </Arg>
+            <Arg>           BOOL            </Arg>
+            <Arg>           UINT32          </Arg>
+        </onGetPublicBountyList>
+
+        <onAvatarBountyInfo>
+            <Arg>           UINT8          </Arg>
+            <Arg>           UINT8          </Arg>
+            <Arg>           ARRAY <of> BOUNTY_ITEM_CLIENT_VAL  </of>       </Arg>
+        </onAvatarBountyInfo>
+
+        <onNoticeAssignedHunter>
+            <Arg>       BOUNTY_ITEM_SYNC_VAL      </Arg>
+        </onNoticeAssignedHunter>
+    </ClientMethods>
+</root>

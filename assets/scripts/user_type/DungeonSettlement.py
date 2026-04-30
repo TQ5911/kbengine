@@ -17,7 +17,7 @@ import raidBossChallenge_basicInfo as RBC_BI
 import teamDunChallenge_basicInfo as TDC_BI
 import teamMatch_pointsRanking as TM_PR
 
-class DungeonExtraData(userType.UserSoleType):
+class DungeonExtraData(userType.UserSingleType):
     def __init__(self, gbId = 0, name = '', school = 0, level = 0, sex = 0, eId = 0):
         self.gbId = gbId
         self.name = name
@@ -56,7 +56,7 @@ class DungeonExtraData(userType.UserSoleType):
 
 DungeonExtraDataInstance = DungeonExtraData()
 
-class DungeonSettlementData(userType.UserSoleType):
+class DungeonSettlementData(userType.UserSingleType):
     def __init__(self):
         self.gbId = 0
         self.name = ''

@@ -53,11 +53,11 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def doEnterDungeon(self, box, gbId, dungeonUUID, spaceNo, extra):
         raise Exception('not implemented')
     
-    def getDungeonSpaceNoRange(self):
-        return gameconst.SpaceType.getCopiedSpaceNoRange(self.dungeonNo)
+    def getDungeonSpaceRange(self):
+        return gameconst.SpaceType.getClonedSpaceNoRange(self.dungeonNo)
 
     def createDungeonSpaceRemote(self, box, gbId, dungeonUUID, extra):
-        spaceNoStart, spaceNoEnd = self.getDungeonSpaceNoRange()
+        spaceNoStart, spaceNoEnd = self.getDungeonSpaceRange()
         if self.crtGenSpaceNo < spaceNoStart or self.crtGenSpaceNo >= spaceNoEnd:
             self.crtGenSpaceNo = spaceNoStart
         for spaceNo in itertools.chain(range(self.crtGenSpaceNo, spaceNoEnd), range(spaceNoStart, self.crtGenSpaceNo)):
@@ -67,7 +67,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 self.crtGenSpaceNo = _crtGenSpaceNo if _crtGenSpaceNo < spaceNoEnd else spaceNoStart
                 break
         else:
-            ERROR_MSG('cannot createDungeonSpaceRemote', len(self.spaces))
+            LOG_ERR('cannot createDungeonSpaceRemote', len(self.spaces))
 
     def _getDungeonSpaceVal(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         raise Exception('not implemented')
@@ -79,7 +79,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return enterNum
 
     def _createSpaceRemote(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        INFO_MSG('zt: create home space', spaceNo, playerBox.id, playerGbId,dungeonUUID, extra)
+        LOG_IFO('zt: create home space', spaceNo, playerBox.id, playerGbId,dungeonUUID, extra)
 
         self.spaces[spaceNo]=self._getDungeonSpaceVal(spaceNo, playerBox, playerGbId, dungeonUUID, extra)
 
@@ -97,7 +97,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                                       )
 
     def _onCreateSpaceRemote(self, spaceBox, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        INFO_MSG('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, dungeonUUID, extra)
+        LOG_IFO('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, dungeonUUID, extra)
         if not spaceBox:
             if self.spaces.has_key(spaceNo):
                 self.spaces.pop(spaceNo)
@@ -112,7 +112,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onDungeonSpaceReady(self, spaceNo):
         if spaceNo not in self.spaces:
-            ERROR_MSG('zt: onDungeonSpaceReady cannot find space:', spaceNo)
+            LOG_ERR('zt: onDungeonSpaceReady cannot find space:', spaceNo)
             return
 
         if self._needSpaceMgr(spaceNo):
@@ -144,19 +144,19 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             props['dungeonStage'] = dungeonStage
 
         tempMiscProps = {}
-        if formula.isSingleDungeonSpace(spaceNo):
-            tempMiscProps[gameconst.DungeonSpaceMgrProps.singleDungeonBelongPlayerGBID] = spaceVal.ownerGbId
-        elif formula.isTeamDungeonSpace(spaceNo):
-            tempMiscProps[gameconst.DungeonSpaceMgrProps.teamDungeonBelongTeamUUID] = spaceVal.teamUUID
-        elif formula.isRaidDungeonSpace(spaceNo):
-            tempMiscProps[gameconst.DungeonSpaceMgrProps.raidDungeonBelongRaidUUID] = spaceVal.raidUUID
-        elif formula.isGuildBossDungeonSpace(spaceNo):
-            tempMiscProps[gameconst.DungeonSpaceMgrProps.guildBossDungeonBelongGuildUUID] = spaceVal.guildUUID
+        if formula.inSingleDungeonScene(spaceNo):
+            tempMiscProps[gameconst.DungeonSpaceMgrProps.DSMPEnumsingleDungeonBelongPlayerGBID] = spaceVal.ownerGbId
+        elif formula.inTeamDungeonScene(spaceNo):
+            tempMiscProps[gameconst.DungeonSpaceMgrProps.DSMPEnumteamDungeonBelongTeamUUID] = spaceVal.teamUUID
+        elif formula.inRaidDungeonScene(spaceNo):
+            tempMiscProps[gameconst.DungeonSpaceMgrProps.DSMPEnumraidDungeonBelongRaidUUID] = spaceVal.raidUUID
+        elif formula.inGuildBossDungeonScene(spaceNo):
+            tempMiscProps[gameconst.DungeonSpaceMgrProps.DSMPEnumguildBossDungeonBelongGuildUUID] = spaceVal.guildUUID
 
         if tempMiscProps:
             props.setdefault("tempMiscProps", {}).update(tempMiscProps)
 
-        INFO_MSG('create DungeonSpaceMgr', props)
+        LOG_IFO('create DungeonSpaceMgr', props)
         mgr = KBEngine.createEntityLocally('DungeonSpaceMgr', props)
         spaceVal.spaceMgr = mgr
 
@@ -190,7 +190,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def createCellEntity(self, spaceNo, entityType, position, direction, props):
         if spaceNo not in self.spaces:
-            ERROR_MSG('zt: createCellEntity cannot find space:', spaceNo)
+            LOG_ERR('zt: createCellEntity cannot find space:', spaceNo)
             return
 
         spaceVal=self.spaces[spaceNo]
@@ -198,12 +198,12 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onEntityCreated(self, spaceNo, spaceUUID, entId, gameEntityIdentifyID):
         if spaceNo not in self.spaces:
-            ERROR_MSG('zt: onEntityCreated cannot find space:', spaceNo, spaceUUID)
+            LOG_ERR('zt: onEntityCreated cannot find space:', spaceNo, spaceUUID)
             return
 
         sVal = self.spaces[spaceNo]
         if sVal.spaceUUID != spaceUUID:
-            ERROR_MSG(f'onEntityCreated:: spaceUUID not match {spaceNo}, {sVal.spaceUUID}!={spaceUUID}')
+            LOG_ERR(f'onEntityCreated:: spaceUUID not match {spaceNo}, {sVal.spaceUUID}!={spaceUUID}')
             return
 
         genVal = sVal.onDungeonEntityCreated(gameEntityIdentifyID)
@@ -218,15 +218,15 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         raise NotImplementedError()
 
     def _onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp=0):
-        INFO_MSG('onReliveInDungeon::', spaceNo, playerBox, playerGbId, reliveType, reliveHp)
+        LOG_IFO('onReliveInDungeon::', spaceNo, playerBox, playerGbId, reliveType, reliveHp)
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: onReliveInDungeon cannot find space:', spaceNo)
+            LOG_ERR('wl: onReliveInDungeon cannot find space:', spaceNo)
             return
 
         dungeonInfo = DDI.datas.get(self.dungeonNo, None)
-        dungeonSInfo = utils.getDunStructureModuleData(self.dungeonNo)
+        dungeonSInfo = utils.getDunStructModData(self.dungeonNo)
         if not dungeonInfo:
-            ERROR_MSG('wl: onReliveInDungeon cannot find dungeonInfo:', self.dungeonNo)
+            LOG_ERR('wl: onReliveInDungeon cannot find dungeonInfo:', self.dungeonNo)
             return
 
         dungeonSpaceType = dungeonInfo['type']
@@ -236,7 +236,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 rebornPosDict = dungeonSInfo['RebornPos']
                 
             if not rebornPosDict:
-                gameengine.reportCritical(
+                gameengine.panicStack(
                     'Reborn position not defined in dungeon {0}, '
                     'please confirm dungeon RebornPos defined in dungeon-map client Editor '
                     '(check dungeon_{0}.py file and make sure RebornPos Class defined in file) '
@@ -244,12 +244,12 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 return
 
             rebornD, *_ = rebornPosDict.values()
-            rebornPos = formula.bornPosFromData(rebornD)
+            rebornPos = formula.bornPosFromDunData(rebornD)
             rebornDir = (0.0, 0.0, rebornD['Dir'] * math.pi / 180)
             # 修改下复活点
             if spaceNo in self.rebornPosCache:
                 posCache = self.rebornPosCache[spaceNo]
-                INFO_MSG('relive use rebornPosCache', spaceNo, posCache)
+                LOG_IFO('relive use rebornPosCache', spaceNo, posCache)
                 # 做个随机偏移
                 angle = random.uniform(0, 2 * math.pi)
                 radius = max(0, rebornD['Props']['Radius'])
@@ -266,13 +266,13 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         elif reliveType == gameconst.RELIVE_TYPE_LEAVE_IN_DUNGEON:
             # FEATURE()(DUNGEON): cal leave dungeon from client
-            WARNING_MSG('onReliveInDungeon::reliveType RELIVE_TYPE_LEAVE_IN_DUNGEON in dungeon is not valid')
+            LOG_WARN('onReliveInDungeon::reliveType RELIVE_TYPE_LEAVE_IN_DUNGEON in dungeon is not valid')
 
         else:
-            ERROR_MSG('onReliveInDungeon::reliveType is not valid, got {}'.format(reliveType))
+            LOG_ERR('onReliveInDungeon::reliveType is not valid, got {}'.format(reliveType))
 
     def onCreateNewRebornPos(self, spaceNo, position):
-        INFO_MSG('onCreateNewRebornPos', spaceNo, position)
+        LOG_IFO('onCreateNewRebornPos', spaceNo, position)
         self.rebornPosCache[spaceNo] = position
 
     def onDungeonStarted(self, spaceNo, tCreate):
@@ -282,9 +282,9 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return self.spaces[spaceNo].spaceBox.cell
 
     def sendBigWorldDungeonProps(self, box, gbId, spaceNo):
-        INFO_MSG('sendBigWorldDungeonProps::')
+        LOG_IFO('sendBigWorldDungeonProps::')
         if spaceNo not in self.spaces:
-            ERROR_MSG('spaceNo "{}" not found in spaces'.format(spaceNo))
+            LOG_ERR('spaceNo "{}" not found in spaces'.format(spaceNo))
             return
 
         spaceVal = self.spaces[spaceNo]
@@ -312,9 +312,9 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return None
 
     def getSettlementRankList(self, rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset):
-        INFO_MSG("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
+        LOG_IFO("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
         if spaceNo not in self.spaces:
-            WARNING_MSG('getSettlementRankList:: failed, missing space data', spaceNo)
+            LOG_WARN('getSettlementRankList:: failed, missing space data', spaceNo)
             return
 
         spaceVal = self.spaces[spaceNo]

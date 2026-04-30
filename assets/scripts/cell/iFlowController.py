@@ -12,10 +12,10 @@ class IFlowController(object):
 
     def flowCtrlIsTaskCompleteCallback(self, state, taskId, eid, expect=gameconst.TaskStat.TASK_STAT_UNKNOWN, checkOnce=False):
         """base(impTask).isTaskComplete 回调"""
-        # ERROR_MSG("flowCtrlIsTaskCompleteCallback::", state, taskId, eid, expect, checkOnce)
+        # LOG_ERR("flowCtrlIsTaskCompleteCallback::", state, taskId, eid, expect, checkOnce)
         # fix inprogress
         if state in (gameconst.TaskStat.TASK_STAT_RUNNING, gameconst.TaskStat.TASK_STAT_FINISHED):
-            INFO_MSG("flowCtrlIsTaskCompleteCallback:: fixed inprogress callback state", state, taskId, eid, expect, checkOnce)
+            LOG_IFO("flowCtrlIsTaskCompleteCallback:: fixed inprogress callback state", state, taskId, eid, expect, checkOnce)
             state = gameconst.TaskStat.TASK_STAT_RUNNING
 
         if state != expect:
@@ -37,7 +37,7 @@ class IFlowController(object):
         elif state == gameconst.TaskStat.TASK_STAT_RUNNING:
             self.flowCtrlOnTaskInProgress(taskId)
         else:
-            WARNING_MSG("flowCtrlIsTaskCompleteCallback::unhandled stat", state, taskId, eid, expect, checkOnce)
+            LOG_WARN("flowCtrlIsTaskCompleteCallback::unhandled stat", state, taskId, eid, expect, checkOnce)
 
     def flowCtrlOnTaskComplete(self, taskId):
         """任务完成时向controller汇报, 玩家实体调用"""
@@ -75,10 +75,6 @@ class IFlowController(object):
             self.flowController.onDungeonCollectionBeCollected(collGID)
             self.flowController.onDungeonCollectionBeCollectedUsePrototypeID(collectionId)
 
-    def flowCtrlDungeonBuffPointReleaseComplete(self, buffPointGIDs):
-        if self.flowController:
-            self.flowController.onDungeonBuffPointReleaseComplete(buffPointGIDs)
-
     def flowCtrlDungeonAirWallReleaseComplete(self, airWallGIDs):
         if self.flowController:
             self.flowController.onDungeonAirWallReleaseComplete(airWallGIDs)
@@ -114,11 +110,11 @@ class IFlowController(object):
             self.flowController.onMonsterRestNumberDecreased(monsterGID, newNumber, newTotalNumber)
 
     def triggeredFlowControllerRestNumIncreased(self):
-        # INFO_MSG("triggeredFlowControllerRestNumIncreased::")
+        # LOG_IFO("triggeredFlowControllerRestNumIncreased::")
         return self._triggeredFlowControllerRestNumChanged(increased=True)
 
     def triggeredFlowControllerRestNumDecreased(self):
-        DEBUG_MSG("triggeredFlowControllerRestNumDecreased::")
+        LOG_DBG("triggeredFlowControllerRestNumDecreased::")
         return self._triggeredFlowControllerRestNumChanged(decreased=True)
 
     def _triggeredFlowControllerRestNumChanged(self, decreased=False, increased=False):
@@ -129,30 +125,30 @@ class IFlowController(object):
             return
 
         className = self.__class__.__name__
-        h, _ = utils.getRealAvatarEnt(self)
+        h, _ = utils.getRealAvatarEntity(self)
         if (h and h.IsAvatar) or not className:
             return
 
         entTotalNum = 0
-        for i in spaceMgr.taggedEntities.get(className, []):
+        for i in spaceMgr.tagEntities.get(className, []):
             _ent = KBEngine.entities.get(i)
             if not (_ent and not _ent.isDie()):
                 continue
-            _enth, _ = utils.getRealAvatarEnt(_ent)
+            _enth, _ = utils.getRealAvatarEntity(_ent)
             if _enth and _enth.IsAvatar:
                 continue
             entTotalNum += 1
 
         if hasattr(self, 'gameEntityId') and self.gameEntityId:
-            gid = utils.getGidFromGameEntityId(self.gameEntityId)
+            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
             gid_tag = 'gid_{}'.format(gid)
             gidLen = 0
-            if gid and gid_tag in spaceMgr.taggedEntities:
-                for i in spaceMgr.taggedEntities[gid_tag]:
+            if gid and gid_tag in spaceMgr.tagEntities:
+                for i in spaceMgr.tagEntities[gid_tag]:
                     _ent = KBEngine.entities.get(i)
                     if not (_ent and not _ent.isDie()):
                         continue
-                    _enth, _ = utils.getRealAvatarEnt(_ent)
+                    _enth, _ = utils.getRealAvatarEntity(_ent)
                     if _enth and _enth.IsAvatar:
                         continue
                     gidLen += 1
@@ -164,12 +160,12 @@ class IFlowController(object):
         if hasattr(self, 'creepBaseId') and self.creepBaseId:
             creepIdStr = str(self.creepBaseId)
             cidLen = 0
-            if creepIdStr in spaceMgr.taggedEntities:
-                for i in spaceMgr.taggedEntities[creepIdStr]:
+            if creepIdStr in spaceMgr.tagEntities:
+                for i in spaceMgr.tagEntities[creepIdStr]:
                     _ent = KBEngine.entities.get(i)
                     if not (_ent and not _ent.isDie()):
                         continue
-                    _enth, _ = utils.getRealAvatarEnt(_ent)
+                    _enth, _ = utils.getRealAvatarEntity(_ent)
                     if _enth and _enth.IsAvatar:
                         continue
                     cidLen += 1
@@ -194,7 +190,7 @@ class IFlowController(object):
         if not self.flowController:
             return
 
-        checkResult = gameconst.DungeonFlowCompareSymbol.compare(symbol, currentKillNum, number)
+        checkResult = gameconst.DungeonFlowCompSym.compare(symbol, currentKillNum, number)
         if not checkResult:
             if checkOnce:
                 self.flowController.cancelWaitingTriggerEvents(ctx, (eid, ))
@@ -207,7 +203,7 @@ class IFlowController(object):
         if not self.flowController:
             return
 
-        checkResult = gameconst.DungeonFlowCompareSymbol.compare(symbol, currentKillNum, number)
+        checkResult = gameconst.DungeonFlowCompSym.compare(symbol, currentKillNum, number)
         if not checkResult:
             if checkOnce:
                 self.flowController.cancelWaitingTriggerEvents(ctx, (eid, ))
@@ -217,7 +213,7 @@ class IFlowController(object):
 
     def flowCtrlDungeonAlivePlayerIncreased(self, newNumber):
         if self.flowController:
-            self.flowController.onDungeonAlivePlayerIncreased(newNumber)
+            self.flowController.onDungeonAlivePlayerCountIncreased(newNumber)
 
     def flowCtrlDungeonPlayerRestNumChanged(self, newNumber):
         if self.flowController:
@@ -247,12 +243,6 @@ class IFlowController(object):
         spaceMgr = self.spaceMgr
         if spaceMgr and spaceMgr.flowController:
             spaceMgr.flowController.onEntityMoveToFixPos(moveUUID, succ)
-
-    def flowCtrlDunTrapBeTriggered(self, entityGID):
-        """陷阱被触发后调用"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onDungeonTrapBeTriggered(entityGID)
 
     def flowCtrlDunEntityimmuneDeathTrigger(self, entityGID):
         """Entity进入濒死状态触发"""
@@ -286,7 +276,7 @@ class IFlowController(object):
             spaceMgr.flowController.onEntityRoutingMissingEscort(-1, -1)
 
     def _onAnyPlayerCinemaPlayEndedTimeout(self, cinemaPlayID, eid):
-        INFO_MSG("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
+        LOG_IFO("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
         if self.flowController:
             e = self.flowController.getEventByEventId(eid)
             if e and isinstance(e, flowController.AnyPlayerCinemaPlayEndedEvent):

@@ -204,6 +204,7 @@
     <ClientMethods>
         <onCubeRoomEndTime>
             <Arg>           LONGTIME                </Arg>
+            <Arg>           UINT8                </Arg>
         </onCubeRoomEndTime>
 
         <onCubeAutoRenewSwitch>

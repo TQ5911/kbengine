@@ -20,9 +20,9 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AAC_DD
 
 class IGuildTrain(object):
     def resetGuildTrain(self, exposed):
-        INFO_MSG('resetGuildTrain:', self.gbID)
+        LOG_IFO('resetGuildTrain:', self.gbID)
         if not self.trainDic:
-            WARNING_MSG('resetGuildTrain but train is empty', self.gbID)
+            LOG_WARN('resetGuildTrain but train is empty', self.gbID)
             return
 
         currency, amount = G_GCD.datas['guildTrainResetFee']['value']
@@ -30,7 +30,7 @@ class IGuildTrain(object):
 
         if not self.canDeductWealth(deductWealthVal):
             # self.onMessagePre(G_GCD.datas['guildTrainReset_lackCoin_msg']['value'], [ID_IDD.datas[currency]['name']])
-            WARNING_MSG('resetGuildTrain not enough 1:', deductWealthVal)
+            LOG_WARN('resetGuildTrain not enough 1:', deductWealthVal)
             return
 
         opUUID = KBEngine.genUUID64()
@@ -80,16 +80,16 @@ class IGuildTrain(object):
     def _checkCanUpgradeTrainLevel(self, trainId, targetLevel, gtuData):
         curLevel = self.trainDic.get(trainId, 0)
         if targetLevel != curLevel + 1:
-            WARNING_MSG('upgradeTrainLevel target level invalid:', trainId, targetLevel, curLevel)
+            LOG_WARN('upgradeTrainLevel target level invalid:', trainId, targetLevel, curLevel)
             return None
 
         if not gtuData:
-            ERROR_MSG('_checkUpgradeCell but level invalid:', trainId, targetLevel)
+            LOG_ERR('_checkUpgradeCell but level invalid:', trainId, targetLevel)
             return None
 
         _curLevel = self.getRoleCacheAttr('level')
         if _curLevel < gtuData['charLevelReq']:
-            ERROR_MSG('_checkUpgradeCell but self level not enough:', _curLevel, targetLevel)
+            LOG_ERR('_checkUpgradeCell but self level not enough:', _curLevel, targetLevel)
             return None
 
         gtData = GT_GTD.datas[trainId]
@@ -118,7 +118,7 @@ class IGuildTrain(object):
         return dwVal
 
     def upgradeTrainLevel(self, exposed, trainId, targetLevel):
-        INFO_MSG('upgradeTrainLevel:', trainId, targetLevel)
+        LOG_IFO('upgradeTrainLevel:', trainId, targetLevel)
         gtuData = GT_GTUD.datas.get(targetLevel)
         if self._checkCanUpgradeTrainLevel(trainId, targetLevel, gtuData) is None:
             return
@@ -146,7 +146,7 @@ class IGuildTrain(object):
         self.trainDic[_trainId] = _targetLevel
 
         score = self._calcGuildTrainScore()
-        INFO_MSG('onCheckUpgradeTrainLevelResult:', result, ctx, self.trainDic, score)
+        LOG_IFO('onCheckUpgradeTrainLevelResult:', result, ctx, self.trainDic, score)
         self.cell.onUpgradeTrainLevel(_trainId, _targetLevel, score)
         self.client.onUpdateGuildTrains([{
             'trainId': _trainId,
@@ -162,17 +162,17 @@ class IGuildTrain(object):
         )
 
     def _addGuildMoneyFromGuildTrain(self, delta):
-        curOffset = self.getPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset, 0)
+        curOffset = self.getPersistentMiscProp(gameconst.EntityPropsEnum.guildTrainGuildMoneyOffset, 0)
         if curOffset >= delta:
             leftOffset = curOffset - delta
             if not leftOffset:
-                self.popPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset)
+                self.popPersistentMiscProp(gameconst.EntityPropsEnum.guildTrainGuildMoneyOffset)
             else:
-                self.setPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset, leftOffset)
+                self.setPersistentMiscProp(gameconst.EntityPropsEnum.guildTrainGuildMoneyOffset, leftOffset)
             return
         else:
             delta -= curOffset
-            self.popPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset)
+            self.popPersistentMiscProp(gameconst.EntityPropsEnum.guildTrainGuildMoneyOffset)
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AAC_DD.datas.BONUS_SRC_GUILD_TRAIN_UPGRADE

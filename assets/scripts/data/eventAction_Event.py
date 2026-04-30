@@ -231,6 +231,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "ClaimTask": _tools.RODict({
+        "ID": "ClaimTask",
+        "EventID": 10037,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,
@@ -271,6 +277,12 @@ datas = _tools.RODict({
         "ID": "GettaskPopup",
         "EventID": 20007,
         "sendType": 2,
+        "npcId": None
+    }),
+    "arenaKing": _tools.RODict({
+        "ID": "arenaKing",
+        "EventID": 20008,
+        "sendType": 0,
         "npcId": None
     }),
     "taskRepeat": _tools.RODict({

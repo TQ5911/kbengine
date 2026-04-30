@@ -17,7 +17,7 @@ class TcpClient(TcpConnection):
         self.adminStub = adminStub
 
     def afterClose(self):
-        DEBUG_MSG('in TcpClient.afterClose')
+        LOG_DBG('in TcpClient.afterClose')
         self.adminStub.gmCenterClosed()
 
     def sync_connect(self):
@@ -43,17 +43,17 @@ class TcpClient(TcpConnection):
         self.attach_rpc_channel(self.channel)
 
     def handle_close(self):
-        DEBUG_MSG('Attention!!! TcpClient.handle_close')
+        LOG_DBG('Attention!!! TcpClient.handle_close')
         super().handle_close()
         self.afterClose()
 
     def handle_expt(self):
-        DEBUG_MSG('Attention!!! TcpClient.handle_expt')
+        LOG_DBG('Attention!!! TcpClient.handle_expt')
         super().handle_expt()
         self.afterClose()
 
     def handle_error(self):
-        DEBUG_MSG('Attention!!! TcpClient.handle_error')
+        LOG_DBG('Attention!!! TcpClient.handle_error')
         super().handle_expt()
         self.afterClose()
 

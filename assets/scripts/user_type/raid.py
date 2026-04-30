@@ -76,7 +76,7 @@ class RaidVal(userType.UserSTDSoleType):
                  raidTarget=0,
                  raidMinLevel = 0,
                  raidMinScore = 0,
-                 raidMicsSwitch=gameconst.RaidMicsMode.OFF,
+                 raidMicsSwitch=gameconst.RaidMicsModeEnum.OFF,
                  raidMicsBlocked=False,
                  raidDungeonRecords=None,
                  raidTeamDic=None, raidApplyJoinDic=None,
@@ -113,7 +113,7 @@ class RaidVal(userType.UserSTDSoleType):
         self.leaderClientDeathTimer = 0
         self.raidAutoMatchTime = 0
         self.raidFilterPlayers = {}
-        self.raidCreateTime = utils.getNow()
+        self.raidCreateTime = utils.curTS()
         self.isPublish = False
         self.recruitInfo = ''
         #
@@ -296,7 +296,6 @@ class RaidVal(userType.UserSTDSoleType):
         return PlayerRaidTeamMemberCacheVal(
                     playerGbId=raidMemberVal.playerGbId,
                     playerBox=raidMemberVal.playerBox,
-                    bFollow=raidMemberVal.bFollow,
                     spaceNo=raidMemberVal.spaceNo,
                     score=raidMemberVal.score,
                     joinType=raidMemberVal.joinType)
@@ -367,7 +366,7 @@ class RaidVal(userType.UserSTDSoleType):
             return
 
         playerBox = raidMemberVal.playerBox
-        if utils.isBoxOffline(playerBox):
+        if utils.checkBoxOffline(playerBox):
             raidMemberVal.playerBox = None
             raidMemberVal.bOnline = False
             return
@@ -375,7 +374,7 @@ class RaidVal(userType.UserSTDSoleType):
         if playerBox.cell and hasattr(playerBox.cell, fn):
             getattr(playerBox.cell, fn)(*args)
         else:
-            WARNING_MSG('broadcastAllRaidMembersCell:: fn cell error', raidMemberVal.playerGbId, fn)
+            LOG_WARN('broadcastAllRaidMembersCell:: fn cell error', raidMemberVal.playerGbId, fn)
 
     def _broadcastAllRaidMemberBase(self, raidMemberVal, exclude, fn, args):
         if raidMemberVal.playerGbId in exclude:
@@ -384,7 +383,7 @@ class RaidVal(userType.UserSTDSoleType):
             return
 
         playerBox = raidMemberVal.playerBox
-        if utils.isBoxOffline(playerBox):
+        if utils.checkBoxOffline(playerBox):
             raidMemberVal.playerBox = None
             raidMemberVal.bOnline = False
             return
@@ -392,7 +391,7 @@ class RaidVal(userType.UserSTDSoleType):
         if hasattr(playerBox, fn):
             getattr(playerBox, fn)(*args)
         else:
-            WARNING_MSG('broadcastAllRaidMembersBase:: fn base error', raidMemberVal.playerGbId, fn)
+            LOG_WARN('broadcastAllRaidMembersBase:: fn base error', raidMemberVal.playerGbId, fn)
 
     def _broadcastAllRaidMemberClient(self, raidMemberVal, exclude, fn, args):
         if raidMemberVal.playerGbId in exclude:
@@ -401,16 +400,16 @@ class RaidVal(userType.UserSTDSoleType):
             return
 
         playerBox = raidMemberVal.playerBox
-        if utils.isBoxOffline(playerBox):
+        if utils.checkBoxOffline(playerBox):
             raidMemberVal.playerBox = None
             raidMemberVal.bOnline = False
             return
 
         if playerBox.client and hasattr(playerBox.client, fn):
-            # WARNING_MSG('DEBUG:: send to client Avatar[{}]: '.format(playerBox.id), fn, args)
+            # LOG_WARN('DEBUG:: send to client Avatar[{}]: '.format(playerBox.id), fn, args)
             getattr(playerBox.client, fn)(*args)
         else:
-            WARNING_MSG('broadcastAllRaidMembersClient:: fn client err', raidMemberVal.playerGbId, fn)
+            LOG_WARN('broadcastAllRaidMembersClient:: fn client err', raidMemberVal.playerGbId, fn)
 
     def setRaidDungeonInfo(self, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, toClient=False, toCell=False):
         raidDungeonVal = RaidDungeonCacheVal(dungeonNo=dungeonNo, spaceNo=spaceNo, spaceUUID=spaceUUID,
@@ -422,11 +421,11 @@ class RaidVal(userType.UserSTDSoleType):
 
     def clearRaidDungeonInfo(self, dungeonNo, spaceNo, spaceUUID, toClient=False, toCell=False):
         if dungeonNo not in self.raidDungeonRecords:
-            WARNING_MSG('clearRaidDungeonInfo:: dungeonNo missing', self.raidUUID, dungeonNo)
+            LOG_WARN('clearRaidDungeonInfo:: dungeonNo missing', self.raidUUID, dungeonNo)
             return
         dungeonRecord = self.raidDungeonRecords[dungeonNo]
         if dungeonRecord.spaceNo != spaceNo or dungeonRecord.spaceUUID != spaceUUID:
-            WARNING_MSG('clearRaidDungeonInfo:: record outdate', self.raidUUID, dungeonNo, spaceNo, spaceUUID)
+            LOG_WARN('clearRaidDungeonInfo:: record outdate', self.raidUUID, dungeonNo, spaceNo, spaceUUID)
             return
 
         del self.raidDungeonRecords[dungeonNo]
@@ -434,16 +433,16 @@ class RaidVal(userType.UserSTDSoleType):
 
     def addNewTeam(self, teamIDX):
         if teamIDX in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_REPEAT.initkvbody(source='addNewTeam',
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_REPEAT.initkvbody(source='addNewTeam',
                                                                              raidUUID=self.raidUUID,
                                                                              teamIDX=teamIDX)
         teamVal = RaidTeamVal(teamIDX=teamIDX)
         self.raidTeamDic[teamIDX] = teamVal
-        return teamVal, gameconst.RaidErrno.RAID_OK
+        return teamVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def addNewMember(self, playerGBID, playerProps, specialTeamIDX=0, toClient=False):
         if self.isRaidFull():
-            return None, gameconst.RaidErrno.RAID_RAID_IS_FULL.initkvbody(source='addNewMember',
+            return None, gameconst.RaidErrno.ENUM_RAID_RAID_IS_FULL.initkvbody(source='addNewMember',
                                                                           raidUUID=self.raidUUID)
 
         playerProps.update({'raidUUID': self.raidUUID})
@@ -453,7 +452,7 @@ class RaidVal(userType.UserSTDSoleType):
         else:
             raidMemberVal, err = self._addNewMemberAutomatic(playerGBID, playerProps, toClient)
 
-        if err == gameconst.RaidErrno.RAID_OK:
+        if err == gameconst.RaidErrno.ENUM_RAID_OK:
             # 新来的，应该刷一下团队信息缓存
             self.refreshRaidCacheValToAllPlayers()
             self.broadcastAllRaidMembersCell('onRaidAddNewMember', (raidMemberVal.playerBox.id,), (playerGBID,))
@@ -468,22 +467,20 @@ class RaidVal(userType.UserSTDSoleType):
 
     def _addNewMemberSpecially(self, playerGBID, playerProps, raidTeamIDX, toClient=False, pos=0):
         if not 0 < raidTeamIDX <= self.maxTeamNum:
-            return None, gameconst.RaidErrno.RAID_RAID_TEAM_IDX_OFR.initkvbody(source='_addNewMemberSpecially',
+            return None, gameconst.RaidErrno.ENUM_RAID_RAID_TEAM_IDX_OFR.initkvbody(source='_addNewMemberSpecially',
                                                                                teamIDX=raidTeamIDX,
                                                                                capacity=self.raidCapacity)
 
         # CASE1: create New Team, add member and set captain
         if raidTeamIDX not in self.raidTeamDic:
             teamVal, _err = self.addNewTeam(raidTeamIDX)
-            if _err != gameconst.RaidErrno.RAID_OK:
+            if _err != gameconst.RaidErrno.ENUM_RAID_OK:
                 return None, _err.initkvbody(source='_addNewMemberSpecially',
                                              playerGBID=playerGBID)
             raidMemberVal, _err = teamVal.addTeamMember(playerGBID, playerProps)
-            if _err != gameconst.RaidErrno.RAID_OK:
+            if _err != gameconst.RaidErrno.ENUM_RAID_OK:
                 return None, _err.initkvbody(source='_addNewMemberSpecially',
                                              playerGBID=playerGBID)
-            #
-            # teamVal.setTeamCaptain(playerGBID)
 
             if toClient:
                 raidMemberVal.playerBox and raidMemberVal.playerBox.client.onGetRaidData(self.toClientData())
@@ -494,16 +491,16 @@ class RaidVal(userType.UserSTDSoleType):
                 # self.broadcastAllRaidMembersClient(
                 #    'onSetRaidTeamCaptain', (self.raidUUID, raidTeamIDX, playerGBID), exclude=(playerGBID, ))
 
-            return raidMemberVal, gameconst.RaidErrno.RAID_OK
+            return raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
         # CASE2: in other condition, team already exist
         teamVal = self.raidTeamDic[raidTeamIDX]
         if teamVal.isRaidFull():
-            return None, gameconst.RaidErrno.RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='_addNewMemberSpecially',
+            return None, gameconst.RaidErrno.ENUM_RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='_addNewMemberSpecially',
                                                                                  raidUUID=self.raidUUID,
                                                                                  playerGBID=playerGBID)
         raidMemberVal, _err = teamVal.addTeamMember(playerGBID, playerProps, pos)
-        if _err != gameconst.RaidErrno.RAID_OK:
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
             return None, _err.initkvbody(source='_addNewMemberSpecially',
                                          playerGBID=playerGBID)
 
@@ -512,16 +509,7 @@ class RaidVal(userType.UserSTDSoleType):
             self.broadcastAllRaidMembersClient(
                 'onAddNewRaidMember', (self.raidUUID, raidTeamIDX, playerGBID, raidMemberVal.toClientData()),
                 exclude=(playerGBID, ))
-        '''
-        #
-        if not teamVal.teamCaptainGBID:
-            WARNING_MSG('_addNewMember:: exist team and no captain, force set', playerGBID)
-            teamVal.setTeamCaptain(playerGBID)
-
-            toClient and self.broadcastAllRaidMembersClient(
-                'onSetRaidTeamCaptain', (self.raidUUID, raidTeamIDX, playerGBID), exclude=(playerGBID, ))
-        '''
-        return raidMemberVal, gameconst.RaidErrno.RAID_OK
+        return raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def _addNewMemberAutomatic(self, playerGBID, playerProps, toClient=False):
 
@@ -529,15 +517,13 @@ class RaidVal(userType.UserSTDSoleType):
             if raidTeamIDX not in self.raidTeamDic:
                 # create New Team, add member and set captain
                 teamVal, _err = self.addNewTeam(raidTeamIDX)
-                if _err != gameconst.RaidErrno.RAID_OK:
+                if _err != gameconst.RaidErrno.ENUM_RAID_OK:
                     return None, _err.initkvbody(source='_addNewMemberAutomatic',
                                                  playerGBID=playerGBID)
                 raidMemberVal, _err = teamVal.addTeamMember(playerGBID, playerProps)
-                if _err != gameconst.RaidErrno.RAID_OK:
+                if _err != gameconst.RaidErrno.ENUM_RAID_OK:
                     return None, _err.initkvbody(source='_addNewMemberAutomatic',
                                                  playerGBID=playerGBID)
-                #
-                # teamVal.setTeamCaptain(playerGBID)
 
                 if toClient:
                     raidMemberVal.playerBox and raidMemberVal.playerBox.client.onGetRaidData(self.toClientData())
@@ -548,34 +534,26 @@ class RaidVal(userType.UserSTDSoleType):
                     # self.broadcastAllRaidMembersClient(
                     #    'onSetRaidTeamCaptain', (self.raidUUID, raidTeamIDX, playerGBID), exclude=(playerGBID, ))
 
-                return raidMemberVal, gameconst.RaidErrno.RAID_OK
+                return raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
             # in other condition, team already exist
             teamVal = self.raidTeamDic[raidTeamIDX]
             if teamVal.isRaidFull():
                 continue
             raidMemberVal, _err = teamVal.addTeamMember(playerGBID, playerProps)
-            if _err != gameconst.RaidErrno.RAID_OK:
+            if _err != gameconst.RaidErrno.ENUM_RAID_OK:
                 return None, _err.initkvbody(source='_addNewMemberAutomatic',
                                              playerGBID=playerGBID)
-            '''
-            #
-            if not teamVal.teamCaptainGBID:
-                WARNING_MSG('_addNewMemberAutomatic:: exist team and no captain, force set', playerGBID)
-                teamVal.setTeamCaptain(playerGBID)
-                toClient and self.broadcastAllRaidMembersClient(
-                    'onSetRaidTeamCaptain', (self.raidUUID, raidTeamIDX, teamVal.teamCaptainGBID), exclude=(playerGBID, ))
-            '''
             if toClient:
                 raidMemberVal.playerBox and raidMemberVal.playerBox.client.onGetRaidData(self.toClientData())
                 self.broadcastAllRaidMembersClient(
                     'onAddNewRaidMember', (self.raidUUID, raidTeamIDX, playerGBID, raidMemberVal.toClientData()),
                     exclude=(playerGBID, ))
 
-            return raidMemberVal, gameconst.RaidErrno.RAID_OK
+            return raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
         # all team full or can not insert player in
-        return None, gameconst.RaidErrno.RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='_addNewMemberAutomatic',
+        return None, gameconst.RaidErrno.ENUM_RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='_addNewMemberAutomatic',
                                                                              raidUUID=self.raidUUID,
                                                                              playerGBID=playerGBID)
 
@@ -584,7 +562,7 @@ class RaidVal(userType.UserSTDSoleType):
         for memberData in teamMemberList:
             teamIdx = self.getRaidTeamIDX(memberData['playerGbId'])
             if teamIdx:
-                WARNING_MSG('_validateAddTeamMemberList:: player already In raid, auto pop', memberData['playerGbId'])
+                LOG_WARN('_validateAddTeamMemberList:: player already In raid, auto pop', memberData['playerGbId'])
                 continue
             memberData.update(self.getNewRaidMemberMiscStatus())
             validateTeamMemberList.append(memberData)
@@ -605,7 +583,7 @@ class RaidVal(userType.UserSTDSoleType):
 
         memberValDic, err = self._addNewTeamMembers(teamMemberList, captainGBID, toClient)
 
-        if err == gameconst.RaidErrno.RAID_OK and toClient:
+        if err == gameconst.RaidErrno.ENUM_RAID_OK and toClient:
             # broadcast message
             raidLeaderVal = self.getRaidLeader()
             for raidMemberGBID, raidMemberVal in memberValDic.items():
@@ -617,16 +595,16 @@ class RaidVal(userType.UserSTDSoleType):
 
     def _addNewTeamMembers(self, teamMemberList, captainGBID, toClient=False):
         if not teamMemberList:
-            return {}, gameconst.RaidErrno.RAID_OK
+            return {}, gameconst.RaidErrno.ENUM_RAID_OK
 
         memberValDic = {}
         memberNum = self.memberNum
         teamMemberLen = len(teamMemberList)
         raidTeamMaxNum = gameconst.RAID_TEAM_MEMBER_MAX_NUM
         if teamMemberLen > raidTeamMaxNum:
-            return None, gameconst.RaidErrno.RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER.initkvbody(source='addNewTeamMembers')
+            return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER.initkvbody(source='addNewTeamMembers')
         if teamMemberLen + memberNum > self.raidCapacity:
-            return None, gameconst.RaidErrno.RAID_RAID_IS_FULL.initkvbody(source='addNewTeamMembers')
+            return None, gameconst.RaidErrno.ENUM_RAID_RAID_IS_FULL.initkvbody(source='addNewTeamMembers')
 
         maxTeamNum = self.maxTeamNum
         for raidTeamIDX in range(1, maxTeamNum+1):
@@ -653,13 +631,13 @@ class RaidVal(userType.UserSTDSoleType):
 
                 # add team members here
                 memberValDic, err = raidTeamVal.addTeamMembers({i['playerGbId']: i for i in curTeamMemberAddList})
-                if err != gameconst.RaidErrno.RAID_OK:
+                if err != gameconst.RaidErrno.ENUM_RAID_OK:
                     return None, err.initkvbody(source='addNewTeamMembers')
 
                 if curTeamleftNum:
                     teamMemberList = teamMemberList[curTeamAddNum:]
                     memberValDic1, err1 = self._addNewTeamMembers(teamMemberList, captainGBID, False)
-                    if err1 == gameconst.RaidErrno.RAID_OK:
+                    if err1 == gameconst.RaidErrno.ENUM_RAID_OK:
                         memberValDic.update(memberValDic1)
                     else:
                         _revert()
@@ -676,11 +654,11 @@ class RaidVal(userType.UserSTDSoleType):
             else:
                 # create new team and add members here
                 raidTeamVal, _err = self.addNewTeam(raidTeamIDX)
-                if _err != gameconst.RaidErrno.RAID_OK:
+                if _err != gameconst.RaidErrno.ENUM_RAID_OK:
                     return None, _err.initkvbody(source='addNewTeamMembers')
 
                 memberValDic, err = raidTeamVal.addTeamMembers({i['playerGbId']: i for i in teamMemberList})
-                if err != gameconst.RaidErrno.RAID_OK:
+                if err != gameconst.RaidErrno.ENUM_RAID_OK:
                     return None, err.initkvbody(source='addNewTeamMembers')
 
                 if toClient:
@@ -690,18 +668,18 @@ class RaidVal(userType.UserSTDSoleType):
                             'onAddNewRaidMember', (self.raidUUID, raidTeamIDX, memberGBID, memberVal.toClientData()),
                             exclude=tuple(memberValDic))
 
-                return memberValDic, gameconst.RaidErrno.RAID_OK
+                return memberValDic, gameconst.RaidErrno.ENUM_RAID_OK
 
-        return None, gameconst.RaidErrno.RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='addNewTeamMembers')
+        return None, gameconst.RaidErrno.ENUM_RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='addNewTeamMembers')
 
     def popMember(self, teamIDX, playerGBID, toClient=False):
         if teamIDX not in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='popMember')
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='popMember')
 
         raidTeamVal = self.raidTeamDic[teamIDX]
         # STEP1: 将玩家移除团队
         raidMemberVal, err = raidTeamVal.popTeamMember(playerGBID)
-        if err != gameconst.RaidErrno.RAID_OK:
+        if err != gameconst.RaidErrno.ENUM_RAID_OK:
             return None, err.initkvbody(source='popMember::teamVal.popTeamMember')
 
         if toClient:
@@ -712,19 +690,19 @@ class RaidVal(userType.UserSTDSoleType):
 
         # 该小队最后一个人离开
         if raidTeamVal.isEmpty():
-            INFO_MSG('popMember:: pop team when it empty')
+            LOG_IFO('popMember:: pop team when it empty')
             self.raidTeamDic.pop(teamIDX)
-        self.raidFilterPlayers[playerGBID] = utils.getNow()
-        return raidMemberVal, gameconst.RaidErrno.RAID_OK
+        self.raidFilterPlayers[playerGBID] = utils.curTS()
+        return raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def setRaidLeader(self, leaderGBID, leaderTeamIDX, toClient=False):
         if leaderTeamIDX not in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='setRaidLeader',
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='setRaidLeader',
                                                                                 raidUUID=self.raidUUID,
                                                                                 teamIDX=leaderTeamIDX)
         teamVal = self.raidTeamDic[leaderTeamIDX]
         if leaderGBID not in teamVal.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND(source='setRaidLeader',
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND(source='setRaidLeader',
                                                                         raidUUID=self.raidUUID,
                                                                         teamIDX=leaderTeamIDX,
                                                                         playerGBID=leaderGBID)
@@ -733,8 +711,6 @@ class RaidVal(userType.UserSTDSoleType):
         oldLeaderTeamIDX = self.raidLeaderTeamIDX
         self.raidLeaderGBID = leaderGBID
         self.raidLeaderTeamIDX = leaderTeamIDX
-        #
-        # teamVal.setTeamCaptain(leaderGBID)
 
         if oldLeaderTeamIDX in self.raidTeamDic and oldLeaderGBID in self.raidTeamDic[oldLeaderTeamIDX].teamPlayerDic:
             self.turnOffRaidMemberMics(leaderGBID, oldLeaderTeamIDX, oldLeaderGBID,
@@ -749,55 +725,30 @@ class RaidVal(userType.UserSTDSoleType):
             gameengine.getGlobalBase('EliteInvasionStub').updateEliteMonsterBelongName(self.raidUUID,
                                                                                        self.getRaidLeader().playerName)
         '''
-        return None, gameconst.RaidErrno.RAID_OK
+        return None, gameconst.RaidErrno.ENUM_RAID_OK
 
     def setRaidDeputy(self, deputyGBID, deputyTeamIDX, toClient=False):
-        def _check():
+        if deputyGBID:
             if deputyTeamIDX not in self.raidTeamDic:
-                return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='setRaidDeputy',
+                return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='setRaidDeputy',
                                                                                     raidUUID=self.raidUUID,
                                                                                     teamIDX=deputyTeamIDX)
             teamVal = self.raidTeamDic[deputyTeamIDX]
             if deputyGBID not in teamVal.teamPlayerDic:
-                return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND(source='setRaidDeputy',
+                return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND(source='setRaidDeputy',
                                                                             raidUUID=self.raidUUID,
                                                                             teamIDX=deputyTeamIDX,
                                                                             playerGBID=deputyGBID)
-
-            return None, gameconst.RaidErrno.RAID_OK
-
-        if deputyGBID:
-            _, err = _check()
-            if err != gameconst.RaidErrno.RAID_OK:
-                return _, err
         else:
             deputyGBID = 0
             deputyTeamIDX = 0
 
-        oldDeputyGBID = self.raidDeputyGBID
-        oldDeputyTeamIDX = self.raidDeputyTeamIDX
         self.raidDeputyGBID = deputyGBID
         self.raidDeputyTeamIDX = deputyTeamIDX
-        #
-        # teamVal.setTeamCaptain(leaderGBID)
-        '''
-        # 副团长暂时先不处理这个
-        if oldDeputyTeamIDX in self.raidTeamDic and oldDeputyGBID in self.raidTeamDic[oldDeputyTeamIDX].teamPlayerDic:
-            self.turnOffRaidMemberMics(deputyGBID, oldDeputyTeamIDX, oldDeputyGBID,
-                                       blockMics=self.raidMicsBlocked, toClient=True)
-        self.turnOnRaidMemberMics(deputyGBID, deputyTeamIDX, deputyGBID, toClient=True)
-        '''
         if toClient:
-            # self.broadcastAllRaidMembersClient('onSetRaidTeamCaptain', (self.raidUUID, leaderTeamIDX, leaderGBID))
             self.broadcastAllRaidMembersClient('onSetRaidDeputy', (self.raidUUID, self.raidDeputyGBID))
-        '''
-        # 副团长暂时先不处理这个
-        if oldDeputyGBID != deputyGBID:
-            gameengine.getGlobalBase('EliteInvasionStub').updateEliteMonsterBelongName(self.raidUUID,
-                                                                                       self.getRaidDeputy().playerName)
-        '''
 
-        return None, gameconst.RaidErrno.RAID_OK
+        return None, gameconst.RaidErrno.ENUM_RAID_OK
 
     def getRaidLeader(self):
         raidTeam = self.raidTeamDic.get(self.raidLeaderTeamIDX, None)
@@ -818,11 +769,11 @@ class RaidVal(userType.UserSTDSoleType):
 
     def addSingleRaidJoin(self, playerGBID, playerName, level, school, sex, score, applySource):
         if playerGBID in self.raidApplyJoinDic and self.raidApplyJoinDic[playerGBID].raidJoinType == gameconst.RaidJoinType.SINGLE:
-            return None, gameconst.RaidErrno.RAID_ALREADY_APPLY_JOIN.initkvbody(source='addSingleRaidJoin',
+            return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_APPLY_JOIN.initkvbody(source='addSingleRaidJoin',
                                                                                 playerGBID=playerGBID,
                                                                                 raidUUID=self.raidUUID)
         if self.isRaidApplyListFull():
-            return None, gameconst.RaidErrno.RAID_APPLY_JOIN_NUMBER_OFR.initkvbody(source='addSingleRaidJoin',
+            return None, gameconst.RaidErrno.ENUM_RAID_APPLY_JOIN_NUMBER_OFR.initkvbody(source='addSingleRaidJoin',
                                                                                    playerGBID=playerGBID,
                                                                                    raidUUID=self.raidUUID,
                                                                                    joinRecordNum=len(self.raidApplyJoinDic))
@@ -830,18 +781,18 @@ class RaidVal(userType.UserSTDSoleType):
         applyJoinVal = team.applyJoinPlayerVal(playerGBID, playerName, level, school, sex, applySource, score)
         raidApplyJoinPlayerVal = RaidApplyJoinPlayerVal(
             raidJoinType=gameconst.RaidJoinType.SINGLE, joinPlayerGBID=playerGBID,
-            raidJoinPlayerDic={playerGBID: applyJoinVal}, tCreate=utils.getNow())
+            raidJoinPlayerDic={playerGBID: applyJoinVal}, tCreate=utils.curTS())
         self.raidApplyJoinDic[playerGBID] = raidApplyJoinPlayerVal
-        return raidApplyJoinPlayerVal, gameconst.RaidErrno.RAID_OK
+        return raidApplyJoinPlayerVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def addTeamRaidJoin(self, captainGBID, teamUUID, memberDataList):
         if captainGBID in self.raidApplyJoinDic and self.raidApplyJoinDic[captainGBID].raidJoinType == gameconst.RaidJoinType.TEAM:
-            return None, gameconst.RaidErrno.RAID_ALREADY_APPLY_JOIN.initkvbody(source='addTeamRaidJoin',
+            return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_APPLY_JOIN.initkvbody(source='addTeamRaidJoin',
                                                                                 captainGBID=captainGBID,
                                                                                 teamUUID=teamUUID,
                                                                                 raidUUID=self.raidUUID)
         if self.isRaidApplyListFull():
-            return None, gameconst.RaidErrno.RAID_APPLY_JOIN_NUMBER_OFR.initkvbody(source='addTeamRaidJoin',
+            return None, gameconst.RaidErrno.ENUM_RAID_APPLY_JOIN_NUMBER_OFR.initkvbody(source='addTeamRaidJoin',
                                                                                    captainGBID=captainGBID,
                                                                                    teamUUID=teamUUID,
                                                                                    raidUUID=self.raidUUID,
@@ -856,14 +807,14 @@ class RaidVal(userType.UserSTDSoleType):
 
         raidApplyJoinPlayerVal = RaidApplyJoinPlayerVal(
             raidJoinType=gameconst.RaidJoinType.TEAM, joinPlayerGBID=captainGBID,
-            joinTeamUUID=teamUUID, raidJoinPlayerDic=applyJoinValDic, tCreate=utils.getNow())
+            joinTeamUUID=teamUUID, raidJoinPlayerDic=applyJoinValDic, tCreate=utils.curTS())
         self.raidApplyJoinDic[captainGBID] = raidApplyJoinPlayerVal
 
-        return raidApplyJoinPlayerVal, gameconst.RaidErrno.RAID_OK
+        return raidApplyJoinPlayerVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def popRaidJoin(self, playerGBID):
         if playerGBID not in self.raidApplyJoinDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='popSingleRaidJoin',
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='popSingleRaidJoin',
                                                                                    playerGBID=playerGBID)
 
         playerJoinVal = self.raidApplyJoinDic.pop(playerGBID)
@@ -873,13 +824,13 @@ class RaidVal(userType.UserSTDSoleType):
             if val and val.bOnline and val.playerBox and val.playerBox.client:
                 val.playerBox.client.onDelRaidApplyJoinRecord(self.raidUUID, playerGBID)
 
-        return playerJoinVal, gameconst.RaidErrno.RAID_OK
+        return playerJoinVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def getRaidJoin(self, playerGBID):
         if playerGBID not in self.raidApplyJoinDic:
-            return None, gameconst.RaidErrno.RAID_APPLY_JOIN_NOT_FOUND.initkvbody(source='getRaidJoin',
+            return None, gameconst.RaidErrno.ENUM_RAID_APPLY_JOIN_NOT_FOUND.initkvbody(source='getRaidJoin',
                                                                                   playerGBID=playerGBID)
-        return self.raidApplyJoinDic[playerGBID], gameconst.RaidErrno.RAID_OK
+        return self.raidApplyJoinDic[playerGBID], gameconst.RaidErrno.ENUM_RAID_OK
 
     def clearRaidJoin(self):
         self.raidApplyJoinDic.clear()
@@ -888,10 +839,10 @@ class RaidVal(userType.UserSTDSoleType):
         return playerGBID in self.raidApplyJoinDic
 
     def getMemberPos(self, teamIDX, playerGBID):
-        if teamIDX not in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='getMemberPos')
+        raidTeamVal = self.raidTeamDic.get(teamIDX, None)
+        if not raidTeamVal:
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='getMemberPos')
 
-        raidTeamVal = self.raidTeamDic[teamIDX]
         return raidTeamVal.getTeamMemberPos(playerGBID)
 
     # --------------------------------------------------------------------
@@ -912,7 +863,7 @@ class RaidVal(userType.UserSTDSoleType):
 
     def switchRaidMiscMode(self, srcPlayerGBID, mode, extraProps, toClient=False):
         if srcPlayerGBID != self.raidLeaderGBID:
-            return None, gameconst.RaidErrno.RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='switchRaidMiscMode',
+            return None, gameconst.RaidErrno.ENUM_RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='switchRaidMiscMode',
                                                                                     srcPlayerGBID=srcPlayerGBID,
                                                                                     raidUUID=self.raidUUID,
                                                                                     mode=mode)
@@ -920,16 +871,16 @@ class RaidVal(userType.UserSTDSoleType):
         oldMode = self.raidMicsSwitch
         if oldMode != mode:
             try:
-                if mode == gameconst.RaidMicsMode.OFF:
+                if mode == gameconst.RaidMicsModeEnum.OFF:
                     self._onRaidMiscModeSwitchOff()
-                elif mode == gameconst.RaidMicsMode.FREE:
+                elif mode == gameconst.RaidMicsModeEnum.FREE:
                     self._onRaidMiscModeSwitchToFree(extraProps)
-                elif mode == gameconst.RaidMicsMode.LEADER:
+                elif mode == gameconst.RaidMicsModeEnum.LEADER:
                     self._onRaidMiscModeSwitchToLeader(extraProps)
 
             except Exception as exc:
                 gameengine.reportCritital("switchRaidMiscMode::exc found", exc)
-                return None, gameconst.RaidErrno.UNKNOWN.initkvbody(source='switchRaidMiscMode',
+                return None, gameconst.RaidErrno.ENUM_UNKNOWN.initkvbody(source='switchRaidMiscMode',
                                                                     srcPlayerGBID=srcPlayerGBID,
                                                                     raidUUID=self.raidUUID,
                                                                     mode=mode,
@@ -939,7 +890,7 @@ class RaidVal(userType.UserSTDSoleType):
 
         self.raidMicsSwitch = mode
 
-        return self, gameconst.RaidErrno.RAID_OK
+        return self, gameconst.RaidErrno.ENUM_RAID_OK
 
     def _onRaidMiscModeSwitchOff(self):
         for raidTeamVal in self.raidTeamDic.values():
@@ -970,45 +921,45 @@ class RaidVal(userType.UserSTDSoleType):
 
     def turnOnRaidMemberMics(self, srcPlayerGBID, teamIDX, playerGBID, toClient=False):
         if not self.raidMicsSwitch:
-            return None, gameconst.RaidErrno.RAID_MICS_SWITCH_OFF.initkvbody(source='turnOnRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_MICS_SWITCH_OFF.initkvbody(source='turnOnRaidMemberMics',
                                                                              srcPlayerGBID=srcPlayerGBID,
                                                                              raidUUID=self.raidUUID,
                                                                              teamIDX=teamIDX)
         _isSrcPlayerRaidLeader = (srcPlayerGBID == self.raidLeaderGBID)
-        if self.raidMicsSwitch == gameconst.RaidMicsMode.FREE:
+        if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.FREE:
             if (not _isSrcPlayerRaidLeader) and srcPlayerGBID != playerGBID:
-                return None, gameconst.RaidErrno.RAID_MISC_FREE_MODE_LIMIT.initkvbody(source='turnOnRaidMemberMics',
+                return None, gameconst.RaidErrno.ENUM_RAID_MISC_FREE_MODE_LIMIT.initkvbody(source='turnOnRaidMemberMics',
                                                                                       srcPlayerGBID=srcPlayerGBID,
                                                                                       raidUUID=self.raidUUID,
                                                                                       teamIDX=teamIDX)
 
-        if self.raidMicsSwitch == gameconst.RaidMicsMode.LEADER:
+        if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             if (not _isSrcPlayerRaidLeader):
-                return None, gameconst.RaidErrno.RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='turnOnRaidMemberMics',
+                return None, gameconst.RaidErrno.ENUM_RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='turnOnRaidMemberMics',
                                                                                         srcPlayerGBID=srcPlayerGBID,
                                                                                         raidUUID=self.raidUUID,
                                                                                         teamIDX=teamIDX)
 
         if (not _isSrcPlayerRaidLeader) and self.raidMicsBlocked:
-            return None, gameconst.RaidErrno.RAID_ALL_MICS_BLOCKED.initkvbody(source='turnOnRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_ALL_MICS_BLOCKED.initkvbody(source='turnOnRaidMemberMics',
                                                                               srcPlayerGBID=srcPlayerGBID,
                                                                               raidUUID=self.raidUUID,
                                                                               teamIDX=teamIDX)
 
         if (not _isSrcPlayerRaidLeader) and self.raidMemberMicsNum >= self.maxRaidMemberMicsNum:
-            return None, gameconst.RaidErrno.RAID_MICS_NUM_OUT_OF_RANGE.initkvbody(source='turnOnRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_MICS_NUM_OUT_OF_RANGE.initkvbody(source='turnOnRaidMemberMics',
                                                                                    srcPlayerGBID=srcPlayerGBID,
                                                                                    raidUUID=self.raidUUID,
                                                                                    teamIDX=teamIDX)
 
         if teamIDX not in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='turnOnRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='turnOnRaidMemberMics',
                                                                                 srcPlayerGBID=srcPlayerGBID,
                                                                                 raidUUID=self.raidUUID,
                                                                                 teamIDX=teamIDX)
         teamVal = self.raidTeamDic[teamIDX]
         if playerGBID not in teamVal.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND(source='turnOnRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND(source='turnOnRaidMemberMics',
                                                                         srcPlayerGBID=srcPlayerGBID,
                                                                         raidUUID=self.raidUUID,
                                                                         teamIDX=teamIDX,
@@ -1022,7 +973,7 @@ class RaidVal(userType.UserSTDSoleType):
                 _unblockMics = True
 
             else:
-                return None, gameconst.RaidErrno.RAID_MICS_BLOCK.initkvbody(source='turnOnRaidMemberMics',
+                return None, gameconst.RaidErrno.ENUM_RAID_MICS_BLOCK.initkvbody(source='turnOnRaidMemberMics',
                                                                             srcPlayerGBID=srcPlayerGBID,
                                                                             raidUUID=self.raidUUID,
                                                                             teamIDX=teamIDX,
@@ -1034,43 +985,43 @@ class RaidVal(userType.UserSTDSoleType):
         if toClient:
             _unblockMics and self.broadcastAllRaidMembersClient('onUnblockRaidMemberMisc', (self.raidUUID, teamIDX, playerGBID))
 
-        return memberVal, gameconst.RaidErrno.RAID_OK
+        return memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def turnOffRaidMemberMics(self, srcPlayerGBID, teamIDX, playerGBID, blockMics=False, toClient=False):
         if not self.raidMicsSwitch:
-            return None, gameconst.RaidErrno.RAID_MICS_SWITCH_OFF.initkvbody(source='turnOffRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_MICS_SWITCH_OFF.initkvbody(source='turnOffRaidMemberMics',
                                                                              srcPlayerGBID=srcPlayerGBID,
                                                                              raidUUID=self.raidUUID,
                                                                              teamIDX=teamIDX)
 
-        if self.raidMicsSwitch == gameconst.RaidMicsMode.FREE:
+        if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.FREE:
             if srcPlayerGBID != self.raidLeaderGBID and srcPlayerGBID != playerGBID:
-                return None, gameconst.RaidErrno.RAID_MISC_FREE_MODE_LIMIT.initkvbody(source='turnOffRaidMemberMics',
+                return None, gameconst.RaidErrno.ENUM_RAID_MISC_FREE_MODE_LIMIT.initkvbody(source='turnOffRaidMemberMics',
                                                                                       srcPlayerGBID=srcPlayerGBID,
                                                                                       raidUUID=self.raidUUID,
                                                                                       teamIDX=teamIDX)
 
-        if self.raidMicsSwitch == gameconst.RaidMicsMode.LEADER:
+        if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             if srcPlayerGBID != self.raidLeaderGBID:
-                return None, gameconst.RaidErrno.RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='turnOffRaidMemberMics',
+                return None, gameconst.RaidErrno.ENUM_RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='turnOffRaidMemberMics',
                                                                                         srcPlayerGBID=srcPlayerGBID,
                                                                                         raidUUID=self.raidUUID,
                                                                                         teamIDX=teamIDX)
 
         if blockMics and playerGBID == self.raidLeaderGBID:
-            return None, gameconst.RaidErrno.RAID_LEADER_CANT_TURN_OFF_MICS.initkvbody(source='turnOffRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_LEADER_CANT_TURN_OFF_MICS.initkvbody(source='turnOffRaidMemberMics',
                                                                                        srcPlayerGBID=srcPlayerGBID,
                                                                                        raidUUID=self.raidUUID,
                                                                                        teamIDX=teamIDX)
 
         if teamIDX not in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='turnOffRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='turnOffRaidMemberMics',
                                                                                 srcPlayerGBID=srcPlayerGBID,
                                                                                 raidUUID=self.raidUUID,
                                                                                 teamIDX=teamIDX)
         teamVal = self.raidTeamDic[teamIDX]
         if playerGBID not in teamVal.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND(source='turnOffRaidMemberMics',
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND(source='turnOffRaidMemberMics',
                                                                         srcPlayerGBID=srcPlayerGBID,
                                                                         raidUUID=self.raidUUID,
                                                                         teamIDX=teamIDX,
@@ -1080,26 +1031,26 @@ class RaidVal(userType.UserSTDSoleType):
         if memberVal.enableMics:
             memberVal.enableMics = False
 
-        if blockMics or self.raidMicsSwitch == gameconst.RaidMicsMode.LEADER:
+        if blockMics or self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             memberVal.isBlockMics = True
 
-        return memberVal, gameconst.RaidErrno.RAID_OK
+        return memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def unblockRaidMemberMisc(self, srcPlayerGBID, teamIDX, playerGBID, toClient=False):
         _isSrcPlayerRaidLeader = (srcPlayerGBID == self.raidLeaderGBID)
         if (not _isSrcPlayerRaidLeader) and self.raidMicsBlocked:
-            return None, gameconst.RaidErrno.RAID_ALL_MICS_BLOCKED.initkvbody(source='unblockRaidMemberMisc',
+            return None, gameconst.RaidErrno.ENUM_RAID_ALL_MICS_BLOCKED.initkvbody(source='unblockRaidMemberMisc',
                                                                               srcPlayerGBID=srcPlayerGBID,
                                                                               raidUUID=self.raidUUID,
                                                                               teamIDX=teamIDX)
 
         if teamIDX not in self.raidTeamDic:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='unblockRaidMemberMisc',
+            return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='unblockRaidMemberMisc',
                                                                                 raidUUID=self.raidUUID,
                                                                                 teamIDX=teamIDX)
         teamVal = self.raidTeamDic[teamIDX]
         if playerGBID not in teamVal.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND(source='unblockRaidMemberMisc',
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND(source='unblockRaidMemberMisc',
                                                                         raidUUID=self.raidUUID,
                                                                         teamIDX=teamIDX,
                                                                         playerGBID=playerGBID)
@@ -1110,14 +1061,14 @@ class RaidVal(userType.UserSTDSoleType):
         if toClient:
             self.broadcastAllRaidMembersClient('onUnblockRaidMemberMisc', (self.raidUUID, teamIDX, playerGBID))
 
-        return memberVal, gameconst.RaidErrno.RAID_OK
+        return memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def getNewRaidMemberMiscStatus(self):
         if self.raidMicsBlocked:
             return dict(isBlockMics=True)
-        if self.raidMicsSwitch == gameconst.RaidMicsMode.FREE:
+        if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.FREE:
             return dict()
-        elif self.raidMicsSwitch == gameconst.RaidMicsMode.LEADER:
+        elif self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             return dict(isBlockMics=True)
         return dict()
 
@@ -1129,16 +1080,11 @@ class RaidVal(userType.UserSTDSoleType):
             memberGBIDList += list(raidTeamVal.teamPlayerDic.keys())
         return memberGBIDList
 
-    def onMemberFollowChanged(self, changeGbId, bFollow):
-        for raidTeamVal in self.raidTeamDic.values():
-            raidTeamVal.onMemberFollowChanged(changeGbId, bFollow)
-
-
     def isRaidInAutoMatch(self):
         return self.raidAutoMatchTime != 0
 
     def stopAutoMatch(self, timeout=False):
-        INFO_MSG('in stopAutoMatch:', timeout, self.raidAutoMatchTime)
+        LOG_IFO('in stopAutoMatch:', timeout, self.raidAutoMatchTime)
         if not self.isRaidInAutoMatch():
             return
         self.raidAutoMatchTime = 0
@@ -1151,7 +1097,7 @@ class RaidVal(userType.UserSTDSoleType):
         if self.isRaidFull():
             self.getRaidLeader().playerBox.onMessagePre(TMMCD.datas['teamMatch_fullMsg']['value'], [])
             return
-        self.raidAutoMatchTime = utils.getNow()
+        self.raidAutoMatchTime = utils.curTS()
         raidInfoDic = self._getRaidMatchInfoDic()
         gameengine.getGlobalBase('RaidMatchStub').raidAutoMatch(raidInfoDic)
         return
@@ -1191,7 +1137,7 @@ class RaidVal(userType.UserSTDSoleType):
         for _, raidTeam in self.raidTeamDic.items():
             for _, pVal in raidTeam.teamPlayerDic.items():
                 if minLevel > pVal.level or minScore> pVal.score:
-                    ERROR_MSG("RaidStub->raid->checkRaidTarget, minScore and minLevel are greater than one of the raid member's score and level. ", minLevel, minScore, pVal)
+                    LOG_ERR("RaidStub->raid->checkRaidTarget, minScore and minLevel are greater than one of the raid member's score and level. ", minLevel, minScore, pVal)
                     self.getRaidLeaderBox().onMessagePre(TMMCD.datas['team_TargetCondition']['value'], [])
                     return False
         return True
@@ -1214,7 +1160,7 @@ class RaidVal(userType.UserSTDSoleType):
                 if hasattr(box.client, func):
                     getattr(box.client, func, lambda *_, **__: None)(*args)
             else:
-                WARNING_MSG('broadcastAllMembersClient raidMember has no client', gbID)
+                LOG_WARN('broadcastAllMembersClient raidMember has no client', gbID)
 
     def broadcastAllMembersBase(self, func, args, exclude=None):
         for gbID, raidPlayerVal in self.iterRaidPlayers():
@@ -1238,7 +1184,7 @@ class RaidVal(userType.UserSTDSoleType):
                 if hasattr(box.client, func):
                     getattr(box.client, func)(*args)
             else:
-                WARNING_MSG('broadcastOtherMembersClient raidMember has no client', gbID)
+                LOG_WARN('broadcastOtherMembersClient raidMember has no client', gbID)
 
     def broadcastAllMembersCell(self, func, args):
         for gbID, raidPlayerVal in self.iterRaidPlayers():
@@ -1249,7 +1195,7 @@ class RaidVal(userType.UserSTDSoleType):
                 if hasattr(box.cell, func):
                     getattr(box.cell, func)(*args)
             else:
-                WARNING_MSG('broadcastAllMembersCell raidMember has no cell', gbID)
+                LOG_WARN('broadcastAllMembersCell raidMember has no cell', gbID)
 
     def broadcastOtherMembersCell(self, playerGbId, func, args):
         for gbID, raidPlayerVal in self.iterRaidPlayers():
@@ -1262,7 +1208,7 @@ class RaidVal(userType.UserSTDSoleType):
                 if hasattr(box.cell, func):
                     getattr(box.cell, func)(*args)
             else:
-                WARNING_MSG('broadcastOtherMembersCell raidMember has no cell', gbID)
+                LOG_WARN('broadcastOtherMembersCell raidMember has no cell', gbID)
 
     def broadcastOtherMembersBase(self, playerGbId, func, args):
         for gbID, raidPlayerVal in self.iterRaidPlayers():
@@ -1275,7 +1221,7 @@ class RaidVal(userType.UserSTDSoleType):
                 if hasattr(box, func):
                     getattr(box, func)(*args)
             else:
-                WARNING_MSG('broadcastOtherMembersBase raidMember has no base', gbID)
+                LOG_WARN('broadcastOtherMembersBase raidMember has no base', gbID)
 
     def iterRaidPlayers(self):
         for raidTeamVal in self.raidTeamDic.values():
@@ -1301,7 +1247,7 @@ class RaidVal(userType.UserSTDSoleType):
 
     # ------ 标记 -----
     def addRaidMarkMember(self, owner, type, index, name, gbId, entId, pos, spaceNo=0):
-        INFO_MSG('addRaidMarkMember', owner, type, index, name, gbId, entId, pos, spaceNo)
+        LOG_IFO('addRaidMarkMember', owner, type, index, name, gbId, entId, pos, spaceNo)
         if self.onlyCaptainCanMark and owner and owner.id != self.getRaidLeaderBox().id:
             return
 
@@ -1316,7 +1262,7 @@ class RaidVal(userType.UserSTDSoleType):
             self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.ADD)
 
     def addRaidMarkMemberFromData(self, markDataInfo):
-        INFO_MSG('addRaidMarkMemberFromData', markDataInfo)
+        LOG_IFO('addRaidMarkMemberFromData', markDataInfo)
         self.raidMark.initFromClientData(markDataInfo)
         self.onlyCaptainCanMark = markDataInfo.get('onlyCaptainCanMark', False)
         # 全量通知
@@ -1361,7 +1307,7 @@ class RaidVal(userType.UserSTDSoleType):
                     continue
                 box.client.onChangeRaidMark(markInfoDict)
 
-        INFO_MSG('onChangeRaidMarkInfo', markInfoDict)
+        LOG_IFO('onChangeRaidMarkInfo', markInfoDict)
 
 
     def updateMemberVolatileAttr(self, playerGBID, playerUpdateProps):
@@ -1441,7 +1387,7 @@ class RaidTeamVal(userType.UserSTDSoleType):
 
     def addTeamMember(self, gbId, props, pos=0):
         if gbId in self.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_REPEAT.initkvbody(source='addTeamMember')
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_REPEAT.initkvbody(source='addTeamMember')
         memberVal = RaidTeamMemberVal(**props)
         if pos == 0 or not self.teamPlayerDic or pos > len(self.teamPlayerDic):
             self.teamPlayerDic[gbId] = memberVal
@@ -1455,7 +1401,7 @@ class RaidTeamVal(userType.UserSTDSoleType):
                     memberPlayerVal = self.teamPlayerDic.pop(first_key)
                     tmpTeamPlayerDic[first_key] = memberPlayerVal
             self.teamPlayerDic = tmpTeamPlayerDic
-        return memberVal, gameconst.RaidErrno.RAID_OK
+        return memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def addTeamMembers(self, gbIdAndPropsDic):
         record = {}
@@ -1467,36 +1413,28 @@ class RaidTeamVal(userType.UserSTDSoleType):
 
         for gbId, props in gbIdAndPropsDic.items():
             memberVal, err = self.addTeamMember(gbId, props)
-            if err != gameconst.RaidErrno.RAID_OK:
+            if err != gameconst.RaidErrno.ENUM_RAID_OK:
                 _revert()
                 return None, err
 
             record[gbId] = memberVal
 
-        return record, gameconst.RaidErrno.RAID_OK
+        return record, gameconst.RaidErrno.ENUM_RAID_OK
 
     def popTeamMember(self, gbId):
         if gbId not in self.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='popTeamMember')
+            return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='popTeamMember')
         memberVal = self.teamPlayerDic.pop(gbId)
-        return memberVal, gameconst.RaidErrno.RAID_OK
+        return memberVal, gameconst.RaidErrno.ENUM_RAID_OK
     #
     def getTeamMemberPos(self, gbId):
         if gbId not in self.teamPlayerDic:
-            return 0, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='getTeamMemberPos')
+            return 0, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='getTeamMemberPos')
 
         for idx, (gbid, member) in enumerate(self.teamPlayerDic.items()):
             if gbId == gbid:
-                return idx + 1, gameconst.RaidErrno.RAID_OK
-        return 0, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='getTeamMemberPos')
-
-    def setTeamCaptain(self, gbId):
-        # 没有小队长了,就不设置
-        return None, gameconst.RaidErrno.RAID_OK
-        if gbId not in self.teamPlayerDic:
-            return None, gameconst.RaidErrno.RAID_NOT_IN_TEAM.initkvbody(source='setTeamCaptain')
-        self.teamCaptainGBID = gbId
-        return None, gameconst.RaidErrno.RAID_OK
+                return idx + 1, gameconst.RaidErrno.ENUM_RAID_OK
+        return 0, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='getTeamMemberPos')
 
     def getTeamCaptain(self):
         return self.teamPlayerDic[self.teamCaptainGBID]
@@ -1505,19 +1443,6 @@ class RaidTeamVal(userType.UserSTDSoleType):
         if gbId in self.teamPlayerDic:
             return True
         return False
-
-    def onMemberFollowChanged(self, changeGbId, bFollow):
-        if changeGbId in self.teamPlayerDic:
-            self.teamPlayerDic[changeGbId].setFollowCaptain(bFollow)
-        for gbId, teamPlayerVal in self.teamPlayerDic.items():
-            box = teamPlayerVal.playerBox
-            if not teamPlayerVal.bOnline:
-                continue
-
-            if box.cell:
-                box.cell.onFollowCaptainChangedCell(changeGbId, bFollow)
-            else:
-                WARNING_MSG('onMemberFollowChanged::teamMember has no cell', gbId)
 
 RaidTeamMemberVal = team.TeamMemberCacheVal
 
@@ -1584,8 +1509,6 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
                  raidMinLevel=0,
                  raidMinScore=0,
                  raidDungeonRecords=None, raidTeamDic=None,
-                 followPlayerGbId=0,
-                 raidLeaderBigWorldMapFollowPos=None,
                  recruitInfo='',
                  password='',
                  isAutoExpedition=False):
@@ -1607,8 +1530,6 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
         self.raidMinScore = raidMinScore
         self.raidDungeonRecords = raidDungeonRecords    # type: dict[int, RaidDungeonCacheVal]
         self.raidTeamDic = raidTeamDic                  # type: dict[int, PlayerRaidTeamCacheVal]
-        self.followPlayerGbId = followPlayerGbId
-        self.raidLeaderBigWorldMapFollowPos = raidLeaderBigWorldMapFollowPos
         self.recruitInfo = recruitInfo
         self.password = password
         self.isAutoExpedition = isAutoExpedition
@@ -1636,8 +1557,6 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
                'raidMinScore': self.raidMinScore,
                'raidDungeonRecords': [i.toSavedDict() for i in self.raidDungeonRecords.values()],
                'raidTeamDic': [i.toSavedDict() for i in self.raidTeamDic.values()],
-               'followPlayerGbId': self.followPlayerGbId,
-               'raidLeaderBigWorldMapFollowPos': self.raidLeaderBigWorldMapFollowPos,
                'recruitInfo': self.recruitInfo,
                'password':self.password,
                'isAutoExpedition':self.isAutoExpedition}
@@ -1658,8 +1577,6 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
                                    for i in dataDic['raidDungeonRecords']}
         self.raidTeamDic = {i['teamIDX']: PlayerRaidTeamCacheVal().initFromDict(i)
                             for i in dataDic['raidTeamDic']}
-        self.followPlayerGbId = dataDic['followPlayerGbId']
-        self.raidLeaderBigWorldMapFollowPos = dataDic['raidLeaderBigWorldMapFollowPos']
         self.recruitInfo = dataDic['recruitInfo']
         self.password = dataDic['password']
         self.isAutoExpedition = dataDic['isAutoExpedition']
@@ -1678,9 +1595,6 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
         for teamIDX, teamVal in self.raidTeamDic.items():
             for memberGBID, memberVal in teamVal.teamPlayerDic.items():
                 yield teamIDX, memberGBID, memberVal
-
-    def setFollowPlayerGbId(self):
-        self.followPlayerGbId = self.raidCaptainGBID
 
     def getRaidLeader(self, default=None):
         if self.raidLeaderTeamIDX not in self.raidTeamDic:

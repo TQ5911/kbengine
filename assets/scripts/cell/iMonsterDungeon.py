@@ -12,15 +12,15 @@ class IMonsterDungeon(object):
     """Dungeon interface for cell Monster/..."""
 
     def addDungeonKillCount(self):
-        if not formula.isDungeonSpace(self.spaceNo):
+        if not formula.inDungeonScene(self.spaceNo):
             return
 
-        DEBUG_MSG('addDungeonKillCount::')
+        LOG_DBG('addDungeonKillCount::')
         # if not self.dungeonFlagId or self.dungeonFlagId not in DDM.datas[dungeonNo]:
         # 【【任务】副本编辑器新节点-指定怪物原型死亡数量】
         # 透传creepBaseId, flagId不在此处阻拦
         # if not self.dungeonFlagId:
-        #     ERROR_MSG('dungeonFlagId not found in dungeon, '
+        #     LOG_ERR('dungeonFlagId not found in dungeon, '
         #               'got {}/{}'.format(dungeonNo, self.dungeonFlagId))
         #     return
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】

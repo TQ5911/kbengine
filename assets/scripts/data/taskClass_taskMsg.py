@@ -224,5 +224,15 @@ datas = _tools.RODict({
         "ID": "taskComplete",
         "value": 54001983,
         "type": "uint"
+    }),
+    "TaskReExecuted": _tools.RODict({
+        "ID": "TaskReExecuted",
+        "value": 54002169,
+        "type": "uint"
+    }),
+    "TaskCanBeReExecuted": _tools.RODict({
+        "ID": "TaskCanBeReExecuted",
+        "value": 54002170,
+        "type": "uint"
     })
 })

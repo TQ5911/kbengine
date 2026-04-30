@@ -166,24 +166,6 @@
             <Arg>           POSITION_ARG    </Arg>
         </askAllMemberFollow>
 
-        <cancelAllMemberFollow>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-        </cancelAllMemberFollow>
-
-        <followTeamCaptain>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-        </followTeamCaptain>
-
-        <cancelFollowTeamCaptain>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-        </cancelFollowTeamCaptain>
-
         <updateMemberAttr>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
@@ -204,25 +186,6 @@
             <Arg>           BOOL            </Arg>
         </updateOnlineState>
 
-        <updateTeamFollowQueue>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           BOOL            </Arg>
-        </updateTeamFollowQueue>
-
-        <teamFollowersCellDo>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           METHOD_NAME     </Arg>
-            <Arg>           METHOD_ARGS     </Arg>
-        </teamFollowersCellDo>
-
-        <isAllMembersFollowDo>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           METHOD_NAME     </Arg>
-            <Arg>           METHOD_ARGS     </Arg>
-        </isAllMembersFollowDo>
-
         <!--dungeon mixin part-->
         <createTeamDungeon>
             <Arg>   MAILBOX         </Arg>
@@ -240,16 +203,6 @@
             <Arg>   MAILBOX     </Arg>
             <Arg>   PYTHON      </Arg>
         </onCreateTeamDungeon>
-
-        <enterGuildBanditDungeon>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   PYTHON      </Arg>
-            <Arg>   GUILD_UUID  </Arg>
-            <Arg>   OBJECT_ID   </Arg>
-        </enterGuildBanditDungeon>
 
         <enterTeamDungeon>
             <Arg>   MAILBOX     </Arg>
@@ -336,48 +289,6 @@
             <Arg>           TEAMID       </Arg>
         </clearApplyJoinDic>
 
-        <requestStartTeamDuel>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           MAILBOX      </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           MAILBOX      </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-            <Arg>           BOOL         </Arg>
-        </requestStartTeamDuel>
-
-        <beRequestedStartTeamDuel>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           MAILBOX      </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-            <Arg>           UNICODE      </Arg>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           MAILBOX      </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-            <Arg>           BOOL         </Arg>
-        </beRequestedStartTeamDuel>
-
-        <onTeamDuelSpaceReady>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           SPACE_NO     </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-            <Arg>           UUID         </Arg>
-            <Arg>           UINT8        </Arg>
-            <Arg>           UUID         </Arg>
-            <Arg>           UNICODE      </Arg>
-        </onTeamDuelSpaceReady>
-
-        <beginEnterTeamDuelSpace>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-        </beginEnterTeamDuelSpace>
-
-        <onTeamDuelCompelted>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           SPACE_NO     </Arg>
-            <Arg>           UINT8        </Arg>
-        </onTeamDuelCompelted>
-
         <sendChatMsgFromTeamMember>
             <Arg>           TEAMID       </Arg>
             <Arg>           PLAYER_GBID  </Arg>
@@ -391,31 +302,6 @@
             <Arg>           METHOD_NAME     </Arg>
             <Arg>           METHOD_ARGS     </Arg>
         </getTeamMemberInfo>
-
-        <addTeamBanditKiller>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           OBJECT_ID       </Arg>
-            <Arg>           UINT8           </Arg>
-            <Arg>           UINT16          </Arg>
-            <Arg>           LINE_NO         </Arg>
-        </addTeamBanditKiller>
-
-        <addTeamGuildBandit>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           GUILD_UUID      </Arg>
-            <Arg>           OBJECT_ID       </Arg>
-        </addTeamGuildBandit>
-
-        <delTeamGuildBandit>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           OBJECT_ID       </Arg>
-        </delTeamGuildBandit>
-
-        <delTeamBanditKiller>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           OBJECT_ID    </Arg>
-            <Arg>           UINT8        </Arg>
-        </delTeamBanditKiller>
 
         <teamPrepareAutoMatch>
             <Arg>           TEAMID       </Arg>
@@ -456,13 +342,6 @@
             <Arg>           UINT32       </Arg>
             <Arg>           UINT32       </Arg>
         </getTeamList>
-
-        <checkActivedGuildBandit>
-            <Arg>           ENTITYCALL   </Arg>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-            <Arg>           OBJECT_ID    </Arg>
-        </checkActivedGuildBandit>
 
        <killMonster>
             <Arg>           TEAMID       </Arg>
@@ -527,13 +406,6 @@
         </onReplyInviteRaidWithTeamFail>
 
         <!--raid mixin ended-->
-
-        <getOpenedGuildBandit>
-            <Arg>   TEAMID          </Arg>
-            <Arg>   ENTITYCALL      </Arg>
-            <Arg>   ENTITYCALL      </Arg>
-        </getOpenedGuildBandit>
-
         <updateTeamSilentFlag>
             <Arg>   TEAMID          </Arg>
             <Arg>   BOOL            </Arg>

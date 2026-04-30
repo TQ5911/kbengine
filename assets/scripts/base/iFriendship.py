@@ -28,17 +28,17 @@ class IFriendship(object):
     def __init__(self):
         self.friendInitStatus = 0
         self.packetSendList = []
-        self.createTempEvent(gameconst.AvatarProps.friendInitEvent)
+        self.createTempEvent(gameconst.EntityPropsEnum.friendInitEvent)
 
     # ------------------------------- load start -------------------------------
     def _loadFriendReq(self, *args):
-        DEBUG_MSG("IFriendship::_loadFriendReq", args)
+        LOG_DBG("IFriendship::_loadFriendReq", args)
         gamesql.loadFriends(self.gbID, self._onLoadFriends)
 
     def _onLoadFriends(self, ret, num, insertId, err):
-        DEBUG_MSG("IFriendship::_onLoadFriends", ret)
+        LOG_DBG("IFriendship::_onLoadFriends", ret)
         if err:
-            ERROR_MSG("IFriendship::_onLoadFriends error={}".format(err))
+            LOG_ERR("IFriendship::_onLoadFriends error={}".format(err))
             return
 
         _gbIds = []
@@ -53,16 +53,16 @@ class IFriendship(object):
             self._onGetFriendsInfoFromRedis([])
 
     def _onGetFriendsInfoFromRedis(self, fcValList):
-        DEBUG_MSG("IFriendship::_onGetFriendsInfoFromRedis", fcValList)
+        LOG_DBG("IFriendship::_onGetFriendsInfoFromRedis", fcValList)
         self.friendship.updateFriendsInInit(fcValList)
 
-        _ed = utils.getNow() - gameconst.ONE_DAY_SECONDS * RC_RCD.datas['relationApplicationExpiryDate']['value']
+        _ed = utils.curTS() - gameconst.ONE_DAY_COST_SECONDS * RC_RCD.datas['relationApplicationExpiryDate']['value']
         redisUtils.FriendUtils.getFriendInitInfo(self.gbID, _ed, self._onGetFriendInitList)
 
     def _onGetFriendInitList(self, cid, err, initList):
-        DEBUG_MSG("IFriendship::_onGetFriendInitLis", err, initList)
+        LOG_DBG("IFriendship::_onGetFriendInitLis", err, initList)
         if err:
-            ERROR_MSG("IFriendship::_onGetFriendInitLis error={}".format(err))
+            LOG_ERR("IFriendship::_onGetFriendInitLis error={}".format(err))
             return
 
         reqList = initList[0]
@@ -81,14 +81,14 @@ class IFriendship(object):
             self._onGetRecvUsersInfo([], recentList)
 
     def _onGetRecvUsersInfo(self, fcValList, recentList):
-        DEBUG_MSG("IFriendship::_onGetRecvUsersInfo", fcValList)
+        LOG_DBG("IFriendship::_onGetRecvUsersInfo", fcValList)
         self.friendship.updateRecvInInit(fcValList)
         self._loadMsgs(None, [], [], recentList)
 
     def _loadMsgs(self, err, ret, gbIds, recentList):
-        DEBUG_MSG('IFriendship::_loadMsgs', err, ret, gbIds, recentList)
+        LOG_DBG('IFriendship::_loadMsgs', err, ret, gbIds, recentList)
         if err:
-            ERROR_MSG("IFriendship::_loadMsgs error={}".format(err))
+            LOG_ERR("IFriendship::_loadMsgs error={}".format(err))
             return
 
         for i, _gbId in enumerate(gbIds):
@@ -113,7 +113,7 @@ class IFriendship(object):
             self._onGetBlockUsersInfo([])
 
     def _onGetBlockUsersInfo(self, fcValList):
-        DEBUG_MSG("IFriendship::_onGetBlockUsersInfo", fcValList)
+        LOG_DBG("IFriendship::_onGetBlockUsersInfo", fcValList)
         self.friendship.updateBlockList(fcValList)
 
         _strangerGbIds = self.friendship.getStrangerGbIds()
@@ -123,7 +123,7 @@ class IFriendship(object):
             self._onGetStrangerUsersInfo([])
 
     def _onGetStrangerUsersInfo(self, fcValList):
-        DEBUG_MSG("IFriendship::_onGetStrangerUsersInfo", fcValList)
+        LOG_DBG("IFriendship::_onGetStrangerUsersInfo", fcValList)
         self.friendship.updateStrangers(fcValList)
 
         _friendGbIds = self.friendship.getFriendGbIds()
@@ -136,13 +136,13 @@ class IFriendship(object):
         self.friendship.updateFriendsBoxes(boxList)
 
         self.friendInitStatus = 1
-        self.triggerTempEvent(gameconst.AvatarProps.friendInitEvent)
+        self.triggerTempEvent(gameconst.EntityPropsEnum.friendInitEvent)
 
         self._notifyFriendsImOnline()
 
     def _sendFriendInfoToClient(self, *args):
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, '_sendFriendInfoToClient', ())
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, '_sendFriendInfoToClient', ())
             return
 
         def _iter():
@@ -192,19 +192,19 @@ class IFriendship(object):
 
     @property
     def friendInitStatus(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.friendInitStatus, 1)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.friendInitStatus, 1)
 
     @friendInitStatus.setter
     def friendInitStatus(self, val):
         if val:
-            self.popTempMiscProp(gameconst.AvatarProps.friendInitStatus)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.friendInitStatus)
         else:
-            self.setTempMiscProp(gameconst.AvatarProps.friendInitStatus, 0)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.friendInitStatus, 0)
 
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def sendFriendRequest(self, exposed, gbId):
-        INFO_MSG("IFriends::sendFriendRequest gbId={}".format(gbId))
+        LOG_IFO("IFriends::sendFriendRequest gbId={}".format(gbId))
         if self.friendship.isRecvReq(gbId):
             self._acceptRequest(gbId)
             return
@@ -228,7 +228,7 @@ class IFriendship(object):
 
     def _sendFriendRequestOnGetTargetFriendsNum(self, fcVal, ret, num, insertId, err):
         if err:
-            ERROR_MSG("IFriends::sendFriendRequestOnGetTargetFriendsNum error={}".format(err))
+            LOG_ERR("IFriends::sendFriendRequestOnGetTargetFriendsNum error={}".format(err))
             return
 
         _cnt = 0
@@ -236,12 +236,12 @@ class IFriendship(object):
             _cnt += int(_cntOne)
 
         if _cnt >= RC_RCD.datas['relationFriendNumMax']['value']:
-            WARNING_MSG("IFriends::sendFriendRequestOnGetTargetFriendsNum friends is full")
+            LOG_WARN("IFriends::sendFriendRequestOnGetTargetFriendsNum friends is full")
             return
 
         # 判断对方申请列表数量
-        _ed = utils.getNow()
-        _st = _ed - gameconst.ONE_DAY_SECONDS * RC_RCD.datas['relationApplicationExpiryDate']['value']
+        _ed = utils.curTS()
+        _st = _ed - gameconst.ONE_DAY_COST_SECONDS * RC_RCD.datas['relationApplicationExpiryDate']['value']
 
         redisUtils.FriendUtils.sendFriendRequest(
             self.gbID,
@@ -272,9 +272,9 @@ class IFriendship(object):
         }
 
     def _sendFriendRequestAfterAddRedis(self, gbId, now, cid, err, ret):
-        INFO_MSG("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
+        LOG_IFO("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
         if err:
-            ERROR_MSG("IFriends::_sendFriendRequestAfterAddRedis error={}".format(err))
+            LOG_ERR("IFriends::_sendFriendRequestAfterAddRedis error={}".format(err))
             return
 
         ret = int(ret)
@@ -288,7 +288,7 @@ class IFriendship(object):
             return
 
         elif ret != 0:
-            WARNING_MSG("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
+            LOG_WARN("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
             return
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -301,11 +301,11 @@ class IFriendship(object):
 
     def receiveFriendRequest(self, senderData, timestamp):
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, 'receiveFriendRequest', (senderData, timestamp))
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, 'receiveFriendRequest', (senderData, timestamp))
             return
 
         if self.friendship.isFriend(senderData['gbId']):
-            WARNING_MSG("IFriends::receiveFriendRequest already is friend", senderData['gbId'])
+            LOG_WARN("IFriends::receiveFriendRequest already is friend", senderData['gbId'])
             return
 
         _clientData = self.friendship.addReceiveReq(senderData, timestamp)
@@ -314,9 +314,9 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def rejectRequest(self, exposed, gbId):
-        INFO_MSG("IFriends::rejectRequest gbId={}".format(gbId))
+        LOG_IFO("IFriends::rejectRequest gbId={}".format(gbId))
         if not self.friendship.isRecvReq(gbId):
-            ERROR_MSG("IFriends::rejectRequest not receive request", gbId)
+            LOG_ERR("IFriends::rejectRequest not receive request", gbId)
             return
 
         self._removeRecvRequest(gbId)
@@ -324,7 +324,7 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def acceptAllRequest(self, exposed):
-        INFO_MSG("IFriends::acceptAllRequest")
+        LOG_IFO("IFriends::acceptAllRequest")
         _gbIds = self.friendship.getRecvReqGbIds()
         def _iter():
             for _gbId in _gbIds:
@@ -335,12 +335,12 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def rejectAllRequest(self, exposed):
-        INFO_MSG("IFriends::rejectAllRequest")
+        LOG_IFO("IFriends::rejectAllRequest")
         redisUtils.FriendUtils.rejectAllRequest(self.gbID, self._rejectAllRequestAfterDelRedis)
 
     def _rejectAllRequestAfterDelRedis(self, cid, err, ret):
         if err:
-            ERROR_MSG("IFriends::_rejectAllRequestAfterDelRedis error={}".format(err))
+            LOG_ERR("IFriends::_rejectAllRequestAfterDelRedis error={}".format(err))
             return
 
         _gbIds = self.friendship.getRecvReqGbIds()
@@ -350,7 +350,7 @@ class IFriendship(object):
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     @gamedecorator.checkGameconfigEnable('friend')
     def acceptRequest(self, exposed, gbId):
-        INFO_MSG("IFriends::acceptRequest gbId={}".format(gbId))
+        LOG_IFO("IFriends::acceptRequest gbId={}".format(gbId))
         self._acceptRequest(gbId)
 
     def _acceptRequest(self, gbId):
@@ -359,7 +359,7 @@ class IFriendship(object):
             return
 
         if not self.friendship.isRecvReq(gbId):
-            ERROR_MSG("IFriends::acceptRequest not receive request", gbId)
+            LOG_ERR("IFriends::acceptRequest not receive request", gbId)
             return
 
         if self.friendship.isBlock(gbId):
@@ -386,7 +386,7 @@ class IFriendship(object):
 
     def _acceptRequestOnGetTwoFriendsNum(self, ret, err, gbId):
         if err:
-            ERROR_MSG("IFriends::_acceptRequestOnGetTwoFriendsNum error={}".format(err))
+            LOG_ERR("IFriends::_acceptRequestOnGetTwoFriendsNum error={}".format(err))
             return
 
         # 添加好友
@@ -394,7 +394,7 @@ class IFriendship(object):
         _cnt2 = int(ret[2][0]) + int(ret[3][0])
         _maxNum = RC_RCD.datas['relationFriendNumMax']['value']
         if _cnt1 >= _maxNum or _cnt2 >= _maxNum:
-            # ERROR_MSG("IFriends::_acceptRequestOnGetTwoFriendsNum friends is full", _cnt1, _cnt2, gbId)
+            # LOG_ERR("IFriends::_acceptRequestOnGetTwoFriendsNum friends is full", _cnt1, _cnt2, gbId)
             self.onMessagePre(RC_RCD.datas['relationFriendNumMaxMsg']['value'], [])
             return
 
@@ -406,7 +406,7 @@ class IFriendship(object):
 
     def _acceptRequestAfterAddFriend(self, err, gbId):
         if err:
-            WARNING_MSG("IFriends::_acceptRequestAfterAddFriend error={}".format(err))
+            LOG_WARN("IFriends::_acceptRequestAfterAddFriend error={}".format(err))
             return
 
         self.friendship.addFriend(gbId, self)
@@ -439,7 +439,7 @@ class IFriendship(object):
 
     def _onRemoveRecvRequest(self, cid, err, ret, gbId):
         if err:
-            ERROR_MSG("IFriends::_onRemoveRecvRequest error={}".format(err))
+            LOG_ERR("IFriends::_onRemoveRecvRequest error={}".format(err))
             return
 
         self.friendship.removeReceiveReq(gbId)
@@ -464,13 +464,13 @@ class IFriendship(object):
     def onAcceptFriendOffline(self, gbIds):
         _fVal = self.friendship.getFriend(gbIds[0])
         if not _fVal:
-            WARNING_MSG("IFriends::onAcceptFriendOffline not found friend", gbIds[0])
+            LOG_WARN("IFriends::onAcceptFriendOffline not found friend", gbIds[0])
             return
 
         _fVal.setBox(None)
 
         if not _fVal.name:
-            _fVal.setFriendFlags(utils.bitSet(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY))
+            _fVal.setFriendFlags(utils.bset(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY))
         else:
             self.client.onUpdateFriendsFull([_fVal.toClientData(self.friendship)])
 
@@ -489,7 +489,7 @@ class IFriendship(object):
     def _sendClientFriendDiffInfo(self, gbId):
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            WARNING_MSG("IFriends::_sendClientFriendDiffInfo not found friend", gbId)
+            LOG_WARN("IFriends::_sendClientFriendDiffInfo not found friend", gbId)
             return
 
         self.client.onUpdateFriendsDiff([_fVal.toDiff()])
@@ -499,12 +499,12 @@ class IFriendship(object):
 
     def onNotifyFriendsNameChanged(self, gbId, newName):
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, 'onNotifyFriendsNameChanged', (gbId, newName))
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, 'onNotifyFriendsNameChanged', (gbId, newName))
             return
 
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            WARNING_MSG("IFriends::onNotifyFriendsNameChanged not found friend", gbId)
+            LOG_WARN("IFriends::onNotifyFriendsNameChanged not found friend", gbId)
             return
 
         _fVal.setName(newName)
@@ -514,14 +514,14 @@ class IFriendship(object):
         self.friendship.notifyFriendsImOffline(self.gbID)
 
     def onNotifyOffline(self, gbId):
-        DEBUG_MSG("IFriends::onNotifyOffline gbId={}".format(gbId))
+        LOG_DBG("IFriends::onNotifyOffline gbId={}".format(gbId))
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, 'onNotifyOffline', (gbId,))
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, 'onNotifyOffline', (gbId,))
             return
 
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            WARNING_MSG("IFriends::onNotifyOffline not found friend", gbId)
+            LOG_WARN("IFriends::onNotifyOffline not found friend", gbId)
             return
 
         _fVal.setBox(None)
@@ -529,7 +529,7 @@ class IFriendship(object):
 
     def onNotifyOnline(self, gbId, box, src):
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, 'onNotifyOnline', (gbId, box, src))
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, 'onNotifyOnline', (gbId, box, src))
             return
 
         if src == gameconst.FriendOnlineSrc.MAKE_FRIENDS1:
@@ -544,13 +544,13 @@ class IFriendship(object):
 
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            WARNING_MSG("IFriends::onNotifyOnline not found friend", gbId)
+            LOG_WARN("IFriends::onNotifyOnline not found friend", gbId)
             return
 
         _fVal.setBox(box)
 
         if not _fVal.name:
-            _fVal.setFriendFlags(utils.bitSet(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY))
+            _fVal.setFriendFlags(utils.bset(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY))
         else:
             if src == gameconst.FriendOnlineSrc.MAKE_FRIENDS1:
                 self.client.onUpdateFriendsFull([_fVal.toClientData(self.friendship)])
@@ -564,13 +564,13 @@ class IFriendship(object):
             self._sendFriendMsg(gbId, _msg)
 
     def searchFriendAll(self, name):
-        INFO_MSG("IFriends::searchFriend name={}".format(name))
+        LOG_IFO("IFriends::searchFriend name={}".format(name))
         gamesql.searchFriendTemp(self._searchFriendTemp)
 
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def searchFriend(self, exposed, name):
-        INFO_MSG("IFriends::searchElastic name={}".format(name))
+        LOG_IFO("IFriends::searchElastic name={}".format(name))
         elasticUtils.ElasticUtils.searchAvatarByName(
             name,
             self._searchElasticOnGetRet)
@@ -586,7 +586,7 @@ class IFriendship(object):
 
     def _searchFriendTemp(self, ret, num, insertId, err):
         if err:
-            ERROR_MSG("IFriends::_searchFriendTemp error={}".format(err))
+            LOG_ERR("IFriends::_searchFriendTemp error={}".format(err))
             return
 
         _gbIds = []
@@ -598,7 +598,7 @@ class IFriendship(object):
 
             _gbIds.append(_gbId)
 
-        DEBUG_MSG('IFriends::_searchFriendTemp _gbIds={}'.format(_gbIds))
+        LOG_DBG('IFriends::_searchFriendTemp _gbIds={}'.format(_gbIds))
         if _gbIds:
             redisUtils.RedisUtils.getUsersInfo(_gbIds, self._searchFriendTempOnGetUserInfo)
         else:
@@ -616,7 +616,7 @@ class IFriendship(object):
                 'school': _fcVal.school,
                 'level': _fcVal.level,
                 'sex': _fcVal.sex,
-                'flags': utils.bitSet(0, gameconst.FriendFlags.IS_ONLINE) if _fcVal.isOnline else 0,
+                'flags': utils.bset(0, gameconst.FriendFlags.IS_ONLINE) if _fcVal.isOnline else 0,
             })
 
         def _iter(sendList):
@@ -641,13 +641,13 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFriend(self, exposed, gbId):
-        INFO_MSG("IFriends::removeFriend gbId={}".format(gbId))
+        LOG_IFO("IFriends::removeFriend gbId={}".format(gbId))
         self._removeFriend(gbId, gameconst.FriendRemoveReason.CLIENT_REMOVE)
 
     def _removeFriend(self, gbId, reason):
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            WARNING_MSG("IFriends::_removeFriend not found friend", gbId)
+            LOG_WARN("IFriends::_removeFriend not found friend", gbId)
             return
 
         gamesql.removeFriends(
@@ -658,7 +658,7 @@ class IFriendship(object):
 
     def _removeFriendAfterDelFriend(self, fVal, reason, ret, num, insertId, err):
         if err:
-            ERROR_MSG("IFriends::_removeFriendAfterDelFriend error={}".format(err))
+            LOG_ERR("IFriends::_removeFriendAfterDelFriend error={}".format(err))
             return
 
         self.friendship.removeRelation(
@@ -690,9 +690,9 @@ class IFriendship(object):
         )
 
     def onFriendRemoveYou(self, gbId):
-        INFO_MSG("IFriends::onFriendRemoveYou gbId={}".format(gbId))
+        LOG_IFO("IFriends::onFriendRemoveYou gbId={}".format(gbId))
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, 'onFriendRemoveYou', (gbId,))
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, 'onFriendRemoveYou', (gbId,))
             return
 
         self.friendship.removeRelation(
@@ -712,9 +712,9 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def blockPlayer(self, exposed, gbId):
-        INFO_MSG("IFriends::blockPlayer gbId={}".format(gbId))
+        LOG_IFO("IFriends::blockPlayer gbId={}".format(gbId))
         if self.friendship.isBlock(gbId):
-            ERROR_MSG("IFriends::blockPlayer already block", gbId)
+            LOG_ERR("IFriends::blockPlayer already block", gbId)
             return
 
         if self.friendship.isBlockFull():
@@ -728,7 +728,7 @@ class IFriendship(object):
 
     def _blockPlayerAfterAddRedis(self, cid, err, ret, gbId):
         if err:
-            ERROR_MSG("IFriends::_blockPlayerAfterAddRedis error={}".format(err))
+            LOG_ERR("IFriends::_blockPlayerAfterAddRedis error={}".format(err))
             return
 
         self.friendship.addBlock(gbId)
@@ -759,9 +759,9 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFromBlock(self, exposed, gbId):
-        INFO_MSG("IFriends::removeFromBlock gbId={}".format(gbId))
+        LOG_IFO("IFriends::removeFromBlock gbId={}".format(gbId))
         if not self.friendship.isBlock(gbId):
-            ERROR_MSG("IFriends::removeFromBlock not block", gbId)
+            LOG_ERR("IFriends::removeFromBlock not block", gbId)
             return
 
         redisUtils.FriendUtils.removeBlockAvatar(
@@ -771,7 +771,7 @@ class IFriendship(object):
 
     def _removeFromBlockAfterDelRedis(self, cid, err, ret, gbId):
         if err:
-            ERROR_MSG("IFriends::_removeFromBlockAfterDelRedis error={}".format(err))
+            LOG_ERR("IFriends::_removeFromBlockAfterDelRedis error={}".format(err))
             return
 
         self.friendship.removeBlock(gbId)
@@ -784,12 +784,12 @@ class IFriendship(object):
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     @gamedecorator.checkGameconfigEnable('chat')
     def sendFriendMsg(self, exposed, gbId, msg):
-        INFO_MSG("IFriends::sendFriendMsg gbId={} msg={}".format(gbId, msg))
+        LOG_IFO("IFriends::sendFriendMsg gbId={} msg={}".format(gbId, msg))
         self._sendFriendMsg(gbId, msg)
 
     def _sendFriendMsg(self, gbId, msg):
         if len(msg) > gameconst.FRIEND_MSG_MAX_LEN:
-            ERROR_MSG("IFriends::sendFriendMsg msg too long", gbId, msg)
+            LOG_ERR("IFriends::sendFriendMsg msg too long", gbId, msg)
             return
 
         if self.friendship.isHasRelation(gbId):
@@ -817,7 +817,7 @@ class IFriendship(object):
 
     def _onSendFriendMsg(self, cid, err, ret, gbId, ts, msg):
         if err:
-            ERROR_MSG("IFriends::_onSendFriendMsg error={}".format(err))
+            LOG_ERR("IFriends::_onSendFriendMsg error={}".format(err))
             return
 
         if ret == -1:
@@ -838,7 +838,7 @@ class IFriendship(object):
             _isOnline = True
             _isFriend = False
 
-        elif utils.isBoxOffline(_fVal.box):
+        elif utils.checkBoxOffline(_fVal.box):
             _isOnline = False
             _isFriend = True
 
@@ -856,9 +856,9 @@ class IFriendship(object):
         )
 
     def onRecvMsg(self, gbId, ts, msg):
-        INFO_MSG("IFriends::onRecvMsg gbId={} ts={} msg={}".format(gbId, ts, msg))
+        LOG_IFO("IFriends::onRecvMsg gbId={} ts={} msg={}".format(gbId, ts, msg))
         if not self.friendInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.friendInitEvent, 'onRecvMsg', (gbId, ts, msg))
+            self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, 'onRecvMsg', (gbId, ts, msg))
             return
 
         if not self.friendship.isHasRelation(gbId):
@@ -878,7 +878,7 @@ class IFriendship(object):
         self.friendship.recordMsg(gbId, msg, ts, gameconst.FriendMsgDir.RECV, self)
 
     def getFriendMsgs(self, exposed, gbId):
-        INFO_MSG('IFriends::getFriendMsgs gbId={}'.format(gbId))
+        LOG_IFO('IFriends::getFriendMsgs gbId={}'.format(gbId))
         _msgs = self.friendship.getMsgs(gbId)
         _status = None
 
@@ -900,10 +900,10 @@ class IFriendship(object):
             redisUtils.FriendUtils.clearFriendMsg(gbId, self.gbID, self._onRemoveFriendMsgs)
 
     def _onRemoveFriendMsgs(self, *args):
-        INFO_MSG("IFriends::_onRemoveFriendMsgs", args)
+        LOG_IFO("IFriends::_onRemoveFriendMsgs", args)
 
     def removeRecent(self, exposed, gbId):
-        INFO_MSG("IFriends::removeRecent gbId={}".format(gbId))
+        LOG_IFO("IFriends::removeRecent gbId={}".format(gbId))
         self._removeRecent(gbId)
 
     def _removeRecent(self, gbId):
@@ -914,7 +914,7 @@ class IFriendship(object):
 
     def _onRemoveRecent(self, cid, err, ret, gbId):
         if err:
-            ERROR_MSG("IFriends::_onRemoveRecent error={}".format(err))
+            LOG_ERR("IFriends::_onRemoveRecent error={}".format(err))
             return
 
         self.friendship.doRemoveRecent(gbId, self)
@@ -928,7 +928,7 @@ class IFriendship(object):
         if self.packetSendTimer:
             return
 
-        # self.packetSendTimer = self._callback(0.1, '_doSendPacket', (), gametimer.TIMER_TAG_SEND_MULTI_PACKET, varTimerID='packetSendTimer')
+        # self.packetSendTimer = self.addTimerCB(0.1, '_doSendPacket', (), gametimer.TIMER_TAG_SEND_MULTI_PACKET, varTimerID='packetSendTimer')
         self._doSendPacket()
 
     def _doSendPacket(self):
@@ -943,7 +943,7 @@ class IFriendship(object):
 
             break
 
-        self.packetSendTimer = self._callback(0.1, '_doSendPacket', (), gametimer.TIMER_TAG_SEND_MULTI_PACKET, varTimerID='packetSendTimer')
+        self.packetSendTimer = self.addTimerCB(0.1, '_doSendPacket', (), gametimer.TIMER_TAG_SEND_MULTI_PACKET, varTimerID='packetSendTimer')
 
     # ------------------------------- packet send end -------------------------------
 
@@ -954,7 +954,7 @@ class IFriendship(object):
         redisUtils.RedisUtils.onModifyAttr(self.gbID, dataDict)
 
     def getAvatarInterInfo(self, exposed, gbId):
-        DEBUG_MSG('ckz: getAvatarInterInfo ', gbId)
+        LOG_DBG('ckz: getAvatarInterInfo ', gbId)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase\
             ([gbId], 'onGetAvatarInterInfoBase', (self, ), self, 'getInterInfoOffline', ())
 
@@ -1004,13 +1004,13 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('roleAuthorization')
     @AuthClsWraper.onlyHost
     def authorizeRole(self, exposed, gbId, days, authPermission):
-        INFO_MSG('authorizeRole', gbId)
+        LOG_IFO('authorizeRole', gbId)
         if self.accountEntity.checkHasAuth(self.gbID):
-            ERROR_MSG('IFriends::authorizeRole already authorized')
+            LOG_ERR('IFriends::authorizeRole already authorized')
             return
 
         if days > gameconst.AUTH_AVATAR_LEND_EXPIRE_TIME:
-            ERROR_MSG('IFriends::authorizeRole days too long', days)
+            LOG_ERR('IFriends::authorizeRole days too long', days)
             return
 
         _fVal = self.friendship.getFriend(gbId)
@@ -1018,18 +1018,19 @@ class IFriendship(object):
             self.onMessagePre(A_ACD.datas['agentOffline']['value'], [])
             return
 
-        if utils.isBoxOffline(_fVal.box):
+        if utils.checkBoxOffline(_fVal.box):
             self.onMessagePre(A_ACD.datas['agentOffline']['value'], [])
+            self.client.onDealAuthResult(False)
             return
 
         if authPermission is not None:
             self.authPermission = authPermission
 
         self.setTempMiscProp(
-            gameconst.AvatarProps.authRoleInfo,
+            gameconst.EntityPropsEnum.authRoleInfo,
             {
                 'gbId': gbId,
-                'ts': utils.getNow(),
+                'ts': utils.curTS(),
                 'days': days,
                 'st': gameconst.AuthState.NORMAL
             })
@@ -1037,26 +1038,26 @@ class IFriendship(object):
 
     @AuthClsWraper.onlyHost
     def cancelAuthRole(self, exposed):
-        _authCache = self.getTempMiscProp(gameconst.AvatarProps.authRoleInfo, None)
+        _authCache = self.getTempMiscProp(gameconst.EntityPropsEnum.authRoleInfo, None)
         if not _authCache:
-            WARNING_MSG('IFriends::cancelAuthRole auth role info not exist')
+            LOG_WARN('IFriends::cancelAuthRole auth role info not exist')
             return
 
         if _authCache['st'] != gameconst.AuthState.NORMAL:
-            WARNING_MSG('IFriends::cancelAuthRole auth role not normal')
+            LOG_WARN('IFriends::cancelAuthRole auth role not normal')
             return
 
-        if _authCache['ts'] + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.getNow():
-            WARNING_MSG('IFriends::cancelAuthRole auth role info expired')
+        if _authCache['ts'] + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.curTS():
+            LOG_WARN('IFriends::cancelAuthRole auth role info expired')
             return
 
-        self.popTempMiscProp(gameconst.AvatarProps.authRoleInfo)
+        self.popTempMiscProp(gameconst.EntityPropsEnum.authRoleInfo)
         _fVal = self.friendship.getFriend(_authCache['gbId'])
         if not _fVal:
-            INFO_MSG("IFriends::cancelAuthRole gbId={} not your friend".format(_authCache['gbId']))
+            LOG_IFO("IFriends::cancelAuthRole gbId={} not your friend".format(_authCache['gbId']))
             return
 
-        if utils.isBoxOffline(_fVal.box):
+        if utils.checkBoxOffline(_fVal.box):
             return
 
         _fVal.box.client.onCancelAuthRole(self.gbID, self.getRoleCacheAttr('name'))
@@ -1064,42 +1065,54 @@ class IFriendship(object):
     def onRecvAuthRole(self, gbId, name):
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            ERROR_MSG("IFriends::onRecvAuthRole gbId={} not your friend".format(gbId))
+            LOG_ERR("IFriends::onRecvAuthRole gbId={} not your friend".format(gbId))
             return
 
-        _gbId, _ts = self.getTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (0, 0))
-        _now = utils.getNow()
+        _gbId, _ts = self.getTempMiscProp(gameconst.EntityPropsEnum.recvAuthRoleInfo, (0, 0))
+        _now = utils.curTS()
         if _ts + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME > _now:
-            WARNING_MSG("IFriends::onRecvAuthRole gbId={} auth role info expired".format(gbId))
+            LOG_WARN("IFriends::onRecvAuthRole gbId={} auth role info expired".format(gbId))
             return
 
-        self.setTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (gbId, _now))
+        self.setTempMiscProp(gameconst.EntityPropsEnum.recvAuthRoleInfo, (gbId, _now))
         self.client.onRecvAuthRoleClient(gbId, name)
+
+    def _dealAuthOffline(self):
+        _gbId, _ts = self.getTempMiscProp(gameconst.EntityPropsEnum.recvAuthRoleInfo, (0, 0))
+        if not _gbId:
+            return
+
+        self._dealAuthRole(False, True)
 
     @AuthClsWraper.onlyHost
     def dealAuthRole(self, exposed, isAccept):
-        INFO_MSG('dealAuthRole', isAccept)
-        _gbId, _ts = self.popTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (0, 0))
+        LOG_IFO('dealAuthRole', isAccept)
+        self._dealAuthRole(isAccept, False)
+
+    def _dealAuthRole(self, isAccept, isOffline):
+        _gbId, _ts = self.popTempMiscProp(gameconst.EntityPropsEnum.recvAuthRoleInfo, (0, 0))
         if not _gbId:
-            ERROR_MSG('IFriends::dealAuthRole recv auth role info not exist')
+            LOG_ERR('IFriends::dealAuthRole recv auth role info not exist')
             return
 
-        _now = utils.getNow()
+        _now = utils.curTS()
         # +5 留出容错时间
         if _ts + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < _now:
-            ERROR_MSG('IFriends::dealAuthRole auth role info expired')
+            LOG_ERR('IFriends::dealAuthRole auth role info expired')
             return
 
         _fVal = self.friendship.getFriend(_gbId)
         if not _fVal:
-            ERROR_MSG('IFriends::dealAuthRole not your friend', _gbId)
+            LOG_ERR('IFriends::dealAuthRole not your friend', _gbId)
             return
 
-        if utils.isBoxOffline(_fVal.box):
-            ERROR_MSG('IFriends::dealAuthRole gbId={} is offline'.format(_gbId))
+        if utils.checkBoxOffline(_fVal.box):
+            LOG_ERR('IFriends::dealAuthRole gbId={} is offline'.format(_gbId))
             return
 
         if not isAccept:
+            if isOffline:
+                _fVal.box.onMessagePre(A_ACD.datas['agentOffline']['value'], [])
             _fVal.box.client.onDealAuthResult(False)
             return
 
@@ -1108,24 +1121,24 @@ class IFriendship(object):
 
     def onAgreeAuthRole(self, gbId, dbid):
         if self.accountEntity.checkHasAuth(self.gbID):
-            ERROR_MSG('IFriends::onAgreeAuthRole already authorized')
+            LOG_ERR('IFriends::onAgreeAuthRole already authorized')
             return
 
-        _authCache = self.getTempMiscProp(gameconst.AvatarProps.authRoleInfo, None)
+        _authCache = self.getTempMiscProp(gameconst.EntityPropsEnum.authRoleInfo, None)
         if not _authCache:
-            WARNING_MSG('IFriends::onAgreeAuthRole auth role info not exist')
+            LOG_WARN('IFriends::onAgreeAuthRole auth role info not exist')
             return
 
         if _authCache['st'] != gameconst.AuthState.NORMAL:
-            WARNING_MSG('IFriends::onAgreeAuthRole auth role not normal')
+            LOG_WARN('IFriends::onAgreeAuthRole auth role not normal')
             return
 
         if _authCache['gbId'] != gbId:
-            ERROR_MSG('IFriends::onAgreeAuthRole not your friend', _authCache['gbId'])
+            LOG_ERR('IFriends::onAgreeAuthRole not your friend', _authCache['gbId'])
             return
 
-        if _authCache['ts'] + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.getNow():
-            ERROR_MSG('IFriends::onAgreeAuthRole auth role info expired')
+        if _authCache['ts'] + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.curTS():
+            LOG_ERR('IFriends::onAgreeAuthRole auth role info expired')
             return
 
         _authCache['st'] = gameconst.AuthState.AGREE_AUTH
@@ -1137,18 +1150,18 @@ class IFriendship(object):
             functools.partial(self._onAgreeAuthRoleResult, gbId))
 
     def _onAgreeAuthRoleResult(self, gbId, ret):
-        self.popTempMiscProp(gameconst.AvatarProps.authRoleInfo)
+        self.popTempMiscProp(gameconst.EntityPropsEnum.authRoleInfo)
         if not ret:
-            ERROR_MSG('_onAgreeAuthRoleResult failed', ret)
+            LOG_ERR('_onAgreeAuthRoleResult failed', ret)
             return
 
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            ERROR_MSG('IFriends::_onAgreeAuthRoleResult not your friend', gbId)
+            LOG_ERR('IFriends::_onAgreeAuthRoleResult not your friend', gbId)
             return
 
-        if utils.isBoxOffline(_fVal.box):
-            ERROR_MSG('IFriends::_onAgreeAuthRoleResult gbId={} is offline'.format(gbId))
+        if utils.checkBoxOffline(_fVal.box):
+            LOG_ERR('IFriends::_onAgreeAuthRoleResult gbId={} is offline'.format(gbId))
             return
 
         # 走到这里整个授权的流程就结束了
@@ -1164,13 +1177,13 @@ class IFriendship(object):
         self.accountEntity.addOtherCharVal(gbId, char)
 
     def hasAuthPermission(self, permission):
-        return utils.hasBit(self.authPermission.permission, permission)
+        return utils.bhas(self.authPermission.permission, permission)
 
     @AuthClsWraper.onlyHost
     def stopAuthInAvatar(self, exposed):
         _hostAccount = self.getHostAccount()
         if not _hostAccount:
-            ERROR_MSG('IFriends::stopAuthInAvatar not host')
+            LOG_ERR('IFriends::stopAuthInAvatar not host')
             return
 
         _hostAccount.stopCharacterAuthInternal(self.gbID)
@@ -1180,22 +1193,22 @@ class IFriendship(object):
         # bit 1: 1 main, 0 ob
         _state = 0
         if chn == gameconst.ClientCallChannel.MAIN_CHANNEL:
-            _state = utils.bitSet(0, 1)
+            _state = utils.bset(0, 1)
             if self.accountEntity.isAuthHost(self.gbID):
-                _state = utils.bitSet(_state, 0)
+                _state = utils.bset(_state, 0)
 
         else:
             if self.subAccount.isAuthHost(self.gbID):
-                _state = utils.bitSet(_state, 0)
+                _state = utils.bset(_state, 0)
 
         self.getClient(chn).onClientAuthState(_state)
 
     @AuthClsWraper.onlyHost
     def modifyAuthPermission(self, exposed, authPermission, days):
-        INFO_MSG('modifyAuthPermission', authPermission, days)
+        LOG_IFO('modifyAuthPermission', authPermission, days)
         self.authPermission = authPermission
         if days:
-            _authExpire = utils.getNow() + days * gameconst.ONE_DAY_SECONDS
+            _authExpire = utils.curTS() + days * gameconst.ONE_DAY_COST_SECONDS
             if self.mainAccountCache.isAccountHost():
                 self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
 
@@ -1229,7 +1242,7 @@ class IFriendship(object):
         self.authStatistics.addUseMoney(self, money)
 
     def onUpdateExpRate(self, exp, expRate):
-        self.setTempMiscProp(gameconst.AvatarProps.cellExperience, exp)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.cellExperience, exp)
         if not self.accountEntity.isAuthHost(self.gbID):
             return
 
@@ -1237,7 +1250,7 @@ class IFriendship(object):
 
     def startCheckExpireOnLogin(self):
         # 登录完成后，如果是代理，五秒后再检查一次expire时间是否一致，防止出现极限问题
-        self._callback(5, '_checkAuthExpireOnLogin', (), gametimer.TIMER_TAG_CHECK_AUTH_LOGIN)
+        self.addTimerCB(5, '_checkAuthExpireOnLogin', (), gametimer.TIMER_TAG_CHECK_AUTH_LOGIN)
 
     def _checkAuthExpireOnLogin(self):
         if self.accountEntity.isAuthHost(self.gbID):
@@ -1250,7 +1263,7 @@ class IFriendship(object):
             return
 
         if err:
-            ERROR_MSG('_checkAuthExpireOnLoginAfterGetDBData err={}'.format(err))
+            LOG_ERR('_checkAuthExpireOnLoginAfterGetDBData err={}'.format(err))
             return
 
         _authExpire, _authDbId, _gbId = ret[0]
@@ -1272,7 +1285,7 @@ class IFriendship(object):
         self.authExpireTimerId = self._datetimeCallback(_fireTime, 'onAuthExpire', (), gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE, 'authExpireTimerId')
 
     def onAuthExpire(self):
-        DEBUG_MSG('onAuthExpire')
+        LOG_DBG('onAuthExpire')
         self.onMessagePre(A_ACD.datas['expirationNotice']['value'], [])
         self.authStatistics.reset()
         self.authStatistics = self.authStatistics
@@ -1300,5 +1313,19 @@ class IFriendship(object):
 
     def addAuthStatistics(self, awardVal):
         self.authStatistics.addItemByAward(awardVal)
+
+    def doGetAuthOfflineTime(self, box):
+        box.client.onGetAuthOfflineTimeClient(self.gbID, self.authStatistics.authOffline)
+
+    def checkAuthDisassembleAndMsg(self):
+        # 检测代理是否可以分解
+        if self.accountEntity.isAuthHost(self.gbID):
+            return True
+
+        if self.hasAuthPermission(A_AFD.Disassembly):
+            return True
+
+        self.onMessagePre(A_ACD.datas['itemDisassemblyLimitMsg']['value'], [])
+        return False
     # ------------------------ 角色授权结束 ---------------------------------------
 

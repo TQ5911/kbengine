@@ -15,7 +15,7 @@ import copy
 import teamMatch_matchConfig as TMMCD
 
 
-class applyJoinPlayerVal(userType.UserSoleType):
+class applyJoinPlayerVal(userType.UserSingleType):
     def __init__(self, gbId, playerName, level, school, sex, applySource, score=0):
         self.gbId = gbId
         self.playerName = playerName
@@ -37,9 +37,9 @@ class applyJoinPlayerVal(userType.UserSoleType):
         }
 
 
-class TeamMemberCacheVal(userType.UserSoleType):
-    def __init__(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow, bOnline,
-                 spaceNo=0, position=(0, 0, 0), hp=1, fullHp=1, score=0, hpkScore=0, mountState=0,
+class TeamMemberCacheVal(userType.UserSingleType):
+    def __init__(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bOnline,
+                 spaceNo=0, position=(0, 0, 0), hp=1, fullHp=1, score=0, mountState=0,
                  raidUUID=0, enableMics=False, isBlockMics=False, isDead=True, openId='', siegeWarCamp=0, joinType=gameconst.TeamJoinType.DEFAULT):
         self.playerGbId = playerGbId
         self.playerBox = playerBox
@@ -48,14 +48,12 @@ class TeamMemberCacheVal(userType.UserSoleType):
         self.school = school
         self.sex = sex
         self.picFrameId = picFrameId
-        self.bFollow = bFollow
         self.bOnline = bOnline
         self.spaceNo = spaceNo
         self.position = position
         self.hp = hp
         self.fullHp = fullHp
         self.score = score
-        self.hpkScore = hpkScore
         self.mountState = mountState
         self.raidUUID = raidUUID
         self.enableMics = enableMics
@@ -74,14 +72,12 @@ class TeamMemberCacheVal(userType.UserSoleType):
             'school': self.school,
             'sex': self.sex,
             'picFrameId': self.picFrameId,
-            'bFollow': False,
             'bOnline': self.bOnline,
             'spaceNo': self.spaceNo,
             'position': self.position,
             'hp': self.hp,
             'fullHp': self.fullHp,
             'score': self.score,
-            'hpkScore': self.hpkScore,
             'raidUUID': self.raidUUID,
             'isDead': self.isDead,
             'openId': self.openId,
@@ -98,14 +94,12 @@ class TeamMemberCacheVal(userType.UserSoleType):
             'school': self.school,
             'sex': self.sex,
             'picFrameId': self.picFrameId,
-            'bFollow': self.bFollow,
             'bOnline': self.bOnline,
             'spaceNo': self.spaceNo,
             'position': self.position,
             'hp': self.hp,
             'fullHp': self.fullHp,
             'score': self.score,
-            'hpkScore': self.hpkScore,
             'mountState': self.mountState,
             'raidUUID': self.raidUUID,
             'enableMics': self.enableMics,
@@ -124,7 +118,6 @@ class TeamMemberCacheVal(userType.UserSoleType):
                 'school': self.school,
                 'sex': self.sex,
                 'picFrameId': self.picFrameId,
-                'bFollow': self.bFollow,
                 'bOnline': self.bOnline,
                 'spaceNo': self.spaceNo,
                 'position': self.position,
@@ -135,9 +128,6 @@ class TeamMemberCacheVal(userType.UserSoleType):
                 'isBlockMics': self.isBlockMics,
                 'openId': self.openId,
             }
-
-    def setFollowCaptain(self, bFollow):
-        self.bFollow = bFollow
 
     def updateOnlineState(self, bOnline, playerBox):
         self.bOnline = bOnline
@@ -165,7 +155,7 @@ class TeamDungeonCache(userType.UserDictType):
         return {'dungeons': [i for i in self.values()]}
 
     def addDungeonCache(self, dungeonNo, spaceNo, spaceUUID):
-        INFO_MSG("addDungeonCache", dungeonNo, spaceNo, spaceUUID)
+        LOG_IFO("addDungeonCache", dungeonNo, spaceNo, spaceUUID)
         if dungeonNo not in self:
             self[dungeonNo] = TeamDungeonSpaceCacheVal(dungeonNo, spaceNo, spaceUUID)
 
@@ -184,7 +174,7 @@ class TeamDungeonCache(userType.UserDictType):
             self.addDungeonCache(dungeonNo, spaceNo, 0)
 
         if self[dungeonNo].spaceNo != spaceNo:
-            WARNING_MSG("addDungeonFounder:: space no not match, skipped",
+            LOG_WARN("addDungeonFounder:: space no not match, skipped",
                         self[dungeonNo].spaceNo, spaceNo)
             return
 
@@ -208,7 +198,7 @@ class TeamDungeonCache(userType.UserDictType):
             return self[dungeonNo]
 
     def destoryDungeonCache(self, dungeonNo, spaceNo, spaceUUID):
-        INFO_MSG("destoryDungeonCache", dungeonNo, spaceNo, spaceUUID)
+        LOG_IFO("destoryDungeonCache", dungeonNo, spaceNo, spaceUUID)
         if dungeonNo not in self:
             return
 
@@ -217,7 +207,7 @@ class TeamDungeonCache(userType.UserDictType):
             del self[dungeonNo]
 
 
-class TeamDungeonSpaceCacheVal(userType.UserSoleType):
+class TeamDungeonSpaceCacheVal(userType.UserSingleType):
     def __init__(self, dungeonNo, spaceNo, spaceUUID):
         self.dungeonNo = dungeonNo
         self.spaceNo = spaceNo
@@ -263,7 +253,7 @@ class TeamDungeonSpaceCacheVal(userType.UserSoleType):
         if tState == 3:
             return True, 'complete'
 
-        dungeonTime = utils.getNow() - tCreate
+        dungeonTime = utils.curTS() - tCreate
 
         if tTimeout and dungeonTime > tTimeout * 60:
             return True, 'timeout'
@@ -303,7 +293,7 @@ class TeamDungeonFounders(userType.UserDictType):
         self.pop(playerGbId, None)
 
 
-class TeamDungeonFounderVal(userType.UserSoleType):
+class TeamDungeonFounderVal(userType.UserSingleType):
     def __init__(self, spaceNo, playerGbId, playerBox, tEnter=0, tLeave=0, isEnter=False):
         self.spaceNo = spaceNo
         self.playerGbId = playerGbId
@@ -328,14 +318,14 @@ class TeamDungeonFounderVal(userType.UserSoleType):
 
     def onAvatarEnter(self, gbId):
         if gbId == self.playerGbId:
-            self.tEnter = utils.getNow()
+            self.tEnter = utils.curTS()
             self.tLeave = 0
             self.isEnter = True
 
     def onAvatarLeave(self, gbId, isOffline=False):
         if gbId == self.playerGbId:
             self.tEnter = 0
-            self.tLeave = utils.getNow()
+            self.tLeave = utils.curTS()
             if isOffline:
                 self.playerBox = None
 
@@ -390,56 +380,10 @@ class TeamDungeonMixin(object):
 
 # ===============================================
 
-
-class TeamDuelData(userType.UserSoleType):
-    def __init__(self):
-        self.reset()
-
-    def onAppliedDuel(self, spaceNo, duelUUID, side, targetTeamUUID, targetTeamName):
-        self.duelSpaceNo = spaceNo
-        self.duelUUID = duelUUID
-        self.side = side
-        self.targetTeamUUID = targetTeamUUID
-        self.targetTeamName = targetTeamName
-
-    def reset(self):
-        self.duelSpaceNo = 0
-        self.duelUUID = 0
-        self.side = 0
-        self.targetTeamUUID = 0
-        self.targetTeamName = ''
-
-    def hasTeamDuel(self):
-        return self.duelUUID != 0
-
-
-class BanditCacheVal(userType.UserSoleType):
-    def __init__(self, targetId=0, posId=0, lineNo=0):
-        self.targetId = targetId
-        self.posId = posId
-        self.lineNo = lineNo
-
-    def toSaveBCVal(self):
-        return {
-            'targetId': self.targetId,
-            'posId': self.posId,
-            'lineNo': self.lineNo,
-        }
-
-    def __repr__(self):
-        return '{}({})'.format(
-            self.__class__.__name__,
-            ','.join(['{}={}'.format(k, v) for k, v in self.__dict__.items()])
-        )
-
-    @staticmethod
-    def getBanditCacheVal(dataDict):
-        return BanditCacheVal(**dataDict)
-
-class TeamVal(userType.UserSoleType, TeamDungeonMixin):
+class TeamVal(userType.UserSingleType, TeamDungeonMixin):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, playerBox=None, playerName='', level=0, school=0,
-                 sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, isDead=False,
-                 openId='', siegeWarCamp=0, teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
+                 sex=0, picFrameId=0, bOnline=True, score=0, mountState=0, isDead=False,
+                 openId='', siegeWarCamp=0, teamMicsSwitch=gameconst.TeamMicsModeEnum.OFF, teamMicsBlocked=False):
         # region __init__
         self.teamId = teamId
         self.teamTarget = teamTarget
@@ -450,25 +394,19 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         self.teamMinScore = score
 
         self.teamCaptainGbId = teamCaptainGbId
-        self.banditKillerInfo = BanditCacheVal.getBanditCacheVal({})  # type: BanditCacheVal
-        self.guildBanditId = 0
-        self.guildBanditGuild = 0
-        self.randQimoInfo = BanditCacheVal.getBanditCacheVal({})
         self.teamPlayerDic = {}             # type: {int: TeamMemberCacheVal}
         self.applyJoinDic = {}
         # teamDungeonDic: key: dungeonNo, value: dungeonSpaceNo
         self.teamDungeonDic = TeamDungeonCache()
-        self.teamDuelData = TeamDuelData()
         # -----------------------------------------------------------
         # team mics
         self.teamMicsSwitch = teamMicsSwitch        # type: int
         self.teamMicsBlocked = teamMicsBlocked      # type: bool
         # -----------------------------------------------------------
-        self.teamFollowQueue = []
         self.enemyGuildLeaderMirrorInfo = {}
         self.isPublish = False
         self.recruitInfo = ''
-        self.tCreated = utils.getNow()
+        self.tCreated = utils.curTS()
         self.captainOfflineTimer = 0
         #-------------------------------
         self.teamMark = TeamMarkCacheVal()
@@ -490,7 +428,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             v.reloadScript()
 
         self.teamDungeonDic.reloadScript()
-        self.teamDuelData.reloadScript()
         self.teamMark.reloadScript()
         return
 
@@ -503,10 +440,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         self.teamMinLv = savedDataDict['teamMinLv']
         self.teamMinScore = savedDataDict['teamMinScore']
         self.teamCaptainGbId = savedDataDict['teamCaptainGbId']
-        self.banditKillerInfo = BanditCacheVal.getBanditCacheVal(savedDataDict['banditKillerInfo'])
-        self.guildBanditId = savedDataDict['guildBanditId']
-        self.guildBanditGuild = savedDataDict['guildBanditGuild']
-        self.randQimoInfo = BanditCacheVal.getBanditCacheVal(savedDataDict['randQimoInfo'])
         self.lastSortBag = 0
         self.usingItemsInfo = {}
         self.teamMicsSwitch = savedDataDict['teamMicsSwitch']
@@ -528,7 +461,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             school = teamMemberDict['school']
             sex = teamMemberDict['sex']
             picFrameId = teamMemberDict['picFrameId']
-            bFollow = teamMemberDict['bFollow']
             bOnline = teamMemberDict['bOnline']
             spaceNo = teamMemberDict['spaceNo']
             position = teamMemberDict['position']
@@ -539,7 +471,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             openId = teamMemberDict['openId']
             joinType = teamMemberDict['joinType']
             self.teamPlayerDic[playerGbId] = TeamMemberCacheVal(playerGbId, playerBox, playerName, level, school, sex, picFrameId,
-                                                            bFollow, bOnline, spaceNo, position, hp, fullHp, score=score, \
+                                                            bOnline, spaceNo, position, hp, fullHp, score=score, \
                                                             mountState=mountState, isDead=isDead, openId=openId, joinType=joinType)
 
     def toSavedDict(self):
@@ -550,16 +482,12 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                      'teamMinLv':self.teamMinLv,  
                      'teamMinScore': self.teamMinScore, 
                      'teamCaptainGbId': self.teamCaptainGbId,
-                     'banditKillerInfo': self.banditKillerInfo.toSaveBCVal(), 
                      'teamMemberList': [i.toSavedDict() for i in self.teamPlayerDic.values()],
                      'teamDungeonList': [_ for _ in self.teamDungeonDic.values()],
-                     'guildBanditId': self.guildBanditId, 
-                     'randQimoInfo': self.randQimoInfo.toSaveBCVal(),
                      'teamHonorPKMatchTime': self.teamHonorPKMatchTime, 
                      'isSilent':self.isSilent,
                      'teamMicsSwitch': self.teamMicsSwitch, 
                      'teamMicsBlocked': self.teamMicsBlocked,
-                     'guildBanditGuild': self.guildBanditGuild, 
                      'recruitInfo': self.recruitInfo,
                      'isAutoExpedition': self.isAutoExpedition,
                      'password': self.password,
@@ -609,20 +537,33 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
     def getTeamMemberNum(self):
         return len(self.teamPlayerDic)
 
-    def addMember(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow=False,
+    def addMemberForStub(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId,
                   bOnline=True, score=0, mountState=0, isDead=False, openId=0, joinType=gameconst.TeamJoinType.DEFAULT):
         if self.isTeamFull():
-            WARNING_MSG('addMember isTeamFull', playerGbId, playerBox, playerName, level, school, picFrameId,
-                        bFollow, bOnline, score, isDead, openId)
-            return False, gameconst.RaidErrno.RAID_RAID_TEAM_IS_FULL
+            LOG_WARN('addMemberForStub isTeamFull', playerGbId, playerBox, playerName, level, school, picFrameId,
+                        bOnline, score, isDead, openId)
+            return False, gameconst.RaidErrno.ENUM_RAID_RAID_TEAM_IS_FULL
 
         isBlockMics = False
         if self.teamMicsBlocked:
             isBlockMics = True
 
-        newMember = TeamMemberCacheVal(playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow, bOnline,
-                                       score=score, mountState=mountState, isDead=isDead, openId=openId,
-                                       isBlockMics=isBlockMics, joinType=joinType)
+        newMember = TeamMemberCacheVal(
+            playerGbId, 
+            playerBox, 
+            playerName, 
+            level, 
+            school, 
+            sex, 
+            picFrameId, 
+            bOnline,
+            score=score, 
+            mountState=mountState, 
+            isDead=isDead, 
+            openId=openId,
+            isBlockMics=isBlockMics, 
+            joinType=joinType)
+
         self.teamPlayerDic[playerGbId] = newMember
 
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -631,17 +572,17 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 continue
             if gbId != playerGbId:
                 if not box.cell:
-                    ERROR_MSG('teamMember is not online', gbId)
+                    LOG_ERR('teamMember is not online', gbId)
                     continue
 
                 box.cell.onAddTeamMemberCell(playerGbId, playerBox)
                 if not box.client:
-                    WARNING_MSG('teamMember has no client', gbId)
+                    LOG_WARN('teamMember has no client', gbId)
                 else:
                     box.client.onAddTeamMember(newMember.toClientData())
             else:
                 if not box.cell:
-                    ERROR_MSG('teamMember is not online', gbId)
+                    LOG_ERR('teamMember is not online', gbId)
                     continue
 
                 box.cell.onJoinTeam(self.teamId, newMember.joinType)
@@ -649,42 +590,42 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 if box.client:
                     box.client.onAddTeam(self.getClientData())
                 else:
-                    WARNING_MSG('teamMember has no client', gbId)
+                    LOG_WARN('teamMember has no client', gbId)
         if playerGbId != self.teamCaptainGbId:
             # playerBox.onBaseJoinTeam(self.teamId, self.teamCaptainGbId)
-            self.broadcastAllMembersBase('onMessagePre', [TMMCD.datas['teamChannel_enterTeamMsg']['value'], [playerName]])
+            self.broadcastAllMembersBase('onMessagePre', [TMMCD.datas['teamChannel_enterTeamMsg']['value'], [playerName, str(playerGbId)]])
         else:
             #队长创建队伍
             self.getCaptainBox().onMessagePre(TMMCD.datas['teamChannel_createTeamMsg']['value'], [])
         self.teamMatchInfoUpdate()
-        return True, gameconst.RaidErrno.RAID_OK
+        return True, gameconst.RaidErrno.ENUM_RAID_OK
 
     def delMember(self, playerGbId, notifySelf=True):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
             box = teamPlayerVal.playerBox
-            if not teamPlayerVal.bOnline or utils.isBoxOffline(box):
+            if not teamPlayerVal.bOnline or utils.checkBoxOffline(box):
                 continue
             if gbId != playerGbId:
                 if not box or not box.cell:
-                    ERROR_MSG('delMember teamMember is not online', gbId)
+                    LOG_ERR('delMember teamMember is not online', gbId)
                     continue
 
                 box.cell.onDelTeamMemberCell(playerGbId)
                 if not box.client:
-                    WARNING_MSG('delMember teamMember has no client', gbId)
+                    LOG_WARN('delMember teamMember has no client', gbId)
                 else:
                     box.client.onDelTeamMember(playerGbId)
             else:
-                INFO_MSG('DEL MEMBER')
+                LOG_IFO('DEL MEMBER')
                 if not box or not box.cell:
-                    ERROR_MSG('delMember teamMember is not online', gbId)
+                    LOG_ERR('delMember teamMember is not online', gbId)
                     continue
 
                 notifySelf and box.cell.onLeaveTeam()
                 if box.client:
                     notifySelf and box.client.onLeaveTeam()
                 else:
-                    WARNING_MSG('delMember teamMember has no client', gbId)
+                    LOG_WARN('delMember teamMember has no client', gbId)
 
         self.teamPlayerDic.pop(playerGbId, None)
         self.teamMatchInfoUpdate()
@@ -696,7 +637,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             return
         oldCaptainGbId = self.teamCaptainGbId
         self.teamCaptainGbId = captainGbId
-        self.onMemberFollowChanged(captainGbId, False)
         self.notifyApplyJoinInfo(captainGbId)
         self.stopAutoMatch()
         captainBox = None
@@ -708,11 +648,11 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             if box.client:
                 box.client.onChangeCaptain(captainGbId)
             else:
-                WARNING_MSG('setCaptainGbId teamMember has no client', gbId)
+                LOG_WARN('setCaptainGbId teamMember has no client', gbId)
             if box.cell:
                 box.cell.onChangeCaptainCell(captainGbId)
             else:
-                ERROR_MSG('setCaptainGbId teamMember is not online', gbId)
+                LOG_ERR('setCaptainGbId teamMember is not online', gbId)
             if self.teamCaptainGbId == gbId:
                 captainBox = box
                 captainPlayerVal = teamPlayerVal
@@ -741,7 +681,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         # captainBox and captainBox.cell.turnOnTeamMics()
 
         self.broadcastAllMembersBase('onMessagePre',
-                                     [TMMCD.datas['teamChannel_becomeCaptainMsg']['value'], [self.getPlayerName(captainGbId)]])
+                                     [TMMCD.datas['teamChannel_becomeCaptainMsg']['value'], [self.getPlayerName(captainGbId), str(captainGbId)]])
 
     def notifyApplyJoinInfo(self, captainGbId):
         applyJoinInfoList = []
@@ -755,8 +695,13 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         return self.teamCaptainGbId
 
     def getCaptainBox(self):
-        if utils.isBoxOffline(self.teamPlayerDic[self.teamCaptainGbId].playerBox):
+        teamPlayerVal = self.teamPlayerDic.get(self.teamCaptainGbId)
+        if not teamPlayerVal:
             return utils.Swallower()
+
+        if utils.checkBoxOffline(teamPlayerVal.playerBox):
+            return utils.Swallower()
+
         return self.teamPlayerDic[self.teamCaptainGbId].playerBox
 
     def getCaptainName(self):
@@ -789,7 +734,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
 
     def isInApplyJoinDic(self, gbId):
         if gbId not in self.applyJoinDic:
-            INFO_MSG('isInApplyJoinDic not in applyJoinDic', gbId)
+            LOG_IFO('isInApplyJoinDic not in applyJoinDic', gbId)
             return False
         return True
 
@@ -810,56 +755,16 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             if not teamPlayerVal.bOnline:
                 continue
             if gbId != self.getCaptainGbId():
-                if formula.spaceForbidTeamFollow(teamPlayerVal.spaceNo):
+                if formula.checkSpaceForbidTeamFollow(teamPlayerVal.spaceNo):
                     continue
 
                 if box.client:
                     box.client.onFollowTeamCaptainAsk(spaceNo, pos)
                 else:
-                    WARNING_MSG('askAllMemberFollow teamMember has no client', gbId)
-
-    def cancelAllMemberFollow(self):
-        for gbId, teamPlayerVal in self.teamPlayerDic.items():
-            box = teamPlayerVal.playerBox
-            if gbId != self.getCaptainGbId():
-                self.onMemberFollowChanged(gbId, False)
-                if not teamPlayerVal.bOnline:
-                    continue
-                if box.cell:
-                    box.cell.onCaptainCancleFollowTeam()
-                else:
-                    ERROR_MSG('cancelAllMemberFollow teamMember is not online', gbId)
-
-    def onMemberFollowChanged(self, changeGbId, bFollow):
-        self.teamPlayerDic[changeGbId].setFollowCaptain(bFollow)
-        for gbId, teamPlayerVal in self.teamPlayerDic.items():
-            box = teamPlayerVal.playerBox
-            if not teamPlayerVal.bOnline:
-                continue
-
-            if box.cell:
-                box.cell.onFollowCaptainChangedCell(changeGbId, bFollow)
-            else:
-                WARNING_MSG('onMemberFollowChanged teamMember has no cell', gbId)
-
-        self.resetTeamFollowQueue(changeGbId, bFollow)
-
-    def resetTeamFollowQueue(self, changeGbId, bFollow):
-        INFO_MSG('resetTeamFollowQueue', changeGbId, bFollow, self.teamFollowQueue)
-
-        if bFollow:
-            if changeGbId in self.teamFollowQueue:
-                INFO_MSG('already in teamFollowQueue')
-            else:
-                self.teamFollowQueue.append(changeGbId)
-        else:
-            if changeGbId in self.teamFollowQueue:
-                self.teamFollowQueue.remove(changeGbId)
-            else:
-                INFO_MSG('not in teamFollowQueue')
+                    LOG_WARN('askAllMemberFollow teamMember has no client', gbId)
 
     def clearApplyJoinDic(self):
-        INFO_MSG('clearApplyJoinDic')
+        LOG_IFO('clearApplyJoinDic')
         self.applyJoinDic = {}
 
     def updateMemberAttr(self, playerGbId, attrDic):
@@ -875,13 +780,13 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             if not teamPlayerVal.bOnline:
                 continue
             if not box or not box.cell:
-                ERROR_MSG('updateMemberAttr teamMember is not online', gbId)
+                LOG_ERR('updateMemberAttr teamMember is not online', gbId)
                 continue
             box.cell.onUpdateTeamMemberCell(playerGbId, attrDic)
         self.teamMatchInfoUpdate()
         self.broadcastAllMembersClient('onUpdateMemberAttr',
                                          (playerGbId, memberInfo.playerName, memberInfo.level, memberInfo.score,
-                                          memberInfo.school, memberInfo.bFollow, memberInfo.bOnline, memberInfo.picFrameId))
+                                          memberInfo.school, memberInfo.bOnline, memberInfo.picFrameId))
 
     def updateMemberVolatileAttr(self, playerGbId, attrDic):
         if playerGbId not in self.teamPlayerDic:
@@ -894,7 +799,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 continue
 
             box = teamPlayerVal.playerBox
-            if utils.isBoxOffline(box):
+            if utils.checkBoxOffline(box):
                 continue
 
             if any(map(lambda _attr: _attr in attrDic, ('spaceNo', 'score', 'mountState'))):
@@ -925,7 +830,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         self.teamPlayerDic[playerGbId].updateOnlineState(bOnline, playerBox)
         memberInfo = self.teamPlayerDic[playerGbId]
         self.broadcastAllMembersClient('onUpdateMemberAttr', (playerGbId, memberInfo.playerName, memberInfo.level,
-            memberInfo.score, memberInfo.school, memberInfo.bFollow, memberInfo.bOnline, memberInfo.picFrameId))
+            memberInfo.score, memberInfo.school, memberInfo.bOnline, memberInfo.picFrameId))
         self.broadcastAllMembersCell('onUpdateOnlineCell', (playerGbId, playerBox))
 
     def broadcastAllMembersClient(self, func, args, exclude=None):
@@ -939,7 +844,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 if hasattr(box.client, func):
                     getattr(box.client, func, lambda *_, **__: None)(*args)
             else:
-                WARNING_MSG('broadcastAllMembersClient teamMember has no client', gbId)
+                LOG_WARN('broadcastAllMembersClient teamMember has no client', gbId)
 
     def broadcastAllMembersBase(self, func, args, exclude=None):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -963,7 +868,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 if hasattr(box.client, func):
                     getattr(box.client, func)(*args)
             else:
-                WARNING_MSG('broadcastOtherMembersClient teamMember has no client', gbId)
+                LOG_WARN('broadcastOtherMembersClient teamMember has no client', gbId)
 
     def broadcastAllMembersCell(self, func, args):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -974,7 +879,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 if hasattr(box.cell, func):
                     getattr(box.cell, func)(*args)
             else:
-                WARNING_MSG('broadcastAllMembersCell teamMember has no cell', gbId)
+                LOG_WARN('broadcastAllMembersCell teamMember has no cell', gbId)
 
     def broadcastOtherMembersCell(self, playerGbId, func, args):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -987,7 +892,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 if hasattr(box.cell, func):
                     getattr(box.cell, func)(*args)
             else:
-                WARNING_MSG('broadcastOtherMembersCell teamMember has no cell', gbId)
+                LOG_WARN('broadcastOtherMembersCell teamMember has no cell', gbId)
 
     def broadcastOtherMembersBase(self, playerGbId, func, args):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -1000,7 +905,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 if hasattr(box, func):
                     getattr(box, func)(*args)
             else:
-                WARNING_MSG('broadcastOtherMembersBase teamMember has no base', gbId)
+                LOG_WARN('broadcastOtherMembersBase teamMember has no base', gbId)
 
     def isAllMembersOffline(self):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -1026,75 +931,11 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             return gbId
         return -1
 
-    def isAllMembersFollw(self):
-        for gbId, teamPlayerVal in self.teamPlayerDic.items():
-            if self.teamCaptainGbId == gbId:
-                continue
-
-            if not teamPlayerVal.bFollow:
-                return False
-
-        return True
-
-    def teamFollowersCellDo(self, func, args):
-        members = []
-        for gbId, teamPlayerVal in self.teamPlayerDic.items():
-            if self.teamCaptainGbId == gbId:
-                members.append(gbId)
-                continue
-
-            if teamPlayerVal.bFollow:
-                members.append(gbId)
-
-        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(members, func, args, None, '', ())
-
-    def onAppliedDuel(self, spaceNo, duelUUID, side, targetTeamUUID, targetTeamName):
-        self.teamDuelData.onAppliedDuel(spaceNo, duelUUID, side, targetTeamUUID, targetTeamName)
-
-        for gbId, teamPlayerVal in self.teamPlayerDic.items():
-            if teamPlayerVal.playerBox and teamPlayerVal.playerBox.cell:
-                teamPlayerVal.playerBox.cell.onTeamDuelSpaceReady(spaceNo, duelUUID, side, targetTeamName)
-
-    def onDuelCompleted(self, spaceNo, isWin):
-        self.teamDuelData.reset()
-
-    def addBanditKillerId(self, banditCacheVal):
-        if self.banditKillerInfo and self.banditKillerInfo.targetId:
-            WARNING_MSG('already exist bandit', self.banditKillerInfo.targetId)
-
-        self.banditKillerInfo = banditCacheVal
-        self.broadcastAllMembersClient('onUpdateTeamBanditKiller', (self.banditKillerInfo.toSaveBCVal(), ))
-
-    def setGuildBandit(self, guildBanditId, guildUUID):
-        self.guildBanditId = guildBanditId
-        self.guildBanditGuild = guildUUID
-
-    def delBanditKillerId(self, targetId):
-        if self.banditKillerInfo.targetId != targetId:
-            return
-
-        self.banditKillerInfo = BanditCacheVal.getBanditCacheVal({})
-        self.broadcastAllMembersClient('onUpdateTeamBanditKiller', (self.banditKillerInfo.toSaveBCVal(), ))
-
-    def addRandQimoId(self, banditCacheVal):
-        if self.randQimoInfo.targetId:
-            WARNING_MSG('already exist rand qimo', self.randQimoInfo)
-
-        self.randQimoInfo = banditCacheVal
-        self.broadcastAllMembersClient('onUpdateTeamRandQimo', (self.randQimoInfo.toSaveBCVal(), ))
-
-    def delRandQimoId(self, targetId):
-        if self.randQimoInfo.targetId != targetId:
-            return
-
-        self.randQimoInfo = BanditCacheVal.getBanditCacheVal({})
-        self.broadcastAllMembersClient('onUpdateTeamRandQimo', (self.randQimoInfo.toSaveBCVal(), ))
-
     def startAutoMatch(self, guildUUID):
         if self.isTeamFull():
             self.getCaptainBox().onMessagePre(TMMCD.datas['teamMatch_fullMsg']['value'], [])
             return
-        self.teamAutoMatchTime = utils.getNow()
+        self.teamAutoMatchTime = utils.curTS()
         teamInfoDic = self._getTeamMatchInfoDic()
         teamInfoDic['guildUUID'] = guildUUID
         gameengine.getGlobalBase('TeamMatchStub').teamAutoMatch(teamInfoDic)
@@ -1102,7 +943,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         return
 
     def teamMatchInfoUpdate(self):
-        INFO_MSG('in teamMatchInfoUpdate:', self.teamAutoMatchTime)
+        LOG_IFO('in teamMatchInfoUpdate:', self.teamAutoMatchTime)
         if not self.isTeamInAutoMatch():
             return
         teamInfoDic = self._getTeamMatchInfoDic()
@@ -1131,7 +972,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         return self.teamAutoMatchTime != 0
 
     def stopAutoMatch(self, timeout=False):
-        INFO_MSG('in stopAutoMatch:', timeout, self.teamAutoMatchTime)
+        LOG_IFO('in stopAutoMatch:', timeout, self.teamAutoMatchTime)
         if not self.isTeamInAutoMatch():
             return
         self.teamAutoMatchTime = 0
@@ -1142,7 +983,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         return
 
     def setTarget(self, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition):
-        INFO_MSG('in setTarget:', teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
+        LOG_IFO('in setTarget:', teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
         if not self.checkTeamTarget(minLv, minScore):
             return False
         self.teamTarget = teamTarget
@@ -1159,7 +1000,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         # check team member's score and level
         for teamMemberVal in self.teamPlayerDic.values():
             if minLevel > teamMemberVal.level or minScore > teamMemberVal.score:
-                ERROR_MSG("teamstub->team->checkTeamTarget, minScore and minLevel are greater than one of the team member's score and level. ", minLevel, minScore, teamMemberVal)
+                LOG_ERR("teamstub->team->checkTeamTarget, minScore and minLevel are greater than one of the team member's score and level. ", minLevel, minScore, teamMemberVal)
                 self.getCaptainBox().onMessagePre(TMMCD.datas['team_TargetCondition']['value'], [])
                 return False
         return True
@@ -1197,9 +1038,9 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         oldMode = self.teamMicsSwitch
         if oldMode != mode:
             try:
-                if mode == gameconst.TeamMicsMode.OFF:
+                if mode == gameconst.TeamMicsModeEnum.OFF:
                     self._onTeamMiscModeSwitchOff()
-                elif mode == gameconst.TeamMicsMode.FREE:
+                elif mode == gameconst.TeamMicsModeEnum.FREE:
                     self._onTeamMiscModeSwitchToFree(extraProps)
 
             except Exception as exc:
@@ -1213,12 +1054,12 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         return self, ""
 
     def _onTeamMiscModeSwitchOff(self):
-        INFO_MSG('_onTeamMiscModeSwitchOff::')
+        LOG_IFO('_onTeamMiscModeSwitchOff::')
         for teamMemberVal in self.teamPlayerDic.values():
             teamMemberVal.enableMics = teamMemberVal.isBlockMics = False
 
     def _onTeamMiscModeSwitchToFree(self, extraProps):
-        INFO_MSG("_onTeamMiscModeSwitchToFree::", extraProps)
+        LOG_IFO("_onTeamMiscModeSwitchToFree::", extraProps)
         teamCaptainGBID = self.getCaptainGbId()
         for teamMemberVal in self.teamPlayerDic.values():
             if teamMemberVal.playerGbId == teamCaptainGBID:
@@ -1234,7 +1075,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             return None, "TEAM_MICS_SWITCH_OFF"
 
         teamCaptainGBID = self.getCaptainGbId()
-        if self.teamMicsSwitch == gameconst.TeamMicsMode.FREE:
+        if self.teamMicsSwitch == gameconst.TeamMicsModeEnum.FREE:
             if srcPlayerGBID != teamCaptainGBID and srcPlayerGBID != playerGBID:
                 return None, "TEAM_MISC_FREE_MODE_LIMIT"
 
@@ -1267,7 +1108,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             return None, "TEAM_MICS_SWITCH_OFF"
 
         teamCaptainGBID = self.getCaptainGbId()
-        if self.teamMicsSwitch == gameconst.TeamMicsMode.FREE:
+        if self.teamMicsSwitch == gameconst.TeamMicsModeEnum.FREE:
             if srcPlayerGBID != teamCaptainGBID and srcPlayerGBID != playerGBID:
                 return None, "TEAM_MISC_FREE_MODE_LIMIT"
 
@@ -1304,7 +1145,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
     # --------------------------------------------------------------------
     # ---------------------------- 标记相关 -------------------------------
     def addMarkMember(self, owner, type, index, name, gbId, entId, pos, spaceNo=0):
-        INFO_MSG('addMarkMember: ', owner, entId, type, index, name, gbId, pos, spaceNo, self.onlyCaptainCanMark, self.getCaptainBox().id)
+        LOG_IFO('addMarkMember: ', owner, entId, type, index, name, gbId, pos, spaceNo, self.onlyCaptainCanMark, self.getCaptainBox().id)
         if self.onlyCaptainCanMark and owner and owner.id != self.getCaptainBox().id:
             return
         ret = False
@@ -1353,16 +1194,15 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                 continue
             box.client.onChangeTeamMark(markInfoDict)
         
-        INFO_MSG('onChangeTeamMarkInfo', markInfoDict)
+        LOG_IFO('onChangeTeamMarkInfo', markInfoDict)
 
     def clearMarkRecord(self, ownerStub):
         self.teamMark.clearMarkRecord(ownerStub, self.teamId)
 
-class PlayerTeamMemberCacheVal(userType.UserSoleType):
-    def __init__(self, playerGbId, playerBox, bFollow, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0, joinType=gameconst.TeamJoinType.DEFAULT):
+class PlayerTeamMemberCacheVal(userType.UserSingleType):
+    def __init__(self, playerGbId, playerBox, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0, joinType=gameconst.TeamJoinType.DEFAULT):
         self.playerGbId = playerGbId
         self.playerBox = playerBox
-        self.bFollow = bFollow
         self.spaceNo = spaceNo
         self.mountState = mountState
         self.score = score
@@ -1372,7 +1212,6 @@ class PlayerTeamMemberCacheVal(userType.UserSoleType):
         return {
             'playerGbId': self.playerGbId,
             'playerBox': self.playerBox,
-            'bFollow': self.bFollow,
             'spaceNo': self.spaceNo,
             'mountState': self.mountState,
             'score': self.score,
@@ -1385,15 +1224,13 @@ class PlayerTeamMemberCacheVal(userType.UserSoleType):
                 setattr(self, attrName, attrVal)
 
 
-class PlayerTeamCacheVal(userType.UserSoleType):
-    def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, teamCaptainBigWorldMapFollowPos=None):
+class PlayerTeamCacheVal(userType.UserSingleType):
+    def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0):
         self.teamId = teamId
         self.teamTarget = teamTarget
         self.teamCaptainGbId = teamCaptainGbId
         self.teamPlayerDic = {}  # type:{int: PlayerTeamMemberCacheVal}
         self.applyJoinDic = {}
-        self.followPlayerGbId = 0
-        self.teamCaptainBigWorldMapFollowPos = teamCaptainBigWorldMapFollowPos
 
     def reset(self):
         self.teamId = 0
@@ -1401,8 +1238,6 @@ class PlayerTeamCacheVal(userType.UserSoleType):
         self.teamCaptainGbId = 0
         self.teamPlayerDic = {}
         self.applyJoinDic = {}
-        self.followPlayerGbId = 0
-        self.teamCaptainBigWorldMapFollowPos = None
 
     def getTeamMemberIndex(self, playerGBID):
         if playerGBID not in self.teamPlayerDic:
@@ -1416,13 +1251,13 @@ class PlayerTeamCacheVal(userType.UserSoleType):
             idx += 1
         return 0
 
-    def addMember(self, owner, playerGbId, playerBox, bFollow=False, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0):
+    def addMemberForPlayer(self, owner, playerGbId, playerBox, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0):
         if playerBox:
             teamMember = KBEngine.entities.get(playerBox.id)
             if teamMember and teamMember in owner.entitiesInView(True):
                 owner.teammateEntIdInAoiSet.add(playerBox.id)
                 owner.expAddRatioByTeam = utils.getTeamExpBonus(len(owner.teammateEntIdInAoiSet))
-        pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, bFollow, spaceNo, mountState, score)
+        pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, spaceNo, mountState, score)
         self.teamPlayerDic[playerGbId] = pVal
 
     def delMember(self, owner, playerGbId):
@@ -1435,37 +1270,6 @@ class PlayerTeamCacheVal(userType.UserSoleType):
         if playerGbId not in self.teamPlayerDic:
             return
         self.teamPlayerDic[playerGbId].updateAttr(attrDic)
-
-    def setFollowPlayerGbId(self):
-        self.followPlayerGbId = self.teamCaptainGbId
-
-    def getFollowPlayerPos(self):
-        # playerBox = self.getPlayerBoxbyGbId(self.followPlayerGbId)
-        # if not playerBox:
-        #     return None
-
-        # player = KBEngine.entities.get(playerBox.id, None)
-        # if not player:
-        #     return None
-
-        # return player.position
-        return self.getCaptainPosition()
-
-    def getNearByMember(self, owner):
-        boxList = []
-        for member in self.teamPlayerDic.values():
-            if not member.playerBox:
-                continue
-
-            player = KBEngine.entities.get(member.playerBox.id, None)
-
-            if not player:
-                continue
-
-            if sMath.distance2D(owner.position, player.position) < CCD.datas['dropShareRange']['value']:
-                boxList.append(player)
-
-        return boxList
 
     def setCaptainGbId(self, captainGbId):
         if self.teamCaptainGbId == captainGbId:
@@ -1484,9 +1288,6 @@ class PlayerTeamCacheVal(userType.UserSoleType):
         teamMemberVal = self.teamPlayerDic.get(self.teamCaptainGbId, None)
         return teamMemberVal.spaceNo if teamMemberVal else 0
 
-    def getCaptainMountState(self):
-        return self.teamPlayerDic[self.teamCaptainGbId].mountState
-
     def getCaptainPosition(self):
         captainBox = self.getCaptainBox()
         if not captainBox:
@@ -1497,17 +1298,6 @@ class PlayerTeamCacheVal(userType.UserSoleType):
             return None
 
         return captain.position
-
-    def getCaptainCombatState(self):
-        captainBox = self.getCaptainBox()
-        if not captainBox:
-            return None
-
-        captain = KBEngine.entities.get(captainBox.id, None)
-        if not captain:
-            return None
-
-        return captain.autoCombat
 
     def getTeamTarget(self):
         return self.teamTarget
@@ -1545,14 +1335,14 @@ class PlayerTeamCacheVal(userType.UserSoleType):
                 getattr(box, func)(*args)
 
     def allMembersCellDo(self, func, args):
-        INFO_MSG('allMembersCellDo--------')
+        LOG_IFO('allMembersCellDo--------')
         for playerGbId, teamMemberVal in self.teamPlayerDic.items():
             box = teamMemberVal.playerBox
             if box and box.cell and hasattr(box.cell, func):
                 getattr(box.cell, func)(*args)
 
     def allMembersClientDo(self, func, args, exclude=()):
-        INFO_MSG('allMembersClientDo--------')
+        LOG_IFO('allMembersClientDo--------')
         for playerGbId, teamMemberVal in self.teamPlayerDic.items():
             if playerGbId in exclude:
                 continue
@@ -1569,18 +1359,6 @@ class PlayerTeamCacheVal(userType.UserSoleType):
         if self.isInTeam(playerGbId):
             self.teamPlayerDic[playerGbId].playerBox = playerBox
 
-    def followCaptainChanged(self, playerGbId, bFollow):
-        if self.isInTeam(playerGbId):
-            self.teamPlayerDic[playerGbId].bFollow = bFollow
-
-    def getOnlineFollowPlayers(self):
-        players = []
-        for playerGbId, teamMemberVal in self.teamPlayerDic.items():
-            if teamMemberVal.playerBox and teamMemberVal.bFollow:
-                players.append(teamMemberVal.playerGbId)
-
-        return players
-
     def initFromDict(self, savedDataDict):
         self.teamId = savedDataDict['teamId']
         self.teamTarget = savedDataDict['teamTarget']
@@ -1589,29 +1367,23 @@ class PlayerTeamCacheVal(userType.UserSoleType):
         for teamMemberDict in teamMemberList:
             playerGbId = teamMemberDict['playerGbId']
             playerBox = teamMemberDict['playerBox']
-            bFollow = teamMemberDict['bFollow']
             spaceNo = teamMemberDict['spaceNo']
             mountState = teamMemberDict['mountState']
             score = teamMemberDict['score']
-            pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, bFollow, spaceNo, mountState, score)
+            pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, spaceNo, mountState, score)
             self.teamPlayerDic[playerGbId] = pVal
 
-        self.followPlayerGbId = savedDataDict.get('followPlayerGbId')
-
-        self.teamCaptainBigWorldMapFollowPos = sMath.position2DTo3D(savedDataDict["teamCaptainBigWorldMapFollowPos"]) \
-                if savedDataDict["teamCaptainBigWorldMapFollowPos"] else None
-
     def toSavedDict(self):
-        savedDict = {'teamId': self.teamId, 'teamTarget': self.teamTarget, 'teamCaptainGbId': self.teamCaptainGbId,
-                     'teamMemberList': [], 'followPlayerGbId': self.followPlayerGbId}
+        savedDict = {
+            'teamId': self.teamId, 
+            'teamTarget': self.teamTarget, 
+            'teamCaptainGbId': self.teamCaptainGbId,
+            'teamMemberList': []}
 
         for gbId in self.teamPlayerDic:
             teamMemberObj = self.teamPlayerDic[gbId]
             teamMemberDic = teamMemberObj.toSavedDict()
             savedDict['teamMemberList'].append(teamMemberDic)
-
-        savedDict['teamCaptainBigWorldMapFollowPos'] = sMath.postion3DTo2DCell(self.teamCaptainBigWorldMapFollowPos) \
-                if self.teamCaptainBigWorldMapFollowPos else None
 
         return savedDict
 
@@ -1625,7 +1397,7 @@ class PlayerTeamCacheVal(userType.UserSoleType):
             v.reloadScript()
         return
 
-class TeamMarkCacheVal(userType.UserSoleType):
+class TeamMarkCacheVal(userType.UserSingleType):
     def __init__(self):
         super().__init__()
         self.playerDict = {}  # type: {int: TeamMarkMemberCacheVal}
@@ -1636,7 +1408,7 @@ class TeamMarkCacheVal(userType.UserSoleType):
         # 有gbId就用gbId 作为标识
         if gbId > 0:
             entId = gbId
-        INFO_MSG('addPlayerMark: ', type, index, name, gbId, entId, pos, spaceNo)
+        LOG_IFO('addPlayerMark: ', type, index, name, gbId, entId, pos, spaceNo)
         if entId in self.playerCache:
             if self.playerCache[entId] == index:
                 return False
@@ -1676,7 +1448,7 @@ class TeamMarkCacheVal(userType.UserSoleType):
         return True, memberVal.entId
 
     def clearMarkRecord(self, ownerStub, teamId):
-        INFO_MSG('clearMarkRecord: ', teamId, self.playerDict.keys())
+        LOG_IFO('clearMarkRecord: ', teamId, self.playerDict.keys())
         for memberVal in self.playerDict.values():
             if memberVal.type != gameconst.TeamMarkType.MARK_ENEMY:
                 continue
@@ -1706,7 +1478,7 @@ class TeamMarkCacheVal(userType.UserSoleType):
         return self
 
 
-class TeamMarkMemberCacheVal(userType.UserSoleType):
+class TeamMarkMemberCacheVal(userType.UserSingleType):
     def __init__(self, type, index, name, gbId, entId, pos=None, spaceNo=0):
         self.entId = entId
         self.gbId = gbId

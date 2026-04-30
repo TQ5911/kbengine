@@ -29,7 +29,7 @@ datas = _tools.RODict({
         "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "activityTask": 0,
         "openGuildLevel": 1,
-        "firstUnlockPush": 1
+        "firstUnlockPush": 1,
     }),
     32000002: _tools.RODict({
         "ID": 32000002,
@@ -44,7 +44,7 @@ datas = _tools.RODict({
         "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "activityTask": 0,
         "openGuildLevel": 1,
-        "firstUnlockPush": 1
+        "firstUnlockPush": 1,
     }),
     32000003: _tools.RODict({
         "ID": 32000003,
@@ -59,7 +59,7 @@ datas = _tools.RODict({
         "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "activityTask": 0,
         "openGuildLevel": 1,
-        "firstUnlockPush": 1
+        "firstUnlockPush": 1,
     }),
     32000004: _tools.RODict({
         "ID": 32000004,
@@ -74,7 +74,7 @@ datas = _tools.RODict({
         "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "activityTask": 0,
         "openGuildLevel": 1,
-        "firstUnlockPush": 1
+        "firstUnlockPush": 1,
     })
 })
 

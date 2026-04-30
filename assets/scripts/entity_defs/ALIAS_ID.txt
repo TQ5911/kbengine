@@ -5,6 +5,7 @@ Account method onCharInfoChange 11
 Account method onCreateAvatarFailed 1
 Account method onCreateAvatarResult 2
 Account method onGameConfigChanged 5
+Account method onGetAuthOfflineTimeClient 17
 Account method onHotfixVersion 14
 Account method onKickAnotherAccount 8
 Account method onKickAnotherAvatar 9
@@ -55,14 +56,13 @@ Avatar property dmgArmor 130
 Avatar property dodge 76
 Avatar property drugsQuantity 163
 Avatar property duelAttr 82
-Avatar property enemyMgr 123
 Avatar property evasion 24
 Avatar property exp 80
 Avatar property expGrow 151
 Avatar property fatal 81
 Avatar property finalDmg 133
 Avatar property finalDmgAnti 134
-Avatar property followCaptain 21
+Avatar property flyValue 21
 Avatar property force 196
 Avatar property freeRecoverDeathPenaltyTimes 86
 Avatar property frozenAnti 69
@@ -120,6 +120,7 @@ Avatar property mulCD 109
 Avatar property mulSpeed 136
 Avatar property name 42
 Avatar property newbieGuideIds 104
+Avatar property newbieGuideVals 36
 Avatar property nextRecoverGuildAssistTime 112
 Avatar property nextRecoverQixieAssistTime 146
 Avatar property obId 62
@@ -127,6 +128,7 @@ Avatar property paidCubeTimes 28
 Avatar property paidWonderLandTicket 29
 Avatar property pkModel 45
 Avatar property pkProtect 56
+Avatar property preyFlag 40
 Avatar property pushAnti 173
 Avatar property pushEnh 174
 Avatar property qixieAssistTimes 147
@@ -154,10 +156,12 @@ Avatar property stunEnh 178
 Avatar property summonSlotIdx 157
 Avatar property tGreyNameStart 61
 Avatar property teamId 34
+Avatar property title 30
 Avatar property totalScore 43
 Avatar property ultraSkillPower 71
 Avatar property wonderLandAddTimes 63
 Avatar property wonderLandTicket 68
+Avatar property worldLevel 32
 Barrier property barrierId 4
 Barrier property force 6
 Barrier property gameEntityId 7
@@ -181,6 +185,7 @@ Collection property dropEquipItemId 15
 Collection property force 12
 Collection property gameEntityId 8
 Collection property gatherCnt 16
+Collection property groupLock 4
 Collection property name 9
 Collection property spaceNo 10
 CoreAreaFlag property defenseNum 4
@@ -196,6 +201,7 @@ Creation method onAddPassiveSkill 5
 Creation method onAddSkill 6
 Creation method onBreakCastingSkill 8
 Creation method onBreakChannelingSkill 9
+Creation method onExitShiftByConflict 7
 Creation method onGetAureoleInfo 12
 Creation method onGetBuffInfo 13
 Creation method onMessage 14
@@ -231,6 +237,7 @@ Creation property level 60
 Creation property mulCD 73
 Creation property mulSpeed 35
 Creation property name 77
+Creation property scopeAddRatio 4
 Creation property selectedTargetId 78
 Creation property spaceNo 81
 Creation property speed 82
@@ -253,6 +260,7 @@ Monster method onBornAction 1
 Monster method onBreakCastingSkill 11
 Monster method onBreakChannelingSkill 12
 Monster method onDead 2
+Monster method onExitShiftByConflict 13
 Monster method onGetAureoleInfo 15
 Monster method onGetBuffInfo 16
 Monster method onMessage 17
@@ -296,6 +304,7 @@ Monster property monsterId 11
 Monster property mulCD 104
 Monster property mulSpeed 43
 Monster property name 12
+Monster property recoverProgress 7
 Monster property selectedTargetId 163
 Monster property siegeWarCamp 18
 Monster property spaceNo 172
@@ -316,6 +325,7 @@ Npc method onBornAction 1
 Npc method onBreakCastingSkill 14
 Npc method onBreakChannelingSkill 15
 Npc method onDead 2
+Npc method onExitShiftByConflict 4
 Npc method onGetAureoleInfo 18
 Npc method onGetBuffInfo 19
 Npc method onMessage 20
@@ -378,6 +388,7 @@ Summon method onAddSkill 7
 Summon method onBreakCastingSkill 9
 Summon method onBreakChannelingSkill 10
 Summon method onDead 11
+Summon method onExitShiftByConflict 8
 Summon method onGetAureoleInfo 14
 Summon method onGetBuffInfo 15
 Summon method onMessage 16

@@ -9,7 +9,7 @@ import random
 class ISpaceEntiteisMgr(object):
     def __init__(self):
         self.players = {}
-        self.taggedEntities = {}
+        self.tagEntities = {}
         self.eventListener = {}
         self.entitiesMap = {}
         self.bossEntityId = 0
@@ -29,15 +29,15 @@ class ISpaceEntiteisMgr(object):
         self.bossFbEntityId = fbEntityId
 
     def addEntity(self, entType, entTableId, box, tag, extra=None):
-        if tag not in self.taggedEntities:
-            self.taggedEntities[tag] = []
+        if tag not in self.tagEntities:
+            self.tagEntities[tag] = []
 
-        self.taggedEntities[tag].append((entType, entTableId, box))
+        self.tagEntities[tag].append((entType, entTableId, box))
         self.entitiesMap[box.id] = (entType, entTableId, box, tag)
 
     def getAllEntities(self):
         ret = []
-        for tag, entities in self.taggedEntities.items():
+        for tag, entities in self.tagEntities.items():
             for entType, entTableId, box in entities:
                 ret.append(box)
 
@@ -49,17 +49,17 @@ class ISpaceEntiteisMgr(object):
             return box
         return
 
-    def getEntitiesByTag(self, tag):
+    def listEntitiesByTag(self, tag):
         ret = []
-        for entType, entTableId, box in self.taggedEntities.get(tag, ()):
+        for entType, entTableId, box in self.tagEntities.get(tag, ()):
             ret.append(box)
 
         return ret
 
     def removeEntity(self, tag, entId):
-        for i, (entType, entTableId, box) in enumerate(self.taggedEntities.get(tag, [])):
+        for i, (entType, entTableId, box) in enumerate(self.tagEntities.get(tag, [])):
             if box.id == entId:
-                self.taggedEntities[tag].pop(i)
+                self.tagEntities[tag].pop(i)
                 self.entitiesMap.pop(entId)
                 break
 
@@ -73,10 +73,10 @@ class ISpaceEntiteisMgr(object):
         self.players.pop(gbId, None)
 
     def getAnyEntityByTag(self, tag):
-        if tag not in self.taggedEntities:
+        if tag not in self.tagEntities:
             return None
 
-        return random.choice(self.taggedEntities[tag])[2]
+        return random.choice(self.tagEntities[tag])[2]
 
     def addEventListener(self, eventId, box, args):
         if eventId not in self.eventListener:
@@ -97,7 +97,7 @@ class ISpaceEntiteisMgr(object):
         pass
 
     def triggerEvent(self, eventId):
-        DEBUG_MSG('triggerEvent', eventId, self.eventListener)
+        LOG_DBG('triggerEvent', eventId, self.eventListener)
         if eventId not in self.eventListener:
             return
 

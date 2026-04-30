@@ -20,7 +20,7 @@ import message_chatMessage as M_CMD
 import json
 import gzip
 
-class AchievementsVal(userType.UserSoleType):
+class AchievementsVal(userType.UserSingleType):
     '''ACHIEVEMENTS_DATA_INFO'''
     def __init__(self, achieveList=(), maxVersion=-1, finishedIds=(), sumPoint=0):
         self.maxVersion = maxVersion
@@ -32,7 +32,7 @@ class AchievementsVal(userType.UserSoleType):
 
             self._addTypeDic(achieveVal)
 
-        self.finishedIds = set(finishedIds)
+        self.finishedIds = list(finishedIds)
 
 
     @classmethod
@@ -43,12 +43,12 @@ class AchievementsVal(userType.UserSoleType):
         return {
             'achieveList': [achieveVal for achieveVal in self.achieveDic.values()],
             'maxVersion': self.maxVersion,
-            'finishedIds': list(self.finishedIds),
+            'finishedIds': self.finishedIds,
             'sumPoint': self.sumPoint,
         }
 
     def onLvUpAchievement(self, ls, le, avatar):
-        DEBUG_MSG('onLvUpAchievement', ls, le, avatar.gbID, avatar.getRoleCacheAttr('level', 1))
+        LOG_DBG('onLvUpAchievement', ls, le, avatar.gbID, avatar.getRoleCacheAttr('level', 1))
         for _lv in range(ls + 1, le + 1):
             self.takeNewAchievementWhenLevelUp(_lv, avatar)
 
@@ -65,7 +65,7 @@ class AchievementsVal(userType.UserSoleType):
             avatar.client.onUpdateAchieveDatas(_updateList)
 
     def triggerAchieveByType(self, avatar, targetType, ctx):
-        DEBUG_MSG('triggerAchieveByType', targetType, ctx)
+        LOG_DBG('triggerAchieveByType', targetType, ctx)
         _waitList = self.typeDic.get(targetType, [])
         _updateList = self._updateByWaitList(avatar, _waitList, ctx)
 
@@ -121,7 +121,7 @@ class AchievementsVal(userType.UserSoleType):
         while waitList:
             _maxTimes -= 1
             if _maxTimes <= 0:
-                ERROR_MSG('achieve wait list loop too much')
+                LOG_ERR('achieve wait list loop too much')
                 break
 
             _achieveId = waitList.pop(0)
@@ -157,7 +157,7 @@ class AchievementsVal(userType.UserSoleType):
                     if _sonId not in waitList:
                         waitList.append(_sonId)
 
-        DEBUG_MSG('updateByWaitList left times:', _maxTimes)
+        LOG_DBG('updateByWaitList left times:', _maxTimes)
 
         return _updateList
 
@@ -171,7 +171,7 @@ class AchievementsVal(userType.UserSoleType):
         for _msgId in _msgIds:
             _msgData = M_CMD.datas[_msgId]
 
-            if gameconst.ChatChannel.WORLD in _msgData['channelID']:
+            if gameconst.ChatChannelEnum.WORLD in _msgData['channelID']:
                 gameengine.broadcastBaseapp(
                     'broadcastToAllAvatar',
                     (
@@ -217,7 +217,11 @@ class AchievementsVal(userType.UserSoleType):
             avatar.addWealth(_src, _awardVal, _opUUID, _detail, directly=False)
 
             self.popAchieveVal(_achieveId)
-            self.finishedIds.add(_achieveId)
+            if _achieveId in self.finishedIds:
+                ERROR_MSG('takeAllAchievementRewards but already has id', _achieveId)
+                continue
+
+            self.finishedIds.append(_achieveId)
             _takeIds.append(_achieveId)
 
             self.sumPoint += _achieveVal.configData()['achPoint']
@@ -237,10 +241,10 @@ class AchievementsVal(userType.UserSoleType):
         avatar.client.onTakeAchievementRewards(_takeIds, self.sumPoint)
 
     def sendInitDataToClient(self, avatar):
-        jsonStr = json.dumps([[obj.toAchievementValSavedDict() for obj in self.achieveDic.values()], list(self.finishedIds), self.sumPoint]).encode('ascii')
-        DEBUG_MSG('in sendInitDataToClient:', len(jsonStr))
+        jsonStr = json.dumps([[obj.toAchievementValSavedDict() for obj in self.achieveDic.values()], self.finishedIds, self.sumPoint]).encode('ascii')
+        LOG_DBG('in sendInitDataToClient:', len(jsonStr))
         zStr = gzip.compress(jsonStr)
-        DEBUG_MSG('in sendInitDataToClient:', len(zStr))
+        LOG_DBG('in sendInitDataToClient:', len(zStr))
         avatar.streamStringProxy(zStr, '', gameconst.StreamStringID.ACHIEVEMENT_DATA)
 
     def __str__(self):

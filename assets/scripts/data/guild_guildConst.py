@@ -601,7 +601,7 @@ datas = _tools.RODict({
     }),
     "guild_enmityCost": _tools.RODict({
         "key": "guild_enmityCost",
-        "value": (30000007, 500),
+        "value": (30000007, 50000),
     }),
     "guild_relieveUnion": _tools.RODict({
         "key": "guild_relieveUnion",
@@ -726,5 +726,17 @@ datas = _tools.RODict({
     "guild_accessMethodMsg": _tools.RODict({
         "key": "guild_accessMethodMsg",
         "value": 54000598,
+    }),
+    "guild_limitActionId": _tools.RODict({
+        "key": "guild_limitActionId",
+        "value": (1, 2, 3, 4),
+    }),
+    "guild_limitActionTime": _tools.RODict({
+        "key": "guild_limitActionTime",
+        "value": 24,
+    }),
+    "guild_actionLimit": _tools.RODict({
+        "key": "guild_actionLimit",
+        "value": 54003267,
     })
 })

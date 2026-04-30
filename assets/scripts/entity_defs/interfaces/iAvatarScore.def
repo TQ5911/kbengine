@@ -16,6 +16,7 @@
             <Flags> ALL_CLIENTS </Flags>
             <Default> 0  </Default>
             <Persistent>    true    </Persistent>
+            <WitnessName>   true    </WitnessName>
         </totalScore>
 
         <updateScoreTimerId>

@@ -55,6 +55,13 @@ func CentralServer_ActiveTick_Handler(endPoint prpc.IEndPoint, dec func(interfac
     }
     return endPoint.(ICentralServerInterface).ActiveTick(in)
 }
+func CentralServer_OnAccountOnline_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(AccountOnlineVal)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(ICentralServerInterface).OnAccountOnline(in)
+}
 func CentralServer_OnAccountOffline_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(AccountOfflineVal)
     if err := dec(in); err != nil {
@@ -122,23 +129,28 @@ var CentralServerServiceDesc = prpc.ServiceDesc{
             Handler:     CentralServer_ActiveTick_Handler,
         },
         {
-            MethodName:  "OnAccountOffline",
+            MethodName:  "OnAccountOnline",
             MethodIndex: 7,
+            Handler:     CentralServer_OnAccountOnline_Handler,
+        },
+        {
+            MethodName:  "OnAccountOffline",
+            MethodIndex: 8,
             Handler:     CentralServer_OnAccountOffline_Handler,
         },
         {
             MethodName:  "LockLoginSwitchServer",
-            MethodIndex: 8,
+            MethodIndex: 9,
             Handler:     CentralServer_LockLoginSwitchServer_Handler,
         },
         {
             MethodName:  "UnlockLoginSwitchServer",
-            MethodIndex: 9,
+            MethodIndex: 10,
             Handler:     CentralServer_UnlockLoginSwitchServer_Handler,
         },
         {
             MethodName:  "DeleteCharacter",
-            MethodIndex: 10,
+            MethodIndex: 11,
             Handler:     CentralServer_DeleteCharacter_Handler,
         },
     },
@@ -183,20 +195,24 @@ func (self *CentralServerClient) ActiveTick(in *Void) (*Void, error) {
     err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[6], in)
     return &Void{}, err
 }
-func (self *CentralServerClient) OnAccountOffline(in *AccountOfflineVal) (*Void, error) {
+func (self *CentralServerClient) OnAccountOnline(in *AccountOnlineVal) (*Void, error) {
     err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[7], in)
     return &Void{}, err
 }
-func (self *CentralServerClient) LockLoginSwitchServer(in *LockLoginSwitchServerVal) (*Void, error) {
+func (self *CentralServerClient) OnAccountOffline(in *AccountOfflineVal) (*Void, error) {
     err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[8], in)
     return &Void{}, err
 }
-func (self *CentralServerClient) UnlockLoginSwitchServer(in *UnlockLoginSwitchServerVal) (*Void, error) {
+func (self *CentralServerClient) LockLoginSwitchServer(in *LockLoginSwitchServerVal) (*Void, error) {
     err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[9], in)
     return &Void{}, err
 }
-func (self *CentralServerClient) DeleteCharacter(in *DeleteCharacterRequest) (*Void, error) {
+func (self *CentralServerClient) UnlockLoginSwitchServer(in *UnlockLoginSwitchServerVal) (*Void, error) {
     err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[10], in)
+    return &Void{}, err
+}
+func (self *CentralServerClient) DeleteCharacter(in *DeleteCharacterRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[11], in)
     return &Void{}, err
 }
 type ICentralServerInterface interface {
@@ -207,6 +223,7 @@ type ICentralServerInterface interface {
     OnCreateCharacter(*NewCharacterInfo) (*Void, error)
     OnLoginComplete(*AccountVal) (*Void, error)
     ActiveTick(*Void) (*Void, error)
+    OnAccountOnline(*AccountOnlineVal) (*Void, error)
     OnAccountOffline(*AccountOfflineVal) (*Void, error)
     LockLoginSwitchServer(*LockLoginSwitchServerVal) (*Void, error)
     UnlockLoginSwitchServer(*UnlockLoginSwitchServerVal) (*Void, error)

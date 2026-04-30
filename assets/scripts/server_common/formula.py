@@ -14,66 +14,61 @@ import mineBattle_miningArea as MBMA
 import experience_revenue as ERD
 
 @functools.lru_cache(maxsize=1024)
-def getMapId(spaceNo):
+def fetchMapId(spaceNo):
     if spaceNo >= gameconst.COPIED_SPACE_NO_START:
         return spaceNo // gameconst.SPACE_NO_INTERVAL
     return spaceNo
 
 
-def whatSpaceMap(spaceNo):
-    mapId = getMapId(spaceNo)
+def getSpaceMap(spaceNo):
+    mapId = fetchMapId(spaceNo)
 
-    if isLineSpace(spaceNo):
-        _ = gameconst.spaceDict[mapId]
-    elif mapId in gameconst.spaceDict:
-        _ = gameconst.spaceDict[mapId]
+    if inLineScene(spaceNo):
+        _ = gameconst.gSpaceDict[mapId]
+    elif mapId in gameconst.gSpaceDict:
+        _ = gameconst.gSpaceDict[mapId]
     elif mapId in GGD.datas:
         spaceType = GGD.datas[mapId]['type']
-        if gameconst.DungeonType.isBigWorldDungeon(spaceType):
-            _ = gameconst.spaceDict[gameconst.MapIdDef.mapXinYuanCheng]
+        if gameconst.DungeonTypeJudge.isBigWorldDungeon(spaceType):
+            _ = gameconst.gSpaceDict[gameconst.MapIdDef.mapXinYuanCheng]
         else:
             # in other case, is common dungeon
-            _ = gameconst.spaceDict[mapId]
+            _ = gameconst.gSpaceDict[mapId]
 
     elif mapId == gameconst.MapIdDef.mapSpecial:
-        _ = gameconst.spaceDict[gameconst.MapIdDef.mapXinYuanCheng]
+        _ = gameconst.gSpaceDict[gameconst.MapIdDef.mapXinYuanCheng]
     else:
         raise TypeError('Unknown spaceNo :{}'.format(spaceNo))
 
     path = 'spaces/%s' % _['map']
     return path
 
-def whatSpaceName(spaceNo):
-    lineType = getLineType(spaceNo)
-    mapCfg = GGD.datas.get(lineType, {})
-    return mapCfg.get('name', '')
-
 @functools.lru_cache(1024, typed=False)
-def whatSpaceType(spaceNo):
-    mapId = getMapId(spaceNo)
+def getSpaceType(spaceNo):
+    mapId = fetchMapId(spaceNo)
     if not mapId:
         return gameconst.SpaceType.UnKownSpaceType
 
     return GGD.datas[mapId]['type']
 
 @functools.lru_cache(1024, typed=False)
-def whatSpaceSubType(spaceNo):
-    mapId = getMapId(spaceNo)
+def getSpaceSubType(spaceNo):
+    mapId = fetchMapId(spaceNo)
     if not mapId:
         return gameconst.SpaceSubType.Yanwu
 
     return GGD.datas[mapId]['subType']
 
 @functools.lru_cache(1024, typed=False)
-def whatSpaceTypeWithSub(spaceNo):
-    mapId = getMapId(spaceNo)
+def getSpaceTypeWithSub(spaceNo):
+    mapId = fetchMapId(spaceNo)
     if not mapId:
         return gameconst.SpaceType.UnKownSpaceType, 0
 
     return GGD.datas[mapId]['type'], GGD.datas[mapId]['subType']
 
 
-def bornPosFromData(d):
+def bornPosFromDunData(d):
     _radius = d.get('Props', {}).get('Radius', 0.0)
     if _radius <= 0:
         return (d['PosX'], d['PosY'], d['PosZ'])
@@ -85,133 +80,118 @@ def bornPosFromData(d):
     return (_x, d['PosY'], _z)
 
 
-def whatSpaceBornPoint(spaceNo):
-    mapId = getMapId(spaceNo)
+def getSpaceBornPoint(spaceNo):
+    mapId = fetchMapId(spaceNo)
     import utils
-    dunSData = utils.getDunStructureModuleData(mapId)
+    dunSData = utils.getDunStructModData(mapId)
     if 'BornPos' not in dunSData:
         return None
 
     d, *_ = dunSData['BornPos'].values()
-    return bornPosFromData(d)
+    return bornPosFromDunData(d)
 
-def whatSpaceBornPosAndDir(mapId):
+def getSpaceBornPosAndDir(mapId):
     import utils
-    dunSData = utils.getDunStructureModuleData(mapId)
+    dunSData = utils.getDunStructModData(mapId)
     if 'BornPos' not in dunSData:
         return None, None
 
     _data = random.choice(list(dunSData['BornPos'].values()))
-    return bornPosFromData(_data), (0, 0, _data['Dir'] * math.pi / 180)
+    return bornPosFromDunData(_data), (0, 0, _data['Dir'] * math.pi / 180)
 
 
-def range2D(p1, p2):
-    return cmath.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
+def inStaticScene(spaceNo):
+    return 0 < spaceNo < gameconst.COPIED_SPACE_NO_START
 
 
-def range3D(p1, p2):
-    return cmath.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2)
+def inLineScene(spaceNo):
+    return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceLine
 
 
-def isStaticSpace(spaceNo):
-    return 0 < spaceNo < gameconst.COPIED_SPACE_NO_START or spaceInSpecial(spaceNo)
-
-
-def isLineSpace(spaceNo):
-    return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceLine
-
-
-def isWolrdBossSpace(spaceNo):
-    _type, _sub = whatSpaceTypeWithSub(spaceNo)
+def inWolrdBossScene(spaceNo):
+    _type, _sub = getSpaceTypeWithSub(spaceNo)
     return _type == gameconst.SpaceType.SpaceLine and _sub == gameconst.SpaceSubType.Boss
 
 
-def isDuelMapId(mapId):
+def checkDuelMapId(mapId):
     _type, _sub = GGD.datas[mapId]['type'], GGD.datas[mapId]['subType']
     return _type == gameconst.SpaceType.SpaceLine and _sub == gameconst.SpaceSubType.Yanwu
 
-def isDuelGround(spaceNo):
-    _type, _sub = whatSpaceTypeWithSub(spaceNo)
+def inDuelScene(spaceNo):
+    _type, _sub = getSpaceTypeWithSub(spaceNo)
     # 演武场 sub == 2
     if _type == gameconst.SpaceType.SpaceLine and _sub == gameconst.SpaceSubType.Yanwu:
         return True
 
     return False
 
-def isCubeSpace(spaceNo):
-    return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceCube
+def inCubeScene(spaceNo):
+    return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceCube
 
 
-def isCubeReady(spaceNo):
-    _mapId = getMapId(spaceNo)
+def inCubeReadyScene(spaceNo):
+    _mapId = fetchMapId(spaceNo)
     return cube_room.datas.get(_mapId, {}).get('type') == gameconst.CubeRoomType.READY
 
 
-def isWonderLandSpace(spaceNo):
-    return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceWonderLand
+def inWonderLandScene(spaceNo):
+    return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceWonderLand
 
-def isSiegeWarSpace(spaceNo):
-    return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceSiegeWar
+def inSiegeWarScene(spaceNo):
+    return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceSiegeWar
 
-def isYanWuSpace(spaceNo):
-    return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceLine and whatSpaceSubType(spaceNo) == gameconst.SpaceSubType.Yanwu
-
-def getCubeSpaceNo(mapId):
-    return getLineSpaceNo(mapId, 0)
+def inYanWuScene(spaceNo):
+    return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceLine and getSpaceSubType(spaceNo) == gameconst.SpaceSubType.Yanwu
 
 
-def isWorldLineType(lineType):
+def checkWorldLineType(lineType):
     return lineType in gameconst.MapIdDef.mapWorldSet
 
 
-def spaceInSpecial(spaceNo):
-    return False
-
-
 @functools.lru_cache(1024, typed=False)
-def spaceInWorldLine(spaceNo):
-    return isWorldLineType(getLineType(spaceNo))
+def inWorldLineScene(spaceNo):
+    return checkWorldLineType(parseLineType(spaceNo))
 
-def getDungeonStubGlobalName(dungeonNo, dungeonEnterType=gameconst.DungeonEnterType.UNKNOWN):
-    if dungeonEnterType == gameconst.DungeonEnterType.TEAM:
+def fetchDungeonStubGlobalName(dungeonNo, dungeonEnterType=gameconst.DungeonEnterTypeEnum.UNKNOWN):
+    if dungeonEnterType == gameconst.DungeonEnterTypeEnum.TEAM:
         return 'dungeon_{}_t'.format(dungeonNo)
-    elif dungeonEnterType == gameconst.DungeonEnterType.SINGLE:
+    elif dungeonEnterType == gameconst.DungeonEnterTypeEnum.SINGLE:
         return 'dungeon_{}_s'.format(dungeonNo)
-    elif dungeonEnterType == gameconst.DungeonEnterType.RAID:
+    elif dungeonEnterType == gameconst.DungeonEnterTypeEnum.RAID:
         return 'dungeon_{}_r'.format(dungeonNo)
-    elif dungeonEnterType == gameconst.DungeonEnterType.GUILD:
+    elif dungeonEnterType == gameconst.DungeonEnterTypeEnum.GUILD:
         return 'dungeon_{}_g'.format(dungeonNo)
     else:
         return 'dungeon_%s' % dungeonNo
 
-def getLineSpaceNo(lineType, lineNo=-1):
+def combineLineSpaceNo(lineType, lineNo=-1):
     import utils
     if lineNo < 0:
-        lineNo = random.randint(0, utils.getLineMaxNumber(lineType) - 1)
+        lineNo = random.randint(0, utils.fetchLineMaxNumber(lineType) - 1)
     return lineType * gameconst.SPACE_NO_INTERVAL + lineNo
 
 
-def getLineNo(spaceNo):
-    if not (isLineSpace(spaceNo) or isCubeSpace(spaceNo)):
+def parseLineNo(spaceNo):
+    if not (inLineScene(spaceNo) or inCubeScene(spaceNo)):
         return -1
 
     return spaceNo % gameconst.SPACE_NO_INTERVAL
 
 
-def getLineType(spaceNo):
-    if not isLineSpace(spaceNo):
+def parseLineType(spaceNo):
+    if not inLineScene(spaceNo):
         return 0
 
     return spaceNo // gameconst.SPACE_NO_INTERVAL
 
 
-def getDungeonNoBySpaceNo(spaceNo):
+def parseDungeonNoBySpaceNo(spaceNo):
     if spaceNo >= gameconst.SPACE_NO_INTERVAL:
         return spaceNo // gameconst.SPACE_NO_INTERVAL
     return spaceNo
 
 
-def setBit(x, index, on=True):
+def bset(x, index, on=True):
     bi = int(index / 8)
     si = index % 8
     qfl = len(x)
@@ -224,13 +204,13 @@ def setBit(x, index, on=True):
     if on:
         x[bi] |= tmp
     else:
-        if getBit(x, index):
+        if bitGet(x, index):
             x[bi] ^= tmp
 
     return x
 
 
-def getBit(x, index):
+def bitGet(x, index):
     bi = int(index / 8)
     si = index % 8
     if len(x) < bi + 1:
@@ -240,7 +220,7 @@ def getBit(x, index):
 
 
 # 设置int64整数列表表示的bit vector中第index个bit值
-def setInt64VectorBit(intList, index, on=True):
+def setInt64ListBit(intList, index, on=True):
     ii = index // 64
     bi = index % 64
     if on:
@@ -252,14 +232,14 @@ def setInt64VectorBit(intList, index, on=True):
 
 
 # 获得int64整数列表表示的bit vector中第index个bit值
-def getInt64VectorBit(intList, index):
+def getInt64ListBit(intList, index):
     ii = index // 64
     bi = index % 64
     return (intList[ii] >> bi) & 1 > 0
 
 
 # 获得int64整数列表表示的bit vector中所有1所在的bit所在的下标
-def getInt64VectorOnIndexes(intList):
+def getInt64ListOnIndexes(intList):
     bitList = []
     for i, num in enumerate(intList):
         if not num:
@@ -274,28 +254,6 @@ def getInt64VectorOnIndexes(intList):
             # 清除当前最低位的1
             num &= num - 1
     return bitList
-
-
-def test_getInt64VectorOnIndexes():
-    """
-    测试getInt64VectorOnIndexes函数的正确性
-    """
-    # 测试单个数组元素
-    assert getInt64VectorOnIndexes([0x1]) == [0]
-    assert getInt64VectorOnIndexes([0x2]) == [1]
-    assert getInt64VectorOnIndexes([0x3]) == [0, 1]
-    assert getInt64VectorOnIndexes([0x8000000000000000]) == [63]
-
-    # 测试多个数组元素
-    assert getInt64VectorOnIndexes([0x0, 0x1]) == [64]
-    assert getInt64VectorOnIndexes([0x1, 0x1]) == [0, 64]
-    assert getInt64VectorOnIndexes([0x3, 0x5]) == [0, 1, 64, 66]
-
-    # 测试全1的情况
-    assert len(getInt64VectorOnIndexes([0xFFFFFFFFFFFFFFFF])) == 64
-    assert getInt64VectorOnIndexes([0xFFFFFFFFFFFFFFFF]) == list(range(64))
-
-    print("All tests passed!")
 
 
 def hashableJsonHook(obj):
@@ -318,7 +276,7 @@ def round2(number, ndigit=None):
         return float(r)
 
 
-def getStubIndex():
+def fetchStubIndex():
     return KBEngine.getComponentGroupOrder()
 
 
@@ -326,27 +284,20 @@ def calcPosPoolIndex(rId, index):
     return rId * gameconst.ENTITY_POS_POLICY_MAX_NUM + index
 
 
-def getPosPoolIndex(posIndex):
+def fetchPosPoolIndex(posIndex):
     return posIndex % gameconst.ENTITY_POS_POLICY_MAX_NUM
 
 
-def getGameEntityId(entId):
-    return entId * 1000
-
-
-def getEntityId(gameEntityId):
-    return gameEntityId // 1000
-
-def isDungeonSpace(spaceNo):
-    return whatSpaceType(spaceNo) in (gameconst.SpaceType.SpaceWorldDungeon,
+def inDungeonScene(spaceNo):
+    return getSpaceType(spaceNo) in (gameconst.SpaceType.SpaceWorldDungeon,
                                       gameconst.SpaceType.SpaceNormalDungeon,
                                       gameconst.SpaceType.SpaceGuild)
 
-def isMineWarSpace(spaceNo):
-    return getMapId(spaceNo) in MBMA.datas.keys() and getLineNo(spaceNo) == 0
+def inMineWarScene(spaceNo):
+    return fetchMapId(spaceNo) in MBMA.datas.keys() and parseLineNo(spaceNo) == 0
 
 def getMineWarMineArea(spaceNo):
-    mapId = getMapId(spaceNo)
+    mapId = fetchMapId(spaceNo)
     for line, data in MBMA.datas.items():
         if mapId in data['sceneList']:
             return data['sceneList']
@@ -359,22 +310,22 @@ def getMineWarBattleArea(spaceNo):
 def isMineWarMineArea(spaceNo):
     return getMineWarBattleArea(spaceNo) > 0
 
-def spaceForbidTeamFollow(spaceNo):
+def checkSpaceForbidTeamFollow(spaceNo):
     if not spaceNo:
         return True
 
-    mapId = getMapId(spaceNo)
+    mapId = fetchMapId(spaceNo)
     sceneInfo = GGD.datas.get(mapId, None)
     if sceneInfo and not sceneInfo['ifTeamFollow']:
         return True
 
     return False
 
-def spaceForbidAutoFight(spaceNo):
+def checkSpaceForbidAutoFight(spaceNo):
     if not spaceNo:
         return True
 
-    mapId = getMapId(spaceNo)
+    mapId = fetchMapId(spaceNo)
     sceneInfo = GGD.datas.get(mapId, None)
     if sceneInfo and not sceneInfo['ifAutoFight']:
         return True
@@ -383,65 +334,62 @@ def spaceForbidAutoFight(spaceNo):
 
 def isBigWorldNaviCostLikedSpace(spaceNo):
     """打点地图跟大世界场景公用一份，但是不是大世界"""
-    _type, _sub = whatSpaceTypeWithSub(spaceNo)
-    # if _type == gameconst.SpaceType.SpaceWorldDungeon:
-    #     return True
-
+    _type, _sub = getSpaceTypeWithSub(spaceNo)
     if _type == gameconst.SpaceType.SpaceLine:
         return True
 
     return False
 
-def isSingleDungeonSpace(spaceNo):
-    if not isDungeonSpace(spaceNo):
+def inSingleDungeonScene(spaceNo):
+    if not inDungeonScene(spaceNo):
         return False
-    dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
-    if enterType == gameconst.DungeonEnterType.BOTH:
-        dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getSingleDungeonSpaceNoRange(dungeonNo)
+    dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    if enterType == gameconst.DungeonEnterTypeEnum.BOTH:
+        dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getSingleDungeonSpaceRange(dungeonNo)
         return dunSpaceStart <= spaceNo < dunSpaceEnd
     else:
-        return enterType == gameconst.DungeonEnterType.SINGLE
+        return enterType == gameconst.DungeonEnterTypeEnum.SINGLE
 
 
-def isTeamDungeonSpace(spaceNo):
-    if not isDungeonSpace(spaceNo):
+def inTeamDungeonScene(spaceNo):
+    if not inDungeonScene(spaceNo):
         return False
-    dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
-    if enterType == gameconst.DungeonEnterType.BOTH:
-        dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getTeamDungeonSpaceNoRange(dungeonNo)
+    dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    if enterType == gameconst.DungeonEnterTypeEnum.BOTH:
+        dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getTeamDungeonSpaceRange(dungeonNo)
         return dunSpaceStart <= spaceNo < dunSpaceEnd
     else:
-        return enterType == gameconst.DungeonEnterType.TEAM
+        return enterType == gameconst.DungeonEnterTypeEnum.TEAM
 
-def isRaidDungeonSpace(spaceNo):
-    if not isDungeonSpace(spaceNo):
+def inRaidDungeonScene(spaceNo):
+    if not inDungeonScene(spaceNo):
         return False
-    dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
-    if enterType == gameconst.DungeonEnterType.RAID:
+    dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    if enterType == gameconst.DungeonEnterTypeEnum.RAID:
         return True
     return False
 
-def isGuildBossDungeonSpace(spaceNo):
-    if not isDungeonSpace(spaceNo):
+def inGuildBossDungeonScene(spaceNo):
+    if not inDungeonScene(spaceNo):
         return False
-    dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    spaceType = GGD.datas[dungeonNo].get('type', gameconst.DungeonSpaceType.UNKNOWN)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
-    if spaceType == gameconst.DungeonSpaceType.GUILD_BOSS \
-        and enterType == gameconst.DungeonEnterType.GUILD:
+    dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
+    spaceType = GGD.datas[dungeonNo].get('type', gameconst.DungeonSpaceTypeEnum.UNKNOWN)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    if spaceType == gameconst.DungeonSpaceTypeEnum.GUILD_BOSS \
+        and enterType == gameconst.DungeonEnterTypeEnum.GUILD:
         return True
     return False
 
 def getKillMonsterRewardConfig(monsterLevel, playerLevel):
-        maxLevel = (ERD.maxKey - 1) // 2
-        deltaLevel = monsterLevel - playerLevel
-        if deltaLevel >= 0:
-            levelDelta = min(deltaLevel, maxLevel)
-        else:
-            levelDelta = max(deltaLevel, -maxLevel)
+    maxLevel = (ERD.maxKey - 1) // 2
+    deltaLevel = monsterLevel - playerLevel
+    if deltaLevel >= 0:
+        levelDelta = min(deltaLevel, maxLevel)
+    else:
+        levelDelta = max(deltaLevel, -maxLevel)
 
-        config = ERD.revenueLevelGapDic[levelDelta]
-        return config
+    config = ERD.revenueLevelGapDic[levelDelta]
+    return config

@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "dailyLimitNum": _tools.RODict({
         "ID": "dailyLimitNum",
-        "value": 5,
+        "value": 10,
     }),
     "weeklyLimitNum": _tools.RODict({
         "ID": "weeklyLimitNum",

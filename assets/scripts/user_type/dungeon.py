@@ -13,7 +13,7 @@ import userType
 import gamePlay_gamePlay as DDL
 
 
-class DungeonSpaceVal(userType.UserSoleType):
+class DungeonSpaceVal(userType.UserSingleType):
     SPACE_STATE_INIT = 1
     SPACE_STATE_DURING = 2
     SPACE_STATE_COMPLETE = 3
@@ -26,7 +26,7 @@ class DungeonSpaceVal(userType.UserSoleType):
         self.spaceBox = spaceBox
         self.spaceMgr = spaceMgr
         self.spaceLevel = spaceLevel
-        self.tCreate = utils.getNow()
+        self.tCreate = utils.curTS()
         self.nDestoryCnt = 0
         self.destroyTimer = 0
         self.completeDungeonTimer = 0
@@ -57,14 +57,14 @@ class DungeonSpaceVal(userType.UserSoleType):
         return self.state == self.SPACE_STATE_TO_DESTORY
 
     def getRemainTime(self, dungeonNo=None):
-        dungeonNo = dungeonNo or formula.getMapId(self.spaceNo)
+        dungeonNo = dungeonNo or formula.fetchMapId(self.spaceNo)
 
         if dungeonNo not in DDL.datas:
-            ERROR_MSG('Can\'t find dungeonNo in dungeonInfo: {}'.format(dungeonNo))
+            LOG_ERR('Can\'t find dungeonNo in dungeonInfo: {}'.format(dungeonNo))
             return 0
 
         timeout = DDL.datas[dungeonNo]['timeOut'] * 60
-        lostT = utils.getNow() - self.tCreate
+        lostT = utils.curTS() - self.tCreate
 
         remainT = int(timeout - lostT)
 
@@ -73,14 +73,14 @@ class DungeonSpaceVal(userType.UserSoleType):
 
     def cancelCompleteTimer(self, owner, tag):
         if self.completeDungeonTimer:
-            owner._cancelCallback(self.completeDungeonTimer, tag)
+            owner.cancelTimerCB(self.completeDungeonTimer, tag)
         self.clearCompleteTimer()
 
     def clearCompleteTimer(self):
         self.completeDungeonTimer = 0
 
     def getElapsedTime(self):
-        return utils.getNow() - self.tCreate
+        return utils.curTS() - self.tCreate
 
 # ======================================================
 # Dungeon Monster Creator TimeLine Structure
@@ -125,7 +125,7 @@ class DungeonSpaceTimeLineMixin(object):
             self.dungeonTimeLineDic[flagId].kills = 0
 
 
-class DungeonSpaceTimeLineVal(userType.UserSoleType):
+class DungeonSpaceTimeLineVal(userType.UserSingleType):
     def __init__(self, flagId=0, refreshCount=0, nextRefreshTime=0, stopRefresh=False, kills=0):
         self.flagId = flagId
         self.refreshCount = refreshCount
@@ -217,7 +217,7 @@ class DungeonEntityGeneratorQueueMixin(object):
 
         for entVal in val.entityList:
             self._gameEntityIdentifyIDReversedDict[entVal.entProps["gameEntityIdentifyID"]] = val.genUUID
-            _gid = utils.getGidFromGameEntityId(entVal.entProps["gameEntityId"])
+            _gid = utils.parseGidFromGameEntityId(entVal.entProps["gameEntityId"])
             self._gameEntityIdReversedDict.setdefault(_gid, set()).add(val.genUUID)
 
     def popEntityGeneratorVal(self, genUUID, default=None):
@@ -234,7 +234,7 @@ class DungeonEntityGeneratorQueueMixin(object):
 
         for entVal in val.entityList:
             self._gameEntityIdentifyIDReversedDict.pop(entVal.entProps["gameEntityIdentifyID"], None)
-            _gid = utils.getGidFromGameEntityId(entVal.entProps["gameEntityId"])
+            _gid = utils.parseGidFromGameEntityId(entVal.entProps["gameEntityId"])
             self._gameEntityIdReversedDict.get(_gid, set()).discard(genUUID)
         return val
 
@@ -249,7 +249,7 @@ class DungeonEntityGeneratorQueueMixin(object):
 
     def onDungeonEntityCreated(self, gameEntityIdentifyID):
         if gameEntityIdentifyID not in self._gameEntityIdentifyIDReversedDict:
-            ERROR_MSG("DungeonEntityGeneratorQueueMixin::onDungeonEntityCreated:: gameEntityIdentifyID not found",
+            LOG_ERR("DungeonEntityGeneratorQueueMixin::onDungeonEntityCreated:: gameEntityIdentifyID not found",
                       gameEntityIdentifyID, self._gameEntityIdentifyIDReversedDict)
             return
 
@@ -299,7 +299,7 @@ class SingleDungeonFounders(userType.UserDictType):
     def getFounderKey(self, playerGbId, spaceUUID):
         return playerGbId, spaceUUID
 
-class SingleDungeonFounderVal(userType.UserSoleType):
+class SingleDungeonFounderVal(userType.UserSingleType):
     def __init__(self, spaceNo, spaceUUID, playerGbId, playerBox, tEnter=0, tLeave=0):
         self.spaceNo = spaceNo
         self.spaceUUID = spaceUUID
@@ -310,13 +310,13 @@ class SingleDungeonFounderVal(userType.UserSoleType):
 
     def onAvatarEnter(self, gbId):
         if gbId == self.playerGbId:
-            self.tEnter = utils.getNow()
+            self.tEnter = utils.curTS()
             self.tLeave = 0
 
     def onAvatarLeave(self, gbId, isOffline=False):
         if gbId == self.playerGbId:
             self.tEnter = 0
-            self.tLeave = utils.getNow()
+            self.tLeave = utils.curTS()
             if isOffline:
                 self.playerBox = None
 
@@ -416,7 +416,7 @@ class RaidDungeonFounders(userType.UserDictType):
         self.pop(playerGBID, None)
 
 
-class RaidDungeonFounderVal(userType.UserSoleType):
+class RaidDungeonFounderVal(userType.UserSingleType):
     """RaidStub 团队副本中存在成员结构体"""
 
     def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0,
@@ -431,27 +431,27 @@ class RaidDungeonFounderVal(userType.UserSoleType):
 
     def onAvatarEnter(self, gbId):
         if gbId == self.playerGBID:
-            self.tEnter = utils.getNow()
+            self.tEnter = utils.curTS()
             self.tLeave = 0
 
     def onAvatarLeave(self, gbId, isOffline=False):
         if gbId == self.playerGBID:
             self.tEnter = 0
-            self.tLeave = utils.getNow()
+            self.tLeave = utils.curTS()
             if isOffline:
                 self.playerBox = None
 
     def hasAvatar(self):
         return self.tEnter and not self.tLeave
 
-class BaseDungeonFoundersMixin(userType.UserSoleType):
+class BaseDungeonFoundersMixin(userType.UserSingleType):
     def __init__(self):
         self.founders = DungeonFounderVals()
     
     def _lateReload(self):
         self.founders.reloadScript()
 
-class BaseDungeonStatisticFoundersMixin(userType.UserSoleType):
+class BaseDungeonStatisticFoundersMixin(userType.UserSingleType):
     def __init__(self):
         self.statisticFounders = DungeonStatisticFounderVals()
         self.statisticBatchCount = 0
@@ -484,7 +484,7 @@ class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, Dunge
         self.avatarGbId = avatarGbId
         self.avatarId = avatarId
 
-class DungeonStatisticMixin(userType.UserSoleType):
+class DungeonStatisticMixin(userType.UserSingleType):
     def __init__(self, gbID = 0, name = "", rank = 0, dmg = 0, hurt = 0, heal = 0, dead = 0):
         self.gbID = gbID
         self.name = name
@@ -497,7 +497,7 @@ class DungeonStatisticMixin(userType.UserSoleType):
     def getRank(self):
         return self.rank
 
-class DungeonFounderValMixin(userType.UserSoleType):
+class DungeonFounderValMixin(userType.UserSingleType):
     def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0, playerName=""):
         self.spaceNo = spaceNo
         self.spaceUUID = spaceUUID
@@ -509,13 +509,13 @@ class DungeonFounderValMixin(userType.UserSoleType):
 
     def onAvatarEnter(self, gbId):
         if gbId == self.playerGBID:
-            self.tEnter = utils.getNow()
+            self.tEnter = utils.curTS()
             self.tLeave = 0
 
     def onAvatarLeave(self, gbId, isOffline=False):
         if gbId == self.playerGBID:
             self.tEnter = 0
-            self.tLeave = utils.getNow()
+            self.tLeave = utils.curTS()
             if isOffline:
                 self.playerBox = None
 

@@ -20,20 +20,20 @@ class IStatistics(object):
         """
         检查统计记录的场景是否变化，变化则重置记录
         """
-        recordSpaceNo = self.getTempMiscProp(gameconst.AvatarProps.statisticDataRecordSpaceNo, 0)
+        recordSpaceNo = self.getTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecordSpaceNo, 0)
         if recordSpaceNo != self.baseSpaceNo:
-            self.setTempMiscProp(gameconst.AvatarProps.statisticDataRecord, {})
-            self.setTempMiscProp(gameconst.AvatarProps.statisticDataRecordSpaceNo, self.baseSpaceNo)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecord, {})
+            self.setTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecordSpaceNo, self.baseSpaceNo)
 
     def onLeaveStatisticSpace(self, fromSpaceNo):
         """
         离开场景回调
         """
         # 缓存清除
-        self.setTempMiscProp(gameconst.AvatarProps.statisticDataRecord, {})
-        recordSpaceNo = self.getTempMiscProp(gameconst.AvatarProps.statisticDataRecordSpaceNo, 0)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecord, {})
+        recordSpaceNo = self.getTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecordSpaceNo, 0)
         if recordSpaceNo != 0:
-            self.setTempMiscProp(gameconst.AvatarProps.statisticDataRecordSpaceNo, 0)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecordSpaceNo, 0)
             stub = gameengine.getStatisticStub(recordSpaceNo)
             stub.stopGetStatistics(self.gbID, recordSpaceNo)
 
@@ -43,7 +43,7 @@ class IStatistics(object):
         """
         self.checkStatisticRecordSpace()
 
-        dataRecord = self.getTempMiscProp(gameconst.AvatarProps.statisticDataRecord, {})
+        dataRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecord, {})
         for i, val in enumerate(data):
             gbId = val.get('gbId', 0)
             if gbId == 0:
@@ -51,7 +51,7 @@ class IStatistics(object):
             # val['rank'] = i + 1
             val['statisticsNum'] -= dataRecord.get(statisticType, {}).get(gbId, 0)
 
-        INFO_MSG('IStatistics::onGetStatistics: entityID={}, statisticType={}, data={}'.format(self.id, statisticType, data))
+        LOG_IFO('IStatistics::onGetStatistics: entityID={}, statisticType={}, data={}'.format(self.id, statisticType, data))
         self.client.onGetStatisticsClient(statisticType, data)
     
     def onGetStatisticsDetail(self, cache, statisticType, batchSize, batchNo, data):
@@ -59,10 +59,10 @@ class IStatistics(object):
         统计数据详情回调
         """
         # IStatistics::onGetStatisticsDetail: entityID=6272, batchSize=1, batchNo=1, data=[{'gbId': 5700768059476672513, 'name': '郑槿言', 'school': 1001, 'statisticsNum': 348, 'rank': 1}]
-        INFO_MSG('IStatistics::onGetStatisticsDetail: entityID={}, cache={}, statisticType={}, batchSize={}, batchNo={}, dataSize={}'.format(self.id, cache, statisticType, batchSize, batchNo, len(data)))
+        LOG_IFO('IStatistics::onGetStatisticsDetail: entityID={}, cache={}, statisticType={}, batchSize={}, batchNo={}, dataSize={}'.format(self.id, cache, statisticType, batchSize, batchNo, len(data)))
         self.checkStatisticRecordSpace()
 
-        dataRecord = self.getTempMiscProp(gameconst.AvatarProps.statisticDataRecord, {})
+        dataRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecord, {})
         # 本次是拉取缓存
         if cache:
             for val in data:
@@ -72,7 +72,7 @@ class IStatistics(object):
                 if statisticType not in dataRecord:
                     dataRecord[statisticType] = {}
                 dataRecord[statisticType][gbId] = val.get('statisticsNum', 0)
-            self.setTempMiscProp(gameconst.AvatarProps.statisticDataRecord, dataRecord)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecord, dataRecord)
             return
 
         for val in data:

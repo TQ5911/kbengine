@@ -26,4 +26,4 @@ def checkDBProperty():
 
 def sendCheckError(persistProList, id, typename):
     errMsg = "[{}({})] have persistProperty {} but not in database".format(typename, id, str(persistProList))
-    ERROR_MSG(errMsg)
+    LOG_ERR(errMsg)

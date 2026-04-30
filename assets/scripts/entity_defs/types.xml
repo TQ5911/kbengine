@@ -147,6 +147,7 @@
     <RANK>              UINT16          </RANK>
     <AUTH_PERMISSION>   UINT64          </AUTH_PERMISSION>
     <CHANNEL>           UINT8           </CHANNEL>
+    <HIST_COND>         UINT32          </HIST_COND>
 
     <FACE_DATA> FIXED_DICT
         <implementedBy>     appearanceInfo.faceDataIns     </implementedBy>
@@ -169,11 +170,14 @@
     <REWARD_VAL>   FIXED_DICT
         <Properties>
             <itemId>
-                <Type>    ITEMID  </Type>
+                <Type>  ITEMID  </Type>
             </itemId>
             <itemNum>
-                <Type>  UINT32   </Type>
+                <Type>  UINT32  </Type>
             </itemNum>
+            <bindType>
+                <Type>  UINT8   </Type>
+            </bindType>
         </Properties>
     </REWARD_VAL>
 
@@ -1255,9 +1259,6 @@
             <picFrameId>
                 <Type>  OUTFIT_ID       </Type>
             </picFrameId>
-            <bFollow>
-                <Type>  BOOL            </Type>
-            </bFollow>
             <bOnline>
                 <Type>  BOOL            </Type>
             </bOnline>
@@ -1322,20 +1323,6 @@
             </onlyCaptainCanMark>
         </Properties>
     </CLIENT_TEAM_MARK_INFO>
-
-    <BANDIT_CACHE_VAL> FIXED_DICT
-        <Properties>
-            <targetId>
-                <Type>  OBJECT_ID       </Type>
-            </targetId>
-            <posId>
-                <Type>  UINT16          </Type>
-            </posId>
-            <lineNo>
-                <Type>  UINT8           </Type>
-            </lineNo>
-        </Properties>
-    </BANDIT_CACHE_VAL>
 
     <CLIENT_TEAM_INFO> FIXED_DICT
         <Properties>
@@ -1404,9 +1391,6 @@
             <score>
                 <Type>  SCORE           </Type>
             </score>
-            <hpkScore>
-                <Type>  SCORE           </Type>
-            </hpkScore>
             <level>
                 <Type>  LEVEL           </Type>
             </level>
@@ -1419,9 +1403,6 @@
             <picFrameId>
                 <Type>  OUTFIT_ID       </Type>
             </picFrameId>
-            <bFollow>
-                <Type>  BOOL            </Type>
-            </bFollow>
             <bOnline>
                 <Type>  BOOL            </Type>
             </bOnline>
@@ -1506,18 +1487,6 @@
             <teamCaptainGbId>
                 <Type>  PLAYER_GBID    </Type>
             </teamCaptainGbId>
-            <banditKillerInfo>
-                <Type>  BANDIT_CACHE_VAL    </Type>
-            </banditKillerInfo>
-            <guildBanditId>
-                <Type>  OBJECT_ID </Type>
-            </guildBanditId>
-            <guildBanditGuild>
-                <Type>  GUILD_UUID  </Type>
-            </guildBanditGuild>
-            <randQimoInfo>
-                <Type>  BANDIT_CACHE_VAL    </Type>
-            </randQimoInfo>
             <teamMemberList>
                 <Type>  ARRAY <of>  TEAM_MEMBER_VAL </of>   </Type>
             </teamMemberList>
@@ -1583,9 +1552,6 @@
             <playerBox>
                 <Type>  MAILBOX       </Type>
             </playerBox>
-            <bFollow>
-                <Type>  BOOL          </Type>
-            </bFollow>
             <spaceNo>
                 <Type>  SPACE_NO      </Type>
             </spaceNo>
@@ -1615,12 +1581,6 @@
             <teamMemberList>
                 <Type>  ARRAY <of>  TEAM_MEMBER_CACHE_VAL </of>   </Type>
             </teamMemberList>
-            <followPlayerGbId>
-                <Type>  PLAYER_GBID    </Type>
-            </followPlayerGbId>
-            <teamCaptainBigWorldMapFollowPos>
-                <Type> PYTHON </Type>
-            </teamCaptainBigWorldMapFollowPos>
         </Properties>
     </TEAM_INFO_CACHE>
 
@@ -1924,12 +1884,6 @@
             <raidTeamDic>
                 <Type>  ARRAY   <of>    PLAYER_RAID_TEAM_CACHE_VAL   </of>   </Type>
             </raidTeamDic>
-            <followPlayerGbId>
-                <Type>  PLAYER_GBID    </Type>
-            </followPlayerGbId>
-            <raidLeaderBigWorldMapFollowPos>
-                <Type> PYTHON </Type>
-            </raidLeaderBigWorldMapFollowPos>
             <recruitInfo>
                 <Type>  UNICODE     </Type>
             </recruitInfo>
@@ -2831,6 +2785,9 @@
             <maxRoleTime>
                 <Type>  LONGTIME   </Type>
             </maxRoleTime>
+            <dueTime>
+                <Type>  LONGTIME   </Type>
+            </dueTime>
             <minRoleLevel>
                 <Type>  LEVEL   </Type>
             </minRoleLevel>
@@ -2899,6 +2856,9 @@
                 <Type> UNICODE </Type>
                 <DatabaseLength> 1024 </DatabaseLength>
             </cont>
+            <dueTime>
+                <Type>  LONGTIME   </Type>
+            </dueTime>
         </Properties>
     </MAIL_VAL>
 
@@ -3066,6 +3026,12 @@
             <fund>
                 <Type>  GUILD_FUND      </Type>
             </fund>
+            <joinTime>
+                <Type>  LONGTIME        </Type>
+            </joinTime>
+            <histCond>
+                <Type>  HIST_COND        </Type>
+            </histCond>
         </Properties>
     </GUILD_MEMBER_DATA_INFO>
 
@@ -3797,8 +3763,7 @@
                 <Type>  SCHOOL                  </Type>
             </school>
             <listData>
-                <Type>  PY_LIST                 </Type>
-                <DatabaseLength>  5120000                                       </DatabaseLength>
+                <Type>  ARRAY   <of>    PYTHON  </of>   </Type>
             </listData>
         </Properties>
     </LEADER_BOARD_SCHOOL_LIST_DATA_INFO>
@@ -3810,8 +3775,7 @@
                 <Type>  UINT8                   </Type>
             </leaderBoardType>
             <listData>
-                <Type>  PY_LIST                 </Type>
-                <DatabaseLength>  5120000                                       </DatabaseLength>
+                <Type>  ARRAY   <of>    PYTHON  </of>   </Type>
             </listData>
             <schoolsData>
                 <Type>  ARRAY   <of>    LEADER_BOARD_SCHOOL_LIST_DATA_INFO </of>    </Type>
@@ -4256,6 +4220,9 @@
             <lastFindTime>
                 <Type>  LONGTIME </Type>
             </lastFindTime>
+            <lastScheduleTime>
+                <Type>  LONGTIME </Type>
+            </lastScheduleTime>
         </Properties>
     </RELATION_ENEMY_DATA_INFO>
 
@@ -4285,6 +4252,9 @@
             <recordList>
                 <Type>  ARRAY <of>  PYTHON                      </of>   </Type>
             </recordList>
+            <killList>
+                <Type>  ARRAY <of>  PYTHON                      </of>   </Type>
+            </killList>
         </Properties>
     </ENEMY_MGR_DATA_INFO>
 
@@ -4797,6 +4767,9 @@
             <oldScore>
                 <Type>  SCORE                   </Type>
             </oldScore>
+            <oldBindMoney>
+                <Type>  MONEY                   </Type>
+            </oldBindMoney>
             <oldMoney>
                 <Type>  MONEY                   </Type>
             </oldMoney>
@@ -4827,6 +4800,9 @@
             <hostOffline>
                 <Type>  LONGTIME                </Type>
             </hostOffline>
+            <authOffline>
+                <Type>  LONGTIME                </Type>
+            </authOffline>
             <authLogin>
                 <Type>  LONGTIME                </Type>
             </authLogin>
@@ -5456,7 +5432,7 @@
                 <Type>  UINT8                   </Type>
             </opr>
             <key>
-                <Type>  STRING                  </Type>
+                <Type>  UINT8                   </Type>
             </key>
             <ts>
                 <Type>  LONGTIME                </Type>
@@ -5521,4 +5497,181 @@
             </bindType>
         </Properties>
     </CLI_MULTI_ENHANCE_CONSUMED_RESULT>
+
+    <CLI_RECORD_DATA_INFO> FIXED_DICT
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE </Type>
+            </name>
+            <school>
+                <Type>  SCHOOL </Type>
+            </school>
+            <level>
+                <Type>  LEVEL </Type>
+            </level>
+            <sex>
+                <Type>  UINT8 </Type>
+            </sex>
+            <ts>
+                <Type>  LONGTIME </Type>
+            </ts>
+            <type>
+                <Type>  UINT8 </Type>
+            </type>
+            <spaceNo>
+                <Type>  SPACE_NO </Type>
+            </spaceNo>
+        </Properties>
+    </CLI_RECORD_DATA_INFO>
+
+    <BOUNTY_ITEM_VAL> FIXED_DICT
+        <Properties>
+            <uuid>
+                <Type>  UUID  </Type>
+            </uuid>
+            <timestamp>
+                <Type>  LONGTIME  </Type>
+            </timestamp>
+            <leftTime>
+                <Type>  LONGTIME  </Type>
+            </leftTime>
+            <acceptedLeftTime>
+                <Type>  LONGTIME  </Type>
+            </acceptedLeftTime>
+            <bountyType>
+                <Type>  UINT8  </Type>
+            </bountyType>
+            <publishMoney>
+                <Type>  UINT32  </Type>
+            </publishMoney>
+            <depositMoney>
+                <Type>  UINT32  </Type>
+            </depositMoney>
+            <totalMoney>
+                <Type>  UINT32  </Type>
+            </totalMoney>
+            <flag>
+                <Type>  UINT8  </Type>
+            </flag>
+            <state>
+                <Type>  UINT8  </Type>
+            </state>
+
+            <gbid>
+                <Type>  PLAYER_GBID          </Type>
+            </gbid>
+            <name>
+                <Type>  UNICODE          </Type>
+            </name>
+            <school>
+                <Type>  SCHOOL          </Type>
+            </school>
+
+            <preyGbId>
+                <Type>  PLAYER_GBID          </Type>
+            </preyGbId>
+            <preyName>
+                <Type>  UNICODE          </Type>
+            </preyName>
+            <preySchool>
+                <Type>  SCHOOL          </Type>
+            </preySchool>
+
+            <hunterGbId>
+                <Type>  PLAYER_GBID          </Type>
+            </hunterGbId>
+            <hunterName>
+                <Type>  UNICODE          </Type>
+            </hunterName>
+            <hunterSchool>
+                <Type>  SCHOOL          </Type>
+            </hunterSchool>
+        </Properties>
+    </BOUNTY_ITEM_VAL>
+
+    <BOUNTY_ITEM_SYNC_VAL> FIXED_DICT
+        <Properties>
+            <baseInfo>
+                <Type>  BOUNTY_ITEM_VAL  </Type>
+            </baseInfo>
+            <preyOnline>
+                <Type>  BOOL            </Type>
+            </preyOnline>
+        </Properties>
+    </BOUNTY_ITEM_SYNC_VAL>
+
+    <BOUNTY_ITEM_CLIENT_VAL> FIXED_DICT
+        <Properties>
+            <baseInfo>
+                <Type>  BOUNTY_ITEM_VAL  </Type>
+            </baseInfo>
+            <preyOnline>
+                <Type>  BOOL            </Type>
+            </preyOnline>
+            <preyLevel>
+                <Type>  LEVEL           </Type>
+            </preyLevel>
+            <preyScore>
+                <Type>  SCORE           </Type>
+            </preyScore>
+            <preyPos>
+                <Type>  POSITION_ARG    </Type>
+            </preyPos>
+            <preySpaceNo>
+                <Type>  SPACE_NO        </Type>
+            </preySpaceNo>
+        </Properties>
+    </BOUNTY_ITEM_CLIENT_VAL>
+
+    <BOUNTY_INFO>   FIXED_DICT
+        <implementedBy>     BountyInfo.bountyInfoInstance    </implementedBy>
+        <Properties>
+            <bountyList>
+                <Type>  ARRAY <of>  BOUNTY_ITEM_VAL </of>   </Type>
+            </bountyList>
+        </Properties>
+    </BOUNTY_INFO>
+
+    <HUNTER_RANK_ITEM_VAL> FIXED_DICT
+        <Properties>
+            <hunterGbId>
+                <Type>  PLAYER_GBID          </Type>
+            </hunterGbId>
+            <hunterName>
+                <Type>  UNICODE          </Type>
+            </hunterName>
+            <successedCnt>
+                <Type>  UINT32          </Type>
+            </successedCnt>
+            <failedCnt>
+                <Type>  UINT32          </Type>
+            </failedCnt>
+            <lastUpdateTimestamp>
+                <Type>  LONGTIME          </Type>
+            </lastUpdateTimestamp>
+        </Properties>
+    </HUNTER_RANK_ITEM_VAL>
+
+    <HUNTER_RANK_INFO>   FIXED_DICT
+        <implementedBy>     BountyInfo.hunterRankInfoInstance    </implementedBy>
+        <Properties>
+            <hunterRankList>
+                <Type>  ARRAY <of>  HUNTER_RANK_ITEM_VAL </of>   </Type>
+            </hunterRankList>
+        </Properties>
+    </HUNTER_RANK_INFO>
+
+    <TITLE_VAL_INFO> FIXED_DICT
+        <Properties>
+            <titleId>
+                <Type>  TITLE_ID   </Type>
+            </titleId>
+            <expireTime>
+                <Type>  LONGTIME   </Type>
+            </expireTime>
+        </Properties>
+    </TITLE_VAL_INFO>
 </root>

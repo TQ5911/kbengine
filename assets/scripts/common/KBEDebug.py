@@ -79,6 +79,12 @@ def TRACE_MSG(*args, **kwargs):
     printMsg(args, False)
 
 
+def LOG_DBG(*args, **kwargs):
+    if DebugLevelType.DEBUG >= debugLevel:
+        KBEngine.scriptLogType(KBEngine.LOG_TYPE_DBG)
+        printMsg(args, True)
+
+
 def DEBUG_MSG(*args, **kwargs):
     if DebugLevelType.DEBUG >= debugLevel:
         KBEngine.scriptLogType(KBEngine.LOG_TYPE_DBG)
@@ -91,10 +97,23 @@ def INFO_MSG(*args, **kwargs):
         printMsg(args, False)
 
 
+def LOG_IFO(*args, **kwargs):
+    if DebugLevelType.INFO >= debugLevel:
+        KBEngine.scriptLogType(KBEngine.LOG_TYPE_INFO)
+        printMsg(args, False)
+
+
 def WARNING_MSG(*args, **kwargs):
     if DebugLevelType.WARNING >= debugLevel:
         KBEngine.scriptLogType(KBEngine.LOG_TYPE_WAR)
         printMsg(args, True)
+
+
+def LOG_WARN(*args, **kwargs):
+    if DebugLevelType.WARNING >= debugLevel:
+        KBEngine.scriptLogType(KBEngine.LOG_TYPE_WAR)
+        printMsg(args, True)
+
 
 def EXCEPT_WARNING_MSG(*args, **kwargs):
     if DebugLevelType.WARNING >= debugLevel:
@@ -126,13 +145,25 @@ def ERROR_MSG(*args, **kwargs):
         iFeiShu.instance().reportErrorMsg(errMsg)
 
 
+def LOG_ERR(*args, **kwargs):
+    if DebugLevelType.ERROR >= debugLevel:
+        KBEngine.scriptLogType(KBEngine.LOG_TYPE_ERR)
+        for a in args:
+            if 'UnicodeDecode' in str(a) and not kwargs.get('exceptHook', False):
+                import traceback
+                traceback.print_stack()
+        errMsg = printMsg(args, True)
+        import iFeiShu
+        iFeiShu.instance().reportErrorMsg(errMsg)
+
+
 def FUNCTION_DEBUG():
     def _wrapper(fn):
         @functools.wraps(fn)
         def __wrapper(*args, **kwargs):
-            ERROR_MSG('[FN_DEBUG]   ->  called --> {}'.format(fn.__name__), args, kwargs)
+            LOG_ERR('[FN_DEBUG]   ->  called --> {}'.format(fn.__name__), args, kwargs)
             r = fn(*args, **kwargs)
-            ERROR_MSG('[FN_DEBUG]   ->  ended  --> {}  result: {}'.format(fn.__name__, r))
+            LOG_ERR('[FN_DEBUG]   ->  ended  --> {}  result: {}'.format(fn.__name__, r))
             return r
         return __wrapper
     return _wrapper

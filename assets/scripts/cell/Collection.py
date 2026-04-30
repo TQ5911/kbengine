@@ -20,7 +20,6 @@ import gameglobal
 import const_const as CONST
 import NPC_Pick as NPD
 import NPC_pickConst as NPCST
-import NPC_pickTimes as NPPT
 import creep_bornState as CBSD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
@@ -39,25 +38,25 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         # super(iFubenSpace.IFubenSpace, self).__init__()
         iGameEntity.IGameEntity.__init__(self)
         iEntityRefresh.IEntityRefresh.__init__(self)
-        self.force = gameconst.ForceType.NPC
+        self.force = gameconst.ForceTypeEnum.NPC
         self.type = NPD.datas.get(self.collectionId, {}).get('type', gameconst.CollectionType.NORMAL)
-        DEBUG_MSG("--------create collection", self.id, self.refreshTime, self.gameEntityId, self.collectionId, self.type)
+        LOG_DBG("--------create collection", self.id, self.refreshTime, self.gameEntityId, self.collectionId, self.type)
 
         if not self.name:
             self.name = NPD.datas.get(self.collectionId, {}).get('name', '无名采集物')
 
         self.initPosition()
         if NPD.datas.get(self.collectionId, {}).get('isInvalid'):
-            ERROR_MSG('create invalid collection!', self.collectionId)
+            LOG_ERR('create invalid collection!', self.collectionId)
             self.delaySafeDestroy(5)
 
         self._initBornState()
 
         spaceMgr = self.spaceMgr
-        gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         if spaceMgr:
             spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
-        elif formula.isDungeonSpace(self.spaceNo):
+        elif formula.inDungeonScene(self.spaceNo):
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.collectionId),
                                              'gid_{}'.format(gid), self.__class__.__name__,))
@@ -69,7 +68,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         ifBornState = NPD.datas[self.collectionId]['ifBornState']
         if ifBornState:
             self.changeBornState(gameconst.BornStateType.invisible)
-            self._callback(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
+            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
                            (gameconst.BornStateType.static, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
             self.changeBornState(gameconst.BornStateType.move)
@@ -82,10 +81,10 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         return self.collectionId
 
     def getPickTimes(self, collectionId):
-        pickData = NPPT.datas.get(collectionId, None)
+        pickData = NPD.datas.get(collectionId, None)
         if not pickData:
             return 0
-        return pickData['pickTimes']
+        return pickData['forPickTimes']
 
     def getSpecialPickTimes(self, collectionId):
         collData = NPD.datas.get(collectionId, None)
@@ -104,16 +103,18 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             super(Collection, self).onTimer(tid, userData)
 
     def onCollectRewards(self, avatarId, gbId, needDestroy):
-        DEBUG_MSG('onCollectRewards::', needDestroy)
+        LOG_DBG('onCollectRewards::', needDestroy)
         if not needDestroy:
             return
 
         spaceMgr = self.spaceMgr
         if spaceMgr:
-            spaceMgr.onCollectionBeCollect(utils.getGidFromGameEntityId(self.gameEntityId), self.creepBaseId)
+            spaceMgr.onCollectionBeCollect(utils.parseGidFromGameEntityId(self.gameEntityId), self.creepBaseId)
+            if formula.isMineWarMineArea(self.spaceNo):
+                spaceMgr.onAvatarGetMineEntity(self.id, avatarId)
 
-        if formula.isLineSpace(self.spaceNo):
-            lineType = formula.getMapId(self.spaceNo)
+        if formula.inLineScene(self.spaceNo):
+            lineType = formula.fetchMapId(self.spaceNo)
             gameengine.getLineStub(lineType).onCollectionBeCollectAndDestroyed(self.spaceNo, self.posIndex, self.gameEntityId)
         # TODO:: 处理非线空间的Entity
 
@@ -123,7 +124,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if self.dropEquipId != dropEquipId:
             return
 
-        INFO_MSG('Collection onEquipDropDestroy', self.id, dropEquipId)
+        LOG_IFO('Collection onEquipDropDestroy', self.id, dropEquipId)
         self.dropEquipId = 0
         self.delaySafeDestroy()
 
@@ -171,18 +172,21 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             self.onCollectRewards(avatarId, gbId, False)
 
 
-    def checkAvatarGather(self, avatarBase, gbId, ctx):
+    def checkAvatarGather(self, avatarBase, gbId, ctx, isPicking):
         ret = self._checkAvatarGather(avatarBase, gbId)
         if not ret:
-            WARNING_MSG("checkAvatarGather::failed")
+            LOG_WARN("checkAvatarGather::failed")
             return False
 
         # 矿战预检查
         avatar = KBEngine.entities.get(avatarBase.id)
         if avatar and not avatar.mineWarCellPrecheckCollection(self.collectionId):
             return False
+        
+        if self.groupLock:
+            return False
 
-        avatarBase.checkGatherCond(self.collectionId, self.id, self.dropEquipId, ctx)
+        avatarBase.checkGatherCond(self.collectionId, self.id, self.dropEquipId, ctx, isPicking)
         return True
 
     def checkAvatarGatherFlag(self, avatarBase, gbId):
@@ -198,26 +202,26 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
     def _checkAvatarGather(self, avatarBase, gbId, sendMsg=True):
         npData = NPD.datas[self.collectionId]
         if npData['timeCheck'] and self.gatherAvatars.get(gbId, 0) >= npData['timeCheck']:
-            WARNING_MSG("_checkAvatarGather failed1", npData['timeCheck'], self.gatherAvatars.get(gbId, 0))
+            LOG_WARN("_checkAvatarGather failed1", npData['timeCheck'], self.gatherAvatars.get(gbId, 0))
             return False
 
         if npData.get('isInvalid'):
-            ERROR_MSG('pick invalid collection!', self.collectionId)
+            LOG_ERR('pick invalid collection!', self.collectionId)
             return False
 
         if not avatarBase:
-            ERROR_MSG('_checkAvatarGather, cannot find avatar111', avatarBase)
+            LOG_ERR('_checkAvatarGather, cannot find avatar111', avatarBase)
             return False
 
         canPickTime = npData['timeCheck']
         if canPickTime:
             avatar = KBEngine.entities.get(avatarBase.id)
             if not avatar or avatar.isDestroyed:
-                ERROR_MSG('_checkAvatarGather, cannot find avatar', avatarBase)
+                LOG_ERR('_checkAvatarGather, cannot find avatar', avatarBase)
                 return False
             curTime = avatar.getCollectionAlreadyPickTime(self.collectionId)
             if curTime<0 or curTime>=canPickTime:
-                WARNING_MSG("_checkAvatarGather failed2", canPickTime, curTime)
+                LOG_WARN("_checkAvatarGather failed2", canPickTime, curTime)
                 return False
 
         pickTimes = self.getPickTimes(self.collectionId)
@@ -231,7 +235,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         curPickTimes, pickTimes = self.getGatherPickTimes(gbId)
 
         if avatarBase.client:
-            DEBUG_MSG("onUpdateCollectionGatherPickTimes", self.id, curPickTimes, pickTimes)
+            LOG_DBG("onUpdateCollectionGatherPickTimes", self.id, curPickTimes, pickTimes)
             avatarBase.client.onUpdateCollectionGatherPickTimes(self.id, curPickTimes, pickTimes)
 
     def getGatherPickTimes(self, gbId):
@@ -252,8 +256,8 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             self.onEntityRefresh()
 
         if KBEngine.isShuttingDown() and self.dropEquipId:
-            ERROR_MSG('Collection onDestroy', self.id, KBEngine.isShuttingDown())
-            _collEndTime = utils.getNow() + 60
+            LOG_ERR('Collection onDestroy', self.id, KBEngine.isShuttingDown())
+            _collEndTime = utils.curTS() + 60
             gameengine.getGlobalBase('DropStub').updateCollEndTime(self.dropEquipId, _collEndTime)
 
     def onEntityRefresh(self):

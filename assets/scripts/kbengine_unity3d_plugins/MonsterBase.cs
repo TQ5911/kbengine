@@ -45,6 +45,8 @@ namespace KBEngine
 		
 		public float mulSpeed = 0f;
 		
+		public Byte recoverProgress = 0;
+		public virtual void onRecoverProgressChanged(Byte oldValue) {}
 		
 		public Int32 siegeWarCamp = 0;
 		
@@ -198,6 +200,10 @@ namespace KBEngine
 				case 265:
 					Int32 onDead_arg1 = stream.readInt32();
 					onDead(onDead_arg1);
+					break;
+				case 463:
+					Vector3 onExitShiftByConflict_arg1 = stream.readVector3();
+					onExitShiftByConflict(onExitShiftByConflict_arg1);
 					break;
 				case 296:
 					Int32 onGetAureoleInfo_arg1 = stream.readInt32();
@@ -739,6 +745,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onPositionChanged(oldval_position);
+						}
+
+						break;
+					case 221:
+						Byte oldval_recoverProgress = recoverProgress;
+						recoverProgress = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onRecoverProgressChanged(oldval_recoverProgress);
+						}
+						else
+						{
+							if(inWorld)
+								onRecoverProgressChanged(oldval_recoverProgress);
 						}
 
 						break;
@@ -1353,6 +1375,27 @@ namespace KBEngine
 					else
 					{
 						onPositionChanged(oldval_position);
+					}
+				}
+			}
+
+			Byte oldval_recoverProgress = recoverProgress;
+			Property prop_recoverProgress = pdatas[7];
+			if(prop_recoverProgress.isBase())
+			{
+				if(inited && !inWorld)
+					onRecoverProgressChanged(oldval_recoverProgress);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_recoverProgress.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onRecoverProgressChanged(oldval_recoverProgress);
 					}
 				}
 			}

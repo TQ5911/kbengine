@@ -46,10 +46,6 @@
             <Arg>   PY_LIST     </Arg>
         </flowCtrlDungeonCollectionReleaseComplete>
 
-        <flowCtrlDungeonBuffPointReleaseComplete>
-            <Arg>   PY_LIST     </Arg>
-        </flowCtrlDungeonBuffPointReleaseComplete>
-
         <flowCtrlDungeonAirWallReleaseComplete>
             <Arg>   PY_LIST     </Arg>
         </flowCtrlDungeonAirWallReleaseComplete>

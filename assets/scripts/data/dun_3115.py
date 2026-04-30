@@ -43,6 +43,7 @@ datas ={
     "PosY": 5.398143,
     "PosZ": 130.2683,
     "Props": {
+      "ChestGroupID": 1,
       "GroupID": "",
       "Level": 28,
       "LightPillar": "",
@@ -52,7 +53,7 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 600.0,
+      "RefreshTime": 15.0,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -75,6 +76,7 @@ datas ={
     "PosY": 3.673163,
     "PosZ": 120.7225,
     "Props": {
+      "ChestGroupID": 1,
       "GroupID": "",
       "Level": 28,
       "LightPillar": "",
@@ -84,7 +86,7 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 600.0,
+      "RefreshTime": 15.0,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -107,6 +109,7 @@ datas ={
     "PosY": 3.673163,
     "PosZ": 117.1892,
     "Props": {
+      "ChestGroupID": 1,
       "GroupID": "",
       "Level": 28,
       "LightPillar": "",
@@ -116,7 +119,7 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 600.0,
+      "RefreshTime": 15.0,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -139,6 +142,7 @@ datas ={
     "PosY": 5.366189,
     "PosZ": 125.2552,
     "Props": {
+      "ChestGroupID": 1,
       "GroupID": "",
       "Level": 28,
       "LightPillar": "",
@@ -148,7 +152,7 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 600.0,
+      "RefreshTime": 15.0,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -171,6 +175,7 @@ datas ={
     "PosY": 4.569312,
     "PosZ": 123.7423,
     "Props": {
+      "ChestGroupID": 1,
       "GroupID": "",
       "Level": 28,
       "LightPillar": "",
@@ -180,7 +185,7 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 600.0,
+      "RefreshTime": 15.0,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -203,10 +208,12 @@ datas ={
     "PosY": 8.806935,
     "PosZ": 149.4715,
     "Props": {
+      "ChestGroupID": 1,
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 600.0,
+      "RefreshTime": 40.0,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1
@@ -284,6 +291,33 @@ datas ={
       "TelX": 59.58692,
       "TelY": 3.726687,
       "TelZ": 87.07021
+    }
+  },
+  "31158005": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 180.5462,
+    "DisplayName": "",
+    "EntityID": 16002002,
+    "ID": 31158005,
+    "Name": "\u6df7\u6c8c\u56de\u5eca\u4e00\u5c42\u5b88\u62a4\u5b9d\u7bb1-\u9ad8\u7ea7",
+    "PosX": 79.39975,
+    "PosY": 3.726561,
+    "PosZ": 92.82285,
+    "Props": {
+      "ChestGroupID": "",
+      "IsOnGround": 1,
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 15.0,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

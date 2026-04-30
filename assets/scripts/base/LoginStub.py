@@ -51,7 +51,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         # 注册人数
         gamesql.queryCountAccountNum(self._initAccountRegNum)
 
-        self.todayAccountRegNumTs= utils.getNow()
+        self.todayAccountRegNumTs= utils.curTS()
         self.accountTodayRegNum.setSum(self, 0)
 
     def doNext(self):
@@ -95,9 +95,6 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         elif userData == gametimer.LOGIN_STUB_SYNC_INTERFACE_REGNUM:
             gameglobal.localBaseApp.notifyInterfaceSyncRegisterCount(self.accountRegNum.dataSum)
-
-        elif userData == gametimer.LOGIN_STUB_REG_NUM_CNT:
-            self.regNumLog()
         
         elif userData == gametimer.LOGIN_STUB_LOG_TRACKING_PCU:
             LogTrackingMgr.LogTrackingMgr.Server_Pcu(
@@ -110,7 +107,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return gameconfig
 
     def onCentralServerConnected(self, centralServerId):
-        INFO_MSG('onCentralServerConnected', centralServerId, KBEngine.getComponentGroupOrder())
+        LOG_IFO('onCentralServerConnected', centralServerId, KBEngine.getComponentGroupOrder())
         if KBEngine.getComponentGroupOrder()==1:
             self.tryRegisterServer(centralServerId)
 
@@ -121,13 +118,13 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def tryRegisterServer(self, centralServerId):
         if not KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
-            self._callback(5, 'tryRegisterServer', (centralServerId,), gametimer.TIMER_TAG_TRY_REGISTER_SERVER)
+            self.addTimerCB(5, 'tryRegisterServer', (centralServerId,), gametimer.TIMER_TAG_TRY_REGISTER_SERVER)
         else:
             self.registerServer(centralServerId)
 
-    def onAccountDestroy(self, accountName, accountType, devicePlatId, centralServerId, channelId):
-        INFO_MSG("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId)
-        realAccountName = utils.getRealAccountName(accountType, accountName)
+    def onAccountDestroy(self, accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr):
+        LOG_IFO("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr)
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
         self.account2box.pop(realAccountName, None)
         # deduct account online num
         self.accountNumCounter.decSum(self)
@@ -137,27 +134,27 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.playerNumPlat[devicePlatId][channelId] = max(curNum - 1, 0)
 
         if gameconfig.enableCentralLogin():
-            self.notifyCentralServerOffline(accountName, accountType, centralServerId)
+            self.notifyCentralServerOffline(accountName, accountType, centralServerId, sessionIdStr)
         
         redisUtils.RedisUtils.getSVIPFlag(accountName, self._onDecSVIPAccount)
 
     def incSVIPOnlineNumBySetSVIP(self):
-        INFO_MSG("incSVIPOnlineNumBySetSVIP")
+        LOG_IFO("incSVIPOnlineNumBySetSVIP")
         self.SVIPOnlineNum.incSum(self)
 
     def _onIncSVIPAccount(self, cid, err, res):
-        INFO_MSG("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
+        LOG_IFO("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
         if err:
-            ERROR_MSG("_onIncSVIPAccount", "err", err)
+            LOG_ERR("_onIncSVIPAccount", "err", err)
             return
 
         if res and res.decode() == '1':
             self.SVIPOnlineNum.incSum(self)
 
     def _onDecSVIPAccount(self, cid, err, res):
-        INFO_MSG("_onDecSVIPAccount", "cid", cid, "err", err, "res", res)
+        LOG_IFO("_onDecSVIPAccount", "cid", cid, "err", err, "res", res)
         if err:
-            ERROR_MSG("_onDecSVIPAccount", "err", err)
+            LOG_ERR("_onDecSVIPAccount", "err", err)
             return
 
         if res and res.decode() == '1':
@@ -166,16 +163,19 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def updateSVIPOnlineNum(self):
         redisUtils.RedisUtils.set(gameconst.RedisKey.NORMAL_ONLINE_NUM + str(gameconfig.serverId()), self.accountNumCounter.dataSum - self.SVIPOnlineNum.dataSum)
 
-    def onAccountLogin(self, accountName, devicePlatId, box, accountType):
-        INFO_MSG("onAccountLogin::", accountName, devicePlatId, box, accountType)
-        realAccountName = utils.getRealAccountName(accountType, accountName)
+    def onAccountLogin(self, accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr):
+        LOG_IFO("onAccountLogin::", accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr)
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
         if realAccountName in self.kickAccountSet:
-            self.onKickAccount(accountType, accountName, gameconst.AVATAR_OFFLINE_REASON_KICK_BY_CENTRAL_SERVER)
+            self.onKickAccount(accountType, accountName, gameconst.OFFLINE_REASON_KICK_BY_CENTRAL_SERVER)
         else:
             self.account2box[realAccountName] = box
 
+        if gameconfig.enableCentralLogin():
+            self.notifyCentralServerOnline(accountName, accountType, centralServerId, sessionIdStr)
+
     def onAccountCreated(self, accountName, devicePlatId, isNew, channelId):
-        INFO_MSG("onAccountCreated::", accountName, devicePlatId, isNew, channelId)
+        LOG_IFO("onAccountCreated::", accountName, devicePlatId, isNew, channelId)
         # add account online num
         self.accountNumCounter.incSum(self)
 
@@ -191,16 +191,16 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         redisUtils.RedisUtils.getSVIPFlag(accountName, self._onIncSVIPAccount)
 
     def onKickAccount(self, accountType, accountName, kickReason):
-        realAccountName = utils.getRealAccountName(accountType, accountName)
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
         self.kickAccountSet.discard(realAccountName)
         self.doOnOthersBaseByAccountName([realAccountName, ], 'kickAccount',
             (kickReason, accountName, accountType), self, 'onKickAccountFail',
                                          (realAccountName,))
 
     def onKickAccountFail(self, failOpenIds, realAccountName):
-        WARNING_MSG("onKickAccountFail", failOpenIds, realAccountName)
+        LOG_WARN("onKickAccountFail", failOpenIds, realAccountName)
         self.kickAccountSet = set.union(self.kickAccountSet, set(realAccountName))
-        self._callback(30, 'rmFromKickAccountSet', (realAccountName,), gametimer.TIMER_TAG_REMOVE_FROM_KICK_ACCOUNT_SET)
+        self.addTimerCB(30, 'rmFromKickAccountSet', (realAccountName,), gametimer.TIMER_TAG_REMOVE_FROM_KICK_ACCOUNT_SET)
 
     def rmFromKickAccountSet(self, realAccountName):
         self.kickAccountSet.discard(realAccountName)
@@ -230,36 +230,22 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def _initAccountRegNum(self, ret, num, insertId, err):
         if err:
-            ERROR_MSG('LoginStub::_initAccountRegSet query db err.', err)
+            LOG_ERR('LoginStub::_initAccountRegSet query db err.', err)
             return
 
         self.accountRegNum.setSum(self, int(ret[0][0]))
-        INFO_MSG('LoginStub::_initAccountRegSet init reg num:', self.accountRegNum.dataSum)
+        LOG_IFO('LoginStub::_initAccountRegSet init reg num:', self.accountRegNum.dataSum)
 
     def gmLookUpAccount(self, cbBox, realAccountName, uid, index, raw):
         accountBox = self.account2box.get(realAccountName, None)
         cbBox.onGmFindAccount(accountBox, realAccountName, index, raw, uid)
 
     def updateTodayRegNum(self):
-        DEBUG_MSG("updateTodayRegNum", self.todayAccountRegNumTs)
-        if utils.isDiffDay(self.todayAccountRegNumTs, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
+        LOG_DBG("updateTodayRegNum", self.todayAccountRegNumTs)
+        if utils.checkDiffDay(self.todayAccountRegNumTs, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
             self.accountTodayRegNum.setSum(self, 0)
-            self.todayAccountRegNumTs = utils.getNow()
-            DEBUG_MSG("reset")
+            self.todayAccountRegNumTs = utils.curTS()
+            LOG_DBG("reset")
 
         self.accountTodayRegNum.incSum(self)
 
-    def syncRegNumLog(self):
-        #self.pyAddTimer(1, 60, gametimer.LOGIN_STUB_REG_NUM_CNT)
-        pass
-
-    def regNumLog(self):
-        pass
-        # if utils.isDiffDay(self.todayAccountRegNumTs, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
-        #     self.accountTodayRegNum.setSum(self, 0)
-        #     self.todayAccountRegNumTs = utils.getNow()
-        #
-        # gamelog.makeWLog("RegisterNum", {
-        #         'all': self.accountRegNum.dataSum,
-        #         'today_add': self.accountTodayRegNum.dataSum
-        #     })

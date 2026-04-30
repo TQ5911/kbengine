@@ -337,7 +337,7 @@ datas = _tools.RODict({
     7000: _tools.RODict({
         "ID": 7000,
         "name": "演武场",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,

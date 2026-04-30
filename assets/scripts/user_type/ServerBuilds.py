@@ -21,7 +21,7 @@ import gameglobal
 import dataUtils
 import LogTrackingMgr
 
-class Build(userType.UserSoleType):
+class Build(userType.UserSingleType):
     """BUILD_INFO"""
     ACTIVE_SKILL_SLOTS_COUNT = 14
 
@@ -50,8 +50,8 @@ class Build(userType.UserSoleType):
         return slots[slotId]
 
     def isRightSlot(self, skillId, slotId):
-        isUltraSkill = utils.hasSkillTag(skillId, gameconst.SkillTag.UltraSkill)
-        isGeneralSkill = utils.hasSkillTag(skillId, gameconst.SkillTag.GeneralSkill)
+        isUltraSkill = utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill)
+        isGeneralSkill = utils.hasSkillTagById(skillId, gameconst.SkillTag.GeneralSkill)
         if slotId is None:
             return False
         if slotId == 0 and not isGeneralSkill:
@@ -66,7 +66,7 @@ class Build(userType.UserSoleType):
         return True
 
     def getSkillRecommendSlot(self, owner, skillId):
-        if utils.hasSkillTag(skillId, gameconst.SkillTag.UltraSkill):
+        if utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill):
             if not self.activeSkills[Build.ULTRA_SKILL_SLOT]:
                 return Build.ULTRA_SKILL_SLOT
             else:
@@ -80,7 +80,7 @@ class Build(userType.UserSoleType):
         recommendSlot = recommendSkills.index(skillId) if skillId in recommendSkills else None
         if recommendSlot is not None and not self.activeSkills[recommendSlot]:
             if not self.isRightSlot(skillId, recommendSlot):
-                ERROR_MSG('skill and slot mismatch', recommendSlot, skillId)
+                LOG_ERR('skill and slot mismatch', recommendSlot, skillId)
                 return None
             return recommendSlot
 
@@ -184,7 +184,7 @@ class Build(userType.UserSoleType):
         if not cfgData:
             cfgData = SRSUD.datas.get(oldSkillId, None)
             if not cfgData:
-                ERROR_MSG('getMaxLevel cfgData is None', skillId, oldSkillId)
+                LOG_ERR('getMaxLevel cfgData is None', skillId, oldSkillId)
                 return 1
         return len(cfgData.get('levelLimit')) + 1
 
@@ -194,15 +194,15 @@ class Build(userType.UserSoleType):
 
         _morphBaseSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
         if delta > 0 and self.skillLevels[skillId] + delta > self.getMaxLevel(owner, _morphBaseSkillId, _morphBaseSkillId):
-            DEBUG_MSG('skillLv reach max', owner.id, skillId, self.skillLevels)
+            LOG_DBG('skillLv reach max', owner.id, skillId, self.skillLevels)
             return False
 
         if delta < 0 and self.skillLevels[skillId] + delta < 1:
-            DEBUG_MSG('skillLv reach min', owner.id, skillId, self.skillLevels)
+            LOG_DBG('skillLv reach min', owner.id, skillId, self.skillLevels)
             return False
 
         if not owner.hasSkill(skillId):
-            DEBUG_MSG('skill does not unlocked')
+            LOG_DBG('skill does not unlocked')
             return False
 
         return True
@@ -212,16 +212,16 @@ class Build(userType.UserSoleType):
             return False
 
         if delta != 1:
-            ERROR_MSG('levelUp delta must be 1', skillId, delta)
+            LOG_ERR('levelUp delta must be 1', skillId, delta)
             return
 
         _morphBaseSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
         if delta > 0 and self.skillLevels[skillId] >= self.getMaxLevel(owner, _morphBaseSkillId, oldSkillId):
-            DEBUG_MSG('skillLv reach max', owner.id, skillId, self.skillLevels)
+            LOG_DBG('skillLv reach max', owner.id, skillId, self.skillLevels)
             return False
 
         if not owner.hasSkill(skillId):
-            DEBUG_MSG('skill does not unlocked')
+            LOG_DBG('skill does not unlocked')
             return False
 
         oldLevel = self.skillLevels[skillId]
@@ -233,7 +233,7 @@ class Build(userType.UserSoleType):
         selfLevel = gameglobal.roleCache[owner.id]['level']
         levelLimit = cfgData.get('levelLimit')[oldLevel-1]
         if selfLevel < levelLimit:
-            ERROR_MSG('level limit:', selfLevel, levelLimit)
+            LOG_ERR('level limit:', selfLevel, levelLimit)
             return False
 
         costItemInfo = {}
@@ -248,7 +248,7 @@ class Build(userType.UserSoleType):
         deductVal.addWealthByItemId(costItemId, itemNum)
 
         if not owner.canDeductWealth(deductVal, sendMsg=True):
-            ERROR_MSG('   in levelUp, canDeductWealth fail:', skillId, delta)
+            LOG_WARN('   in levelUp, canDeductWealth fail:', skillId, delta)
             return
 
         opUUID = KBEngine.genUUID64()
@@ -319,7 +319,7 @@ class Build(userType.UserSoleType):
 
     def getSkillLevel(self, skillId):
         if skillId not in self.skillLevels:
-            ERROR_MSG("getSkillLevel not in self.skillLevels")
+            LOG_ERR("getSkillLevel not in self.skillLevels")
             return 0
 
         return self.skillLevels[skillId]
@@ -329,7 +329,7 @@ def buildCheck(fn):
     @functools.wraps(fn)
     def wrapfn(self, *args, **kwargs):
         if args[0] >= len(self):
-            ERROR_MSG(fn.__name__, 'builds has no buildId', args[0])
+            LOG_ERR(fn.__name__, 'builds has no buildId', args[0])
             return
 
         return fn(self, *args, **kwargs)
@@ -343,7 +343,7 @@ class ServerBuilds(userType.UserListType):
 
     def getSlotId(self, buildId, skillId, isActive=True):
         if buildId >= len(self):
-            ERROR_MSG('getSlotId builds has no buildId', buildId)
+            LOG_ERR('getSlotId builds has no buildId', buildId)
             return None
 
         return self[buildId].getSlotId(skillId, isActive)

@@ -57,5 +57,9 @@
             <Arg>       GUILD_UUID     </Arg>
             <Arg>       UINT8          </Arg>
         </onMineWarGuildDisbanded>
+
+        <onMineWarFlagChangeAttack>
+            <Arg>       BOOL          </Arg>
+        </onMineWarFlagChangeAttack>
     </CellMethods>
 </root>

@@ -83,7 +83,8 @@ datas ={
     "transition": {
       "finished": [
         1010,
-        1021
+        1021,
+        1006
       ]
     }
   },
@@ -93,11 +94,7 @@ datas ={
       20200001
     ],
     "dialogID": 19020001,
-    "transition": {
-      "finished": [
-        1006
-      ]
-    }
+    "transition": {}
   },
   "1011": {
     "type": "popupdialog",

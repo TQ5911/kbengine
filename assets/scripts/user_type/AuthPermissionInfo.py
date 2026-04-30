@@ -4,7 +4,7 @@
 import userType
 
 
-class AuthPermissionVal(userType.UserSoleType):
+class AuthPermissionVal(userType.UserSingleType):
     '''AUTH_PERMISSION_DATA_INFO'''
     def __init__(self, permission=0, dailyMoney=0):
         self.permission = permission

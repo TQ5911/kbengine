@@ -4,7 +4,7 @@ from KBEDebug import *
 
 import userType
 
-class EffectEvent(userType.UserSoleType):
+class EffectEvent(userType.UserSingleType):
     def __init__(self, name, triggerRoleId, targetRoleId, eventContext):
         self.name = name
         self.triggerRoleId = triggerRoleId

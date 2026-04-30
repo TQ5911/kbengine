@@ -21,60 +21,99 @@ type HttpService struct {
 }
 
 type QueueReply struct {
-	QueueId    uint32 `json:"queueId"`
-	State      uint8  `json:"state"`
-	ServerId   uint32 `json:"serverId"`
-	ServerHost string `json:"serverHost"`
-	WaitTime   uint64 `json:"waitTime"`
+	QueueId        uint32 `json:"queueId"`
+	State          uint8  `json:"state"`
+	ServerId       uint32 `json:"serverId"`
+	ServerHost     string `json:"serverHost"`
+	WaitTime       uint64 `json:"waitTime"`
+	ServerOpenTime int64  `json:"serverOpenTime"`
 }
 
+func (self *HttpService) doQueueReply(w http.ResponseWriter, queueId uint32, state uint8, serverId uint32, serverHost string, waitTime uint64,
+	serverOpenTime int64,
+) {
+	response := QueueReply{}
+	response.QueueId = queueId
+	response.State = state
+	response.ServerId = serverId
+	response.ServerHost = serverHost
+	response.WaitTime = waitTime
+	response.ServerOpenTime = serverOpenTime
+	data, err := json.Marshal(response)
+	if err != nil {
+		appLog.Error("handleStartQueue json response failed", err.Error())
+		w.WriteHeader(405)
+		return
+	}
+	fmt.Fprintf(w, string(data))
+}
 func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var accountNameStr = strings.Join(r.Form["accountName"], "")
 	var serverIdStr = strings.Join(r.Form["serverId"], "")
 	log.Println("handleStartQueue", accountNameStr, serverIdStr)
 	serverId := common.Str2UInt32(serverIdStr)
+	serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverIdStr))
 	accountName := accountNameStr
 
 	conn := self.app.redisPool.Get()
 	defer conn.Close()
 
-	isSVIP, err := redis.String(conn.Do("get", "g:vip:sv:"+accountNameStr))
-	if err == nil && isSVIP == "1" {
-		appLog.Info("account is svip, no need queue", accountNameStr, serverId)
-		serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverIdStr))
-		response := QueueReply{}
-		response.QueueId = 0
-		response.State = uint8(clientService.QueueReply_QUEUE_SUCCESS)
-		response.ServerId = serverId
-		response.ServerHost = serverHost
-		response.WaitTime = 0
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleStartQueue json response failed", err.Error())
-			w.WriteHeader(405)
-			return
+	//用户tagType
+	userTagTypeSet := map[string]bool{}
+	officialTagType, err := redis.String(conn.Do("get", "officialTagType_"+accountNameStr))
+	if err == nil {
+		tagList := strings.Split(officialTagType, ",")
+		for _, tag := range tagList {
+			userTagTypeSet[tag] = true
 		}
-		fmt.Fprintf(w, string(data))
+	}
+	log.Println("userTagTypeSet", userTagTypeSet)
+
+	//白名单直接放行
+	if _, ok := userTagTypeSet["0"]; ok {
+		appLog.Info("account is white list, no need queue", accountNameStr, serverId)
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
 		return
 	}
 
+	//开服时间没到返回失败
+	openTime, err := redis.String(conn.Do("get", "g:server_open_time"+serverIdStr))
+	if err == nil {
+		openTimeI64, err := strconv.ParseInt(openTime, 10, 64)
+		if err == nil && openTimeI64 > time.Now().Unix() {
+			appLog.Info("server not open", accountNameStr, serverId)
+			self.doQueueReply(w, 0, uint8(clientService.QueueReply_BEFORE_OPENTIME), serverId, serverHost, 0, openTimeI64-time.Now().Unix())
+			return
+		}
+	} else {
+		appLog.Warn("get server open time failed", accountNameStr, serverId)
+	}
+
+	//维护时间
+	serverOpenState, err := redis.String(conn.Do("get", "g:server_open_state"+serverIdStr))
+	if err == nil {
+		appLog.Warn("server maintenance ", serverOpenState, accountNameStr, serverId)
+		if serverOpenState == "0" {
+			self.doQueueReply(w, 0, uint8(clientService.QueueReply_MAINTENANCE), serverId, serverHost, 0, 0)
+			return
+		}
+	} else {
+		appLog.Warn("get server maintenance time failed", accountNameStr, serverId)
+	}
+
+	//用户是绿通，免排队
+	if _, ok := userTagTypeSet["3"]; ok {
+		appLog.Info("account is green code, no need queue", accountNameStr, serverId)
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
+		return
+	}
+
+	//获取在线人数异常
 	onlineNum, err := redis.Int(conn.Do("get", "g:normal_online_num"+serverIdStr))
 	if err != nil {
 		appLog.Warn("handleStartQueue request invalid serverId:\n", serverId, self.app.gameServers, err.Error())
-		response := QueueReply{}
-		response.QueueId = 0
-		response.State = uint8(clientService.QueueReply_QUEUE_FAILED)
-		response.ServerId = serverId
-		response.ServerHost = ""
-		response.WaitTime = 0
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleStartQueue json response failed", err.Error())
-			w.WriteHeader(405)
-			return
-		}
-		fmt.Fprintf(w, string(data))
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_FAILED), serverId, serverHost, 0, 0)
 		return
 	}
 
@@ -86,26 +125,14 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 
 	accountKey := self.app.buildAccountKey(accountNameStr, strconv.Itoa(int(clientService.AccountType_ACCOUNT_TOKEN)))
 
+	//已经在线
 	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+accountKey))
 	if err != nil {
 		appLog.Info("handleStartQueue account is not online:", accountNameStr, "  err:", err.Error())
 	} else {
 		if lastServerId == int(serverId) {
 			appLog.Info("handleStartQueue account is still online, no need queue", accountNameStr, serverId)
-			serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverIdStr))
-			response := QueueReply{}
-			response.QueueId = 0
-			response.State = uint8(clientService.QueueReply_QUEUE_SUCCESS)
-			response.ServerId = serverId
-			response.ServerHost = serverHost
-			response.WaitTime = 0
-			data, err := json.Marshal(response)
-			if err != nil {
-				appLog.Error("handleStartQueue json response failed", err.Error())
-				w.WriteHeader(405)
-				return
-			}
-			fmt.Fprintf(w, string(data))
+			self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
 			return
 		}
 	}
@@ -145,35 +172,11 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		}
 	}
 
+	//当前无需排队
 	if onlineNum < MaxOnlineNum && (hasGetTokenNoUse || gameServer.limiter.Allow()) {
-		serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverId))
-		client := &QueueClientService{
-			ServerEndPoint: nil,
-			app:            self.app,
-			activeTickCnt:  0,
-			isReqQueue:     false,
-			isValid:        true,
-			isQueueSuc:     false,
-			serverId:       serverIdStr,
-			accountName:    accountName,
-			serverHost:     serverHost,
-			tLastRecv:      time.Now().Unix(),
-		}
-
-		response := QueueReply{}
-		response.QueueId = 1
-		response.State = uint8(clientService.QueueReply_QUEUE_SUCCESS)
-		response.ServerId = serverId
-		response.ServerHost = client.GetServerHost()
-		response.WaitTime = client.GetWaitTime()
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleStartQueue json response failed", err.Error())
-			w.WriteHeader(405)
-			return
-		}
-		fmt.Fprintf(w, string(data))
 		appLog.Info("queue success")
+		self.doQueueReply(w, 1, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
+		return
 	} else {
 		VIPFlag := false
 		expireTime, err := redis.String(conn.Do("get", "g:vip:v:"+accountNameStr))
@@ -187,19 +190,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		self.app.addClient(client)
 
 		client.SetQueueId(self.app.enQueue(serverId, accountName, VIPFlag))
-		response := QueueReply{}
-		response.QueueId = uint32(client.GetQueueId())
-		response.State = uint8(clientService.QueueReply_QUEUE_IN_PROCESS)
-		response.ServerId = serverId
-		response.ServerHost = client.GetServerHost()
-		response.WaitTime = client.GetWaitTime()
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleStartQueue json response failed", err.Error())
-			w.WriteHeader(405)
-			return
-		}
-		fmt.Fprintf(w, string(data))
+		self.doQueueReply(w, uint32(client.GetQueueId()), uint8(clientService.QueueReply_QUEUE_IN_PROCESS), serverId, client.GetServerHost(), client.GetWaitTime(), 0)
 	}
 }
 
@@ -256,69 +247,11 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-type GreenCodeReply struct {
-	IsSuccess bool `json:"isSuccess"`
-}
-
-func (self *HttpService) handleExchangeGreenCode(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	var accountNameStr = strings.Join(r.Form["accountName"], "")
-	var serverIdStr = strings.Join(r.Form["serverId"], "")
-	var greenCodeStr = strings.Join(r.Form["greenCode"], "")
-
-	log.Println("handleExchangeGreenCode: ", accountNameStr, serverIdStr, "g:green_code:"+greenCodeStr)
-
-	conn := self.app.redisPool.Get()
-	defer conn.Close()
-
-	owner, err := redis.String(conn.Do("get", "g:green_code:"+greenCodeStr))
-	if err != nil {
-		response := GreenCodeReply{}
-		response.IsSuccess = false
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleExchangeGreenCode json response failed", err.Error())
-			w.WriteHeader(405)
-			return
-		}
-		fmt.Fprintf(w, string(data))
-		return
-	}
-
-	if owner == "0" {
-		redis.String(conn.Do("set", "g:green_code:"+greenCodeStr, accountNameStr))
-		redis.String(conn.Do("set", "g:vip:sv:"+accountNameStr, "1"))
-
-		response := GreenCodeReply{}
-		response.IsSuccess = true
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleExchangeGreenCode json response failed", err.Error())
-			w.WriteHeader(405)
-			return
-		}
-		fmt.Fprintf(w, string(data))
-		return
-	} else {
-		log.Println("handleExchangeGreenCode: ", accountNameStr, serverIdStr, greenCodeStr, owner)
-		response := GreenCodeReply{}
-		response.IsSuccess = false
-		data, err := json.Marshal(response)
-		if err != nil {
-			appLog.Error("handleExchangeGreenCode json response failed", err.Error())
-			w.WriteHeader(405)
-			return
-		}
-		fmt.Fprintf(w, string(data))
-	}
-}
-
 func (self *HttpService) startHttpServer(listenAddr string) {
 	appLog.Info("startHttpServer", listenAddr)
 
 	http.HandleFunc("/startQueue", self.handleStartQueue)
 	http.HandleFunc("/getQueueInfo", self.handleGetQueueInfo)
-	http.HandleFunc("/exchangeGreenCode", self.handleExchangeGreenCode)
 
 	listener, err := greuse.Listen("tcp", listenAddr)
 	if err != nil {

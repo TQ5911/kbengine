@@ -104,9 +104,9 @@ class RedisUtils(object):
 
     @classmethod
     def getUsersInfoResult(cls, gbIdList, func, cid, err, result):
-        DEBUG_MSG('getUsersInfoResult', gbIdList, cid, result)
+        LOG_DBG('getUsersInfoResult', gbIdList, cid, result)
         if err:
-            ERROR_MSG('getUsersInfoResult error:', err)
+            LOG_ERR('getUsersInfoResult error:', err)
             return
 
         _gbIds = []
@@ -135,7 +135,7 @@ class RedisUtils(object):
     @classmethod
     def _onGetUsersInfoFromSql(cls, fcValList, gbIdToIdx, func, ret, num, insertId, err):
         if type(err) is str and err:
-            ERROR_MSG('_onGetUsersInfoFromSql error:', err)
+            LOG_ERR('_onGetUsersInfoFromSql error:', err)
             return
 
         for _data in ret:
@@ -148,16 +148,16 @@ class RedisUtils(object):
     @classmethod
     def checkAvatarNewInfoOk(cls, avatarDic):
         if b'picFrameId' not in avatarDic:
-            WARNING_MSG('checkAvatarNewInfoOk not ok', avatarDic)
+            LOG_WARN('checkAvatarNewInfoOk not ok', avatarDic)
             return False
         if b'platID' not in avatarDic:
-            WARNING_MSG('checkAvatarNewInfoOk not ok', avatarDic)
+            LOG_WARN('checkAvatarNewInfoOk not ok', avatarDic)
             return False
         if b'areaID' not in avatarDic:
-            WARNING_MSG('checkAvatarNewInfoOk not ok', avatarDic)
+            LOG_WARN('checkAvatarNewInfoOk not ok', avatarDic)
             return False
         if b'isHide' not in avatarDic:
-            WARNING_MSG('checkAvatarNewInfoOk not ok', avatarDic)
+            LOG_WARN('checkAvatarNewInfoOk not ok', avatarDic)
             return False
         return True
 
@@ -165,11 +165,11 @@ class RedisUtils(object):
     def toFcVal(cls, avatarInfo):
         avatarInfoDic = dict(zip(avatarInfo[0::2], avatarInfo[1::2]))
         gbId = int(avatarInfoDic[b'gbId'])
-        name = utils.getStringFromBytesRedis(avatarInfoDic[b'name'])
+        name = utils.bytesToStringRedis(avatarInfoDic[b'name'])
         school = int(avatarInfoDic[b'school'])
         level = int(avatarInfoDic[b'level'])
-        accountName = utils.getStringFromBytesRedis(avatarInfoDic[b'accountName'])
-        guildName = utils.getStringFromBytesRedis(avatarInfoDic[b'guildName'])
+        accountName = utils.bytesToStringRedis(avatarInfoDic[b'accountName'])
+        guildName = utils.bytesToStringRedis(avatarInfoDic[b'guildName'])
         guildUUID = int(avatarInfoDic[b'guildUUID'])
         sex = int(avatarInfoDic[b'sex'])
         battleEffect = int(avatarInfoDic[b'battleEffect'])
@@ -195,9 +195,9 @@ class RedisUtils(object):
     @classmethod
     def getSingleUserInfo(cls, gbId, func, errFunc=None):
         def resultCallback_getSingleUserInfo(gbId, cid, error, avatarInfo):
-            DEBUG_MSG('resultCallback_getSingleUserInfo', gbId, cid, error, avatarInfo)
+            LOG_DBG('resultCallback_getSingleUserInfo', gbId, cid, error, avatarInfo)
             if error != "":
-                ERROR_MSG('resultCallback_getSingleUserInfo invalid:', gbId, error)
+                LOG_ERR('resultCallback_getSingleUserInfo invalid:', gbId, error)
                 return
 
             if not (avatarInfo and cls.checkAvatarNewInfoOk(avatarInfo)):
@@ -212,12 +212,15 @@ class RedisUtils(object):
     @classmethod
     def toFcValFromDB(cls, data):
         gbId, name, school, sex, level, accountName, totalScore, dbId, offlineTime, deleteFlag, picFrameId, accountType, obId, channelId = data
+        if channelId is None:
+            channelId = 0
+
         gbId, school, sex, level, totalScore, dbId, offlineTime, isDelete,  picFrameId, accountType, obId, channelId = \
             int(gbId), int(school), int(sex), int(level), int(totalScore), int(dbId), int(offlineTime), \
                 1 if gameconst.AvatarFlag.delete == int(deleteFlag) else 0, int(picFrameId), int(accountType), int(obId), int(channelId)
 
-        name = utils.getStringFromBytes(name)
-        accountName = utils.getStringFromBytes(accountName)
+        name = utils.bytesToString(name)
+        accountName = utils.bytesToString(accountName)
         # platID = utils.getPlatIdByAccountType(accountType)
         platID = 0
         areaID = channelId
@@ -232,7 +235,7 @@ class RedisUtils(object):
     @classmethod
     def _onGetSingleFromSql(cls, func, errFunc, ret, num, insertId, err):
         if type(err) is str and err:
-            ERROR_MSG('ckz: _onGetUsersInfo error:', err)
+            LOG_ERR('ckz: _onGetUsersInfo error:', err)
             errFunc and errFunc()
             return
 
@@ -252,7 +255,7 @@ class RedisUtils(object):
 
     @classmethod
     def onModifyAttr(cls, gbId, attrs):
-        DEBUG_MSG('onModifyAttr:', gbId, attrs)
+        LOG_DBG('onModifyAttr:', gbId, attrs)
         gameglobal.localBaseApp.pushRedisAttrs(gbId, attrs)
         cls.doModifyAttr(gbId)
 
@@ -268,7 +271,7 @@ class RedisUtils(object):
                 cls.justUnlock(gbId)
                 return
 
-            DEBUG_MSG('truly modify dic:', attrs, fcVal)
+            LOG_DBG('truly modify dic:', attrs, fcVal)
             localBase.getRedisClient().hmset(cls.getTableName(gbId), attrs, functools.partial(cls.justUnlock, gbId))
 
         cls.saveSingleUserInfo(gbId, __tmp, functools.partial(cls.unlockAndError, gbId))
@@ -276,7 +279,7 @@ class RedisUtils(object):
     @staticmethod
     def unlockAndError(gbId, *args):
         gameglobal.localBaseApp.unlockKey(gbId)
-        gameengine.reportCritical('onModifyAttr but failed:', gbId)
+        gameengine.panicStack('onModifyAttr but failed:', gbId)
 
     @staticmethod
     def justUnlock(gbId, *args):
@@ -290,9 +293,9 @@ class RedisUtils(object):
 
     @classmethod
     def resultCallback_saveSingleUserInfo(cls, gbId, func, errFunc, cid, error, isExist):
-        DEBUG_MSG('resultCallback_saveSingleUserInfo', gbId, cid, error, isExist)
+        LOG_DBG('resultCallback_saveSingleUserInfo', gbId, cid, error, isExist)
         if error != "":
-            ERROR_MSG('resultCallback_saveSingleUserInfo invalid:', gbId, error)
+            LOG_ERR('resultCallback_saveSingleUserInfo invalid:', gbId, error)
             errFunc and errFunc()
             return
 
@@ -304,7 +307,7 @@ class RedisUtils(object):
     @classmethod
     def set_player_token(cls, gbId, token):
         redisKey = 'AvatarToken_' + str(gbId)
-        DEBUG_MSG(f"set player token gbId={gbId}, token={token}")
+        LOG_DBG(f"set player token gbId={gbId}, token={token}")
         gameglobal.localBaseApp.getRedisClient().setex(redisKey, token, 86400)
 
 
@@ -476,28 +479,28 @@ class AccountUtils(object):
 
     @classmethod
     def addAvatar(cls, accountName, gbId):
-        INFO_MSG("AccountUtils addAvatar", accountName, gbId)
+        LOG_IFO("AccountUtils addAvatar", accountName, gbId)
         gameglobal.localBaseApp.getRedisClient().sadd(cls.getTableName(accountName), [gbId], functools.partial(
             cls.resultCallback_addAvatar, gbId))
 
     @classmethod
     def resultCallback_addAvatar(cls, gbId, cid, error, result):
-        DEBUG_MSG("resultCallback_addAvatar", gbId, cid, error, result)
+        LOG_DBG("resultCallback_addAvatar", gbId, cid, error, result)
         if error != "":
-            ERROR_MSG('resultCallback_addAvatar invalid:', gbId, error)
+            LOG_ERR('resultCallback_addAvatar invalid:', gbId, error)
             return
 
     @classmethod
     def removeAvatar(cls, accountName, gbId):
-        INFO_MSG("AccountUtils removeAvatar", accountName, gbId)
+        LOG_IFO("AccountUtils removeAvatar", accountName, gbId)
         gameglobal.localBaseApp.getRedisClient().srem(cls.getTableName(accountName), gbId, functools.partial(
             cls.resultCallback_removeAvatar, gbId))
 
     @classmethod
     def resultCallback_removeAvatar(cls, gbId, cid, error, result):
-        DEBUG_MSG("resultCallback_removeAvatar", gbId, cid, error, result)
+        LOG_DBG("resultCallback_removeAvatar", gbId, cid, error, result)
         if error != "":
-            ERROR_MSG('resultCallback_removeAvatar invalid:', gbId, error)
+            LOG_ERR('resultCallback_removeAvatar invalid:', gbId, error)
             return
 
 
@@ -508,12 +511,12 @@ class HashTableUtils(object):
 
     @classmethod
     def loadAllFromRedis(cls, hName, callback):
-        DEBUG_MSG('loadAllFromRedis', hName)
+        LOG_DBG('loadAllFromRedis', hName)
         gameglobal.localBaseApp.getRedisClient().hgetall(hName, functools.partial(cls.onLoadAllFromRedis, callback))
 
     @classmethod
     def onLoadAllFromRedis(cls, callback, cid, err, result):
-        DEBUG_MSG("onLoadAllFromRedis", err, result)
+        LOG_DBG("onLoadAllFromRedis", err, result)
         if err == "":
             if callback:
                 dataDic = {}
@@ -559,7 +562,7 @@ class HashTableUtils(object):
 
     @classmethod
     def onLoadFromRedis(cls, callback, cid, err, result):
-        DEBUG_MSG("onLoadFromRedis", err, result)
+        LOG_DBG("onLoadFromRedis", err, result)
         if err == "":
             if callback:
                 callback(result)
@@ -571,7 +574,7 @@ class HashTableUtils(object):
 
     @classmethod
     def onLoadSomeFromRedis(cls, callback, keyList, cid, err, result):
-        DEBUG_MSG("onLoadSomeFromRedis", err, result)
+        LOG_DBG("onLoadSomeFromRedis", err, result)
         if err == "":
             if callback:
                 dataDic = {}
@@ -589,13 +592,13 @@ class ListUtils(object):
 
     @classmethod
     def loadAllFromRedis(cls, lName, callback):
-        DEBUG_MSG('loadAllFromRedis for List', lName)
+        LOG_DBG('loadAllFromRedis for List', lName)
         gameglobal.localBaseApp.getRedisClient().lrange(lName, 0, -1,
                                                         functools.partial(cls.onLoadAllFromRedis, callback))
 
     @classmethod
     def onLoadAllFromRedis(cls, callback, cid, err, result):
-        DEBUG_MSG("onLoadAllFromRedis for List", err, result)
+        LOG_DBG("onLoadAllFromRedis for List", err, result)
         if err == "" and callback:
             callback(result)
 
@@ -618,12 +621,12 @@ class SetUtils(object):
 
     @classmethod
     def loadAllFromRedis(cls, hName, callback):
-        DEBUG_MSG('loadAllFromRedis', hName)
+        LOG_DBG('loadAllFromRedis', hName)
         gameglobal.localBaseApp.getRedisClient().smembers(hName, functools.partial(cls.onLoadAllFromRedis, callback))
 
     @classmethod
     def onLoadAllFromRedis(cls, callback, cid, err, result):
-        DEBUG_MSG("onLoadAllFromRedis", err, result)
+        LOG_DBG("onLoadAllFromRedis", err, result)
         if err == "":
             if callback:
                 dataLst = []
@@ -724,12 +727,12 @@ class PlayerCoinAuctionRecord(object):
 
     @classmethod
     def recordMessage(cls, timestamp, playerGBID, itemId, number, totalPrice, itemData=None, reviewUUID=0):
-        DEBUG_MSG(f'{cls.__name__}.recordMessage::',
+        LOG_DBG(f'{cls.__name__}.recordMessage::',
                   timestamp, playerGBID, itemId, number, totalPrice, itemData, reviewUUID)
         # 最多保存7天消息
         # TODO(): read data from config table
         m_itemData = itemData if itemData is not None else {}
-        m_expireT = utils.getNow() + 30 * gameconst.ONE_DAY_SECONDS
+        m_expireT = utils.curTS() + 30 * gameconst.ONE_DAY_COST_SECONDS
         cls._recordMessage(timestamp, playerGBID, itemId, number, totalPrice, m_itemData, reviewUUID, m_expireT)
 
     @classmethod
@@ -741,7 +744,7 @@ class PlayerCoinAuctionRecord(object):
 
     @classmethod
     def getMessageRecord(cls, box, gbId, number=-1):
-        DEBUG_MSG(f"{cls.__name__}.getMessageRecord::", gbId, box)
+        LOG_DBG(f"{cls.__name__}.getMessageRecord::", gbId, box)
         key = cls._getKey(gbId)
 
         def _onGetMessageRecordWarpper(cid, error, result):
@@ -752,9 +755,9 @@ class PlayerCoinAuctionRecord(object):
 
     @classmethod
     def onGetMessageRecord(cls, cid, error, result, box, gbId):
-        DEBUG_MSG(f"{cls.__name__}.onGetMessageRecord::", error)
+        LOG_DBG(f"{cls.__name__}.onGetMessageRecord::", error)
         if error != "":
-            WARNING_MSG(f"{cls.__name__}.onGetMessageRecord::cache missing", error)
+            LOG_WARN(f"{cls.__name__}.onGetMessageRecord::cache missing", error)
             return
 
         lastRecords = []
@@ -769,14 +772,14 @@ class PlayerCoinAuctionRecord(object):
                      'itemData': json.loads(itemData),
                      'reviewUUID': reviewUUID}
             lastRecords.append(_data)
-        DEBUG_MSG(f'{cls.__name__}.onGetMessageRecord:: messge --> ', cid, len(lastRecords))
+        LOG_DBG(f'{cls.__name__}.onGetMessageRecord:: messge --> ', cid, len(lastRecords))
         # box.client.onGetPlayerCoinAuctionRecords(gbId, lastRecords)
         box.streamStringProxy(gzip.compress(json.dumps(lastRecords).encode('ascii')),
                               '', gameconst.StreamStringID.COIN_AUCTION_SALE_RECORD)
 
     @classmethod
     def clearMessageRecord(cls, gbId):
-        DEBUG_MSG(f'{cls.__name__}.clearMessageRecord::', gbId)
+        LOG_DBG(f'{cls.__name__}.clearMessageRecord::', gbId)
         cls._clearMessageRecord(gbId)
 
     @classmethod
@@ -786,7 +789,7 @@ class PlayerCoinAuctionRecord(object):
 
     @classmethod
     def clearExpiredMessageRecords(cls, gbId):
-        DEBUG_MSG(f'{cls.__name__}.clearMessageRecord::', gbId)
+        LOG_DBG(f'{cls.__name__}.clearMessageRecord::', gbId)
         cls._clearExpiredMessageRecords(gbId)
 
     @classmethod
@@ -800,19 +803,19 @@ class PlayerCoinAuctionRecord(object):
 
     @classmethod
     def onClearExpiredMessageRecords(cls, cid, error, result, gbId):
-        DEBUG_MSG(f"{cls.__name__}.onClearExpiredMessageRecords::", error, gbId)
+        LOG_DBG(f"{cls.__name__}.onClearExpiredMessageRecords::", error, gbId)
         if error != "":
-            WARNING_MSG(f"{cls.__name__}.onClearExpiredMessageRecords::cache missing", error)
+            LOG_WARN(f"{cls.__name__}.onClearExpiredMessageRecords::cache missing", error)
             return
 
         if not result:
             return
 
-        _now, _crtidx = utils.getNow(), 0
+        _now, _crtidx = utils.curTS(), 0
         for idx, encodedMsg in enumerate(result):
             timestamp, playerGBID, itemId, number, eachPrice, *_extras = cls._decodeMessage(encodedMsg)
             _crtidx = idx
-            if _now - timestamp >= gameconst.ONE_DAY_SECONDS * 30:
+            if _now - timestamp >= gameconst.ONE_DAY_COST_SECONDS * 30:
                 break
         else:
             _crtidx = 0
@@ -867,10 +870,10 @@ class PlayerBuyAuctionItemRecord(object):
 
     @classmethod
     def recordMessage(cls, timestamp, playerGBID, itemId, number, totalPrice, itemData=None, reviewUUID=0):
-        DEBUG_MSG(f'{cls.__name__}.recordMessage::',
+        LOG_DBG(f'{cls.__name__}.recordMessage::',
                   timestamp, playerGBID, itemId, number, totalPrice, itemData, reviewUUID)
         m_itemData = itemData if itemData is not None else {}
-        m_expireT = utils.getNow() + 30 * gameconst.ONE_DAY_SECONDS
+        m_expireT = utils.curTS() + 30 * gameconst.ONE_DAY_COST_SECONDS
         cls._recordMessage(timestamp, playerGBID, itemId, number, totalPrice, m_itemData, reviewUUID, m_expireT)
 
     @classmethod
@@ -882,7 +885,7 @@ class PlayerBuyAuctionItemRecord(object):
 
     @classmethod
     def getMessageRecord(cls, box, gbId, number=-1):
-        DEBUG_MSG(f"{cls.__name__}.getMessageRecord::", gbId, box)
+        LOG_DBG(f"{cls.__name__}.getMessageRecord::", gbId, box)
         key = cls._getKey(gbId)
 
         def _onGetMessageRecordWarpper(cid, error, result):
@@ -893,9 +896,9 @@ class PlayerBuyAuctionItemRecord(object):
 
     @classmethod
     def onGetMessageRecord(cls, cid, error, result, box, gbId):
-        DEBUG_MSG(f"{cls.__name__}.onGetMessageRecord::", error)
+        LOG_DBG(f"{cls.__name__}.onGetMessageRecord::", error)
         if error != "":
-            WARNING_MSG(f"{cls.__name__}.onGetMessageRecord::cache missing", error)
+            LOG_WARN(f"{cls.__name__}.onGetMessageRecord::cache missing", error)
             return
 
         lastRecords = []
@@ -910,13 +913,13 @@ class PlayerBuyAuctionItemRecord(object):
                      'itemData': json.loads(itemData),
                      'reviewUUID': reviewUUID}
             lastRecords.append(_data)
-        DEBUG_MSG(f'{cls.__name__}.onGetMessageRecord:: messge --> ', cid, len(lastRecords))
+        LOG_DBG(f'{cls.__name__}.onGetMessageRecord:: messge --> ', cid, len(lastRecords))
         box.streamStringProxy(gzip.compress(json.dumps(lastRecords).encode('ascii')),
                               '', gameconst.StreamStringID.COIN_AUCTION_BUY_RECORD)
 
     @classmethod
     def clearMessageRecord(cls, gbId):
-        DEBUG_MSG(f'{cls.__name__}.clearMessageRecord::', gbId)
+        LOG_DBG(f'{cls.__name__}.clearMessageRecord::', gbId)
         cls._clearMessageRecord(gbId)
 
     @classmethod
@@ -926,7 +929,7 @@ class PlayerBuyAuctionItemRecord(object):
 
     @classmethod
     def clearExpiredMessageRecords(cls, gbId):
-        DEBUG_MSG(f'{cls.__name__}.clearMessageRecord::', gbId)
+        LOG_DBG(f'{cls.__name__}.clearMessageRecord::', gbId)
         cls._clearExpiredMessageRecords(gbId)
 
     @classmethod
@@ -940,16 +943,16 @@ class PlayerBuyAuctionItemRecord(object):
 
     @classmethod
     def onClearExpiredMessageRecords(cls, cid, error, result, gbId):
-        DEBUG_MSG(f"{cls.__name__}.onClearExpiredMessageRecords::", error, gbId)
+        LOG_DBG(f"{cls.__name__}.onClearExpiredMessageRecords::", error, gbId)
         if error != "":
-            WARNING_MSG(f"{cls.__name__}.onClearExpiredMessageRecords::cache missing", error)
+            LOG_WARN(f"{cls.__name__}.onClearExpiredMessageRecords::cache missing", error)
             return
 
-        _now, _crtidx = utils.getNow(), 0
+        _now, _crtidx = utils.curTS(), 0
         for idx, encodedMsg in enumerate(result):
             timestamp, playerGBID, itemId, number, totalPrice, *_extras = cls._decodeMessage(encodedMsg)
             _crtidx = idx
-            if _now - timestamp >= gameconst.ONE_DAY_SECONDS * 30:
+            if _now - timestamp >= gameconst.ONE_DAY_COST_SECONDS * 30:
                 break
         else:
             _crtidx = 0
@@ -969,7 +972,7 @@ class RedBagUtils:
 
     @classmethod
     def getRedBagRankList(cls, cb=None):
-        # gameglobal.localBaseApp.getRedisClient().getRangeByScore(cls.redbagRankKey(), 0, utils.getNow(), 0, 100, False, None,
+        # gameglobal.localBaseApp.getRedisClient().getRangeByScore(cls.redbagRankKey(), 0, utils.curTS(), 0, 100, False, None,
         #     functools.partial(cls.callbackGetRankList, cb))
         gameglobal.localBaseApp.getRedisClient().getRange(cls.redbagRankKey(), 0, 100, True, False, None,
                                                           functools.partial(cls.callbackGetRankList, cb))
@@ -977,7 +980,7 @@ class RedBagUtils:
     @classmethod
     def callbackGetRankList(cls, cb, cid, error, result):
         if error != "":
-            ERROR_MSG("callbackGetRankList::cache missing", error)
+            LOG_ERR("callbackGetRankList::cache missing", error)
             return
         cb and cb(result)
 
@@ -990,7 +993,7 @@ class RedBagUtils:
     @classmethod
     def callbackAddRedBagRankData(cls, redbagId, cb, cid, error, result):
         if error != "":
-            ERROR_MSG("callbackAddRedBagRankData::cache missing", error)
+            LOG_ERR("callbackAddRedBagRankData::cache missing", error)
 
         cb and cb(error)
 
@@ -1004,7 +1007,7 @@ class RedBagUtils:
     @classmethod
     def callbackRemoveRedBagRankData(cls, redbagIds, cb, cid, error, result):
         if error != "":
-            ERROR_MSG("callbackRemoveRedBagRankData::cache missing", error)
+            LOG_ERR("callbackRemoveRedBagRankData::cache missing", error)
             return
         cb and cb(error)
 
@@ -1035,7 +1038,7 @@ class RedBagUtils:
     @classmethod
     def callbackSetRedBagFetchExpire(cls, redbagId, cb, cid, error, result):
         if error != "":
-            ERROR_MSG("callbackSetRedBagFetchExpire::cache missing", error)
+            LOG_ERR("callbackSetRedBagFetchExpire::cache missing", error)
             return
         cb and cb(error)
 
@@ -1047,6 +1050,6 @@ class RedBagUtils:
     @classmethod
     def callbackRemoveRedBagFetch(cls, redbagId, cb, cid, error, result):
         if error != "":
-            ERROR_MSG("callbackRemoveRedBagFetch::cache missing", error)
+            LOG_ERR("callbackRemoveRedBagFetch::cache missing", error)
         cb and cb(error)
 

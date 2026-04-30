@@ -145,7 +145,7 @@ datas = _tools.RODict({
     }),
     "mp": _tools.RODict({
         "ID": "mp",
-        "name": "当前能量值",
+        "name": "当前法力值",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
@@ -160,7 +160,7 @@ datas = _tools.RODict({
     }),
     "baseFullMp": _tools.RODict({
         "ID": "baseFullMp",
-        "name": "基础最大能量值",
+        "name": "基础最大法力值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -205,7 +205,7 @@ datas = _tools.RODict({
     }),
     "mulFullMp": _tools.RODict({
         "ID": "mulFullMp",
-        "name": "能量值增加百分比",
+        "name": "法力值增加百分比",
         "type": "float",
         "propType": 3,
         "ifSend": 1,

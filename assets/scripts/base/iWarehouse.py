@@ -46,17 +46,17 @@ class IWarehouse(object):
         return
 
     def warehouseExpansion(self, pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context):
-        INFO_MSG("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
+        LOG_IFO("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
         bankCapacity = BGDSD.datas['bankCapacity']['value']
         if self.warehouse.capacity >= bankCapacity:
-            WARNING_MSG('   in warehouseExpansion, reach limit 1:', self.warehouse.capacity)
+            LOG_WARN('   in warehouseExpansion, reach limit 1:', self.warehouse.capacity)
             self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
             return
         
         oldCapacity = self.warehouse.capacity
         newCapacity = self.warehouse.capacity + gridNum
         if newCapacity > bankCapacity:
-            WARNING_MSG('   in warehouseExpansion, reach limit 2:', newCapacity)
+            LOG_WARN('   in warehouseExpansion, reach limit 2:', newCapacity)
             newCapacity = bankCapacity
         self.warehouse.capacity = newCapacity
         self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
@@ -72,7 +72,7 @@ class IWarehouse(object):
             {itemId:useNum}
         )
 
-        self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
+        self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.OPERATE_BAG_STAT_OK, newCapacity)
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqGetWarehouse(self, exposed):
@@ -80,21 +80,21 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqUnlockWarehouse(self, exposed, gridNum):
-        INFO_MSG('in reqUnlockWarehouse', gridNum)
+        LOG_IFO('in reqUnlockWarehouse', gridNum)
         if gridNum <= 0:
-            ERROR_MSG('reqUnlockWarehouse error:', gridNum)
+            LOG_ERR('reqUnlockWarehouse error:', gridNum)
             return
 
         newCapacity = self.warehouse.doUnlockWarehouseGrids(self, gridNum)
         if newCapacity:
-            self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
+            self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.OPERATE_BAG_STAT_OK, newCapacity)
         return
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToWarehouse(self, exposed, gridId, itemId, itemNum):
-        INFO_MSG('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
+        LOG_IFO('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
-            WARNING_MSG('     in reqMoveItemToWarehouse, bag locked')
+            LOG_WARN('     in reqMoveItemToWarehouse, bag locked')
             return
 
         if self.warehouse.isFull():
@@ -103,17 +103,17 @@ class IWarehouse(object):
         
         bankForbiddenList = BGDSD.datas['bankForbiddenList']['value']
         if bankForbiddenList and itemId in bankForbiddenList:
-            WARNING_MSG('     in reqMoveItemToWarehouse, item is forbidden')
+            LOG_WARN('     in reqMoveItemToWarehouse, item is forbidden')
             self.onMessagePre(BGDSD.datas['putInFail_itemLimited_msg']['value'], [])
             return
         
         itemObj = self.bagData.getItemObjByGridId(gridId)
         if not itemObj or itemObj.itemId != itemId:
-            WARNING_MSG('reqMoveItemToWarehouse, no this item:', gridId, itemId, itemNum)
+            LOG_WARN('reqMoveItemToWarehouse, no this item:', gridId, itemId, itemNum)
             return
          
         if itemObj.itemNum < itemNum or itemNum <= 0:
-            WARNING_MSG('reqMoveItemToWarehouse, move item is over limit:', gridId, itemId, itemObj.itemNum, itemNum)
+            LOG_WARN('reqMoveItemToWarehouse, move item is over limit:', gridId, itemId, itemObj.itemNum, itemNum)
             return
         
         opUUID = KBEngine.genUUID64()
@@ -123,40 +123,40 @@ class IWarehouse(object):
         if itemObj.itemNum == itemNum:
             # 检查进入仓库
             planOp, _, _ = self.warehouse.calcAddItemsPlan([itemObj])
-            if planOp != gameconst.BagOpPlan.BAG_OP_OK:
+            if planOp != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 self.onMessagePre(BGDSD.datas['putInFail_bankFull_msg']['value'], [])
                 return
 
             bagItem = self.bagData.cleanGridByGridId(self, gridId, itemId, opUUID, srcType, detail)
             if not bagItem:
-                WARNING_MSG('     in moveItemToWarehouse, bagItem is None:', gridId, itemId)
+                LOG_WARN('     in moveItemToWarehouse, bagItem is None:', gridId, itemId)
                 return
 
             opStat, planDic = self.warehouse.addItemsWithPlan(self, [bagItem, ], opUUID, srcType, detail, notify=False)
-            if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-                gameengine.reportCritical('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId)
+            if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+                gameengine.panicStack('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId)
         else:
             # 移动一部分
             itemObj = itemFactory.ItemFactory.createItem(itemId, itemNum, itemObj.bindType)
              # 检查进入仓库
             planOp, _, _ = self.warehouse.calcAddItemsPlan([itemObj])
-            if planOp != gameconst.BagOpPlan.BAG_OP_OK:
+            if planOp != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 self.onMessagePre(BGDSD.datas['putInFail_bankFull_msg']['value'], [])
                 return
             # 从背包按照指定格子移除
             self.bagData.deductItemsByGrid(self, {gridId: itemNum}, opUUID, srcType, detail)
             # 加入仓库
             opStat, planDic = self.warehouse.addItemsWithPlan(self, [itemObj, ], opUUID, srcType, detail, notify=False)
-            if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-                gameengine.reportCritical('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId, itemNum)
+            if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+                gameengine.panicStack('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId, itemNum)
         LogTrackingMgr.LogTrackingMgr.Item_Movement(opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.BagToWarehouse)
         self.client.onWarehouseInItems(opStat, self.warehouse._getClientDataFromPlanDic(planDic))
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToBag(self, exposed, gridId, itemId, itemNum):
-        INFO_MSG('in reqMoveItemToBag:', gridId, itemId, itemNum)
+        LOG_IFO('in reqMoveItemToBag:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
-            WARNING_MSG('in reqMoveItemToBag, bag locked')
+            LOG_WARN('in reqMoveItemToBag, bag locked')
             return
 
         if self.bagData.isFull():
@@ -165,11 +165,11 @@ class IWarehouse(object):
         
         itemObj = self.warehouse.getItemObjByGridId(gridId)
         if not itemObj:
-            WARNING_MSG("in reqMoveItemToBag, wrong arg gridId", gridId)
+            LOG_WARN("in reqMoveItemToBag, wrong arg gridId", gridId)
             return
         
         if itemObj.itemNum < itemNum or itemNum <= 0:
-            WARNING_MSG('in reqMoveItemToBag, move item is over limit:', gridId, itemId, itemObj.itemNum, itemNum)
+            LOG_WARN('in reqMoveItemToBag, move item is over limit:', gridId, itemId, itemObj.itemNum, itemNum)
             return
         
         if self.checkBagItemLimit(itemObj.itemId, itemObj.itemNum):
@@ -183,38 +183,38 @@ class IWarehouse(object):
         if itemObj.itemNum == itemNum:
              # 检查进入背包
             planOp, _, _ = self.bagData.calcAddItemsPlan([itemObj])
-            if planOp != gameconst.BagOpPlan.BAG_OP_OK:
+            if planOp != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 self.onMessagePre(BGDSD.datas['takeOutFail_bagFull_msg']['value'], [])
                 return
             
             roomItem = self.warehouse.cleanGridByGridId(self, gridId, itemId, opUUID, srcType, detail, sendClient=False)
             if not roomItem:
-                WARNING_MSG('in reqMoveItemToBag, roomItem is None')
+                LOG_WARN('in reqMoveItemToBag, roomItem is None')
                 return
             
             opStat, planDic = self.bagData.addItemsWithPlan(self, [roomItem, ], opUUID, srcType, detail, notify=False)
-            if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-                gameengine.reportCritical('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
+            if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+                gameengine.panicStack('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
         else:
             # 移动一部分
             itemObj = itemFactory.ItemFactory.createItem(itemId, itemNum, itemObj.bindType)
              # 检查进入背包
             planOp, _, _ = self.bagData.calcAddItemsPlan([itemObj])
-            if planOp != gameconst.BagOpPlan.BAG_OP_OK:
+            if planOp != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 self.onMessagePre(BGDSD.datas['putInFail_bankFull_msg']['value'], [])
                 return
             # 从背包按照指定格子移除
             self.warehouse.deductItemsByGrid(self, {gridId: itemNum}, opUUID, srcType, detail)
             # 加入仓库
             opStat, planDic = self.bagData.addItemsWithPlan(self, [itemObj, ], opUUID, srcType, detail, notify=False)
-            if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-                gameengine.reportCritical('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
+            if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+                gameengine.panicStack('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
         LogTrackingMgr.LogTrackingMgr.Item_Movement(opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.WarehouseToBag)
         self.client.onWarehouseOutItems(opStat, gridId, itemNum)
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseSort(self, exposed):
-        INFO_MSG('in reqWarehouseSort:')
+        LOG_IFO('in reqWarehouseSort:')
         if self.warehouse.doBagSort(self):
             dic = self.warehouse.toBagSavedDict()
             jsonStr = json.dumps(dic).encode('ascii')
@@ -224,26 +224,26 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseLockItem(self, exposed, gridId, itemId, uniqueId, lockStatus):
-        INFO_MSG('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
+        LOG_IFO('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
         if not dataUtils.checkLockAvailableStatus(itemId):
-            ERROR_MSG('in reqWarehouseLockItem, item locker is not opened', itemId)
+            LOG_ERR('in reqWarehouseLockItem, item locker is not opened', itemId)
             return
         
         if lockStatus not in gameconst.ItemLockStatus.VALID_STATUS:
-            WARNING_MSG("in reqWarehouseLockItem, wrong arg lockStatus", lockStatus)
+            LOG_WARN("in reqWarehouseLockItem, wrong arg lockStatus", lockStatus)
             return
         
         itemObj = self.warehouse.getItemObjByGridId(gridId)
         if not itemObj:
-            WARNING_MSG("in reqWarehouseLockItem, wrong arg gridId", gridId)
+            LOG_WARN("in reqWarehouseLockItem, wrong arg gridId", gridId)
             return
 
         if itemObj.itemId != itemId:
-            WARNING_MSG("in reqWarehouseLockItem, wrong arg itemid", uniqueId, itemObj.itemId, itemId)
+            LOG_WARN("in reqWarehouseLockItem, wrong arg itemid", uniqueId, itemObj.itemId, itemId)
             return
         
         if itemObj.uniqueId != uniqueId:
-            WARNING_MSG("in reqWarehouseLockItem, wrong arg uniqueId", itemObj.uniqueId, uniqueId, itemObj.itemId, itemId)
+            LOG_WARN("in reqWarehouseLockItem, wrong arg uniqueId", itemObj.uniqueId, uniqueId, itemObj.itemId, itemId)
             return
         
         itemObj.setLockStatus(lockStatus)

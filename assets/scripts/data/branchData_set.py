@@ -54,5 +54,13 @@ datas = _tools.RODict({
     "Branch_activePlayer": _tools.RODict({
         "ID": "Branch_activePlayer",
         "value": 5,
+    }),
+    "Branch_mergeFloatRange": _tools.RODict({
+        "ID": "Branch_mergeFloatRange",
+        "value": 25,
+    }),
+    "Branch_allocationPlan": _tools.RODict({
+        "ID": "Branch_allocationPlan",
+        "value": 1,
     })
 })

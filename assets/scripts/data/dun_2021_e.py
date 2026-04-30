@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -78,8 +79,7 @@ datas ={
       "finished": [
         1021,
         1101,
-        1031,
-        1006
+        1031
       ]
     }
   },

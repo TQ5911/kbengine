@@ -1013,7 +1013,7 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None,
-        "group": 1
+        "group": (1, 10)
     }),
     101: _tools.RODict({
         "ID": 101,
@@ -1023,7 +1023,7 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None,
-        "group": 1
+        "group": (1, 10)
     }),
     102: _tools.RODict({
         "ID": 102,
@@ -1033,7 +1033,7 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None,
-        "group": 1
+        "group": (1, 10)
     }),
     103: _tools.RODict({
         "ID": 103,
@@ -1043,7 +1043,7 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None,
-        "group": 1
+        "group": (1, 10)
     }),
     104: _tools.RODict({
         "ID": 104,
@@ -1053,7 +1053,7 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None,
-        "group": 1
+        "group": (1, 10)
     }),
     105: _tools.RODict({
         "ID": 105,
@@ -1063,7 +1063,7 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None,
-        "group": 1
+        "group": (1, 10)
     }),
     106: _tools.RODict({
         "ID": 106,
@@ -1584,7 +1584,97 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": None
+    }),
+    158: _tools.RODict({
+        "ID": 158,
+        "name": "BONUS_SRC_KILLER_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    159: _tools.RODict({
+        "ID": 159,
+        "name": "BONUS_SRC_FINANCIER_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    160: _tools.RODict({
+        "ID": 160,
+        "name": "BONUS_SRC_BOUNTY_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    161: _tools.RODict({
+        "ID": 161,
+        "name": "BONUS_SRC_BOUNTY_BACK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    162: _tools.RODict({
+        "ID": 162,
+        "name": "BONUS_SRC_REWARD_BACK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    163: _tools.RODict({
+        "ID": 163,
+        "name": "BONUS_SRC_MAIL_CLEAR_DUETIME",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 3
+    }),
+    164: _tools.RODict({
+        "ID": 164,
+        "name": "BONUS_SRC_DEPOSIT_REFUND",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    165: _tools.RODict({
+        "ID": 165,
+        "name": "BONUS_SRC_DEPOSIT_ALL",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    166: _tools.RODict({
+        "ID": 166,
+        "name": "BONUS_SRC_PET_REROLL_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
     })
 })
 minKey = 1
-maxKey = 157
+maxKey = 166

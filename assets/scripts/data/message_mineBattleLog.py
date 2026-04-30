@@ -23,22 +23,22 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "name": "mineBattle_occupyRecord",
-        "log": "经过浴血奋战，帮主<color=#F3D58F>{0}</color>率领帮众占领了<color=#038304>{1}</color>矿区"
+        "log": "经过浴血奋战，帮主<color=#beab67>{0}</color>率领帮众占领了<color=#54e7f2>{1}</color>矿区"
     }),
     3: _tools.RODict({
         "ID": 3,
         "name": "mineBattle_flagDamageRecord1",
-        "log": "<color=#038304>{0}</color>帮会的<color=#F3D58F>{1}</color>破坏了矿区荣誉旗帜，地面散落了众多宝箱"
+        "log": "<color=#98cf48>{0}</color>帮会的<color=#beab67>{1}</color>破坏了矿区荣誉旗帜，地面散落了众多宝箱"
     }),
     4: _tools.RODict({
         "ID": 4,
         "name": "mineBattle_flagDamageRecord2",
-        "log": "矿区荣誉旗帜被破坏，本周已被破坏<color=#038304>{0}/{1}</color>次，<color=#038304>{2}</color>帮会权威受到挑战"
+        "log": "矿区荣誉旗帜被破坏，本周已被破坏<color=#038304>{0}/{1}</color>次，<color=#98cf48>{2}</color>帮会权威受到挑战"
     }),
     5: _tools.RODict({
         "ID": 5,
         "name": "mineBattle_flagDamageRecord3",
-        "log": "矿区荣誉旗帜被破坏，本周已被破坏<color=#038304>{0}/{1}</color>次，<color=#038304>{2}</color>帮会颜面扫地，不再获得矿区额外收益"
+        "log": "矿区荣誉旗帜被破坏，本周已被破坏<color=#038304>{0}/{1}</color>次，<color=#98cf48>{2}</color>帮会颜面扫地，不再获得矿区额外收益"
     })
 })
 minKey = 1

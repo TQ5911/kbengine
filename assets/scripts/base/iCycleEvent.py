@@ -24,7 +24,7 @@ class IBaseCycleEvent(object):
     """
     eventType = EventType.EVENT_NONE
 
-    def __init__(self, owner, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
+    def __init__(self, owner, cbFunc, cbArg=(), cycleTime=gameconst.GENERAL_CYCLE_TIME):
         self.cbFunc = cbFunc
         self.cbArg = cbArg
         self.tUpdateTime = self.getUpdateDict(owner).get(cbFunc, 0)
@@ -63,12 +63,12 @@ class HourCycleEvent(IBaseCycleEvent):
         return owner.tLastHourUpdateTimeDict
 
     def _calcNextCBTime(self):
-        tUpdate = utils.getCurrentHourTS(offsetSec=self.cycleTime)
+        tUpdate = utils.getCurHourTS(offsetSec=self.cycleTime)
         tNow = time.time()
         if tNow < tUpdate:
             self.tUpdateTime = tUpdate
         else:
-            self.tUpdateTime = tUpdate + gameconst.ONE_HOUR_SECONDES
+            self.tUpdateTime = tUpdate + gameconst.ONE_HOUR_COST_SECONDES
 
 
 class DayCycleEvent(IBaseCycleEvent):
@@ -81,12 +81,12 @@ class DayCycleEvent(IBaseCycleEvent):
         return owner.tLastDayUpdateTimeDict
 
     def _calcNextCBTime(self):
-        tUpdate = utils.getCurrentDayTS(offsetSec=self.cycleTime)
+        tUpdate = utils.getCurDayTS(offsetSec=self.cycleTime)
         tNow = time.time()
         if tNow < tUpdate:
             self.tUpdateTime = tUpdate
         else:
-            self.tUpdateTime = tUpdate + gameconst.ONE_DAY_SECONDS
+            self.tUpdateTime = tUpdate + gameconst.ONE_DAY_COST_SECONDS
 
 
 class WeekCycleEvent(IBaseCycleEvent):
@@ -97,19 +97,19 @@ class WeekCycleEvent(IBaseCycleEvent):
     DEFAULT_REFRESH_WEEKDAY = 1
 
     def __init__(self, owner, cbFunc, cbArg=(),
-                 cycleTime=gameconst.ONE_DAY_SECONDS * (DEFAULT_REFRESH_WEEKDAY - 1) + gameconst.COMMON_CYCLE_TIME):
+                 cycleTime=gameconst.ONE_DAY_COST_SECONDS * (DEFAULT_REFRESH_WEEKDAY - 1) + gameconst.GENERAL_CYCLE_TIME):
         super(WeekCycleEvent, self).__init__(owner, cbFunc, cbArg, cycleTime)
 
     def getUpdateDict(self, owner):
         return owner.tLastWeekUpdateTimeDict
 
     def _calcNextCBTime(self):
-        tUpdate = utils.getCurrentWeekTS(offsetSec=self.cycleTime)
+        tUpdate = utils.getCurWeekTS(offsetSec=self.cycleTime)
         tNow = time.time()
         if tNow < tUpdate:
             self.tUpdateTime = tUpdate
         else:
-            self.tUpdateTime = tUpdate + gameconst.WEEK_SENCONDS
+            self.tUpdateTime = tUpdate + gameconst.ONE_WEEK_COST_SECONDS
 
 
 class MonthCycleEvent(IBaseCycleEvent):
@@ -167,30 +167,30 @@ class ICycleEvent(object):
         self.schemeEvent = []
 
     def _checkUpdateEvent(self):
-        nowTime = utils.getNow()
-        DEBUG_MSG('myh _checkUpdateEvent', nowTime, self.tLastUpdateTime)
+        nowTime = utils.curTS()
+        LOG_DBG('myh _checkUpdateEvent', nowTime, self.tLastUpdateTime)
         if self.tLastUpdateTime > 0:
             for eventObj in self.schemeEvent:
                 bNeedUpdate = False
                 if eventObj.eventType == EventType.EVENT_HOUR:
-                    if utils.isDiffHour(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
+                    if utils.checkDiffHour(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
                         bNeedUpdate = True
                 elif eventObj.eventType == EventType.EVENT_DAY:
-                    if utils.isDiffDay(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
+                    if utils.checkDiffDay(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
                         bNeedUpdate = True
                 elif eventObj.eventType == EventType.EVENT_WEEK:
-                    if utils.isDiffWeek(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
+                    if utils.checkDiffWeek(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
                         bNeedUpdate = True
                 elif eventObj.eventType == EventType.EVENT_MONTH:
-                    if utils.isDiffMonth(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
+                    if utils.checkDiffMonth(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
                         bNeedUpdate = True
                 if bNeedUpdate:
-                    DEBUG_MSG('in _checkUpdateEvent', eventObj.eventType, eventObj.cbFunc)
+                    LOG_DBG('in _checkUpdateEvent', eventObj.eventType, eventObj.cbFunc)
                     try:
                         func = getattr(self, eventObj.cbFunc, None)
                         func and func(*eventObj.cbArg)
                     except Exception as e:
-                        gameengine.reportCritical("_checkUpdateEvent exception:", e, eventObj.cbFunc)
+                        gameengine.panicStack("_checkUpdateEvent exception:", e, eventObj.cbFunc)
 
         self.tLastUpdateTime = nowTime
 
@@ -200,7 +200,7 @@ class ICycleEvent(object):
         self.pyAddTimer(1, 60, gametimer.CYCLE_EVENT_TICK_TIMER)
 
     def onCycleEventTick(self):
-        nowTime = utils.getNow()
+        nowTime = utils.curTS()
         cmpObj = CmpCycleEvent(nowTime)
         heapq.heappush(self.schemeEvent, cmpObj)
         isUpdate = False
@@ -213,7 +213,7 @@ class ICycleEvent(object):
                 try:
                     getattr(self, newObj.cbFunc)(*newObj.cbArg)
                 except Exception as e:
-                    gameengine.reportCritical('onDailyEvent, exception:', e, newObj.cbFunc)
+                    gameengine.panicStack('onDailyEvent, exception:', e, newObj.cbFunc)
                 newObj.calcNextCBTime(self)
                 heapq.heappush(self.schemeEvent, newObj)
                 isUpdate = True
@@ -224,13 +224,13 @@ class ICycleEvent(object):
             retObj = heapq.nsmallest(1, self.schemeEvent)[0]
             remainTime = retObj.tUpdateTime - nowTime
             if remainTime < 60:
-                DEBUG_MSG('cb time:', time.localtime(retObj.tUpdateTime), nowTime)
-                self.cycleEventCheckTimerId = self._callback(remainTime + random.random() * 5, '_onCycleEventTick',
+                LOG_DBG('cb time:', time.localtime(retObj.tUpdateTime), nowTime)
+                self.cycleEventCheckTimerId = self.addTimerCB(remainTime + random.random() * 5, '_onCycleEventTick',
                                                              (), gametimer.TIMER_TAG_CYCLE_EVENT_CHECK,
                                                              'cycleEventCheckTimerId')
 
     def _onCycleEventTick(self):
-        nowTime = utils.getNow()
+        nowTime = utils.curTS()
         cmpObj = CmpCycleEvent(nowTime)
         heapq.heappush(self.schemeEvent, cmpObj)
         isUpdate = False
@@ -244,7 +244,7 @@ class ICycleEvent(object):
                 try:
                     getattr(self, newObj.cbFunc)(*newObj.cbArg)
                 except Exception as e:
-                    gameengine.reportCritical('onDailyEvent, exception:', e, newObj.cbFunc)
+                    gameengine.panicStack('onDailyEvent, exception:', e, newObj.cbFunc)
                 newObj.calcNextCBTime(self)
                 heapq.heappush(self.schemeEvent, newObj)
                 isUpdate = True
@@ -256,12 +256,12 @@ class ICycleEvent(object):
             retObj = heapq.nsmallest(1, self.schemeEvent)[0]
             remainTime = retObj.tUpdateTime - nowTime
             if remainTime < 60:
-                DEBUG_MSG('cb time:', time.localtime(retObj.tUpdateTime), nowTime)
-                self.cycleEventCheckTimerId = self._callback(remainTime + random.randint(1, 3), '_onCycleEventTick',
+                LOG_DBG('cb time:', time.localtime(retObj.tUpdateTime), nowTime)
+                self.cycleEventCheckTimerId = self.addTimerCB(remainTime + random.randint(1, 3), '_onCycleEventTick',
                                                              (), gametimer.TIMER_TAG_CYCLE_EVENT_CHECK,
                                                              'cycleEventCheckTimerId')
 
-    def register_Event(self, eventType, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
+    def register_Event(self, eventType, cbFunc, cbArg=(), cycleTime=gameconst.GENERAL_CYCLE_TIME):
         if eventType == EventType.EVENT_HOUR:
             evetObj = HourCycleEvent(self, cbFunc, cbArg, cycleTime)
         elif eventType == EventType.EVENT_DAY:
@@ -278,13 +278,13 @@ class ICycleEvent(object):
     def registerHourlyEvent(self, cbFunc, cbArg=(), cycleTime=0):
         self.register_Event(EventType.EVENT_HOUR, cbFunc, cbArg, cycleTime)
 
-    def registerDailyEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
+    def registerDailyEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.GENERAL_CYCLE_TIME):
         self.register_Event(EventType.EVENT_DAY, cbFunc, cbArg, cycleTime)
 
     # 默认周一的5点刷新
-    def registerWeekEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.ONE_DAY_SECONDS * (
-            WeekCycleEvent.DEFAULT_REFRESH_WEEKDAY - 1) + gameconst.COMMON_CYCLE_TIME):
+    def registerWeekEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.ONE_DAY_COST_SECONDS * (
+            WeekCycleEvent.DEFAULT_REFRESH_WEEKDAY - 1) + gameconst.GENERAL_CYCLE_TIME):
         self.register_Event(EventType.EVENT_WEEK, cbFunc, cbArg, cycleTime)
 
-    def registerMonthEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
+    def registerMonthEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.GENERAL_CYCLE_TIME):
         self.register_Event(EventType.EVENT_MONTH, cbFunc, cbArg, cycleTime)

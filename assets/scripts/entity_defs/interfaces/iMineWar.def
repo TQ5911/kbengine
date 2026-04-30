@@ -42,6 +42,10 @@
             <Type>      UINT8         </Type>
             <Flags>     BASE           </Flags>
         </mineWarStateBase>
+        <scoreTimer>
+            <Type>      UINT32                 </Type>
+            <Flags>     CELL_PRIVATE           </Flags>
+        </scoreTimer>
 
     </Properties>
 
@@ -113,6 +117,7 @@
             <Arg>          LINE_NO         </Arg>
             <Arg>          GUILD_UUID         </Arg>
             <Arg>          UINT8         </Arg>
+            <Arg>          UINT32         </Arg>
         </onMineWarFlagBeDestroyed>
         <onMineWarFlagAllDestroyed>
             <Arg>          LINE_NO         </Arg>

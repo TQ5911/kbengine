@@ -5,23 +5,18 @@
 from KBEDebug import *
 import KBEngine
 
-import math
-
 import gameengine
 import gametimer
 import gamemove
 import gameconst
 import gametimer
-import formula
 import random
 import utils
-import copy
-import sMath, math, Math
+import math
 
 import ep_ctrl
 
 import userType
-import actionContext
 
 import gamePlay_gamePlay as DDI
 import creep_base as CBD
@@ -30,28 +25,26 @@ import buff_buff as BUFF
 import NPC_NPC as NPC_DATA
 
 __all__ = [
-    'FlowEvent',
-    'FlowRandomEvent',
-    'ForLoop',
-    'ForLoopWithBreak',
-    'WhileLoop',
+    'FlowNodeEvent',
+    'FlowRandomNodeEvent',
+    'ForLoopEvent',
+    'ForLoopWithBreakEvent',
+    'WhileLoopEvent',
     'DelayExecEvent',
 
-    'DelayDungeonEnd',
+    'DelayDungeonEndEvent',
     'WaitingTaskCompleteEvent',
-    'WaitingTaskFailedEvent',
+    'WaitingTaskFailureEvent',
     'WaitingTaskInProgressEvent',
     'DungeonMonsterReleaseEvent',
     'DungeonNPCReleaseEvent',
     'DungeonCollectionReleaseEvent',
     'DungeonCollectionBeCollectedEvent',
     'DungeonMultiCollectionAllBeCollectedEvent',
-    'DungeonBuffPointReleaseEvent',
     'DungeonAirWallReleaseEvent',
     'DungeonTeleporterReleaseEvent',
     'AIEnterAttackEvent',
     'AILeaveAttackEvent',
-    'DungeonTrapBeTriggered',
     'DungeonMoveEntityToFixPosEvent',
     'MonsterHpMonitorTriggerEvent',
     'MonsterRestNumberEvent',
@@ -67,1520 +60,1355 @@ __all__ = [
 
     'AnyPlayerCinemaPlayEndedEvent',
 
-    'get_common_release_key',
+    'getCommonReleaseKey',
     'DungeonRebornPosReleaseEvent',
 ]
 
 
-def get_common_release_key(eventId, entityGIDs):
-    return 'release_common_{}_{}'.format(eventId, '_'.join((str(i) for i in entityGIDs)))
+def getCommonReleaseKey(eventId, entityGIDs):
+    return 'common_release_{}_{}'.format(eventId, '_'.join((str(i) for i in entityGIDs)))
 
 
-class _GroupMixin(object):
+class _GroupEventMixin(object):
 
-    def makeGroup(self, *events):
+    def makeEventGroup(self, *events):
         self.eGroup = events
 
 
 class _DelayCancelMixin(object):
 
-    def cancel(self, ctx, tag):
+    def cancelDelay(self, ctx, tag):
         tid = ctx.tid
-        if tid not in self._timerIdDic:
+        if tid not in self._timerDict:
             return
-        self.controller.owner._cancelCallback(self._timerIdDic[tid], tag)
-        del self._timerIdDic[tid]
+        self.controller.owner.cancelTimerCB(self._timerDict[tid], tag)
+        del self._timerDict[tid]
 
 
 class _WaitingCancelMixin(object):
 
-    def cancel(self, ctx):
-        key = self.get_waiting_key(ctx)
+    def cancelWait(self, ctx):
+        key = self.fetchWaitingKey(ctx)
         ctrl = self.controller
-        popList = []
-        if key in ctrl._waitings:
-            for idx, (e, e_ctx) in enumerate(ctrl._waitings[key]):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        _popList = []
+        if key in ctrl.waitingsDict:
+            for idx, (e, eCtx) in enumerate(ctrl.waitingsDict[key]):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                ctrl._waitings[key].pop(i)
+            for i in reversed(_popList):
+                ctrl.waitingsDict[key].pop(i)
 
 
-class _ElementHotReloadMixin(userType.UserSoleType):
+class _ElementHotReloadMixin(userType.UserSingleType):
 
     def _lateReload(self):
         import inspect
         import sys
-        DEBUG_MSG('  |--  {}::_lateReload: {}'.format(self.__class__.__name__, self.id))
-        for v in self._params.values():
+        LOG_DBG('  |--  {}::_lateReload: {}'.format(self.__class__.__name__, self.id))
+        for v in self.paramsDict.values():
             if callable(v) and not inspect.isfunction(v):
-                DEBUG_MSG('    |-- {}::_lateReload param method: {} {}'.format(
-                    self.__class__.__name__, v.__name__, self.id))
+                LOG_DBG('    |-- {}::_lateReload param\'s method: {} id: [{}]'.format(
+                    self.classname(), v.__name__, self.id))
                 utils.resetCls(v.__self__)
             else:
-                getattr(v, 'reloadScript', ep_ctrl.utils.EMPTY_FUNC)()
+                getattr(v, 'reloadScript', utils.emptyFunc)()
 
         if isinstance(self, ep_ctrl.event.BaseEvent):
-            DEBUG_MSG('    |-- {}::_lateReload param handler: {} {}'.format(
-                    self.__class__.__name__, self._handler.__name__, self.id))
-            self._handler = getattr(sys.modules[self._handler.__module__], self._handler.__name__)
+            LOG_DBG('    |-- {}::_lateReload param\'s handler: {} id: [{}]'.format(
+                    self.classname(), self._handlerFunc.__name__, self.id))
+            self._handlerFunc = getattr(sys.modules[self._handlerFunc.__module__], self._handlerFunc.__name__)
 
 
-class FlowEvent(ep_ctrl.event.Event, _ElementHotReloadMixin):
+class FlowNodeEvent(ep_ctrl.event.Event, _ElementHotReloadMixin):
     """subclass for Event"""
 
 
-class FlowRandomEvent(ep_ctrl.event.RandomEvent, _ElementHotReloadMixin):
+class FlowRandomNodeEvent(ep_ctrl.event.RandomEvent, _ElementHotReloadMixin):
     """subclass for random event"""
 
 
-class ForLoop(ep_ctrl.flow.BaseForLoop, _ElementHotReloadMixin, _DelayCancelMixin, _GroupMixin):
+class ForLoopEvent(ep_ctrl.flow.BaseForLoop, _ElementHotReloadMixin, _DelayCancelMixin, _GroupEventMixin):
 
-    __self_params__ = ('delayTime', )
+    __selfParams__ = ('delayTime', )
 
     def __init__(self, *args, **kwargs):
-        super(ForLoop, self).__init__(*args, **kwargs)
-        self._timerIdDic = {}
+        super(ForLoopEvent, self).__init__(*args, **kwargs)
+        self._timerDict = {}
 
     @property
     def timerTag(self):
         return gametimer.TIMER_TAG_FLOW_CONTROLLER_DELAY_CALLBACK
 
-    def next(self, ctx, **ref_params):
-        if self._looping_counters[ctx.tid] > self.get_last_index():
-            self._handle_looping(self, self, ctx, **ref_params)
+    def next(self, ctx, **refParams):
+        if self._looping_counters[ctx.tid] > self.getLastIndex():
+            self._handle_looping(self, self, ctx, **refParams)
             return
-        delayTime = self.get_param('delayTime', 0.1) or 0.1
+        delayTime = self.fetchArgument('delayTime', 0.1) or 0.1
         _spaceMgr = self.controller.owner
-        if ctx.tid in self._timerIdDic:
-            _spaceMgr._cancelCallback(self._timerIdDic[ctx.tid], self.timerTag)
-        self._timerIdDic[ctx.tid] = _spaceMgr._callback(
+        if ctx.tid in self._timerDict:
+            _spaceMgr.cancelTimerCB(self._timerDict[ctx.tid], self.timerTag)
+        self._timerDict[ctx.tid] = _spaceMgr.addTimerCB(
             delayTime, 'flowControllerDelayCallback',
-            (self, '_handle_looping', (self, self, ctx), ref_params), self.timerTag)
+            (self, '_handle_looping', (self, self, ctx), refParams), self.timerTag)
 
-    def _handle_looping(self, this, src_e, ctx, **ref_params):
-        self._timerIdDic.pop(ctx.tid, None)
-        super(ForLoop, self)._handle_looping(self, src_e, ctx, **ref_params)
+    def _handle_looping(self, this, srcE, ctx, **refParams):
+        self._timerDict.pop(ctx.tid, None)
+        super(ForLoopEvent, self)._handle_looping(self, srcE, ctx, **refParams)
 
-    def cancel(self, ctx):
+    def cancelDelay(self, ctx):
         tid = ctx.tid
-        super(ForLoop, self).cancel(ctx, self.timerTag)
+        super(ForLoopEvent, self).cancelDelay(ctx, self.timerTag)
         self._looping_counters.pop(tid, None)
 
 
-class ForLoopWithBreak(ep_ctrl.flow.BaseForLoopWithBreak, _ElementHotReloadMixin, _DelayCancelMixin):
+class ForLoopWithBreakEvent(ep_ctrl.flow.BaseForLoopWithBreak, _ElementHotReloadMixin, _DelayCancelMixin):
 
-    __self_params__ = ('delayTime', )
+    __selfParams__ = ('delayTime', )
 
     def __init__(self, *args, **kwargs):
-        super(ForLoopWithBreak, self).__init__(*args, **kwargs)
-        self._timerIdDic = {}
+        super(ForLoopWithBreakEvent, self).__init__(*args, **kwargs)
+        self._timerDict = {}
 
     @property
     def timerTag(self):
         return gametimer.TIMER_TAG_FLOW_CONTROLLER_DELAY_CALLBACK
 
-    def next(self, ctx, **ref_params):
-        delayTime = self.get_param('delayTime', 0.1)
+    def next(self, ctx, **refParams):
+        delayTime = self.fetchArgument('delayTime', 0.1)
         _spaceMgr = self.controller.owner
-        if ctx.tid in self._timerIdDic:
-            _spaceMgr._cancelCallback(self._timerIdDic[ctx.tid], self.timerTag)
-        self._timerIdDic[ctx.tid] = _spaceMgr._callback(
+        if ctx.tid in self._timerDict:
+            _spaceMgr.cancelTimerCB(self._timerDict[ctx.tid], self.timerTag)
+        self._timerDict[ctx.tid] = _spaceMgr.addTimerCB(
             delayTime, 'flowControllerDelayCallback',
-            (self, '_handle_looping', (self, self, ctx), ref_params), self.timerTag)
+            (self, '_handle_looping', (self, self, ctx), refParams), self.timerTag)
 
-    def _handle_looping(self, this, src_e, ctx, **ref_params):
-        self._timerIdDic.pop(ctx.tid, None)
-        super(ForLoopWithBreak, self)._handle_looping(self, src_e, ctx, **ref_params)
+    def _handle_looping(self, this, srcE, ctx, **refParams):
+        self._timerDict.pop(ctx.tid, None)
+        super(ForLoopWithBreakEvent, self)._handle_looping(self, srcE, ctx, **refParams)
 
-    def cancel(self, ctx):
+    def cancelDelay(self, ctx):
         tid = ctx.tid
-        super(ForLoopWithBreak, self).cancel(ctx, self.timerTag)
+        super(ForLoopWithBreakEvent, self).cancelDelay(ctx, self.timerTag)
         self._looping_counters.pop(tid, None)
 
 
-class WhileLoop(ep_ctrl.flow.BaseWhileLoop, _ElementHotReloadMixin, _DelayCancelMixin):
+class WhileLoopEvent(ep_ctrl.flow.BaseWhileLoop, _ElementHotReloadMixin, _DelayCancelMixin):
 
-    __self_params__ = ('delayTime', )
+    __selfParams__ = ('delayTime', )
 
     def __init__(self, *args, **kwargs):
-        super(WhileLoop, self).__init__(*args, **kwargs)
-        self._timerIdDic = {}
+        super(WhileLoopEvent, self).__init__(*args, **kwargs)
+        self._timerDict = {}
 
     @property
     def timerTag(self):
         return gametimer.TIMER_TAG_FLOW_CONTROLLER_DELAY_CALLBACK
 
-    def next(self, ctx, **ref_params):
-        delayTime = self.get_param('delayTime', 0.1)
+    def next(self, ctx, **refParams):
+        delayTime = self.fetchArgument('delayTime', 0.1)
         _spaceMgr = self.controller.owner
-        if ctx.tid in self._timerIdDic:
-            _spaceMgr._cancelCallback(self._timerIdDic[ctx.tid], self.timerTag)
-        self._timerIdDic[ctx.tid] = _spaceMgr.owner._callback(
+        if ctx.tid in self._timerDict:
+            _spaceMgr.cancelTimerCB(self._timerDict[ctx.tid], self.timerTag)
+        self._timerDict[ctx.tid] = _spaceMgr.owner.addTimerCB(
             delayTime, 'flowControllerDelayCallback',
-            (self, '_handle_looping', (self, self, ctx), ref_params), self.timerTag)
+            (self, '_handle_looping', (self, self, ctx), refParams), self.timerTag)
 
-    def _handle_looping(self, this, src_e, ctx, **ref_params):
-        self._timerIdDic.pop(ctx.tid, None)
-        super(WhileLoop, self)._handle_looping(self, src_e, ctx, **ref_params)
+    def _handle_looping(self, this, srcE, ctx, **refParams):
+        self._timerDict.pop(ctx.tid, None)
+        super(WhileLoopEvent, self)._handle_looping(self, srcE, ctx, **refParams)
 
-    def cancel(self, ctx):
-        super(WhileLoop, self).cancel(ctx, self.timerTag)
+    def cancelDelay(self, ctx):
+        super(WhileLoopEvent, self).cancelDelay(ctx, self.timerTag)
 
 
-class DelayExecEvent(ep_ctrl.event.BaseDelayedEvent, _ElementHotReloadMixin, _DelayCancelMixin, _GroupMixin):
+class DelayExecEvent(ep_ctrl.event.BaseDelayedEvent, _ElementHotReloadMixin, _DelayCancelMixin, _GroupEventMixin):
 
     def __init__(self, *args, **kwargs):
+        self._timerDict = {}
         super(DelayExecEvent, self).__init__(*args, **kwargs)
-        self._timerIdDic = {}
 
     @property
     def timerTag(self):
         return gametimer.TIMER_TAG_FLOW_CONTROLLER_DELAY_EXECEVENT_CALLBACK
 
-    def next(self, ctx, **ref_params):
+    def next(self, ctx, **refParams):
         _spaceMgr = self.controller.owner
-        if ctx.tid in self._timerIdDic:
-            _spaceMgr._cancelCallback(self._timerIdDic[ctx.tid], self.timerTag)
-        self._timerIdDic[ctx.tid] = _spaceMgr._callback(
+        if ctx.tid in self._timerDict:
+            _spaceMgr.cancelTimerCB(self._timerDict[ctx.tid], self.timerTag)
+        self._timerDict[ctx.tid] = _spaceMgr.addTimerCB(
             self._delay_time, 'flowControllerDelayExecEventCallback', (self, ctx), self.timerTag)
 
 
-    def handle_be_triggered_after_delay(self, obj):
-        self._timerIdDic.pop(obj.tid, None)
-        super(DelayExecEvent, self).handle_be_triggered_after_delay(obj)
+    def handleBeTriggeredAfterDelay(self, obj):
+        self._timerDict.pop(obj.tid, None)
+        super(DelayExecEvent, self).handleBeTriggeredAfterDelay(obj)
 
-    def cancel(self, ctx):
-        super(DelayExecEvent, self).cancel(ctx, self.timerTag)
+    def cancelDelay(self, ctx):
+        super(DelayExecEvent, self).cancelDelay(ctx, self.timerTag)
 
 
-class DelayDungeonEnd(DelayExecEvent):
+class DelayDungeonEndEvent(DelayExecEvent):
 
-    def __init__(self, event_id, controller, dungeonNo, spaceNo, delayTime, preDelayTime,
-                 isFail=False, event_handler=None, **kwargs):
-        super(DelayDungeonEnd, self).__init__(
-            event_id, controller, event_handler, delay_time=preDelayTime, **kwargs)
-        self.add_param('dungeonNo', dungeonNo)
-        self.add_param('spaceNo', spaceNo)
-        self.add_param('delayTime', delayTime)
-        self.add_param('preDelayTime', preDelayTime)
-        self.add_param('isFail', isFail)
+    def __init__(self, eventId, controller, dungeonNo, spaceNo, delayTime, preDelayTime,
+                 isFail=False, eventHandler=None, **kwargs):
+        super(DelayDungeonEndEvent, self).__init__(
+            eventId, controller, eventHandler, delay_time=preDelayTime, **kwargs)
+        self.putArgument('dungeonNo', dungeonNo)
+        self.putArgument('spaceNo', spaceNo)
+        self.putArgument('delayTime', delayTime)
+        self.putArgument('preDelayTime', preDelayTime)
+        self.putArgument('isFail', isFail)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        spaceNo = self.get_param('spaceNo')
-        preDelayTime = self.get_param('preDelayTime')
-        for pid in self.controller.owner.players:
-            pEnt = KBEngine.entities.get(pid)
-            pEnt and pEnt.client.changeDungeonRemainTime(spaceNo, int(utils.getNow() + preDelayTime))
-        super(DelayDungeonEnd, self).handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        spaceNo = self.fetchArgument('spaceNo')
+        preDelayTime = self.fetchArgument('preDelayTime')
+        _sendTime = int(utils.curTS() + preDelayTime)
+        self.controller.owner.syncPlayer(lambda box: box.client.changeDungeonRemainTime(spaceNo, _sendTime))
+        super(DelayDungeonEndEvent, self).handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
 
-    def handle_be_triggered_after_delay(self, obj):
+    def handleBeTriggeredAfterDelay(self, obj):
         from ._controller import handleEndDungeon
 
         handleEndDungeon(self, self, obj, **self._pkg_all_ref_params())
-        super(DelayDungeonEnd, self).handle_be_triggered_after_delay(obj)
+        super(DelayDungeonEndEvent, self).handleBeTriggeredAfterDelay(obj)
 
 
-class WaitingTaskCompleteEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class WaitingTaskCompleteEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, task_id, checknow, checkOnce, event_handler=None, **kwargs):
-        super(WaitingTaskCompleteEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('taskId', task_id)
-        self.add_param('checkNow', checknow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, task_id, checknow, checkOnce, eventHandler=None, **kwargs):
+        super(WaitingTaskCompleteEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('taskId', task_id)
+        self.putArgument('checkNow', checknow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super(WaitingTaskCompleteEvent, self).handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
-        checkNow = self.get_param('checkNow')
-        checkOnce = self.get_param('checkOnce')
-        taskId = self.get_param('taskId')
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        super(WaitingTaskCompleteEvent, self).handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
+        checkNow = self.fetchArgument('checkNow')
+        checkOnce = self.fetchArgument('checkOnce')
+        taskId = self.fetchArgument('taskId')
         if (checkNow or checkOnce) and taskId:
             spaceMgr = self.controller.owner
             if spaceMgr:
-                for pid in spaceMgr.players:
-                    pEnt = KBEngine.entities.get(pid)
-                    pEnt and pEnt.base.getTaskCurrentState(
-                        taskId, pEnt, 'flowCtrlIsTaskCompleteCallback',
-                        (taskId, self.id, gameconst.TaskStat.TASK_STAT_SUBMITTED, checkOnce))
+                _args = (taskId, self.id, gameconst.TaskStat.TASK_STAT_SUBMITTED, checkOnce)
+                spaceMgr.syncPlayer(lambda box: box.base.getTaskCurrentState(taskId, box, 'flowCtrlIsTaskCompleteCallback', _args))
 
-    def get_waiting_key(self, ctx):
-        return self.get_task_key(self.get_param('taskId', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getTaskKey(self.fetchArgument('taskId', 0))
 
     @staticmethod
-    def get_task_key(task_id):
-        return 'task_complete_{}'.format(task_id)
+    def getTaskKey(task_id):
+        return 'task_finish_{}'.format(task_id)
 
 
-class WaitingTaskFailedEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
-    def __init__(self, event_id, controller, task_id, checknow, checkOnce, event_handler=None, **kwargs):
-        super(WaitingTaskFailedEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('taskId', task_id)
-        self.add_param('checkNow', checknow)
-        self.add_param('checkOnce', checkOnce)
+class WaitingTaskFailureEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+    def __init__(self, eventId, controller, task_id, checknow, checkOnce, eventHandler=None, **kwargs):
+        super(WaitingTaskFailureEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('taskId', task_id)
+        self.putArgument('checkNow', checknow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super(WaitingTaskFailedEvent, self).handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
-        checkNow = self.get_param('checkNow')
-        checkOnce = self.get_param('checkOnce')
-        taskId = self.get_param('taskId')
-        if (checkNow or checkOnce) and taskId:
-            spaceMgr = self.controller.owner
-            if spaceMgr:
-                for pid in spaceMgr.players:
-                    pEnt = KBEngine.entities.get(pid)
-                    pEnt and pEnt.base.getTaskCurrentState(
-                        taskId, pEnt, 'flowCtrlIsTaskCompleteCallback',
-                        (taskId, self.id, gameconst.TaskStat.TASK_STAT_FAILED, checkOnce))
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        super(WaitingTaskFailureEvent, self).handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
+        checkNow = self.fetchArgument('checkNow')
+        checkOnce = self.fetchArgument('checkOnce')
+        taskId = self.fetchArgument('taskId')
+        if not ((checkNow or checkOnce) and taskId):
+            return
 
-    def get_waiting_key(self, ctx):
-        return self.get_task_key(self.get_param('taskId', 0))
+        spaceMgr = self.controller.owner
+        if not spaceMgr:
+            return
 
-    @staticmethod
-    def get_task_key(task_id):
-        return 'task_failed_{}'.format(task_id)
+        _innerArgs = (taskId, self.id, gameconst.TaskStat.TASK_STAT_FAILED, checkOnce)
+        spaceMgr.syncPlayer(lambda box: box.base.getTaskCurrentState(taskId, box, 'flowCtrlIsTaskCompleteCallback', _innerArgs))
 
-
-class WaitingTaskInProgressEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
-    def __init__(self, event_id, controller, task_id, checknow, checkOnce, event_handler=None, **kwargs):
-        super(WaitingTaskInProgressEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('taskId', task_id)
-        self.add_param('checkNow', checknow)
-        self.add_param('checkOnce', checkOnce)
-
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        super(WaitingTaskInProgressEvent, self).handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
-        checkNow = self.get_param('checkNow')
-        checkOnce = self.get_param('checkOnce')
-        taskId = self.get_param('taskId')
-        if (checkNow or checkOnce) and taskId:
-            spaceMgr = self.controller.owner
-            if spaceMgr:
-                for pid in spaceMgr.players:
-                    pEnt = KBEngine.entities.get(pid)
-                    pEnt and pEnt.base.getTaskCurrentState(
-                        taskId, pEnt, 'flowCtrlIsTaskCompleteCallback',
-                        (taskId, self.id, gameconst.TaskStat.TASK_STAT_RUNNING, checkOnce))
-
-    def get_waiting_key(self, ctx):
-        return self.get_task_key(self.get_param('taskId', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getTaskKey(self.fetchArgument('taskId', 0))
 
     @staticmethod
-    def get_task_key(task_id):
+    def getTaskKey(task_id):
+        return 'task_failure_{}'.format(task_id)
+
+
+class WaitingTaskInProgressEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+    def __init__(self, eventId, controller, task_id, checknow, checkOnce, eventHandler=None, **kwargs):
+        super(WaitingTaskInProgressEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('taskId', task_id)
+        self.putArgument('checkNow', checknow)
+        self.putArgument('checkOnce', checkOnce)
+
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        super(WaitingTaskInProgressEvent, self).handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
+        checkNow = self.fetchArgument('checkNow')
+        checkOnce = self.fetchArgument('checkOnce')
+        taskId = self.fetchArgument('taskId')
+        if not ((checkNow or checkOnce) and taskId):
+            return
+
+        spaceMgr = self.controller.owner
+        if not spaceMgr:
+            return
+
+        _args = (taskId, self.id, gameconst.TaskStat.TASK_STAT_RUNNING, checkOnce)
+        spaceMgr.syncPlayer(lambda box: box.base.getTaskCurrentState(taskId, box, 'flowCtrlIsTaskCompleteCallback', _args))
+
+    def fetchWaitingKey(self, ctx):
+        return self.getTaskKey(self.fetchArgument('taskId', 0))
+
+    @staticmethod
+    def getTaskKey(task_id):
         return 'task_inprogress_{}'.format(task_id)
 
 
-class DungeonMonsterReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonMonsterReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('monsterGIDs', 'monsterNum', 'monsterLevel')
+    __selfParams__ = ('monsterGIDs', 'monsterNum', 'monsterLevel')
     __ref_params__ = ('dungeonNo', 'spaceNo')
 
-    def __init__(self, event_id, controller, monsterGIDs, event_handler=None, **kwargs):
-        super(DungeonMonsterReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('monsterGIDs', monsterGIDs)
+    def __init__(self, eventId, controller, monsterGIDs, eventHandler=None, **kwargs):
+        super(DungeonMonsterReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('monsterGIDs', monsterGIDs)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']     # dungeonNo get from ref
-        spaceNo = ref_params['spaceNo']
-        monsterGIDs = self.get_param('monsterGIDs', [])
-        monsterNum = self.get_param('monsterNum', 1)
-        monsterLevel = self.get_param('monsterLevel', 0)
-        overwriteProps = self.get_param('overwriteProps', {})
-        ifSetBoss = self.get_param('ifSetBoss', False)
-        initState = self.get_param('initState', 0)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        dungeonNo = refParams['dungeonNo']     # dungeonNo get from ref
+        spaceNo = refParams['spaceNo']
+        monsterGIDs = self.fetchArgument('monsterGIDs', [])
+        monsterNum = self.fetchArgument('monsterNum', 1)
+        monsterLevel = self.fetchArgument('monsterLevel', 0)
+        overwriteProps = self.fetchArgument('overwriteProps', {})
+        ifSetBoss = self.fetchArgument('ifSetBoss', False)
+        initState = self.fetchArgument('initState', 0)
         stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, monsterGIDs, monsterNum, monsterLevel,
+        _id = self.id
+        stub.spawnDungeonEntityByGameEntityId(spaceNo, monsterGIDs, monsterNum, monsterLevel,
                                                  {'overwriteProps': overwriteProps, 'ifSetBoss': ifSetBoss,
-                                                  'initState': initState, 'eventId': self.id})
-        super(DungeonMonsterReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+                                                  'initState': initState, 'eventId': _id})
+        super(DungeonMonsterReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_monster_release_key(self.id, self.get_param('monsterGIDs', []))
+    def fetchWaitingKey(self, ctx):
+        return self.getMonsterReleaseKey(self.id, self.fetchArgument('monsterGIDs', []))
 
     @staticmethod
-    def get_monster_release_key(eventId, monsterGIDs):
-        return get_common_release_key(eventId, monsterGIDs)
+    def getMonsterReleaseKey(eventId, monsterGIDs):
+        return getCommonReleaseKey(eventId, monsterGIDs)
 
 
-class DungeonNPCReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonNPCReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('npcGIDs', 'npcNum', 'npcLevel')
+    __selfParams__ = ('npcGIDs', 'npcNum', 'npcLevel')
     __ref_params__ = ('dungeonNo', 'spaceNo')
 
-    def __init__(self, event_id, controller, npcGIDs, event_handler=None, **kwargs):
-        super(DungeonNPCReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('npcGIDs', npcGIDs)
+    def __init__(self, eventId, controller, npcGIDs, eventHandler=None, **kwargs):
+        super(DungeonNPCReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('npcGIDs', npcGIDs)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        npcGIDs = self.get_param('npcGIDs', [])
-        npcNum = self.get_param('npcNum', 1)
-        npcLevel = self.get_param('npcLevel', 0)
-        ifSetBoss = self.get_param('ifSetBoss', False)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        dungeonNo = refParams['dungeonNo']
+        spaceNo = refParams['spaceNo']
+        npcGIDs = self.fetchArgument('npcGIDs', [])
+        npcNum = self.fetchArgument('npcNum', 1)
+        npcLevel = self.fetchArgument('npcLevel', 0)
+        ifSetBoss = self.fetchArgument('ifSetBoss', False)
         stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, npcGIDs, npcNum, npcLevel,
+        stub.spawnDungeonEntityByGameEntityId(spaceNo, npcGIDs, npcNum, npcLevel,
                                                  {'ifSetBoss': ifSetBoss, 'eventId': self.id})
-        super(DungeonNPCReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+        super(DungeonNPCReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_npc_release_key(self.id, self.get_param('npcGIDs', []))
+    def fetchWaitingKey(self, ctx):
+        return self.getNpcReleaseKey(self.id, self.fetchArgument('npcGIDs', []))
 
     @staticmethod
-    def get_npc_release_key(eventId, npcGIDs):
-        return get_common_release_key(eventId, npcGIDs)
+    def getNpcReleaseKey(eventId, npcGIDs):
+        return getCommonReleaseKey(eventId, npcGIDs)
 
 
-class DungeonCollectionReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonCollectionReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('collGIDs', 'collNum', 'randomCollectionNum', 'checkHaveInFixed')
+    __selfParams__ = ('collGIDs', 'collNum', 'randomCollectionNum', 'checkHaveInFixed')
     __ref_params__ = ('dungeonNo', 'spaceNo')
 
-    def __init__(self, event_id, controller, collGIDs, event_handler=None, **kwargs):
-        super(DungeonCollectionReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('collGIDs', collGIDs)
+    def __init__(self, eventId, controller, collGIDs, eventHandler=None, **kwargs):
+        super(DungeonCollectionReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('collGIDs', collGIDs)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        collGIDs = self.get_param('collGIDs', [])
-        collNum = self.get_param('collNum', 1)
-        DEBUG_MSG("handle_be_triggered begin ", collGIDs)
-        randomCollectionNum = self.get_param('randomCollectionNum', 0)
-        checkHaveInFixed = self.get_param('checkHaveInFixed', False)
-        if randomCollectionNum and len(collGIDs) >= randomCollectionNum:
-            collGIDs = random.sample(collGIDs, randomCollectionNum)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _spaceNo = refParams['spaceNo']
+        _collGIDs = self.fetchArgument('collGIDs', [])
+        _collNum = self.fetchArgument('collNum', 1)
+        LOG_DBG("handleProcessActivated begin ", _collGIDs)
+        _randomCollectionNum = self.fetchArgument('randomCollectionNum', 0)
+        checkHaveInFixed = self.fetchArgument('checkHaveInFixed', False)
+        if _randomCollectionNum and len(_collGIDs) >= _randomCollectionNum:
+            _collGIDs = random.sample(_collGIDs, _randomCollectionNum)
 
         _spaceMgr = self.controller.owner
         if checkHaveInFixed:
-            for _ent in _spaceMgr.getEntitiesByTag("Collection"):
-                gid = utils.getGidFromGameEntityId(_ent.gameEntityId)
-                if gid in collGIDs:
-                    collGIDs.remove(gid)
+            for _entity in _spaceMgr.listEntitiesByTag("Collection"):
+                gid = utils.parseGidFromGameEntityId(_entity.gameEntityId)
+                if gid in _collGIDs:
+                    _collGIDs.remove(gid)
 
-            if not len(collGIDs):
-                WARNING_MSG("DungeonCollectionReleaseEvent not collGIDs")
+            if not len(_collGIDs):
+                LOG_WARN("DungeonCollectionReleaseEvent not _collGIDs")
                 return
 
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, collGIDs, collNum, 0,
+        stub = gameengine.getDungeonStubBySpaceNo(_spaceNo)
+        stub.spawnDungeonEntityByGameEntityId(_spaceNo, _collGIDs, _collNum, 0,
                                                  {'eventId': self.id})
-        super(DungeonCollectionReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+        super(DungeonCollectionReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_coll_release_key(self.id, self.get_param('collGIDs', []))
+    def fetchWaitingKey(self, ctx):
+        return self.getCollReleaseKey(self.id, self.fetchArgument('collGIDs', []))
 
     @staticmethod
-    def get_coll_release_key(eventId, collGIDs):
-        return get_common_release_key(eventId, collGIDs)
+    def getCollReleaseKey(eventId, collGIDs):
+        return getCommonReleaseKey(eventId, collGIDs)
 
 
-class DungeonCollectionBeCollectedEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonCollectionBeCollectedEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('collGIDs', )
+    __selfParams__ = ('collGIDs', )
 
-    def __init__(self, event_id, controller, collGIDs, checkNow, checkOnce, event_handler=None, **kwargs):
-        super().__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('collGIDs', collGIDs)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, collGIDs, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super().__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('collGIDs', collGIDs)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        collGIDs = self.get_param('collGIDs')
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        _collGIDs = self.fetchArgument('collGIDs')
 
-        usePrototypeID = self.get_param('usePrototypeID', False)
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce')
+        usePrototypeID = self.fetchArgument('usePrototypeID', False)
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce')
         if not (checkOnce or checkNow):
-            for collGID in collGIDs:
-                collGID = "cbid{}".format(collGID) if usePrototypeID else collGID
-                self._controller.waiting_for_dungeon_collection_be_collected_trigger(self, ctx, collGID)
+            for _collGID in _collGIDs:
+                _collGID = "cbid{}".format(_collGID) if usePrototypeID else _collGID
+                self._controller.waitingForDungeonCollectionBeCollectedTrigger(self, ctx, _collGID)
 
         else:
             _spaceMgr = self.controller.owner
             _isCollected = False
-            for collGID in collGIDs:
-                collGID = "cbid{}".format(collGID) if usePrototypeID else collGID
-                collNum = _spaceMgr.collBeCollectedDict.get(collGID, 0)
-                if collNum > 0:
+            for _collGID in _collGIDs:
+                _collGID = "cbid{}".format(_collGID) if usePrototypeID else _collGID
+                _collNum = _spaceMgr.collBeCollectedDict.get(_collGID, 0)
+                if _collNum > 0:
                     _isCollected = True
                     break
 
             if _isCollected:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                for collGID in collGIDs:
-                    collGID = "cbid{}".format(collGID) if usePrototypeID else collGID
-                    self._controller.waiting_for_dungeon_collection_be_collected_trigger(self, ctx, collGID)
+                for _collGID in _collGIDs:
+                    _collGID = "cbid{}".format(_collGID) if usePrototypeID else _collGID
+                    self._controller.waitingForDungeonCollectionBeCollectedTrigger(self, ctx, _collGID)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: collection be collected checkonce failed --"
-                            " collGIDs={}".format(self.id, collGIDs, usePrototypeID))
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: collection be collected checkonce failed --"
+                            " _collGIDs={}".format(self.id, _collGIDs, usePrototypeID))
 
-    def re_handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        self.handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+    def reHandleBeTriggered(self, srcE, srcIdx, idx, obj, **refParams):
+        self.handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
 
-    def cancel(self, ctx):
-        m_collGIDs = self.get_param('collGIDs', [])
+    def cancelWait(self, context):
+        m_collGIDs = self.fetchArgument('collGIDs', [])
 
         ctrl = self.controller
 
         for i_collGID in m_collGIDs:
-            popList = []
-            eList = ctrl._waitings.get(ctrl.GLOBAL_KEY, {}).get(
-                ctrl.DUNGEON_COLL_BE_COLLECT_KEY, {}).get(i_collGID)
+            _popList = []
+            _eventList = ctrl.waitingsDict.get(ctrl.GLOBAL_EVENT_KEY, {}).get(
+                ctrl.DUNGEON_COLLECTIBLE_KEY, {}).get(i_collGID)
 
-            if not eList:
+            if not _eventList:
                 continue
 
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == context.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonMultiCollectionAllBeCollectedEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonMultiCollectionAllBeCollectedEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('collGIDs', )
+    __selfParams__ = ('collGIDs', )
 
-    def __init__(self, event_id, controller, collGIDs, event_handler=None, **kwargs):
-        super().__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('collGIDs', collGIDs)
+    def __init__(self, eventId, controller, collGIDs, eventHandler=None, **kwargs):
+        super().__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('collGIDs', collGIDs)
         self._collectDict = {i: False for i in collGIDs}
 
-    # ----------------------------------------------
-    # collection method
     def collected(self, collGID):
         if collGID in self._collectDict:
             self._collectDict[collGID] = True
 
-    def isAllBeCollected(self):
+    def hasAllCollected(self):
         return all(self._collectDict.values())
     # ----------------------------------------------
 
-    def re_handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
+    def reHandleBeTriggered(self, srcE, srcIdx, idx, obj, **refParams):
         self._collectDict = {i: False for i in self._collectDict}
-        self.handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+        self.handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
 
-        m_collGIDs = self.get_param('collGIDs')
+        m_collGIDs = self.fetchArgument('collGIDs')
         for i_collGID in m_collGIDs:
-            self._controller.waiting_for_dungeon_multi_collection_all_be_colllected(self, ctx, i_collGID)
+            self._controller.waitingForDungeonMultiCollectionAllBeColllected(self, ctx, i_collGID)
 
-    def cancel(self, ctx):
-        m_collGIDs = self.get_param('collGIDs', [])
+    def cancelWait(self, ctx):
+        m_collGIDs = self.fetchArgument('collGIDs', [])
 
         ctrl = self.controller
 
         for i_collGID in m_collGIDs:
-            popList = []
-            eList = ctrl._waitings.get(ctrl.GLOBAL_KEY, {}).get(
-                ctrl.DUNGEON_MULTI_COLL_BE_COLLTECT_KEY, {}).get(i_collGID)
+            _popList = []
+            _eventList = ctrl.waitingsDict.get(ctrl.GLOBAL_EVENT_KEY, {}).get(
+                ctrl.DUNGEON_MULTI_BE_COLLTECT_KEY, {}).get(i_collGID)
 
-            if not eList:
+            if not _eventList:
                 continue
 
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonBuffPointReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonAirWallReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('buffPointGIDs', 'buffPointNum')
+    __selfParams__ = ('airWallGIDs', 'airWallNum')
     __ref_params__ = ('dungeonNo', 'spaceNo')
 
-    def __init__(self, event_id, controller, buffPointGIDs, event_handler=None, **kwargs):
-        super(DungeonBuffPointReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('buffPointGIDs', buffPointGIDs)
+    def __init__(self, eventId, controller, airWallGIDs, eventHandler=None, **kwargs):
+        super(DungeonAirWallReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('airWallGIDs', airWallGIDs)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        buffPointGIDs = self.get_param('buffPointGIDs', [])
-        buffPointNum = self.get_param('buffPointNum', 1)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        dungeonNo = refParams['dungeonNo']
+        spaceNo = refParams['spaceNo']
+        airWallGIDs = self.fetchArgument('airWallGIDs', [])
+        airWallNum = self.fetchArgument('airWallNum', 1)
         stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, buffPointGIDs, buffPointNum, 0,
+        stub.spawnDungeonEntityByGameEntityId(spaceNo, airWallGIDs, airWallNum, 0,
                                                  {'eventId': self.id})
-        super(DungeonBuffPointReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+        super(DungeonAirWallReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_coll_release_key(self.id, self.get_param('buffPointGIDs', []))
+    def fetchWaitingKey(self, ctx):
+        return self.getCollReleaseKey(self.id, self.fetchArgument('airWallGIDs', []))
 
     @staticmethod
-    def get_coll_release_key(eventId, buffPointGIDs):
-        return get_common_release_key(eventId, buffPointGIDs)
+    def getCollReleaseKey(eventId, airWallGIDs):
+        return getCommonReleaseKey(eventId, airWallGIDs)
 
 
-class DungeonAirWallReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonTeleporterReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('airWallGIDs', 'airWallNum')
-    __ref_params__ = ('dungeonNo', 'spaceNo')
-
-    def __init__(self, event_id, controller, airWallGIDs, event_handler=None, **kwargs):
-        super(DungeonAirWallReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('airWallGIDs', airWallGIDs)
-
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        airWallGIDs = self.get_param('airWallGIDs', [])
-        airWallNum = self.get_param('airWallNum', 1)
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, airWallGIDs, airWallNum, 0,
-                                                 {'eventId': self.id})
-        super(DungeonAirWallReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
-
-    def get_waiting_key(self, ctx):
-        return self.get_coll_release_key(self.id, self.get_param('airWallGIDs', []))
-
-    @staticmethod
-    def get_coll_release_key(eventId, airWallGIDs):
-        return get_common_release_key(eventId, airWallGIDs)
-
-
-class DungeonTeleporterReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
-
-    __self_params__ = ('entityGID', 'targetEntityGID')
+    __selfParams__ = ('entityGID', 'targetEntityGID')
     __ref_params__ = ('dungeonNo', 'spaceNo')
 
 
-    def __init__(self, event_id, controller, entityGID, targetEntityGID, event_handler=None, **kwargs):
-        super(DungeonTeleporterReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('entityGID', entityGID)
-        self.add_param('targetEntityGID', targetEntityGID)
+    def __init__(self, eventId, controller, entityGID, targetEntityGID, eventHandler=None, **kwargs):
+        super(DungeonTeleporterReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('entityGID', entityGID)
+        self.putArgument('targetEntityGID', targetEntityGID)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        entityGID = self.get_param('entityGID', -1)
-        targetEntityGID = self.get_param('targetEntityGID', 1)
-        trapRange = self.get_param('trapRange', 0)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        dungeonNo = refParams['dungeonNo']
+        spaceNo = refParams['spaceNo']
+        entityGID = self.fetchArgument('entityGID', -1)
+        targetEntityGID = self.fetchArgument('targetEntityGID', 1)
+        trapRange = self.fetchArgument('trapRange', 0)
         stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, [entityGID, ], 1, 0,
+        stub.spawnDungeonEntityByGameEntityId(spaceNo, [entityGID, ], 1, 0,
                                                  {'targetEntityGID': targetEntityGID, 'trapRange': trapRange})
-        super(DungeonTeleporterReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+        super(DungeonTeleporterReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_coll_release_key(self.get_param('entityGID', -1))
+    def fetchWaitingKey(self, ctx):
+        return self.getCollReleaseKey(self.fetchArgument('entityGID', -1))
 
     @staticmethod
-    def get_coll_release_key(entityGID):
+    def getCollReleaseKey(entityGID):
         return 'dun_tel_release_{}'.format(entityGID)
 
 
-class AIEnterAttackEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class AIEnterAttackEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, monsterGID, checkNow, checkOnce, event_handler=None, **kwargs):
-        super(AIEnterAttackEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('monsterGID', monsterGID)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, monsterGID, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super(AIEnterAttackEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('monsterGID', monsterGID)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def get_waiting_key(self, ctx):
-        return self.get_enter_attack_key(self.get_param('monsterGID', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getEnterAttackKey(self.fetchArgument('monsterGID', 0))
 
     @staticmethod
-    def get_enter_attack_key(monsterGID):
+    def getEnterAttackKey(monsterGID):
         return 'enter_attack_{}'.format(monsterGID)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
 
-        monsterGID = self.get_param('monsterGID', 0)
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce', False)
+        monsterGID = self.fetchArgument('monsterGID', 0)
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce', False)
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_trigger(self.get_waiting_key(obj), self, ctx)
+            self._controller.waitingForTrigger(self.fetchWaitingKey(obj), self, ctx)
 
         else:
             _spaceMgr = self.controller.owner
-            _gidTag = 'gid_{}'.format(monsterGID)
-            for _eid in _spaceMgr.taggedEntities.get(_gidTag, ()):
-                _ent = KBEngine.entities.get(_eid)
-                if not _ent:
+            _tagOfGid = 'gid_{}'.format(monsterGID)
+            for _eid in _spaceMgr.tagEntities.get(_tagOfGid, ()):
+                _entity = KBEngine.entities.get(_eid)
+                if not _entity:
                     continue
-                if _ent.hasState(gameconst.State.Fighting):
+                if _entity.hasState(gameconst.StateEnum.Fighting):
                     _ret = True
                     break
             else:
                 _ret = False
 
             if _ret:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                self._controller.waiting_for_trigger(self.get_waiting_key(obj), self, ctx)
+                self._controller.waitingForTrigger(self.fetchWaitingKey(obj), self, ctx)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: monster in battle check failed --"
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: monster in battle check failed --"
                             " monsterGID={}".format(self.id, monsterGID))
 
 
-class AILeaveAttackEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin, _GroupMixin):
+class AILeaveAttackEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin, _GroupEventMixin):
 
-    def __init__(self, event_id, controller, monsterGID, checkNow, checkOnce, event_handler=None, **kwargs):
-        super(AILeaveAttackEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('monsterGID', monsterGID)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, monsterGID, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super(AILeaveAttackEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('monsterGID', monsterGID)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def get_waiting_key(self, ctx):
-        return self.get_leave_attack_key(self.get_param('monsterGID', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getLeaveAttackKey(self.fetchArgument('monsterGID', 0))
 
     @staticmethod
-    def get_leave_attack_key(monsterGID):
+    def getLeaveAttackKey(monsterGID):
         return 'leave_attack_{}'.format(monsterGID)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
 
-        monsterGID = self.get_param('monsterGID', 0)
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce', False)
+        monsterGID = self.fetchArgument('monsterGID', 0)
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce', False)
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_trigger(self.get_waiting_key(obj), self, ctx)
+            self._controller.waitingForTrigger(self.fetchWaitingKey(obj), self, ctx)
 
         else:
             _spaceMgr = self.controller.owner
-            _gidTag = 'gid_{}'.format(monsterGID)
-            _entities = _spaceMgr.taggedEntities.get(_gidTag, ())
-            for _eid in _entities:
-                _ent = KBEngine.entities.get(_eid)
-                if not _ent:
+            _tagOfGid = 'gid_{}'.format(monsterGID)
+            _eids = _spaceMgr.tagEntities.get(_tagOfGid, ())
+            for _eid in _eids:
+                _entity = KBEngine.entities.get(_eid)
+                if not _entity:
                     continue
-                if not _ent.hasState(gameconst.State.Fighting):
+                if not _entity.hasState(gameconst.StateEnum.Fighting):
                     _ret = True
                     break
             else:
                 # NOTE(): 没有怪物的话脱战检查必然为True
-                _ret = True if not _entities else False
+                _ret = True if not _eids else False
 
             if _ret:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                self._controller.waiting_for_trigger(self.get_waiting_key(obj), self, ctx)
+                self._controller.waitingForTrigger(self.fetchWaitingKey(obj), self, ctx)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: monster leave battle check failed --"
-                            " monsterGID={}, num={}".format(self.id, monsterGID, len(_entities)))
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: monster leave battle check failed --"
+                            " monsterGID={}, num={}".format(self.id, monsterGID, len(_eids)))
 
 
-class DungeonTrapBeTriggered(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonMoveEntityToFixPosEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, entityGID, checkNow, checkOnce, event_handler=None, **kwargs):
-        super().__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('entityGID', entityGID)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, entityGID, _pos, speed, moveAni, eventHandler=None, **kwargs):
+        super(DungeonMoveEntityToFixPosEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('entityGID', entityGID)
+        self.putArgument('_pos', _pos)
+        self.putArgument('speed', speed)
+        self.putArgument('moveAni', moveAni)
+        self.putArgument('moveUUID', utils.generateUUID())
 
-    def get_waiting_key(self, ctx):
-        return self.get_trap_be_triggered_key(self.get_param('entityGID', 0))
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        entityGID = self.fetchArgument('entityGID', 0)
+        _pos = self.fetchArgument('_pos')
+        speed = self.fetchArgument('speed', 0)
+        _moveAni = self.fetchArgument('moveAni', gameconst.DunFlowMoveAniEnum.RUN01)
+        moveUUID = self.fetchArgument('moveUUID')
 
-    @staticmethod
-    def get_trap_be_triggered_key(entityGID):
-        return 'trap_be_triggered_{}'.format(entityGID)
-
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
-        ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-
-        entityGID = self.get_param('entityGID', 0)
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce')
-        if not (checkOnce or checkNow):
-            self._controller.waiting_for_trigger(self.get_waiting_key(obj), self, ctx)
-
-        else:
-            _spaceMgr = self.controller.owner
-            _gidTag = 'gid_{}'.format(entityGID)
-            _entities = _spaceMgr.taggedEntities.get(_gidTag, ())
-            for _eid in _entities:
-                _ent = KBEngine.entities.get(_eid)
-                if _ent and _ent.getTempMiscProp(gameconst.AvatarProps.trapByTriggerredFlag, False):
-                    _ret = True
-                    break
-
-            else:
-                _ret = False
-
-            if _ret:
-                self.continue_handle_be_triggered(ctx)
-
-            elif checkNow:
-                self._controller.waiting_for_trigger(self.get_waiting_key(obj), self, ctx)
-
-            else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: trap by triggered checkonce failed --"
-                            " entityGID={}, num={}".format(self.id, entityGID, len(_entities)))
-
-
-class DungeonMoveEntityToFixPosEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
-
-    def __init__(self, event_id, controller, entityGID, pos_, speed, moveAni, event_handler=None, **kwargs):
-        super(DungeonMoveEntityToFixPosEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('entityGID', entityGID)
-        self.add_param('pos_', pos_)
-        self.add_param('speed', speed)
-        self.add_param('moveAni', moveAni)
-        self.add_param('moveUUID', utils.getUUID())
-
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        entityGID = self.get_param('entityGID', 0)
-        pos_ = self.get_param('pos_')
-        speed = self.get_param('speed', 0)
-        moveAni = self.get_param('moveAni', gameconst.DungeonFlowMoveAni.RUN01)
-        moveUUID = self.get_param('moveUUID')
-
-        if not pos_:
-            WARNING_MSG('FlowController::handleDungeonMoveEntityToFixedPos: unknown position', self.id)
+        if not _pos:
+            LOG_WARN('FlowController::handleDungeonMoveEntityToFixedPos: unknown position', self.id)
             return
 
         spaceMgr = self.controller.owner
         gidTag = 'gid_{}'.format(entityGID)
-        ents = spaceMgr.getEntitiesByTag(gidTag)
-        for ent in ents:
+        ents = spaceMgr.listEntitiesByTag(gidTag)
+        for _entity in ents:
 
             userData = {'type': gamemove.FLOW_CONTROLLER_FORCE_MOVE, 'moveUUID': moveUUID}
 
             _newBaseSpeed = _newAdjSpeed = 0.0
-            _newMoveAni = ent.moveAni
+            _newMoveAni = _entity.moveAni
 
-            # region moveAni
-            if moveAni != gameconst.DungeonFlowMoveAni.DEFAULT:
-                _newMoveAni = moveAni
-            # endregion
+            if _moveAni != gameconst.DunFlowMoveAniEnum.DEFAULT:
+                _newMoveAni = _moveAni
 
-            # region spped
             if speed > 0:
                 _newBaseSpeed = speed
 
-            elif speed == 0 and ent.IsNpc:
-                _d = NPC_DATA.datas.get(ent.npcId, {})
-                if moveAni == gameconst.DungeonFlowMoveAni.RUN01:
-                    _newBaseSpeed = _d.get('baseSpeed', 0.0)
+            elif speed == 0 and _entity.IsNpc:
+                _npcData = NPC_DATA.datas.get(_entity.npcId, {})
+                if _moveAni == gameconst.DunFlowMoveAniEnum.RUN01:
+                    _newBaseSpeed = _npcData.get('baseSpeed', 0.0)
 
-                elif moveAni == gameconst.DungeonFlowMoveAni.RUN02:
-                    _newBaseSpeed = _d.get('baseSpeed', 0.0)
-                    _newAdjSpeed = _d.get('adjSpeed', 0.0)
+                elif _moveAni == gameconst.DunFlowMoveAniEnum.RUN02:
+                    _newBaseSpeed = _npcData.get('baseSpeed', 0.0)
+                    _newAdjSpeed = _npcData.get('adjSpeed', 0.0)
             # endregion
 
             if _newBaseSpeed > 0:
-                userData.update({"fc_OriginBaseSpeed": ent.baseSpeed})
-                ent.setProp('baseSpeed', _newBaseSpeed, src=gameconst.SourceType.FlowCtrl)
+                userData.update({"fc_OriginBaseSpeed": _entity.baseSpeed})
+                _entity.setProp('baseSpeed', _newBaseSpeed, src=gameconst.SourceType.SrcTpFlowCtrl)
             if _newAdjSpeed > 0:
-                userData.update({"fc_OriginAdjSpeed": ent.adjSpeed})
-                ent.setProp('adjSpeed', _newAdjSpeed, src=gameconst.SourceType.FlowCtrl)
-            if _newMoveAni != ent.moveAni:
-                userData.update({"fc_OriginMoveAni": ent.moveAni})
-                ent.moveAni =_newMoveAni
+                userData.update({"fc_OriginAdjSpeed": _entity.adjSpeed})
+                _entity.setProp('adjSpeed', _newAdjSpeed, src=gameconst.SourceType.SrcTpFlowCtrl)
+            if _newMoveAni != _entity.moveAni:
+                userData.update({"fc_OriginMoveAni": _entity.moveAni})
+                _entity.moveAni =_newMoveAni
 
-            ent.cancelMoveController()
-            if ent.aiController:
-                ent.aiController.moveToFixedPositionInForce(pos_, userData)
+            _entity.cancelMoveController()
+            if _entity.aiController:
+                _entity.aiController.moveToFixedPositionInForce(_pos, userData)
             else:
-                ent.navigateToPosition(pos_, userData)
+                _entity.navigateToPosition(_pos, userData)
 
-        super(DungeonMoveEntityToFixPosEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+        super(DungeonMoveEntityToFixPosEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_move_key(self.get_param('moveUUID', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getMoveKey(self.fetchArgument('moveUUID', 0))
 
     @staticmethod
-    def get_move_key(moveUUID):
+    def getMoveKey(moveUUID):
         return 'move_to_fixpos_{}'.format(moveUUID)
 
 
-class MonsterHpMonitorTriggerEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class MonsterHpMonitorTriggerEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('monsterGID', 'symbol', 'hpPercent')
+    __selfParams__ = ('monsterGID', 'symbol', 'hpPercent')
 
-    def __init__(self, event_id, controller, monsterGID, symbol, hpPercent, checkNow, checkOnce, event_handler=None,
+    def __init__(self, eventId, controller, monsterGID, symbol, hpPercent, checkNow, checkOnce, eventHandler=None,
                  **kwargs):
-        super(MonsterHpMonitorTriggerEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('monsterGID', monsterGID)
-        self.add_param('symbol', symbol)
-        self.add_param('hpPercent', hpPercent)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+        super(MonsterHpMonitorTriggerEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('monsterGID', monsterGID)
+        self.putArgument('symbol', symbol)
+        self.putArgument('hpPercent', hpPercent)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        monsterGID = self.get_param('monsterGID', 0)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        hp = self.get_param('hpPercent', -1)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        monsterGID = self.fetchArgument('monsterGID', 0)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        hp = self.fetchArgument('hpPercent', -1)
 
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce', False)
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce', False)
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_monster_hp_monitor_trigger(
+            self._controller.waitingForMonsterHpMonitorTrigger(
                 self, ctx, monsterGID, symbol, hp)
 
         else:
             _spaceMgr = self.controller.owner
-            _gidTag = 'gid_{}'.format(monsterGID)
-            _gitEidList = _spaceMgr.taggedEntities.get(_gidTag, [])
-            if not _gitEidList:
-                gameengine.reportCritical("MonsterHpMonitorTriggerEvent::ent not found", monsterGID, _gidTag)
+            _tagOfGid = 'gid_{}'.format(monsterGID)
+            _gidList = _spaceMgr.tagEntities.get(_tagOfGid, [])
+            if not _gidList:
+                gameengine.panicStack("MonsterHpMonitorTriggerEvent::ent not found", monsterGID, _tagOfGid)
                 return
 
-            for _eid in _gitEidList:
-                _ent = KBEngine.entities.get(_eid)
-                if not _ent:
+            for _eid in _gidList:
+                _entity = KBEngine.entities.get(_eid)
+                if not _entity:
                     continue
 
-                _crtHpPrt = round(_ent.hp/_ent.fullHp*100, 2)
-                _ret = gameconst.DungeonFlowCompareSymbol.compare(symbol, _crtHpPrt, hp)
+                _controlHpPrt = round(_entity.hp / _entity.fullHp * 100, 2)
+                _ret = gameconst.DungeonFlowCompSym.compare(symbol, _controlHpPrt, hp)
                 if _ret:
-                    self.continue_handle_be_triggered(ctx)
+                    self.continueHandleBeTriggered(ctx)
                     break
 
                 elif checkNow:
-                    self._controller.waiting_for_monster_hp_monitor_trigger(
+                    self._controller.waitingForMonsterHpMonitorTrigger(
                         self, ctx, monsterGID, symbol, hp)
                     break
 
                 else:
-                    WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: entity hp checkonce failed --"
-                                " symbol={}, {} {}".format(self.id, symbol, _crtHpPrt, hp, _ent.gameEntityId))
+                    LOG_WARN("DUNGEON FLOW -- EVENT[{}]: entity hp checkonce failed --"
+                                " symbol={}, {} {}".format(self.id, symbol, _controlHpPrt, hp, _entity.gameEntityId))
 
 
-    def cancel(self, ctx):
-        monsterGID = self.get_param('monsterGID', 0)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        hp = self.get_param('hpPercent', -1)
+    def cancelWait(self, ctx):
+        _monsterGID = self.fetchArgument('monsterGID', 0)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        _hp = self.fetchArgument('hpPercent', -1)
 
         ctrl = self.controller
 
-        popList = []
-        eList = ctrl._monster_waitings.get(
-            monsterGID, {}).get(
-            ctrl.MONSTER_WAITING_HP_MODIFY_KEY, {}).get(symbol, {}).get(hp)
+        _popList = []
+        _eList = ctrl.monsterAwaitDic.get(
+            _monsterGID, {}).get(
+            ctrl.MONSTER_AWAIT_HP_MODIFY_KEY, {}).get(symbol, {}).get(_hp)
 
-        if eList:
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        if _eList:
+            for idx, (e, eCtx) in enumerate(_eList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eList.pop(i)
 
 
-class MonsterRestNumberEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class MonsterRestNumberEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('monsterGID', 'symbol', 'restNum')
+    __selfParams__ = ('monsterGID', 'symbol', 'restNum')
 
-    def __init__(self, event_id, controller, monsterGID, symbol, number, checkNow, checkOnce, event_handler=None, **kwargs):
-        super(MonsterRestNumberEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('monsterGID', monsterGID)
-        self.add_param('symbol', symbol)
-        self.add_param('restNum', number)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, monsterGID, symbol, number, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super(MonsterRestNumberEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('monsterGID', monsterGID)
+        self.putArgument('symbol', symbol)
+        self.putArgument('restNum', number)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        monsterGID = self.get_param('monsterGID', 0)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('restNum', -1)
-        usePrototypeID = self.get_param('usePrototypeID', False)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        monsterGID = self.fetchArgument('monsterGID', 0)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('restNum', -1)
+        usePrototypeID = self.fetchArgument('usePrototypeID', False)
         if usePrototypeID:
             monsterGID = "cbid{}".format(monsterGID)
 
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce', False)
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce', False)
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_monster_rest_number_trigger(
+            self._controller.waitingForMonsterRestNumberTrigger(
                 self, ctx, monsterGID, symbol, number)
 
         else:
             _spaceMgr = self.controller.owner
             if monsterGID > 0:
-                _gidTag = 'gid_{}'.format(monsterGID)
+                _tagOfGid = 'gid_{}'.format(monsterGID)
             else:
                 # NOTE()(FLOW_CONTROLLER): rest number checkOnce All only support monster
-                _gidTag = 'Monster'
+                _tagOfGid = 'Monster'
 
             _currentNum = 0
-            for _eid in _spaceMgr.taggedEntities.get(_gidTag, ()):
-                _ent = KBEngine.entities.get(_eid)
-                if _ent and not _ent.isDie():
+            for _eid in _spaceMgr.tagEntities.get(_tagOfGid, ()):
+                _entity = KBEngine.entities.get(_eid)
+                if _entity and not _entity.isDie():
                     _currentNum += 1
-            _ret = gameconst.DungeonFlowCompareSymbol.compare(symbol, _currentNum, number)
+            _ret = gameconst.DungeonFlowCompSym.compare(symbol, _currentNum, number)
             if _ret:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                self._controller.waiting_for_monster_rest_number_trigger(
+                self._controller.waitingForMonsterRestNumberTrigger(
                     self, ctx, monsterGID, symbol, number)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: rest number checkonce failed --"
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: rest number checkonce failed --"
                             " symbol={}, {} {}".format(self.id, symbol, _currentNum, number))
 
-    def cancel(self, ctx):
-        monsterGID = self.get_param('monsterGID', 0)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('restNum', -1)
+    def cancelWait(self, ctx):
+        _monsterGID = self.fetchArgument('monsterGID', 0)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('restNum', -1)
 
         ctrl = self.controller
 
-        popList = []
-        eList = ctrl._monster_waitings.get(
-            monsterGID, {}).get(
-            ctrl.MONSTER_WAITING_REST_NUM, {}).get(symbol, {}).get(number)
+        _popList = []
+        _eList = ctrl.monsterAwaitDic\
+            .get(_monsterGID, {})\
+            .get(ctrl.MONSTER_AWAIT_REST_NUM, {})\
+            .get(symbol, {})\
+            .get(number)
 
-        if eList:
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        if _eList:
+            for idx, (e, eCtx) in enumerate(_eList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eList.pop(i)
 
 
-class DungeonMonsterKillerNumberEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonMonsterKillerNumberEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('monsterGID', 'symbol', 'killNum', 'checkOnce')
+    __selfParams__ = ('monsterGID', 'symbol', 'killNum', 'checkOnce')
 
-    def __init__(self, event_id, controller, monsterGID, symbol, number, checkNow, checkOnce, event_handler=None, **kwargs):
-        super(DungeonMonsterKillerNumberEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('monsterGID', monsterGID)
-        self.add_param('symbol', symbol)
-        self.add_param('killNum', number)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, monsterGID, symbol, number, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super(DungeonMonsterKillerNumberEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('monsterGID', monsterGID)
+        self.putArgument('symbol', symbol)
+        self.putArgument('killNum', number)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        monsterGID = self.get_param('monsterGID', 0)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('killNum', -1)
-        usePrototypeID = self.get_param('usePrototypeID', False)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        _monsterGID = self.fetchArgument('monsterGID', 0)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('killNum', -1)
+        usePrototypeID = self.fetchArgument('usePrototypeID', False)
         if usePrototypeID:
-            monsterGID = "cbid{}".format(monsterGID)
-        self._controller.waiting_for_dungeon_monster_kill_number_trigger(
-            self, ctx, monsterGID, symbol, number)
+            _monsterGID = "cbid{}".format(_monsterGID)
+        self._controller.waitingForDungeonMonsterKillNumberTrigger(
+            self, ctx, _monsterGID, symbol, number)
 
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce')
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce')
         if checkOnce or checkNow:
-            spaceNo = ref_params['spaceNo']
+            spaceNo = refParams['spaceNo']
             stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-            if monsterGID > 0:
-                stub.flowCtrlCheckDungeonEntityKillNumber(spaceNo, monsterGID, symbol, number, usePrototypeID, self.id, obj, checkOnce)
+            if _monsterGID > 0:
+                stub.flowCheckDungeonKillCount(spaceNo, _monsterGID, symbol, number, usePrototypeID, self.id, obj, checkOnce)
             else:
-                stub.flowCtrlCheckDungeonAllEntityKillNumber(spaceNo, symbol, number, self.id, obj, checkOnce)
+                stub.flowCheckDungeonAllKillCount(spaceNo, symbol, number, self.id, obj, checkOnce)
 
-    def cancel(self, ctx):
-        monsterGID = self.get_param('monsterGID', 0)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('killNum', -1)
+    def cancelWait(self, ctx):
+        monsterGID = self.fetchArgument('monsterGID', 0)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('killNum', -1)
 
         ctrl = self.controller
 
-        popList = []
-        eList = ctrl._monster_waitings.get(
-            monsterGID, {}).get(
-            ctrl.DUNGEON_MONSTER_WAITING_KILL_NUM, {}).get(symbol, {}).get(number)
+        _popList = []
+        _eventList = ctrl.monsterAwaitDic\
+            .get(monsterGID, {})\
+            .get(ctrl.DUNGEON_MONSTER_AWAIT_KILL_NUM, {})\
+            .get(symbol, {})\
+            .get(number)
 
-        if eList:
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        if _eventList:
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonPlayerRestNumEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonPlayerRestNumEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ()
+    __selfParams__ = ()
 
-    def __init__(self, event_id, controller, event_handler=None, **kwargs):
-        super().__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('symbol', kwargs['symbol'])
-        self.add_param('playerNum', kwargs['number'])
-        self.add_param('checkNow', kwargs['checkNow'])
-        self.add_param('checkOnce', kwargs['checkOnce'])
+    def __init__(self, eventId, controller, eventHandler=None, **kwargs):
+        super().__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('symbol', kwargs['symbol'])
+        self.putArgument('playerNum', kwargs['number'])
+        self.putArgument('checkNow', kwargs['checkNow'])
+        self.putArgument('checkOnce', kwargs['checkOnce'])
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('playerNum', -1)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('playerNum', -1)
 
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce')
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce')
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_dungeon_player_rest_num_trigger(self, ctx, symbol, number)
+            self._controller.waitingForDungeonPlayerRestNumTrigger(self, ctx, symbol, number)
 
         else:
             _currentNum = 0
-            for pid in self.controller.owner.players:
-                pEnt = KBEngine.entities.get(pid)
-                if pEnt:
+            for _pid in self.controller.owner.players:
+                _pEnt = KBEngine.entities.get(_pid)
+                if _pEnt:
                     _currentNum += 1
 
-            _ret = gameconst.DungeonFlowCompareSymbol.compare(symbol, _currentNum, number)
+            _ret = gameconst.DungeonFlowCompSym.compare(symbol, _currentNum, number)
             if _ret:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                self._controller.waiting_for_dungeon_player_rest_num_trigger(self, ctx, symbol, number)
+                self._controller.waitingForDungeonPlayerRestNumTrigger(self, ctx, symbol, number)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: player rest number checkonce failed --"
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: player rest number checkonce failed --"
                             " symbol={}, {} {}".format(self.id, symbol, _currentNum, number))
-    def cancel(self, ctx):
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('playerNum', -1)
+    def cancelWait(self, ctx):
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('playerNum', -1)
 
         ctrl = self.controller
 
-        popList = []
-        eList = ctrl._waitings.get(ctrl.GLOBAL_KEY, {}).get(
+        _popList = []
+        _eventList = ctrl.waitingsDict.get(ctrl.GLOBAL_EVENT_KEY, {}).get(
             ctrl.DUNGEON_PLAYER_REST_NUM, {}).get(symbol, {}).get(number)
 
-        if eList:
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        if _eventList:
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonAlivePlayerEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonAlivePlayerEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('symbol', 'playerNum')
+    __selfParams__ = ('symbol', 'playerNum')
 
-    def __init__(self, event_id, controller, symbol, number, checkNow, checkOnce, event_handler=None, **kwargs):
-        super(DungeonAlivePlayerEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('symbol', symbol)
-        self.add_param('playerNum', number)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, symbol, number, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super(DungeonAlivePlayerEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('symbol', symbol)
+        self.putArgument('playerNum', number)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('playerNum', -1)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('playerNum', -1)
 
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce')
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce')
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_dungeon_alive_player_trigger(self, ctx, symbol, number)
+            self._controller.waitingForDungeonAlivePlayerTrigger(self, ctx, symbol, number)
 
         else:
             _currentNum = 0
-            for pid in self.controller.owner.players:
-                pEnt = KBEngine.entities.get(pid)
-                if pEnt and not pEnt.isDie():
+            for _pid in self.controller.owner.players:
+                _pEnt = KBEngine.entities.get(_pid)
+                if _pEnt and not _pEnt.isDie():
                     _currentNum += 1
 
-            _ret = gameconst.DungeonFlowCompareSymbol.compare(symbol, _currentNum, number)
+            _ret = gameconst.DungeonFlowCompSym.compare(symbol, _currentNum, number)
             if _ret:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                self._controller.waiting_for_dungeon_alive_player_trigger(self, ctx, symbol, number)
+                self._controller.waitingForDungeonAlivePlayerTrigger(self, ctx, symbol, number)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: alive player number checkonce failed --"
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: alive player number checkonce failed --"
                             " symbol={}, {} {}".format(self.id, symbol, _currentNum, number))
 
-    def cancel(self, ctx):
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        number = self.get_param('playerNum', -1)
+    def cancelWait(self, ctx):
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        number = self.fetchArgument('playerNum', -1)
 
         ctrl = self.controller
 
-        popList = []
-        eList = ctrl._waitings.get(ctrl.GLOBAL_KEY, {}).get(
-            ctrl.DUNGEON_ALIVE_PLAYER, {}).get(symbol, {}).get(number)
+        _popList = []
+        _eventList = ctrl.waitingsDict.get(ctrl.GLOBAL_EVENT_KEY, {}).get(
+            ctrl.DUN_ALIVE_PLAYER, {}).get(symbol, {}).get(number)
 
-        if eList:
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        if _eventList:
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonAnyPlayerHPMonitorTriggerEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonAnyPlayerHPMonitorTriggerEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __self_params__ = ('symbol', 'hpPercent')
+    __selfParams__ = ('symbol', 'hpPercent')
 
-    def __init__(self, event_id, controller, symbol, hpPercent, checkNow, checkOnce, event_handler=None, **kwargs):
-        super(DungeonAnyPlayerHPMonitorTriggerEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('symbol', symbol)
-        self.add_param('hpPercent', hpPercent)
-        self.add_param('checkNow', checkNow)
-        self.add_param('checkOnce', checkOnce)
+    def __init__(self, eventId, controller, symbol, hpPercent, checkNow, checkOnce, eventHandler=None, **kwargs):
+        super(DungeonAnyPlayerHPMonitorTriggerEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('symbol', symbol)
+        self.putArgument('hpPercent', hpPercent)
+        self.putArgument('checkNow', checkNow)
+        self.putArgument('checkOnce', checkOnce)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        hp = self.get_param('hpPercent', -1)
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        hp = self.fetchArgument('hpPercent', -1)
 
-        checkNow = self.get_param('checkNow', False)
-        checkOnce = self.get_param('checkOnce', False)
+        checkNow = self.fetchArgument('checkNow', False)
+        checkOnce = self.fetchArgument('checkOnce', False)
         if not (checkOnce or checkNow):
-            self._controller.waiting_for_dungeon_any_player_hp_monitor_trigger(self, ctx, symbol, hp)
+            self._controller.waitingForDungeonAnyPlayerHpMonitorTrigger(self, ctx, symbol, hp)
 
         else:
-            for pid in self.controller.owner.players:
-                pEnt = KBEngine.entities.get(pid)
-                _currentHpPrt = round(pEnt.hp/pEnt.fullHp*100, 2)
-                if pEnt and gameconst.DungeonFlowCompareSymbol.compare(symbol, _currentHpPrt, hp):
+            for _pid in self.controller.owner.players:
+                _pEnt = KBEngine.entities.get(_pid)
+                _currentHpPrt = round(_pEnt.hp/_pEnt.fullHp*100, 2)
+                if _pEnt and gameconst.DungeonFlowCompSym.compare(symbol, _currentHpPrt, hp):
                     _ret = True
                     break
             else:
                 _ret = False
 
             if _ret:
-                self.continue_handle_be_triggered(ctx)
+                self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
-                self._controller.waiting_for_dungeon_any_player_hp_monitor_trigger(self, ctx, symbol, hp)
+                self._controller.waitingForDungeonAnyPlayerHpMonitorTrigger(self, ctx, symbol, hp)
 
             else:
-                WARNING_MSG("DUNGEON FLOW -- EVENT[{}]: check any player hp checkonce failed --"
+                LOG_WARN("DUNGEON FLOW -- EVENT[{}]: check any player hp checkonce failed --"
                             " symbol={}, {} {}".format(self.id, symbol, _currentHpPrt, hp))
 
-    def cancel(self, ctx):
-        symbol = self.get_param('symbol', gameconst.DungeonFlowCompareSymbol.un)
-        hp = self.get_param('hpPercent', -1)
+    def cancelWait(self, ctx):
+        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
+        hp = self.fetchArgument('hpPercent', -1)
 
         ctrl = self.controller
 
-        popList = []
-        eList = ctrl._waitings.get(ctrl.GLOBAL_KEY, {}).get(
-            ctrl.DUNGEON_ANY_PLAYER_HP_MODIFY_KEY, {}).get(symbol, {}).get(hp)
+        _popList = []
+        _eventList = ctrl.waitingsDict\
+            .get(ctrl.GLOBAL_EVENT_KEY, {})\
+            .get(ctrl.DUNGEON_ANY_PLAYER_HP_MODIFY_KEY, {})\
+            .get(symbol, {})\
+            .get(hp)
 
-        if eList:
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+        if _eventList:
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonValueCheckHoldEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin,
+class DungeonValueCheckHoldEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin,
                                  _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, varIds, event_handler=None, **kwargs):
-        super(DungeonValueCheckHoldEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('varIds', varIds)
+    def __init__(self, eventId, controller, varIds, eventHandler=None, **kwargs):
+        super(DungeonValueCheckHoldEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('varIds', varIds)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        _w_args = (src_e, src_idx, idx, obj)
-        _w_kwargs = ref_params
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        _w_args = (srcE, srcIdx, idx, obj)
+        _w_kwargs = refParams
         ctx = ep_ctrl.context.WaitingEventContext(
-            obj.tid, waiting_e=self,
-            waiting_args=_w_args,
-            waiting_kwargs=_w_kwargs)
-        m_varIds = self.get_param('varIds', [])
+            obj.tid, waitingE=self,
+            waitingArgs=_w_args,
+            waitingKwargs=_w_kwargs)
+        m_varIds = self.fetchArgument('varIds', [])
         for m_varId in m_varIds:
-            self._controller.waiting_for_dungeon_space_var_change_check(self, ctx, m_varId)
+            self._controller.waitingForDungeonSpaceVarChangeCheck(self, ctx, m_varId)
 
 
-    def cancel(self, ctx):
-        m_varIds = self.get_param('varIds', [])
+    def cancelWait(self, ctx):
+        m_varIds = self.fetchArgument('varIds', [])
 
         ctrl = self.controller
 
         for m_varId in m_varIds:
-            popList = []
-            eList = ctrl._waitings.get(ctrl.GLOBAL_KEY, {}).get(
-                ctrl.DUNGEON_SPACE_VAR_CHECK_KEY, {}).get(m_varId)
+            _popList = []
+            _eventList = ctrl.waitingsDict\
+                .get(ctrl.GLOBAL_EVENT_KEY, {})\
+                .get(ctrl.DUNGEON_SPACE_VAR_CHECK_KEY, {})\
+                .get(m_varId)
 
-            if not eList:
+            if not _eventList:
                 continue
 
-            for idx, (e, e_ctx) in enumerate(eList):
-                if e_ctx.tid == ctx.tid:
-                    popList.append(idx)
+            for idx, (e, eCtx) in enumerate(_eventList):
+                if eCtx.tid == ctx.tid:
+                    _popList.append(idx)
 
-            for i in reversed(popList):
-                eList.pop(i)
+            for i in reversed(_popList):
+                _eventList.pop(i)
 
 
-class DungeonEntityImmuneDeath(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class DungeonEntityImmuneDeath(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, entityGID, event_handler=None, **kwargs):
-        super(DungeonEntityImmuneDeath, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param("entityGID", entityGID)
+    def __init__(self, eventId, controller, entityGID, eventHandler=None, **kwargs):
+        super(DungeonEntityImmuneDeath, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument("entityGID", entityGID)
 
-    def get_waiting_key(self, ctx):
-        return self.get_immune_death_key(self.get_param("entityGID", 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getImmuneDeathKey(self.fetchArgument("entityGID", 0))
 
     @staticmethod
-    def get_immune_death_key(entityGID):
+    def getImmuneDeathKey(entityGID):
         return "entity_immune_death_{}".format(entityGID)
 
 
-class EntityRouteFinishedEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class EntityRouteFinishedEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, entityGID, pathID, event_handler=None, **kwargs):
-        super(EntityRouteFinishedEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('entityGID', entityGID)
-        self.add_param('pathID', pathID)
+    def __init__(self, eventId, controller, entityGID, pathID, eventHandler=None, **kwargs):
+        super(EntityRouteFinishedEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('entityGID', entityGID)
+        self.putArgument('pathID', pathID)
 
-    def get_waiting_key(self, ctx):
-        return self.get_route_finished_key(self.get_param('entityGID', 0), self.get_param('pathID', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getRouteFinishedKey(self.fetchArgument('entityGID', 0), self.fetchArgument('pathID', 0))
 
     @staticmethod
-    def get_route_finished_key(entityGID, pathID):
+    def getRouteFinishedKey(entityGID, pathID):
         return 'route_finished_{}_{}'.format(entityGID, pathID)
 
 
-class EntityRoutingMissingEscortEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class EntityRoutingMissingEscortEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, entityGID, pathID, event_handler=None, **kwargs):
-        super(EntityRoutingMissingEscortEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('entityGID', entityGID)
-        self.add_param('pathID', pathID)
+    def __init__(self, eventId, controller, entityGID, pathID, eventHandler=None, **kwargs):
+        super(EntityRoutingMissingEscortEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('entityGID', entityGID)
+        self.putArgument('pathID', pathID)
 
-    def continue_handle_be_triggered(self, ctx):
-        super().continue_handle_be_triggered(ctx)
-        infLoop = self.get_param('infLoop', False)
+    def continueHandleBeTriggered(self, ctx):
+        super().continueHandleBeTriggered(ctx)
+        infLoop = self.fetchArgument('infLoop', False)
         if infLoop:
-            self.re_handle_be_triggered(*ctx.waiting_args, **ctx.waiting_kwargs)
+            self.reHandleBeTriggered(*ctx.waitingArgs, **ctx.waitingKwargs)
 
-    def get_waiting_key(self, ctx):
-        return self.get_route_missing_escort_key(self.get_param('entityGID', 0), self.get_param('pathID', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getRouteMissingEscortKey(self.fetchArgument('entityGID', 0), self.fetchArgument('pathID', 0))
 
     @staticmethod
-    def get_route_missing_escort_key(entityGID, pathID):
+    def getRouteMissingEscortKey(entityGID, pathID):
         return 'route_missing_escort_{}_{}'.format(entityGID, pathID)
 
 
-class AnyPlayerCinemaPlayEndedEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+class AnyPlayerCinemaPlayEndedEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    def __init__(self, event_id, controller, cinemaPlayID, delay, event_handler=None, **kwargs):
-        super(AnyPlayerCinemaPlayEndedEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('cinemaPlayID', cinemaPlayID)
-        self.add_param('delay', delay)
+    def __init__(self, eventId, controller, cinemaPlayID, delay, eventHandler=None, **kwargs):
+        super(AnyPlayerCinemaPlayEndedEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('cinemaPlayID', cinemaPlayID)
+        self.putArgument('delay', delay)
         self.eventCtrlId = 0
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        cinemaPlayID = self.get_param('cinemaPlayID', 0)
-        delay = self.get_param('delay', 0)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        cinemaPlayID = self.fetchArgument('cinemaPlayID', 0)
+        delay = self.fetchArgument('delay', 0)
         if delay <= 0:
-            WARNING_MSG("AnyPlayerCinemaPlayEndedEvent::delay <=0, eid={} cid={} delay={}".format(
+            LOG_WARN("AnyPlayerCinemaPlayEndedEvent::delay <=0, eid={} cid={} delay={}".format(
                 self.id, cinemaPlayID, delay))
             delay = 0.1
 
         spaceMgr = self.controller.owner
         if not spaceMgr:
-            ERROR_MSG('FlowController::AnyPlayerCinemaPlayEndedEvent:spaceMgr not found')
+            LOG_ERR('FlowController::AnyPlayerCinemaPlayEndedEvent:spaceMgr not found')
         else:
             if self.eventCtrlId > 0:
-                spaceMgr._cancelCallback(
-                    self.eventCtrlId, gametimer.TIMER_TAG_EPCTRL_PLAYER_CINEMA_PLAY_END_TIMEOUT)
+                spaceMgr.cancelTimerCB(
+                    self.eventCtrlId, gametimer.TIMER_TAG_EP_CINEMA_END_TIMEOUT)
             self.eventCtrlId = spaceMgr.toCallbackAfter(
-                delay, gametimer.TIMER_TAG_EPCTRL_PLAYER_CINEMA_PLAY_END_TIMEOUT
+                delay, gametimer.TIMER_TAG_EP_CINEMA_END_TIMEOUT
             )._onAnyPlayerCinemaPlayEndedTimeout(cinemaPlayID, self.id)
 
-        return super().handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
+        return super().handleProcessActivated(srcE, srcIdx, idx, obj, **refParams)
 
-    def continue_handle_be_triggered(self, ctx):
+    def continueHandleBeTriggered(self, ctx):
         if self.eventCtrlId > 0:
             spaceMgr = self.controller.owner
-            spaceMgr and spaceMgr._cancelCallback(
-                self.eventCtrlId, gametimer.TIMER_TAG_EPCTRL_PLAYER_CINEMA_PLAY_END_TIMEOUT)
-        super().continue_handle_be_triggered(ctx)
+            spaceMgr and spaceMgr.cancelTimerCB(
+                self.eventCtrlId, gametimer.TIMER_TAG_EP_CINEMA_END_TIMEOUT)
+        super().continueHandleBeTriggered(ctx)
 
-    def get_waiting_key(self, ctx):
-        return self.get_cinema_play_ended_key(self.get_param('cinemaPlayID', 0))
+    def fetchWaitingKey(self, ctx):
+        return self.getCinemaPlayEndedKey(self.fetchArgument('cinemaPlayID', 0))
 
     @staticmethod
-    def get_cinema_play_ended_key(cinemaPlayID):
+    def getCinemaPlayEndedKey(cinemaPlayID):
         return 'cinema_player_ended_{}'.format(cinemaPlayID)
 
 
-class _CommonCreateRandomlyEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
-
-    def __init__(self, event_id, controller, entityGIDs, number, rng, event_handler=None, **kwargs):
-        super().__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('entityGIDs', entityGIDs)
-        self.add_param('number', number)
-        self.add_param('rng', rng)
-
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        entityGIDs = self.get_param('entityGIDs', [])
-        number = self.get_param('number', 1)
-
-        filterEntityGIDs, otherEntityGIDs = self.filterEntityGIDs(entityGIDs)
-
-        if len(filterEntityGIDs) < number:
-            WARNING_MSG(f"FlowController::{self.__class__.__name__}:: filterEntityGIDs not enough",
-                        self.id, entityGIDs, filterEntityGIDs, otherEntityGIDs, number)
-            flagIds = [i for i in filterEntityGIDs]
-        else:
-            flagIds = self._getSampleEntityGIDs(filterEntityGIDs, number)
-
-        if len(flagIds) < number:
-            WARNING_MSG(f"FlowController::{self.__class__.__name__}:: flagIds not enough",
-                        self.id, entityGIDs, flagIds, filterEntityGIDs, otherEntityGIDs, number)
-
-        _overLimitNum = self.isEntityOverLimit(flagIds)
-        if  _overLimitNum > 0:
-            WARNING_MSG(f"FlowController::{self.__class__.__name__}:: Entity over limit",
-                        self.id, entityGIDs, flagIds, filterEntityGIDs, otherEntityGIDs, number, _overLimitNum)
-            flagIds = self._getSampleEntityGIDs(flagIds, max(len(flagIds) - _overLimitNum, 0))
-
-        if not flagIds:
-            WARNING_MSG(f"FlowController::{self.__class__.__name__}:: flagIds is Empty",
-                        self.id, entityGIDs, flagIds, filterEntityGIDs, otherEntityGIDs, number, _overLimitNum)
-            ctx = ep_ctrl.context.WaitingEventContext(
-                obj.tid, waiting_e=self,
-                waiting_args=(src_e, src_idx, idx, obj),
-                waiting_kwargs=ref_params)
-            self.continue_handle_be_triggered(ctx)
-            return
-
-        rng = self.get_param('rng', 0)
-        extra = self.buildDefaultCreateEntityExtra()
-        extra.update({'tmpProps': {'createRadius': rng, 'createCount': 1}})
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, flagIds, 1, 0, extra)
-
-        setattr(obj, self.get_context_flags_key(), flagIds)
-        super().handle_be_triggered(src_e, src_idx, idx, obj, **ref_params)
-
-    def isEntityOverLimit(self, flagIds):
-        return False
-
-    def filterEntityGIDs(self, entityGIDs):
-        _spaceMgr = self.controller.owner
-
-        filterEntityGIDs, otherEntityGIDs = [], []
-        for entityGID in entityGIDs:
-            _gidTag = 'gid_{}'.format(entityGID)
-            if _gidTag not in _spaceMgr.taggedEntities or not  _spaceMgr.taggedEntities[_gidTag]:
-                filterEntityGIDs.append(entityGID)
-                continue
-
-            for _eid in _spaceMgr.taggedEntities.get(_gidTag, (0, )):
-                _ent = KBEngine.entities.get(_eid)
-                filterEntityGIDs.append(entityGID) if not _ent else otherEntityGIDs.append(entityGID)
-                break
-
-        return filterEntityGIDs, otherEntityGIDs
-
-    def _getSampleEntityGIDs(self, entityGIDs, number):
-        _realEntityGIDs = random.sample(entityGIDs, min(number, len(entityGIDs))) if entityGIDs else entityGIDs
-        return _realEntityGIDs
-
-    def get_waiting_key(self, ctx):
-        entityGIDs = getattr(ctx, self.get_context_flags_key(), [])
-        return get_common_release_key(self.id, entityGIDs)
-
-    def get_context_flags_key(self):
-        return f"flags_{self.__class__.__name__}_{self.id}"
-
-    def buildDefaultCreateEntityExtra(self):
-        return {'eventId': self.id, 'checkCreateUniqueness': True}
-
-class DungeonRebornPosReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
-    __self_params__ = ('rebornPosGIDs', 'rebornPosNum')
+class DungeonRebornPosReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+    __selfParams__ = ('rebornPosGIDs', 'rebornPosNum')
     __ref_params__ = ('dungeonNo', 'spaceNo')
 
-    def __init__(self, event_id, controller, rebornPosGIDs, event_handler=None, **kwargs):
-        super(DungeonRebornPosReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
-        self.add_param('rebornPosGIDs', rebornPosGIDs)
+    def __init__(self, eventId, controller, rebornPosGIDs, eventHandler=None, **kwargs):
+        super(DungeonRebornPosReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('rebornPosGIDs', rebornPosGIDs)
 
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        dungeonNo = ref_params['dungeonNo']
-        spaceNo = ref_params['spaceNo']
-        rebornPosGIDs = self.get_param('rebornPosGIDs', [])
-        rebornPosNum = self.get_param('rebornPosNum', 1)
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        dungeonNo = refParams['dungeonNo']
+        spaceNo = refParams['spaceNo']
+        rebornPosGIDs = self.fetchArgument('rebornPosGIDs', [])
+        rebornPosNum = self.fetchArgument('rebornPosNum', 1)
         stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.createEntityInDungeonByGameEntityId(spaceNo, rebornPosGIDs, rebornPosNum, 0,
+        stub.spawnDungeonEntityByGameEntityId(spaceNo, rebornPosGIDs, rebornPosNum, 0,
                                                  {'eventId': self.id})
-        super(DungeonRebornPosReleaseEvent, self).handle_be_triggered(
-            src_e, src_idx, idx, obj, **ref_params)
+        super(DungeonRebornPosReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
 
-    def get_waiting_key(self, ctx):
-        return self.get_coll_release_key(self.id, self.get_param('rebornPosGIDs', []))
+    def fetchWaitingKey(self, ctx):
+        return self.getCollReleaseKey(self.id, self.fetchArgument('rebornPosGIDs', []))
 
     @staticmethod
-    def get_coll_release_key(eventId, rebornPosGIDs):
-        return get_common_release_key(eventId, rebornPosGIDs)
+    def getCollReleaseKey(eventId, rebornPosGIDs):
+        return getCommonReleaseKey(eventId, rebornPosGIDs)

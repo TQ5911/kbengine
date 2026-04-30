@@ -13,7 +13,7 @@ import mounts_mounts as MOUNTS
 
 class ImpOutfit(object):
     def __init__(self):
-        DEBUG_MSG("ImpOutfit __init__ ")
+        LOG_DBG("ImpOutfit __init__ ")
         self.checkOutfitConfigOpen(gameconst.OutfitType.wing, self.appearance.outfitData.wingId)
         self.checkOutfitConfigOpen(gameconst.OutfitType.hair, self.appearance.outfitData.hairId)
         self.checkOutfitConfigOpen(gameconst.OutfitType.clothes, self.appearance.outfitData.clothesId)
@@ -27,12 +27,12 @@ class ImpOutfit(object):
 
     @utils.isMyself
     def reqDisableOutfit(self, exposed, outfitType, outfitId):
-        DEBUG_MSG('reqDisableOutfit:', outfitType, outfitId)
+        LOG_DBG('reqDisableOutfit:', outfitType, outfitId)
         self.appearance.removeOutfitId(self, outfitType, outfitId)
         return
 
     def enableOutfit(self, outfitType, outfitId):
-        DEBUG_MSG('enableOutfit:', outfitType, outfitId)
+        LOG_DBG('enableOutfit:', outfitType, outfitId)
         if outfitType == gameconst.OutfitType.mount:
             if outfitId != self.curMountId:
                 self._exitRiding()
@@ -49,19 +49,19 @@ class ImpOutfit(object):
         return
 
     def updatePicFrameId(self, picFrameId):
-        DEBUG_MSG('updatePicFrameId ', picFrameId)
+        LOG_DBG('updatePicFrameId ', picFrameId)
         # self.guildBox and self.guildBox.onUpdateAttrAndDiffNotify(self.gbId, {'picFrameId': picFrameId})
         if self.teamId > 0:
             self.updateAttrToStub({'picFrameId': picFrameId})
         # gameengine.getGlobalBase('VisitStub').onUpdateVisitInfo(self.gbId, {'picFrameId': picFrameId})
 
     def updatePropByMount(self, mountId, bAdd):
-        DEBUG_MSG('updatePropByMount:', mountId, bAdd)
+        LOG_DBG('updatePropByMount:', mountId, bAdd)
         prop = MOUNTS.datas[mountId]['prop']
         if prop:
             if bAdd:
                 for propName, val in prop:
-                    self.addProp(propName, val, gameconst.SourceType.MountProp)
+                    self.addProp(propName, val, gameconst.SourceType.SrcTpMountProp)
             else:
                 for propName, val in prop:
-                    self.addProp(propName, -val, gameconst.SourceType.MountProp)
+                    self.addProp(propName, -val, gameconst.SourceType.SrcTpMountProp)

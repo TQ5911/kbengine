@@ -202,7 +202,7 @@ class FunctionHooker:
             message = f"[{getattr(args[0], 'name', '')}]{self.prefix}[hook] {message}"
         else:
             message = f"{self.prefix}[hook] {message}"
-        DEBUG_MSG(message)
+        LOG_DBG(message)
 
     def hook_function(self, func: FunctionType) -> FunctionType:
         """Hook a single function"""
@@ -226,9 +226,9 @@ class FunctionHooker:
             old_trace = None
             if self.show_variables:
                 # 获取函数源代码并解析AST
-                import dis
+                import distance
                 # 获取函数的字节码
-                bytecode = dis.Bytecode(func)
+                bytecode = distance.Bytecode(func)
                 
                 # 分析字节码，找出所有STORE_*操作的目标变量
                 local_var_names = set()
@@ -380,7 +380,7 @@ def hook_specific_class_method(module_name: str,
         
         # Get class
         if not hasattr(module, class_name):
-            DEBUG_MSG(f"Hook Error: Class {class_name} not found in module {module_name}")
+            LOG_DBG(f"Hook Error: Class {class_name} not found in module {module_name}")
             return False
         
         cls = getattr(module, class_name)
@@ -389,11 +389,11 @@ def hook_specific_class_method(module_name: str,
         hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_method(cls, method_name)
         hooker.reset_call_func_type()
-        DEBUG_MSG(f"Hook succeeded: {module_name}.{class_name}.{method_name}")
+        LOG_DBG(f"Hook succeeded: {module_name}.{class_name}.{method_name}")
         return True
         
     except Exception as e:
-        DEBUG_MSG(f"Hook failed: {e}")
+        LOG_DBG(f"Hook failed: {e}")
         return False
 
 def hook_specific_class(module_name: str, 
@@ -420,7 +420,7 @@ def hook_specific_class(module_name: str,
 
         # Get class
         if not hasattr(module, class_name):
-            DEBUG_MSG(f"Error: Class {class_name} not found in module {module_name}")
+            LOG_DBG(f"Error: Class {class_name} not found in module {module_name}")
             return False
         
         cls = getattr(module, class_name)
@@ -429,11 +429,11 @@ def hook_specific_class(module_name: str,
         hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_class(cls, method_filter)
         hooker.reset_call_func_type()
-        DEBUG_MSG(f"Hook succeeded: {module_name}.{class_name}")
+        LOG_DBG(f"Hook succeeded: {module_name}.{class_name}")
         return True
         
     except Exception as e:
-        DEBUG_MSG(f"Hook failed: {e}")
+        LOG_DBG(f"Hook failed: {e}")
         return False
 
 def hook_specific_module(module_name: str, 
@@ -462,17 +462,17 @@ def hook_specific_module(module_name: str,
         hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_module(module, class_filter, method_filter)
         hooker.reset_call_func_type()
-        DEBUG_MSG(f"Hook succeeded: {module_name}")
+        LOG_DBG(f"Hook succeeded: {module_name}")
         return True
         
     except Exception as e:
-        DEBUG_MSG(f"Hook failed: {e}")
+        LOG_DBG(f"Hook failed: {e}")
         return False
 
 def hook_print_open(is_print: bool):
     hooker = FunctionHooker.get_instance()
     hooker.verbose = is_print
-    DEBUG_MSG(f"Hook print is open: {is_print}")
+    LOG_DBG(f"Hook print is open: {is_print}")
     return True
 
 """

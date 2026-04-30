@@ -59,13 +59,13 @@ def _34000010(lv):
 def _34000011(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*0.002
+        a = i*0.003
         sum = a
     return sum
 def _34000012(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*0.001
+        a = i*0.0015
         sum = a
     return sum
 def _34000013(e):
@@ -107,13 +107,19 @@ def _34000018(lv):
 def _34000019(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*25
+        a = i*20
         sum = a
     return sum
 def _34000020(lv):
     sum = 0
     for i in range(1, lv+1):
         a = i*0.005
+        sum = a
+    return sum
+def _34000021(lv):
+    sum = 0
+    for i in range(1, lv+1):
+        a = i*0.006
         sum = a
     return sum
 def _34010001(e):
@@ -276,6 +282,10 @@ datas = _tools.RODict({
     34000020: _tools.RODict({
         "ID": 34000020,
         'serverFormula':_34000020,
+    }),
+    34000021: _tools.RODict({
+        "ID": 34000021,
+        'serverFormula':_34000021,
     }),
     34900000: _tools.RODict({
         "ID": 34900000,

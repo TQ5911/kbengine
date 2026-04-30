@@ -30,6 +30,7 @@ namespace KBEngine
 		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 
 		public virtual void onCreateAvatarFailed(Byte arg1) {} 
 		public virtual void onCreateAvatarResult(Byte arg1, UInt64 arg2) {} 
+		public virtual void onGetAuthOfflineTimeClient(UInt64 arg1, UInt32 arg2) {} 
 		public virtual void onKickAnotherAccount() {} 
 		public virtual void onKickAnotherAvatar() {} 
 		public virtual void onLoginNeedReconnect() {} 
@@ -162,6 +163,11 @@ namespace KBEngine
 					List<string> onGameConfigChanged_arg1 = ((DATATYPE_AnonymousArray_10002)method.args[0]).createFromStreamEx(stream);
 					List<Byte> onGameConfigChanged_arg2 = ((DATATYPE_AnonymousArray_10003)method.args[1]).createFromStreamEx(stream);
 					onGameConfigChanged(onGameConfigChanged_arg1, onGameConfigChanged_arg2);
+					break;
+				case 460:
+					UInt64 onGetAuthOfflineTimeClient_arg1 = stream.readUint64();
+					UInt32 onGetAuthOfflineTimeClient_arg2 = stream.readUint32();
+					onGetAuthOfflineTimeClient(onGetAuthOfflineTimeClient_arg1, onGetAuthOfflineTimeClient_arg2);
 					break;
 				case 49:
 					string onHotfixVersion_arg1 = stream.readString();

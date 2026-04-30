@@ -23,7 +23,7 @@ datas = _tools.RODict({
     1001: _tools.RODict({
         "ID": 1001,
         "name": "道士",
-        "isOpen": 2,
+        "isOpen": (1, 2),
         "classType": 2,
         "propType": 3,
         "excludePropType": 1,
@@ -60,7 +60,7 @@ datas = _tools.RODict({
     1002: _tools.RODict({
         "ID": 1002,
         "name": "法师",
-        "isOpen": 2,
+        "isOpen": (1, 2),
         "classType": 2,
         "propType": 2,
         "excludePropType": 1,
@@ -97,7 +97,7 @@ datas = _tools.RODict({
     1003: _tools.RODict({
         "ID": 1003,
         "name": "战士",
-        "isOpen": 1,
+        "isOpen": (1, 2),
         "classType": 1,
         "propType": 1,
         "excludePropType": 2,

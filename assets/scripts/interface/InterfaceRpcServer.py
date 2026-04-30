@@ -17,7 +17,7 @@ def clearAccountCompIdCache(accountName):
     if not _cache:
         return
 
-    if _cache[0] < utils.getNow():
+    if _cache[0] < utils.curTS():
         gameglobal.accountCompIdCache.pop(accountName)
 
 
@@ -25,7 +25,7 @@ class Baseapp2InterfaceRpcService(Interface):
     def __init__(self, connMgr, tcpConn):
         self.tcpConn = tcpConn
         self.baseappStub = BaseApp_Stub(tcpConn.rpc_channel)
-        self.tLastTick = utils.getNow()
+        self.tLastTick = utils.curTS()
 
     def on_connected(self):
         pass
@@ -34,15 +34,15 @@ class Baseapp2InterfaceRpcService(Interface):
         pass
 
     def gameConfigChangedOnBaseapp(self, rpc_controller, request, done):
-        INFO_MSG('gameConfigChangedOnBaseapp: ', request.name, request.val)
+        LOG_IFO('gameConfigChangedOnBaseapp: ', request.name, request.val)
         gameconfig.gmSetCutomConfig(request.name, request.val, False)
 
     def cacheConfigOnBaseapp(self, rpc_controller, request, done):
-        INFO_MSG('cacheConfigOnBaseapp: ', request.name, request.val)
+        LOG_IFO('cacheConfigOnBaseapp: ', request.name, request.val)
         gameconfig.setCacheConfig(request.name, request.val)
 
     def syncCacheConfigOnBaseapp(self, rpc_controller, request, done):
-        INFO_MSG('syncCacheConfigOnBaseapp', request.name, request.val)
+        LOG_IFO('syncCacheConfigOnBaseapp', request.name, request.val)
         names, values = gameconfig.unpackInterfaceDiffCache(request.name, request.val)
         for i in range(0, min(len(names), len(values))):
             gameconfig.setCacheConfig(names[i], values[i])
@@ -59,16 +59,16 @@ class Baseapp2InterfaceRpcService(Interface):
         gamerefresh.refreshData(args)
 
     def syncRegisterCount(self, rpc_controller, request, done):
-        INFO_MSG('sync register count from base:', request.value)
+        LOG_IFO('sync register count from base:', request.value)
         gameglobal.registerCount = int(request.value)
 
     def activeTick(self, rpc_controller, request, done):
-        self.tLastTick = utils.getNow()
+        self.tLastTick = utils.curTS()
         self.baseappStub.activeTickCallback(None, Void(), None)
 
     def setAccountComp(self, rpc_controller, request, done):
-        INFO_MSG('setAccountComp:', request)
-        _expire = utils.getNow() + gameconst.AUTH_AVATAR_LOGIN_EXPIRE_TIME
+        LOG_IFO('setAccountComp:', request)
+        _expire = utils.curTS() + gameconst.AUTH_AVATAR_LOGIN_EXPIRE_TIME
         gameglobal.accountCompIdCache[request.accountName] = (_expire, request.compID)
 
         # +5 是为了留点容错时间
@@ -83,12 +83,12 @@ class Baseapp2InterfaceRpcService(Interface):
     def updateAntiAddictionData(self, rpc_controller, request, done):
         timeType = request.timeType
         timestamp = request.timestamp
-        INFO_MSG('updateAntiAddictionData:', timeType, timestamp)
+        LOG_IFO('updateAntiAddictionData:', timeType, timestamp)
         gameglobal.antiAddictionData = [timeType, timestamp]
 
     def setMapleServerInfo(self, rpc_controller, request, done):
         gameglobal.mapleServerInfo = json.loads(request.data)
-        INFO_MSG('setMapleServerInfo:', gameglobal.mapleServerInfo)
+        LOG_IFO('setMapleServerInfo:', gameglobal.mapleServerInfo)
 
 class BaseappClientMgr(object):
     def __init__(self):
@@ -96,7 +96,7 @@ class BaseappClientMgr(object):
         self.syncFlag = False
 
     def handleNewConnection(self, tcpConn):
-        INFO_MSG('handleNewConnection', tcpConn.peername)
+        LOG_IFO('handleNewConnection', tcpConn.peername)
         interfaceService = Baseapp2InterfaceRpcService(self, tcpConn)
         tcpConn.set_channel_interface_obj(interfaceService)
         self.clients[tcpConn.peername] = interfaceService
@@ -108,11 +108,11 @@ class BaseappClientMgr(object):
     def checkClicentsActive(self):
         invalidClients = []
         for name, service in self.clients.items():
-            if utils.getNow() - service.tLastTick > 60:
+            if utils.curTS() - service.tLastTick > 60:
                 invalidClients.append(name)
 
         for name in invalidClients:
-            INFO_MSG('checkClicentsActive: remove baseapp client', name)
+            LOG_IFO('checkClicentsActive: remove baseapp client', name)
             self.clients.pop(name)
 
 
@@ -125,10 +125,10 @@ def startRpcServer():
     hostList = gameconfig.interfaceRpcHostList()
     for host in hostList:
         addr, port = host['addr'], int(host['port'])
-        INFO_MSG('start rpc server on:', addr, port)
+        LOG_IFO('start rpc server on:', addr, port)
         try:
             tcpServer = TcpServer.TcpServer(addr, port, None, connMgr)
             KBEngine.addTimer(1, 60, lambda timerId: connMgr.checkClicentsActive())
             break
         except Exception as e:
-            INFO_MSG('start rpc server on: %s, %s, fail: %s' % (addr, port, e))
+            LOG_IFO('start rpc server on: %s, %s, fail: %s' % (addr, port, e))

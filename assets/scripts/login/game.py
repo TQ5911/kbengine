@@ -17,7 +17,7 @@ def onLoginAppReady():
     KBEngine method.
     loginapp已经准备好了
     """
-    INFO_MSG('onLoginAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
+    LOG_IFO('onLoginAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
              (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
 
 
@@ -26,7 +26,7 @@ def onLoginAppReady():
 def onTick(timerID):
     """
     """
-    INFO_MSG('onTick()')
+    LOG_IFO('onTick()')
 
 
 def onLoginAppShutDown():
@@ -34,7 +34,7 @@ def onLoginAppShutDown():
     KBEngine method.
     这个loginapp被关闭前的回调函数
     """
-    INFO_MSG('onLoginAppShutDown()')
+    LOG_IFO('onLoginAppShutDown()')
 
 
 def onRequestLogin(loginName, password, clientType, datas):
@@ -43,7 +43,7 @@ def onRequestLogin(loginName, password, clientType, datas):
     账号请求登陆时回调
     此处还可以对登陆进行排队，将排队信息存放于datas
     """
-    INFO_MSG('onRequestLogin() loginName=%s, clientType=%s' % (loginName, clientType))
+    LOG_IFO('onRequestLogin() loginName=%s, clientType=%s' % (loginName, clientType))
 
     errorno = KBEngine.SERVER_SUCCESS
 
@@ -66,7 +66,7 @@ def onLoginCallbackFromDB(loginName, accountName, errorno, datas):
     这个机制用于一个账号多名称系统或者多个第三方账号系统登入服务器。
     客户端得到baseapp地址的同时也会返回这个账号名称，客户端登陆baseapp应该使用这个账号名称登陆
     """
-    INFO_MSG('onLoginCallbackFromDB() loginName=%s, accountName=%s, errorno=%s' % (loginName, accountName, errorno))
+    LOG_IFO('onLoginCallbackFromDB() loginName=%s, accountName=%s, errorno=%s' % (loginName, accountName, errorno))
 
 
 def onRequestCreateAccount(accountName, password, datas):
@@ -74,7 +74,7 @@ def onRequestCreateAccount(accountName, password, datas):
     KBEngine method.
     请求账号创建时回调
     """
-    INFO_MSG('onRequestCreateAccount() %s' % (accountName))
+    LOG_IFO('onRequestCreateAccount() %s' % (accountName))
 
     errorno = KBEngine.SERVER_SUCCESS
 
@@ -93,4 +93,4 @@ def onCreateAccountCallbackFromDB(accountName, errorno, datas):
     账号请求注册后db验证回调
     errorno: KBEngine.SERVER_ERR_*
     """
-    INFO_MSG('onCreateAccountCallbackFromDB() accountName=%s, errorno=%s' % (accountName, errorno))
+    LOG_IFO('onCreateAccountCallbackFromDB() accountName=%s, errorno=%s' % (accountName, errorno))

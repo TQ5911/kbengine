@@ -19,7 +19,7 @@ ON DUPLICATE KEY UPDATE
 """
 
 
-class CharacterVal(userType.UserSoleType):
+class CharacterVal(userType.UserSingleType):
     def __init__(self, gbId=0, dbId=0, school=0, name='', sex=0, level=0, birthInDB=0,
                  tLastOnline=0, charAppearance=None, selfDbId=0, authDbId=0, authExpire=0, parentID=0):
         self.gbId = gbId

@@ -18,7 +18,7 @@ import struct
 
 import formula
 
-class ShieldVal(userType.UserSoleType):
+class ShieldVal(userType.UserSingleType):
     def __init__(self, buffId, shieldType, shieldMaxValue, shieldValue, shieldEffects = None):
         self.buffId = buffId
         self.shieldMaxValue = shieldMaxValue
@@ -64,7 +64,7 @@ class Shields(userType.UserDictType):
         return
 
 
-class ClientBuffVal(userType.UserSoleType):
+class ClientBuffVal(userType.UserSingleType):
     def __init__(self, id, level, srcKey, endTimeStamp, duration):
         self.buffId = id
         self.srcKey = srcKey
@@ -119,7 +119,7 @@ class ServerBuffs(userType.UserDictType):
         return self[buffId].get(buffSrcKey)
 
     def doAddBuff(self, owner, buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs):
-        DEBUG_MSG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
+        LOG_DBG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
         owner.combatDebugMsg('doAddBuff: buffId:%s, level:%s, duration:%s, releaseRoleId:%s, releaseRoleName:%s, buffSrcType:%s, srcKey:%s, rootContext:%s',
                                      buffId, level, duration, releaseRoleId, releaseRoleName, srcType, srcKey, rootContext)
         self.setdefault(buffId, {})
@@ -132,7 +132,7 @@ class ServerBuffs(userType.UserDictType):
         else :
             buffVal.initBuff(owner,**kwargs)
         self.buffTagSet = buffVal.addBuffTags(self.buffTagSet)
-        DEBUG_MSG('added buff', buffVal)
+        LOG_DBG('added buff', buffVal)
         return buffVal
 
     def hasBuffTag(self, tag):
@@ -157,7 +157,7 @@ class ServerBuffs(userType.UserDictType):
     def removeBuff(self, owner, buffId, buffSrcKeys, isFinished, removeType):
         if buffId not in self:
             return
-        DEBUG_MSG("trace removeBuff ", buffId, buffSrcKeys, isFinished, removeType)
+        LOG_DBG("trace removeBuff ", buffId, buffSrcKeys, isFinished, removeType)
         owner.combatDebugMsg('removeBuff: buffId:%s, buffSrcKeys:%s, isFinished:%s, removeType:%s',
                                      buffId, buffSrcKeys, isFinished, removeType)
         buffSrcKeys = buffSrcKeys or list(self[buffId].keys())
@@ -168,8 +168,8 @@ class ServerBuffs(userType.UserDictType):
         for buffKey in buffSrcKeys:
             #buff action中可能会移除这个buffKey
             if buffKey not in self[buffId]:
-                if removeType!=gameconst.RemoveType.EndByAction:
-                    ERROR_MSG('cannot find buffKey', buffKey)
+                if removeType!=gameconst.RemoveType.RTEnumEndByAction:
+                    LOG_ERR('cannot find buffKey', buffKey)
                     import traceback
                     traceback.print_stack()
                 continue
@@ -178,7 +178,7 @@ class ServerBuffs(userType.UserDictType):
             if buffVal.isRemoving:
                 continue
 
-            if removeType==gameconst.RemoveType.EndByTime and not buffVal.isBuffTimeEnd(owner):
+            if removeType==gameconst.RemoveType.RTEnumEndByTime and not buffVal.isBuffTimeEnd(owner):
                 buffVal.delayRemoveBuff(owner, isFinished, removeType)
                 continue
 
@@ -217,17 +217,17 @@ class ServerBuffs(userType.UserDictType):
 
         owner.broadcastRemoveBuffEvent(buffId)
 
-    def checkValidOnLogin(self, owner,tLastOffline):
+    def checkValidOnLogin(self, owner,tsLastOffline):
         rmBuffs = {}
         for buffId, buffMap in self.items():
             invalidKeys = []
-            buffSrcKey = owner._getBuffSrcKey(buffId)
+            buffSrcKey = owner.getBuffSrcKey(buffId)
             for buffKey, buffVal in buffMap.items():
                 if buffVal.getBuffDuration()>0 :
-                    if buffVal.getBuffRemainTimeOffline(owner,tLastOffline) <= 0:
+                    if buffVal.getBuffRemainTimeOffline(owner,tsLastOffline) <= 0:
                         invalidKeys.append(buffKey)
                     else:
-                        buffVal.duration=buffVal.getBuffRemainTimeOffline(owner,tLastOffline)
+                        buffVal.duration=buffVal.getBuffRemainTimeOffline(owner,tsLastOffline)
                         buffVal.tStartTime=time.time()
                 if buffSrcKey and buffKey==buffSrcKey:
                     buffVal.releaseRoleId = owner.id
@@ -248,7 +248,7 @@ class ServerBuffs(userType.UserDictType):
         return
 
 
-class Buff(userType.UserSoleType):
+class Buff(userType.UserSingleType):
     def __init__(self, buffId, level, duration, releaseRoleId, srcType, srcKey, rootContext, randomValue=0,
                  removeTimerId=0,releaseRoleName="",releaseRoleGbId="", isAddBySelf=False):
         self.buffId = buffId
@@ -321,22 +321,22 @@ class Buff(userType.UserSoleType):
 
         return endTime-time.time() if endTime>time.time() else 0.0
 
-    def getBuffRemainTimeOffline(self,owner,tLastOffline):
+    def getBuffRemainTimeOffline(self,owner,tsLastOffline):
         if not owner.IsAvatar:
-            tLastOffline = 0
+            tsLastOffline = 0
 
         duration = self.getBuffDuration()
         if duration <= 0:
             return float('inf')
 
         endTime = duration + self.tStartTime
-        if endTime < tLastOffline:
+        if endTime < tsLastOffline:
             return 0.0
 
         if self.isOffLineLast():
             return endTime - time.time() if endTime > time.time() else 0.0
         else:
-            return endTime - tLastOffline
+            return endTime - tsLastOffline
 
     def getBuffEndTime(self, owner):
         if self.getBuffDuration()<=0:
@@ -362,23 +362,23 @@ class Buff(userType.UserSoleType):
         if duration > 0:
             remainTime = self.getBuffRemainTime()
             if remainTime>0:
-                self.removeTimerId = owner._callback(remainTime, 'removeBuff', (self.buffId, (self.srcKey,), True,
-                                                                                gameconst.RemoveType.EndByTime),
+                self.removeTimerId = owner.addTimerCB(remainTime, 'removeBuff', (self.buffId, (self.srcKey,), True,
+                                                                                gameconst.RemoveType.RTEnumEndByTime),
                                                                                 gametimer.TIMER_TAG_REMOVE_BUFF)
             else:
-                ERROR_MSG('initBuff error', duration, remainTime, self.tStartTime, self.buffId)
-                owner.removeBuff(self.buffId, (self.srcKey,), False, gameconst.RemoveType.Default)
+                LOG_ERR('initBuff error', duration, remainTime, self.tStartTime, self.buffId)
+                owner.removeBuff(self.buffId, (self.srcKey,), False, gameconst.RemoveType.RTEnumDefault)
                 return
 
     def _getEffectCaller(self):
-        if self.srcType==gameconst.BuffSrcType.Combat:
+        if self.srcType==gameconst.BuffSrcTypeEnum.Combat:
             return effect.BuffCaller({'buffId':self.buffId, 'buffKey':self.srcKey,})
 
     def getEffectList(self, owner, **extraInfo):
-        if self.srcType==gameconst.BuffSrcType.Combat:
+        if self.srcType==gameconst.BuffSrcTypeEnum.Combat:
             effectList = self.getBuffEffectList(self.buffId)
         else:
-            gameengine.reportCritical('invalid buff src:', self.srcType, self.buffId)
+            gameengine.panicStack('invalid buff src:', self.srcType, self.buffId)
             return
 
         if not effectList:
@@ -387,7 +387,7 @@ class Buff(userType.UserSoleType):
         buffCaller = self._getEffectCaller()
         for i, effectDict in enumerate(effectList):
             effectId = effectDict['EffectId']
-            effectKey = utils.getBuffEffectKey(effectId, i)
+            effectKey = utils.fetchBuffEffectKey(effectId, i)
             self.effectDic[effectKey] = effect.createEffect(owner, buffCaller, effectId, i, extraInfo)
             self.effectDic[effectKey].setupEffect(owner, buffCaller)
 
@@ -511,14 +511,14 @@ class Buff(userType.UserSoleType):
                 buffTagSet.add(tag)
         return buffTagSet
 
-    def hasTag(self, tag):
+    def hasBuffTag(self, tag):
         tags = self.getTag(self.buffId)
         if tags and tag in tags:
             return True
         return False
 
     def overlayBuff(self, owner, toLevel, duration):
-        DEBUG_MSG("trace overlayBuff 1")
+        LOG_DBG("trace overlayBuff 1")
         oldLevel = self.level
 
         if oldLevel == toLevel:
@@ -530,7 +530,7 @@ class Buff(userType.UserSoleType):
             if newDura <= 0:
                 newDura = float('inf')
 
-            DEBUG_MSG("trace overlayBuff 2 ", newDura, remainTime, self)
+            LOG_DBG("trace overlayBuff 2 ", newDura, remainTime, self)
 
         self.tStartTime = time.time()
         self.skillNum = 0
@@ -538,37 +538,37 @@ class Buff(userType.UserSoleType):
         self.attNum = 0
 
         if self.removeTimerId > 0:
-            owner._cancelCallback(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_BUFF)
+            owner.cancelTimerCB(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_BUFF)
             self.removeTimerId = 0
 
         self.duration = duration
 
         duration = self.getBuffDuration()
         if duration > 0:
-            DEBUG_MSG("trace overlayBuff 3")
+            LOG_DBG("trace overlayBuff 3")
             buffCaller = self._getEffectCaller()
             effectValues = list(self.effectDic.values())
             for effectVal in effectValues:
                 effectVal.onOverlayBuff(owner, buffCaller)
 
-            self.removeTimerId = owner._callback(duration, 'removeBuff', (self.buffId, (self.srcKey,), True,
-                                                                        gameconst.RemoveType.EndByTime),
+            self.removeTimerId = owner.addTimerCB(duration, 'removeBuff', (self.buffId, (self.srcKey,), True,
+                                                                        gameconst.RemoveType.RTEnumEndByTime),
                                                                         gametimer.TIMER_TAG_REMOVE_BUFF)
 
         if oldLevel != toLevel:
-            DEBUG_MSG("trace overlayBuff 4")
+            LOG_DBG("trace overlayBuff 4")
             buffCaller = self._getEffectCaller()
             effectValues = list(self.effectDic.values())
             for effectVal in effectValues:
 
-                if effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BASIC:
+                if effectVal.EFFECT_TYPE == gameconst.EffecType.ENUM_EFFECT_BASIC:
                     #先按旧的等级移除effect
                     effectVal.removeEffect(owner, buffCaller, isOverleap=True)
 
-                elif effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BY_EVENT:
+                elif effectVal.EFFECT_TYPE == gameconst.EffecType.ENUM_EFFECT_BY_EVENT:
                     pass
 
-                elif effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BY_TIMER:
+                elif effectVal.EFFECT_TYPE == gameconst.EffecType.ENUM_EFFECT_BY_TIMER:
                     effectVal.removeEffect(owner, buffCaller, isOverleap=True)
 
             self.level = int(toLevel)
@@ -581,20 +581,20 @@ class Buff(userType.UserSoleType):
                 if not effectVal:
                     continue
 
-                if effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BASIC:
+                if effectVal.EFFECT_TYPE == gameconst.EffecType.ENUM_EFFECT_BASIC:
                     effectVal.setupEffect(owner, buffCaller)
 
-                elif effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BY_EVENT:
+                elif effectVal.EFFECT_TYPE == gameconst.EffecType.ENUM_EFFECT_BY_EVENT:
                     pass
 
-                elif effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BY_TIMER:
+                elif effectVal.EFFECT_TYPE == gameconst.EffecType.ENUM_EFFECT_BY_TIMER:
                     effectVal.setupEffect(owner, buffCaller)
 
             refreshAction = self.getRefreshAction(self.buffId)
             if refreshAction:
                 ctxFunc = lambda r:actionContext.BuffRefreshCtx(self.releaseRoleId, owner.id, self.buffId, self.level, self.srcKey, r, self.rootContext)
                 owner.doCombatActions(refreshAction, owner, owner, owner.id, ctxFunc)
-            DEBUG_MSG("trace overlayBuff ", self)
+            LOG_DBG("trace overlayBuff ", self)
 
     def isBuffTimeEnd(self, owner):
         buffCaller = self._getEffectCaller()
@@ -602,23 +602,23 @@ class Buff(userType.UserSoleType):
             if isinstance(effectVal, effect.TimerEffect):
                 effectDict = effectVal.getEffectDict(owner, buffCaller)
                 if effectDict['Count']>=0 and effectVal.isValid:
-                    DEBUG_MSG('cannot remove buff by time now, will remove later', effectVal)
+                    LOG_DBG('cannot remove buff by time now, will remove later', effectVal)
                     return False
         return True
 
     #有TimerEffect的buff必须保证effect tick的次数到达配置次数后才可以销毁，否则延迟移除
     def delayRemoveBuff(self, owner, isFinished, removeType):
         if self.removeTimerId > 0:
-            owner._cancelCallback(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_BUFF)
+            owner.cancelTimerCB(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_BUFF)
 
-        self.removeTimerId = owner._callback(0.3, 'removeBuff', (self.buffId, (self.srcKey,), isFinished, removeType),
+        self.removeTimerId = owner.addTimerCB(0.3, 'removeBuff', (self.buffId, (self.srcKey,), isFinished, removeType),
                                              gametimer.TIMER_TAG_REMOVE_BUFF)
 
     def onBuffRemove(self, owner, isFinished, removeType):
         #一定要放在最开始cancel，否则在action后cancel可能会把action加上去的timer退出了
         #因为这里保存的id已经是无效的了，可能被引擎重用
         if self.removeTimerId > 0:
-            owner._cancelCallback(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_BUFF)
+            owner.cancelTimerCB(self.removeTimerId, gametimer.TIMER_TAG_REMOVE_BUFF)
             self.removeTimerId = 0
 
         eventKey = self._getBuffEventKey()
@@ -636,11 +636,11 @@ class Buff(userType.UserSoleType):
 
         eventAction = None
         endAction = self.getEndAction(self.buffId)
-        if removeType == gameconst.RemoveType.EndByBeat and self.getEndByBeatAction(self.buffId):
+        if removeType == gameconst.RemoveType.RTEnumEndByBeat and self.getEndByBeatAction(self.buffId):
             eventAction = self.getEndByBeatAction(self.buffId)
-        elif removeType == gameconst.RemoveType.EndByDead and self.getEndByDieRemoveAction(self.buffId):
+        elif removeType == gameconst.RemoveType.RTEnumEndByDead and self.getEndByDieRemoveAction(self.buffId):
             eventAction = self.getEndByDieRemoveAction(self.buffId)
-        elif removeType == gameconst.RemoveType.EndByTime:
+        elif removeType == gameconst.RemoveType.RTEnumEndByTime:
             eventAction = self.getEndByTimeAction(self.buffId)
 
         ctxFunc = lambda r:actionContext.BuffEndCtx(self.releaseRoleId, owner.id, self.buffId, self.level, self.srcKey, removeType, r, self.rootContext)
@@ -650,7 +650,7 @@ class Buff(userType.UserSoleType):
 
         buffCaller = self._getEffectCaller()
         for effectId, effect in self.effectDic.items():
-            DEBUG_MSG("remove effect ", effect)
+            LOG_DBG("remove effect ", effect)
             effect.removeEffect(owner, buffCaller)
         self.effectDic.clear()
 
@@ -660,7 +660,7 @@ class Buff(userType.UserSoleType):
         self.skillNum += 1
         if self.getEndBySkill(self.buffId) > 0 and self.skillNum >= self.getEndBySkill(self.buffId):
             owner.removeListener('onSkill', self._getBuffEventKey())
-            owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.EndBySkill)
+            owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.RTEnumEndBySkill)
 
     def onEventBeat(self, owner, event, buffId):
         if buffId != self.buffId:
@@ -668,7 +668,7 @@ class Buff(userType.UserSoleType):
         self.beatNum += 1
         if self.getEndByBeat(self.buffId) > 0 and self.beatNum >= self.getEndByBeat(self.buffId):
             owner.removeListener('onBeat', self._getBuffEventKey())
-            owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.EndByBeat)
+            owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.RTEnumEndByBeat)
 
     def onEventHit(self, owner, event, buffId):
         if buffId != self.buffId:
@@ -676,7 +676,7 @@ class Buff(userType.UserSoleType):
         self.attNum += 1
         if self.attNum >= self.getEndByAtt(self.buffId) > 0:
             owner.removeListener('onHit', self._getBuffEventKey())
-            owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.EndByAtt)
+            owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.RTEnumEndByAtt)
 
     def isRemoveOnDead(self):
         if self.getDeadDontRemove(self.buffId):
@@ -690,26 +690,26 @@ class Buff(userType.UserSoleType):
 
     def pauseEffects(self, owner):
         if self.isPause:
-            WARNING_MSG("pauseEffects has already paused", self.buffId)
+            LOG_WARN("pauseEffects has already paused", self.buffId)
             return
 
         self.isPause = True
         buffCaller = self._getEffectCaller()
         for effectId in list(self.effectDic.keys()):
             effect = self.effectDic.get(effectId)
-            DEBUG_MSG("pauseEffects effect ", effect)
+            LOG_DBG("pauseEffects effect ", effect)
             effect and effect.pauseEffect(owner, buffCaller)
 
     def restartEffects(self, owner):
         if not self.isPause:
-            WARNING_MSG("restartEffects has not paused", self.buffId)
+            LOG_WARN("restartEffects has not paused", self.buffId)
             return
 
         self.isPause = False
         buffCaller = self._getEffectCaller()
         for effectId in list(self.effectDic.keys()):
             effect = self.effectDic.get(effectId)
-            DEBUG_MSG("restartEffects effect ", effect)
+            LOG_DBG("restartEffects effect ", effect)
             effect and effect.restartEffect(owner, buffCaller)
 
     def resetTimerId(self):

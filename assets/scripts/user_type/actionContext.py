@@ -38,7 +38,9 @@ ACTION_USE_ITEM_HEAL = 29
 ACTION_USE_BOX_TYPE_ITEM = 30
 ACTION_AI_ACTION = 31
 
-class ActionContext(userType.UserSoleType):
+BUFF_ACTIONS = (ACTION_BUFF_TICK, ACTION_BUFF_END, ACTION_BUFF_EFFECT)
+
+class ActionContext(userType.UserSingleType):
     actionType = ACTION_UNKNOWN
 
     def __init__(self, parentContext=None):
@@ -88,7 +90,11 @@ ACTION_CONTEXT_DEFAULT = ActionContext()
 
 class UseSkillCtx(ActionContext):
     actionType = ACTION_USE_SKILL
-    def __init__(self, casterEntId, skillId, skillArgs, useTargetId, effectedEntIds, skillObj, skillResult, castBySkill=0, isSucc=None, parentCtx=None,actionProgress=0,isLastActionStage=False):
+    def __init__(self, casterEntId, skillId, skillArgs, useTargetId, 
+                 effectedEntIds=None, skillObj=None, skillResult=None, 
+                 castBySkill=0, isSucc=None, parentCtx=None, actionProgress=0,
+                 isLastActionStage=False, isClient=False, checkInRange=True):
+
         super(UseSkillCtx, self).__init__(parentCtx)
         self.casterEntId = casterEntId          #�ż��ܵ�entity id
         self.skillId = skillId                  #����id
@@ -99,17 +105,17 @@ class UseSkillCtx(ActionContext):
         self.skillObj = skillObj                #SkillAttack����
         self.skillResult = skillResult
         self.isSucc = isSucc
-        self.duringBigWorldDuel = False
         self.actionProgress = actionProgress                 #���ܽ���
         self.isLastActionStage = isLastActionStage           #�Ƿ����һ��actionstage
-        self.checkInRange = True
+        self.checkInRange = checkInRange
+        self.isClient = isClient
 
         if self.skillResult:
             self.skillResult.sourceType = self.getDmgSourceType()
             self.skillResult.sourceId = self.getDmgSourceId()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Skill
+        return gameconst.SourceType.SrcTpSkill
 
     def getDmgSourceId(self):
         return self.skillId
@@ -159,7 +165,7 @@ class CreationCtx(ActionContext):
         return self.getDmgSourceId()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Creation
+        return gameconst.SourceType.SrcTpCreation
 
     def getDmgSourceId(self):
         e = KBEngine.entities.get(self.creationEntId)
@@ -192,7 +198,7 @@ class BuffRefreshCtx(ActionContext):
             self.buffResult.reloadScript()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Buff
+        return gameconst.SourceType.SrcTpBuff
 
     def getDmgSourceId(self):
         return self.buffId
@@ -206,7 +212,7 @@ class BuffRefreshCtx(ActionContext):
     def getOwnerEntity(self):
         return KBEngine.entities.get(self.ownerEntId)
 
-    def getBuffObj(self):
+    def getBuffObject(self):
         owner = self.getOwnerEntity()
         if not owner:
             return None
@@ -236,7 +242,7 @@ class BuffEndCtx(ActionContext):
             self.buffResult.reloadScript()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Buff
+        return gameconst.SourceType.SrcTpBuff
 
     def getDmgSourceId(self):
         return self.buffId
@@ -250,7 +256,7 @@ class BuffEndCtx(ActionContext):
     def getOwnerEntity(self):
         return KBEngine.entities.get(self.ownerEntId)
 
-    def getBuffObj(self):
+    def getBuffObject(self):
         owner = self.getOwnerEntity()
         if not owner:
             return None
@@ -283,7 +289,7 @@ class BuffEffectCtx(ActionContext):
         self.args.reloadScript()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Buff
+        return gameconst.SourceType.SrcTpBuff
 
     def getDmgSourceId(self):
         return self.buffId
@@ -297,7 +303,7 @@ class BuffEffectCtx(ActionContext):
     def getOwnerEntity(self):
         return KBEngine.entities.get(self.ownerEntId)
 
-    def getBuffObj(self):
+    def getBuffObject(self):
         owner = self.getOwnerEntity()
         if not owner:
             return None
@@ -384,7 +390,7 @@ class UseItemHealCtx(ActionContext):
             self.itemResult.sourceId = self.getDmgSourceId()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Item
+        return gameconst.SourceType.SrcTpItem
 
     def getDmgSourceId(self):
         return self.itemId
@@ -406,7 +412,7 @@ class DeadActCtx(ActionContext):
             self.actResult.sourceId = self.getDmgSourceId()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Default
+        return gameconst.SourceType.SrcTpDefault
 
     def getDmgSourceId(self):
         return self.killerEntId
@@ -414,14 +420,14 @@ class DeadActCtx(ActionContext):
     def getCombatResult(self):
         return self.actResult
 
-class FlowControllerCtx(ActionContext):
+class FlowCtrlCtx(ActionContext):
     actionType = ACTION_FLOW_CONTROLLER_CALLED
 
     __defaults__ = {'rawGameEntityId': 0,
                     'number': 0, 'radius': 0}
 
     def __init__(self, parentContext=None, **customProps):
-        super(FlowControllerCtx, self).__init__(parentContext)
+        super(FlowCtrlCtx, self).__init__(parentContext)
         if customProps:
             self.customDict.update(customProps)
 
@@ -437,7 +443,7 @@ class FlowControllerCtx(ActionContext):
 class ClaimTaskCtx(object):
     actionType = ACTION_CLAIM_TASK
 
-    def __init__(self, claimSrc=gameconst.ClaimTaskSrc.NORMAL, callbackUUID=0, teamId=0, teamBaseInfoDic=None,
+    def __init__(self, claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_NORMAL, callbackUUID=0, teamId=0, teamBaseInfoDic=None,
                  seed=0, extra=None):
         super(ClaimTaskCtx, self).__init__()
         self.teamId = teamId
@@ -516,7 +522,7 @@ class PassiveSkillCtx(ActionContext):
         self.skillId = pSkillId                  #技能id
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.PassiveSkill
+        return gameconst.SourceType.SrcTpPassiveSkill
 
     def getDmgSourceId(self):
         return self.skillId
@@ -570,7 +576,7 @@ class AureoleCtx(ActionContext):
             self.aureoleResult.reloadScript()
 
     def getDmgSourceType(self):
-        return gameconst.SourceType.Aureole
+        return gameconst.SourceType.SrcTpAureole
 
     def getDmgSourceId(self):
         return self.aureoleId
@@ -601,4 +607,10 @@ class CubeDurCtx(object):
             if self.failedLeaveCube:
                 self.avatarBase.cell.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
 
+class CreateSummonCtx(ActionContext):
+    actionType = ACTION_UNKNOWN
+    def __init__(self, summonLv, skillLv, parentCtx=None):
+        super(CreateSummonCtx, self).__init__(parentCtx)
+        self.summonLv = summonLv
+        self.skillLv = skillLv
 

@@ -46,5 +46,9 @@ datas = _tools.RODict({
     "workShop_maxNum": _tools.RODict({
         "ID": "workShop_maxNum",
         "value": 99,
+    }),
+    "workShop_materialLack2": _tools.RODict({
+        "ID": "workShop_materialLack2",
+        "value": 54003268,
     })
 })

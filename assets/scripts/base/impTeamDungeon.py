@@ -37,10 +37,6 @@ class DungeonSheetMixin(object):
         else:
             return False
 
-    def isNeedTeamFollow(self, dungeonNo):
-        x = self._getPrmBydungeonNo(dungeonNo, 'needTeamFollow')
-        return bool(x)
-
 
 class ImpTeamDungeon(DungeonSheetMixin):
     """avatar mix class in baseapp"""
@@ -49,7 +45,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
     # GOODMAN CARD METHOD
 
     def getCurrentActRewardStatus(self, srcId=gameconst.DungeonSrcEnum.DEFAULT, playMode=gameconst.DungeonPlayModeEnum.UNKNOWN):
-        INFO_MSG('getCurrentActRewardStatus::', srcId, playMode)
+        LOG_IFO('getCurrentActRewardStatus::', srcId, playMode)
         actId, canGetReward = 0, False
 
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
@@ -124,12 +120,12 @@ class ImpTeamDungeon(DungeonSheetMixin):
         return True, 'OK'
 
     def useItemAndEnterTeamDungeon(self, needDic, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        INFO_MSG('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
+        LOG_IFO('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
                   spaceMgrBox, extra)
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemDict(needDic)
         if not self.canDeductWealth(deductWealthVal):
-            ERROR_MSG('Enter teamDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
+            LOG_ERR('Enter teamDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
             return
 
         opUUID = KBEngine.genUUID64()
@@ -137,7 +133,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
         detail = gameclass.AwardDetail(spaceNo=spaceNo)
         self.deductWealth(src, deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterTeamDungeon(
-            gameconst.BagOPStat.BAG_OP_STAT_OK, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
+            gameconst.BagOPStat.OPERATE_BAG_STAT_OK, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
         
     def selfCheckAndEnterTeamDungeon(self, teamId, dungeonNo, extra):
         extra.update({
@@ -150,6 +146,6 @@ class ImpTeamDungeon(DungeonSheetMixin):
             'eId': self.id,
         })
 
-        INFO_MSG('selfCheckAndEnterTeamDungeon::', teamId, dungeonNo, extra)
+        LOG_IFO('selfCheckAndEnterTeamDungeon::', teamId, dungeonNo, extra)
         teamStub = gameengine.getTeamStub(teamId)
         teamStub.enterTeamDungeonDirectly(self, self.gbID, teamId, dungeonNo, extra)

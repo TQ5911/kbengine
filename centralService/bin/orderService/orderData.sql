@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS `orderData`
+(
+    id bigint unsigned AUTO_INCREMENT,
+    `orderNo` varchar(64) not null DEFAULT '',
+    `outTradeNo` varchar(64) not null DEFAULT '',
+    `createTime` int unsigned not null DEFAULT 0,
+    `gameId` varchar(16) not null DEFAULT '',
+    `userGameId` bigint not null DEFAULT 0,
+    `userId` bigint not null DEFAULT 0,
+    `userRoleId` bigint not null DEFAULT 0,
+    `roleName` varchar(32) not null DEFAULT '',
+    `serverId` int unsigned not null DEFAULT 0,
+    `serverName` varchar(32) not null DEFAULT '',
+    `productId` varchar(32) not null DEFAULT 0,
+    `productCode` int unsigned not null DEFAULT 0,
+    `channelProductId` varchar(32) not null DEFAULT '',
+    `productName` varchar(32) not null DEFAULT '',
+    `buyNum` int unsigned not null DEFAULT 0,
+	`payTime` int unsigned not null DEFAULT 0,
+    `payableAmount` decimal not null DEFAULT 0.0,
+    `actualAmount` decimal not null DEFAULT 0.0,
+    `payType` varchar(8) not null DEFAULT '',
+    `orderSource` varchar(8) not null DEFAULT '',
+    `orderProcessStatus` tinyint not null DEFAULT 0,
+    UNIQUE INDEX (`orderNo`),
+    UNIQUE INDEX (`outTradeNo`),
+    PRIMARY KEY idKey (id)
+);

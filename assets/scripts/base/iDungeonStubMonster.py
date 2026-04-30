@@ -68,7 +68,7 @@ class IDungeonStubMonster(object):
 
                         ret = self._createDungeonEntityInQueue(sVal, genVal, entVal)
                         if not ret:
-                            gameengine.reportCritical("onTimeCreateEntity:: createEntityErr, ", spaceNo, entVal, genVal.__dict__)
+                            gameengine.panicStack("onTimeCreateEntity:: createEntityErr, ", spaceNo, entVal, genVal.__dict__)
                             continue
 
                         _currentSpaceCreateEntityCount += 1
@@ -98,10 +98,10 @@ class IDungeonStubMonster(object):
     # =========================================
     # TIME_LINE METHODS
 
-    def createEntityInDungeonByGameEntityId(self, spaceNo, flagIds, num, level, extra):
-        DEBUG_MSG('createEntityInDungeonByGameEntityId::', spaceNo, flagIds, num, level, extra, self.dungeonNo)
+    def spawnDungeonEntityByGameEntityId(self, spaceNo, flagIds, num, level, extra):
+        LOG_DBG('spawnDungeonEntityByGameEntityId::', spaceNo, flagIds, num, level, extra, self.dungeonNo)
         if spaceNo not in self.spaces:
-            ERROR_MSG('createEntityInDungeonByGameEntityId:: spaceNo not founed', spaceNo)
+            LOG_ERR('spawnDungeonEntityByGameEntityId:: spaceNo not founed', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
@@ -116,12 +116,12 @@ class IDungeonStubMonster(object):
         for i, flagId in enumerate(flagIds):
             if checkCreateUniqueness:
                 if sVal.isFlagIdInEntityGenerator(flagId):
-                    WARNING_MSG("createEntityInDungeonByGameEntityId::create Entity skip with uniqueness checker", spaceNo, flagId, num, level, extra)
+                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity skip with uniqueness checker", spaceNo, flagId, num, level, extra)
                     continue
 
             sFlagId = str(flagId)
             if sFlagId not in dunAllDatas:
-                ERROR_MSG("createEntityInDungeonByGameEntityId::create Entity flagId missing in dungeon module data",
+                LOG_ERR("spawnDungeonEntityByGameEntityId::create Entity flagId missing in dungeon module data",
                           spaceNo, flagId, num, level, extra)
                 continue
 
@@ -152,7 +152,7 @@ class IDungeonStubMonster(object):
 
             elif className == 'Npc':
                 if not dunData.get('Props', {}).get('IsOpen', 1):
-                    WARNING_MSG("createEntityInDungeonByGameEntityId::create Entity but not open", spaceNo, className, flagId, num, level, extra)
+                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity but not open", spaceNo, className, flagId, num, level, extra)
                     continue
                 _gen = self._getNPCDefArgs(dunAllDatas, spaceNo, flagId, sVal, num,
                                            npcLevel=level, ifSetBoss=extra.get('ifSetBoss', False), extraVal=extraVal)
@@ -160,14 +160,10 @@ class IDungeonStubMonster(object):
 
             elif className == 'Collection':
                 if not dunData.get('Props', {}).get('IsOpen', 1):
-                    WARNING_MSG("createEntityInDungeonByGameEntityId::create Entity but not open", spaceNo, className, flagId, num, level, extra)
+                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity but not open", spaceNo, className, flagId, num, level, extra)
                     continue
                 extraVal.update({'CollectionType': extra.get('CollectionType', gameconst.CollectionType.NORMAL)})
                 _gen = self._getCollDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, extraVal=extraVal)
-                gens.append(_gen)
-
-            elif className == 'BuffRefreshPos':
-                _gen = self._getBuffPointDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, extraVal=extraVal)
                 gens.append(_gen)
 
             elif className in ('Barrier', 'AirWall'):
@@ -184,7 +180,7 @@ class IDungeonStubMonster(object):
                 gens.append(_gen)
                 
             else:
-                ERROR_MSG('createEntityInDungeonByGameEntityId:: entityType not support',
+                LOG_ERR('spawnDungeonEntityByGameEntityId:: entityType not support',
                           spaceNo, flagId)
                 continue
 
@@ -198,57 +194,10 @@ class IDungeonStubMonster(object):
                 withBase=False,
                 extra={'flagIds': flagIds, 'className': specialClassName, 'fromEventId': fromEventId})
             sVal.addEntityGeneratorVal(genVal)
-
-    def _createSpaceTimeLine(self, spaceNo):
-        # if self.dungeonNo not in DDMD.datas:
-        #     WARNING_MSG('dungeonNo not found in dungeonMonster define, got {}'.format(self.dungeonNo))
-        #     return
-
-        # monsterDefs = DDMD.datas[self.dungeonNo]
-        # sVal = self.spaces[spaceNo]
-        # now = utils.getNow()
-
-        # for flagId, mVal in monsterDefs.items():
-        #     rCreateDelay = mVal['startCheck']
-
-            # timeLineVal __init__
-            # sVal.addTimeLine(flagId, 0, now + rCreateDelay, True)
-        warnings.warn('dungeon_dungeonMonster.py table deprecated', DeprecationWarning)
-
-    def _getDefsArgs(self, spaceNo, flagId, spaceVal, monsterVal, timeLineVal, currentTime=None):
-        if not currentTime:
-            currentTime = utils.getNow()
-
-        dunAllDatas = utils.getDunModuleData(self.dungeonNo)
-        if not dunAllDatas or str(flagId) not in dunAllDatas:
-            ERROR_MSG('Can\'t found flagId {} in Datas "dun_{}"'.format(flagId, self.dungeonNo))
-            # stop refresh immediately
-            timeLineVal.nextRefreshTime = -1
-            timeLineVal.stopRefresh = True
-            return
-
-        dunData = dunAllDatas[str(flagId)]
-        # dunDataProps = dunData.get('Props', {})
-
-        if dunData['ClassName'] != 'Monster':
-            ERROR_MSG('Got else Monster class: {}'.format(dunData['ClassName']))
-            # stop refresh immediately
-            timeLineVal.nextRefreshTime = -1
-            timeLineVal.stopRefresh = True
-            return
-
-        # -------------------------------------
-        # create monsters here
-        # -------------------------------------
-        dungeonEntDefs = self._getMonsterDefArgs(dunAllDatas, spaceNo, flagId, spaceVal, monsterVal)
-        # -------------------------------------
-        timeLineVal.updateRefreshTime(currentTime + monsterVal['checkInterval'])
-        return dungeonEntDefs
-
     # =========================================
 
     def _buildDefArgsGen(self, props, flagId, className, dataProps, num):
-        gameEntityGen = utils.generateGameEntityId(int(flagId), num)
+        gameEntityGen = utils.genGameEntityId(int(flagId), num)
 
         def _pkg(k, v, idx):
             if k == 'tmpProps':
@@ -394,36 +343,6 @@ class IDungeonStubMonster(object):
 
         return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
 
-    def _getBuffPointDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, extraVal=None):
-        dunCollData = dunAllDatas[str(flagId)]
-        dunDataProps = dunCollData.get('Props', {})
-
-        pointId = dunCollData['EntityID']
-        className = 'BuffPoint'
-
-        props = {'spaceNo': spaceNo,
-                 'pointId': pointId,
-                 'spaceMgrId': spaceVal.spaceMgr.id,
-                 'spaceMgrBox': spaceVal.spaceMgr,
-                 'position': (dunCollData['PosX'],
-                              dunCollData['PosY'],
-                              dunCollData['PosZ']),
-                 'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
-                 'name': dunCollData['DisplayName'],
-                 'dungeonFlagId': flagId,
-                 'pointId': flagId,
-                 'gameEntityId': 0,
-                 'gameEntityIdentifyID': 0}
-
-        extraProps = utils.getBuffRefreshPointExtraProps(dunDataProps)
-        props.update(extraProps)
-
-        props.setdefault('tmpProps', {})
-        if extraVal and 'tmpProps' in extraVal:
-            props['tmpProps'].update(extraVal.get('tmpProps', {}))
-
-        return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
-
     def _getAirWallDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, extraVal=None):
         dunCollData = dunAllDatas[str(flagId)]
         dunDataProps = dunCollData.get('Props', {})
@@ -509,16 +428,14 @@ class IDungeonStubMonster(object):
 
     def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: createCellEntity cannot find space:', spaceNo)
+            LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
             return
 
-        self._createSpaceTimeLine(spaceNo)
-
     def _checkEntitiesCellLoaded(self, spaceNo, extra, currentCount=1):
-        # DEBUG_MSG('_checkEntitiesCellLoaded::', spaceNo)
+        # LOG_DBG('_checkEntitiesCellLoaded::', spaceNo)
         extra = extra or {}
         if spaceNo not in self.spaces:
-            ERROR_MSG('_checkEntitiesCellLoaded::cannot find space:', spaceNo)
+            LOG_ERR('_checkEntitiesCellLoaded::cannot find space:', spaceNo)
             return
         sVal = self.spaces[spaceNo]
 
@@ -527,23 +444,23 @@ class IDungeonStubMonster(object):
         sVal.loadDungeonEntitiesCheckTimerDic.pop(genUUID, None)
 
         if currentCount > 30:
-            gameengine.reportCritical("_checkEntitiesCellLoaded:: loaded failed", spaceNo, sVal.homeEnts)
+            gameengine.panicStack("_checkEntitiesCellLoaded:: loaded failed", spaceNo, sVal.homeEnts)
             return
 
-        DEBUG_MSG('_checkEntitiesCellLoaded::', spaceNo, sVal.homeEnts)
+        LOG_DBG('_checkEntitiesCellLoaded::', spaceNo, sVal.homeEnts)
         if all(sVal.homeEnts):
             # todo  配置AI
-            # INFO_MSG('_checkEntitiesCellLoaded::config monster ai')
+            # LOG_IFO('_checkEntitiesCellLoaded::config monster ai')
             self._onDungeonEntitiesLoaded(spaceNo, extra)
         else:
-            _timerId = self._callback(1, '_checkEntitiesCellLoaded', (spaceNo, extra, currentCount+1),
+            _timerId = self.addTimerCB(1, '_checkEntitiesCellLoaded', (spaceNo, extra, currentCount+1),
                                       gametimer.TIMER_TAG_CHECK_ENTITIES_CELL_LOADED)
             sVal.loadDungeonEntitiesCheckTimerDic.update({genUUID: _timerId})
 
     def cancelSpaceEntitiesLoadingProcess(self, spaceNo):
-        DEBUG_MSG("cancelSpaceEntitiesLoadingProcess::", spaceNo)
+        LOG_DBG("cancelSpaceEntitiesLoadingProcess::", spaceNo)
         if spaceNo not in self.spaces:
-            WARNING_MSG('cancelSpaceEntitiesLoadingProcess::cannot find space:', spaceNo)
+            LOG_WARN('cancelSpaceEntitiesLoadingProcess::cannot find space:', spaceNo)
             return
         sVal = self.spaces[spaceNo]
 
@@ -552,14 +469,14 @@ class IDungeonStubMonster(object):
         for _timerDic, _tag in ((sVal.loadingDungeonEntitiesTimerDic, gametimer.TIMER_TAG_LOAD_DUNGEON_ENTITIES_CALL_BACK),
                                 (sVal.loadDungeonEntitiesCheckTimerDic, gametimer.TIMER_TAG_CHECK_ENTITIES_CELL_LOADED)):
             for timerId in _timerDic.values():
-                self._cancelCallback(timerId, _tag)
+                self.cancelTimerCB(timerId, _tag)
 
             _timerDic.clear()
 
     def _onDungeonEntitiesLoaded(self, spaceNo, extra):
-        DEBUG_MSG('_onDungeonEntitiesLoaded::', spaceNo, extra)
+        LOG_DBG('_onDungeonEntitiesLoaded::', spaceNo, extra)
         if spaceNo not in self.spaces:
-            ERROR_MSG('_onDungeonEntitiesLoaded::cannot find space:', spaceNo)
+            LOG_ERR('_onDungeonEntitiesLoaded::cannot find space:', spaceNo)
             return
         flagIds = extra.get('flagIds')
         className = extra.get('className')
@@ -581,8 +498,6 @@ class IDungeonStubMonster(object):
             sVal.spaceMgr.cell.flowCtrlDungeonNPCReleaseComplete(flagIds)
         elif className == 'Collection':
             sVal.spaceMgr.cell.flowCtrlDungeonCollectionReleaseComplete(flagIds)
-        elif className == 'BuffRefreshPos':
-            sVal.spaceMgr.cell.flowCtrlDungeonBuffPointReleaseComplete(flagIds)
         elif className in ('Barrier', 'AirWall'):
             sVal.spaceMgr.cell.flowCtrlDungeonAirWallReleaseComplete(flagIds)
         elif className == 'Teleporter':
@@ -598,7 +513,7 @@ class IDungeonStubMonster(object):
 
     def addKillCount(self, spaceNo, flagId, creepBaseId):
         if spaceNo not in self.spaces:
-            ERROR_MSG('wl: createCellEntity cannot find space:', spaceNo)
+            LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
@@ -608,16 +523,16 @@ class IDungeonStubMonster(object):
 
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         if not (flagId or creepBaseId):
-            ERROR_MSG('addKillCount:: must set flagId or creepBaseId')
+            LOG_ERR('addKillCount:: must set flagId or creepBaseId')
             return
 
         # 【【任务】副本编辑器新节点-指定怪物原型死亡数量】
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         dunData = utils.getDunModuleData(dungeonNo)
         if not creepBaseId:
             creepBaseId = dunData.get(str(flagId), {}).get('EntityID', 0)
 
-        DEBUG_MSG('------ addKillCount in {}/{}'.format(spaceNo, flagId))
+        LOG_DBG('------ addKillCount in {}/{}'.format(spaceNo, flagId))
         _needAddCreepBaseKillNumFlag = True
 
         if flagId:
@@ -634,18 +549,18 @@ class IDungeonStubMonster(object):
             sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(
                 creepBaseId, sVal.getCreepBaseKilledNum(creepBaseId), sVal.killSum)
 
-        DEBUG_MSG('----- NOW KILL {} MONSTERS in space {}'
+        LOG_DBG('----- NOW KILL {} MONSTERS in space {}'
                   '-----'.format(sVal.killSum, spaceNo))
 
-    def flowCtrlCheckDungeonEntityKillNumber(self, spaceNo, monsterGID, symbol, number, usePrototypeID, eid, ctx, checkOnce):
-        DEBUG_MSG("flowCtrlCheckDungeonEntityKillNumber::", spaceNo, monsterGID, symbol, number, usePrototypeID, eid, ctx, checkOnce)
+    def flowCheckDungeonKillCount(self, spaceNo, monsterGID, symbol, number, usePrototypeID, eid, ctx, checkOnce):
+        LOG_DBG("flowCheckDungeonKillCount::", spaceNo, monsterGID, symbol, number, usePrototypeID, eid, ctx, checkOnce)
 
         if spaceNo not in self.spaces:
-            ERROR_MSG('flowCtrlCheckDungeonEntityKillNumber:: cannot find space', spaceNo)
+            LOG_ERR('flowCheckDungeonKillCount:: cannot find space', spaceNo)
             return
 
         if not monsterGID:
-            ERROR_MSG('flowCtrlCheckDungeonEntityKillNumber:: monsterGID must set number', monsterGID)
+            LOG_ERR('flowCheckDungeonKillCount:: monsterGID must set number', monsterGID)
             return
 
         sVal = self.spaces[spaceNo]
@@ -657,22 +572,22 @@ class IDungeonStubMonster(object):
             currentKillNum = _val.kills if _val else 0
 
         if not (sVal.spaceMgr and sVal.spaceMgr.cell):
-            WARNING_MSG("flowCtrlCheckDungeonEntityKillNumber:: spaceMgr not found", spaceNo)
+            LOG_WARN("flowCheckDungeonKillCount:: spaceMgr not found", spaceNo)
             return
 
         sVal.spaceMgr.cell.flowCtrlOnCheckDungeonEntityKillNumber(monsterGID, symbol, number, currentKillNum, usePrototypeID, eid, ctx, checkOnce)
 
-    def flowCtrlCheckDungeonAllEntityKillNumber(self, spaceNo, symbol, number, eid, ctx, checkOnce):
-        DEBUG_MSG("flowCtrlCheckDungeonAllEntityKillNumber::", spaceNo, symbol, number, eid, ctx, checkOnce)
+    def flowCheckDungeonAllKillCount(self, spaceNo, symbol, number, eid, ctx, checkOnce):
+        LOG_DBG("flowCheckDungeonAllKillCount::", spaceNo, symbol, number, eid, ctx, checkOnce)
         if spaceNo not in self.spaces:
-            ERROR_MSG('flowCtrlCheckDungeonAllEntityKillNumber:: cannot find space', spaceNo)
+            LOG_ERR('flowCheckDungeonAllKillCount:: cannot find space', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
         currentKillNum = sVal.killSum
 
         if not (sVal.spaceMgr and sVal.spaceMgr.cell):
-            WARNING_MSG("flowCtrlCheckDungeonAllEntityKillNumber:: spaceMgr not found", spaceNo)
+            LOG_WARN("flowCheckDungeonAllKillCount:: spaceMgr not found", spaceNo)
             return
 
         sVal.spaceMgr.cell.flowCtrlOnCheckDungeonAllEntityKillNumber(symbol, number, currentKillNum, eid, ctx, checkOnce)

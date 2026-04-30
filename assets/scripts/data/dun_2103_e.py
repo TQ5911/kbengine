@@ -349,8 +349,7 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1809,
-        1811
+        1809
       ]
     }
   },
@@ -362,11 +361,11 @@ datas ={
     "compare": 1,
     "restNum": 0,
     "usePrototypeID": 0,
-    "checkNow": 0,
+    "checkNow": 1,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1812
+        1811
       ]
     }
   },
@@ -378,7 +377,7 @@ datas ={
     "compare": 1,
     "restNum": 0,
     "usePrototypeID": 0,
-    "checkNow": 0,
+    "checkNow": 1,
     "checkOnce": 0,
     "transition": {
       "finished": [
@@ -506,7 +505,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1011
+        1011,
+        1006
       ]
     }
   },
@@ -822,7 +822,6 @@ datas ={
         1135,
         1031,
         1051,
-        1006,
         1152
       ]
     }

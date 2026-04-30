@@ -9,7 +9,7 @@ import random
 import gameengine
 import inscriptionEffectInfo
 
-class Affix(userType.UserSoleType):
+class Affix(userType.UserSingleType):
     def __init__(self, affixId = 0, affixLv=1):
         self.afxId = affixId
         self.lv = max(affixLv, 1)
@@ -64,14 +64,14 @@ class GlyphAffix(Affix):
             return
         affixData = AFAFD.datas.get(self.afxId)
         if not affixData:
-            ERROR_MSG('GlyphAffix-->applyEffects, missing affix data ', self.afxId)
+            LOG_ERR('GlyphAffix-->applyEffects, missing affix data ', self.afxId)
             return
         self.analysisEffects(affixData['inscription'])
 
     def analysisEffects(self, inscriptionId):
         ret, glyphSkillId, glyphQuality, glyphTypes, glyphValues = inscriptionEffectInfo.InscriptionEffectInfo.getEffectValues(inscriptionId)
         if not ret:
-            ERROR_MSG('GlyphAffix-->analysisEffects, analysis effects failed ', inscriptionId)
+            LOG_ERR('GlyphAffix-->analysisEffects, analysis effects failed ', inscriptionId)
             return
         self.glyphSkillId = glyphSkillId
         self.glyphQuality = glyphQuality
@@ -190,10 +190,10 @@ def genBlessAffix(iLevel, affixId):
 
 def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, attrSrcType, afxValStartIdx=0, afxValEndIdx=-1):
     #词条对avatar单属性的加成
-    INFO_MSG('in applyAffixPropEffectToAvatar:',  attrNameList, attrValList)
+    LOG_IFO('in applyAffixPropEffectToAvatar:',  attrNameList, attrValList)
     valNum = len(attrValList)
     if afxValEndIdx >= valNum:
-        gameengine.reportCritical('applyAffixPropEffectToAvatar, afx end idx error:', attrValList, afxValStartIdx, afxValEndIdx)
+        gameengine.panicStack('applyAffixPropEffectToAvatar, afx end idx error:', attrValList, afxValStartIdx, afxValEndIdx)
         return
 
     for idx, attrName in enumerate(attrNameList):
@@ -207,9 +207,9 @@ def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, at
     return
 
 def removeAffixEffectFromAvatar(owner, affixItem, baseAttrAddValDic, attrSrcType):
-    INFO_MSG('in removeAffixEffectFromAvatar')
+    LOG_IFO('in removeAffixEffectFromAvatar')
     # 移除单属性加成
-    INFO_MSG('     in removeAffixEffectFromAvatar, baseAttrsByAfxVal:', baseAttrAddValDic)
+    LOG_IFO('     in removeAffixEffectFromAvatar, baseAttrsByAfxVal:', baseAttrAddValDic)
     for propName, val in baseAttrAddValDic.items():
         owner.addProp(propName, -1 * val, attrSrcType)
     # # 移除技能加成

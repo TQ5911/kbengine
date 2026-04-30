@@ -107,10 +107,6 @@ datas = _tools.RODict({
         "ID": "rewardParticipation",
         "value": "参与奖励",
     }),
-    "rewardParticipationID": _tools.RODict({
-        "ID": "rewardParticipationID",
-        "value": 40020541,
-    }),
     "countDownMsg": _tools.RODict({
         "ID": "countDownMsg",
         "value": "{0}后，自动回到先前位置",

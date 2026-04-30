@@ -26,6 +26,6 @@ class IBaseNoCell(iBase.IBase):
     def globalDataSumCallback(self, obj, callbackName, args):
         func = getattr(obj, callbackName, None)
         if not func:
-            ERROR_MSG('globalDataSumCallback ')
+            LOG_ERR('globalDataSumCallback ')
             return
         func(*args)

@@ -194,6 +194,7 @@ Avatar autoMatchTarget 76
 Avatar autoRaidMatchStartTime 31769
 Avatar autoRaidMatchTarget 144
 Avatar avatarFlag 30333
+Avatar avatarRankData 32327
 Avatar avatarScoreRank 31656
 Avatar avatarVarDic 30227
 Avatar awardFightPropDic 30105
@@ -270,6 +271,8 @@ Avatar cellCrossServerState 31189
 Avatar cellDataCache 30329
 Avatar cellEquipEncExtraTimesList 31266
 Avatar cellFlags 31569
+Avatar cellHunterInfo 32360
+Avatar cellPreyInfo 32324
 Avatar challengeAvatars 30651
 Avatar chatChannel 89
 Avatar checkAreaTgtTaskTimer 30226
@@ -290,6 +293,8 @@ Avatar collectionAuctionIdList 30993
 Avatar collectionAuctionItemCategoryList 31494
 Avatar combatReturnInfo 31433
 Avatar commonFlagCell 431
+Avatar continuousIllegalCount 32355
+Avatar continuousTickCount 32354
 Avatar controlledByReasonDic 30036
 Avatar controlledStates 30439
 Avatar copper 30256
@@ -349,9 +354,12 @@ Avatar drugsQuantityBase 31262
 Avatar duelAttr 133
 Avatar duelBlackDict 31225
 Avatar effectEventCDInfo 32254
+Avatar emoteId 32380
 Avatar endCrossServerTimerId 31583
 Avatar enemyCacheSet 30440
 Avatar enemyMgr 441
+Avatar enemyScheduleTag 32303
+Avatar enemyScheduleTimerId 32304
 Avatar enterViewList 32187
 Avatar equipDropData 31480
 Avatar escortDistance 30042
@@ -370,9 +378,10 @@ Avatar fightBackTimerId 31434
 Avatar finalDmg 471
 Avatar finalDmgAnti 472
 Avatar firstBuyCreditDic 31362
-Avatar followCaptain 74
-Avatar followInfo 30560
-Avatar followtSuspendReason 30033
+Avatar flyCheckTimer 30326
+Avatar flyResumeTimer 32350
+Avatar flyResumeValue 32351
+Avatar flyValue 179
 Avatar forbiddenFlags 30365
 Avatar force 571
 Avatar freeRecoverDeathPenaltyTimes 414
@@ -418,6 +427,8 @@ Avatar healMpRatio 122
 Avatar hit 24
 Avatar holidayPayInfo 31364
 Avatar hp 27
+Avatar hunterDamageSet 32362
+Avatar hunterInfo 32358
 Avatar idipBanDataDict 30340
 Avatar idipBanDict 30339
 Avatar idipIncomeDict 30341
@@ -431,6 +442,8 @@ Avatar isClientOnGround 435
 Avatar isDestroying 30319
 Avatar isDestroyingCell 30320
 Avatar isInLocalServer 31582
+Avatar isInitCheck 32356
+Avatar isLastOverSpeed 32381
 Avatar isNeedDisturb 30465
 Avatar isNeedResortView 30354
 Avatar isSwitchServer 31332
@@ -447,7 +460,10 @@ Avatar lastMonthCardDailyRewardTime 31613
 Avatar lastMonthCardHangupGetTime 31658
 Avatar lastMonthcardLoginTime 32297
 Avatar lastNotifyScoreTime 30048
+Avatar lastPlayTime 32383
+Avatar lastPosition 32353
 Avatar lastSpaceNo 30330
+Avatar lastSpeed 32352
 Avatar leftCubeTimes 422
 Avatar leftGuildTS 426
 Avatar level 5
@@ -514,6 +530,7 @@ Avatar myMineList 32220
 Avatar myMineListBase 32228
 Avatar name 9
 Avatar newbieGuideIds 257
+Avatar newbieGuideVals 180
 Avatar newbieStep 31899
 Avatar nextRecoverGuildAssistTime 31395
 Avatar nextRecoverQixieAssistTime 199
@@ -525,6 +542,7 @@ Avatar offlineReason 30338
 Avatar otherServerAvatarBox 31190
 Avatar outfitExpireTimerId 31126
 Avatar outfitInfo 31127
+Avatar overSpeedCheckTimer 32384
 Avatar packetSendList 30896
 Avatar packetSendTimer 30895
 Avatar paidCubeTimes 156
@@ -537,9 +555,13 @@ Avatar pickedCollections 30389
 Avatar pkModel 84
 Avatar pkModelBefore 85
 Avatar pkProtect 86
+Avatar playTimerId 32382
 Avatar pointIndex 30041
 Avatar popRoleCacheTimer 30334
+Avatar preyFlag 32361
+Avatar preyInfo 32357
 Avatar propChangedTimes 31432
+Avatar publishList 32325
 Avatar pushAnti 480
 Avatar pushEnh 453
 Avatar qixieAssistTimes 191
@@ -562,7 +584,6 @@ Avatar relationTypeList 30100
 Avatar releaseRedBagDict 31995
 Avatar relogCnt 30317
 Avatar remainHangupMinutes 31659
-Avatar replyFollowCaptainTimer 30538
 Avatar replyTeamCaptainTimer 30529
 Avatar rmFightStateTimeId 30438
 Avatar roleAccount 30306
@@ -572,6 +593,7 @@ Avatar saleItemMoney 31403
 Avatar savedBuffDic 30230
 Avatar school 6
 Avatar scoreInitFinished 30049
+Avatar scoreTimer 32386
 Avatar scoresInfo 82
 Avatar scriptClientData 30361
 Avatar selectedTargetId 209
@@ -601,6 +623,7 @@ Avatar silentSpeakTime 30674
 Avatar skillBroken 30364
 Avatar skillCD 473
 Avatar skillDic 30137
+Avatar skillTimerDic 32329
 Avatar skillTimerLogQueue 32259
 Avatar slowAnti 457
 Avatar slowEnh 456
@@ -609,6 +632,7 @@ Avatar spaceMgrId 30399
 Avatar spaceNo 21
 Avatar spaceVarDic 30228
 Avatar speed 20
+Avatar speedCheckStart 32359
 Avatar state 36
 Avatar state2 37
 Avatar stateList 30415
@@ -630,7 +654,6 @@ Avatar tGreyNameStart 92
 Avatar tLastDayUpdateTimeDict 30394
 Avatar tLastHourUpdateTimeDict 32041
 Avatar tLastMonthUpdateTimeDict 30396
-Avatar tLastOfflineBase 30326
 Avatar tLastUpdateTime 30397
 Avatar tLastWeekUpdateTimeDict 30395
 Avatar tLogin 30327
@@ -652,6 +675,8 @@ Avatar tempMiscProps 30372
 Avatar tempMiscPropsBase 30331
 Avatar timerDataBase 30374
 Avatar timerDataCell 30380
+Avatar title 162
+Avatar titleList 32328
 Avatar tmpProps 30369
 Avatar tmpTaskSkillIds 31609
 Avatar totalGameTime 30337
@@ -660,6 +685,7 @@ Avatar totalOfflineMinute 31660
 Avatar totalPayFreeReliveTimes 30117
 Avatar totalScore 83
 Avatar trainDic 31385
+Avatar tsLastOfflineBase 32385
 Avatar ttl 30370
 Avatar ultraSkillPower 114
 Avatar updateScoreTimerId 30047
@@ -680,6 +706,7 @@ Avatar wonderLandAddTimes 106
 Avatar wonderLandQuota 32295
 Avatar wonderLandTicket 105
 Avatar wonderLandTimerId 30944
+Avatar worldLevel 74
 Avatar wuHuaLevel 31429
 Avatar zedPoint 8
 Barrier barrierId 436
@@ -748,6 +775,36 @@ BaseApp tempMiscPropsBase 30109
 BaseApp timerDataBase 30110
 BaseApp timerToLoad 30082
 BaseApp timerToLoadCell 30086
+BountyStub allRankInfoDataList 32369
+BountyStub birthInDB 32306
+BountyStub bountyInfoData 31275
+BountyStub bountyListVersionId 32364
+BountyStub checkExpiredBountyHeap 32365
+BountyStub checkExpiredBountyTimerId 32366
+BountyStub cycleEventCheckTimerId 32320
+BountyStub datetimeTimerDataBase 32312
+BountyStub datetimeTimerDataNextTBase 32314
+BountyStub datetimeTimerDataTimeCacheBase 32313
+BountyStub datetimeTimerIdBase 32311
+BountyStub datetimeTimerIdBaseCount 32310
+BountyStub hunterBountyDict 32323
+BountyStub hunterRankInfoData 32368
+BountyStub isDestroying 32305
+BountyStub lastPersistentTimestamp 32388
+BountyStub methodPoolBase 32307
+BountyStub persistentVersionId 32387
+BountyStub preyBountyDict 32322
+BountyStub publishBountyDict 32321
+BountyStub showPublicBountyList 32363
+BountyStub showPublicRankDataList 32370
+BountyStub tLastDayUpdateTimeDict 32316
+BountyStub tLastHourUpdateTimeDict 32315
+BountyStub tLastMonthUpdateTimeDict 32318
+BountyStub tLastUpdateTime 32319
+BountyStub tLastWeekUpdateTimeDict 32317
+BountyStub tempMiscPropsBase 32308
+BountyStub timerDataBase 32309
+BountyStub updateExpiredBountyTimerId 32367
 CityBattleTeleporter CBTimes 230
 CityBattleTeleporter baseGlobalIdx 31765
 CityBattleTeleporter birthInMem 31760
@@ -803,6 +860,7 @@ Collection gameEntityId 50
 Collection gameEntityIdentifyID 30221
 Collection gatherAvatars 30195
 Collection gatherCnt 348
+Collection groupLock 192
 Collection initCellCallbacks 30207
 Collection isDestroying 30209
 Collection isGroupRefresh 31860
@@ -1076,6 +1134,7 @@ Creation realDmgDef 599
 Creation refreshTime 30259
 Creation rmFightStateTimeId 31174
 Creation savedBuffDic 31141
+Creation scopeAddRatio 203
 Creation selectedTargetId 367
 Creation shieldDic 31144
 Creation silentAnti 331
@@ -1083,6 +1142,7 @@ Creation silentEnh 321
 Creation skillBroken 31154
 Creation skillCD 620
 Creation skillDic 31139
+Creation skillTimerDic 32333
 Creation slowAnti 584
 Creation slowEnh 583
 Creation spaceMgrBox 31254
@@ -1200,6 +1260,8 @@ CubeSpaceMgr aiEventListener 31316
 CubeSpaceMgr aiEvents 31315
 CubeSpaceMgr baseGlobalIdx 31305
 CubeSpaceMgr birthInMem 31300
+CubeSpaceMgr boxGroupEntities 32326
+CubeSpaceMgr boxGroupMonsters 32371
 CubeSpaceMgr cellFlags 31527
 CubeSpaceMgr collBeCollectedDict 31319
 CubeSpaceMgr collToBoss 31381
@@ -1226,7 +1288,7 @@ CubeSpaceMgr spaceEntities 31308
 CubeSpaceMgr spaceNo 420
 CubeSpaceMgr spaceState 31320
 CubeSpaceMgr spaceVars 31311
-CubeSpaceMgr taggedEntities 31309
+CubeSpaceMgr tagEntities 30033
 CubeSpaceMgr tempMiscProps 31306
 CubeSpaceMgr thinkTimer 31314
 CubeSpaceMgr timeLimitedEntityTimerId 32193
@@ -1294,6 +1356,8 @@ DungeonSpaceMgr aiEvents 30877
 DungeonSpaceMgr baseGlobalIdx 30867
 DungeonSpaceMgr birthInDB 30859
 DungeonSpaceMgr birthInMem 30862
+DungeonSpaceMgr boxGroupEntities 32378
+DungeonSpaceMgr boxGroupMonsters 32379
 DungeonSpaceMgr cellFlags 31531
 DungeonSpaceMgr collBeCollectedDict 30879
 DungeonSpaceMgr datetimeTimerDataCell 30884
@@ -1338,7 +1402,7 @@ DungeonSpaceMgr spaceNo 90
 DungeonSpaceMgr spaceState 30880
 DungeonSpaceMgr spaceVars 30873
 DungeonSpaceMgr spaceid 30855
-DungeonSpaceMgr taggedEntities 30871
+DungeonSpaceMgr tagEntities 32346
 DungeonSpaceMgr tempMiscProps 30868
 DungeonSpaceMgr tempMiscPropsBase 30861
 DungeonSpaceMgr thinkTimer 30876
@@ -1354,7 +1418,6 @@ GlobalMailStub datetimeTimerDataTimeCacheBase 31286
 GlobalMailStub datetimeTimerIdBase 31284
 GlobalMailStub datetimeTimerIdBaseCount 31283
 GlobalMailStub delayMailList 31277
-GlobalMailStub deleteMailsList 31275
 GlobalMailStub isDestroying 31278
 GlobalMailStub lastSendTime 31276
 GlobalMailStub mailList 31274
@@ -1381,6 +1444,7 @@ Guild guildFlag 31369
 Guild guildFund 31387
 Guild guildIcon 31411
 Guild guildIconList 31412
+Guild guildIronMine 32349
 Guild guildLevel 31375
 Guild guildMoney 31377
 Guild guildName 31359
@@ -1456,17 +1520,24 @@ ItemLinkStub tempMiscPropsBase 30842
 ItemLinkStub timerDataBase 30843
 ItemLinkStub uniqueIdCache 30838
 LeaderBoardStub birthInDB 31418
+LeaderBoardStub cycleEventCheckTimerId 32348
 LeaderBoardStub datetimeTimerDataBase 31424
 LeaderBoardStub datetimeTimerDataNextTBase 31426
 LeaderBoardStub datetimeTimerDataTimeCacheBase 31425
 LeaderBoardStub datetimeTimerIdBase 31423
 LeaderBoardStub datetimeTimerIdBaseCount 31422
+LeaderBoardStub dynamicWorldLevel 30786
 LeaderBoardStub isDestroying 31417
 LeaderBoardStub leaderBoardCache 31414
 LeaderBoardStub leaderBoardIdx 31401
 LeaderBoardStub leaderBoardList 31399
 LeaderBoardStub leaderBoardType 31393
 LeaderBoardStub methodPoolBase 31419
+LeaderBoardStub tLastDayUpdateTimeDict 31309
+LeaderBoardStub tLastHourUpdateTimeDict 30871
+LeaderBoardStub tLastMonthUpdateTimeDict 31945
+LeaderBoardStub tLastUpdateTime 32347
+LeaderBoardStub tLastWeekUpdateTimeDict 31809
 LeaderBoardStub tempMiscPropsBase 31420
 LeaderBoardStub timerDataBase 31421
 LoginStub SVIPOnlineNum 32260
@@ -1764,6 +1835,7 @@ Monster pushAnti 521
 Monster pushEnh 487
 Monster realDmg 496
 Monster realDmgDef 503
+Monster recoverProgress 221
 Monster refreshDataKey 31608
 Monster refreshTime 30481
 Monster rmFightStateTimeId 30695
@@ -1779,6 +1851,7 @@ Monster silentEnh 454
 Monster skillBroken 30655
 Monster skillCD 512
 Monster skillDic 30602
+Monster skillTimerDic 32330
 Monster slowAnti 491
 Monster slowEnh 489
 Monster soulRefreshTime 30576
@@ -2100,6 +2173,7 @@ Npc silentEnh 269
 Npc skillBroken 30510
 Npc skillCD 561
 Npc skillDic 30458
+Npc skillTimerDic 32332
 Npc slowAnti 546
 Npc slowEnh 545
 Npc spaceMgrBox 30192
@@ -2125,6 +2199,17 @@ Npc ttl 30148
 Npc useTargetTypeCacheFlag 30558
 Npc viewRadius 31990
 Npc warningTimerId 32301
+OrderStub birthInDB 32336
+OrderStub datetimeTimerDataBase 32342
+OrderStub datetimeTimerDataNextTBase 32344
+OrderStub datetimeTimerDataTimeCacheBase 32343
+OrderStub datetimeTimerIdBase 32341
+OrderStub datetimeTimerIdBaseCount 32340
+OrderStub globalIdx 32334
+OrderStub isDestroying 32335
+OrderStub methodPoolBase 32337
+OrderStub tempMiscPropsBase 32338
+OrderStub timerDataBase 32339
 PlayerStub account2box 30066
 PlayerStub avatarCounter 30069
 PlayerStub birthInDB 30073
@@ -2243,6 +2328,8 @@ SiegeWarSpaceMgr aiEventListener 31816
 SiegeWarSpaceMgr aiEvents 31815
 SiegeWarSpaceMgr baseGlobalIdx 31805
 SiegeWarSpaceMgr birthInMem 31800
+SiegeWarSpaceMgr boxGroupEntities 32376
+SiegeWarSpaceMgr boxGroupMonsters 32377
 SiegeWarSpaceMgr cellFlags 31530
 SiegeWarSpaceMgr collBeCollectedDict 31819
 SiegeWarSpaceMgr datetimeTimerDataCell 31824
@@ -2266,7 +2353,7 @@ SiegeWarSpaceMgr spaceEntities 31808
 SiegeWarSpaceMgr spaceNo 157
 SiegeWarSpaceMgr spaceState 31820
 SiegeWarSpaceMgr spaceVars 31811
-SiegeWarSpaceMgr taggedEntities 31809
+SiegeWarSpaceMgr tagEntities 32345
 SiegeWarSpaceMgr tempMiscProps 31806
 SiegeWarSpaceMgr thinkTimer 31814
 SiegeWarSpaceMgr timeLimitedEntityTimerId 32199
@@ -2525,6 +2612,7 @@ Summon cellFlags 31571
 Summon checkTargetTypeTimeId 31025
 Summon cloneList 30789
 Summon controlledStates 31019
+Summon createContext 32302
 Summon createTime 32236
 Summon creationList 30790
 Summon datetimeTimerDataCell 31093
@@ -2632,6 +2720,7 @@ Summon silentEnh 186
 Summon skillBroken 30777
 Summon skillCD 536
 Summon skillDic 30758
+Summon skillTimerDic 32331
 Summon slowAnti 524
 Summon slowEnh 523
 Summon spaceMgrBox 31098
@@ -2738,6 +2827,8 @@ WonderLandSpaceMgr aiEventListener 30929
 WonderLandSpaceMgr aiEvents 30928
 WonderLandSpaceMgr baseGlobalIdx 30763
 WonderLandSpaceMgr birthInMem 30739
+WonderLandSpaceMgr boxGroupEntities 32372
+WonderLandSpaceMgr boxGroupMonsters 32373
 WonderLandSpaceMgr cellFlags 31528
 WonderLandSpaceMgr collBeCollectedDict 30932
 WonderLandSpaceMgr collToBoss 30976
@@ -2764,7 +2855,7 @@ WonderLandSpaceMgr spaceEntities 30785
 WonderLandSpaceMgr spaceNo 103
 WonderLandSpaceMgr spaceState 30933
 WonderLandSpaceMgr spaceVars 30924
-WonderLandSpaceMgr taggedEntities 30786
+WonderLandSpaceMgr tagEntities 30538
 WonderLandSpaceMgr tempMiscProps 30764
 WonderLandSpaceMgr thinkTimer 30927
 WonderLandSpaceMgr timeLimitedEntityTimerId 32195
@@ -2803,6 +2894,8 @@ WorldLineSpaceMgr aiEventListener 31952
 WorldLineSpaceMgr aiEvents 31951
 WorldLineSpaceMgr baseGlobalIdx 31962
 WorldLineSpaceMgr birthInMem 31957
+WorldLineSpaceMgr boxGroupEntities 32374
+WorldLineSpaceMgr boxGroupMonsters 32375
 WorldLineSpaceMgr cellFlags 31529
 WorldLineSpaceMgr collBeCollectedDict 31955
 WorldLineSpaceMgr datetimeTimerDataCell 31968
@@ -2826,7 +2919,7 @@ WorldLineSpaceMgr spaceEntities 31944
 WorldLineSpaceMgr spaceNo 365
 WorldLineSpaceMgr spaceState 31956
 WorldLineSpaceMgr spaceVars 31947
-WorldLineSpaceMgr taggedEntities 31945
+WorldLineSpaceMgr tagEntities 30560
 WorldLineSpaceMgr tempMiscProps 31963
 WorldLineSpaceMgr thinkTimer 31950
 WorldLineSpaceMgr timeLimitedEntityTimerId 32197

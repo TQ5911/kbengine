@@ -34,10 +34,10 @@ class ILineSpaceStub(object):
         self.createLines()
 
     def createLines(self):
-        for ln in range(utils.getLineMaxNumber(self.lineType)):
+        for ln in range(utils.fetchLineMaxNumber(self.lineType)):
             lineMaxCnt = BBD.datas[self.lineType]['N1']
             spaceWeight = utils.calcSpaceWeight(0, False, gameconst.EntNumPerPlayerInAOI.worldLine, lineMaxCnt/10)
-            self._callback(ln*0.2, '_createLineSpaceRemote', (ln,spaceWeight), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
+            self.addTimerCB(ln*0.2, '_createLineSpaceRemote', (ln,spaceWeight), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
 
     def newLineSpaceVal(self, lineType, lineNo):
         # return lineSpace.LineSpaceVal(lineType, lineNo, lineSpace.LineSpaceVal.LINE_CREATING)
@@ -49,19 +49,19 @@ class ILineSpaceStub(object):
         return self.lineSpaces[lineNo]
 
     def createCellEntityInSpace(self, spaceNo, className, bornPosition, bornDirection, params):
-        lineNo = formula.getLineNo(spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
         spaceVal = self.getLineSpaceVal(lineNo)
         params['spaceMgrId'] = spaceVal.spaceMgrBoxCell.id
 
         spaceVal.lineSpaceBox.cell.createCellLocally(className, bornPosition, bornDirection, params)
 
     def _createLineSpaceRemote(self, lineNo, spaceWeight=10):
-        spaceNo = formula.getLineSpaceNo(self.lineType, lineNo)
-        INFO_MSG('zt: create line', lineNo, spaceNo, spaceWeight)
+        spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
 
         self.lineSpaces[lineNo] = self.newLineSpaceVal(self.lineType, lineNo)
 
-        cellappIndx = lineNo + 1
+        cellappIndx = lineNo + 1 + gameconst.getWorldLineCellIdx(self.lineType)
+        LOG_IFO('zt: create line', lineNo, spaceNo, spaceWeight, self.lineType, cellappIndx)
         KBEngine.createEntityAnywhere('Space',
                                       {
                                           'spaceno': spaceNo,
@@ -75,8 +75,8 @@ class ILineSpaceStub(object):
                                       )
 
     def _createLineSpaceLocal(self, lineNo, spaceWeight=10):
-        spaceNo = formula.getLineSpaceNo(self.lineType, lineNo)
-        INFO_MSG('zt: create line locally', lineNo, spaceNo, spaceWeight)
+        spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
+        LOG_IFO('zt: create line locally', lineNo, spaceNo, spaceWeight)
 
         self.lineSpaces[lineNo] = self.newLineSpaceVal(self.lineType, lineNo)
 
@@ -93,40 +93,40 @@ class ILineSpaceStub(object):
         self._onCreateLineSpace(s, spaceNo)
 
     def _onCreateLineSpace(self, spaceBox, spaceNo):
-        lineNo = formula.getLineNo(spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
         sVal = self.getLineSpaceVal(lineNo)
         sVal.lineSpaceBox = spaceBox
 
     def onLineSpaceReady(self, spaceNo):
-        INFO_MSG('onLineSpaceReady', spaceNo)
-        lineNo = formula.getLineNo(spaceNo)
+        LOG_IFO('onLineSpaceReady', spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
         self.lineSpaces[lineNo].lineSpaceReady()
         
         # spaceVal = self.getLineSpaceVal(lineNo)
         # spaceVal.lineSpaceBox.cell.doLoadEntities(0)
 
     def onSpaceMgrReady(self, spaceNo, spaceMgrCell):
-        DEBUG_MSG("iLineSpaceStub onSpaceMgrReady", spaceNo, spaceMgrCell)
-        lineNo = formula.getLineNo(spaceNo)
+        LOG_DBG("iLineSpaceStub onSpaceMgrReady", spaceNo, spaceMgrCell)
+        lineNo = formula.parseLineNo(spaceNo)
         spaceVal = self.getLineSpaceVal(lineNo)
         spaceVal.setSpaceMgrBoxCell(spaceMgrCell)
 
     def onLoadEntitiesEnd(self, spaceNo):
-        DEBUG_MSG("iLineSpaceStub onLoadEntitiesEnd", spaceNo)
-        lineNo = formula.getLineNo(spaceNo)
+        LOG_DBG("iLineSpaceStub onLoadEntitiesEnd", spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
         self.lineSpaces[lineNo].lineEntitiesReady()
         self.batchlyCall(self.sendLineInfoOnSpaceChanged(), 50)
 
         gameengine.callBaseApps('gameglobal.onLineEntityReady', (spaceNo,))
 
     def handleCellappDeath(self, groupOrder):
-        INFO_MSG('handleCellappDeath', groupOrder)
+        LOG_IFO('handleCellappDeath', groupOrder)
         if groupOrder not in self.deadApps:
             self.deadApps.append(groupOrder)
 
     def onLineSpaceGone(self, spaceNo, groupOrder):
-        ERROR_MSG('onLineSpaceGone', spaceNo, groupOrder)
-        lineNo = formula.getLineNo(spaceNo)
+        LOG_ERR('onLineSpaceGone', spaceNo, groupOrder)
+        lineNo = formula.parseLineNo(spaceNo)
         self.lineSpaces.pop(lineNo, None)
         self.collectionSharedLimitDic.pop(spaceNo, None)
         self.missedLines[lineNo] = groupOrder
@@ -134,17 +134,17 @@ class ILineSpaceStub(object):
     def onCellappRelive(self, groupOrder):
         if groupOrder not in self.relivedCellapps:
             self.relivedCellapps.append(groupOrder)
-        INFO_MSG('LineStub:onCellappRelive', groupOrder, self.deadApps, self.relivedCellapps)
+        LOG_IFO('LineStub:onCellappRelive', groupOrder, self.deadApps, self.relivedCellapps)
 
         self._tryRecoverLines()
 
     def _tryRecoverLines(self):
         if len(self.relivedCellapps) == len(self.deadApps):
-            INFO_MSG('recove lines:', self.missedLines)
+            LOG_IFO('recove lines:', self.missedLines)
             delay = 0
             for ln, order in self.missedLines.items():
                 self.willRecoverLine(ln)
-                self._callback(delay, '_createLineSpaceRemote', (ln,), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
+                self.addTimerCB(delay, '_createLineSpaceRemote', (ln,), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
                 delay += 0.2
 
             self.relivedCellapps = []
@@ -155,7 +155,7 @@ class ILineSpaceStub(object):
         pass
 
     def checkAllLineSpaceReady(self, box, callback, args):
-        if len(self.lineSpaces) == utils.getLineMaxNumber(self.lineType):
+        if len(self.lineSpaces) == utils.fetchLineMaxNumber(self.lineType):
             allLineReady = all([sVal.isSpaceReady() for sVal in self.lineSpaces.values()])
         else:
             allLineReady = False
@@ -166,21 +166,21 @@ class ILineSpaceStub(object):
         return sorted([lineNo for lineNo, sVal in self.lineSpaces.items() if sVal.isReadyEnter()])
 
     def createCellEntityInLine(self, box, spaceNo):
-        lineNo = formula.getLineNo(spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
         sVal = self.getLineSpaceVal(lineNo)
         if not sVal:
-            ERROR_MSG('createCellEntityInLine: invalid spaceNo', box.id, spaceNo)
+            LOG_ERR('createCellEntityInLine: invalid spaceNo', box.id, spaceNo)
             return
 
         if not sVal.lineSpaceBox:
-            ERROR_MSG('createCellEntityInLine: invalid spaceBox', box.id, spaceNo)
+            LOG_ERR('createCellEntityInLine: invalid spaceBox', box.id, spaceNo)
             return
 
         sVal.lineSpaceBox.createCellNearSelf(box)
 
     def createRefreshTimers(self):
         for lineNo, line in self.lineSpaces.items():
-            spaceNo = formula.getLineSpaceNo(gameconst.SpaceType.SpaceLine, lineNo)
+            spaceNo = formula.combineLineSpaceNo(gameconst.SpaceType.SpaceLine, lineNo)
             policyIdsMap = []
             self.createRefreshTimers(spaceNo, policyIdsMap)
 
@@ -188,18 +188,10 @@ class ILineSpaceStub(object):
         pass
 
     def onCollectionBeCollectAndDestroyed(self, spaceNo, posIndex, gameEntityId):
-        DEBUG_MSG('onCollectionBeCollectAndDestroyed::', spaceNo, posIndex, gameEntityId)
-        # lineNo = formula.getLineNo(spaceNo)
-        # if lineNo not in self.lineSpaces:
-        #     ERROR_MSG('onCollectionBeCollectAndDestroyed:: lineNo not found', spaceNo, lineNo)
-        #     return
-        # # collections recycle
-        # entId = formula.getEntityId(gameEntityId)
-        # self.recycleEntityPos(spaceNo, entId, posIndex)
-        # TODO other logic
+        LOG_DBG('onCollectionBeCollectAndDestroyed::', spaceNo, posIndex, gameEntityId)
 
     def loadSingleEntity(self, spaceNo, clsName, needCreateBase, pos, direction, props):
-        # DEBUG_MSG("--- iLineSpaceStub loadSingleEntity", spaceNo, clsName, pos, direction, props)
+        # LOG_DBG("--- iLineSpaceStub loadSingleEntity", spaceNo, clsName, pos, direction, props)
         if needCreateBase:
             props.update({
                 'spaceNo': spaceNo,
@@ -211,7 +203,7 @@ class ILineSpaceStub(object):
                 props
             )
             if not e:
-                ERROR_MSG("loadSingleEntity base entity failed", clsName)
+                LOG_ERR("loadSingleEntity base entity failed", clsName)
             if clsName == 'MonsterGrp':
                 e.createMonstersFromGrp(props)
         else:
@@ -219,40 +211,40 @@ class ILineSpaceStub(object):
 
     def onLoadGroupEntities(self, info):
         lineNoList = list(self.lineSpaces.keys())
-        DEBUG_MSG("ILineSpaceStub::onLoadGroupEntities", info, lineNoList)
+        LOG_DBG("ILineSpaceStub::onLoadGroupEntities", info, lineNoList)
         if len(lineNoList) <= 0:
-            WARNING_MSG('ILineSpaceStub::onLoadGroupEntities: no lineNo found')
+            LOG_WARN('ILineSpaceStub::onLoadGroupEntities: no lineNo found')
             return
 
         for lineNo in lineNoList:
-            info['spaceNo'] = formula.getLineSpaceNo(self.lineType, lineNo)
-            DEBUG_MSG("ILineSpaceStub::onLoadGroupEntities lineNo, spaceNo", lineNo, info['spaceNo'])
+            info['spaceNo'] = formula.combineLineSpaceNo(self.lineType, lineNo)
+            LOG_DBG("ILineSpaceStub::onLoadGroupEntities lineNo, spaceNo", lineNo, info['spaceNo'])
             spaceVal = self.getLineSpaceVal(lineNo)
             spaceVal.lineSpaceBox.cell.callOnSpace('onLoadGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))
 
     def onRefreshGroupEntities(self, info):
         lineNoList = list(self.lineSpaces.keys())
-        DEBUG_MSG("ILineSpaceStub::onRefreshGroupEntities", info, lineNoList)
+        LOG_DBG("ILineSpaceStub::onRefreshGroupEntities", info, lineNoList)
         if len(lineNoList) <= 0:
-            WARNING_MSG('ILineSpaceStub::onRefreshGroupEntities: no lineNo found')
+            LOG_WARN('ILineSpaceStub::onRefreshGroupEntities: no lineNo found')
             return
         lineNo = info['lineNo']
         if lineNo not in lineNoList:
-            WARNING_MSG('ILineSpaceStub::onRefreshGroupEntities: lineNo not found', lineNo, lineNoList)
+            LOG_WARN('ILineSpaceStub::onRefreshGroupEntities: lineNo not found', lineNo, lineNoList)
             return
 
-        info['spaceNo'] = formula.getLineSpaceNo(self.lineType, lineNo)
-        DEBUG_MSG("ILineSpaceStub::onRefreshGroupEntities lineNo, spaceNo", lineNo, info['spaceNo'])
+        info['spaceNo'] = formula.combineLineSpaceNo(self.lineType, lineNo)
+        LOG_DBG("ILineSpaceStub::onRefreshGroupEntities lineNo, spaceNo", lineNo, info['spaceNo'])
         spaceVal = self.getLineSpaceVal(lineNo)
         spaceVal.lineSpaceBox.cell.callOnSpace('onRefreshGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))
 
     def onDestroyGroupEntities(self, info):
         lineNoList = list(self.lineSpaces.keys())
-        DEBUG_MSG("ILineSpaceStub::onDestroyGroupEntities", info, lineNoList)
+        LOG_DBG("ILineSpaceStub::onDestroyGroupEntities", info, lineNoList)
 
         if not info.get('spaceNo', None):
-            WARNING_MSG('ILineSpaceStub::onDestroyGroupEntities: spaceNo not found', info, lineNoList)
+            LOG_WARN('ILineSpaceStub::onDestroyGroupEntities: spaceNo not found', info, lineNoList)
             return
 
-        spaceVal = self.getLineSpaceVal(formula.getLineNo(info['spaceNo']))
+        spaceVal = self.getLineSpaceVal(formula.parseLineNo(info['spaceNo']))
         spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))

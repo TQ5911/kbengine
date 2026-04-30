@@ -58,5 +58,9 @@ datas = _tools.RODict({
     "mountUpQuickDistanceRatio": _tools.RODict({
         "ID": "mountUpQuickDistanceRatio",
         "value": 1.0,
+    }),
+    "mountareaCannotRide": _tools.RODict({
+        "ID": "mountareaCannotRide",
+        "value": 54481010,
     })
 })

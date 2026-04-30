@@ -28,7 +28,7 @@ class RouterService(GameServer):
         self.loginMgr.onRouterServerDisonnected()
 
     def onRemoteCallFromOthersBase(self, rpc_controller, reply, done):
-        DEBUG_MSG("onRemoteCallFromOthersBase", done)
+        LOG_DBG("onRemoteCallFromOthersBase", done)
         serverId = reply.serverId
         dstServerId = reply.dstServerId
         componentId = reply.componentId
@@ -98,7 +98,7 @@ class RemoteServerStubEntityCall(RemoteServerEntityCall):
 # r = RemoteServerBoxEntityCall(20202, box)
 # r.doBuyCredit(123)
 class RemoteServerBoxEntityCall(RemoteServerEntityCall):
-    def __init__(self, dstServerId, box, compoentType=gameconst.CrossServerCallbackComponent.BASE, initOtherEntityCall=True):
+    def __init__(self, dstServerId, box, compoentType=gameconst.CrossServerCBComponent.ENUM_BASE, initOtherEntityCall=True):
         super(RemoteServerBoxEntityCall, self).__init__(dstServerId, box)
         self.entityCallType = gameconst.RemoteServerEntityCallType.BOX
         self.compoentType = compoentType
@@ -106,10 +106,10 @@ class RemoteServerBoxEntityCall(RemoteServerEntityCall):
         if initOtherEntityCall:
             if box.client:
                 self.client = self.__class__(
-                    dstServerId, box, compoentType=gameconst.CrossServerCallbackComponent.CLIENT, initOtherEntityCall=False)
+                    dstServerId, box, compoentType=gameconst.CrossServerCBComponent.ENUM_CLIENT, initOtherEntityCall=False)
             if box.cell:
                 self.cell = self.__class__(
-                    dstServerId, box, compoentType=gameconst.CrossServerCallbackComponent.CELL, initOtherEntityCall=False)
+                    dstServerId, box, compoentType=gameconst.CrossServerCBComponent.ENUM_CELL, initOtherEntityCall=False)
 
     @property
     def id(self):
@@ -137,7 +137,7 @@ class RemoteServerBoxEntityCall(RemoteServerEntityCall):
 
 class IRouter(object):
     def __init__(self):
-        INFO_MSG("IRouter init")
+        LOG_IFO("IRouter init")
         super().__init__()
         self.componentId = int(os.getenv('KBE_COMPONENTID'))
         self.routerServerDic = {}
@@ -169,7 +169,7 @@ class IRouter(object):
             return
 
         if routerServerId not in self.routerServerDic:
-            ERROR_MSG("connectRouterServer routerServerId not in routerServerDic", routerServerId,
+            LOG_ERR("connectRouterServer routerServerId not in routerServerDic", routerServerId,
                       self.routerServerDic)
             return
 
@@ -182,7 +182,7 @@ class IRouter(object):
             return
 
         rsInfo = self.routerServerDic.get(routerServerId)
-        DEBUG_MSG('IRouter connecting router server:', rsInfo.ip, rsInfo.port, rsInfo.serverId)
+        LOG_DBG('IRouter connecting router server:', rsInfo.ip, rsInfo.port, rsInfo.serverId)
         self.routerClientDic[routerServerId] = RouterService(self, (rsInfo.ip, rsInfo.port), rsInfo.serverId)
 
 
@@ -210,7 +210,7 @@ class IRouter(object):
             return
 
         if len(self.routerClientDic) <=0:
-            ERROR_MSG("doOnOthersBase has no routerClientDic")
+            LOG_ERR("doOnOthersBase has no routerClientDic")
             return
 
         otherBaseRequest = OthersBaseRequest()
@@ -245,24 +245,24 @@ class IRouter(object):
             return
 
         if curServerId != dstServerId:
-            ERROR_MSG("onRemoteCallFromOthersBase serverId error",  curServerId, dstServerId)
+            LOG_ERR("onRemoteCallFromOthersBase serverId error",  curServerId, dstServerId)
             return
 
         entityCallType, stubNameOrBox, compoentType, funcName, args = pickle.loads(memoryStream)
-        INFO_MSG("onRemoteCallFromOthersBase", entityCallType, stubNameOrBox, compoentType, funcName, args)
+        LOG_IFO("onRemoteCallFromOthersBase", entityCallType, stubNameOrBox, compoentType, funcName, args)
         try:
             if entityCallType == gameconst.RemoteServerEntityCallType.STUB_NAME:
                 func = getattr(gameengine.getGlobalBase(stubNameOrBox), funcName)
                 func(*args)
             elif entityCallType == gameconst.RemoteServerEntityCallType.BOX:
-                if compoentType == gameconst.CrossServerCallbackComponent.BASE:
+                if compoentType == gameconst.CrossServerCBComponent.ENUM_BASE:
                     func = getattr(stubNameOrBox, funcName)
-                elif compoentType == gameconst.CrossServerCallbackComponent.CELL:
+                elif compoentType == gameconst.CrossServerCBComponent.ENUM_CELL:
                     func = getattr(stubNameOrBox.cell, funcName)
-                elif compoentType == gameconst.CrossServerCallbackComponent.CLIENT:
+                elif compoentType == gameconst.CrossServerCBComponent.ENUM_CLIENT:
                     func = getattr(stubNameOrBox.client, funcName)
                 else:
                     raise RuntimeError("onRemoteCallFromOthersBase:: compoentType err, {}".format(compoentType))
                 func(*args)
         except Exception as e:
-            ERROR_MSG('onRemoteCallFromOthersBase failed:', e, entityCallType, stubNameOrBox, funcName, args, traceback.format_exc())
+            LOG_ERR('onRemoteCallFromOthersBase failed:', e, entityCallType, stubNameOrBox, funcName, args, traceback.format_exc())

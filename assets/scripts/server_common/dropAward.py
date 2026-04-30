@@ -26,7 +26,7 @@ import copy
 import rank_rankDrop as R_RD
 
 
-class WealthUnit(userType.UserSoleType):
+class WealthUnit(userType.UserSingleType):
     def __str__(self):
         return str(vars(self))
 
@@ -142,7 +142,7 @@ class WealthItem(WealthUnit):
             bindType = dataUtils.getItemDefaultBindType()
 
         if bindType not in (gameconst.ItemBindType.BIND, gameconst.ItemBindType.NORMAL):
-            gameengine.reportCritical('invalid bindType', itemId, num, bindType)
+            gameengine.panicStack('invalid bindType', itemId, num, bindType)
             return
         self.data.setdefault(itemId, {})
         self.data[itemId].setdefault(bindType, 0)
@@ -196,7 +196,7 @@ class WealthItem(WealthUnit):
         for itemId in list(self.data.keys()):
             itemData = dataUtils.getCommItemData(itemId)
             if not itemData:
-                WARNING_MSG('popExtractRewardItems, no itemData:', self.data)
+                LOG_WARN('popExtractRewardItems, no itemData:', self.data)
                 continue
             if itemData['type'] == gameconst.ItemType.Normal and itemData[
                 'subType'] == gameconst.ItemSubType.ExtractReward:
@@ -205,7 +205,6 @@ class WealthItem(WealthUnit):
 
     def popRemainBagLimitItems(self, canAddNum):
         bagLimitItemsDic = {}
-
         # 将物品列表中的背包限制物品数量累加到data中
         newItemsObjs = []
         for item in self.itemsObjs:
@@ -213,10 +212,12 @@ class WealthItem(WealthUnit):
             if itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
                 totalNum = item.itemNum
                 bindType = item.bindType
-                if itemId not in self.data:
-                    self.data[itemId] = {bindType: totalNum}
-                else:
-                    self.data[itemId][bindType] += totalNum
+
+                itemData = self.data.get(itemId, None)
+                if not itemData:
+                    itemData = {}
+                    self.data[itemId] = itemData
+                itemData[bindType] = itemData.get(bindType, 0) + totalNum
             else:
                 newItemsObjs.append(item)
         self.itemsObjs = newItemsObjs
@@ -242,7 +243,7 @@ class WealthItem(WealthUnit):
                     bagLimitItemsDic[itemId] = self.data.pop(itemId)
 
         if bagLimitItemsDic:
-            INFO_MSG('popRemainBagLimitItems:', bagLimitItemsDic, canAddNum)
+            LOG_IFO('popRemainBagLimitItems:', bagLimitItemsDic, canAddNum)
         return bagLimitItemsDic
 
     def clear(self):
@@ -251,7 +252,7 @@ class WealthItem(WealthUnit):
 
     def updateBindType(self, awardContext, bindType):
         if bindType not in gameconst.ItemBindType.VALID_BIND_TYPE:
-            ERROR_MSG('updateBindType, invalid bind type:', bindType, gameconst.ItemBindType.VALID_BIND_TYPE)
+            LOG_ERR('updateBindType, invalid bind type:', bindType, gameconst.ItemBindType.VALID_BIND_TYPE)
             return
 
         for itemID, wealthData in self.data.items():
@@ -263,10 +264,15 @@ class WealthItem(WealthUnit):
         for itemsObj in self.itemsObjs:
             itemsObj.setItemBind(bindType)
 
-class WealthTitleOne(userType.UserSoleType):
+class WealthTitleOne(userType.UserSingleType):
     def __init__(self, titleId, startTime=-1):
         self.titleId = titleId
         self.startTime = startTime
+        if startTime == -1:
+            self.startTime = utils.curTS()
+
+    def toSavedDict(self):
+        return {'titleId': self.titleId, 'startTime': self.startTime}
 
 
 class WealthTitle(WealthUnit):
@@ -274,8 +280,18 @@ class WealthTitle(WealthUnit):
         # data: list of title id
         self.data = data or []
 
+    def createFromTitleList(self, titleList):
+        if not titleList:
+            return
+        for titleId in titleList:
+            self.data.append(WealthTitleOne(titleId))
+
     def __add__(self, other):
         self.data.extend(other.data)
+        return self
+    
+    def __mul__(self, factor):
+        # 没有策划特殊需求，暂时不处理
         return self
 
     def clear(self):
@@ -312,7 +328,7 @@ class WealthResDic(WealthUnit):
     def clear(self):
         self.data = {}
 
-class WealthVal(userType.UserSoleType):
+class WealthVal(userType.UserSingleType):
     def __str__(self):
         return str(vars(self))
 
@@ -355,9 +371,6 @@ class WealthVal(userType.UserSoleType):
 
 
 class AwardMixin(object):
-    def toShowList(self):
-        return [{'itemId': k, 'itemNum': v} for k, v in self.getItemsDic().items()]
-
     def getItemsDic(self):
         # 获得所有有效item的数量信息, 记录日志, 爬塔奖励展示 使用
         itemsDic = {}
@@ -368,6 +381,12 @@ class AwardMixin(object):
             for _, num in itemInfo.items():
                 itemsDic[itemId] = itemsDic.get(itemId, 0) + num
         for it in self.itemWealth.itemsObjs:
+            itemsDic[it.itemId] = itemsDic.get(it.itemId, 0) + it.itemNum
+
+        for itemId, itemInfo in self.petItemWealth.data.items():
+            for _, num in itemInfo.items():
+                itemsDic[itemId] = itemsDic.get(itemId, 0) + num
+        for it in self.petItemWealth.itemsObjs:
             itemsDic[it.itemId] = itemsDic.get(it.itemId, 0) + it.itemNum
         return itemsDic
 
@@ -395,7 +414,7 @@ class AwardMixin(object):
     
     def scaleUpByMult(self, multVal):
         if multVal <= 0:
-            gameengine.reportCritical(f"Unsupported mult val: 'scaleUpByMult' and '{multVal}'")
+            gameengine.panicStack(f"Unsupported mult val: 'scaleUpByMult' and '{multVal}'")
             return self
         
         for numericWealth in self.getNumericWealth():
@@ -436,7 +455,7 @@ class AwardMixin(object):
 
 class BaseAwardVal(WealthVal, AwardMixin):
 
-    def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0):
+    def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, titleList=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0):
         self.exp = WealthNumeric('exp', gameconst.ItemId.EXP, exp)
         self.coin = WealthNumeric('coin', gameconst.ItemId.COIN, coin)
         self.money = WealthNumeric('money', gameconst.ItemId.MONEY, money)
@@ -450,6 +469,9 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.petItemWealth = WealthItem()
         self.itemWealth = WealthItem()
         self.addWealthByObjList(itemObjs)
+
+        self.titleWealth = WealthTitle()
+        self.titleWealth.createFromTitleList(titleList)
 
     def _lateReload(self):
         for wealthIt in self.getAllWealth():
@@ -479,12 +501,14 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.guildExp += other.guildExp
         self.bindMoney += other.bindMoney
 
+        self.titleWealth += other.titleWealth
+
         return self
     
     def __mul__(self, factor):
         """重写乘法操作"""
         if not isinstance(factor, (int, float)):
-            gameengine.reportCritical(f"Unsupported operand type(s) for *: 'BaseAwardVal' and '{type(factor).__name__}'")
+            gameengine.panicStack(f"Unsupported operand type(s) for *: 'BaseAwardVal' and '{type(factor).__name__}'")
             return self
         
         for attr in self.getAllWealth():
@@ -512,7 +536,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
         return (self.coin, self.money, self.guildContrib, self.darkIron, self.bindMoney)
 
     def getAllWealth(self):
-        return self.getNumericWealth() + (self.itemWealth, self.petItemWealth)
+        return self.getNumericWealth() + (self.itemWealth, self.petItemWealth, self.titleWealth,)
 
     def clear(self):
         for wealth in self.getAllWealth():
@@ -544,7 +568,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
 
         itemData = dataUtils.getCommItemData(itemId) or {}
         if not itemData:
-            gameengine.reportCritical('BaseAwardVal::addWealthByItemId, not support itemId:', itemId)
+            gameengine.panicStack('BaseAwardVal::addWealthByItemId, not support itemId:', itemId)
             return self
 
         type = itemData.get('type')
@@ -560,12 +584,15 @@ class BaseAwardVal(WealthVal, AwardMixin):
                 self.petItemWealth.addItemObjs(itemObjs)
             else:
                 self.petItemWealth.addAwardItem(itemId, num, bindType)
+        elif type == gameconst.ItemType.Title:
+            self.titleWealth.data.append(WealthTitleOne(itemId))
+
         return self
 
     def addWealthByObjList(self, itemObjs):
         if not itemObjs:
             return
-        # INFO_MSG('in addWealthByObjList:', [it.itemId for it in itemObjs])
+        # LOG_IFO('in addWealthByObjList:', [it.itemId for it in itemObjs])
         itemObjs = list(filter(lambda it: it.itemNum > 0, itemObjs))
         normalItemList = []
         petItemList = []
@@ -598,8 +625,8 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.petItemWealth.updateBindType(awardContext, bindType)
 
 class AwardVal(BaseAwardVal):
-    def __init__(self, exp=0, coin=0, money=0, fightPropList=None, itemObjs=None, **kwargs):
-        super().__init__(exp=exp, coin=coin, money=money, itemObjs=itemObjs, **kwargs)
+    def __init__(self, exp=0, coin=0, money=0, fightPropList=None, itemObjs=None, titleList=None, **kwargs):
+        super().__init__(exp=exp, coin=coin, money=money, itemObjs=itemObjs, titleList=titleList, **kwargs)
         self.fightProps = WealthFightProp(fightPropList)
         return
 
@@ -611,13 +638,13 @@ class AwardVal(BaseAwardVal):
     def __mul__(self, factor):
         """重写乘法操作"""
         if not isinstance(factor, (int, float)):
-            gameengine.reportCritical(f"Unsupported operand type(s) for *: 'AwardVal' and '{type(factor).__name__}'")
+            gameengine.panicStack(f"Unsupported operand type(s) for *: 'AwardVal' and '{type(factor).__name__}'")
             return self
         super().__mul__(factor)
         return self
 
     def getAllWealth(self):
-        return super().getAllWealth() +(self.fightProps,)
+        return super(AwardVal, self).getAllWealth() +(self.fightProps,)
 
     def processAntiAddict(self, owner, isNotify, srcType, detail):
         return self
@@ -682,7 +709,7 @@ class DeductWealthVal(WealthVal, AwardMixin):
         elif itemType == gameconst.ItemType.LingShou:
             self.petItemWealth.addAwardItem(itemId, num, bindType)
         else:
-            ERROR_MSG('DeductWealthVal error:', itemId, bindType, num)
+            LOG_ERR('DeductWealthVal error:', itemId, bindType, num)
         return self
 
     def addWealthByObjList(self, itemObjs):
@@ -696,7 +723,7 @@ class DeductWealthVal(WealthVal, AwardMixin):
                 continue
             maxStackSize = it.maxStackSize(it.itemId)
             if maxStackSize != 1:
-                ERROR_MSG('DeductWealthVal::addWealthByObjList, not support itemId:', it.itemId)
+                LOG_ERR('DeductWealthVal::addWealthByObjList, not support itemId:', it.itemId)
                 continue
             itemData = dataUtils.getCommItemData(it.itemId)
             itemType = itemData.get('type')
@@ -718,17 +745,18 @@ class DeductWealthVal(WealthVal, AwardMixin):
 
 
 class MailWealthVal(BaseAwardVal):
-    def __init__(self, exp=0, coin=0, money=0, itemObjs=None, titleList=None, **kwargs):
+    def __init__(self, exp=0, coin=0, money=0, itemObjs=None, **kwargs):
         super().__init__(exp=exp, coin=coin,  money=money, itemObjs=itemObjs, **kwargs)
 
-        self.titleWealth = WealthTitle(titleList)
+
+    def __repr__(self):
+        return "MailWealthVal(%s)" % self.toMailWealthDict()
 
     def getAllWealth(self):
-        return super().getAllWealth() + (self.titleWealth,)
+        return super().getAllWealth()
 
     def __add__(self, other):
         super().__add__(other)
-        self.titleWealth += other.titleWealth
         return self
 
     def toMailWealthDict(self):
@@ -749,6 +777,12 @@ class MailWealthVal(BaseAwardVal):
 
         for it in self.itemWealth.itemsObjs:
             bagItemObjList.append(it.toItemSavedDict())
+
+        for itemId, awardInfo in self.petItemWealth.data.items():
+            for bindType, itemNum in awardInfo.items():
+                if not itemNum:
+                    continue
+                bagItemList.append({'itemId':itemId, 'itemNum':itemNum, 'bindType':bindType})
 
         for it in self.petItemWealth.itemsObjs:
             bagItemObjList.append(it.toItemSavedDict())
@@ -773,6 +807,7 @@ class MailWealthVal(BaseAwardVal):
 
         for bagItemDic in dic['bagItemList']:
             self.addWealthByItemId(bagItemDic['itemId'], bagItemDic['itemNum'], bagItemDic['bindType'])
+        
         itemObjList = []
         for itemSavedDic in dic['bagItemObjList']:
             it = itemFactory.ItemFactory.createItemWithSavedDict(itemSavedDic)
@@ -787,13 +822,13 @@ class MailWealthVal(BaseAwardVal):
         self.titleWealth.data.append(WealthTitleOne(titleId, startTime))
 
     def addWealthByRewardId(self, rewardId):
-        INFO_MSG('in addWealthByRewardId:', rewardId)
+        LOG_IFO('in addWealthByRewardId:', rewardId)
         wealthVal = getAward(rewardId, 1, awardContext.CommonContext(0))
         self.addWealthByAwardVal(wealthVal)
         return
 
     def addWealthByAwardVal(self, wealthVal:AwardVal):
-        INFO_MSG('in addWealthByAwardVal:', wealthVal)
+        LOG_IFO('in addWealthByAwardVal:', wealthVal)
         if wealthVal.isEmpty():
             return
         for awardIt in wealthVal.getNumericWealth():
@@ -853,6 +888,7 @@ class MailWealthVal(BaseAwardVal):
             maxNum -= 1
             newPetItemObjs.append(it)
         self.petItemWealth.itemsObjs = newPetItemObjs
+        
     def mailWealthExceedUplimit(self):
         totalNum = 0
         for awardIt in self.getNumericWealth():
@@ -862,9 +898,10 @@ class MailWealthVal(BaseAwardVal):
         totalNum += len(self.itemWealth.data) + len(self.itemWealth.itemsObjs)
         totalNum += len(self.petItemWealth.data) + len(self.petItemWealth.itemsObjs)
         maxNum = MACF.datas['mailItemsNumMax']['value']
-        if totalNum > maxNum:
-            gameengine.reportCritical('mailWealthExceedUplimit:', totalNum, maxNum)
-        return totalNum > maxNum
+        ret = totalNum > maxNum
+        if ret:
+            gameengine.panicStack('mailWealthExceedUplimit:', totalNum, maxNum)
+        return ret
 
     def getAwardVal(self):
         wealthVal = AwardVal(
@@ -878,9 +915,16 @@ class MailWealthVal(BaseAwardVal):
             guildFund=self.guildFund.data,
             guildExp=self.guildExp.data,
             bindMoney=self.bindMoney.data,
+            titleList=[titleVal.titleId for titleVal in self.titleWealth.data]
         )
 
         for itemId, itemInfo in self.itemWealth.data.items():
+            for bindType, num in itemInfo.items():
+                if num <= 0:
+                    continue
+                wealthVal.addWealthByItemId(itemId, num, bindType)
+            
+        for itemId, itemInfo in self.petItemWealth.data.items():
             for bindType, num in itemInfo.items():
                 if num <= 0:
                     continue
@@ -925,7 +969,7 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
 
     if itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID:
         itemId = EquipmentItem.EquipItemIdGen.genEquipItemIdByDropData(**dropParamDic)
-        INFO_MSG('_genEquipItemList, gen Equipitem ItemId:', itemId, dropParamDic)
+        LOG_IFO('_genEquipItemList, gen Equipitem ItemId:', itemId, dropParamDic)
 
     equipList = []
     if itemId:
@@ -945,7 +989,7 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
                 bindType = gameconst.ItemBindType.NORMAL
         equipList.extend(itemFactory.ItemFactory.createItemList(itemId, itemNum, bindType, **dropParamDic))
     else:
-        ERROR_MSG('_genEquipItemList, no match equipment:', itemId, dropParamDic)
+        LOG_ERR('_genEquipItemList, no match equipment:', itemId, dropParamDic)
     return equipList
 
 def _addItemToAward(awardVal: AwardVal, itemId, itemNum, bindType, quality, context):
@@ -999,7 +1043,7 @@ def _getFixedAward(fixAward, context, itemType):
             itemId = itemId()
         itemData = dataUtils.getCommItemData(itemId)
         if not itemData:
-            gameengine.reportCritical(f"dropAward->_getFixedAward ::raise exception, missing item config in reward data, {fixAward}, {itemId}")
+            gameengine.panicStack(f"dropAward->_getFixedAward ::raise exception, missing item config in reward data, {fixAward}, {itemId}")
             continue
         if itemData.get('type') != itemType:
             continue
@@ -1182,7 +1226,7 @@ def _calFinalBindWeight(dropTargetData, monthCard, bindWeightRank):
 def _calSubPackDrop(dropTarget, times, context):
     #单次子包掉落与策划约定最大掉100次，如未来有需求更大得用numpy重构
     if times > 100:
-        ERROR_MSG("drop times is too large:", times, "dropTarget:", dropTarget, "context:", context)
+        LOG_ERR("drop times is too large:", times, "dropTarget:", dropTarget, "context:", context)
         return [], [], [], [], []
 
     monthCard = 0 if context.extra['isMonthCardExpired'] else 1
@@ -1192,7 +1236,7 @@ def _calSubPackDrop(dropTarget, times, context):
     if dropSubPackageData:
         dropSubPackageData = _checkDropCondition(dropSubPackageData, context)
         if len(dropSubPackageData) == 0:
-            WARNING_MSG("dropSubPackageData is empty, dropTarget: %s" % dropTarget)
+            LOG_WARN("dropSubPackageData is empty, dropTarget: %s" % dropTarget)
             return [], [], [], [], []
         weights = []
         for dropData in dropSubPackageData:
@@ -1264,7 +1308,7 @@ def _getDropAwardType1or2(dropPackage, dropType, dropCount, context):
     if dropDataList:
         dropDataList = _checkDropCondition(dropDataList, context)
         if len(dropDataList) == 0:
-            WARNING_MSG("dropDataList is empty, dropPackage: %s" % dropPackage)
+            LOG_WARN("dropDataList is empty, dropPackage: %s" % dropPackage)
             return awardVal
         weights = []
         for dropData in dropDataList:
@@ -1284,9 +1328,9 @@ def _getDropAwardType1or2(dropPackage, dropType, dropCount, context):
                     bindType = _getBindType(dropTarget, bindWeight, context)
                     awardVal.addWealthByItemId(dropTarget, num, bindType, grade = grade)
                 else:
-                    WARNING_MSG("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
+                    LOG_WARN("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
     else:
-        WARNING_MSG("dropPackage is None, dropPackage: %s" % dropPackage)
+        LOG_WARN("dropPackage is None, dropPackage: %s" % dropPackage)
 
     return awardVal
 
@@ -1297,7 +1341,7 @@ def _getDropAwardType3(dropPackage, dropCount, context):
     if dropDataList:
         dropDataList = _checkDropCondition(dropDataList, context)
         if len(dropDataList) == 0:
-            WARNING_MSG("dropDataList is empty, dropPackage: %s" % dropPackage)
+            LOG_WARN("dropDataList is empty, dropPackage: %s" % dropPackage)
             return awardVal
         for idx in range(len(dropDataList)):
             dropTargetData = dropDataList[idx]
@@ -1310,7 +1354,7 @@ def _getDropAwardType3(dropPackage, dropCount, context):
                     bindType = _getBindType(dropTarget, bindWeight, context)
                     awardVal.addWealthByItemId(dropTarget, num, bindType, grade = grade)
                 else:
-                    WARNING_MSG("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
+                    LOG_WARN("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
 
     return awardVal
 
@@ -1321,7 +1365,7 @@ def _getDropAwardType4or5(dropPackage, dropType, dropCount, context):
     if dropDataList:
         dropDataList = _checkDropCondition(dropDataList, context)
         if len(dropDataList) == 0:
-            WARNING_MSG("dropDataList is empty, dropPackage: %s" % dropPackage)
+            LOG_WARN("dropDataList is empty, dropPackage: %s" % dropPackage)
             return awardVal
         for i in range(dropCount):
             for idx in range(len(dropDataList)):
@@ -1335,7 +1379,7 @@ def _getDropAwardType4or5(dropPackage, dropType, dropCount, context):
                             bindType = _getBindType(dropTarget, bindWeight, context)
                             awardVal.addWealthByItemId(dropTarget, num, bindType, grade = grade)
                         else:
-                            WARNING_MSG("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
+                            LOG_WARN("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
 
                     if dropType == gameconst.DropWayType.DROP_WAY_TYPE_5:
                         break
@@ -1359,7 +1403,7 @@ def _getDropAward(dropIDList, context):
             elif dropType == gameconst.DropWayType.DROP_WAY_TYPE_4 or dropType == gameconst.DropWayType.DROP_WAY_TYPE_5:
                 awardVal += _getDropAwardType4or5(dropPackage, dropType, dropCount, context)
         else:
-            WARNING_MSG("dropData is None, dropID: %s" % dropID)
+            LOG_WARN("dropData is None, dropID: %s" % dropID)
 
     return awardVal
 
@@ -1394,8 +1438,8 @@ def getAwardOne(awardId, context, isNeedDisturb=False):
         else:
             awardItem.data += int(awardNum)
 
-    # titleId = awardData.get('title')
-    # titleId and award.titleWealth.data.append(WealthTitleOne(titleId, -1))
+    titleId = awardData.get('title')
+    titleId and award.titleWealth.data.append(WealthTitleOne(titleId, -1))
     #
     # petData = awardData.get('pet')
     # petData and award.petWealth.data.append(petData)

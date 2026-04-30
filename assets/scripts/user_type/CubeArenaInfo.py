@@ -10,7 +10,7 @@ import cube_room
 import utils
 
 
-class CubeArenaVal(userType.UserSoleType):
+class CubeArenaVal(userType.UserSingleType):
     '''CUBE_ARENA_DATA_INFO'''
     def __init__(self, arenaStage=0, arenaKing=0, stageChangeTime=0, kingBuffId=0):
         """
@@ -31,29 +31,29 @@ class CubeArenaVal(userType.UserSoleType):
 
     def setArenaKing(self, player, spaceMgr):
         if self.arenaKing:
-            INFO_MSG('arenaKing is not 0', self.arenaKing)
-            return False
+            LOG_IFO('arenaKing is not 0', self.arenaKing, player.id)
+            return self.arenaKing == player.id
 
         self.arenaKing = player.id
         self.arenaStage = 1
-        self.stageChangeTime = utils.getNow()
+        self.stageChangeTime = utils.curTS()
         _buffs = self.getStageBuff(player.spaceNo)
         self.kingBuffId = _buffs[0][1]
 
         player.removeBuff(self.getChallengerBuff(player.spaceNo))
         player.addBuff(self.kingBuffId, 1, player.id)
         spaceMgr.dealWithArenaTimer()
-        INFO_MSG('arena king by set', player.gbId)
+        LOG_IFO('arena king by set', player.gbId)
         spaceMgr.syncPlayer(lambda box: box.client.onArenaKing(self.arenaKing))
         return True
 
     def getChallengerBuff(self, spaceNo):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         return cube_floor.datas[_floor]['challengerBuff']
 
     def getStageBuff(self, spaceNo):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         return cube_floor.datas[_floor]['defenderBuff']
 
@@ -67,7 +67,7 @@ class CubeArenaVal(userType.UserSoleType):
         self.kingBuffId = 0
 
         if killerPlayer.IsAvatar:
-            INFO_MSG('arena king by kill', killerPlayer.gbId)
+            LOG_IFO('arena king by kill', killerPlayer.gbId)
             self.setArenaKing(killerPlayer, spaceMgr)
         else:
             spaceMgr.dealWithArenaTimer()
@@ -75,27 +75,27 @@ class CubeArenaVal(userType.UserSoleType):
 
     def doAddStage(self, curStage, spaceMgr):
         if not self.arenaStage:
-            ERROR_MSG('arenaStage is 0', spaceMgr.spaceNo)
+            LOG_ERR('arenaStage is 0', spaceMgr.spaceNo)
             return False
 
         if curStage != self.arenaStage:
-            ERROR_MSG('curStage is not equal to arenaStage', spaceMgr.spaceNo)
+            LOG_ERR('curStage is not equal to arenaStage', spaceMgr.spaceNo)
             return False
 
         _buffs = self.getStageBuff(spaceMgr.spaceNo)
         if self.arenaStage + 1 > len(_buffs):
-            ERROR_MSG('arenaStage is out of range', spaceMgr.spaceNo)
+            LOG_ERR('arenaStage is out of range', spaceMgr.spaceNo)
             return False
 
         _player = KBEngine.entities.get(self.arenaKing)
         if not (_player and _player.spaceNo == spaceMgr.spaceNo):
-            ERROR_MSG('arenaKing is not exist', spaceMgr.spaceNo, self.arenaKing)
+            LOG_ERR('arenaKing is not exist', spaceMgr.spaceNo, self.arenaKing)
             self.arenaStage = 0
             self.arenaKing = 0
             return False
 
         self.arenaStage += 1
-        self.stageChangeTime = utils.getNow()
+        self.stageChangeTime = utils.curTS()
         _player.removeBuff(self.kingBuffId)
         self.kingBuffId = _buffs[self.arenaStage - 1][1]
         _player.addBuff(self.kingBuffId, 1, _player.id)
@@ -107,7 +107,7 @@ class CubeArenaVal(userType.UserSoleType):
         if not self.arenaStage:
             return 0
 
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         _buffInfos = cube_floor.datas[_floor]['defenderBuff']
         if self.arenaStage >= len(_buffInfos):

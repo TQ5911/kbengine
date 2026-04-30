@@ -191,6 +191,8 @@ def attackShare(self, target, context, *args):
 
     dmgAvoidance = armorAvoidance(self, target, classTag, arg8)
 
+    levelDmgRatioEx = levelDmgRatio(self, target, classTag)
+
     # 对象伤害倍率计算
     if self.IsCreation:
         realDmgRatioEx = realDmgRatio(utils.getHostEntity(self), target,context)
@@ -235,7 +237,7 @@ def attackShare(self, target, context, *args):
                     from KBEDebug import DEBUG_MSG
                     DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, datas)
 
-        realHurt =max((((realAtk - dmgAvoidance) *(arg1+addSkillRatio)+ arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
+        realHurt =max((((realAtk - dmgAvoidance) *(arg1+addSkillRatio)+ arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx * levelDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
     
     if target.IsMonster:
         if not hasattr(context, "ignoreMaxDamage"):
@@ -483,37 +485,15 @@ def isHit(self, target, context):
                 addValue = datas[0]
                 from KBEDebug import DEBUG_MSG
                 DEBUG_MSG("in isHit, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, datas)
-    
-    if self.IsAvatar:
-        if target.IsAvatar:
-            AtkRatio = self.getProp("hit")
-            DefRatio = target.getProp("dodge")
-        elif target.IsMonster:
-            AtkRatio = self.getProp("accuracy")
-            DefRatio = target.getProp("evasion")
-    elif self.IsMonster:
-        if target.IsAvatar:
-            AtkRatio = self.getProp("accuracy")
-            DefRatio = target.getProp("evasion")
-        elif target.IsMonster:
-            AtkRatio = self.getProp("accuracy")
-            DefRatio = target.getProp("evasion")
-    elif self.IsSummon or self.IsCreation:       
-        hostRole = KBEngine.entities.get(self.hostId, None)
-        if hostRole and hostRole.IsAvatar:
-            if target.IsAvatar:
-                AtkRatio = hostRole.getProp("accuracy")
-                DefRatio = target.getProp("evasion")
-            elif target.IsMonster:
-                AtkRatio = hostRole.getProp("accuracy")
-                DefRatio = target.getProp("evasion")
-        elif hostRole and hostRole.IsMonster:
-            if target.IsAvatar:
-                AtkRatio = hostRole.getProp("accuracy")
-                DefRatio = target.getProp("evasion")
-            elif target.IsMonster:
-                AtkRatio = hostRole.getProp("accuracy")
-                DefRatio = target.getProp("evasion")
+
+    targetHost = utils.getHostEntity(target)
+    selfHost = utils.getHostEntity(self)
+    if targetHost and targetHost.IsAvatar and selfHost and selfHost.IsAvatar:
+        AtkRatio = self.getProp("hit")
+        DefRatio = target.getProp("dodge")
+    else:
+        AtkRatio = self.getProp("accuracy")
+        DefRatio = target.getProp("evasion")
 
     hitRatio = min(max(0.95 + (addValue + AtkRatio - DefRatio - min(max((target.level - self.level), 0), 10)) / 100, minHitRate), maxHitRate)
     if random.randint(1, 100) <= hitRatio * 100:
@@ -620,7 +600,7 @@ def fatalDmg(self, target, context):
                 from KBEDebug import DEBUG_MSG
                 DEBUG_MSG("in fatalDmg, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO, datas)
 
-    fatalDmgRatio = min(max(1.1, addValue + 1.5 + self.getProp("mortal") - t_antiMortal), 2)
+    fatalDmgRatio = min(max(minFatalDmgRatio, addValue + 1.5 + self.getProp("mortal") - t_antiMortal), maxFatalDmgRatio)
     return fatalDmgRatio
 
 def armorAvoidance(self, target, classTag, ignoreRatio):
@@ -656,20 +636,14 @@ def realDmgRatio(self, target, context):
     if not target:
         return realDmgRatio
 
-    if self.IsAvatar:
-        if target.IsAvatar:
-            AtkDmgRatio = self.getProp("PVPDmg")
-            DefDmgRatio = target.getProp("PVPDmgAnti")
-        elif target.IsMonster:
-            AtkDmgRatio = self.getProp("monsterDmg")
-            DefDmgRatio = target.getProp("monsterDmgAnti")
-    elif self.IsMonster:
-        if target.IsAvatar:
-            AtkDmgRatio = self.getProp("monsterDmg")
-            DefDmgRatio = target.getProp("monsterDmgAnti")
-        elif target.IsMonster:
-            AtkDmgRatio = self.getProp("monsterDmg")
-            DefDmgRatio = target.getProp("monsterDmgAnti")
+    targetHost = utils.getHostEntity(target)
+    selfHost = utils.getHostEntity(self)
+    if targetHost and targetHost.IsAvatar and selfHost and selfHost.IsAvatar:
+        AtkDmgRatio = self.getProp("PVPDmg")
+        DefDmgRatio = target.getProp("PVPDmgAnti")
+    else:
+        AtkDmgRatio = self.getProp("monsterDmg")
+        DefDmgRatio = target.getProp("monsterDmgAnti")
 
     finalDmg = self.getProp("finalDmg")
 
@@ -791,9 +765,6 @@ def controlResist(self, target, context, *args):
 
     skill = self._getSkillByActionContext(context)
     skillLv = skill.getLevel(self) if skill else 0
-    srcControlPower = 796 + 12 * (skillLv-1)  # 投放中控制技能强
-    if context.actionType == actionContext.ACTION_EQUIP:
-        srcControlPower = 42 + context.affixLv * context.affixLevelGap * 8
     controlPower = controlAnti - controlEnh + min(max((target.level - self.level),0), 5)
 
     result = combatSkill.AntiControlResult()
@@ -1189,4 +1160,23 @@ def doControlState(self, target, context, stateType, *args):
         return frozen(self, target, context, *args)
 
     return False
+
+def levelDmgRatio(self, target, context):
+    # 等级伤害倍率计算
+
+    levelDmgRatio = 1.0
+
+    if not target:
+        return levelDmgRatio
+
+    selfHost = utils.getHostEntity(self)
+    targetHost = utils.getHostEntity(target)
+    if selfHost and selfHost.IsAvatar and targetHost and targetHost.IsMonster:
+        levelDmgRatio = max(1 - max((target.level - self.level),0) * 0.05,0.3)        
+    elif selfHost and selfHost.IsMonster and targetHost and targetHost.IsAvatar:
+        levelDmgRatio = min(1 + max((self.level - target.level),0) * 0.1,3)
+    else:
+        levelDmgRatio = 1
+        
+    return levelDmgRatio
 

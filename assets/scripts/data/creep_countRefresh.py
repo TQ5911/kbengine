@@ -236,7 +236,7 @@ datas = _tools.RODict({
         "mapID": 3120,
         "combatAreaID": 31208008,
         "refreshMonsterID": _tools.ROList([31200096, 31200104]),
-        "countLimit": 100,
+        "countLimit": 75,
         "countMonsterID": _tools.ROList([11011030, 11011031, 11011032]),
         "countResetTime": 60
     }),
@@ -254,7 +254,7 @@ datas = _tools.RODict({
         "mapID": 3120,
         "combatAreaID": 31208008,
         "refreshMonsterID": _tools.ROList([31200129, 31200137]),
-        "countLimit": 100,
+        "countLimit": 125,
         "countMonsterID": _tools.ROList([11011040, 11011041, 11011042]),
         "countResetTime": 60
     }),
@@ -488,7 +488,7 @@ datas = _tools.RODict({
         "mapID": 3220,
         "combatAreaID": 32208008,
         "refreshMonsterID": _tools.ROList([32200096, 32200104]),
-        "countLimit": 100,
+        "countLimit": 75,
         "countMonsterID": _tools.ROList([11012030, 11012032, 11012032]),
         "countResetTime": 60
     }),
@@ -506,7 +506,7 @@ datas = _tools.RODict({
         "mapID": 3220,
         "combatAreaID": 32208008,
         "refreshMonsterID": _tools.ROList([32200129, 32200137]),
-        "countLimit": 100,
+        "countLimit": 125,
         "countMonsterID": _tools.ROList([11012040, 11012041, 11012042]),
         "countResetTime": 60
     }),
@@ -740,7 +740,7 @@ datas = _tools.RODict({
         "mapID": 3320,
         "combatAreaID": 33208008,
         "refreshMonsterID": _tools.ROList([33200096, 33200104]),
-        "countLimit": 100,
+        "countLimit": 75,
         "countMonsterID": _tools.ROList([11013030, 11013033, 11013032]),
         "countResetTime": 60
     }),
@@ -758,7 +758,7 @@ datas = _tools.RODict({
         "mapID": 3320,
         "combatAreaID": 33208008,
         "refreshMonsterID": _tools.ROList([33200129, 33200137]),
-        "countLimit": 100,
+        "countLimit": 125,
         "countMonsterID": _tools.ROList([11013040, 11013041, 11013042]),
         "countResetTime": 60
     }),

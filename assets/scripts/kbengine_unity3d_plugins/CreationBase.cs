@@ -39,6 +39,8 @@ namespace KBEngine
 		
 		public float mulSpeed = 0f;
 		
+		public double scopeAddRatio = 0d;
+		public virtual void onScopeAddRatioChanged(double oldValue) {}
 		
 		
 		
@@ -178,6 +180,10 @@ namespace KBEngine
 					UInt32 onBreakChannelingSkill_arg2 = stream.readUint32();
 					Int32 onBreakChannelingSkill_arg3 = stream.readInt32();
 					onBreakChannelingSkill(onBreakChannelingSkill_arg1, onBreakChannelingSkill_arg2, onBreakChannelingSkill_arg3);
+					break;
+				case 497:
+					Vector3 onExitShiftByConflict_arg1 = stream.readVector3();
+					onExitShiftByConflict(onExitShiftByConflict_arg1);
 					break;
 				case 615:
 					Int32 onGetAureoleInfo_arg1 = stream.readInt32();
@@ -638,6 +644,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onPositionChanged(oldval_position);
+						}
+
+						break;
+					case 203:
+						double oldval_scopeAddRatio = scopeAddRatio;
+						scopeAddRatio = stream.readDouble();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onScopeAddRatioChanged(oldval_scopeAddRatio);
+						}
+						else
+						{
+							if(inWorld)
+								onScopeAddRatioChanged(oldval_scopeAddRatio);
 						}
 
 						break;
@@ -1152,6 +1174,27 @@ namespace KBEngine
 					else
 					{
 						onPositionChanged(oldval_position);
+					}
+				}
+			}
+
+			double oldval_scopeAddRatio = scopeAddRatio;
+			Property prop_scopeAddRatio = pdatas[4];
+			if(prop_scopeAddRatio.isBase())
+			{
+				if(inited && !inWorld)
+					onScopeAddRatioChanged(oldval_scopeAddRatio);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_scopeAddRatio.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onScopeAddRatioChanged(oldval_scopeAddRatio);
 					}
 				}
 			}

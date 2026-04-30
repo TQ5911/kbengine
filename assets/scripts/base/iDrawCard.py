@@ -29,10 +29,10 @@ class IDrawCard(object):
 		self.curDrawCardRecord = drawCardRecord()
 
 	def drawCardOnLogin(self):
-		curTimestamp = utils.getNow()
+		curTimestamp = utils.curTS()
 
 		poolsInfo = utils.checkDrawCardPoolTimeLimit(curTimestamp, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_TYPE_LOGIN)
-		INFO_MSG('call drawCardOnLogin', curTimestamp, poolsInfo)
+		LOG_IFO('call drawCardOnLogin', curTimestamp, poolsInfo)
 
 		if len(poolsInfo):
 			self.triggerTimeLimitGuaranteedReward(poolsInfo)
@@ -41,11 +41,11 @@ class IDrawCard(object):
 		clientData = []
 		for pool, info in self.drawCardInfo.cardPoolInfoDict.items():
 			clientData.append(info.toClientDict())
-		INFO_MSG('call sendDrawCardInfo', clientData)
+		LOG_IFO('call sendDrawCardInfo', clientData)
 		self.client.onGetDrawCardInfo(clientData)
 
 	def updateDrawCardInfo(self, info):
-		INFO_MSG('call updateDrawCardInfo', info.toClientDict())
+		LOG_IFO('call updateDrawCardInfo', info.toClientDict())
 		self.client.onUpdateDrawCardInfo(info.toClientDict())
 
 	def onDrawCardDailyUpdate(self, *args):
@@ -54,35 +54,35 @@ class IDrawCard(object):
 			self.updateDrawCardInfo(info)
 
 	def checkGachaPoolVaild(self, pool):
-		INFO_MSG('call checkGachaPoolVaild', pool)
+		LOG_IFO('call checkGachaPoolVaild', pool)
 		poolData = GGP.datas.get(pool, None)
 		if not poolData:
-			ERROR_MSG('call checkGachaPoolVaild pool None')
+			LOG_ERR('call checkGachaPoolVaild pool None')
 			return False
 		
 		startTime = utils.getIntTimestamp(poolData['startTime'])
 		endTime = utils.getIntTimestamp(poolData['endTime'])
 		if not startTime and not endTime:
-			INFO_MSG('call checkGachaPoolVaild not timeLimit')
+			LOG_IFO('call checkGachaPoolVaild not timeLimit')
 			return True
 		#startTime, endTime = (endTime, startTime) if startTime > endTime else (startTime, endTime)
-		curTimestamp = utils.getNow()
-		INFO_MSG('call checkGachaPoolVaild', curTimestamp, startTime, endTime)
+		curTimestamp = utils.curTS()
+		LOG_IFO('call checkGachaPoolVaild', curTimestamp, startTime, endTime)
 		if startTime <= curTimestamp and curTimestamp <= endTime:
-			INFO_MSG('call checkGachaPoolVaild in timeLimit')
+			LOG_IFO('call checkGachaPoolVaild in timeLimit')
 			return True
 		
 		if startTime > curTimestamp:
 			self.onMessagePre(GGS.datas['poolEndMsg']['value'], [])
-			WARNING_MSG('call checkGachaPoolVaild before timeLimit')
+			LOG_WARN('call checkGachaPoolVaild before timeLimit')
 		else:
 			self.onMessagePre(GGS.datas['poolEndMsg']['value'], [])
-			WARNING_MSG('call checkGachaPoolVaild after timeLimit')
+			LOG_WARN('call checkGachaPoolVaild after timeLimit')
 		return False
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqRandomSummonPet(self, exposed, pool, summonNum):
-		INFO_MSG('call reqRandomSummonPet', pool, summonNum)
+		LOG_IFO('call reqRandomSummonPet', pool, summonNum)
 		if not self.checkGachaPoolVaild(pool):
 			return
 		
@@ -91,7 +91,7 @@ class IDrawCard(object):
 			
 		if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
 			self.onMessagePre(GGS.datas['guaranteeMaxFull']['value'], [])
-			WARNING_MSG('call reqRandomSummonPet: guaranteed limit', curPoolInfo.guaranteed, GGS.datas['maxStack']['value'])
+			LOG_WARN('call reqRandomSummonPet: guaranteed limit', curPoolInfo.guaranteed, GGS.datas['maxStack']['value'])
 			return
 
 		rollCostKey = str(summonNum) + str('rollCost')
@@ -102,10 +102,10 @@ class IDrawCard(object):
 		realRollNum = 0
 		
 		if not rollCost:
-			ERROR_MSG('call reqRandomSummonPet rollCost not found in config')
+			LOG_ERR('call reqRandomSummonPet rollCost not found in config')
 			return 
 		if not rollReward:
-			ERROR_MSG('call reqRandomSummonPet rollReward not found in config')
+			LOG_ERR('call reqRandomSummonPet rollReward not found in config')
 			return 
 		for itemNum, rollNum in gatchaTypeReward:
 			if itemNum == summonNum:
@@ -113,7 +113,7 @@ class IDrawCard(object):
 				break
 
 		if not realRollNum:
-			ERROR_MSG('call reqRandomSummonPet summonNum not found in config')
+			LOG_ERR('call reqRandomSummonPet summonNum not found in config')
 			return
 
 		level = self.getAvatarLevel()
@@ -128,7 +128,7 @@ class IDrawCard(object):
 
 		if curPoolInfo.dailyNum + summonNum > curDailyNum:
 			self.onMessagePre(GGS.datas['rollLimitNotEnough']['value'], [])
-			WARNING_MSG('call reqRandomSummonPet over daily limit', curPoolInfo.dailyNum, summonNum, level, curDailyNum)
+			LOG_WARN('call reqRandomSummonPet over daily limit', curPoolInfo.dailyNum, summonNum, level, curDailyNum)
 			return
 
 		petRollTicket = rollCost
@@ -137,7 +137,7 @@ class IDrawCard(object):
 			deductWealthVal.addWealthByItemId(itemId, costNum)
 
 		if not self.canDeductWealth(deductWealthVal):
-			ERROR_MSG('reqRandomSummonPet items not enough:', deductWealthVal)
+			LOG_ERR('reqRandomSummonPet items not enough:', deductWealthVal)
 			return
 
 		detail = gameclass.AwardDetail(summonNum=summonNum)
@@ -153,13 +153,13 @@ class IDrawCard(object):
 
 
 	def onRandomSummonPetResult(self, briefList, awardCtx):
-		INFO_MSG('call onRandomSummonPetResult', briefList, awardCtx)
+		LOG_IFO('call onRandomSummonPetResult', briefList, awardCtx)
 		poolData = awardCtx.extra.get('poolData', None)
 		if not poolData:
-			ERROR_MSG('onRandomSummonPetResult poolData not exist:', awardCtx)
+			LOG_ERR('onRandomSummonPetResult poolData not exist:', awardCtx)
 			return
 		
-		INFO_MSG('call onRandomSummonPetResult poolData', poolData)
+		LOG_IFO('call onRandomSummonPetResult poolData', poolData)
 		pool = poolData.get('pool', 0)
 		summonNum = poolData.get('summonNum', 1)
 		realRollNum = poolData.get('realRollNum', 1)
@@ -199,7 +199,7 @@ class IDrawCard(object):
 		for info in briefList:
 			for i in range(info['itemNum']):
 				itemIdList.append(info['itemId'])
-		INFO_MSG('call onRandomSummonPetResult itemIdList, realRollNum', itemIdList, realRollNum)
+		LOG_IFO('call onRandomSummonPetResult itemIdList, realRollNum', itemIdList, realRollNum)
 		self.client.onRandomSummonPet(itemIdList[:realRollNum])
 
 		self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetPetDraw'], (summonNum,))
@@ -231,7 +231,7 @@ class IDrawCard(object):
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqGetGuaranteedPetEgg(self, exposed, pool):
-		INFO_MSG('call reqGetGuaranteedPetEgg', pool)
+		LOG_IFO('call reqGetGuaranteedPetEgg', pool)
 		if not self.checkGachaPoolVaild(pool):
 			return
 
@@ -239,7 +239,7 @@ class IDrawCard(object):
 		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
 
 		if curPoolInfo.guaranteed <= 0:
-			ERROR_MSG('call reqGetGuaranteedPetEgg guaranteed not enough', curPoolInfo.guaranteed)
+			LOG_ERR('call reqGetGuaranteedPetEgg guaranteed not enough', curPoolInfo.guaranteed)
 			return
 
 		guaranteed = curPoolInfo.guaranteed
@@ -266,19 +266,19 @@ class IDrawCard(object):
 	@gamedecorator.checkGameconfigEnable('drawPet')
 	@gamedecorator.limitcall(5)
 	def reqPetDrawCardRecord(self, exposed, pool):
-		INFO_MSG('call petDrawCardRecord', pool)
+		LOG_IFO('call petDrawCardRecord', pool)
 		#if not self.checkGachaPoolVaild(pool):
 		#	return
 		poolData = GGP.datas.get(pool, None)
 		if not poolData:
-			ERROR_MSG('call reqPetDrawCardRecord pool None')
+			LOG_ERR('call reqPetDrawCardRecord pool None')
 			return
 
 		data = self.drawCardRecord.getStreamRecordData(poolData.get('poolGroupId', pool))
 		self.streamStringProxy(data, '', gameconst.StreamStringID.PET_DRAW_CARD_RECORD)
 
 	def triggerTimeLimitGuaranteedReward(self, poolsInfo):
-		INFO_MSG('call triggerTimeLimitGuaranteedReward', self.gbID, poolsInfo)
+		LOG_IFO('call triggerTimeLimitGuaranteedReward', self.gbID, poolsInfo)
 		for pool, _ in poolsInfo.items():
 			poolData = GGP.datas[pool]
 			curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
@@ -310,20 +310,20 @@ class IDrawCard(object):
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqOpenPetCard(self, exposed, idx):
-		INFO_MSG('call reqOpenPetCard', idx)
+		LOG_IFO('call reqOpenPetCard', idx)
 		if not self.curDrawCardRecord.checkBitSet(idx):
-			WARNING_MSG('call reqOpenPetCard idx out of range')
+			LOG_WARN('call reqOpenPetCard idx out of range')
 			return
-		if not self.curDrawCardRecord.hasBitSet():
-			WARNING_MSG('call reqOpenPetCard all open')
+		if not self.curDrawCardRecord.bhasSet():
+			LOG_WARN('call reqOpenPetCard all open')
 			return
 
 		if idx == 0:
 			idxList = self.curDrawCardRecord.getAllBitSet()
 			self.openPetCard(idxList)
 		else:
-			if not self.curDrawCardRecord.hasBitSet(idx):
-				ERROR_MSG('call reqOpenPetCard alerady open')
+			if not self.curDrawCardRecord.bhasSet(idx):
+				LOG_ERR('call reqOpenPetCard alerady open')
 				return
 			self.openPetCard([idx])
 

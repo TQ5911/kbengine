@@ -112,7 +112,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
     SERVICE_CLASS = CrossDataService
 
     def __init__(self):
-        INFO_MSG('CrossDataStub __init__')
+        LOG_IFO('CrossDataStub __init__')
         self.addDatetimeTimerTick()
         self.initCentralServers('crossDataServerInfo', 'crossDataServerId')
 
@@ -134,12 +134,12 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             self._onTimer(tid, userArg)
 
     def doNext(self):
-        DEBUG_MSG('CrossDataStub doNext')
+        LOG_DBG('CrossDataStub doNext')
         super().doNext()
         return
 
     def onCrossDataServerConnected(self, centralServerId):
-        INFO_MSG('CrossDataStub onCrossDataServerConnected', centralServerId)
+        LOG_IFO('CrossDataStub onCrossDataServerConnected', centralServerId)
         serverId = gameconfig.serverId()
 
         _req = RegisterGameServerRequest()
@@ -158,7 +158,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
     def clearCache(self):
         _deleteCacheUUID = []
-        _now = utils.getNow()
+        _now = utils.curTS()
         for _uuid, _cache in self.remoteCallCache.items():
             _ts = _cache.get('ts')
             if _now - _ts > 10:
@@ -176,7 +176,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             _client.csStub.activeTick(None, Void(), None)
 
     def onCrossDataServerDisonnected(self, centralServerId):
-        DEBUG_MSG('CrossDataStub onCrossDataServerDisonnected', centralServerId)
+        LOG_DBG('CrossDataStub onCrossDataServerDisonnected', centralServerId)
 
     def addGuildDataToCrossData(self, guildBox, guildData):
         _req = AddGuildInfoRequest()
@@ -192,13 +192,13 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub addGuildDataToCrossData no client')
+            LOG_WARN('CrossDataStub addGuildDataToCrossData no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'guildBox': guildBox,
             'guildData': guildData,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.addGuildInfo(None, _req, None)
@@ -206,7 +206,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
     def onAddGuildInfo(self, reply):
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onAddGuildInfo no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onAddGuildInfo no cache', reply.uuid)
             return
 
         _guildBox = _cache.get('guildBox')
@@ -221,12 +221,12 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub getGuildsInfo no client')
+            LOG_WARN('CrossDataStub getGuildsInfo no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'box': box,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.getGuildInfos(None, _req, None)
@@ -234,7 +234,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
     def onGetGuildInfos(self, reply):
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onGetGuildInfos no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onGetGuildInfos no cache', reply.uuid)
             return
 
         _box = _cache.get('box')
@@ -257,7 +257,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub removeGuildInfo no client')
+            LOG_WARN('CrossDataStub removeGuildInfo no client')
             return
 
         _client.csStub.removeGuildInfo(None, _req, None)
@@ -272,14 +272,14 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub addGuildRelation no client')
+            LOG_WARN('CrossDataStub addGuildRelation no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'box': box,
             'guildBox': guildBox,
             'relationType': relationType,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
             'opUUID': opUUID,
         }
 
@@ -288,7 +288,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
     def onAddGuildRelation(self, reply):
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onAddGuildRelation no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onAddGuildRelation no cache', reply.uuid)
             return
 
         if not reply.success:
@@ -330,7 +330,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub removeGuildRelation no client')
+            LOG_WARN('CrossDataStub removeGuildRelation no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
@@ -338,7 +338,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             'guildUUID': guildUUID2,
             'guildBox': guildBox,
             'relationType': relationType,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.removeGuildRelation(None, _req, None)
@@ -346,7 +346,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
     def onRemoveGuildRelation(self, reply):
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onRemoveGuildRelation no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onRemoveGuildRelation no cache', reply.uuid)
             return
 
         #城战准备阶段会自动解除攻守方帮会同盟，此时此处box会是None
@@ -360,7 +360,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             _guildBox.addGuildEvent(_eId, _args)
 
     def onBroadcastRemoveGuildRelation(self, reply):
-        INFO_MSG('CrossDataStub onBroadcastRemoveGuildRelation', reply)
+        LOG_IFO('CrossDataStub onBroadcastRemoveGuildRelation', reply)
         _relationType = utils.getGuildRelation(reply.guildUUID1, reply.guildUUID2)
         gameengine.callAllApps(
             'gameengine.removeGuildRelation',
@@ -391,7 +391,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         )
 
     def onBroadcastGuildRelationSingle(self, reply):
-        INFO_MSG('CrossDataStub onBroadcastGuildRelationSingle', reply)
+        LOG_IFO('CrossDataStub onBroadcastGuildRelationSingle', reply)
 
         gameengine.callAllApps(
             'gameengine.addGuildRelation',
@@ -423,7 +423,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         )
 
     def onGuildRelationAll(self, reply):
-        INFO_MSG('CrossDataStub onGuildRelationAll', reply)
+        LOG_IFO('CrossDataStub onGuildRelationAll', reply)
         _relationDic = {}
         for _relationData in reply.guildRelations:
             _pair = utils.getGuildUUIDPair(_relationData.guildUUID1, _relationData.guildUUID2)
@@ -439,13 +439,13 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub applyGuildUnionInCross no client')
+            LOG_WARN('CrossDataStub applyGuildUnionInCross no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'box': box,
             'guildBox': guildBox,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.applyGuildUnion(None, _req, None)
@@ -454,7 +454,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         # 自己申请完之后返回对方的帮会信息
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onApplyGuildUnionResult no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onApplyGuildUnionResult no cache', reply.uuid)
             return
 
         _box = _cache.get('box')
@@ -474,7 +474,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         }
 
     def onApplyGuildUnion(self, reply):
-        INFO_MSG('CrossDataStub onApplyGuildUnion', reply)
+        LOG_IFO('CrossDataStub onApplyGuildUnion', reply)
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             reply.receiverGuildUUID,
             'onApplyGuildUnion',
@@ -491,20 +491,20 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub getGuildInfosByGuildUUID no client')
+            LOG_WARN('CrossDataStub getGuildInfosByGuildUUID no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'box': box,
             'func': func,
             'args': args,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.getGuildInfosByGuildUUID(None, _req, None)
 
     def onNotifyGuildRelation(self, reply):
-        INFO_MSG('CrossDataStub onNotifyGuildRelation', reply)
+        LOG_IFO('CrossDataStub onNotifyGuildRelation', reply)
         if reply.relationType == gameconst.GuildRelationType.ENEMY:
             _func = 'onAddGuildEnemyToOtherGuild'
             _args = (reply.guildInfo.guildUUID, reply.guildInfo.guildName)
@@ -523,7 +523,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         )
 
     def onNotifyGuildCancelUnion(self, reply):
-        INFO_MSG('CrossDataStub onNotifyGuildCancelUnion', reply)
+        LOG_IFO('CrossDataStub onNotifyGuildCancelUnion', reply)
         _eId = message_guildLog_def.datas.guild_relieveUnionDes
         _args = [reply.guildInfo.guildName]
 
@@ -543,21 +543,21 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub getEnemyGuildInfos no client')
+            LOG_WARN('CrossDataStub getEnemyGuildInfos no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'box': box,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.getEnemyGuildInfos(None, _req, None)
 
     def onGetEnemyGuildInfos(self, reply):
-        INFO_MSG('CrossDataStub onGetEnemyGuildInfos', reply)
+        LOG_IFO('CrossDataStub onGetEnemyGuildInfos', reply)
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onGetEnemyGuildInfos no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onGetEnemyGuildInfos no cache', reply.uuid)
             return
 
         _box = _cache.get('box')
@@ -585,13 +585,13 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub removeReceiverGuildApplyUnion no client')
+            LOG_WARN('CrossDataStub removeReceiverGuildApplyUnion no client')
             return
 
         _client.csStub.removeReceiverGuildApplyUnion(None, _req, None)
 
     def onNotifyRemoveReceiverGuildApplyUnion(self, reply):
-        INFO_MSG('CrossDataStub onNotifyRemoveReceiverGuildApplyUnion', reply)
+        LOG_IFO('CrossDataStub onNotifyRemoveReceiverGuildApplyUnion', reply)
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             reply.receiverGuildUUID,
             'onRemoveReceiverGuildApplyUnion',
@@ -609,12 +609,12 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub getCrossServerGuildDetail no client')
+            LOG_WARN('CrossDataStub getCrossServerGuildDetail no client')
             return
 
         self.remoteCallCache[_req.uuid] = {
             'box': box,
-            'ts': utils.getNow(),
+            'ts': utils.curTS(),
         }
 
         _client.csStub.getCrossServerGuildDetail(None, _req, None)
@@ -643,16 +643,16 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub getCrossServerGuildDetailFromOtherServer no client')
+            LOG_WARN('CrossDataStub getCrossServerGuildDetailFromOtherServer no client')
             return
 
         _client.csStub.getCrossServerGuildDetailFromOtherServer(None, _req, None)
 
     def onGetCrossServerGuildDetail(self, reply):
-        INFO_MSG('CrossDataStub onGetCrossServerGuildDetail', reply)
+        LOG_IFO('CrossDataStub onGetCrossServerGuildDetail', reply)
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onGetCrossServerGuildDetail no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onGetCrossServerGuildDetail no cache', reply.uuid)
             return
 
         _box = _cache.get('box')
@@ -678,14 +678,14 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub doOnCrossGuild no client')
+            LOG_WARN('CrossDataStub doOnCrossGuild no client')
             return
 
         if box is not None:
             _req.uuid = KBEngine.genUUID64()
             self.remoteCallCache[_req.uuid] = {
                 'box': box,
-                'ts': utils.getNow(),
+                'ts': utils.curTS(),
                 'resultFunc': resultFunc,
                 'resultArgs': resultArgs,
             }
@@ -695,7 +695,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
     def onDoOnCrossGuildResult(self, reply):
         _cache = self.remoteCallCache.pop(reply.uuid, None)
         if not _cache:
-            ERROR_MSG('CrossDataStub onDoOnCrossGuildResult no cache', reply.uuid)
+            LOG_ERR('CrossDataStub onDoOnCrossGuildResult no cache', reply.uuid)
             return
 
         _box = _cache.get('box')
@@ -713,7 +713,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client = self.getRandomClient()
         if not _client:
-            WARNING_MSG('CrossDataStub doOnCrossGuildBack no client')
+            LOG_WARN('CrossDataStub doOnCrossGuildBack no client')
             return
 
         _client.csStub.doOnCrossGuildResultBack(None, _req, None)

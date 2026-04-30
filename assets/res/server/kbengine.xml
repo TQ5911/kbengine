@@ -58,7 +58,7 @@
         </crossServerInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
-        <enableGlobalAuction> 1 </enableGlobalAuction>
+        <orderServerHost> 192.168.10.13:2011</orderServerHost>
 
         <redisServer> 192.168.10.12 </redisServer>
         <redisPort> 6379 </redisPort>

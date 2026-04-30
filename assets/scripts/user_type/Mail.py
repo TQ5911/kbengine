@@ -4,6 +4,7 @@ import KBEngine
 from KBEDebug import *
 
 import utils
+import dataUtils
 import userType
 import dropAward
 import gameconst
@@ -12,11 +13,10 @@ import mailAssistor
 
 import LogTrackingMgr
 
-import mail_mail as MAMAD
 import mail_config as MACF
 
 
-class GlobalMail(userType.UserSoleType):
+class GlobalMail(userType.UserSingleType):
     def __init__(self):
         self.globalMailGBID = 0
         self.mailId = 0
@@ -25,6 +25,7 @@ class GlobalMail(userType.UserSoleType):
         self.expiredTime = 0
         self.minRoleTime = 0
         self.maxRoleTime = 0
+        self.dueTime = 0
         self.minRoleLevel = 0
         self.maxRoleLevel = 0
         self.extraAttach = dropAward.MailWealthVal()
@@ -38,18 +39,18 @@ class GlobalMail(userType.UserSoleType):
         self.extraAttach.reloadScript()
         return
 
-    def initNewGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, 
-                          despArgs, title, cont, minRoleTime, maxRoleTime, 
-                          minRoleLevel, maxRoleLevel, channel, srcType):
+    def initNewGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, 
+                          minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType):
         self.globalMailGBID = KBEngine.genUUID64()
         self.mailId = mailId
         self.despArgs = despArgs if despArgs else []
-        self.createTime = utils.getNow()
+        self.createTime = utils.curTS()
         self.minRoleTime = minRoleTime
         self.maxRoleTime = maxRoleTime
+        self.dueTime = dueTime
         self.minRoleLevel = minRoleLevel
         self.maxRoleLevel = maxRoleLevel
-        self.expiredTime = mailAssistor.calcMailExpiredTime(mailId, utils.getNow())
+        self.expiredTime = mailAssistor.calcMailExpiredTime(mailId, utils.curTS())
         self.extraAttach = extraAttach if extraAttach else dropAward.MailWealthVal()
         self.title = title
         self.cont = cont
@@ -64,6 +65,7 @@ class GlobalMail(userType.UserSoleType):
         self.expiredTime = dataDic['expiredTime']
         self.minRoleTime = dataDic['minRoleTime']
         self.maxRoleTime = dataDic['maxRoleTime']
+        self.dueTime = dataDic.get('dueTime', 0)
         self.minRoleLevel = dataDic['minRoleLevel']
         self.maxRoleLevel = dataDic['maxRoleLevel']
         self.extraAttach = dataDic.get('extraAttach', None)
@@ -84,6 +86,7 @@ class GlobalMail(userType.UserSoleType):
             'expiredTime':self.expiredTime,
             'minRoleTime':self.minRoleTime,
             'maxRoleTime':self.maxRoleTime,
+            'dueTime':self.dueTime,
             'minRoleLevel':self.minRoleLevel,
             'maxRoleLevel':self.maxRoleLevel,
             'extraAttach':self.extraAttach,
@@ -94,23 +97,22 @@ class GlobalMail(userType.UserSoleType):
         }
 
     def isExpired(self):
-        return self.expiredTime <= utils.getNow()
+        return self.expiredTime <= utils.curTS()
 
     def isTracebackTimeOut(self):
         # 后创建账号也都能收到的邮件，需要考虑追溯期
-        mailData = MAMAD.datas[self.mailId]
-        if mailData['type'] != gameconst.MailType.GLOBAL_MAIL_INCLUDE_NEW_PLAYERS:
-            return False
+        return dataUtils.checkMailType(self.mailId, gameconst.MailType.GLOBAL_MAIL_INCLUDE_NEW_PLAYERS)
+    
+    def isForOldPlayer(self):
+        # 只给已创建账号的老玩家发
+        return dataUtils.checkMailType(self.mailId, gameconst.MailType.GLOBAL_MAIL_EXCLUDE_NEW_PLAYERS)
 
-        return False
-
-
-class MailCacheData(userType.UserSoleType):
+class MailCacheData(userType.UserSingleType):
     def __init__(self):
         self.lastGlobalMailTime = 0
         self.mails = {}
         self.globalMailsMap = {}
-        self.newestMailCreateTime = 0
+        self.lastPlayerMailTime = 0
 
     def _lateReload(self):
         super(MailCacheData, self)._lateReload()
@@ -121,60 +123,84 @@ class MailCacheData(userType.UserSoleType):
     def resetMailCache(self):
         self.lastGlobalMailTime = 0
         self.globalMailsMap.clear()
-        self.newestMailCreateTime = 0
+        self.lastPlayerMailTime = 0
         self.mails.clear()
 
     def isEmpty(self):
         return len(self.mails) == 0
 
-    def mailGBIDListAtNewestCreateTime(self):
-        return [mail.mailGBID for mail in self.mails.values() if mail.createTime == self.newestMailCreateTime]
+    def mailGBIDListAtNewestCreateTime(self, isGlobal):
+        rets = []
+        for mail in self.mails.values():
+            if isGlobal:
+                if mail.globalMailGBID > 0 and mail.createTime == self.lastGlobalMailTime:
+                    rets.append(mail.mailGBID)
+            else:
+                if mail.globalMailGBID == 0 and mail.createTime == self.lastPlayerMailTime:
+                    rets.append(mail.mailGBID)
+        return rets
 
-    def mailSpaceLeft(self):
-        mailMaxNum = MACF.datas['mailNumMax']['value']
-        return mailMaxNum - len(self.mails)
+    def playerMailSpaceLeft(self):
+        maxPlayerMailNum = MACF.datas['mailNumMax']['value']
+        return maxPlayerMailNum - (len(self.mails) - len(self.globalMailsMap))
+    
+    def systemMailSpaceLeft(self):
+        globalMailCount = len(self.globalMailsMap)
+        maxSystemMailNum = MACF.datas['mailNumMax2']['value']
+        return maxSystemMailNum - globalMailCount
 
     def getLastGlobalMailTime(self):
         return self.lastGlobalMailTime
 
-    def setLastGlobalMailTime(self, lastGBMailTime):
-        if lastGBMailTime > self.lastGlobalMailTime:
-            self.lastGlobalMailTime = lastGBMailTime
+    def setLastGlobalMailTime(self, lastMailTime):
+        if lastMailTime > self.lastGlobalMailTime:
+            self.lastGlobalMailTime = lastMailTime
         return
-
-    def addNewMailCache(self, mail):
+    
+    def setLastPlayerMailTime(self, lastMailTime):
+        if lastMailTime > self.lastPlayerMailTime:
+            self.lastPlayerMailTime = lastMailTime
+        return
+    
+    def addNewMailCache(self, owner, mail):
         if mail.mailGBID in self.mails:
             return False
-        if mail.isExpired():
+        if mail.isExpired() or not mail.isInLoginWindow(owner.tLoginBase):
             return False
+        
+        mail.clearDueTime()
 
         self.mails[mail.mailGBID] = mail
-        if mail.createTime > self.newestMailCreateTime:
-            self.newestMailCreateTime = mail.createTime
+
         if mail.globalMailGBID > 0:
             self.globalMailsMap[mail.globalMailGBID] = mail.mailGBID
-            if mail.createTime > self.lastGlobalMailTime:
-                self.setLastGlobalMailTime(mail.createTime)
+            self.setLastGlobalMailTime(mail.createTime)
+        else:
+            self.setLastPlayerMailTime(mail.createTime)
         return True
 
     def deleteMailsCache(self, mailGBIDList):
         rmMails ={}
         for mailGBID in mailGBIDList:
             mVal = self.mails.pop(mailGBID, None)
-            if mVal:
-                rmMails[mailGBID] = mVal
+            if not mVal:
+                continue
+            rmMails[mailGBID] = mVal
+            if mVal.globalMailGBID <=0:
+                continue
+            self.globalMailsMap.pop(mVal.globalMailGBID, None)
 
         return rmMails
 
     def getMailByGBID(self, mailGBID):
         return self.mails.get(mailGBID)
 
-    def readMail(self, mailGBID):
+    def readMail(self, avatar, mailGBID):
         mail = self.getMailByGBID(mailGBID)
         if not mail:
             return
         mail.setReadState(gameconst.MailReadState.HasRead)
-        LogTrackingMgr.LogTrackingMgr.Mail_Read(mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
+        LogTrackingMgr.LogTrackingMgr.Mail_Read(avatar.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
         return
 
     def setAttachHasGet(self, mailGBID):
@@ -190,9 +216,32 @@ class MailCacheData(userType.UserSoleType):
         attachMails = sorted(attachMails, key=lambda mail:mail.createTime)
         return attachMails
 
-    def getReplaceMailList(self, num):
-        rmGBIDList = []
+    def getReplaceMailList(self, isGlobal):
+        if isGlobal:
+            num = self.systemMailSpaceLeft()
+        else:
+            num = self.playerMailSpaceLeft()
+
+        if num >= 0:
+            return []
+        
+        num = abs(num)
+         
+        globalMail = []
+        playerMail = []
         mailSortList = sorted(list(self.mails.values()), key=lambda mail: (-1*mail.attachStat, -1*mail.readStat, mail.createTime))
+        for mail in mailSortList:
+            if mail.globalMailGBID > 0:
+                globalMail.append(mail)
+            else:
+                playerMail.append(mail)
+
+        if isGlobal:
+            mailSortList = globalMail
+        else:
+            mailSortList = playerMail
+                   
+        rmGBIDList = []
         cordinateList = []
         for mail in mailSortList:
             if mail.readStat == gameconst.MailReadState.HasRead or mail.attachStat == gameconst.MailAttachState.HasGET:
@@ -207,9 +256,6 @@ class MailCacheData(userType.UserSoleType):
     def getMailListCanDelete(self):
         deleteMailGBIDList = []
         for oneMail in self.mails.values():
-            if oneMail.isExpired():
-                deleteMailGBIDList.append(oneMail.mailGBID)
-                continue
             if oneMail.attachStat == gameconst.MailAttachState.NotGet:
                 continue
             if oneMail.readStat == gameconst.MailReadState.NotRead:
@@ -219,16 +265,26 @@ class MailCacheData(userType.UserSoleType):
 
     def getClientMailList(self):
         mailList = []
-        for oneMail in self.mails.values():
-            mailList.append(oneMail.toMailClientDict())
-        mailList = sorted(mailList, key=lambda oneMail: -1*oneMail['createTime'])
-        mailMaxNum = MACF.datas['mailNumMax']['value']
-        if len(mailList) > mailMaxNum:
-            mailList = mailList[:mailMaxNum]
+        playerMailCount = 0
+        globalMailCount = 0
+        playerMailMaxNum = MACF.datas['mailNumMax']['value']
+        globalMailMaxNum = MACF.datas['mailNumMax2']['value']
+        mailSortList = sorted(list(self.mails.values()), key=lambda mail: (mail.attachStat, mail.readStat, -1*mail.createTime))
+        for oneMail in mailSortList:
+            if playerMailCount >= playerMailMaxNum \
+                and globalMailCount >= globalMailMaxNum:
+                break
+            if oneMail.globalMailGBID > 0:
+                if globalMailCount < globalMailMaxNum:
+                    globalMailCount += 1
+                    mailList.append(oneMail.toMailClientDict())
+            else:
+                if playerMailCount < playerMailMaxNum:
+                    playerMailCount += 1
+                    mailList.append(oneMail.toMailClientDict())
         return mailList
 
-
-class Mail(userType.UserSoleType):
+class Mail(userType.UserSingleType):
     def __init__(self):
         self.toGBID = 0
         self.mailId = 0
@@ -248,6 +304,7 @@ class Mail(userType.UserSoleType):
         self.srcSubType = 0
         self.desc = ''
         self.source = 0
+        self.dueTime = 0
         return
 
     def _lateReload(self):
@@ -265,22 +322,30 @@ class Mail(userType.UserSoleType):
         self.mailGBID = int(dbMailRowData[2].decode())
         self.globalMailGBID = int(dbMailRowData[3].decode())
         self.readStat = int(dbMailRowData[4].decode())
-        self.createTime = int(dbMailRowData[5].decode())
-        self.expiredTime = int(dbMailRowData[6].decode())
-        self.fromGBID = int(dbMailRowData[7].decode())
-        self.attach = cPickle.loads(dbMailRowData[8])
-        self.attachStat = int(dbMailRowData[9].decode())
-        self.despArgs = cPickle.loads(dbMailRowData[10])
-        self.title = dbMailRowData[11].decode()
-        self.cont = dbMailRowData[12].decode()
-        self.opUUID = int(dbMailRowData[13].decode())
-        self.srcType = int(dbMailRowData[14].decode())
-        self.srcSubType = int(dbMailRowData[15].decode())
-        self.desc = dbMailRowData[16].decode()
-        self.source = int(dbMailRowData[17].decode())
+        self.dueTime = int(dbMailRowData[5].decode())
+        self.createTime = int(dbMailRowData[6].decode())
+        self.expiredTime = int(dbMailRowData[7].decode())
+        self.fromGBID = int(dbMailRowData[8].decode())
+        # 对原先的旧数据格式做下兼容
+        datas = cPickle.loads(dbMailRowData[9])
+        if type(datas) is dict:
+            mailAttach = dropAward.MailWealthVal()
+            mailAttach.fromMailWealthDict(datas)
+            self.attach = mailAttach
+        else:
+            self.attach = datas
+        self.attachStat = int(dbMailRowData[10].decode())
+        self.despArgs = cPickle.loads(dbMailRowData[11])
+        self.title = dbMailRowData[12].decode()
+        self.cont = dbMailRowData[13].decode()
+        self.opUUID = int(dbMailRowData[14].decode())
+        self.srcType = int(dbMailRowData[15].decode())
+        self.srcSubType = int(dbMailRowData[16].decode())
+        self.desc = dbMailRowData[17].decode()
+        self.source = int(dbMailRowData[18].decode())
 
     def initFromSavedMailDict(self, dataDic):
-        #DEBUG_MSG('in init initFromSavedMailDict:', dataDic)
+        #LOG_DBG('in init initFromSavedMailDict:', dataDic)
         self.mailGBID = dataDic['mailGBID']
         self.mailId = dataDic['mailId']
         self.toGBID = dataDic['toGBID']
@@ -301,6 +366,7 @@ class Mail(userType.UserSoleType):
         self.srcSubType = dataDic['srcSubType']
         self.desc = dataDic['desc']
         self.source = dataDic['source']
+        self.dueTime = dataDic.get('dueTime', 0)
         return
 
     def toMailSavedDict(self):
@@ -322,6 +388,7 @@ class Mail(userType.UserSoleType):
             'srcSubType':self.srcSubType,
             'desc':self.desc,
             'source':self.source,
+            'dueTime':self.dueTime,
         }
 
     def toMailClientDict(self):
@@ -342,14 +409,19 @@ class Mail(userType.UserSoleType):
         }
 
     def isExpired(self):
-        return self.expiredTime <= utils.getNow()
+        return self.expiredTime <= utils.curTS()
+    
+    def isInLoginWindow(self, loginTime):
+        if self.dueTime > 0 and loginTime > self.dueTime:
+            return False
+        return True
 
     def setReadState(self, state):
         self.readStat = state
 
     def setAttachState(self, state):
         if state != self.attachStat and state == gameconst.MailAttachState.NotGet:
-            INFO_MSG('mail attach state reset not get:', self.toMailSavedDict())
+            LOG_IFO('mail attach state reset not get:', self.toMailSavedDict())
         self.attachStat = state
 
     def canGetAttach(self):
@@ -363,3 +435,9 @@ class Mail(userType.UserSoleType):
             #邮件尚未读取
             return False
         return True
+
+    def clearDueTime(self):
+        self.dueTime = 0
+
+    def getDueTime(self):
+        return self.dueTime

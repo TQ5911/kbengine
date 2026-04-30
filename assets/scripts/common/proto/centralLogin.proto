@@ -156,12 +156,6 @@ enum CaptchaType
     CT_NULL = 0;
     //登录
     CT_Login = 1;
-    //发布会
-    CT_Press = 2;
-    //领取奖励
-    CT_Award = 3;
-    //集市入口
-    CT_Market = 4;
 }
 
 //弹出验证通知

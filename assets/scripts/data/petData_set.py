@@ -65,7 +65,15 @@ datas = _tools.RODict({
     }),
     "petBagCapacity": _tools.RODict({
         "ID": "petBagCapacity",
-        "value": 200,
+        "value": 350,
+    }),
+    "petBagFullMsg": _tools.RODict({
+        "ID": "petBagFullMsg",
+        "value": 54000011,
+    }),
+    "petBagFullMail": _tools.RODict({
+        "ID": "petBagFullMail",
+        "value": 37000021,
     }),
     "petUnlockTips": _tools.RODict({
         "ID": "petUnlockTips",

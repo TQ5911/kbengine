@@ -21,6 +21,12 @@
             <Default>       0               </Default>
             <WitnessName>   true            </WitnessName>
         </mineWarCamp>
+        <recoverProgress>
+            <Type>          UINT8           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </recoverProgress>
     </Properties>
 
     <CellMethods>

@@ -33,7 +33,6 @@ datas ={
         1010,
         1011,
         1009,
-        1012,
         1014,
         1138,
         1035,
@@ -73,7 +72,8 @@ datas ={
         1175,
         1176,
         1178,
-        1025
+        1025,
+        1204
       ]
     }
   },
@@ -84,7 +84,7 @@ datas ={
   },
   "1009": {
     "type": "taskFinished",
-    "taskID": 86060056,
+    "taskID": 86060061,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -131,7 +131,7 @@ datas ={
   },
   "1025": {
     "type": "taskFinished",
-    "taskID": 86060063,
+    "taskID": 86060003,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -240,8 +240,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1151,
-        1003
+        1151
       ]
     }
   },
@@ -328,11 +327,7 @@ datas ={
   "1012": {
     "type": "taskInProgress",
     "taskID": 86060061,
-    "transition": {
-      "finished": [
-        1024
-      ]
-    }
+    "transition": {}
   },
   "1014": {
     "type": "taskInProgress",
@@ -1514,5 +1509,16 @@ datas ={
       40028043
     ],
     "transition": {}
+  },
+  "1204": {
+    "type": "taskFinished",
+    "taskID": 86060055,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1003
+      ]
+    }
   }
 }

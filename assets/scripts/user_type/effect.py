@@ -23,7 +23,7 @@ import gametimer
 import gamedecorator
 
 #effect的调用者
-class EffectCaller(userType.UserSoleType):
+class EffectCaller(userType.UserSingleType):
     UNKOWN = 0
     BUFF = 1
     CRYSTAL = 2
@@ -58,7 +58,7 @@ class BuffCaller(EffectCaller):
 
     def getEffectVal(self, owner, effectId, effectIndex):
         buffVal = self.getCaller(owner)
-        effectKey = utils.getBuffEffectKey(effectId, effectIndex)
+        effectKey = utils.fetchBuffEffectKey(effectId, effectIndex)
         return buffVal.effectDic.get(effectKey)
 
     def getCallerKey(self, effectId, effectIndex):
@@ -69,10 +69,10 @@ class BuffCaller(EffectCaller):
         return effectList
 
     def getCallerSrc(self):
-        return gameconst.SourceType.Buff
+        return gameconst.SourceType.SrcTpBuff
 
-class EffectBase(userType.UserSoleType):
-    EFFECT_TYPE = gameconst.EffecType.EFFECT_UNKNOW
+class EffectBase(userType.UserSingleType):
+    EFFECT_TYPE = gameconst.EffecType.ENUM_EFFECT_UNKNOW
 
     def __init__(self, owner, callerInfo, effectId, effectIndex, extraInfo):
         self.effectId = effectId
@@ -131,7 +131,7 @@ class EffectBase(userType.UserSoleType):
         pass
 
 class BasicEffect(EffectBase):
-    EFFECT_TYPE = gameconst.EffecType.EFFECT_BASIC
+    EFFECT_TYPE = gameconst.EffecType.ENUM_EFFECT_BASIC
 
     #effect不能独立存在，必须是被其他模块调用的，暂时只要buff，所以这里的callerinfo都是buffCaller
     def __init__(self, owner, callerInfo:EffectCaller, effectId, effectIndex, extraInfo):
@@ -232,11 +232,11 @@ class BasicEffect(EffectBase):
         values = self.getRealValue(owner, callerInfo, values)
         isMul = effectDict.get('isMul',False)
         if len(skillIds)!=len(values):
-            ERROR_MSG('invalid addSkillCd args', callerInfo)
+            LOG_ERR('invalid addSkillCd args', callerInfo)
             return
 
         if isMul and any(value <= -1 for value in values):
-            ERROR_MSG('invalid addSkillCd args', values)
+            LOG_ERR('invalid addSkillCd args', values)
             return
 
         eventKey = self._getEffectEventKey(owner, callerInfo)
@@ -246,7 +246,7 @@ class BasicEffect(EffectBase):
             if toSkillId and skillId!=toSkillId:
                 continue
 
-            skillVal = owner.getSkill(skillId, reportError=False)
+            skillVal = owner.skillDic.doGetSkill(skillId, reportErr=False)
             if skillVal:
                 if isMul:
                     cd = skillVal.getSkillData(skillId).get('CD', 0)
@@ -269,7 +269,7 @@ class BasicEffect(EffectBase):
         isMul = effectDict.get('isMul', False)
         eventKey = self._getEffectEventKey(owner, callerInfo)
         for idx, skillId in enumerate(skillIds):
-            skillVal = owner.getSkill(skillId, reportError=False)
+            skillVal = owner.skillDic.doGetSkill(skillId, reportErr=False)
             if skillVal:
                 if isMul:
                     cd = skillVal.getSkillData(skillId).get('CD', 0)
@@ -301,7 +301,7 @@ class BasicEffect(EffectBase):
         if callerInfo.callerType in (EffectCaller.BUFF,):
             shieldId = callerInfo.buffId
         else:
-            ERROR_MSG('cannot get shieldId', callerInfo)
+            LOG_ERR('cannot get shieldId', callerInfo)
             return
 
         host = owner.getAvatar()
@@ -319,14 +319,14 @@ class BasicEffect(EffectBase):
                     if len(datas) == 1:
                         addValue = datas[0]
                         totalAddValue = value * addValue
-                        DEBUG_MSG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
+                        LOG_DBG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
 
                 ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
                         totalAddValue = addValue
-                        DEBUG_MSG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
+                        LOG_DBG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
 
 
                 value += totalAddValue
@@ -344,7 +344,7 @@ class BasicEffect(EffectBase):
         if callerInfo.callerType in (EffectCaller.BUFF,):
             shieldId = callerInfo.buffId
         else:
-            ERROR_MSG('cannot get shieldId', callerInfo)
+            LOG_ERR('cannot get shieldId', callerInfo)
             return
 
         host = owner.getAvatar()
@@ -362,14 +362,14 @@ class BasicEffect(EffectBase):
                     if len(datas) == 1:
                         addValue = datas[0]
                         totalAddValue = hpValue * addValue
-                        DEBUG_MSG("in addDefensiveShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
+                        LOG_DBG("in addDefensiveShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
 
                 ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
                         totalAddValue = addValue
-                        DEBUG_MSG("in addDefensiveShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
+                        LOG_DBG("in addDefensiveShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
 
 
                 hpValue += totalAddValue
@@ -407,7 +407,7 @@ class BasicEffect(EffectBase):
             self.setupEffect(owner, buffCaller)
 
 class EventEffect(EffectBase):
-    EFFECT_TYPE = gameconst.EffecType.EFFECT_BY_EVENT
+    EFFECT_TYPE = gameconst.EffecType.ENUM_EFFECT_BY_EVENT
 
     def __init__(self, owner, callerInfo, effectId, effectIndex, extraInfo):
         super(EventEffect, self).__init__(owner, callerInfo, effectId, effectIndex, extraInfo)
@@ -419,7 +419,7 @@ class EventEffect(EffectBase):
             # 默认需求:不持久化的，即便CD非0也重置
             pass
         self.tNextTime = triggerTime
-        #DEBUG_MSG('init EventEffect', self.effectId, self.tNextTime, utils.getNowTimeStr(self.tNextTime))
+        #LOG_DBG('init EventEffect', self.effectId, self.tNextTime, utils.getNowTimeStr(self.tNextTime))
 
 
     def getEffectData(self):
@@ -451,7 +451,7 @@ class EventEffect(EffectBase):
 
     @gamedecorator.prevent_instance_reentry
     def onActionEvent(self, owner, callerInfo, event):
-        DEBUG_MSG('onActionEvent: the event context -', event)
+        LOG_DBG('onActionEvent: the event context -', event)
 
         if not self.isValid:
             return
@@ -478,7 +478,7 @@ class EventEffect(EffectBase):
         if event.name == 'onSpecSkill' and effectDict.get('skillId') != event.eventContext.skillId:
             return
         elif event.name == 'onSelfBuff' and effectDict.get('BuffId') != event.eventContext.buffId:
-            DEBUG_MSG('onActionEvent - "onSelfBuff" not trigger', effectDict, event.eventContext.buffId)
+            LOG_DBG('onActionEvent - "onSelfBuff" not trigger', effectDict, event.eventContext.buffId)
             return
 
         target = None
@@ -509,7 +509,7 @@ class EventEffect(EffectBase):
                     bufVal = callerInfo.getCaller(owner)
                     ctxBuilder = lambda r:actionContext.EventEffectCtx(callerInfo.getFromEntId(owner), owner.id, callerInfo.buffId, bufVal.level, bufVal.srcKey, self.effectId, argsDict, event.eventContext, r, bufVal.rootContext)
                 else:
-                    ERROR_MSG('unsupported effect caller', callerInfo, self)
+                    LOG_ERR('unsupported effect caller', callerInfo, self)
                     return
                 _ret = owner.doCombatActions(action, owner, target, callerInfo.getFromEntId(owner), ctxBuilder)
 
@@ -523,7 +523,7 @@ class EventEffect(EffectBase):
         self._removeEventListener(owner, callerInfo)
 
 class TimerEffect(EffectBase):
-    EFFECT_TYPE = gameconst.EffecType.EFFECT_BY_TIMER
+    EFFECT_TYPE = gameconst.EffecType.ENUM_EFFECT_BY_TIMER
 
     def __init__(self, owner, callerInfo, effectId, effectIndex, extraInfo):
         self.effectTimer = 0
@@ -537,7 +537,7 @@ class TimerEffect(EffectBase):
     def setupEffect(self, owner, callerInfo):
         effectDict = self.getEffectDict(owner, callerInfo)
         if 'Count' not in effectDict or 'Interval' not in effectDict:
-            ERROR_MSG('TimerEffect needs Count and Interval',  callerInfo, self.effectId, effectDict)
+            LOG_ERR('TimerEffect needs Count and Interval',  callerInfo, self.effectId, effectDict)
             caller = callerInfo.getCaller(owner)
             caller.onSetupEffectError(callerInfo, self.effectId)
             return
@@ -546,7 +546,7 @@ class TimerEffect(EffectBase):
         self.isValid = True
 
         self.updateEffect(owner, callerInfo)
-        DEBUG_MSG('setupEffect', self)
+        LOG_DBG('setupEffect', self)
 
     def updateEffect(self, owner, callerInfo):
         self.effectTimer = 0
@@ -563,7 +563,7 @@ class TimerEffect(EffectBase):
                 # 之所以会走到这里，大概率是因为_doTickAction里面调用了类似
                 #overlaybuff的接口,导致里面 已经添加了timer
                 return
-            self.effectTimer = owner._callback(interval, 'updateTimeEffect', (callerInfo, self.effectId, self.effectIndex),
+            self.effectTimer = owner.addTimerCB(interval, 'updateTimeEffect', (callerInfo, self.effectId, self.effectIndex),
 
                                                gametimer.TIMER_TAG_UPDATE_TIME_EFFECT)
 
@@ -581,7 +581,7 @@ class TimerEffect(EffectBase):
             bufVal = callerInfo.getCaller(owner)
             ctxBuilder = lambda r:actionContext.BuffEffectCtx(fromEntId, owner.id, bufVal.buffId, bufVal.level, bufVal.srcKey, self.effectId, args, r, bufVal.rootContext)
         else:
-            ERROR_MSG('unsupported effect caller', callerInfo, self.effectId)
+            LOG_ERR('unsupported effect caller', callerInfo, self.effectId)
             return
 
         owner.doCombatActions(act, owner, owner, fromEntId, ctxBuilder)
@@ -594,7 +594,7 @@ class TimerEffect(EffectBase):
         self.isValid = False
 
         if self.effectTimer > 0:
-            owner._cancelCallback(self.effectTimer, gametimer.TIMER_TAG_UPDATE_TIME_EFFECT)
+            owner.cancelTimerCB(self.effectTimer, gametimer.TIMER_TAG_UPDATE_TIME_EFFECT)
             self.effectTimer = 0
 
     def onLoadedFromDB(self, callerInfo):

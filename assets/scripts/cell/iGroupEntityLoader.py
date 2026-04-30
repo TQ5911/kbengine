@@ -42,9 +42,9 @@ class IGroupEntityLoader(object):
 
         info["geIds"] = tmp_list
         for gameEntityId in tmp_list:
-            gid, gct = utils.splitGameEntityId(gameEntityId)
+            gid, gct = utils.splitFromGameEntityId(gameEntityId)
 
-            spaceConfig = utils.getDunStructureModuleData(formula.getMapId(spaceNo))
+            spaceConfig = utils.getDunStructModData(formula.fetchMapId(spaceNo))
             datas = spaceConfig.get('EntityRefreshPoint', {})
             if str(gid) not in datas:
                 continue
@@ -90,11 +90,11 @@ class IGroupEntityLoader(object):
 
             needCreateBase = 0
             data = (gameEntityId, spaceNo, className, needCreateBase, bornPosition, bornDirection, params, 0)
-            DEBUG_MSG("IGroupEntityLoader::loadGroupEntities for single ", spaceNo, className, gameEntityId)
+            LOG_DBG("IGroupEntityLoader::loadGroupEntities for single ", spaceNo, className, gameEntityId)
             readyEntitiesList.append(data)
 
     def loadGroupEntitiesBatchly(self, spaceNo, entIter, batchNum, interval, isInit=False, spaceMgrId=0):
-        DEBUG_MSG("loadGroupEntitiesBatchly-----------", batchNum, interval)
+        LOG_DBG("loadGroupEntitiesBatchly-----------", batchNum, interval)
         _iter = self.loadGroupEntitiesAsync(entIter, isInit, spaceMgrId)
         self.batchlyCall(_iter, batchNum, interval)
 
@@ -115,7 +115,7 @@ class IGroupEntityLoader(object):
                     yield utils.emptyFunc
                     break
                 except SystemError as e:
-                    WARNING_MSG('IGroupEntityLoader::loadGroupEntitiesAsync SystemError', e)
+                    LOG_WARN('IGroupEntityLoader::loadGroupEntitiesAsync SystemError', e)
                     yield utils.emptyFunc
 
         if isInit:
@@ -124,7 +124,7 @@ class IGroupEntityLoader(object):
         yield utils.emptyFunc
 
     def onLoadGroupEntities(self, info, spaceMgrId):
-        DEBUG_MSG("IGroupEntityLoader::onLoadGroupEntities", info, spaceMgrId)
+        LOG_DBG("IGroupEntityLoader::onLoadGroupEntities", info, spaceMgrId)
         self._onLoadGroupEntities(info, spaceMgrId)
 
     def _onLoadGroupEntities(self, info, spaceMgrId):
@@ -139,36 +139,36 @@ class IGroupEntityLoader(object):
                                     gameconfig.entityLoadSpeed(),
                                     gameconst.LoadEntitySetting.BATCH_DELAY, True, spaceMgrId)
 
-        DEBUG_MSG("IGroupEntityLoader::_onLoadGroupEntities", info, spaceMgrId)
+        LOG_DBG("IGroupEntityLoader::_onLoadGroupEntities", info, spaceMgrId)
         gameengine.getGlobalBase('WorldRefreshEntityStub').onLoadGroupEntitiesAck(info)
 
     def _initGroupEntities(self, spaceNo, id, count):
-        _mapId = formula.getMapId(spaceNo)
+        _mapId = formula.fetchMapId(spaceNo)
         self._maxCreateIndex.setdefault(id, 0)
         fromIdx = self._maxCreateIndex.get(id)
-        DEBUG_MSG('IGroupEntityLoader::_initGroupEntities spaceNo, id, count, fromIdx', spaceNo, id, count, fromIdx)
+        LOG_DBG('IGroupEntityLoader::_initGroupEntities spaceNo, id, count, fromIdx', spaceNo, id, count, fromIdx)
         def _iterGameGroupEntityId():
-            spaceConfig = utils.getDunStructureModuleData(_mapId)
+            spaceConfig = utils.getDunStructModData(_mapId)
             ents = spaceConfig.get('EntityRefreshPoint', {})
             data = ents.get(str(id), None)
             if not data:
-                WARNING_MSG('IGroupEntityLoader::_initGroupEntities no data', id)
+                LOG_WARN('IGroupEntityLoader::_initGroupEntities no data', id)
                 return
 
             self._maxCreateIndex[id] += count
-            for i in utils.generateGameEntityIdFrom(id, count, fromIdx):
+            for i in utils.genGameEntityIdFrom(id, count, fromIdx):
                 yield i
 
         _retList = BalancedObjectGenerator.BalancedObjectGenerator(_iterGameGroupEntityId())
         random.shuffle(_retList)
-        DEBUG_MSG('IGroupEntityLoader::_initGroupEntities _retList', _retList)
+        LOG_DBG('IGroupEntityLoader::_initGroupEntities _retList', _retList)
         return _retList
 
     def onLoadGroupEntitiesEnd(self):
-        DEBUG_MSG("IGroupEntityLoader::onLoadGroupEntitiesEnd ")
+        LOG_DBG("IGroupEntityLoader::onLoadGroupEntitiesEnd ")
 
     def onRefreshGroupEntities(self, info, spaceMgrId):
-        DEBUG_MSG("IGroupEntityLoader::onRefreshGroupEntities", info, spaceMgrId)
+        LOG_DBG("IGroupEntityLoader::onRefreshGroupEntities", info, spaceMgrId)
         refreshTime = info.get('refreshTime', 1)
         entityIDs = info.get('geIds', None)
         if entityIDs and len(entityIDs) > 0:
@@ -177,7 +177,7 @@ class IGroupEntityLoader(object):
             self._onLoadGroupEntities(info, spaceMgrId)
 
     def _onRefreshGroupEntities(self, info, spaceMgrId):
-        DEBUG_MSG("IGroupEntityLoader::_onRefreshGroupEntities", info, spaceMgrId, KBEngine.isShuttingDown())
+        LOG_DBG("IGroupEntityLoader::_onRefreshGroupEntities", info, spaceMgrId, KBEngine.isShuttingDown())
         if KBEngine.isShuttingDown():
             return
 
@@ -190,11 +190,11 @@ class IGroupEntityLoader(object):
                                     gameconfig.entityLoadSpeed(),
                                     gameconst.LoadEntitySetting.BATCH_DELAY, False, spaceMgrId)
 
-        DEBUG_MSG("IGroupEntityLoader::_onRefreshGroupEntities", info, spaceMgrId)
+        LOG_DBG("IGroupEntityLoader::_onRefreshGroupEntities", info, spaceMgrId)
         gameengine.getGlobalBase('WorldRefreshEntityStub').onLoadGroupEntitiesAck(info)
 
     def onDestroyGroupEntities(self, info, spaceMgrId):
-        DEBUG_MSG("IGroupEntityLoader::onDestroyGroupEntities", info, spaceMgrId)
+        LOG_DBG("IGroupEntityLoader::onDestroyGroupEntities", info, spaceMgrId)
         if not spaceMgrId:
             return
         spaceMgr = KBEngine.entities.get(spaceMgrId)

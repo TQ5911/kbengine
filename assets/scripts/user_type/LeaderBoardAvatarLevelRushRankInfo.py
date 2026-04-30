@@ -4,7 +4,7 @@
 import userType
 import LogTrackingMgr
 
-class LeaderBoardAvatarLevelRushRankVal(userType.UserSoleType):
+class LeaderBoardAvatarLevelRushRankVal(userType.UserSingleType):
     '''LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO'''
     def __init__(self, gbId=0, name='', level=0, school=0, ts=0, guildName='', guildUUID=0, accountName='', phone=''):
         self.gbId = gbId

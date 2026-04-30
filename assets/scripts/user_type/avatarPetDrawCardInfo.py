@@ -9,7 +9,7 @@ import utils
 import gzip
 from collections import deque
 
-class cardPoolInfo(userType.UserSoleType):
+class cardPoolInfo(userType.UserSingleType):
     def __init__(self, pool=0, num=0, guaranteed=0, dailyNum=0):
         self.pool = pool
         self.num = num
@@ -72,7 +72,7 @@ class petDrawCardInfoInstance(userType.UserSTDSoleInfo):
 petDrawCardInfoInstance = petDrawCardInfoInstance()
 
 
-class drawCardRecord(userType.UserSoleType):
+class drawCardRecord(userType.UserSingleType):
     def __init__(self, id=0, ts=0, items=[]):
         self.id = id
         self.ts = ts
@@ -102,20 +102,20 @@ class drawCardRecord(userType.UserSoleType):
 
     def allBitSet(self):
         for idx in range(len(self.items)):
-            self.itemsBit = utils.bitSet(self.itemsBit, idx + 1)
+            self.itemsBit = utils.bset(self.itemsBit, idx + 1)
 
-    def hasBitSet(self, idx=0):
+    def bhasSet(self, idx=0):
         if idx == 0:
             return self.itemsBit != 0
-        return utils.hasBit(self.itemsBit, idx)
+        return utils.bhas(self.itemsBit, idx)
 
     def resetBitSet(self, idx):
-        self.itemsBit = utils.bitReset(self.itemsBit, idx)
+        self.itemsBit = utils.breset(self.itemsBit, idx)
 
     def getAllBitSet(self):
         idxList = []
         for idx in range(len(self.items)):
-            if self.hasBitSet(idx + 1):
+            if self.bhasSet(idx + 1):
                 idxList.append(idx + 1)
         return idxList
 
@@ -133,7 +133,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         return 'clientDataDic',
 
     def initFromDict(self, dataDic):
-        #DEBUG_MSG('init DrawCardRecord', dataDic)
+        #LOG_DBG('init DrawCardRecord', dataDic)
         drawCardRecordList = dataDic.get('drawCardRecordList', [])
         for poolRecordData in drawCardRecordList:
             pool = poolRecordData['pool']
@@ -148,7 +148,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
             poolData["totalCnt"] = poolRecordData['totalCnt']
 
         # 初始化前检测一次
-        ts = utils.getNow()
+        ts = utils.curTS()
         for pool in self.drawCardRecordDic.keys():
             self.checkCntLimit(pool)
             self.checkExpiredLimit(pool, ts)
@@ -156,7 +156,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
 
     def toSavedDict(self):
         # 落库前检测一次
-        ts = utils.getNow()
+        ts = utils.curTS()
         for pool in self.drawCardRecordDic.keys():
             self.checkCntLimit(pool)
             self.checkExpiredLimit(pool, ts)
@@ -176,7 +176,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         data = {
             'drawCardRecordList': drawCardRecordList,
         }
-        #DEBUG_MSG('save DrawCardRecord', data)
+        #LOG_DBG('save DrawCardRecord', data)
         return data
 
     def toClientDict(self, pool):
@@ -186,12 +186,12 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         if not poolData or not clientData:
             poolData, clientData = self.setdefault(pool)
 
-        ts = utils.getNow()
+        ts = utils.curTS()
         self.checkCntLimit(pool)
         self.checkExpiredLimit(pool, ts)
 
         if not clientData["beUpdate"]:
-            #DEBUG_MSG('update DrawCardRecord', clientData["clientData"])
+            #LOG_DBG('update DrawCardRecord', clientData["clientData"])
             return clientData["clientData"]
 
         poolRecordData = {}
@@ -203,12 +203,12 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         #poolRecordData['curCnt'] = len(recordDicList)
         #poolRecordData['totalCnt'] = poolData["totalCnt"]
         poolRecordData['data'] = recordDicList
-        #DEBUG_MSG('client DrawCardRecord', poolRecordData)
+        #LOG_DBG('client DrawCardRecord', poolRecordData)
 
         clientData["beUpdate"] = False
         clientData["clientData"] = poolRecordData
 
-        #DEBUG_MSG('update DrawCardRecord', clientData["clientData"])
+        #LOG_DBG('update DrawCardRecord', clientData["clientData"])
         return poolRecordData
 
     def setdefault(self, pool):
@@ -226,7 +226,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         clientData = self.clientDataDic.get(pool, None)
         if not poolData or not clientData:
             poolData, clientData = self.setdefault(pool)
-        ts = utils.getNow()
+        ts = utils.curTS()
         poolData["totalCnt"] += 1
         record = drawCardRecord(poolData["totalCnt"], ts, items)
         poolData['recordList'].appendleft(record)
@@ -265,9 +265,9 @@ class petDrawCardRecord(userType.UserSTDSoleType):
     def getStreamRecordData(self, pool):
         dic = self.toClientDict(pool)
         jsonStr = json.dumps(dic).encode('ascii')
-        DEBUG_MSG('in getStreamRecordData, jsonStr:', len(jsonStr))
+        LOG_DBG('in getStreamRecordData, jsonStr:', len(jsonStr))
         zStr = gzip.compress(jsonStr)
-        DEBUG_MSG('in getStreamRecordData, gzipStr:', len(zStr))
+        LOG_DBG('in getStreamRecordData, gzipStr:', len(zStr))
         return zStr
 
 class petDrawCardRecordInstance(userType.UserSTDSoleInfo):

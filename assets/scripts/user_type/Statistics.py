@@ -8,7 +8,7 @@ import utils
 import gameconst
 import gametimer
 
-class PlayerStatisticCacheVal(userType.UserSoleType):
+class PlayerStatisticCacheVal(userType.UserSingleType):
     def __init__(self, gbId, playerBox, extraDic):
         self.gbId = gbId
         self.playerBox = playerBox
@@ -21,7 +21,7 @@ class PlayerStatisticCacheVal(userType.UserSoleType):
         self.petDmg = 0
         self.petHurt = 0
         self.petHeal = 0
-        self.tStartTime = utils.getNow()
+        self.tStartTime = utils.curTS()
         self.allTime = 0
         self.statisticType = gameconst.StatisticType.STA_TYPE_DAMAGE
         self.lastVersion = 0
@@ -87,11 +87,11 @@ class PlayerStatisticCacheVal(userType.UserSoleType):
         self.petDmg += statisticDic.get('petDmg', 0)
         self.petHurt += statisticDic.get('petHurt', 0)
         self.petHeal += statisticDic.get('petHeal', 0)
-        self.allTime += (utils.getNow() - self.tStartTime)
-        self.tStartTime = utils.getNow()
+        self.allTime += (utils.curTS() - self.tStartTime)
+        self.tStartTime = utils.curTS()
 
     def updateStartTime(self):
-        self.tStartTime = utils.getNow()
+        self.tStartTime = utils.curTS()
 
     def startGetStatistics(self, statisticType, playerBox):
         # if self.isNeedBroadcast and self.statisticType == statisticType:
@@ -101,7 +101,7 @@ class PlayerStatisticCacheVal(userType.UserSoleType):
         self.playerBox = playerBox
         self.lastVersion = 0
         self.isNeedBroadcast = True
-        INFO_MSG('startGetStatistics', self.gbId, statisticType)
+        LOG_IFO('startGetStatistics', self.gbId, statisticType)
 
     def stopGetStatistics(self):
         self.isNeedBroadcast = False
@@ -161,18 +161,18 @@ class PlayerStatisticCacheVal(userType.UserSoleType):
             'school': self.school,
             'stDatas':{}
             }
-        if utils.hasBit(statisticTypes, gameconst.StatisticType.STA_TYPE_DAMAGE):
+        if utils.bhas(statisticTypes, gameconst.StatisticType.STA_TYPE_DAMAGE):
             clientData['stDatas']['dmg'] = self.dmg
-        if utils.hasBit(statisticTypes, gameconst.StatisticType.STA_TYPE_HURT):
+        if utils.bhas(statisticTypes, gameconst.StatisticType.STA_TYPE_HURT):
             clientData['stDatas']['hurt'] = self.hurt
-        if utils.hasBit(statisticTypes, gameconst.StatisticType.STA_TYPE_HEAL):
+        if utils.bhas(statisticTypes, gameconst.StatisticType.STA_TYPE_HEAL):
             clientData['stDatas']['heal'] = self.heal
-        if utils.hasBit(statisticTypes, gameconst.StatisticType.STA_TYPE_DEAD):
+        if utils.bhas(statisticTypes, gameconst.StatisticType.STA_TYPE_DEAD):
             clientData['stDatas']['dead'] = self.dead
 
         return clientData
 
-class StatisticsCacheVal(userType.UserSoleType):
+class StatisticsCacheVal(userType.UserSingleType):
     def __init__(self, spaceNo, owner):
         self.spaceNo = spaceNo
         self.owner = owner
@@ -209,7 +209,7 @@ class StatisticsCacheVal(userType.UserSoleType):
         self.healPSRankList = []
         self.healWithPetPSRankList = []
 
-    def addMember(self, gbId, playerBox, extraDic):
+    def addMemberForSta(self, gbId, playerBox, extraDic):
         if gbId in self.statisticPlayerDic:
             pVal = self.statisticPlayerDic.get(gbId)
             pVal.updateStartTime()
@@ -259,7 +259,7 @@ class StatisticsCacheVal(userType.UserSoleType):
 
     def showData(self):
         for gbId, pVal in self.statisticPlayerDic.items():
-            INFO_MSG('showData', self.spaceNo, gbId, pVal.getClientData(0))
+            LOG_IFO('showData', self.spaceNo, gbId, pVal.getClientData(0))
 
     def startGetStatistics(self, gbId, playerBox, statisticType, extraDic):
         if gbId in self.statisticPlayerDic:
@@ -274,7 +274,7 @@ class StatisticsCacheVal(userType.UserSoleType):
         if gbId not in self.statisticPlayerDic:
             return
 
-        INFO_MSG('stopGetStatistics', self.spaceNo, gbId)
+        LOG_IFO('stopGetStatistics', self.spaceNo, gbId)
         pVal = self.statisticPlayerDic.get(gbId)
         pVal.stopGetStatistics()
 
@@ -305,7 +305,7 @@ class StatisticsCacheVal(userType.UserSoleType):
             if not pVal.playerBox or not pVal.isNeedBroadcast:
                 continue
 
-            if utils.isBoxOffline(pVal.playerBox):
+            if utils.checkBoxOffline(pVal.playerBox):
                 pVal.stopGetStatistics()
                 continue
 
@@ -331,7 +331,7 @@ class StatisticsCacheVal(userType.UserSoleType):
 
             pVal.lastVersion = self.versionDic[pVal.statisticType]
 
-            # INFO_MSG("_sendStatistics: ", gbId, sData)
+            # LOG_IFO("_sendStatistics: ", gbId, sData)
 
             yield lambda: pVal.playerBox.onGetStatistics(pVal.statisticType, sData)
 
@@ -399,7 +399,7 @@ class StatisticsCacheVal(userType.UserSoleType):
     def getDungeonStatisticData(self, uuid, box, statisticType):
         self.detailRankList = self.getRankList(statisticType)
         self.owner.batchlyCall(self.doDisptachStatisticDatas(uuid, statisticType, self.detailRankList, 20, box), 1, 0.1)
-        INFO_MSG('getDungeonStatisticData', self.spaceNo, uuid, statisticType)
+        LOG_IFO('getDungeonStatisticData', self.spaceNo, uuid, statisticType)
 
     def doDisptachStatisticDatas(self, uuid, statisticType, allDatas, batchSize, box):
         if not allDatas:
@@ -424,5 +424,5 @@ class StatisticsCacheVal(userType.UserSoleType):
                 data['rank'] = idx + j + 1
                 datas.append(data)
             batchIdx += 1
-            DEBUG_MSG('_sendRank', allCount, totalBatchCount, batchIdx, batchSize, self.spaceNo, uuid, statisticType, datas)
+            LOG_DBG('_sendRank', allCount, totalBatchCount, batchIdx, batchSize, self.spaceNo, uuid, statisticType, datas)
             yield lambda : box.onDungeonStatisticData(totalBatchCount, batchIdx, self.spaceNo, uuid, statisticType, datas)

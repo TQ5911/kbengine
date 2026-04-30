@@ -11,7 +11,7 @@ import dataUtils
 
 import itemData_itemData as ITEMDATA
 
-class ItemContainer(userType.UserSoleType):
+class ItemContainer(userType.UserSingleType):
     def __init__(self, capacity):
         self.capacity = capacity
 
@@ -34,12 +34,12 @@ class ItemContainer(userType.UserSoleType):
         for itemDict in itemsList:
             gridId = itemDict['gridId']
             if itemDict['itemId'] == 0:
-                gameengine.reportCritical('in initFromDict, itemid is 0:', itemDict)
+                gameengine.panicStack('in initFromDict, itemid is 0:', itemDict)
                 continue
             try:
                 gridObj = itemFactory.ItemFactory.createItemWithSavedDict(itemDict)
             except Exception as e:
-                gameengine.reportCritical('load item err:', itemDict, e)
+                gameengine.panicStack('load item err:', itemDict, e)
                 continue
             if not gridObj:
                 continue
@@ -57,7 +57,7 @@ class ItemContainer(userType.UserSoleType):
             try:
                 gridDic = gridObj.toBagItemDict(gridId)
             except Exception as e:
-                ERROR_MSG('getBagData err:', gridId, gridObj, getattr(gridObj, 'itemId', 0), e)
+                LOG_ERR('getBagData err:', gridId, gridObj, getattr(gridObj, 'itemId', 0), e)
                 continue
             itemList.append(gridDic)
         return itemList
@@ -100,12 +100,12 @@ class ItemContainer(userType.UserSoleType):
     def getItemDataByGridId(self, gridId):
         gridObj = self.getItemObjByGridId(gridId)
         if not gridObj:
-            ERROR_MSG('getItemDataByGridId: gridObj is none {}'.format(gridId))
+            LOG_ERR('getItemDataByGridId: gridObj is none {}'.format(gridId))
             return None
 
         itemData = ITEMDATA.datas.get(gridObj.itemId, None)
         if not itemData:
-            ERROR_MSG('getItemDataByGridId: itemData is none {}'.format(gridObj.itemId))
+            LOG_ERR('getItemDataByGridId: itemData is none {}'.format(gridObj.itemId))
             return None
 
         return itemData
@@ -148,7 +148,7 @@ class ItemContainer(userType.UserSoleType):
         return gridObjs
 
     def _recycleGrid(self, gridId, itemId):
-        INFO_MSG('_recycleGrid:', gridId, itemId)
+        LOG_IFO('_recycleGrid:', gridId, itemId)
         gridIds = self.itemId2gridIds.get(itemId)
         if gridId in gridIds:
             gridIds.remove(gridId)
@@ -203,11 +203,11 @@ class ItemContainer(userType.UserSoleType):
             gridId = self.getEmptyGrid()
         if gridId is None:
             # no free grid
-            return gameconst.BagOPStat.BAG_OP_NO_SPACE, None
+            return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
 
         if gridId in self.gridId2GridObj:
-            gameengine.reportCritical('addItemsToNewGrid: add to non empty grid', gridId)
-            return gameconst.BagOPStat.BAG_OP_NO_SPACE, None
+            gameengine.panicStack('addItemsToNewGrid: add to non empty grid', gridId)
+            return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
         
         # 装备入包需要设置一下职业，战力计算需要
         if dataUtils.isEquipItemByItemId(itemObj.itemId):
@@ -216,11 +216,11 @@ class ItemContainer(userType.UserSoleType):
         self.gridId2GridObj[gridId] = itemObj
         self.itemId2gridIds.setdefault(itemObj.itemId, set()).add(gridId)
 
-        return gameconst.BagOPStat.BAG_OP_STAT_OK, gridId
+        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, gridId
 
     def canAddItems(self, itemList):
         opPlan, _, _ = self.calcAddItemsPlan(itemList, planDetails=False)
-        return opPlan == gameconst.BagOpPlan.BAG_OP_OK
+        return opPlan == gameconst.BagOpPlan.OPERATE_BAG_OK
 
     def calcAddItemsPlan(self, itemList, planDetails=True):
         # old: wrapped to existing grids
@@ -230,15 +230,15 @@ class ItemContainer(userType.UserSoleType):
         for it in itemList:
             planResult, leftNum = self._calcAddSingleItemPlan(it, addPlanDict)
 
-            if planResult != gameconst.BagOpPlan.BAG_OP_OK:
+            if planResult != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 if not planDetails:
-                    return gameconst.BagOpPlan.BAG_OP_NO_PLAN
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN
                 leftItemList.append([it, leftNum])
 
         if leftItemList:
-            return gameconst.BagOpPlan.BAG_OP_NO_PLAN, addPlanDict, leftItemList
+            return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, addPlanDict, leftItemList
         else:
-            return gameconst.BagOpPlan.BAG_OP_OK, addPlanDict, leftItemList
+            return gameconst.BagOpPlan.OPERATE_BAG_OK, addPlanDict, leftItemList
 
     def _calcAddSingleItemPlan(self, item, planDict):
         totalNum = item.itemNum
@@ -254,7 +254,7 @@ class ItemContainer(userType.UserSoleType):
                 planItems.append((item, addNum))
                 planDict['old'][gridId] = planItems
                 if totalNum == 0:
-                    return gameconst.BagOpPlan.BAG_OP_OK, totalNum
+                    return gameconst.BagOpPlan.OPERATE_BAG_OK, totalNum
 
         for gridId, planItems in planDict['new'].items():
             sumNum = sum([num for _, num in planItems])
@@ -264,40 +264,40 @@ class ItemContainer(userType.UserSoleType):
                 totalNum = totalNum - addNum
                 planItems.append((item, addNum))
                 if totalNum == 0:
-                    return gameconst.BagOpPlan.BAG_OP_OK, totalNum
+                    return gameconst.BagOpPlan.OPERATE_BAG_OK, totalNum
 
         # newGridId = self.getEmptyGrid(excludes=list(planDict['new'].keys()))
         # if newGridId is not None:
         #     planDict['new'][newGridId] = [(item, totalNum)]
-        #     return gameconst.BagOpPlan.BAG_OP_OK, 0
+        #     return gameconst.BagOpPlan.OPERATE_BAG_OK, 0
 
         for oneNum in range(0, totalNum, maxStackSize):
             addNum = min(maxStackSize, totalNum - oneNum)
             newGridId = self.getEmptyGrid(excludes=list(planDict['new'].keys()))
             if newGridId is None:
-                return gameconst.BagOpPlan.BAG_OP_NO_PLAN, totalNum
+                return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, totalNum
             planDict['new'][newGridId] = [(item, addNum)]
             totalNum -= addNum
             if totalNum == 0:
-                return gameconst.BagOpPlan.BAG_OP_OK, totalNum
+                return gameconst.BagOpPlan.OPERATE_BAG_OK, totalNum
 
-        return gameconst.BagOpPlan.BAG_OP_NO_PLAN, totalNum
+        return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, totalNum
 
     def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
                          srcSubType=0, idipSource=0):
-        INFO_MSG('addItemsWithPlan', self.isLocked(), [(i.itemId, i.itemNum) for i in itemList], opUUID, src)
+        LOG_IFO('addItemsWithPlan', self.isLocked(), [(i.itemId, i.itemNum) for i in itemList], opUUID, src)
         if self.isLocked():
-            return gameconst.BagOPStat.BAG_OP_BAG_LOCKED, {}
+            return gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, {}
 
         if planDict:
-            addPlanCode = gameconst.BagOpPlan.BAG_OP_OK
+            addPlanCode = gameconst.BagOpPlan.OPERATE_BAG_OK
         else:
             addPlanCode, planDict, leftList = self.calcAddItemsPlan(itemList)
 
-        INFO_MSG('addItemsWithPlan', addPlanCode, planDict)
+        LOG_IFO('addItemsWithPlan', addPlanCode, planDict)
 
-        if addPlanCode != gameconst.BagOpPlan.BAG_OP_OK:
-            return gameconst.BagOPStat.BAG_OP_NO_SPACE, None
+        if addPlanCode != gameconst.BagOpPlan.OPERATE_BAG_OK:
+            return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
 
         for gridId, planItems in planDict['old'].items():
             item = self.gridId2GridObj[gridId]
@@ -311,7 +311,7 @@ class ItemContainer(userType.UserSoleType):
             # addItemsWithPlan已经通知客户端一次，在addItemsWithPlan里调用addItemsToNewGrid，syncToClient为False
             self.addItemsToNewGrid(owner, it, opUUID, src, detail, gridId, notify, False, srcSubType, idipSource)
 
-        return gameconst.BagOPStat.BAG_OP_STAT_OK, planDict
+        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDict
 
     # 只计算扣除物品的方案，不扣除物品
     def calcDeductItemsPlan(self, itemsDict, itemObjs=None):
@@ -320,15 +320,15 @@ class ItemContainer(userType.UserSoleType):
             for item in itemObjs:
                 gridId, gridObj = self.getItemByUniqueId(item.uniqueId)
                 if gridObj is None:
-                    ERROR_MSG('calcDeductItemsPlan: item not found', item.uniqueId)
-                    return gameconst.BagOpPlan.BAG_OP_NO_PLAN, None
+                    LOG_ERR('calcDeductItemsPlan: item not found', item.uniqueId)
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, None
                 maxStackSize = gridObj.maxStackSize(gridObj.itemId)
                 if maxStackSize != 1:
-                    ERROR_MSG('calcDeductItemsPlan: maxStackSize must be 1', gridObj.itemId)
-                    return gameconst.BagOpPlan.BAG_OP_NO_PLAN, None
+                    LOG_ERR('calcDeductItemsPlan: maxStackSize must be 1', gridObj.itemId)
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, None
                 if gridObj.isLocked() :
-                    ERROR_MSG('calcDeductItemsPlan: item is locked', item.uniqueId, gridObj.itemId)
-                    return gameconst.BagOpPlan.BAG_OP_NO_PLAN, gridObj.itemId
+                    LOG_ERR('calcDeductItemsPlan: item is locked', item.uniqueId, gridObj.itemId)
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, gridObj.itemId
                 removeDict[gridId] = item.itemNum
 
         for itemId, itemInfo in itemsDict.items():
@@ -336,12 +336,12 @@ class ItemContainer(userType.UserSoleType):
                 if itemNum == 0:
                     continue
                 leftNum, ret = self._calcDeductSingleItemPlan(itemId, bindType, itemNum, removeDict)
-                if ret != gameconst.BagOpPlan.BAG_OP_OK and bindType == gameconst.ItemBindType.BIND:
+                if ret != gameconst.BagOpPlan.OPERATE_BAG_OK and bindType == gameconst.ItemBindType.BIND:
                     leftNum, ret = self._calcDeductSingleItemPlan(itemId, gameconst.ItemBindType.NORMAL, leftNum, removeDict)
-                if ret != gameconst.BagOpPlan.BAG_OP_OK:
-                    return gameconst.BagOpPlan.BAG_OP_NO_PLAN, itemId
+                if ret != gameconst.BagOpPlan.OPERATE_BAG_OK:
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, itemId
 
-        return gameconst.BagOpPlan.BAG_OP_OK, removeDict
+        return gameconst.BagOpPlan.OPERATE_BAG_OK, removeDict
 
     def _calcDeductSingleItemPlan(self, itemId, bindType, totalNum, planDict):
         itemGrids = self.getGridIdsByItemId(itemId)
@@ -362,9 +362,9 @@ class ItemContainer(userType.UserSoleType):
                 totalNum = totalNum - removeNum
                 planDict[gridId] = planNum + removeNum
                 if totalNum == 0:
-                    return 0, gameconst.BagOpPlan.BAG_OP_OK
+                    return 0, gameconst.BagOpPlan.OPERATE_BAG_OK
 
-        return totalNum, gameconst.BagOpPlan.BAG_OP_NO_PLAN
+        return totalNum, gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN
 
     def getItemByUniqueId(self, uniqueId):
         for gridId, item in self.gridId2GridObj.items():
@@ -404,10 +404,10 @@ class ItemContainer(userType.UserSoleType):
     def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True, srcSubType=0,
                           idipSource=0):
         # 清除grid，并返回清除前的对象
-        INFO_MSG('in cleanGridByGridId:', gridId, itemId)
+        LOG_IFO('in cleanGridByGridId:', gridId, itemId)
         cleanItem = self.getItemObjByGridId(gridId)
         if not cleanItem or cleanItem.itemId != itemId:
-            WARNING_MSG('   in cleanGridByGridId, data error:', cleanItem)
+            LOG_WARN('   in cleanGridByGridId, data error:', cleanItem)
             return None
         self._recycleGrid(gridId, itemId)
 
@@ -427,24 +427,24 @@ class ItemContainer(userType.UserSoleType):
         return
 
     def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDict=None, isCheckLock=True):
-        INFO_MSG('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
+        LOG_IFO('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
         if self.isLocked():
             if isCheckLock:
-                return gameconst.BagOPStat.BAG_OP_BAG_LOCKED, None
+                return gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, None
             else:
-                WARNING_MSG("in Bag::deductItemsWithPlan, bag is locked, but isCheckLock is False", owner.id, itemsDict,
+                LOG_WARN("in Bag::deductItemsWithPlan, bag is locked, but isCheckLock is False", owner.id, itemsDict,
                             opUUID, srcType)
         if planDict:
-            deductPlan = gameconst.BagOpPlan.BAG_OP_OK
+            deductPlan = gameconst.BagOpPlan.OPERATE_BAG_OK
         else:
             deductPlan, planDict = self.calcDeductItemsPlan(itemsDict, itemsObjs)
 
-        if deductPlan == gameconst.BagOpPlan.BAG_OP_NO_PLAN:
-            return gameconst.BagOPStat.BAG_OP_ITEMS_NOT_ENOUGH, None
+        if deductPlan == gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN:
+            return gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH, None
 
         self.deductItemsByGrid(owner, planDict, opUUID, srcType, detail)
 
-        return gameconst.BagOPStat.BAG_OP_STAT_OK, planDict
+        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDict
 
     @utils.checkBagLocked
     def doCleanBag(self, owner, opUUID, src, detail):

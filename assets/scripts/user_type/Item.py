@@ -33,7 +33,7 @@ class Item(BaseItem.BaseItem):
         expireTime = itemData['expirationDate']
         expireTimeStr = itemData.get('itemTimeOut')
         if expireTime > 0:
-            self.expireTime = utils.getNow() + expireTime
+            self.expireTime = utils.curTS() + expireTime
         elif expireTimeStr:
             if expireTimeStr.startswith('cityBattle'):
                 self.expireTime = utils.getSiegeWarItemExpireTime()
@@ -66,7 +66,7 @@ class Item(BaseItem.BaseItem):
         return m_dict
 
     def canMerge(self, withIt, skipItemId=False, skipBindType=False, skipMaxStack=False,
-                 skipExpired=False, now=utils.getNow(), **kwargs):
+                 skipExpired=False, now=utils.curTS(), **kwargs):
         if not skipItemId and self.itemId != withIt.itemId:
             return False
         if not skipBindType and self.bindType != withIt.bindType:

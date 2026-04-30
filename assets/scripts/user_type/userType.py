@@ -14,7 +14,7 @@ class UserType(object):
         return ()
 
 
-class UserSoleType(UserType):
+class UserSingleType(UserType):
     def reloadScript(self):
         import utils
         utils.resetCls(self)
@@ -24,6 +24,9 @@ class UserSoleType(UserType):
 
     def _lateReload(self):
         return
+
+    def classname(self):
+        return self.__class__.__name__
 
 
 class UserListType(list, UserType):
@@ -146,7 +149,7 @@ class ABCInfo(object):
         raise NotImplementedError
 
 
-class UserSTDSoleType(UserSoleType):
+class UserSTDSoleType(UserSingleType):
 
     def initFromDict(self, dataDic):
         raise NotImplementedError
@@ -172,7 +175,7 @@ class UserSTDSoleInfo(ABCInfo):
         return type(obj) == self.cls
 
 
-class Error(UserSoleType, BaseException):
+class Error(UserSingleType, BaseException):
     def __init__(self, errno, errbody=None, errmsg=''):
         self.errno = errno
         self.errbody = errbody
@@ -250,7 +253,7 @@ class UserPriQueueTypeIterator(object):
 
         raise StopIteration
 
-class UserPriQueueType(UserSoleType):
+class UserPriQueueType(UserSingleType):
     def __init__(self, maxCount, popCallBack=None):
         super(UserPriQueueType, self).__init__()
 
@@ -290,7 +293,7 @@ class UserPriQueueType(UserSoleType):
     def priPush(self, obj):
         if obj.key == 0:
             import gameengine
-            gameengine.reportCritical('priPush but key invalid')
+            gameengine.panicStack('priPush but key invalid')
             return
 
         if obj.key in self._finders:

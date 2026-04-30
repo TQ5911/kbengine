@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildApplyUnionVal(userType.UserSoleType):
+class GuildApplyUnionVal(userType.UserSingleType):
     '''GUILD_APPLY_UNION_DATA_INFO'''
     def __init__(self, guildUUID=0, endTime=0, guildName='', guildIcon=0, flag=0, guildScore=0, guildLevel=0):
         self.guildUUID = guildUUID

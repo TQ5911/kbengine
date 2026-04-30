@@ -14,7 +14,7 @@ import random
 import chatConfig_chatConfig as CC_CCD
 
 
-class FetchPlayerVal(userType.UserSoleType):
+class FetchPlayerVal(userType.UserSingleType):
     """RED_BAG_FETCH_PLAYER_VAL"""
     def __init__(self, playerGbId=0, name='', money=0, fetchTime=0):
         self.playerGbId = playerGbId
@@ -46,7 +46,7 @@ class FetchPlayerVal(userType.UserSoleType):
     def toEncodeData(self):
         return json.dumps(self.toSaveDict())
 
-class RedBagFetchVal(userType.UserSoleType):
+class RedBagFetchVal(userType.UserSingleType):
     """RED_BAG_FETCH_VAL"""
     def __init__(self):
         self.fetchPlayerDict = {}
@@ -86,20 +86,20 @@ class RedBagFetchVal(userType.UserSoleType):
         return playerGbId in self.fetchPlayerDict
 
     def doFetch(self, playerGbId, name, _money):
-        INFO_MSG('doFetch: playerGbId=%d name=%s _money=%d' % (playerGbId, name, _money))
+        LOG_IFO('doFetch: playerGbId=%d name=%s _money=%d' % (playerGbId, name, _money))
 
         if self.hasFetched(playerGbId):
-            DEBUG_MSG('doFetch: playerGbId=%d already fetch' % playerGbId)
+            LOG_DBG('doFetch: playerGbId=%d already fetch' % playerGbId)
             return None
         if self.maxMoney < _money:
             self.maxMoney = _money
             self.maxGbId = playerGbId
-        _FpVal = FetchPlayerVal(playerGbId, name, _money, utils.getNow())
+        _FpVal = FetchPlayerVal(playerGbId, name, _money, utils.curTS())
         self.fetchPlayerDict[playerGbId] = _FpVal
 
         return _FpVal
 
-class RedBagVal(userType.UserSoleType):
+class RedBagVal(userType.UserSingleType):
     """RED_BAG_VAL"""
     def __init__(self, redbagId=0, playerGbId=0, playerName='', guildUUID=0, redbagType=0, channel=0, money=0, leftMoney=0, num=0, leftNum=0, releaseTime=0, desc=u''):
         self.redbagId = redbagId
@@ -151,7 +151,7 @@ class RedBagVal(userType.UserSoleType):
         return self.leftNum
     
     def isExpire(self):
-        return utils.getNow() >= self.releaseTime + CC_CCD.datas['returnPacketTime']['value'] * 3600
+        return utils.curTS() >= self.releaseTime + CC_CCD.datas['returnPacketTime']['value'] * 3600
     
     # 检查条件 需前置判断
     def doFetchRedBag(self, playerGbId):
@@ -172,7 +172,7 @@ class RedBagVal(userType.UserSoleType):
             _money = 1
 
         if self.leftMoney < _money:
-            DEBUG_MSG('RedBagVal::doFetchRedBag: leftMoney < _money', self.leftMoney, _money)
+            LOG_DBG('RedBagVal::doFetchRedBag: leftMoney < _money', self.leftMoney, _money)
             return 0
 
         self.leftNum -= 1

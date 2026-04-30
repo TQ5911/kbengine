@@ -12,6 +12,13 @@
             <Default>       0                        </Default>
             <Persistent>    true                     </Persistent>
         </avatarScoreRank>
+
+        <avatarRankData>
+            <Type>          PY_DICT                  </Type>
+            <Flags>         BASE                     </Flags>
+            <Default>       {}                       </Default>
+            <Persistent>    true                     </Persistent>
+        </avatarRankData>
     </Properties>
 
     <BaseMethods>

@@ -42,7 +42,7 @@ class Rsyslogger(object):
 # data--dict
 def log(logId, data):
     if not isinstance(data, dict):
-        WARNING_MSG("data{0} not dict".format(data))
+        LOG_WARN("data{0} not dict".format(data))
         return
 
     logData = {
@@ -54,7 +54,7 @@ def log(logId, data):
     try:
         s = json.dumps(logData, ensure_ascii=False)
     except Exception as e:
-        ERROR_MSG('json dump obj err:', e, logId)
+        LOG_ERR('json dump obj err:', e, logId)
         return
     TLOG(logId, s)
 
@@ -140,44 +140,17 @@ def getWLogClass(name):
         return WLogClassMap[name]
 
 
-# name gamewlog中的类名
-# TODO：从表格中导出常量名
-def makeWLog(name, logData):
-    logData.update({"server": str(gameconfig.serverId())})
-    cls = getWLogClass(name)
-    if cls:
-        st = cls(logData)
-        TLOG("", str(st))
-
-
-def makeRewardRankInfoLog(rakType, rankResp):
-    if len(rankResp.data) <= 0:
-        return
-    _rankInfo = []
-    for it in rankResp.data:
-        pos, gbId = it.data
-        _rankInfo.append((pos, gbId))
-
-    logData = {
-        "rank_id": "%s" % rakType,
-        "rank_info": _rankInfo,
-        "rank_time": utils.getTimestamp64(),
-        "reward_time": utils.getTimestamp64()
-    }
-    makeWLog("GMRewardRankInfo", logData)
-
-
 ################################## wlog end########################################
 
 def TLOG(name="", logData="", fromTracking=False):
     if not fromTracking:
-        gameengine.reportCritical('use old tlog', name)
+        gameengine.panicStack('use old tlog', name)
 
     logFlag = gameconfig.logFlag()
     if logFlag == gameconst.LogType.NORMAL:
-        INFO_MSG(logData)
+        LOG_IFO(logData)
     elif logFlag == gameconst.LogType.WLOG:
-        DEBUG_MSG(logData)
+        LOG_DBG(logData)
         if platform.system() == 'Linux':
             syslogLogger.info(str(logData))
 

@@ -142,5 +142,9 @@ datas = _tools.RODict({
     "openSound": _tools.RODict({
         "ID": "openSound",
         "value": 85601033,
+    }),
+    "rollStopTips": _tools.RODict({
+        "ID": "rollStopTips",
+        "value": 54000949,
     })
 })

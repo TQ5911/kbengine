@@ -21,33 +21,33 @@ class Space(iBase.IBase):
     def __init__(self):
         super(Space, self).__init__()
 
-        self.spacetype = formula.whatSpaceType(self.spaceno)
+        self.spacetype = formula.getSpaceType(self.spaceno)
 
         self.cellData['spaceType'] = self.spacetype
 
-        _type, _sub = formula.whatSpaceTypeWithSub(self.spaceno)
-        INFO_MSG('Space init spaceWeight', self.cellappIndex, self.spaceWeight, _type, _sub)
+        _type, _sub = formula.getSpaceTypeWithSub(self.spaceno)
+        LOG_IFO('Space init spaceWeight', self.cellappIndex, self.spaceWeight, _type, _sub)
         if self.spaceWeight == 0:
             #TODO set default spaceWeight for all space types
-            ERROR_MSG('create Space has not set spaceWeight', self.spaceno)
-            if formula.isSingleDungeonSpace(self.spaceno):
+            LOG_ERR('create Space has not set spaceWeight', self.spaceno)
+            if formula.inSingleDungeonScene(self.spaceno):
                 self.spaceWeight = utils.calcSpaceWeight(1, False, gameconst.EntNumPerPlayerInAOI.singleDungeon)
-            elif formula.isTeamDungeonSpace(self.spaceno):
+            elif formula.inTeamDungeonScene(self.spaceno):
                 self.spaceWeight = utils.calcSpaceWeight(5, False, gameconst.EntNumPerPlayerInAOI.teamDungeon)
             else:
-                ERROR_MSG('create Space has not set default spaceWeight', self.spaceno)
+                LOG_ERR('create Space has not set default spaceWeight', self.spaceno)
                 self.spaceWeight = 10
 
         self.createCellEntityInNewSpace(self.cellappIndex, self.spaceWeight)
 
-        INFO_MSG('Space.__init__:', self.spaceno, self.spaceWeight, KBEngine.getComponentGroupOrder())
+        LOG_IFO('Space.__init__:', self.spaceno, self.spaceWeight, KBEngine.getComponentGroupOrder())
         return
 
     def onGetCell(self):
-        INFO_MSG('Space.onGetCell', self.spaceno, self.spacetype)
-        if formula.isStaticSpace(self.spaceno):
+        LOG_IFO('Space.onGetCell', self.spaceno, self.spacetype)
+        if formula.inStaticScene(self.spaceno):
             gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_TO_BASE + ':' + str(self.spaceno),
-                                      utils.getPythonServer())
+                                      utils.getPythonAddr())
             gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(self.spaceno), self)
 
         if self.chunkAlready:
@@ -63,20 +63,20 @@ class Space(iBase.IBase):
         if reason:
             self.onLoseCellReason = reason
 
-        INFO_MSG("space onLoseCell ", self.spaceno, reason)
-        if formula.isCubeSpace(self.spaceno):
+        LOG_IFO("space onLoseCell ", self.spaceno, reason)
+        if formula.inCubeScene(self.spaceno):
             if not KBEngine.isShuttingDown():
                 gameengine.getCubeStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
-        elif formula.isWonderLandSpace(self.spaceno):
+        elif formula.inWonderLandScene(self.spaceno):
             if not KBEngine.isShuttingDown():
                 gameengine.getWonderLandStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
-        elif formula.isLineSpace(self.spaceno):
-            lineType = formula.getMapId(self.spaceno)
+        elif formula.inLineScene(self.spaceno):
+            lineType = formula.fetchMapId(self.spaceno)
             gameengine.getLineStub(lineType).onLineSpaceGone(self.spaceno, 0)
 
-        elif formula.isDungeonSpace(self.spaceno):
+        elif formula.inDungeonScene(self.spaceno):
             gameengine.getDungeonStubBySpaceNo(self.spaceno).onDungeonSpaceGone(self.spaceno, reason)
 
         self.entireDestroy(False, False)
@@ -84,7 +84,7 @@ class Space(iBase.IBase):
         return
 
     def onCreateCellFailure(self):
-        ERROR_MSG('Space.onCreateCellFailture')
+        LOG_ERR('Space.onCreateCellFailture')
         self.destroy(deleteFromDB=False, writeToDB=False)
         return
 
@@ -93,7 +93,7 @@ class Space(iBase.IBase):
         return
 
     def entireConstruct(self, spaceID):
-        INFO_MSG('Space %s %s entireConstruct' % (self.spaceno, spaceID))
+        LOG_IFO('Space %s %s entireConstruct' % (self.spaceno, spaceID))
         self.spaceid = spaceID
 
         if self.chunkAlready:
@@ -112,25 +112,25 @@ class Space(iBase.IBase):
         self._initData()
 
         self.cell.onEntireConstruct()
-        if formula.isDungeonSpace(self.spaceno):
+        if formula.inDungeonScene(self.spaceno):
             gameengine.getDungeonStubBySpaceNo(self.spaceno).onDungeonSpaceReady(self.spaceno)
-        elif formula.isLineSpace(self.spaceno):
-            lineType = formula.getMapId(self.spaceno)
+        elif formula.inLineScene(self.spaceno):
+            lineType = formula.fetchMapId(self.spaceno)
             gameengine.getLineStub(lineType).onLineSpaceReady(self.spaceno)
-        elif formula.isCubeSpace(self.spaceno):
+        elif formula.inCubeScene(self.spaceno):
             gameengine.getCubeStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
-        elif formula.isWonderLandSpace(self.spaceno):
+        elif formula.inWonderLandScene(self.spaceno):
             gameengine.getWonderLandStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
-        elif formula.isSiegeWarSpace(self.spaceno):
+        elif formula.inSiegeWarScene(self.spaceno):
             gameengine.getGlobalBase('SiegeWarSpaceStub').onStaticSpaceReady(self.spaceno)
         else:
-            ERROR_MSG('unsupported space', self.spaceno)
+            LOG_ERR('unsupported space', self.spaceno)
         return
 
     def entireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
-        INFO_MSG("space entireDestroy ", self.spaceno)
+        LOG_IFO("space entireDestroy ", self.spaceno)
 
         self._preEntireDestroy()
 
@@ -159,7 +159,7 @@ class Space(iBase.IBase):
         return
 
     def _initData(self):
-        INFO_MSG("Space#initData", self.spaceid, self.spaceno)
+        LOG_IFO("Space#initData", self.spaceid, self.spaceno)
         # gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACENO_TO_SPACEID+':'+str(self.spaceno), self.spaceid)
         # gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACEID_TO_SPACENO+':'+str(self.spaceid), self.spaceno)
 

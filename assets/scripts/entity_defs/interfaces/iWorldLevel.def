@@ -1,0 +1,25 @@
+<root>
+    <Properties>
+        <worldLevel>
+            <Type>          INT32           </Type>
+            <Flags>         OWN_CLIENT      </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </worldLevel>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+        <onGetDynamicWorldLevel>
+            <Arg>          INT32                  </Arg>
+        </onGetDynamicWorldLevel>
+
+        <onWorldLevelDailyUpdate>
+        </onWorldLevelDailyUpdate>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

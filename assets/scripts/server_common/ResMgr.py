@@ -71,12 +71,12 @@ def getChildrenName(root, path):
 def loadAreaData():
     allData = {}
     for mapId, cfgData in GPGPD.datas.items():
-        if not formula.isWorldLineType(mapId):
+        if not formula.checkWorldLineType(mapId):
             continue
         sceneRes = cfgData['sceneRes']
         filePath = 'spaces/areaInfo/{}_area.tmx'.format(sceneRes)
         if not KBEngine.hasRes(filePath):
-            # WARNING_MSG('loadAreaData has no config areaData', mapId)
+            # LOG_WARN('loadAreaData has no config areaData', mapId)
             continue
         dataFile = KBEngine.open(filePath, 'rt')
         firstLine = dataFile.readline()
@@ -85,7 +85,7 @@ def loadAreaData():
         width = int(width)
         height = int(height)
 
-        INFO_MSG('load area data:', mapId, width, height)
+        LOG_IFO('load area data:', mapId, width, height)
         data = {}
 
         for i in range(height-1,-1,-1):
@@ -93,7 +93,7 @@ def loadAreaData():
             line = line.strip()
             areaIds = line.split()
             if len(areaIds)!=width:
-                ERROR_MSG('area data error:', i, width, len(areaIds))
+                LOG_ERR('area data error:', i, width, len(areaIds))
                 return
 
             for j,aid in enumerate(areaIds):

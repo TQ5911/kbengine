@@ -132,3 +132,5 @@ class ILeaderBoard(object):
 
         if leaderBoardType == gameconst.LeaderBoardType.AVATAR_SCORE:
             self.avatarScoreRank = rank
+        
+        self.avatarRankData[leaderBoardType] = rank

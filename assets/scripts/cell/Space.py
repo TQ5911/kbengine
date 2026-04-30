@@ -44,7 +44,7 @@ class SpaceEntityGenerateMixin(object):
 
 class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader, iGroupEntityLoader.IGroupEntityLoader, iFubenSpace.IFubenSpace):
     def __init__(self):
-        INFO_MSG("Space#__init__", self.spaceNo, self.spaceID, self.dungeonId, KBEngine.getComponentGroupOrder())
+        LOG_IFO("Space#__init__", self.spaceNo, self.spaceID, self.dungeonId, KBEngine.getComponentGroupOrder())
         iEntityLoader.IEntityLoader.__init__(self)
         iGroupEntityLoader.IGroupEntityLoader.__init__(self)
         gameglobal.localSpaceNoMap[self.spaceNo] = self
@@ -56,23 +56,23 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
         self.base.initCellField(self.spaceID)
 
         # 完整地图用包含了navmesh/tmx的目录路径
-        self.spaceMap = formula.whatSpaceMap(self.spaceNo)
+        self.spaceMap = formula.getSpaceMap(self.spaceNo)
         # 多个tmx拼接时给定具体tmx文件的路径
         if not self.spaceMap and self.spaceNo:
-            gameengine.reportCritical("space map is empty! %s %s" % (self.spaceNo, self.spaceID))
+            gameengine.panicStack("space map is empty! %s %s" % (self.spaceNo, self.spaceID))
 
         if self.spaceMap:
             # KBEngine.addSpaceGeometryMapping(self.spaceID, None, self.spaceMap)
             kbeUtils.addSpaceGeometryMapping(self.spaceID, None, self.spaceMap)
 
-        if formula.spaceInWorldLine(self.spaceNo) and gameconfig.cellAppCount() > utils.getLineMaxNumber(
-                formula.getLineType(self.spaceNo)) * 2:
+        if formula.inWorldLineScene(self.spaceNo) and gameconfig.cellAppCount() > utils.fetchLineMaxNumber(
+                formula.parseLineType(self.spaceNo)) * 2:
             pass
             # KBEngine.setAppFlags(KBEngine.APP_FLAGS_NOT_PARTCIPATING_LOAD_BALANCING|flags)
         elif not gameglobal.staticCell:
             gameglobal.staticCell = self
 
-        if formula.spaceInWorldLine(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo):
             _pos = gameconst.SPACE_FIX_POS
             _dir = (0, 0, 0)
             _params = {
@@ -100,10 +100,10 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
             return
 
         direction = (float(direction[0]), float(direction[1]), float(direction[2]))
-        DEBUG_MSG('createCellLocally~~~~~~~~~~', pos, direction)
+        LOG_DBG('createCellLocally~~~~~~~~~~', pos, direction)
         properties['spaceNo'] = self.spaceNo
         entity = KBEngine.createEntity(entType, self.spaceID, pos, direction, properties)
-        DEBUG_MSG('after createCellLocally~~~~~~~~~~', entity)
+        LOG_DBG('after createCellLocally~~~~~~~~~~', entity)
         return entity
 
     def onDestroy(self):
@@ -122,12 +122,7 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
             self._onTimerCallback(tid)
 
     def onEntireConstruct(self):
-        INFO_MSG('zt: onEntireConstruct', self.id, self.spaceNo)
-        # 寻路数据原点的坐标导出到tmx文件中,引擎按照新格式去读取，脚本无需再调用KBEngine.setTileMapOrigin
-        # _, origin = formula.whatSpaceInfo(self.spaceNo)
-        # mapId = formula.getMapId(self.spaceNo)
-        # origin = gameconst.spaceDict[mapId]['origin']
-        # KBEngine.setTileMapOrigin(self.spaceID, origin[0], origin[1])
+        LOG_IFO('zt: onEntireConstruct', self.id, self.spaceNo)
 
     def calculateSpawnTime(self):
         # space only have default spawnspan
@@ -142,18 +137,18 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
             getattr(ent, func)(*args)
 
     def setHomeCompByteMap(self, box, x, z, height, width, byteMap):
-        DEBUG_MSG('ckz: setHomeCompByteMap', x, z, height, width)
+        LOG_DBG('ckz: setHomeCompByteMap', x, z, height, width)
         byteMap = bytes(byteMap)
         KBEngine.addLayerOneTilesFromBytes(self.spaceID, x, z, height, width, byteMap)
         box.onHomeByteMapSet(self.spaceNo)
 
     def updateSpaceWeight(self, spaceWeight):
-        INFO_MSG('updateSpaceWeight', self.spaceID, spaceWeight)
+        LOG_IFO('updateSpaceWeight', self.spaceID, spaceWeight)
         self.setSpaceWeight(self.spaceID, spaceWeight)
 
     def callOnSpaceMgr(self, func, args):
         if not self.spaceMgr:
-            ERROR_MSG('callOnSpaceMgr: spaceMgr is None', func, args)
+            LOG_ERR('callOnSpaceMgr: spaceMgr is None', func, args)
             return
 
         getattr(self.spaceMgr, func)(*args)

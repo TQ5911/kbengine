@@ -50,8 +50,8 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 self.matchRaidsPool[tgtId] = []
                 self.matchPlayersPool[tgtId] = []
 
-        self._callback(1, '_doMatch', (), gametimer.TIMER_TAG_DO_RAID_MATCH)
-        self._callback(10, '_checkTimeOutMatch', (), gametimer.TIMER_TAG_DO_RAID_MATCH_TIMEOUT)
+        self.addTimerCB(1, '_doMatch', (), gametimer.TIMER_TAG_DO_RAID_MATCH)
+        self.addTimerCB(10, '_checkTimeOutMatch', (), gametimer.TIMER_TAG_DO_RAID_MATCH_TIMEOUT)
         return
 
     def postReloadScript(self):
@@ -69,21 +69,21 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimerCallback(tid)
 
     def raidAutoMatch(self, raidInfoDic):
-        INFO_MSG('in raidAutoMatch:', raidInfoDic)
+        LOG_IFO('in raidAutoMatch:', raidInfoDic)
         if 0 == raidInfoDic['raidTarget']:
             return
         tmVal = self.raidsDic.get(raidInfoDic['raidID'])
         if tmVal:
             self._rmRaidFromMatchPool(raidInfoDic['raidID'])
 
-        tmVal = RaidTeamMatchVal(raidInfoDic, utils.getNow())
+        tmVal = RaidTeamMatchVal(raidInfoDic, utils.curTS())
         if tmVal.isRaidFull():
             return
         self._addRaidToPool(tmVal)
         return
 
     def onRaidInfoUpdate(self, raidInfoDic):
-        INFO_MSG('in onRaidInfoUpdate:', raidInfoDic)
+        LOG_IFO('in onRaidInfoUpdate:', raidInfoDic)
         if 0 == raidInfoDic['raidTarget']:
             self._rmRaidFromMatchPool(raidInfoDic['raidID'])
             return
@@ -101,7 +101,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def raidStopAutoMatch(self, raidID):
-        INFO_MSG('in raidStopAutoMatch:', raidID)
+        LOG_IFO('in raidStopAutoMatch:', raidID)
         self._rmRaidFromMatchPool(raidID)
         return
 
@@ -114,7 +114,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return True
 
     def onRaidPlayerMatchInfoUpdate(self, playerInfoDic):
-        INFO_MSG('in onRaidPlayerMatchInfoUpdate:', playerInfoDic)
+        LOG_IFO('in onRaidPlayerMatchInfoUpdate:', playerInfoDic)
         pmVal = self.playersDic.get(playerInfoDic['playerGbId'], None)
         if not pmVal:
             return
@@ -122,13 +122,13 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def raidPlayerAutoMatch(self, playerMatchDic):
-        INFO_MSG('in playerAutoMatch:', playerMatchDic)
+        LOG_IFO('in playerAutoMatch:', playerMatchDic)
         pmVal = self.playersDic.get(playerMatchDic['playerGbId'], None)
         if pmVal:
             self._rmPlayerFromMatchPool(playerMatchDic['playerGbId'])
 
-        now = utils.getNow()
-        pmVal = RaidPlayerMatchVal(playerMatchDic, utils.getNow())
+        now = utils.curTS()
+        pmVal = RaidPlayerMatchVal(playerMatchDic, utils.curTS())
         self._playerStartMatch(pmVal)
         playerMatchDic['playerBox'].cell.onCellRaidPlayerStartAutoMatch(now, playerMatchDic['target'])
         return
@@ -147,7 +147,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def raidPlayerStopAutoMatch(self, playerGbId):
-        INFO_MSG('in raidPlayerStopAutoMatch:', playerGbId)
+        LOG_IFO('in raidPlayerStopAutoMatch:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -156,7 +156,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerAutoMatchTimeout(self, playerGbId):
-        INFO_MSG('in playerAutoMatchTimeout:', playerGbId)
+        LOG_IFO('in playerAutoMatchTimeout:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -165,7 +165,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def _rmPlayerFromMatchPool(self, playerGbId):
-        INFO_MSG('in _rmPlayerFromMatchPool:', playerGbId)
+        LOG_IFO('in _rmPlayerFromMatchPool:', playerGbId)
         pmVal = self.playersDic.pop(playerGbId, None)
         if not pmVal:
             return False
@@ -174,10 +174,10 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return True
 
     def _doMatch(self):
-        self._callback(3, '_doMatch', (), gametimer.TIMER_TAG_DO_MATCH)
+        self.addTimerCB(3, '_doMatch', (), gametimer.TIMER_TAG_DO_MATCH)
         if len(self.raidsDic) > 0 or len(self.playersDic) > 0:
-            # DEBUG_MSG('in _doMatch, matchPlayersPool:', self.matchPlayersPool)
-            # DEBUG_MSG('in _doMatch, matchRaidsPool:', self.matchRaidsPool)
+            # LOG_DBG('in _doMatch, matchPlayersPool:', self.matchPlayersPool)
+            # LOG_DBG('in _doMatch, matchRaidsPool:', self.matchRaidsPool)
             try:
                 matchedPlayers = []
                 for playerGbid, pmVal in self.playersDic.items():
@@ -192,7 +192,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                         if not tmVal.canAddPlayer(pmVal):
                             continue
                         #matched
-                        INFO_MSG('     in _doMatch, matched:', playerGbid, raidUUID)
+                        LOG_IFO('     in _doMatch, matched:', playerGbid, raidUUID)
                         if tmVal.addPlayerToTeam(pmVal):
                             matchedPlayers.append(playerGbid)
                             if tmVal.isRaidFull():
@@ -203,17 +203,17 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 for playerGBID in matchedPlayers:
                     self.playerMatchedSucc(playerGBID)
             except Exception as e:
-                ERROR_MSG('in _doMatch, exception:', e)
+                LOG_ERR('in _doMatch, exception:', e)
         return
 
     def _checkTimeOutMatch(self):
-        #DEBUG_MSG('in _checkTimeOutMatch')
-        self._callback(10, '_checkTimeOutMatch', (), gametimer.TIMER_TAG_CHECK_TIME_OUT_MATCH)
+        #LOG_DBG('in _checkTimeOutMatch')
+        self.addTimerCB(10, '_checkTimeOutMatch', (), gametimer.TIMER_TAG_CHECK_TIME_OUT_MATCH)
         rmPlayers = []
         for playerGbid, pmVal in self.playersDic.items():
             if pmVal.isTimeOut():
                 rmPlayers.append(playerGbid)
-                INFO_MSG('     in _checkTimeOutMatch, rmPlayers:', rmPlayers)
+                LOG_IFO('     in _checkTimeOutMatch, rmPlayers:', rmPlayers)
         for playerGBID in rmPlayers:
             self.playerAutoMatchTimeout(playerGBID)
 
@@ -225,7 +225,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         for raidUUID in fullTeams:
             self.raidStopAutoMatch(raidUUID)
 
-class RaidTeamMatchVal(userType.UserSoleType):
+class RaidTeamMatchVal(userType.UserSingleType):
     def __init__(self, raidInfoDic, startTime):
         self.raidID = raidInfoDic['raidID']
         self.raidCapacity = raidInfoDic['raidCapacity']
@@ -269,9 +269,9 @@ class RaidTeamMatchVal(userType.UserSoleType):
 
     def isTimeOut(self):
         maxMatchTime = TMMCD.datas['maxMatchTime']['value']
-        return self.startTime + maxMatchTime < utils.getNow()
+        return self.startTime + maxMatchTime < utils.curTS()
 
-class RaidPlayerMatchVal(userType.UserSoleType):
+class RaidPlayerMatchVal(userType.UserSingleType):
     def __init__(self, playerInfoDic, startTime):
         self.startTime = startTime
         self.target = playerInfoDic['target']
@@ -282,14 +282,12 @@ class RaidPlayerMatchVal(userType.UserSoleType):
         self.school = playerInfoDic['school']
         self.sex = playerInfoDic['sex']
         self.picFrameId = playerInfoDic['picFrameId']
-        self.bFollow = playerInfoDic['bFollow']
         self.bOnline = playerInfoDic['bOnline']
         self.spaceNo = playerInfoDic['spaceNo']
         self.position = playerInfoDic['position']
         self.hp = playerInfoDic['hp']
         self.fullHp = playerInfoDic['fullHp']
         self.score = playerInfoDic['score']
-        self.hpkScore = playerInfoDic['hpkScore']
         self.mountState = playerInfoDic['mountState']
         self.raidUUID = playerInfoDic['raidUUID']
         self.enableMics = playerInfoDic['enableMics']
@@ -299,7 +297,7 @@ class RaidPlayerMatchVal(userType.UserSoleType):
 
     def isTimeOut(self):
         maxMatchTime = TMMCD.datas['maxMatchTime']['value']
-        return self.startTime + maxMatchTime < utils.getNow()
+        return self.startTime + maxMatchTime < utils.curTS()
 
     def updateMatchProp(self, playerInfoDic):
         self.playerGbId = playerInfoDic['playerGbId']
@@ -309,14 +307,12 @@ class RaidPlayerMatchVal(userType.UserSoleType):
         self.school = playerInfoDic['school']
         self.sex = playerInfoDic['sex']
         self.picFrameId = playerInfoDic['picFrameId']
-        self.bFollow = playerInfoDic['bFollow']
         self.bOnline = playerInfoDic['bOnline']
         self.spaceNo = playerInfoDic['spaceNo']
         self.position = playerInfoDic['position']
         self.hp = playerInfoDic['hp']
         self.fullHp = playerInfoDic['fullHp']
         self.score = playerInfoDic['score']
-        self.hpkScore = playerInfoDic['hpkScore']
         self.mountState = playerInfoDic['mountState']
         self.raidUUID = playerInfoDic['raidUUID']
         self.enableMics = playerInfoDic['enableMics']

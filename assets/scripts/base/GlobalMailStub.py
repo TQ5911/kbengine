@@ -26,7 +26,8 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.delayMailTimerId = 0
         self.sendMailTimerId = 0
         self.sendMailDeque = collections.deque()
-
+        LOG_DBG('GlobalMailStub')
+                
     def postReloadScript(self):
         super(GlobalMailStub, self).postReloadScript()
         for globalMail in self.mailList:
@@ -47,12 +48,12 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def trySendDelayMails(self):
         if self.delayMailTimerId:
-            self._cancelCallback(self.delayMailTimerId, gametimer.TIMER_TAG_CHECK_SEND_DELAY_MAILS)
+            self.cancelTimerCB(self.delayMailTimerId, gametimer.TIMER_TAG_CHECK_SEND_DELAY_MAILS)
             self.delayMailTimerId = 0
 
         if not self.delayMailList:
             return
-        now = utils.getNow()
+        now = utils.curTS()
         sendMailList = []
         minLeftTime = float('inf')
         for mail in self.delayMailList:
@@ -64,113 +65,47 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if mail.createTime-now < minLeftTime:
                 minLeftTime = mail.createTime-now
 
-        INFO_MSG('trySendDelayMails, sendMailList:', [gmail.toGlobalMailDict() for gmail in sendMailList])
+        LOG_IFO('trySendDelayMails, sendMailList:', [gmail.toGlobalMailDict() for gmail in sendMailList])
         for gmail in sendMailList:
             self.delayMailList.remove(gmail)
         self.addToSendMailDeque(sendMailList)
 
         if minLeftTime != float('inf'):
-            INFO_MSG('trySendDelayMails:', minLeftTime, len(self.delayMailList))
-            self.delayMailTimerId = self._callback(minLeftTime, 'trySendDelayMails', (),
+            LOG_IFO('trySendDelayMails:', minLeftTime, len(self.delayMailList))
+            self.delayMailTimerId = self.addTimerCB(minLeftTime, 'trySendDelayMails', (),
                                                    gametimer.TIMER_TAG_CHECK_SEND_DELAY_MAILS, 'delayMailTimerId')
 
-    def sendIDIPGlobalMail(self, su, cmdId, attachStr, title, cont, beginTime, endTime, serial, idipSource, mailId,
-                           minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, idipMailType):
-        INFO_MSG('sendIDIPGlobalMail:', cmdId, attachStr, title, cont, beginTime, endTime, serial, idipSource)
-        # if idipMailType == gameconst.IDIPMailType.IDIP_SERVER_ITEM_MAIL:
-        #     respClass = idipDef.IDIP_DO_SEND_SERVER_ITEM_MAIL_RSP
-        # elif idipMailType == gameconst.IDIPMailType.IDIP_LINK_MAIL:
-        #     respClass = idipDef.IDIP_DO_SEND_MAIL_WITH_LINKS_RSP
-        # elif idipMailType == gameconst.IDIPMailType.IDIP_SERVER_PRE_MAIL:
-        #     respClass = idipDef.IDIP_DO_PRE_SEND_SERVER_MAIL_RSP
-        # else:
-        #     ERROR_MSG('sendIDIPGlobalMail, idipType error:', idipMailType)
-        #     return
-
-        # if minRoleTime < 0 or minRoleLevel < 0:
-        #     WARNING_MSG('sendIDIPGlobalMail, minRoleTime or minRoleLevel failed:', minRoleTime, minRoleLevel)
-        #     retCode = gameconst.IDIPErr.ARGS_ERR
-        #     errMsg = 'minRoleTime or minRoleLevel invalid'
-        #     su.sendIDIPResponse(retCode, errMsg, respClass(retCode, errMsg))
-        #     return
-        #
-        # if maxRoleTime <= 0 or maxRoleLevel <=0:
-        #     WARNING_MSG('sendIDIPGlobalMail, maxRoleTime or maxRoleLevel failed:', maxRoleTime, maxRoleLevel)
-        #     retCode = gameconst.IDIPErr.ARGS_ERR
-        #     errMsg = 'maxRoleTime or maxRoleLevel invalid'
-        #     su.sendIDIPResponse(retCode, errMsg, respClass(retCode, errMsg))
-        #     return
-        #
-        # if minRoleTime>=maxRoleTime or minRoleLevel>maxRoleLevel:
-        #     WARNING_MSG('sendIDIPGlobalMail, args error:', minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel)
-        #     retCode = gameconst.IDIPErr.ARGS_ERR
-        #     errMsg = 'minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel invalid'
-        #     su.sendIDIPResponse(retCode, errMsg, respClass(retCode, errMsg))
-        #     return
-        #
-        # attach = mailAssistor.parseAttachStr(attachStr)
-        # now = utils.getNow()
-        # if endTime != 0 and endTime < now:
-        #     WARNING_MSG('sendIDIPGlobalMail, endTime time error:', beginTime, now)
-        #     retCode = gameconst.IDIPErr.ARGS_ERR
-        #     su.sendIDIPResponse(retCode, 'EndTime expired', respClass(retCode, 'EndTime expired'))
-        #     return
-        #
-        # if endTime != 0 and beginTime >= endTime:
-        #     WARNING_MSG('sendIDIPGlobalMail, beginTime and endTime time error:', beginTime, endTime, now)
-        #     retCode = gameconst.IDIPErr.ARGS_ERR
-        #     su.sendIDIPResponse(retCode, 'BeginTime greater EndTime',  respClass(retCode, 'BeginTime greater EndTime'))
-        #     return
-        #
-        # if attach.mailWealthExceedUplimit():
-        #     WARNING_MSG('sendIDIPGlobalMail, mailWealthExceedUplimit')
-        #     retCode = gameconst.IDIPErr.ARGS_ERR
-        #     su.sendIDIPResponse(retCode, 'item count limit', respClass(retCode, 'item count limit'))
-        #     return
-        #
-        # globalMail = Mail.GlobalMail()
-        # globalMail.initNewGlobalMail(mailId, attach, (), title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel)
-        # if endTime:
-        #     globalMail.expiredTime = endTime
-        #
-        # globalMail.createTime = now if beginTime <= now else beginTime
-        # self.delayMailList.append(globalMail)
-        # self.trySendDelayMails()
-        # su.sendIDIPResponse(0, '', respClass(0, ''))
-        return
-
-    def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, 
-                       despArgs, title, cont, minRoleTime, maxRoleTime,
-                       minRoleLevel, maxRoleLevel, channel, srcType):
-        INFO_MSG('in sendGlobalMail:', mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, channel, srcType)
+    def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, 
+                       minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType):
+        LOG_IFO('in sendGlobalMail:', mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType)
         
-        if maxRoleTime <= 0 or maxRoleLevel <=0 :
-            WARNING_MSG('sendGlobalMail, maxRoleTime or maxRoleLevel failed:', maxRoleTime, maxRoleLevel)
+        if dueTime < 0 or maxRoleTime < 0 or maxRoleLevel < 0 :
+            LOG_WARN('sendGlobalMail, maxRoleTime or maxRoleLevel failed:', dueTime, maxRoleTime, maxRoleLevel)
             return
 
-        if minRoleTime>maxRoleTime or minRoleLevel>maxRoleLevel:
-            WARNING_MSG('sendIDIPGlobalMail, args error:', minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel)
+        if minRoleTime > maxRoleTime or minRoleLevel > maxRoleLevel:
+            LOG_WARN('sendGlobalMail, args error:', minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel)
             return
 
         if len(despArgs) != MAMAD.MailArgsNumMap[mailId]:
-            gameengine.reportCritical('     sendGlobalMail, despArgs num error:', mailId, despArgs)
+            gameengine.panicStack('     sendGlobalMail, despArgs num error:', mailId, despArgs)
             return
 
-        if utils.getNow() <= self.lastSendTime:
-            WARNING_MSG('   sendGlobalMail, in sendGlobalMail cd, please send later')
+        if utils.curTS() <= self.lastSendTime:
+            LOG_WARN('   sendGlobalMail, in sendGlobalMail cd, please send later')
             return False
 
         mailData = MAMAD.datas.get(mailId, None)
         if not mailData:
-            WARNING_MSG('   in sendOneGlobalMail, no this mail:', mailId)
+            LOG_WARN('   in sendGlobalMail, no this mail:', mailId)
             return False
 
         if mailData['type'] == gameconst.MailType.PLAYER_MAIL:
-            WARNING_MSG('   in sendOneGlobalMail, not global mail:', mailData['type'])
+            LOG_WARN('   in sendGlobalMail, not global mail:', mailData['type'])
             return False
 
         if not mailData['isOpen']:
-            WARNING_MSG('   in sendOneGlobalMail, not opened')
+            LOG_WARN('   in sendGlobalMail, not opened')
             return False
 
         title = title or ''
@@ -184,6 +119,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             cont, 
             minRoleTime, 
             maxRoleTime, 
+            dueTime,
             minRoleLevel, 
             maxRoleLevel,
             channel,
@@ -191,7 +127,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         )
 
         if globalMail.isExpired():
-            WARNING_MSG('   in sendGlobalMail, mail expired')
+            LOG_WARN('   in sendGlobalMail, mail expired')
             return False
         self.addToSendMailDeque([globalMail])
         return True
@@ -204,64 +140,59 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def startSendGlobalMail(self):
         if self.sendMailTimerId:
-            self._cancelCallback(self.sendMailTimerId, gametimer.TIMER_TAG_SEND_GLOBAL_MAIL)
+            self.cancelTimerCB(self.sendMailTimerId, gametimer.TIMER_TAG_SEND_GLOBAL_MAIL)
             self.sendMailTimerId = 0
         if not self.sendMailDeque:
             return
-        if utils.getNow() <= self.lastSendTime:
-            self.sendMailTimerId = self._callback(2, 'startSendGlobalMail', (),
+        curTime = utils.curTS()
+        if curTime <= self.lastSendTime:
+            self.sendMailTimerId = self.addTimerCB(2, 'startSendGlobalMail', (),
                                                    gametimer.TIMER_TAG_SEND_GLOBAL_MAIL, 'sendMailTimerId')
             return
 
         globalMail = self.sendMailDeque.popleft()
-        self._doSendGlobalMail(globalMail)
+        self._doSendGlobalMail(curTime, globalMail)
         if self.sendMailDeque:
-            INFO_MSG('startSendGlobalMail, left mail num:', len(self.sendMailDeque))
-            self.sendMailTimerId = self._callback(2, 'startSendGlobalMail', (),
+            LOG_IFO('startSendGlobalMail, left mail num:', len(self.sendMailDeque))
+            self.sendMailTimerId = self.addTimerCB(2, 'startSendGlobalMail', (),
                                                    gametimer.TIMER_TAG_SEND_GLOBAL_MAIL, 'sendMailTimerId')
 
-    def _doSendGlobalMail(self, globalMail):
-        INFO_MSG('_doSendGlobalMail:', globalMail.toGlobalMailDict())
-        self.lastSendTime = utils.getNow()
-        globalMail.createTime = utils.getNow()
+    def _doSendGlobalMail(self, curTime, globalMail):
+        LOG_IFO('_doSendGlobalMail:', globalMail.toGlobalMailDict())
+        self.lastSendTime = curTime
+        globalMail.createTime = curTime
         self.mailList.append(globalMail)
         self.writeToDB(functools.partial(self._onGlobalMailWriteToDB, globalMail.globalMailGBID))
 
     def delayWriteToDBGlobalMail(self, globalMailGBID):
         self.writeToDB(functools.partial(self._onGlobalMailWriteToDB, globalMailGBID))
 
-    def _onGlobalMailWriteToDB(self, globalMailGBID, isSuccess, baseRef):
-        INFO_MSG('_onGlobalMailWriteToDB:', globalMailGBID, isSuccess, baseRef)
-        if isinstance(isSuccess, int) and isSuccess == gameconst.WriteToDBResult.ARCHIVING:
-            self._callback(1, 'delayWriteToDBGlobalMail', (globalMailGBID, ), gametimer.TIMER_TAG_GLOBAL_MAIL_WRITE_TO_DB)
+    def _onGlobalMailWriteToDB(self, globalMailGBID, saveStatus, baseRef):
+        LOG_IFO('_onGlobalMailWriteToDB:', globalMailGBID, saveStatus, baseRef)
+        # 引擎里的落库保存时，前一个保存请求还在进行中，需要延迟处理
+        if saveStatus == gameconst.WriteToDBResult.ARCHIVING:
+            self.addTimerCB(1, 'delayWriteToDBGlobalMail', (globalMailGBID, ), gametimer.TIMER_TAG_GLOBAL_MAIL_WRITE_TO_DB)
             return
 
+        # 引擎里找不到具名的数据库连接，放弃保存了，报个错
+        if saveStatus == gameconst.WriteToDBResult.MISSING_DB_INTERFACE:
+            self.mailList.remove(globalMail)
+            gameengine.panicStack('_onGlobalMailWriteToDB: db interface is missing:', globalMailGBID)
+            return
+        
         globalMail = self.findGlobalMailByMailGBID(globalMailGBID)
         if not globalMail:
-            gameengine.reportCritical('_onGlobalMailWriteToDB not found globamail:', globalMailGBID)
+            gameengine.panicStack('_onGlobalMailWriteToDB: not found globamail:', globalMailGBID)
             return
 
-        if not isSuccess:
-            gameengine.reportCritical('_onGlobalMailWriteToDB writeToDB failed')
+        if not saveStatus:
             self.mailList.remove(globalMail)
+            gameengine.panicStack('_onGlobalMailWriteToDB: writeToDB failed')
             return
-
+        # 增加同步全服
         gameengine.broadcastBaseapp('onSyncOneGlobalMail', (globalMail, ))
+        # 检查全服存储限制
         self.checkGlobalMailNum()
-        self.makeGlobalMailLog(globalMail)
-
-    def makeGlobalMailLog(self, globalMail):
-        attachStr = globalMail.extraAttach.getItemsTLogStr()
-        showAttachStr = ''
-        attachList = attachStr.split(';')
-        for attachItemStr in attachList:
-            if not attachItemStr:
-                continue
-            itemId, itemNum = attachItemStr.split(',')
-            itemName = dataUtils.getItemSpecialDetailData(int(itemId))['name']
-            showAttachStr += itemName + ':' + itemNum + ';'
-        if showAttachStr:
-            showAttachStr = showAttachStr.strip(';')
 
     def findGlobalMailByMailGBID(self, globalMailGBID):
         for mail in reversed(self.mailList):
@@ -269,38 +200,35 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 return mail
 
     def checkGlobalMailNum(self):
+        # 1.处理过期的全服邮件
         expiredMailPosList = []
         for pos, mail in enumerate(self.mailList):
-            if mail.isExpired() or mail.isTracebackTimeOut():
+            if mail.isExpired():
                 expiredMailPosList.append(pos)
 
         for pos in reversed(expiredMailPosList):
             self.mailList.pop(pos)
 
-        mailMaxNum = MACF.datas['mailNumMax']['value']
-        if len(self.mailList) <= mailMaxNum:
+        # 2.检查是否接近上限，报个警
+        if len(self.mailList) / gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT >= gameconst.MailConstID.MAX_GLOBAL_MAIL_OVER_RATE / 100:
+            gameengine.panicStack('checkGlobalMailNum, global mail save is closed to up limit ', \
+                                        len(self.mailList), \
+                                        gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT, \
+                                        gameconst.MailConstID.MAX_GLOBAL_MAIL_OVER_RATE
+                                    )
+        # 3.正常范围内，正常同步全服
+        if len(self.mailList) <= gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT:
             expiredMailPosList and self.syncGlobalMailsList()
             return
-
-        canDeleteMailPosList = []
-        for pos, mail in enumerate(self.mailList):
-            mailData = MAMAD.datas[mail.mailId]
-            if mailData['type'] == gameconst.MailType.GLOBAL_MAIL_EXCLUDE_NEW_PLAYERS:
-                canDeleteMailPosList.append(pos)
-
-        deleteNum = len(canDeleteMailPosList)-mailMaxNum
-        deletePosList = []
-        if deleteNum > 0:
-            deletePosList = canDeleteMailPosList[:deleteNum]
-            for pos in reversed(deletePosList):
-                self.mailList.pop(pos)
-
-        if expiredMailPosList or deletePosList:
-            self.syncGlobalMailsList()
+        
+        # 4.处理超过上限，先删除最老的邮件
+        self.mailList = self.mailList[-1*gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT:]
+        # 5.同步全服
+        self.syncGlobalMailsList()
         return
 
     def syncGlobalMailsList(self):
-        gameengine.broadcastBaseapp('onSyncGlobalMailsList', (self.mailList, self.deleteMailsList))
+        gameengine.broadcastBaseapp('onSyncGlobalMailsList', (self.mailList,))
         return
 
     ##################################### gm ##########################################
@@ -309,8 +237,8 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         mailList = [{'maiGBID':mail.globalMailGBID, 'mailId':mail.mailId,
                      'createTime':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mail.createTime))}
                      for mail in list(self.mailList)[:-(mailNum+1):-1]]
-        INFO_MSG('gmGetGlobalMailList:', str(mailList))
-        box.client.onRecvAvatarChannelMsg(gameconst.ChatChannel.WORLD, channelAvatarInfo, str(mailList))
+        LOG_IFO('gmGetGlobalMailList:', str(mailList))
+        box.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, channelAvatarInfo, str(mailList))
 
     def gmDeleteOneGlobalMail(self, mailGBID):
         return

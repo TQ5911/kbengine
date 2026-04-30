@@ -29,19 +29,19 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         #     # raise error if fail to init engine airwall
         #     self.addEngineAirWall()
         # except:
-        #     ERROR_MSG('RebornPos.__init__:: add Engine airwall failed')
+        #     LOG_ERR('RebornPos.__init__:: add Engine airwall failed')
         #     import traceback
         #     traceback.print_exc()
 
         spaceMgr = self.spaceMgr
-        if formula.isDungeonSpace(self.spaceNo):
-            gid = utils.getGidFromGameEntityId(self.gameEntityId)
-            dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        if formula.inDungeonScene(self.spaceNo):
+            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
+            dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.rebornPosId),
                                              'gid_{}'.format(gid), self.__class__.__name__,))
                 
-        elif formula.isSiegeWarSpace(self.spaceNo):
+        elif formula.inSiegeWarScene(self.spaceNo):
             if spaceMgr:
                 spaceMgr.addEntity(self.id, ('', self.__class__.__name__,))
 
@@ -51,23 +51,23 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         return self.rebornPosId
 
     def getTmxName(self):
-        if formula.spaceInWorldLine(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo):
             dunName =  utils.getDunModuleName(self.spaceNo)
         else:
             dunName =  utils.getDunModuleName(self.spaceNo // gameconst.SPACE_NO_HOME_INTERVAL)
 
-        gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         dunFileName = '{}_{}.tmx'.format(dunName, gid)
 
         return dunFileName
 
     def getTmxAnchorPoint(self):
-        if formula.spaceInWorldLine(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo):
             data = utils.getDunModuleData(self.spaceNo)
         else:
             data = utils.getDunModuleData(self.spaceNo // gameconst.SPACE_NO_HOME_INTERVAL)
 
-        gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         props = data[str(gid)]['Props']
         return int(props['MPosX']), int(props['MPosZ'])
 
@@ -85,7 +85,7 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         pass
 
     def _preSafeDestory(self):
-        DEBUG_MSG('_preSafeDestory::')
+        LOG_DBG('_preSafeDestory::')
         super(RebornPos, self)._preSafeDestory()
 
     def safeDestroy(self, forceDestroy=False):

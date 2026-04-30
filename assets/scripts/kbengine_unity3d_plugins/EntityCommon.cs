@@ -18,6 +18,7 @@ namespace KBEngine
 		public virtual void onBreakCastingSkill(Int32 arg1, UInt32 arg2, Int32 arg3) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onBreakChannelingSkill(Int32 arg1, UInt32 arg2, Int32 arg3) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onDead(Int32 arg1) {} //Avatar Monster Summon Npc 
+		public virtual void onExitShiftByConflict(Vector3 arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onGameConfigChanged(List<string> arg1, List<Byte> arg2) {} //Account Avatar 
 		public virtual void onGetAureoleInfo(Int32 arg1, CLIENT_AUREOLES arg2) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onGetBuffInfo(Int32 arg1, CLIENT_BUFFS arg2) {} //Avatar Monster Summon Npc Creation 

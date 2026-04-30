@@ -7,7 +7,7 @@ import math
 import userType
 
 
-class AvatarScores(userType.UserSoleType):
+class AvatarScores(userType.UserSingleType):
 
     __attrs__ = ("equipments", "level", "rewardFightProp", 'mount', 'pet', 'skill', 'guildtrain', 'meridian')
 
@@ -24,11 +24,11 @@ class AvatarScores(userType.UserSoleType):
         crtValue = self.__dict__.get(key, 0)
         if crtValue != value:
             object.__setattr__(self, key, value)
-            DEBUG_MSG('\- AvatarScoreColl:: set "{}" from {} to {}'.format(key, crtValue, value))
-            DEBUG_MSG('  |- CurrentScore: ', self.__repr__())
-            DEBUG_MSG('  |- TotalScore:   ', self.totalScore)
+            LOG_DBG('\- AvatarScoreColl:: set "{}" from {} to {}'.format(key, crtValue, value))
+            LOG_DBG('  |- CurrentScore: ', self.__repr__())
+            LOG_DBG('  |- TotalScore:   ', self.totalScore)
         else:
-            DEBUG_MSG('\= AvatarScoreColl:: un-change "{}" {} == {}'.format(key, crtValue, value))
+            LOG_DBG('\= AvatarScoreColl:: un-change "{}" {} == {}'.format(key, crtValue, value))
 
     def __init__(self, equipments=0, level=0, rewardFightProp=0, mount=0, pet=0, skill=0, guildtrain=0, meridian=0, bless=0):
         self.equipments = equipments            # 装备评分

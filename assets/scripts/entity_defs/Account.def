@@ -290,6 +290,11 @@
         <minorAccountConstraintTip>
             <Arg>   UINT64              </Arg>
         </minorAccountConstraintTip>
+
+        <onGetAuthOfflineTimeClient>
+            <Arg>   PLAYER_GBID         </Arg>
+            <Arg>   LONGTIME            </Arg>
+        </onGetAuthOfflineTimeClient>
     </ClientMethods>
 
     <BaseMethods>
@@ -373,6 +378,14 @@
 
         <accountOffline> <Exposed/>
         </accountOffline>
+
+        <getAuthOfflineTime> <Exposed/>
+            <Arg>    PLAYER_GBID    </Arg>
+        </getAuthOfflineTime>
+
+        <getAuthOfflineTimeButOffline>
+            <Arg>    ARRAY  <of>    PLAYER_GBID     </of>   </Arg>
+        </getAuthOfflineTimeButOffline>
     </BaseMethods>
 
     <CellMethods>

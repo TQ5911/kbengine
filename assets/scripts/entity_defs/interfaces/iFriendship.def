@@ -202,6 +202,10 @@
         <onAuthExpireChanged>
             <Arg>           LONGTIME                        </Arg>
         </onAuthExpireChanged>
+
+        <doGetAuthOfflineTime>
+            <Arg>           ENTITYCALL                      </Arg>
+        </doGetAuthOfflineTime>
     </BaseMethods>
 
     <CellMethods>

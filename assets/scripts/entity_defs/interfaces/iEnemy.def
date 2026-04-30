@@ -1,10 +1,20 @@
 <root>
     <Properties>
         <enemyMgr>
-            <Type>          ENEMY_MGR_DATA_INFO    </Type>
-            <Flags>         BASE_AND_CLIENT        </Flags>
-            <Persistent>    true                        </Persistent>
+            <Type>          ENEMY_MGR_DATA_INFO     </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
         </enemyMgr>
+        <enemyScheduleTag>
+            <Type>          BOOL                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </enemyScheduleTag>
+        <enemyScheduleTimerId>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </enemyScheduleTimerId>
     </Properties>
 
     <BaseMethods>
@@ -34,6 +44,24 @@
             <Arg>          BOOL                         </Arg>
             <Arg>          PYTHON                       </Arg>
         </onGetEnemyPosInfoResult>
+
+        <onScheduleEnemyPosInfoResult>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </onScheduleEnemyPosInfoResult>
+
+        <getEnemyRecord> <Exposed/>
+            <Arg>          PLAYER_GBID                  </Arg>
+        </getEnemyRecord>
+
+        <switchEnemySchedule> <Exposed/>
+            <Arg>          BOOL                         </Arg>
+        </switchEnemySchedule>
+
+        <getRecordList> <Exposed/>
+        </getRecordList>
+
     </BaseMethods>
 
     <ClientMethods>
@@ -58,11 +86,25 @@
             <Arg>          PLAYER_GBID </Arg>
             <Arg>          BOOL                         </Arg>
             <Arg>          SPACE_NO                     </Arg>
+            <Arg>          BOOL                       </Arg>
         </sendEnemyPosInfoToClient>
 
         <onInitEnemyRecord>
             <Arg>          BOOL                         </Arg>
             <Arg>          ARRAY <of> ENEMY_RECORD_DATA_LIST </of> </Arg>
         </onInitEnemyRecord>
+
+        <onEnemyRecord>
+            <Arg>          ENEMY_RECORD_DATA_LIST       </Arg>
+        </onEnemyRecord>
+
+        <showEnemyIcon>
+            <Arg>          BOOL                         </Arg>
+        </showEnemyIcon>
+
+        <onRecordList>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          ARRAY <of> CLI_RECORD_DATA_INFO </of>    </Arg>
+        </onRecordList>
     </ClientMethods>
 </root>

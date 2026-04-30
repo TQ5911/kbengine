@@ -345,6 +345,17 @@ datas = _tools.RODict({
         "baseSpeed": 0.0,
         "adjSpeed": 0.0,
     }),
+    "5003_01_liushamaster_pig": _tools.RODict({
+        "resource": "5003_01_liushamaster_pig",
+        "name": "冲锋猪猪",
+        "resourcePath": "Assets/Res/art/char/monster/5003_01_liushamaster_pig.prefab",
+        "battleType": 0,
+        "bePushedDistance": 1.0,
+        "bePushedSpeed": 10.0,
+        "bePushedExTime": 0.667,
+        "baseSpeed": 0.0,
+        "adjSpeed": 0.0,
+    }),
     "5009_00_wudumaster_01": _tools.RODict({
         "resource": "5009_00_wudumaster_01",
         "name": "三头蛟1",

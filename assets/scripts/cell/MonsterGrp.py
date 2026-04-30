@@ -26,8 +26,8 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
 
     def __init__(self):
         iCell.ICell.__init__(self)
-        INFO_MSG('create monster group: {}'.format(self.id))
-        if formula.isDungeonSpace(self.spaceNo):
+        LOG_IFO('create monster group: {}'.format(self.id))
+        if formula.inDungeonScene(self.spaceNo):
             if self.spaceMgr:
                 self.spaceMgr.addEntity(
                     self.id,
@@ -37,13 +37,13 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
             self.initAllMonsters()
 
     def initAllMonsters(self):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         _iterGIDs = []
         for _gid in self.getMonsterGIDs():
             _monData = _dunData[str(_gid)]
             _refreshNum = int(_monData['Props']['RefreshNum'])
-            for i in utils.generateGameEntityId(_gid, _refreshNum):
+            for i in utils.genGameEntityId(_gid, _refreshNum):
                 _iterGIDs.append(i)
 
         _entityProps = []
@@ -54,12 +54,16 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
             KBEngine.createEntity(_className, self.spaceID, _pos, _dir, _params)
 
     def getMonsterGIDs(self):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _groupData = utils.getDunGroupModuleData(_mapId)
         return _groupData.get(str(self.groupId))
 
-    def doEntityRefreshGrp(self, gameEntityId):
+    def doEntityRefreshGrp(self, boxGroupId, gameEntityId):
         if KBEngine.isShuttingDown():
+            return
+        
+        if boxGroupId > 0 and self.spaceMgr and self.spaceMgr.boxGroupHasUnlock(boxGroupId):
+            self.spaceMgr.addBoxGroupMonster(boxGroupId, gameEntityId, self.id)
             return
 
         _entityProps = []
@@ -143,12 +147,12 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         KBEngine method.
         entity销毁
         """
-        DEBUG_MSG("monsterGrp::onDestroy: %i." % self.id)
+        LOG_DBG("monsterGrp::onDestroy: %i." % self.id)
 
         self._clearMonsters()
 
     def _clearMonsters(self):
-        DEBUG_MSG('Reset monsters monsterGroupId.')
+        LOG_DBG('Reset monsters monsterGroupId.')
         for _, monster in self.monsters:
             if monster.monsterGroupId == self.id:
                 monster.monsterGroupId = 0

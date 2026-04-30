@@ -1,0 +1,221 @@
+<root>
+    <Interfaces>
+        <Interface>     iBaseNoCell     </Interface>
+        <Interface>     iGlobal         </Interface>
+        <Interface>     iTimerBase      </Interface>
+        <Interface>     iCycleEvent     </Interface>
+    </Interfaces>
+
+     <Properties>
+        <bountyInfoData>
+            <Type>          BOUNTY_INFO     </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </bountyInfoData>
+
+        <publishBountyDict>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       {}              </Default>
+        </publishBountyDict>
+
+        <preyBountyDict>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       {}              </Default>
+        </preyBountyDict> 
+
+        <hunterBountyDict>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       {}              </Default>
+        </hunterBountyDict> 
+
+        <showPublicBountyList>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+        </showPublicBountyList> 
+
+        <bountyListVersionId>
+            <Type>          UINT32          </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       1              </Default>
+        </bountyListVersionId>
+
+        <checkExpiredBountyHeap>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+        </checkExpiredBountyHeap>
+
+        <checkExpiredBountyTimerId>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </checkExpiredBountyTimerId>
+
+        <updateExpiredBountyTimerId>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </updateExpiredBountyTimerId>
+
+        <hunterRankInfoData>
+            <Type>          HUNTER_RANK_INFO    </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>    true                </Persistent>
+        </hunterRankInfoData>
+
+        <allRankInfoDataList>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+        </allRankInfoDataList>
+
+        <showPublicRankDataList>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+        </showPublicRankDataList> 
+
+        <persistentVersionId>
+            <Type>          UINT32          </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       1              </Default>
+        </persistentVersionId>
+
+        <lastPersistentTimestamp>
+            <Type>          LONGTIME        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0              </Default>
+        </lastPersistentTimestamp>
+    </Properties>
+
+
+    <BaseMethods>
+        <updateBounty>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           PY_DICT         </Arg>
+        </updateBounty>
+
+        <initQueryBountyInfo>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           PLAYER_GBID     </Arg>
+        </initQueryBountyInfo>
+
+        <publishBounty>
+            <Arg>           MAILBOX             </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+        </publishBounty>
+
+        <onPublisherPrePublishBountyRes>
+            <Arg>           MAILBOX                 </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onPublisherPrePublishBountyRes>
+
+        <onNoticeBecomePreyFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           UUID         </Arg>
+        </onNoticeBecomePreyFailed>
+        
+
+        <acceptBounty>
+            <Arg>           MAILBOX             </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+        </acceptBounty>
+
+        <onHunterPreAcceptBountyRes>
+            <Arg>           MAILBOX                 </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onHunterPreAcceptBountyRes>
+
+        <onNoticeBecomePreyHunterFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           UUID         </Arg>
+        </onNoticeBecomePreyHunterFailed>
+
+        <onNoticeHasAcceptedFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           UUID         </Arg>
+        </onNoticeHasAcceptedFailed>
+
+        <complateBounty>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           UUID            </Arg>
+        </complateBounty>
+
+        <onNoticeComplateBountyFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onNoticeComplateBountyFailed>
+
+
+        <onNoticeExpiredBountyFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onNoticeExpiredBountyFailed>
+
+        <onNoticeAssignedHunterFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           MAILBOX         </Arg>
+        </onNoticeAssignedHunterFailed>
+
+        <onWaitForPrePublishBounty>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+        </onWaitForPrePublishBounty>
+
+        <onHunterPrePublishBountyRes>
+            <Arg>           MAILBOX                 </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onHunterPrePublishBountyRes>
+
+        <publishBountyResFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </publishBountyResFailed>
+
+        <acceptBountyResFailed>
+            <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           UINT8                   </Arg>
+        </acceptBountyResFailed>
+
+
+        <getShowPublicRankList>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT32          </Arg>
+        </getShowPublicRankList>
+        
+        <getShowPublicBountyList>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+        </getShowPublicBountyList>
+
+        <updateBountyAvatarInfo>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           PY_DICT         </Arg>
+        </updateBountyAvatarInfo>
+        
+        <gmShowBountyInfo>
+        </gmShowBountyInfo>
+	</BaseMethods>
+
+	<CellMethods>
+	</CellMethods>
+
+	<ClientMethods>
+	</ClientMethods>
+
+</root>

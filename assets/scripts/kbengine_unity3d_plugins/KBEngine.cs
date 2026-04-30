@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "02CD3026D95B4580FA04A5CDEB0AF61B";
+        public string serverEntitydefMD5 = "4260A3D174E785F9B578AC744317BE18";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -2737,13 +2737,9 @@ namespace KBEngine
                 entity.direction.Set(entity.direction.x, entity.direction.y, yaw);
                 Event.fireOut(EventOutTypes.updatePosition, entity);
                 entity.onSetPosition();
-                entity.onSetDirection();
+                entity.onSetDirectionSmooth();
                 entity.onUpdateVolatileData();
             }
-
-            _entityServerPos.x = x;
-            _entityServerPos.y = y;
-            _entityServerPos.z = z;
         }
     }
 

@@ -9,6 +9,7 @@ import utils
 import json
 import gamePlay_gamePlay as GMP
 import creep_base as CBD
+import creep_coefficient as C_CD
 import character_roleData_r_school as SD
 import itemData_itemData as ID
 import NPC_Pick as NPD
@@ -70,7 +71,7 @@ class DropUnit():
                 QA_DROP_GLOBAL_CACHE[cacheKey]['callbacks'].append(callback)
             process_info = self._get_process_info(cacheKey)
             return False, cacheStatus, '正在执行中，请等待', process_info   
-        self.startTime[cacheKey] = utils.getNow()
+        self.startTime[cacheKey] = utils.curTS()
         QA_DROP_GLOBAL_CACHE[cacheKey] = {'data': None, 'status': CACHE_STATUS_RUNNING, 'callbacks': [], 'process_info': {}}
         if callback:
             QA_DROP_GLOBAL_CACHE[cacheKey]['callbacks'].append(callback)
@@ -78,8 +79,8 @@ class DropUnit():
         return False, cacheStatus, '开始执行，请等待', {}
     
     def _setCacheResult(self, cacheKey, data):
-        endTime = utils.getNow()
-        DEBUG_MSG("DropUnit: _setCacheResult cacheKey:%s dataLen:%s costTime:%s" % (cacheKey, len(data), endTime - self.startTime[cacheKey])) 
+        endTime = utils.curTS()
+        LOG_DBG("DropUnit: _setCacheResult cacheKey:%s dataLen:%s costTime:%s" % (cacheKey, len(data), endTime - self.startTime[cacheKey])) 
         QA_DROP_GLOBAL_CACHE[cacheKey]['data'] = data
         QA_DROP_GLOBAL_CACHE[cacheKey]['status'] = CACHE_STATUS_FINISHED
         self._doCacheCallback(cacheKey)
@@ -117,7 +118,7 @@ class DropUnit():
             else:
                 genNum = leftTimes
                 leftTimes = 0
-            INFO_MSG("DropUnit: batchGenAward rewardId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
+            LOG_IFO("DropUnit: batchGenAward rewardId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
             self._update_process_info(cacheKey, genNum)
             if genNum > 0:
                 # 调用 getAward 并将结果添加到合并列表中
@@ -199,7 +200,7 @@ class DropUnit():
             Level = 0
             if ClassName == 'Monster':
                 Level = props.get('Level', 0)
-                rewardIDs = CBD.datas.get(EntityID, {}).get('rewardID', ()) or []
+                rewardIDs = dataUtils.getMonsterRewardIds(EntityID, Level)
                 Name = Name or CBD.datas.get(EntityID, {}).get('name', '')
                 goCount = True
             elif ClassName == 'Collection':
@@ -229,7 +230,7 @@ class DropUnit():
                             })
             
         def callback(output, _outputByDun=outputByDun, _cacheKey=cacheKey):
-            DEBUG_MSG(f"DropUnit: getDunDrop done dunNo:{dunNo} num:{num} outputByDunLen:{len(outputByDun)} count_data_list:{len(count_data_list)}")
+            LOG_DBG(f"DropUnit: getDunDrop done dunNo:{dunNo} num:{num} outputByDunLen:{len(outputByDun)} count_data_list:{len(count_data_list)}")
             # 为了避免回传超长，这里分开传，在前端拼
             all_data = {
                 'dropData': output,
@@ -315,7 +316,7 @@ class DropUnit():
 
     def writeToJsonFile(self, data):
         file_path = '/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/output.json'
-        INFO_MSG(f"DropUnit: writeToJsonFile {file_path}")
+        LOG_IFO(f"DropUnit: writeToJsonFile {file_path}")
         # 先判断一下目录是否存在，不存在就不写入了
         import os
         if not os.path.exists(os.path.dirname(file_path)):
@@ -327,7 +328,7 @@ class DropUnit():
 def doTest():
     dropUnit = DropUnit(None, 10000)
     dropUnit.batchGenAward(40020261, {'awardId': 40020261, 'playerLevel': 1, 'school': 1003, 'sex': 0})
-    INFO_MSG("DropUnit: doTest")
+    LOG_IFO("DropUnit: doTest")
 
 
 '''

@@ -27,6 +27,7 @@ import (
 
 const SERVER_RAND_STR_LEN int = 10
 const LOGIN_TOKEN_LEN int = 15
+const SESSIONID_STR_LEN int = 30
 const SECONDS_ONE_DAY = 86400
 
 // 成功
@@ -62,9 +63,9 @@ type LoginClientService struct {
 	qsHost           string
 	isCaptchaValid   bool
 	captchaBeginTime int64
-	tokenTimeout	 uint32
-	userId      	 string
-	otherJsonData	 string
+	tokenTimeout     uint32
+	userId           string
+	otherJsonData    string
 }
 
 type PayLoad struct {
@@ -84,73 +85,74 @@ type UserInfo struct {
 }
 
 type ChannelInfo struct {
-	Id   			uint32 `json:"id"`
+	Id uint32 `json:"id"`
 }
 
 type TapTapAccessToken struct {
-	Kid   			string `json:"kid"`
-	TokenType 		string `json:"token_type"`
-	MacKey   		string `json:"mac_key"`
-	MacAlgorithm  	string `json:"mac_algorithm"`
-	ScopeSet 	    []string `json:"scopeSet"`
+	Kid          string   `json:"kid"`
+	TokenType    string   `json:"token_type"`
+	MacKey       string   `json:"mac_key"`
+	MacAlgorithm string   `json:"mac_algorithm"`
+	ScopeSet     []string `json:"scopeSet"`
 }
 
 type TapTapResponseData struct {
-	Code                 int    `json:"code"`
-	Msg                  string `json:"msg"`
-	Error                string `json:"error"`
-	ErrorDescription     string `json:"error_description"`
+	Code             int    `json:"code"`
+	Msg              string `json:"msg"`
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
 
-	Avatar 		         string `json:"avatar"`
-	Gender               string `json:"gender"`
-	Name   			     string `json:"name"`
-	OpenId   		     string `json:"openid"`
-	UnionId  	         string `json:"unionid"`
+	Avatar  string `json:"avatar"`
+	Gender  string `json:"gender"`
+	Name    string `json:"name"`
+	OpenId  string `json:"openid"`
+	UnionId string `json:"unionid"`
 }
 
-type TapTapAccessTokenResponse  struct {
-	Data    		TapTapResponseData    `json:"data"`
-	Now     		int64                 `json:"now"`
-	Success 		bool                  `json:"success"`
+type TapTapAccessTokenResponse struct {
+	Data    TapTapResponseData `json:"data"`
+	Now     int64              `json:"now"`
+	Success bool               `json:"success"`
 }
 
-var tapTapErrorMap = map[string]clientService.LoginReply_LoginResult {
-	"access_denied":        clientService.LoginReply_LOGIN_THIRD_TAPTAP_ACCESS_DENIED,
-    "forbidden":            clientService.LoginReply_LOGIN_THIRD_TAPTAP_FORBIDDEN,
-    "server_error":         clientService.LoginReply_LOGIN_THIRD_TAPTAP_SERVER_ERROR,
-    "insufficient_scope":   clientService.LoginReply_LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE,
+var tapTapErrorMap = map[string]clientService.LoginReply_LoginResult{
+	"access_denied":      clientService.LoginReply_LOGIN_THIRD_TAPTAP_ACCESS_DENIED,
+	"forbidden":          clientService.LoginReply_LOGIN_THIRD_TAPTAP_FORBIDDEN,
+	"server_error":       clientService.LoginReply_LOGIN_THIRD_TAPTAP_SERVER_ERROR,
+	"insufficient_scope": clientService.LoginReply_LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE,
 }
 
 type OfficialAccessToken struct {
-	Token 			string `json:"token"`
+	Token string `json:"token"`
 }
 
 type OfficialResponseData struct {
-	GameId					string 	`json:"gameId"`
-	TokenRefreshed			bool 	`json:"tokenRefreshed"`
-	UserGameId				string 	`json:"userGameId"`
-	Phone               	string 	`json:"phone"`
-	TokenValid				bool 	`json:"tokenValid"`
-	TokenTimeout   			string 	`json:"tokenTimeout"`
-	UserInfoId   		  	string 	`json:"userInfoId"`
-	NewToken  	         	string 	`json:"token"`
-	IsCertified				bool	`json:"isCertified"`
-	Birthday				string	`json:"birthday"`
-	Age						uint32	`json:"age"`
+	GameId         string `json:"gameId"`
+	TokenRefreshed bool   `json:"tokenRefreshed"`
+	UserGameId     string `json:"userGameId"`
+	Phone          string `json:"phone"`
+	TokenValid     bool   `json:"tokenValid"`
+	TokenTimeout   string `json:"tokenTimeout"`
+	UserInfoId     string `json:"userInfoId"`
+	NewToken       string `json:"token"`
+	IsCertified    bool   `json:"isCertified"`
+	Birthday       string `json:"birthday"`
+	Age            uint32 `json:"age"`
+	TagType        string `json:"tagType"`
 }
 
-type OfficialAccessTokenResponse  struct {
-	Success			bool					`json:"-"`
-	Code			int32					`json:"code"`
-	Message 		string                	`json:"message"`
-	Data    		OfficialResponseData  	`json:"data"`
-	Timestamp     	string                 	`json:"timestamp"`
+type OfficialAccessTokenResponse struct {
+	Success   bool                 `json:"-"`
+	Code      int32                `json:"code"`
+	Message   string               `json:"message"`
+	Data      OfficialResponseData `json:"data"`
+	Timestamp string               `json:"timestamp"`
 }
 
-var officialErrorMap = map[int32]clientService.LoginReply_LoginResult {
-	401:        			clientService.LoginReply_LOGIN_THIRD_OFFICIAL_401,
-    500:            		clientService.LoginReply_LOGIN_THIRD_OFFICIAL_500,
-    1001:         			clientService.LoginReply_LOGIN_THIRD_OFFICIAL_1001,
+var officialErrorMap = map[int32]clientService.LoginReply_LoginResult{
+	401:  clientService.LoginReply_LOGIN_THIRD_OFFICIAL_401,
+	500:  clientService.LoginReply_LOGIN_THIRD_OFFICIAL_500,
+	1001: clientService.LoginReply_LOGIN_THIRD_OFFICIAL_1001,
 }
 
 func (self *LoginClientService) startCheckValidTimer() {
@@ -642,7 +644,7 @@ func (self *LoginClientService) resetThirdData() {
 	self.otherJsonData = "{}"
 }
 
-func (self *LoginClientService) _hmacSha1(valStr, keyStr string) (string) {
+func (self *LoginClientService) _hmacSha1(valStr, keyStr string) string {
 	key := []byte(keyStr)
 	mac := hmac.New(sha1.New, key)
 	mac.Write([]byte(valStr))
@@ -650,11 +652,11 @@ func (self *LoginClientService) _hmacSha1(valStr, keyStr string) (string) {
 	return base64.StdEncoding.EncodeToString(mac.Sum(nil))
 }
 
-func (self *LoginClientService) _getTapTapLoginResultByErrorMsg(errorMsg string) (clientService.LoginReply_LoginResult) {
-    if result, exists := tapTapErrorMap[errorMsg]; exists {
-        return result
-    }
-    return clientService.LoginReply_LOGIN_THIRD_FAILED
+func (self *LoginClientService) _getTapTapLoginResultByErrorMsg(errorMsg string) clientService.LoginReply_LoginResult {
+	if result, exists := tapTapErrorMap[errorMsg]; exists {
+		return result
+	}
+	return clientService.LoginReply_LOGIN_THIRD_FAILED
 }
 
 func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization string, loginResult *clientService.LoginReply_LoginResult) bool {
@@ -685,16 +687,16 @@ func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization stri
 	err = json.Unmarshal([]byte(respBody), &tapTapAccessTokenResponse)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("_attemptTapTapRequest fails to unmarshal err: %s", err.Error()))
-	   	return false
+		return false
 	}
 	self.resetThirdData()
 	if !tapTapAccessTokenResponse.Success {
 		appLog.Warn(fmt.Sprintf("_attemptTapTapRequest respBody false: %d, %s, %s, %s", tapTapAccessTokenResponse.Data.Code, tapTapAccessTokenResponse.Data.Msg,
-		tapTapAccessTokenResponse.Data.Error, tapTapAccessTokenResponse.Data.ErrorDescription))
+			tapTapAccessTokenResponse.Data.Error, tapTapAccessTokenResponse.Data.ErrorDescription))
 		*loginResult = self._getTapTapLoginResultByErrorMsg(tapTapAccessTokenResponse.Data.Error)
 	} else {
 		appLog.Info(fmt.Sprintf("_attemptTapTapRequest respBody true: %s, %s, %s, %s, %s", tapTapAccessTokenResponse.Data.Avatar, tapTapAccessTokenResponse.Data.Gender,
-		tapTapAccessTokenResponse.Data.Name, tapTapAccessTokenResponse.Data.OpenId, tapTapAccessTokenResponse.Data.UnionId))
+			tapTapAccessTokenResponse.Data.Name, tapTapAccessTokenResponse.Data.OpenId, tapTapAccessTokenResponse.Data.UnionId))
 		self.accountType = clientService.AccountType_ACCOUNT_TAPTAP
 		self.userId = tapTapAccessTokenResponse.Data.UnionId
 		self.accountName = tapTapAccessTokenResponse.Data.OpenId
@@ -703,7 +705,7 @@ func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization stri
 	return tapTapAccessTokenResponse.Success
 }
 
-func (self *LoginClientService) _loginByTapTap(channelInfo *ChannelInfo, tapTapAccessToken *TapTapAccessToken, loginResult *clientService.LoginReply_LoginResult) (bool) {
+func (self *LoginClientService) _loginByTapTap(channelInfo *ChannelInfo, tapTapAccessToken *TapTapAccessToken, loginResult *clientService.LoginReply_LoginResult) bool {
 	appLog.Info("_loginByTapTap: verify request")
 
 	var clientId string
@@ -757,11 +759,11 @@ func (self *LoginClientService) _loginByTapTap(channelInfo *ChannelInfo, tapTapA
 	return self._attemptTapTapRequest(reqURL, authorization, loginResult)
 }
 
-func (self *LoginClientService) _getOfficialLoginResultByErrorMsg(errorCode int32) (clientService.LoginReply_LoginResult) {
-    if result, exists := officialErrorMap[errorCode]; exists {
-        return result
-    }
-    return clientService.LoginReply_LOGIN_THIRD_FAILED
+func (self *LoginClientService) _getOfficialLoginResultByErrorMsg(errorCode int32) clientService.LoginReply_LoginResult {
+	if result, exists := officialErrorMap[errorCode]; exists {
+		return result
+	}
+	return clientService.LoginReply_LOGIN_THIRD_FAILED
 }
 
 func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, loginResult *clientService.LoginReply_LoginResult) bool {
@@ -792,7 +794,7 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 	err = json.Unmarshal([]byte(respBody), &officialAccessTokenResponse)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest fails to unmarshal err: %s", err.Error()))
-	   	return false
+		return false
 	}
 	self.resetThirdData()
 	if officialAccessTokenResponse.Code != 200 {
@@ -801,9 +803,9 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 		officialAccessTokenResponse.Success = false
 	} else {
 		appLog.Info(fmt.Sprintf("_attemptOfficialRequest respBody true: %s, %t, %s, %s, %t, %s, %s, %s, %t, %s, %d", officialAccessTokenResponse.Data.GameId, officialAccessTokenResponse.Data.TokenRefreshed,
-		officialAccessTokenResponse.Data.UserGameId, officialAccessTokenResponse.Data.Phone, officialAccessTokenResponse.Data.TokenValid,
-		officialAccessTokenResponse.Data.TokenTimeout, officialAccessTokenResponse.Data.UserInfoId, officialAccessTokenResponse.Data.NewToken,
-		officialAccessTokenResponse.Data.IsCertified, officialAccessTokenResponse.Data.Birthday, officialAccessTokenResponse.Data.Age))
+			officialAccessTokenResponse.Data.UserGameId, officialAccessTokenResponse.Data.Phone, officialAccessTokenResponse.Data.TokenValid,
+			officialAccessTokenResponse.Data.TokenTimeout, officialAccessTokenResponse.Data.UserInfoId, officialAccessTokenResponse.Data.NewToken,
+			officialAccessTokenResponse.Data.IsCertified, officialAccessTokenResponse.Data.Birthday, officialAccessTokenResponse.Data.Age))
 
 		tokenTimeout, err1 := strconv.ParseUint(officialAccessTokenResponse.Data.TokenTimeout, 10, 32)
 		phone, err2 := strconv.ParseUint(officialAccessTokenResponse.Data.Phone, 10, 64)
@@ -814,14 +816,15 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 			appLog.Warn("_attemptOfficialRequest respBody tokenTimeout error", err1)
 			*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
 			officialAccessTokenResponse.Success = false
-		} else if err2 != nil{
+		} else if err2 != nil {
 			appLog.Warn("_attemptOfficialRequest respBody phone error", err2)
 			*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
 			officialAccessTokenResponse.Success = false
 		} else {
-			data := map[string]interface{} {
-				"age":      	uint32(age),
-				"phone":		uint64(phone),
+			data := map[string]interface{}{
+				"age":   uint32(age),
+				"phone": uint64(phone),
+				"si": common.RandString(SESSIONID_STR_LEN),
 				//"birthday": 	uint32(birthday),
 				//"isCertified": 	bool(isCertified),
 			}
@@ -839,12 +842,19 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 				self.otherJsonData = string(otherJsonData)
 				officialAccessTokenResponse.Success = true
 			}
+
+			conn := self.app.redisPool.Get()
+			defer conn.Close()
+			_, err := conn.Do("set", fmt.Sprintf("officialTagType_%s", self.accountName), officialAccessTokenResponse.Data.TagType)
+			if err != nil {
+				appLog.Error(fmt.Sprintf("_loginByOfficial set officialTagType_%s error: %s", self.accountName, err.Error()))
+			}
 		}
 	}
 	return officialAccessTokenResponse.Success
 }
 
-func (self *LoginClientService) _loginByOfficial(channelInfo *ChannelInfo, officialAccessToken *OfficialAccessToken, loginResult *clientService.LoginReply_LoginResult) (bool) {
+func (self *LoginClientService) _loginByOfficial(channelInfo *ChannelInfo, officialAccessToken *OfficialAccessToken, loginResult *clientService.LoginReply_LoginResult) bool {
 	appLog.Info("_loginByOfficial: verify request")
 
 	token := officialAccessToken.Token

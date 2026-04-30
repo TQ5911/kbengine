@@ -4,7 +4,7 @@
 import userType
 
 
-class ActTimesVal(userType.UserSoleType):
+class ActTimesVal(userType.UserSingleType):
     '''ACT_TIMES_DATA_INFO'''
     def __init__(self, actId=0, times=0):
         self.actId = actId

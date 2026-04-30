@@ -52,7 +52,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
             sceneList = MBMA.datas[mapId].get('sceneList', [])
             if len(sceneList) < 2:
-                ERROR_MSG('MineWarStub.__init__ mapId:{} sceneList invalid:{}'.format(mapId, sceneList))
+                LOG_ERR('MineWarStub.__init__ mapId:{} sceneList invalid:{}'.format(mapId, sceneList))
                 continue
             self.warMapTransferDict[mapId] = sceneList[-2]  # 传送到安全区场景id
             
@@ -61,6 +61,9 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         self.prepareNeed = utils.getMineWarPrepareNeedSec()
         self.startOffsetSec = utils.getMineWarStartOffsetSec()
         self.endOffsetSec = utils.getMineWarEndOffsetSec()
+
+        #
+        self.lastCalcFlagTime = 0
         
     def doNext(self):
 
@@ -76,6 +79,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             self._onTimerCallback(tid)
         elif userArg == gametimer.MINE_WAR_STATE_CHECK:
             self._calcCurState()
+            self._calcMineWarFlagBeAttack()
             
         elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
@@ -89,6 +93,9 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         # 矿石结算
         for mapId, mineWarVal in self.mineMapData.items():
             mineWarVal.onCollectEnd()
+
+        #
+        self.lastCalcFlagTime = utils.getCurDayTS(offsetSec=gameconst.GENERAL_CYCLE_TIME)
 
     def getMineWarState(self):
         return self.state
@@ -111,27 +118,33 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         d = _startTimeStr[6:8]
         # 第一次活动开启时间
         firstTime = int(time.mktime(datetime.datetime(int(y), int(m), int(d), 0, 0, 0).timetuple()))
-        if utils.getNow() < firstTime:
+        self.startTime = firstTime
+        self.endTime = self.startTime + gameconst.ONE_HOUR_COST_SECONDES      
+        if utils.curTS() <= firstTime:
             return False
         
         return True
     
     def _calcState(self):
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            self.startTime = 0
+            self.endTime = 0
+        # if True:
+            return gameconst.MINE_WAR_STATE.END
         if not self.canServerStartMineWar():
             return gameconst.MINE_WAR_STATE.END
         
-        if not gameconfig.visibleConfigEnabled('mineBattle'):
-        # if True:
-            return gameconst.MINE_WAR_STATE.END
-        
-        now = utils.getNow()
-        self.startOffsetSec = utils.getMineWarStartOffsetSec()
-        self.endOffsetSec = utils.getMineWarEndOffsetSec()
-        self.startTime = utils.getCurrentWeekTS(offsetSec=self.startOffsetSec)
-        self.endTime = utils.getCurrentWeekTS(offsetSec=self.endOffsetSec)
-        if self.endTime <= now:
-            self.startTime += gameconst.ONE_WEEK_SECONDS
-            self.endTime += gameconst.ONE_WEEK_SECONDS
+        now = utils.curTS()
+        startTime = utils.getCurWeekTS(offsetSec=self.startOffsetSec)
+        endTime = utils.getCurWeekTS(offsetSec=self.endOffsetSec)
+        # 上次活动结束了，并且 结束时间比本周开启时间早，立即更新时间（主要处理与第一次开启时间的冲突
+        if self.endTime < now and self.endTime + 5 < startTime:
+            self.startTime = startTime
+            self.endTime = endTime
+
+        if self.endTime + 5 < now:
+            self.startTime += gameconst.ONE_WEEK_COST_SECONDS
+            self.endTime += gameconst.ONE_WEEK_COST_SECONDS
         prepareTime = self.startTime - self.prepareNeed
 
         if now < prepareTime:
@@ -152,7 +165,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             self._onStateChange(self.state, curState)
             
     def _onStateChange(self, oldState, newState):
-        INFO_MSG('MineWarStub.onStateChange oldState:', oldState, 'newState:', newState)
+        LOG_IFO('MineWarStub.onStateChange oldState:', oldState, 'newState:', newState)
         if newState == gameconst.MINE_WAR_STATE.PREPARE:
             self._onMineWarPrepare()
         elif newState == gameconst.MINE_WAR_STATE.RUNNING:
@@ -173,8 +186,8 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         # 注册定时器传送到上一层
         transferTime = self.startTime - MBC.datas['mineBattle_transferPersonnelTime']['value'] * 60
-        offset = max(transferTime - utils.getNow(), 0)
-        self._callback(offset, '_transferMineWarPersonnel', (), gametimer.TIMER_TAG_TRANSFER_MINE_WAR_PERSONNEL)
+        offset = max(transferTime - utils.curTS(), 0)
+        self.addTimerCB(offset, '_transferMineWarPersonnel', (), gametimer.TIMER_TAG_TRANSFER_MINE_WAR_PERSONNEL)
 
     def _transferMineWarPersonnel(self):
         if not gameconfig.visibleConfigEnabled('mineBattle'):
@@ -187,6 +200,11 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         # 开始时重置
         for mapId, mineWarVal in self.mineMapData.items():
+            lastGuildId = mineWarVal.getGuildGbId()
+            if lastGuildId > 0:
+                # 矿产移到帮派
+                gameengine.getGlobalBase('GuildStub').callOnGuild(lastGuildId, 'doAddGuildIronMineFromStub', (mineWarVal.allCollectNum, ), None, '', ())
+            # 需要先移，再重置
             mineWarVal.onStartReset()
 
         # 广播玩家
@@ -208,7 +226,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
             if mineWarVal.onMineWarEnd():
                 # self.onRewardMineWar(mapId, guildGbId, tempguildGbId) # 放到spacemgr自己去处理
-                INFO_MSG('MineWarStub._onMineWarEnd mapId:', mapId, 'oldGuildId:', guildGbId, 'newGuildId:', tempguildGbId)
+                LOG_IFO('MineWarStub._onMineWarEnd mapId:', mapId, 'oldGuildId:', guildGbId, 'newGuildId:', tempguildGbId)
                 mapCfg = MBMA.datas.get(mapId, {})
                 mapName = mapCfg.get('name', '')
                 currGuildInfo = mineWarVal.currGuildInfo
@@ -240,7 +258,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                     logRankList.append({'rank': i+1, 'guildGbId': guildVal.guildGbId, 'ownerTime': guildVal.ownerTime, 'revenue': guildVal.revenue})
                 LogTrackingMgr.LogTrackingMgr.MineBattle_End(self.endTime, mapId, tempguildGbId, logRankList)
             except Exception as e:
-                ERROR_MSG('LogTrackingMgr.MineBattle_End error:', mapId, tempguildGbId)
+                LOG_ERR('LogTrackingMgr.MineBattle_End error:', mapId, tempguildGbId)
 
         # 结算
         self.onEndRewardByScore()
@@ -249,7 +267,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarEndPlayer', (changeInfo,), ()))        
 
     def callAllMineWarSpaceMgr(self, funcName, args=[], kwargs={}):
-        INFO_MSG('callAllMineWarSpaceMgr with:', funcName, 'args:', args, 'kwargs:', kwargs)
+        LOG_IFO('callAllMineWarSpaceMgr with:', funcName, 'args:', args, 'kwargs:', kwargs)
         for mapId, mineWarVal in self.mineMapData.items():
             arg = []
             spaceMgrbox = mineWarVal.getSpaceMgrbox()
@@ -265,7 +283,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             getattr(spaceMgrbox, funcName)(*arg)
 
     def doMineWarGuildDisbanded(self, guildId):
-        INFO_MSG('MineWarStub.onMineWarGuildDisbanded :', 'guildId:', guildId)
+        LOG_IFO('MineWarStub.onMineWarGuildDisbanded :', 'guildId:', guildId)
         _mapIds = 0
         for mapId, mineWarVal in self.mineMapData.items():
             if mineWarVal.getGuildGbId() == guildId:
@@ -279,7 +297,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             spaceMgrbox.onMineWarGuildDisbanded(mineWarVal.getGuildGbId(), self.state)
 
     def onRewardMineWar(self, mapId, oldGuildId, newGuildId):
-        INFO_MSG('MineWarStub.onRewardMineWar mapId:', mapId, 'oldGuildId:', oldGuildId, 'newGuildId:', newGuildId)
+        LOG_IFO('MineWarStub.onRewardMineWar mapId:', mapId, 'oldGuildId:', oldGuildId, 'newGuildId:', newGuildId)
         # 奖励矿战胜利帮派成员
         spaceMgrbox = self.mineMapData[mapId].getSpaceMgrbox()
         if spaceMgrbox:
@@ -295,12 +313,23 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         mineWarVal.addMineWarEvent(3, [guildName, killerName])
         LogTrackingMgr.LogTrackingMgr.MineBattle_KillFlag(mapId, guildGbId, killerGbId, mineWarVal.flagDestroyedNum)
 
+
+        lostMineNum = int(MBC.datas['mineBattle_flagDestroyLoss']['value'] * mineWarVal.allCollectNum)
+        realMineNum = lostMineNum
+        minMineNum = MBC.datas['mineBattle_flagDestroyLossFloors']['value']
+        if mineWarVal.allCollectNum < minMineNum:
+            lostMineNum = mineWarVal.allCollectNum
+            realMineNum = minMineNum
+        mineWarVal.allCollectNum = max(mineWarVal.allCollectNum - lostMineNum, 0)
+        # todo 根据矿产数量，掉落宝箱 
+
+
         guildName = mineWarVal.currGuildInfo.guildName
         damageCfg = MBC.datas['mineBattle_flagDamageEffect']['value']
         mineWarVal.addMineWarEvent(4, [str(mineWarVal.flagDestroyedNum), str(damageCfg[0]), guildName])
         # 帮会频道
         self._doMineWarBroadcastGuildMember(mineWarVal.currGuildInfo.guildGbId, 'doBroadcastGuildMemberBase',
-                                                ('onMineWarFlagBeDestroyed', (mapId, mineWarVal.currGuildInfo.guildGbId, mineWarVal.flagDestroyedNum)))
+                                                ('onMineWarFlagBeDestroyed', (mapId, mineWarVal.currGuildInfo.guildGbId, mineWarVal.flagDestroyedNum, lostMineNum)))
         
         if mineWarVal.flagDestroyedNum == damageCfg[0]:
             # 战报
@@ -310,7 +339,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarFlagAllDestroyed', (mapId, guildName, mineWarVal.currGuildInfo.guildGbId), ()))
 
     def doOnMineWarKillCoreForGuild(self, mapId, box, guildInfo):
-        INFO_MSG('doOnMineWarKillCoreForGuild mapId:', mapId, 'box:', box.id, 'guildInfo:', guildInfo)
+        LOG_IFO('doOnMineWarKillCoreForGuild mapId:', mapId, 'box:', box.id, 'guildInfo:', guildInfo)
         mineWarVal: MineWarInfo.MineWarMapVal = self.mineMapData.get(mapId, None)
         if mineWarVal is None:
             return
@@ -323,7 +352,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         
         if mineWarVal.flagHp > hp:
             # 帮会频道
-            INFO_MSG('SyncMineWarFlagHp flagHp change warning mapId:', mapId, 'from:', mineWarVal.flagHp, 'to:', hp)
+            LOG_IFO('SyncMineWarFlagHp flagHp change warning mapId:', mapId, 'from:', mineWarVal.flagHp, 'to:', hp)
             self._doMineWarBroadcastGuildMember(mineWarVal.currGuildInfo.guildGbId, 'doBroadcastGuildMemberBase',
                                                 ('onMineWarFlagHpChangeWarning', (mapId,)))
 
@@ -373,11 +402,11 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
             info['flagRecoverTime'] = 0
             flagDestroyedTime = Val.getflagDestroyedTime()
-            if utils.isDiffDay(flagDestroyedTime, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
+            if utils.checkDiffDay(flagDestroyedTime, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
                 info['flagDestroyed'] = 0
             else:
                 info['flagDestroyed'] = 1
-                info['flagRecoverTime'] = utils.getCurrentDayTS(offsetSec=gameconst.COMMON_CYCLE_TIME) + gameconst.ONE_DAY_SECONDS
+                info['flagRecoverTime'] = utils.getCurDayTS(offsetSec=gameconst.GENERAL_CYCLE_TIME) + gameconst.ONE_DAY_COST_SECONDS
 
             # destroyCfg = MBC.datas['mineBattle_flagDamageEffect']['value']
             # incomeCfg = (MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0) * 100
@@ -395,18 +424,18 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         playerBox.client.onMineWarInfo(mineWarInfo)
 
-        INFO_MSG('MineWarStub.playerGetMineWarInfo response:', mineWarInfo)
+        LOG_IFO('MineWarStub.playerGetMineWarInfo response:', mineWarInfo)
 
     def doGetMineWarFlagHp(self, mapId, playerBox):
         mapVal = self.mineMapData.get(mapId, None)
         if mapVal is None:
             return
-        # INFO_MSG('MineWarStub.doGetMineWarFlagHp called for player:', playerBox.id, 'mapId:', mapId, 'flagHp:', mapVal.flagHp)
+        # LOG_IFO('MineWarStub.doGetMineWarFlagHp called for player:', playerBox.id, 'mapId:', mapId, 'flagHp:', mapVal.flagHp)
         flagHp = mapVal.flagHp if self.state != gameconst.MINE_WAR_STATE.RUNNING else 0
         playerBox.client.onGetMineWarFlagHp(mapId, mapVal.flagHp)
 
     def doShareGuildMineWarBonusToMember(self, mapId, srcGbId, shareList, box):
-        INFO_MSG('doShareGuildMineWarBonusToMember mapId:', mapId, 'srcGbId:', srcGbId, 'shareList:', shareList)
+        LOG_IFO('doShareGuildMineWarBonusToMember mapId:', mapId, 'srcGbId:', srcGbId, 'shareList:', shareList)
         mapVal = self.mineMapData.get(mapId, None)
         if mapVal is None:
             return
@@ -415,7 +444,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         for val in shareList:
             sum += val['bonusNum']
         if sum > mapVal.allCollectNum:
-            DEBUG_MSG('doShareGuildMineWarBonusToMember sum > allCollectNum:', sum, '>', mapVal.allCollectNum)
+            LOG_DBG('doShareGuildMineWarBonusToMember sum > allCollectNum:', sum, '>', mapVal.allCollectNum)
             box.onMessagePre(MBC.datas['mineBattle_notEnoughStock']['value'], [])
             box.client.onMineWarShareBonusResult(False)
             return
@@ -465,7 +494,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             res.append(val)
             idx += 1
 
-        INFO_MSG('MineWarStub.doGetMineWarGuildMemberScore response to player:', mapId, res)
+        LOG_IFO('MineWarStub.doGetMineWarGuildMemberScore response to player:', mapId, res)
         playerBox.client.onGetMineWarGuildMemberScore(mapId, res)
     
     def doGetMineWarGuildOwnerRank(self, mapId, playerBox, guildInfo, last):
@@ -478,7 +507,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         if self.state == gameconst.MINE_WAR_STATE.RUNNING:
             if last:
                 ownerList = mapVal.ownerRankListLast
-            elif utils.getNow() - mapVal.coreDestroyedTime > MINE_WAR_RANK_CD:
+            elif utils.curTS() - mapVal.coreDestroyedTime > MINE_WAR_RANK_CD:
                 mapVal.calcOwnerTime()
                 ownerList = list(mapVal.guildOwnerDict.values())
                 ownerList.sort(key=lambda x: x.ownerTime, reverse=True)
@@ -511,7 +540,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             selfRankInfo = MineWarInfo.MineWarGuildVal().initFromDict(guildInfo).toSaveDict()
             selfRankInfo['rankId'] = 0
         
-        # INFO_MSG('MineWarStub.doGetMineWarGuildOwnerRank response to player:', last, playerBox.id, guildInfo, selfRankInfo, rankList)
+        # LOG_IFO('MineWarStub.doGetMineWarGuildOwnerRank response to player:', last, playerBox.id, guildInfo, selfRankInfo, rankList)
         playerBox.onMineWarGuildOwnerRankBase(selfRankInfo, rankList)
 
             
@@ -524,11 +553,11 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         rankList = []
         if self.state == gameconst.MINE_WAR_STATE.RUNNING and not last:
-            if utils.getNow() - mapVal.lastScoreRankTime > MINE_WAR_RANK_CD:
+            if utils.curTS() - mapVal.lastScoreRankTime > MINE_WAR_RANK_CD:
                 scoreList = [val for val in scoreDict.values() if val.totalScore >= MBC.datas['mineBattle_rankScoreThreshold']['value']]
                 scoreList.sort(key=lambda x: x.totalScore, reverse=True)
                 mapVal.scoreRankListTemp = scoreList
-                mapVal.lastScoreRankTime = utils.getNow()
+                mapVal.lastScoreRankTime = utils.curTS()
             else:
                 scoreList = mapVal.scoreRankListTemp
         else:
@@ -554,7 +583,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                                                         guildDspFlag=guildInfo.get('guildDspFlag', 0)).getData()
             selfGuildInfo['rankId'] = 0
         
-        # INFO_MSG('MineWarStub.doGetMineWarGuildPlayerRank response to player:', playerBox.id, guildInfo, selfGuildInfo, rankList)
+        # LOG_IFO('MineWarStub.doGetMineWarGuildPlayerRank response to player:', playerBox.id, guildInfo, selfGuildInfo, rankList)
         playerBox.onMineWarGuildPlayerRankBase(selfGuildInfo, rankList)
 
         
@@ -569,7 +598,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         mapVal.addMineWarScoreVal(playerGbId, playerName, guildGbId, guildName, guildIcon, guildDspFlag, score, scoreType)
 
     def playerCollectAward(self, mapId, num):
-        INFO_MSG('MineWarStub.playerCollectAward lineType:', mapId, 'num:', num)
+        LOG_IFO('MineWarStub.playerCollectAward lineType:', mapId, 'num:', num)
         mineWarVal = self.mineMapData.get(mapId, None)
         if mineWarVal is None:
             return
@@ -628,7 +657,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                         _addVal.addWealthByItemId(rankCfg[i + 1], 1)
                         mailAssistor.sendMailToPlayers([obj.gbId], MBC.datas['mineBatte_scoreRankMail']['value'], 
                                                     extraAttach=_addVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
-                        INFO_MSG('onEndRewardByScore send mail', mapId, obj.gbId, i + 1, rankCfg[i + 1])
+                        LOG_IFO('onEndRewardByScore send mail', mapId, obj.gbId, i + 1, rankCfg[i + 1])
                     else:
                         # 参与奖 
                         otherList.append(obj)
@@ -643,7 +672,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                                                         extraAttach=_otherVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
                         yield lambda: None
                 def _sendOthersDone():
-                    INFO_MSG('MineWarStub.onEndRewardByScore _sendOthersDone mapId:', mapId)
+                    LOG_IFO('MineWarStub.onEndRewardByScore _sendOthersDone mapId:', mapId)
                 self.batchlyCall(_sendOthers(), 30, 0.2, _sendOthersDone)
             #
             try:
@@ -652,6 +681,29 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                     logRankList.append({'rank': i+1, 'playerGbId': obj.gbId, 'playerScore': obj.totalScore})
                 LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward(self.endTime, mapId, logRankList, opUUID)
             except Exception as e:
-                ERROR_MSG('LogTrackingMgr.MineBattle_End_Reward error:', mapId)
+                LOG_ERR('LogTrackingMgr.MineBattle_End_Reward error:', mapId)
                 
-        INFO_MSG('MineWarStub.onEndRewardByScore done')
+        LOG_IFO('MineWarStub.onEndRewardByScore done')
+
+    def _calcMineWarFlagBeAttack(self):
+        config = MBC.datas['mineBattle_flagAttackTime']['value']
+        start = config[0] // 100
+        end = config[1] // 100
+
+        
+        _tLast = time.localtime(self.lastCalcFlagTime)
+        _tNow = time.localtime(utils.curTS()-2) # 提前2秒计算，避免定时器误差导致的攻击状态不同步问题
+        attackState = None
+        # DEBUG_MSG('MineWarStub._calcMineWarFlagBeAttack time:', self.lastCalcFlagTime, utils.curTS(), start, end, _tLast.tm_hour, _tNow.tm_hour)
+        if _tLast.tm_hour < start and _tNow.tm_hour >= start:
+            attackState = True
+        if _tLast.tm_hour < end and _tNow.tm_hour >= end:
+            attackState = False
+        if attackState is None:
+            return
+        DEBUG_MSG('MineWarStub._calcMineWarFlagBeAttack attackState change to:', attackState)
+        for mapId, mineWarVal in self.mineMapData.items():
+            spaceMgrbox = mineWarVal.getSpaceMgrbox()
+            if spaceMgrbox:
+                self.lastCalcFlagTime = utils.curTS()
+                spaceMgrbox.onMineWarFlagChangeAttack(attackState)

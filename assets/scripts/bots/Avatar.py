@@ -415,11 +415,11 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
             skill_args = [skillId, targetId, direct, 0]
             self.skills_cache.append(skill_args)
 
-    def onGetMailList(self, mails):
-        DEBUG_MSG('onGetMailList:', mails)
+    def onGetMailList(self, *args):
+        DEBUG_MSG('onGetMailList:', args)
 
-    def onUseItems(self, *arg):
-        DEBUG_MSG('onUseItems:', arg)
+    def onUseItems(self, *args):
+        DEBUG_MSG('onUseItems:', args)
 
     def onBagSort(self, *args):
         DEBUG_MSG('onBagSort:', args)

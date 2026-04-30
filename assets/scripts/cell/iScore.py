@@ -19,11 +19,11 @@ class IScore(object):
         self.initAvatarScores()
 
     def initAvatarScores(self):
-        INFO_MSG('initAvatarScores')
+        LOG_IFO('initAvatarScores')
         self.scoreInitFinished = False
         self.totalScore = 0
         m_dict = {i: False for i in AvatarScores.AvatarScores.__attrs__}
-        self.setTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist, m_dict)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist, m_dict)
         self._initAvatarCellScores()
         self.base.initAvatarBaseScores()
         self.toCallbackAfter(10).checkInitScoreTimeout()
@@ -35,7 +35,7 @@ class IScore(object):
         self.updateGuildScoreFromInit()
 
     def onInitAvatarBaseScores(self, data):
-        INFO_MSG('onInitAvatarBaseScores::', data)
+        LOG_IFO('onInitAvatarBaseScores::', data)
         data = data or {}
         for k, v in data.items():
             self._changeScore(k, v)
@@ -43,27 +43,27 @@ class IScore(object):
     def checkInitScoreTimeout(self):
         if self.scoreInitFinished:
             return
-        gameengine.reportCritical('checkInitScoreTimeout:', self.getTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist))
+        gameengine.panicStack('checkInitScoreTimeout:', self.getTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist))
         self.scoreInitFinished = True
         self.onAllAvatarScoreBeInited(timeout=True)
 
     def onAllAvatarScoreBeInited(self, timeout=False):
-        INFO_MSG("onAllAvatarScoreBeInited, timeout:", timeout)
+        LOG_IFO("onAllAvatarScoreBeInited, timeout:", timeout)
         self.scoreInitFinished = True
-        self.popTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist)
+        self.popTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist)
         self.client.onAvatarTotalScoreInitCompleted()
 
     def markAvatarScoreBeInited(self, key):
         if self.scoreInitFinished:
             return
-        m_avatarScoresInitChecklist = self.getTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist)
+        m_avatarScoresInitChecklist = self.getTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist)
         if not m_avatarScoresInitChecklist:
-            gameengine.reportCritical('markAvatarScoreBeInited, no avatarScoresInitChecklist cache')
+            gameengine.panicStack('markAvatarScoreBeInited, no avatarScoresInitChecklist cache')
             return
         if key not in m_avatarScoresInitChecklist:
-            ERROR_MSG("markAvatarScoreBeInited:: un-known key", key)
+            LOG_ERR("markAvatarScoreBeInited:: un-known key", key)
             return
-        INFO_MSG('markAvatarScoreBeInited, score has init:', key)
+        LOG_IFO('markAvatarScoreBeInited, score has init:', key)
         m_avatarScoresInitChecklist[key] = True
         if not all(m_avatarScoresInitChecklist.values()):
             return
@@ -171,11 +171,11 @@ class IScore(object):
 # '''.format(s.equipments, s.level, s.monstermanual, s.wanxiang, s.homecreep, s.homebuilding,
 #            s.homeqishu, s.guildtrain, s.lingshou, s.skillpoints, s.soulCards, s.totalScore)
 #
-#         _info = utils.buildChatChannelAvatarInfo(
+#         _info = utils.buildChatChannelAvatarData(
 #             self.id, self.gbId, self.school, self.name, self.level, self.sex, self.appearance.outfitData.picFrameId)
 #
 #         import gameengine
 #         gameengine.broadcastBaseapp('onBroadcastToAllClients',
 #                                         ('onRecvAvatarChannelMsg',
-#                                          (gameconst.ChatChannel.WORLD, _info, _msg), ()))
+#                                          (gameconst.ChatChannelEnum.WORLD, _info, _msg), ()))
 

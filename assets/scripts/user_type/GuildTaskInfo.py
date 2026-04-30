@@ -2,7 +2,7 @@
 
 import userType
 
-class GuildTaskInfoVal(userType.UserSoleType):
+class GuildTaskInfoVal(userType.UserSingleType):
     "GUILD_ONETASK_INFO"
     def __init__(self, taskID = 0, num = 0, completed = False):
         self.taskID = taskID

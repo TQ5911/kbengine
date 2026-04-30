@@ -26,17 +26,17 @@ class IHolidayPay(object):
 
         holidayID = self.holidayPayInfo.holidayID(creditID)
         if not holidayID:
-            INFO_MSG('IHolidayPay::checkHolidayPayCond gift(%s) no holiday config !!!' % creditID)
+            LOG_IFO('IHolidayPay::checkHolidayPayCond gift(%s) no holiday config !!!' % creditID)
             self.onMessagePre(BCBCC.datas['holidayGift_overdue_msgID']['value'], [])
             return False
 
         if not self._checkOpenTime(holidayID):
-            INFO_MSG('IHolidayPay::checkHolidayPayCond holiday(%s) not open !!!' % holidayID)
+            LOG_IFO('IHolidayPay::checkHolidayPayCond holiday(%s) not open !!!' % holidayID)
             self.onMessagePre(BCBCC.datas['holidayGift_overdue_msgID']['value'], [])
             return False
 
         if not self._checkGainTimes(creditID):
-            INFO_MSG('IHolidayPay::checkHolidayPayCond gift(%s) left no gain times(%s) !!!' % (creditID, self.holidayPayInfo.gainTimes(creditID)))
+            LOG_IFO('IHolidayPay::checkHolidayPayCond gift(%s) left no gain times(%s) !!!' % (creditID, self.holidayPayInfo.gainTimes(creditID)))
             self.onMessagePre(BCBCC.datas['holidayGift_overLimitBuyTime_msgID']['value'], [])
             return False
 
@@ -54,7 +54,7 @@ class IHolidayPay(object):
 
     def _checkOpenTime(self, holidayID):
         return dataUtils.isInCrontabDatetimeRange(
-            utils.getNow(),
+            utils.curTS(),
             BCHG.datas[holidayID]['openTimeCron'],
             BCHG.datas[holidayID]['endTimeCron']
         )

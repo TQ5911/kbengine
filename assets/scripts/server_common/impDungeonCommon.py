@@ -28,7 +28,7 @@ class ImpDungeonCommon(object):
 
     @staticmethod
     def getMapInfoByDungeonNo(dungeonNo):
-        dunSData = utils.getDunStructureModuleData(dungeonNo)
+        dunSData = utils.getDunStructModData(dungeonNo)
         if 'MapInfo' not in dunSData:
             return ()
         mapInfo, *_ = dunSData['MapInfo'].values()
@@ -36,13 +36,13 @@ class ImpDungeonCommon(object):
         return tuple(tuple(p) for p in _rawPoints)
 
     def _getEntranceByDungeonNo(self, dungeonNo):
-        dunSData = utils.getDunStructureModuleData(dungeonNo)
+        dunSData = utils.getDunStructModData(dungeonNo)
         if 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
-            return formula.bornPosFromData(d)
+            return formula.bornPosFromDunData(d)
 
     def _getEntranceDirByDungeonNo(self, dungeonNo):
-        dunSData = utils.getDunStructureModuleData(dungeonNo)
+        dunSData = utils.getDunStructModData(dungeonNo)
         if 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
             return d['Dir']

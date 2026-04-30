@@ -1,11 +1,15 @@
 package CentralLogin
 
 import (
+	"bytes"
 	"centralService/src/appLog"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"slices"
 
 	//"os"
 	"strconv"
@@ -15,6 +19,7 @@ import (
 	//"golang.org/x/sys/unix"
 	"centralService/src/common"
 
+	"github.com/garyburd/redigo/redis"
 	"github.com/gogf/greuse"
 )
 
@@ -366,14 +371,152 @@ func (self *HttpService) queryAccountServers(w http.ResponseWriter, r *http.Requ
 	fmt.Fprintf(w, servers)
 }
 
+type ActivationCodeReply struct {
+	IsSuccess bool   `json:"isSuccess"`
+	TagType   string `json:"tagType"`
+}
+
+type ActivationCodeData struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (self *HttpService) replyActivationCode(w http.ResponseWriter, isSuccess bool, tagType string) {
+	response := ActivationCodeReply{}
+	response.IsSuccess = isSuccess
+	response.TagType = tagType
+	data, err := json.Marshal(response)
+	if err != nil {
+		appLog.Error("replyActivationCode json response failed", err.Error())
+		w.WriteHeader(405)
+		return
+	}
+	fmt.Fprintf(w, string(data))
+}
+
+func getCodeType(code string) string {
+	mapCode := map[string]string{
+		"INV": "2",
+		"SP":  "3",
+	}
+	for k, v := range mapCode {
+		if strings.HasPrefix(code, k) {
+			return v
+		}
+	}
+	return ""
+}
+
+func (self *HttpService) setRedisOfficialTagType(gameId string, code string) string {
+	codeType := getCodeType(code)
+	if codeType == "" {
+		return ""
+	}
+	conn := self.app.redisPool.Get()
+	defer conn.Close()
+	officialTagType, err := redis.String(conn.Do("get", "officialTagType_"+gameId))
+	if err != nil {
+		appLog.Error("setRedisOfficialTagType get redis failed", err.Error())
+		return ""
+	}
+	tagList := strings.Split(officialTagType, ",")
+	if !slices.Contains(tagList, codeType) {
+		tagList = append(tagList, codeType)
+		redis.String(conn.Do("set", "officialTagType_"+gameId, strings.Join(tagList, ",")))
+		appLog.Info("setRedisOfficialTagType set redis success", gameId, codeType)
+		return codeType
+	} else {
+		appLog.Info("setRedisOfficialTagType redis already has", gameId, codeType)
+	}
+	return ""
+}
+
+func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	var gameId = strings.Join(r.Form["gameId"], "")
+	var code = strings.Join(r.Form["code"], "")
+	var token = strings.Join(r.Form["token"], "")
+	var tagType = strings.Join(r.Form["tagType"], "")
+
+	codeType := getCodeType(code)
+	if codeType == "" {
+		self.replyActivationCode(w, false, "")
+		log.Println("handleExchangeActivationCode: ", gameId, code, tagType, "invalid code")
+		return
+	}
+
+	log.Println("handleExchangeActivationCode: ", gameId, code, tagType)
+
+	bodyMap := map[string]string{
+		"userGameId": gameId,
+		"code":       code,
+	}
+	jsonBody, _ := json.Marshal(bodyMap)
+	var reqHost string
+	if value, ok := LoginConfig.Official["reqhost"]; ok {
+		reqHost = value.(string)
+	} else {
+		appLog.Error("handleExchangeActivationCode LoginConfig.Official[reqHost]")
+		return
+	}
+
+	var reqURI string
+	if value, ok := LoginConfig.Official["accesscode"]; ok {
+		reqURI = value.(string)
+	} else {
+		appLog.Error("handleExchangeActivationCode LoginConfig.Official[reqURI]")
+		return
+	}
+
+	reqURL := reqHost + reqURI
+	client := http.Client{Timeout: 5 * time.Second}
+	req, err := http.NewRequest(http.MethodPost, reqURL, bytes.NewReader(jsonBody))
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode NewRequest: %s", err.Error()))
+		self.replyActivationCode(w, false, "")
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("satoken", token)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode Do: %s", err.Error()))
+		self.replyActivationCode(w, false, "")
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode ReadAll: %s", err.Error()))
+		self.replyActivationCode(w, false, "")
+		return
+	}
+
+	log.Println("handleExchangeActivationCode: ", string(body))
+
+	var response ActivationCodeData
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode Unmarshal: %s", err.Error()))
+		self.replyActivationCode(w, false, "")
+		return
+	}
+
+	if response.Code == 200 {
+		c := self.setRedisOfficialTagType(gameId, code)
+		self.replyActivationCode(w, true, c)
+	} else {
+		self.replyActivationCode(w, false, "")
+	}
+}
+
 func (self *HttpService) startHttpServer(listenAddr string) {
 	appLog.Info("startHttpServer", listenAddr)
 
-	http.HandleFunc("/idipUnban", self.handleIDIPUnBanRequest)
-	http.HandleFunc("/idipBan", self.handleIDIPBanRequest)
-	http.HandleFunc("/delaccount", self.handleIDIPDelAccount)
-	http.HandleFunc("/queryaccountlastlogin", self.handleIDIPQueryLastLogin)
-	http.HandleFunc("/queryaccountservers", self.queryAccountServers)
+	http.HandleFunc("/exchangeActivationCode", self.handleExchangeActivationCode)
 
 	listener, err := greuse.Listen("tcp", listenAddr)
 	if err != nil {

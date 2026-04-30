@@ -19,7 +19,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def __init__(self):
         super(StatisticStub, self).__init__()
-        INFO_MSG("StatisticStub  __init__", self.classname())
+        LOG_IFO("StatisticStub  __init__", self.classname())
         self.statisticDic = {}
         return
 
@@ -50,9 +50,9 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
 
     def startReportStatistics(self, gbId, playerBox, spaceNo, extraDic):
-        INFO_MSG("startReportStatistics", gbId, spaceNo, extraDic)
+        LOG_IFO("startReportStatistics", gbId, spaceNo, extraDic)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            ERROR_MSG("startReportStatistics space cannot statistic", gbId, spaceNo)
+            LOG_ERR("startReportStatistics space cannot statistic", gbId, spaceNo)
             return
 
         if spaceNo not in self.statisticDic:
@@ -60,31 +60,31 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self.statisticDic[spaceNo] = sVal
         else:
             sVal = self.statisticDic.get(spaceNo)
-        sVal.addMember(gbId, playerBox, extraDic)
+        sVal.addMemberForSta(gbId, playerBox, extraDic)
 
     def stopReportStatistics(self, gbId, playBox, spaceNo):
-        INFO_MSG("startReportStatistics", gbId, spaceNo)
+        LOG_IFO("startReportStatistics", gbId, spaceNo)
         sVal = self.statisticDic.get(spaceNo, None)
         if sVal:
             sVal.delMember(gbId)
 
     def reportStatistics(self, gbId, spaceNo, statisticDic):
-        INFO_MSG("reportStatistics", gbId, spaceNo, statisticDic)
+        LOG_IFO("reportStatistics", gbId, spaceNo, statisticDic)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            ERROR_MSG("reportStatistics space cannot statistic", gbId, spaceNo)
+            LOG_ERR("reportStatistics space cannot statistic", gbId, spaceNo)
             return
 
         if spaceNo not in self.statisticDic:
-            ERROR_MSG("reportStatistics spaceNo not in self.statisticDic", spaceNo)
+            LOG_ERR("reportStatistics spaceNo not in self.statisticDic", spaceNo)
             return
 
         sVal = self.statisticDic.get(spaceNo)
         sVal.updateStatistics(gbId, statisticDic)
 
     def startGetStatistics(self, gbId, playerBox, spaceNo, statisticType, extraDic):
-        # INFO_MSG("startGetStatistics", statisticType)
+        # LOG_IFO("startGetStatistics", statisticType)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            ERROR_MSG("startGetStatistics space cannot statistic", gbId, spaceNo)
+            LOG_ERR("startGetStatistics space cannot statistic", gbId, spaceNo)
             return
 
         if spaceNo not in self.statisticDic:
@@ -97,7 +97,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def stopGetStatistics(self, gbId, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            INFO_MSG("stopGetStatistics space cannot statistic", gbId, spaceNo)
+            LOG_IFO("stopGetStatistics space cannot statistic", gbId, spaceNo)
             return
 
         if spaceNo not in self.statisticDic:
@@ -108,11 +108,11 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onSpaceGone(self, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            INFO_MSG("onSpaceGone space cannot statistic", spaceNo)
+            LOG_IFO("onSpaceGone space cannot statistic", spaceNo)
             return
 
         if spaceNo in self.statisticDic:
-            INFO_MSG("onSpaceGone", spaceNo)
+            LOG_IFO("onSpaceGone", spaceNo)
             self.statisticDic.pop(spaceNo)
 
     def showData(self):
@@ -121,11 +121,11 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getStatisticsDetail(self, gbId, playerBox, spaceNo, statisticType, extraDic):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            ERROR_MSG("getStatisticsDetail space cannot statistic", gbId, spaceNo)
+            LOG_ERR("getStatisticsDetail space cannot statistic", gbId, spaceNo)
             return []
 
         if spaceNo not in self.statisticDic:
-            ERROR_MSG("getStatisticsDetail spaceNo not in self.statisticDic", spaceNo)
+            LOG_ERR("getStatisticsDetail spaceNo not in self.statisticDic", spaceNo)
             return []
 
         sVal = self.statisticDic.get(spaceNo)
@@ -133,11 +133,11 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def getDungeonStatisticData(self, spaceNo, uuid, box, statisticType):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            ERROR_MSG("getDungeonStatisticData space cannot statistic", spaceNo)
+            LOG_ERR("getDungeonStatisticData space cannot statistic", spaceNo)
             return {}
 
         if spaceNo not in self.statisticDic:
-            ERROR_MSG("getDungeonStatisticData spaceNo not in self.statisticDic", spaceNo)
+            LOG_ERR("getDungeonStatisticData spaceNo not in self.statisticDic", spaceNo)
             return {}
 
         sVal = self.statisticDic.get(spaceNo)

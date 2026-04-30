@@ -26,23 +26,23 @@ class IDuelCell(object):
     @gamedecorator.checkGameconfigEnable('duel')
     @utils.isMyself
     def reqDuel(self, exposed, targetId):
-        INFO_MSG('reqDuel: ', targetId)
-        _mapId = formula.getMapId(self.spaceNo)
+        LOG_IFO('reqDuel: ', targetId)
+        _mapId = formula.fetchMapId(self.spaceNo)
         if not GP_GPD.datas[_mapId].get('ifSinglePK', 0):
             self.showMsg(D_CD.datas['duel_forbidScene']['value'], [])
             return
 
         if self.ifSafeArea():
-            ERROR_MSG('reqDuel in safe area:', targetId)
+            LOG_ERR('reqDuel in safe area:', targetId)
             return
 
         if targetId == self.id:
-            ERROR_MSG('reqDuel cannot duel with yourself:', targetId)
+            LOG_ERR('reqDuel cannot duel with yourself:', targetId)
             return
 
         target = KBEngine.entities.get(targetId)
         if not target:
-            ERROR_MSG('reqDuel target not found:', targetId)
+            LOG_ERR('reqDuel target not found:', targetId)
             return
 
         if not self.checkConflictState(CCD.datas.duel, bMsg=False):
@@ -54,16 +54,16 @@ class IDuelCell(object):
             return
 
         if self.duelAttr.inDuel():
-            ERROR_MSG('reqDuel cannot duel while already in duel:', targetId)
+            LOG_ERR('reqDuel cannot duel while already in duel:', targetId)
             return
 
         if target.duelAttr.inDuel():
-            ERROR_MSG('reqDuel target is already in duel:', targetId)
+            LOG_ERR('reqDuel target is already in duel:', targetId)
             return
 
         _radius = D_CD.datas['duel_battleRange']['value']
         if sMath.distance2D(self.position, target.position) > _radius * 2:
-            ERROR_MSG('reqDuel distance too far:', targetId)
+            LOG_ERR('reqDuel distance too far:', targetId)
             return
 
         if self._inDuelRequest():
@@ -75,12 +75,12 @@ class IDuelCell(object):
             return
 
         if self.id in target.duelBlackDict:
-            ERROR_MSG('reqDuel target is in duel black list:', targetId)
+            LOG_ERR('reqDuel target is in duel black list:', targetId)
             return
 
         self.duelRequestId = targetId
         # 多延迟两秒，防止客户端超时后拒绝过早
-        self.duelReqEndTime = utils.getNow() + D_CD.datas['duel_autoRefuseTime']['value'] + 2
+        self.duelReqEndTime = utils.curTS() + D_CD.datas['duel_autoRefuseTime']['value'] + 2
 
         target.currentRecvDuelReqId = self.id
         target.recvDuelReqEndTime = self.duelReqEndTime
@@ -100,61 +100,61 @@ class IDuelCell(object):
 
     # 是否在duel请求中
     def _inDuelRequest(self):
-        if self.duelReqEndTime < utils.getNow():
+        if self.duelReqEndTime < utils.curTS():
             return False
 
         return self.duelRequestId != 0
 
     # 是否在接收duel请求中
     def inRecvDuelRequest(self):
-        if self.recvDuelReqEndTime < utils.getNow():
+        if self.recvDuelReqEndTime < utils.curTS():
             return False
 
         return self.currentRecvDuelReqId != 0
 
     @property
     def duelRequestId(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.duelRequestId, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.duelRequestId, 0)
 
     @duelRequestId.setter
     def duelRequestId(self, value):
         if value:
-            self.setTempMiscProp(gameconst.AvatarProps.duelRequestId, value)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.duelRequestId, value)
         else:
-            self.popTempMiscProp(gameconst.AvatarProps.duelRequestId)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.duelRequestId)
 
     @property
     def currentRecvDuelReqId(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.currentRecvDuelReqId, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.currentRecvDuelReqId, 0)
 
     @currentRecvDuelReqId.setter
     def currentRecvDuelReqId(self, value):
         if value:
-            self.setTempMiscProp(gameconst.AvatarProps.currentRecvDuelReqId, value)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.currentRecvDuelReqId, value)
         else:
-            self.popTempMiscProp(gameconst.AvatarProps.currentRecvDuelReqId)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.currentRecvDuelReqId)
 
     @property
     def duelReqEndTime(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.duelReqEndTime, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.duelReqEndTime, 0)
 
     @duelReqEndTime.setter
     def duelReqEndTime(self, value):
         if value:
-            self.setTempMiscProp(gameconst.AvatarProps.duelReqEndTime, value)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.duelReqEndTime, value)
         else:
-            self.popTempMiscProp(gameconst.AvatarProps.duelReqEndTime)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.duelReqEndTime)
 
     @property
     def recvDuelReqEndTime(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.RecvDuelReqEndTime, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.RecvDuelReqEndTime, 0)
 
     @recvDuelReqEndTime.setter
     def recvDuelReqEndTime(self, value):
         if value:
-            self.setTempMiscProp(gameconst.AvatarProps.RecvDuelReqEndTime, value)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.RecvDuelReqEndTime, value)
         else:
-            self.popTempMiscProp(gameconst.AvatarProps.RecvDuelReqEndTime)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.RecvDuelReqEndTime)
 
     def _removeDuelBlack(self, targetId):
         self.duelBlackDict.pop(targetId, None)
@@ -175,12 +175,12 @@ class IDuelCell(object):
         if isBlack:
             self.duelBlackDict[target.id] = 1
             _delay = D_CD.datas['duel_disturbRefuseTime']['value'] * 60
-            self._callback(_delay, '_removeDuelBlack', (target.id,), gametimer.TIMER_TAG_DUEL_BLACK)
+            self.addTimerCB(_delay, '_removeDuelBlack', (target.id,), gametimer.TIMER_TAG_DUEL_BLACK)
 
     @gamedecorator.checkGameconfigEnable('duel')
     @utils.isMyself
     def dealDuelReq(self, exposed, accept, isBlack):
-        INFO_MSG('dealDuelReq: ', accept, isBlack)
+        LOG_IFO('dealDuelReq: ', accept, isBlack)
         if not accept:
             self._rejectDuelReq(isBlack)
             return
@@ -195,7 +195,7 @@ class IDuelCell(object):
 
         target = KBEngine.entities.get(self.currentRecvDuelReqId)
         if not target:
-            WARNING_MSG('dealDuelReq target not found:', self.id, self.currentRecvDuelReqId, self.recvDuelReqEndTime)
+            LOG_WARN('dealDuelReq target not found:', self.id, self.currentRecvDuelReqId, self.recvDuelReqEndTime)
             return
 
         if target.ifSafeArea():
@@ -208,7 +208,7 @@ class IDuelCell(object):
             self.clearAllRequest(target)
             return
 
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         if not GP_GPD.datas[_mapId].get('ifSinglePK', 0):
             self.showMsg(D_CD.datas['duel_forbidScene']['value'], [])
             self.clearAllRequest(target)
@@ -293,14 +293,14 @@ class IDuelCell(object):
         self.duelAttr = self.duelAttr
         self.resetAllTargetTypeCache()
 
-        if formula.isDuelGround(self.spaceNo):
+        if formula.inDuelScene(self.spaceNo):
             if self.mp != self.fullMp:
                 _delta = self.fullMp - self.mp
                 self.modifyMP(_delta)
 
             if self.hp != self.fullHp:
                 _delta = self.fullHp - self.hp
-                self.modifyHP(_delta, self.id, gameconst.SourceType.DuelEnd, self.id)
+                self.modifyHP(_delta, self.id, gameconst.SourceType.SrcTpDuelEnd, self.id)
 
         self.removeBuffsByTag('duelClear')
 
@@ -308,9 +308,14 @@ class IDuelCell(object):
 
     def onDuelFinished(self, finishReason):
         self.removeState(CSD.datas.duel)
+        self.base.completeGuildTask(
+            gameconst.GuildTaskType.DUEL,
+            0,
+            1,
+        )
 
     def getDuelDeathHp(self, oldHp):
-        if formula.isDuelGround(self.spaceNo):
+        if formula.inDuelScene(self.spaceNo):
             return self.fullHp
 
         _minHp = int(self.fullHp * gameconst.DUEL_RECOVER_PERCENT)
@@ -318,10 +323,10 @@ class IDuelCell(object):
         return max(_minHp, oldHp)
 
     def isLightningArea(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.isLightningArea, 0)
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.isLightningArea, 0)
 
     def ifSafeArea(self):
-        if not (formula.spaceInWorldLine(self.spaceNo) and self.areaId):
+        if not (formula.inWorldLineScene(self.spaceNo) and self.areaId):
             return False
 
         _areaData = WC_AD.datas.get(self.areaId)

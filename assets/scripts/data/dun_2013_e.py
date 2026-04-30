@@ -15,7 +15,8 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1009
+        1009,
+        1006
       ]
     }
   },
@@ -133,11 +134,7 @@ datas ={
     "lv": "1",
     "lvlmt": -1,
     "duration": -1.0,
-    "transition": {
-      "finished": [
-        1006
-      ]
-    }
+    "transition": {}
   },
   "1021": {
     "type": "popupdialog",

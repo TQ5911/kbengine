@@ -12,7 +12,7 @@ import gameconst
 import userType
 
 
-class BasicDungeonSrc(userType.UserSoleType):
+class BasicDungeonSrc(userType.UserSingleType):
     """副本来源基类"""
 
     def __init__(self, **extra):
@@ -38,35 +38,6 @@ class KickoutFromDungeon(BasicDungeonSrc):
     @property
     def kickReason(self):
         return self._extra['kickReason']
-
-
-class DungeonFromFollowTeamCaptain(BasicDungeonSrc):
-    """跟随队长"""
-
-    def __init__(self, needCast=False):
-        super(DungeonFromFollowTeamCaptain, self).__init__(
-            srcId=gameconst.DungeonSrcEnum.FROM_FOLLOW_CAPTAIN,
-            needCast=bool(needCast))
-
-    @property
-    def needCast(self):
-        return self._extra['needCast']
-
-    @property
-    def requestCaptainSpaceNo(self):
-        return self._extra.get('requestCaptainSpaceNo', 0)
-
-    @requestCaptainSpaceNo.setter
-    def requestCaptainSpaceNo(self, newSpaceNo):
-        self._extra['requestCaptainSpaceNo'] = newSpaceNo
-
-    @property
-    def requestCaptainPosition(self):
-        return self._extra.get('requestCaptainPosition', ())
-
-    @requestCaptainPosition.setter
-    def requestCaptainPosition(self, newPos):
-        self._extra["requestCaptainPosition"] = newPos
 
 
 class DungeonFromClientSrc(BasicDungeonSrc):

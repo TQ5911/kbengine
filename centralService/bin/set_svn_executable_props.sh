@@ -20,6 +20,9 @@ svn propset svn:executable on ./router/game_router.sh
 svn propset svn:executable on ./login/centralLogin
 svn propset svn:executable on ./login/game_login.sh
 
+svn propset svn:executable on ./orderService/orderService
+svn propset svn:executable on ./orderService/game_orderService.sh
+
 svn propset svn:executable on build_all_server.sh
 
 echo 'Executable permissions on all above are set successfully'

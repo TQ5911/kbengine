@@ -8,7 +8,7 @@ import formula
 import gameconfig
 
 
-class LineSpaceVal(userType.UserSoleType):
+class LineSpaceVal(userType.UserSingleType):
     LINE_CREATING = 1
     LINE_SPACE_READY = 2
     LINE_ENTITIES_READY = 3
@@ -21,7 +21,7 @@ class LineSpaceVal(userType.UserSoleType):
         self.lineSpaceBox = None
 
     def getSpaceNo(self):
-        return formula.getLineSpaceNo(self.lineType, self.lineNo)
+        return formula.combineLineSpaceNo(self.lineType, self.lineNo)
 
     def lineSpaceReady(self):
         self.lineStatus = self.LINE_SPACE_READY

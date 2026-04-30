@@ -4,7 +4,7 @@
 import userType
 
 
-class GuildEventLogVal(userType.UserSoleType):
+class GuildEventLogVal(userType.UserSingleType):
     '''GUILD_EVENT_LOG_DATA_INFO'''
     def __init__(self, eventId=0, args=0, ts=0):
         self.eventId = eventId

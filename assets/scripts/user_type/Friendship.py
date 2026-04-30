@@ -11,7 +11,7 @@ import redisUtils
 import relationConfig_relationConfig as RC_RCD
 
 
-class RelationBase(userType.UserSoleType):
+class RelationBase(userType.UserSingleType):
     def toClientFromFriendship(self, data, gbId, friendship):
         _msgListVal = friendship.msgsDic.get(gbId)
         if _msgListVal is None:
@@ -43,10 +43,10 @@ class FriendVal(RelationBase):
     def setBox(self, box):
         self.box = box
         if box is None:
-            self.setFriendFlags(utils.bitReset(self.flags, gameconst.FriendFlags.IS_ONLINE))
-            self.offlineTime = utils.getNow()
+            self.setFriendFlags(utils.breset(self.flags, gameconst.FriendFlags.IS_ONLINE))
+            self.offlineTime = utils.curTS()
         else:
-            self.setFriendFlags(utils.bitSet(self.flags, gameconst.FriendFlags.IS_ONLINE))
+            self.setFriendFlags(utils.bset(self.flags, gameconst.FriendFlags.IS_ONLINE))
 
     def setFriendFlags(self, flags):
         self.flags = flags
@@ -130,7 +130,7 @@ class StrangerVal(RelationBase):
         self.toClientFromFriendship(_data, self.gbId, friendship)
         return _data
 
-class ReceiverVal(userType.UserSoleType):
+class ReceiverVal(userType.UserSingleType):
     def __init__(self, gbId=0, name='', sex=0, school=0, level=0, timestamp=0):
         self.gbId = gbId
         self.name = name
@@ -156,7 +156,7 @@ class ReceiverVal(userType.UserSoleType):
         }
 
 
-class FriendBlockVal(userType.UserSoleType):
+class FriendBlockVal(userType.UserSingleType):
     def __init__(self, gbId=0, name='', level=0, school=0, sex=0, ts=0):
         self.gbId = gbId
         self.name = name
@@ -188,7 +188,7 @@ class FriendBlockVal(userType.UserSoleType):
         }
 
 
-class RecentVal(userType.UserSoleType):
+class RecentVal(userType.UserSingleType):
     def __init__(self, gbId=0, ts=0):
         self.gbId = gbId
         self.ts = ts
@@ -200,7 +200,7 @@ class RecentVal(userType.UserSoleType):
         }
 
 
-class Friendship(userType.UserSoleType):
+class Friendship(userType.UserSingleType):
     """FRIEND_SHIP"""
     def __init__(self, receiveList=(), lastSendTS=0, msgDic=(), recentList=(), blockList=()):
         self.friendsDict = {}
@@ -338,8 +338,8 @@ class Friendship(userType.UserSoleType):
             return
 
         _fVal.updateFromFcVal(fcVal)
-        if utils.hasBit(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY):
-            _fVal.setFriendFlags(utils.bitReset(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY))
+        if utils.bhas(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY):
+            _fVal.setFriendFlags(utils.breset(_fVal.flags, gameconst.FriendFlags.NEED_FIRST_NOTIFY))
             owner.client.onUpdateFriendsFull([_fVal.toClientData(self)])
 
     def addReceiveReq(self, reqData, timestamp):
@@ -375,7 +375,7 @@ class Friendship(userType.UserSoleType):
 
     def notifyFriendsImOffline(self, ownerGbId):
         for _fVal in self.friendsDict.values():
-            if utils.isBoxOffline(_fVal.box):
+            if utils.checkBoxOffline(_fVal.box):
                 continue
 
             _fVal.box.onNotifyOffline(ownerGbId)
@@ -383,13 +383,13 @@ class Friendship(userType.UserSoleType):
 
     def notifyFriendsImOnline(self, owner):
         for _fVal in self.friendsDict.values():
-            if utils.isBoxOffline(_fVal.box):
+            if utils.checkBoxOffline(_fVal.box):
                 continue
 
             _fVal.box.onNotifyOnline(owner.gbID, owner, gameconst.FriendOnlineSrc.ONLINE)
 
     def genNewSendMsgTS(self):
-        _now = utils.getNow()
+        _now = utils.curTS()
         if _now <= self.lastSendTS:
             self.lastSendTS += 1
         else:
@@ -577,7 +577,7 @@ class Friendship(userType.UserSoleType):
             if _gbId in self.blockDict:
                 continue
 
-            _bVal = FriendBlockVal(gbId=_gbId, ts=utils.getNow())
+            _bVal = FriendBlockVal(gbId=_gbId, ts=utils.curTS())
             self.blockDict[_gbId] = _bVal
 
     def initRecent(self, recentList, owner):
@@ -632,7 +632,7 @@ class Friendship(userType.UserSoleType):
         return gbId in self.blockDict
 
     def addBlock(self, gbId):
-        _fVal = FriendBlockVal(gbId, ts=utils.getNow())
+        _fVal = FriendBlockVal(gbId, ts=utils.curTS())
         self.blockDict[gbId] = _fVal
 
     def removeBlock(self, gbId):

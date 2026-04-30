@@ -5,7 +5,7 @@ from KBEDebug import *
 import userType
 
 
-class HolidayPayInfo(userType.UserSoleType):
+class HolidayPayInfo(userType.UserSingleType):
     def __init__(self):
         # key:creditID value:list[holidayID, gainTimes]
         self.creditDic = {}

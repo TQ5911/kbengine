@@ -191,6 +191,38 @@ datas = _tools.RODict({
         "antiStudio": 1,
         "auctionCategory": 8,
     }),
+    21: _tools.RODict({
+        "ID": 21,
+        "type": 0,
+        "subType": 21,
+        "sort": 6,
+        "antiStudio": 1,
+        "auctionCategory": 7,
+    }),
+    22: _tools.RODict({
+        "ID": 22,
+        "type": 0,
+        "subType": 22,
+        "sort": 6,
+        "antiStudio": 1,
+        "auctionCategory": 7,
+    }),
+    23: _tools.RODict({
+        "ID": 23,
+        "type": 0,
+        "subType": 23,
+        "sort": 6,
+        "antiStudio": 1,
+        "auctionCategory": 7,
+    }),
+    24: _tools.RODict({
+        "ID": 24,
+        "type": 0,
+        "subType": 24,
+        "sort": 13,
+        "antiStudio": 1,
+        "auctionCategory": 0,
+    }),
     1000: _tools.RODict({
         "ID": 1000,
         "type": 1,
@@ -302,10 +334,26 @@ datas = _tools.RODict({
         "sort": 1,
         "antiStudio": 1,
         "auctionCategory": 0,
+    }),
+    4000: _tools.RODict({
+        "ID": 4000,
+        "type": 4,
+        "subType": 1,
+        "sort": 6,
+        "antiStudio": 1,
+        "auctionCategory": 0,
+    }),
+    4001: _tools.RODict({
+        "ID": 4001,
+        "type": 4,
+        "subType": 2,
+        "sort": 6,
+        "antiStudio": 1,
+        "auctionCategory": 0,
     })
 })
 minKey = 0
-maxKey = 2011
+maxKey = 4001
 
 ItemTypeSortDic = _tools.RODict({ 
         0:12,
@@ -329,6 +377,10 @@ ItemTypeSortDic = _tools.RODict({
         18:4,
         19:9,
         20:6,
+        21:6,
+        22:6,
+        23:6,
+        24:13,
         52:1,
         1000:1,
         1001:1,
@@ -344,13 +396,15 @@ ItemTypeSortDic = _tools.RODict({
         2009:1,
         2010:1,
         2011:1,
+        4001:6,
+        4002:6,
 })
 
 
 AuctionCategoryDic = _tools.RODict({ 
         5:[(0, 11)],
         6:[(0, 7), (0, 8), (0, 9), (0, 10), (0, 18)],
-        7:[(0, 6), (0, 12), (0, 13)],
+        7:[(0, 6), (0, 12), (0, 13), (0, 21), (0, 22), (0, 23)],
         8:[(0, 20)],
         9:[(1, 1)],
 })

@@ -17,7 +17,7 @@ import teamDunChallenge_config as TDC_CFG
 import raidBossChallenge_config as RBC_CFG
 
 
-class _DungeonPlayMode(userType.UserSoleType):
+class _DungeonPlayMode(userType.UserSingleType):
 
     def __init__(self, playMode=0, **kwargs):
         self.playMode = playMode
@@ -26,7 +26,7 @@ class _DungeonPlayMode(userType.UserSoleType):
 
     def getTEnd(self, dungeonNo):
         if not self.tCreate:
-            WARNING_MSG('_DungeonPlayMode:: tCreate not set', self.tCreate)
+            LOG_WARN('_DungeonPlayMode:: tCreate not set', self.tCreate)
             return 0
         return int(self.tCreate + DDI.datas[dungeonNo]['timeOut'] * 60 + 1)
 
@@ -54,7 +54,7 @@ class CrusadeDungeonPlayMode(_DungeonPlayMode):
         self.mulHurt = mulHurt
         self.teamUUID = teamUUID
 
-class DungeonPlayModePlayerMiXin(userType.UserSoleType):
+class DungeonPlayModePlayerMiXin(userType.UserSingleType):
     def __init__(self, rewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
         self.rewardNumber = rewardNumber
         self.rewardCoinNumber = rewardCoinNumber
@@ -88,26 +88,26 @@ class DungeonPlayModePlayerMiXin(userType.UserSoleType):
             return
         newNum = self.rewardNumber + num
         if newNum < 0:
-            WARNING_MSG('Crusade _addRewardWithLimit 1:: newNum smaller than zero', newNum, countType)
+            LOG_WARN('Crusade _addRewardWithLimit 1:: newNum smaller than zero', newNum, countType)
             newNum = 0
         self.rewardNumber = newNum
 
         if countType == gameconst.DungeonAddRewardNumCountType.ITEM_COUNT:
             newNum = self.rewardItemNumber + num
             if newNum < 0:
-                WARNING_MSG('Crusade _addRewardWithLimit 2:: newNum smaller than zero', newNum, countType)
+                LOG_WARN('Crusade _addRewardWithLimit 2:: newNum smaller than zero', newNum, countType)
                 newNum = 0
             self.rewardItemNumber = newNum
 
         if countType == gameconst.DungeonAddRewardNumCountType.COIN_COUNT:
             newNum = self.rewardCoinNumber + num
             if newNum < 0:
-                WARNING_MSG('Crusade _addRewardWithLimit 3:: newNum smaller than zero', newNum, countType)
+                LOG_WARN('Crusade _addRewardWithLimit 3:: newNum smaller than zero', newNum, countType)
                 newNum = 0
             self.rewardCoinNumber = newNum
 
     def deductRewardNum(self):
-        INFO_MSG('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
+        LOG_IFO('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
         if self.rewardNumber > 0:
             # 优先使用金币购买的次数
             if self.rewardCoinNumber > 0:
@@ -122,8 +122,8 @@ class DungeonPlayModePlayerMiXin(userType.UserSoleType):
                     self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, -1)
                     self.ticketType = gameconst.DungeonTicketType.ITEM
         else:
-            gameengine.reportCritical(f"{self.__class__.__name__}::deductRewardNum:: remain count is zero !!!", self)
-        INFO_MSG('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
+            gameengine.panicStack(f"{self.__class__.__name__}::deductRewardNum:: remain count is zero !!!", self)
+        LOG_IFO('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
 
     def hasCoinCount(self):
         return self.rewardCoinNumber > 0
@@ -174,7 +174,7 @@ class ChiefDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
     def rewardNumCoinDailyLimit(self):
         return int(RBC_CFG.datas['rewardNumCoinDailyLimit']['value'])
     
-class DungeonPassRecords(userType.UserSoleType):
+class DungeonPassRecords(userType.UserSingleType):
     def __init__(self, entryIds=[], entryStatus=[]):
         self.passEntryRecords = {}
         for idx in range(0, len(entryIds)):

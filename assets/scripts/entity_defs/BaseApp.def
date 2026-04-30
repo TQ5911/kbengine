@@ -202,20 +202,6 @@
             <Arg>       PYTHON         </Arg>
         </onGetAllPlayer>
 
-        <recordOfflinePlayerMailLog>
-            <Arg>         AVATARGBID_LIST        </Arg>
-            <Arg>         MAILID        </Arg>
-            <Arg>         MAIL_GBID     </Arg>
-            <Arg>         UNICODE       </Arg>
-            <Arg>         UNICODE       </Arg>
-            <Arg>         UNICODE       </Arg>
-            <Arg>         UINT32        </Arg>
-            <Arg>         UINT32        </Arg>
-            <Arg>         OP_UUID       </Arg>
-            <Arg>         UNICODE       </Arg>
-            <Arg>         UINT32        </Arg>
-        </recordOfflinePlayerMailLog>
-
         <replyHttpCommand>
             <Arg>       MAILBOX     </Arg>
             <Arg>       STRING      </Arg>

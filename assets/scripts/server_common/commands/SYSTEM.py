@@ -5,96 +5,91 @@ import gmCommand
 import functools
 import importlib
 import gameglobal
+import gameconfig
+import redisUtils
 from KBEDebug import *
 from commands.CMD_COMMON import *
 
-import login_set as LGS
+import login_set as LGSD
 
-BASE = gameconst.BASE
-CELL = gameconst.CELL
-ALL = gameconst.ALL
-INSIDE = gmAdmin.INSIDE
-ALLSIDE = gmAdmin.ALLSIDE
+BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
+    gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
 
-gm_cmd = gmCommand.gm_cmd
-forwardCommand = gmCommand.forwardCommand
-callApps = gmCommand._callApps
+gm_cmd, forwardGMCommand, callOnApps = gmCommand.gm_cmd, gmCommand.forwardGMCommand,\
+    gmCommand._callApps
 
 Int = gmCommand.Int
 Player = gmCommand.Player
 
-RARG = gmCommand.RARG
-RSU = gmCommand.RSU
-RSTUB = gmCommand.RSTUB
-RONE = gmCommand.RONE
-RALL = gmCommand.RALL
+RARG, RSU, RSTUB, RONE, RALL= gmCommand.RARG, gmCommand.RSU, gmCommand.RSTUB,\
+    gmCommand.RONE, gmCommand.RALL
 
 GOD_GROUPS = gmCommand.GOD_GROUPS
 
-@gm_cmd('$objcheck', (Int('autoFixed'), ), RONE, BASE, 'objcheck', ALLSIDE, GOD_GROUPS)
-def objcheck(su, autoFixed):
-    forwardCommand(su, '$_objcheck-cell', autoFixed)
-    forwardCommand(su, '$_objcheck-base', autoFixed)
+@gm_cmd('$objcheck', (Int('auto fixed'), ), RONE, BASE, 'do obj check', ALLSIDE, GOD_GROUPS)
+def gmObjcheck(su, autofixed):
+    forwardGMCommand(su, '$_objcheck-cell', autofixed)
+    forwardGMCommand(su, '$_objcheck-base', autofixed)
     return True, 'objcheck 完成'
 
-@gm_cmd('$_objcheck-cell', (Int('autoFixed'), ), RALL, CELL, 'objcheck', ALLSIDE, GOD_GROUPS)
-def objcheckCell(su, autoFixed):
-    DEBUG_MSG('begin objcheckCell')
+@gm_cmd('$_objcheck-cell', (Int('auto fixed'), ), RALL, CELL, 'do obj check', ALLSIDE, GOD_GROUPS)
+def objcheckCell(su, autofixed):
+    LOG_DBG('begin objcheckCell')
     import gamerefresh
-    gamerefresh.mismathObjectCheck(autoFixed=autoFixed, debug=True)
+    gamerefresh.mismathObjectCheck(autoFixed=autofixed, debug=True)
 
-@gm_cmd('$_objcheck-base', (Int('autoFixed'), ), RALL, BASE, 'objcheck', ALLSIDE, GOD_GROUPS)
-def objcheckBase(su, autoFixed):
-    DEBUG_MSG('begin objcheckBase')
+@gm_cmd('$_objcheck-base', (Int('auto fixed'), ), RALL, BASE, 'do obj check', ALLSIDE, GOD_GROUPS)
+def objcheckBase(su, autofixed):
+    LOG_DBG('begin objcheckBase')
     import gamerefresh
-    gamerefresh.mismathObjectCheck(autoFixed=autoFixed, debug=True)
+    gamerefresh.mismathObjectCheck(autoFixed=autofixed, debug=True)
 
-@gm_cmd('$refresh', (), RONE, BASE, 'refresh', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$refresh', (), RONE, BASE, 'gm refresh', ALLSIDE, GOD_GROUPS)
 def refresh(su):
-    forwardCommand(su, '$_refresh-cell')
-    forwardCommand(su, '$_refresh-base')
+    forwardGMCommand(su, '$_refresh-cell')
+    forwardGMCommand(su, '$_refresh-base')
     return True, 'refresh完成'
 
-@gm_cmd('$_refresh-cell', (), RALL, CELL, 'refresh', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_refresh-cell', (), RALL, CELL, 'gm refresh cell', ALLSIDE, GOD_GROUPS)
 def refreshCell(su):
-    DEBUG_MSG('begin refreshCell')
+    LOG_DBG('begin refreshCell')
     import gamerefresh
     gamerefresh.refreshScript()
 
-@gm_cmd('$_refresh-base', (), RALL, BASE, 'refresh', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_refresh-base', (), RALL, BASE, 'gm refresh base', ALLSIDE, GOD_GROUPS)
 def refreshBase(su):
-    DEBUG_MSG('begin refreshBase')
+    LOG_DBG('begin refresh base')
     import gamerefresh
     gamerefresh.refreshScript()
 
-@gm_cmd('$reloaddata', (), RONE, BASE, 'reload数据', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$reloaddata', (), RONE, BASE, 'reload data', ALLSIDE, GOD_GROUPS)
 def reloadData(su):
-    forwardCommand(su, '$_reloaddata-cell')
-    forwardCommand(su, '$_reloaddata-base')
+    forwardGMCommand(su, '$_reloaddata-cell')
+    forwardGMCommand(su, '$_reloaddata-base')
     gameglobal.localBaseApp.notifyInterfaceDataReload([])
-    return True, 'reload data完成'
+    return True, 'reload data done'
 
-@gm_cmd('$_reloaddata-cell', (), RALL, CELL, 'reload数据', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_reloaddata-cell', (), RALL, CELL, 'reload data cell', ALLSIDE, GOD_GROUPS)
 def reloadDataCell(su):
-    DEBUG_MSG('begin reloadDataCell')
+    LOG_DBG('begin reloadDataCell')
     import gamerefresh
     gamerefresh.refreshData()
 
-@gm_cmd('$_reloaddata-base', (), RALL, BASE, 'reload数据', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_reloaddata-base', (), RALL, BASE, 'reload data base', ALLSIDE, GOD_GROUPS)
 def reloadDataBase(su):
-    DEBUG_MSG('begin reloadDataBase')
+    LOG_DBG('begin reloadDataBase')
     import gamerefresh
     gamerefresh.refreshData()
 
-@gm_cmd('$kickavatar', (Player("gbId/Id"),Int('messageId')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
-def kickAvatar(su, player,messageId):
-    if messageId == 0:
-        messageId=LGS.datas['login_serverClosed']['value']
+@gm_cmd('$kickavatar', (Player("gbId or Id"), Int('msg Id')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
+def kickAvatar(su, player, msgId):
+    if msgId == 0:
+        msgId = LGSD.datas['login_serverClosed']['value']
     if not player.gmMode :
-        player.onMessagePre(messageId, [])
-        ret = player.destroySelf(gameconst.AVATAR_OFFLINE_REASON_GMKICK)
+        player.onMessagePre(msgId, [])
+        ret = player.destroySelf(gameconst.OFFLINE_REASON_GMKICK)
 
-        return ret, '执行完成：%s,%s'% (ret,messageId)
+        return ret, '执行完成：%s,%s'% (ret, msgId)
 
 
 def _kickAllAccount(msgId, *args):
@@ -103,66 +98,64 @@ def _kickAllAccount(msgId, *args):
         'broadcastToAllAccount',
         ('kickAccountGm', (msgId, )))
 
-@gm_cmd('$killallavatar', (Int('messageId'),), RONE, BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=0)
-def killAllAvatar(su,messageId=0):
-    import gameengine
+@gm_cmd('$killallavatar', (Int('msgId'),), RONE, BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=0)
+def killAllAvatar(su,msgId=0):
     import gameglobal
 
-    if messageId == 0:
-        messageId=LGS.datas['login_serverClosed']['value']
+    if msgId == 0:
+        msgId = LGSD.datas['login_serverClosed']['value']
 
-    callApps(gameconst.BASE, 'gameconfig.setCacheConfig', ('permitLogin', '0'))
-    callApps(gameconst.CELL, 'gameconfig.setCacheConfig', ('permitLogin', '0'))
+    callOnApps(gameconst.BASE, 'gameconfig.setCacheConfig', ('permitLogin', '0'))
+    callOnApps(gameconst.CELL, 'gameconfig.setCacheConfig', ('permitLogin', '0'))
     gameglobal.localBaseApp.notifyInterfaceCacheConfigChanged('permitLogin', '0')
 
-    # gameengine.broadcastBaseapp('broadcastToAllAvatar',
-    #                                 (gameconst.CELL, 'kickGm',
-    #                                  (gameconst.AVATAR_OFFLINE_REASON_GMKICK,messageId )))
-    #
+    key = gameconst.RedisKey.SERVER_OPEN_STATE + str(gameconfig.serverId())
+    redisUtils.RedisUtils.set(key, "0")
+    LOG_IFO('update redis server open state when kill all avatar: ', key, "0")
     import KBEngine
-    KBEngine.addTimer(5, 0, functools.partial(_kickAllAccount, messageId))
+    KBEngine.addTimer(5, 0, functools.partial(_kickAllAccount, msgId))
 
 
-@gm_cmd('$hotreload', (), RONE, BASE, 'hotreload', ALLSIDE, GOD_GROUPS)
-def hotreload(su):
+@gm_cmd('$hotreload', (), RONE, BASE, 'hot reload', ALLSIDE, GOD_GROUPS)
+def gmHotreload(su):
     import hotReload
     importlib.reload(hotReload)
-    forwardCommand(su, '$_hotreload-cell')
-    forwardCommand(su, '$_hotreload-base')
+    forwardGMCommand(su, '$_hotreload-cell')
+    forwardGMCommand(su, '$_hotreload-base')
     gameglobal.localBaseApp.notifyInterfaceReload()
 
-@gm_cmd('$hotreloadCell', (), RONE, BASE, 'hotreload', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$hotreloadCell', (), RONE, BASE, 'hot reload cell', ALLSIDE, GOD_GROUPS)
 def hotreloadCell(su):
     import hotReload
     importlib.reload(hotReload)
-    forwardCommand(su, '$_hotreload-cell')
+    forwardGMCommand(su, '$_hotreload-cell')
 
-@gm_cmd('$hotreloadBase', (), RONE, BASE, 'hotreload', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$hotreloadBase', (), RONE, BASE, 'hot reload base', ALLSIDE, GOD_GROUPS)
 def hotreloadBase(su):
     import hotReload
     importlib.reload(hotReload)
-    forwardCommand(su, '$_hotreload-base')
+    forwardGMCommand(su, '$_hotreload-base')
 
-@gm_cmd('$hotreloadInterface', (), RONE, BASE, 'hotreload', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$hotreloadInterface', (), RONE, BASE, 'hot reload interface', ALLSIDE, GOD_GROUPS)
 def hotreloadInterface(su):
     gameglobal.localBaseApp.notifyInterfaceReload()
-    return True, 'hotReload interface完成'
+    return True, 'hotReload interface done'
 
-@gm_cmd('$_hotreload-cell', (), RALL, CELL, 'hotreload', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_hotreload-cell', (), RALL, CELL, 'hot reload cell', ALLSIDE, GOD_GROUPS)
 def _hotReloadCell(su):
-    INFO_MSG('begin _hotReloadCell')
+    LOG_IFO('begin _hotReloadCell')
     import hotReload
     importlib.reload(hotReload)
     hotReload.refreshCell()
 
-@gm_cmd('$_hotreload-base', (), RALL, BASE, 'hotreload', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_hotreload-base', (), RALL, BASE, 'hot reload base', ALLSIDE, GOD_GROUPS)
 def _hotReloadBase(su):
-    INFO_MSG('begin _hotReloadBase')
+    LOG_IFO('begin _hotReloadBase')
     import hotReload
     importlib.reload(hotReload)
     hotReload.refreshBase()
 
-@gm_cmd('$hotfix', (), RALL, BASE, 'hotfix', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$hotfix', (), RALL, BASE, 'do hotfix', ALLSIDE, GOD_GROUPS)
 def hotfix(su):
     gameglobal.localBaseApp.readhotfix()
 
@@ -178,7 +171,7 @@ def _setGameConstInternal(su, className, field, val):
         obj = getattr(gameconst, className, None)
 
     if not obj:
-        su.onCommandResult(gameconst.GMCommandErr.ARGS_ERR, 'invalid class name:%s'%className, {})
+        su.onCommandResult(gameconst.GMCommandErr.GM_RET_ARGS_ERR, 'invalid class name:%s'%className, {})
         return
 
     if hasattr(obj, field):

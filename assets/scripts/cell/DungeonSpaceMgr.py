@@ -47,9 +47,9 @@ class DungeonCompleteDelayNotifyMixin(object):
             self.dungeonCompleteDelayNotifyTimer = 0
     
     def cancelCompleteDelayNotifyTimer(self, owner, tag):
-        INFO_MSG('cancelCompleteDelayNotifyTimer~', owner, tag)
+        LOG_IFO('cancelCompleteDelayNotifyTimer~', owner, tag)
         if self.dungeonCompleteDelayNotifyTimer:
-            owner._cancelCallback(self.dungeonCompleteDelayNotifyTimer, tag)
+            owner.cancelTimerCB(self.dungeonCompleteDelayNotifyTimer, tag)
         self.clearCompleteDelayNotifyTimer()
 
     def clearCompleteDelayNotifyTimer(self):
@@ -61,7 +61,7 @@ class DungeonCompleteDelayNotifyMixin(object):
 
 class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPlayerReliveRecordMixin, DungeonCompleteDelayNotifyMixin):
     def __init__(self):
-        INFO_MSG("DungeonSpaceMgr#__init__", self.spaceNo, self.spaceID)
+        LOG_IFO("DungeonSpaceMgr#__init__", self.spaceNo, self.spaceID)
 
         iCell.ICell.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
@@ -75,45 +75,45 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
     @property
     def dungeonTimeFreezeFlag(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonTimeFreezeSpaceMgrFlag, default=False)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonTimeFreezeSpaceMgrFlag, default=False)
 
     @dungeonTimeFreezeFlag.setter
     def dungeonTimeFreezeFlag(self, newFlag):
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonTimeFreezeSpaceMgrFlag, bool(newFlag))
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonTimeFreezeSpaceMgrFlag, bool(newFlag))
 
     @property
     def dungeonRewardBossID(self):
-        if not self.hasTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonRewardBossID):
-            self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonRewardBossID, 0)
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonRewardBossID)
+        if not self.hasTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonRewardBossID):
+            self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonRewardBossID, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonRewardBossID)
 
     @dungeonRewardBossID.setter
     def dungeonRewardBossID(self, newVal):
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonRewardBossID, newVal)
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonRewardBossID, newVal)
 
     @property
     def singleDungeonBelongPlayerGBID(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.singleDungeonBelongPlayerGBID, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumsingleDungeonBelongPlayerGBID, 0)
 
     @property
     def teamDungeonBelongTeamUUID(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.teamDungeonBelongTeamUUID, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumteamDungeonBelongTeamUUID, 0)
 
     @property
     def raidDungeonBelongRaidUUID(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.raidDungeonBelongRaidUUID, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumraidDungeonBelongRaidUUID, 0)
 
     @property
     def guildBossDungeonBelongGuildUUID(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.guildBossDungeonBelongGuildUUID, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumguildBossDungeonBelongGuildUUID, 0)
     
     @property
     def isDungeonWin(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonWinFlagSpaceMgrCache, False)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonWinFlagSpaceMgrCache, False)
 
     @isDungeonWin.setter
     def isDungeonWin(self, newFlag: bool):
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.dungeonWinFlagSpaceMgrCache, bool(newFlag))
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumdungeonWinFlagSpaceMgrCache, bool(newFlag))
 
     @property
     def spaceUUID(self):
@@ -130,28 +130,18 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
     def _checkDungeonTimeout(self):
         tCreate = self.dungeonPlayMode.tCreate
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         endTime = int(tCreate + DDI.datas[dungeonNo]['timeOut'] * 60 + 1)
-        if utils.getNow() > endTime:
-            WARNING_MSG('_checkDungeonTimeout:: timeout', dungeonNo)
+        if utils.curTS() > endTime:
+            LOG_WARN('_checkDungeonTimeout:: timeout', dungeonNo)
             self.onDungeonTimeout()
             return
         self.toCallbackAfter(1)._checkDungeonTimeout()
 
-    def initAIController(self):
-        pass
-        # mapId=formula.getMapId(self.spaceNo)
-        # aiNo=SSD.datas.get(mapId, {}).get('treeID')
-        # if not aiNo:
-        #     return
-        #
-        # self.aiController=spaceMgrAIController.SpaceMgrAIController(self.id, str(aiNo))
-        # self.tickAI()
-
     def initFlowController(self):
         spaceNo = self.spaceNo
-        dungeonNo = formula.getMapId(spaceNo)
-        if utils.isDunFlowModuleDataExist(dungeonNo):
+        dungeonNo = formula.fetchMapId(spaceNo)
+        if utils.checkDunFlowModuleDataExist(dungeonNo):
             self._initFlowController(dungeonNo)
         else:
             # 【【任务】副本支持空副本流程】
@@ -161,48 +151,48 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
     def _initFlowController(self, dungeonNo=-1):
         spaceNo = self.spaceNo
         if dungeonNo <= 0:
-            dungeonNo = formula.getMapId(spaceNo)
+            dungeonNo = formula.fetchMapId(spaceNo)
         try:
             self.flowController, nodes = flowController.buildFlowController(dungeonNo, spaceNo, self)
             self.flowController.check_all()
         except Exception as e:
             import traceback
             traceback.print_exc()
-            ERROR_MSG('initFlowController::exception got: ', e)
+            LOG_ERR('initFlowController::exception got: ', e)
             return
 
-        self._callback(0.5, '_flowStart', (), gametimer.TIMER_TAG_FLOW_START)
+        self.addTimerCB(0.5, '_flowStart', (), gametimer.TIMER_TAG_FLOW_START)
 
     def resetFlowControllerStartByStage(self, dungeonStageID):
-        INFO_MSG('resetStartNodeByStage::', dungeonStageID)
+        LOG_IFO('resetStartNodeByStage::', dungeonStageID)
         assert dungeonStageID >= 0
         import ep_ctrl
 
         controller = self.flowController
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
-        for eventId, event in controller._elements.items():
-            if event.name == '{}_{}'.format(gameconst.DungeonFlowEventName.dunStageSet, eventId) \
-                    and event.get_param('dungeonStageID', -1) == dungeonStageID:
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
+        for eventId, event in controller.elementsDic.items():
+            if event.name == '{}_{}'.format(gameconst.DungeonFlowEventType.EVdunStageSet, eventId) \
+                    and event.fetchArgument('dungeonStageID', -1) == dungeonStageID:
                 # 创建头空节点和副本开始节点
-                _sentinelEvent = controller.build_element(flowController.FlowEvent, 0)
+                _sentinelEvent = controller.buildElement(flowController.FlowNodeEvent, 0)
                 newStartEvent = controller.buildStartDungeonEvent(ep_ctrl.utils.gen_uuid(), dungeonNo, self.spaceNo)
                 _sentinelEvent.bind_element(newStartEvent, 1, 1)
                 newStartEvent.bind_element(event, 1, 1)
                 controller.replace_start_node(_sentinelEvent)
                 return True
         else:
-            ERROR_MSG('resetStartNodeByStage:: dungeonStageID not found', dungeonStageID)
+            LOG_ERR('resetStartNodeByStage:: dungeonStageID not found', dungeonStageID)
             return False
 
     def _flowStart(self):
-        WARNING_MSG('_flowStart:: NOW')
+        LOG_WARN('_flowStart:: NOW')
         # 帮会副本直接开始流程
-        if formula.isGuildBossDungeonSpace(self.spaceNo):
+        if formula.inGuildBossDungeonScene(self.spaceNo):
             self.flowController.trigger_now()
             return
         
         # 【【任务】团队副本的创建和进入接口独立】
-        if not self.players and not formula.isRaidDungeonSpace(self.spaceNo):
+        if not self.players and not formula.inRaidDungeonScene(self.spaceNo):
             # 对于一下情况, 直接开始副本流程逻辑(不等待玩家)
             # 1. 团队副本
             self.toCallbackAfter(0.5)._flowStart()
@@ -216,10 +206,10 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 return
 
         if self.dungeonStage:
-            WARNING_MSG('_flowStart:: NOW FROM STAGE, {}'.format(self.dungeonStage))
+            LOG_WARN('_flowStart:: NOW FROM STAGE, {}'.format(self.dungeonStage))
             r = self.resetFlowControllerStartByStage(self.dungeonStage)
             if not r:
-                gameengine.reportCritical('_flowStart:: STAGE NOT FOUND', self.dungeonStage)
+                gameengine.panicStack('_flowStart:: STAGE NOT FOUND', self.dungeonStage)
                 return
 
         self.flowController.trigger_now()
@@ -228,25 +218,25 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         return self.getEntitiyByTag(gameconst.HomeEntType.getTypeDesc(gameconst.HomeEntType.Boss))
 
     def changeDungeonStageSet(self, newStageID):
-        INFO_MSG('changeDungeonStageSet::', newStageID)
+        LOG_IFO('changeDungeonStageSet::', newStageID)
         oldStageID = self.dungeonStage
         self._changeDungeonStageSet(oldStageID, newStageID, toClient=True)
 
     def _changeDungeonStageSet(self, oldStageID, newStageID, toClient=False, now=None):
-        INFO_MSG('in _changeDungeonStageSet:', oldStageID, newStageID, self.dungeonPlayMode.__dict__)
+        LOG_IFO('in _changeDungeonStageSet:', oldStageID, newStageID, self.dungeonPlayMode.__dict__)
         self.dungeonStage = newStageID
-        self.dungeonStageStartT = now or utils.getNow()
+        self.dungeonStageStartT = now or utils.curTS()
 
     def onDungeonStarted(self, tCreate):
-        INFO_MSG('onDungeonStarted::', tCreate, self.dungeonPlayMode.playMode)
+        LOG_IFO('onDungeonStarted::', tCreate, self.dungeonPlayMode.playMode)
         self.dungeonPlayMode.tCreate = tCreate
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         endTime = int(tCreate + DDI.datas[dungeonNo]['timeOut'] * 60 + 1)
         self.toCallbackAfter(1)._checkDungeonTimeout()
         for pid in self.players:
             ent = KBEngine.entities.get(pid)
-            if ent and ent.isReal() and formula.isDungeonSpace(ent.spaceNo):
-                if formula.getDungeonNoBySpaceNo(self.spaceNo) == formula.getDungeonNoBySpaceNo(ent.spaceNo):
+            if ent and ent.isReal() and formula.inDungeonScene(ent.spaceNo):
+                if formula.parseDungeonNoBySpaceNo(self.spaceNo) == formula.parseDungeonNoBySpaceNo(ent.spaceNo):
                     ent.client.changeDungeonRemainTime(self.spaceNo, endTime)
 
     def onPlayerOffline(self, playerId, playerGbId):
@@ -259,7 +249,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             box.client.newTransPetStart(self.transPetId, self.triggerGuideId)
 
     def onPlayerEnter(self, playerId):
-        INFO_MSG('onPlayerEnter', playerId)
+        LOG_IFO('onPlayerEnter', playerId)
         super(DungeonSpaceMgr, self).onPlayerEnter(playerId)
         self.flowCtrlDungeonAlivePlayerIncreased(self.getAlivePlayerNumber())
         self.flowCtrlDungeonPlayerRestNumChanged(len(self.players))
@@ -268,7 +258,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             pent.sendDunTimeFreezeFlag()
 
     def onPlayerLeave(self, playerGbId, playerId, box):
-        INFO_MSG('onPlayerLeave', playerGbId, playerId, box)
+        LOG_IFO('onPlayerLeave', playerGbId, playerId, box)
         super(DungeonSpaceMgr, self).onPlayerLeave(playerGbId, playerId, box)
         self.flowCtrlDungeonAlivePlayerDecreased(self.getAlivePlayerNumber())
         self.flowCtrlDungeonPlayerRestNumChanged(len(self.players))
@@ -277,11 +267,11 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         super(DungeonSpaceMgr, self).addEntity(entId, tags)
         ent = KBEngine.entities.get(entId)
 
-        _hostEnt, _ = utils.getRealAvatarEnt(ent)
+        _hostEnt, _ = utils.getRealAvatarEntity(ent)
 
         if hasattr(ent, 'gameEntityIdentifyID'):
             if ent.gameEntityIdentifyID <= 0:
-                WARNING_MSG("DungeonSpaceMgr::addEntity:: gameEntityIdentifyID zero", ent, tags, ent.gameEntityIdentifyID)
+                LOG_WARN("DungeonSpaceMgr::addEntity:: gameEntityIdentifyID zero", ent, tags, ent.gameEntityIdentifyID)
                 return
             gameengine.getDungeonStubBySpaceNo(self.spaceNo).onEntityCreated(
                 self.spaceNo, self.spaceUUID, entId, ent.gameEntityIdentifyID)
@@ -301,31 +291,31 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         return len(list(filter(lambda p: not p.isPlayerDead(), self.players.values())))
 
     def onDungeonTimeout(self):
-        INFO_MSG('onDungeonTimeout::')
+        LOG_IFO('onDungeonTimeout::')
         # 【【任务】副本结束逻辑调整】
         # 1.表里配置的副本最长时间结束后，不需要再延迟了，直接销毁副本。
         delay = 0
         # for pid in self.players:
         #     ent = KBEngine.entities.get(pid)
-        #     if ent and ent.isReal() and formula.isDungeonSpace(ent.spaceNo):
-        #         if formula.getDungeonNoBySpaceNo(self.spaceNo) == formula.getDungeonNoBySpaceNo(ent.spaceNo):
-        #             ent.client.changeDungeonRemainTime(self.spaceNo, utils.getNow() + delay)
+        #     if ent and ent.isReal() and formula.inDungeonScene(ent.spaceNo):
+        #         if formula.parseDungeonNoBySpaceNo(self.spaceNo) == formula.parseDungeonNoBySpaceNo(ent.spaceNo):
+        #             ent.client.changeDungeonRemainTime(self.spaceNo, utils.curTS() + delay)
         stub = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
-        if formula.isSingleDungeonSpace(self.spaceNo):
+        if formula.inSingleDungeonScene(self.spaceNo):
             stub.completeSingleDungeon(self.spaceNo, self.singleDungeonBelongPlayerGBID, False, delay)
-        elif formula.isTeamDungeonSpace(self.spaceNo):
+        elif formula.inTeamDungeonScene(self.spaceNo):
             stub.completeTeamDungeon(self.spaceNo, self.teamDungeonBelongTeamUUID, False, delay, gameconst.DunegonCompleteReasonType.TIMEOUT)
-        elif formula.isRaidDungeonSpace(self.spaceNo):
+        elif formula.inRaidDungeonScene(self.spaceNo):
             stub.completeRaidDungeon(self.spaceNo, self.raidDungeonBelongRaidUUID, False, delay, gameconst.DunegonCompleteReasonType.TIMEOUT)
-        elif formula.isGuildBossDungeonSpace(self.spaceNo):
+        elif formula.inGuildBossDungeonScene(self.spaceNo):
             stub.completeGuildBossDungeon(self.spaceNo, self.guildBossDungeonBelongGuildUUID, False, delay, gameconst.DunegonCompleteReasonType.TIMEOUT)
 
     def onSingleDungeonCompleted(self, spaceNo, playerGbId, win, delay, elapsedTime):
-        INFO_MSG('onSingleDungeonCompleted::', spaceNo, playerGbId, win, delay, elapsedTime)
+        LOG_IFO('onSingleDungeonCompleted::', spaceNo, playerGbId, win, delay, elapsedTime)
         self._onDungeonCompleted(spaceNo, win, delay, elapsedTime, playerGbId)
 
     def onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, elapsedTime, playerGbId, completedReasonType):
-        INFO_MSG('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay, elapsedTime, playerGbId, completedReasonType)
+        LOG_IFO('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay, elapsedTime, playerGbId, completedReasonType)
 
         self._doDungeonPreSettlement(teamUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.CRUSADE, completedReasonType)
 
@@ -333,28 +323,28 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self.syncPlayer(lambda box: box.doFinishGuildDungeonTask())
 
     def onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, creepBaseKillDic, playerGbidAndNameList, elapsedTime, playerGbId, completedReasonType):
-        INFO_MSG('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList), elapsedTime, playerGbId, completedReasonType)
+        LOG_IFO('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList), elapsedTime, playerGbId, completedReasonType)
 
         self._doDungeonPreSettlement(raidUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.CHIEF, completedReasonType)
 
     def onGuildBossDungeonCompleted(self, spaceNo, guildUUID, win, delay, elapsedTime, completedReasonType):
-        INFO_MSG('onGuildBossDungeonCompleted::', spaceNo, guildUUID, win, delay, elapsedTime, completedReasonType)
+        LOG_IFO('onGuildBossDungeonCompleted::', spaceNo, guildUUID, win, delay, elapsedTime, completedReasonType)
         # 标记结算阶段
-        self.guildBox.onGuildChallengeDungeonSettlement(utils.getNow())
+        self.guildBox.onGuildChallengeDungeonSettlement(utils.curTS())
 
         self._doDungeonPreSettlement(guildUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.GUILD_BOSS, completedReasonType)
     # 副本预结算
     def _doDungeonPreSettlement(self, uniqueID, spaceNo, win, delay, elapsedTime, playMode, completedReasonType):
         opUUID = uniqueID
-        INFO_MSG('_doDungeonPreSettlement:: start settlement 1', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode, completedReasonType)
+        LOG_IFO('_doDungeonPreSettlement:: start settlement 1', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode, completedReasonType)
         if playMode not in gameconst.DungeonPlayModeEnum.COLL_ALL:
-            INFO_MSG('_doDungeonPreSettlement::unknow play mode ', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
+            LOG_IFO('_doDungeonPreSettlement::unknow play mode ', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
             return
         
-        _now = utils.getNow()
+        _now = utils.curTS()
         _endT = int(_now + delay)
         players = {}
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         # 置副本输赢状态
         self.isDungeonWin = win
         # 筛选有效的玩家
@@ -365,7 +355,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             else:
                 self.players.pop(pid, None)
         if len(players) == 0:
-            WARNING_MSG('_doDungeonPreSettlement::no player is left in dungeon ', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
+            LOG_WARN('_doDungeonPreSettlement::no player is left in dungeon ', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
             return
         
         # 记录异步操作需要的缓存数据
@@ -405,14 +395,14 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         else:
             batchSize = allCount
             totalBatchCount = 1
-        INFO_MSG('_doDungeonPreSettlement:: start settlement 2', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode, totalBatchCount, batchSize, allCount, players.keys(), self.dungeonSettlementDataCache)
+        LOG_IFO('_doDungeonPreSettlement:: start settlement 2', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode, totalBatchCount, batchSize, allCount, players.keys(), self.dungeonSettlementDataCache)
         # 发送玩家副本结束消息
         def _notifyDungeonCompleted(allCount, batchSize):
             for idx in range(0, allCount, batchSize):
                 entities = validEntities[idx:idx+batchSize]
                 for entity in entities:
                     entity.client and entity.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT)
-                INFO_MSG('_doDungeonPreSettlement:: do settlement', opUUID, uniqueID, spaceNo, allCount, totalBatchCount, batchSize, idx, len(entities))
+                LOG_IFO('_doDungeonPreSettlement:: do settlement', opUUID, uniqueID, spaceNo, allCount, totalBatchCount, batchSize, idx, len(entities))
                 yield lambda *args:None
             # 通知完成之后开始请求排名数据    
             self._doDungeonStartSettlement(opUUID, uniqueID, spaceNo, win, delay, elapsedTime, 0, playMode)
@@ -420,12 +410,12 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self.batchlyCall(_notifyDungeonCompleted(allCount, batchSize), 1, 0.1)
                                   
     def _doDungeonStartSettlement(self, opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playerGbId, playMode):
-        INFO_MSG("_doDungeonStartSettlement::", opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playerGbId, playMode)
+        LOG_IFO("_doDungeonStartSettlement::", opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playerGbId, playMode)
         # 通知统计数据stub获取数据
-        self._callback(0.1, '_getDungeonRankData', (opUUID, uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
+        self.addTimerCB(0.1, '_getDungeonRankData', (opUUID, uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
 
     def _getDungeonRankData(self, opUUID, uniqueID, spaceNo):
-        INFO_MSG("_getDungeonRankData::", opUUID, uniqueID, spaceNo)
+        LOG_IFO("_getDungeonRankData::", opUUID, uniqueID, spaceNo)
         if len(self.dungeonSettlementDataCache['statisticTypes']) == 0:
             self._doDungeonEndSettlement(opUUID, uniqueID, spaceNo)
             return
@@ -435,7 +425,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         stub.getDungeonStatisticData(spaceNo, opUUID, self, statisticDataType)
 
     def _doDungeonEndSettlement(self, opUUID, uniqueID, spaceNo):
-        INFO_MSG("_doDungeonEndSettlement::", opUUID, uniqueID, spaceNo, len(self.dungeonSettlementDataCache))
+        LOG_IFO("_doDungeonEndSettlement::", opUUID, uniqueID, spaceNo, len(self.dungeonSettlementDataCache))
         uniqueID = self.dungeonSettlementDataCache['uniqueID']
         players = self.dungeonSettlementDataCache['players']
         spaceNo = self.dungeonSettlementDataCache['spaceNo']
@@ -472,17 +462,17 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             self.dungeonStatisticRecords[statisticType] = newStatisticDatas
             rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
             rankCountList[statisticType] = len(newStatisticDatas)
-            INFO_MSG("_doDungeonEndSettlement:: 1", opUUID, uniqueID, statisticType, rankCountList[statisticType])
+            LOG_IFO("_doDungeonEndSettlement:: 1", opUUID, uniqueID, statisticType, rankCountList[statisticType])
         # 公会副本需要支持拉取伤害排名
         if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
             records = list(self.dungeonStatisticRecords.get(gameconst.StatisticType.STA_TYPE_DAMAGE, {}).values())
             self.dungeonStatisticSortedRecords[gameconst.StatisticType.STA_TYPE_DAMAGE] = sorted(records, key=lambda v: v['rank'])
         
         # 根据排名计算奖励
-        self._callback(0.1, '_doDungeonCalcReward', (opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, True), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
+        self.addTimerCB(0.1, '_doDungeonCalcReward', (opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, True), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
 
     def _doDungeonCalcReward(self, opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, needDungeonData):
-        INFO_MSG("_doDungeonCalcReward::", opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, needDungeonData)
+        LOG_IFO("_doDungeonCalcReward::", opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, needDungeonData)
         # 开始计算有多少人能获得奖励
         players = self.dungeonSettlementDataCache['players']
         playMode = self.dungeonSettlementDataCache['playMode']
@@ -509,7 +499,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
                     dungeonExtraDatas = self.dungeonExtraDatas.get(entity.gbId, None)
                     if not dungeonExtraDatas:
-                        WARNING_MSG("_calcReward::  player extra data is missing", opUUID, uniqueID, entity.gbId, self.spaceNo)
+                        LOG_WARN("_calcReward::  player extra data is missing", opUUID, uniqueID, entity.gbId, self.spaceNo)
                         continue
                     
                     if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
@@ -532,7 +522,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                         elif playMode == gameconst.DungeonPlayModeEnum.CHIEF:
                             settlement = DungeonSettlement.DungeonSettlementData()
                             settlement._calcChiefSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra)
-                INFO_MSG('_calcReward', opUUID, uniqueID, allCount, totalBatchCount, batchSize, self.spaceNo)
+                LOG_IFO('_calcReward', opUUID, uniqueID, allCount, totalBatchCount, batchSize, self.spaceNo)
                 yield lambda *args:None
             # 通知完成之后开始请求排名数据    
             self._doCheckSettlementData(opUUID, uniqueID)
@@ -540,7 +530,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self.batchlyCall(_calcReward(allCount, batchSize), 1, 0.1)
 
     def _doCheckSettlementData(self, opUUID, uniqueID):
-        INFO_MSG("_doCheckSettlementData::", opUUID, uniqueID)
+        LOG_IFO("_doCheckSettlementData::", opUUID, uniqueID)
         def _check():
             while True:
                 hasWait = False
@@ -557,7 +547,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self.batchlyCall(_check(), 1, 0.1)
 
     def _doDungeonRewards(self, opUUID, uniqueID):
-        INFO_MSG("_doDungeonRewards::", opUUID, uniqueID)
+        LOG_IFO("_doDungeonRewards::", opUUID, uniqueID)
         uniqueID = self.dungeonSettlementDataCache['uniqueID']
         players = self.dungeonSettlementDataCache['players']
         spaceNo = self.dungeonSettlementDataCache['spaceNo']
@@ -603,7 +593,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             else:
                 batchSize = allCount
                 totalBatchCount = 1
-            INFO_MSG("_doDungeonRewards::", opUUID, uniqueID, allCount, totalBatchCount, batchSize)
+            LOG_IFO("_doDungeonRewards::", opUUID, uniqueID, allCount, totalBatchCount, batchSize)
             # 发送玩家副本结束消息
             def _notifyDungeonSettlement(allCount, batchSize):
                 for idx in range(0, allCount, batchSize):
@@ -615,7 +605,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                         entity.client.onDungeonCompleteDungeonData(opUUID, cliDungeonData)
                         entity.client.changeDungeonRemainTime(spaceNo, endTime)
                         entity.client.onDungeonCompleteSettlementData(opUUID, [clientData])
-                    INFO_MSG('_doDungeonRewards', allCount, totalBatchCount, batchSize, self.spaceNo)
+                    LOG_IFO('_doDungeonRewards', allCount, totalBatchCount, batchSize, self.spaceNo)
                     yield lambda *args:None
             # 间隔0.1秒处理一次
             self.batchlyCall(_notifyDungeonSettlement(allCount, batchSize), 1, 0.1)
@@ -632,7 +622,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             else:
                 batchSize = allCount
                 totalBatchCount = 1
-            INFO_MSG("_doDungeonRewards::", opUUID, uniqueID, allCount, totalBatchCount, batchSize)
+            LOG_IFO("_doDungeonRewards::", opUUID, uniqueID, allCount, totalBatchCount, batchSize)
             def _doDungeonFinalReward():
                 for gbId in gbIds:
                     playerData = self.dungeonRewardDatas.get(gbId)
@@ -650,21 +640,21 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                                 clientData = settlementData['client']
                                 clientDatas.append(clientData)
                             entity.client.onDungeonCompleteSettlementData(opUUID, clientDatas)
-                            INFO_MSG('_doDungeonRewards', allCount, totalBatchCount, batchSize, self.spaceNo)
+                            LOG_IFO('_doDungeonRewards', allCount, totalBatchCount, batchSize, self.spaceNo)
                             sendCount += 1
                             # 这里如果大于batchSize
                             if sendCount > batchSize:
                                 sendCount = 0
-                                INFO_MSG('_doDungeonRewards 1', allCount, totalBatchCount, batchSize, self.spaceNo)
+                                LOG_IFO('_doDungeonRewards 1', allCount, totalBatchCount, batchSize, self.spaceNo)
                                 yield lambda *args:None
                     yield from _notifyDungeonSettlement(allCount, batchSize)
             # 间隔0.01秒处理一次
             self.batchlyCall(_doDungeonFinalReward(), 1, 0.1)
 
     def _onDungeonCompleted(self, spaceNo, win, delay, elapsedTime, playerGbId):
-        INFO_MSG("_onDungeonCompleted::", spaceNo, win, delay, elapsedTime, playerGbId)
+        LOG_IFO("_onDungeonCompleted::", spaceNo, win, delay, elapsedTime, playerGbId)
         self.isDungeonWin = win
-        _now = utils.getNow()
+        _now = utils.curTS()
         _endT = int(_now + delay)
         _allPlayersAreGoodMan = False
         pids = []
@@ -679,22 +669,22 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     # 【【任务】队伍无助力目标时返回MSG提示】
                     pEnt.showMsg(ACCD.datas["msgId_goodMan_noHelpTarget"]["value"], [])
 
-                dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-                INFO_MSG("_onDungeonCompleted:: 0", dungeonNo, spaceNo, win, elapsedTime, _endT, playerGbId)
+                dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
+                LOG_IFO("_onDungeonCompleted:: 0", dungeonNo, spaceNo, win, elapsedTime, _endT, playerGbId)
                 pEnt.client.changeDungeonRemainTime(spaceNo, _endT)
                 pids.append(pid)
             else:
                 self.players.pop(pid, None)
                 
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         # 延迟通知客户端副本结束
         completeDelayNotifyTime = self.getCompleteDelayNotifyTime()
         if delay > 0 and delay > completeDelayNotifyTime:
-            INFO_MSG("_onDungeonCompleted:: 1", dungeonNo, spaceNo, win, elapsedTime, _endT, delay, completeDelayNotifyTime, playerGbId)
-            self._callback(completeDelayNotifyTime, '_onDungenCompleteDelayNotifyCallback',
+            LOG_IFO("_onDungeonCompleted:: 1", dungeonNo, spaceNo, win, elapsedTime, _endT, delay, completeDelayNotifyTime, playerGbId)
+            self.addTimerCB(completeDelayNotifyTime, '_onDungenCompleteDelayNotifyCallback',
                 (pids, dungeonNo, win, elapsedTime, _endT, playerGbId), gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
         else:
-            INFO_MSG("_onDungeonCompleted:: 2", dungeonNo, spaceNo, win, elapsedTime, _endT, delay, completeDelayNotifyTime, playerGbId)
+            LOG_IFO("_onDungeonCompleted:: 2", dungeonNo, spaceNo, win, elapsedTime, _endT, delay, completeDelayNotifyTime, playerGbId)
             self._onDungenCompleteDelayNotifyCallback(pids, dungeonNo, win, elapsedTime, _endT, playerGbId)
                 
     def _onDungenCompleteDelayNotifyCallback(self, pids, dungeonNo, win, elapsedTime, _endT, playerGbId):
@@ -705,7 +695,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             if pEnt and pEnt.isReal():
                 if playerGbId and pEnt.gbId != playerGbId:
                     continue
-                INFO_MSG("_onDungenCompleteDelayNotifyCallback:: ", pid, dungeonNo, win, elapsedTime, _endT, playerGbId)
+                LOG_IFO("_onDungenCompleteDelayNotifyCallback:: ", pid, dungeonNo, win, elapsedTime, _endT, playerGbId)
                 pEnt.client and pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT)
 
     def onUpdateChallengeInfo(self, hpPercent):
@@ -713,7 +703,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         if not isChallengeDun or self.dungeonPlayMode.easy:
             return
 
-        now = utils.getNow()
+        now = utils.curTS()
         for pid in list(self.players):
             pEnt = KBEngine.entities.get(pid)
             if pEnt and pEnt.isReal():
@@ -721,15 +711,15 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 pEnt.base.updateChallengeSpeedRaceInfo(hpPercent, costTime, self.dungeonPlayMode.dunLevel)
 
     def doEnterTeamDungeon(self, playerBox, playerGBID, spaceUUID, spaceBox, extra):
-        INFO_MSG("doEnterTeamDungeon::", playerBox, playerGBID, spaceUUID, spaceBox, extra)
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        LOG_IFO("doEnterTeamDungeon::", playerBox, playerGBID, spaceUUID, spaceBox, extra)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if DDI.datas[dungeonNo]['enterBlockByCombat']:
             for pid in self.players:
                 pEnt = KBEngine.entities.get(pid)
                 if not pEnt:
                     continue
-                if pEnt.hasState(gameconst.State.Fighting):
-                    WARNING_MSG("doEnterTeamDungeon:: failed, player is in fighting state", self.spaceNo)
+                if pEnt.hasState(gameconst.StateEnum.Fighting):
+                    LOG_WARN("doEnterTeamDungeon:: failed, player is in fighting state", self.spaceNo)
                     return
         # 记录组队副本结算需要的相关数据
         data = DungeonSettlement.DungeonExtraData()
@@ -739,23 +729,23 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         playerBox.cell.doEnterTeamDungeon(self.spaceNo, spaceUUID, spaceBox, self.base, extra)
 
     def enterRaidDungeonDirectly(self, playerBox, playerGBID, spaceUUID, spaceBox, src, extraProps):
-        INFO_MSG("enterRaidDungeonDirectly::", playerBox, playerGBID, spaceUUID, spaceBox, src, extraProps)
+        LOG_IFO("enterRaidDungeonDirectly::", playerBox, playerGBID, spaceUUID, spaceBox, src, extraProps)
         m_dungeonNo, m_errno = self._enterRaidDungeonDirectly(playerBox, playerGBID, spaceUUID, spaceBox, src)
-        if m_errno != gameconst.RaidDungeonErrno.RAIDDUN_OK:
-            WARNING_MSG(f"enterRaidDungeonDirectly::failed, errno={m_errno}")
+        if m_errno != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
+            LOG_WARN(f"enterRaidDungeonDirectly::failed, errno={m_errno}")
         playerBox.cell.doEnterRaidDungeonAfterCheck(m_dungeonNo, self.spaceNo, spaceUUID, spaceBox, self.base, src, extraProps)
 
     def _enterRaidDungeonDirectly(self, playerBox, playerGBID, spaceUUID, spaceBox, src):
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if DDI.datas[dungeonNo]['enterBlockByCombat']:
             for pid in self.players:
                 pEnt = KBEngine.entities.get(pid)
                 if not pEnt:
                     continue
-                if pEnt.hasState(gameconst.State.Fighting):
-                    return None, gameconst.RaidDungeonErrno.RAIDDUN_ENTER_BLOCK_BY_COMBAT
+                if pEnt.hasState(gameconst.StateEnum.Fighting):
+                    return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_ENTER_BLOCK_BY_COMBAT
 
-        return dungeonNo, gameconst.RaidDungeonErrno.RAIDDUN_OK
+        return dungeonNo, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
     def onCollectionBeCollect(self, entityGID, collectionId):
         super().onCollectionBeCollect(entityGID, collectionId)
@@ -763,36 +753,36 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
     @property
     def transPetId(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.transPetId, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumtransPetId, 0)
 
     @transPetId.setter
     def transPetId(self, newVal):
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.transPetId, newVal)
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumtransPetId, newVal)
 
     @property
     def triggerGuideId(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.triggerGuideId, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumtriggerGuideId, 0)
 
     @triggerGuideId.setter
     def triggerGuideId(self, newVal):
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.triggerGuideId, newVal)
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumtriggerGuideId, newVal)
 
     @property
     def breakStuckPos(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckPos, None)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumbreakStuckPos, None)
     
     @breakStuckPos.setter
     def breakStuckPos(self, newVal):
-        INFO_MSG('set breakStuckPos:', newVal)
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckPos, newVal)
+        LOG_IFO('set breakStuckPos:', newVal)
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumbreakStuckPos, newVal)
 
     @property
     def breakStuckDir(self):
-        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckDir, 0)
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumbreakStuckDir, 0)
     
     @breakStuckDir.setter
     def breakStuckDir(self, newVal):
-        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckDir, newVal)
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.DSMPEnumbreakStuckDir, newVal)
 
     def startTimeFreeze(self):
         self.dungeonTimeFreezeFlag = True
@@ -821,24 +811,24 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 pent.stopDunTimeFreeze()
 
     def doEnterGuildBossDungeon(self, playerBox, playerGBID, spaceUUID, spaceBox, extra):
-        INFO_MSG("doEnterGuildBossDungeon::", playerBox, playerGBID, spaceUUID, spaceBox, extra)
-        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        LOG_IFO("doEnterGuildBossDungeon::", playerBox, playerGBID, spaceUUID, spaceBox, extra)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if DDI.datas[dungeonNo]['enterBlockByCombat']:
             for pid in self.players:
                 pEnt = KBEngine.entities.get(pid)
                 if not pEnt:
                     continue
-                if pEnt.hasState(gameconst.State.Fighting):
-                    WARNING_MSG("doEnterGuildBossDungeon:: failed, player is in fighting state", self.spaceNo)
+                if pEnt.hasState(gameconst.StateEnum.Fighting):
+                    LOG_WARN("doEnterGuildBossDungeon:: failed, player is in fighting state", self.spaceNo)
                     return
         playerBox.cell.doEnterGuildBossDungeon(self.spaceNo, spaceUUID, spaceBox, self.base, extra)
 
     def onDungeonStatisticData(self, totalBatchCount, currentBatchID, spaceNo, uniqueID, statisticType, dungeonStatisticRecords):
-        INFO_MSG("onDungeonStatisticData::",self.dungeonSettlementDataCache['opUUID'], uniqueID, totalBatchCount, currentBatchID, self.spaceNo, spaceNo, statisticType, dungeonStatisticRecords)
+        LOG_IFO("onDungeonStatisticData::",self.dungeonSettlementDataCache['opUUID'], uniqueID, totalBatchCount, currentBatchID, self.spaceNo, spaceNo, statisticType, dungeonStatisticRecords)
         if totalBatchCount == 0:
             rankCountList = self.dungeonSettlementDataCache.setdefault('rankCountList', {})
             rankCountList[statisticType] = 0
-            self._callback(0.1, '_getDungeonRankData', (self.dungeonSettlementDataCache['opUUID'], uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
+            self.addTimerCB(0.1, '_getDungeonRankData', (self.dungeonSettlementDataCache['opUUID'], uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
             return
         
         dataRecords = self.dungeonStatisticRecords.setdefault(statisticType, {})
@@ -850,11 +840,11 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             rankCountList = self.dungeonSettlementDataCache.setdefault('rankCountList', {})
             rankCountList[statisticType] = len(dataRecords)
             self.dungeonStatisticBatchCount = 0
-            self._callback(0.1, '_getDungeonRankData', (self.dungeonSettlementDataCache['opUUID'], uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
+            self.addTimerCB(0.1, '_getDungeonRankData', (self.dungeonSettlementDataCache['opUUID'], uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
             return
 
     def setGuildBox(self, box, opUUID):
-        INFO_MSG("setGuildBox::", opUUID, self.spaceNo)
+        LOG_IFO("setGuildBox::", opUUID, self.spaceNo)
         self.guildBox = box
         self.opUUID = opUUID
     
@@ -862,18 +852,18 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         return self.guildBox
     
     def dungeonCompleted(self):
-        INFO_MSG("dungeonCompleted::", self.spaceNo)
+        LOG_IFO("dungeonCompleted::", self.spaceNo)
         self.guildBox.onGuildChallengeDungeonCompleted()
 
     def notifyDungeonExtarData(self, gbId, datas):
         self.dungeonExtraDatas[gbId] = datas
         
     def onGetSettlementRankList(self, rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset):
-        INFO_MSG("onGetSettlementRankList:: 1", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset)
+        LOG_IFO("onGetSettlementRankList:: 1", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset)
         results = []
         rankDatas = self.dungeonStatisticSortedRecords.get(rankType)
         if not rankDatas:
-            WARNING_MSG("onGetSettlementRankList:: 2 no rank data, ", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset)
+            LOG_WARN("onGetSettlementRankList:: 2 no rank data, ", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset)
             playerBox.client.onGetSettlementRankList(rankType, dungeonNo, idx, offset, results)
             return
         # 限制单次拉取的最大数量
@@ -882,7 +872,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
         datas = rankDatas[idx:idx+offset]
 
-        INFO_MSG("onGetSettlementRankList:: 3", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset, len(datas), len(rankDatas))
+        LOG_IFO("onGetSettlementRankList:: 3", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset, len(datas), len(rankDatas))
 
         for data in datas:
             result = {
@@ -892,15 +882,15 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             }
             results.append(result)
 
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         playerBox.client.onGetSettlementRankList(rankType, dungeonNo, idx, offset, results)
     
     def _calcPointsRanking(self, playMode, statisticType):
-        INFO_MSG('_calcPointsRanking: 1', playMode, statisticType)
+        LOG_IFO('_calcPointsRanking: 1', playMode, statisticType)
         results = {}
         statisticRecords = self.dungeonStatisticRecords.setdefault(statisticType, {})
         if len(statisticRecords) == 0:
-            INFO_MSG('_calcPointsRanking: 2', playMode, statisticType)
+            LOG_IFO('_calcPointsRanking: 2', playMode, statisticType)
             return results
         
         playerDiedScore = int(TM_PR.datas['playerDiedScore']['value'])
@@ -916,70 +906,70 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         rankDiffRatio = float(TM_PR.datas['upLevelValuePercent']['value'])
         for data in datas:
             curRank = data['rank']
-            DEBUG_MSG('_calcPointsRanking: 3', curRank, data, playMode, statisticType)
+            LOG_DBG('_calcPointsRanking: 3', curRank, data, playMode, statisticType)
             # 首次找
             if rankCfgData is None:
-                DEBUG_MSG('_calcPointsRanking: 4', curRank, playMode, statisticType)
+                LOG_DBG('_calcPointsRanking: 4', curRank, playMode, statisticType)
                 rankCfgData = self._doGetValidPointRankCfg(curRank, playMode, statisticType)
                 if not rankCfgData:
                     return results
-            DEBUG_MSG('_calcPointsRanking: 5', curRank, rankCfgData, data, playMode, statisticType)
+            LOG_DBG('_calcPointsRanking: 5', curRank, rankCfgData, data, playMode, statisticType)
             # 不在范围，重新找
             if not (curRank >= rankCfgData[0] and curRank <= rankCfgData[1]):
-                DEBUG_MSG('_calcPointsRanking: 6', curRank, rankCfgData, data, playMode, statisticType)
+                LOG_DBG('_calcPointsRanking: 6', curRank, rankCfgData, data, playMode, statisticType)
                 rankCfgData = self._doGetValidPointRankCfg(curRank, playMode, statisticType)
                 if not rankCfgData:
                     return results
-            DEBUG_MSG('_calcPointsRanking: 7', curRank, rankCfgData, data, playMode, statisticType)
+            LOG_DBG('_calcPointsRanking: 7', curRank, rankCfgData, data, playMode, statisticType)
             # 首个区间计算
             if lastMinScore is None:
-                DEBUG_MSG('_calcPointsRanking: 8', curRank, rankCfgData, data, playMode, statisticType)
+                LOG_DBG('_calcPointsRanking: 8', curRank, rankCfgData, data, playMode, statisticType)
                 results[data['gbId']] = rankCfgData[2]
             else:
                 if data['statisticsNum'] > 0:
                     if data['statisticsNum'] >= rankDiffRatio * lastMinScore:
-                        DEBUG_MSG('_calcPointsRanking: 9', curRank, rankCfgData, data, playMode, statisticType)
+                        LOG_DBG('_calcPointsRanking: 9', curRank, rankCfgData, data, playMode, statisticType)
                         results[data['gbId']] = rankCfgData[2]
                     else:
-                        DEBUG_MSG('_calcPointsRanking: 10', curRank, rankCfgData, data, playMode, statisticType)
+                        LOG_DBG('_calcPointsRanking: 10', curRank, rankCfgData, data, playMode, statisticType)
                         results[data['gbId']] = rankCfgData[3]
                 else:
-                    DEBUG_MSG('_calcPointsRanking: 11', curRank, rankCfgData, data, playMode, statisticType)
+                    LOG_DBG('_calcPointsRanking: 11', curRank, rankCfgData, data, playMode, statisticType)
                     results[data['gbId']] = 0
                 
             # 当前范围的最后一名，更新一下上个区间的最小值                
             if curRank == rankCfgData[1]:
-                DEBUG_MSG('_calcPointsRanking: 12', curRank, rankCfgData, data, playMode, statisticType)
+                LOG_DBG('_calcPointsRanking: 12', curRank, rankCfgData, data, playMode, statisticType)
                 lastMinScore = data['statisticsNum']
 
         return results
     
     def _calcDeadCount(self, gbId, playMode, statisticType):
-        INFO_MSG('_calcDeadCount: 1', gbId, playMode, statisticType)
+        LOG_IFO('_calcDeadCount: 1', gbId, playMode, statisticType)
         statisticRecords = self.dungeonStatisticRecords.setdefault(statisticType, {})
         if len(statisticRecords) == 0:
-            INFO_MSG('_calcDeadCount: 2', gbId, playMode, statisticType)
+            LOG_IFO('_calcDeadCount: 2', gbId, playMode, statisticType)
             return 0
         
         for data in statisticRecords.values():
             if data['gbId'] == gbId:
-                DEBUG_MSG('_calcDeadCount: 3', gbId, playMode, statisticType, data['statisticsNum'])
+                LOG_DBG('_calcDeadCount: 3', gbId, playMode, statisticType, data['statisticsNum'])
                 return data['statisticsNum']
         return 0
         
     def _doGetValidPointRankCfg(self, rank, playMode, statisticType):
         rankCfgDatas = self.getStatisticRankCfg(playMode, statisticType)
         if not rankCfgDatas:
-            ERROR_MSG("_doGetValidPointRankCfg:: no rank cfg data, ", rank, playMode, statisticType)
+            LOG_ERR("_doGetValidPointRankCfg:: no rank cfg data, ", rank, playMode, statisticType)
             return None
         
         for rankCfgData in rankCfgDatas:
             if len(rankCfgData) != 4:
-                ERROR_MSG("_doGetValidPointRankCfg:: wrong rank cfg data, ", rank, playMode, statisticType, rankCfgDatas, rankCfgData)
+                LOG_ERR("_doGetValidPointRankCfg:: wrong rank cfg data, ", rank, playMode, statisticType, rankCfgDatas, rankCfgData)
                 return None
             if rank >= rankCfgData[0] and rank <= rankCfgData[1]:
                 return rankCfgData
-        WARNING_MSG("_doGetValidPointRankCfg:: no rank cfg data, ", rank, playMode, statisticType, rankCfgDatas)
+        LOG_WARN("_doGetValidPointRankCfg:: no rank cfg data, ", rank, playMode, statisticType, rankCfgDatas)
         return None
         
     def getStatisticRankCfg(self, playMode, statisticType):
@@ -1021,7 +1011,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         return score, deadCount
     
     def onNotifySettlementResult(self, box, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards, goldPassRewards, dungeonRewards):
-        INFO_MSG("onNotifySettlementResult::", opUUId, uniqueId, playMode, spaceNo, dungeonNo, win, extra, firstPassRewards, goldPassRewards, dungeonRewards)
+        LOG_IFO("onNotifySettlementResult::", opUUId, uniqueId, playMode, spaceNo, dungeonNo, win, extra, firstPassRewards, goldPassRewards, dungeonRewards)
         dungeonRewardData = self.dungeonRewardDatas.get(extra['gbId'])
         if not dungeonRewardData:
             return
@@ -1043,13 +1033,13 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         dungeonRewardData['entity'] = box
 
     def doDungeonMonsterBorn(self, monsterGID, createTime):
-        INFO_MSG("doDungeonMonsterBorn::", monsterGID, createTime, self.dungeonPlayMode.spaceUUID, self.spaceNo, self.dungeonPlayMode.playMode)
+        LOG_IFO("doDungeonMonsterBorn::", monsterGID, createTime, self.dungeonPlayMode.spaceUUID, self.spaceNo, self.dungeonPlayMode.playMode)
         if not monsterGID:
             return
         uniqueID = 0
-        if formula.isTeamDungeonSpace(self.spaceNo):
+        if formula.inTeamDungeonScene(self.spaceNo):
             uniqueID = self.dungeonPlayMode.teamUUID
-        elif formula.isRaidDungeonSpace(self.spaceNo):
+        elif formula.inRaidDungeonScene(self.spaceNo):
             uniqueID = self.dungeonPlayMode.raidUUID
         else:
             return
@@ -1059,7 +1049,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             LogTrackingMgr.LogTrackingMgr.Dungeon_Boss_Born(
                 uniqueID,
                 self.dungeonPlayMode.playMode,
-                formula.getDungeonNoBySpaceNo(self.spaceNo),
+                formula.parseDungeonNoBySpaceNo(self.spaceNo),
                 self.dungeonPlayMode.spaceUUID,
                 self.spaceNo,
                 monsterGID,
@@ -1068,13 +1058,13 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             )
 
     def doDungeonMonsterDead(self, monsterGID, createTime):
-        INFO_MSG("doDungeonMonsterDead::", monsterGID, createTime, self.dungeonPlayMode.spaceUUID, self.spaceNo, self.dungeonPlayMode.playMode)
+        LOG_IFO("doDungeonMonsterDead::", monsterGID, createTime, self.dungeonPlayMode.spaceUUID, self.spaceNo, self.dungeonPlayMode.playMode)
         if not monsterGID:
             return
         uniqueID = 0
-        if formula.isTeamDungeonSpace(self.spaceNo):
+        if formula.inTeamDungeonScene(self.spaceNo):
             uniqueID = self.dungeonPlayMode.teamUUID
-        elif formula.isRaidDungeonSpace(self.spaceNo):
+        elif formula.inRaidDungeonScene(self.spaceNo):
             uniqueID = self.dungeonPlayMode.raidUUID
         else:
             return
@@ -1084,15 +1074,15 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             LogTrackingMgr.LogTrackingMgr.Dungeon_Boss_Dead(
                 uniqueID,
                 self.dungeonPlayMode.playMode,
-                formula.getDungeonNoBySpaceNo(self.spaceNo),
+                formula.parseDungeonNoBySpaceNo(self.spaceNo),
                 self.dungeonPlayMode.spaceUUID,
                 self.spaceNo,
                 monsterGID,
                 createTime,
-                utils.getNow(),
+                utils.curTS(),
                 self.dungeonPlayMode.tCreate
             )
 
     def recordAutoFightTimes(self, gbId, state, times):
-        INFO_MSG("recordAutoFightTimes::", gbId, state, times, self.dungeonPlayMode.spaceUUID, self.spaceNo, self.dungeonPlayMode.playMode)
+        LOG_IFO("recordAutoFightTimes::", gbId, state, times, self.dungeonPlayMode.spaceUUID, self.spaceNo, self.dungeonPlayMode.playMode)
         self.dungeonAutoBattleTimes[gbId] = self.dungeonAutoBattleTimes.get(gbId, 0) + times

@@ -136,7 +136,7 @@ namespace KBEngine
         public override void onBreakChannelingSkill(Int32 objId, UInt32 skillID, int reason)
         {
             if (hasView)
-                view.onServerBreakChannelingSkill(skillID);
+                view.OnServerBreakChannelingSkill(skillID);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_BREAK_CHANNEL_SKILL, id, skillID);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_TARGET_ONCASTSKILL, this.id, skillID, KBEngineTime.GetServerRealTimeMS() / 1000d, false);
 
@@ -159,7 +159,7 @@ namespace KBEngine
         public override void onBreakCastingSkill(int objId, uint skillID, int reason)
         {
             if (hasView)
-                view.onServerBreakCastingSkill(skillID);
+                view.OnServerBreakCastingSkill(skillID);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_BREAK_CASTING_SKILL, id, skillID);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_TARGET_ONCASTSKILL, this.id, skillID, KBEngineTime.GetServerRealTimeMS() / 1000d, false);
 
@@ -574,8 +574,8 @@ namespace KBEngine
 
         public override void onAdjCDChanged(float oldValue)
         {
-            if (hasView)
-                view.m_adjcd = adjCD;
+            //if (hasView)
+            //    view.m_adjcd = adjCD;
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SET_AdjCD, this.id, adjCD);
         }
 
@@ -698,7 +698,7 @@ namespace KBEngine
         public override void onMulCDChanged(float oldValue)
         {
             if (hasView)
-                view.m_mulcd = mulCD;
+                view.Mulcd = mulCD;
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SET_MulCD, this.id, mulCD);
         }
 
@@ -715,7 +715,7 @@ namespace KBEngine
             if (speed != oldValue)
             {
                 if (hasView)
-                    view.Speed = speed;
+                    view.CurrentSpeed = speed;
                 //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SET_SPEED, id, speed);
             }
         }

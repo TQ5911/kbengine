@@ -9,7 +9,7 @@ import math
 import gametimer
 
 
-class LinePlayerVal(userType.UserSoleType):
+class LinePlayerVal(userType.UserSingleType):
     NONE = 0
     ENTERING = 1
     IN_LINE = 2
@@ -83,7 +83,7 @@ class LinePlayers(userType.UserDictType):
         self.removePendingEnterPlayer(None, playerVal.gbId)
 
     def doAddLinePlayer(self, owner, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo):
-        self[gbId] = LinePlayerVal(box, gbId, teamUUID, areaId, status, curSpaceNo, utils.getNow(), extraInfo.get('selfGuildUUID', 0))
+        self[gbId] = LinePlayerVal(box, gbId, teamUUID, areaId, status, curSpaceNo, utils.curTS(), extraInfo.get('selfGuildUUID', 0))
 
         if teamUUID:
             self.teamPlayers.setdefault(teamUUID, {})
@@ -134,7 +134,7 @@ class LinePlayers(userType.UserDictType):
             return
 
         if oldTeamUUID and oldTeamUUID != pVal.teamUUID:
-            WARNING_MSG('teamUUID mismatch', pVal, gbId, oldTeamUUID, newTeamUUID)
+            LOG_WARN('teamUUID mismatch', pVal, gbId, oldTeamUUID, newTeamUUID)
 
         self._removeFromTeamPlayers(pVal)
         pVal.onTeamChanged(newTeamUUID)
@@ -165,7 +165,7 @@ class LinePlayers(userType.UserDictType):
         if gbId in self.pendingEnterPlayers:
             self.removePendingEnterPlayer(owner, gbId)
 
-        sec = utils.getNow()
+        sec = utils.curTS()
         self.pendingEnterPlayers[gbId] = sec
         if self.pendingSec == sec:
             self.pendingSecNum += 1
@@ -183,7 +183,7 @@ class LinePlayers(userType.UserDictType):
         return len(self.pendingEnterPlayers)
 
     def getPendingEnterNumNowSec(self):
-        sec = utils.getNow()
+        sec = utils.curTS()
         if self.pendingSec == sec:
             return self.pendingSecNum
         return 0
@@ -219,10 +219,10 @@ class AllLinePlayers(userType.UserDictType):
             return
 
         if not players.doRemoveLinePlayer(owner, gbId):
-            ERROR_MSG('zt: fail to remove player', lineNo, gbId)
+            LOG_ERR('zt: fail to remove player', lineNo, gbId)
             for ln, playersVal in self.items():
                 if ln == lineNo:
                     continue
                 if players.doRemoveLinePlayer(owner, gbId):
-                    DEBUG_MSG('zt: remove player', ln, gbId)
+                    LOG_DBG('zt: remove player', ln, gbId)
 

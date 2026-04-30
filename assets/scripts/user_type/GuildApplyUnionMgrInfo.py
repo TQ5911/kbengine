@@ -10,7 +10,7 @@ import gameconst
 import guildAuthorization_authorizationID_def as GA_AI_DD
 import guild_guildConst as G_GCD
 
-class GuildApplyUnionMgrVal(userType.UserSoleType):
+class GuildApplyUnionMgrVal(userType.UserSingleType):
     '''GUILD_APPLY_UNION_MGR_DATA_INFO'''
     # type hint
     applyUnionDic: dict
@@ -26,8 +26,8 @@ class GuildApplyUnionMgrVal(userType.UserSoleType):
             self.senderDict[_senderVal.guildUUID] = _senderVal
 
     def addSender(self, guildUUID, guildName, guildIcon, flag, guildScore):
-        _now = utils.getNow()
-        _expireTime = _now + G_GCD.datas['guild_unionApplicationTimeLimit']['value'] * gameconst.ONE_DAY_SECONDS
+        _now = utils.curTS()
+        _expireTime = _now + G_GCD.datas['guild_unionApplicationTimeLimit']['value'] * gameconst.ONE_DAY_COST_SECONDS
         _senderVal = GuildApplyUnionSenderInfo.GuildApplyUnionSenderVal(
             guildUUID, guildName, guildIcon, flag, guildScore, _expireTime)
         self.senderDict[guildUUID] = _senderVal
@@ -52,8 +52,8 @@ class GuildApplyUnionMgrVal(userType.UserSoleType):
         self.senderDict.pop(guildUUID, None)
 
     def addApplyUnion(self, guildUUID, guildName, guildIcon, flag, guildScore, guildLevel):
-        _now = utils.getNow()
-        _expireTime = _now + G_GCD.datas['guild_unionApplicationTimeLimit']['value'] * gameconst.ONE_DAY_SECONDS
+        _now = utils.curTS()
+        _expireTime = _now + G_GCD.datas['guild_unionApplicationTimeLimit']['value'] * gameconst.ONE_DAY_COST_SECONDS
         _auVal = GuildApplyUnionInfo.GuildApplyUnionVal(
             guildUUID, 
             _expireTime, 
@@ -70,14 +70,14 @@ class GuildApplyUnionMgrVal(userType.UserSoleType):
         if not _senderVal:
             return False
 
-        return _senderVal.endTime > utils.getNow()
+        return _senderVal.endTime > utils.curTS()
 
     def isInApplyUnion(self, guildUUID):
         _auVal = self.applyUnionDic.get(guildUUID)
         if not _auVal:
             return False
 
-        return _auVal.endTime > utils.getNow()
+        return _auVal.endTime > utils.curTS()
 
     def toGuildApplyUnionMgrSavedDict(self):
         return {

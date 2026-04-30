@@ -7,7 +7,7 @@ import utils
 import GuildEventLogInfo
 
 
-class GuildEventListLogVal(userType.UserSoleType):
+class GuildEventListLogVal(userType.UserSingleType):
     '''GUILD_EVENT_LIST_LOG_DATA_INFO'''
     def __init__(self, eventList=(), lastEventTS=0):
         self.eventList = eventList

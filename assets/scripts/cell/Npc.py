@@ -41,7 +41,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             self.initCNpc()
         else:
             self.initNpc()
-        INFO_MSG('on create', self.spaceNo, self.position, self.npcId)
+        LOG_IFO('on create', self.spaceNo, self.position, self.npcId)
 
     def initNpc(self):
         if not self.level:
@@ -64,20 +64,20 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         self.bornPosition = tuple(self.position)
 
         if self.force == 0:
-            self.force = gameconst.ForceType.NPC
+            self.force = gameconst.ForceTypeEnum.NPC
 
         self.initBornAction()
 
         spaceMgr = self.spaceMgr
 
-        if formula.isDungeonSpace(self.spaceNo) and spaceMgr:
-            gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        if formula.inDungeonScene(self.spaceNo) and spaceMgr:
+            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
             spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.npcId),
                                          'gid_{}'.format(gid), self.__class__.__name__,))
             if self.isBoss:
                 spaceMgr.setBossEntity(self.id)
 
-        elif formula.isWonderLandSpace(self.spaceNo):
+        elif formula.inWonderLandScene(self.spaceNo):
             spaceMgr.addEntity(self.id, (str(self.npcId),
                                          self.__class__.__name__,))
         else:
@@ -100,7 +100,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         super().onEnterTrap(entity, rangeXZ, rangeY, controllerId, userArg)
-        if userArg == gameconst.ROUTE_ESCORT_TRAP:
+        if userArg == gameconst.ESCORT_ROUTE_TRAP:
             self.onPlayerEnterEscortTrap(entity, rangeXZ, rangeY, controllerId)
 
     def getPathId(self):
@@ -114,14 +114,14 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
     def changeBornState(self, state):
         if self.bornState >= state:
-            ERROR_MSG('changeBornState failed:', self.bornState, state)
+            LOG_ERR('changeBornState failed:', self.bornState, state)
             return
 
         self.bornState = state
         if state == gameconst.BornStateType.move:
             pathId = self.getPathId()
             if pathId:
-                self._callback(1, 'setRoute', (pathId, True if self.aiController else False),
+                self.addTimerCB(1, 'setRoute', (pathId, True if self.aiController else False),
                                gametimer.TIMER_TAG_SET_ROUTE)
         elif state == gameconst.BornStateType.reMove:
             self.bornState = gameconst.BornStateType.move
@@ -129,10 +129,10 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             self.stopThink()
             self.interruptRouting()
             self.cancelMoveController()
-            self.killCastingSkill(gameconst.EndCasting.CaptureMonster)
-            self.killChannelingSkill(gameconst.ChannelingBreak.CAPTURE)
+            self.killCastingSkill(gameconst.EndCasting.ECEnumCaptureMonster)
+            self.killChannelingSkill(gameconst.ChannelingBreak.BREAK_TP_CAPTURE)
         elif state == gameconst.BornStateType.normal:
-            self._callback(0.5, 'startThink', (), gametimer.TIMER_TAG_START_THINK)
+            self.addTimerCB(0.5, 'startThink', (), gametimer.TIMER_TAG_START_THINK)
 
     @property
     def creepBaseId(self):
@@ -171,9 +171,9 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         radii = self.getAlertDistance()
         if radii<=0:
             return
-        self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
+        self.hateTrapId = self.addProximity(radii, radii, gameconst.AGGRO_TRIGGER_TRAP)
         leaveAoiRange = self.getLeaveAlertDistance()
-        self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
+        self.addProximity(leaveAoiRange, 0.0, gameconst.AOI_EXIT_TRAP)
 
     def onBeAttacked(self, arg):
         attackerId = arg.triggerRoleId
@@ -204,19 +204,19 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
     def _checkValidEnt(self, ent):
         if not ent or ent.isDestroyed:
-            WARNING_MSG('NPC._checkValidEnt: invalid entity')
+            LOG_WARN('NPC._checkValidEnt: invalid entity')
             return False
 
         if not ent.IsAvatar:
-            WARNING_MSG('NPC._checkValidEnt: not Avatar')
+            LOG_WARN('NPC._checkValidEnt: not Avatar')
             return False
 
         if ent.spaceNo != self.spaceNo:
-            WARNING_MSG('NPC._checkValidEnt: not in same space')
+            LOG_WARN('NPC._checkValidEnt: not in same space')
             return False
 
         if sMath.distance2D(self.position, ent.position) > 30:
-            WARNING_MSG('NPC._checkValidEnt: too faraway')
+            LOG_WARN('NPC._checkValidEnt: too faraway')
             return False
 
         return True

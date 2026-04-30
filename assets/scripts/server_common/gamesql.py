@@ -28,7 +28,7 @@ def createExtraIndex():
 
 def onSqlCallback(ret, num, insertId, err, msg):
     if err:
-        ERROR_MSG('onSqlCallback error:', err, msg)
+        LOG_ERR('onSqlCallback error:', err, msg)
 
 
 def getCustomConfig(callback=None):
@@ -38,10 +38,10 @@ def getCustomConfig(callback=None):
 
 
 def _onGetCustomConfig(result, rows, insertid, error, callback):
-    DEBUG_MSG('_onGetCustomConfig', error)
+    LOG_DBG('_onGetCustomConfig', error)
     if error:
         if KBEngine.component != 'interfaces':
-            ERROR_MSG('_onGetCustomConfig error:', error)
+            LOG_ERR('_onGetCustomConfig error:', error)
         return
     gameconfig.loadCustomConfig(result)
 
@@ -58,18 +58,18 @@ def checkAdminCmdSerial(cmdSerial, callback):
 def recordAdminCmdSucc(cmdSerial, result, retErrMsg, resultBytes):
     def _onRecordAdminCmd(ret, num, insertId, err):
         if err:
-            ERROR_MSG("recordAdminCmdSucc error", ret, num, insertId, err)
+            LOG_ERR("recordAdminCmdSucc error", ret, num, insertId, err)
 
     resutlStr = resultBytes.decode('utf-8')
     sql = 'INSERT INTO `game_admin_cmds` (`cmdSerial`, `tWhen`, `result`, `retErrMsg`, `retStr`) VALUES ("%s", %s, %s, %s, %s)' % (
         cmdSerial,
-        utils.getNow(), result, utils.escape_string(retErrMsg), utils.escape_string(resutlStr))
-    DEBUG_MSG("recordAdminCmdSucc", sql)
+        utils.curTS(), result, utils.escape_string(retErrMsg), utils.escape_string(resutlStr))
+    LOG_DBG("recordAdminCmdSucc", sql)
     KBEngine.executeRawDatabaseCommand(sql, _onRecordAdminCmd)
 
 
 def deleteExpiredAdminCmdSerial():
-    sql = 'DELETE FROM `game_admin_cmds` WHERE `tWhen`<%s' % (utils.getNow() - gameconst.ONE_WEEK_SECONDS,)
+    sql = 'DELETE FROM `game_admin_cmds` WHERE `tWhen`<%s' % (utils.curTS() - gameconst.ONE_WEEK_COST_SECONDS,)
     KBEngine.executeRawDatabaseCommand(sql)
 
 
@@ -98,14 +98,18 @@ def _onRecordEntityDBID(ret, num, insertId, err, entityType, dbid):
 def getAvatarBasicInfoByPlayerNameOrGBIDOrObID(playerNameOrGBIDOrObID, callback):
     if utils.isGbId(playerNameOrGBIDOrObID):
         sql = """SELECT sm_gbID, sm_name, sm_accountName, id FROM tbl_Avatar WHERE sm_gbID = %s""" % playerNameOrGBIDOrObID
-    elif utils.isRoleName(playerNameOrGBIDOrObID):
+    elif utils.checkRoleName(playerNameOrGBIDOrObID):
         sql = """SELECT sm_gbID, sm_name, sm_accountName, id FROM tbl_Avatar WHERE sm_name = BINARY %s""" % utils.escape_string(
             playerNameOrGBIDOrObID)
     else:
-        ERROR_MSG('in getAvatarBasicInfoByPlayerNameOrGBID, playerNameOrGBID error:', playerNameOrGBIDOrObID)
+        LOG_ERR('in getAvatarBasicInfoByPlayerNameOrGBID, playerNameOrGBID error:', playerNameOrGBIDOrObID)
         return
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
+def getAvatarBasicInfoByPlayerNameList(playerNameList, callback):
+    nameListStr = ','.join(utils.escape_string(name) for name in playerNameList)
+    sql = """SELECT sm_gbID, sm_name, sm_accountName, sm_school, id FROM tbl_Avatar WHERE BINARY sm_name in (%s)""" % nameListStr
+    KBEngine.executeRawDatabaseCommand(sql, callback)
 
 def loadLastGlobalMailInfo(playerGbId, callback):
     sql = '''CALL gamesp_load_last_global_mail_info(%s,%s)'''%(playerGbId, 0)
@@ -116,41 +120,51 @@ def updateLastGlobaMailInfo(playerGBID, lastGlobalMailTime, callback):
         lastGlobalMailTime, playerGBID, lastGlobalMailTime)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
-def sendMailByGBID(toGBID, mailId, mailGBID, globalMailGBID, readStat, createTime, expiredTime, fromGBID, attach,
+def sendMailByGBID(toGBID, mailId, mailGBID, globalMailGBID, readStat, dueTime, createTime, expiredTime, fromGBID, attach,
                    attachStat, despArgs, title, cont, opUUID, srcType, srcSubType, desc, idipSource, callback):
-    attach = utils.bytes2hex(cPickle.dumps(attach))
-    despArgs = utils.bytes2hex(cPickle.dumps(despArgs))
-    sql = '''CALL gamesp_send_mail(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'%s','%s',%s,%s,%s,'%s',%s)'''%\
-          (toGBID, mailId, mailGBID, globalMailGBID, readStat, createTime, expiredTime, fromGBID, attach,
+    # 按照类型走序列化
+    datas = attach.toMailWealthDict()
+    attach = utils.bytesToHex(cPickle.dumps(datas))
+    despArgs = utils.bytesToHex(cPickle.dumps(despArgs))
+    sql = '''CALL gamesp_send_mail(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'%s','%s',%s,%s,%s,'%s',%s)'''%\
+          (toGBID, mailId, mailGBID, globalMailGBID, readStat, dueTime, createTime, expiredTime, fromGBID, attach,
                 attachStat, despArgs, title, cont, opUUID, srcType, srcSubType, desc, idipSource)
-    DEBUG_MSG('gamesql::sendMailByGBID:', sql)
+    LOG_DBG('gamesql::sendMailByGBID:', sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
-def loadMailsFromDB(gbId, fromTime, excludeMailList, callback):
-    maxMailNum = MACF.datas['mailNumMax']['value']
-    fields = '''toGBID,mailId,mailGBID,globalMailGBID,readStat,createTime,expiredTime,fromGBID,attach,attachStat,despArgs,title,cont, opUUID,srcType,srcSubType,desp,idipSource'''
+def loadMailsFromDB(gbId, fromTime, isGlobal, excludeMailList, callback):
+    maxMailNum = MACF.datas['mailNumMax']['value'] + MACF.datas['mailNumMax2']['value']
+    fields = '''toGBID,mailId,mailGBID,globalMailGBID,readStat,dueTime,createTime,expiredTime,fromGBID,attach,attachStat,despArgs,title,cont, opUUID,srcType,srcSubType,desp,idipSource'''
     if excludeMailList:
         mailGBIDStr = ','.join([str(mailGBID) for mailGBID in excludeMailList])
-        sql = """SELECT %s FROM %s WHERE toGBID=%s and createTime>=%s and mailGBID not in (%s) ORDER BY createTime DESC limit %s""" % (
-            fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, fromTime, mailGBIDStr, maxMailNum * 2)
+        if isGlobal:
+            sql = """SELECT %s FROM %s WHERE toGBID=%s and globalMailGBID>0 and createTime>=%s and mailGBID not in (%s) ORDER BY createTime DESC limit %s""" % (
+                fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, fromTime, mailGBIDStr, maxMailNum * 2)
+        else:
+            sql = """SELECT %s FROM %s WHERE toGBID=%s and globalMailGBID=0 and createTime>=%s and mailGBID not in (%s) ORDER BY createTime DESC limit %s""" % (
+                fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, fromTime, mailGBIDStr, maxMailNum * 2)
     else:
-        sql = """SELECT %s FROM %s WHERE toGBID=%s and createTime>=%s ORDER BY createTime DESC limit %s""" % (
-            fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, fromTime, maxMailNum * 2)
-    # DEBUG_MSG('in loadMailsFromDB, sql:', sql)
+        if isGlobal:
+            sql = """SELECT %s FROM %s WHERE toGBID=%s and globalMailGBID>0 and createTime>=%s ORDER BY createTime DESC limit %s""" % (
+                fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, fromTime, maxMailNum * 2)
+        else:
+            sql = """SELECT %s FROM %s WHERE toGBID=%s and globalMailGBID=0 and createTime>=%s ORDER BY createTime DESC limit %s""" % (
+                fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, fromTime, maxMailNum * 2)
+    LOG_DBG('in loadMailsFromDB, sql:', isGlobal, sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 def loadMailByMailGBID(gbId, mailGBID, callback):
     fields = '''toGBID,mailId,mailGBID,globalMailGBID,readStat,createTime,expiredTime,fromGBID,attach,attachStat,despArgs,title,cont, opUUID,srcType,srcSubType,desp,idipSource'''
     sql = """SELECT %s FROM %s WHERE toGBID=%s and mailGBID=%s""" % (
         fields, gameconst.TABLE_NAME_GAME_MAIL, gbId, mailGBID)
-    #DEBUG_MSG('in loadMailsFromDB, sql:', sql)
+    #LOG_DBG('in loadMailsFromDB, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err:callback(ret,num,insertId,err))
 
 def setMailHasRead(toGBID, mailGBID, callback):
     sql = """UPDATE %s SET readStat=%s where toGBID=%s and mailGBID=%s""" % (gameconst.TABLE_NAME_GAME_MAIL,
                                                                              gameconst.MailReadState.HasRead, toGBID,
                                                                              mailGBID)
-    # DEBUG_MSG('in setMultiMailsHasRead, sql:', sql)
+    # LOG_DBG('in setMultiMailsHasRead, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
@@ -159,7 +173,7 @@ def setMultiMailsHasRead(toGBID, mailGBIDList, callback):
     sql = """UPDATE %s SET readStat=%s where toGBID=%s and mailGBID in (%s)""" % (gameconst.TABLE_NAME_GAME_MAIL,
                                                                                   gameconst.MailReadState.HasRead,
                                                                                   toGBID, mailGBIDStr)
-    # DEBUG_MSG('in setMultiMailsHasRead, sql:', sql)
+    # LOG_DBG('in setMultiMailsHasRead, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
@@ -169,7 +183,7 @@ def setMailHasGetAttach(toGBID, mailGBIDList, callback):
     sql = """UPDATE %s SET attachStat=%s, readStat=%s where toGBID=%s and mailGBID in (%s)""" % (
         gameconst.TABLE_NAME_GAME_MAIL,
         gameconst.MailAttachState.HasGET, gameconst.MailReadState.HasRead, toGBID, mailGBIDStr)
-    # DEBUG_MSG('in setMailHasGetAttach, sql:', sql)
+    # LOG_DBG('in setMailHasGetAttach, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
@@ -177,25 +191,33 @@ def resetMailAttachNotState(toGBID, mailGBID, readState, callback):
     sql = """UPDATE %s SET attachStat=%s, readStat=%s where toGBID=%s and mailGBID=%s""" % (
         gameconst.TABLE_NAME_GAME_MAIL,
         gameconst.MailAttachState.NotGet, readState, toGBID, mailGBID)
-    # DEBUG_MSG('in setMailHasGetAttach, sql:', sql)
+    # LOG_DBG('in setMailHasGetAttach, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
 def deleteMailByMailGBID(toGBID, mailGBID, callback):
     sql = """DELETE FROM %s WHERE toGBID=%s AND mailGBID=%s""" % (gameconst.TABLE_NAME_GAME_MAIL, toGBID, mailGBID)
-    DEBUG_MSG('in deleteMailByMailGBID, sql:', sql)
+    LOG_DBG('in deleteMailByMailGBID, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
-def deleteOldMails(toGBID, minMailTime, minMailTiemMailList, callback):
+def deleteOldMails(toGBID, minMailTime, minMailTiemMailList, isGlobal, callback):
     if minMailTiemMailList:
         mailGBIDStr = ','.join([str(mailGBID) for mailGBID in minMailTiemMailList])
-        sql = """DELETE FROM %s WHERE toGBID=%s AND createTime <= %s and mailGBID not in (%s)""" % (
-            gameconst.TABLE_NAME_GAME_MAIL, toGBID, minMailTime, mailGBIDStr)
+        if isGlobal:
+            sql = """DELETE FROM %s WHERE toGBID=%s and globalMailGBID>0 AND createTime <= %s and mailGBID not in (%s)""" % (
+                gameconst.TABLE_NAME_GAME_MAIL, toGBID, minMailTime, mailGBIDStr)
+        else:
+            sql = """DELETE FROM %s WHERE toGBID=%s and globalMailGBID=0 AND createTime <= %s and mailGBID not in (%s)""" % (
+                gameconst.TABLE_NAME_GAME_MAIL, toGBID, minMailTime, mailGBIDStr)
     else:
-        sql = """DELETE FROM %s WHERE toGBID=%s AND createTime < %s""" % (
-            gameconst.TABLE_NAME_GAME_MAIL, toGBID, minMailTime)
-    DEBUG_MSG('in deleteOldMails, sql:', sql)
+        if isGlobal:
+            sql = """DELETE FROM %s WHERE toGBID=%s and globalMailGBID>0 AND createTime<%s""" % (
+                gameconst.TABLE_NAME_GAME_MAIL, toGBID, minMailTime)
+        else:
+            sql = """DELETE FROM %s WHERE toGBID=%s and globalMailGBID=0 AND createTime<%s""" % (
+                gameconst.TABLE_NAME_GAME_MAIL, toGBID, minMailTime)
+    LOG_DBG('in deleteOldMails, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
@@ -203,22 +225,28 @@ def deleteMultiMails(toGBID, mailGBIDList, callback):
     mailGBIDStr = ','.join([str(mailGBID) for mailGBID in mailGBIDList])
     sql = """DELETE FROM %s WHERE toGBID=%s AND mailGBID in (%s)""" % (
         gameconst.TABLE_NAME_GAME_MAIL, toGBID, mailGBIDStr)
-    DEBUG_MSG('in deleteMultiMails, sql:', sql)
+    LOG_DBG('in deleteMultiMails, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
+def updateMultiMails(toGBID, mailGBIDList, callback):
+    mailGBIDStr = ','.join([str(mailGBID) for mailGBID in mailGBIDList])
+    sql = """UPDATE %s set dueTime=0 WHERE toGBID=%s AND mailGBID in (%s)""" % (
+        gameconst.TABLE_NAME_GAME_MAIL, toGBID, mailGBIDStr)
+    LOG_DBG('in updateMultiMails, sql:', sql)
+    KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 def sendMailToAccount(accountName, accountType, mailId, attachStr, despArgsStr, title, cont, opUUID, srcType,
                       srcSubType, desc, idipSource, callback):
     sql = """INSERT INTO game_account_mails (accountName,accountType,mailId,sendTime,attachStr,despStr,title,cont,opUUID,srcType,srcSubType,desp,idipSource) VALUES('%s',%s,%s,%s,'%s','%s','%s','%s',%s,%s,%s,'%s',%s)""" % \
-          (accountName, accountType, mailId, utils.getNow(), attachStr, despArgsStr, title, cont, opUUID, srcType,
+          (accountName, accountType, mailId, utils.curTS(), attachStr, despArgsStr, title, cont, opUUID, srcType,
            srcSubType, desc, idipSource)
-    DEBUG_MSG('in sendMailToAccount, sql:', sql)
+    LOG_DBG('in sendMailToAccount, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
 def loadMailByAccountInfo(accountName, accountType, playerGBID, callback):
     sql = """CALL gamesp_load_account_mails('%s',%s,%s)""" % (accountName, accountType, playerGBID)
-    # DEBUG_MSG('in loadMailByAccountInfo, sql:', sql)
+    # LOG_DBG('in loadMailByAccountInfo, sql:', sql)
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
 
 
@@ -229,7 +257,7 @@ def getAvatarInfoFromDB(gbIds, callback):
         _str = 'in ({})'.format(','.join((str(gbId) for gbId in gbIds)))
 
     sql = """SELECT a.sm_gbID, a.sm_name, a.sm_school, a.sm_sex, a.sm_level, a.sm_accountName, a.sm_totalScore, a.id, \
-        a.sm_tLastOfflineBase, a.sm_avatarFlag, a.sm_appearance_outfitData_picFrameId, a.sm_accountType, a.sm_obId, c.sm_channelId\
+        a.sm_tsLastOfflineBase, a.sm_avatarFlag, a.sm_appearance_outfitData_picFrameId, a.sm_accountType, a.sm_obId, c.sm_channelId\
         FROM tbl_Avatar a left join tbl_Account c on a.sm_accountDBID = c.id WHERE a.sm_gbID %s""" % _str
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
@@ -250,7 +278,7 @@ def addAccountWhiteList(accountNameList):
 
 def addMultAccountWhiteList(valueStr):
     sql = "insert ignore into game_login_white_list (accountName, accountGmMode) values %s;" % (valueStr)
-    DEBUG_MSG('addMultAccountWhiteList', sql)
+    LOG_DBG('addMultAccountWhiteList', sql)
     KBEngine.executeRawDatabaseCommand(sql)
 
 
@@ -261,7 +289,7 @@ def deleteAccountWhiteList(accountNameList):
 
 def deleteMultAccountWhiteList(valueStr):
     sql = "DELETE FROM game_login_white_list where accountName in (%s);" % (valueStr)
-    DEBUG_MSG('deleteMultAccountWhiteList', sql)
+    LOG_DBG('deleteMultAccountWhiteList', sql)
     KBEngine.executeRawDatabaseCommand(sql)
 
 def loadAvatarAppearanceDataFromDB(gbIdList, callback):
@@ -338,13 +366,13 @@ def unforbidChat(accountName):
 
 
 def queryAccountDBID(platId, accountName, callback):
-    accountType = utils.getAccountTypeByPlatId(platId)
+    accountType = utils.fetchAccountTypeByPlatId(platId)
     sql = f"select entityDBID from kbe_accountinfos where accountName = '{accountType}:{accountName}'"
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def deleteAccountEntity(platId, accountName, callback):
-    accountType = utils.getAccountTypeByPlatId(platId)
+    accountType = utils.fetchAccountTypeByPlatId(platId)
     sql = f"delete from kbe_accountinfos where accountName = '{accountType}:{accountName}'"
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
@@ -365,19 +393,19 @@ ItemDataSqlClass = collections.namedtuple('ItemDataSqlClass', itemDataSqlKeys)
 
 def queryAvatarLoginTimeByAccountName(accountName, callback):
     sql = f"select sm_tLoginBase from tbl_Avatar where sm_accountName = '{accountName}'"
-    INFO_MSG(sql)
+    LOG_IFO(sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def queryAvatarGBIDByAccountName(accountName, callback):
     sql = f"select sm_gbId from tbl_Avatar where sm_accountName = '{accountName}'"
-    INFO_MSG(sql)
+    LOG_IFO(sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def queryCountAccountNum(callback):
     sql = 'select count(id) from tbl_Account'
-    INFO_MSG(sql)
+    LOG_IFO(sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
@@ -393,23 +421,23 @@ def deleteCrossServerGameAccountInfo(entityDBID):
 
 def dbCommandCallback(ret, num, insertId, err, detail):
     if err:
-        ERROR_MSG('db command error:', err, detail)
+        LOG_ERR('db command error:', err, detail)
 
 
 def _onRecordOfflineCallback(ret, num, insertId, err, gbId, callbackName, args):
     if err:
-        ERROR_MSG('_onRecordOfflineCallback error:', err, gbId, callbackName, args)
+        LOG_ERR('_onRecordOfflineCallback error:', err, gbId, callbackName, args)
         return
 
     nCallback = int(ret[0][0])
     if nCallback > 1000:
-        ERROR_MSG('_onRecordOfflineCallback: too many calbacks', nCallback, gbId, callbackName, args)
+        LOG_ERR('_onRecordOfflineCallback: too many calbacks', nCallback, gbId, callbackName, args)
 
 
 def recordAvatarOfflineCallback(gbId, callbackName, args):
     data = cPickle.dumps(args)
     if len(data) > 1024 * 60:
-        ERROR_MSG('offline callback data overflow:', gbId, callbackName, data.hex())
+        LOG_ERR('offline callback data overflow:', gbId, callbackName, data.hex())
         return
     sql = 'CALL gamesp_record_avatar_offline_callbacks(%s, %s, 0x%s)' % (
         gbId, utils.escape_string(callbackName), data.hex())
@@ -421,18 +449,18 @@ def recordAvatarOfflineCallback(gbId, callbackName, args):
 
 def _onLoadOfflineCallback(cbData, num, insertId, err, entId, gbId, finishCallback):
     if err:
-        ERROR_MSG('_onLoadOfflineCallback err', err, gbId)
+        LOG_ERR('_onLoadOfflineCallback err', err, gbId)
         return
 
     if cbData:
         def _onDeleteCallbacks(err1):
             avatar = KBEngine.entities.get(entId)
             if not avatar or avatar.isDestroyed:
-                WARNING_MSG('_onLoadOfflineCallback: player is offline. ', entId, gbId, cbData)
+                LOG_WARN('_onLoadOfflineCallback: player is offline. ', entId, gbId, cbData)
                 return
 
             if err1:
-                ERROR_MSG('_onDeleteCallbacks err', err, gbId)
+                LOG_ERR('_onDeleteCallbacks err', err, gbId)
                 return
 
             for _id, callbackName, argData in cbData:
@@ -441,11 +469,11 @@ def _onLoadOfflineCallback(cbData, num, insertId, err, entId, gbId, finishCallba
                     funcName = callbackName.decode('ascii')
                     func = getattr(avatar, funcName)
                     if not getattr(func, 'offlineCall', False):
-                        ERROR_MSG('function is not offline callable:', entId, gbId, callbackName, argData)
+                        LOG_ERR('function is not offline callable:', entId, gbId, callbackName, argData)
                         continue
                     func(*args)
                 except Exception as e:
-                    ERROR_MSG('avatar offline callback error:', gbId, callbackName, argData, e)
+                    LOG_ERR('avatar offline callback error:', gbId, callbackName, argData, e)
 
             finishCallback and finishCallback()
 
@@ -468,7 +496,7 @@ def loadOfflineCallback(avatar, finishCallback):
 
 def _sendMailCallback(ret, num, insertId, err, toGBID, mailVal, onSendCallback):
     if err:
-        ERROR_MSG('_sendMailCallback', err, toGBID, mailVal.mailId, mailVal.mailUUID, mailVal.srcType, mailVal.detail,
+        LOG_ERR('_sendMailCallback', err, toGBID, mailVal.mailId, mailVal.mailUUID, mailVal.srcType, mailVal.detail,
                   mailVal.title)
         return
 
@@ -483,62 +511,33 @@ def _sendMailCallback(ret, num, insertId, err, toGBID, mailVal, onSendCallback):
 
 def queryAccountDid(gbid, callback):
     sql = f'select sm_did from tbl_Account a join tbl_Avatar b on a.id=b.sm_accountDBID where b.sm_gbID={gbid};'
-    INFO_MSG('sql')
+    LOG_IFO('sql')
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, err))
 
 
 def delAccountClearDB(realAccount, callback):
-    accountType, accountName = utils.getAccountTypeAndName(realAccount)
+    accountType, accountName = utils.fetchAccountTypeAndName(realAccount)
     sql = f'update tbl_Account set sm_userName="", sm_identityCard="", sm_isDelete=1 where sm_accountType={accountType} and \
         sm_accountName="{accountName}")'
-    INFO_MSG('delAccountClearDB', sql)
+    LOG_IFO('delAccountClearDB', sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def recoverAccountDB(realAccount, callback):
-    accountType, accountName = utils.getAccountTypeAndName(realAccount)
+    accountType, accountName = utils.fetchAccountTypeAndName(realAccount)
     sql = f'update tbl_Account set sm_isDelete=0 where sm_accountType={accountType} and sm_accountName="{accountName}")'
-    INFO_MSG('recoverAccountDB', sql)
+    LOG_IFO('recoverAccountDB', sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
-
-
-def _onChargebackDBUpdate(ret, num, insertId, err, sql, srcType, callback):
-    if err:
-        ERROR_MSG('chargeBackExtWealth error:', err, sql)
-        callback and callback(False, [], None, 0, 0)
-        return
-
-    val = None
-    srcKeyList = []
-    recordNum = 0
-    DEBUG_MSG('_onChargebackUpdate status', ret, sql)
-    if ret:
-        val = dropAward.AwardVal()
-        for bsrcKey, bwealth, _recordNum in ret:
-            if int(_recordNum) == -1:
-                recordNum = int(_recordNum)
-                srcKeyList.append(bsrcKey.decode('ascii'))
-            else:
-                recordNum += int(_recordNum)
-                if not bwealth:
-                    continue
-                wealthVal = cPickle.loads(bytes.fromhex(bwealth.decode('ascii')))
-                srcKeyList.append(bsrcKey.decode('ascii'))
-                val += wealthVal
-        callback and callback(recordNum != -1, srcKeyList, val, recordNum, srcType)
-    else:
-        # 没有订单
-        callback and callback(True, srcKeyList, val, recordNum, srcType)
 
 
 def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
     def _onGetItemsInfo(ret, num, insertId, err, alreadyRemovedNum, needDeduct):
         if err:
-            checkCallback(gameconst.GMCommandErr.DB_OP_ERR, 0, alreadyRemovedNum, needDeduct)
+            checkCallback(gameconst.GMCommandErr.GM_RET_DB_OP_ERR, 0, alreadyRemovedNum, needDeduct)
             return
 
         if not ret:
-            checkCallback(gameconst.GMCommandErr.TARGET_NOT_EXISTS, 0, alreadyRemovedNum, needDeduct)
+            checkCallback(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, 0, alreadyRemovedNum, needDeduct)
         else:
             bcoin, bcoinFrac, baupCoin, baupCoinFrac, bbagData = ret[0]
             coin, coinFrac = int(bcoin.decode('ascii')), int(bcoinFrac.decode('ascii'))
@@ -551,11 +550,11 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
             hasNum = 0
             wealthVal = dropAward.DeductWealthVal().addWealthByItemId(itemId, needDeductTotal)
 
-            INFO_MSG(f'checkOfflineDeductWealth: {gbId} need remove {needDeductTotal} {coinVal}')
+            LOG_IFO(f'checkOfflineDeductWealth: {gbId} need remove {needDeductTotal} {coinVal}')
 
             itemData = dataUtils.getCommItemData(itemId)
             if not itemData:
-                checkCallback(gameconst.GMCommandErr.INTERNAL_ERROR, 0, alreadyRemovedNum, needDeduct)
+                checkCallback(gameconst.GMCommandErr.GM_RET_INTERNAL_ERROR, 0, alreadyRemovedNum, needDeduct)
                 return
             if itemData['type'] == gameconst.ItemType.Normal:
                 for itDic in bagItemList:
@@ -563,19 +562,19 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
                         hasNum += itDic.get('itemNum', 0)
 
                 if hasNum < needDeductTotal:
-                    checkCallback(gameconst.GMCommandErr.INSUFFICIENT, hasNum, alreadyRemovedNum, needDeduct)
+                    checkCallback(gameconst.GMCommandErr.GM_RET_INSUFFICIENT, hasNum, alreadyRemovedNum, needDeduct)
                     return
             elif itemId == gameconst.ItemId.COIN:
                 hasNum = coinVal
                 if wealthVal.coin.data and wealthVal.coin.data > coinVal:
-                    checkCallback(gameconst.GMCommandErr.INSUFFICIENT, coinVal, alreadyRemovedNum, needDeduct)
+                    checkCallback(gameconst.GMCommandErr.GM_RET_INSUFFICIENT, coinVal, alreadyRemovedNum, needDeduct)
                     return
 
             checkCallback(0, hasNum, alreadyRemovedNum, needDeduct)
 
     def _onGetRemoved(ret, num, insertId, err):
         if err:
-            checkCallback and checkCallback(gameconst.GMCommandErr.INTERNAL_ERROR, 0, 0, deductNum)
+            checkCallback and checkCallback(gameconst.GMCommandErr.GM_RET_INTERNAL_ERROR, 0, 0, deductNum)
             return 0
 
         removedNum = 0
@@ -588,7 +587,7 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
                 if _itemId == itemId:
                     removedNum += totalNum
 
-        DEBUG_MSG(f'already del {removedNum}, need del {deductNum}')
+        LOG_DBG(f'already del {removedNum}, need del {deductNum}')
         checkLeftSql = 'select sm_coin, sm_coinFraction, sm_auspiciousCoin, sm_auspiciousCoinFraction, hex(sm_bagData_itemsList) from tbl_Avatar where sm_gbID=%s' % gbId
         KBEngine.executeRawDatabaseCommand(checkLeftSql,
                                            lambda _ret, _num, _insertId, _err: _onGetItemsInfo(_ret, _num, _insertId,
@@ -601,7 +600,7 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
 
 def getAccountDid(gbid, callback):
     sql = f'select sm_did from tbl_Account a join tbl_Avatar b on a.sm_avatarGBID=b.sm_gbID where b.sm_gbID={gbid};'
-    INFO_MSG(f'getAccountDid, gbid:{gbid}')
+    LOG_IFO(f'getAccountDid, gbid:{gbid}')
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
@@ -647,7 +646,7 @@ def removeAllFriends(gbId, callback):
 
 def _onRecordAccountOfflineCallback(ret, num, insertId, err, accountName, callbackName, args):
     if err:
-        ERROR_MSG('_onRecordAccountOfflineCallback error:', err, accountName, callbackName, args)
+        LOG_ERR('_onRecordAccountOfflineCallback error:', err, accountName, callbackName, args)
         return
 
 
@@ -657,7 +656,7 @@ def recordAccountOfflineCallback(accountName, callbackName, args):
     """
     data = cPickle.dumps(args)
     if len(data) > 1024 * 60:
-        ERROR_MSG('offline callback data overflow:', accountName, callbackName, data.hex())
+        LOG_ERR('offline callback data overflow:', accountName, callbackName, data.hex())
         return
 
     sql = 'INSERT INTO game_account_offline_callbacks (accountName, callbackName, args) VALUES (%s, %s, 0x%s)' % (
@@ -724,7 +723,7 @@ def loadTableData(columnsStr, tblName, condition, callback):
 
 def saveTableData(tblName, columns, values, callback):
     _sql = f'INSERT INTO {tblName} ({columns}) VALUES {values}'
-    DEBUG_MSG('saveTableData', _sql)
+    LOG_DBG('saveTableData', _sql)
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 
@@ -804,16 +803,15 @@ def getAvatarTotalScoreAndSpaceNo(gbId, callback):
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 def getAvatarPersonalInfo(gbId, callback):
-    _sql = f"""SELECT a.sm_name, a.sm_level, a.sm_school, a.sm_totalScore, eq.sm_gridId, eq.sm_attrJson, a.sm_sex,
-		  a.sm_appearance_weapon, a.sm_appearance_breast, a.sm_appearance_outfitData_hairId, a.sm_appearance_outfitData_clothesId,
-		  a.sm_appearance_outfitData_picFrameId, a.sm_appearance_outfitData_wingId, a.sm_appearance_outfitData_mountId, a.sm_appearance_faceData_suitId,
-		  a.sm_appearance_faceData_hairIdFaceId, a.sm_appearance_faceData_hairColorIdSkinColorId, eq.sm_itemId, eq.sm_createTime, eq.sm_expireTime,
-		  eq.sm_uniqueId, eq.sm_bindType, eq.sm_lockStatus
+    _a1, _a2 = utils.getAvatarFieldsDOTStr()
+    _eq = utils.getEquipSQLStr()
+
+    _sql = f"""SELECT {_a1},{_eq}
         FROM tbl_Avatar_bodyEquipData_bodyEquipList eq
-        RIGHT JOIN (SELECT id, sm_name, sm_level, sm_school, sm_totalScore, sm_sex, sm_appearance_weapon, sm_appearance_breast, sm_appearance_outfitData_hairId,
-		  sm_appearance_outfitData_clothesId, sm_appearance_outfitData_picFrameId, sm_appearance_outfitData_wingId, sm_appearance_outfitData_mountId,
-		  sm_appearance_faceData_suitId, sm_appearance_faceData_hairIdFaceId, sm_appearance_faceData_hairColorIdSkinColorId
-		   FROM tbl_Avatar WHERE sm_gbID={gbId}) a ON a.id = eq.parentID"""
+        RIGHT JOIN (SELECT id, {_a2}
+		FROM tbl_Avatar WHERE sm_gbID={gbId}) a ON a.id = eq.parentID"""
+
+    LOG_DBG('getAvatarPersonalInfo', _sql)
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 # --------------------------- auth avatar start --------------------------------
@@ -893,5 +891,10 @@ def banLogin(gbId, endTime, callback):
 
 def disbanLogin(gbId, callback):
     _sql = f'UPDATE tbl_Avatar SET sm_banLogin=0 WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def getAvatarAuthOfflineTime(gbId, callback):
+    _sql = f'SELECT sm_gbID, sm_authStatistics_authOffline FROM tbl_Avatar WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 # --------------------------- auth avatar end --------------------------------

@@ -6,7 +6,7 @@ import JunXuQiXieInfo
 import guildWarEquipment_warEquipmentUpgrate as G_WED
 
 
-class JunXuArchitectureVal(userType.UserSoleType):
+class JunXuArchitectureVal(userType.UserSingleType):
     '''JUN_XU_ARCHITECTURE_DATA_INFO'''
     def __init__(self, qixieList=()):
         self.qixieDic = {}

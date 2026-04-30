@@ -404,6 +404,18 @@
             <Arg>      UNICODE              </Arg>
             <Arg>      UINT8                </Arg>
         </onGuildNameChange>
+
+        <guildAssistAfterCheck>
+            <Arg>       GUILD_BUILDING_ID       </Arg>
+        </guildAssistAfterCheck>
+
+        <guildDonateAfterCheck>
+            <Arg>       ITEM_ID                 </Arg>
+            <Arg>       UINT32                  </Arg>
+        </guildDonateAfterCheck>
+
+        <getGuildIronMine> <Exposed/>
+        </getGuildIronMine>
     </BaseMethods>
 
     <CellMethods>
@@ -566,5 +578,9 @@
         <syncGuildTaskInfo>
             <Arg>      ARRAY   <of> GUILD_ONETASK_INFO      </of>  </Arg>
         </syncGuildTaskInfo>
+
+        <onGetGuildIronMine>
+            <Arg>      INT32                   </Arg>
+        </onGetGuildIronMine>
     </ClientMethods>
 </root>

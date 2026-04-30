@@ -28,11 +28,11 @@ class IBaseWithCell(iBase.IBase):
         try:
             spaceNo = self.getCellData('spaceNo', 0)
         except:
-            ERROR_MSG('Error: failed to create for lack space', self.classname(), self.id, spaceNo)
+            LOG_ERR('Error: failed to create for lack space', self.classname(), self.id, spaceNo)
             return
 
         smCell = None
-        if formula.isDungeonSpace(spaceNo):
+        if formula.inDungeonScene(spaceNo):
             dungeonStub = gameengine.getDungeonStubBySpaceNo(spaceNo)
             try:
                 sc = dungeonStub.spaces[spaceNo].spaceBox.cell
@@ -41,18 +41,18 @@ class IBaseWithCell(iBase.IBase):
                 # dungeonStub 不在当前进程
                 dungeonStub.requestSpaceCell(self, spaceNo)
             return
-        elif formula.spaceInWorldLine(spaceNo) or formula.isWonderLandSpace(spaceNo):
-            lineType = formula.getMapId(spaceNo)
+        elif formula.inWorldLineScene(spaceNo) or formula.inWonderLandScene(spaceNo):
+            lineType = formula.fetchMapId(spaceNo)
             gameengine.getLineStub(lineType).createCellEntityInLine(self, spaceNo)
             return
         else:
-            ERROR_MSG('fail to create cell', spaceNo)
+            LOG_ERR('fail to create cell', spaceNo)
             return
 
         try:
             self.createCellEntity(smCell)
         except:
-            ERROR_MSG('Error: failed to create for exception', self.classname(), self.id, spaceNo, smCell)
+            LOG_ERR('Error: failed to create for exception', self.classname(), self.id, spaceNo, smCell)
             self.semiDestroy()
 
     def _createCellEntityInCopySpace(self, spaceCell, spaceNo):
@@ -63,14 +63,14 @@ class IBaseWithCell(iBase.IBase):
                 spaceCell.base.createCellNearSelf(self)
 
         except Exception as e:
-            ERROR_MSG('Error:failed to create for exception:', self.classname(), self.id, spaceNo, str(e))
+            LOG_ERR('Error:failed to create for exception:', self.classname(), self.id, spaceNo, str(e))
             self.semiDestroy()
 
     def onCellSafeDestroy(self):
         self.onLoseCellReason = gameconst.OnLoseCellReason.CELL_SAFE_DESTROY
 
     def onCreateCellFailure(self):
-        ERROR_MSG(self.classname() + '.onCreateCellFailture')
+        LOG_ERR(self.classname() + '.onCreateCellFailture')
 
         self.destroy(deleteFromDB=False, writeToDB=False)
 
@@ -78,7 +78,7 @@ class IBaseWithCell(iBase.IBase):
 
     def onGetCell(self):
         for callbackName, args in self.initCellCallbacks:
-            DEBUG_MSG('call cell', callbackName, args)
+            LOG_DBG('call cell', callbackName, args)
             self.cell.callMethod(callbackName, args)
 
         self.initCellCallbacks = []
@@ -131,7 +131,7 @@ class IBaseWithCell(iBase.IBase):
         if self.isDestroyed:
             return
 
-        DEBUG_MSG('base.entireDestroy', deleteFromDB, writeToDB, self.isDestroyed, self.cell)
+        LOG_DBG('base.entireDestroy', deleteFromDB, writeToDB, self.isDestroyed, self.cell)
 
         self._preEntireDestroy()
 

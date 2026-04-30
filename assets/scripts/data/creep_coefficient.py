@@ -18,6 +18,8 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "notes": "野外-小怪",
+        "rewardID": (40030101,),
+        "expRatio": 1.0,
         "adjFullHp": 3.5,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -59,6 +61,8 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "notes": "野外-幸运怪",
+        "rewardID": None,
+        "expRatio": 27.4,
         "adjFullHp": 240.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.3,
@@ -100,6 +104,8 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "notes": "野外-精英",
+        "rewardID": (40030101,),
+        "expRatio": 2.3,
         "adjFullHp": 8.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.2,
@@ -141,6 +147,8 @@ datas = _tools.RODict({
     4: _tools.RODict({
         "ID": 4,
         "notes": "野外-头目",
+        "rewardID": (40030501,),
+        "expRatio": 20.6,
         "adjFullHp": 180.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.8,
@@ -182,6 +190,8 @@ datas = _tools.RODict({
     5: _tools.RODict({
         "ID": 5,
         "notes": "野外-世界boss",
+        "rewardID": None,
+        "expRatio": 1000.0,
         "adjFullHp": 16200.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.0,
@@ -223,6 +233,8 @@ datas = _tools.RODict({
     6: _tools.RODict({
         "ID": 6,
         "notes": "普通讨伐-普通小怪",
+        "rewardID": None,
+        "expRatio": 1.0,
         "adjFullHp": 3.5,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -264,6 +276,8 @@ datas = _tools.RODict({
     7: _tools.RODict({
         "ID": 7,
         "notes": "普通讨伐-高级小怪",
+        "rewardID": None,
+        "expRatio": 2.0,
         "adjFullHp": 8.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.3,
@@ -305,6 +319,8 @@ datas = _tools.RODict({
     8: _tools.RODict({
         "ID": 8,
         "notes": "普通讨伐-精英",
+        "rewardID": None,
+        "expRatio": 3.0,
         "adjFullHp": 20.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.3,
@@ -346,6 +362,8 @@ datas = _tools.RODict({
     9: _tools.RODict({
         "ID": 9,
         "notes": "普通讨伐-头目",
+        "rewardID": None,
+        "expRatio": 20.0,
         "adjFullHp": 180.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.8,
@@ -387,6 +405,8 @@ datas = _tools.RODict({
     10: _tools.RODict({
         "ID": 10,
         "notes": "普通讨伐-首领",
+        "rewardID": None,
+        "expRatio": 60.0,
         "adjFullHp": 540.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.0,
@@ -428,6 +448,8 @@ datas = _tools.RODict({
     11: _tools.RODict({
         "ID": 11,
         "notes": "首领讨伐-首领",
+        "rewardID": None,
+        "expRatio": 700.0,
         "adjFullHp": 8100.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.0,
@@ -469,6 +491,8 @@ datas = _tools.RODict({
     12: _tools.RODict({
         "ID": 12,
         "notes": "混沌回廊-小怪",
+        "rewardID": (40031501,),
+        "expRatio": 3.0,
         "adjFullHp": 3.5,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -510,6 +534,8 @@ datas = _tools.RODict({
     13: _tools.RODict({
         "ID": 13,
         "notes": "混沌回廊-精英",
+        "rewardID": (40031501,),
+        "expRatio": 6.9,
         "adjFullHp": 8.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.2,
@@ -551,6 +577,8 @@ datas = _tools.RODict({
     14: _tools.RODict({
         "ID": 14,
         "notes": "混沌回廊-头目",
+        "rewardID": (40031501,),
+        "expRatio": 105.0,
         "adjFullHp": 90.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.8,
@@ -592,6 +620,8 @@ datas = _tools.RODict({
     15: _tools.RODict({
         "ID": 15,
         "notes": "混沌回廊-首领",
+        "rewardID": None,
+        "expRatio": 100.0,
         "adjFullHp": 240.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.9,
@@ -633,6 +663,8 @@ datas = _tools.RODict({
     2016: _tools.RODict({
         "ID": 2016,
         "notes": "混沌回廊-首领2",
+        "rewardID": None,
+        "expRatio": 50.0,
         "adjFullHp": 120.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.5,
@@ -674,6 +706,8 @@ datas = _tools.RODict({
     16: _tools.RODict({
         "ID": 16,
         "notes": "天劫崖-小怪",
+        "rewardID": (40037501,),
+        "expRatio": 2.0,
         "adjFullHp": 3.5,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -715,6 +749,8 @@ datas = _tools.RODict({
     17: _tools.RODict({
         "ID": 17,
         "notes": "天劫崖-精英",
+        "rewardID": (40037501,),
+        "expRatio": 4.6,
         "adjFullHp": 8.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.2,
@@ -756,6 +792,8 @@ datas = _tools.RODict({
     18: _tools.RODict({
         "ID": 18,
         "notes": "天劫崖-随机首领",
+        "rewardID": None,
+        "expRatio": 41.0,
         "adjFullHp": 30.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.8,
@@ -797,6 +835,8 @@ datas = _tools.RODict({
     19: _tools.RODict({
         "ID": 19,
         "notes": "天劫崖-低级固定首领",
+        "rewardID": None,
+        "expRatio": 62.0,
         "adjFullHp": 180.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.8,
@@ -838,6 +878,8 @@ datas = _tools.RODict({
     20: _tools.RODict({
         "ID": 20,
         "notes": "天劫崖-中级固定首领",
+        "rewardID": None,
+        "expRatio": 82.0,
         "adjFullHp": 240.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.9,
@@ -879,6 +921,8 @@ datas = _tools.RODict({
     21: _tools.RODict({
         "ID": 21,
         "notes": "天劫崖-高级固定首领",
+        "rewardID": None,
+        "expRatio": 165.0,
         "adjFullHp": 480.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.9,
@@ -920,6 +964,8 @@ datas = _tools.RODict({
     22: _tools.RODict({
         "ID": 22,
         "notes": "天劫崖-低级召唤首领",
+        "rewardID": None,
+        "expRatio": 41.0,
         "adjFullHp": 120.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.8,
@@ -961,6 +1007,8 @@ datas = _tools.RODict({
     2023: _tools.RODict({
         "ID": 2023,
         "notes": "天劫崖-中级召唤首领",
+        "rewardID": None,
+        "expRatio": 62.0,
         "adjFullHp": 180.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.9,
@@ -1002,6 +1050,8 @@ datas = _tools.RODict({
     2024: _tools.RODict({
         "ID": 2024,
         "notes": "天劫崖-高级召唤首领",
+        "rewardID": None,
+        "expRatio": 82.0,
         "adjFullHp": 240.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.9,
@@ -1043,6 +1093,8 @@ datas = _tools.RODict({
     23: _tools.RODict({
         "ID": 23,
         "notes": "道士 召唤兽A-麒麟",
+        "rewardID": None,
+        "expRatio": 0.0,
         "adjFullHp": 6.75,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.28,
@@ -1084,6 +1136,8 @@ datas = _tools.RODict({
     24: _tools.RODict({
         "ID": 24,
         "notes": "道士 召唤兽B-灰熊",
+        "rewardID": None,
+        "expRatio": 0.0,
         "adjFullHp": 9.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -1125,6 +1179,8 @@ datas = _tools.RODict({
     25: _tools.RODict({
         "ID": 25,
         "notes": "道士 召唤兽C-骑士",
+        "rewardID": None,
+        "expRatio": 0.0,
         "adjFullHp": 7.65,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.18,
@@ -1166,6 +1222,8 @@ datas = _tools.RODict({
     26: _tools.RODict({
         "ID": 26,
         "notes": "矿战旗帜",
+        "rewardID": None,
+        "expRatio": 0.0,
         "adjFullHp": 50000.0,
         "adjFullMp": 0.0,
         "adjMinPhysicalAtk": 0.0,
@@ -1207,6 +1265,8 @@ datas = _tools.RODict({
     27: _tools.RODict({
         "ID": 27,
         "notes": "矿战水晶",
+        "rewardID": None,
+        "expRatio": 0.0,
         "adjFullHp": 50000.0,
         "adjFullMp": 0.0,
         "adjMinPhysicalAtk": 0.0,
@@ -1248,6 +1308,8 @@ datas = _tools.RODict({
     28: _tools.RODict({
         "ID": 28,
         "notes": "首领讨伐2-双首领",
+        "rewardID": None,
+        "expRatio": 350.0,
         "adjFullHp": 4050.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.0,
@@ -1289,6 +1351,8 @@ datas = _tools.RODict({
     29: _tools.RODict({
         "ID": 29,
         "notes": "首领讨伐3-3首领",
+        "rewardID": None,
+        "expRatio": 234.0,
         "adjFullHp": 2700.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.0,
@@ -1330,6 +1394,8 @@ datas = _tools.RODict({
     30: _tools.RODict({
         "ID": 30,
         "notes": "帮派副本1-首领",
+        "rewardID": None,
+        "expRatio": 700.0,
         "adjFullHp": 16800.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.95,
@@ -1371,6 +1437,8 @@ datas = _tools.RODict({
     100: _tools.RODict({
         "ID": 100,
         "notes": "新手关-小怪",
+        "rewardID": None,
+        "expRatio": 1.0,
         "adjFullHp": 2.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -1412,6 +1480,8 @@ datas = _tools.RODict({
     101: _tools.RODict({
         "ID": 101,
         "notes": "新手关-精英",
+        "rewardID": None,
+        "expRatio": 1.5,
         "adjFullHp": 3.5,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.2,
@@ -1453,6 +1523,8 @@ datas = _tools.RODict({
     102: _tools.RODict({
         "ID": 102,
         "notes": "新手关-小boss",
+        "rewardID": None,
+        "expRatio": 10.0,
         "adjFullHp": 15.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.5,
@@ -1494,6 +1566,8 @@ datas = _tools.RODict({
     103: _tools.RODict({
         "ID": 103,
         "notes": "任务头目",
+        "rewardID": (40030101,),
+        "expRatio": 10.0,
         "adjFullHp": 30.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.0,
@@ -1535,6 +1609,8 @@ datas = _tools.RODict({
     104: _tools.RODict({
         "ID": 104,
         "notes": "新手关-大boss",
+        "rewardID": None,
+        "expRatio": 20.0,
         "adjFullHp": 35.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.5,
@@ -1575,7 +1651,9 @@ datas = _tools.RODict({
     }),
     105: _tools.RODict({
         "ID": 105,
-        "notes": "新手关-头目",
+        "notes": "新手关-小头目",
+        "rewardID": None,
+        "expRatio": 2.0,
         "adjFullHp": 4.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.2,
@@ -1617,6 +1695,8 @@ datas = _tools.RODict({
     120: _tools.RODict({
         "ID": 120,
         "notes": "普通讨伐1-普通小怪",
+        "rewardID": None,
+        "expRatio": 1.0,
         "adjFullHp": 4.375,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.25,
@@ -1658,6 +1738,8 @@ datas = _tools.RODict({
     121: _tools.RODict({
         "ID": 121,
         "notes": "普通讨伐1-高级小怪",
+        "rewardID": None,
+        "expRatio": 2.0,
         "adjFullHp": 10.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.625,
@@ -1699,6 +1781,8 @@ datas = _tools.RODict({
     122: _tools.RODict({
         "ID": 122,
         "notes": "普通讨伐1-精英",
+        "rewardID": None,
+        "expRatio": 3.0,
         "adjFullHp": 25.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 1.625,
@@ -1740,6 +1824,8 @@ datas = _tools.RODict({
     123: _tools.RODict({
         "ID": 123,
         "notes": "普通讨伐1-头目",
+        "rewardID": None,
+        "expRatio": 20.0,
         "adjFullHp": 225.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.25,
@@ -1781,6 +1867,8 @@ datas = _tools.RODict({
     124: _tools.RODict({
         "ID": 124,
         "notes": "普通讨伐1-首领",
+        "rewardID": None,
+        "expRatio": 60.0,
         "adjFullHp": 675.0,
         "adjFullMp": 1.0,
         "adjMinPhysicalAtk": 2.5,

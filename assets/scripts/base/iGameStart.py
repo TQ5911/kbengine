@@ -16,6 +16,7 @@ import utils
 import random
 import gamebase
 import dataUtils
+import redisUtils
 
 import gamePlay_gamePlay as DDL
 import wonderLand_floor as WL_FD
@@ -36,18 +37,18 @@ class IGameStart(object):
         if userArg == gametimer.BASESTUB_TIMER_CHECK_COMPONENTS:
             cellapps = self.initedCellapps
             if len(cellapps) != gameconfig.cellAppCount():
-                INFO_MSG('start waiting: waiting for cellapps start: %s/%s' % (cellapps, gameconfig.cellAppCount()))
+                LOG_IFO('start waiting: waiting for cellapps start: %s/%s' % (cellapps, gameconfig.cellAppCount()))
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
                 return
 
             comps = KBEngine.getComponents()
             if len(comps['baseapps']) + 1 != gameconfig.baseAppCount():
-                INFO_MSG('start waiting: waiting for baseapps start: %s/%s' % (
+                LOG_IFO('start waiting: waiting for baseapps start: %s/%s' % (
                 len(comps['baseapps']) + 1, gameconfig.baseAppCount()))
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
                 return
 
-            INFO_MSG('starting: components ready')
+            LOG_IFO('starting: components ready')
 
             self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_BASEAPPS)
 
@@ -56,11 +57,11 @@ class IGameStart(object):
             howManyBaseApp = gameengine.howManyBaseApps()
 
             if howManyBaseApp < baseAppCnt:
-                INFO_MSG('start waiting: waiting for creating all BaseApp Entity: %s/%s' % (howManyBaseApp, baseAppCnt))
+                LOG_IFO('start waiting: waiting for creating all BaseApp Entity: %s/%s' % (howManyBaseApp, baseAppCnt))
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_BASEAPPS)
                 return
 
-            INFO_MSG('starting: successful to create all baseapps&cellapps, now create stubs')
+            LOG_IFO('starting: successful to create all baseapps&cellapps, now create stubs')
             self.onGetAllBaseApps()
 
             self.createLocalStubs()
@@ -76,14 +77,22 @@ class IGameStart(object):
 
         elif userArg == gametimer.WAIT_GET_ALL_SERVER_INFO:
             if not gameglobal.mapleServerInfo:
-                WARNING_MSG('still waiting for get mapleServerInfo')
+                LOG_WARN('still waiting for get mapleServerInfo')
                 self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
                 return
 
             if gameglobal.mapleServerInfo[gameconfig.serverId()]['start_time'] != gameconfig.serverOpenTime():
-                ERROR_MSG(f'server startTime not match: {gameglobal.mapleServerInfo[gameconfig.serverId()]}, {gameconfig.serverOpenTime()}')
+                LOG_ERR(f'server startTime not match: {gameglobal.mapleServerInfo[gameconfig.serverId()]}, {gameconfig.serverOpenTime()}')
                 self.pyAddTimer(1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
                 return
+            
+            # 服务器开服时间和状态写redis
+            if gameglobal.isBootstrap:
+                key = gameconst.RedisKey.SERVER_OPEN_TIME + str(gameconfig.serverId())
+                redisUtils.RedisUtils.set(key, str(gameconfig.serverOpenTime()), self._onServerOpenTime)
+
+                key = gameconst.RedisKey.SERVER_OPEN_STATE + str(gameconfig.serverId())
+                redisUtils.RedisUtils.set(key, str(gameconfig.permitLogin()), self._onServerOpenState)
 
             self.pyAddTimer(0.1, 0, gametimer.CREATE_LEADER_BOARD_STUB)
 
@@ -96,7 +105,7 @@ class IGameStart(object):
             for _lbType in gameconst.LeaderBoardType.ALL_KEYS:
                 _stub = gameengine.getLeaderStub(_lbType, reportErr=False)
                 if not _stub:
-                    INFO_MSG('start waiting: waiting for leaderBoardStub ready', _lbType)
+                    LOG_IFO('start waiting: waiting for leaderBoardStub ready', _lbType)
                     self.pyAddTimer(0.1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
                     return
 
@@ -112,71 +121,71 @@ class IGameStart(object):
             for stubName in gameconst.GLOBAL_BASE_STUB_UNARCHIVE:
                 globalName = stubName
                 if not gameengine.getGlobalBase(globalName, reportErr=False):
-                    INFO_MSG('start waiting: still waiting for stub:', globalName)
+                    LOG_IFO('start waiting: still waiting for stub:', globalName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
             for i in range(gameconst.TEAMSTUB_CONFIG_NUM):
                 stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(i)
                 if not KBEngine.globalData.get(stubName):
-                    INFO_MSG('still waiting for team stub', stubName)
+                    LOG_IFO('still waiting for team stub', stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
 
             for i in range(gameconst.RAIDSTUB_CONFIG_NUM):
                 stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
                 if not KBEngine.globalData.get(stubName):
-                    INFO_MSG('still waiting for raid stub', stubName)
+                    LOG_IFO('still waiting for raid stub', stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
                 
             for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
                 stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
                 if not KBEngine.globalData.get(stubName):
-                    INFO_MSG('still waiting for statistic stub', stubName)
+                    LOG_IFO('still waiting for statistic stub', stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
 
             for lineType in gameconst.lineStubMap().keys():
                 globalName = gameengine.buildLineStubName(lineType)
                 if not gameengine.getGlobalBase(globalName, reportErr=False):
-                    INFO_MSG('start waiting: still waiting for line stub:', globalName)
+                    LOG_IFO('start waiting: still waiting for line stub:', globalName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
             for stubName in gameconst.GLOBAL_BASE_STUB_ARCHIVE:
                 if not gameengine.getGlobalBase(stubName, reportErr=False):
-                    INFO_MSG('still waiting for archived stub', stubName)
+                    LOG_IFO('still waiting for archived stub', stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
             for dungeonNo, dVal in DDL.datas.items():
                 if not dVal.get('type', 0):
-                    WARNING_MSG('skip dungeon stub in none dungeonType', dungeonNo)
+                    LOG_WARN('skip dungeon stub in none dungeonType', dungeonNo)
                     continue
 
                 if hasattr(self, '_skipInitDungeonStubs') and dungeonNo in self._skipInitDungeonStubs:
-                    WARNING_MSG('skip dungeon stub in err found', dungeonNo)
+                    LOG_WARN('skip dungeon stub in err found', dungeonNo)
                     continue
 
                 dungeonType = dVal['type']
-                if dungeonType not in gameconst.DungeonSpaceType.COLL_DUNGEON:
+                if dungeonType not in gameconst.DungeonSpaceTypeEnum.COLL_DUNGEON:
                     continue
 
                 enterType = dVal['enterType']
-                if enterType in gameconst.DungeonEnterType.COLL_ALL:
-                    stubName = formula.getDungeonStubGlobalName(dungeonNo, enterType)
+                if enterType in gameconst.DungeonEnterTypeEnum.COLL_ALL:
+                    stubName = formula.fetchDungeonStubGlobalName(dungeonNo, enterType)
                     if not KBEngine.globalData.get(stubName):
-                        INFO_MSG('still waiting for dungeon stub', stubName)
+                        LOG_IFO('still waiting for dungeon stub', stubName)
                         self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                         return
                     continue
 
-                if enterType == gameconst.DungeonEnterType.BOTH:
-                    for enterType in gameconst.DungeonEnterType.COLL_BOTH:
-                        stubName = formula.getDungeonStubGlobalName(dungeonNo, enterType)
+                if enterType == gameconst.DungeonEnterTypeEnum.BOTH:
+                    for enterType in gameconst.DungeonEnterTypeEnum.COLL_BOTH:
+                        stubName = formula.fetchDungeonStubGlobalName(dungeonNo, enterType)
                         if not KBEngine.globalData.get(stubName):
-                            INFO_MSG('still waiting for dungeon stub', stubName)
+                            LOG_IFO('still waiting for dungeon stub', stubName)
                             self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                             return
                         continue
@@ -188,26 +197,27 @@ class IGameStart(object):
 
             for _floorNo in WL_FD.datas.keys():
                 if not gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False):
-                    INFO_MSG('start waiting: waiting for wonderland stub', _floorNo)
+                    LOG_IFO('start waiting: waiting for wonderland stub', _floorNo)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
             for _floorNo in C_FD.datas.keys():
                 if not gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False):
-                    INFO_MSG('start waiting: waiting for CubeStub stub', _floorNo)
+                    LOG_IFO('start waiting: waiting for CubeStub stub', _floorNo)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
-            INFO_MSG('starting: all baseapp finished creating stubs')
+            LOG_IFO('starting: all baseapp finished creating stubs')
             self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_HALF_PREPARE)
 
         elif userArg == gametimer.BASESTUB_TIMER_GLOBAL_STUBS_HALF_PREPARE:
             # 所有stub都创建完成，执行doNext
-            idx = formula.getStubIndex()
+            idx = formula.fetchStubIndex()
 
             gameglobal.localLoginStub.doNext()
             gameglobal.localAdminStub.doNext()
             gameglobal.localAuctionStub.doNext()
+            gameglobal.localOrderStub.doNext()
 
             if gameglobal.isBootstrap:
                 for lineType in gameconst.lineStubMap().keys():
@@ -240,22 +250,22 @@ class IGameStart(object):
                     enterType = dVal['enterType']
                     dungeonType = dVal['type']
 
-                    if dungeonType not in gameconst.DungeonSpaceType.COLL_DUNGEON:
-                        INFO_MSG("BaseStub::BASESTUB_TIMER_GLOBAL_STUBS_HALF_PREPARE:: skip dungeonNo in gamePlay table: ",
+                    if dungeonType not in gameconst.DungeonSpaceTypeEnum.COLL_DUNGEON:
+                        LOG_IFO("BaseStub::BASESTUB_TIMER_GLOBAL_STUBS_HALF_PREPARE:: skip dungeonNo in gamePlay table: ",
                                  dungeonNo, dungeonType)
                         continue
 
-                    if dungeonType == gameconst.DungeonSpaceType.UNKNOWN \
-                            or enterType == gameconst.DungeonEnterType.UNKNOWN:
+                    if dungeonType == gameconst.DungeonSpaceTypeEnum.UNKNOWN \
+                            or enterType == gameconst.DungeonEnterTypeEnum.UNKNOWN:
                         continue
 
-                    if enterType in gameconst.DungeonEnterType.COLL_ALL:
+                    if enterType in gameconst.DungeonEnterTypeEnum.COLL_ALL:
                         stub = gameengine.getDungeonStubByDungeonNo(dungeonNo, enterType)
                         stub.doNext()
                         continue
 
-                    if enterType == gameconst.DungeonEnterType.BOTH:
-                        for enterType in gameconst.DungeonEnterType.COLL_BOTH:
+                    if enterType == gameconst.DungeonEnterTypeEnum.BOTH:
+                        for enterType in gameconst.DungeonEnterTypeEnum.COLL_BOTH:
                             stub = gameengine.getDungeonStubByDungeonNo(dungeonNo, enterType)
                             stub.doNext()
                             continue
@@ -268,13 +278,13 @@ class IGameStart(object):
 
                 gameengine.getGlobalBase('SiegeWarSpaceStub').doNext()
 
-            INFO_MSG('starting: all stubs doNext')
+            LOG_IFO('starting: all stubs doNext')
 
             self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
 
         elif userArg == gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE:
             if self.preparingEntTypes:
-                INFO_MSG('still wating for fullPrepare', self.preparingEntTypes)
+                LOG_IFO('still wating for fullPrepare', self.preparingEntTypes)
                 self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
                 return
 
@@ -288,7 +298,7 @@ class IGameStart(object):
                     stubName = lineCfg['stubName']
                     ready = self.lineReady.get(lineType, False)
                     if not ready:
-                        INFO_MSG('start waiting: waiting for line space ready', stubName, lineType)
+                        LOG_IFO('start waiting: waiting for line space ready', stubName, lineType)
                         gameengine.getLineStub(lineType).checkAllLineSpaceReady(self, 'onLineReady', ())
                         self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
                         return
@@ -302,7 +312,7 @@ class IGameStart(object):
 
             gameglobal.localBaseApp.readhotfix()
 
-            INFO_MSG('starting: line space ready', self.lineReady)
+            LOG_IFO('starting: line space ready', self.lineReady)
 
             if not gameconfig.waitEntityLoading():
                 gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_BASEAPP_READY, KBEngine.getComponentGroupOrder())
@@ -312,16 +322,16 @@ class IGameStart(object):
         elif userArg == gametimer.BASESTUB_TIMER_CREATE_LINE_SPACE_ENTITIES:
             ready = self.isLineEntityReady()
             if not ready:
-                INFO_MSG('start waiting: waiting for entities ready', ready.extra)
+                LOG_IFO('start waiting: waiting for entities ready', ready.extra)
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CREATE_LINE_SPACE_ENTITIES)
                 return
 
-            INFO_MSG('starting: line entities ready')
+            LOG_IFO('starting: line entities ready')
 
-            def _callback(*args):
-                DEBUG_MSG('set server start:', args)
+            def _func(*args):
+                LOG_DBG('set server start:', args)
 
-            gamesql.setServerStateInfo('server_start_time', utils.getNow(), _callback)
+            gamesql.setServerStateInfo('server_start_time', utils.curTS(), _func)
             gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_BASEAPP_READY, KBEngine.getComponentGroupOrder())
             self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CREATE_WORLD_REFRESH_ENTITIES)
 
@@ -334,21 +344,21 @@ class IGameStart(object):
             if gameglobal.isBootstrap:
                 ready = self.isWorldRefreshEntityReady()
                 if not ready:
-                   INFO_MSG('start waiting: waiting for world refresh entities ready', ready.extra)
+                   LOG_IFO('start waiting: waiting for world refresh entities ready', ready.extra)
                    gameengine.getGlobalBase('WorldRefreshEntityStub').checkAllGroupReady(self, 'onWorldRefreshEntityReady', ())
                    self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_WAIT_WORLD_REFRESH_ENTITIES_READY)
                    return
 
-            INFO_MSG('starting: world refresh entities ready')
+            LOG_IFO('starting: world refresh entities ready')
             self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_GAME_READY)
 
         elif userArg == gametimer.BASESTUB_TIMER_GAME_READY:
             if not gameglobal.isRelivedBaseapp and len(gameglobal.readyBaseappOrder) != gameconfig.baseAppCount():
-                INFO_MSG('start waiting: waitting for all baseapps ready', gameglobal.isRelivedBaseapp, gameglobal.readyBaseappOrder)
+                LOG_IFO('start waiting: waitting for all baseapps ready', gameglobal.isRelivedBaseapp, gameglobal.readyBaseappOrder)
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_GAME_READY)
                 return
 
-            WARNING_MSG('starting: all baseapp ready, set game ready')
+            LOG_WARN('starting: all baseapp ready, set game ready')
             if gameglobal.isBootstrap:
                 gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_GAME_READY, True)
                 import gmCommand
@@ -357,16 +367,20 @@ class IGameStart(object):
                 agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
                 gmCommand.doCommandInside(agent, "$setcachecfg interfaceEnableLogin 1")
                 gameengine.getGlobalBase('PlayerStub').syncOnlineNumToQueueServer()
-                # gameengine.getGlobalBase('PlayerStub').syncOnlineNumLog()
-                gameglobal.localLoginStub.syncRegNumLog()
+
+    def _onServerOpenTime(self, ok, data):
+        LOG_IFO("onServerOpenTime", ok, data)
+
+    def _onServerOpenState(self, ok, data):
+        LOG_IFO("onServerOpenState", ok, data)
 
     def createLocalStubs(self):
-        idx = formula.getStubIndex()
+        idx = formula.fetchStubIndex()
         _createFunc = lambda name, props: gamebase.createGlobal(name, props, gameengine.buildIndexStubName(name, idx))
         gameglobal.localLoginStub = _createFunc('LoginStub', {'globalIdx': idx})
         gameglobal.localAdminStub = _createFunc('AdminStub', {'globalIdx': idx})
         gameglobal.localAuctionStub = _createFunc('AuctionStub', {'globalIdx':idx})
-
+        gameglobal.localOrderStub = _createFunc('OrderStub', {'globalIdx':idx})
         gameglobal.localLoginStub.accountNumCounter.setSum(self, self.accountNum)
 
         self.localStubCreated = True
@@ -375,17 +389,17 @@ class IGameStart(object):
         self.lineReady[lineType] = isReady
 
     def onLineEntityReady(self, spaceNo):
-        lineType = formula.getLineType(spaceNo)
+        lineType = formula.parseLineType(spaceNo)
         self.lineEntityReadyNum[lineType] = self.lineEntityReadyNum.get(lineType, 0) + 1
-        DEBUG_MSG('onLineEntityReady:: lineType: {}, READY {} / {}'.format(
-            lineType, self.lineEntityReadyNum.get(lineType, 0), utils.getLineMaxNumber(lineType)))
+        LOG_DBG('onLineEntityReady:: lineType: {}, READY {} / {}'.format(
+            lineType, self.lineEntityReadyNum.get(lineType, 0), utils.fetchLineMaxNumber(lineType)))
 
     def isLineEntityReady(self):
         for mapId, lineCfg in gameconst.lineStubMap().items():
             if not lineCfg.get('createAtStart', True):
                 continue
 
-            needNum = utils.getLineMaxNumber(mapId)
+            needNum = utils.fetchLineMaxNumber(mapId)
 
             readyNum = self.lineEntityReadyNum.get(mapId, 0)
             if readyNum < needNum:
@@ -406,11 +420,11 @@ class IGameStart(object):
         return gameclass.BoolResult(True, 0)
 
     def addInitProcedure(self, name):
-        INFO_MSG('start init', name)
+        LOG_IFO('start init', name)
         self.initProcedures[name] = 1
 
     def onInitProcedureDone(self, key):
-        INFO_MSG('init done:', key)
+        LOG_IFO('init done:', key)
         self.initProcedures.pop(key, None)
 
     def createGlobalStubs(self):
@@ -442,39 +456,39 @@ class IGameStart(object):
             dungeonSpaceType = stubPrm.get('type', 0)
             dungeonEnterType = stubPrm.get('enterType', 0)
 
-            if dungeonSpaceType not in gameconst.DungeonSpaceType.COLL_DUNGEON:
-                INFO_MSG("BaseStub::_createGlobalStubs:: skip dungeonNo in gamePlay table: ",
+            if dungeonSpaceType not in gameconst.DungeonSpaceTypeEnum.COLL_DUNGEON:
+                LOG_IFO("BaseStub::_createGlobalStubs:: skip dungeonNo in gamePlay table: ",
                          dungeonNo, dungeonSpaceType)
                 continue
 
             hasSpace = False
-            if gameconst.DungeonType.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.getDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterType.TEAM)
+            if gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.TEAM)
                 random.choice(baseApps).createUnarchiveStub(
                     'TeamDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
                 hasSpace = True
 
-            if gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.getDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterType.SINGLE)
+            if gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE)
                 random.choice(baseApps).createUnarchiveStub(
                     'SingleDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
                 hasSpace = True
 
-            if gameconst.DungeonType.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.getDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterType.RAID)
+            if gameconst.DungeonTypeJudge.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.RAID)
                 random.choice(baseApps).createUnarchiveStub(
                     'RaidDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
                 hasSpace = True
 
             # 公会boss副本
-            if gameconst.DungeonType.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.getDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterType.GUILD)
+            if gameconst.DungeonTypeJudge.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.GUILD)
                 random.choice(baseApps).createUnarchiveStub(
                     'GuildBossDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
                 hasSpace = True
 
             if not hasSpace:
-                WARNING_MSG('_createGlobalStubs:: UN-KNOWN DungeonType', dungeonNo, dungeonSpaceType, dungeonEnterType)
+                LOG_WARN('_createGlobalStubs:: UN-KNOWN DungeonTypeJudge', dungeonNo, dungeonSpaceType, dungeonEnterType)
                 if not hasattr(self, '_skipInitDungeonStubs'):
                     self._skipInitDungeonStubs = []
                 self._skipInitDungeonStubs.append(dungeonNo)
@@ -491,14 +505,14 @@ class IGameStart(object):
         random.choice(baseApps).createUnarchiveStub('SiegeWarSpaceStub', {}, 'SiegeWarSpaceStub')
 
     def fullPrepare(self, entType):
-        INFO_MSG(entType, 'fullPrepare')
+        LOG_IFO(entType, 'fullPrepare')
         if entType in self.preparingEntTypes:
             self.preparingEntTypes.remove(entType)
 
     def addInitedCellapp(self, groupOrder):
         if groupOrder in self.initedCellapps:
             return
-        INFO_MSG('addInitedCellapp', groupOrder)
+        LOG_IFO('addInitedCellapp', groupOrder)
         self.initedCellapps.append(groupOrder)
         self.initedCellapps.sort()
 
@@ -506,9 +520,9 @@ class IGameStart(object):
         gamesql.loadLeaderBoardStubInfos(self._onGetLeaderBoardStubInfos)
 
     def _onGetLeaderBoardStubInfos(self, ret, num, insertId, err):
-        INFO_MSG('LeaderBoardAvatarStub _onGetLeaderBoardStubInfos')
+        LOG_IFO('LeaderBoardAvatarStub _onGetLeaderBoardStubInfos')
         if err:
-            ERROR_MSG('LeaderBoardAvatarStub _onGetLeaderBoardStubInfos', err)
+            LOG_ERR('LeaderBoardAvatarStub _onGetLeaderBoardStubInfos', err)
             return
 
         _dic = {k: None for k in gameconst.LeaderBoardType.ALL_KEYS}
@@ -545,12 +559,12 @@ class IGameStart(object):
 
     def _onGetAllServerResult(self, httpCode, data, headers, success, *args):
         if not (httpCode == 200 and success):
-            ERROR_MSG('_onGetAllServerResult', httpCode)
+            LOG_ERR('_onGetAllServerResult', httpCode)
             self.pyAddTimer(0.1, 0, gametimer.GET_ALL_SERVER_INFO)
             return
 
         _datas = json.loads(data)
-        INFO_MSG('all server data', _datas)
+        LOG_IFO('all server data', _datas)
         _dic = {}
         for _data in _datas['servers']:
             _dic[_data['id']] = _data

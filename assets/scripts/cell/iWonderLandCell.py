@@ -33,7 +33,7 @@ class WonderLandSwitch(object):
         return self.curTimes < self.times
 
     def addTimes(self):
-        DEBUG_MSG('WonderLandSwitch::addTimes: {}'.format(self.curTimes))
+        LOG_DBG('WonderLandSwitch::addTimes: {}'.format(self.curTimes))
         self.curTimes += 1
 
     def toClientData(self):
@@ -48,7 +48,7 @@ class WonderLandSwitch(object):
 class IWonderLandCell(object):
     def __init__(self):
         if self.wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER:
-            ERROR_MSG('IWonderLandCell::init: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
+            LOG_ERR('IWonderLandCell::init: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
             self.wonderLandQuota.resetOnLogin()
 
     @utils.isMyself
@@ -59,18 +59,22 @@ class IWonderLandCell(object):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
 
+        if self.level < WL_FD.datas[floor]['needLv']:
+            LOG_ERR('IWonderLandCell::enterWonderLand: level < needLv: {} < {}'.format(self.level, WL_FD.datas[floor]['needLv']))
+            return
+
         if self.totalScore < WL_FD.datas[floor]['needScore']:
-            ERROR_MSG('IWonderLandCell::enterWonderLand: totalScore < needScore: {} < {}'.format(self.totalScore, WL_FD.datas[floor]['needScore']))
+            LOG_ERR('IWonderLandCell::enterWonderLand: totalScore < needScore: {} < {}'.format(self.totalScore, WL_FD.datas[floor]['needScore']))
             return
 
         mapId = WL_FD.datas[floor]['ID']
-        _targetSpaceNo = formula.getLineSpaceNo(mapId, 0)
+        _targetSpaceNo = formula.combineLineSpaceNo(mapId, 0)
 
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
             return
 
         if self.wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER:
-            ERROR_MSG('IWonderLandCell::enterWonderLand: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
+            LOG_ERR('IWonderLandCell::enterWonderLand: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
             return
 
         if self.wonderLandQuota.leftTime <= 0:
@@ -90,7 +94,7 @@ class IWonderLandCell(object):
             },
             'l': _lContext,
             'src': _src,
-            'hasCast': True,
+            'hasCast': False,
             'enterType': extra.get('enterWonderLandType', 0)
         }
 
@@ -98,19 +102,23 @@ class IWonderLandCell(object):
 
         canLeave = self.packageComplexTeleportLeaveData(_lContext)
         if not canLeave:
-            WARNING_MSG('IWonderLandCell::beginEnterWonderLand: can not leave')
+            LOG_WARN('IWonderLandCell::beginEnterWonderLand: can not leave')
             return
 
-        self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=_options, context=_context)
+        self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=_options, context=_context, failedFunc='enterWonderLandFailed', failedArgs=(spaceNo,))
+
+    def enterWonderLandFailed(self, spaceNo):
+        DEBUG_MSG("IWonderLandCell::enterWonderLandFailed", spaceNo)
+        gameengine.getWonderLandStubBySpaceNo(spaceNo).onLeaveWonderLand(self.gbId)
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def leaveWonderLand(self, exposed):
-        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_CLIENT)
+        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_CLIENT, False)
 
-    def leaveWonderLandInternal(self, srcId):
-        if not formula.isWonderLandSpace(self.spaceNo):
-            WARNING_MSG('IWonderLandCell::leaveWonderLand: spaceNo not line: {}'.format(self.spaceNo))
+    def leaveWonderLandInternal(self, srcId, hasCast=True):
+        if not formula.inWonderLandScene(self.spaceNo):
+            LOG_WARN('IWonderLandCell::leaveWonderLand: spaceNo not line: {}'.format(self.spaceNo))
             return
 
         _src = dungeonSrc.BasicDungeonSrc(srcId=srcId)
@@ -119,47 +127,48 @@ class IWonderLandCell(object):
             'e': {},
             'l': _l,
             'src': _src,
-            'hasCast': True,
+            'hasCast': hasCast,
         }
 
         _canLeave = self.packageComplexTeleportLeaveData(_l)
         if not _canLeave:
-            WARNING_MSG('IWonderLandCell::leaveWonderLand: can not leave')
+            LOG_WARN('IWonderLandCell::leaveWonderLand: can not leave')
             return
 
-        _, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=formula.whatSpaceType(self.spaceNo))
-        _spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.getLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
+        _, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=formula.getSpaceType(self.spaceNo))
+        _spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
 
         _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.LEAVE)
         self.doLeaveFromSapceToSpace(self.spaceNo, _spaceNo, _options, _context)
 
     def _onWonderLandOffline(self):
-        if not formula.isWonderLandSpace(self.spaceNo):
+        if not formula.inWonderLandScene(self.spaceNo):
             return
 
         self._cancelWonderLandTimer()
         self.wonderLandQuota.checkout()
 
     def _dealWithWonderLandTimer(self, oldSpaceNo, newSpaceNo):
-        _oldNeedTimer = formula.isWonderLandSpace(oldSpaceNo)
-        _newNeedTimer = formula.isWonderLandSpace(newSpaceNo)
+        _oldNeedTimer = formula.inWonderLandScene(oldSpaceNo)
+        _newNeedTimer = formula.inWonderLandScene(newSpaceNo)
 
         self.wonderLandQuota.refreshEnterTime()
         if _oldNeedTimer == _newNeedTimer:
             return
 
         if _newNeedTimer:
-            self.wonderLandQuota.setWonderLandEnterTime(self, utils.getNow())
+            self.wonderLandQuota.setWonderLandEnterTime(self, utils.curTS())
             self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_RENEW)
 
         else:
             self._cancelWonderLandTimer()
-            self.wonderLandQuota.checkout()
+            #self.wonderLandQuota.checkout()
+            self.wonderLandQuota.reset()
 
     def _startWonderLandTimer(self, durStatus):
         self._cancelWonderLandTimer()
 
-        _now = utils.getNow()
+        _now = utils.curTS()
         _endTime = _now + self.wonderLandQuota.calcLeftTime()
 
         if durStatus == gameconst.WONDER_LAND_DUR_RENEW:
@@ -182,20 +191,20 @@ class IWonderLandCell(object):
             self._onWonderLandTimeOutEnd()
 
     def _onWonderLandTimeOutEnd(self):
-        if not formula.isWonderLandSpace(self.spaceNo):
+        if not formula.inWonderLandScene(self.spaceNo):
             return
 
-        INFO_MSG('IWonderLandCell::_onWonderLandTimeOutEnd: {}'.format(self.spaceNo))
-        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
+        LOG_IFO('IWonderLandCell::_onWonderLandTimeOutEnd: {}'.format(self.spaceNo))
+        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT, True)
 
     def _onWonderLandTimeOutRenew(self):
-        INFO_MSG('IWonderLandCell::wonderLandRenewCB: {}'.format(self.spaceNo))
-        if not formula.isWonderLandSpace(self.spaceNo):
+        LOG_IFO('IWonderLandCell::wonderLandRenewCB: {}'.format(self.spaceNo))
+        if not formula.inWonderLandScene(self.spaceNo):
             return
 
         self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_TIMEOUT)
 
-        _switchVal = self.getTempMiscProp(gameconst.AvatarProps.wonderLandSwitch)
+        _switchVal = self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandSwitch)
 
         if _switchVal is None:
             return
@@ -217,7 +226,7 @@ class IWonderLandCell(object):
             self.wonderLandTimerId = 0
 
     def afterLeaveWonderLand(self):
-        if self.getTempMiscProp(gameconst.AvatarProps.wonderLandSwitch):
+        if self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandSwitch):
             self._changeWonderLandSwitch(False, {})
         self.clearWonderLandRewardRecord()
 
@@ -230,15 +239,15 @@ class IWonderLandCell(object):
         self.base.summonWonderLandBossBase(gid, itemId, itemNum, collectionId)
 
     def summonWonderLandBossFromBase(self, gid, itemId, collectionId, opUUID):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         if not _dunData:
-            ERROR_MSG('IWonderLandCell::summonWonderLandBossFromBase: not found dunData', self.spaceNo)
+            LOG_ERR('IWonderLandCell::summonWonderLandBossFromBase: not found dunData', self.spaceNo)
             return
 
         _monData = _dunData.get(str(gid))
         if not _monData:
-            ERROR_MSG('IWonderLandCell::summonWonderLandBossFromBase: not found monData', gid)
+            LOG_ERR('IWonderLandCell::summonWonderLandBossFromBase: not found monData', gid)
             return
 
         if self.spaceMgr.checkHasBoss(_monData.get('EntityID')):
@@ -262,21 +271,17 @@ class IWonderLandCell(object):
 
         self.spaceMgr.setCollToBoss(collectionId, _bossId)
         KBEngine.createEntity('Monster', self.spaceID, _pos, _dir, params)
-        _bossName = CBD.datas[_bossId]['name']
-        _msgId = utils.getNeedTranslateMsgId(WL_CD.datas['wonderLand_fixedBossAppear']['value'])
-        _args = [utils.getNeedTranslateArg(_bossName)]
-        self.spaceMgr.syncPlayer(lambda playerEnt: playerEnt.showMsg(_msgId, _args))
 
     def getMonsterIdFromGID(self, gid):
-        _mapId = formula.getMapId(self.spaceNo)
+        _mapId = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         if not _dunData:
-            ERROR_MSG('IWonderLandCell::getMonsterIdFromGID: not found dunData', self.spaceNo)
+            LOG_ERR('IWonderLandCell::getMonsterIdFromGID: not found dunData', self.spaceNo)
             return
 
         _monData = _dunData.get(str(gid))
         if not _monData:
-            ERROR_MSG('IWonderLandCell::getMonsterIdFromGID: not found monData', gid)
+            LOG_ERR('IWonderLandCell::getMonsterIdFromGID: not found monData', gid)
             return
 
         return _monData.get('EntityID')
@@ -294,33 +299,36 @@ class IWonderLandCell(object):
 
     @utils.isMyself
     def reqChangeWonderLandSwitch(self, exposed, masterSwitch, switchData):
-        INFO_MSG('IWonderLandCell::reqChangeWonderLandSwitch: {} {}'.format(masterSwitch, switchData))
+        LOG_IFO('IWonderLandCell::reqChangeWonderLandSwitch: {} {}'.format(masterSwitch, switchData))
         if masterSwitch and not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
 
         self._changeWonderLandSwitch(masterSwitch, switchData)
 
+    def deadChangeWonderLandSwitch(self):
+        self.reqChangeWonderLandSwitch(self.id, False, WonderLandSwitch().toClientData())
+
     def _changeWonderLandSwitch(self, masterSwitch, switchData):
         if not masterSwitch:
-            self.popTempMiscProp(gameconst.AvatarProps.wonderLandSwitch)
+            self.popTempMiscProp(gameconst.EntityPropsEnum.wonderLandSwitch)
             self.client.onWonderLandSwitch(False, WonderLandSwitch().toClientData())
             return
 
         _switchVal = WonderLandSwitch(**switchData)
-        self.setTempMiscProp(gameconst.AvatarProps.wonderLandSwitch, _switchVal)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.wonderLandSwitch, _switchVal)
         self.client.onWonderLandSwitch(True, switchData)
 
         if _switchVal.canAddTimes():
             self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_RENEW)
 
     def _checkAddWonderLandDurationCondition(self):
-        if not formula.isWonderLandSpace(self.spaceNo):
-            WARNING_MSG('IWonderLandCell::checkAddWonderLandDurationCondition: spaceNo not wonderLand: {}'.format(self.spaceNo))
+        if not formula.inWonderLandScene(self.spaceNo):
+            LOG_WARN('IWonderLandCell::checkAddWonderLandDurationCondition: spaceNo not wonderLand: {}'.format(self.spaceNo))
             return False
 
         if self.wonderLandQuota.calcLeftTime() > WL_CD.datas['wonderLandNumTime']['value'] * 60:
-            WARNING_MSG('IWonderLandCell::checkAddWonderLandDurationCondition: wonderLandQuota.calcLeftTime() > WL_CD.datas[\'wonderLandNumTime\'][\'value\'] * 60: {}'.format(self.wonderLandQuota.calcLeftTime()))
+            LOG_WARN('IWonderLandCell::checkAddWonderLandDurationCondition: wonderLandQuota.calcLeftTime() > WL_CD.datas[\'wonderLandNumTime\'][\'value\'] * 60: {}'.format(self.wonderLandQuota.calcLeftTime()))
             return False
 
         return True
@@ -342,29 +350,29 @@ class IWonderLandCell(object):
         self.base.doAddWonderLandTicket(itemId, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID)
 
     def addWonderLandRewardRecord(self, rewardList):
-        _dic = self.getTempMiscProp(gameconst.AvatarProps.wonderLandRewardList, {})
+        _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList, {})
         for _data in rewardList:
             _itemId = _data['itemId']
             _bindType = _data['bindType']
             _dic.setdefault(_itemId, {})
             _dic[_itemId][_bindType] = _dic[_itemId].get(_bindType, 0) + _data['itemNum']
 
-        self.setTempMiscProp(gameconst.AvatarProps.wonderLandRewardList, _dic)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList, _dic)
         self.client.onAddWonderLandRewardRecord(rewardList)
 
     def clearWonderLandRewardRecord(self):
-        self.popTempMiscProp(gameconst.AvatarProps.wonderLandRewardList)
+        self.popTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList)
 
     def doSendWonderLandLoginData(self):
-        if not formula.isWonderLandSpace(self.spaceNo):
+        if not formula.inWonderLandScene(self.spaceNo):
             return
 
         _rewardList = []
-        for k, v in self.getTempMiscProp(gameconst.AvatarProps.wonderLandRewardList, {}).items():
+        for k, v in self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList, {}).items():
             for _bindType, _num in v.items():
                 _rewardList.append({'itemId': k, 'itemNum': _num, 'bindType': _bindType})
 
-        _switchVal = self.getTempMiscProp(gameconst.AvatarProps.wonderLandSwitch)
+        _switchVal = self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandSwitch)
         if _switchVal is None:
             _masterSwitch = False
             _switchData = WonderLandSwitch().toClientData()
@@ -372,7 +380,7 @@ class IWonderLandCell(object):
             _masterSwitch = True
             _switchData = _switchVal.toClientData()
 
-        _endTime = utils.getNow() + self.wonderLandQuota.calcLeftTime()
+        _endTime = utils.curTS() + self.wonderLandQuota.calcLeftTime()
         self.client.onWonderLandLoginData(_endTime, _masterSwitch, _switchData, _rewardList)
 
     def onLogonEnterWonderLandCB(self, spaceMgrBoxCellId):
@@ -380,7 +388,7 @@ class IWonderLandCell(object):
         self.spaceMgr.onPlayerEnter(self.id)
 
         gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onEnterWonderLandSuccess(self.gbId, self.spaceNo)
-        self.wonderLandQuota.setWonderLandEnterTime(self, utils.getNow())
+        self.wonderLandQuota.setWonderLandEnterTime(self, utils.curTS())
         self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_RENEW)
 
     @utils.isMyself

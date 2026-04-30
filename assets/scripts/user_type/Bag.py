@@ -17,6 +17,7 @@ import LogTrackingMgr
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import itemData_itemData as ITEM_DATA
+import agent_agentConfig as A_ACD
 import const_const as CONST
 import gearBase_gearBase as GBGBD
 import gearBase_gearConst as GBGCD
@@ -78,7 +79,7 @@ class Bag(BaseBag.BaseBag):
 
     def toBagSavedDict(self):
         data = super(Bag, self).toBagSavedDict()
-        now = utils.getNow()
+        now = utils.curTS()
         itemCDList = [{'itemId': itemId, 'cdTime': cdTime} for itemId, cdTime in self.itemsCDDic.items() if
                       cdTime > now]
         groupCDList = [{'groupId': groupId, 'cdTime': cdTime} for groupId, cdTime in self.groupCDDic.items() if
@@ -132,7 +133,7 @@ class Bag(BaseBag.BaseBag):
                          srcSubType=0, idipSource=0, directly=True):
         opStat, planDict = super(Bag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDict, notify,
                                                              syncToClient, srcSubType, idipSource)
-        if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
             return opStat, planDict
 
         # tmpFish = {}
@@ -266,14 +267,14 @@ class Bag(BaseBag.BaseBag):
         return opStat, planDict
 
     def useItemsFailed(self, owner, errCode, itemId=0):
-        INFO_MSG('useItemsFailed, errCode:', errCode, itemId)
-        if errCode == gameconst.BagOPStat.BAG_OP_LEVEL_ERR:
+        LOG_IFO('useItemsFailed, errCode:', errCode, itemId)
+        if errCode == gameconst.BagOPStat.OPERATE_BAG_LEVEL_ERR:
             owner.onMessagePre(MMD.datas.itemLackOfLevel, [])
-        elif errCode == gameconst.BagOPStat.BAG_OP_ITEMS_NOT_ENOUGH:
+        elif errCode == gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH:
             owner.onMessagePre(MMD.datas.lackOfItem, [str(itemId)])
-        elif errCode == gameconst.BagOPStat.BAG_OP_DAILY_LIMIT:
+        elif errCode == gameconst.BagOPStat.OPERATE_BAG_DAILY_LIMIT:
             owner.onMessagePre(MMD.datas.item_dailyUseLimited, [])
-        elif errCode == gameconst.BagOPStat.BAG_OP_CD_ERR:
+        elif errCode == gameconst.BagOPStat.OPERATE_BAG_CD_ERR:
             owner.onMessagePre(MMD.datas.itemInCD, [])
         return
 
@@ -307,10 +308,10 @@ class Bag(BaseBag.BaseBag):
             itemObj.setItemNum(newItemNum)
 
     def doUseGridItems(self, owner, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
-        INFO_MSG('in doUseGridItems:', gridId, itemId)
+        LOG_DBG('in doUseGridItems:', gridId, itemId)
         gridObj = self.getItemObjByGridId(gridId)
         if not gridObj:
-            self.useItemsFailed(owner, gameconst.BagOPStat.BAG_OP_DATA_ERR, itemId)
+            self.useItemsFailed(owner, gameconst.BagOPStat.OPERATE_BAG_DATA_ERR, itemId)
             return
 
         useItemCtx.bindType = gridObj.bindType
@@ -320,7 +321,7 @@ class Bag(BaseBag.BaseBag):
 
         isBaseAction = (isBaseAct or actionName.endswith('_base'))
         if not isBaseAction and not self.tryLockBag(lockDesc='doUseGridItems:%s' % gridId):
-            self.useItemsFailed(owner, gameconst.BagOPStat.BAG_OP_BAG_LOCKED, itemId)
+            self.useItemsFailed(owner, gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, itemId)
             return
 
         if action:
@@ -328,7 +329,7 @@ class Bag(BaseBag.BaseBag):
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACDD.datas.BONUS_SRC_FROM_ITEM
             detail = gameclass.AwardDetail(gridId=gridId, itemId=gridObj.itemId, hasNum=gridObj.itemNum, useNum=useNum)
-            now = utils.getNow()
+            now = utils.curTS()
 
             if gridObj.isReUseItem():
                 gridObj.useTimes -= useNum
@@ -341,10 +342,10 @@ class Bag(BaseBag.BaseBag):
                 # 无消耗道具需要调用通知接口
                 owner.client.onUpdateGridItemsNum(self.bagType, [{'gridId': gridId, 'itemNum': gridObj.itemNum}, ])
 
-            dataDic = owner.getTempMiscProp(gameconst.AvatarProps.useBagItemData, None)
+            dataDic = owner.getTempMiscProp(gameconst.EntityPropsEnum.useBagItemData, None)
             if not dataDic:
                 dataDic = {}
-                owner.setTempMiscProp(gameconst.AvatarProps.useBagItemData, dataDic)
+                owner.setTempMiscProp(gameconst.EntityPropsEnum.useBagItemData, dataDic)
             dataDic[opUUID] = {'t': now, 'gridId': gridId, 'itemId': gridObj.itemId,
                                'useNum': useNum, 'gridObj': gridObj, 'opUUID': opUUID, 'srcType': srcType}
 
@@ -371,49 +372,49 @@ class Bag(BaseBag.BaseBag):
 
     def canUseGridItem(self, owner, gridId, itemId, useNum):
         if self.isUseItemsDailyLimit(itemId, useNum):
-            return gameconst.BagOPStat.BAG_OP_DAILY_LIMIT
+            return gameconst.BagOPStat.OPERATE_BAG_DAILY_LIMIT
 
         gridObj = self.getItemObjByGridId(gridId)
         if not gridObj:
-            return gameconst.BagOPStat.BAG_OP_DATA_ERR
+            return gameconst.BagOPStat.OPERATE_BAG_DATA_ERR
 
         if gridObj.itemId != itemId:
-            return gameconst.BagOPStat.BAG_OP_DATA_ERR
+            return gameconst.BagOPStat.OPERATE_BAG_DATA_ERR
 
         if self.isLocked():
-            return gameconst.BagOPStat.BAG_OP_BAG_LOCKED
+            return gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED
 
         # 道具本身被上锁了
         if gridObj.isLocked():
-            return gameconst.BagOPStat.BAG_OP_ITEM_LOCKED
+            return gameconst.BagOPStat.OPERATE_BAG_ITEM_LOCKED
 
         if useNum > gridObj.itemNum:
-            return gameconst.BagOPStat.BAG_OP_ITEMS_NOT_ENOUGH
+            return gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH
 
         # check expireTime
-        now = utils.getNow()
+        now = utils.curTS()
         if gridObj.isExpired():
-            return gameconst.BagOPStat.BAG_OP_ITEM_EXPIRED
+            return gameconst.BagOPStat.OPERATE_BAG_ITEM_EXPIRED
 
         if not gridObj.isEnabled():
-            return gameconst.BagOPStat.BAG_OP_ITEM_DISABLED
+            return gameconst.BagOPStat.OPERATE_BAG_ITEM_DISABLED
 
         if gridObj.isReUseItem() and (useNum != 1 or gridObj.useTimes < useNum):
-            WARNING_MSG('canUseGridItem reuse items useTimes failed:', gridObj.itemId, gridObj.useTimes)
-            return gameconst.BagOPStat.BAG_OP_REUSE_ITEM_USE_TIMES_FAILED
+            LOG_WARN('canUseGridItem reuse items useTimes failed:', gridObj.itemId, gridObj.useTimes)
+            return gameconst.BagOPStat.OPERATE_BAG_REUSE_ITEM_USE_TIMES_FAILED
 
         # check level
         itemData = dataUtils.getCommItemData(gridObj.itemId)
         myLevel = gameglobal.roleCache.get(owner.id, {}).get('level', 0)
         if myLevel != 0 and myLevel < itemData['levelRequirement']:
-            return gameconst.BagOPStat.BAG_OP_LEVEL_ERR
+            return gameconst.BagOPStat.OPERATE_BAG_LEVEL_ERR
 
         # check cdtime
         cdtiem = self._getItemCD(gridObj.itemId)
         if now < cdtiem:
-            return gameconst.BagOPStat.BAG_OP_CD_ERR
+            return gameconst.BagOPStat.OPERATE_BAG_CD_ERR
 
-        return gameconst.BagOPStat.BAG_OP_STAT_OK
+        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK
 
     def _updateItemCD(self, owner, itemId):
         if self.bagType != gameconst.BagType.BAG_TYPE_NORMAL:
@@ -424,7 +425,7 @@ class Bag(BaseBag.BaseBag):
         if 0 == itemData['itemCD']:
             return
         cdGroup = itemData['CDGroup']
-        newCD = utils.getNow() + itemData['itemCD']
+        newCD = utils.curTS() + itemData['itemCD']
         if 0 == cdGroup:
             self.itemsCDDic[itemId] = newCD
         else:
@@ -433,7 +434,7 @@ class Bag(BaseBag.BaseBag):
         return
 
     def _getItemCD(self, itemId):
-        now = utils.getNow()
+        now = utils.curTS()
         cd = self.itemsCDDic.get(itemId, None)
         if cd is not None:
             if now < cd:
@@ -449,11 +450,11 @@ class Bag(BaseBag.BaseBag):
         return 0
 
     def onUseItemDone(self, owner, isSucceed, opUUID):
-        INFO_MSG('onUseItemDone:', isSucceed, opUUID)
+        LOG_IFO('onUseItemDone:', isSucceed, opUUID)
         self.unLockBag()
-        dataDic = owner.getTempMiscProp(gameconst.AvatarProps.useBagItemData)
+        dataDic = owner.getTempMiscProp(gameconst.EntityPropsEnum.useBagItemData)
         # if not dataDic:
-        #     WARNING_MSG('onUseItemDone, no dataDic:', dataDic)
+        #     LOG_WARN('onUseItemDone, no dataDic:', dataDic)
         #     return
         info = dataDic.pop(opUUID)
         gridId = info['gridId']
@@ -469,7 +470,7 @@ class Bag(BaseBag.BaseBag):
             curGridObj = self.getItemObjByGridId(gridId)
             if curGridObj:
                 if curGridObj.itemId != itemId:
-                    WARNING_MSG('onUseItemDone, itemId not matched:', curGridObj.uniqueId, opUUID, curGridObj.itemId,
+                    LOG_WARN('onUseItemDone, itemId not matched:', curGridObj.uniqueId, opUUID, curGridObj.itemId,
                                 itemId)
                     return
                 curGridObj.setItemNum(curGridObj.itemNum + info['useNum'])
@@ -493,16 +494,16 @@ class Bag(BaseBag.BaseBag):
 
     @utils.checkBagLocked
     def doUnlockGrids(self, owner, gridNum):
-        INFO_MSG('in doUnlockGrids', gridNum)
+        LOG_IFO('in doUnlockGrids', gridNum)
         commonBagCapacity = BagDataSet.datas['commonBagCapacity']['value']
         if self.capacity >= commonBagCapacity:
-            WARNING_MSG('   in doUnlockGrids, reach limit:', self.capacity)
+            LOG_WARN('   in doUnlockGrids, reach limit:', self.capacity)
             return
         
         oldCapacity = self.capacity
         newCapacity = self.capacity + gridNum
         if newCapacity > commonBagCapacity:
-            WARNING_MSG('   in doUnlockGrids, reach limit:', newCapacity)
+            LOG_WARN('   in doUnlockGrids, reach limit:', newCapacity)
             return
         
         initGridNum = BagDataSet.datas['initCommonBagCapacity']['value']
@@ -514,10 +515,10 @@ class Bag(BaseBag.BaseBag):
             needItemId = BagCommCapData.datas[gridId]['itemNeeded']
             itemNum = BagCommCapData.datas[gridId]['itemNum']
             deductWealthVal.addWealthByItemId(needItemId, itemNum, dataUtils.getItemDefaultBindType())
-            INFO_MSG('     in doUnlockGrids:', needItemId, itemNum)
+            LOG_IFO('     in doUnlockGrids:', needItemId, itemNum)
 
         if not owner.canDeductWealth(deductWealthVal, sendMsg=True):
-            WARNING_MSG('       in doUnlockGrids, items not enough:', deductWealthVal)
+            LOG_WARN('       in doUnlockGrids, items not enough:', deductWealthVal)
             return
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_UNLOCK_GRIDS
@@ -539,24 +540,24 @@ class Bag(BaseBag.BaseBag):
 
     def getTaskItems(self, taskId):
         if self.bagType != gameconst.BagType.BAG_TYPE_TASK:
-            gameengine.reportCritical('getTaskItems bagType error:', self.bagType)
+            gameengine.panicStack('getTaskItems bagType error:', self.bagType)
             return
 
         return [(gridId, it.itemId) for gridId, it in self.gridId2GridObj.items() if it.taskId == taskId]
 
     def doDressEquip(self, owner, gridId, dressType, dstSlotId):
-        INFO_MSG('in doDressEquip, gridId:', gridId, dressType)
+        LOG_IFO('in doDressEquip, gridId:', gridId, dressType)
         gridObj = self.getItemObjByGridId(gridId)
         if gridObj is None:
-            ERROR_MSG('doDressEquip gridObj is None', gridId, dressType, dstSlotId)
+            LOG_ERR('doDressEquip gridObj is None', gridId, dressType, dstSlotId)
             return False
 
         if not gridObj.isEquipmentItem():
-            WARNING_MSG('     in doDressEquip, gridObj is not equipment')
+            LOG_WARN('     in doDressEquip, gridObj is not equipment')
             return False
 
         if not gridObj.isGood():
-            WARNING_MSG('     in doDressEquip, gridObj can not dress')
+            LOG_WARN('     in doDressEquip, gridObj can not dress')
             return False
 
         roleInfo = gameglobal.roleCache.get(owner.id, None)
@@ -565,42 +566,42 @@ class Bag(BaseBag.BaseBag):
         reqClassList = gearInfo.get('reqClass', [])
         myClass = roleInfo['school']
         if 0 not in reqClassList and myClass not in reqClassList:
-            WARNING_MSG('     in doDressEquip, school not matched:', gearInfo['reqClass'], roleInfo['school'])
+            LOG_WARN('     in doDressEquip, school not matched:', gearInfo['reqClass'], roleInfo['school'])
             owner.onMessagePre(MMD.datas.equipFail_classNotMatch, [])
             return False
 
         equipLevel = gearInfo['equipLevel']
         roleLevel = roleInfo['level']
-        INFO_MSG('     in doDressEquip, level info:', equipLevel, roleLevel)
+        LOG_IFO('     in doDressEquip, level info:', equipLevel, roleLevel)
         if equipLevel > roleInfo['level']:
-            WARNING_MSG('     in doDressEquip, level not matched:', equipLevel, roleLevel)
+            LOG_WARN('     in doDressEquip, level not matched:', equipLevel, roleLevel)
             owner.onMessagePre(GBGCD.datas['equipWearLowRoleLevel']['value'], [])
             return False
 
-        now = utils.getNow()
+        now = utils.curTS()
         if not self.tryLockBag(lockDesc='doDressEquip uniqueId:%s' % gridObj.uniqueId):
-            WARNING_MSG('lock bag fail:', self.lockDesc, gridId, gridObj.itemId)
+            LOG_WARN('lock bag fail:', self.lockDesc, gridId, gridObj.itemId)
             return False
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DRESS
         detail = gameclass.AwardDetail(uniqueid=gridObj.uniqueId)
         self.cleanGridByGridId(owner, gridId, gridObj.itemId, opUUID, srcType, detail, sendClient=False)
-        tempDataDic = owner.getTempMiscProp(gameconst.AvatarProps.equipDressTempData, None)
+        tempDataDic = owner.getTempMiscProp(gameconst.EntityPropsEnum.equipDressTempData, None)
         if tempDataDic is None:
             tempDataDic = {}
-            owner.setTempMiscProp(gameconst.AvatarProps.equipDressTempData, tempDataDic)
+            owner.setTempMiscProp(gameconst.EntityPropsEnum.equipDressTempData, tempDataDic)
         tempDataDic[opUUID] = {'t':now, 'gridId':gridId, 'opUUID':opUUID, 'gridObj':gridObj, 'dressType':dressType}
 
         owner.cell.cellDressEquipment(opUUID, gridObj.toItemSavedDict(), dstSlotId)
         return True
 
     def doDressEquipCB(self, owner, opUUID, result, oldBodyEquipDic=None):
-        INFO_MSG('in doDressEquipCB:', opUUID, result)
+        LOG_IFO('in doDressEquipCB:', opUUID, result)
         self.unLockBag()
-        tempDataDic = owner.getTempMiscProp(gameconst.AvatarProps.equipDressTempData, {})
+        tempDataDic = owner.getTempMiscProp(gameconst.EntityPropsEnum.equipDressTempData, {})
         tempData = tempDataDic.pop(opUUID, None)
         if not tempData:
-            gameengine.reportCritical('doDressEquipCB, tempData lost:', opUUID, tempDataDic)
+            gameengine.panicStack('doDressEquipCB, tempData lost:', opUUID, tempDataDic)
 
         gridId = tempData['gridId']
         gridObj = tempData['gridObj']
@@ -624,7 +625,7 @@ class Bag(BaseBag.BaseBag):
         return
 
     def doBagUndressEquip(self, owner, bodyEquipDic):
-        INFO_MSG('in doBagUndressEquip')
+        LOG_IFO('in doBagUndressEquip')
         equipItem = itemFactory.ItemFactory.createItemWithSavedDict(bodyEquipDic)
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DRESS
@@ -634,7 +635,7 @@ class Bag(BaseBag.BaseBag):
 
     @utils.checkBagLocked
     def doBagEquipDisassemble(self, owner, gridIdList, uniqueIdList):
-        INFO_MSG('in doBagEquipDisassemble:', gridIdList, uniqueIdList)
+        LOG_IFO('in doBagEquipDisassemble:', gridIdList, uniqueIdList)
         # 装备批量分解，背包空间不够，都不能分解成功
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DISASSEMBLE
@@ -646,24 +647,29 @@ class Bag(BaseBag.BaseBag):
         for gridId, uniqueId in zip(gridIdList, uniqueIdList):
             bagEquipItem = self.getItemObjByGridId(gridId)
             if not bagEquipItem:
-                WARNING_MSG('     in doBagEquipDisassemble, gridId error:', gridId)
+                LOG_WARN('     in doBagEquipDisassemble, gridId error:', gridId)
                 continue
 
             if bagEquipItem.uniqueId != uniqueId:
-                WARNING_MSG('     in doBagEquipDisassemble, uniqueId not matched:', bagEquipItem.uniqueId)
+                LOG_WARN('     in doBagEquipDisassemble, uniqueId not matched:', bagEquipItem.uniqueId)
                 continue
 
             if not bagEquipItem.canBeDisassembled():
-                WARNING_MSG('     in doBagEquipDisassemble, cannot be disassembled:', gridId)
+                LOG_WARN('     in doBagEquipDisassemble, cannot be disassembled:', gridId)
                 continue
+
+            if bagEquipItem.quality >= A_ACD.datas['itemDisassemblyLimit']['value']:
+                if not owner.checkAuthDisassembleAndMsg():
+                    continue
+
             totalWealthVal += bagEquipItem.returnWealthyByDisassemble(owner)
             succGridIdList.append(gridId)
             succUniqueIdList.append(uniqueId)
 
         awardCtx = awardContext.CommonContext(0)
         checkResult = owner.canAddWealthVal(srcType, totalWealthVal, awardCtx)
-        if not checkResult and checkResult.extra != gameconst.BagOPStat.BAG_OP_NO_SPACE:
-            WARNING_MSG('doBagEquipDisassemble, can not add wealthVal')
+        if not checkResult and checkResult.extra != gameconst.BagOPStat.OPERATE_BAG_NO_SPACE:
+            LOG_WARN('doBagEquipDisassemble, can not add wealthVal')
             return
 
         clientData =[]
@@ -676,7 +682,7 @@ class Bag(BaseBag.BaseBag):
             consumedItems.append({'uniqueId':uniqueId, 'itemId':bagEquipItem.itemId, 'itemNum':itemNum})
 
         if len(clientData) == 0:
-            WARNING_MSG('doBagEquipDisassemble, clientData is empty')
+            LOG_WARN('doBagEquipDisassemble, clientData is empty')
             return
         owner.client.onUpdateGridItemsNum(self.bagType, clientData)
         owner.addWealth(srcType, totalWealthVal, opUUID, detail, awardCtx)

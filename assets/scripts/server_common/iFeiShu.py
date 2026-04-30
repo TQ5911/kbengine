@@ -102,7 +102,7 @@ class IFeiShu():
                            timeoutSec=1)
 
     def onReportResult(self, httpcode, data, headers, success, url, msgs, channel):
-        INFO_MSG('onReportResult: code: {}, data: {}, headers: {}, success: {}, url: {}, channel: {}'.format(httpcode, data, headers, success, url, channel))
+        LOG_IFO('onReportResult: code: {}, data: {}, headers: {}, success: {}, url: {}, channel: {}'.format(httpcode, data, headers, success, url, channel))
         if channel != 'wechat' and (httpcode != 200 or KBEngine.publish()):
             # report to wechat
             self.wxReportDirect(msgs)

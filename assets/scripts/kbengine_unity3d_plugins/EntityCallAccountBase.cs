@@ -30,6 +30,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void getAuthOfflineTime(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("getAuthOfflineTime", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
 		public void getAvatarDetailForAccount(UInt64 arg1)
 		{
 			Bundle pBundle = newCall("getAvatarDetailForAccount", 0);

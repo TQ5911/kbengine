@@ -13,10 +13,10 @@ DATA_BASEAPP = 2
 
 
 # TOOD x: sync dataSum after baseapp crash&recover
-class GloalDataSum(userType.UserSoleType):
+class GloalDataSum(userType.UserSingleType):
     def __init__(self, globalKey, registerFunc, dataType, cd=1):
         self.changeCD = cd
-        self.tLastChanged = utils.getNow()
+        self.tLastChanged = utils.curTS()
         self.dataSum = 0
         self.delta = 0
         self.changeTimer = 0
@@ -34,14 +34,14 @@ class GloalDataSum(userType.UserSoleType):
         registerFunc(self.globalKey, self.onGetDataIncrement)
 
     def _setGlobalData(self, owner, forceSet=False):
-        now = utils.getNow()
+        now = utils.curTS()
 
         if forceSet or now - self.tLastChanged >= self.changeCD:
             self._doSetData(self.globalKey, self.delta)
             self.delta = 0
             self.tLastChanged = now
         elif not self.changeTimer:
-            self.changeTimer = owner._callback(self.changeCD, 'globalDataSumCallback',
+            self.changeTimer = owner.addTimerCB(self.changeCD, 'globalDataSumCallback',
                                                (self, 'onTimerSetGlobalSum', ()), gametimer.TIMER_TAG_GLOBALDATA_SUM)
 
     def onGetDataIncrement(self, delta):
@@ -61,15 +61,15 @@ class GloalDataSum(userType.UserSoleType):
 
     def _doSetData(self, key, val):
         if self.dataType == DATA_GLOBAL:
-            ERROR_MSG('GloalDataSum: global sum. todo...')
+            LOG_ERR('GloalDataSum: global sum. todo...')
         elif self.dataType == DATA_BASEAPP:
             gameengine.broadcastBaseapp('onBaseappSumIncrement', (key, val))
         else:
-            ERROR_MSG('GloalDataSum: unsupported data type', self.dataType, self.globalKey)
+            LOG_ERR('GloalDataSum: unsupported data type', self.dataType, self.globalKey)
 
     def onTimerSetGlobalSum(self):
         self.changeTimer = 0
-        now = utils.getNow()
+        now = utils.curTS()
         if now - self.tLastChanged >= self.changeCD:
             self._doSetData(self.globalKey, self.delta)
             self.delta = 0

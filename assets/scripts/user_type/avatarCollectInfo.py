@@ -5,7 +5,7 @@ from KBEDebug import *
 import KBEngine
 import userType
 
-class collectItem(userType.UserSoleType):
+class collectItem(userType.UserSingleType):
     def __init__(self, collectibleID):
         self.collectibleID = collectibleID 
         # 这里的state用来记录客户端的收藏操作和服务端的任务进度
@@ -29,14 +29,14 @@ class collectItem(userType.UserSoleType):
 
     def isCompleteAt(self, required):
         if not 0<=required<=14:
-            WARNING_MSG('in isCompleteAt, required exceed :', required)
+            LOG_WARN('in isCompleteAt, required exceed :', required)
             return False
         mask = (1<<required)
         return (self.state & mask) == mask
 
     def isCompleteAll(self, required):
         if not 0<=required<=14:
-            WARNING_MSG('in isCompleteAll, required exceed :', required)
+            LOG_WARN('in isCompleteAll, required exceed :', required)
             return False
         mask = (1<<required) - 1
         return (self.state & mask) == mask
@@ -51,7 +51,7 @@ class collectItem(userType.UserSoleType):
             self.state &= ~(1<<15)
         
 
-class collectInfo(userType.UserSoleType):
+class collectInfo(userType.UserSingleType):
     def __init__(self, *args, **kwargs):
         super(collectInfo, self).__init__(*args, **kwargs)
         self.collectibleDict = {} 

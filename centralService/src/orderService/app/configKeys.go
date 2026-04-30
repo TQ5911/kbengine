@@ -1,0 +1,26 @@
+package app
+
+const (
+	ServiceID            = "serviceID"
+	AppName              = "serverName"
+	RedisAddr            = "redisAddress"
+	RedisPass            = "redisPassword"
+	RedisDB              = "redisDB"
+	RedisMasterName      = "redisMasterName"
+	Mode                 = "mode"
+	HttpAPIAddr          = "httpAPIAddress"
+	DebugAddr            = "debugAddress"
+	ServerAddr           = "serverAddress"
+	HttpCmdSignKey       = "httpCmdSignKey"
+	MallAPIAddress       = "mallAPIAddress"
+	MallAPIKey           = "mallAPIKey"
+	MallAPISecret        = "mallAPISecret"
+	OssAddress           = "ossAddress"
+	OssBucketName        = "ossBucketName"
+	OssUserName          = "ossUserName"
+	OssAccessKey         = "ossAccessKey"
+	OssSecretKey         = "ossSecretKey"
+	FeiShuReportLimit    = "feiShuReportLimit"
+	FeiShuReportInterval = "feiShuReportInterval"
+	FeiShuReportAddr     = "feiShuReportAddr"
+)

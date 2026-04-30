@@ -7,7 +7,7 @@ import utils
 import itemData_set as ID_SD
 
 
-class InstantPotionSlotsVal(userType.UserSoleType):
+class InstantPotionSlotsVal(userType.UserSingleType):
     '''INSTANT_POTION_SLOTS_DATA_INFO'''
     def __init__(self, slots):
         self.slots = slots
@@ -70,14 +70,14 @@ class InstantPotionSlotsVal(userType.UserSoleType):
 
     def _hasAutoHealHp(self):
         for potion in self.slots:
-            if potion.isHp() and utils.hasBit(potion.potionState, gameconst.PotionState.AUTO):
+            if potion.isHp() and utils.bhas(potion.potionState, gameconst.PotionState.AUTO):
                 return True
 
         return False
 
     def _hasAutoHealMp(self):
         for potion in self.slots:
-            if potion.isMp() and utils.hasBit(potion.potionState, gameconst.PotionState.AUTO):
+            if potion.isMp() and utils.bhas(potion.potionState, gameconst.PotionState.AUTO):
                 return True
 
         return False
