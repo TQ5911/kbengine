@@ -79,7 +79,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return enterNum
 
     def _createSpaceRemote(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        LOG_IFO('zt: create home space', spaceNo, playerBox.id, playerGbId,dungeonUUID, extra)
+        LOG_INFO('zt: create home space', spaceNo, playerBox.id, playerGbId,dungeonUUID, extra)
 
         self.spaces[spaceNo]=self._getDungeonSpaceVal(spaceNo, playerBox, playerGbId, dungeonUUID, extra)
 
@@ -97,7 +97,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                                       )
 
     def _onCreateSpaceRemote(self, spaceBox, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        LOG_IFO('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, dungeonUUID, extra)
+        LOG_INFO('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, dungeonUUID, extra)
         if not spaceBox:
             if self.spaces.has_key(spaceNo):
                 self.spaces.pop(spaceNo)
@@ -156,7 +156,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if tempMiscProps:
             props.setdefault("tempMiscProps", {}).update(tempMiscProps)
 
-        LOG_IFO('create DungeonSpaceMgr', props)
+        LOG_INFO('create DungeonSpaceMgr', props)
         mgr = KBEngine.createEntityLocally('DungeonSpaceMgr', props)
         spaceVal.spaceMgr = mgr
 
@@ -176,7 +176,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         pass
 
-    def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
+    def enterDungeonSpaceSuccess(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         pass
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
@@ -218,7 +218,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         raise NotImplementedError()
 
     def _onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp=0):
-        LOG_IFO('onReliveInDungeon::', spaceNo, playerBox, playerGbId, reliveType, reliveHp)
+        LOG_INFO('onReliveInDungeon::', spaceNo, playerBox, playerGbId, reliveType, reliveHp)
         if spaceNo not in self.spaces:
             LOG_ERR('wl: onReliveInDungeon cannot find space:', spaceNo)
             return
@@ -249,7 +249,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             # 修改下复活点
             if spaceNo in self.rebornPosCache:
                 posCache = self.rebornPosCache[spaceNo]
-                LOG_IFO('relive use rebornPosCache', spaceNo, posCache)
+                LOG_INFO('relive use rebornPosCache', spaceNo, posCache)
                 # 做个随机偏移
                 angle = random.uniform(0, 2 * math.pi)
                 radius = max(0, rebornD['Props']['Radius'])
@@ -272,7 +272,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('onReliveInDungeon::reliveType is not valid, got {}'.format(reliveType))
 
     def onCreateNewRebornPos(self, spaceNo, position):
-        LOG_IFO('onCreateNewRebornPos', spaceNo, position)
+        LOG_INFO('onCreateNewRebornPos', spaceNo, position)
         self.rebornPosCache[spaceNo] = position
 
     def onDungeonStarted(self, spaceNo, tCreate):
@@ -282,7 +282,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return self.spaces[spaceNo].spaceBox.cell
 
     def sendBigWorldDungeonProps(self, box, gbId, spaceNo):
-        LOG_IFO('sendBigWorldDungeonProps::')
+        LOG_INFO('sendBigWorldDungeonProps::')
         if spaceNo not in self.spaces:
             LOG_ERR('spaceNo "{}" not found in spaces'.format(spaceNo))
             return
@@ -312,7 +312,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return None
 
     def getSettlementRankList(self, rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset):
-        LOG_IFO("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
+        LOG_INFO("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
         if spaceNo not in self.spaces:
             LOG_WARN('getSettlementRankList:: failed, missing space data', spaceNo)
             return

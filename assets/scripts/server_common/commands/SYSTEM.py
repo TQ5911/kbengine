@@ -110,8 +110,8 @@ def killAllAvatar(su,msgId=0):
     gameglobal.localBaseApp.notifyInterfaceCacheConfigChanged('permitLogin', '0')
 
     key = gameconst.RedisKey.SERVER_OPEN_STATE + str(gameconfig.serverId())
-    redisUtils.RedisUtils.set(key, "0")
-    LOG_IFO('update redis server open state when kill all avatar: ', key, "0")
+    redisUtils.RedisUtils.cmdSet(key, "0")
+    LOG_INFO('update redis server open state when kill all avatar: ', key, "0")
     import KBEngine
     KBEngine.addTimer(5, 0, functools.partial(_kickAllAccount, msgId))
 
@@ -143,14 +143,14 @@ def hotreloadInterface(su):
 
 @gm_cmd('$_hotreload-cell', (), RALL, CELL, 'hot reload cell', ALLSIDE, GOD_GROUPS)
 def _hotReloadCell(su):
-    LOG_IFO('begin _hotReloadCell')
+    LOG_INFO('begin _hotReloadCell')
     import hotReload
     importlib.reload(hotReload)
     hotReload.refreshCell()
 
 @gm_cmd('$_hotreload-base', (), RALL, BASE, 'hot reload base', ALLSIDE, GOD_GROUPS)
 def _hotReloadBase(su):
-    LOG_IFO('begin _hotReloadBase')
+    LOG_INFO('begin _hotReloadBase')
     import hotReload
     importlib.reload(hotReload)
     hotReload.refreshBase()
@@ -161,8 +161,12 @@ def hotfix(su):
 
 @gm_cmd('$setrequiredclientversion', (Int('plat'), Str('version'),), RALL, BASE, '设置强更版本号', ALLSIDE, GOD_GROUPS)
 def setRequiredClientVersion(su, platId, verStr):
+    if not utils.check4stageversion(verStr):
+        return
     gameglobal.requiredClientVersion[platId] = verStr
-    avatarFilter = lambda a:a.accountEntity.devicePlatId==platId
+    import gameengine
+    gameglobal.localBaseApp.updateRequiredClientVersion(platId, verStr)
+    gameglobal.localBaseApp.broadcastToAllAccountPatchVersion(platId, verStr)
 
 def _setGameConstInternal(su, className, field, val):
     if className=='""' or not className:

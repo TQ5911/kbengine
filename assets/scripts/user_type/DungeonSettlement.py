@@ -86,7 +86,7 @@ class DungeonSettlementData(userType.UserSingleType):
     
     def _calcGuildBossSettlement(self, box, rewardDatas, opUUId, uniqueId, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, dungeonStatisticRecords):
         # 公会副本结算有排名奖励
-        dmgRankData = dungeonStatisticRecords.get(gameconst.StatisticType.STA_TYPE_DAMAGE, {}).get(dungeonExtraDatas.gbId, None)
+        dmgRankData = dungeonStatisticRecords.get(gameconst.StatisticEnum.STA_TYPE_DAMAGE, {}).get(dungeonExtraDatas.gbId, None)
         if dmgRankData:
             extra = self._getDungeonExtraData(rewardDatas, dungeonExtraDatas, win, dmgRankData['rank'], dmgRankData['statisticsNum'])
         else:

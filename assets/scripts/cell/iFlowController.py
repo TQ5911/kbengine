@@ -10,31 +10,31 @@ import flowController
 
 class IFlowController(object):
 
-    def flowCtrlIsTaskCompleteCallback(self, state, taskId, eid, expect=gameconst.TaskStat.TASK_STAT_UNKNOWN, checkOnce=False):
+    def flowCtrlIsTaskCompleteCallback(self, state, taskId, eid, expect=gameconst.TaskStatEnum.TASK_STAT_UNKNOWN, checkOnce=False):
         """base(impTask).isTaskComplete 回调"""
         # LOG_ERR("flowCtrlIsTaskCompleteCallback::", state, taskId, eid, expect, checkOnce)
         # fix inprogress
-        if state in (gameconst.TaskStat.TASK_STAT_RUNNING, gameconst.TaskStat.TASK_STAT_FINISHED):
-            LOG_IFO("flowCtrlIsTaskCompleteCallback:: fixed inprogress callback state", state, taskId, eid, expect, checkOnce)
-            state = gameconst.TaskStat.TASK_STAT_RUNNING
+        if state in (gameconst.TaskStatEnum.TASK_STAT_RUNNING, gameconst.TaskStatEnum.TASK_STAT_FINISHED):
+            LOG_INFO("flowCtrlIsTaskCompleteCallback:: fixed inprogress callback state", state, taskId, eid, expect, checkOnce)
+            state = gameconst.TaskStatEnum.TASK_STAT_RUNNING
 
         if state != expect:
             if checkOnce:
                 spaceMgr = self.spaceMgr
                 if spaceMgr and spaceMgr.flowController:
-                    if state != gameconst.TaskStat.TASK_STAT_SUBMITTED:
+                    if state != gameconst.TaskStatEnum.TASK_STAT_SUBMITTED:
                         spaceMgr.flowController.cancelTaskCompleteTriggerEvents(taskId, (eid, ))
-                    if state != gameconst.TaskStat.TASK_STAT_FAILED:
+                    if state != gameconst.TaskStatEnum.TASK_STAT_FAILED:
                         spaceMgr.flowController.cancelTaskFailedTriggerEvents(taskId, (eid, ))
-                    if state != gameconst.TaskStat.TASK_STAT_RUNNING:
+                    if state != gameconst.TaskStatEnum.TASK_STAT_RUNNING:
                         spaceMgr.flowController.cancelTaskInProgressTriggerEvents(taskId, (eid, ))
             return
 
-        if state == gameconst.TaskStat.TASK_STAT_SUBMITTED:
+        if state == gameconst.TaskStatEnum.TASK_STAT_SUBMITTED:
             self.flowCtrlOnTaskComplete(taskId)
-        elif state == gameconst.TaskStat.TASK_STAT_FAILED:
+        elif state == gameconst.TaskStatEnum.TASK_STAT_FAILED:
             self.flowCtrlOnTaskFailed(taskId)
-        elif state == gameconst.TaskStat.TASK_STAT_RUNNING:
+        elif state == gameconst.TaskStatEnum.TASK_STAT_RUNNING:
             self.flowCtrlOnTaskInProgress(taskId)
         else:
             LOG_WARN("flowCtrlIsTaskCompleteCallback::unhandled stat", state, taskId, eid, expect, checkOnce)
@@ -89,28 +89,8 @@ class IFlowController(object):
         if spaceMgr and spaceMgr.flowController:
             spaceMgr.flowController.onMonsterHpBeModified(monsterGID, oldHp, newHp, fullHp)
 
-    def flowCtrlMonsterRestNumIncreased(self, monsterGID, newNumber, newTotalNumber):
-        """怪物数量增加时向controller汇报, spaceMgr调用"""
-        if self.flowController:
-            self.flowController.onMonsterRestNumberIncreased(monsterGID, newNumber, newTotalNumber)
-
-    def flowCtrlMonsterRestNumIncreasedByCreepbaseId(self, monsterId, newNumber, newTotalNumber):
-        if self.flowController:
-            monsterGID = 'cbid{}'.format(monsterId)
-            self.flowController.onMonsterRestNumberIncreased(monsterGID, newNumber, newTotalNumber)
-
-    def flowCtrlMonsterRestNumDecreased(self, monsterGID, newNumber, newTotalNumber):
-        """怪物数量减少时向Controller汇报, spaceMgr调用"""
-        if self.flowController:
-            self.flowController.onMonsterRestNumberDecreased(monsterGID, newNumber, newTotalNumber)
-
-    def flowCtrlMonsterRestNumDecreasedByCreepbaseId(self, monsterId, newNumber, newTotalNumber):
-        if self.flowController:
-            monsterGID = 'cbid{}'.format(monsterId)
-            self.flowController.onMonsterRestNumberDecreased(monsterGID, newNumber, newTotalNumber)
-
     def triggeredFlowControllerRestNumIncreased(self):
-        # LOG_IFO("triggeredFlowControllerRestNumIncreased::")
+        # LOG_INFO("triggeredFlowControllerRestNumIncreased::")
         return self._triggeredFlowControllerRestNumChanged(increased=True)
 
     def triggeredFlowControllerRestNumDecreased(self):
@@ -129,50 +109,22 @@ class IFlowController(object):
         if (h and h.IsAvatar) or not className:
             return
 
-        entTotalNum = 0
-        for i in spaceMgr.tagEntities.get(className, []):
-            _ent = KBEngine.entities.get(i)
-            if not (_ent and not _ent.isDie()):
-                continue
-            _enth, _ = utils.getRealAvatarEntity(_ent)
-            if _enth and _enth.IsAvatar:
-                continue
-            entTotalNum += 1
-
         if hasattr(self, 'gameEntityId') and self.gameEntityId:
             gid = utils.parseGidFromGameEntityId(self.gameEntityId)
-            gid_tag = 'gid_{}'.format(gid)
-            gidLen = 0
-            if gid and gid_tag in spaceMgr.tagEntities:
-                for i in spaceMgr.tagEntities[gid_tag]:
-                    _ent = KBEngine.entities.get(i)
-                    if not (_ent and not _ent.isDie()):
-                        continue
-                    _enth, _ = utils.getRealAvatarEntity(_ent)
-                    if _enth and _enth.IsAvatar:
-                        continue
-                    gidLen += 1
-            if decreased:
-                spaceMgr.flowCtrlMonsterRestNumDecreased(gid, gidLen, entTotalNum)
             if increased:
-                spaceMgr.flowCtrlMonsterRestNumIncreased(gid, gidLen, entTotalNum)
+                spaceMgr.flowController.onMonsterRestNumberIncreased(gid, gameconst.FLOW_REST_MONSTER_TAG_GID, spaceMgr)
+                spaceMgr.flowController.onMonsterRestNumberIncreased(-1, gameconst.FLOW_REST_MONSTER_TAG_ALL, spaceMgr)
 
-        if hasattr(self, 'creepBaseId') and self.creepBaseId:
-            creepIdStr = str(self.creepBaseId)
-            cidLen = 0
-            if creepIdStr in spaceMgr.tagEntities:
-                for i in spaceMgr.tagEntities[creepIdStr]:
-                    _ent = KBEngine.entities.get(i)
-                    if not (_ent and not _ent.isDie()):
-                        continue
-                    _enth, _ = utils.getRealAvatarEntity(_ent)
-                    if _enth and _enth.IsAvatar:
-                        continue
-                    cidLen += 1
             if decreased:
-                spaceMgr.flowCtrlMonsterRestNumDecreasedByCreepbaseId(creepIdStr, cidLen, entTotalNum)
+                spaceMgr.flowController.onMonsterRestNumberDecreased(gid, gameconst.FLOW_REST_MONSTER_TAG_GID, spaceMgr)
+                spaceMgr.flowController.onMonsterRestNumberDecreased(-1, gameconst.FLOW_REST_MONSTER_TAG_ALL, spaceMgr)
+
+        if hasattr(self, 'creepbaseId') and self.creepbaseId:
             if increased:
-                spaceMgr.flowCtrlMonsterRestNumIncreasedByCreepbaseId(creepIdStr, cidLen, entTotalNum)
+                spaceMgr.flowController.onMonsterRestNumberIncreased(self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, spaceMgr)
+
+            if decreased:
+                spaceMgr.flowController.onMonsterRestNumberDecreased(self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, spaceMgr)
 
     def flowCtrlDungeonMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
         """怪物击杀储量增加时向Controller汇报, spaceMgr调用"""
@@ -276,7 +228,7 @@ class IFlowController(object):
             spaceMgr.flowController.onEntityRoutingMissingEscort(-1, -1)
 
     def _onAnyPlayerCinemaPlayEndedTimeout(self, cinemaPlayID, eid):
-        LOG_IFO("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
+        LOG_INFO("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
         if self.flowController:
             e = self.flowController.getEventByEventId(eid)
             if e and isinstance(e, flowController.AnyPlayerCinemaPlayEndedEvent):

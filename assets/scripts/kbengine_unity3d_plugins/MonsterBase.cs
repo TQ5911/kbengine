@@ -19,6 +19,8 @@ namespace KBEngine
 		public EntityBaseEntityCall_MonsterBase baseEntityCall = null;
 		public EntityCellEntityCall_MonsterBase cellEntityCall = null;
 
+		public Int32 FirstBloodTargetId = 0;
+		public virtual void onFirstBloodTargetIdChanged(Int32 oldValue) {}
 		
 		public Int32 antiFatal = 0;
 		public float bePushedSpeed = 0f;
@@ -30,6 +32,7 @@ namespace KBEngine
 		
 		public virtual void onBossDeadDisappearTimeChanged(double oldValue) {}
 		public float dmgArmor = 0f;
+		public Int32 firstHateTargetId = 0;
 		
 		
 		
@@ -45,8 +48,8 @@ namespace KBEngine
 		
 		public float mulSpeed = 0f;
 		
-		public Byte recoverProgress = 0;
-		public virtual void onRecoverProgressChanged(Byte oldValue) {}
+		public float recoverProgress = 0f;
+		public virtual void onRecoverProgressChanged(float oldValue) {}
 		
 		public Int32 siegeWarCamp = 0;
 		
@@ -259,6 +262,10 @@ namespace KBEngine
 					SKILL_DAMAGE_INFO onSkillDamage_arg1 = ((DATATYPE_SKILL_DAMAGE_INFO)method.args[0]).createFromStreamEx(stream);
 					onSkillDamage(onSkillDamage_arg1);
 					break;
+				case 515:
+					Byte onStateChangedForce_arg1 = stream.readUint8();
+					onStateChangedForce(onStateChangedForce_arg1);
+					break;
 				case 197:
 					Vector3 onTelBack_arg1 = stream.readVector3();
 					onTelBack(onTelBack_arg1);
@@ -364,6 +371,22 @@ namespace KBEngine
 
 				switch(prop.properUtype)
 				{
+					case 248:
+						Int32 oldval_FirstBloodTargetId = FirstBloodTargetId;
+						FirstBloodTargetId = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFirstBloodTargetIdChanged(oldval_FirstBloodTargetId);
+						}
+						else
+						{
+							if(inWorld)
+								onFirstBloodTargetIdChanged(oldval_FirstBloodTargetId);
+						}
+
+						break;
 					case 497:
 						float oldval_adjCD = adjCD;
 						adjCD = stream.readFloat();
@@ -505,6 +528,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDmgArmorChanged(oldval_dmgArmor);
+						}
+
+						break;
+					case 222:
+						Int32 oldval_firstHateTargetId = firstHateTargetId;
+						firstHateTargetId = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFirstHateTargetIdChanged(oldval_firstHateTargetId);
+						}
+						else
+						{
+							if(inWorld)
+								onFirstHateTargetIdChanged(oldval_firstHateTargetId);
 						}
 
 						break;
@@ -749,8 +788,8 @@ namespace KBEngine
 
 						break;
 					case 221:
-						Byte oldval_recoverProgress = recoverProgress;
-						recoverProgress = stream.readUint8();
+						float oldval_recoverProgress = recoverProgress;
+						recoverProgress = stream.readFloat();
 
 						if(prop.isBase())
 						{
@@ -874,6 +913,27 @@ namespace KBEngine
 		{
 			ScriptModule sm = EntityDef.moduledefs["Monster"];
 			Dictionary<UInt16, Property> pdatas = sm.idpropertys;
+
+			Int32 oldval_FirstBloodTargetId = FirstBloodTargetId;
+			Property prop_FirstBloodTargetId = pdatas[10];
+			if(prop_FirstBloodTargetId.isBase())
+			{
+				if(inited && !inWorld)
+					onFirstBloodTargetIdChanged(oldval_FirstBloodTargetId);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_FirstBloodTargetId.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFirstBloodTargetIdChanged(oldval_FirstBloodTargetId);
+					}
+				}
+			}
 
 			float oldval_adjCD = adjCD;
 			Property prop_adjCD = pdatas[16];
@@ -1060,6 +1120,27 @@ namespace KBEngine
 					else
 					{
 						onDmgArmorChanged(oldval_dmgArmor);
+					}
+				}
+			}
+
+			Int32 oldval_firstHateTargetId = firstHateTargetId;
+			Property prop_firstHateTargetId = pdatas[8];
+			if(prop_firstHateTargetId.isBase())
+			{
+				if(inited && !inWorld)
+					onFirstHateTargetIdChanged(oldval_firstHateTargetId);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_firstHateTargetId.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFirstHateTargetIdChanged(oldval_firstHateTargetId);
 					}
 				}
 			}
@@ -1379,7 +1460,7 @@ namespace KBEngine
 				}
 			}
 
-			Byte oldval_recoverProgress = recoverProgress;
+			float oldval_recoverProgress = recoverProgress;
 			Property prop_recoverProgress = pdatas[7];
 			if(prop_recoverProgress.isBase())
 			{

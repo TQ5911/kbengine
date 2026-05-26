@@ -25,4 +25,4 @@ class IMonsterDungeon(object):
         #     return
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         dungeonStubCall = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
-        dungeonStubCall.addKillCount(self.spaceNo, self.dungeonFlagId, self.creepBaseId)
+        dungeonStubCall.addKillCount(self.spaceNo, self.dungeonFlagId, self.creepbaseId)

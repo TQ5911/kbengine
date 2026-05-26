@@ -107,11 +107,11 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doGetGuildList(self, box):
         _sendData = [_gcVal.toGuildListData() for _gcVal in self.guildDic.values()]
-        LOG_IFO("GuildStub::doGetGuildList:", _sendData)
+        LOG_INFO("GuildStub::doGetGuildList:", _sendData)
         box.client.onGetGuildListData(_sendData)
 
     def _onCreateGuildFromLoad(self, guildUUID, guildBox, dbid, wasActive):
-        LOG_IFO('_onCreateGuildFromLoad:', guildBox, dbid, wasActive, guildUUID)
+        LOG_INFO('_onCreateGuildFromLoad:', guildBox, dbid, wasActive, guildUUID)
         if wasActive:
             LOG_ERR("GuildStub::_onCreateGuildFromLoad: guildBox is active.", guildUUID)
             return
@@ -213,7 +213,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         getattr(box, func)(_gcVals, *args)
 
     def _onCreateGuildBox(self, guildBox, createData, gbId, guildUUID, leaderBox, ctx):
-        LOG_IFO("GuildStub::_onCreateGuildBox:", guildBox)
+        LOG_INFO("GuildStub::_onCreateGuildBox:", guildBox)
         if not guildBox:
             LOG_ERR("GuildStub::_onCreateGuildBox: create guild guildBox failed.", createData, gbId, guildUUID)
             redisUtils.SetUtils.srem(gameconst.RedisKey.GUILD_NAME_TBL, createData['guildName'])

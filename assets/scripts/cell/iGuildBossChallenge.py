@@ -19,41 +19,41 @@ class IGuildBossChallenge(object):
         return self.guildBossDungeonID > 0
 
     def setGuildBossDungeonID(self, dungeonID):
-        LOG_IFO('setGuildBossDungeonID::', dungeonID)
+        LOG_INFO('setGuildBossDungeonID::', dungeonID)
         self.guildBossDungeonID = dungeonID
 
     def clearGuildBossDungeonID(self, dungeonNo):
-        LOG_IFO('clearGuildBossDungeonID::', dungeonNo)
+        LOG_INFO('clearGuildBossDungeonID::', dungeonNo)
         self.guildBossDungeonID = 0
 
     def doEnterGuildBossDungeon(self, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        eContext = {'spaceUUID': spaceUUID,
+        eCtx = {'spaceUUID': spaceUUID,
                     'spaceBox': spaceBox,
                     'spaceMgrBox': spaceMgrBox,
                     'guildUUID': extra['guildUUID'],
                     'extra': extra}
-        lContext = {}
+        lCtx = {}
         src = extra.get('src')
-        context = {'e': eContext, 'l': lContext, 'src': src}
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
-        LOG_IFO('doEnterGuildBossDungeon::', context)
-        canLeave = self.packageComplexTeleportLeaveData(lContext)
+        context = {'e': eCtx, 'l': lCtx, 'src': src}
+        options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
+        LOG_INFO('doEnterGuildBossDungeon::', context)
+        canLeave = self.packComplexTeleportLeaveData(lCtx)
         if not canLeave:
             return
 
-        self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
+        self.telFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     def doLeaveGuildBossDungeon(self, extra):
-        lContext = {'guildUUID': extra['guildUUID'],
+        lCtx = {'guildUUID': extra['guildUUID'],
                     'spaceMgrBox': self.spaceMgr.base,
                     'extra': extra}
-        eContext = {}
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.LEAVE)
-        context = {'e': eContext, 'l': lContext, 'src': 0}
-        LOG_IFO('doLeaveGuildBossDungeon::', context)
-        spaceType = self._getPrmBydungeonNo(formula.parseDungeonNoBySpaceNo(self.spaceNo), 'type')
-        _, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
-        spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
+        eCtx = {}
+        options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
+        context = {'e': eCtx, 'l': lCtx, 'src': 0}
+        LOG_INFO('doLeaveGuildBossDungeon::', context)
+        spaceType = self._getParamBydungeonNo(formula.parseDungeonNoBySpaceNo(self.spaceNo), 'type')
+        _, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
+        spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 
     def checkGuildBossChallengeCond(self):
@@ -82,7 +82,7 @@ class IGuildBossChallenge(object):
     @gamedecorator.checkGameconfigEnable('guildBossChallenge')
     @gamedecorator.limitcall(1)
     def openGuildDungeon(self, exposed, openTime, openType, openId):
-        LOG_IFO('IGuildBossChallenge::openGuildDungeon:', exposed, openTime, openType, openId)
+        LOG_INFO('IGuildBossChallenge::openGuildDungeon:', exposed, openTime, openType, openId)
         if not self.checkGuildBossChallengeCond():
             return
         
@@ -158,7 +158,7 @@ class IGuildBossChallenge(object):
     @gamedecorator.checkGameconfigEnable('guildBossChallenge')
     @gamedecorator.limitcall(1)
     def getChangllengeDataInfo(self, exposed):
-        LOG_IFO('IGuildBossChallenge::getChangllengeDataInfo:', exposed)
+        LOG_INFO('IGuildBossChallenge::getChangllengeDataInfo:', exposed)
         if not self.checkGuildBossChallengeCond():
             return
         
@@ -167,7 +167,7 @@ class IGuildBossChallenge(object):
     @gamedecorator.checkGameconfigEnable('guildBossChallenge')
     @gamedecorator.limitcall(1)
     def cancelGuildDungeonOrder(self, exposed, openId):
-        LOG_IFO('IGuildBossChallenge::cancelGuildDungeonOrder:', exposed, openId)
+        LOG_INFO('IGuildBossChallenge::cancelGuildDungeonOrder:', exposed, openId)
         if not self.checkGuildBossChallengeCond():
             return
         
@@ -180,7 +180,7 @@ class IGuildBossChallenge(object):
     @gamedecorator.checkGameconfigEnable('guildBossChallenge')
     @gamedecorator.limitcall(1)
     def enterBossChallengeDungeon(self, exposed, openId):
-        LOG_IFO('IGuildBossChallenge::enterBossChallengeDungeon:', exposed, openId)
+        LOG_INFO('IGuildBossChallenge::enterBossChallengeDungeon:', exposed, openId)
         if not self.checkGuildBossChallengeCond():
             return
         
@@ -196,7 +196,7 @@ class IGuildBossChallenge(object):
     @gamedecorator.checkGameconfigEnable('guildBossChallenge')
     @gamedecorator.limitcall(1)
     def leaveBossChallengeDungeon(self, exposed, openId):
-        LOG_IFO('IGuildBossChallenge::leaveBossChallengeDungeon:', exposed, openId)
+        LOG_INFO('IGuildBossChallenge::leaveBossChallengeDungeon:', exposed, openId)
         if not self.checkGuildBossChallengeCond():
             return
         

@@ -108,15 +108,15 @@ class DungeonSpaceTimeLineMixin(object):
             if addKillSumFlag:
                 self.killSum += 1
 
-    def addKillByCreepBaseId(self, creepBaseId, addKillSumFlag=True):
-        if creepBaseId not in self.dungeonCreepBaseKillDic:
-            self.dungeonCreepBaseKillDic[creepBaseId] = 0
-        self.dungeonCreepBaseKillDic[creepBaseId] += 1
+    def addKillByCreepBaseId(self, creepbaseId, addKillSumFlag=True):
+        if creepbaseId not in self.dungeonCreepBaseKillDic:
+            self.dungeonCreepBaseKillDic[creepbaseId] = 0
+        self.dungeonCreepBaseKillDic[creepbaseId] += 1
         if addKillSumFlag:
             self.killSum += 1
 
-    def getCreepBaseKilledNum(self, creepBaseId):
-        return self.dungeonCreepBaseKillDic.get(creepBaseId, 0)
+    def getCreepBaseKilledNum(self, creepbaseId):
+        return self.dungeonCreepBaseKillDic.get(creepbaseId, 0)
 
     def clearKills(self, flagId):
         if flagId in self.dungeonTimeLineDic:

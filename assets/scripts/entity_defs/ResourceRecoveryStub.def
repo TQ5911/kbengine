@@ -1,0 +1,33 @@
+<root>
+    <Interfaces>
+        <Interface>     iBaseNoCell     </Interface>
+        <Interface>     iGlobal         </Interface>
+        <Interface>     iTimerBase      </Interface>
+        <Interface>     iCycleEvent     </Interface>
+    </Interfaces>
+
+     <Properties>
+        <recoveryData>
+            <Type>          RESOURCE_RECOVERY_INFO      </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+        </recoveryData>
+
+        <checkFreeTicketNumConfigTimerId>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </checkFreeTicketNumConfigTimerId>
+    </Properties>
+
+
+    <BaseMethods>
+	</BaseMethods>
+
+	<CellMethods>
+	</CellMethods>
+
+	<ClientMethods>
+	</ClientMethods>
+
+</root>

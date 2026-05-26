@@ -110,13 +110,13 @@ class CityBattleTeleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity, 
 
     def _checkBadEnt(self, ent):
         if not ent or ent.isDestroyed:
-            LOG_IFO('Teleporter._checkBadEnt: invalid entity')
+            LOG_INFO('Teleporter._checkBadEnt: invalid entity')
             return True
 
         if not ent.IsAvatar:
-            LOG_IFO('Teleporter._checkBadEnt: not Avatar')
+            LOG_INFO('Teleporter._checkBadEnt: not Avatar')
             return True
 
         if ent.spaceNo != self.spaceNo:
-            LOG_IFO('Teleporter._checkBadEnt: not in same space')
+            LOG_INFO('Teleporter._checkBadEnt: not in same space')
             return True

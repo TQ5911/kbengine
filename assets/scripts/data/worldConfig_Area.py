@@ -32,7 +32,7 @@ datas = _tools.RODict({
         "N5": 150,
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
-        "ifRide": 0,
+        "ifRide": 1,
         "specialAreaType": 0
     }),
     3: _tools.RODict({
@@ -84,7 +84,27 @@ datas = _tools.RODict({
         "deathPenaltyID": 1,
         "ifRide": 1,
         "specialAreaType": 1
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "Areaname": "祖珂地堡5层",
+        "N4": 100,
+        "N5": 150,
+        "ifSafeArea": 1,
+        "deathPenaltyID": 1,
+        "ifRide": 1,
+        "specialAreaType": 1
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "Areaname": "擂台房",
+        "N4": 100,
+        "N5": 150,
+        "ifSafeArea": 1,
+        "deathPenaltyID": 1,
+        "ifRide": 1,
+        "specialAreaType": 1
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 10

@@ -66,13 +66,13 @@
             <Arg>   PYTHON          </Arg>
         </doEnterDungeon>
 
-        <enterDungeonSpaceSucc>
+        <enterDungeonSpaceSuccess>
             <Arg>       SPACE_NO      </Arg>
             <Arg>       MAILBOX       </Arg>
             <Arg>       PLAYER_GBID   </Arg>
             <Arg>       TEAMID      </Arg>
             <Arg>       PYTHON      </Arg>
-        </enterDungeonSpaceSucc>
+        </enterDungeonSpaceSuccess>
 
         <leaveDungeonSpaceSucc>
             <Arg>       SPACE_NO      </Arg>

@@ -339,8 +339,7 @@ datas ={
       "finished": [
         1119,
         1147,
-        1148,
-        1171
+        1148
       ]
     }
   },
@@ -393,8 +392,7 @@ datas ={
       "finished": [
         1010,
         1191,
-        1999,
-        1172
+        1999
       ]
     }
   },
@@ -792,31 +790,5 @@ datas ={
         1163
       ]
     }
-  },
-  "1171": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21010051
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
-    "transition": {}
-  },
-  "1172": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21010082
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
-    "transition": {}
   }
 }

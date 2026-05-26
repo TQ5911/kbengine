@@ -12,7 +12,7 @@ import sMath
 import utils
 import gameconst
 import gamedecorator
-import conflict_conflict_def as CCD
+import conflict_conflict_def as C_C_DD
 
 class IRoute(object):
 
@@ -36,11 +36,11 @@ class IRoute(object):
         LOG_DBG('setRoute', pathId, routeByAI, speedOverwrite)
         speedOverwrite = speedOverwrite if speedOverwrite is not None else {}
         if pathId not in path_path.datas:
-            LOG_IFO('setRoute: invalid pathId {}'.format(pathId))
+            LOG_INFO('setRoute: invalid pathId {}'.format(pathId))
             return False
 
         if len(path_path.datas[pathId]['pointList']) < 2:
-            LOG_IFO('setRoute: invalid pointList {}'.format(path_path.datas[pathId]['pointList']))
+            LOG_INFO('setRoute: invalid pointList {}'.format(path_path.datas[pathId]['pointList']))
             return False
 
         self.cancelRouting()
@@ -150,7 +150,7 @@ class IRoute(object):
         if not self.pathId or self.pointIndex >= len(path_path.datas[self.pathId]['pointList']):
             return False
 
-        if not self.checkConflictState(CCD.datas.move):
+        if not self.checkConflictState(C_C_DD.datas.move):
             return False
 
         if sMath.distance2D(self.position, self.nextPoint()) >= 0.1:
@@ -163,7 +163,7 @@ class IRoute(object):
                 self.pointIndex = next_pointIndex
             else:
                 if self.pointIndex >= len(path_path.datas[self.pathId]['pointList']) - 1:
-                    LOG_IFO('startRouting: already in end point')
+                    LOG_INFO('startRouting: already in end point')
                     self.routeState = gameconst.RouteState.ROUTE_STATE_COMPLETE
                     self.onRouteFinished()
                     self._resetRoute()
@@ -226,7 +226,7 @@ class IRoute(object):
             self.removeState(gameconst.StateEnum.Moving)
             return
 
-        if self.checkConflictState(CCD.datas.move):
+        if self.checkConflictState(C_C_DD.datas.move):
             if path_path.datas[self.pathId]['type'] == 4:
                 self.luckMonsterPatrol()
             else:
@@ -244,7 +244,7 @@ class IRoute(object):
             for i in range(2, 10, 2):
                 posList = self.getRandomPoints(self.nextPoint(), i, 1, 0)
                 if posList:
-                    LOG_IFO('moveToRouteNodeCB: choice accessible point', i, posList[0])
+                    LOG_INFO('moveToRouteNodeCB: choice accessible point', i, posList[0])
                     self.addTimerCB(random.random(), 'moveToRouteNode', (False, posList[0], 0, False), gametimer.TIMER_TAG_MOVE_TO_ROUTE_NODE)
                     break
                 # FIXME()(ROUTE): 这里似乎想延时防止调用速度过快，需要看看，先删掉，sleep太危险了

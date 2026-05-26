@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+
+    </Properties>
+
+    <CellMethods>
+        <applyEnterLine> <Exposed/>
+            <Arg>           LINE_TYPE         </Arg>
+        </applyEnterLine>
+
+        <applySwitchLine> <Exposed/>
+            <Arg>           LINE_NO           </Arg>
+        </applySwitchLine>
+
+        <beginEnterLine>
+            <Arg>           LINE_TYPE         </Arg>
+            <Arg>           LINE_NO           </Arg>
+            <Arg>           MAILBOX           </Arg>
+            <Arg>           POSITION_ARG      </Arg>
+            <Arg>           DIRECTION_ARG     </Arg>
+            <Arg>           PYTHON            </Arg>
+        </beginEnterLine>
+
+        <beginSwitchLine>
+            <Arg>           LINE_TYPE         </Arg>
+            <Arg>           LINE_NO           </Arg>
+            <Arg>           LINE_NO           </Arg>
+            <Arg>           MAILBOX           </Arg>
+            <Arg>           PYTHON            </Arg>
+        </beginSwitchLine>
+
+        <beginGoBackLine>
+            <Arg>           SPACE_NO          </Arg>
+            <Arg>           MAILBOX           </Arg>
+            <Arg>           POSITION_ARG      </Arg>
+            <Arg>           DIRECTION_ARG     </Arg>
+            <Arg>           METHOD_NAME       </Arg>
+            <Arg>           METHOD_ARGS       </Arg>
+        </beginGoBackLine>
+
+        <beginLeaveLine>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       POSITION_ARG   </Arg>
+            <Arg>       DIRECTION_ARG  </Arg>
+        </beginLeaveLine>
+
+        <applyLeaveLine> <Exposed/>
+        </applyLeaveLine>
+
+        <queryLineInfo> <Exposed/>
+            <Arg>           LINE_TYPE         </Arg>
+        </queryLineInfo>
+
+        <onCheckSwitchLine>
+            <Arg>           BOOL              </Arg>
+            <Arg>           SPACE_NO          </Arg>
+            <Arg>           LINE_NO           </Arg>
+            <Arg>           PYTHON            </Arg>
+            <Arg>           PYTHON            </Arg>
+            <Arg>           PYTHON            </Arg>
+        </onCheckSwitchLine>
+
+        <applyEnterLineInternal>
+            <Arg>           LINE_TYPE        </Arg>
+            <Arg>           LINE_NO          </Arg>
+            <Arg>           PYTHON           </Arg>
+            <Arg>           PYTHON           </Arg>
+            <Arg>           PYTHON           </Arg>
+        </applyEnterLineInternal>
+
+        <onMergeLine>
+            <Arg>           LINE_NO           </Arg>
+        </onMergeLine>
+    </CellMethods>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <ClientMethods>
+        <onMapUnlockMessagePre>
+            <Arg>        MAP_ID     </Arg>
+        </onMapUnlockMessagePre>
+
+        <onGetLineInfo>
+            <Arg>        UNICODE    </Arg>
+        </onGetLineInfo>
+    </ClientMethods>
+
+</root>

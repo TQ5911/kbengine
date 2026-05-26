@@ -143,8 +143,8 @@ func GetAccountInfo(realAccount string) (string, string) {
 	return strArrs[0], strArrs[1]
 }
 
-func GetNowTime() uint32 {
-	return uint32(time.Now().Unix())
+func GetNowTime() int64 {
+	return time.Now().Unix()
 }
 
 func GetServerCfg() *viper.Viper {

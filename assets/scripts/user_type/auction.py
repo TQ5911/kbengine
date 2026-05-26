@@ -20,7 +20,7 @@ import auction_auctionConst as AUT_CONST
 G_INDEX_SPLIT_KEY = '%%'
 
 
-class AuctionItem(userType.UserSTDSoleType):
+class AuctionItem(userType.UserSTSoleType):
     __attrs__ = ('auctionType',  # 交易行类型
                  'auctionItemUUID',  # 上架物品唯一UUID
                  'addTime',  # 上架物品时间
@@ -254,7 +254,7 @@ class AuctionItem(userType.UserSTDSoleType):
         return self.itemData.bindType
 
 
-class Auction(userType.UserSTDSoleType):
+class Auction(userType.UserSTSoleType):
 
     def initFromDict(self, dataDic):
         self.auctionType = dataDic["auctionType"]
@@ -477,7 +477,7 @@ class Auction(userType.UserSTDSoleType):
             return self._iterGetItemsFromAuctionNoIndex(searchOptions, filterFn), _m_errno.ERR_AUCTION_OK
 
     def _iterGetItemsFromAuctionWithIndex(self, indexKey, indexItemKey, filterFn):
-        LOG_IFO("_iterGetItemsFromAuctionWithIndex::", indexKey, indexItemKey)
+        LOG_INFO("_iterGetItemsFromAuctionWithIndex::", indexKey, indexItemKey)
         self._sortAuctionItemIndex(indexKey, indexItemKey)
 
         if not filterFn:
@@ -546,7 +546,7 @@ class Auction(userType.UserSTDSoleType):
         return auctionItem.number
 
 
-class AuctionPlayerCache(userType.UserSTDSoleType):
+class AuctionPlayerCache(userType.UserSTSoleType):
 
     def _lateReload(self):
         for d in self.followedItemData:
@@ -645,7 +645,7 @@ class AuctionPlayerCache(userType.UserSTDSoleType):
         self.unlockedGrids += 1
 
 
-class AuctionItemRecord(userType.UserSTDSoleType):
+class AuctionItemRecord(userType.UserSTSoleType):
 
     def initFromDict(self, dataDic):
         self.recordUUID = dataDic['recordUUID']
@@ -684,7 +684,7 @@ class AuctionItemRecord(userType.UserSTDSoleType):
         self.number = 0
 
 
-class AuctionItemRecommendRecord(userType.UserSTDSoleType):
+class AuctionItemRecommendRecord(userType.UserSTSoleType):
 
     def initFromDict(self, dataDic):
         self.recordUUID = dataDic['recordUUID']

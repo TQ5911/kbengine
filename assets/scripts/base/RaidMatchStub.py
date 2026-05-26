@@ -69,7 +69,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimerCallback(tid)
 
     def raidAutoMatch(self, raidInfoDic):
-        LOG_IFO('in raidAutoMatch:', raidInfoDic)
+        LOG_INFO('in raidAutoMatch:', raidInfoDic)
         if 0 == raidInfoDic['raidTarget']:
             return
         tmVal = self.raidsDic.get(raidInfoDic['raidID'])
@@ -83,7 +83,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onRaidInfoUpdate(self, raidInfoDic):
-        LOG_IFO('in onRaidInfoUpdate:', raidInfoDic)
+        LOG_INFO('in onRaidInfoUpdate:', raidInfoDic)
         if 0 == raidInfoDic['raidTarget']:
             self._rmRaidFromMatchPool(raidInfoDic['raidID'])
             return
@@ -101,7 +101,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def raidStopAutoMatch(self, raidID):
-        LOG_IFO('in raidStopAutoMatch:', raidID)
+        LOG_INFO('in raidStopAutoMatch:', raidID)
         self._rmRaidFromMatchPool(raidID)
         return
 
@@ -114,7 +114,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return True
 
     def onRaidPlayerMatchInfoUpdate(self, playerInfoDic):
-        LOG_IFO('in onRaidPlayerMatchInfoUpdate:', playerInfoDic)
+        LOG_INFO('in onRaidPlayerMatchInfoUpdate:', playerInfoDic)
         pmVal = self.playersDic.get(playerInfoDic['playerGbId'], None)
         if not pmVal:
             return
@@ -122,7 +122,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def raidPlayerAutoMatch(self, playerMatchDic):
-        LOG_IFO('in playerAutoMatch:', playerMatchDic)
+        LOG_INFO('in playerAutoMatch:', playerMatchDic)
         pmVal = self.playersDic.get(playerMatchDic['playerGbId'], None)
         if pmVal:
             self._rmPlayerFromMatchPool(playerMatchDic['playerGbId'])
@@ -147,7 +147,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def raidPlayerStopAutoMatch(self, playerGbId):
-        LOG_IFO('in raidPlayerStopAutoMatch:', playerGbId)
+        LOG_INFO('in raidPlayerStopAutoMatch:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -156,7 +156,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerAutoMatchTimeout(self, playerGbId):
-        LOG_IFO('in playerAutoMatchTimeout:', playerGbId)
+        LOG_INFO('in playerAutoMatchTimeout:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -165,7 +165,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def _rmPlayerFromMatchPool(self, playerGbId):
-        LOG_IFO('in _rmPlayerFromMatchPool:', playerGbId)
+        LOG_INFO('in _rmPlayerFromMatchPool:', playerGbId)
         pmVal = self.playersDic.pop(playerGbId, None)
         if not pmVal:
             return False
@@ -192,7 +192,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                         if not tmVal.canAddPlayer(pmVal):
                             continue
                         #matched
-                        LOG_IFO('     in _doMatch, matched:', playerGbid, raidUUID)
+                        LOG_INFO('     in _doMatch, matched:', playerGbid, raidUUID)
                         if tmVal.addPlayerToTeam(pmVal):
                             matchedPlayers.append(playerGbid)
                             if tmVal.isRaidFull():
@@ -213,7 +213,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         for playerGbid, pmVal in self.playersDic.items():
             if pmVal.isTimeOut():
                 rmPlayers.append(playerGbid)
-                LOG_IFO('     in _checkTimeOutMatch, rmPlayers:', rmPlayers)
+                LOG_INFO('     in _checkTimeOutMatch, rmPlayers:', rmPlayers)
         for playerGBID in rmPlayers:
             self.playerAutoMatchTimeout(playerGBID)
 

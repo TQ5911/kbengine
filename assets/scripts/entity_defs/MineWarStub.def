@@ -31,6 +31,8 @@
             <Arg>          UNICODE        </Arg>
             <Arg>          PLAYER_GBID         </Arg>
             <Arg>          UNICODE        </Arg>
+            <Arg>          PY_LIST        </Arg>
+            <Arg>          PY_LIST        </Arg>
         </onMineWarFlagBeKill>
 
         <playerGetMineWarInfo>

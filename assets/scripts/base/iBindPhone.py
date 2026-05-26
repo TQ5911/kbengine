@@ -35,7 +35,7 @@ class IBindPhone(object):
     def sendClaimPcLoginRewardInfo(self):
         firstTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.firstPcLoginTimestamp, 0)
         claimTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.claimPcLoginRewardTimestamp, 0)
-        LOG_IFO("IBindPhone sendClaimPcLoginRewardInfo", firstTimestamp, claimTimestamp, self.accountEntity.devicePlatId)
+        LOG_INFO("IBindPhone sendClaimPcLoginRewardInfo", firstTimestamp, claimTimestamp, self.accountEntity.devicePlatId)
         self.client.claimPcLoginRewardInfo(firstTimestamp, claimTimestamp)
 
     def isUnlocked(self, type):
@@ -78,13 +78,13 @@ class IBindPhone(object):
         resetTime = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.resetBindPhoneCntTime, 0)
         needSet = False
         if resetTime <= now:
-            LOG_IFO("IBindPhone controlReqLimit reset")
+            LOG_INFO("IBindPhone controlReqLimit reset")
             self.accountEntity.popPersistentMiscProp(gameconst.EntityPropsEnum.resetBindPhoneCntTime, 0)
             self.accountEntity.popPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
             needSet = True
 
         curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
-        LOG_IFO("IBindPhone controlReqLimit ", curCnt, utils.getCommonTimeStrFromTimeStamp(resetTime))
+        LOG_INFO("IBindPhone controlReqLimit ", curCnt, utils.getCommonTimeStrFromTimeStamp(resetTime))
         maxCnt = LSD.datas['phoneFrequentLockTime']['value']
         if curCnt >= maxCnt:
             LOG_WARN("IBindPhone controlReqLimit cnt limit", curCnt, maxCnt)
@@ -96,7 +96,7 @@ class IBindPhone(object):
             startTimeCron, _ = utils.nextByCronTupleList([[[0], [5], [], [], [], []]], now)
             nextResetTime = now + startTimeCron
             self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.resetBindPhoneCntTime, nextResetTime)
-            LOG_IFO("IBindPhone controlReqLimit next reset timestamp", curCnt, nextResetTime)
+            LOG_INFO("IBindPhone controlReqLimit next reset timestamp", curCnt, nextResetTime)
 
         return False
 
@@ -113,7 +113,7 @@ class IBindPhone(object):
     @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('phoneBind', {}).get('type', 'welfare'))
     def reqBindPhone(self, exposed, phone):
-        LOG_IFO("IBindPhone reqBindPhone", phone, self.gbID, self.accountName)
+        LOG_INFO("IBindPhone reqBindPhone", phone, self.gbID, self.accountName)
         if self.accountType != centralLogin.ACCOUNT_TAPTAP:
             LOG_WARN("IBindPhone reqBindPhone channel error", self.accountType, self.accountName, centralLogin.ACCOUNT_TAPTAP)
             return
@@ -130,14 +130,14 @@ class IBindPhone(object):
         url = gameconfig.tapTapBindPhoneReqUrl()
         message = json.dumps({"phone": str(phone)})
         self.setTempPhone(phone)
-        LOG_IFO("IBindPhone reqBindPhone url", url, message)
+        LOG_INFO("IBindPhone reqBindPhone url", url, message)
         KBEngine.urlopenv2(url, self._reqBindPhoneResponse, method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json"},
                 timeoutSec=5)
 
     def _reqBindPhoneResponse(self, httpCode, jsonData, headers, success, *args):
-        LOG_IFO("IBindPhone _reqBindPhoneResponse", httpCode, jsonData, headers, success)
+        LOG_INFO("IBindPhone _reqBindPhoneResponse", httpCode, jsonData, headers, success)
         #即便回复了也先限制下
         #self.popTempMiscProp(gameconst.EntityPropsEnum.reqBindPhoneTimestamp, 0)
         if not (httpCode == 200 and success):
@@ -149,7 +149,7 @@ class IBindPhone(object):
         code = data['code']
         if code == 200 or code == 202:
             self.onMessagePre(MMD.datas.smsSentSuccess, [])
-            LOG_IFO("IBindPhone _reqBindPhoneResponse success ", self.getTempPhone())
+            LOG_INFO("IBindPhone _reqBindPhoneResponse success ", self.getTempPhone())
         elif code == 1002 or code == 1003:
             curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
             curCnt = max(int(curCnt - 1), 0)
@@ -169,7 +169,7 @@ class IBindPhone(object):
         return True
 
     def controlVerifyLimit(self):
-        LOG_IFO("IBindPhone controlVerifyLimit")
+        LOG_INFO("IBindPhone controlVerifyLimit")
         now = utils.curTS()
         verifyCodeTimestamp = self.getTempMiscProp(gameconst.EntityPropsEnum.verifyCodeTimestamp, 0)
         if verifyCodeTimestamp > now:
@@ -184,7 +184,7 @@ class IBindPhone(object):
     @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('phoneBind', {}).get('type', 'welfare'))
     def reqVerifyCode(self, exposed, code):
-        LOG_IFO("IBindPhone reqVerifyCode", code, self.gbID, self.accountName)
+        LOG_INFO("IBindPhone reqVerifyCode", code, self.gbID, self.accountName)
         if self.accountEntity.phone != 0:
             LOG_WARN("IBindPhone reqVerifyCode alerady bind", self.accountEntity.phone)
             return
@@ -200,14 +200,14 @@ class IBindPhone(object):
 
         url = gameconfig.tapTapBindPhoneVerifyUrl()
         message = json.dumps({"phone": str(self.getTempPhone()), "code": str(code)})
-        LOG_IFO("IBindPhone reqVerifyCode url", url, message)
+        LOG_INFO("IBindPhone reqVerifyCode url", url, message)
         KBEngine.urlopenv2(url, self._reqVerifyCodeResponse, method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json"},
                 timeoutSec=5)
 
     def _reqVerifyCodeResponse(self, httpCode, jsonData, headers, success, *args):
-        LOG_IFO("IBindPhone _reqVerifyCodeResponse", httpCode, jsonData, headers, success)
+        LOG_INFO("IBindPhone _reqVerifyCodeResponse", httpCode, jsonData, headers, success)
         # 即便回复了也先限制下
         #self.popTempMiscProp(gameconst.EntityPropsEnum.verifyCodeTimestamp, 0)
         if not (httpCode == 200 and success):
@@ -223,20 +223,20 @@ class IBindPhone(object):
             self.client.bindPhoneReplay(True, self.accountEntity.phone)
             self.popTempPhone()
             self.onMessagePre(MMD.datas.login_phoneSuccess, [])
-            LOG_IFO("IBindPhone _reqVerifyCodeResponse success ", self.accountEntity.phone)
+            LOG_INFO("IBindPhone _reqVerifyCodeResponse success ", self.accountEntity.phone)
         elif code == 1002 or code == 1003:
             self.onMessagePre(MMD.datas.login_phoneRepeat, [])
         else:
             self.onMessagePre(MMD.datas.smsInvalid, [])
 #####################################################################################
     def checkDevicePlatId(self, devicePlatId):
-        LOG_IFO("IBindPhone checkDevicePlatId", devicePlatId)
+        LOG_INFO("IBindPhone checkDevicePlatId", devicePlatId)
         return devicePlatId in (gameconst.DevicePlatId.PC_CLIENT, )
     
     @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable('welfare_pcLogin')
     def reqClaimPcLoginReward(self, exposed):
-        LOG_IFO("IBindPhone reqClaimPcLoginReward", self.gbID, self.accountName)
+        LOG_INFO("IBindPhone reqClaimPcLoginReward", self.gbID, self.accountName)
         claimTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.claimPcLoginRewardTimestamp, 0)
         if claimTimestamp != 0:
             LOG_WARN("IBindPhone reqClaimPcLoginReward alerady claim", claimTimestamp)

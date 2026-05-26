@@ -137,7 +137,7 @@ class RemoteServerBoxEntityCall(RemoteServerEntityCall):
 
 class IRouter(object):
     def __init__(self):
-        LOG_IFO("IRouter init")
+        LOG_INFO("IRouter init")
         super().__init__()
         self.componentId = int(os.getenv('KBE_COMPONENTID'))
         self.routerServerDic = {}
@@ -249,7 +249,7 @@ class IRouter(object):
             return
 
         entityCallType, stubNameOrBox, compoentType, funcName, args = pickle.loads(memoryStream)
-        LOG_IFO("onRemoteCallFromOthersBase", entityCallType, stubNameOrBox, compoentType, funcName, args)
+        LOG_INFO("onRemoteCallFromOthersBase", entityCallType, stubNameOrBox, compoentType, funcName, args)
         try:
             if entityCallType == gameconst.RemoteServerEntityCallType.STUB_NAME:
                 func = getattr(gameengine.getGlobalBase(stubNameOrBox), funcName)

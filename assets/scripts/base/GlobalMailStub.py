@@ -65,19 +65,19 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if mail.createTime-now < minLeftTime:
                 minLeftTime = mail.createTime-now
 
-        LOG_IFO('trySendDelayMails, sendMailList:', [gmail.toGlobalMailDict() for gmail in sendMailList])
+        LOG_INFO('trySendDelayMails, sendMailList:', [gmail.toGlobalMailDict() for gmail in sendMailList])
         for gmail in sendMailList:
             self.delayMailList.remove(gmail)
         self.addToSendMailDeque(sendMailList)
 
         if minLeftTime != float('inf'):
-            LOG_IFO('trySendDelayMails:', minLeftTime, len(self.delayMailList))
+            LOG_INFO('trySendDelayMails:', minLeftTime, len(self.delayMailList))
             self.delayMailTimerId = self.addTimerCB(minLeftTime, 'trySendDelayMails', (),
                                                    gametimer.TIMER_TAG_CHECK_SEND_DELAY_MAILS, 'delayMailTimerId')
 
     def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, 
                        minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType):
-        LOG_IFO('in sendGlobalMail:', mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType)
+        LOG_INFO('in sendGlobalMail:', mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType)
         
         if dueTime < 0 or maxRoleTime < 0 or maxRoleLevel < 0 :
             LOG_WARN('sendGlobalMail, maxRoleTime or maxRoleLevel failed:', dueTime, maxRoleTime, maxRoleLevel)
@@ -153,12 +153,12 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         globalMail = self.sendMailDeque.popleft()
         self._doSendGlobalMail(curTime, globalMail)
         if self.sendMailDeque:
-            LOG_IFO('startSendGlobalMail, left mail num:', len(self.sendMailDeque))
+            LOG_INFO('startSendGlobalMail, left mail num:', len(self.sendMailDeque))
             self.sendMailTimerId = self.addTimerCB(2, 'startSendGlobalMail', (),
                                                    gametimer.TIMER_TAG_SEND_GLOBAL_MAIL, 'sendMailTimerId')
 
     def _doSendGlobalMail(self, curTime, globalMail):
-        LOG_IFO('_doSendGlobalMail:', globalMail.toGlobalMailDict())
+        LOG_INFO('_doSendGlobalMail:', globalMail.toGlobalMailDict())
         self.lastSendTime = curTime
         globalMail.createTime = curTime
         self.mailList.append(globalMail)
@@ -168,7 +168,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.writeToDB(functools.partial(self._onGlobalMailWriteToDB, globalMailGBID))
 
     def _onGlobalMailWriteToDB(self, globalMailGBID, saveStatus, baseRef):
-        LOG_IFO('_onGlobalMailWriteToDB:', globalMailGBID, saveStatus, baseRef)
+        LOG_INFO('_onGlobalMailWriteToDB:', globalMailGBID, saveStatus, baseRef)
         # 引擎里的落库保存时，前一个保存请求还在进行中，需要延迟处理
         if saveStatus == gameconst.WriteToDBResult.ARCHIVING:
             self.addTimerCB(1, 'delayWriteToDBGlobalMail', (globalMailGBID, ), gametimer.TIMER_TAG_GLOBAL_MAIL_WRITE_TO_DB)
@@ -237,7 +237,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         mailList = [{'maiGBID':mail.globalMailGBID, 'mailId':mail.mailId,
                      'createTime':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mail.createTime))}
                      for mail in list(self.mailList)[:-(mailNum+1):-1]]
-        LOG_IFO('gmGetGlobalMailList:', str(mailList))
+        LOG_INFO('gmGetGlobalMailList:', str(mailList))
         box.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, channelAvatarInfo, str(mailList))
 
     def gmDeleteOneGlobalMail(self, mailGBID):

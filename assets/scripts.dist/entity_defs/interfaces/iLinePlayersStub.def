@@ -1,0 +1,136 @@
+<root>
+
+    <Properties>
+        <lineType>
+            <Type>      UINT32    </Type>
+            <Flags>     BASE      </Flags>
+        </lineType>
+
+        <allPlayers>
+            <Type>      LINE_PLAYERS_INFO    </Type>
+            <Flags>     BASE                 </Flags>
+        </allPlayers>
+
+    </Properties>
+
+    <BaseMethods>
+        <enterLine>
+            <Arg>       INT32          </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       POSITION_ARG   </Arg>
+            <Arg>       DIRECTION_ARG  </Arg>
+            <Arg>       PYTHON         </Arg>
+        </enterLine>
+
+        <enterLineSuccess>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+        </enterLineSuccess>
+
+        <enterLineFailed>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+        </enterLineFailed>
+
+        <autoSwitchLine>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       PYTHON         </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </autoSwitchLine>
+
+        <switchLine>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+        </switchLine>
+
+        <switchLineSuccess>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+        </switchLineSuccess>
+
+        <switchLineFailed>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+        </switchLineFailed>
+
+        <leaveLine>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       POSITION_ARG   </Arg>
+            <Arg>       DIRECTION_ARG  </Arg>
+        </leaveLine>
+
+        <updateLinePlayerInfo>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+        </updateLinePlayerInfo>
+
+        <notifyPlayerOffline>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+        </notifyPlayerOffline>
+
+        <checkCanEnterLine>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </checkCanEnterLine>
+
+        <checkCanEnterLineFinallyFailed>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       PYTHON         </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </checkCanEnterLineFinallyFailed>
+
+        <removePendingEnterOnBaseDestroy>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+        </removePendingEnterOnBaseDestroy>
+
+        <goBackLine>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       POSITION_ARG   </Arg>
+            <Arg>       DIRECTION_ARG  </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </goBackLine>
+
+        <doQueryLineInfo>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+        </doQueryLineInfo>
+
+        <debugPlayerAreaInfo>
+        </debugPlayerAreaInfo>
+    </BaseMethods>
+</root>

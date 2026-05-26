@@ -40,7 +40,7 @@ class cardPoolInfo(userType.UserSingleType):
         }
         return data
 
-class petDrawCardInfo(userType.UserSTDSoleType):
+class petDrawCardInfo(userType.UserSTSoleType):
     def __init__(self):
         self.cardPoolInfoDict = {}
 
@@ -64,7 +64,7 @@ class petDrawCardInfo(userType.UserSTDSoleType):
     def setdefault(self, pool):
         return self.cardPoolInfoDict.setdefault(pool, cardPoolInfo(pool))
 
-class petDrawCardInfoInstance(userType.UserSTDSoleInfo):
+class petDrawCardInfoInstance(userType.UserSTSoleInfo):
     @property
     def cls(self):
         return petDrawCardInfo
@@ -122,7 +122,7 @@ class drawCardRecord(userType.UserSingleType):
     def checkBitSet(self, idx):
         return idx <= len(self.items)
 
-class petDrawCardRecord(userType.UserSTDSoleType):
+class petDrawCardRecord(userType.UserSTSoleType):
     def __init__(self):
         self.drawCardRecordDic = {}
         self.clientDataDic = {}
@@ -270,7 +270,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         LOG_DBG('in getStreamRecordData, gzipStr:', len(zStr))
         return zStr
 
-class petDrawCardRecordInstance(userType.UserSTDSoleInfo):
+class petDrawCardRecordInstance(userType.UserSTSoleInfo):
     @property
     def cls(self):
         return petDrawCardRecord

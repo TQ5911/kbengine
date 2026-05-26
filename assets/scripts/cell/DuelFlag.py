@@ -7,6 +7,7 @@ import gameconst
 import gametimer
 import sMath
 import utils
+import actionContext
 
 import duel_config as D_CD
 
@@ -85,7 +86,7 @@ class DuelFlag(iCell.ICell, iTimer.ITimer):
         self.finishReason = reason
 
     def onAvatarDuelFailed(self, avatarEid):
-        LOG_IFO('onAvatarDuelFailed', avatarEid)
+        LOG_INFO('onAvatarDuelFailed', avatarEid)
         if self.checkTimer:
             self.pyDelTimer(self.checkTimer, gametimer.DUEL_FLAG_CHECK_TICK)
             self.checkTimer = 0
@@ -111,6 +112,12 @@ class DuelFlag(iCell.ICell, iTimer.ITimer):
                 _adVal.box.cell.onDuelFinished(self.finishReason)
 
             _adVal.box.client.onDuelResult(winGbId, winName, self.finishReason)
+            
+        for _adVal in self.avatarInDuelDatas:
+            _ent = KBEngine.entities.get(_adVal.eid)
+            if _ent:
+                isWin = _adVal.eid != avatarEid
+                _ent.base.triggerAchievementWithCtx(gameconst.AchieveType.DUEL, actionContext.AchievementCtx(isWin=isWin))
 
         self.safeDestroy()
 

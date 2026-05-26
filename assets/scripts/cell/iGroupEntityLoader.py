@@ -51,12 +51,12 @@ class IGroupEntityLoader(object):
 
             _mPrm = datas[str(gid)]
             className = info['className']
-            bornPosition = (_mPrm['PosX'], _mPrm['PosY'], _mPrm['PosZ'])
+            _bornPosition = (_mPrm['PosX'], _mPrm['PosY'], _mPrm['PosZ'])
 
             if 'Dir' in _mPrm:
-                bornDirection = (0.0, 0.0, _mPrm['Dir'] * math.pi / 180)
+                _bornDirection = (0.0, 0.0, _mPrm['Dir'] * math.pi / 180)
             else:
-                bornDirection = gameconst.DEFAULT_DIRECTION
+                _bornDirection = gameconst.DEFAULT_DIRECTION
 
             tmpProps = {'createIndex': gct}
 
@@ -64,8 +64,8 @@ class IGroupEntityLoader(object):
                 'spaceNo': spaceNo,
                 'spaceno': spaceNo,
                 'gameEntityId': gameEntityId,
-                'direction': bornDirection,
-                'position': bornPosition,
+                'direction': _bornDirection,
+                'position': _bornPosition,
                 'isGroupRefresh': 1,
                 'tmpProps': tmpProps,
                 'refreshTime': info['refreshTime'],
@@ -89,7 +89,7 @@ class IGroupEntityLoader(object):
                 })
 
             needCreateBase = 0
-            data = (gameEntityId, spaceNo, className, needCreateBase, bornPosition, bornDirection, params, 0)
+            data = (gameEntityId, spaceNo, className, needCreateBase, _bornPosition, _bornDirection, params, 0)
             LOG_DBG("IGroupEntityLoader::loadGroupEntities for single ", spaceNo, className, gameEntityId)
             readyEntitiesList.append(data)
 

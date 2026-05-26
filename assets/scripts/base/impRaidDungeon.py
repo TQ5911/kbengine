@@ -5,13 +5,13 @@ import gameconst
 
 class ImpRaidDungeon(object):
     def createAndEnterRaidDungeonMemberPreCheck(self, srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData):
-        LOG_IFO("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+        LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
         dungeonPlayMode = extraData['dungeonPlayMode']
         errno = gameconst.RaidDungeonErrno.ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL
         if dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
-            LOG_IFO("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+            LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
             if self.chiefInfo.isCanTakeReward():
-                LOG_IFO("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+                LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
                 errno = gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
         extraData.pop('dungeonPlayMode', None)
         srcPlayerBox.cell.onCreateAndEnterRaidDungeonAllMemberPreCheck(
@@ -27,5 +27,5 @@ class ImpRaidDungeon(object):
             'gbId': self.gbID,
             'eId': self.id,
         })
-        LOG_IFO('doEnterRaidDungeonSelfCheck::', dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)
+        LOG_INFO('doEnterRaidDungeonSelfCheck::', dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)
         self.cell.doEnterRaidDungeonAfterCheck(dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)

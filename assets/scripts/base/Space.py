@@ -26,7 +26,7 @@ class Space(iBase.IBase):
         self.cellData['spaceType'] = self.spacetype
 
         _type, _sub = formula.getSpaceTypeWithSub(self.spaceno)
-        LOG_IFO('Space init spaceWeight', self.cellappIndex, self.spaceWeight, _type, _sub)
+        LOG_INFO('Space init spaceWeight', self.cellappIndex, self.spaceWeight, _type, _sub)
         if self.spaceWeight == 0:
             #TODO set default spaceWeight for all space types
             LOG_ERR('create Space has not set spaceWeight', self.spaceno)
@@ -40,11 +40,11 @@ class Space(iBase.IBase):
 
         self.createCellEntityInNewSpace(self.cellappIndex, self.spaceWeight)
 
-        LOG_IFO('Space.__init__:', self.spaceno, self.spaceWeight, KBEngine.getComponentGroupOrder())
+        LOG_INFO('Space.__init__:', self.spaceno, self.spaceWeight, KBEngine.getComponentGroupOrder())
         return
 
     def onGetCell(self):
-        LOG_IFO('Space.onGetCell', self.spaceno, self.spacetype)
+        LOG_INFO('Space.onGetCell', self.spaceno, self.spacetype)
         if formula.inStaticScene(self.spaceno):
             gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_TO_BASE + ':' + str(self.spaceno),
                                       utils.getPythonAddr())
@@ -63,7 +63,7 @@ class Space(iBase.IBase):
         if reason:
             self.onLoseCellReason = reason
 
-        LOG_IFO("space onLoseCell ", self.spaceno, reason)
+        LOG_INFO("space onLoseCell ", self.spaceno, reason)
         if formula.inCubeScene(self.spaceno):
             if not KBEngine.isShuttingDown():
                 gameengine.getCubeStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
@@ -93,7 +93,7 @@ class Space(iBase.IBase):
         return
 
     def entireConstruct(self, spaceID):
-        LOG_IFO('Space %s %s entireConstruct' % (self.spaceno, spaceID))
+        LOG_INFO('Space %s %s entireConstruct' % (self.spaceno, spaceID))
         self.spaceid = spaceID
 
         if self.chunkAlready:
@@ -130,7 +130,7 @@ class Space(iBase.IBase):
     def entireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
-        LOG_IFO("space entireDestroy ", self.spaceno)
+        LOG_INFO("space entireDestroy ", self.spaceno)
 
         self._preEntireDestroy()
 
@@ -159,7 +159,7 @@ class Space(iBase.IBase):
         return
 
     def _initData(self):
-        LOG_IFO("Space#initData", self.spaceid, self.spaceno)
+        LOG_INFO("Space#initData", self.spaceid, self.spaceno)
         # gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACENO_TO_SPACEID+':'+str(self.spaceno), self.spaceid)
         # gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACEID_TO_SPACENO+':'+str(self.spaceid), self.spaceno)
 

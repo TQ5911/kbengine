@@ -39,7 +39,7 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
         owner.debug("执行初始化状态逻辑 当前地图ID:%s, 目标地图:%s" % (curMapId, owner.dstMapId))
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
         if not owner.dstMapId:
             owner.initBot()
@@ -72,7 +72,7 @@ class BotAIState_EnterDungeon(AIState):
             return
         self.stateTime = now
         owner.debug(f"执行进入副本状态逻辑, 当前地图ID:%s, 目标地图:%s" % (curMapId, owner.dstMapId))
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
         if int(curMapId) == owner.dstMapId:
             owner.changeAIState(AISTATE_BACK_CHAR)

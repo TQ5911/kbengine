@@ -15,151 +15,114 @@ class ItemContainer(userType.UserSingleType):
     def __init__(self, capacity):
         self.capacity = capacity
 
-        self.gridId2GridObj = {}
-        self.itemId2gridIds = {}
+        self.gridIdToGridObj = {}
+        self.itemIdToGridIds = {}
 
     def _lateReload(self):
         super(ItemContainer, self)._lateReload()
 
-        for v in self.gridId2GridObj.values():
+        for v in self.gridIdToGridObj.values():
             v.reloadScript()
 
         return
 
     def initFromDict(self, savedDataDict):
         self.capacity = savedDataDict['capacity']
-        self.gridId2GridObj = {}
-        self.itemId2gridIds = {}
-        itemsList = savedDataDict['itemsList']
-        for itemDict in itemsList:
-            gridId = itemDict['gridId']
-            if itemDict['itemId'] == 0:
-                gameengine.panicStack('in initFromDict, itemid is 0:', itemDict)
+        self.gridIdToGridObj = {}
+        self.itemIdToGridIds = {}
+        _itemsList = savedDataDict['itemsList']
+        for _itemDict in _itemsList:
+            gridId = _itemDict['gridId']
+            if _itemDict['itemId'] == 0:
+                gameengine.panicStack('in initFromDict, itemid is 0:', _itemDict)
                 continue
             try:
-                gridObj = itemFactory.ItemFactory.createItemWithSavedDict(itemDict)
+                gridObj = itemFactory.ItemFactory.createItemWithSavedDict(_itemDict)
             except Exception as e:
-                gameengine.panicStack('load item err:', itemDict, e)
+                gameengine.panicStack('load item err:', _itemDict, e)
                 continue
             if not gridObj:
                 continue
             itemId = gridObj.itemId
-            self.gridId2GridObj[gridId] = gridObj
-            if itemId not in self.itemId2gridIds:
-                self.itemId2gridIds[itemId] = set()
-            self.itemId2gridIds[itemId].add(gridId)
+            self.gridIdToGridObj[gridId] = gridObj
+            if itemId not in self.itemIdToGridIds:
+                self.itemIdToGridIds[itemId] = set()
+            self.itemIdToGridIds[itemId].add(gridId)
 
     def getBagData(self):
-        gridIds = self.gridId2GridObj.keys()
-        itemList = []
-        for gridId in gridIds:
-            gridObj = self.gridId2GridObj[gridId]
+        _gridIds = self.gridIdToGridObj.keys()
+        _itemList = []
+        for gridId in _gridIds:
+            gridObj = self.gridIdToGridObj[gridId]
             try:
                 gridDic = gridObj.toBagItemDict(gridId)
-            except Exception as e:
-                LOG_ERR('getBagData err:', gridId, gridObj, getattr(gridObj, 'itemId', 0), e)
+            except Exception as exc:
+                LOG_ERR('getBagData err:', gridId, gridObj, getattr(gridObj, 'itemId', 0), exc)
                 continue
-            itemList.append(gridDic)
-        return itemList
+            _itemList.append(gridDic)
+        return _itemList
 
     def toBagSavedDict(self):
-
         return {
-            'capacity': self.capacity,
             'itemsList': self.getBagData(),
+            'capacity': self.capacity,
         }
 
     def toItemContainerClientDict(self):
-
         return {
-            'capacity': self.capacity,
             'itemsList': self.getBagData(),
+            'capacity': self.capacity,
         }
 
     def reset(self):
-        self.gridId2GridObj = {}
-        self.itemId2gridIds = {}
+        self.gridIdToGridObj = {}
+        self.itemIdToGridIds = {}
 
     def isFull(self):
-        return len(self.gridId2GridObj) >= self.capacity
+        return len(self.gridIdToGridObj) >= self.capacity
 
     @property
     def leftGridCount(self):
-        return self.capacity - len(self.gridId2GridObj)
-
-    def getItemIdByGridId(self, gridId):
-        gridObj = self.getItemObjByGridId(gridId)
-        if gridObj:
-            return gridObj.itemId
-        else:
-            return 0
+        return self.capacity - len(self.gridIdToGridObj)
 
     def getItemObjByGridId(self, gridId):
-        return self.gridId2GridObj.get(gridId, None)
+        return self.gridIdToGridObj.get(gridId, None)
 
-    def getItemDataByGridId(self, gridId):
-        gridObj = self.getItemObjByGridId(gridId)
-        if not gridObj:
-            LOG_ERR('getItemDataByGridId: gridObj is none {}'.format(gridId))
-            return None
-
-        itemData = ITEMDATA.datas.get(gridObj.itemId, None)
-        if not itemData:
-            LOG_ERR('getItemDataByGridId: itemData is none {}'.format(gridObj.itemId))
-            return None
-
-        return itemData
-
-    def hasItem(self, itemId):
-        gridIds = self.itemId2gridIds.get(itemId)
-        return bool(gridIds)
-
-    def getEmptyGrid(self, excludes=()):
+    def fetchEmptyGrid(self, excludes=()):
         if self.isFull():
             return None
-        for gridId in range(self.capacity):
-            if gridId in self.gridId2GridObj or gridId in excludes:
-                continue
-            return gridId
-        return None
 
-    def countEmptyGrid(self):
-        return self.capacity - len(self.gridId2GridObj)
+        for _gridId in range(self.capacity):
+            if _gridId in self.gridIdToGridObj or _gridId in excludes:
+                continue
+            return _gridId
+        return None
 
     def getGridIdsByItemId(self, itemId):
         # 获得指定itemId的所有格子
-        return self.itemId2gridIds.get(itemId, [])
+        return self.itemIdToGridIds.get(itemId, [])
 
     def getMinGridByItemId(self, itemId, bindType):
-        grids = self.getGridIdsByItemId(itemId)
-        for gridId in grids:
-            gridObj = self.getItemObjByGridId(gridId)
+        _grids = self.getGridIdsByItemId(itemId)
+        for _gridId in _grids:
+            gridObj = self.getItemObjByGridId(_gridId)
             if gridObj.bindType == bindType:
-                return gridId, gridObj
+                return _gridId, gridObj
         return -1, None
     
-    def getGridObjsByItemId(self, itemId, bindType = gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED):
-        gridObjs = []
-        grids = self.getGridIdsByItemId(itemId)
-        for gridId in grids:
-            gridObj = self.getItemObjByGridId(gridId)
-            if gridObj.bindType == bindType or bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
-                gridObjs.append(gridObj)
-        return gridObjs
-
     def _recycleGrid(self, gridId, itemId):
-        LOG_IFO('_recycleGrid:', gridId, itemId)
-        gridIds = self.itemId2gridIds.get(itemId)
-        if gridId in gridIds:
-            gridIds.remove(gridId)
-        if len(gridIds) == 0:
-            self.itemId2gridIds.pop(itemId, None)
-        self.gridId2GridObj.pop(gridId, None)
+        LOG_INFO('_recycleGrid:', gridId, itemId)
+        _gridIds = self.itemIdToGridIds.get(itemId)
+        if gridId in _gridIds:
+            _gridIds.remove(gridId)
+        if len(_gridIds) == 0:
+            self.itemIdToGridIds.pop(itemId, None)
+        self.gridIdToGridObj.pop(gridId, None)
 
-    def getItemCount(self, itemId, bindType):
-        itemCount = 0
-        grids = self.getGridIdsByItemId(itemId)
-        for gridId in grids:
+    def getItemCount(self, gbId, itemId, bindType):
+        _itemCount = 0
+        _grids = self.getGridIdsByItemId(itemId)
+        for gridId in _grids:
             gridObj = self.getItemObjByGridId(gridId)
             # 过期
             if gridObj.isExpired():
@@ -168,44 +131,21 @@ class ItemContainer(userType.UserSingleType):
             if gridObj.isLocked():
                 continue
             # 如果是装备，检查是否损坏了
-            if gridObj.isEquipmentItem() and not gridObj.isGood():
+            if gridObj.isEquipmentItem() and not gridObj.isGood(gbId):
                 continue
             if bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED or bindType == gridObj.bindType:
-                itemCount += gridObj.itemNum
-        return itemCount
+                _itemCount += gridObj.itemNum
+        return _itemCount
 
-    def getItemCountWithKargs(self, itemId, bindType, **kwargs):
-        itemCount = 0
-        # 获取道具Item所在的格子
-        grids = self.getGridIdsByItemId(itemId)
-        for gridId in grids:
-            # 根据格子id获取道具对象
-            gridObj = self.getItemObjByGridId(gridId)
-            # 判断绑定类型
-            if bindType == gridObj.bindType:
-                isOk = True
-                # 检查属性存在且满足
-                for k, v in kwargs.items():
-                    if not hasattr(gridObj, k):
-                        isOk = False
-                        break
-                    if getattr(gridObj, k) != v:
-                        isOk = False
-                        break
-                if isOk:
-                    # 累加道具个数
-                    itemCount += gridObj.itemNum
-        return itemCount
-
-    def addItemsToNewGrid(self, owner, itemObj, opUUID, src, detail, gridId=None, notify=True, syncToClient=True,
-                          srcSubType=0, idipSource=0):
+    def addItemsToNewGrid(self, owner, itemObj, opUUID, srcType, detail, gridId=None, syncToClient=True):
         if gridId is None:
-            gridId = self.getEmptyGrid()
+            gridId = self.fetchEmptyGrid()
+
         if gridId is None:
             # no free grid
             return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
 
-        if gridId in self.gridId2GridObj:
+        if gridId in self.gridIdToGridObj:
             gameengine.panicStack('addItemsToNewGrid: add to non empty grid', gridId)
             return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
         
@@ -213,27 +153,23 @@ class ItemContainer(userType.UserSingleType):
         if dataUtils.isEquipItemByItemId(itemObj.itemId):
             itemObj.setEquipSchool(owner.getAvatarSchool())
 
-        self.gridId2GridObj[gridId] = itemObj
-        self.itemId2gridIds.setdefault(itemObj.itemId, set()).add(gridId)
+        self.gridIdToGridObj[gridId] = itemObj
+        self.itemIdToGridIds.setdefault(itemObj.itemId, set()).add(gridId)
 
         return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, gridId
 
-    def canAddItems(self, itemList):
-        opPlan, _, _ = self.calcAddItemsPlan(itemList, planDetails=False)
-        return opPlan == gameconst.BagOpPlan.OPERATE_BAG_OK
-
     def calcAddItemsPlan(self, itemList, planDetails=True):
-        # old: wrapped to existing grids
-        # new: insert to empty grids
+        # old: wrapped to existing _grids
+        # new: insert to empty _grids
         addPlanDict = {'old': {}, 'new': {}}
         leftItemList = []
-        for it in itemList:
-            planResult, leftNum = self._calcAddSingleItemPlan(it, addPlanDict)
+        for _it in itemList:
+            planResult, leftNum = self._calcAddSingleItemPlan(_it, addPlanDict)
 
             if planResult != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 if not planDetails:
                     return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN
-                leftItemList.append([it, leftNum])
+                leftItemList.append([_it, leftNum])
 
         if leftItemList:
             return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, addPlanDict, leftItemList
@@ -241,51 +177,45 @@ class ItemContainer(userType.UserSingleType):
             return gameconst.BagOpPlan.OPERATE_BAG_OK, addPlanDict, leftItemList
 
     def _calcAddSingleItemPlan(self, item, planDict):
-        totalNum = item.itemNum
-        maxStackSize = item.maxStackSize(item.itemId)
+        _totalNum = item.itemNum
+        _maxStackSize = item.maxStackSize(item.itemId)
         oldGrids = self.getGridIdsByItemId(item.itemId)
         for gridId in oldGrids:
-            it = self.gridId2GridObj[gridId]
-            planItems = planDict['old'].get(gridId, [])
-            sumNum = sum([num for _, num in planItems])
-            if it.canMerge(item) and it.itemNum + sumNum < maxStackSize:
-                addNum = min(totalNum, maxStackSize - it.itemNum - sumNum)
-                totalNum = totalNum - addNum
-                planItems.append((item, addNum))
-                planDict['old'][gridId] = planItems
-                if totalNum == 0:
-                    return gameconst.BagOpPlan.OPERATE_BAG_OK, totalNum
+            _it = self.gridIdToGridObj[gridId]
+            _planItems = planDict['old'].get(gridId, [])
+            sumNum = sum([num for _, num in _planItems])
+            if _it.canMerge(item) and _it.itemNum + sumNum < _maxStackSize:
+                addNum = min(_totalNum, _maxStackSize - _it.itemNum - sumNum)
+                _totalNum = _totalNum - addNum
+                _planItems.append((item, addNum))
+                planDict['old'][gridId] = _planItems
+                if _totalNum == 0:
+                    return gameconst.BagOpPlan.OPERATE_BAG_OK, _totalNum
 
-        for gridId, planItems in planDict['new'].items():
-            sumNum = sum([num for _, num in planItems])
-            it = planItems[0][0]
-            if it.canMerge(item) and sumNum < maxStackSize:
-                addNum = min(totalNum, maxStackSize - sumNum)
-                totalNum = totalNum - addNum
-                planItems.append((item, addNum))
-                if totalNum == 0:
-                    return gameconst.BagOpPlan.OPERATE_BAG_OK, totalNum
+        for gridId, _planItems in planDict['new'].items():
+            sumNum = sum([num for _, num in _planItems])
+            _it = _planItems[0][0]
+            if _it.canMerge(item) and sumNum < _maxStackSize:
+                addNum = min(_totalNum, _maxStackSize - sumNum)
+                _totalNum = _totalNum - addNum
+                _planItems.append((item, addNum))
+                if _totalNum == 0:
+                    return gameconst.BagOpPlan.OPERATE_BAG_OK, _totalNum
 
-        # newGridId = self.getEmptyGrid(excludes=list(planDict['new'].keys()))
-        # if newGridId is not None:
-        #     planDict['new'][newGridId] = [(item, totalNum)]
-        #     return gameconst.BagOpPlan.OPERATE_BAG_OK, 0
-
-        for oneNum in range(0, totalNum, maxStackSize):
-            addNum = min(maxStackSize, totalNum - oneNum)
-            newGridId = self.getEmptyGrid(excludes=list(planDict['new'].keys()))
+        for oneNum in range(0, _totalNum, _maxStackSize):
+            addNum = min(_maxStackSize, _totalNum - oneNum)
+            newGridId = self.fetchEmptyGrid(excludes=list(planDict['new'].keys()))
             if newGridId is None:
-                return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, totalNum
+                return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, _totalNum
             planDict['new'][newGridId] = [(item, addNum)]
-            totalNum -= addNum
-            if totalNum == 0:
-                return gameconst.BagOpPlan.OPERATE_BAG_OK, totalNum
+            _totalNum -= addNum
+            if _totalNum == 0:
+                return gameconst.BagOpPlan.OPERATE_BAG_OK, _totalNum
 
-        return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, totalNum
+        return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, _totalNum
 
-    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
-                         srcSubType=0, idipSource=0):
-        LOG_IFO('addItemsWithPlan', self.isLocked(), [(i.itemId, i.itemNum) for i in itemList], opUUID, src)
+    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True):
+        LOG_INFO('addItemsWithPlan', self.isLocked(), [(_i.itemId, _i.itemNum) for _i in itemList], opUUID, src)
         if self.isLocked():
             return gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, {}
 
@@ -294,22 +224,22 @@ class ItemContainer(userType.UserSingleType):
         else:
             addPlanCode, planDict, leftList = self.calcAddItemsPlan(itemList)
 
-        LOG_IFO('addItemsWithPlan', addPlanCode, planDict)
+        LOG_INFO('addItemsWithPlan', addPlanCode, planDict)
 
         if addPlanCode != gameconst.BagOpPlan.OPERATE_BAG_OK:
             return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
 
-        for gridId, planItems in planDict['old'].items():
-            item = self.gridId2GridObj[gridId]
-            mergeNum = sum([num for _, num in planItems])
+        for gridId, _planItems in planDict['old'].items():
+            item = self.gridIdToGridObj[gridId]
+            mergeNum = sum([num for _, num in _planItems])
             item.setItemNum(item.itemNum + mergeNum)
 
-        for gridId, planItems in planDict['new'].items():
-            sumNum = sum([num for _, num in planItems])
-            it = planItems[0][0]
-            it.setItemNum(sumNum)
+        for gridId, _planItems in planDict['new'].items():
+            sumNum = sum([num for _, num in _planItems])
+            _it = _planItems[0][0]
+            _it.setItemNum(sumNum)
             # addItemsWithPlan已经通知客户端一次，在addItemsWithPlan里调用addItemsToNewGrid，syncToClient为False
-            self.addItemsToNewGrid(owner, it, opUUID, src, detail, gridId, notify, False, srcSubType, idipSource)
+            self.addItemsToNewGrid(owner, _it, opUUID, src, detail, gridId, False)
 
         return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDict
 
@@ -331,80 +261,79 @@ class ItemContainer(userType.UserSingleType):
                     return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, gridObj.itemId
                 removeDict[gridId] = item.itemNum
 
-        for itemId, itemInfo in itemsDict.items():
-            for bindType, itemNum in itemInfo.items():
+        for _itemId, _itemInfo in itemsDict.items():
+            for bindType, itemNum in _itemInfo.items():
                 if itemNum == 0:
                     continue
-                leftNum, ret = self._calcDeductSingleItemPlan(itemId, bindType, itemNum, removeDict)
+                leftNum, ret = self._calcDeductSingleItemPlan(_itemId, bindType, itemNum, removeDict)
                 if ret != gameconst.BagOpPlan.OPERATE_BAG_OK and bindType == gameconst.ItemBindType.BIND:
-                    leftNum, ret = self._calcDeductSingleItemPlan(itemId, gameconst.ItemBindType.NORMAL, leftNum, removeDict)
+                    leftNum, ret = self._calcDeductSingleItemPlan(_itemId, gameconst.ItemBindType.NORMAL, leftNum, removeDict)
                 if ret != gameconst.BagOpPlan.OPERATE_BAG_OK:
-                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, itemId
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, _itemId
 
         return gameconst.BagOpPlan.OPERATE_BAG_OK, removeDict
 
     def _calcDeductSingleItemPlan(self, itemId, bindType, totalNum, planDict):
         itemGrids = self.getGridIdsByItemId(itemId)
         for gridId in itemGrids:
-            it = self.gridId2GridObj[gridId]
+            _it = self.gridIdToGridObj[gridId]
             planNum = planDict.get(gridId, 0)
 
-            if it.bindType != bindType:
+            if _it.bindType != bindType:
                 continue
 
             # 开启了锁，并且已上锁
-            if it.isLocked():
+            if _it.isLocked():
                 continue
 
-            if it.itemId == itemId and not it.isExpired() and it.itemNum > planNum:
+            if _it.itemId == itemId and not _it.isExpired() and _it.itemNum > planNum:
                 # 如果这个格子已经被扣除了planNum了，这次扣除要先减去
-                removeNum = min(totalNum, it.itemNum - planNum)
-                totalNum = totalNum - removeNum
-                planDict[gridId] = planNum + removeNum
+                _removeNum = min(totalNum, _it.itemNum - planNum)
+                totalNum = totalNum - _removeNum
+                planDict[gridId] = planNum + _removeNum
                 if totalNum == 0:
                     return 0, gameconst.BagOpPlan.OPERATE_BAG_OK
 
         return totalNum, gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN
 
     def getItemByUniqueId(self, uniqueId):
-        for gridId, item in self.gridId2GridObj.items():
-            if not item.uniqueId:
+        for _gridId, _item in self.gridIdToGridObj.items():
+            if not _item.uniqueId:
                 continue
 
-            if item.uniqueId == uniqueId:
-                return gridId, item
+            if _item.uniqueId == uniqueId:
+                return _gridId, _item
 
         return -1, None
 
     def getItemByItemIdAndUniqueId(self, itemId, uniqueId, withGridId=False):
         # FIXME()(AUCTION): 现在非特殊物品没有uniqueId, 以后会有
         # 该方法可以使用`getItemByUniqueId`代替
-        gridId, itemObj = -1, None
+        _gridId, itemObj = -1, None
         for i_gridId, i_it in self.iterGetItemByItemIdAndUniqueId(itemId, uniqueId):
-            gridId, itemObj = i_gridId, i_it
+            _gridId, itemObj = i_gridId, i_it
             break
 
         if withGridId:
-            return gridId, itemObj
+            return _gridId, itemObj
         else:
             return itemObj
 
 
     def iterGetItemByItemIdAndUniqueId(self, itemId, uniqueId):
-        for gridId, it in self.iterGetItemByItemId(itemId):
-            if it.uniqueId == uniqueId:
-                yield gridId, it
+        for _gridId, _it in self.iterGetItemByItemId(itemId):
+            if _it.uniqueId == uniqueId:
+                yield _gridId, _it
 
     def iterGetItemByItemId(self, itemId):
-        gridIds = self.getGridIdsByItemId(itemId)
-        for gridId in gridIds:
-            it = self.gridId2GridObj[gridId]
-            yield gridId, it
+        _gridIds = self.getGridIdsByItemId(itemId)
+        for _gridId in _gridIds:
+            _it = self.gridIdToGridObj[_gridId]
+            yield _gridId, _it
 
-    def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True, srcSubType=0,
-                          idipSource=0):
+    def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True):
         # 清除grid，并返回清除前的对象
-        LOG_IFO('in cleanGridByGridId:', gridId, itemId)
+        LOG_INFO('in cleanGridByGridId:', gridId, itemId)
         cleanItem = self.getItemObjByGridId(gridId)
         if not cleanItem or cleanItem.itemId != itemId:
             LOG_WARN('   in cleanGridByGridId, data error:', cleanItem)
@@ -415,19 +344,19 @@ class ItemContainer(userType.UserSingleType):
 
     # 调用前需要判断好每个grid的数量是否足够，这里面不做检查,保证执行成功，不够直接raise
     def deductItemsByGrid(self, owner, grid2ItemNum, opUUID, srcType, detail, sendClient=True):
-        for gridId, deductNum in grid2ItemNum.items():
-            item = self.getItemObjByGridId(gridId)
+        for _gridId, deductNum in grid2ItemNum.items():
+            item = self.getItemObjByGridId(_gridId)
             if deductNum < 0:
                 deductNum = item.itemNum
             if deductNum > item.itemNum:
-                raise Exception('deductItemsByGrid error: %s %s %s %s' % (owner.id, gridId, item.itemNum, grid2ItemNum))
+                raise Exception('deductItemsByGrid error: %s %s %s %s' % (owner.id, _gridId, item.itemNum, grid2ItemNum))
             item.setItemNum(item.itemNum - deductNum)
             if item.itemNum == 0:
-                self._recycleGrid(gridId, item.itemId)
+                self._recycleGrid(_gridId, item.itemId)
         return
 
     def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDict=None, isCheckLock=True):
-        LOG_IFO('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
+        LOG_INFO('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
         if self.isLocked():
             if isCheckLock:
                 return gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, None
@@ -448,18 +377,18 @@ class ItemContainer(userType.UserSingleType):
 
     @utils.checkBagLocked
     def doCleanBag(self, owner, opUUID, src, detail):
-        deductDic = {}
-        for gridId, gridObj in self.gridId2GridObj.items():
-            deductDic[gridId] = gridObj.itemId
+        _deductDic = {}
+        for _gridId, gridObj in self.gridIdToGridObj.items():
+            _deductDic[_gridId] = gridObj.itemId
 
-        for gridId, itemId in deductDic.items():
-            self.cleanGridByGridId(owner, gridId, itemId, opUUID, src, detail)
+        for _gridId, itemId in _deductDic.items():
+            self.cleanGridByGridId(owner, _gridId, itemId, opUUID, src, detail)
 
-        self.gridId2GridObj = {}
-        self.itemId2gridIds = {}
+        self.gridIdToGridObj = {}
+        self.itemIdToGridIds = {}
 
     def getItemUniqueId(self, itemId):
-        for gridId, item in self.gridId2GridObj.items():
+        for _gridId, item in self.gridIdToGridObj.items():
             if item.itemId == itemId:
                 return item.uniqueId
     
@@ -469,17 +398,17 @@ class ItemContainer(userType.UserSingleType):
             return False, None, None
         if bindType not in gameconst.ItemBindType.VALID_BIND_TYPE:
             return False, None, None
-        gridIDs = self.itemId2gridIds.get(itemId, None)
-        if not gridIDs:
+        _gridIDs = self.itemIdToGridIds.get(itemId, None)
+        if not _gridIDs:
             return False, None, None
         bindCount = 0
         bindGridIDs = {}
         normalCount = 0
         normalGridIDs = {}
-        for gridID in gridIDs:
-            if excludedGridIDs and gridID in excludedGridIDs:
+        for _gridID in _gridIDs:
+            if excludedGridIDs and _gridID in excludedGridIDs:
                 continue
-            item = self.gridId2GridObj.get(gridID)
+            item = self.gridIdToGridObj.get(_gridID)
             if item.isLocked():
                 continue
             if bindType != gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED and bindType != item.bindType:
@@ -497,32 +426,34 @@ class ItemContainer(userType.UserSingleType):
             if isGot:
                 if bindType == gameconst.ItemBindType.BIND:
                     if item.itemNum >= count:
-                        bindGridIDs[gridID] = bindGridIDs.get(gridID, 0) + count
+                        bindGridIDs[_gridID] = bindGridIDs.get(_gridID, 0) + count
+                        bindCount += count
                         return True, bindGridIDs, [bindCount, 0]
                     else:
                         count -= item.itemNum
-                        bindGridIDs[gridID] = bindGridIDs.get(gridID, 0) + item.itemNum
+                        bindGridIDs[_gridID] = bindGridIDs.get(_gridID, 0) + item.itemNum
+                        bindCount += item.itemNum                        
                         if count == 0:
                             return True, bindGridIDs, [bindCount, 0]
 
-                    bindCount += item.itemNum
                 elif bindType == gameconst.ItemBindType.NORMAL:
                     if item.itemNum >= count:
-                        normalGridIDs[gridID] = normalGridIDs.get(gridID, 0) + count
+                        normalGridIDs[_gridID] = normalGridIDs.get(_gridID, 0) + count
+                        normalCount += count
                         return True, normalGridIDs, [0, normalCount]
                     else:
                         count -= item.itemNum
-                        normalGridIDs[gridID] = normalGridIDs.get(gridID, 0) + item.itemNum
+                        normalGridIDs[_gridID] = normalGridIDs.get(_gridID, 0) + item.itemNum
+                        normalCount += item.itemNum
                         if count == 0:
                             return True, normalGridIDs, [0, normalCount]
-                        
-                    normalCount += item.itemNum
+    
                 elif bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
                     if item.bindType == gameconst.ItemBindType.BIND:
-                        bindGridIDs[gridID] = bindGridIDs.get(gridID, 0) + item.itemNum
+                        bindGridIDs[_gridID] = bindGridIDs.get(_gridID, 0) + item.itemNum
                         bindCount += item.itemNum
                     elif item.bindType == gameconst.ItemBindType.NORMAL:
-                        normalGridIDs[gridID] = normalGridIDs.get(gridID, 0) + item.itemNum
+                        normalGridIDs[_gridID] = normalGridIDs.get(_gridID, 0) + item.itemNum
                         normalCount += item.itemNum
         # 同时满足的, 优先使用绑定的, 再使用未绑定的, 需要计算一遍
         if bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
@@ -530,51 +461,51 @@ class ItemContainer(userType.UserSingleType):
             bindCount = 0
             normalCount = 0
             if isNormalTypeFirst:
-                for gridID, itemNum in normalGridIDs.items():
+                for _gridID, itemNum in normalGridIDs.items():
                     if itemNum > count:
                         normalCount += count
-                        results[gridID] = results.get(gridID, 0) + count
+                        results[_gridID] = results.get(_gridID, 0) + count
                         return True, results, [bindCount, normalCount]
                     else:
                         count -= itemNum
                         normalCount += itemNum
-                        results[gridID] = results.get(gridID, 0) + itemNum
+                        results[_gridID] = results.get(_gridID, 0) + itemNum
                         if count == 0:
                             return True, results, [bindCount, normalCount]
                         
-                for gridID, itemNum in bindGridIDs.items():
+                for _gridID, itemNum in bindGridIDs.items():
                     if itemNum > count:
                         bindCount += count
-                        results[gridID] = results.get(gridID, 0) + count
+                        results[_gridID] = results.get(_gridID, 0) + count
                         return True, results, [bindCount, normalCount]
                     else:
                         count -= itemNum
                         bindCount += itemNum
-                        results[gridID] = results.get(gridID, 0) + itemNum
+                        results[_gridID] = results.get(_gridID, 0) + itemNum
                         if count == 0:
                             return True, results, [bindCount, normalCount]
             else:
-                for gridID, itemNum in bindGridIDs.items():
+                for _gridID, itemNum in bindGridIDs.items():
                     if itemNum > count:
                         bindCount += count
-                        results[gridID] = results.get(gridID, 0) + count
+                        results[_gridID] = results.get(_gridID, 0) + count
                         return True, results, [bindCount, normalCount]
                     else:
                         count -= itemNum
                         bindCount += itemNum
-                        results[gridID] = results.get(gridID, 0) + itemNum
+                        results[_gridID] = results.get(_gridID, 0) + itemNum
                         if count == 0:
                             return True, results, [bindCount, normalCount]
                         
-                for gridID, itemNum in normalGridIDs.items():
+                for _gridID, itemNum in normalGridIDs.items():
                     if itemNum > count:
                         normalCount += count
-                        results[gridID] = results.get(gridID, 0) + count
+                        results[_gridID] = results.get(_gridID, 0) + count
                         return True, results, [bindCount, normalCount]
                     else:
                         count -= itemNum
                         normalCount += itemNum
-                        results[gridID] = results.get(gridID, 0) + itemNum
+                        results[_gridID] = results.get(_gridID, 0) + itemNum
                         if count == 0:
                             return True, results, [bindCount, normalCount]
 

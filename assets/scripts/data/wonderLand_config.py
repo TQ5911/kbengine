@@ -23,9 +23,13 @@ datas = _tools.RODict({
         "ID": "wonderLandNumCoin",
         "value": 100,
     }),
+    "wonderLandNumCoinCost": _tools.RODict({
+        "ID": "wonderLandNumCoinCost",
+        "value": ((1, 30000021, 100), (2, 30000001, 100)),
+    }),
     "wonderLandNumCoinDailyLimit": _tools.RODict({
         "ID": "wonderLandNumCoinDailyLimit",
-        "value": 1,
+        "value": 2,
     }),
     "wonderLandNumItem": _tools.RODict({
         "ID": "wonderLandNumItem",
@@ -166,6 +170,10 @@ datas = _tools.RODict({
     "wonderLand_randomBossAppear": _tools.RODict({
         "ID": "wonderLand_randomBossAppear",
         "value": 54001958,
+    }),
+    "wonderLand_summoningFailed2": _tools.RODict({
+        "ID": "wonderLand_summoningFailed2",
+        "value": 54001961,
     }),
     "wonderLand_bossAlive": _tools.RODict({
         "ID": "wonderLand_bossAlive",

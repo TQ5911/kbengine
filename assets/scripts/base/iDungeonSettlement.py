@@ -9,6 +9,7 @@ import gameclass
 import gameconfig
 import LogTrackingMgr
 import formula
+import actionContext
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import raidBossChallenge_basicInfo as RBC_BI
@@ -60,10 +61,10 @@ class IDungeonSettlement(object):
         return ret
 
     def onDungeonSettlement(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
-        LOG_IFO('onDungeonSettlement:: 1', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+        LOG_INFO('onDungeonSettlement:: 1', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
         if not self.checkDungeonPlayModeOpen(playMode):
             box.cell.onNotifySettlementResult(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, [], [], [])
-            LOG_IFO('onDungeonSettlement:: 2, play mode id closed, no reward ', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+            LOG_INFO('onDungeonSettlement:: 2, play mode id closed, no reward ', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
             return
         
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
@@ -84,7 +85,7 @@ class IDungeonSettlement(object):
             if dungeonRewardId > 0:
                 ctx = self._getAvatarAwardCtx(dungeonRewardId, None)
                 dungeonRewards = dropAward.getAwardOne(dungeonRewardId, ctx).toBriefList()
-                LOG_IFO('in _doChiefSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                LOG_INFO('in _doChiefSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                 self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CHIEF, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD, dungeonRewardId, dungeonRewards)
 
             if self.chiefInfo.checkUsedTicketType(gameconst.DungeonTicketType.GOLD):
@@ -92,7 +93,7 @@ class IDungeonSettlement(object):
                 if goldRewardId > 0:
                     ctx = self._getAvatarAwardCtx(goldRewardId, None)
                     goldPassRewards = dropAward.getAwardOne(goldRewardId, ctx).toBriefList()
-                    LOG_IFO('in _doChiefSettlement:: record gold reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                    LOG_INFO('in _doChiefSettlement:: record gold reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CHIEF, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_RAID_GOLD_PASS_REWARD, goldRewardId, goldPassRewards)
             entryId = RBC_BI.dungeonIdxDic.get(dungeonNo)
             if self.chiefPassRecords.checkEntryStatus(entryId):
@@ -102,8 +103,14 @@ class IDungeonSettlement(object):
                     self.chiefPassRecords = self.chiefPassRecords
                     ctx = self._getAvatarAwardCtx(firstRewardId, None)
                     firstPassRewards = dropAward.getAwardOne(firstRewardId, ctx).toBriefList()
-                    LOG_IFO('in _doChiefSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                    LOG_INFO('in _doChiefSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CHIEF, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD, firstRewardId, firstPassRewards)
+            self.achievementInfo.triggerAchieveByType(
+                self,
+                gameconst.AchieveType.CHIEF,
+                actionContext.AchievementCtx(dungeonNo=dungeonNo)
+            )
+        
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.CHIEF, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], goldPassRewards if goldPassRewards else [], dungeonRewards if dungeonRewards else [])
         
         LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(extra['uniqueID'], gameconst.DungeonPlayModeEnum.CHIEF, dungeonNo, extra['spaceUUID'], spaceNo, self.gbID, \
@@ -120,7 +127,7 @@ class IDungeonSettlement(object):
             if dungeonRewardId > 0:
                 ctx = self._getAvatarAwardCtx(dungeonRewardId, None)
                 dungeonRewards = dropAward.getAwardOne(dungeonRewardId, ctx).toBriefList()
-                LOG_IFO('in _doCrusadeSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                LOG_INFO('in _doCrusadeSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                 self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD, dungeonRewardId, dungeonRewards)
 
             if self.crusadeInfo.checkUsedTicketType(gameconst.DungeonTicketType.GOLD):
@@ -128,7 +135,7 @@ class IDungeonSettlement(object):
                 if goldRewardId > 0:
                     ctx = self._getAvatarAwardCtx(goldRewardId, None)
                     goldPassRewards = dropAward.getAwardOne(goldRewardId, ctx).toBriefList()
-                    LOG_IFO('in _doCrusadeSettlement:: record gold reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                    LOG_INFO('in _doCrusadeSettlement:: record gold reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD, goldRewardId, goldPassRewards)
             entryId = TDC_BI.dungeonIdxDic.get(dungeonNo)
             if self.crusadePassRecords.checkEntryStatus(entryId):
@@ -138,8 +145,13 @@ class IDungeonSettlement(object):
                     self.crusadePassRecords = self.crusadePassRecords
                     ctx = self._getAvatarAwardCtx(firstRewardId, None)
                     firstPassRewards = dropAward.getAwardOne(firstRewardId, ctx).toBriefList()
-                    LOG_IFO('in _doCrusadeSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                    LOG_INFO('in _doCrusadeSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_TEAM_GOLD_PASS_REWARD, firstRewardId, firstPassRewards)
+            self.achievementInfo.triggerAchieveByType(
+                self,
+                gameconst.AchieveType.CRUSADE,
+                actionContext.AchievementCtx(dungeonNo=dungeonNo)
+            )
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.CRUSADE, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], goldPassRewards if goldPassRewards else [], dungeonRewards if dungeonRewards else [])
         
         LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(extra['uniqueID'], gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, extra['spaceUUID'], spaceNo, self.gbID, \
@@ -167,7 +179,7 @@ class IDungeonSettlement(object):
             if dungeonRewardId > 0:
                 ctx = self._getAvatarAwardCtx(dungeonRewardId, None)
                 dungeonRewards = dropAward.getAwardOne(dungeonRewardId, ctx).toBriefList()
-                LOG_IFO('in _doGuildBossChallengeSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                LOG_INFO('in _doGuildBossChallengeSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                 self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.GUILD_BOSS, dungeonNo, win, rank, uniqueId, AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CLEAR_REWARD, dungeonRewardId, dungeonRewards)
 
             # 首通奖励
@@ -180,12 +192,13 @@ class IDungeonSettlement(object):
                     self.guildBossPassRecords = self.guildBossPassRecords
                     ctx = self._getAvatarAwardCtx(firstRewardId, None)
                     firstPassRewards = dropAward.getAwardOne(firstRewardId, ctx).toBriefList()
-                    LOG_IFO('in _doGuildBossChallengeSettlement:: record first pass reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                    LOG_INFO('in _doGuildBossChallengeSettlement:: record first pass reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.GUILD_BOSS, dungeonNo, win, rank, uniqueId, AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_FIRST_REWARD, firstRewardId, firstPassRewards)
         
         LogTrackingMgr.LogTrackingMgr.Guild_BossChallenge_Settlement(opUUId, self.gbID, win, score, rank, isFirstPass, firstPassRewards if firstPassRewards else [], dungeonRewards if dungeonRewards else [])
         
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.GUILD_BOSS, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], [], dungeonRewards if dungeonRewards else [])
+        self.triggerAchievementWithCtx(gameconst.AchieveType.GUILD_ACTIVITY, actionContext.AchievementCtx(activityType=gameconst.AchieveGuildActivityType.BOSS))
 
     def _doAddWealthVal(self, opUUID, playMode, dungeonNo, win, rank, uniqueId, src, rewardId, rewards):
         addWealthVal = dropAward.AwardVal()
@@ -200,5 +213,5 @@ class IDungeonSettlement(object):
     def checkGuildBossRewardRemainTimes(self, dungeonNo):
         return self.guildBossRewardWeeklyCount < int(GC_C.datas['guildRewardTimes']['value'])
     
-    def dungeonSettlementWeeklyReset(self):
+    def dungeonSettlementWeeklyReset(self, *args):
         self.guildBossRewardWeeklyCount = 0

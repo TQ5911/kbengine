@@ -12,6 +12,18 @@
             <Flags>         BASE            </Flags>
             <Persistent>    true            </Persistent>
         </outfitInfo>
+
+        <purchasedOutfitIds>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </purchasedOutfitIds>
+
+        <purchasedappearanceIds>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </purchasedappearanceIds>
     </Properties>
 
 
@@ -21,36 +33,32 @@
             <Arg>       OUTFIT_ID       </Arg>
         </reqEnableOutfit>
 
-        <reqExpOutfit> <Exposed/>
-            <Arg>       UINT8           </Arg>
-            <Arg>       OUTFIT_ID       </Arg>
-            <Arg>       ITEMID          </Arg>
-        </reqExpOutfit>
-
         <reqBuyOutfit> <Exposed/>
-            <Arg>       UINT8           </Arg>
-            <Arg>       OUTFIT_ID       </Arg>
+            <Arg>       UINT32          </Arg>
         </reqBuyOutfit>
-        <reqClickOutfit> <Exposed/>
-            <Arg>       UINT8           </Arg>
-            <Arg>       OUTFIT_ID       </Arg>
-        </reqClickOutfit>
+
+        <reqPurchasedOutfitIds> <Exposed/>
+        </reqPurchasedOutfitIds>
 
         <updateAccountCharacterOutfit>
             <Arg>       STRING          </Arg>
             <Arg>       OUTFIT_ID       </Arg>
         </updateAccountCharacterOutfit>
 
-        <onGetToplistWing>
-            <Arg>        PY_DICT                    </Arg>
-        </onGetToplistWing>
+        <addOutfitByReason>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+            <Arg>       TIMESTAMP       </Arg>
+            <Arg>       UINT32          </Arg>
+        </addOutfitByReason>
 
-        <addWingByToplist>
-            <Arg>       OUTFIT_ID           </Arg>
-            <Arg>       UINT32              </Arg>
-            <Arg>       UINT32              </Arg>
-        </addWingByToplist>
-
+        <addAppearanceByReason>
+            <Arg>       UINT32          </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+            <Arg>       TIMESTAMP       </Arg>
+            <Arg>       UINT32          </Arg>
+        </addAppearanceByReason>
     </BaseMethods>
 
     <CellMethods>
@@ -72,11 +80,24 @@
             <Arg>       OUTFIT_ID       </Arg>
             <Arg>       BOOL            </Arg>
         </updatePropByMount>
+
+        <updatePropByAppearance>
+            <Arg>       UINT32       </Arg>
+            <Arg>       BOOL         </Arg>
+        </updatePropByAppearance>
+
+        <appearanceOnLogin>
+            <Arg>       PY_DICT           </Arg>
+        </appearanceOnLogin>
     </CellMethods>
 
     <ClientMethods>
         <onUpdateOutfitData>
             <Arg>      ARRAY <of> CLIENT_OUTFIT_VAL    </of>    </Arg>
         </onUpdateOutfitData>
+
+        <onPurchasedOutfitIds>
+            <Arg>      ARRAY <of> UINT32    </of>    </Arg>
+        </onPurchasedOutfitIds>
     </ClientMethods>
 </root>

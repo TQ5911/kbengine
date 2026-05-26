@@ -8,21 +8,21 @@ import userType
 import auction
 
 
-class AuctionItemInfo(userType.UserSTDSoleInfo):
+class AuctionItemInfo(userType.UserSTSoleInfo):
 
     @property
     def cls(self):
         return auction.AuctionItem
 
 
-class AuctionInfo(userType.UserSTDSoleInfo):
+class AuctionInfo(userType.UserSTSoleInfo):
 
     @property
     def cls(self):
         return auction.Auction
 
 
-class AuctionPlayerCacheInfo(userType.UserSTDSoleInfo):
+class AuctionPlayerCacheInfo(userType.UserSTSoleInfo):
 
     @property
     def cls(self):

@@ -16,8 +16,10 @@ datas ={
           "PosY": 111.4327,
           "PosZ": 386.6934,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 20,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -27,6 +29,7 @@ datas ={
             "RefreshTime": 999999.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -72,8 +75,10 @@ datas ={
           "PosY": 100.0,
           "PosZ": 138.59,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 20,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -83,6 +88,7 @@ datas ={
             "RefreshTime": 1,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u534a\u517d\u6218\u58eb\u7b2c\u4e00\u6ce2"
           }
         },
@@ -151,12 +157,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 11042005,
           "ID": 21020006,
-          "PosX": 375.422577,
+          "PosX": 375.4226,
           "PosY": 100.0,
           "PosZ": 143.1525,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 20,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -164,7 +172,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u534a\u517d\u6218\u58eb\u7b2c\u4e00\u6ce2"
           }
         },
@@ -315,12 +325,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 11042004,
           "ID": 21020012,
-          "PosX": 361.741974,
-          "PosY": 100.676018,
-          "PosZ": 164.692215,
+          "PosX": 361.742,
+          "PosY": 100.676,
+          "PosZ": 164.6922,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 20,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -328,7 +340,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u534a\u517d\u6218\u58eb\u7b2c\u4e8c\u6ce2"
           }
         },
@@ -451,12 +465,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 11042004,
           "ID": 21020017,
-          "PosX": 374.891479,
-          "PosY": 100.227089,
-          "PosZ": 155.858566,
+          "PosX": 374.8915,
+          "PosY": 100.2271,
+          "PosZ": 155.8586,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 20,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -464,7 +480,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u534a\u517d\u6218\u58eb\u7b2c\u4e8c\u6ce2"
           }
         },
@@ -2807,11 +2825,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 45.0,
-            "MPosX": 318.0,
+            "Length": 90.0,
+            "MPosX": 307.0,
             "MPosY": 100.02,
-            "MPosZ": 90.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 47.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028004": {
@@ -2830,11 +2849,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 30.0,
+            "Length": 60.0,
             "MPosX": 341.0,
             "MPosY": 99.4,
-            "MPosZ": 177.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 147.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028005": {
@@ -2853,11 +2873,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 30.0,
-            "MPosX": 322.0,
+            "Length": 60.0,
+            "MPosX": 313.0,
             "MPosY": 99.3,
-            "MPosZ": 235.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 207.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028006": {
@@ -2876,11 +2897,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 38.0,
-            "MPosX": 292.0,
+            "Length": 76.0,
+            "MPosX": 276.0,
             "MPosY": 98.5,
-            "MPosZ": 292.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 257.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028007": {
@@ -2899,11 +2921,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 10.0,
-            "MPosX": 278.0,
+            "Length": 20.0,
+            "MPosX": 271.0,
             "MPosY": 98.3,
-            "MPosZ": 360.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 353.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028008": {
@@ -2922,11 +2945,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 15.0,
+            "Length": 30.0,
             "MPosX": 278.0,
             "MPosY": 98.2,
-            "MPosZ": 374.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 359.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028009": {
@@ -2945,11 +2969,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 20.0,
-            "MPosX": 262.0,
+            "Length": 40.0,
+            "MPosX": 254.0,
             "MPosY": 97.6,
-            "MPosZ": 403.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 385.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028010": {
@@ -2968,11 +2993,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 20.0,
-            "MPosX": 391.0,
+            "Length": 40.0,
+            "MPosX": 382.0,
             "MPosY": 100.72,
-            "MPosZ": 120.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 102.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028011": {
@@ -2991,11 +3017,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 27.0,
-            "MPosX": 391.0,
+            "Length": 54.0,
+            "MPosX": 389.0,
             "MPosY": 100.8,
-            "MPosZ": 155.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 128.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028012": {
@@ -3014,11 +3041,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 20.0,
-            "MPosX": 398.0,
+            "Length": 40.0,
+            "MPosX": 389.0,
             "MPosY": 97.4,
-            "MPosZ": 258.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 240.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028013": {
@@ -3037,11 +3065,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 30.0,
-            "MPosX": 351.0,
+            "Length": 60.0,
+            "MPosX": 327.0,
             "MPosY": 97.7,
-            "MPosZ": 294.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 275.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028014": {
@@ -3060,11 +3089,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 25.0,
-            "MPosX": 330.0,
+            "Length": 50.0,
+            "MPosX": 320.0,
             "MPosY": 96.7,
-            "MPosZ": 331.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 308.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028015": {
@@ -3083,11 +3113,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 10.0,
-            "MPosX": 330.0,
+            "Length": 20.0,
+            "MPosX": 328.0,
             "MPosY": 96.7,
-            "MPosZ": 375.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 365.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028016": {
@@ -3106,11 +3137,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 15.0,
-            "MPosX": 310.0,
+            "Length": 30.0,
+            "MPosX": 298.0,
             "MPosY": 95.4,
-            "MPosZ": 394.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 385.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028017": {
@@ -3129,11 +3161,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 20.0,
-            "MPosX": 293.0,
+            "Length": 40.0,
+            "MPosX": 285.0,
             "MPosY": 95.4,
-            "MPosZ": 413.0,
-            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899"
+            "MPosZ": 394.0,
+            "Remark": "\u5916\u56f4\u5e38\u9a7b\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028018": {
@@ -3152,11 +3185,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 50.0,
-            "Length": 10.0,
-            "MPosX": 356.0,
+            "Length": 30.0,
+            "MPosX": 336.0,
             "MPosY": 102.51,
-            "MPosZ": 207.0,
-            "Remark": "\u4e00\u9636\u6bb5\u7a7a\u6c14\u5899"
+            "MPosZ": 205.0,
+            "Remark": "\u4e00\u9636\u6bb5\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028019": {
@@ -3175,11 +3209,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 35.0,
-            "Length": 15.0,
-            "MPosX": 300.0,
+            "Length": 50.0,
+            "MPosX": 268.0,
             "MPosY": 110.84,
-            "MPosZ": 358.0,
-            "Remark": "\u4e8c\u9636\u6bb5\u7a7a\u6c14\u5899"
+            "MPosZ": 345.0,
+            "Remark": "\u4e8c\u9636\u6bb5\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028020": {
@@ -3198,11 +3233,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 35.0,
-            "Length": 15.0,
-            "MPosX": 283.0,
+            "Length": 50.0,
+            "MPosX": 251.0,
             "MPosY": 110.82,
-            "MPosZ": 396.0,
-            "Remark": "\u4e09\u9636\u6bb5\u7a7a\u6c14\u5899"
+            "MPosZ": 382.0,
+            "Remark": "\u4e09\u9636\u6bb5\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "21028021": {
@@ -3221,11 +3257,12 @@ datas ={
           "Props": {
             "AreaType": 2,
             "Height": 30.0,
-            "Length": 15.0,
-            "MPosX": 261.0,
+            "Length": 50.0,
+            "MPosX": 229.0,
             "MPosY": 119.94,
-            "MPosZ": 446.0,
-            "Remark": "\u56db\u9636\u6bb5\u7a7a\u6c14\u5899"
+            "MPosZ": 431.0,
+            "Remark": "\u56db\u9636\u6bb5\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         }
       }
@@ -3301,13 +3338,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 1,
         "ID": 21028023,
-        "PosX": 286.2853,
-        "PosY": 116.618,
-        "PosZ": 435.8926,
+        "PosX": 286.331,
+        "PosY": 116.7332,
+        "PosZ": 435.1529,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 8.0,
-          "Remark": ""
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     }

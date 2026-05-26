@@ -1,0 +1,141 @@
+<root>
+
+    <Interfaces>
+        <Interface> iBaseNoCell </Interface>
+        <Interface> iGlobal    </Interface>
+        <Interface> iTimerBase </Interface>
+    </Interfaces>
+
+    <Properties>
+        <globalIdx>
+            <Type>      UINT16     </Type>
+            <Flags>     BASE        </Flags>
+        </globalIdx>
+        <accountCache>
+            <Type>      PY_DICT     </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}      </Default>
+        </accountCache>
+
+        <centralServerIp>
+            <Type>      STRING      </Type>
+            <Flags>     BASE        </Flags>
+        </centralServerIp>
+
+        <centralServerPort>
+            <Type>      UINT16       </Type>
+            <Flags>     BASE        </Flags>
+        </centralServerPort>
+
+        <playerNumPlat>
+            <Type>      PY_DICT       </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}      </Default>
+        </playerNumPlat>
+
+        <account2box>
+            <Type>      PY_DICT     </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}      </Default>
+        </account2box>
+
+        <kickAccountSet>
+            <Type>      PY_SET      </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   set()       </Default>
+        </kickAccountSet>
+
+        <heartBeatTimer>
+            <Type>      TIMER_ID    </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   0           </Default>
+        </heartBeatTimer>
+
+        <accountNumCounter>
+            <Type>      PYTHON      </Type>
+            <Flags>     BASE        </Flags>
+        </accountNumCounter>
+
+        <accountRegNum>
+            <Type>      PYTHON      </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   0           </Default>
+        </accountRegNum>
+
+        <accountTodayRegNum>
+            <Type>      PYTHON      </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   0           </Default>
+        </accountTodayRegNum>
+        
+    </Properties>
+
+    <BaseMethods>
+        <updateCharacterInfo>
+            <Arg>      PYTHON     </Arg>
+            <Arg>      UINT32     </Arg>
+        </updateCharacterInfo>
+
+        <notifyCentralServerCreateAvatar>
+            <Arg>      PYTHON     </Arg>
+            <Arg>      UINT32     </Arg>
+        </notifyCentralServerCreateAvatar>
+
+        <notifyCentralServerLoginComplete>
+            <Arg>      UINT8     </Arg>
+            <Arg>      STRING    </Arg>
+            <Arg>      UINT32     </Arg>
+        </notifyCentralServerLoginComplete>
+
+        <onAccountDestroy>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
+        </onAccountDestroy>
+
+        <onAccountLogin>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       UINT32      </Arg>
+        </onAccountLogin>
+
+        <onAccountCreated>
+            <Arg>   UNICODE </Arg>
+            <Arg>      UINT8     </Arg>
+            <Arg>      BOOL     </Arg>
+            <Arg>       UINT8       </Arg>
+        </onAccountCreated>
+
+        <doOnOthersBaseByAccountName>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           METHOD_NAME </Arg>
+            <Arg>           METHOD_ARGS </Arg>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           METHOD_NAME </Arg>
+            <Arg>           METHOD_ARGS </Arg>
+        </doOnOthersBaseByAccountName>
+
+        <gmLookUpAccount>
+            <Arg> MAILBOX </Arg>
+            <Arg> UNICODE </Arg>
+            <Arg> STRING </Arg>
+            <Arg> UINT8 </Arg>
+            <Arg> BOOL </Arg>
+        </gmLookUpAccount>
+
+        <lockLoginSwitchServer>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   DBID                    </Arg>
+            <Arg>   SERVER_ID               </Arg>
+            <Arg>   UNICODE                 </Arg>
+            <Arg>   UINT32                  </Arg>
+        </lockLoginSwitchServer>
+
+        <unlockLoginSwitchServer>
+            <Arg>   UNICODE                 </Arg>
+        </unlockLoginSwitchServer>
+    </BaseMethods>
+</root>

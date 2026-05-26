@@ -415,7 +415,7 @@ def buildIndexStubName(stubName, idx):
     return '%s_%s' % (stubName, idx)
 
 def getTeamStub(teamId):
-    id = teamId % gameconst.TEAMSTUB_CONFIG_NUM
+    id = teamId % gameconst.TEAMSTUB_CONF_NUM
     teamStubName = 'TeamStub' + str(id)
     return getGlobalBase(teamStubName)
 
@@ -441,6 +441,28 @@ def modifyGlobalActData(actId, endTime):
         gameglobal.globalActData[actId] = endTime
     else:
         gameglobal.globalActData.pop(actId, None)
+
+def updateFreeTicketNumConfig(dateNumInfo):
+    LOG_INFO("updateFreeTicketNumConfig dateNumInfo", dateNumInfo)
+    for subType, dateNumList in dateNumInfo.items():
+        expandInfoList = []
+        for cfgIdx, cfgInfo in enumerate(dateNumList):
+            expandInfoList.append([cfgInfo[0], cfgInfo[1]])
+            if cfgIdx + 1 >= len(dateNumList):
+                LOG_DBG("updateFreeTicketNumConfig end", expandInfoList[-1])
+                break
+            nextData = dateNumList[cfgIdx + 1]
+            while expandInfoList[-1][0] < nextData[0]:
+                adjDataTimestamp = utils.getIntTimestamp(str(expandInfoList[-1][0]) + gameconst.RESOURCE_RECOVER_TIME_POINT_STR)
+                adjDataTimestamp += 86400
+                adjDataTime = utils.getIntDateTime(adjDataTimestamp)
+                if adjDataTime >= nextData[0]:
+                    break
+                expandInfoList.append([adjDataTime, expandInfoList[-1][1]])
+        gameglobal.freeTicketNumConfig[subType] = expandInfoList
+
+        LOG_DBG("updateFreeTicketNumConfig gameglobal.freeTicketNumConfig", subType, expandInfoList)
+        gameglobal.localBaseApp.doUpdateFreeTicketNumConfig(subType, expandInfoList)
 
 def updateAntiAddictionData(timeType, nextStartTime):
     gameglobal.antiAddictionData = [timeType, nextStartTime]
@@ -550,16 +572,22 @@ def callAppsByEventTag(tag, *args):
 
 def addForbiddenTaskIds(taskId):
     gameglobal.forbiddenTaskIds[taskId] = True
-    LOG_IFO("addForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
+    LOG_INFO("addForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
 
 def removeForbiddenTaskIds(taskId):
     gameglobal.forbiddenTaskIds.pop(taskId, None)
-    LOG_IFO("removeForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
+    LOG_INFO("removeForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
 
 def quertForbiddenTaskIds():
     taskIds = list(gameglobal.forbiddenTaskIds.keys())
-    LOG_IFO("quertForbiddenTaskIds,", gameglobal.forbiddenTaskIds)
+    LOG_INFO("quertForbiddenTaskIds,", gameglobal.forbiddenTaskIds)
     return taskIds
 
 def checkForbiddenTaskId(taskId):
     return taskId in gameglobal.forbiddenTaskIds
+
+
+def resetMineGlobalData(mineGlobalData):
+    gameglobal.mineGlobalData = mineGlobalData.clone()
+
+

@@ -47,21 +47,16 @@ class AvatarBuildsMixin(object):
 
     # 技能升级
     def baseLevelUpSkill(self, newSkillId, oldSkillId, levelDelta):
-        LOG_IFO('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
+        LOG_INFO('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
         _skillId = dataUtils.getSkillIdByMorphState(newSkillId, self.morphState)
         self._levelUpSkill(_skillId, oldSkillId, levelDelta)
         self.updateSkillScore()
 
     def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
-        LOG_IFO("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
+        LOG_INFO("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
         if not self.buildDic.levelUp(self, newSkillId, oldSkillId, levelDelta):
-            LOG_IFO('skill can not levelUp', newSkillId, oldSkillId)
+            LOG_INFO('skill can not levelUp', newSkillId, oldSkillId)
             return False
-
-        self.achievementInfo.triggerAchieveByType(
-            self,
-            gameconst.AchieveType.LEVEL_UP_SKILL,
-            actionContext.AchievementCtx())
         return True
 
     def onChangeSkillLv(self, skillId, toLv):
@@ -95,7 +90,7 @@ class AvatarBuildsMixin(object):
                        self.cannelTemporarySkill(taskId, _buildSkillId)
                     else:
                         if self.unlockActiveSkill(_buildSkillId, skillId, isNotify, lv, mid):
-                            LOG_IFO('unlock skill', skillId)
+                            LOG_INFO('unlock skill', skillId)
                             unlockedSkills.append(skillId)
 
         if unlockedSkills:
@@ -180,7 +175,7 @@ class AvatarBuildsMixin(object):
     # 拖技能到build
     @gamedecorator.crossServer
     def updateSkills(self, exposed, skillSlotInfos):
-        LOG_IFO("updateSkills ", skillSlotInfos)
+        LOG_INFO("updateSkills ", skillSlotInfos)
         self._updateSkills(skillSlotInfos, True, True)
 
     def _updateSkills(self, skillSlotInfos, bNotifyClient=False, isMessage=False):
@@ -258,11 +253,11 @@ class ImpCombat(AvatarBuildsMixin):
 
         self.client.onDeathPenaltyReward(killerGbId, killerName, _showList, killerData)
 
-    def refreshFreeRecoverDeathPenaltyTimes(self):
+    def refreshFreeRecoverDeathPenaltyTimes(self, *args):
         self.freeRecoverDeathPenaltyTimes = GP_SD.datas['freeExpRecCount']['value']
 
     def recoverDeathPenaltyExp(self, exposed, expireTime, itemId):
-        LOG_IFO('recoverDeathPenaltyExp:', expireTime, itemId)
+        LOG_INFO('recoverDeathPenaltyExp:', expireTime, itemId)
         if expireTime < utils.curTS():
             LOG_ERR('recoverDeathPenaltyExp expireTime invalid:', expireTime, self.gbID)
             return
@@ -312,7 +307,7 @@ class ImpCombat(AvatarBuildsMixin):
         self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
 
     def removeDeathPenaltyExp(self, exposed, expireTime):
-        LOG_IFO('removeDeathPenaltyExp:', expireTime)
+        LOG_INFO('removeDeathPenaltyExp:', expireTime)
         if self.deathPenaltyData.removeDeathPenaltyVal(expireTime):
             self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
 
@@ -475,7 +470,7 @@ class ImpCombat(AvatarBuildsMixin):
 
     @gamedecorator.checkGameconfigEnable('quickSettings')
     def setInstantPotionSlots(self, exposed, potion):
-        LOG_IFO('setInstantPotionSlots', potion)
+        LOG_INFO('setInstantPotionSlots', potion)
         _oldAutoHealHp = self.instantPotionSlots._hasAutoHealHp()
         _oldAutoHealMp = self.instantPotionSlots._hasAutoHealMp()
         if not self.instantPotionSlots.updateSlot(self, potion):
@@ -522,7 +517,7 @@ class ImpCombat(AvatarBuildsMixin):
 
     @gamedecorator.checkGameconfigEnable('quickSettings')
     def unsetInstantPotionSlots(self, exposed, slotId):
-        LOG_IFO('unsetInstantPotionSlots', slotId)
+        LOG_INFO('unsetInstantPotionSlots', slotId)
         self.instantPotionSlots.unsetSlot(slotId)
 
         self.client.onRemoveInstantPotionSlots(slotId)
@@ -558,7 +553,7 @@ class ImpCombat(AvatarBuildsMixin):
     # 快捷吃药 end ---------------------------------
 
     def initSummonSlotIdx(self):
-        LOG_IFO('initSummonSlotIdx', self.summonSlotIdxBase)
+        LOG_INFO('initSummonSlotIdx', self.summonSlotIdxBase)
         self.cell.setSummonSlotIdx(self.summonSlotIdxBase)
 
     def setSummonSlotIdx(self, exposed, slotIdx):
@@ -566,14 +561,14 @@ class ImpCombat(AvatarBuildsMixin):
 
     def _setSummonSlotIdx(self, slotIdx):
         if slotIdx == self.summonSlotIdxBase:
-            LOG_IFO('base setSummonSlotIdx same idx', slotIdx)
+            LOG_INFO('base setSummonSlotIdx same idx', slotIdx)
             return
 
         school = gameglobal.roleCache[self.id]['school']
         summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
         skillLevel = self.buildDic.getSkillLevel(summonSkillId)
-        LOG_IFO('base setSummonSlotIdx', slotIdx, self.summonSlotIdxBase, school, skillLevel)
+        LOG_INFO('base setSummonSlotIdx', slotIdx, self.summonSlotIdxBase, school, skillLevel)
         if school != summonSchool:
             LOG_ERR('base setSummonSlotIdx school error', school, summonSchool)
             return
@@ -594,7 +589,7 @@ class ImpCombat(AvatarBuildsMixin):
             return
 
         if self.summonSlotIdxBase == 0:
-            LOG_IFO('base updateSkillLevelSetSummonSlotIdx1', skillId, skillLevel)
+            LOG_INFO('base updateSkillLevelSetSummonSlotIdx1', skillId, skillLevel)
             self._setSummonSlotIdx(SRSU.minKey)
             return
 
@@ -607,11 +602,11 @@ class ImpCombat(AvatarBuildsMixin):
         if slotIdx == self.summonSlotIdxBase:
             return
 
-        LOG_IFO('base updateSkillLevelSetSummonSlotIdx2', self.summonSlotIdxBase, slotIdx, skillId, skillLevel)
+        LOG_INFO('base updateSkillLevelSetSummonSlotIdx2', self.summonSlotIdxBase, slotIdx, skillId, skillLevel)
         self.cell.setSummonSlotIdx(slotIdx)
 
     def setSummonSlotIdxAck(self, slotIdx):
-        LOG_IFO('base setSummonSlotIdxAck', self.summonSlotIdxBase, slotIdx)
+        LOG_INFO('base setSummonSlotIdxAck', self.summonSlotIdxBase, slotIdx)
         self.summonSlotIdxBase = slotIdx
 
     def removeSkillSetSummonSlotIdx(self, removedSkills):
@@ -621,7 +616,7 @@ class ImpCombat(AvatarBuildsMixin):
         if school != summonSchool or summonSkillId not in removedSkills:
             return
 
-        LOG_IFO('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
+        LOG_INFO('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
         self.summonSlotIdxBase = 0
         self.cell.setSummonSlotIdx(0)
 
@@ -634,5 +629,5 @@ class ImpCombat(AvatarBuildsMixin):
         if self.morphState == gameconst.MORPH_BUILD_STATE:
             return
 
-        LOG_IFO('base removeSkillChangeMorphState ', summonSkillId, removedSkills, self.morphState)
+        LOG_INFO('base removeSkillChangeMorphState ', summonSkillId, removedSkills, self.morphState)
         self.cell.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)

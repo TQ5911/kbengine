@@ -569,11 +569,19 @@ datas = _tools.RODict({
     }),
     "guild_unionNum": _tools.RODict({
         "key": "guild_unionNum",
-        "value": 20,
+        "value": 3,
+    }),
+    "guild_unionNum2": _tools.RODict({
+        "key": "guild_unionNum2",
+        "value": 2,
+    }),
+    "guild_unionNum3": _tools.RODict({
+        "key": "guild_unionNum3",
+        "value": 1,
     }),
     "guild_unionApplicationNum": _tools.RODict({
         "key": "guild_unionApplicationNum",
-        "value": 50,
+        "value": 10,
     }),
     "guild_unionDesc": _tools.RODict({
         "key": "guild_unionDesc",
@@ -701,11 +709,11 @@ datas = _tools.RODict({
     }),
     "guild_warEquipmentAssets": _tools.RODict({
         "key": "guild_warEquipmentAssets",
-        "value": ('Assets/Res/ui/texturenp/guild/guild_department01_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department02_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department03_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department05_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department04_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department06_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department07_bg_img.png'),
+        "value": ('Assets/Res/ui/texturenp/guild/guild_department01_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department02_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department03_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department05_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department04_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department06_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department07_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department08_bg_img.png'),
     }),
     "guild_warEquipmentName": _tools.RODict({
         "key": "guild_warEquipmentName",
-        "value": ('主城门', '副城门', '新元旗帜', '攻城兽', '守城弩', '矿区核心', '矿区荣誉旗帜'),
+        "value": ('主城门', '副城门', '新元旗帜', '攻城兽', '守城弩', '矿区核心', '矿区荣誉旗帜', '矿区枢纽'),
     }),
     "guild_unionApplicationTimeLimit": _tools.RODict({
         "key": "guild_unionApplicationTimeLimit",
@@ -738,5 +746,9 @@ datas = _tools.RODict({
     "guild_actionLimit": _tools.RODict({
         "key": "guild_actionLimit",
         "value": 54003267,
+    }),
+    "guild_relieveUnionMail": _tools.RODict({
+        "key": "guild_relieveUnionMail",
+        "value": 37001024,
     })
 })

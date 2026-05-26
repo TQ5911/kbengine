@@ -1,0 +1,23 @@
+<root>
+    <Properties>
+        <reportCnt>
+            <Type>          UINT8               </Type>
+            <Flags>         BASE_AND_CLIENT     </Flags>
+            <Persistent>    True                </Persistent>
+            <Default>       0                   </Default>
+        </reportCnt>
+    </Properties>
+
+    <BaseMethods>
+        <reqReport> <Exposed/>
+            <Arg>   UINT64            </Arg>
+            <Arg>   STRING            </Arg>
+            <Arg>   ARRAY    <of>    UINT8        </of>   </Arg>
+            <Arg>   STRING            </Arg>
+            <Arg>   STRING            </Arg>
+        </reqReport>
+    </BaseMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

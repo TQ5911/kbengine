@@ -119,4 +119,4 @@ class IsDead(py_trees.behaviour.Behaviour, metaclass=BehaviourMeta):
     method = 'isDead'
 
 class ShouldAttack(py_trees.composites.Condition, metaclass=ConditionMeta):
-    method = 'shouldAttack'
+    method = 'shouldBotAttack'

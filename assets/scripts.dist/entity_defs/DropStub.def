@@ -1,0 +1,92 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+        <Interface> iCentralStub                </Interface>
+    </Interfaces>
+
+    <Properties>
+        <remoteCallCache>
+            <Type>          PY_DICT             </Type>
+            <Flags>         BASE                </Flags>
+        </remoteCallCache>
+    </Properties>
+
+    <BaseMethods>
+        <dropEquipItem>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       BLOB                </Arg>
+            <Arg>       BLOB                </Arg>
+            <Arg>       LONGTIME            </Arg>
+            <Arg>       LONGTIME            </Arg>
+            <Arg>       UINT32              </Arg>
+            <Arg>       SERVER_ID           </Arg>
+            <Arg>       OBJECT_ID           </Arg>
+        </dropEquipItem>
+
+        <takeDropEquip>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </takeDropEquip>
+
+        <giveUpDropEquip>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </giveUpDropEquip>
+
+        <doGetTakeReward>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </doGetTakeReward>
+
+        <doFetchOtherGiveUpEquip>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </doFetchOtherGiveUpEquip>
+
+        <doGetDropInfo>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </doGetDropInfo>
+
+        <doRedeemEquipDrop>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </doRedeemEquipDrop>
+
+        <removeDropEquip>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT8               </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </removeDropEquip>
+
+        <sendRepairDropMail>
+            <Arg>       UNIQUE_ID           </Arg>
+        </sendRepairDropMail>
+
+        <updateCollEndTime>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       LONGTIME            </Arg>
+        </updateCollEndTime>
+
+        <doCheckDropExpire>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </doCheckDropExpire>
+
+        <getDropNotifyList>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </getDropNotifyList>
+   </BaseMethods>
+</root>

@@ -158,5 +158,13 @@ datas = _tools.RODict({
     "patrolStayDelay": _tools.RODict({
         "ID": "patrolStayDelay",
         "value": 0.5,
+    }),
+    "firstBloodBelongLose": _tools.RODict({
+        "ID": "firstBloodBelongLose",
+        "value": 6,
+    }),
+    "firstBloodBelongReturn": _tools.RODict({
+        "ID": "firstBloodBelongReturn",
+        "value": 6,
     })
 })

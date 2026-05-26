@@ -209,5 +209,40 @@ datas = _tools.RODict({
         "ID": "MonsterDigits",
         "value": "{0}({1}级)",
         "Type": "string"
+    }),
+    "OfflineText": _tools.RODict({
+        "ID": "OfflineText",
+        "value": "目标已离线",
+        "Type": "string"
+    }),
+    "SameMapText": _tools.RODict({
+        "ID": "SameMapText",
+        "value": "目标在同一地图",
+        "Type": "string"
+    }),
+    "SameLineText": _tools.RODict({
+        "ID": "SameLineText",
+        "value": "目标在同一分线",
+        "Type": "string"
+    }),
+    "JumpMapText": _tools.RODict({
+        "ID": "JumpMapText",
+        "value": "需要跳转地图",
+        "Type": "string"
+    }),
+    "JumpLineText": _tools.RODict({
+        "ID": "JumpLineText",
+        "value": "需要跳转分线",
+        "Type": "string"
+    }),
+    "CountdownText": _tools.RODict({
+        "ID": "CountdownText",
+        "value": "完成倒计时：{0}",
+        "Type": "string"
+    }),
+    "KillernameText": _tools.RODict({
+        "ID": "KillernameText",
+        "value": "杀手：{0}",
+        "Type": "string"
     })
 })

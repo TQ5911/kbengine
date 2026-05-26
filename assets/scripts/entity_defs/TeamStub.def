@@ -7,11 +7,11 @@
     </Interfaces>
 
     <Properties>
-        <teamDic>
+        <teamDict>
             <Type>      PY_DICT      </Type>
             <Flags>     BASE        </Flags>
             <Default>   {}        </Default>
-        </teamDic>
+        </teamDict>
     </Properties>
 
     <BaseMethods>
@@ -36,10 +36,10 @@
             <Arg>           PYTHON          </Arg>
         </applyJoinTeam>
 
-        <addTeamMember>
+        <addTeamMemberInStub>
             <Arg>           TEAMID          </Arg>
             <Arg>           PY_DICT         </Arg>
-        </addTeamMember>
+        </addTeamMemberInStub>
 
         <applyInviteTeam>
             <Arg>           ENTITYCALL      </Arg>
@@ -67,7 +67,6 @@
         </leaveTeam>
 
         <kickTeamMember>
-            <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           PLAYER_GBID     </Arg>
@@ -81,13 +80,11 @@
             <Arg>           PLAYER_GBID     </Arg>
         </transferCaptain>
 
-        <applyBecomeCaptain>
-            <Arg>           ENTITYCALL      </Arg>
+        <doApplyBecomeCaptain>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
             <Arg>           UNICODE         </Arg>
-        </applyBecomeCaptain>
+        </doApplyBecomeCaptain>
 
        <replyBecomeCaptain>
             <Arg>           ENTITYCALL      </Arg>
@@ -123,28 +120,13 @@
             <Arg>           BOOL            </Arg>
         </notifyPlayerLogon>
 
-        <logonEnterLine>
+        <teamLogonEnterLine>
             <Arg>           LINE_TYPE       </Arg>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PYTHON          </Arg>
-        </logonEnterLine>
-
-        <logonEnterMyHome>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PYTHON          </Arg>
-        </logonEnterMyHome>
-
-        <logonEnterGuildSpace>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           GUILD_UUID      </Arg>
-            <Arg>           PYTHON          </Arg>
-        </logonEnterGuildSpace>
+        </teamLogonEnterLine>
 
         <disbandTeam>
             <Arg>           ENTITYCALL      </Arg>
@@ -195,14 +177,14 @@
             <Arg>   PYTHON          </Arg>
         </createTeamDungeon>
 
-        <onCreateTeamDungeon>
+        <afterCreateTeamDungeon>
             <Arg>   TEAMID      </Arg>
             <Arg>   DUNGEON_NO  </Arg>
             <Arg>   SPACE_NO    </Arg>
             <Arg>   UUID        </Arg>
             <Arg>   MAILBOX     </Arg>
             <Arg>   PYTHON      </Arg>
-        </onCreateTeamDungeon>
+        </afterCreateTeamDungeon>
 
         <enterTeamDungeon>
             <Arg>   MAILBOX     </Arg>
@@ -283,11 +265,10 @@
 
         <!--dungeon mixin part end-->
 
-        <clearApplyJoinDic>
-            <Arg>           ENTITYCALL   </Arg>
+        <clearApplyJoinDicInStub>
             <Arg>           PLAYER_GBID  </Arg>
             <Arg>           TEAMID       </Arg>
-        </clearApplyJoinDic>
+        </clearApplyJoinDicInStub>
 
         <sendChatMsgFromTeamMember>
             <Arg>           TEAMID       </Arg>
@@ -342,14 +323,6 @@
             <Arg>           UINT32       </Arg>
             <Arg>           UINT32       </Arg>
         </getTeamList>
-
-       <killMonster>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           SPACE_NO     </Arg>
-            <Arg>           MONSTER_ID   </Arg>
-            <Arg>           UINT32       </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-       </killMonster>
 
         <!--raid mixin start-->
         <createRaidWithTeam>

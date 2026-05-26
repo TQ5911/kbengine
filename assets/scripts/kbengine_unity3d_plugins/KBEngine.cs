@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "4260A3D174E785F9B578AC744317BE18";
+        public string serverEntitydefMD5 = "50217E9879B2E309AD138C799DCBE78A";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -1611,6 +1611,7 @@ namespace KBEngine
             _disableUpdatePos = true;
         }
 
+        private float m_lastUpdateToServerFixedTime = 0;
         /*
 			更新当前玩家的位置与朝向到服务端， 可以通过开关_syncPlayerMS关闭这个机制
 		*/
@@ -1621,19 +1622,29 @@ namespace KBEngine
                 return;
             }
 
-            var now = DateTime.Now;
-            TimeSpan span = now - _lastUpdateToServerTime;
+            //var now = DateTime.Now;
+            //TimeSpan span = now - _lastUpdateToServerTime;
 
-            if (!isForce && span.Ticks < _updatePlayerToServerPeroid * _1MS_TO_100NS)
+
+
+            m_lastUpdateToServerFixedTime += Time.fixedDeltaTime;
+
+            if (!isForce && m_lastUpdateToServerFixedTime < 0.09f /*span.Ticks < _updatePlayerToServerPeroid * _1MS_TO_100NS*/)
+            {
                 return;
+            }
 
             Entity playerEntity = player();
 
             if (playerEntity == null || playerEntity.inWorld == false || playerEntity.ServerSetPosition || !KBEngineApp.app.helloDone)
+            {
                 return;
+            }
 
             if (!isForce && (playerEntity.isControlled || playerEntity.isShifting))
+            {
                 return;
+            }
 
             Avatar playerAvatar = playerEntity as Avatar;
             if (playerAvatar == null || playerAvatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || playerAvatar.IsObPlayer())
@@ -1641,7 +1652,17 @@ namespace KBEngine
                 return;
             }
 
-            _lastUpdateToServerTime = now; // - (span - TimeSpan.FromTicks(Convert.ToInt64(_updatePlayerToServerPeroid * _1MS_TO_100NS)));
+            if (playerAvatar.hasView && playerAvatar.view is ViewAvatar viewAvatar)
+            {
+                if (!viewAvatar.IsClientControlledTransform())
+                {
+                    return;
+                }
+            }
+
+            //_lastUpdateToServerTime = now; // - (span - TimeSpan.FromTicks(Convert.ToInt64(_updatePlayerToServerPeroid * _1MS_TO_100NS)));
+
+
 
             Vector3 position = playerEntity.position;
             Vector3 direction = playerEntity.direction;
@@ -1651,9 +1672,11 @@ namespace KBEngine
             bool dirHasChanged = Vector3.Distance(playerEntity._entityLastLocalDir, direction) > 0.001f;
             bool isOnGroundChanged = playerEntity._entityLastLocalIsOnGround != isOnGround;
 
-
             if (posHasChanged || dirHasChanged || isOnGroundChanged)
             {
+                //GLog.LogError($"KBEngine::updatePlayerToServer: {playerEntity._entityLastLocalPos}=>{position} dir={Vector3.Distance(playerEntity._entityLastLocalPos, position)} {span.TotalSeconds}");
+                //GLog.LogError($"KBEngine::updatePlayerToServer: {playerEntity._entityLastLocalDir}=>{direction} dir={direction - playerEntity._entityLastLocalDir} {span.TotalSeconds}");
+
                 playerEntity._entityLastLocalPos = position;
                 playerEntity._entityLastLocalDir = direction;
                 playerEntity._entityLastLocalIsOnGround = isOnGround;
@@ -1661,6 +1684,8 @@ namespace KBEngine
                 //disable期间_entityLastLocalPos仍然修改，所以即使重新enable后也不会把终点同步过去
                 if (!_disableUpdatePos)
                 {
+                    m_lastUpdateToServerFixedTime = 0;
+
                     Bundle bundle = Bundle.createObject();
                     bundle.newMessage(Messages.messages["Baseapp_onUpdateDataFromClient"]);
                     bundle.writeFloat(position.x);

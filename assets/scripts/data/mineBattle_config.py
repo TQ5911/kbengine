@@ -27,6 +27,22 @@ datas = _tools.RODict({
         "ID": "mineBattle_miningSafeArea",
         "value": "{1028:1024, 1123:1122}",
     }),
+    "mineBattle_coreTempletId": _tools.RODict({
+        "ID": "mineBattle_coreTempletId",
+        "value": 10280001,
+    }),
+    "mineBattle_batchTempletId": _tools.RODict({
+        "ID": "mineBattle_batchTempletId",
+        "value": 10280148,
+    }),
+    "mineBatte_neutralMiningAreaCoreProp": _tools.RODict({
+        "ID": "mineBatte_neutralMiningAreaCoreProp",
+        "value": _tools.ROList([52004021, 52004021]),
+    }),
+    "mineBattle_buffPosition": _tools.RODict({
+        "ID": "mineBattle_buffPosition",
+        "value": _tools.ROList([(74.2, 248.04, 65.67), (157.9, 257.0, 65.4), (218.4, 251.96, 55.21), (137.93, 248.7, 163.82), (135.94, 250.01, 270.81), (267.4, 249.72, 362.11), (261.74, 247.96, 123.51), (316.84, 247.95, 84.83), (434.47, 251.6, 131.69), (386.51, 249.47, 211.33), (433.86, 249.46, 246.23), (378.34, 247.95, 335.34), (348.17, 249.63, 309.32), (333.55, 247.96, 203.42), (205.6, 249.61, 168.3), (228.22, 248.55, 262.24), (243.46, 248.01, 328.81), (170.45, 247.96, 265.58), (381.54, 249.53, 443.9), (430.07, 249.53, 378.3), (387.03, 249.53, 443.02), (308.47, 251.84, 386.32), (312.63, 253.48, 485.3), (421.32, 255.06, 475.53)]),
+    }),
     "mineBattle_miningTime": _tools.RODict({
         "ID": "mineBattle_miningTime",
         "value": _tools.ROList([1600, 200]),
@@ -34,6 +50,10 @@ datas = _tools.RODict({
     "mineBattle_startTime": _tools.RODict({
         "ID": "mineBattle_startTime",
         "value": _tools.ROList([3, 2000, 2100]),
+    }),
+    "mineBattle_flagAttackTime": _tools.RODict({
+        "ID": "mineBattle_flagAttackTime",
+        "value": _tools.ROList([900, 2100]),
     }),
     "mineBattle_interfacePromptTime": _tools.RODict({
         "ID": "mineBattle_interfacePromptTime",
@@ -49,7 +69,15 @@ datas = _tools.RODict({
     }),
     "mineBattle_recoveryRatio": _tools.RODict({
         "ID": "mineBattle_recoveryRatio",
-        "value": _tools.ROList([0.001, 0.005]),
+        "value": _tools.ROList([0.01, 0.1]),
+    }),
+    "mineBattle_hubRepairRatio": _tools.RODict({
+        "ID": "mineBattle_hubRepairRatio",
+        "value": _tools.ROList([0.015, 0.3]),
+    }),
+    "mineBattle_hubRecoveryRatio": _tools.RODict({
+        "ID": "mineBattle_hubRecoveryRatio",
+        "value": _tools.ROList([0.01, 0.1]),
     }),
     "mineBattle_coreInvincibleBuffID": _tools.RODict({
         "ID": "mineBattle_coreInvincibleBuffID",
@@ -62,6 +90,14 @@ datas = _tools.RODict({
     "mineBattle_flagRecoverBuffID": _tools.RODict({
         "ID": "mineBattle_flagRecoverBuffID",
         "value": 64007005,
+    }),
+    "mineBattle_hubRecoverBuffID": _tools.RODict({
+        "ID": "mineBattle_hubRecoverBuffID",
+        "value": 64007008,
+    }),
+    "mineBattle_hubRepairBuffID": _tools.RODict({
+        "ID": "mineBattle_hubRepairBuffID",
+        "value": 64007009,
     }),
     "mineBattle_damageScore": _tools.RODict({
         "ID": "mineBattle_damageScore",
@@ -103,6 +139,10 @@ datas = _tools.RODict({
         "ID": "mineBattle_MoneyID",
         "value": 30000013,
     }),
+    "mineBattle_guildBlackIron": _tools.RODict({
+        "ID": "mineBattle_guildBlackIron",
+        "value": 30000016,
+    }),
     "mineBattle_extraIncome": _tools.RODict({
         "ID": "mineBattle_extraIncome",
         "value": 5,
@@ -117,7 +157,7 @@ datas = _tools.RODict({
     }),
     "mineBattle_flagDamageEffect": _tools.RODict({
         "ID": "mineBattle_flagDamageEffect",
-        "value": _tools.ROList([5, 10]),
+        "value": _tools.ROList([3, 30]),
     }),
     "mineBatte_rankPersonNum": _tools.RODict({
         "ID": "mineBatte_rankPersonNum",
@@ -127,17 +167,57 @@ datas = _tools.RODict({
         "ID": "mineBatte_rankGuildNum",
         "value": 20,
     }),
-    "mineBattle_coreTempletId": _tools.RODict({
-        "ID": "mineBattle_coreTempletId",
-        "value": 10280001,
-    }),
     "mineBattle_flagDropCollectionId": _tools.RODict({
         "ID": "mineBattle_flagDropCollectionId",
         "value": _tools.ROList([16006068]),
     }),
-    "mineBatte_neutralMiningAreaCoreProp": _tools.RODict({
-        "ID": "mineBatte_neutralMiningAreaCoreProp",
-        "value": _tools.ROList([52004021, 52004021]),
+    "mineBattle_flagDropParameter": _tools.RODict({
+        "ID": "mineBattle_flagDropParameter",
+        "value": _tools.ROList([15, 15, 600]),
+    }),
+    "mineBattle_flagDestroyLoss": _tools.RODict({
+        "ID": "mineBattle_flagDestroyLoss",
+        "value": 3,
+    }),
+    "mineBattle_flagDestroyLossFloors": _tools.RODict({
+        "ID": "mineBattle_flagDestroyLossFloors",
+        "value": 10000,
+    }),
+    "mineBattle_buffId": _tools.RODict({
+        "ID": "mineBattle_buffId",
+        "value": _tools.ROList([64007006, 64007007]),
+    }),
+    "mineBattle_ironOreId": _tools.RODict({
+        "ID": "mineBattle_ironOreId",
+        "value": 16006165,
+    }),
+    "mineBattle_buffRefreshTime": _tools.RODict({
+        "ID": "mineBattle_buffRefreshTime",
+        "value": 10,
+    }),
+    "mineBattle__buffFirstRefreshTime": _tools.RODict({
+        "ID": "mineBattle__buffFirstRefreshTime",
+        "value": 5,
+    }),
+    "mineBattle_buffNumsOneTime": _tools.RODict({
+        "ID": "mineBattle_buffNumsOneTime",
+        "value": 10,
+    }),
+    "mineBattle_ironOreNumsOneTime": _tools.RODict({
+        "ID": "mineBattle_ironOreNumsOneTime",
+        "value": 10,
+    }),
+    "mineBattle_batchReviveTime": _tools.RODict({
+        "ID": "mineBattle_batchReviveTime",
+        "value": 80,
+    }),
+    "mineBattle_batchReviveTime2": _tools.RODict({
+        "ID": "mineBattle_batchReviveTime2",
+        "value": 20,
+    }),
+    "mineBattle_flagTeleportRange": _tools.RODict({
+        "ID": "mineBattle_flagTeleportRange",
+        "value": _tools.ROList([1, 5]),
     }),
     "mineBattle_InterfaceButtonText": _tools.RODict({
         "ID": "mineBattle_InterfaceButtonText",
@@ -315,66 +395,6 @@ datas = _tools.RODict({
         "ID": "mineBattle_teleportMsg",
         "value": 54003257,
     }),
-    "mineBattle_buffId": _tools.RODict({
-        "ID": "mineBattle_buffId",
-        "value": _tools.ROList([64007006, 64007007]),
-    }),
-    "mineBattle_ironOreId": _tools.RODict({
-        "ID": "mineBattle_ironOreId",
-        "value": 16006165,
-    }),
-    "mineBattle_buffPosition": _tools.RODict({
-        "ID": "mineBattle_buffPosition",
-        "value": _tools.ROList([(74.2, 248.04, 65.67), (157.9, 257.0, 65.4), (218.4, 251.96, 55.21), (137.93, 248.7, 163.82), (135.94, 250.01, 270.81), (267.4, 249.72, 362.11), (308.48, 251.99, 385.99), (261.74, 247.96, 123.51), (316.84, 247.95, 84.83), (419.9, 251.6, 140.36), (386.51, 249.47, 211.33), (433.86, 249.46, 246.23), (378.34, 247.95, 335.34), (348.17, 249.63, 309.32), (333.55, 247.96, 203.42), (205.6, 249.61, 168.3), (228.22, 248.55, 262.24), (243.46, 248.01, 328.81), (170.45, 247.96, 265.58), (381.54, 249.53, 443.9), (430.07, 249.53, 378.3), (387.03, 249.53, 443.02), (308.47, 251.84, 386.32), (312.63, 253.48, 485.3), (421.32, 255.06, 475.53)]),
-    }),
-    "mineBattle_buffRefreshTime": _tools.RODict({
-        "ID": "mineBattle_buffRefreshTime",
-        "value": 10,
-    }),
-    "mineBattle__buffFirstRefreshTime": _tools.RODict({
-        "ID": "mineBattle__buffFirstRefreshTime",
-        "value": 5,
-    }),
-    "mineBattle_buffNumsOneTime": _tools.RODict({
-        "ID": "mineBattle_buffNumsOneTime",
-        "value": 10,
-    }),
-    "mineBattle_ironOreNumsOneTime": _tools.RODict({
-        "ID": "mineBattle_ironOreNumsOneTime",
-        "value": 10,
-    }),
-    "mineBattle_randomIronOreId": _tools.RODict({
-        "ID": "mineBattle_randomIronOreId",
-        "value": 16001041,
-    }),
-    "mineBattle_batchReviveTime": _tools.RODict({
-        "ID": "mineBattle_batchReviveTime",
-        "value": 35,
-    }),
-    "mineBattle_batchReviveTime2": _tools.RODict({
-        "ID": "mineBattle_batchReviveTime2",
-        "value": 20,
-    }),
-    "mineBattle_hubRecoverBuffID": _tools.RODict({
-        "ID": "mineBattle_hubRecoverBuffID",
-        "value": 64007008,
-    }),
-    "mineBattle_hubRepairBuffID": _tools.RODict({
-        "ID": "mineBattle_hubRepairBuffID",
-        "value": 64007009,
-    }),
-    "mineBattle_flagDestroyLoss": _tools.RODict({
-        "ID": "mineBattle_flagDestroyLoss",
-        "value": 5,
-    }),
-    "mineBattle_flagDestroyLossFloors": _tools.RODict({
-        "ID": "mineBattle_flagDestroyLossFloors",
-        "value": 10000,
-    }),
-    "mineBattle_flagAttackTime": _tools.RODict({
-        "ID": "mineBattle_flagAttackTime",
-        "value": _tools.ROList([900, 2100]),
-    }),
     "mineBattle_randomIronOreMsg": _tools.RODict({
         "ID": "mineBattle_randomIronOreMsg",
         "value": 54003271,
@@ -390,9 +410,5 @@ datas = _tools.RODict({
     "mineBattle_hubRepairMsg": _tools.RODict({
         "ID": "mineBattle_hubRepairMsg",
         "value": 54003274,
-    }),
-    "mineBattle_hubRecoveryRatio": _tools.RODict({
-        "ID": "mineBattle_hubRecoveryRatio",
-        "value": _tools.ROList([0.001, 0.005]),
     })
 })

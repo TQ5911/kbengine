@@ -126,5 +126,13 @@ datas = _tools.RODict({
     "rmbSwitch": _tools.RODict({
         "ID": "rmbSwitch",
         "value": 1,
+    }),
+    "rmbSymbol": _tools.RODict({
+        "ID": "rmbSymbol",
+        "value": "Assets/Res/ui/texture/common/com_money_icon.png",
+    }),
+    "limitedTime": _tools.RODict({
+        "ID": "limitedTime",
+        "value": "限时上架至{0}",
     })
 })

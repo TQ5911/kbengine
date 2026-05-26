@@ -5,7 +5,7 @@
 	using System.Collections; 
 	using System.Collections.Generic;
 	using System.Threading;
-
+    using UnityEngine.Profiling;
     /// <summary>
     /// KBE-Plugin fire-out events(KBE => Unity):
     /// </summary>
@@ -685,7 +685,9 @@
 				//}
 				try
 				{
+                    Profiler.BeginSample($"KBEUpdate.{eobj.eventname}");
 					eobj.info.method.Invoke (eobj.info.obj, eobj.args);
+                    Profiler.EndSample();
 				}
 	            catch (Exception e)
 	            {
@@ -726,7 +728,9 @@
 				//}
 				try
 				{
+                    Profiler.BeginSample($"KBEUpdate.processInEvents.{eobj.eventname}");
 					eobj.info.method.Invoke (eobj.info.obj, eobj.args);
+                    Profiler.EndSample();
 				}
 	            catch (Exception e)
 	            {

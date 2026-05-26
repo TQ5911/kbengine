@@ -310,7 +310,7 @@ SET @sql = IF(
        AND TABLE_NAME = @table_name
        AND COLUMN_NAME = @column_name) = 0,
     CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
-    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS message'
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
 );
 
 PREPARE stmt FROM @sql;

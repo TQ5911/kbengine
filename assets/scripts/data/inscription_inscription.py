@@ -76,7 +76,7 @@ datas = _tools.RODict({
         "rarity": 4,
         "skill_id": 90010040,
         "type": (12,),
-        "effect_value": _tools.ROList([(6, 0.3, 0.5)]),
+        "effect_value": _tools.ROList([(9, 0.3, 0.5)]),
     }),
     103201: _tools.RODict({
         "ID": 103201,
@@ -303,11 +303,11 @@ datas = _tools.RODict({
         "type": (22, 15),
         "effect_value": _tools.ROList([(0.15, 0.15), (2, 2)]),
     }),
-    109302: _tools.RODict({
-        "ID": 109302,
-        "name": "灵气庇佑【彻悟】",
+    109401: _tools.RODict({
+        "ID": 109401,
+        "name": "灵气庇佑【御极】",
         "tag": 9,
-        "rarity": 3,
+        "rarity": 4,
         "skill_id": 90010035,
         "type": (13,),
         "effect_value": _tools.ROList([(64001307,)]),
@@ -690,14 +690,14 @@ datas = _tools.RODict({
         "type": (4, 6, 10),
         "effect_value": _tools.ROList([(6, 6), (0.05, 0.05), (1, 1)]),
     }),
-    208303: _tools.RODict({
-        "ID": 208303,
-        "name": "寒冰圆环【彻悟】",
+    208401: _tools.RODict({
+        "ID": 208401,
+        "name": "寒冰圆环【御极】",
         "tag": 8,
-        "rarity": 3,
+        "rarity": 4,
         "skill_id": 90020040,
-        "type": (22, 13),
-        "effect_value": _tools.ROList([(0.15, 0.15), (64000610,)]),
+        "type": (24,),
+        "effect_value": _tools.ROList([(90020400,)]),
     }),
     209203: _tools.RODict({
         "ID": 209203,
@@ -717,8 +717,8 @@ datas = _tools.RODict({
         "type": (7,),
         "effect_value": _tools.ROList([(100, 100)]),
     }),
-    209303: _tools.RODict({
-        "ID": 209303,
+    209302: _tools.RODict({
+        "ID": 209302,
         "name": "冰霜护盾【彻悟】",
         "tag": 9,
         "rarity": 3,
@@ -726,14 +726,14 @@ datas = _tools.RODict({
         "type": (11,),
         "effect_value": _tools.ROList([(5, 5)]),
     }),
-    209401: _tools.RODict({
-        "ID": 209401,
+    209402: _tools.RODict({
+        "ID": 209402,
         "name": "冰霜护盾【御极】",
         "tag": 9,
         "rarity": 4,
         "skill_id": 90020005,
-        "type": (16, 13),
-        "effect_value": _tools.ROList([(5, 5), (64000607,)]),
+        "type": (16, 8),
+        "effect_value": _tools.ROList([(5, 5), (0.3, 0.3)]),
     }),
     210203: _tools.RODict({
         "ID": 210203,
@@ -906,6 +906,15 @@ datas = _tools.RODict({
         "type": (21, 16),
         "effect_value": _tools.ROList([(1, 1), (3, 3)]),
     }),
+    301401: _tools.RODict({
+        "ID": 301401,
+        "name": "狂怒斩【御极】",
+        "tag": 1,
+        "rarity": 4,
+        "skill_id": 90030075,
+        "type": (24,),
+        "effect_value": _tools.ROList([(90030750,)]),
+    }),
     302205: _tools.RODict({
         "ID": 302205,
         "name": "野蛮冲撞【初窥】",
@@ -960,15 +969,6 @@ datas = _tools.RODict({
         "type": (21, 16),
         "effect_value": _tools.ROList([(1, 1), (3, 3)]),
     }),
-    303403: _tools.RODict({
-        "ID": 303403,
-        "name": "纵斩【御极】",
-        "tag": 3,
-        "rarity": 4,
-        "skill_id": 90030040,
-        "type": (1, 22),
-        "effect_value": _tools.ROList([(0.3, 0.3), (0.3, 0.3)]),
-    }),
     304205: _tools.RODict({
         "ID": 304205,
         "name": "鸣龙心法【初窥】",
@@ -1002,8 +1002,8 @@ datas = _tools.RODict({
         "tag": 4,
         "rarity": 4,
         "skill_id": 90030060,
-        "type": (13, 16),
-        "effect_value": _tools.ROList([(64000909,), (7, 7)]),
+        "type": (13, 14),
+        "effect_value": _tools.ROList([(64000909,), (64000743, 5)]),
     }),
     305205: _tools.RODict({
         "ID": 305205,
@@ -1068,14 +1068,14 @@ datas = _tools.RODict({
         "type": (16, 14),
         "effect_value": _tools.ROList([(5, 5), (64000701, 3)]),
     }),
-    306304: _tools.RODict({
-        "ID": 306304,
-        "name": "擒蛟爪【彻悟】",
+    306401: _tools.RODict({
+        "ID": 306401,
+        "name": "擒蛟爪【御极】",
         "tag": 6,
-        "rarity": 3,
+        "rarity": 4,
         "skill_id": 90030045,
-        "type": (22, 6),
-        "effect_value": _tools.ROList([(0.2, 0.2), (0.1, 0.1)]),
+        "type": (24,),
+        "effect_value": _tools.ROList([(90030450,)]),
     }),
     307205: _tools.RODict({
         "ID": 307205,
@@ -1122,8 +1122,8 @@ datas = _tools.RODict({
         "type": (13,),
         "effect_value": _tools.ROList([(64000910,)]),
     }),
-    308304: _tools.RODict({
-        "ID": 308304,
+    308303: _tools.RODict({
+        "ID": 308303,
         "name": "六合斩【彻悟】",
         "tag": 8,
         "rarity": 3,
@@ -1131,8 +1131,8 @@ datas = _tools.RODict({
         "type": (16, 14),
         "effect_value": _tools.ROList([(3, 3), (64000701, 3)]),
     }),
-    308305: _tools.RODict({
-        "ID": 308305,
+    308304: _tools.RODict({
+        "ID": 308304,
         "name": "六合斩【彻悟】",
         "tag": 8,
         "rarity": 3,
@@ -1158,8 +1158,8 @@ datas = _tools.RODict({
         "type": (16, 13),
         "effect_value": _tools.ROList([(2, 2), (64000911,)]),
     }),
-    309304: _tools.RODict({
-        "ID": 309304,
+    309303: _tools.RODict({
+        "ID": 309303,
         "name": "上挑斩【彻悟】",
         "tag": 9,
         "rarity": 3,
@@ -1230,11 +1230,11 @@ datas = _tools.RODict({
         "type": (22, 13),
         "effect_value": _tools.ROList([(0.15, 0.15), (64000912,)]),
     }),
-    311401: _tools.RODict({
-        "ID": 311401,
-        "name": "霸道乾坤【御极】",
+    311306: _tools.RODict({
+        "ID": 311306,
+        "name": "霸道乾坤【彻悟】",
         "tag": 11,
-        "rarity": 4,
+        "rarity": 3,
         "skill_id": 90030005,
         "type": (24,),
         "effect_value": _tools.ROList([(90030080,)]),
@@ -1263,17 +1263,17 @@ datas = _tools.RODict({
         "tag": 12,
         "rarity": 3,
         "skill_id": 90030010,
-        "type": (16, 13),
-        "effect_value": _tools.ROList([(4, 4), (64000913,)]),
+        "type": (16, 6),
+        "effect_value": _tools.ROList([(4, 4), (0.2, 0.2)]),
     }),
-    312304: _tools.RODict({
-        "ID": 312304,
-        "name": "血饮狂刃【彻悟】",
+    312402: _tools.RODict({
+        "ID": 312402,
+        "name": "血饮狂刃【御极】",
         "tag": 12,
-        "rarity": 3,
+        "rarity": 4,
         "skill_id": 90030010,
-        "type": (22, 21, 6),
-        "effect_value": _tools.ROList([(0.2, 0.2), (1, 1), (0.1, 0.1)]),
+        "type": (22, 12, 13),
+        "effect_value": _tools.ROList([(0.2, 0.2), (9, 1, 1), (64000916,)]),
     }),
     313205: _tools.RODict({
         "ID": 313205,

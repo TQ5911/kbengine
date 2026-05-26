@@ -18,6 +18,8 @@ import wonderLand_floor as WL_FD
 import wonderLand_config as WL_CD
 import creep_base as CBD
 import activityControl_config as AC_CD
+import const_const as CONST
+import conflict_conflict_def as C_C_DD
 
 class WonderLandSwitch(object):
     def __init__(self, coinSwitch=False, itemSwitch=False, times=0):
@@ -83,6 +85,19 @@ class IWonderLandCell(object):
 
         extra = {'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_LEFT_TIME}
         gameengine.getWonderLandStub(mapId).doEnterWonderLand(self.base, self.gbId, extra)
+    
+    def doSwitchWonderLandLine(self, spaceBox, spaceMgrBoxCellId, spaceNo, extra):
+        if extra.get('isMerge', False):
+            self.beginEnterWonderLand(spaceBox, spaceMgrBoxCellId, spaceNo, extra)
+            return
+        self._commonNeedCast(
+            C_C_DD.datas.teleportCast,
+            gameconst.StateEnum.Teleporting,
+            gameconst.CastType.teleportAnchor,
+            'beginEnterWonderLand',
+            (spaceBox, spaceMgrBoxCellId, spaceNo, extra),
+            castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
+        )
 
     def beginEnterWonderLand(self, spaceBox, spaceMgrBoxCellId, spaceNo, extra):
         _lContext = {}
@@ -98,17 +113,17 @@ class IWonderLandCell(object):
             'enterType': extra.get('enterWonderLandType', 0)
         }
 
-        _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
+        _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
 
-        canLeave = self.packageComplexTeleportLeaveData(_lContext)
+        canLeave = self.packComplexTeleportLeaveData(_lContext)
         if not canLeave:
             LOG_WARN('IWonderLandCell::beginEnterWonderLand: can not leave')
             return
 
-        self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=_options, context=_context, failedFunc='enterWonderLandFailed', failedArgs=(spaceNo,))
+        self.telFromSpaceToSpace(self.spaceNo, spaceNo, options=_options, context=_context, failedFunc='enterWonderLandFailed', failedArgs=(spaceNo,))
 
     def enterWonderLandFailed(self, spaceNo):
-        DEBUG_MSG("IWonderLandCell::enterWonderLandFailed", spaceNo)
+        LOG_DBG("IWonderLandCell::enterWonderLandFailed", spaceNo)
         gameengine.getWonderLandStubBySpaceNo(spaceNo).onLeaveWonderLand(self.gbId)
 
     @utils.isMyself
@@ -130,15 +145,15 @@ class IWonderLandCell(object):
             'hasCast': hasCast,
         }
 
-        _canLeave = self.packageComplexTeleportLeaveData(_l)
+        _canLeave = self.packComplexTeleportLeaveData(_l)
         if not _canLeave:
             LOG_WARN('IWonderLandCell::leaveWonderLand: can not leave')
             return
 
-        _, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=formula.getSpaceType(self.spaceNo))
-        _spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
+        _, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=formula.getSpaceType(self.spaceNo))
+        _spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
 
-        _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.LEAVE)
+        _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
         self.doLeaveFromSapceToSpace(self.spaceNo, _spaceNo, _options, _context)
 
     def _onWonderLandOffline(self):
@@ -146,7 +161,7 @@ class IWonderLandCell(object):
             return
 
         self._cancelWonderLandTimer()
-        self.wonderLandQuota.checkout()
+        self.wonderLandQuota.reset()
 
     def _dealWithWonderLandTimer(self, oldSpaceNo, newSpaceNo):
         _oldNeedTimer = formula.inWonderLandScene(oldSpaceNo)
@@ -194,11 +209,11 @@ class IWonderLandCell(object):
         if not formula.inWonderLandScene(self.spaceNo):
             return
 
-        LOG_IFO('IWonderLandCell::_onWonderLandTimeOutEnd: {}'.format(self.spaceNo))
+        LOG_INFO('IWonderLandCell::_onWonderLandTimeOutEnd: {}'.format(self.spaceNo))
         self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT, True)
 
     def _onWonderLandTimeOutRenew(self):
-        LOG_IFO('IWonderLandCell::wonderLandRenewCB: {}'.format(self.spaceNo))
+        LOG_INFO('IWonderLandCell::wonderLandRenewCB: {}'.format(self.spaceNo))
         if not formula.inWonderLandScene(self.spaceNo):
             return
 
@@ -299,7 +314,7 @@ class IWonderLandCell(object):
 
     @utils.isMyself
     def reqChangeWonderLandSwitch(self, exposed, masterSwitch, switchData):
-        LOG_IFO('IWonderLandCell::reqChangeWonderLandSwitch: {} {}'.format(masterSwitch, switchData))
+        LOG_INFO('IWonderLandCell::reqChangeWonderLandSwitch: {} {}'.format(masterSwitch, switchData))
         if masterSwitch and not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
@@ -343,11 +358,11 @@ class IWonderLandCell(object):
         self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
         self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_RENEW)
 
-    def checkAddWonderLandDurationCondition(self, itemId, num, opUUID):
+    def checkAddWonderLandDurationCondition(self, addType, itemId, itemNum, num, opUUID):
         if not self._checkAddWonderLandDurationCondition():
             return
 
-        self.base.doAddWonderLandTicket(itemId, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID)
+        self.base.doAddWonderLandTicket(addType, itemId, itemNum, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID)
 
     def addWonderLandRewardRecord(self, rewardList):
         _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList, {})

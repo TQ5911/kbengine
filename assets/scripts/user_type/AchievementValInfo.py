@@ -7,6 +7,7 @@ import gameconfig
 import achievement_details as A_DD
 import gameconst
 import LogTrackingMgr
+from KBEDebug import *
 
 # 等级成就
 def _checkAchieveLevelFinished(avatar, achieveData, achieveVal, ctx):
@@ -20,7 +21,39 @@ def _checkAchieveScoreFinished(avatar, achieveData, achieveVal, ctx):
 
 # 精灵契约成就
 def _checkAchieveDrawCardFinished(avatar, achieveData, achieveVal, ctx):
-    achieveVal.step += ctx.addNum
+    _qualityDict = ctx.qualityDict
+    
+    addNum = 0
+    baseQuality = -1 if len(achieveData['targetParam']) == 1 else achieveData['targetParam'][1]
+    for quality, num in _qualityDict.items():
+        if quality >= baseQuality:
+            addNum += num
+
+    achieveVal.step += addNum
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+#技能升级
+def _checkSkillUpgrade(avatar, achieveData, achieveVal, ctx):
+    limitLevel = -1 if len(achieveData['targetParam']) == 1 else achieveData['targetParam'][1]
+    if limitLevel == -1:
+        achieveVal.step += 1
+    elif ctx.oldLevel < limitLevel and ctx.newLevel >= limitLevel:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveUsePotion(avatar, achieveData, achieveVal, ctx):
+    if len(achieveData['targetParam']) == 1:
+        achieveVal.step += 1
+    elif ctx.itemId in achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+# 在默认基础上增加mapId
+def _checkAchieveAddStepWithMapId(avatar, achieveData, achieveVal, ctx):
+    if len(achieveData['targetParam']) == 1:
+        achieveVal.step += 1
+    elif ctx.mapId == achieveData['targetParam'][1]:
+        achieveVal.step += 1
     return achieveVal.step >= achieveData['targetParam'][0]
 
 def _checkAchieveAddStep(avatar, achieveData, achieveVal, ctx):
@@ -38,8 +71,8 @@ def _checkAchievePetEquipNum(avatar, achieveData, achieveVal, ctx):
     return achieveVal.step >= _num
 
 def _checkAchieveHookReward(avatar, achieveData, achieveVal, ctx):
-    _mapId = achieveData['targetParam'][0]
-    _num = achieveData['targetParam'][1]
+    _mapId = achieveData['targetParam'][1]
+    _num = achieveData['targetParam'][0]
     if getattr(ctx, 'mapId', 0) == _mapId:
         achieveVal.step += 1
 
@@ -74,18 +107,74 @@ def _checkAchieveLeaderBoard(avatar, achieveData, achieveVal, ctx):
         return False
     
 def _checkAchieveKillTarSuffixMonster(avatar, achieveData, achieveVal, ctx):
-    _suffixIds = achieveData['targetParam'][0]
+    _suffixIds = achieveData['targetParam'][1]
     if ctx.get('suffixId', 0) not in _suffixIds:
         return False
     achieveVal.step += 1
-    return achieveVal.step >= achieveData['targetParam'][1]
+    return achieveVal.step >= achieveData['targetParam'][0]
 
 def _checkAchieveKillTarMonster(avatar, achieveData, achieveVal, ctx):
-    _monsterIds = achieveData['targetParam'][0]
+    _monsterIds = achieveData['targetParam'][1]
     if ctx.get('monsterId', 0) not in _monsterIds:
         return False
     achieveVal.step += 1
-    return achieveVal.step >= achieveData['targetParam'][1]
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveEnemy(avatar, achieveData, achieveVal, ctx):
+    achieveVal.step = max(achieveVal.step, ctx.count)
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveDuel(avatar, achieveData, achieveVal, ctx):
+    if ctx.isWin == achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveBounty(avatar, achieveData, achieveVal, ctx):
+    if ctx.bountyType == achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveDungeon(avatar, achieveData, achieveVal, ctx):
+    if ctx.dungeonNo == achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveEquipQuality(avatar, achieveData, achieveVal, ctx):
+    qualityData = ctx.qualityData
+    achieveVal.step = 0
+    for quality, count in qualityData.items():
+        if quality >= achieveData['targetParam'][1]:
+            achieveVal.step += count
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveMineCollect(avatar, achieveData, achieveVal, ctx):
+    if ctx.collectionId == achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveSynthesis(avatar, achieveData, achieveVal, ctx):
+    for i in range(len(ctx.getNum)):
+        if ctx.getQuality[i] >= achieveData['targetParam'][1]:
+            achieveVal.step += ctx.getNum[i]
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveMaxMoney(avatar, achieveData, achieveVal, ctx):
+    achieveVal.step = max(achieveVal.step, ctx.money)
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveAddNum(avatar, achieveData, achieveVal, ctx):
+    achieveVal.step += ctx.num
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveMeridian(avatar, achieveData, achieveVal, ctx):
+    if ctx.slotIdx == achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveGuildActivity(avatar, achieveData, achieveVal, ctx):
+    if ctx.activityType == achieveData['targetParam'][1]:
+        achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][0]
 
 # 第一个是checkFunc，第二个代表初始化时候是否要校验一次
 _CHECK_ACHIEVE_DIC = {
@@ -99,23 +188,39 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.MAKE_EQUIPMENT: (_checkAchieveAddStep, False),
     gameconst.AchieveType.ENHANCE_EQUIPMENT: (_checkAchieveAddStep, False),
     gameconst.AchieveType.EQUIPMENT_WITH_SPIRIT: (_checkAchieveAddStep, False),
-    gameconst.AchieveType.LEVEL_UP_SKILL: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.LEVEL_UP_SKILL: (_checkSkillUpgrade, False),
     gameconst.AchieveType.ACTIVITY: (_checkAchieveActivityFinished, False),
     gameconst.AchieveType.PET_BATTLE: (_checkAchievePetBattleNum, True),
     gameconst.AchieveType.PET_EQUIP: (_checkAchievePetEquipNum, True),
     gameconst.AchieveType.LOGIN_DAYS: (_checkAchieveAddStep, True),
     gameconst.AchieveType.DEAD_TIMES: (_checkAchieveAddStep, False),
     gameconst.AchieveType.DO_COLLECT: (_checkAchieveAddStep, False),
-    gameconst.AchieveType.USE_POTION: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.USE_POTION: (_checkAchieveUsePotion, False),
     gameconst.AchieveType.MAIN_TASK: (_checkAchieveTask, False),
     gameconst.AchieveType.SUB_TASK: (_checkAchieveTask, False),
     gameconst.AchieveType.HOOK_TASK_REWARD: (_checkAchieveHookReward, False),
     gameconst.AchieveType.LEADER_BOARD: (_checkAchieveLeaderBoard, False),
     gameconst.AchieveType.SIEGE_KILL: (_checkAchieveAddStep, False),
-    gameconst.AchieveType.PERSONAL_BOX: (_checkAchieveAddStep, False),
-    gameconst.AchieveType.VIEWPOINT: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.PERSONAL_BOX: (_checkAchieveAddStepWithMapId, False),
+    gameconst.AchieveType.VIEWPOINT: (_checkAchieveAddStepWithMapId, False),
     gameconst.AchieveType.KILL_TAR_SUFFIX_MONSTER: (_checkAchieveKillTarSuffixMonster, False),
     gameconst.AchieveType.KILL_TAR_MONSTER: (_checkAchieveKillTarMonster, False),
+    gameconst.AchieveType.ENEMY: (_checkAchieveEnemy, False),
+    gameconst.AchieveType.DUEL: (_checkAchieveDuel, False),
+    gameconst.AchieveType.WONDERLAND_KILL: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.BOUNTY: (_checkAchieveBounty, False),
+    gameconst.AchieveType.CRUSADE: (_checkAchieveDungeon, False),
+    gameconst.AchieveType.CHIEF: (_checkAchieveDungeon, False),
+    gameconst.AchieveType.COLLECT: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.EQUIP_QUALITY: (_checkAchieveEquipQuality, False),
+    gameconst.AchieveType.MINE_COLLECT: (_checkAchieveMineCollect, False),
+    gameconst.AchieveType.SYNTHESIS: (_checkAchieveSynthesis, False),
+    gameconst.AchieveType.MAX_MONEY: (_checkAchieveMaxMoney, False),
+    gameconst.AchieveType.AUCTION_MONEY: (_checkAchieveAddNum, False),
+    gameconst.AchieveType.INSCRIPTION: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.MERIDIAN: (_checkAchieveMeridian, False),
+    gameconst.AchieveType.GUILD_CONTRIB: (_checkAchieveAddNum, False),
+    gameconst.AchieveType.GUILD_ACTIVITY: (_checkAchieveGuildActivity, False),
 }
 
 
@@ -131,6 +236,10 @@ class AchievementValVal(userType.UserSingleType):
 
     def targetType(self):
         return self.configData()['targetType']
+
+    @staticmethod
+    def checkSupport(targetType):
+        return targetType in _CHECK_ACHIEVE_DIC
 
     def isFinished(self):
         return utils.bhas(self.flag, gameconst.AchievementFlag.FINISHED)

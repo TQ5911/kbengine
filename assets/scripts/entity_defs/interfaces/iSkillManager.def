@@ -26,10 +26,10 @@
             <Persistent>      true                </Persistent>
         </skillDic>
 
-        <buffDic>
+        <buffMgrDic>
             <Type>            SERVER_BUFFS              </Type>
             <Flags>           CELL_PRIVATE             </Flags>
-        </buffDic>
+        </buffMgrDic>
 
         <savedBuffDic>
             <Type>            SERVER_BUFFS              </Type>
@@ -37,10 +37,10 @@
             <Persistent>      true                </Persistent>
         </savedBuffDic>
 
-        <aureoleDic>
+        <auraDic>
             <Type>            AUREOLE                   </Type>
             <Flags>           CELL_PRIVATE             </Flags>
-        </aureoleDic>
+        </auraDic>
 
         <aureoleFormOtherDic>
             <Type>            AUREOLE_FROM_OTHERS       </Type>
@@ -51,11 +51,6 @@
             <Type>            SHIELD_INFO               </Type>
             <Flags>           CELL_PRIVATE             </Flags>
         </shieldDic>
-
-        <statisticsDmgRecords>
-            <Type>            PYTHON                    </Type>
-            <Flags>           CELL_PRIVATE             </Flags>
-        </statisticsDmgRecords>
 
         <state>
             <Type>          STATE64                </Type>
@@ -368,29 +363,29 @@
             <Default>       {}               </Default>
         </controlledStates>
 
-        <enemyCacheSet>
+        <enemiesCacheSet>
             <Type>          PYTHON              </Type>
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       set()               </Default>
-        </enemyCacheSet>
+        </enemiesCacheSet>
 
-        <notEnemyCacheSet>
+        <notEnemiesCacheSet>
             <Type>          PYTHON              </Type>
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       set()               </Default>
-        </notEnemyCacheSet>
+        </notEnemiesCacheSet>
 
-        <friendCacheSet>
+        <friendsCacheSet>
             <Type>          PYTHON              </Type>
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       set()               </Default>
-        </friendCacheSet>
+        </friendsCacheSet>
 
-        <notFriendCacheSet>
+        <notFriendsCacheSet>
             <Type>          PYTHON              </Type>
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       set()               </Default>
-        </notFriendCacheSet>
+        </notFriendsCacheSet>
 
         <cacheSelfSet>
             <Type>          PYTHON              </Type>
@@ -398,10 +393,10 @@
             <Default>       set()               </Default>
         </cacheSelfSet>
 
-        <checkTargetTypeTimeId>
+        <checkTargetTypeTimerId>
             <Type>          TIMER_ID            </Type>
             <Flags>         CELL_PRIVATE        </Flags>
-        </checkTargetTypeTimeId>
+        </checkTargetTypeTimerId>
 
         <useTargetTypeCacheFlag>
             <Type>          BOOL                </Type>
@@ -409,10 +404,10 @@
             <Default>       0                   </Default>
         </useTargetTypeCacheFlag>
 
-        <stopCacheTargetTypeTimeId>
+        <stopCacheTargetTypeTimerId>
             <Type>          TIMER_ID            </Type>
             <Flags>         CELL_PRIVATE        </Flags>
-        </stopCacheTargetTypeTimeId>
+        </stopCacheTargetTypeTimerId>
 
         <baseFatal>
             <Type>          INT32          </Type>
@@ -779,6 +774,11 @@
             <Type>          PY_DICT         </Type>
             <Flags>         CELL_PRIVATE    </Flags>
         </skillTimerDic>
+
+        <checkShieldTimerId>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </checkShieldTimerId>
     </Properties>
 
     <CellMethods>
@@ -1019,5 +1019,9 @@
         <onExitShiftByConflict>
             <Arg>        POSITION3D         </Arg>
         </onExitShiftByConflict>
+
+        <onStateChangedForce>
+            <Arg>        UINT8              </Arg>
+        </onStateChangedForce>
     </ClientMethods>
 </root>

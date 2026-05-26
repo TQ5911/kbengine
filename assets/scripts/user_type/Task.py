@@ -70,20 +70,20 @@ class TaskExtraAttr(userType.UserSingleType):
 class Task(userType.UserSingleType):
     def __init__(self, taskId, taskData=None):
         self.taskId = taskId
-        taskData = taskData or dataUtils.getTaskData(taskId)
-        self.taskType = dataUtils.taskFieldVal(taskData, 'TaskType')
-        cycleEnable = dataUtils.taskFieldVal(taskData, 'OpenCondCheckTaskCount')
+        taskData = taskData or dataUtils.getTaskCfg(taskId)
+        self.taskType = dataUtils.getTaskFieldVal(taskData, 'TaskType')
+        cycleEnable = dataUtils.getTaskFieldVal(taskData, 'OpenCondCheckTaskCount')
         if cycleEnable:
-            self.cycleType = dataUtils.taskFieldVal(taskData, 'OpenCondCountCycle')
-            self.limitCount = dataUtils.taskFieldVal(taskData, 'OpenCondCountLimit')
+            self.cycleType = dataUtils.getTaskFieldVal(taskData, 'OpenCondCountCycle')
+            self.limitCount = dataUtils.getTaskFieldVal(taskData, 'OpenCondCountLimit')
         else:
             self.cycleType = gameconst.TaskCycleType.CYCLE_TASK_ENUM_NONE
             self.limitCount = 0
         self.rootTaskId = dataUtils.getRootTaskId(taskId)
-        self.parentTaskId = dataUtils.taskFieldVal(taskData, 'FatherTaskId')
+        self.parentTaskId = dataUtils.getTaskFieldVal(taskData, 'FatherTaskId')
 
         self.lastChildTaskId = 0
-        self.stat = gameconst.TaskStat.TASK_STAT_DEFAULT
+        self.stat = gameconst.TaskStatEnum.TASK_STAT_DEFAULT
         # 领取任务次数
         self.claimCount = 0
         self.alreadyCount = 0
@@ -282,9 +282,9 @@ class Task(userType.UserSingleType):
         self.claimSrc = taskCtx.claimSrc
         self.seed = taskCtx.seed
 
-        taskData = dataUtils.getTaskData(taskId)
+        taskData = dataUtils.getTaskCfg(taskId)
         # LOG_DBG('in Task::initTaskFromData, taskId:', taskId, alreadyCount, claimCount, taskCtx.extra)
-        self.setStat(owner, gameconst.TaskStat.TASK_STAT_RUNNING)
+        self.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_RUNNING)
         self.claimCount = claimCount
         self.alreadyCount = alreadyCount
         self.taskRewardLimitDic = taskRewardLimitDic or {}
@@ -294,7 +294,7 @@ class Task(userType.UserSingleType):
         self.pointsDic = {taskId: (pos[0], pos[1], pos[2]) for taskId, pos in pointsDic.items()}
 
         # childTasks
-        cfgChildTaskIds = dataUtils.taskFieldVal(taskData, 'ChildTaskIds')
+        cfgChildTaskIds = dataUtils.getTaskFieldVal(taskData, 'ChildTaskIds')
         if len(cfgChildTaskIds) > 0:
             checkLevel = 0
             if taskCtx.teamBaseInfoDic:
@@ -314,10 +314,10 @@ class Task(userType.UserSingleType):
             self.childTaskIds = childTaskIds
 
         self.teamId = taskCtx.teamId
-        failedSec = dataUtils.taskFieldVal(taskData, 'FailCondTimeLimit')
+        failedSec = dataUtils.getTaskFieldVal(taskData, 'FailCondTimeLimit')
         if failedSec > 0:
             failedSec = int(failedSec)
-            if dataUtils.taskFieldVal(taskData, 'FailCondTimingOffline'):
+            if dataUtils.getTaskFieldVal(taskData, 'FailCondTimingOffline'):
                 # 下线后依旧计时的任务
                 self.expiredTime = utils.curTS() + failedSec
                 taskInfo.addExpiredTimeTask(taskId, self.expiredTime)
@@ -327,7 +327,7 @@ class Task(userType.UserSingleType):
                 taskInfo.addValidSecTask(taskId, self.validSec)
 
         # 与活动关联的任务
-        # failCondActId = dataUtils.taskFieldVal(taskData, 'FailCondActId')
+        # failCondActId = dataUtils.getTaskFieldVal(taskData, 'FailCondActId')
         # if taskId in ACAD.taskId2actId and failCondActId:
         #     if failCondActId in gameconst.ACT_ID_CONST.FESTIVAL_ACTIVITY_IDS:
         #         festivalId = ACAD.datas[failCondActId]['cntFestival']
@@ -337,9 +337,9 @@ class Task(userType.UserSingleType):
         #         self.expiredTime = gameglobal.globalOpenedActDic.get(int(failCondActId), 0)
 
         # 计数任务
-        checkValue = dataUtils.taskFieldVal(taskData, 'FinCondNeedCheckValue')
+        checkValue = dataUtils.getTaskFieldVal(taskData, 'FinCondNeedCheckValue')
         if checkValue:
-            values = dataUtils.taskFieldVal(taskData, 'FinCondCheckValue')
+            values = dataUtils.getTaskFieldVal(taskData, 'FinCondCheckValue')
             for idx, valueData in enumerate(values):
                 if valueData['Value'] <= 0:
                     continue
@@ -348,11 +348,11 @@ class Task(userType.UserSingleType):
                 self.addNewTarget(tgt)
 
         # 杀怪任务
-        hasKillMst = dataUtils.taskFieldVal(taskData, 'FinCondHasKillMon')
+        hasKillMst = dataUtils.getTaskFieldVal(taskData, 'FinCondHasKillMon')
         if hasKillMst:
-            tgtKillMonsters = dataUtils.taskFieldVal(taskData, 'FinCondKillMonster')
-            killMonstersMode = dataUtils.taskFieldVal(taskData, 'FinCondKillMonsterMode')
-            killMonstersTotalCount = dataUtils.taskFieldVal(taskData, 'FinCondKillMonsterNum')
+            tgtKillMonsters = dataUtils.getTaskFieldVal(taskData, 'FinCondKillMonster')
+            killMonstersMode = dataUtils.getTaskFieldVal(taskData, 'FinCondKillMonsterMode')
+            killMonstersTotalCount = dataUtils.getTaskFieldVal(taskData, 'FinCondKillMonsterNum')
 
             monsterIDs = set()
 
@@ -380,9 +380,9 @@ class Task(userType.UserSingleType):
                 self.addNewTarget(tgt)
 
         # 收集物品任务
-        hasGatherItems = dataUtils.taskFieldVal(taskData, 'FinCondHasGatherItems')
+        hasGatherItems = dataUtils.getTaskFieldVal(taskData, 'FinCondHasGatherItems')
         if hasGatherItems:
-            tgtItems = dataUtils.taskFieldVal(taskData, 'FinCondGatherItems')
+            tgtItems = dataUtils.getTaskFieldVal(taskData, 'FinCondGatherItems')
             for oneData in tgtItems:
                 itemId = oneData['ItemId']
                 dstCnt = oneData['Count']
@@ -404,9 +404,9 @@ class Task(userType.UserSingleType):
                 self.addNewTarget(tgt)
 
         # 交互采集任务
-        hasInterCollect = dataUtils.taskFieldVal(taskData, 'FinCondHasInterCollect')
+        hasInterCollect = dataUtils.getTaskFieldVal(taskData, 'FinCondHasInterCollect')
         if hasInterCollect:
-            collData = dataUtils.taskFieldVal(taskData, 'FinCondInterCollect')
+            collData = dataUtils.getTaskFieldVal(taskData, 'FinCondInterCollect')
             for oneData in collData:
                 collId = oneData['CollId']
                 dstCnt = oneData['Count']
@@ -419,8 +419,8 @@ class Task(userType.UserSingleType):
                 self.addNewTarget(tgt)
 
         # 激活怪物图鉴任务
-        if dataUtils.taskFieldVal(taskData, 'FinCondNeedActiveCard'):
-            manualIdsStr = dataUtils.taskFieldVal(taskData, 'FinCondMonCardId')
+        if dataUtils.getTaskFieldVal(taskData, 'FinCondNeedActiveCard'):
+            manualIdsStr = dataUtils.getTaskFieldVal(taskData, 'FinCondMonCardId')
             manualIds = manualIdsStr.split('|')
             for mid in manualIds:
                 if not mid:
@@ -431,8 +431,8 @@ class Task(userType.UserSingleType):
                 self.addNewTarget(tgt)
 
         # 播放一个动作任务
-        if dataUtils.taskFieldVal(taskData, 'FinCondIsTriggerAction'):
-            for oneTgtData in dataUtils.taskFieldVal(taskData, 'FinCondTriggerAction'):
+        if dataUtils.getTaskFieldVal(taskData, 'FinCondIsTriggerAction'):
+            for oneTgtData in dataUtils.getTaskFieldVal(taskData, 'FinCondTriggerAction'):
                 actionId = oneTgtData.get('ActionId')
                 if not actionId:
                     continue
@@ -441,7 +441,7 @@ class Task(userType.UserSingleType):
                 self.addNewTarget(tgt)
 
         # 与npc交谈任务
-        tgtTalkToNpc = dataUtils.taskFieldVal(taskData, 'FinCondFinDialogs')
+        tgtTalkToNpc = dataUtils.getTaskFieldVal(taskData, 'FinCondFinDialogs')
         for oneData in tgtTalkToNpc:
             npcIdStr = oneData['NPCId']
             dialogIdStr = oneData['DialogId']
@@ -456,7 +456,7 @@ class Task(userType.UserSingleType):
             self.addNewTarget(tgt)
 
         # 到达指定区域
-        if dataUtils.taskFieldVal(taskData, 'FinCondIsTriggerArea'):
+        if dataUtils.getTaskFieldVal(taskData, 'FinCondIsTriggerArea'):
             if not pointsDic:
                 rootTask = taskInfo.getRootTask(self.taskId)
                 if rootTask:
@@ -465,13 +465,13 @@ class Task(userType.UserSingleType):
             if pointsDic:
                 rdPoint = pointsDic.get(self.taskId, None)
             tgt = TaskTargetInfo.TaskTgtFactory.createTarget(gameconst.TaskTargetType.TASK_TARGET_REACH_AREA,
-                                                             dataUtils.taskFieldVal(taskData, 'FinCondReachArea'),
+                                                             dataUtils.getTaskFieldVal(taskData, 'FinCondReachArea'),
                                                              rdPoint)
             self.addNewTarget(tgt)
             taskInfo.addReachAreaTargetTask(taskId, tgt)
 
         # 到达某个等级
-        dstLevel = dataUtils.taskFieldVal(taskData, 'FinCondToLevel')
+        dstLevel = dataUtils.getTaskFieldVal(taskData, 'FinCondToLevel')
         if dstLevel > 0:
             tgt = TaskTargetInfo.TaskTgtFactory.createTarget(gameconst.TaskTargetType.TASK_TARGET_LEVEL,
                                                              dstLevel)
@@ -479,7 +479,7 @@ class Task(userType.UserSingleType):
             self.addNewTarget(tgt)
 
         # 关联任务处于某个状态
-        finRelateTaskIdsStr = dataUtils.taskFieldVal(taskData, 'FinCondRelateTaskId')
+        finRelateTaskIdsStr = dataUtils.getTaskFieldVal(taskData, 'FinCondRelateTaskId')
         # 注意这里，编辑器导出的 FinCondRelateTaskId 的数据还可能是: str类型的 '0', int 类型的 0, int 类型的 taskId
         finRelateTaskIdsStr = str(finRelateTaskIdsStr)
         if finRelateTaskIdsStr:
@@ -493,22 +493,22 @@ class Task(userType.UserSingleType):
                     continue
                 relTaskStat = owner.taskInfo.getTaskCurrentState(relTaskId)
                 tgt = TaskTargetInfo.TaskTgtFactory.createTarget(gameconst.TaskTargetType.TASK_TARGET_RELATE_TASK,
-                                                                 relTaskId, dataUtils.taskFieldVal(taskData,
+                                                                 relTaskId, dataUtils.getTaskFieldVal(taskData,
                                                                                                    'FinCondRelateTaskState'),
                                                                  relTaskStat)
                 self.addNewTarget(tgt)
 
         # 变量目标
-        varFrmId = dataUtils.taskFieldVal(taskData, 'FinCondVarCheckFormID')
+        varFrmId = dataUtils.getTaskFieldVal(taskData, 'FinCondVarCheckFormID')
         if varFrmId:
             tgt = TaskTargetInfo.TaskTgtFactory.createTarget(gameconst.TaskTargetType.TASK_TARGET_VAR, varFrmId)
-            tgt.checkVarCond(owner, varFrmId, dataUtils.taskFieldVal(taskData, 'FinCondVarCheckParam'))
+            tgt.checkVarCond(owner, varFrmId, dataUtils.getTaskFieldVal(taskData, 'FinCondVarCheckParam'))
             self.addNewTarget(tgt)
 
         # 计次目标
-        counterId = dataUtils.taskFieldVal(taskData, 'FinCondCountID')
-        dstCnt = dataUtils.taskFieldVal(taskData, 'FinCondCountTgt')
-        counterParam = dataUtils.taskFieldVal(taskData, 'FinCondCountParam')
+        counterId = dataUtils.getTaskFieldVal(taskData, 'FinCondCountID')
+        dstCnt = dataUtils.getTaskFieldVal(taskData, 'FinCondCountTgt')
+        counterParam = dataUtils.getTaskFieldVal(taskData, 'FinCondCountParam')
         if counterId and dstCnt:
             # if counterId == TCTTD.couterTargetDic['TaskCounterTargetXZKY']:
             #     curCnt = owner.achieveInfo.achieveScore
@@ -522,7 +522,7 @@ class Task(userType.UserSingleType):
 
     def setStat(self, owner, stat):
         if self.stat != stat:
-            LOG_IFO('Task::setStat, taskId {}, {} ==> {}'.format(self.taskId, self.stat, stat))
+            LOG_INFO('Task::setStat, taskId {}, {} ==> {}'.format(self.taskId, self.stat, stat))
 
             self.stat = stat
             owner.onTaskStateChanged(self.taskId, stat)
@@ -540,7 +540,7 @@ class Task(userType.UserSingleType):
 
     def isInEndStat(self):
         # 任务是否处于最终状态
-        return self.stat in [gameconst.TaskStat.TASK_STAT_SUBMITTED, gameconst.TaskStat.TASK_STAT_QUIT]
+        return self.stat in [gameconst.TaskStatEnum.TASK_STAT_SUBMITTED, gameconst.TaskStatEnum.TASK_STAT_QUIT]
 
     def isTaskExpired(self):
         return 0 < self.expiredTime <= utils.curTS()
@@ -548,7 +548,7 @@ class Task(userType.UserSingleType):
     def canAddRewardId(self, taskId, rewardId, rewardMaxNum=1):
         hasRewardTimes = self.taskRewardLimitDic.get(taskId, {}).get(rewardId, 0)
         if hasRewardTimes >= rewardMaxNum:
-            LOG_IFO('in canAddRewardId, hasRewardTimes > rewardMaxNum:', taskId, rewardId, hasRewardTimes,
+            LOG_INFO('in canAddRewardId, hasRewardTimes > rewardMaxNum:', taskId, rewardId, hasRewardTimes,
                       rewardMaxNum)
             return False
         else:
@@ -607,7 +607,7 @@ class Task(userType.UserSingleType):
         return len(self.targetDic) == 0
 
     def checkAllTargetsReached(self):
-        if self.isStat(gameconst.TaskStat.TASK_STAT_FINISHED):
+        if self.isStat(gameconst.TaskStatEnum.TASK_STAT_FINISHED):
             return True
         for tgt in self.getAllTargets():
             if not tgt.isTargetCompleted():
@@ -628,11 +628,11 @@ class Task(userType.UserSingleType):
         return updated, tgtArrived
 
     def setAllTargetsReached(self, owner):
-        LOG_IFO('in Task::setAllTargetsReached:', self.taskId)
+        LOG_INFO('in Task::setAllTargetsReached:', self.taskId)
         for tgt in self.getAllTargets():
             tgt.setTargetCompleted()
 
-        self.setStat(owner, gameconst.TaskStat.TASK_STAT_FINISHED)
+        self.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_FINISHED)
         return
 
     def addGameEntityIdRecord(self, gameEntityId):
@@ -686,7 +686,7 @@ class TaskFactory(object):
         if not taskId:
             gameengine.panicStack('invalid taskId:', taskId)
             return
-        taskData = dataUtils.getTaskData(taskId)
+        taskData = dataUtils.getTaskCfg(taskId)
         if not taskData:
             gameengine.panicStack('no taskdata:', taskId)
             return
@@ -697,7 +697,7 @@ class TaskFactory(object):
 
     @classmethod
     def createTaskBySavedDict(cls, savedDict):
-        taskData = dataUtils.getTaskData(savedDict['taskId'])
+        taskData = dataUtils.getTaskCfg(savedDict['taskId'])
         if not taskData:
             gameengine.panicStack('invalid taskId:', savedDict['taskId'])
             return
@@ -707,7 +707,7 @@ class TaskFactory(object):
 
     @classmethod
     def createTaskByTaskObj(cls, owner, taskObj):
-        taskData = dataUtils.getTaskData(taskObj.taskId)
+        taskData = dataUtils.getTaskCfg(taskObj.taskId)
         if not taskData:
             gameengine.panicStack('invalid taskId:', taskObj.taskId)
             return

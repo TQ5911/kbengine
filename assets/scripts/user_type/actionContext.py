@@ -109,6 +109,7 @@ class UseSkillCtx(ActionContext):
         self.isLastActionStage = isLastActionStage           #�Ƿ����һ��actionstage
         self.checkInRange = checkInRange
         self.isClient = isClient
+        self.lastBlinkPos = None
 
         if self.skillResult:
             self.skillResult.sourceType = self.getDmgSourceType()
@@ -335,9 +336,9 @@ class ChangeSkillSlotCtx(ActionContext):
 
 class AiActionCtx(ActionContext):
     actionType = ACTION_AI_ACTION
-    def __init__(self, creepBaseId, parentCtx=None):
+    def __init__(self, creepbaseId, parentCtx=None):
         super(AiActionCtx, self).__init__(parentCtx)
-        self.creepBaseId = creepBaseId
+        self.creepbaseId = creepbaseId
 
 class PlunderRewardCtx(object):
     def __init__(self, lingqiPointLv=0, lingStone=0, hunStone=0, completion=0):
@@ -590,7 +591,7 @@ class AureoleCtx(ActionContext):
         if not owner:
             return []
 
-        aureoleVal = owner.aureoleDic.get(self.aureoleId)
+        aureoleVal = owner.auraDic.get(self.aureoleId)
         if aureoleVal:
             return aureoleVal.aureoleTargetIds
 
@@ -605,7 +606,7 @@ class CubeDurCtx(object):
     def done(self, isSuccess):
         if not isSuccess:
             if self.failedLeaveCube:
-                self.avatarBase.cell.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
+                self.avatarBase.cell.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT, True)
 
 class CreateSummonCtx(ActionContext):
     actionType = ACTION_UNKNOWN

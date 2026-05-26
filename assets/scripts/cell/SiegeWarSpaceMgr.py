@@ -21,7 +21,7 @@ import guildAuthorization_authorizationID_def as GA_AI_DD
 import CoreAreaFlag
 import message_Message as MM
 import buff
-import buff_buff as BBD
+import buff_buff as B_BD
 
 startEGText = ""
 for i in GA_AD.authorization2Job[GA_AI_DD.datas.cityBattleSiegeEnginesStart]:
@@ -131,7 +131,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
     def __init__(self):
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)
-        LOG_IFO("SiegeWarSpaceMgr __init__")
+        LOG_INFO("SiegeWarSpaceMgr __init__")
 
         self.siegewarEntityDict = {}
         self.siegewarBowDict = {}
@@ -602,7 +602,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
 
         if playerEnt.gbId in self.buffCacheDict:
             for buffId, time in self.buffCacheDict[playerEnt.gbId].items():
-                remainTime = BBD.datas[buffId]['endByTime'] - (utils.curTS() - time)
+                remainTime = B_BD.datas[buffId]['endByTime'] - (utils.curTS() - time)
                 if remainTime > 0:
                     playerEnt.addBuff(buffId, 1, playerEnt.id, duration = remainTime)
         else:
@@ -617,7 +617,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                                           self.cityOwnerId, self.cityOwnerName, self.cityOwnerSchool, self.cityOwnerSex)
             LOG_DBG("[lj]onPlayerEnter: playerEnt.onSiegeWarBattleEnd", self.winnerGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
 
-        LOG_IFO('onPlayerEnter', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
+        LOG_INFO('onPlayerEnter', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
 
     def onPlayerLeave(self, playerGbId, playerId, box):
         if self.offenseTeleporter:
@@ -633,7 +633,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         else:
             LOG_WARN("[lj]onPlayerLeave: playerId is not in self.players", playerId)
         super(SiegeWarSpaceMgr, self).onPlayerLeave(playerGbId, playerId, box)
-        LOG_IFO('onPlayerLeave', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
+        LOG_INFO('onPlayerLeave', playerId, 'offenseNum', self.offenseNum, 'defenseNum', self.defenseNum)
 
     def onPlayerRelive(self, box, playerGbId):
         super(SiegeWarSpaceMgr, self).onPlayerRelive(box, playerGbId)

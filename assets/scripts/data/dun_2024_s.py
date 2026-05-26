@@ -36,9 +36,12 @@ datas ={
         "PosY": 527.723,
         "PosZ": 20.87,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
-          "Remark": ""
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     },

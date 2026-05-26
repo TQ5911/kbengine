@@ -1,0 +1,100 @@
+<root>
+    <Interfaces>
+        <Interface>	   iCell            </Interface>
+        <Interface>	   iBaseWithCell    </Interface>
+        <Interface>	   iFubenSpace      </Interface>
+        <Interface>	   iTimerCell    </Interface>
+        <Interface>    iGameEntity      </Interface>
+        <Interface>    iEntityRefresh       </Interface>
+        <Interface>    iClient          </Interface>
+    </Interfaces>
+
+    <Properties>
+        <name>
+            <Type>      UNICODE         </Type>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </name>
+
+        <type>
+            <Type>      UINT8           </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   1               </Default>
+        </type>
+
+        <collectionId>
+            <Type>	    OBJECT_ID	    </Type>
+            <Flags>	    OTHER_CLIENTS	</Flags>
+        </collectionId>
+
+        <gatherAvatars>
+            <Type>      PYTHON          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   {}              </Default>
+        </gatherAvatars>
+
+        <canGather>
+            <Type>      BOOL            </Type>
+            <Flags>     ALL_CLIENTS     </Flags>
+            <Default>   1               </Default>
+        </canGather>
+
+        <gatherCnt>
+            <Type>      UINT32          </Type>
+            <Flags>     ALL_CLIENTS     </Flags>
+            <Default>   0               </Default>
+        </gatherCnt>
+
+        <tLocked>
+            <Type>      LONGTIME        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   0               </Default>
+        </tLocked>
+
+        <extraJson>
+            <Type>  UNICODE         </Type>
+            <Flags> CELL_PRIVATE    </Flags>
+        </extraJson>
+
+		<bornState>
+            <Type>      UINT8               </Type>
+            <Default>   0                   </Default>
+            <Flags>     OTHER_CLIENTS       </Flags>
+        </bornState>
+
+        <dropEquipId>
+            <Type>      UNIQUE_ID           </Type>
+            <Default>   0                   </Default>
+            <Flags>     OTHER_CLIENTS       </Flags>
+        </dropEquipId>
+
+        <dropEquipItemId>
+            <Type>      ITEM_ID             </Type>
+            <Default>   0                   </Default>
+            <Flags>     OTHER_CLIENTS       </Flags>
+        </dropEquipItemId>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <addGatherAvatar>
+            <Arg>       ENTITY_ID     </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       OBJECT_ID      </Arg>
+        </addGatherAvatar>
+    </CellMethods>
+
+    <ClientMethods>
+        <onEnterCollect>
+        </onEnterCollect>
+
+        <onCancelCollect>
+        </onCancelCollect>
+
+        <onAfterCollect>
+        </onAfterCollect>
+    </ClientMethods>
+
+</root>

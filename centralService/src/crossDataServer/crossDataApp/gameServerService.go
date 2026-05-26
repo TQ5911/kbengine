@@ -46,14 +46,15 @@ func (gss *GameServerService) ActiveTick(in *gameServerService.Void) (*gameServe
 func (gss *GameServerService) AddGuildInfo(in *gameServerService.AddGuildInfoRequest) (*gameServerService.Void, error) {
 	appLog.Info("add guild info:", in.GuildInfo.GuildUUID, in.GuildInfo.GuildName)
 	gss.app.guildData.AddGuildInfo(&GuildInfoCache{
-		guildUUID:  in.GuildInfo.GuildUUID,
-		guildName:  in.GuildInfo.GuildName,
-		serverId:   in.GuildInfo.ServerId,
-		flag:       in.GuildInfo.Flag,
-		guildScore: in.GuildInfo.GuildScore,
-		guildLevel: in.GuildInfo.GuildLevel,
-		guildIcon:  in.GuildInfo.GuildIcon,
-		memberCnt:  in.GuildInfo.MemberCnt,
+		guildUUID:        in.GuildInfo.GuildUUID,
+		guildName:        in.GuildInfo.GuildName,
+		serverId:         in.GuildInfo.ServerId,
+		flag:             in.GuildInfo.Flag,
+		guildScore:       in.GuildInfo.GuildScore,
+		guildLevel:       in.GuildInfo.GuildLevel,
+		guildIcon:        in.GuildInfo.GuildIcon,
+		memberCnt:        in.GuildInfo.MemberCnt,
+		maxGuildUnionNum: in.GuildInfo.MaxGuildUnionNum,
 	})
 
 	_, err := gss.GetClientEndPoint().(*gameServerService.GameServerClient).OnAddGuildInfo(&gameServerService.AddGuildInfoResult{

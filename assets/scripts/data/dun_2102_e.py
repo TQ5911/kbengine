@@ -489,7 +489,7 @@ datas ={
     "entityID": [
       21028019
     ],
-    "num": 0,
+    "num": 1,
     "transition": {}
   },
   "1111": {
@@ -508,7 +508,7 @@ datas ={
     "entityID": [
       21028020
     ],
-    "num": 0,
+    "num": 1,
     "transition": {}
   },
   "1113": {
@@ -733,8 +733,7 @@ datas ={
         1143,
         1144,
         1145,
-        1146,
-        1152
+        1146
       ]
     }
   },
@@ -815,7 +814,6 @@ datas ={
         1148,
         1149,
         1150,
-        1153,
         1092
       ]
     }
@@ -1045,32 +1043,6 @@ datas ={
       21028002
     ],
     "num": 1,
-    "transition": {}
-  },
-  "1152": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21020001
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
-    "transition": {}
-  },
-  "1153": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21020002
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
     "transition": {}
   }
 }

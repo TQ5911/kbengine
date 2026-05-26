@@ -11,6 +11,11 @@
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       {}                      </Default>
         </boxGroupMonsters>
+        <boxGroupCollects>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </boxGroupCollects>
     </Properties>
 
     <CellMethods>

@@ -376,7 +376,7 @@ class Behaviour(object):
 
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
 
         for c in self.conditionList:
             c.reloadScript()

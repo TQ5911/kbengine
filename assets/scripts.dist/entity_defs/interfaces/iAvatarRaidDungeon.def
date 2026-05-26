@@ -1,0 +1,119 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <CellMethods>
+        <onSetRaidDungeonInfo>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+        </onSetRaidDungeonInfo>
+
+        <onClearRaidDungeonInfo>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+        </onClearRaidDungeonInfo>
+
+        <!--团队成员进入副本, 分两个情况
+            1. 没有创建副本: 必须团长调用该方法, 先创建副本, 然后所有团员进入副本
+            2. 已经创建副本: 当前队员进入副本-->
+        <enterGuildChallengeDungeon>
+            <Exposed/>
+            <Arg> DUNGEON_NO </Arg>
+            <Arg> BOOL </Arg>
+        </enterGuildChallengeDungeon>
+
+        <createAndEnterRaidDungeonAllMemberPreCheck>
+            <Arg>   MAILBOX   </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </createAndEnterRaidDungeonAllMemberPreCheck>
+
+        <onCreateAndEnterRaidDungeonAllMemberPreCheck>
+            <Arg>   ERRNO      </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   UNICODE </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onCreateAndEnterRaidDungeonAllMemberPreCheck>
+
+        <onCreateAndEnterRaidDungeonCheckComplete>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onCreateAndEnterRaidDungeonCheckComplete>
+
+        <doCreateAndEnterRaidDungeon>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </doCreateAndEnterRaidDungeon>
+
+        <doEnterRaidDungeonAfterCheck>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON  </Arg>
+        </doEnterRaidDungeonAfterCheck>
+
+        <!--团队成员离开副本-->
+        <leaveRaidDungeon>
+            <Exposed/>
+        </leaveRaidDungeon>
+
+        <selfLeaveRaidDungeon>
+            <Arg>   PYTHON  </Arg>
+        </selfLeaveRaidDungeon>
+
+        <enterRaidDungeon>
+            <Arg>   DUNGEON_NO              </Arg>
+            <Arg>   DUNGEON_SRC             </Arg>
+            <Arg>   PYTHON                  </Arg>
+        </enterRaidDungeon>
+    </CellMethods>
+
+    <BaseMethods>
+        <doEnterRaidDungeonSelfCheck>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON  </Arg>
+        </doEnterRaidDungeonSelfCheck>
+        
+        <createAndEnterRaidDungeonMemberPreCheck>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   DUNGEON_SRC </Arg>
+            <Arg>   PYTHON      </Arg>
+        </createAndEnterRaidDungeonMemberPreCheck>
+    </BaseMethods>
+
+    <ClientMethods>
+        <!--设置团队副本后客户端回调-->
+        <onSetRaidDungeonInfo>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+        </onSetRaidDungeonInfo>
+    </ClientMethods>
+
+</root>
+

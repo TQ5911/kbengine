@@ -97,6 +97,10 @@ class AchievementsVal(userType.UserSingleType):
 
     def _checkCouldTakeAchieve(self, avatar, achieveId):
         _achieveData = A_DD.datas[achieveId]
+        if not AchievementValInfo.AchievementValVal.checkSupport(_achieveData['targetType']):
+            LOG_ERR('这个成就类型服务端还没支持:', _achieveData['targetType'], _achieveData['levelDisplay'])
+            return False
+
         if avatar.getRoleCacheAttr('level', 1) < _achieveData['openLevel']:
             return False
 
@@ -117,7 +121,8 @@ class AchievementsVal(userType.UserSingleType):
     def _updateByWaitList(self, avatar, waitList, ctx):
         waitList = waitList[:] # 复制一份，防止修改原列表
         _updateList = []
-        _maxTimes = 1000
+        # 貌似成就有一万个了，这个先改大点，这个数主要用来防止无限循环
+        _maxTimes = 9999
         while waitList:
             _maxTimes -= 1
             if _maxTimes <= 0:
@@ -218,7 +223,7 @@ class AchievementsVal(userType.UserSingleType):
 
             self.popAchieveVal(_achieveId)
             if _achieveId in self.finishedIds:
-                ERROR_MSG('takeAllAchievementRewards but already has id', _achieveId)
+                LOG_ERR('takeAllAchievementRewards but already has id', _achieveId)
                 continue
 
             self.finishedIds.append(_achieveId)

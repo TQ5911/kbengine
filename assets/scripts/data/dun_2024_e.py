@@ -119,7 +119,8 @@ datas ={
     "transition": {
       "finished": [
         1022,
-        1102
+        1102,
+        1025
       ]
     }
   },
@@ -135,7 +136,8 @@ datas ={
     "transition": {
       "finished": [
         1023,
-        1024
+        1024,
+        1026
       ]
     }
   },
@@ -146,7 +148,7 @@ datas ={
     ],
     "skillID": 91034025,
     "lv": "1",
-    "forceToUse": 0,
+    "forceToUse": 1,
     "transition": {}
   },
   "1102": {
@@ -170,9 +172,9 @@ datas ={
     "entityID": [
       20230001
     ],
-    "skillID": 0,
+    "skillID": 91034025,
     "lv": "1",
-    "forceToUse": 0,
+    "forceToUse": 1,
     "transition": {}
   },
   "1024": {
@@ -181,6 +183,32 @@ datas ={
       20230001
     ],
     "dialogID": 19023004,
+    "transition": {}
+  },
+  "1025": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20230001
+    ],
+    "buffID": [
+      64004970
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {}
+  },
+  "1026": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20230001
+    ],
+    "buffID": [
+      64004971
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
     "transition": {}
   }
 }

@@ -5,8 +5,9 @@ import KBEngine
 from KBEDebug import *
 
 import _pickle as cPickle
+
+import gameglobal
 import iGlobal
-import random
 import iBaseNoCell
 import iTimer
 import utils
@@ -36,8 +37,11 @@ from proto.gameServerDrop_pb2 import GameServer, \
     SendRepairDropMailRequest,\
     UpdateCollEndTimeRequest,\
     CheckDropExpireRequest,\
-    GetDropNotifyListRequest
-
+    SetTakeEquipRedeemPriceRequest,\
+    CheckRedeemExpireRequest, \
+    GetBackEquipRequest, \
+    CustodyRequest, \
+    CheckDropReturnExpireRequest
 
 class DropService(GameServer):
     def __init__(self, mgr, address, centralServerId):
@@ -66,9 +70,6 @@ class DropService(GameServer):
 
     def onRedeem(self, rpc_controller, reply, done):
         self.mgr.onRedeem(reply)
-
-    def onDropTypeChange(self, rpc_controller, reply, done):
-        self.mgr.onDropTypeChange(reply)
 
     def onGetBackEquip(self, rpc_controller, reply, done):
         self.mgr.onGetBackEquip(reply)
@@ -100,12 +101,29 @@ class DropService(GameServer):
     def onCheckDropExpire(self, rpc_controller, reply, done):
         self.mgr.onCheckDropExpire(reply)
 
-    def onAddDropNotify(self, rpc_controller, reply, done):
-        self.mgr.onAddDropNotify(reply)
-
     def onGetDropNotifyList(self, rpc_controller, reply, done):
         self.mgr.onGetDropNotifyList(reply)
 
+    def onCheckRedeemExpire(self, rpc_controller, reply, done):
+        self.mgr.onCheckRedeemExpire(reply)
+
+    def onSetTakeEquipRedeemPrice(self, rpc_controller, reply, done):
+        self.mgr.onSetTakeEquipRedeemPrice(reply)
+    
+    def onCustody(self, rpc_controller, reply, done):
+        self.mgr.onCustody(reply)
+
+    def onCheckDropReturnExpire(self, rpc_controller, reply, done):
+        self.mgr.onCheckDropReturnExpire(reply)
+    
+    def onSetDropEquipPayPrice(self, rpc_controller, reply, done):
+        self.mgr.onSetDropEquipPayPrice(reply)
+
+    def onNotifyCleanCollection(self, rpc_controller, reply, done):
+        self.mgr.onNotifyCleanCollection(reply)
+
+    def onNotifyCustodyEquip(self, rpc_controller, reply, done):
+        self.mgr.onNotifyCustodyEquip(reply)
 
 class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentralStub.ICentralStub):
     SERVICE_CLASS = DropService
@@ -117,7 +135,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         _interval = 5
         self.pyAddTimer(_interval, _interval, gametimer.DROP_STUB_CONNECT_TICK)
         self.pyAddTimer(60, 60, gametimer.DROP_STUB_CLEAR_CACHE)
-
+        self.pyAddTimer(60, 5, gametimer.TIMER_DROP_RETURN_EXPIRE)
+        
     def doNext(self):
         LOG_DBG('Drop doNext')
         super().doNext()
@@ -133,8 +152,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         for _key in _deleteList:
             self.remoteCallCache.pop(_key, None)
 
-    def dropEquipItem(self, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, serverId, collectionId):
-        LOG_DBG('Drop dropEquipItem', gbId, box, equipData, price)
+    def dropEquipItem(self, ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, serverId, collectionId):
+        LOG_DBG('Drop dropEquipItem', ownerServerId, ownerId, returnTime, gbId, box, equipData, price)
         if uniqueId in self.remoteCallCache:
             LOG_ERR('dropEquipItem uniqueId in remoteCallCache', gbId, uniqueId)
             return
@@ -150,6 +169,9 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         req.extraInfo = extraBlob
         req.collExpireTime = collEndTime
         req.collectionId = collectionId
+        req.ownerId = ownerId
+        req.returnTime = returnTime
+        req.ownerServerId = ownerServerId
 
         _client = self.getRandomClient()
         if not _client:
@@ -164,11 +186,13 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
 
         _client.dsStub.drop(None, req, None)
 
-    def takeDropEquip(self, gbId, uniqueId, box):
-        LOG_DBG('Drop takeDropEquip', gbId, uniqueId, box)
+    def takeDropEquip(self, gbId, serverId, uniqueId, box, redeemWaitTime):
+        LOG_DBG('Drop takeDropEquip', gbId, uniqueId, box, redeemWaitTime)
         _req = TakeRequest()
+        _req.serverId = serverId
         _req.uniqueId = uniqueId
         _req.takerGbId = gbId
+        _req.redeemWaitTime = redeemWaitTime
 
         _client = self.getRandomClient()
         if not _client:
@@ -200,7 +224,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
 
         _box = _cache.get('box')
         if reply.result == DropResult_SUCCESS:
-            _box.onTakeDropEquipSuccess(reply.dropGbId, reply.uniqueId, reply.equipInfo, reply.endTime, reply.price)
+            _box.onTakeDropEquipSuccess(reply.dropGbId, reply.uniqueId, reply.equipInfo, reply.endTime, reply.price, reply.redeemWaitTime)
         else:
             _box.onTakeDropEquipFailed(reply.uniqueId, reply.result)
 
@@ -248,6 +272,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
             self.connectAll()
         elif userArg == gametimer.DROP_STUB_CLEAR_CACHE:
             self._clearCache()
+        elif userArg == gametimer.TIMER_DROP_RETURN_EXPIRE:
+            self.checkDropReturnExpire()
         else:
             self._onTimer(tid, userArg)
 
@@ -258,17 +284,6 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
                 continue
 
             _client.dsStub.activeTick(None, Void(), None)
-
-    def onGetBackEquip(self, reply):
-        LOG_DBG('Drop onGetBackEquip', reply)
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [reply.dropGbId, ],
-            'onGetBackDropEquip',
-            (reply.uniqueId, reply.equipInfo, reply.isSelfTake),
-            None, '', ())
-
-    def onDropTypeChange(self, reply):
-        LOG_DBG('Drop onDropTypeChange', reply)
 
     def giveUpDropEquip(self, gbId, uniqueId, box):
         if uniqueId in self.remoteCallCache:
@@ -320,7 +335,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [reply.gbId, ],
             'onDropTypeChangeToAvatar',
-            (reply.uniqueId, reply.dropType),
+            (reply.uniqueId, reply.notifyType),
             None, '', ())
 
     def doGetTakeReward(self, gbId, uniqueId, box):
@@ -416,27 +431,94 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         self.remoteCallCache.pop(reply.uuid)
         _box = _cache.get('box')
 
+        _rewardList = {}
+        for _rewardData in reply.rewardInfos:
+            _rewardList[_rewardData.uniqueId] = _rewardData
+        
+        _returnList = {}
+        for _returnData in reply.returnInfos:
+            _returnList[_returnData.uniqueId] = _returnData
+        
         _dropList = []
-        for _dropData in reply.dropInfo:
+        curTime = utils.curTS()
+        for _dropData in reply.dropInfos:
+            _returnData = _returnList.get(_dropData.uniqueId, None)
+            if _returnData:
+                dropType = gameconst.DropType.TYPE_RETURN_WAIT
+                if curTime >= _returnData.returnTime:
+                    dropType = gameconst.DropType.TYPE_RETURN_GET
+                _dropList.append((
+                    _dropData.uniqueId,
+                    cPickle.loads(_dropData.equipInfo),
+                    _returnData.returnTime,
+                    dropType,
+                    cPickle.loads(_dropData.extraInfo),
+                    _dropData.collExpireTime,
+                    _dropData.price,
+                    _dropData.dropTime
+                ))
+                _returnList.pop(_dropData.uniqueId)
+            else:
+                _dropList.append((
+                    _dropData.uniqueId,
+                    cPickle.loads(_dropData.equipInfo),
+                    _dropData.endTime,
+                    _dropData.dropType,
+                    cPickle.loads(_dropData.extraInfo),
+                    _dropData.collExpireTime,
+                    _dropData.price,
+                    _dropData.dropTime
+                ))
+
+        for returnData in _returnList.values():
+            dropType = gameconst.DropType.TYPE_RETURN_WAIT
+            if curTime >= returnData.returnTime:
+                dropType = gameconst.DropType.TYPE_RETURN_GET
             _dropList.append((
-                _dropData.uniqueId,
-                cPickle.loads(_dropData.equipInfo),
-                _dropData.endTime,
-                _dropData.dropType,
-                cPickle.loads(_dropData.extraInfo),
-                _dropData.collExpireTime,
-                _dropData.price,
-            ))
+                    returnData.uniqueId,
+                    cPickle.loads(returnData.equipInfo),
+                    returnData.returnTime,
+                    dropType,
+                    {},
+                    0,
+                    0,
+                    0
+                ))
+            
 
         _takerList = []
-        for _takerData in reply.takerInfo:
-            _takerList.append((
+        for _takerData in reply.takerInfos:
+            _rewardData = _rewardList.get(_takerData.uniqueId, None)
+            if _rewardData:
+                _takerList.append((
+                _takerData.uniqueId,
+                cPickle.loads(_takerData.equipInfo),
+                _takerData.endTime,
+                gameconst.DropType.TYPE_REWARD,
+                _rewardData.price,
+                _takerData.redeemWaitTime,
+                _takerData.hasPrice,))
+                _rewardList.pop(_takerData.uniqueId)
+            else:
+                _takerList.append((
                 _takerData.uniqueId,
                 cPickle.loads(_takerData.equipInfo),
                 _takerData.endTime,
                 _takerData.dropType,
                 _takerData.price,
-            ))
+                _takerData.redeemWaitTime,
+                _takerData.hasPrice,))
+        
+        for rewardData in _rewardList.values():
+            _takerList.append((
+                rewardData.uniqueId,
+                cPickle.loads(rewardData.equipInfo),
+                0,
+                gameconst.DropType.TYPE_REWARD,
+                0,
+                0,
+                0,))
+            
 
         _box.onGetDropInfo(_dropList, _takerList)
 
@@ -551,24 +633,18 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         _box = _cache.get('box')
         _box.onDropEquipExpire(reply.uniqueId, reply.result)
 
-    def onAddDropNotify(self, reply):
-        LOG_DBG('Drop onAddDropNotify', reply)
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [reply.gbId, ],
-            'onAddDropNotify',
-            (),
-            None, '', ())
-
-    def getDropNotifyList(self, gbId, box):
-        LOG_DBG('Drop getDropNotifyList', gbId, box)
+    def setTakeEquipRedeemPrice(self, gbId, uniqueId, box, price):
+        LOG_DBG('Drop setTakeEquipRedeemPrice', gbId, box, uniqueId, price)
         _uuid = KBEngine.genUUID64()
-        _req = GetDropNotifyListRequest()
+        _req = SetTakeEquipRedeemPriceRequest()
         _req.gbId = gbId
+        _req.uniqueId = uniqueId
+        _req.price = price
         _req.uuid = _uuid
 
         _client = self.getRandomClient()
         if not _client:
-            LOG_ERR('Drop getDropNotifyList no client', gbId)
+            LOG_ERR('Drop setTakeEquipRedeemPrice no client', gbId)
             return
 
         self.remoteCallCache[_uuid] = {
@@ -576,26 +652,217 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
             'ts': utils.curTS(),
             'box': box,
         }
-        _client.dsStub.getDropNotifyList(None, _req, None)
+        _client.dsStub.setTakeEquipRedeemPrice(None, _req, None)
 
-    def onGetDropNotifyList(self, reply):
-        LOG_DBG('Drop onGetDropNotifyList', reply)
+    def onSetTakeEquipRedeemPrice(self, reply):
+        LOG_DBG('Drop onSetTakeEquipRedeemPrice', reply)
         _cache = self.remoteCallCache.get(reply.uuid)
         if not _cache:
-            LOG_ERR('Drop onGetDropNotifyList no cache', reply.uuid)
+            LOG_ERR('Drop onSetTakeEquipRedeemPrice no cache', reply.uuid)
             return
 
         self.remoteCallCache.pop(reply.uuid)
         _box = _cache.get('box')
 
-        _notifyList = []
-        for _notifyData in reply.dropNotify:
-            _notifyList.append({
-                'notifyType': _notifyData.notifyType,
-                'notifyTime': _notifyData.notifyTime,
-                'uniqueId': _notifyData.uniqueId,
-                'equipInfo': _notifyData.equipInfo,
-            })
+        _box.onSetTakeEquipRedeemPriceBase(reply.uniqueId, reply.price, reply.result)
 
-        _box.onGetDropNotifyList(_notifyList)
+    def doCheckRedeemExpire(self, uniqueId, gbId, box):
+        _uuid = KBEngine.genUUID64()
+        _req = CheckRedeemExpireRequest()
+        _req.uniqueId = uniqueId
+        _req.gbId = gbId
+        _req.uuid = _uuid
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_ERR('Drop doCheckRedeemExpire no client', uniqueId)
+            return
+
+        self.remoteCallCache[_uuid] = {
+            'box': box,
+            'gbId': gbId,
+            'ts': utils.curTS(),
+        }
+        _client.dsStub.checkRedeemExpire(None, _req, None)
+
+    def onCheckRedeemExpire(self, reply):
+        LOG_DBG('Drop onCheckRedeemExpire', reply)
+        _cache = self.remoteCallCache.get(reply.uuid)
+        if not _cache:
+            LOG_ERR('Drop onCheckRedeemExpire no cache', reply.uuid)
+            return
+
+        self.remoteCallCache.pop(reply.uuid)
+
+    def doGetDropEquipBack(self, uniqueId, gbId, box):
+        _uuid = KBEngine.genUUID64()
+        _req = GetBackEquipRequest()
+        _req.uniqueId = uniqueId
+        _req.gbId = gbId
+        _req.uuid = _uuid
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_ERR('Drop doGetDropEquipBack no client', uniqueId)
+            return
+
+        self.remoteCallCache[_uuid] = {
+            'box': box,
+            'gbId': gbId,
+            'ts': utils.curTS(),
+        }
+        _client.dsStub.getBackEquip(None, _req, None)
+
+    def custodyEquipItem(self, gbId, box, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId):
+        LOG_DBG('Drop custodyEquipItem', gbId, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId)
+        if uniqueId in self.remoteCallCache:
+            LOG_ERR('custodyEquipItem uniqueId in remoteCallCache', gbId, uniqueId)
+            return
+
+        req = CustodyRequest()
+        req.uniqueId = uniqueId
+        req.dropType = dropType
+        req.equipInfo = equipInfo
+        req.holderGbId = holderGbId
+        req.holderServerId = holderServerId
+        req.ownerServerId = ownerServerId
+        req.ownerId = ownerGbId
+        req.returnTime = returnTime
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_ERR('Drop custodyEquipItem no client', gbId, uniqueId)
+            return
+
+        self.remoteCallCache[uniqueId] = {
+            'box': box,
+            'gbId': gbId,
+            'ts': utils.curTS(),
+        }
+
+        _client.dsStub.drop(None, req, None)
+
+    def onCustody(self, reply):
+        LOG_DBG('Drop onCustody', reply)
+        _cache = self.remoteCallCache.get(reply.uniqueId)
+        if not _cache:
+            ERRROR_MSG('Drop onCustody no cache', reply.uniqueId)
+            return
+
+        self.remoteCallCache.pop(reply.uniqueId)
+
+    def checkDropReturnExpire(self):
+        LOG_DBG('Drop checkDropReturnExpire')
+        _uuid = KBEngine.genUUID64()
+        serverId = gameconfig.serverId()
+
+        req = CheckDropReturnExpireRequest()
+        req.uuid = _uuid
+        req.serverId = serverId
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_ERR('Drop checkDropReturnExpire no client', _uuid, serverId)
+            return
+
+        self.remoteCallCache[_uuid] = {
+            'box': self,
+            'ts': utils.curTS(),
+        }
+
+        _client.dsStub.checkDropReturnExpire(None, req, None)
+
+    def onCheckDropReturnExpire(self, reply):
+        LOG_DBG('Drop onCheckDropReturnExpire', reply)
+        _cache = self.remoteCallCache.get(reply.uuid)
+        if not _cache:
+            ERRROR_MSG('Drop onCheckDropReturnExpire no cache', reply.uuid)
+            return
+
+        self.remoteCallCache.pop(reply.uuid)
+
+    def doGetBackEquip(self, gbId, box, uniqueId, dropType):
+        LOG_DBG('Drop doGetBackEquip')
+        _uuid = KBEngine.genUUID64()
+        serverId = gameconfig.serverId()
+
+        req = GetBackEquipRequest()
+        req.uuid = _uuid
+        req.uniqueId = uniqueId
+        req.dropType = dropType
+        req.gbId = gbId
+        req.serverId = serverId
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_ERR('Drop doGetBackEquip no client', _uuid, serverId)
+            return
+
+        self.remoteCallCache[_uuid] = {
+            'box': box,
+            'gbId': gbId,
+            'ts': utils.curTS(),
+        }
+
+        _client.dsStub.getBackEquip(None, req, None)
+
+    def onGetBackEquip(self, reply):
+        LOG_DBG('Drop onGetBackEquip', reply)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [reply.dropGbId, ],
+            'onGetBackDropEquip',
+            (reply.uniqueId, reply.equipInfo, reply.dropType),
+            None, '', ())
+
+    def onNotifyCustodyEquip(self, reply):
+        LOG_DBG('Drop onNotifyCustodyEquip', reply)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [reply.gbId, ],
+            'onNotifyCustodyEquip',
+            (reply.uniqueId, reply.equipInfo, reply.dropType, reply.equip, reply.retunTime),
+            None, '', ())
+        
+    def setDropEquipPayPrice(self, gbId, uniqueId, box, price):
+        LOG_DBG('Drop setDropEquipPayPrice', gbId, box, uniqueId, price)
+        _uuid = KBEngine.genUUID64()
+        _req = SetTakeEquipRedeemPriceRequest()
+        _req.gbId = gbId
+        _req.uniqueId = uniqueId
+        _req.price = price
+        _req.uuid = _uuid
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_ERR('Drop setDropEquipPayPrice no client', gbId)
+            return
+
+        self.remoteCallCache[_uuid] = {
+            'gbId': gbId,
+            'ts': utils.curTS(),
+            'box': box,
+        }
+        _client.dsStub.setDropEquipPayPrice(None, _req, None)
+
+    def onSetDropEquipPayPrice(self, reply):
+        LOG_DBG('Drop onSetDropEquipPayPrice', reply)
+        _cache = self.remoteCallCache.get(reply.uuid)
+        if not _cache:
+            LOG_ERR('Drop onSetDropEquipPayPrice no cache', reply.uuid)
+            return
+
+        self.remoteCallCache.pop(reply.uuid)
+        _box = _cache.get('box')
+
+        _box.onSetDropEquipPayPriceBase(reply.uniqueId, reply.price, reply.result)
+
+    def onNotifyCleanCollection(self, reply):
+        LOG_DBG('Drop onNotifyCleanCollection', reply)
+        curTime = utils.curTS()
+        for idx in range(0, len(reply.collectionIds)):
+            collExpireTime = reply.collExpireTimes
+            # 创生物还有时间，广播下删除
+            if curTime < collExpireTime:
+                collectionId = reply.collectionIds
+                uniqueId = reply.uniqueIds
+                gameengine.callCellApps('removeEquipDropDestroyCollection', (collectionId, uniqueId))
 

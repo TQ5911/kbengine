@@ -89,8 +89,7 @@ datas ={
     "transition": {
       "finished": [
         1090,
-        1012,
-        1136
+        1012
       ]
     }
   },
@@ -259,8 +258,7 @@ datas ={
     "duration": 10.0,
     "transition": {
       "finished": [
-        1053,
-        1137
+        1053
       ]
     }
   },
@@ -291,8 +289,7 @@ datas ={
     "duration": 10.0,
     "transition": {
       "finished": [
-        1064,
-        1138
+        1064
       ]
     }
   },
@@ -473,44 +470,5 @@ datas ={
         1043
       ]
     }
-  },
-  "1136": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22030001
-    ],
-    "buffID": [
-      64004087
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 60.0,
-    "transition": {}
-  },
-  "1137": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22030002
-    ],
-    "buffID": [
-      64004087
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 70.0,
-    "transition": {}
-  },
-  "1138": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22030003
-    ],
-    "buffID": [
-      64004087
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 70.0,
-    "transition": {}
   }
 }

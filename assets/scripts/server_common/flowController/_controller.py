@@ -353,34 +353,43 @@ class _FlowControllerBeTriggeredMixin(object):
                     copyEvents = copy.copy(events)
                     _triggerList.extend(copyEvents)
                     events.clear()
-                    # for event, eCtx in copyEvents:
-                    #     event.continueHandleBeTriggered(eCtx)
+
             for event, eCtx in _triggerList:
                 event.continueHandleBeTriggered(eCtx)
 
-    def onMonsterRestNumberIncreased(self, monsterGID, newNumber, newTotalNumber):
-        _monsterRestNumEvents, _globalMonsterRestNumEvents = self.getMonsterRestNumEvents(monsterGID)
-        if not (_monsterRestNumEvents or _globalMonsterRestNumEvents):
+    def onMonsterRestNumberIncreased(self, monsterGID, tag, spaceMgr):
+        _key = (monsterGID, tag)
+        _set = self.monsterRestToSumDic.get(_key)
+        if not _set:
             return
 
-        LOG_DBG('FlowController::onMonsterNestNumberIncreased {}: {}'.format(
-            monsterGID, newNumber, newTotalNumber))
+        for _eventId in list(_set):
+            _datas = self.monsterRestAwaitDic.get(_eventId)
+            if not _datas:
+                continue
+            
+            _gids, _tag, _dic = _datas 
+            _restNum = spaceMgr.getMonsterNumByGIDsAndTag(_gids, _tag)
+            LOG_DBG('onMonsterRestNumberIncreased', _gids, _tag, _eventId, _restNum)
+            for fn in (self.cmHandleNumGe, self.cmHandleNumGt, self.cmHandleNumEq):
+                fn(_dic, _restNum)
 
-        for fn in (self.cmHandleNumGe, self.cmHandleNumGt, self.cmHandleNumEq):
-            _monsterRestNumEvents and fn(_monsterRestNumEvents, newNumber)
-            _globalMonsterRestNumEvents and fn(_globalMonsterRestNumEvents, newTotalNumber)
-
-    def onMonsterRestNumberDecreased(self, monsterGID, newNumber, newTotalNumber):
-        _monsterRestNumEvents, _globalMonsterRestNumEvents = self.getMonsterRestNumEvents(monsterGID)
-        if not (_monsterRestNumEvents or _globalMonsterRestNumEvents):
+    def onMonsterRestNumberDecreased(self, monsterGID, tag, spaceMgr):
+        _key = (monsterGID, tag)
+        _set = self.monsterRestToSumDic.get(_key)
+        if not _set:
             return
 
-        LOG_DBG('FlowController::onMonsterNestNumberDecreased {}: {} {}'.format(
-            monsterGID, newNumber, newTotalNumber))
-
-        for fn in (self.cmHandleNumLe, self.cmHandleNumLt, self.cmHandleNumEq):
-            _monsterRestNumEvents and fn(_monsterRestNumEvents, newNumber)
-            _globalMonsterRestNumEvents and fn(_globalMonsterRestNumEvents, newTotalNumber)
+        for _eventId in list(_set):
+            _datas = self.monsterRestAwaitDic.get(_eventId)
+            if not _datas:
+                continue
+            
+            _gids, _tag, _dic = _datas 
+            _restNum = spaceMgr.getMonsterNumByGIDsAndTag(_gids, _tag)
+            LOG_DBG('onMonsterRestNumberDecreased', _gids, _tag, _eventId, _restNum)
+            for fn in (self.cmHandleNumLe, self.cmHandleNumLt, self.cmHandleNumEq):
+                fn(_dic, _restNum)
 
     def onDungeonMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
         _monsterKillNumEvents, _globalMonsterKillNumEvents = self.getDungeonMonsterKillNumEvents(monsterGID)
@@ -557,12 +566,30 @@ class _FlowControllerCustomEventsMixin(object):
         self.monsterAwaitDic[monsterGID][self.MONSTER_AWAIT_HP_MODIFY_KEY][symbol].setdefault(hp, [])
         self.monsterAwaitDic[monsterGID][self.MONSTER_AWAIT_HP_MODIFY_KEY][symbol][hp].append((event, eCtx))
 
-    def waitingForMonsterRestNumberTrigger(self, event, eCtx, monsterGID, symbol, restNum):
-        self.monsterAwaitDic.setdefault(monsterGID, {})
-        self.monsterAwaitDic[monsterGID].setdefault(self.MONSTER_AWAIT_REST_NUM, {})
-        self.monsterAwaitDic[monsterGID][self.MONSTER_AWAIT_REST_NUM].setdefault(symbol, {})
-        self.monsterAwaitDic[monsterGID][self.MONSTER_AWAIT_REST_NUM][symbol].setdefault(restNum, [])
-        self.monsterAwaitDic[monsterGID][self.MONSTER_AWAIT_REST_NUM][symbol][restNum].append((event, eCtx))
+    def clearRestMonsterTrigger(self, eventId):
+        _datas = self.monsterRestAwaitDic.pop(eventId, None)
+        if not _datas:
+            return
+
+        _monsterGIDs, _tag, _ = _datas
+        for _gid in _monsterGIDs:
+            _key = (_gid, _tag)
+            self.monsterRestToSumDic\
+                .get(_key, set())\
+                .discard(eventId)
+
+    def waitingForMonsterRestNumberTrigger(self, event, eCtx, monsterGIDs, tagType, symbol, restNum):
+        _dic = {
+            symbol: {
+                restNum: [(event, eCtx)]
+            }
+        }
+        self.monsterRestAwaitDic[event.id] = (monsterGIDs, tagType, _dic)
+        for _gid in monsterGIDs:
+            _key = (_gid, tagType)
+            self.monsterRestToSumDic\
+                .setdefault(_key, set())\
+                .add(event.id)
 
     def waitingForDungeonMonsterKillNumberTrigger(self, event, eCtx, monsterGID, symbol, killNum):
         self.monsterAwaitDic.setdefault(monsterGID, {})
@@ -681,6 +708,8 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSingleType,
     def __init__(self, owner, start_node=None):
         super(FlowController, self).__init__(start_node=start_node)
         self.monsterAwaitDic = {}
+        self.monsterRestAwaitDic = {}
+        self.monsterRestToSumDic = {}
         self._owner = owner.id
 
     def toBeTriggerWithEids(self, key, eids):
@@ -926,9 +955,9 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSingleType,
                                name=gameconst.DungeonFlowEventType.EVmonsterHp)
         return event
 
-    def buildMonsterRestNumEvent(self, eventId, monsterGID, symbol, number, usePrototypeID, checkNow, checkOnce):
+    def buildMonsterRestNumEvent(self, eventId, monsterGIDs, symbol, number, usePrototypeID, checkNow, checkOnce):
         event = self.buildElement(MonsterRestNumberEvent, element_id=eventId,
-                               monsterGID=monsterGID, symbol=symbol, number=number,
+                               monsterGIDs=monsterGIDs, symbol=symbol, number=number,
                                checkNow=checkNow, checkOnce=checkOnce,
                                eventHandler=handleMonsterRestNumEvent,
                                name=gameconst.DungeonFlowEventType.EVmonsterRestNum)
@@ -1847,13 +1876,13 @@ def _handleMonsterAddHateValue(event, monsterGIDs, chooseType, hateValue):
 
         aiController = monster.aiController
         for _pid in _pids:
-            aiController.increaseHate(_pid, hateValue)
+            aiController.doIncreaseHate(_pid, hateValue)
 
     def _addRandHate(monster, _pids):
         if not monster.aiController:
             return
 
-        monster.aiController.increaseHate(random.choice(_pids), hateValue)
+        monster.aiController.doIncreaseHate(random.choice(_pids), hateValue)
 
     if chooseType == gameconst.FlowAddHateEnum.all:
         _func = _addHateAll
@@ -1985,11 +2014,11 @@ def handleMonsterHpEvent(event, srcE, ctx, **refParams):
 
 
 def handleMonsterRestNumEvent(event, srcE, ctx, **refParams):
-    monsterGID = event.fetchArgument('monsterGID')
+    monsterGIDs = event.fetchArgument('monsterGIDs')
     symbol = event.fetchArgument('symbol')
     number = event.fetchArgument('restNum')
     LOG_WARN('DUNGEON FLOW -- EVENT[{}]: after monster RestNum condition -> {}: {} {}'.format(
-        event.id, monsterGID, symbol, number))
+        event.id, monsterGIDs, symbol, number))
 
 
 def handleDungeonMonsterKillNumEvent(event, srcE, ctx, **refParams):
@@ -2487,7 +2516,7 @@ def handleClearDungeon(event, srcE, ctx, **referenceArgument):
             if 0 == int(_ent.hp) and _ent.fullHp:
                 hpPercent = 0
             spaceMgr.onUpdateChallengeInfo(hpPercent)
-            LOG_IFO("DUNGEON FLOW -- EVENT[{}]: clear dungeon BossId {} BossHp {} BossFullHp {} hpPercent {}".format(event.id, _ent.id, _ent.hp, _ent.fullHp, hpPercent))
+            LOG_INFO("DUNGEON FLOW -- EVENT[{}]: clear dungeon BossId {} BossHp {} BossFullHp {} hpPercent {}".format(event.id, _ent.id, _ent.hp, _ent.fullHp, hpPercent))
         _ent.destroyAllSummon()
         _ent.destoryAllCreation()
         _ent.delaySafeDestroy(round(random.uniform(0.1, 0.3), 1))
@@ -2566,7 +2595,7 @@ def handleDungeonTaskForceFailed(event, srcE, ctx, **referenceArgument):
     LOG_WARN('DUNGEON FLOW -- EVENT[{}]: dungeon task force failed {}'.format(event.id, taskID))
     for pid in event.controller.owner.players:
         _ent = KBEngine.entities.get(pid)
-        _ent.base.startTaskFailed(taskID, gameconst.TaskNotSuccReason.DUNGEON_CTRL)
+        _ent.base.startTaskFailed(taskID, gameconst.TaskNotSuccReasonEnum.DUNGEON_CTRL)
 
 
 def handleChangeDungeonNPCToBattle(event, srcE, ctx, **referenceArgument):
@@ -2788,7 +2817,7 @@ def handleChangeSpaceVar(event, srcE, ctx, **referenceArgument):
     m_varVal = formula_func(mParams)
 
     _opUUID = KBEngine.genUUID64()
-    _src = gameconst.VarChangeSrc.VAR_SRC_SPACE
+    _src = gameconst.VarChangeSrcEnum.VAR_SRC_SPACE
     _desc = "flowController -> handleChangeSpaceVar {} {} {}, spaceNo={}".format(
         varID, formula_, paramVarIDs, spaceMgr.spaceNo)
     spaceMgr.setSpaceVar(varID, m_varVal, _opUUID, _src, _desc)
@@ -2907,7 +2936,7 @@ def handleEntityStartRouting(event, srcE, ctx, **refParams):
             if _ent.IsNpc:
                 _d = NPC_DATA.datas.get(_ent.npcId, {})
             else:
-                _d = CBD.datas.get(_ent.creepBaseId, {})
+                _d = CBD.datas.get(_ent.creepbaseId, {})
             if moveAni == gameconst.DunFlowMoveAniEnum.RUN01:
                 _newBaseSpeed = _d.get('baseSpeed', 0.0)
 

@@ -294,7 +294,12 @@
         <onGetAuthOfflineTimeClient>
             <Arg>   PLAYER_GBID         </Arg>
             <Arg>   LONGTIME            </Arg>
+            <Arg>   LONGTIME            </Arg>
         </onGetAuthOfflineTimeClient>
+
+        <onPatchVersion>
+            <Arg>   STRING              </Arg>
+        </onPatchVersion>
     </ClientMethods>
 
     <BaseMethods>

@@ -16,7 +16,7 @@ class IGuildBossChallenge(object):
         pass
     
     def enterBossChallengeDungeon(self, openId):
-        LOG_IFO('IGuildBossChallenge::enterBossChallengeDungeon:', openId)
+        LOG_INFO('IGuildBossChallenge::enterBossChallengeDungeon:', openId)
 
         dungeoncfg = GCBI.datas.get(openId, None)
         if not dungeoncfg:

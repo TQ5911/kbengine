@@ -1,0 +1,16 @@
+<root>
+    <maxEnterNum>
+        <Type>      UINT16              </Type>
+        <Flags>     BASE                </Flags>
+    </maxEnterNum>
+
+    <allLines>
+        <Type>      PY_DICT             </Type>
+        <Flags>     BASE                </Flags>
+    </allLines>
+
+    <allPlayers>
+        <Type>      PY_DICT             </Type>
+        <Flags>     BASE                </Flags>
+    </allPlayers>
+</root>

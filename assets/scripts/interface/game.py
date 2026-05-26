@@ -53,7 +53,7 @@ def onInterfaceAppReady():
     KBEngine method.
     interfaces已经准备好了
     """
-    LOG_IFO('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
+    LOG_INFO('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
              (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
 
     KBEngine.globalData = {}
@@ -85,7 +85,7 @@ def onInterfaceAppShutDown():
     KBEngine method.
     这个interfaces被关闭前的回调函数
     """
-    LOG_IFO('onInterfaceAppShutDown()')
+    LOG_INFO('onInterfaceAppShutDown()')
 
 
 def onRequestCreateAccount(registerName, password, datas):
@@ -101,7 +101,7 @@ def onRequestCreateAccount(registerName, password, datas):
     @param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
     @type  datas: bytes
     """
-    LOG_IFO('onRequestCreateAccount: registerName=%s' % (registerName))
+    LOG_INFO('onRequestCreateAccount: registerName=%s' % (registerName))
 
     commitName = registerName
 
@@ -118,7 +118,7 @@ def onRequestCreateAccount(registerName, password, datas):
 
 
 def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
-    LOG_IFO('_onCheckBanAccount: registerName', result, realAccountName)
+    LOG_INFO('_onCheckBanAccount: registerName', result, realAccountName)
     accountType, accountName = utils.fetchAccountTypeAndName(realAccountName)
     isNewAccount = False
     if len(result) == 0:
@@ -129,7 +129,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
 
         switch = int(gameconfig.getServerRegSwitch())
         if not switch:
-            LOG_IFO('_onCheckBanAccount check server switch error.', switch)
+            LOG_INFO('_onCheckBanAccount check server switch error.', switch)
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_REG_SWITCH)
             return
     else:
@@ -139,7 +139,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
         # forbidLoginReason = str(result[0][3].decode())
         isDelete = int(result[0][0])
         if isDelete:
-            LOG_IFO('reject login,account delete', isDelete, realAccountName)
+            LOG_INFO('reject login,account delete', isDelete, realAccountName)
             fmtMessage = MMD.datas[LSD.datas['accountCancellation']['value']]['Message']
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'), 0,
                                           gameconst.GAME_SERVER_ERR_REJECT_LOGIN)
@@ -152,7 +152,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
         'isOverRegLimit': isOverRegLimit,
     }
 
-    _requestAccountLogin(realAccountName, password, dataBytes, extra)
+    _onCheckPatchAndAppVersion(realAccountName, password, dataBytes, extra)
 
 
 def onRequestAccountLogin(realAccountName, password, dataBytes):
@@ -168,7 +168,7 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
     @param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
     @type  datas: bytes
     """
-    LOG_IFO('onRequestAccountLogin: registerName', realAccountName, dataBytes)
+    LOG_INFO('onRequestAccountLogin: registerName', realAccountName, dataBytes)
     accountType, accountName = utils.fetchAccountTypeAndName(realAccountName)
     _forceCompId = utils.getForceComponentID(realAccountName)
 
@@ -179,7 +179,7 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
 
     if not gameconfig.interfaceEnableLogin():
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, KBEngine.SERVER_ERR_SRV_STARTING)
-        LOG_IFO('reject login, recovring cellapps')
+        LOG_INFO('reject login, recovring cellapps')
         return
 
     gamesql.getForbidLoginProp(realAccountName,
@@ -195,6 +195,26 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
     # 如果返回码为KBEngine.SERVER_ERR_LOCAL_PROCESSING则表示验证登陆成功，但dbmgr需要检查账号密码，KBEngine.SERVER_SUCCESS则无需再检查密码
     # KBEngine.accountLoginResponse(commitName, realAccountName, datas, KBEngine.SERVER_SUCCESS)
 
+
+def _onCheckPatchAndAppVersion(realAccountName, password, dataBytes, extra=None):
+    accountType, accountName = utils.fetchAccountTypeAndName(realAccountName)
+    if accountType not in (centralLogin.ACCOUNT_UNKNOW, centralLogin.ACCOUNT_BOT,):
+        LOG_INFO('_onCheckPatchAndAppVersion1:', realAccountName)
+        clientData = utils.decClientData(dataBytes)
+        patchVer = clientData.get('patch', '')
+        platId = clientData.get('devicePlatId', 0)
+        
+        patchVersion = gameconfig.patchVersion()
+        newPatchVersion = gameglobal.requiredClientVersion.get(platId, patchVersion)
+        patchVersion = newPatchVersion if utils.compare4stageversion(patchVersion, newPatchVersion) else patchVersion
+        LOG_INFO('_onCheckPatchAndAppVersion2:', clientData, patchVer, platId, patchVersion, gameglobal.requiredClientVersion)
+        if utils.compare4stageversion(patchVer, patchVersion):
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, 
+                    bytes(str(patchVersion), encoding='utf-8'), 
+                    0, gameconst.GAME_SERVER_ERR_PATCH_VERSION)
+            return
+
+    _requestAccountLogin(realAccountName, password, dataBytes, extra)
 
 def _requestAccountLogin(realAccountName, password, dataBytes, extra=None):
     clientData = utils.decClientData(dataBytes)

@@ -5180,6 +5180,43 @@ namespace KBEngine
 		}
 	}
 
+	public struct APPEARANCE_COIN
+	{
+		Int64 value;
+
+		APPEARANCE_COIN(Int64 value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator Int64(APPEARANCE_COIN value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator APPEARANCE_COIN(Int64 value)
+		{
+			Int64 tvalue = (Int64)value;
+			return new APPEARANCE_COIN(tvalue);
+		}
+
+		public static Int64 MaxValue
+		{
+			get
+			{
+				return Int64.MaxValue;
+			}
+		}
+
+		public static Int64 MinValue
+		{
+			get
+			{
+				return Int64.MinValue;
+			}
+		}
+	}
+
 	public struct SCENE_STATE
 	{
 		UInt16 value;
@@ -5558,6 +5595,7 @@ namespace KBEngine
 		public Byte isAddBindValue = 0;
 		public Byte grade = 0;
 		public Byte maxEnhanceLv = 0;
+		public UInt32 returnTime = 0;
 
 	}
 
@@ -5947,6 +5985,7 @@ namespace KBEngine
 		public string openId = "";
 		public Byte raidAmount = 0;
 		public UInt32 offlineTime = 0;
+		public UInt64 bountyId = 0;
 
 	}
 
@@ -6011,6 +6050,13 @@ namespace KBEngine
 	{
 		public UInt16 gridId = 0;
 		public Byte itemNumEx = 0;
+
+	}
+
+	public class RANDOM_UPGRADE_SYNTHESIS_NUM_INFO
+	{
+		public UInt16 key = 0;
+		public UInt16 num = 0;
 
 	}
 
@@ -6509,6 +6555,7 @@ namespace KBEngine
 		public UInt32 collEndTime = 0;
 		public string killerName = "";
 		public UInt32 endTime = 0;
+		public UInt32 redeemWaitTime = 0;
 
 	}
 
@@ -6519,6 +6566,8 @@ namespace KBEngine
 		public UInt32 endTime = 0;
 		public Byte state = 0;
 		public UInt32 price = 0;
+		public UInt32 redeemWaitTime = 0;
+		public Byte hasPrice = 0;
 
 	}
 
@@ -6986,6 +7035,82 @@ namespace KBEngine
 	{
 		public UInt32 titleId = 0;
 		public UInt32 expireTime = 0;
+
+	}
+
+	public class MINE_WAR_FLAG_STATE_INFO
+	{
+		public UInt16 mapId = 0;
+		public Byte flagDestroyed = 0;
+
+	}
+
+	public class FREE_TICKET_RECOVERY_CLIENT_VAL
+	{
+		public UInt16 num = 0;
+		public UInt32 itemId = 0;
+		public UInt32 itemNum = 0;
+
+	}
+
+	public class LEASE_SHOP_SUMMARY
+	{
+		public UInt32 itemId = 0;
+		public Byte quality = 0;
+		public Byte equipType = 0;
+		public Byte equipSubType = 0;
+		public Byte school = 0;
+		public string itemName = "";
+		public UInt32 onSaleCount = 0;
+		public UInt32 minPrice = 0;
+
+	}
+
+	public class LEASE_MARKET_ITEM
+	{
+		public UInt64 uniqueId = 0;
+		public UInt32 itemId = 0;
+		public UInt64 leaseOwnerGbId = 0;
+		public UInt32 pricePerDay = 0;
+		public UInt32 returnEndTime = 0;
+		public Byte quality = 0;
+		public Byte equipType = 0;
+		public Byte equipSubType = 0;
+		public Byte school = 0;
+		public UInt32 score = 0;
+		public string itemName = "";
+		public Byte isDropEquip = 0;
+		public UInt32 leaseOwnerServerId = 0;
+
+	}
+
+	public class LEASE_MY_SALE_ITEM
+	{
+		public UInt64 uniqueId = 0;
+		public UInt32 itemId = 0;
+		public UInt64 leaseOwnerGbId = 0;
+		public UInt32 pricePerDay = 0;
+		public UInt32 returnEndTime = 0;
+		public Byte quality = 0;
+		public Byte equipType = 0;
+		public Byte equipSubType = 0;
+		public Byte school = 0;
+		public UInt32 score = 0;
+		public string itemName = "";
+		public Byte isDropEquip = 0;
+		public UInt32 leaseOwnerServerId = 0;
+		public UInt64 incomeBindGold = 0;
+		public UInt64 incomeGold = 0;
+
+	}
+
+	public class LEASE_RECORD
+	{
+		public UInt32 timestamp = 0;
+		public UInt32 itemId = 0;
+		public UInt64 bindGold = 0;
+		public UInt64 gold = 0;
+		public UInt64 cost = 0;
 
 	}
 

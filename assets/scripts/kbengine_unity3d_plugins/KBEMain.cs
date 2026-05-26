@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using AOT;
-
+using UnityEngine.Profiling;
 // using GCloud.TGPA;
 
 /*
@@ -99,13 +99,15 @@ public class KBEMain : MonoBehaviour
     }
 
 #if UNITY_ANDROID
-    int devicePlatId = (int)TssAccountPlatId.TSSPLAT_ID_ANDROID;
+    int devicePlatId = (int)PlatformType.ANDROID;
 #elif UNITY_IOS
-    int devicePlatId = (int)TssAccountPlatId.TSSPLAT_ID_IOS;
+    int devicePlatId = (int)PlatformType.IOS;
+#elif UNITY_STANDALONE_OSX
+    int devicePlatId = (int)PlatformType.OSX;
 #else
-    int devicePlatId = (int)TssAccountPlatId.TSSPLAT_ID_PC_CLIENT;
+    int devicePlatId = (int)PlatformType.PC;
 #endif
-   
+
         paramDic.Add("deviceModel", deviceModel);
         paramDic.Add("deviceUniqueIdentifier", GetDeviceUniqueIdentifier());
         paramDic.Add("devicePlatId", devicePlatId);
@@ -139,7 +141,7 @@ public class KBEMain : MonoBehaviour
         //paramDic.Add("operator", "");
         paramDic.Add("networkState", "");
 #endif
-        paramDic.Add("packageSource", MainStart.Instance.m_packageSource);
+        paramDic.Add("packageSource", MainStart.Instance.PackageSource);
 
     string oaidStr = "";
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -271,19 +273,25 @@ public class KBEMain : MonoBehaviour
 		MonoBehaviour.print("clientapp::OnDestroy(): end");
 	}
 	
-	protected virtual void Update() 
+	protected virtual void FixedUpdate() 
 	{
 		KBEUpdate();
 	}
-
+    private static readonly CustomSampler _testSampler = CustomSampler.Create("KBEUpdate.gameapp.process");
+    private static readonly CustomSampler _processOutSampler = CustomSampler.Create("KBEUpdate.processOutEvents");
 	public virtual void KBEUpdate()
 	{
         if (gameapp == null)
             return;
 		// 单线程模式必须自己调用
 		if(!isMultiThreads)
-			gameapp.process();
-		
-		KBEngine.Event.processOutEvents();
+        {
+            _testSampler.Begin();
+            gameapp.process();
+            _testSampler.End();
+        }
+        _processOutSampler.Begin();
+        KBEngine.Event.processOutEvents();
+        _processOutSampler.End();
 	}
 }

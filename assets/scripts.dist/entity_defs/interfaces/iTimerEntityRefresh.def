@@ -1,0 +1,28 @@
+<root>
+    <Properties>
+        <refreshEntityQueue>
+            <Type>            PY_LIST             </Type>
+            <Flags>           CELL_PRIVATE       </Flags>
+        </refreshEntityQueue>
+
+        <refreshGID2TimerListMap>
+            <Type>            PY_LIST             </Type>
+            <Flags>           CELL_PRIVATE       </Flags>
+        </refreshGID2TimerListMap>
+
+        <timedIntervalsEntityTimerId>
+            <Type>      TIMER_ID            </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   0                   </Default>
+        </timedIntervalsEntityTimerId>
+
+        <timeLimitedEntityTimerId>
+            <Type>      TIMER_ID            </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   0                   </Default>
+        </timeLimitedEntityTimerId>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+</root>

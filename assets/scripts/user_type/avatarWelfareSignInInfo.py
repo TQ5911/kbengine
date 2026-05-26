@@ -6,7 +6,7 @@ import KBEngine
 import userType
 
 
-class welfareSignInInfo(userType.UserSTDSoleType):
+class welfareSignInInfo(userType.UserSTSoleType):
     def __init__(self, welfareSignInDay=0, welfareLastSignInTimestamp=0, welfareSignInData=0):
         self.welfareSignInDay = welfareSignInDay
         self.welfareLastSignInTimestamp = welfareLastSignInTimestamp
@@ -32,7 +32,7 @@ class welfareSignInInfo(userType.UserSTDSoleType):
         mask = 1 << signInDayNo
         self.welfareSignInData |= mask
 
-class welfareSignInInstance(userType.UserSTDSoleInfo):
+class welfareSignInInstance(userType.UserSTSoleInfo):
     @property
     def cls(self):
         return welfareSignInInfo

@@ -51,7 +51,7 @@ class IStatistics(object):
             # val['rank'] = i + 1
             val['statisticsNum'] -= dataRecord.get(statisticType, {}).get(gbId, 0)
 
-        LOG_IFO('IStatistics::onGetStatistics: entityID={}, statisticType={}, data={}'.format(self.id, statisticType, data))
+        LOG_INFO('IStatistics::onGetStatistics: entityID={}, statisticType={}, data={}'.format(self.id, statisticType, data))
         self.client.onGetStatisticsClient(statisticType, data)
     
     def onGetStatisticsDetail(self, cache, statisticType, batchSize, batchNo, data):
@@ -59,7 +59,7 @@ class IStatistics(object):
         统计数据详情回调
         """
         # IStatistics::onGetStatisticsDetail: entityID=6272, batchSize=1, batchNo=1, data=[{'gbId': 5700768059476672513, 'name': '郑槿言', 'school': 1001, 'statisticsNum': 348, 'rank': 1}]
-        LOG_IFO('IStatistics::onGetStatisticsDetail: entityID={}, cache={}, statisticType={}, batchSize={}, batchNo={}, dataSize={}'.format(self.id, cache, statisticType, batchSize, batchNo, len(data)))
+        LOG_INFO('IStatistics::onGetStatisticsDetail: entityID={}, cache={}, statisticType={}, batchSize={}, batchNo={}, dataSize={}'.format(self.id, cache, statisticType, batchSize, batchNo, len(data)))
         self.checkStatisticRecordSpace()
 
         dataRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.statisticDataRecord, {})

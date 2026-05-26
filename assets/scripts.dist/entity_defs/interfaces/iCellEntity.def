@@ -1,0 +1,17 @@
+<root>
+    <Properties>
+        <spaceMgrId>
+            <Type>          OBJECT_ID           </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </spaceMgrId>
+
+        <spaceMgrBox>
+            <Type>          MAILBOX             </Type>
+            <Flags>         BASE                </Flags>
+        </spaceMgrBox>
+    </Properties>
+
+    <CellMethods>
+
+    </CellMethods>
+</root>

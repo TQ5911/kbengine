@@ -68,9 +68,12 @@ class GlobalMail(userType.UserSingleType):
         self.dueTime = dataDic.get('dueTime', 0)
         self.minRoleLevel = dataDic['minRoleLevel']
         self.maxRoleLevel = dataDic['maxRoleLevel']
-        self.extraAttach = dataDic.get('extraAttach', None)
-        if self.extraAttach is None:
+        _extraAttach = dataDic.get('extraAttach', None)
+        if _extraAttach is None:
             self.extraAttach = dropAward.MailWealthVal()
+        else:
+            self.extraAttach = dropAward.MailWealthVal().fromMailWealthDict(_extraAttach)
+
         self.title = dataDic.get('title', '')
         self.cont = dataDic.get('cont', '')
         self.channel = dataDic.get('channel', 0)
@@ -89,7 +92,7 @@ class GlobalMail(userType.UserSingleType):
             'dueTime':self.dueTime,
             'minRoleLevel':self.minRoleLevel,
             'maxRoleLevel':self.maxRoleLevel,
-            'extraAttach':self.extraAttach,
+            'extraAttach':self.extraAttach.toMailWealthDict(),
             'title':self.title,
             'cont':self.cont,
             'channel': self.channel,
@@ -421,7 +424,7 @@ class Mail(userType.UserSingleType):
 
     def setAttachState(self, state):
         if state != self.attachStat and state == gameconst.MailAttachState.NotGet:
-            LOG_IFO('mail attach state reset not get:', self.toMailSavedDict())
+            LOG_INFO('mail attach state reset not get:', self.toMailSavedDict())
         self.attachStat = state
 
     def canGetAttach(self):

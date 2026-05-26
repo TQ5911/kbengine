@@ -22,7 +22,7 @@
             <WitnessName>   true            </WitnessName>
         </mineWarCamp>
         <recoverProgress>
-            <Type>          UINT8           </Type>
+            <Type>          FLOAT           </Type>
             <Flags>         ALL_CLIENTS     </Flags>
             <Default>       0               </Default>
             <WitnessName>   true            </WitnessName>

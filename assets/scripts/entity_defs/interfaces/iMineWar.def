@@ -46,6 +46,10 @@
             <Type>      UINT32                 </Type>
             <Flags>     CELL_PRIVATE           </Flags>
         </scoreTimer>
+        <mineWarFlagPos>
+            <Type>      PYTHON         </Type>
+            <Flags>     CELL_PRIVATE           </Flags>
+        </mineWarFlagPos>
 
     </Properties>
 
@@ -144,6 +148,10 @@
             <Arg>   ARRAY   <of>    MINE_WAR_GUILD_PLAYER_RANK_INFO     </of>   </Arg>
         </onMineWarGuildPlayerRankBase>
 
+        <onMineWarFlagSync>
+            <Arg>          ARRAY   <of>  MINE_WAR_FLAG_STATE_INFO   </of>   </Arg>
+        </onMineWarFlagSync>
+
     </BaseMethods>
     <CellMethods>
         <onCellPlayerGetGuildInfo>
@@ -157,6 +165,10 @@
 
         <getMineWarMonsterInfo> <Exposed/>
         </getMineWarMonsterInfo>
+
+        <telToMineWarFlag> <Exposed/>
+            <Arg>          LINE_NO         </Arg>
+        </telToMineWarFlag>
 
     </CellMethods>
     <ClientMethods>
@@ -192,6 +204,7 @@
         <onShowMineWarMonsterInfo>
             <Arg>   ENTITY_ID     </Arg>
             <Arg>   ENTITY_ID     </Arg>
+            <Arg>   ENTITY_ID     </Arg>
             <Arg>   GUILD_UUID        </Arg>
             <Arg>   UINT8        </Arg>
             <Arg>   UNICODE      </Arg>
@@ -216,5 +229,15 @@
             <Arg>          LINE_NO         </Arg>
             <Arg>          UINT8         </Arg>
         </onGetMineWarFlagHp>
+        <onMineWarNextReliveTime>
+            <Arg>          TIMESTAMP         </Arg>
+        </onMineWarNextReliveTime>
+        <onMineWarFlagSyncClient>
+            <Arg>          ARRAY   <of>  MINE_WAR_FLAG_STATE_INFO   </of>   </Arg>
+        </onMineWarFlagSyncClient>
+
+        <onMineWarStateChanged>
+            <Arg>          UINT8            </Arg>
+        </onMineWarStateChanged>
     </ClientMethods>
 </root>

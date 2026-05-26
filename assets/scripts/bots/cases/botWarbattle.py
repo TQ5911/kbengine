@@ -53,7 +53,7 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
 
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
 
         cur_map = owner.getSelfMapId()
@@ -93,7 +93,7 @@ class BotAIState_GoBattle(AIState):
             return
         self.stateTime = now
 
-        if owner.hasState(gameconst.State.Death):
+        if owner.hasState(gameconst.StateEnum.Death):
             return  # 等待 onDead 处理
 
         if owner.goBattleArea():
@@ -116,7 +116,7 @@ class BotAIState_Combat(AIState):
         self.stateTime = time.time()
 
     def execute(self, owner):
-        if owner.hasState(gameconst.State.Death):
+        if owner.hasState(gameconst.StateEnum.Death):
             owner.changeAIState(AISTATE_GO_BATTLE)
             return
 
@@ -190,7 +190,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
         if botUtils.distance2D(self.position, self.battleCenter) <= self.pointRadius:
             return True
 
-        if self.hasState(gameconst.State.Moving):
+        if self.hasState(gameconst.StateEnum.Moving):
             return False
 
         dstPos = botUtils.getRandomPosVec3(self.battleCenter, self.pointRadius)

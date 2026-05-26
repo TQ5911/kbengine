@@ -7,11 +7,11 @@ import gameconst
 import userType
 
 
-class ComplexTeleportOptions(userType.UserSingleType):
+class ComplexTeleportOpt(userType.UserSingleType):
     def __init__(self,
                  beforeEnterFirst=False,
                  afterLeaveFirst=True,
-                 teleportType=gameconst.ComplexTeleportType.UNKNOWN):
+                 teleportType=gameconst.ComplexTeleportEnum.UNKNOWN):
         """
 
         :param beforeEnterFirst:  场景切换前置 进入方法优先调用关系设置

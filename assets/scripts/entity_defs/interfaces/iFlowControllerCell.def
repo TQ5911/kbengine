@@ -61,18 +61,6 @@
             <Arg>   HP              </Arg>
         </flowCtrlMonsterHpMonitorTrigger>
 
-        <flowCtrlMonsterRestNumIncreased>
-            <Arg>   GAME_ENTITY_ID  </Arg>
-            <Arg>   UINT32          </Arg>
-            <Arg>   UINT32          </Arg>
-        </flowCtrlMonsterRestNumIncreased>
-
-        <flowCtrlMonsterRestNumDecreased>
-            <Arg>   GAME_ENTITY_ID  </Arg>
-            <Arg>   UINT32          </Arg>
-            <Arg>   UINT32          </Arg>
-        </flowCtrlMonsterRestNumDecreased>
-
         <flowCtrlDungeonMonsterKillNumIncreased>
             <Arg>   GAME_ENTITY_ID  </Arg>
             <Arg>   UINT32          </Arg>

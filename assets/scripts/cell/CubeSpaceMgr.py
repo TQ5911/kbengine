@@ -17,7 +17,7 @@ import iStaticSpaceMgr
 import iCollectionBossForMgr
 import cube_floor
 import NPC_NPC as N_ND
-
+import branchData_set as BDS
 
 class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.IStaticSpaceMgr):
     def __init__(self):
@@ -25,9 +25,15 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         iCollectionBossForMgr.ICollectionBossForMgr.__init__(self)
         gameengine.getCubeStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
 
+        #每分钟统计一次当前line活跃人数(5分钟内进入过战斗状态)
+        self.pyAddTimer(1, 60, gametimer.STATISTIC_FIGHTING_COUNT)
+        self.fightingPlayersCnt = 0
+
     def onTimer(self, tid, userData):
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
+        elif userData == gametimer.STATISTIC_FIGHTING_COUNT:
+            self._statisticFightingCount()
         else:
             super(CubeSpaceMgr, self).onTimer(tid, userData)
 
@@ -132,7 +138,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         if not _nextCBTime:
             return
 
-        LOG_IFO('next arena cb time:', _nextCBTime)
+        LOG_INFO('next arena cb time:', _nextCBTime)
         self.cubeArenaTimerId = self._datetimeCallback(
             _nextCBTime, 
             '_onArenaCB', 
@@ -172,6 +178,12 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
             LOG_WARN('can not find boxCell', box.id)
             return
         _boxCell.addBuff(self.cubeArena.getChallengerBuff(self.spaceNo), 1, _boxCell.id)
+
+    def onChangeSafeArea(self, player, beSafe):
+        if not self._isArenaSpace():
+            return
+        
+        self.cubeArena.onArenaChangeSafeArea(player, beSafe, self)
 
     # ------------------ 擂台房玩法 end --------------------------------
 
@@ -217,3 +229,19 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         _space.createCellLocally('Npc', position, _dir, _params)
         
     # ------------------ 神秘商人 end -----------------------------------
+
+    def _statisticFightingCount(self):
+        now = utils.curTS()
+        lastCnt = self.fightingPlayersCnt
+        self.fightingPlayersCnt = 0
+        dt = BDS.datas["Branch_activePlayer"]["value"] * 60
+        for pid in self.players:
+            ent = KBEngine.entities.get(pid)
+            if not ent:
+                continue
+            #5分钟内有进入过战斗视为"活跃用户"
+            if now - ent.lastFightTime < dt:
+                self.fightingPlayersCnt += 1
+
+        if lastCnt != self.fightingPlayersCnt:
+            gameengine.getCubeStubBySpaceNo(self.spaceNo).onFightingPlayersCntSync(self.spaceNo, self.fightingPlayersCnt)

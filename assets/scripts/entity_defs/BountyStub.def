@@ -169,7 +169,8 @@
         </onNoticeAssignedHunterFailed>
 
         <onWaitForPrePublishBounty>
-            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+            <Arg>           MAILBOX                     </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL        </Arg>
         </onWaitForPrePublishBounty>
 
         <onHunterPrePublishBountyRes>
@@ -208,6 +209,14 @@
             <Arg>           PY_DICT         </Arg>
         </updateBountyAvatarInfo>
         
+        <onReleaseBountyCheckPreyOnlineCallback>
+            <Arg>           BOOL            </Arg>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           BOUNTY_ITEM_SYNC_VAL         </Arg>
+        </onReleaseBountyCheckPreyOnlineCallback>
+
         <gmShowBountyInfo>
         </gmShowBountyInfo>
 	</BaseMethods>

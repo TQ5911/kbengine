@@ -20,7 +20,7 @@ import random
 import linePlayers
 import json
 
-import branchData_branchData as BBD
+import branchData_branchData as B_BD
 import gamePlay_gamePlay as GGD
 import branchData_set as BDS
 
@@ -47,16 +47,255 @@ class EnterLineExtra(object):
         self.isLogin = 0
         self.fromLineNo = -1
 
-
-class ILinePlayersStub(object):
+#分线相关，不改父类属性
+class IBranchLineStub(object):
     def __init__(self):
-        self.mergeRes = []
+        self.mergeRes = {}
         self.fightingPlayersCntBase = {}
         self.lastChooseLineNo = 0
+
+    def _checkSelectLine(self, lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False, lineType=None):
+        LOG_DBG("checkSelectLine", lineNo, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
+        lineType = lineType or self.lineType
+        needCnt = len(extraInfo.followers) + 1
+
+        if exlude and lineNo in exlude:
+            return gameconst.EnterLineCodeEnum.ERR_EXLUDE
+
+        # TODO X: validate line config
+        lineMaxCnt = B_BD.datas[lineType]['N1']
+        N2Cnt = B_BD.datas[lineType]['N2']
+        N3Cnt = B_BD.datas[lineType]['N3']
+        
+        if not self.isSpaceReadyEnter(lineType, lineNo):
+            return gameconst.EnterLineCodeEnum.ERR_SPACE_IS_NOT_READY
+            
+        allPlayers = self.getMapBranchLinePlayers(lineType)
+        lineMembers = allPlayers[lineNo]
+
+        hasLeader = extraInfo.teamUUID and lineMembers.getLeaderGbId(extraInfo.teamUUID)
+        hasMember = hasLeader or (extraInfo.teamUUID and lineMembers.hasTeamMember(extraInfo.teamUUID))
+        failCode = gameconst.EnterLineCodeEnum.ERR_COMMON
+
+        playerNum = len(lineMembers) + lineMembers.getPendingEnterNum()
+
+        # 单条线人数超过上限，禁止进入
+        if playerNum + needCnt > lineMaxCnt:
+            return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_MEMBER
+
+        # 单线每秒人数超过上限，禁止进入(只在登录时限制)
+        if extraInfo.isLogin and lineMembers.getPendingEnterNumNowSec() >= gameconfig.loginLinePlayerNumLimit():
+            return gameconst.EnterLineCodeEnum.ERR_REACH_SEC_LIMIT
+        
+        # 人数 > N2 且 该线没有队友
+        if playerNum > N2Cnt and not hasMember:
+            return gameconst.EnterLineCodeEnum.ERR_ONLY_TEAM_MEMBER
+        
+        # 人数 > N3 且 是自动就不能进了
+        if playerNum > N3Cnt and extraInfo.isAuto and not hasMember:
+            return gameconst.EnterLineCodeEnum.ERR_CANNOT_AUTO_ENTER
+        
+        mergeRes = self.mergeRes.get(lineType, None)
+        if mergeRes:
+            for i, res in mergeRes:
+                if lineNo in res:
+                    return gameconst.EnterLineCodeEnum.ERR_MERGE_LINE
+
+        if formula.checkWorldLineType(lineType):
+            cellappIndx = (lineNo + 1 + gameconst.getWorldLineCellIdx(lineType)) % gameconfig.cellAppCount()
+            cellAvatarCount = gameglobal.cellAvatarCountDict.get(cellappIndx, 0)
+            LOG_INFO("checkmaxCellAvatarCount", cellappIndx, cellAvatarCount)
+            if cellAvatarCount >= gameconfig.maxCellAvatarCount():
+                return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_AVATAR_COUNT
+
+        return gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS
+
+    def _autoSelectLine(self, box, gbId, extraInfo, exlude=None, isSwitchLine=False, lineType=None):
+        lineType = lineType or self.lineType
+        needCnt = len(extraInfo.followers) + 1
+        lineMaxCnt = B_BD.datas[lineType]['N1']
+        allPlayers = self.getMapBranchLinePlayers(lineType)
+
+        # 有队伍且不是队长，优先找队长
+        if extraInfo.teamUUID and not extraInfo.isLeader:
+            for lineNo, lineMembers in allPlayers.items():
+                if lineMembers.getLeaderGbId(extraInfo.teamUUID) and len(lineMembers) + needCnt <= lineMaxCnt:
+                    return lineNo
+
+        n5list = []
+        lineNoList = sorted(allPlayers.keys())
+        if BDS.datas["Branch_allocationPlan"]["value"] == 1:
+            newLineNoList = []
+            usedLineNoSet = set()
+            lineInfo = self._calculateLineInfo(lineType)
+            if gameconfig.switchLineUselastLineNo():
+                if self.lastChooseLineNo in allPlayers:
+                    LOG_INFO("lastChooseLineNo", self.lastChooseLineNo, lineInfo)
+                    if len(allPlayers[self.lastChooseLineNo]) <= max(lineInfo['info'].values()) + BDS.datas["Branch_mergeFloatRange"]["value"]:
+                        newLineNoList.append(self.lastChooseLineNo)
+                        if self.lastChooseLineNo in lineInfo['info']:
+                            lineInfo['info'].pop(self.lastChooseLineNo)
+            newLineNoList.extend(sorted(lineInfo['info'], key=lambda x: lineInfo['info'][x]))
+            for lineNo in newLineNoList:
+                usedLineNoSet.add(lineNo)
+            for lineNo in lineNoList:
+                if lineNo not in usedLineNoSet:
+                    newLineNoList.append(lineNo)
+            lineNoList = newLineNoList
+            LOG_INFO("lineNoList", lineNoList)
+
+        for lineNo in lineNoList:
+            checkCode = self._checkSelectLine(lineNo, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
+            if checkCode == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
+                return lineNo
+            elif checkCode == gameconst.EnterLineCodeEnum.ERR_REACH_AREAM_LIMIT:
+                n5list.append(lineNo)
+        LOG_WARN('cannot select line', box.id, gbId, needCnt,
+                    [len(lineMembers) for lineMembers in allPlayers.values()])
+
+        if formula.checkWorldLineType(lineType):
+            if n5list:
+                LOG_INFO('cannot select line: put to n5 area')
+                return random.choice(n5list)
+            else:
+                LOG_INFO('cannot select line: put to random area')
+                return -1
+        else:
+            return random.choice(self.getLineNoReadyForEnter())
+
+    def _calculateLineInfo(self, lineType=None):
+        if lineType is None:
+            lineType = self.lineType
+
+        res = {'lineType': lineType, 'info': {}}
+        
+        baseLineNum = B_BD.datas[lineType]['num']
+        maxLineNum = gameconst.getBranchLineCnt(lineType)
+        addRequired = B_BD.datas[lineType]['AddRequired']
+
+        needNewLine = True
+        for lineNo in range(gameconst.getBranchLineCnt(lineType)):
+            cnt = self.getSpaceAvatarNo(formula.combineLineSpaceNo(lineType, lineNo))
+            LOG_INFO("calculateLineInfo", lineType, lineNo, cnt)
+            if not self.isSpaceReadyEnter(lineType, lineNo):
+                continue
+
+            if lineNo < baseLineNum or cnt > 0:
+                res['info'][lineNo] = cnt
+
+                ifSafeArea = GGD.datas[lineType]['ifSafeArea']
+                activeCnt = cnt if ifSafeArea else self.fightingPlayersCntBase.get(lineType, {}).get(lineNo, 0)
+                if activeCnt < addRequired:
+                    needNewLine = False
+                continue
+
+        if needNewLine:
+            for i in range(1, maxLineNum):
+                if i not in res['info']:
+                    res['info'][i] = self.getSpaceAvatarNo(formula.combineLineSpaceNo(lineType, i))
+                    break
+
+        return res
+
+    def _checkLineMerge(self, lineType=None):
+        lineType = lineType or self.lineType
+        LOG_DBG('_checkLineMerge', lineType)
+        baseLineNum = B_BD.datas[lineType]['num']
+        mergeRequired = B_BD.datas[lineType]['MergeRequired']
+        allPlayers = self.getMapBranchLinePlayers(lineType)
+        
+        sortedData = []
+        for lineNo, lineMembers in allPlayers.items():
+            if lineNo >= baseLineNum and len(lineMembers) > 0:
+                sortedData.append((lineNo, len(lineMembers)))
+        
+        sortedData = sorted(sortedData, key=lambda x: x[1])
+
+        if not sortedData:
+            return
+        LOG_DBG('sortedData', sortedData)
+
+        idx = 0
+
+        if lineType not in self.mergeRes:
+            self.mergeRes[lineType] = []
+        #将下标j的线合到下标i的线
+        for i in range(len(allPlayers)):
+            sumCnt = len(allPlayers[i])
+            res = []
+            for j in range(idx, len(sortedData)):
+                #要合的线no大于当前的，就结算
+                if i >= sortedData[j][0]:
+                    break
+
+                num = sortedData[j][1]
+                if sumCnt + num <= mergeRequired:
+                    res.append(sortedData[j][0])
+                    sumCnt += num
+                    idx = j + 1
+                else:
+                    break
+            if res:
+                self.mergeRes[lineType].append((i, res))
+
+        if not self.mergeRes[lineType]:
+            return
+
+        LOG_DBG('mergeRes', self.mergeRes[lineType])
+        msgID = BDS.datas["Branch_mergeNoticeMsg"]["value"]
+        for i, res in self.mergeRes[lineType]:
+            for lineNo in res:
+                lineMembers = allPlayers[lineNo]
+                for gbId in list(lineMembers.keys()):
+                    pVal = lineMembers.get(gbId)
+                    if not pVal:
+                        continue
+                    if not pVal.playerBox:
+                        continue
+                    pVal.playerBox.onMessagePre(msgID, [])
+
+    def _doLineMerge(self, lineType=None):
+        lineType = lineType or self.lineType
+        if lineType in self.mergeRes:
+            LOG_DBG('_doLineMerge', lineType)
+            for i, res in self.mergeRes[lineType]:
+                self.mergeLine(i, res, lineType)
+            self.mergeRes.pop(lineType)
+
+    def mergeLine(self, i, res, lineType=None):
+        lineType = lineType or self.lineType
+        LOG_DBG('mergeLine', i, res, lineType)
+        mergeRequired = B_BD.datas[lineType]['MergeRequired']
+        allPlayers = self.getMapBranchLinePlayers(lineType)
+        for fromLineNo in res:
+            lineMembers = allPlayers[fromLineNo]
+            if len(lineMembers) > mergeRequired:
+                continue
+            for gbId in list(lineMembers.keys()):
+                pVal = lineMembers.get(gbId)
+                if not pVal:
+                    continue
+                if not pVal.playerBox:
+                    continue
+                pVal.playerBox.cell.onMergeLine(i)
+
+    def onFightingPlayersCntSync(self, spaceNo, cnt):
+        lineNo = formula.parseLineNo(spaceNo)
+        lineType = formula.parseLineType(spaceNo)
+        self.fightingPlayersCntBase.setdefault(lineType, {})
+        self.fightingPlayersCntBase[lineType][lineNo] = cnt
+        LOG_DBG("onFightingPlayersCntSync", lineType, lineNo, cnt)
+
+class ILinePlayersStub(IBranchLineStub):
+    def __init__(self):
+        super(ILinePlayersStub, self).__init__()
 
     def onLineSpaceReady(self, spaceNo):
         lineNo = formula.parseLineNo(spaceNo)
         self.allPlayers[lineNo] = linePlayers.LinePlayers(lineNo)
+
+    def getMapBranchLinePlayers(self, lineType=None):
+        return self.allPlayers
 
     def genClearTimeOutIter(self):
         for lineNo in list(self.allPlayers.keys()):
@@ -98,7 +337,7 @@ class ILinePlayersStub(object):
 
     def enterLine(self, lineNo, box, gbId, position, direction, extra):
         _linePlayers = self.allPlayers.getLinePlayers(lineNo) or ()
-        LOG_IFO('enterLine', box.id, gbId, lineNo, extra, len(_linePlayers))
+        LOG_INFO('enterLine', box.id, gbId, lineNo, extra, len(_linePlayers))
         ext = EnterLineExtra.new(extra, lineNo)
 
         isAutoSelectedLine = False
@@ -156,7 +395,7 @@ class ILinePlayersStub(object):
             if not isAutoSelectedLine:
                 checkCode = self._checkCanEnterLine(lineNo, box, gbId, ext)
                 if checkCode != gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
-                    LOG_IFO('enterLine fail:', lineNo, box.id, gbId, extra, checkCode)
+                    LOG_INFO('enterLine fail:', lineNo, box.id, gbId, extra, checkCode)
                     # if checkCode == gameconst.EnterLineCodeEnum.ERR_REACH_MAX_GUILD_MEMBER \
                     #         or checkCode == gameconst.EnterLineCodeEnum.ERR_REACH_MAX_MEMBER:
                     #     box.cell.enterGuildBattleLineFailedReachMax()
@@ -178,7 +417,7 @@ class ILinePlayersStub(object):
         playerVal.checkEnterTimer = self.addTimerCB(10, '_checkPlayerEnterLine', (lineNo, box, gbId),
                                                    gametimer.TIMER_TAG_CHECK_PLAYER_ENTER_LINE)
         
-        LOG_IFO("lastChooseLineNo", self.lastChooseLineNo, "->", lineNo)
+        LOG_INFO("lastChooseLineNo", self.lastChooseLineNo, "->", lineNo)
         self.lastChooseLineNo = lineNo
 
     # 进入分线添加playerVal前调用，保证只存在一个playerVal
@@ -221,108 +460,6 @@ class ILinePlayersStub(object):
                                                                                          checkCnt + 1),
                                                            gametimer.TIMER_TAG_CHECK_PLAYER_ENTER_LINE)
 
-    def _checkSelectLine(self, lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False):
-        LOG_DBG("checkSelectLine", lineNo, box, gbId, extraInfo, exlude, isSwitchLine)
-        needCnt = len(extraInfo.followers) + 1
-
-        if exlude and lineNo in exlude:
-            return gameconst.EnterLineCodeEnum.ERR_EXLUDE
-
-        # TODO X: validate line config
-        lineMaxCnt = BBD.datas[self.lineType]['N1']
-        N2Cnt = BBD.datas[self.lineType]['N2']
-        N3Cnt = BBD.datas[self.lineType]['N3']
-        lineMembers = self.allPlayers[lineNo]
-        sVal = self.getLineSpaceVal(lineNo)
-
-        if not sVal.isReadyEnter():
-            return gameconst.EnterLineCodeEnum.ERR_SPACE_IS_NOT_READY
-
-        hasLeader = extraInfo.teamUUID and lineMembers.getLeaderGbId(extraInfo.teamUUID)
-        hasMember = hasLeader or (extraInfo.teamUUID and lineMembers.hasTeamMember(extraInfo.teamUUID))
-        failCode = gameconst.EnterLineCodeEnum.ERR_COMMON
-
-        playerNum = len(lineMembers) + lineMembers.getPendingEnterNum()
-
-        # 单条线人数超过上限，禁止进入
-        if playerNum + needCnt > lineMaxCnt:
-            return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_MEMBER
-
-        # 单线每秒人数超过上限，禁止进入(只在登录时限制)
-        if extraInfo.isLogin and lineMembers.getPendingEnterNumNowSec() >= gameconfig.loginLinePlayerNumLimit():
-            return gameconst.EnterLineCodeEnum.ERR_REACH_SEC_LIMIT
-        
-        # 人数 > N2 且 该线没有队友
-        if playerNum > N2Cnt and not hasMember:
-            return gameconst.EnterLineCodeEnum.ERR_ONLY_TEAM_MEMBER
-        
-        # 人数 > N3 且 是自动就不能进了
-        if playerNum > N3Cnt and extraInfo.isAuto and not hasMember:
-            return gameconst.EnterLineCodeEnum.ERR_CANNOT_AUTO_ENTER
-        
-        for i, res in self.mergeRes:
-            if lineNo in res:
-                return gameconst.EnterLineCodeEnum.ERR_MERGE_LINE
-
-        cellappIndx = (lineNo + 1 + gameconst.getWorldLineCellIdx(self.lineType)) % gameconfig.cellAppCount()
-        cellAvatarCount = gameglobal.cellAvatarCountDict.get(cellappIndx, 0)
-        LOG_IFO("checkmaxCellAvatarCount", cellappIndx, cellAvatarCount)
-        if cellAvatarCount >= gameconfig.maxCellAvatarCount():
-            return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_AVATAR_COUNT
-
-        return gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS
-
-    def _autoSelectLine(self, box, gbId, extraInfo, exlude=None, isSwitchLine=False):
-        needCnt = len(extraInfo.followers) + 1
-        lineMaxCnt = BBD.datas[self.lineType]['N1']
-
-        # 有队伍且不是队长，优先找队长
-        if extraInfo.teamUUID and not extraInfo.isLeader:
-            for lineNo, lineMembers in self.allPlayers.items():
-                if lineMembers.getLeaderGbId(extraInfo.teamUUID) and len(lineMembers) + needCnt <= lineMaxCnt:
-                    return lineNo
-
-        n5list = []
-        lineNoList = sorted(self.allPlayers.keys())
-        if BDS.datas["Branch_allocationPlan"]["value"] == 1:
-            newLineNoList = []
-            usedLineNoSet = set()
-            lineInfo = self._calculateLineInfo()
-            if gameconfig.switchLineUselastLineNo():
-                if self.lastChooseLineNo in self.allPlayers:
-                    LOG_IFO("lastChooseLineNo", self.lastChooseLineNo, lineInfo)
-                    if len(self.allPlayers[self.lastChooseLineNo]) <= max(lineInfo['info'].values()) + BDS.datas["Branch_mergeFloatRange"]["value"]:
-                        newLineNoList.append(self.lastChooseLineNo)
-                        if self.lastChooseLineNo in lineInfo['info']:
-                            lineInfo['info'].pop(self.lastChooseLineNo)
-            newLineNoList.extend(sorted(lineInfo['info'], key=lambda x: lineInfo['info'][x]))
-            for lineNo in newLineNoList:
-                usedLineNoSet.add(lineNo)
-            for lineNo in lineNoList:
-                if lineNo not in usedLineNoSet:
-                    newLineNoList.append(lineNo)
-            lineNoList = newLineNoList
-            LOG_IFO("lineNoList", lineNoList)
-
-        for lineNo in lineNoList:
-            checkCode = self._checkSelectLine(lineNo, box, gbId, extraInfo, exlude, isSwitchLine)
-            if checkCode == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
-                return lineNo
-            elif checkCode == gameconst.EnterLineCodeEnum.ERR_REACH_AREAM_LIMIT:
-                n5list.append(lineNo)
-        LOG_WARN('cannot select line', box.id, gbId, needCnt,
-                    [len(lineMembers) for lineMembers in self.allPlayers.values()])
-
-        if formula.checkWorldLineType(self.lineType):
-            if n5list:
-                LOG_IFO('cannot select line: put to n5 area')
-                return random.choice(n5list)
-            else:
-                LOG_IFO('cannot select line: put to random area')
-                return -1
-        else:
-            return random.choice(self.getLineNoReadyForEnter())
-
     def enterLineSuccess(self, lineNo, box, gbId, succInfo):
         playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not playerVal:
@@ -336,7 +473,7 @@ class ILinePlayersStub(object):
         playerVal.setPlayerStatus(linePlayers.LinePlayerVal.IN_LINE)
 
     def enterLineFailed(self, lineNo, box, gbId, extra):
-        LOG_IFO('enterLineFailed:', lineNo, box.id, gbId, extra)
+        LOG_INFO('enterLineFailed:', lineNo, box.id, gbId, extra)
         spaceVal = self.getLineSpaceVal(lineNo)
         if not spaceVal:
             LOG_ERR('enterLineFailed: invalid lineNo', self.lineType, lineNo, box.id, gbId)
@@ -394,7 +531,7 @@ class ILinePlayersStub(object):
         box.callMethod(cbName, (toLineNo, spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
 
     def switchLine(self, fromLineNo, toLineNo, box, gbId, extra):
-        LOG_IFO('switchLine', fromLineNo, toLineNo, box.id, gbId)
+        LOG_INFO('switchLine', fromLineNo, toLineNo, box.id, gbId)
         ext = EnterLineExtra.new(extra, toLineNo)
         if toLineNo < 0:
             toLineNo = self._autoSelectLine(box, gbId, ext, exlude=(fromLineNo,), isSwitchLine=True)
@@ -445,7 +582,7 @@ class ILinePlayersStub(object):
             self.addLinePlayerInLine(toLineNo, box, gbId, 0, 0, linePlayers.LinePlayerVal.SWITCHING, spaceNo, extra)
 
         box.cell.beginSwitchLine(self.lineType, fromLineNo, toLineNo, spaceVal.lineSpaceBox, extra)
-        LOG_IFO("lastChooseLineNo", self.lastChooseLineNo, "->", toLineNo)
+        LOG_INFO("lastChooseLineNo", self.lastChooseLineNo, "->", toLineNo)
         self.lastChooseLineNo = toLineNo
         return True
 
@@ -465,7 +602,7 @@ class ILinePlayersStub(object):
             self.removeLinePlayerInLine(fromLineNo, gbId)
 
     def switchLineFailed(self, fromLineNo, toLineNo, box, gbId, extra):
-        LOG_IFO('switchLineFailed:', fromLineNo, toLineNo, box.id, gbId, extra)
+        LOG_INFO('switchLineFailed:', fromLineNo, toLineNo, box.id, gbId, extra)
         spaceVal = self.getLineSpaceVal(fromLineNo)
         if not spaceVal:
             LOG_ERR('switchLineFailed: invalid lineNo', self.lineType, fromLineNo, toLineNo, box.id, gbId)
@@ -517,7 +654,7 @@ class ILinePlayersStub(object):
             toLineNo and self.updateLinePlayerInfo(toLineNo, box, gbId, infoDict)
 
     def leaveLine(self, box, gbId, fromSpaceNo, toSpaceNo, toPosition, toDirection):
-        LOG_IFO('leaveLine', box, gbId, fromSpaceNo, toSpaceNo)
+        LOG_INFO('leaveLine', box, gbId, fromSpaceNo, toSpaceNo)
         lineNo = formula.parseLineNo(fromSpaceNo)
         self.removeLinePlayerInLine(lineNo, gbId)
         box.cell.beginLeaveLine(fromSpaceNo, toSpaceNo, toPosition, toDirection)
@@ -577,38 +714,6 @@ class ILinePlayersStub(object):
 
         self.doQueryLineInfo(0, pVal.playerBox, gbId)
 
-    def _calculateLineInfo(self):
-        res = {'lineType': self.lineType, 'info': {}}
-        
-        baseLineNum = BBD.datas[self.lineType]['num']
-        maxLineNum = gameconst.getBranchLineCnt(self.lineType)
-        addRequired = BBD.datas[self.lineType]['AddRequired']
-
-        needNewLine = True
-        for lineNo, lineMembers in self.allPlayers.items():
-            sVal = self.getLineSpaceVal(lineNo)
-
-            if not sVal.isReadyEnter():
-                continue
-
-            if lineNo < baseLineNum or len(lineMembers) > 0:
-                res['info'][lineNo] = len(lineMembers)
-
-                ifSafeArea = GGD.datas[self.lineType]['ifSafeArea']
-                activeCnt = len(lineMembers) if ifSafeArea else self.fightingPlayersCntBase.get(lineNo, 0)
-                if activeCnt < addRequired:
-                    needNewLine = False
-                continue
-
-        if needNewLine:
-            for i in range(1, maxLineNum):
-                if i not in res['info']:
-                    linePlayers = self.allPlayers.getLinePlayers(i)
-                    res['info'][i] = 0 if not linePlayers else len(linePlayers)
-                    break
-
-        return res
-
     def doQueryLineInfo(self, spaceNo, box, gbId):
         res = self._calculateLineInfo()
 
@@ -627,83 +732,3 @@ class ILinePlayersStub(object):
 
     def debugPlayerAreaInfo(self):
         pass
-
-    def _checkLineMerge(self):
-        LOG_DBG('_checkLineMerge')
-        baseLineNum = BBD.datas[self.lineType]['num']
-        mergeRequired = BBD.datas[self.lineType]['MergeRequired']
-        
-        sortedData = []
-        for lineNo, lineMembers in self.allPlayers.items():
-            if lineNo >= baseLineNum and len(lineMembers) > 0:
-                sortedData.append((lineNo, len(lineMembers)))
-        
-        sortedData = sorted(sortedData, key=lambda x: x[1])
-
-        if not sortedData:
-            return
-        LOG_DBG('sortedData', sortedData)
-
-        self.mergeRes = []
-        idx = 0
-
-        #将下标j的线合到下标i的线
-        for i in range(len(self.allPlayers)):
-            sumCnt = len(self.allPlayers.getLinePlayers(i))
-            res = []
-            for j in range(idx, len(sortedData)):
-                #要合的线no大于当前的，就结算
-                if i >= sortedData[j][0]:
-                    break
-
-                num = sortedData[j][1]
-                if sumCnt + num <= mergeRequired:
-                    res.append(sortedData[j][0])
-                    sumCnt += num
-                    idx = j + 1
-                else:
-                    break
-            if res:
-                self.mergeRes.append((i, res))
-
-        if not self.mergeRes:
-            return
-
-        LOG_DBG('mergeRes', self.mergeRes)
-        msgID = BDS.datas["Branch_mergeNoticeMsg"]["value"]
-        for i, res in self.mergeRes:
-            for lineNo in res:
-                lineMembers = self.allPlayers.getLinePlayers(lineNo)
-                for gbId in list(lineMembers.keys()):
-                    pVal = lineMembers.get(gbId)
-                    if not pVal:
-                        continue
-                    if not pVal.playerBox:
-                        continue
-                    pVal.playerBox.onMessagePre(msgID, [])
-
-    def _doLineMerge(self):
-        if self.mergeRes:
-            LOG_DBG('_doLineMerge')
-            for i, res in self.mergeRes:
-                self.mergeLine(i, res)
-            self.mergeRes = []
-
-    def mergeLine(self, i, res):
-        LOG_DBG('mergeLine', i, res)
-        mergeRequired = BBD.datas[self.lineType]['MergeRequired']
-        for fromLineNo in res:
-            lineMembers = self.allPlayers.getLinePlayers(fromLineNo)
-            if len(lineMembers) > mergeRequired:
-                continue
-            for gbId in list(lineMembers.keys()):
-                pVal = lineMembers.get(gbId)
-                if not pVal:
-                    continue
-                if not pVal.playerBox:
-                    continue
-                pVal.playerBox.cell.onMergeLine(i)
-
-    def onFightingPlayersCntSync(self, lineNo, cnt):
-        self.fightingPlayersCntBase[lineNo] = cnt
-        LOG_DBG("onFightingPlayersCntSync", lineNo, cnt)

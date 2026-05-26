@@ -146,5 +146,17 @@ datas = _tools.RODict({
     "rollStopTips": _tools.RODict({
         "ID": "rollStopTips",
         "value": 54000949,
+    }),
+    "rerollHelpInfo": _tools.RODict({
+        "ID": "rerollHelpInfo",
+        "value": 67,
+    }),
+    "rerollEmptyTips": _tools.RODict({
+        "ID": "rerollEmptyTips",
+        "value": "右侧选择精灵石",
+    }),
+    "rerollFailTips": _tools.RODict({
+        "ID": "rerollFailTips",
+        "value": 54000969,
     })
 })

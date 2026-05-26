@@ -96,11 +96,13 @@
 
         <doGetCubeReadyLineCnt>
              <Arg>       ENTITYCALL             </Arg>
+             <Arg>       MAP_ID                 </Arg>
         </doGetCubeReadyLineCnt>
 
         <checkSwitchCubeLine>
              <Arg>       ENTITYCALL             </Arg>
              <Arg>       LINE_NO                </Arg>
+             <Arg>       MAP_ID                 </Arg>
         </checkSwitchCubeLine>
 
         <doSwitchCubeLine>
@@ -108,6 +110,12 @@
              <Arg>       PLAYER_GBID            </Arg>
              <Arg>       LINE_NO                </Arg>
              <Arg>       PYTHON                 </Arg>
+             <Arg>       MAP_ID                 </Arg>
         </doSwitchCubeLine>
+
+        <onFightingPlayersCntSync>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       INT32          </Arg>
+        </onFightingPlayersCntSync>
     </BaseMethods>
 </root>

@@ -9,7 +9,7 @@ import gameengine
 import dropAward
 import gameclass
 import gametimer
-
+import actionContext
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import relationConfig_relationConfig as RC_RCD
 
@@ -20,6 +20,7 @@ class IEnemy(object):
 
     def onDeadAddEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score):
         self.enemyMgr.addEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score)
+        self.triggerAchievementWithCtx(gameconst.AchieveType.ENEMY, actionContext.AchievementCtx(count=self.enemyMgr.getEnemyCount()))
 
     @gamedecorator.checkGameconfigEnable('enemy')
     def reqRemoveEnemy(self, exposed, gbId):
@@ -28,7 +29,7 @@ class IEnemy(object):
 
     @gamedecorator.limitcall(60)
     def getEnemyFreshInfo(self, exposed):
-        LOG_IFO('getEnemyFreshInfo')
+        LOG_INFO('getEnemyFreshInfo')
         _gbIds = self.enemyMgr.getEnemyGbIds()
 
         redisUtils.RedisUtils.getUsersInfo(_gbIds, self._onGetEnemyFreshInfo)
@@ -36,7 +37,7 @@ class IEnemy(object):
     def _onGetEnemyFreshInfo(self, usersInfo):
         LOG_DBG('usersInfo:', usersInfo)
         self.enemyMgr.updateByFcVals(usersInfo)
-        # LOG_IFO('onGetEnemyFreshInfo, enemy fresh info:', self.enemyMgr.getEnemyFreshInfo())
+        # LOG_INFO('onGetEnemyFreshInfo, enemy fresh info:', self.enemyMgr.getEnemyFreshInfo())
         self.client.onGetEnemyFreshInfo(self.enemyMgr.getEnemyFreshInfo())
 
     @gamedecorator.checkGameconfigEnable('enemy')
@@ -55,7 +56,7 @@ class IEnemy(object):
 
     def onGetEnemyPosInfoResult(self, otherGbId, find, posInfo):
         if not find:
-            LOG_IFO('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
+            LOG_INFO('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
             self.client.sendEnemyPosInfoToClient(otherGbId, find, self.enemyMgr.getEnemyLastSpaceNo(otherGbId), True)
             self.enemyMgr.updateEnemyOfflineTime(otherGbId)
             return
@@ -126,7 +127,7 @@ class IEnemy(object):
     def onScheduleEnemyPosInfoResult(self, otherGbId, find, posInfo):
         lastSpaceNo = self.enemyMgr.getEnemyLastSpaceNo(otherGbId)
         if not find:
-            LOG_IFO('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
+            LOG_INFO('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
             self.client.sendEnemyPosInfoToClient(otherGbId, find, lastSpaceNo, False)
             self.enemyMgr.updateEnemyOfflineTime(otherGbId)
             return
@@ -176,7 +177,7 @@ class IEnemy(object):
                 self.client.onRecordList(False, _sendList)
             else:
                 self.client.onRecordList(True, _sendList)
-            # LOG_IFO('doSendRecordList, send record list:', _sendList)
+            # LOG_INFO('doSendRecordList, send record list:', _sendList)
             yield lambda : True
 
     @gamedecorator.checkGameconfigEnable('enemy')

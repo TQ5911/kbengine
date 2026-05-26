@@ -8,7 +8,7 @@ import gameengine
 import gameconst
 import gameglobal
 import gamedecorator
-import chatConfig_chatConfig as CCD
+import chatConfig_chatConfig as C_C_DD
 import chatConfig_channel as CCCH
 import teamMatch_matchConfig as TMMCD
 import teamMatch_activity as TMACTD
@@ -20,7 +20,7 @@ import activityControl_activityData as AC_ADD
 
 class IChat(object):
     def setChatChannel(self, exposed, channel):
-        LOG_IFO('setChatChannel', channel)
+        LOG_INFO('setChatChannel', channel)
         if channel >= gameconst.ChatChannelEnum.MAX:
             return
 
@@ -31,7 +31,7 @@ class IChat(object):
         self.chatChannel = newChannel
 
     def removeChatChannel(self, exposed, channel):
-        LOG_IFO('removeChatChannel', channel)
+        LOG_INFO('removeChatChannel', channel)
         if channel >= gameconst.ChatChannelEnum.MAX:
             return
 
@@ -51,13 +51,13 @@ class IChat(object):
     def sendWorldChatMsg(self, exposed, msg):
         LOG_DBG('sendWorldChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.curTS()
         if now < self.sendWorldMsgTime + CCCH.datas[gameconst.ChatChannelEnum.WORLD]['channelCD']:
             timeDelta = self.sendWorldMsgTime + CCCH.datas[gameconst.ChatChannelEnum.WORLD]['channelCD']-now
-            self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
         if gameglobal.roleCache[self.id]['level'] < CCCH.datas[gameconst.ChatChannelEnum.WORLD]['channelMinLevel']:
@@ -81,13 +81,13 @@ class IChat(object):
     def sendSiegeWarChatMsg(self, exposed, msg):
         LOG_DBG('sendSiegeWarChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.curTS()
         if now < self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannelEnum.SIEGE_WAR]['channelCD']:
             timeDelta = self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannelEnum.SIEGE_WAR]['channelCD']-now
-            self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
         gameengine.broadcastBaseapp('broadcastToAllAvatar',
@@ -99,7 +99,7 @@ class IChat(object):
     def sendGuildChatMsg(self, exposed, msg):
         LOG_DBG('sendGuildChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         self._sendMsgToGuild(msg,True)
@@ -108,7 +108,7 @@ class IChat(object):
         now = utils.curTS()
         if now < self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.GUILD]['channelCD']):
             timeDelta = self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.GUILD]['channelCD']) - now
-            self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
         if not self.guildBox:
@@ -144,7 +144,7 @@ class IChat(object):
     def sendGuildPickChatMsg(self, messageId):
         LOG_DBG('sendGuildPickChatMsg', messageId)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.curTS()
@@ -164,11 +164,11 @@ class IChat(object):
         teamId = self.teamIdBase
         LOG_DBG('sendTeamChatMsg', teamId, msg)
         if not teamId:
-            self.onMessagePre(CCD.datas['teamChannel_NotInTeam_msg']['value'], ())
+            self.onMessagePre(C_C_DD.datas['teamChannel_NotInTeam_msg']['value'], ())
             return
 
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         self._sendMsgToTeam(teamId, msg, True)
@@ -177,7 +177,7 @@ class IChat(object):
         now = utils.curTS()
         if now < self.sendTeamMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.TEAM]['channelCD']):
             timeDelta = self.sendTeamMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.TEAM]['channelCD']) - now
-            self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
         self.sendTeamMsgTime = now
@@ -195,13 +195,13 @@ class IChat(object):
     def sendNearbyChatMsg(self, exposed, msg):
         LOG_DBG('sendNearbyChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.curTS()
         if now < self.sendNearbyMsgTime + CCCH.datas[gameconst.ChatChannelEnum.NEARBY]['channelCD']:
             timeDelta = self.sendNearbyMsgTime + CCCH.datas[gameconst.ChatChannelEnum.NEARBY]['channelCD'] - now
-            self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
         if gameglobal.roleCache[self.id]['level'] < CCCH.datas[gameconst.ChatChannelEnum.NEARBY]['channelMinLevel']:
@@ -228,13 +228,13 @@ class IChat(object):
             return
 
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.curTS()
         if now < self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.RAID]['channelCD']):
             timeDelta = self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.RAID]['channelCD']) - now
-            self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
         avatarInfo = self._getChatChannelAvatarInfo()
@@ -251,7 +251,7 @@ class IChat(object):
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.RAID)
 
     def useTrumpetItem(self, exposed, itemId, msg):
-        LOG_IFO('useTrumpetItem', itemId, msg)
+        LOG_INFO('useTrumpetItem', itemId, msg)
         if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
             self.client.onRecvTrumpetMsg(self._getChatChannelAvatarInfo(), itemId, msg)
         else:
@@ -260,7 +260,7 @@ class IChat(object):
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.WORLD)
 
     def sendReleaseRedbagMsg(self, redbagId, redbagType, channel, money, desc):
-        LOG_IFO("sendReleaseRedbagMsg:", redbagId, redbagType, channel, money, desc)
+        LOG_INFO("sendReleaseRedbagMsg:", redbagId, redbagType, channel, money, desc)
         _avatarInfo = self._getChatChannelAvatarInfo()
         # 发送消息
         if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
@@ -274,15 +274,15 @@ class IChat(object):
 
 
     def checkUseTrumpetBase(self, pendingCheckId,msg):
-        LOG_IFO("checkUseTrumpetBase ",pendingCheckId)
+        LOG_INFO("checkUseTrumpetBase ",pendingCheckId)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         self.cell.afterCheckTrumpetMsg(pendingCheckId, msg)
 
     def queryPetLink(self, petGbId, gbId):
-        LOG_IFO('queryPetLink', petGbId)
+        LOG_INFO('queryPetLink', petGbId)
         # self.getPetDateDetailInfoInternal(gbId, petGbId, '_queryPetLink', ())
 
     # def _queryPetLink(self, result, data):
@@ -292,7 +292,7 @@ class IChat(object):
     #         self.onMessagePre(MMD.datas.channel_noItem, [])
 
     def registerItemLink(self, exposed, itemIdList, uniqueIdList):
-        LOG_IFO('registerItemLink', itemIdList, uniqueIdList)
+        LOG_INFO('registerItemLink', itemIdList, uniqueIdList)
 
         if len(itemIdList) != len(uniqueIdList):
             return
@@ -303,7 +303,7 @@ class IChat(object):
         #         gameengine.getGlobalBase('ItemLinkStub').uploadItemInfo(uniqueIdList[i], item.toItemSavedDict())
 
     def queryItemLink(self, exposed, uniqueId, itemId, gbId):
-        LOG_IFO('queryItemLink', uniqueId, itemId, gbId)
+        LOG_INFO('queryItemLink', uniqueId, itemId, gbId)
         if not gbId:
             LOG_ERR('queryItemLink but invalid gbId', gbId)
             return
@@ -336,11 +336,11 @@ class IChat(object):
             gameglobal.roleCache[self.id]['picFrameId'])
 
     # def queryTransportGoodsLink(self, gbId):
-    #     LOG_IFO('huyf: queryTransportGoodsLink', gbId)
+    #     LOG_INFO('huyf: queryTransportGoodsLink', gbId)
     #     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'handleQueryTransportGoodsLink', (self, 0, gbId, 0, 0), None, '', ())
     #
     # def handleQueryTransportGoodsLink(self, box, actId, gbId, helpNum, guildUUID):
-    #     LOG_IFO('huyf: handleQueryTransportGoodsLink', box, actId, gbId, helpNum, guildUUID)
+    #     LOG_INFO('huyf: handleQueryTransportGoodsLink', box, actId, gbId, helpNum, guildUUID)
     #     # TODO not same guildUUID immediately return  tips message
     #     # 【【货运】点击非同一帮会的玩家的求助信息，没有消息提示，点击求助链接无响应】
     #     if not guildUUID or self.guildUUIDBase != guildUUID:
@@ -357,9 +357,9 @@ class IChat(object):
         self._sendMatchMessage(teamId, content, teamTarget, curNum, channel, True)
 
     def _sendMatchMessage(self, teamId, content, teamTarget, curNum, channel, isTeam):
-        LOG_IFO('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
+        LOG_INFO('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         # 只处理自身目标和具体活动目标
@@ -503,6 +503,6 @@ class IChat(object):
         return message[start:-1]
 
     def onRecvAvatarChannelMsgPre(self, channel, avatarInfo, msg):
-        LOG_IFO("onRecvAvatarChannelMsgPre::", channel, avatarInfo, msg)
+        LOG_INFO("onRecvAvatarChannelMsgPre::", channel, avatarInfo, msg)
         self.client.onRecvAvatarChannelMsg(channel, avatarInfo, msg)
 

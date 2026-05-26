@@ -11,7 +11,9 @@ import dataUtils
 import gamelog
 import iMapMonsterRefresh
 import iTimerEntityRefresh
+import iShowMapEntityType
 import iBoxGroupRefresh
+import gamePlay_gamePlay as GGD
 
 class PlayerInfo(int):
     def __init__(self, *args, **kwargs):
@@ -27,13 +29,15 @@ class PlayerInfo(int):
         self._isDead = False
 
 
-class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh, iTimerEntityRefresh.ITimerEntityRefresh, iBoxGroupRefresh.IBoxGroupRefresh):
+class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh, iTimerEntityRefresh.ITimerEntityRefresh, iBoxGroupRefresh.IBoxGroupRefresh,
+                iShowMapEntityType.IShowMapEntityType):
 
     def __init__(self):
         LOG_DBG('ISpaceMgr.__init__', self.id, self.spaceNo)
         self.initFlowController()
         iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
         iTimerEntityRefresh.ITimerEntityRefresh.__init__(self)
+        iShowMapEntityType.IShowMapEntityType.__init__(self)
         self.beNotifiedSpaceEvent(0, gameconst.AI_EVENT_BEFORE_LOADING_ENTITIES, ())
         self.addEntity(self.id, ('_spaceMgr_',))
 
@@ -61,8 +65,8 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         LOG_DBG('zt: beNotifiedSpaceEvent', srcEntId, eventId, args)
         for entId in list(self.spaceEntities.keys()):
             e = self.getEntityById(entId)
-            if e and e.checkEventListened(eventId):
-                e.receiveAIEvent(srcEntId, eventId, args)
+            if e and e.checkAIEventListened(eventId):
+                e.aiReceiveEvent(srcEntId, eventId, args)
 
     def onTimer(self, tid, userData):
         self._onTimer(tid, userData)
@@ -76,22 +80,15 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
     def onDestroy(self):
         pass
 
-    def receiveAIEvent(self, srcEntId, eventId, args):
+    def aiReceiveEvent(self, srcEntId, eventId, args):
         self.aiEvents[eventId] = ((srcEntId, args), utils.curTS())
-        self.tickAI()
+        self.aiTick()
 
-    def checkEventListened(self, eventId):
+    def checkAIEventListened(self, eventId):
         return eventId in self.aiEventListener
 
-    def actWaitEvent(self, eventId):
-        if eventId not in self.aiEvents:
-            self.aiEventListener[eventId]=utils.curTS()
-            return None
-
-        (srcId, args), timestamp = self.aiEvents.pop(eventId)
-        return srcId, args
-
     def onPlayerEnter(self, playerEntId):
+        iShowMapEntityType.IShowMapEntityType.onPlayerEnter(self, playerEntId)
         self.players[playerEntId] = PlayerInfo(playerEntId)
         ent = self.getEntityById(playerEntId)
         if ent:
@@ -100,7 +97,14 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             ent.startReportStatistics()
             ent.client.onLightPillarUpdate([value for value in self.lightPillarDict.values()], [True] * len(self.lightPillarDict))
 
+            # 修改玩家PK模式
+            mapId = formula.fetchMapId(self.spaceNo)
+            pkModel = GGD.datas.get(mapId, {}).get('pkModel', 0) - 1
+            if pkModel >= 0 and pkModel <= gameconst.PKModel.MAX_PK:
+                ent.setPKModel(pkModel)
+
     def onPlayerLeave(self, gbId, playerId, box):
+        iShowMapEntityType.IShowMapEntityType.onPlayerLeave(self, gbId, playerId, box)
         self.players.pop(playerId, None)
         self.setAvatarNearNotifyState(playerId, False)
 
@@ -132,6 +136,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             # self._doActionByAttrKey(ent, utils.getMonsterAttrKey(attrId))
 
         self.addBoxGroupEntity(ent)
+        iShowMapEntityType.IShowMapEntityType.addEntity(self, entId, tags)
 
     def setBossEntity(self, entId):
         tag = 'boss'
@@ -199,6 +204,30 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         ent = KBEngine.entities.get(entId)
         if ent:
             self.removeBoxGroupEntity(ent)
+        iShowMapEntityType.IShowMapEntityType.removeEntityById(self, entId)
+
+    def getMonsterNumByGIDsAndTag(self, monsterGIDs, tag):
+        _sum = 0
+        for _gid in monsterGIDs:
+            if tag == gameconst.FLOW_REST_MONSTER_TAG_GID:
+                _tagStr = 'gid_{}'.format(_gid)
+            elif tag == gameconst.FLOW_REST_MONSTER_TAG_ALL:
+                _tagStr = 'Monster'
+            else:
+                _tagStr = str(_gid)
+
+            for i in self.tagEntities.get(_tagStr, ()):
+                _ent = KBEngine.entities.get(i)
+                if not (_ent and not _ent.isDie()):
+                    continue
+
+                _enth, _ = utils.getRealAvatarEntity(_ent)
+                if _enth and _enth.IsAvatar:
+                    continue
+
+                _sum += 1
+
+        return _sum
 
     def removeEntitiesByTag(self, tag):
         if tag not in self.tagEntities:
@@ -268,16 +297,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             aureolEnt.onEnterWholeAureole(entity)
 
     def onLeaveWholeAureoleSpace(self, eid):
-        pass
-        # entity = self.getEntityById(eid)
-        # if eid in self.wholeAureoleEntIdList:
-        #     self.wholeAureoleEntIdList.remove(eid)
-        #     entity.disableAureole()
-        #
-        # for wholeAureoleEid in self.wholeAureoleEntIdList:
-        #     aureolEnt = self.getWholeAureoleEntityById(wholeAureoleEid)
-        #     if eid != wholeAureoleEid:
-        #         aureolEnt.onLeaveWholeAureole(entity)
+        return
 
     def _getPlayers(self, players):
         playerEnts = []
@@ -316,6 +336,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         self.setAvatarNearNotifyState(playerId, False)
 
     def onPlayerRelogin(self, box, playerGbId):
+        iShowMapEntityType.IShowMapEntityType.onPlayerRelogin(self, box, playerGbId)
         box.client.onLightPillarUpdate([value for value in self.lightPillarDict.values()], [True] * len(self.lightPillarDict))
 
     def onPlayerDead(self, box, playerGbId):
@@ -343,12 +364,12 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
     def triggerEntityEventById(self, src, entIds, eventId, args):
         ents = self._getEntities(entIds)
         for e in ents:
-            e.aiTriggerEvent(src.id, eventId, args)
+            e.triggerAIEvent(src.id, eventId, args)
 
     def triggerEntityEventByTag(self, src, tag, eventId, args):
         ents = self._getEntitiesByTag(tag)
         for e in ents:
-            e.aiTriggerEvent(src.id, eventId, args)
+            e.triggerAIEvent(src.id, eventId, args)
 
     def innerSetSpaceVar(self, opUUID, varSrc, desc, varId, fmlId, paramVarIdList, avatarVarDic):
         LOG_DBG('innerSetSpaceVar:', varSrc, varId, fmlId, paramVarIdList, avatarVarDic)
@@ -413,16 +434,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         return self.spaceVars.get(varId, dataUtils.getVariableDefaultVal(varId))
 
     def setAvatarNearNotifyState(self, eid, isOn):
-        # if isOn:
-        #     if eid in self.notifyNearPosList:
-        #         return
-        #
-        #     self.notifyNearPosList.append(eid)
-        # else:
-        #     if eid not in self.notifyNearPosList:
-        #         return
-        #
-        #     self.notifyNearPosList.remove(eid)
         pass
 
     def _getDistance(self, ent1, ent2):

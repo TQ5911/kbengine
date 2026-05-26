@@ -224,7 +224,7 @@ class DungeonFlowConstructor(object):
         return self.controller.buildMonsterHpEvent(eventId, monsterId, compare, hpPercent, checkNow, checkOnce)
 
     def construct_monsterRestNum(self, eventId, eventDataDic):
-        _monsterId = eventDataDic['monsterID'][0]
+        _monsterIds = eventDataDic['monsterID']
         _compare = eventDataDic['compare']
         _restNum = eventDataDic['restNum']
         _usePrototypeID = bool(eventDataDic.get('usePrototypeID', 0))
@@ -232,7 +232,7 @@ class DungeonFlowConstructor(object):
         _checkOnce = bool(eventDataDic.get('checkOnce', False))
         return self.controller.buildMonsterRestNumEvent(
             eventId, 
-            _monsterId, 
+            _monsterIds, 
             _compare, 
             _restNum, 
             _usePrototypeID, 
@@ -361,7 +361,7 @@ class DungeonFlowConstructor(object):
     def construct_addBuffToMonster(self, eventId, eventDataDic):
         monsterIDs = eventDataDic['monsterID']
         buffIDs = eventDataDic['buffID']
-        buffLevel = int(eventDataDic['lv'])
+        buffLevel = int(eventDataDic['lv'] or 1)
         buffMaxLevel = eventDataDic.get('lvlmt', -1)
         duration = eventDataDic.get('duration', -1)
         return self.controller.buildDungeonAddBuffToMonster(eventId, monsterIDs, buffIDs, buffLevel, buffMaxLevel, duration)

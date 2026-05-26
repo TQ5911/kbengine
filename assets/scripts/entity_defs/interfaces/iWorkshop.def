@@ -1,5 +1,11 @@
 <root>
     <Properties>
+        <monthlyLimit>
+            <Type>          PY_DICT          </Type>
+            <Flags>         BASE             </Flags>
+            <Persistent>    true             </Persistent>
+            <Default>       {}               </Default>
+        </monthlyLimit>
     </Properties>
 
     <BaseMethods>
@@ -9,6 +15,8 @@
             <Arg>       ARRAY <of> GRIDID </of>     </Arg>
             <Arg>       ARRAY <of> UINT16 </of>     </Arg>
         </reqWorkshopMF>
+        <reqWorkshopMonthlyLimit> <Exposed/>
+        </reqWorkshopMonthlyLimit>
     </BaseMethods>
 
     <CellMethods>
@@ -20,5 +28,10 @@
             <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
             <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </onWorkshopMF>
+
+        <onWorkshopMonthlyLimit>
+            <Arg>  ARRAY       <of>        UINT32      </of>   </Arg>
+            <Arg>  ARRAY       <of>        UINT16      </of>   </Arg>
+        </onWorkshopMonthlyLimit>
     </ClientMethods>
 </root>

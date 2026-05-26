@@ -67,7 +67,7 @@ class ICrossServer(object):
 
     def handleCrossServerWaitingClientInitReason(self):
         _crossServerWaitingClientInitTuple = self.crossServerWaitingClientInitTuple
-        LOG_IFO("handleCrossServerWaitingClientInitReason::", _crossServerWaitingClientInitTuple)
+        LOG_INFO("handleCrossServerWaitingClientInitReason::", _crossServerWaitingClientInitTuple)
 
         if _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitingClientInitTuple.BACKSELECTCHARACTER:
             self.resetCrossServerWaitingClientInitReason()
@@ -112,7 +112,7 @@ class ICrossServer(object):
         return self.isCrossServer and self.isInLocalServer
 
     def onCrossServerStateChanged(self, state):
-        LOG_IFO("onCrossServerStateChanged", state)
+        LOG_INFO("onCrossServerStateChanged", state)
         if self.cellCrossServerState != state:
             isCrossServerStart = self.cellCrossServerState == gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER
             isCrossServerEnd = state == gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER
@@ -149,7 +149,7 @@ class ICrossServer(object):
             self.base.syncMethodCallToLocalServerCell(fnname, fnargs)
 
     def beforeReqCrossServer(self, toServerId, reasonNo):
-        LOG_IFO("beforeReqCrossServer::", toServerId, reasonNo)
+        LOG_INFO("beforeReqCrossServer::", toServerId, reasonNo)
         self.destroyAllSummon()
         self.destoryAllCreation()
         # NOTE(QZZ)(CROSS_SERVER): 灵兽隐藏, 不销毁
@@ -158,7 +158,7 @@ class ICrossServer(object):
         self.unsetAllHateRecord(gameconst.UnsetAllHateReason.teleport)
 
         self.resetUsingSkills(gameconst.ResetSkillReason.ReasonTeleport)
-        self.clearAllTargetTypeCache(True)
+        self.doClearAllTargetTypeCache(True)
 
         self.selfStopAutoCombat(gameconst.SuspendAutoCombatReason.Teleport)
         self.endApplyGather(gameconst.CancelGatherReason.CrossServer)
@@ -167,5 +167,5 @@ class ICrossServer(object):
         self.leaveRaid(self.id)
 
     def onCrossServerSuc(self, reasonNo):
-        LOG_IFO("onCrossServerSuc::", reasonNo)
+        LOG_INFO("onCrossServerSuc::", reasonNo)
         # 【【跨服战场】在进入跨服前需要先退出一些临时的场景（比如副本、帮战分线）】

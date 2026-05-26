@@ -1,0 +1,28 @@
+<root>
+    <Interfaces>
+        <Interface>     iBaseWithCell   </Interface>
+        <Interface>     iCell   </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaceno>
+            <Type>          SPACE_NO        </Type>
+            <Flags>         BASE            </Flags>
+        </spaceno>
+    </Properties>
+
+    <BaseMethods>
+        <spaceCellInfo>
+            <Arg>       MAILBOX     </Arg>
+         </spaceCellInfo>
+    </BaseMethods>
+
+    <CellMethods>
+        <createCellLocally>
+            <Arg>           ENT_TYPE        </Arg>
+            <Arg>           POSITION_ARG    </Arg>
+            <Arg>           DIRECTION_ARG   </Arg>
+            <Arg>           PYTHON          </Arg>
+        </createCellLocally>
+    </CellMethods>
+</root>

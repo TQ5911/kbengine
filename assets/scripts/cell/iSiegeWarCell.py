@@ -60,13 +60,13 @@ class ISiegeWarCell(object):
             'src':_src,
             'hasCast':True
         }
-        _options = complexTeleportOption.ComplexTeleportOptions(teleportType=(gameconst.ComplexTeleportType.ENTER))
-        canLeave = self.packageComplexTeleportLeaveData(_lContext)
+        _options = complexTeleportOption.ComplexTeleportOpt(teleportType=(gameconst.ComplexTeleportEnum.ENTER))
+        canLeave = self.packComplexTeleportLeaveData(_lContext)
         if not canLeave:
             LOG_WARN("ISiegeWarCell::beginEnterSiegeWarSpace: can not leave")
             return
         fromSpaceNo = self.spaceNo if isGm else 0
-        self.teleportFromSpaceToSpace(fromSpaceNo, spaceNo, options=_options, context=_context)
+        self.telFromSpaceToSpace(fromSpaceNo, spaceNo, options=_options, context=_context)
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
@@ -85,7 +85,7 @@ class ISiegeWarCell(object):
             self.base.leaveCrossServerSiegeWarSpace()
             return
 
-        LOG_IFO('ISiegeWarCell::onSiegeWarKickout: ', self.spaceNo, self.cellCrossServerState)
+        LOG_INFO('ISiegeWarCell::onSiegeWarKickout: ', self.spaceNo, self.cellCrossServerState)
         self._leaveSiegeWarSpace(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
 
     def _leaveSiegeWarSpace(self, srcId):
@@ -98,16 +98,16 @@ class ISiegeWarCell(object):
             'hasCast': True,
         }
 
-        _canLeave = self.packageComplexTeleportLeaveData(_l)
+        _canLeave = self.packComplexTeleportLeaveData(_l)
         if not _canLeave:
             LOG_WARN('ISiegeWarCell::leaveSiegeWarSpace: can not leave')
             return
 
         #todo跨服要改
-        _, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=formula.getSpaceType(self.spaceNo))
-        _spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
+        _, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=formula.getSpaceType(self.spaceNo))
+        _spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
 
-        _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.LEAVE)
+        _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
         self.doLeaveFromSapceToSpace(self.spaceNo, _spaceNo, _options, _context)
 
     def collectionCheckSiegeWar(self, *args):

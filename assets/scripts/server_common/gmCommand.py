@@ -55,7 +55,7 @@ pushCommand: 使用该函数可以在GM指令内部调用另一个GM指令。$co
     所有GM指令都可以用pushCommand来进行内部调用，但是只有$_开头的指令才允许使用Python类型参数，
     该类型参数允许直接使用任意类型的参数调用GM指令。比如需要传递个mailbox什么的...
 
-GM指令可以直接用return '执行成功',True 这样的形式来显示反馈，与su.feedbackCommandSucc('执行成功')或者
+GM指令可以直接用return 'command success',True 这样的形式来显示反馈，与su.feedbackCommandSucc('command success')或者
 su.feedbackCommandFail('执行失败')
 应用举例：
 EXAMPLE 1:
@@ -170,17 +170,14 @@ def cash(su, avatar, cash):
 线，则返回Avatar，可以直接调用它的函数进行修改。
 '''
 import KBEngine
-import ResMgr
 import gameconst
 import utils
 import gameengine
 import gameconfig
 import gameglobal
-import json
 import time
 import userType
 import gamesql
-import gamelog
 import random
 
 import gmAdmin
@@ -193,40 +190,35 @@ import proto.centralLogin_pb2 as centralLogin
 
 # --- 开发者组
 # 开发者权限
-GOD_GROUPS = (gmGroup.MANAGER_GROUP_GOD,)
-DEV_GROUPS = (gmGroup.MANAGER_GROUP_DEV, gmGroup.MANAGER_GROUP_GOD,)
+GOD_GROUPS, DEVE_GROUPS, NON_GROUPS = (gmGroup.MANAGER_GROUP_GOD,),\
+    (gmGroup.MANAGER_GROUP_DEV, gmGroup.MANAGER_GROUP_GOD,), ()
 
-NON_GROUPS = ()
-
-if KBEngine.component == 'baseapp':
-    COMPONENT = gameconst.BASE
-elif KBEngine.component == 'cellapp':
+if KBEngine.component == 'cellapp':
     COMPONENT = gameconst.CELL
-
-RSU = 'RSU'
-RONE = 'RONE'
-RALL = 'RALL'
-SELF = 'SELF'
+elif KBEngine.component == 'baseapp':
+    COMPONENT = gameconst.BASE
 
 COMMAND_SPLIT_SEP = ' '
+
+RSU, RONE, RALL, SELF = 'RSU', 'RONE', 'RALL', 'SELF'
 
 
 class _DUMMY_SU(userType.UserSingleType):
     def __init__(self):
-        self.id = 0
         self.spaceNo = 0
+        self.id = 0
         self.who = ''
-        self.accountName = ''
         self.accountRole = ''
+        self.accountName = ''
         self.roleAccount = ''
-        self.roleName = ''
         self.group = frozenset(GOD_GROUPS)
+        self.roleName = ''
 
     def feedbackCommandSucc(self, msg):
-        LOG_IFO('_DUMMY_SU.feedbackCommandSucc', msg)
+        LOG_INFO('_DUMMY_SU.feedbackCommandSucc', msg)
 
     def feedbackCommandFail(self, msg):
-        LOG_IFO('_DUMMY_SU.feedbackCommandFail', msg)
+        LOG_INFO('_DUMMY_SU.feedbackCommandFail', msg)
 
 
 DUMMY_SU = _DUMMY_SU()
@@ -234,10 +226,10 @@ DUMMY_SU = _DUMMY_SU()
 
 class GMAgentBase(userType.UserSingleType):
     def __getattr__(self, name):
-        if name == 'base':
+        if name == 'cell':
             return self
 
-        if name == 'cell':
+        if name == 'base':
             return self
 
         if name == 'client':
@@ -246,63 +238,57 @@ class GMAgentBase(userType.UserSingleType):
         if name in ('id', 'spaceID',):
             return 0
 
-        if name in ('playerName', 'roleName'):
-            return self.account
-
         if name in ('gbID', 'gbId'):
             return 0
+
+        if name in ('playerName', 'roleName'):
+            return self.account
 
         return ''
 
     def feedbackCommandSucc(self, message):
-        LOG_IFO('feedbackCommandSucc', message)
+        LOG_INFO('feedbackCommandSucc', message)
 
     def feedbackCommandFail(self, message):
-        LOG_IFO('feedbackCommandFail', message)
+        LOG_INFO('feedbackCommandFail', message)
 
     def onCommandResult(self, result, retErrMsg, resultObj):
         if type(resultObj) is dict:
             res = resultObj
         else:
             res = resultObj.__dict__ if resultObj else 'None'
-        LOG_IFO('onCommandResult', result, retErrMsg, res)
-
-    def idipCheckOpenId(self, player):
-        return True
-
-    def idipCheckAccountOpenId(self, account):
-        return True
+        LOG_INFO('onCommandResult', result, retErrMsg, res)
 
 
 class GMAgent(GMAgentBase):
     IsAvatar = False
 
-    def __init__(self, owner, tag, account, group=0, cmdUUID=b'', ):
-        self.owner = owner
-        self.account = account
-        self.group = group
-        self.cmdUUID = cmdUUID
-        self.tag = tag
-
     def __getstate__(self):
         return {
-            'owner': self.owner,
             'account': self.account,
+            'owner': self.owner,
             'group': self.group,
+            'tag': self.tag,
             'cmdUUID': self.cmdUUID,
-            'tag': self.tag
         }
+
+    def __init__(self, owner, tag, account, group=0, cmdUUID=b'', ):
+        self.account = account
+        self.owner = owner
+        self.group = group
+        self.tag = tag
+        self.cmdUUID = cmdUUID
 
     def __setstate__(self, state):
         self.__dict__.update(state)
 
     def feedbackCommandSucc(self, message):
-        LOG_IFO('gm command succ:', message)
-        self.owner.replyCommand(self.tag, self.account, self.cmdUUID, message, 1)
+        LOG_INFO('gm command succ:', message)
+        self.owner.doReplyCommand(self.tag, self.account, self.cmdUUID, message, 1)
 
     def feedbackCommandFail(self, message):
-        LOG_IFO('gm command fail:', message)
-        self.owner.replyCommand(self.tag, self.account, self.cmdUUID, message, 0)
+        LOG_INFO('gm command fail:', message)
+        self.owner.doReplyCommand(self.tag, self.account, self.cmdUUID, message, 0)
 
 
 class HTTPAgent(GMAgentBase):
@@ -321,11 +307,11 @@ class HTTPAgent(GMAgentBase):
     def __getstate__(self):
         return {
             'owner': self.owner,
-            'account': self.account,
             'group': self.group,
+            'account': self.account,
             'cmdUUID': self.cmdUUID,
-            'tag': self.tag,
             'seqIdStr': self.seqIdStr,
+            'tag': self.tag,
             'cmdStr': self.cmdStr,
             'baseAppBox': self.baseAppBox,
         }
@@ -336,19 +322,19 @@ class HTTPAgent(GMAgentBase):
     def onCommandResult(self, result, retErrMsg, resultObj):
         resultObj = resultObj or {}
         self.replyHttpCmd(result, retErrMsg, resultObj)
-        LOG_IFO('onCommandResult HTTPAgent', result, retErrMsg, resultObj, self.seqIdStr, self.cmdStr, resultObj)
+        LOG_INFO('onCommandResult HTTPAgent', result, retErrMsg, resultObj, self.seqIdStr, self.cmdStr, resultObj)
 
         if self.seqIdStr and self.cmdStr in gameconfig.httpCmdIdempotent():
             gamesql.recordAdminCmdSucc(self.seqIdStr, result, retErrMsg, resultObj)
 
     def feedbackCommandSucc(self, message):
         result = {}
-        LOG_IFO('feedbackCommandSucc HTTPAgent', self.tag, self.cmdUUID, 0, message, result)
+        LOG_INFO('feedbackCommandSucc HTTPAgent', self.tag, self.cmdUUID, 0, message, result)
         self.replyHttpCmd(0, message, result)
 
     def feedbackCommandFail(self, message):
         result = {}
-        LOG_IFO('feedbackCommandFail HTTPAgent', self.tag, self.cmdUUID, -1, message, result)
+        LOG_INFO('feedbackCommandFail HTTPAgent', self.tag, self.cmdUUID, -1, message, result)
         self.replyHttpCmd(-1, message, result)
 
     def replyHttpCmd(self, result, retErrMsg, resultBytes):
@@ -359,61 +345,9 @@ class HTTPAgent(GMAgentBase):
             self.owner.replyHttpCommand(self.tag, self.cmdUUID, result, retErrMsg, resultBytes)
 
 
-class IDIPGMAgent(GMAgentBase):
-    IsAvatar = False
-
-    def __init__(self, owner, tag, account, cmdId, cmdUUID, requestArgs):
-        self.owner = owner
-        self.account = account
-        self.group = gmGroup.MANAGER_GROUP_GOD
-        self.cmdId = cmdId
-        self.uuid = cmdUUID
-        self.requestArgs = requestArgs
-        self.tag = tag
-
-    def __getstate__(self):
-        return {
-            'owner': self.owner,
-            'account': self.account,
-            'uuid': self.uuid,
-            'cmdId': self.cmdId,
-            'requestArgs': self.requestArgs,
-            'tag': self.tag
-        }
-
-    def __setstate__(self, state):
-        self.group = gmGroup.MANAGER_GROUP_GOD
-        self.__dict__.update(state)
-
-    def onCommandResult(self, result, retErrMsg, resultObj):
-        if result == 0 and hasattr(self.requestArgs, 'Serial'):
-            gamesql.recordIDIPCmdSucc(self.requestArgs.Serial)
-        resultBytes = resultObj.toJsonBytes() if resultObj else b''
-        self.owner.replyIDIPCommand(self.tag, self.uuid, result, retErrMsg, resultBytes)
-
-    def idipCheckOpenId(self, player):
-        if isRawPlayer(player):
-            gbid, roleName, accountName, dbid, lv, school = player
-        else:
-            accountName = player.accountName if KBEngine.component == 'baseapp' else player.roleAccount
-
-        if self.requestArgs.OpenId != accountName:
-            self.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
-            return False
-
-        return True
-
-    def idipCheckAccountOpenId(self, account):
-        if isRawAccount(account):
-            accountName = utils.fetchAccountTypeAndName(account)[1]
-        else:
-            accountName = account.accountName
-
-        if self.requestArgs.OpenId != accountName:
-            self.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
-            return False
-
-        return True
+def RSTUB(stub):
+    assert (type(stub) is str)
+    return stub
 
 
 def RARG(index):
@@ -421,279 +355,271 @@ def RARG(index):
     return index
 
 
-def RSTUB(stub):
-    assert (type(stub) is str)
-    return stub
+def _isRSTUB(r):
+    return type(r) is str and r not in (RSU, RONE, RALL, SELF)
 
 
 def _isRARG(r):
     return type(r) is int
 
 
-def _isRSTUB(r):
-    return type(r) is str and r not in (RSU, RONE, RALL, SELF)
-
-
-class ConvertError(Exception):
+class ConvertErrorException(Exception):
     pass
 
 
-class GmCmdArg(object):
+class GmCmdArgBase(object):
     def __init__(self, desc):
-        self.desc = desc
         self.data = ""
+        self.desc = desc
 
-    def getDesc(self):
+    def fetchDesc(self):
         return self.desc
 
     def convert(self, data):
         raise RuntimeError('Not implemented!')
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         raise RuntimeError('Not implemented!')
 
-    def getFullDesc(self):
-        return '%s(%s)' % (self.getDesc(), self.getTypeDesc())
+    def fetchFullDesc(self):
+        return '%s(%s)' % (self.fetchDesc(), self.fetchTypeDesc())
 
-    def getDefault(self):
+    def fetchDefault(self):
         raise RuntimeError('Not implemented!')
 
-    def getErrorStr(self, data):
-        return '%s 不是有效的 %s' % (data, self.getTypeDesc())
-
-    def toStr(self, value):
-        return str(value)
+    def fetchErrorStr(self, data):
+        return '%s 不是有效的 %s' % (data, self.fetchTypeDesc())
 
     def toString(self):
         return str(self.data)
 
+    def toStr(self, value):
+        return str(value)
 
-class Int(GmCmdArg):
-    def __init__(self, desc, min=None, max=None, range=None, default=0):
+
+class Int(GmCmdArgBase):
+    def __init__(self, desc, min=None, max=None, range=None, default=0, **kwargs):
         super(Int, self).__init__(desc)
-
-        self.min = min
         self.max = max
+        self.min = min
         self.range = range
-        self.default = default
         self.data = str(default)
+        self.default = default
 
     def convert(self, data):
         try:
-            d = int(data)
+            _d = int(data)
         except:
-            raise ConvertError(self.getErrorStr(data))
+            raise ConvertErrorException(self.fetchErrorStr(data))
 
-        if self.min != None and d < self.min:
-            raise ConvertError(self.getErrorStr(data))
+        if self.min != None and _d < self.min:
+            raise ConvertErrorException(self.fetchErrorStr(data))
 
-        if self.max != None and d > self.max:
-            raise ConvertError(self.getErrorStr(data))
+        if self.max != None and _d > self.max:
+            raise ConvertErrorException(self.fetchErrorStr(data))
 
-        if self.range != None and d not in self.range:
-            raise ConvertError(self.getErrorStr(data))
+        if self.range != None and _d not in self.range:
+            raise ConvertErrorException(self.fetchErrorStr(data))
         self.data = data
-        return d
+        return _d
 
-    def getTypeDesc(self):
-        extra = ''
+    def fetchTypeDesc(self):
+        _extra = ''
         if self.min != None or self.max != None:
-            extra = '['
+            _extra = '['
             if self.min != None:
-                extra += str(self.min)
-            extra += '-'
+                _extra += str(self.min)
+            _extra += '-'
             if self.max != None:
-                extra += str(self.max)
-            extra += ']'
+                _extra += str(self.max)
+            _extra += ']'
         elif self.range != None:
-            extra = repr(list(self.range)).replace(' ', '')
-        return 'Int' + extra
+            _extra = repr(list(self.range)).replace(' ', '')
+        return 'Int' + _extra
 
-    def getDefault(self):
+    def fetchDefault(self):
         return self.default
 
 
-class Str(GmCmdArg):
-    def __init__(self, desc, default=''):
+class Str(GmCmdArgBase):
+    def __init__(self, desc, default='', **kwargs):
         super(Str, self).__init__(desc)
-
-        self.default = default
         self.data = str(default)
+        self.default = default
 
     def convert(self, data):
         if type(data) != str:
-            raise ConvertError(self.getErrorStr(data))
+            raise ConvertErrorException(self.fetchErrorStr(data))
         self.data = data
         return data
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         return 'Str'
 
-    def getDefault(self):
+    def fetchDefault(self):
         return self.default
 
 
-class TimeStr(GmCmdArg):
-    def __init__(self, desc):
+class TimeStr(GmCmdArgBase):
+    def __init__(self, desc, *args, **kwargs):
         super(TimeStr, self).__init__(desc)
 
-    def convert(self, data):
-        if type(data) != str:
-            raise ConvertError(self.getErrorStr(data))
+    def convert(self, inputData):
+        if type(inputData) != str:
+            raise ConvertErrorException(self.fetchErrorStr(inputData))
         try:
-            self.data = int(time.mktime(time.strptime(data, '%Y.%m.%d.%H.%M.%S')))
+            self.data = int(time.mktime(time.strptime(inputData, '%Y.%m.%d.%H.%M.%S')))
         except:
-            raise ConvertError("%s is not a valid time str. eg.[2015.9.9.20.0.0]" % (data,))
+            raise ConvertErrorException("%s is not a valid time str. eg.[2015.9.9.20.0.0]" % (inputData,))
         return self.data
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         return 'TimeStr'
 
-    def getDefault(self):
+    def fetchDefault(self):
         return utils.curTS()
 
 
-class Float(GmCmdArg):
-    def __init__(self, desc, min=None, max=None, default=0.0):
+class Float(GmCmdArgBase):
+    def __init__(self, desc, min=None, max=None, default=0.0, **kwargs):
         super(Float, self).__init__(desc)
-
-        self.min = min
         self.max = max
+        self.min = min
 
-        self.default = default
         self.data = str(default)
+        self.default = default
 
     def convert(self, data):
         try:
             d = float(data)
         except:
-            raise ConvertError(self.getErrorStr(data))
+            raise ConvertErrorException(self.fetchErrorStr(data))
 
         if self.min != None and d < self.min:
-            raise ConvertError(self.getErrorStr(data))
+            raise ConvertErrorException(self.fetchErrorStr(data))
 
         if self.max != None and d > self.max:
-            raise ConvertError(self.getErrorStr(data))
+            raise ConvertErrorException(self.fetchErrorStr(data))
 
         self.data = data
         return d
 
-    def getTypeDesc(self):
-        extra = ''
+    def fetchTypeDesc(self):
+        _extra = ''
         if self.min != None or self.max != None:
-            extra = '['
+            _extra = '['
             if self.min != None:
-                extra += str(self.min)
-            extra += '-'
+                _extra += str(self.min)
+            _extra += '-'
             if self.max != None:
-                extra += str(self.max)
-            extra += ']'
-        return 'Float' + extra
+                _extra += str(self.max)
+            _extra += ']'
+        return 'Float' + _extra
 
-    def getDefault(self):
+    def fetchDefault(self):
         return self.default
 
 
-class Rgba(GmCmdArg):
-    def __init__(self, desc):
+class Rgba(GmCmdArgBase):
+    def __init__(self, desc, *args, **kwargs):
         super(Rgba, self).__init__(desc)
 
     def convert(self, data):
         try:
-            r, g, b, a = data.split(',')
-            rgba = '%d,%d,%d,%d' % (int(r), int(g), int(b), int(a))
+            _r, _g, _b, _a = data.split(',')
+            rgba = '%d,%d,%d,%d' % (int(_r), int(_g), int(_b), int(_a))
         except:
-            raise ConvertError(self.getErrorStr(data))
+            raise ConvertErrorException(self.fetchErrorStr(data))
         self.data = data
         return rgba
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         return 'R,G,B,A'
 
-    def getDefault(self):
+    def fetchDefault(self):
         return '255,255,255,255'
 
 
-class Python(GmCmdArg):
-    def __init__(self, desc):
+class Python(GmCmdArgBase):
+    def __init__(self, desc, *args, **kwargs):
         super(Python, self).__init__(desc)
 
-    def convert(self, data):
-        self.data = str(data)
-        return data
+    def convert(self, inputData):
+        self.data = str(inputData)
+        return inputData
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         return 'Python'
 
-    def getDefault(self):
+    def fetchDefault(self):
         return ''
 
     def toStr(self, value):
         return 'python'
 
 
-class EntityArg(GmCmdArg):
+class EntityArg(GmCmdArgBase):
     def getEntity(self, arg):
-        raise RuntimeError('Not implemented!')
-
-    def checkValue(self, arg, value):
         raise RuntimeError('Not implemented!')
 
     def getComponent(self):
         raise RuntimeError('Not implemented!')
 
+    def checkValue(self, arg, val):
+        raise RuntimeError('Not implemented!')
+
 
 class NormalEntityArg(EntityArg):
-    def __init__(self, desc, extra=None):
+    def __init__(self, desc, extra=None, **kwargs):
         super(NormalEntityArg, self).__init__(desc)
 
-        if extra and not (type(extra) is tuple and len(extra) == 2):
-            raise RuntimeError('Wrong extra %s' % (extra,))
+        if extra and (type(extra) is not tuple and len(extra) == 2):
+            raise RuntimeError('Wrong extra data %s' % (extra,))
 
         self.extra = extra
 
-    def convert(self, data):
+    def convert(self, inputData):
         if self.extra:
-            return data
+            return inputData
 
         try:
             # 处理@开头的玩家Entity
-            if data.startswith("@"):
-                int(data[1:])
+            if inputData.startswith("@"):
+                int(inputData[1:])
             else:
-                int(data)
+                int(inputData)
         except:
-            raise ConvertError(self.getErrorStr(data))
-        self.data = data
-        return data
+            raise ConvertErrorException(self.fetchErrorStr(inputData))
+        self.data = inputData
+        return inputData
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         if self.extra:
             return 'Str'
         else:
             return 'Int/@数字'
 
-    def getDefault(self):
+    def fetchDefault(self):
         if self.extra:
             return ''
         else:
             return 0
 
-    def checkValue(self, arg, value):
-        if type(value) in (int, str):
+    def checkValue(self, arg, val):
+        if type(val) in (int, str):
             if self.extra:
-                return 'Entity(%s:%s=%s)不存在' % (self.extra[0], self.extra[1], arg)
+                return 'Entity(%s:%s=%s) not exists' % (self.extra[0], self.extra[1], arg)
             else:
-                return 'Entity(%s)不存在' % (arg,)
+                return 'Entity(%s) not exists' % (arg,)
         return ''
 
     def getEntity(self, arg):
-        ent = None
+        _ent = None
         if hasattr(arg, 'id'):
-            ent = KBEngine.entities.get(arg.id)
-        if not _isEntityExist(ent):
+            _ent = KBEngine.entities.get(arg.id)
+        if not _checkEntityExist(_ent):
             return None
-        return ent
+        return _ent
 
     def getMailBox(self, uid, index, gbId):
         gbId = int(gbId)
@@ -702,16 +628,18 @@ class NormalEntityArg(EntityArg):
 
 
 class CellEntity(NormalEntityArg):
-    def __init__(self, desc, extra=None):
+    def __init__(self, desc, extra=None, **kwargs):
         super(CellEntity, self).__init__(desc, extra)
+        return
 
     def getComponent(self):
         return gameconst.CELL
 
 
 class BaseEntity(NormalEntityArg):
-    def __init__(self, desc, extra=None):
+    def __init__(self, desc, extra=None, **kwargs):
         super(BaseEntity, self).__init__(desc, extra)
+        return
 
     def getComponent(self):
         return gameconst.BASE
@@ -719,34 +647,35 @@ class BaseEntity(NormalEntityArg):
 
 # 不是一个GmCmdArg，而是一个proxy
 class Entity(object):
-    def __init__(self, desc, extra=None):
+    def __init__(self, desc, extra=None, **kwargs):
         self.desc = desc
         self.extra = extra
+        return
 
-    def getArg(self, component):
-        if component == gameconst.BASE:
+    def getArg(self, comp):
+        if comp == gameconst.BASE:
             return BaseEntity(self.desc, self.extra)
-        elif component == gameconst.CELL:
+        elif comp == gameconst.CELL:
             return CellEntity(self.desc, self.extra)
         raise Exception()
 
 
-class MgrStub(GmCmdArg):
-    def __init__(self, desc):
+class MgrStub(GmCmdArgBase):
+    def __init__(self, desc, **kwargs):
         super(MgrStub, self).__init__(desc)
 
     def convert(self, data):
         raise RuntimeError('Not implemented!')
 
-    def getTypeDesc(self):
+    def getEntity(self, arg):
         raise RuntimeError('Not implemented!')
 
-    def getEntity(self, arg):
+    def fetchTypeDesc(self):
         raise RuntimeError('Not implemented!')
 
 
 class Player(EntityArg):
-    def __init__(self, desc, raw=False):
+    def __init__(self, desc, raw=False, **kwargs):
         super(Player, self).__init__(desc)
 
         # raw为True代表当这个玩家不在线时，返回该玩家名，而不做错误处理
@@ -757,17 +686,17 @@ class Player(EntityArg):
         if self.raw and not utils.isEntityId(data):
             # 只有gbid, rolename支持离线模式
             if data != '0' and not (utils.isGbId(data) or utils.checkRoleName(data)):
-                raise ConvertError(self.getErrorStr(data))
+                raise ConvertErrorException(self.fetchErrorStr(data))
         self.data = data
         return data
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         if self.raw:
             return '汉字/Long'
         else:
             return '汉字/Int/Long'
 
-    def getDefault(self):
+    def fetchDefault(self):
         return ''
 
     def getMailBox(self, uid, index, gbId):
@@ -778,16 +707,16 @@ class Player(EntityArg):
     def getComponent(self):
         return gameconst.BASE
 
-    def checkValue(self, arg, value):
-        if value == False:
+    def checkValue(self, arg, val):
+        if val == False:
             return '角色(%s)不存在' % (arg,)
-        if value == True:
+        if val == True:
             return '角色(%s)不在线' % (arg,)
-        if not self.raw and type(value) is str:
+        if not self.raw and type(val) is str:
             return '角色(e_rolename:%s)不存在' % (arg,)
-        if not self.raw and utils.isGbId(value):
+        if not self.raw and utils.isGbId(val):
             return '角色(e_gbid:%d)不存在' % (arg,)
-        if self.raw and utils.isEntityId(value):
+        if self.raw and utils.isEntityId(val):
             return '角色(e_eid:%s)不存在' % (arg,)
         return ''
 
@@ -795,64 +724,60 @@ class Player(EntityArg):
         if isRawPlayer(arg):
             return arg
 
-        ent = None
+        _ent = None
         if arg.__class__.__name__ == 'EntityCall':
-            ent = KBEngine.entities.get(arg.id)
+            _ent = KBEngine.entities.get(arg.id)
         elif isinstance(arg, (KBEngine.Entity,)):
-            ent = arg
+            _ent = arg
 
-        if not _isEntityExist(ent):
+        if not _checkEntityExist(_ent):
             return None
 
-        return ent
+        return _ent
 
 
 class PlayerAccount(NormalEntityArg):
-    def __init__(self, desc, raw=False):
+    def __init__(self, desc, raw=False, **kwargs):
         super(PlayerAccount, self).__init__(desc)
         self.raw = raw
 
-    def convert(self, data):
-        self.data = data
-        return data
+    def convert(self, inputData):
+        self.data = inputData
+        return inputData
 
-    def getTypeDesc(self):
+    def fetchTypeDesc(self):
         return 'Str'
 
-    def getDefault(self):
-        return ''
-
-    def checkValue(self, arg, value):
-        if value == False:
-            return '账号(%s)不存在' % (arg,)
-        if value == True:
-            return '账号(%s)不在线' % (arg,)
-
+    def fetchDefault(self):
         return ''
 
     def getComponent(self):
         return gameconst.BASE
 
+    def checkValue(self, arg, val):
+        if val == False:
+            return '账号(%s)不存在' % (arg,)
+        if val == True:
+            return '账号(%s)不在线' % (arg,)
+
+        return ''
+
     def getEntity(self, arg):
-        if isRawAccount(arg):
+        if checkRawAccount(arg):
             return arg
 
-        ent = None
+        _ent = None
         if arg.__class__.__name__ == 'EntityCall':
-            ent = KBEngine.entities.get(arg.id)
+            _ent = KBEngine.entities.get(arg.id)
         elif isinstance(arg, (KBEngine.Entity,)):
-            ent = arg
+            _ent = arg
 
-        if not _isEntityExist(ent):
+        if not _checkEntityExist(_ent):
             return None
 
-        return ent
+        return _ent
 
     def getAccount(self, uid, index, realAccountName):
-        # accountType, _ = utils.fetchAccountTypeAndName(arg)
-        # if not accountType: #centralLogin.ACCOUNT_UNKNOW = 0
-        #     _updateCmdArg(uid, index, None)
-        #     return
         stubs = gameengine.getLoginStubsByAccountName(realAccountName)
         if stubs:
             stubs[0].gmLookUpAccount(gameglobal.localBaseApp, \
@@ -864,288 +789,276 @@ def isRawPlayer(player):
         return True
 
 
-def isRawAccount(account):
+def checkRawAccount(account):
     if type(account) is str:
         return True
 
 
-def getGbIdFromRawPlayer(player):
+def fetchGbIdFromRawPlayer(player):
     return player[0]
 
 
-def getDbIdFromRawPlayer(player):
-    return player[3]
-
-
-GM_CMDS = gameglobal.GM_CMDS
 GM_CMD_FUNC_NAMES = gameglobal.GM_CMD_FUNC_NAMES
 GM_CMD_ARG_PERMISSION_CHECKER = gameglobal.GM_CMD_ARG_PERMISSION_CHECKER
-
-
-def getSuAccount(su):
-    if hasattr(su, 'who'):
-        return su.who
-    elif hasattr(su, 'accountName'):
-        return su.accountName
-    elif hasattr(su, 'roleAccount'):
-        return su.roleAccount
-    else:
-        return None
+GM_CMDS = gameglobal.GM_CMDS
 
 
 class GmCommand(object):
-    def __init__(self, name, func, args, route, kind, desc, component, side, groups, pub, minArgs, logDisable,
-                 callLimitNum=0):
+    def __init__(self, name, funcName, args, route, kind, desc, component, side, groups, pub, minArgs, logDisable,
+                 callLimitNum=0, **kwargs):
         self.name = name
-        self.func = func
+        self.func = funcName
         self.args = list(args)
-        self.route = route
         self.kind = kind
+        self.route = route
         self.desc = desc
-        self.component = component
         self.side = side
+        self.component = component
         self.groups = frozenset(groups)
         self.pub = pub
         self.minArgs = minArgs
-        self.logDisable = logDisable
         self.callLimitNum = callLimitNum
+        self.logDisable = logDisable
 
     def getRealGroup(self):
         return self.groups
 
-    def checkPermission(self, su):
+    def checkPermission(self, superUser):
         # 如果服务器配置文件中设置不检查权限
         if not gameconfig.gmVerifyByGroup():
             return True
 
-        return su.group in self.getRealGroup()
+        return superUser.group in self.getRealGroup()
 
     def checkComponent(self):
         return self.component == COMPONENT or self.component == gameconst.ALL
 
-    def checkPub(self):
+    def isPub(self):
         if not self.pub:
             return False
 
         return True
 
-    def checkKind(self, kind):
+    def isKind(self, kind):
         return self.kind == kind
 
     def checkSide(self, side):
-        return self.side == gmAdmin.ALLSIDE or self.side == side
+        if self.side == gmAdmin.ALLSIDE:
+            return True
 
-    def getCommandDesc(self):
-        return '%s %s' % (self.name, ' '.join([arg.getFullDesc() for arg in self.args]))
+        return self.side == side
 
-    def getHelpInfo(self):
-        args_desc = {}
+    def fetchCommandDesc(self):
+        return '%s %s' % (self.name, ' '.join([arg.fetchFullDesc() for arg in self.args]))
+
+    def fetchHelpInfo(self):
+        _args_desc = {}
         args_default = {}
         for i, arg in enumerate(self.args):
-            args_desc[i] = arg.getDesc()
-            args_default[i] = arg.getDefault()
+            _args_desc[i] = arg.fetchDesc()
+            args_default[i] = arg.fetchDefault()
 
-        return (self.desc, args_desc, args_default)
+        return (self.desc, _args_desc, args_default)
 
     def getMatchInfo(self):
-        return '指令:[%s, ] 作用:%s,  参数:[ %s ]' % (self.name[1:], self.desc, \
-                                                      ' '.join([arg.getDesc() for arg in self.args]))
+        return '指令:[%s, ] 作用:%s,  参数:[ %s ]' % (
+            self.name[1:], 
+            self.desc,
+            ' '.join([_arg.fetchDesc() for _arg in self.args])
+        )
 
     def strArgs(self, args):
-        new_args = []
+        _new_args = []
         for i, arg in enumerate(self.args):
             if type(arg) is Python:
-                new_args.append(args[i])
+                _new_args.append(args[i])
             else:
                 if self.minArgs >= 0 and i >= len(args):
-                    new_args.append(arg.toStr(arg.getDefault()))
+                    _new_args.append(arg.toStr(arg.fetchDefault()))
                 else:
-                    new_args.append(arg.toStr(args[i]))
-        return new_args
+                    _new_args.append(arg.toStr(args[i]))
+        return _new_args
 
     # 增加了对default参数的支持
     def convertArgs(self, args, realArgs):
         error_msgs = []
+        input_arg_count = len(args) 
+        defined_arg_count = len(self.args)
 
         # 参数个数完全匹配或者大于等于最小参数个数
-        if (self.minArgs < 0 and len(self.args) != len(args)) or (
-                self.minArgs >= 0 and (len(args) < self.minArgs or len(args) > len(self.args))):
-            error_msgs.append('参数个数错误')
-            return error_msgs
+        if self.minArgs < 0:
+            # 不限制最小参数 → 必须严格匹配定义的参数数量
+            if input_arg_count != defined_arg_count:
+                error_msgs.append("参数个数错误")
+                return error_msgs
+        else:
+            # 有最小必填参数 → 不能少，也不能多
+            if input_arg_count < self.minArgs or input_arg_count > defined_arg_count:
+                error_msgs.append("参数个数错误")
+                return error_msgs
 
-        for i, arg in enumerate(self.args):
+        for _i, arg in enumerate(self.args):
             try:
-                if self.minArgs >= 0 and i >= len(args):
-                    realArgs.append(arg.getDefault())
+                if self.minArgs >= 0 and _i >= len(args):
+                    realArgs.append(arg.fetchDefault())
                 else:
-                    realArgs.append(arg.convert(args[i]))
-            except ConvertError as inst:
+                    realArgs.append(arg.convert(args[_i]))
+            except ConvertErrorException as inst:
                 error_msgs.append(inst.args[0])
 
         return error_msgs
 
-    def hasEntityArgs(self):
+    def checkHasEntityArgs(self):
         for arg in self.args:
             if isinstance(arg, EntityArg):
                 return True
         return False
 
-    def getEntityArgs(self):
-        args = set()
-        for i, arg in enumerate(self.args):
-            if isinstance(arg, EntityArg):
-                args.add(i)
-        return args
+    def fetchEntityArgs(self):
+        _args = set()
+        for _i, _arg in enumerate(self.args):
+            if isinstance(_arg, EntityArg):
+                _args.add(_i)
+        return _args
 
-    def getArgMailBoxes(self, su, command, args, raw_args=None, reason=""):
+    def fetchArgMailBoxes(self, su, command, args, raw_args=None, reason="", **kwargs):
         if raw_args is None:
             raw_args = []
 
-        uid = utils.generateUUID()
-        need = self.getEntityArgs()
-        data = {'su': su, 'command': command, 'total': 0,
-                'num': 0, 'args': args, 'need': need, 'done': set(), 'reason': reason}
+        _uid = utils.generateUUID()
+        need = self.fetchEntityArgs()
+        _data = {
+            'command': command, 
+            'su': su, 
+            'total': 0,
+            'num': 0, 
+            'args': args, 
+            'need': need, 
+            'reason': reason,
+            'done': set(), 
+        }
+
         if raw_args:
-            data["raw_args"] = raw_args
-        gameglobal.gmCmdData[uid] = data
+            _data["raw_args"] = raw_args
+
+        gameglobal.gmCmdData[_uid] = _data
 
         pending_args = {}
         for i in need:
-            arg = self.args[i]
-            if isinstance(arg, EntityArg):
-                if type(arg) is Player:
-                    # 0代表su自己
-                    if args[i] == '0':
-                        _updateCmdArg(uid, i, su)
-                    elif utils.isEntityId(args[i]):
-                        pending_args.setdefault(arg.getComponent(), []).append(
-                            (i, (int(args[i]), arg.__class__.__name__)))
-                    else:
-                        # 可能传入gbId(long) 或  roleName(str)
-                        arg.getMailBox(uid, i, args[i])
-                elif type(arg) is PlayerAccount:
-                    data['total'] += _getAppCount(gameconst.BASE)
-                    arg.getAccount(uid, i, args[i])
+            _arg = self.args[i]
+            if not isinstance(_arg, EntityArg):
+                continue
+
+            if type(_arg) is Player:
+                # 0代表su自己
+                if args[i] == '0':
+                    _onUpdateCmdArg(_uid, i, su)
+                elif utils.isEntityId(args[i]):
+                    pending_args.setdefault(_arg.getComponent(), []).append(
+                        (i, (int(args[i]), _arg.__class__.__name__)))
                 else:
-                    if arg.extra:
-                        pending_args.setdefault(arg.getComponent(), []).append(
-                            (i, arg.extra + (args[i], arg.__class__.__name__)))
-                    elif args[i].startswith('@'):
-                        arg.getMailBox(uid, i, args[i])
-                    elif args[i] == '0':
-                        _updateCmdArg(uid, i, su)
-                    else:
-                        pending_args.setdefault(arg.getComponent(), []).append(
-                            (i, (int(args[i]), arg.__class__.__name__)))
+                    # 可能传入gbId(long) 或  roleName(str)
+                    _arg.getMailBox(_uid, i, args[i])
+            elif type(_arg) is PlayerAccount:
+                _data['total'] += _getComponentCount(gameconst.BASE)
+                _arg.getAccount(_uid, i, args[i])
+            else:
+                if _arg.extra:
+                    pending_args.setdefault(_arg.getComponent(), []).append(
+                        (i, _arg.extra + (args[i], _arg.__class__.__name__)))
+                elif args[i].startswith('@'):
+                    _arg.getMailBox(_uid, i, args[i])
+                elif args[i] == '0':
+                    _onUpdateCmdArg(_uid, i, su)
+                else:
+                    pending_args.setdefault(_arg.getComponent(), []).append(
+                        (i, (int(args[i]), _arg.__class__.__name__)))
 
         for k in pending_args.keys():
-            data['total'] += _getAppCount(k)
-        for k, v in pending_args.items():
-            _callApps(k, 'gmCommand.findEntity', (gameglobal.localBaseApp, v, uid))
+            _data['total'] += _getComponentCount(k)
+        for _k, _v in pending_args.items():
+            _callApps(_k, 'gmCommand.findEntity', (gameglobal.localBaseApp, _v, _uid))
 
     def reportError(self, data):
         error_msgs = []
-        args = _splitCommand(data['command'])[1]
+        _args = _splitCommand(data['command'])[1]
         LOG_WARN('do command error:', data)
-        for i in data['need']:
-            arg = self.args[i]
-            if isinstance(arg, Player):
-                if data['args'][i] == False:
+        for _i in data['need']:
+            _arg = self.args[_i]
+            if isinstance(_arg, Player):
+                if data['args'][_i] == False:
                     data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
-                elif data['args'][i] == True:
+                elif data['args'][_i] == True:
                     data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_OFFLINE, '', None)
                 else:
                     data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
 
-            elif isinstance(arg, PlayerAccount) and not data['args'][i]:
+            elif isinstance(_arg, PlayerAccount) and not data['args'][_i]:
                 data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
 
-            msg = arg.checkValue(args[i], data['args'][i])
-            if msg:
-                error_msgs.append(msg)
+            _msg = _arg.checkValue(_args[_i], data['args'][_i])
+            if _msg:
+                error_msgs.append(_msg)
         data['su'].feedbackCommandFail('错误，%s' % ('，'.join(error_msgs)))
 
     def checkArgValues(self, data):
-        args = _splitCommand(data['command'])[1]
-        for i in data['need']:
-            if self.args[i].checkValue(args[i], data['args'][i]):
+        _args = _splitCommand(data['command'])[1]
+        for _i in data['need']:
+            if self.args[_i].checkValue(_args[_i], data['args'][_i]):
                 return False
         return True
 
     def buildCmdString(self, args):
-        fields = []
-        fields.append(self.name)
-        for i, arg in enumerate(self.args):
-            if self.minArgs >= 0 and i >= len(args):
-                fields.append(arg.toStr(arg.getDefault()))
+        _fields = []
+        _fields.append(self.name)
+        for _i, arg in enumerate(self.args):
+            if self.minArgs >= 0 and _i >= len(args):
+                _fields.append(arg.toStr(arg.fetchDefault()))
             else:
-                fields.append(arg.toStr(args[i]))
+                _fields.append(arg.toStr(args[_i]))
 
-        return ' '.join(fields)
+        return ' '.join(_fields)
 
     def _playerLog(self, su, ent, data):
-        if not self.logDisable and data != None:
-            sAccount = ""
-            sRoleName = ""
-            if su.__class__.__name__ == "GmProxy":
-                sAccount = su.who
-                sRoleName = su.who
-
-            if self.component == gameconst.CELL:
-                if su.__class__.__name__ == "Avatar":
-                    sAccount = su.roleAccount
-                    sRoleName = su.name
-
-                if isRawPlayer(ent):
-                    pass
-                elif ent.IsAvatar:
-                    pass
-            elif self.component == gameconst.BASE:
-                if su.__class__.__name__ == "Avatar":
-                    sAccount = su.accountName
-                    sRoleName = su.characterName
-                if isRawPlayer(ent):
-                    pass
-                elif ent.__class__.__name__ == "Avatar":
-                    pass
+        pass
 
     def _gmCallback(self, data, name):
         if not data or not name:
             return
 
-        uid = data.get('uid')
+        _uid = data.get('uid')
         target = data.get('target')
-        if not uid or not target:
+        if not _uid or not target:
             return
 
         func = getattr(target, data.get(name), None)
         if func:
-            func(uid)
+            func(_uid)
 
-    def do(self, su, args, data=None):
+    def do(self, superUser, args, data=None):
         if not self.checkComponent():
             return
-        stub = None
+        _stub = None
 
         if self.route == RSU:
-            su = KBEngine.entities.get(su.id)
-            if not _isEntityExist(su):
+            superUser = KBEngine.entities.get(superUser.id)
+            if not _checkEntityExist(superUser):
                 self._gmCallback(data, 'failCallback')
                 return
 
         elif self.route == RONE:
-            # if self.component == gameconst.BASE and not gameengine.isFirstBaseApp():
-            #     return
-            if self.component == gameconst.CELL and not gameengine.isFirstCellApp():
-                return
+            if self.component == gameconst.CELL:
+                if not gameengine.isFirstCellApp():
+                    return
+
         elif self.route == RALL:
             pass
 
         elif _isRARG(self.route):
-            index = self.route
-            ent = self.args[index].getEntity(args[index])
+            _index = self.route
+            ent = self.args[_index].getEntity(args[_index])
 
-            if type(self.args[index]) is Player:
+            if type(self.args[_index]) is Player:
                 if isRawPlayer(ent):
                     if self.component == gameconst.BASE and not gameengine.isFirstBaseApp():
                         self._gmCallback(data, 'failCallback')
@@ -1153,323 +1066,319 @@ class GmCommand(object):
                     if self.component == gameconst.CELL and not gameengine.isFirstCellApp():
                         self._gmCallback(data, 'failCallback')
                         return
-                elif not _isEntityExist(ent):
+                elif not _checkEntityExist(ent):
                     self._gmCallback(data, 'failCallback')
                     return
 
-            if type(self.args[index]) is PlayerAccount:
-                if isRawAccount(ent):
+            if type(self.args[_index]) is PlayerAccount:
+                if checkRawAccount(ent):
                     if self.component == gameconst.BASE and not gameengine.isFirstBaseApp():
                         self._gmCallback(data, 'failCallback')
                         return
-                elif not _isEntityExist(ent):
+                elif not _checkEntityExist(ent):
                     self._gmCallback(data, 'failCallback')
                     return
 
-            if isinstance(self.args[index], (Entity, CellEntity, BaseEntity)):
-                if not _isEntityExist(ent):
+            if isinstance(self.args[_index], (Entity, CellEntity, BaseEntity)):
+                if not _checkEntityExist(ent):
                     self._gmCallback(data, 'failCallback')
                     return
 
-            args[index] = ent
+            args[_index] = ent
 
         elif _isRSTUB(self.route):
             base = gameengine.getGlobalBase(self.route)
-            stub = KBEngine.entities.get(base.id)
-            if not stub:
+            _stub = KBEngine.entities.get(base.id)
+            if not _stub:
                 return
         try:
-            pl = None
+            _pl = None
             for arg in args:
                 if isRawPlayer(arg):
-                    pl = arg
+                    _pl = arg
                     break
                 elif arg.__class__.__name__ == "Avatar":
-                    pl = arg
+                    _pl = arg
                     break
-            if pl:
-                self._playerLog(su, pl, data)
+            if _pl:
+                self._playerLog(superUser, _pl, data)
 
-            if stub:
-                ret = self.func(su, stub, *args)
+            if _stub:
+                _ret = self.func(superUser, _stub, *args)
             else:
-                ret = self.func(su, *args)
+                _ret = self.func(superUser, *args)
 
-            if type(ret) is bool:
-                if ret:
-                    su.feedbackCommandSucc('执行 %s 成功' % (self.name,))
+            if type(_ret) is bool:
+                if _ret:
+                    superUser.feedbackCommandSucc('执行 %s 成功' % (self.name,))
                 else:
-                    su.feedbackCommandFail('执行 %s 失败' % (self.name,))
-            elif type(ret) is str:
+                    superUser.feedbackCommandFail('执行 %s 失败' % (self.name,))
+            elif type(_ret) is str:
                 raise Exception("GM指令(%r)返回参数错误, 正确格式(msg, succ)" % (self.name,))
-            elif type(ret) is tuple:
-                if len(ret) == 2:
-                    succ, msg = ret
+            elif type(_ret) is tuple:
+                if len(_ret) == 2:
+                    succ, msg = _ret
                     if succ:
-                        su.feedbackCommandSucc(msg)
+                        superUser.feedbackCommandSucc(msg)
                     else:
-                        su.feedbackCommandFail(msg)
+                        superUser.feedbackCommandFail(msg)
                 else:
                     raise Exception("GM指令(%r)返回参数错误, 正确格式(msg, succ)" % (self.name,))
             self._gmCallback(data, 'succCallback')
-        except Exception as e:
+        except Exception as exc:
             import sys
             gameengine.exceptHook(*sys.exc_info())
-            LOG_ERR('do command failed:', e)
-            su.feedbackCommandFail('服务端指令执行 %s 失败, 执行没有生效, 请联系服务端开发' % (self.name))
+            LOG_ERR('do command failed:', exc)
+            superUser.feedbackCommandFail('服务端指令执行 %s 失败, 执行没有生效, 请联系服务端开发.' % (self.name))
 
 
 def findEntity(base, args, uid):
-    result = []
-    for i, t in args:
-        if len(t) == 2:
-            arg, argType = t
+    _result = []
+    for _i, _t in args:
+        if len(_t) == 2:
+            arg, argType = _t
             if type(arg) is int:
                 if arg > gameconst.GBID_BASE:
                     # 是GBID
                     ent = _findEntityByGbId(arg)
                     if ent:
-                        result.append((i, ent))
+                        _result.append((_i, ent))
                 else:
                     # 是普通的entityId
                     ent = KBEngine.entities.get(arg)
-                    if _isEntityExist(ent):
+                    if _checkEntityExist(ent):
                         if argType == 'Player':
                             if ent.__class__.__name__ == 'Avatar':
-                                result.append((i, ent))
+                                _result.append((_i, ent))
                             else:
                                 pass
                         else:
-                            result.append((i, ent))
+                            _result.append((_i, ent))
 
-        else:
-            ent_type, prop_name, prop, argType = t
-            pass
-    base.onGmFindEntity(result, uid)
+    base.onGmFindEntity(_result, uid)
 
 
 def _findEntityByGbId(gbId):
-    if KBEngine.component == 'baseapp':
-        for e in KBEngine.entities.values():
-            if hasattr(e, 'gbID') and e.gbID == gbId and _isEntityExist(e):
-                return e
-    elif KBEngine.component == 'cellapp':
-        for e in KBEngine.entities.values():
-            if hasattr(e, 'gbId') and e.gbId == gbId and _isEntityExist(e):
-                return e
+    if KBEngine.component == 'cellapp':
+        for _e in KBEngine.entities.values():
+            if hasattr(_e, 'gbId') and _e.gbId == gbId and _checkEntityExist(_e):
+                return _e
+    elif KBEngine.component == 'baseapp':
+        for _e in KBEngine.entities.values():
+            if hasattr(_e, 'gbID') and _e.gbID == gbId and _checkEntityExist(_e):
+                return _e
     return None
 
 
 def onFindEntity(result, uid):
-    data = gameglobal.gmCmdData.get(uid)
-    if not data:
+    _data = gameglobal.gmCmdData.get(uid)
+    if not _data:
         return
 
     for i, val in result:
-        _updateCmdArg(uid, i, val)
+        _onUpdateCmdArg(uid, i, val)
 
-    data['num'] += 1
-    if data['num'] >= data['total']:
+    _data['num'] += 1
+    if _data['num'] >= _data['total']:
         gameglobal.gmCmdData.pop(uid, None)
-        if data['done'] != data['need']:
-            cmd = _getCommand(data['command'])
-            cmd.reportError(data)
+        if _data['done'] != _data['need']:
+            cmd = _fetchCommand(_data['command'])
+            cmd.reportError(_data)
 
 
 def onLookUpAvatar(base, role, uid, index, raw):
     if base == True and raw:
         gbid, roleName, accoutName, dbid = role
         t = gbid, roleName, accoutName, dbid
-        _updateCmdArg(uid, index, t)
+        _onUpdateCmdArg(uid, index, t)
     else:
-        _updateCmdArg(uid, index, base)
+        _onUpdateCmdArg(uid, index, base)
 
 
 def onFindAccount(result, realAccountName, index, raw, uid):
-    data = gameglobal.gmCmdData.get(uid)
-    if not data:
+    _data = gameglobal.gmCmdData.get(uid)
+    if not _data:
         return
 
     if result:
-        _updateCmdArg(uid, index, result)
+        _onUpdateCmdArg(uid, index, result)
         gameglobal.gmCmdData.pop(uid, None)
     else:
-        accountType, accName = utils.fetchAccountTypeAndName(realAccountName)
-        if accountType == centralLogin.ACCOUNT_UNKNOW:
-            sql = "select accountName from kbe_accountinfos where accountName = {} or accountName={}".format(
-                utils.escape_string(realAccountName), utils.escape_string(accName))
+        _accountType, _accName = utils.fetchAccountTypeAndName(realAccountName)
+        if _accountType == centralLogin.ACCOUNT_UNKNOW:
+            _sql = "select accountName from kbe_accountinfos where accountName = {} or accountName={}".format(
+                utils.escape_string(realAccountName), utils.escape_string(_accName))
         else:
-            sql = "select accountName from kbe_accountinfos where accountName = {}".format(
+            _sql = "select accountName from kbe_accountinfos where accountName = {}".format(
                 utils.escape_string(realAccountName))
 
-        KBEngine.executeRawDatabaseCommand(sql,
-                                           lambda ret, num, insertId, err: _queryAccountNameCallback(ret, num, insertId,
+        KBEngine.executeRawDatabaseCommand(_sql,
+                                           lambda ret, num, insertid, err: _queryAccountNameCallback(ret, num, insertid,
                                                                                                      err, raw,
                                                                                                      realAccountName,
                                                                                                      uid, index))
 
 
-def _queryAccountNameCallback(ret, num, insertId, err, raw, accountName, uid, index):
+def _queryAccountNameCallback(ret, num, insertid, err, raw, accountName, uid, index):
     if len(ret) == 0:
-        _updateCmdArg(uid, index, False)
+        _onUpdateCmdArg(uid, index, False)
     else:
         if raw:
-            _updateCmdArg(uid, index, accountName)
+            _onUpdateCmdArg(uid, index, accountName)
         else:
-            _updateCmdArg(uid, index, True)
+            _onUpdateCmdArg(uid, index, True)
 
     gameglobal.gmCmdData.pop(uid, None)
 
 
-def onBroadcastCmdSucc(uid):
+def onBroadcastCmdSuccess(uid):
     gameglobal.gmCmdData.pop(uid, None)
 
 
 def onBroadcastCmdFail(uid):
-    data = gameglobal.gmCmdData.get(uid)
-    if not data:
+    _data = gameglobal.gmCmdData.get(uid)
+    if not _data:
         return
 
-    cmd = _getCommand(data['command'])
-    compCnt = data.get('failCompCnt', 0)
-    data['failCompCnt'] = compCnt + 1
-    if data['failCompCnt'] >= _getAppCount(cmd.component):
-        data.pop('failCompCnt', 0)
-        retryCnt = data.get('retryCnt', 0)
+    cmd = _fetchCommand(_data['command'])
+    compCnt = _data.get('failCompCnt', 0)
+    _data['failCompCnt'] = compCnt + 1
+    if _data['failCompCnt'] >= _getComponentCount(cmd.component):
+        _data.pop('failCompCnt', 0)
+        retryCnt = _data.get('retryCnt', 0)
         if retryCnt < 3:
-            data['retryCnt'] = retryCnt + 1
-            LOG_ERR('zt: retry gm command', data['command'], retryCnt)
-            gmBCastRealDoCommand(cmd.component, data['su'], data['command'], data['args'], data)
+            _data['retryCnt'] = retryCnt + 1
+            LOG_ERR('zt: retry gm command', _data['command'], retryCnt)
+            gmBCastRealDoCommand(cmd.component, _data['su'], _data['command'], _data['args'], _data)
         else:
-            data['su'].feedbackCommandFail('执行失败: ' + data['command'])
+            _data['su'].feedbackCommandFail('执行失败: ' + _data['command'])
             gameglobal.gmCmdData.pop(uid, None)
 
 
-def _updateCmdArg(uid, index, value):
-    data = gameglobal.gmCmdData.get(uid)
-    if not data:
+def _onUpdateCmdArg(uid, index, value):
+    _data = gameglobal.gmCmdData.get(uid)
+    if not _data:
         return
-    data['args'][index] = value
-    data['done'].add(index)
-    if data['done'] == data['need']:
+    _data['args'][index] = value
+    _data['done'].add(index)
+    if _data['done'] == _data['need']:
         # Netease.gmCmdData.pop(uid, None)
-        cmd = _getCommand(data['command'])
-        if cmd.checkArgValues(data):
-            data.update({'uid': uid, 'target': gameglobal.localBaseApp, 'succCallback': 'onDoCmdSucc',
+        cmd = _fetchCommand(_data['command'])
+        if cmd.checkArgValues(_data):
+            _data.update({'uid': uid, 'target': gameglobal.localBaseApp, 'succCallback': 'onDoCmdSucc',
                          'failCallback': 'onDoCmdFail'})
-            gmBCastRealDoCommand(cmd.component, data['su'], data['command'], data['args'], data)
+            gmBCastRealDoCommand(cmd.component, _data['su'], _data['command'], _data['args'], _data)
         else:
-            cmd.reportError(data)
+            cmd.reportError(_data)
 
 
-def _isEntityExist(ent):
-    if not ent:
+def _checkEntityExist(entity):
+    if not entity:
         return False
-    return COMPONENT != gameconst.CELL or ent.isReal()
+    return COMPONENT != gameconst.CELL or entity.isReal()
 
 
-def _callApps(component, func, args):
+def _callApps(component, funcName, args):
     if component == gameconst.BASE:
-        gameengine.callBaseApps(func, args)
+        gameengine.callBaseApps(funcName, args)
     elif component == gameconst.CELL:
-        gameengine.callCellApps(func, args)
+        gameengine.callCellApps(funcName, args)
     else:
-        gameengine.callBaseApps(func, args)
-        gameengine.callCellApps(func, args)
+        gameengine.callBaseApps(funcName, args)
+        gameengine.callCellApps(funcName, args)
 
 
-def _getAppCount(component):
+def _getComponentCount(component):
     if component == gameconst.BASE:
-        app_count = gameconfig.baseAppCount()
+        _app_count = gameconfig.baseAppCount()
     else:
-        app_count = gameconfig.cellAppCount()
+        _app_count = gameconfig.cellAppCount()
 
-    return app_count
+    return _app_count
 
 
-def _getCommand(command):
+def _fetchCommand(command):
     return GM_CMDS.get(command.split(COMMAND_SPLIT_SEP)[0])
 
 
 def _splitCommand(command):
-    fields = command.split(COMMAND_SPLIT_SEP)
-    return fields[0], fields[1:]
+    _fields = command.split(COMMAND_SPLIT_SEP)
+    return _fields[0], _fields[1:]
 
 
-def _getFirstArg(command):
-    return command.split(COMMAND_SPLIT_SEP)[1]
+def isForwardCommand(cmd):
+    return cmd.startswith('$_')
 
 
-def _isForwardCommand(command):
-    return command.startswith('$_')
-
-
-def _lowerCommand(command):
-    cmd_name, cmd_args = _splitCommand(command.strip())
+def lowerCommand(command):
+    _cmd_name, cmd_args = _splitCommand(command.strip())
     if not cmd_args:
-        return cmd_name.lower()
-    return cmd_name.lower() + ' ' + ' '.join(cmd_args)
+        return _cmd_name.lower()
+    return _cmd_name.lower() + ' ' + ' '.join(cmd_args)
 
 
 def _isMatchCommand(command):
-    cmd_name, cmd_args = _splitCommand(command.strip())
-    return not cmd_args and len(cmd_name) > 1 and cmd_name[-1] == '$'
+    _cmd_name, cmd_args = _splitCommand(command.strip())
+    return not cmd_args and len(_cmd_name) > 1 and _cmd_name[-1] == '$'
 
 
 # decorator for gm commands
-def gm_cmd(cmds, args, route, component, desc='', side=gmAdmin.INSIDE, groups=DEV_GROUPS, pub=False, minArgs=-1,
-           logDisable=False, callLimitNum=0):
+def gm_cmd(cmds, args, route, component, desc='', side=gmAdmin.INSIDE, groups=DEVE_GROUPS, pub=False, minArgs=-1,
+           logDisable=False, callLimitNum=0, **kwargs):
     if type(cmds) is str:
         cmds = (cmds,)
-    assert (type(cmds) is tuple)
     assert (type(args) is tuple)
+    assert (type(cmds) is tuple)
     assert (route in (RSU, RONE, RALL, SELF) or _isRARG(route) or _isRSTUB(route))
-    assert (component in (gameconst.CELL, gameconst.BASE, gameconst.ALL))
     assert (side in (gmAdmin.INSIDE, gmAdmin.OUTSIDE, gmAdmin.ALLSIDE))
+    assert (component in (gameconst.CELL, gameconst.BASE, gameconst.ALL))
     assert (pub in (True, False))
 
     if route == RSU:
         assert (side == gmAdmin.INSIDE)
-    elif _isRARG(route):
-        assert (route < len(args))
-        assert (isinstance(args[route], EntityArg) or type(args[route]) is Entity or isinstance(args[route], MgrStub))
     elif _isRSTUB(route):
         assert (component == gameconst.BASE)
+    elif _isRARG(route):
+        assert (route < len(args))
+        assert (isinstance(args[route], EntityArg)\
+                or type(args[route]) is Entity\
+                or isinstance(args[route], MgrStub))
 
-    has_python_arg = False
+    _has_python_arg = False
     args = list(args)
-    for i, arg in enumerate(args):
-        if type(arg) is Python:
-            has_python_arg = True
-        elif type(arg) is Entity:
-            args[i] = arg.getArg(component)
+    for _i, _arg in enumerate(args):
+        if type(_arg) is Python:
+            _has_python_arg = True
+        elif type(_arg) is Entity:
+            args[_i] = _arg.getArg(component)
         else:
-            assert (isinstance(arg, GmCmdArg))
+            assert (isinstance(_arg, GmCmdArgBase))
 
-    def _gm_cmd(func):
-        global GM_CMDS
+    def _gm_cmd(innerFunc):
         global GM_CMD_FUNC_NAMES
+        global GM_CMDS
 
-        func_name = func.__name__
-        if func_name in GM_CMD_FUNC_NAMES:
-            raise RuntimeError('GM command func %s duplicated!' % (func_name,))
-        GM_CMD_FUNC_NAMES.add(func_name)
+        _func_name = innerFunc.__name__
+        if _func_name in GM_CMD_FUNC_NAMES:
+            raise RuntimeError('GM command innerFunc %s duplicated!' % (_func_name,))
+        GM_CMD_FUNC_NAMES.add(_func_name)
 
-        for cmd_name in cmds:
-            cmd_name = cmd_name.lower()
-            assert (len(cmd_name) > 1 and cmd_name[0] == '$')
-            if has_python_arg and not _isForwardCommand(cmd_name):
+        for _cmd_name in cmds:
+            _cmd_name = _cmd_name.lower()
+            assert (len(_cmd_name) > 1 and _cmd_name[0] == '$')
+            if _has_python_arg and not isForwardCommand(_cmd_name):
                 raise RuntimeError('CM command %s error! Only internal command can use Python arg' % \
-                                   (cmd_name,))
+                                   (_cmd_name,))
 
-            if cmd_name in GM_CMDS:
-                raise RuntimeError('GM command %s duplicated!' % (cmd_name,))
+            if _cmd_name in GM_CMDS:
+                raise RuntimeError('GM command %s duplicated!' % (_cmd_name,))
 
-            GM_CMDS[cmd_name] = GmCommand(cmd_name, func, args, route, '', \
-                                          desc, component, side, groups, pub, minArgs, logDisable,
-                                          callLimitNum=callLimitNum)
+            GM_CMDS[_cmd_name] = GmCommand(
+                _cmd_name, innerFunc, args, route, '',
+                desc, component, side, groups, pub, minArgs, logDisable,
+                callLimitNum=callLimitNum)
 
-        return func
+        return innerFunc
 
     return _gm_cmd
 
@@ -1479,7 +1388,7 @@ def gm_cmd(cmds, args, route, component, desc='', side=gmAdmin.INSIDE, groups=DE
 # 注意：与@gm_cmd相比，增加了第一个参数为类型，如在ITEM.py的gm指令则为gmAdmin.ITEM，直接将带有decorator的指令放在run_in_cell()和run_in_base()就可以了。
 ############################################
 ''' 例如
-def run_in_base():
+def example_run_in_base():
     import gmAdmin
     @update_gm_cmd(gmAdmin.ITEM, '$itemrecoverbyid', (Player('角色名', raw=True), Int('组操作号'), Int('物品id'), Int('物品数量'), Str('guid'), Int('Cash')), RARG(0), gameconst.CELL,\
         '恢复无镜像道具', gmAdmin.ALLSIDE, OM_DEV_EX_GROUPS, True)
@@ -1487,7 +1396,7 @@ def run_in_base():
         pass
     pass
 
-def run_in_cell():
+def example_run_in_cell():
     import gmAdmin
     @update_gm_cmd(gmAdmin.ITEM, '$itemrecoverbyid', (Player('角色名', raw=True), Int('组操作号'), Int('物品id'), Int('物品数量'), Str('guid'), Int('Cash')), RARG(0), gameconst.CELL,\
         '恢复无镜像道具', gmAdmin.ALLSIDE, OM_DEV_EX_GROUPS, True)
@@ -1497,158 +1406,58 @@ def run_in_cell():
 '''
 
 
-def update_gm_cmd(kind, cmds, args, route, component, desc='', side=gmAdmin.INSIDE, groups=DEV_GROUPS, pub=False,
+def update_gm_cmd(kind, cmds, args, route, component, desc='', side=gmAdmin.INSIDE, groups=DEVE_GROUPS, pub=False,
                   minArgs=-1, logDisable=False):
-    if type(cmds) is str:
+    if isinstance(cmds, str):
         cmds = (cmds,)
-    assert (type(cmds) is tuple)
     assert (type(args) is tuple)
+    assert (type(cmds) is tuple)
     assert (type(kind) is str)
-    assert (route in (RSU, RONE, RALL, SELF) or _isRARG(route) or _isRSTUB(route))
     assert (component in (gameconst.CELL, gameconst.BASE))
-    assert (side in (gmAdmin.INSIDE, gmAdmin.OUTSIDE, gmAdmin.ALLSIDE))
+    assert (route in (RSU, RONE, RALL, SELF) or _isRARG(route) or _isRSTUB(route))
     assert (pub in (True, False))
+    assert (side in (gmAdmin.INSIDE, gmAdmin.OUTSIDE, gmAdmin.ALLSIDE))
 
     if route == RSU:
         assert (side == gmAdmin.INSIDE)
-    elif _isRARG(route):
-        assert (route < len(args))
-        assert (isinstance(args[route], EntityArg) or type(args[route]) is Entity)
     elif _isRSTUB(route):
         assert (component == gameconst.BASE)
+    elif _isRARG(route):
+        assert (route < len(args))
+        assert (isinstance(args[route], EntityArg)\
+                or type(args[route]) is Entity)
 
-    has_python_arg = False
+    _has_python_arg = False
     args = list(args)
-    for i, arg in enumerate(args):
-        if type(arg) is Python:
-            has_python_arg = True
-        elif type(arg) is Entity:
-            args[i] = arg.getArg(component)
+    for i, _arg in enumerate(args):
+        if type(_arg) is Python:
+            _has_python_arg = True
+        elif type(_arg) is Entity:
+            args[i] = _arg.getArg(component)
         else:
-            assert (isinstance(arg, GmCmdArg))
+            assert (isinstance(_arg, GmCmdArgBase))
 
-    def _gm_cmd(func):
+    def _gm_cmd(innerFunc):
         global GM_CMDS
         global GM_CMD_FUNC_NAMES
 
-        func_name = func.__name__
-        if func_name not in GM_CMD_FUNC_NAMES:
-            GM_CMD_FUNC_NAMES.add(func_name)
+        _func_name = innerFunc.__name__
+        if _func_name not in GM_CMD_FUNC_NAMES:
+            GM_CMD_FUNC_NAMES.add(_func_name)
 
-        for cmd_name in cmds:
-            cmd_name = cmd_name.lower()
-            assert (len(cmd_name) > 1 and cmd_name[0] == '$')
-            if has_python_arg and not _isForwardCommand(cmd_name):
-                raise RuntimeError('CM command %s error! Only internal command can use Python arg' % \
-                                   (cmd_name,))
+        for _cmd_name in cmds:
+            _cmd_name = _cmd_name.lower()
+            assert (len(_cmd_name) > 1 and _cmd_name[0] == '$')
+            if _has_python_arg and not isForwardCommand(_cmd_name):
+                raise RuntimeError('CM command %s error! Only internal command can use Python _arg' % \
+                                   (_cmd_name,))
 
-            GM_CMDS[cmd_name] = GmCommand(cmd_name, func, args, route, '', \
+            GM_CMDS[_cmd_name] = GmCommand(_cmd_name, innerFunc, args, route, '', \
                                           desc, component, side, groups, pub, minArgs, logDisable)
 
-        return func
+        return innerFunc
 
     return _gm_cmd
-
-
-def isGMCommand(command):
-    cmd_name = _splitCommand(command)[0].lower()
-    return cmd_name in ('$help', '$helpkind') or _isMatchCommand(command) or cmd_name in GM_CMDS
-
-
-def _exportAllCommands(fn=None):
-    pass
-
-
-# 显示拥有权限的GM指令集
-def _showHelp(su):
-    resDecs = []
-    # 新指令
-    for cmd in GM_CMDS.values():
-        if cmd.checkPermission(su) and cmd.checkPub() and not _isForwardCommand(cmd.name) and cmd.desc != "No Desc":
-            resDecs.append("%s:%s" % (cmd.name[1:], cmd.desc))
-
-    if resDecs:
-        su.client.sendGmMsg(resDecs, 'help')
-
-
-# 搜索拥有权限的GM指令集
-def _showHelpSearch(su, keyword):
-    cmds = []
-    cmdPattern = keyword[:-1]
-
-    for cmd in GM_CMDS.values():
-        if cmd.checkPermission(su) and cmd.checkPub() and not _isForwardCommand(cmd.name) and cmd.desc != "No Desc":
-            cmds.append(cmd)
-
-    resCmd = []
-    for cmd in cmds:
-        side = cmd.side
-        if side != gmAdmin.ALLSIDE:
-            if su.id == 0 and side != gmAdmin.OUTSIDE:
-                continue
-            elif su.id != 0 and side != gmAdmin.INSIDE:
-                continue
-
-        if cmdPattern in cmd.name or cmdPattern in cmd.desc:
-            resCmd.append('指令:%s\n作用:%s\n参数:\n%s' % (
-            cmd.name, cmd.desc, '\n'.join([arg.getFullDesc() for arg in cmd.args])))
-
-    if not resCmd:
-        su.feedbackCommandFail('无效匹配')
-        return True
-
-    su.client.sendGmMsg(resCmd, 'gmmatch')
-
-
-def _showHelpKind(su, kind):
-    # 旧指令
-    # cmds = _whatKind(su, su.roleName, su.group, kind)
-    cmds = {}
-
-    # 新指令
-    for cmd_name, cmd in GM_CMDS.items():
-        if cmd.checkPermission(su) and cmd.checkPub() and cmd.checkKind(kind) and not \
-                _isForwardCommand(cmd_name):
-            cmds[cmd_name[1:]] = cmd.getHelpInfo()
-
-    # TODO:
-
-
-#    if cmds:
-#        su.transProxyData(const.PROXY_KEY_CONSOLE, ('someone_console_option', cmds))
-
-def _showMatchCommand(su, command):
-    # 旧指令
-    # cmds = _matchCommand(su, su.roleName, su.group, command[1:])
-    cmds = []
-
-    # 新指令
-    for cmd_name, cmd in GM_CMDS.items():
-        if cmd.checkPermission(su) and cmd.checkPub() and not _isForwardCommand(cmd_name) and \
-                command[:-1] in cmd_name:
-            cmds.append(cmd.getMatchInfo())
-
-    for cmd in cmds:
-        su.feedbackCommandSucc(cmd)
-
-    return
-
-
-def searchCommand(su, role, group, keyword):
-    # 旧指令
-    # cmds = _searchCommand(su, role, group, keyword)
-    cmds = {}
-
-    # 新指令
-    for cmd_name, cmd in GM_CMDS.items():
-        if cmd.checkPermission(su) and cmd.checkPub() and not _isForwardCommand(cmd_name) \
-                and (cmd_name.find(keyword.lower()) != -1 or cmd.desc.lower().find(keyword.lower()) != -1):
-            cmds[cmd_name[1:]] = cmd.getHelpInfo()
-
-    # TODO:
-    #    su.transProxyData(const.PROXY_KEY_CONSOLE, ('someone_console_option', cmds))
-
-    return
 
 
 # 用于cell/impAdmin.py
@@ -1657,37 +1466,37 @@ def init():
 
 
 def doCommandInside(su, command):
-    LOG_IFO("doCommandInside: %s" % command)
+    LOG_INFO("doCommandInside: %s" % command)
 
     if len(command) <= 1:
         return
 
-    command = _lowerCommand(command)
+    command = lowerCommand(command)
     cmd_name, cmd_args = _splitCommand(command)
 
-    if _isForwardCommand(command):
+    if isForwardCommand(command):
         return
 
     _doCommand(su, command, gmAdmin.INSIDE)
 
 
 def doCommandOutside(su, command, reason):
-    LOG_IFO("doCommandOutside: %s" % command)
+    LOG_INFO("doCommandOutside: %s" % command)
 
     if len(command) <= 1:
         return
 
-    command = _lowerCommand(command)
+    command = lowerCommand(command)
 
-    if _isForwardCommand(command):
+    if isForwardCommand(command):
         return
 
     _doCommand(su, command, gmAdmin.OUTSIDE, reason=reason)
 
 
-def _doCommand(su, command, side, args=None, reason=""):
-    cmd_name, cmd_args = _splitCommand(command)
-    cmd = GM_CMDS.get(cmd_name)
+def _doCommand(superUser, command, side, args=None, reason=""):
+    _cmd_name, _cmd_args = _splitCommand(command)
+    cmd = GM_CMDS.get(_cmd_name)
     if not cmd:
         return
 
@@ -1697,78 +1506,79 @@ def _doCommand(su, command, side, args=None, reason=""):
         is_forward_cmd = True
 
     if is_forward_cmd:
-        cmd_args = args
+        _cmd_args = args
     else:
-        if not cmd.checkPermission(su):
-            su.feedbackCommandFail('权限不足')
+        if not cmd.checkPermission(superUser):
+            superUser.feedbackCommandFail('权限不足')
             return
 
         if not cmd.checkSide(side):
-            su.feedbackCommandFail('使用环境错误')
+            superUser.feedbackCommandFail('使用环境错误')
             return
 
     real_args = []
-    error_msgs = cmd.convertArgs(cmd_args, real_args)
+    error_msgs = cmd.convertArgs(_cmd_args, real_args)
     if error_msgs:
-        su.feedbackCommandFail('错误，%s。指令格式：%s 理由: %s' % ('、'.join(error_msgs), cmd.getCommandDesc(), reason))
+        superUser.feedbackCommandFail('错误，%s。指令格式：%s 理由: %s' % ('、'.join(error_msgs), cmd.fetchCommandDesc(), reason))
         return
 
     # 这里检查参数与指令的合法性
     if not is_forward_cmd:
         try:
             if cmd.func.__name__ in GM_CMD_ARG_PERMISSION_CHECKER:
-                if not GM_CMD_ARG_PERMISSION_CHECKER[cmd.func.__name__](su, cmd, real_args):
+                if not GM_CMD_ARG_PERMISSION_CHECKER[cmd.func.__name__](superUser, cmd, real_args):
                     return
         except:
             import sys
             gameengine.exceptHook(*sys.exc_info())
 
-    if not cmd.hasEntityArgs():
-        gmBCastRealDoCommand(cmd.component, su, command, real_args)
+    if not cmd.checkHasEntityArgs():
+        gmBCastRealDoCommand(cmd.component, superUser, command, real_args)
     else:
-        cmd.getArgMailBoxes(su, command, real_args, cmd_args, reason)
+        cmd.fetchArgMailBoxes(superUser, command, real_args, _cmd_args, reason)
     
     
-    srcStr = su.__getstate__() if hasattr(su, '__getstate__') else str(su)
+    srcStr = superUser.__getstate__() if hasattr(superUser, '__getstate__') else str(superUser)
     LogTrackingMgr.LogTrackingMgr.GM_GM(
         srcStr,
-        cmd_name,
-        ' '.join(cmd_args)
+        _cmd_name,
+        ' '.join(_cmd_args)
     )
 
 
 # 直接在系统内部发起的GM调用，不做相关权限检查
 def doCommandSystem(su, command):
-    LOG_IFO("gmCommand system: %s" % command)
+    LOG_INFO("gmCommand system: %s" % command)
 
-    cmd_name, cmd_args = _splitCommand(command)
-    cmd = GM_CMDS.get(cmd_name)
+    _cmd_name, _cmd_args = _splitCommand(command)
+    cmd = GM_CMDS.get(_cmd_name)
     if not cmd:
         return
 
     real_args = []
-    error_msgs = cmd.convertArgs(cmd_args, real_args)
+    error_msgs = cmd.convertArgs(_cmd_args, real_args)
     if error_msgs:
-        su.feedbackCommandFail('错误，%s。指令格式：%s' % ('、'.join(error_msgs), cmd.getCommandDesc(),))
+        su.feedbackCommandFail('错误，%s。指令格式：%s' % ('、'.join(error_msgs), cmd.fetchCommandDesc(),))
         return
 
-    if not cmd.hasEntityArgs():
+    if not cmd.checkHasEntityArgs():
         gmBCastRealDoCommand(cmd.component, su, command, real_args)
     else:
-        cmd.getArgMailBoxes(su, command, real_args, cmd_args, '系统内部执行')
+        cmd.fetchArgMailBoxes(su, command, real_args, _cmd_args, '系统内部执行')
 
 
 def getBaseMailBox(comp):
     if utils.checkBaseMailBox(comp):
         return comp
+
     if utils.checkCellMailBox(comp):
+        return comp.base
+
+    if KBEngine.component == 'cellapp':
         return comp.base
 
     if KBEngine.component == 'baseapp':
         return comp
-
-    if KBEngine.component == 'cellapp':
-        return comp.base
 
 
 def getCellMailBox(comp):
@@ -1778,65 +1588,56 @@ def getCellMailBox(comp):
     if utils.checkBaseMailBox(comp):
         return comp.cell
 
-    if KBEngine.component == 'cellapp':
-        return comp
-
     if KBEngine.component == 'baseapp':
         return comp.cell
 
+    if KBEngine.component == 'cellapp':
+        return comp
 
-def gmBCastRealDoCommand(component, su, command, real_args, data=None):
-    cmd_name = _splitCommand(command)[0]
-    cmd = GM_CMDS.get(cmd_name)
 
-    if cmd.route == RONE:
-        if cmd.component == gameconst.BASE:
-            baseappBox = random.choice(gameengine.getAllBaseApps())
-            baseappBox.doRONECommand((su, command, real_args, data))
+def gmBCastRealDoCommand(component, superUser, command, real_args, data=None):
+    _cmd_name = _splitCommand(command)[0]
+    _cmd = GM_CMDS.get(_cmd_name)
+
+    if _cmd.route == RONE:
+        if _cmd.component == gameconst.BASE:
+            _baseappBox = random.choice(gameengine.getAllBaseApps())
+            _baseappBox.doRONECommand((superUser, command, real_args, data))
         else:
-            _callApps(component, 'gmCommand.realDoCommand', (su, command, real_args, data))
-    elif cmd.route == SELF:
-        if cmd.component == gameconst.BASE:
-            gameglobal.localBaseApp.doRONECommand((su, command, real_args, data))
+            _callApps(component, 'gmCommand.realDoCommand', (superUser, command, real_args, data))
+    elif _cmd.route == SELF:
+        if _cmd.component == gameconst.BASE:
+            gameglobal.localBaseApp.doRONECommand((superUser, command, real_args, data))
         else:
-            LOG_ERR("gmCommand route error", cmd.route, cmd.component)
-    elif cmd.route == RSU or (_isRARG(cmd.route) and su == real_args[cmd.route]):
-        cond = (KBEngine.component, cmd.component)
-        if cmd.checkComponent():
-            realDoCommand(su, command, real_args, data)
+            LOG_ERR("gmCommand route error", _cmd.route, _cmd.component)
+    elif _cmd.route == RSU or (_isRARG(_cmd.route) and superUser == real_args[_cmd.route]):
+        cond = (KBEngine.component, _cmd.component)
+        if _cmd.checkComponent():
+            realDoCommand(superUser, command, real_args, data)
         elif cond == ('baseapp', gameconst.CELL):
-            getCellMailBox(su).realDoGmCommandProxy((su, command, real_args, data))
+            getCellMailBox(superUser).realDoGmCommandProxy((superUser, command, real_args, data))
         elif cond == ('cellapp', gameconst.BASE):
-            getBaseMailBox(su).realDoGmCommandProxy((su, command, real_args, data))
+            getBaseMailBox(superUser).realDoGmCommandProxy((superUser, command, real_args, data))
         else:
             gameengine.panicStack("wrong cond %s %s" % (cond, command))
     else:
-        _callApps(component, 'gmCommand.realDoCommand', (su, command, real_args, data))
+        _callApps(component, 'gmCommand.realDoCommand', (superUser, command, real_args, data))
 
 
 def realDoCommand(su, command, args, data=None):
-    cmd_name = _splitCommand(command)[0]
-    GM_CMDS.get(cmd_name).do(su, args, data)
+    _cmd_name = _splitCommand(command)[0]
+    GM_CMDS.get(_cmd_name).do(su, args, data)
 
 
 def forwardGMCommand(su, cmdName, *args):
     cmdName = cmdName.lower()
-    cmd = GM_CMDS.get(cmdName)
-    _callApps(gameconst.BASE, 'gmCommand.realForwardCommand', (su, cmd.buildCmdString(args), cmd.strArgs(args)))
+    _cmd = GM_CMDS.get(cmdName)
+    _callApps(gameconst.BASE, 'gmCommand.realForwardCommand', (su, _cmd.buildCmdString(args), _cmd.strArgs(args)))
 
 
-def realForwardCommand(su, command, args):
+def realForwardCommand(superUser, command, args):
     if gameengine.isFirstBaseApp():
-        _doCommand(su, command, gmAdmin.ALLSIDE, args)
-
-
-def gm_arg_permission_checker(checkFunc):
-    def _gm_arg_checker(func):
-        global GM_CMD_ARG_PERMISSION_CHECKER
-        GM_CMD_ARG_PERMISSION_CHECKER[func.__name__] = checkFunc
-        return func
-
-    return _gm_arg_checker
+        _doCommand(superUser, command, gmAdmin.ALLSIDE, args)
 
 
 # 转发到各baseapp/cellapp的gm调用
@@ -1845,53 +1646,4 @@ def gm_arg_permission_checker(checkFunc):
 # @param component: gameconst.BASE/gameconst.CELL/-1 BASE表示发送到所有的baseapp CELL表示发送到所有的cellapp -1表示发送到所有的baseapp和cellapp 如果为str表示某个baseapp/cellapp servername(ip:port)
 # @param realFunc:实际执行的gm函数名，返回值类型必须为tuple(Bool,resultObj)
 # @param callback:收集完所有结果后的回调函数  如果为None则简单反馈执行成功  如果为True 返回JOSN格式化的结果数组  如果出错返回JSON格式化的错误信息数组
-def callServers(su, params, component, realFunc, callback):
-    maxNum = 0
-    if component == gameconst.BASE:
-        maxNum = gameconfig.desiredBaseApps()
-    elif component == gameconst.CELL:
-        maxNum = gameconfig.desiredCellApps()
-    else:
-        maxNum = gameconfig.desiredBaseApps() + gameconfig.desiredCellApps()
-    uid = 0
-    if not isinstance(component, str):
-        uid = utils.generateUUID()
-        gameglobal.gmCmdData[uid] = {'num': 0, 'maxNum': maxNum}
 
-    if component == gameconst.BASE:
-        forwardGMCommand(su, '$_callserversbase', component, realFunc, params,
-                       (gameglobal.localBaseApp, uid, callback, params))
-    elif component == gameconst.CELL:
-        forwardGMCommand(su, '$_callserverscell', component, realFunc, params,
-                       (gameglobal.localBaseApp, uid, callback, params))
-    else:
-        forwardGMCommand(su, '$_callserversbase', component, realFunc, params,
-                       (gameglobal.localBaseApp, uid, callback, params))
-        forwardGMCommand(su, '$_callserverscell', component, realFunc, params,
-                       (gameglobal.localBaseApp, uid, callback, params))
-
-
-def updateUserPrivileges(info):
-    gameglobal.GM_USER_PRIVILEGES[info['urs']] = info
-
-
-def updateGroupPrivileges(group, cmds):
-    gameglobal.GM_CMD_GROUPS = {k: v for k, v in gameglobal.GM_CMD_GROUPS.items() if v != group}
-    for cmd in cmds:
-        gameglobal.GM_CMD_GROUPS[cmd] = group
-
-
-def delUserPrivileges(urs):
-    if urs in gameglobal.GM_USER_PRIVILEGES:
-        del gameglobal.GM_USER_PRIVILEGES[urs]
-
-
-def canSkipCallLimitCheck(group):
-    return group in GOD_GROUPS
-
-
-def removeOldGmCommand(cmds):
-    if cmds not in GM_CMDS:
-        return
-    GM_CMD_FUNC_NAMES.discard(GM_CMDS[cmds].func.__name__)
-    GM_CMDS.pop(cmds, None)

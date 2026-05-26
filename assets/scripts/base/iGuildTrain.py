@@ -20,7 +20,7 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AAC_DD
 
 class IGuildTrain(object):
     def resetGuildTrain(self, exposed):
-        LOG_IFO('resetGuildTrain:', self.gbID)
+        LOG_INFO('resetGuildTrain:', self.gbID)
         if not self.trainDic:
             LOG_WARN('resetGuildTrain but train is empty', self.gbID)
             return
@@ -118,7 +118,7 @@ class IGuildTrain(object):
         return dwVal
 
     def upgradeTrainLevel(self, exposed, trainId, targetLevel):
-        LOG_IFO('upgradeTrainLevel:', trainId, targetLevel)
+        LOG_INFO('upgradeTrainLevel:', trainId, targetLevel)
         gtuData = GT_GTUD.datas.get(targetLevel)
         if self._checkCanUpgradeTrainLevel(trainId, targetLevel, gtuData) is None:
             return
@@ -146,7 +146,7 @@ class IGuildTrain(object):
         self.trainDic[_trainId] = _targetLevel
 
         score = self._calcGuildTrainScore()
-        LOG_IFO('onCheckUpgradeTrainLevelResult:', result, ctx, self.trainDic, score)
+        LOG_INFO('onCheckUpgradeTrainLevelResult:', result, ctx, self.trainDic, score)
         self.cell.onUpgradeTrainLevel(_trainId, _targetLevel, score)
         self.client.onUpdateGuildTrains([{
             'trainId': _trainId,

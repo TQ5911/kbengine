@@ -73,6 +73,13 @@ class EquipDropMgrVal(userType.UserSingleType):
 
         _dropVal.state = dropType
 
+    def onTakeTypeChange(self, uniqueId, dropType):
+        _takeVal = self.takerDict.get(uniqueId, None)
+        if not _takeVal:
+            return
+
+        _takeVal.state = dropType
+
     def fetchNeedRemoveDropEquip(self):
         _val = None
         for _dropVal in list(self.dropDic.values()):
@@ -95,7 +102,8 @@ class EquipDropMgrVal(userType.UserSingleType):
                    killerName,
                    endTime,
                    dropType,
-                   isNotify):
+                   isNotify,
+                   dropTime):
         _dropVal = EquipDropInfo.EquipDropVal(
             uniqueId, 
             price, 
@@ -106,6 +114,7 @@ class EquipDropMgrVal(userType.UserSingleType):
             collEndTime,
             killerName,
             endTime,
+            dropTime
         )
         self.dropDic[uniqueId] = _dropVal
         if isNotify:
@@ -139,14 +148,14 @@ class EquipDropMgrVal(userType.UserSingleType):
     def getTakerVal(self, uniqueId):
         return self.takerDict.get(uniqueId, None)
 
-    def addTaker(self, avatar, uniqueId, equip, endTime, state, price, isNotify):
-        _takerVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, state, price)
+    def addTaker(self, avatar, uniqueId, equip, endTime, state, price, isNotify, redeemWaitTime):
+        _takerVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, state, price, redeemWaitTime, False)
         self.takerDict[uniqueId] = _takerVal
         if isNotify:
             avatar.client.onPickNewEquipDrop(_takerVal)
 
-    def addTakerWait(self, uniqueId, equip, endTime, price):
-        _takerWaitVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, gameconst.DropType.TYPE_REDEEM, price)
+    def addTakerWait(self, uniqueId, equip, endTime, price, redeemWaitTime, hasPrice):
+        _takerWaitVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, gameconst.DropType.TYPE_REDEEM, price, redeemWaitTime, hasPrice)
         self.takerWaitDict[uniqueId] = _takerWaitVal
 
     def removeTaker(self, avatar, uniqueId, isNotify=True):
@@ -162,13 +171,15 @@ class EquipDropMgrVal(userType.UserSingleType):
     
     def doDealDropEquipExpire(self, avatar):
         _endTime = utils.curTS() + 5
-        for _dropVal in list(self.dropDic.values()):
+        # 掉落时间结束
+        for _dropVal in self.dropDic.values():
             if _dropVal.endTime < _endTime:
                 gameengine.getGlobalBase('DropStub').doCheckDropExpire(_dropVal.uniqueId, avatar.gbID, avatar)
 
-        for _takerVal in list(self.takerDict.values()):
-            if _takerVal.endTime < _endTime:
-                gameengine.getGlobalBase('DropStub').doCheckDropExpire(_takerVal.uniqueId, avatar.gbID, avatar)
+        # 赎回倒计时结束
+        for _takerVal in self.takerDict.values():
+            if _takerVal.redeemWaitTime < _endTime:
+                gameengine.getGlobalBase('DropStub').doCheckRedeemExpire(_takerVal.uniqueId, avatar.gbID, avatar)
 
     def checkCouldTakeDrop(self, uniqueId):
         if uniqueId in self.dropDic:
@@ -209,7 +220,6 @@ class EquipDropMgrVal(userType.UserSingleType):
             "lockTime": self.lockTime,
             "timerData": [timerData.toEquipDropMgrTimerDataSavedDict() for timerData in self.timerList],
         }
-
 
 class EquipDropMgrInfo(object):
     def createObjFromDict(self, dataDict):

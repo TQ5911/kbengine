@@ -33,10 +33,10 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
         owner.debug("执行初始化状态逻辑 当前地图ID:%s" % curMapId)
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
         if int(curMapId) == owner.dstMapId:
-            if owner.hasState(gameconst.State.Death):
+            if owner.hasState(gameconst.StateEnum.Death):
                 owner.runGmCommand("$reliveToPos 0 393,7,154 10000")
                 return
             for idx, itemId in enumerate(owner.itemIds):
@@ -63,10 +63,10 @@ class BotAIState_Combat(AIState):
 
     def execute(self, owner):
         owner.debug("执行战斗状态逻辑 %s" % owner.state)
-        if owner.hasState(gameconst.State.Death) or not owner.goBattleArea():
+        if owner.hasState(gameconst.StateEnum.Death) or not owner.goBattleArea():
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
             return
-        if owner.hasState(gameconst.State.Fighting):
+        if owner.hasState(gameconst.StateEnum.Fighting):
             return
 
     def exit(self, owner):
@@ -86,7 +86,7 @@ class BotAIState_GoBattleArea(AIState):
             return
         self.stateTime = now
         owner.debug("执行前往战斗区域状态逻辑 %s %s" % (owner.state, str(owner.position)))
-        if owner.hasState(gameconst.State.Death):
+        if owner.hasState(gameconst.StateEnum.Death):
             owner.runGmCommand("$reliveToPos 0 393,7,154 10000")
             return
         if owner.goBattleArea():
@@ -208,7 +208,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             if self.player.hp / self.player.fullHp < 0.5:
                 self.runGmCommand(f'$addbuff 0 64000069 1') # 满血
             return True
-        if self.hasState(gameconst.State.Moving):
+        if self.hasState(gameconst.StateEnum.Moving):
             return False
         dstPos = botUtils.getRandomPosVec3(self.dstPos, self.pointRadius)
         self.moveTo(dstPos)

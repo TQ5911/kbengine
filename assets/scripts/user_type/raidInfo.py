@@ -6,14 +6,14 @@ import userType
 import raid
 
 
-class RaidValInfo(userType.UserSTDSoleInfo):
+class RaidValInfo(userType.UserSTSoleInfo):
 
     @property
     def cls(self):
         return raid.RaidVal
 
 
-class PlayerRaidCacheValInfo(userType.UserSTDSoleInfo):
+class PlayerRaidCacheValInfo(userType.UserSTSoleInfo):
 
     @property
     def cls(self):

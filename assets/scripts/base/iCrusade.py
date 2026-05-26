@@ -12,10 +12,11 @@ import LogTrackingMgr
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import teamDunChallenge_config as TDC_CFG
 import gameconst
+import actionContext
 
 class ICrusade(object):
     def onCrusadeDailyRewardNumUpdate(self, *args):
-        LOG_IFO('onCrusadeDailyRewardNumUpdate::')
+        LOG_INFO('onCrusadeDailyRewardNumUpdate::')
         dailyRewardNum = self.crusadeInfo.dailyRewardNum
         if self.crusadeInfo.rewardNumber < dailyRewardNum:
             self.crusadeInfo.addRewardNumByDefault(dailyRewardNum - self.crusadeInfo.rewardNumber)
@@ -25,7 +26,7 @@ class ICrusade(object):
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def increaseCrusadeRewardNumber(self, exposed, coinNum, itemNum):
-        LOG_IFO('increaseCrusadeRewardNumber::', coinNum, itemNum)
+        LOG_INFO('increaseCrusadeRewardNumber::', coinNum, itemNum)
         retCoin = self._useCoinToIncreaseCrusadeRewardNumber(coinNum, {}, needMsg = False)
         retItem = self._useItemToIncreaseCrusadeRewardNumber(itemNum, {}, needMsg = False)
         if retCoin or retItem:
@@ -38,17 +39,17 @@ class ICrusade(object):
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
-        LOG_IFO('useItemToIncreaseCrusadeRewardNumber::', useNum)
+        LOG_INFO('useItemToIncreaseCrusadeRewardNumber::', useNum)
         self._useItemToIncreaseCrusadeRewardNumber(useNum, {})
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
-        LOG_IFO('useCoinToIncreaseCrusadeRewardNumber::', useNum)
+        LOG_INFO('useCoinToIncreaseCrusadeRewardNumber::', useNum)
         self._useCoinToIncreaseCrusadeRewardNumber(useNum, {})
 
     def _useItemToIncreaseCrusadeRewardNumber(self, itemNum, extra, needMsg = True):
         itemId = int(TDC_CFG.datas['rewardNumItem']['value'])
-        LOG_IFO('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra, needMsg)
+        LOG_INFO('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra, needMsg)
         if itemNum <= 0:
             return False
 
@@ -68,14 +69,14 @@ class ICrusade(object):
         return True
     
     def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra, needMsg = True):
-        LOG_IFO('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
+        LOG_INFO('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
         self.crusadeInfo.addRewardNumByUseSpecialItem(itemNum)
         self.crusadeInfo = self.crusadeInfo
         if needMsg:
             self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(itemNum)])
 
     def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
-        LOG_IFO('_useCoinToIncreaseCrusadeRewardNumber::', useNum, extra, needMsg)
+        LOG_INFO('_useCoinToIncreaseCrusadeRewardNumber::', useNum, extra, needMsg)
         if useNum <= 0:
             return False
         
@@ -100,7 +101,7 @@ class ICrusade(object):
         return True
     
     def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
-        LOG_IFO('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
+        LOG_INFO('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
         self.crusadeInfo.addRewardNumByUseCoin(useNum)
         self.crusadeInfo = self.crusadeInfo
         if needMsg:
@@ -125,4 +126,4 @@ class ICrusade(object):
             self.getRoleCacheAttr('level')
         )
         
-        LOG_IFO('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)
+        LOG_INFO('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

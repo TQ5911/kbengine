@@ -48,7 +48,7 @@ class INewbie(object):
                         self.taskInfo.tasks.pop(subTaskId, None)
 
                     self.taskInfo.tasks.pop(taskId, None)
-                    self.taskInfo.taskRecordDic[taskId] = gameconst.TaskStat.TASK_STAT_SUBMITTED
+                    self.taskInfo.taskRecordDic[taskId] = gameconst.TaskStatEnum.TASK_STAT_SUBMITTED
                     if taskId in V_VD.taskDic:
                         self.updateVisibleByList(V_VD.taskDic[taskId])
 
@@ -118,7 +118,7 @@ class INewbie(object):
                          'playerGbId': self.gbID,
                          'teamUUID': 0,
                          'extra': {}}}
-        options = complexTeleportOption.ComplexTeleportOptions()
+        options = complexTeleportOption.ComplexTeleportOpt()
         callback1, args1 = '_afterEnter_singleDungeon', (spaceNo, spaceNo, options, context)
         self.cellData.setdefault('tempMiscProps', {})
         self.cellData['tempMiscProps'][gameconst.EntityPropsEnum.newbieCreateCellCB] = ((callback1, args1),)

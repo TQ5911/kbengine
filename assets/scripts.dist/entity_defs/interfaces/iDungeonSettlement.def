@@ -1,0 +1,101 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+        <chiefPassRecords>
+            <Type>          DUNGEON_PASS_RECRODS    </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </chiefPassRecords>
+
+        <crusadePassRecords>
+            <Type>          DUNGEON_PASS_RECRODS    </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </crusadePassRecords>
+
+        <guildBossPassRecords>
+            <Type>          DUNGEON_PASS_RECRODS    </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </guildBossPassRecords>
+
+        <guildBossRewardWeeklyCount>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </guildBossRewardWeeklyCount>
+    </Properties>
+
+    <CellMethods>
+        <getSettlementRankList> <Exposed/>
+            <Arg>   UINT8       </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+        </getSettlementRankList>
+    </CellMethods>
+
+    <BaseMethods>
+        <onDungeonSettlement>
+            <Arg>   UINT8                                                  </Arg>
+            <Arg>   SPACE_NO                                               </Arg>
+            <Arg>   DUNGEON_NO                                             </Arg>
+            <Arg>   UUID                                                   </Arg>
+            <Arg>   UUID                                                   </Arg>
+            <Arg>   UINT8                                                  </Arg>
+            <Arg>   MAILBOX                                                </Arg>
+            <Arg>   PYTHON                                                 </Arg>
+        </onDungeonSettlement>
+
+    </BaseMethods>
+
+    <ClientMethods>
+        <onDungenFinishRewards>
+            <Arg>  UINT8                                                   </Arg>
+            <Arg>  DUNGEON_NO                                              </Arg>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+            <Arg>  UINT16                                                  </Arg>
+        </onDungenFinishRewards>
+
+        <onDungeonChallengeSettlement>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onDungeonChallengeSettlement>
+
+        <onDungeonCompleteDungeonData>
+            <Arg>   UUID                                                   </Arg>
+            <Arg>   CLI_DUNGEON_DATA                                       </Arg>
+        </onDungeonCompleteDungeonData>
+
+        <onDungeonCompleteSettlementData>
+            <Arg>   UUID                                                         </Arg>
+            <Arg>   ARRAY       <of>     CLI_DUNGEON_SETTLEMENT_DATA     </of>   </Arg>
+        </onDungeonCompleteSettlementData>
+
+        <onGetSettlementRankList>
+            <Arg>   UINT8       </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   ARRAY       <of>        CLI_DUNGEON_SETTLEMENT_RANK_DATA      </of>  </Arg>
+        </onGetSettlementRankList>
+
+        <onDungeonCompleted>
+            <Arg>       DUNGEON_NO      </Arg>
+            <Arg>       BOOL            </Arg>
+            <Arg>       INT32           </Arg>
+            <Arg>       INT32           </Arg>
+        </onDungeonCompleted>
+
+        <onNotifyStartBattleCD>
+            <Arg>       DUNGEON_NO      </Arg>
+            <Arg>       INT64           </Arg>
+        </onNotifyStartBattleCD>
+    </ClientMethods>
+
+</root>
+

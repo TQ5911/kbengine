@@ -584,5 +584,8 @@ datas = _tools.RODict({
     }),
     "AbanRemoveItems": _tools.RODict({
         "value": _tools.ROList([])
+    }),
+    "UnlockCustomText": _tools.RODict({
+        "value": ''
     })
 })

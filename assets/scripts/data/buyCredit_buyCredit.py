@@ -295,66 +295,6 @@ datas = _tools.RODict({
         "normalBuyExReward": 0,
         "reward": _tools.ROList([40000165])
     }),
-    68000200: _tools.RODict({
-        "ID": 68000200,
-        "name": "节日礼包1",
-        "type": 7,
-        "subType": 0,
-        "price": 68,
-        "priceID": 0,
-        "quantity": 0,
-        "VIPPoint": 68,
-        "productID": "",
-        "limitType": 0,
-        "limitNumber": 0,
-        "amount": 3,
-        "credit": 0,
-        "firstBuyExRewardType": 0,
-        "firstBuyExReward": 0,
-        "normalBuyExRewardType": 0,
-        "normalBuyExReward": 0,
-        "reward": _tools.ROList([40000015])
-    }),
-    68000201: _tools.RODict({
-        "ID": 68000201,
-        "name": "节日礼包2",
-        "type": 7,
-        "subType": 0,
-        "price": 128,
-        "priceID": 0,
-        "quantity": 0,
-        "VIPPoint": 128,
-        "productID": "",
-        "limitType": 0,
-        "limitNumber": 0,
-        "amount": 3,
-        "credit": 0,
-        "firstBuyExRewardType": 0,
-        "firstBuyExReward": 0,
-        "normalBuyExRewardType": 0,
-        "normalBuyExReward": 0,
-        "reward": _tools.ROList([40000016])
-    }),
-    68000202: _tools.RODict({
-        "ID": 68000202,
-        "name": "节日礼包3",
-        "type": 7,
-        "subType": 0,
-        "price": 328,
-        "priceID": 0,
-        "quantity": 0,
-        "VIPPoint": 328,
-        "productID": "",
-        "limitType": 0,
-        "limitNumber": 0,
-        "amount": 3,
-        "credit": 0,
-        "firstBuyExRewardType": 0,
-        "firstBuyExReward": 0,
-        "normalBuyExRewardType": 0,
-        "normalBuyExReward": 0,
-        "reward": _tools.ROList([40000017])
-    }),
     68000300: _tools.RODict({
         "ID": 68000300,
         "name": "月卡1",
@@ -406,14 +346,14 @@ ProductIdDic = _tools.RODict({
 BuyCreditMainTypeDic = _tools.RODict({ 
         1:[68000001, 68000002, 68000003, 68000004, 68000005, 68000006],
         2:[68000300, 68000301],
-        7:[68000101, 68000102, 68000103, 68000104, 68000105, 68000106, 68000107, 68000108, 68000200, 68000201, 68000202],
+        7:[68000101, 68000102, 68000103, 68000104, 68000105, 68000106, 68000107, 68000108],
 })
 
 
 BuyCreditAllTypeDic = _tools.RODict({ 
         100:[68000001, 68000002, 68000003, 68000004, 68000005, 68000006],
         202:[68000300, 68000301],
-        700:[68000101, 68000102, 68000103, 68000104, 68000105, 68000106, 68000107, 68000108, 68000200, 68000201, 68000202],
+        700:[68000101, 68000102, 68000103, 68000104, 68000105, 68000106, 68000107, 68000108],
 })
 
 

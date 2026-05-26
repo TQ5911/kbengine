@@ -52,9 +52,17 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         elif userData == gametimer.SIEGE_WAR_STUB_SYNC_JUNXUQIXIE_LEVEL:
             self.syncJunXuQiXieLevel()
 
+    def checkAnnouncement(self, state, timestamp):
+        uaType = gameconst.SIEGE_WAR_STATE_2_UPDATE_ANNOUNCEMENT_TYPE.get(state, gameconst.UpdateAnnouncementType.NULL)
+        LOG_DBG('checkAnnouncement', state, timestamp, uaType)
+        if uaType == gameconst.UpdateAnnouncementType.NULL:
+            return
+        gameengine.getGlobalBase('ActStub').updateAnnouncement(gameconst.AnnouncementType.SIEGE_WAR, uaType, utils.curTS(), timestamp)
+
     #跨服同步城战状态
     def setSiegeWarState(self, state, timestamp):
         LOG_DBG('[lj]set siege war state from cross server', state, timestamp)
+        self.checkAnnouncement(state, timestamp)
         #广播
         if self.siegeWarState != state or self.siegeWarStateEndTime != timestamp or not self.stateSynced:
             LOG_DBG('[lj]do broadcast siege war state', state, self.siegeWarStateEndTime, timestamp)

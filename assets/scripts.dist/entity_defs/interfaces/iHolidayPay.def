@@ -1,0 +1,25 @@
+<root>
+    <Properties>
+        <holidayPayInfo>
+            <Type>          HOLIDAYPAY_INFO         </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </holidayPayInfo>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onSendHolidayPayInfo>
+            <Arg> HOLIDAYPAY_LIST </Arg>
+        </onSendHolidayPayInfo>
+
+        <onHolidayPayUpdate>
+            <Arg> HOLIDAYPAY_VAL </Arg>
+        </onHolidayPayUpdate>
+    </ClientMethods>
+</root>

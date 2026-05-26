@@ -1,0 +1,197 @@
+<root>
+    <Properties>
+        <crossServerDic>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+        </crossServerDic>
+
+        <crossServerState>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       1                       </Default>
+        </crossServerState>
+
+        <cellCrossServerState>
+            <Type>          UINT8                   </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       1                       </Default>
+        </cellCrossServerState>
+
+        <otherServerAvatarBox>
+            <Type>          PYTHON                  </Type>
+            <Flags>         BASE                    </Flags>
+        </otherServerAvatarBox>
+
+        <crossServerTickStartTime>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </crossServerTickStartTime>
+
+        <crossServerTickBackTime>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </crossServerTickBackTime>
+
+        <crossServerHeartbeatTimer>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </crossServerHeartbeatTimer>
+
+        <isInLocalServer>
+            <Type>          UINT8                   </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       1                       </Default>
+        </isInLocalServer>
+
+        <endCrossServerTimerId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </endCrossServerTimerId>
+
+        <checkCSTokenTimerId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </checkCSTokenTimerId>
+
+        <goBackServerTimerId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </goBackServerTimerId>
+    </Properties>
+
+    <BaseMethods>
+        <onCrossServerResp>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           UINT16                  </Arg>
+        </onCrossServerResp>
+
+        <onReqGetAvatarPorperties>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </onReqGetAvatarPorperties>
+
+        <onCrossServerSuc>
+            <Arg>           PYTHON                  </Arg>
+        </onCrossServerSuc>
+
+        <onCrossServerHeartbeat>
+        </onCrossServerHeartbeat>
+
+        <onCrossServerHeartbeatBack>
+        </onCrossServerHeartbeatBack>
+
+        <gobackServer>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </gobackServer>
+
+        <crossServerCallBack>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           PYTHON                  </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </crossServerCallBack>
+
+        <onCrossServerEnd>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </onCrossServerEnd>
+
+        <onCrossServerSyncOtherInitedDataFromLocalServer>
+            <Arg>           PYTHON                  </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </onCrossServerSyncOtherInitedDataFromLocalServer>
+
+        <syncMethodCallToLocalServerBase>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToLocalServerBase>
+
+        <beSyncMethodCallFromCrossServerBase>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromCrossServerBase>
+
+        <syncMethodCallToLocalServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToLocalServerCell>
+
+        <beSyncMethodCallFromCrossServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromCrossServerCell>
+
+        <onCheckCrossServerTokenResp>
+            <Arg>           BOOL                    </Arg>
+        </onCheckCrossServerTokenResp>
+
+        <onMessagePre_localCross>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onMessagePre_localCross>
+
+        <onPlayerGetExp_localCrossClient>
+            <Arg>        BONUS_SRC      </Arg>
+            <Arg>        EXP            </Arg>
+            <Arg>        EXP            </Arg>
+            <Arg>        EXP            </Arg>
+        </onPlayerGetExp_localCrossClient>
+
+        <onAvatarLevelUp_localCrossClient>
+            <Arg>        LEVEL      </Arg>
+            <Arg>        LEVEL      </Arg>
+        </onAvatarLevelUp_localCrossClient>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <onCrossServerStateChanged>
+            <Arg>           UINT8                   </Arg>
+        </onCrossServerStateChanged>
+
+        <onCrossServerSuc>
+            <Arg>           UINT8                   </Arg>
+        </onCrossServerSuc>
+
+        <crossServerSyncOtherInitedDataFromLocalServerCell>
+            <Arg>           PYTHON                  </Arg>
+        </crossServerSyncOtherInitedDataFromLocalServerCell>
+
+        <onCrossServerSyncOtherInitedDataToCrossServerCell>
+            <Arg>           PYTHON                  </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </onCrossServerSyncOtherInitedDataToCrossServerCell>
+
+        <syncMethodCallToLocalServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToLocalServerCell>
+
+        <beforeReqCrossServer>
+            <Arg>           SERVER_ID               </Arg>
+            <Arg>           UINT8                   </Arg>
+        </beforeReqCrossServer>
+    </CellMethods>
+
+    <ClientMethods>
+        <onCrossServerTokenResp>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           SERVER_ID               </Arg>
+        </onCrossServerTokenResp>
+
+        <onGobackServer>
+            <Arg>           SPACE_NO                </Arg>
+        </onGobackServer>
+    </ClientMethods>
+</root>

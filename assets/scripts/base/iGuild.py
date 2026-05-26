@@ -59,7 +59,7 @@ class IGuild(object):
         gamesql.loadAvatarGuildInfo(self.gbID, self._onLoadGuildInfo)
 
     def onSetGuildInfoCross(self, guildUUID, guildName, isOnline):
-        LOG_IFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, isOnline)
+        LOG_INFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, isOnline)
         self.guildUUIDBase = guildUUID
         self.guildNameBase = guildName
 
@@ -75,7 +75,7 @@ class IGuild(object):
         })
 
 
-    def _guildDailyReset(self):
+    def _guildDailyReset(self, *args):
         self.guildDonateCoin = 0
         self.guildDonateMoney = 0
         self.guildDonateToken = 0
@@ -112,7 +112,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def createGuild(self, exposed, createData):
-        LOG_IFO("IGuild::createGuild:", createData)
+        LOG_INFO("IGuild::createGuild:", createData)
         if self.getRoleCacheAttr('level') < G_GCD.datas['guildCreateLevelRequire']['value']:
             LOG_ERR("IGuild::createGuild: level < guildCreateLevelRequire.")
             return
@@ -156,7 +156,7 @@ class IGuild(object):
         gameengine.getGlobalBase('GuildStub').doCreateGuild(createData, self.gbID, self, _ctx)
 
     def onCreateGuildResult(self, result, ctx):
-        LOG_IFO("IGuild::onCreateGuildResult:", result)
+        LOG_INFO("IGuild::onCreateGuildResult:", result)
         if result == gameconst.CreateGuildResult.SUCCESS:
             return
 
@@ -186,7 +186,7 @@ class IGuild(object):
         self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
 
     def onJoinGuild(self, guildUUID, guildBox, reason, joinGuildData):
-        LOG_IFO("IGuild::onJoinGuild:", guildUUID, guildBox, reason)
+        LOG_INFO("IGuild::onJoinGuild:", guildUUID, guildBox, reason)
         self.guildBox = guildBox
         self.guildUUIDBase = guildUUID
         self.guildNameBase = joinGuildData['guildName']
@@ -245,7 +245,7 @@ class IGuild(object):
         })
         self.client.selfGuildNameChanged(guildName, dspFlag)
 
-    def _clearApplyedGuilds(self):
+    def _clearApplyedGuilds(self, *args):
         _now = utils.curTS()
         for _guildUUID, _val in list(self.applyedGuilds.items()):
             if _val.isTimeOut(_now):
@@ -273,12 +273,12 @@ class IGuild(object):
         self.guildBox.doSendGuildClientData(self.gbID, self)
 
     def getGuildList(self, exposed):
-        LOG_IFO("IGuild::getGuildList")
+        LOG_INFO("IGuild::getGuildList")
         gameengine.getGlobalBase('GuildStub').doGetGuildList(self)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def exitGuild(self, exposed):
-        LOG_IFO("IGuild::exitGuild", self.guildBox, self.guildInitStatus)
+        LOG_INFO("IGuild::exitGuild", self.guildBox, self.guildInitStatus)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, 'exitGuild', (exposed,))
             return
@@ -287,7 +287,7 @@ class IGuild(object):
             LOG_WARN("IGuild::exitGuild: guildBox is None.")
             return
         
-        LOG_IFO('exit Guild: ', self.mineWarStateBase, self.myGuildInfoBase)
+        LOG_INFO('exit Guild: ', self.mineWarStateBase, self.myGuildInfoBase)
         # 矿战检查
         if self.mineWarStateBase == gameconst.MINE_WAR_STATE.RUNNING and self.myGuildInfoBase.get('leaderGbId') == self.gbID:
             self.onMessagePre(MBC.datas['mineBattle_prohibitExit']['value'], [])
@@ -302,7 +302,7 @@ class IGuild(object):
         self.wuHuaLevel = wuHuaLevel
 
     def onExitGuild(self, guildUUIDBase, reason):
-        LOG_IFO('onExitGuild', guildUUIDBase, reason)
+        LOG_INFO('onExitGuild', guildUUIDBase, reason)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, 'onExitGuild', (guildUUIDBase, reason))
             return
@@ -348,7 +348,8 @@ class IGuild(object):
                 'relationType': _relationType,
             })
 
-        self.client.onGuildRelationAll(_datas)
+        if self.guildBox:
+            self.guildBox.onGetGuildRelationAll(_datas, self)
 
     @property
     def guildJoinContext(self):
@@ -392,7 +393,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def applyJoinGuild(self, exposed, guildUUID):
-        LOG_IFO("IGuild::applyJoinGuild:", guildUUID)
+        LOG_INFO("IGuild::applyJoinGuild:", guildUUID)
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -432,7 +433,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def oneKeyGuildApply(self, exposed, guildUUIDs):
-        LOG_IFO("IGuild::oneKeyGuildApply")
+        LOG_INFO("IGuild::oneKeyGuildApply")
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -509,7 +510,7 @@ class IGuild(object):
         _guild['box'].doApplyJoinGuild(self.gbID, self, _joinData)
 
     def deleteApplyedGuild(self, exposed, guildUUID):
-        LOG_IFO("IGuild::deleteApplyedGuild:", guildUUID)
+        LOG_INFO("IGuild::deleteApplyedGuild:", guildUUID)
         self.applyedGuilds.pop(guildUUID, None)
         self.client.onRemoveApplyedGuilds([guildUUID])
 
@@ -524,7 +525,7 @@ class IGuild(object):
         box.removeApplyFromApplicant(self.gbID)
 
     def joinGuildCB(self, event, agVal):
-        LOG_IFO("IGuild::joinGuildCB:", event)
+        LOG_INFO("IGuild::joinGuildCB:", event)
         if event == gameconst.JoinGuildEvent.RECORD_APPLY:
             self.applyedGuilds[agVal.guildUUID] = agVal
             self.client.onUpdateApplyedGuilds([agVal])
@@ -552,7 +553,7 @@ class IGuild(object):
         self.leftGuildTS = ts
 
     def modifyJoinCond(self, exposed, joinCond):
-        LOG_IFO("IGuild::modifyJoinCond:", joinCond)
+        LOG_INFO("IGuild::modifyJoinCond:", joinCond)
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -570,7 +571,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildApply(self, exposed, gbId, isAgree):
-        LOG_IFO("IGuild::dealGuildApply:", gbId)
+        LOG_INFO("IGuild::dealGuildApply:", gbId)
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -588,7 +589,7 @@ class IGuild(object):
 
     @gamedecorator.limitcall(5, keyFunc=lambda x: '{1}'.format(*x))
     def getGuildDetailInfo(self, exposed, guildUUID):
-        LOG_IFO("IGuild::getGuildDetailInfo:", guildUUID)
+        LOG_INFO("IGuild::getGuildDetailInfo:", guildUUID)
         gameengine.getGlobalBase('GuildStub').getGuildBox(
             self,
             guildUUID,
@@ -598,7 +599,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def editJobPermissions(self, exposed, job, permissions):
-        LOG_IFO("IGuild::editJobPermissions:", job, permissions)
+        LOG_INFO("IGuild::editJobPermissions:", job, permissions)
         if not self.guildBox:
             LOG_WARN("IGuild::editJobPermissions: guildBox is None.")
             return
@@ -614,7 +615,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildDesc(self, exposed, desc):
-        LOG_IFO("IGuild::modifyGuildDesc:", desc)
+        LOG_INFO("IGuild::modifyGuildDesc:", desc)
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -632,7 +633,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyMemberJob(self, exposed, gbId, job):
-        LOG_IFO("IGuild::modifyMemberJob:", gbId, job)
+        LOG_INFO("IGuild::modifyMemberJob:", gbId, job)
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -650,7 +651,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def resign(self, exposed):
-        LOG_IFO("IGuild::resign")
+        LOG_INFO("IGuild::resign")
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -668,7 +669,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def kickMember(self, exposed, gbId):
-        LOG_IFO("IGuild::kickMember:", gbId)
+        LOG_INFO("IGuild::kickMember:", gbId)
         if not self.guildInitStatus:
             self.registerTempEvent(
                 gameconst.EntityPropsEnum.guildInitEvent, 
@@ -716,7 +717,7 @@ class IGuild(object):
 
     # ------------------------------------- assist start --------------------------------
     def guildAssist(self, exposed, buildingId):
-        LOG_IFO('Guild::guildAssist:', self.guildUUIDBase, buildingId)
+        LOG_INFO('Guild::guildAssist:', self.guildUUIDBase, buildingId)
         if not self.guildBox:
             LOG_ERR('Guild::guildAssist: guildBox is None')
             return
@@ -809,7 +810,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def upgradeGuildBuilding(self, exposed, buildingId):
-        LOG_IFO('IGuild::upgradeGuildBuilding:', buildingId)
+        LOG_INFO('IGuild::upgradeGuildBuilding:', buildingId)
         if not self.guildBox:
             LOG_ERR('IGuild::upgradeGuildBuilding: guildBox is None')
             return
@@ -818,7 +819,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def transformGuildMoneyToFund(self, exposed, num):
-        LOG_IFO('IGuild::transformGuildMoneyToFund:', num)
+        LOG_INFO('IGuild::transformGuildMoneyToFund:', num)
         if not self.guildBox:
             LOG_ERR('IGuild::transformGuildMoneyToFund: guildBox is None')
             return
@@ -827,7 +828,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildName(self, exposed, name, dspFlag):
-        LOG_IFO('IGuild::modifyGuildName:', name)
+        LOG_INFO('IGuild::modifyGuildName:', name)
         if not self.guildBox:
             LOG_ERR('IGuild::modifyGuildName: guildBox is None')
             return
@@ -867,7 +868,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildIcon(self, exposed, icon):
-        LOG_IFO('IGuild::modifyGuildIcon:', icon)
+        LOG_INFO('IGuild::modifyGuildIcon:', icon)
         if not self.guildBox:
             LOG_ERR('IGuild::modifyGuildIcon: guildBox is None')
             return
@@ -876,7 +877,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def guildDonate(self, exposed, itemId, num):
-        LOG_IFO('IGuild::guildDonate:', itemId, num)
+        LOG_INFO('IGuild::guildDonate:', itemId, num)
         if not self.guildBox:
             LOG_ERR('IGuild::guildDonate: guildBox is None')
             return
@@ -962,7 +963,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def guildRecruit(self, exposed):
-        LOG_IFO('IGuild::guildRecruit:')
+        LOG_INFO('IGuild::guildRecruit:')
         if not self.guildBox:
             LOG_ERR('IGuild::guildRecruit: guildBox is None')
             return
@@ -971,7 +972,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyGuildDisp(self, exposed, dispFlag):
-        LOG_IFO('IGuild::modifyGuildDisp:', dispFlag)
+        LOG_INFO('IGuild::modifyGuildDisp:', dispFlag)
         if not self.guildBox:
             LOG_ERR('IGuild::modifyGuildDisp: guildBox is None')
             return
@@ -980,7 +981,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def inviteJoinGuild(self, exposed, gbId):
-        LOG_IFO('IGuild::inviteJoinGuild:', gbId)
+        LOG_INFO('IGuild::inviteJoinGuild:', gbId)
         if not self.guildBox:
             LOG_ERR('IGuild::inviteJoinGuild: guildBox is None')
             return
@@ -1007,7 +1008,7 @@ class IGuild(object):
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildInvite(self, exposed, gbId, isAgree):
-        LOG_IFO('IGuild::dealGuildInvite:', gbId, isAgree)
+        LOG_INFO('IGuild::dealGuildInvite:', gbId, isAgree)
         if self.guildUUIDBase:
             LOG_WARN('IGuild::dealGuildInvite: already in guild.')
             return
@@ -1049,7 +1050,7 @@ class IGuild(object):
 
     # -------------------------------------- cross data start --------------------------------------
     def getGuildInfosFromCrossData(self, exposed):
-        LOG_IFO('IGuild::getGuildInfosFromCrossData:')
+        LOG_INFO('IGuild::getGuildInfosFromCrossData:')
         if not self.guildBox:
             LOG_ERR('IGuild::getGuildInfosFromCrossData: guildBox is None')
             return
@@ -1057,14 +1058,14 @@ class IGuild(object):
         self.guildBox.doGetGuildInfosFromCrossData(self.gbID, self)
 
     def onGetGuildInfosFromCrossData(self, guildDatas):
-        LOG_IFO('IGuild::onGetGuildInfosFromCrossData:', guildDatas)
+        LOG_INFO('IGuild::onGetGuildInfosFromCrossData:', guildDatas)
         self.client.onGuildInfoFromCrossData(guildDatas)
 
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     @gamedecorator.limitcall(1)
     def applyGuildUnion(self, exposed, guildUUID):
-        LOG_IFO('IGuild::applyGuildUnion:', guildUUID)
+        LOG_INFO('IGuild::applyGuildUnion:', guildUUID)
         if not self.guildBox:
             LOG_ERR('IGuild::applyGuildUnion: guildBox is None')
             return
@@ -1074,7 +1075,7 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildUnionApply(self, exposed, guildUUID, agree):
-        LOG_IFO('IGuild::dealGuildUnionApply:', guildUUID, agree)
+        LOG_INFO('IGuild::dealGuildUnionApply:', guildUUID, agree)
         if not self.guildBox:
             LOG_ERR('IGuild::dealGuildUnionApply: guildBox is None')
             return
@@ -1084,7 +1085,7 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def cancelGuildUnion(self, exposed, guildUUID):
-        LOG_IFO('IGuild::cancelGuildUnion:', guildUUID)
+        LOG_INFO('IGuild::cancelGuildUnion:', guildUUID)
         if not self.guildBox:
             LOG_ERR('IGuild::cancelGuildUnion: guildBox is None')
             return
@@ -1102,7 +1103,7 @@ class IGuild(object):
             LOG_WARN('IGuild::cancelGuildUnion: guildUUID is not union', guildUUID)
 
     def qixieAssist(self, exposed, qixieType):
-        LOG_IFO('IGuild::qixieAssist:', qixieType)
+        LOG_INFO('IGuild::qixieAssist:', qixieType)
         if not self.guildBox:
             LOG_ERR('IGuild::qixieAssist: guildBox is None')
             return
@@ -1184,7 +1185,7 @@ class IGuild(object):
             self.startRecoverQixieAssistTimer()
 
     def upgradeQixie(self, exposed, qixieType):
-        LOG_IFO('IGuild::upgradeQixie:', qixieType)
+        LOG_INFO('IGuild::upgradeQixie:', qixieType)
         if not self.guildBox:
             LOG_ERR('IGuild::upgradeQixie: guildBox is None')
             return
@@ -1194,7 +1195,7 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def declareEnemy(self, exposed, guildUUID):
-        LOG_IFO('IGuild::declareEnemy:', guildUUID)
+        LOG_INFO('IGuild::declareEnemy:', guildUUID)
         if not self.guildBox:
             LOG_ERR('IGuild::declareEnemy: guildBox is None')
             return
@@ -1203,7 +1204,7 @@ class IGuild(object):
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
     def getGuildInfosByRelationType(self, exposed, relationType):
-        LOG_IFO('IGuild::getGuildInfosByRelationType:', relationType)
+        LOG_INFO('IGuild::getGuildInfosByRelationType:', relationType)
         if not self.guildUUIDBase:
             LOG_ERR('IGuild::getGuildInfosByRelationType: guildBox is None')
             return
@@ -1226,7 +1227,7 @@ class IGuild(object):
         self.client.onGuildInfosByRelationType(guildDatas, relationType)
 
     def donateCityBattleToken(self, exposed, num):
-        LOG_IFO('IGuild::donateCityBattleToken:', num)
+        LOG_INFO('IGuild::donateCityBattleToken:', num)
         if not self.guildBox:
             LOG_ERR('IGuild::donateCityBattleToken: guildBox is None')
             return
@@ -1256,7 +1257,7 @@ class IGuild(object):
         self.guildBox.doDonateCityBattleToken(self.gbID, self, _num, _opUUID)
 
     def getGuildUnionApplySender(self, exposed):
-        LOG_IFO('IGuild::getGuildUnionApplySender:')
+        LOG_INFO('IGuild::getGuildUnionApplySender:')
         if not self.guildBox:
             LOG_ERR('IGuild::getGuildUnionApplySender: guildBox is None')
             return
@@ -1266,7 +1267,7 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def cancelApplyGuildUnion(self, exposed, guildUUID):
-        LOG_IFO('IGuild::cancelApplyGuildUnion:', guildUUID)
+        LOG_INFO('IGuild::cancelApplyGuildUnion:', guildUUID)
         if not self.guildBox:
             LOG_ERR('IGuild::cancelApplyGuildUnion: guildBox is None')
             return
@@ -1275,7 +1276,7 @@ class IGuild(object):
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
     def getGuildDetailOtherServer(self, exposed, guildUUID):
-        LOG_IFO('IGuild::getGuildDetailOtherServer:', guildUUID)
+        LOG_INFO('IGuild::getGuildDetailOtherServer:', guildUUID)
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetail(
             guildUUID,
             self,

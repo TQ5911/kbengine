@@ -152,7 +152,7 @@ class TaskTargetMonsters(BaseTarget):
 
     def killOneMonster(self, spaceNo, monsterId, monsterGBId):
         mapId = formula.fetchMapId(spaceNo)
-        LOG_IFO('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
+        LOG_INFO('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
         opResult = False
         completed = False
         if mapId != self.mapId:
@@ -180,7 +180,7 @@ class TaskTargetMonsters(BaseTarget):
                 opResult = True
 
         completed = self.isTargetCompleted()
-        LOG_IFO('in TargetMonsters::killOneMonster:end, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode, opResult, completed)
+        LOG_INFO('in TargetMonsters::killOneMonster:end, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode, opResult, completed)
 
         return opResult, completed
 
@@ -235,7 +235,7 @@ class TaskTargetItems(BaseTarget):
         return
 
     def gottenItems(self, itemId, num):
-        LOG_IFO('in TargetItems::gottenItems:', self.tgtId, self.dstCnt, self.stepCnt)
+        LOG_INFO('in TargetItems::gottenItems:', self.tgtId, self.dstCnt, self.stepCnt)
         opResult = False
         completed = False
         if itemId != self.tgtId:
@@ -281,7 +281,7 @@ class TaskTargetTalkToNPC(BaseTarget):
         self.dialogIdList = dialogIdList
 
     def doTgtTalkToNpc(self, npcId, dialogId):
-        LOG_IFO('in TargetTalkToNPC::doTgtTalkToNpc:', npcId, dialogId, self.tgtId)
+        LOG_INFO('in TargetTalkToNPC::doTgtTalkToNpc:', npcId, dialogId, self.tgtId)
         dialogId = dialogId // 1000
         if npcId not in self.npcIdList or dialogId not in self.dialogIdList:
             return False
@@ -478,7 +478,7 @@ class TaskTargetAvatarLevel(BaseTarget):
         self.stepCnt = 1
 
     def avatarLevelUp(self, newLv):
-        LOG_IFO('in TargetAvatarLevel::avatarLevelUp:', self.dstCnt, newLv)
+        LOG_INFO('in TargetAvatarLevel::avatarLevelUp:', self.dstCnt, newLv)
         if newLv >= self.stepCnt:
             self.stepCnt = newLv
         return self.isTargetCompleted()

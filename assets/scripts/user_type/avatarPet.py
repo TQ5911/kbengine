@@ -328,7 +328,7 @@ class LingShouInfo(userType.UserSingleType):
         return index < petTeamNum
 
     def updateBattleList(self, owner, battleIndex, slotId, petId):
-        LOG_IFO("updateBattleList", battleIndex, slotId, petId)
+        LOG_INFO("updateBattleList", battleIndex, slotId, petId)
         oldPetId = self.battleList[battleIndex].getPetIdBySlot(slotId)
         self.battleList[battleIndex].setPetIdBySlot(petId, slotId)
         battleType = gameconst.PetMakeTeamType.LEAVE
@@ -362,6 +362,6 @@ class LingShouInfo(userType.UserSingleType):
         return self.battleList[battleListIndex].petIdList.index(petId)
     
     def checkBattlePetRepeat(self, battleIndex, slotId, petId):
-        LOG_IFO("checkBattlePetRepeat", battleIndex, slotId, petId)
+        LOG_INFO("checkBattlePetRepeat", battleIndex, slotId, petId)
         return self.battleList[battleIndex].checkPet(petId)
     # --------------- battle list -------------------

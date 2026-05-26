@@ -69,7 +69,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimerCallback(tid)
 
     def teamAutoMatch(self, teamInfoDic):
-        LOG_IFO('in teamAutoMatch:', teamInfoDic)
+        LOG_INFO('in teamAutoMatch:', teamInfoDic)
         if 0 == teamInfoDic['teamTarget']:
             return
         tmVal = self.teamsDic.get(teamInfoDic['teamId'])
@@ -83,7 +83,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onTeamInfoUpdate(self, teamInfoDic):
-        LOG_IFO('in onTeamInfoUpdate:', teamInfoDic)
+        LOG_INFO('in onTeamInfoUpdate:', teamInfoDic)
         if 0 == teamInfoDic['teamTarget']:
             self._rmTeamFromMatchPool(teamInfoDic['teamId'])
             return
@@ -100,8 +100,8 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.matchTeamsPool[tmVal.teamTarget].append(tmVal.teamId)
         return
 
-    def teamStopAutoMatch(self, teamId):
-        LOG_IFO('in teamStopAutoMatch:', teamId)
+    def doTeamStopAutoMatch(self, teamId):
+        LOG_INFO('in doTeamStopAutoMatch:', teamId)
         self._rmTeamFromMatchPool(teamId)
         return
 
@@ -114,7 +114,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return True
 
     def onPlayerMatchInfoUpdate(self, playerInfoDic):
-        LOG_IFO('in onPlayerMatchInfoUpdate:', playerInfoDic)
+        LOG_INFO('in onPlayerMatchInfoUpdate:', playerInfoDic)
         pmVal = self.playersDic.get(playerInfoDic['playerGbId'], None)
         if not pmVal:
             return
@@ -122,7 +122,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerAutoMatch(self, playerMatchDic):
-        LOG_IFO('in playerAutoMatch:', playerMatchDic)
+        LOG_INFO('in playerAutoMatch:', playerMatchDic)
         pmVal = self.playersDic.get(playerMatchDic['playerGbId'], None)
         if pmVal:
             self._rmPlayerFromMatchPool(playerMatchDic['playerGbId'])
@@ -147,7 +147,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerStopAutoMatch(self, playerGbId):
-        LOG_IFO('in playerStopAutoMatch:', playerGbId)
+        LOG_INFO('in playerStopAutoMatch:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -156,7 +156,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerAutoMatchTimeout(self, playerGbId):
-        LOG_IFO('in playerAutoMatchTimeout:', playerGbId)
+        LOG_INFO('in playerAutoMatchTimeout:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -165,7 +165,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def _rmPlayerFromMatchPool(self, playerGbId):
-        LOG_IFO('in _rmPlayerFromMatchPool:', playerGbId)
+        LOG_INFO('in _rmPlayerFromMatchPool:', playerGbId)
         pmVal = self.playersDic.pop(playerGbId, None)
         if not pmVal:
             return False
@@ -192,14 +192,14 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                         if not tmVal.canAddPlayer(pmVal):
                             continue
                         #matched
-                        LOG_IFO('     in _doMatch, matched:', playerGbid, teamId)
+                        LOG_INFO('     in _doMatch, matched:', playerGbid, teamId)
                         if tmVal.addPlayerToTeam(pmVal):
                             matchedPlayers.append(playerGbid)
                             if tmVal.isTeamFull():
                                 fullTeams.append(teamId)
                             break
                     for rmTeamId in fullTeams:
-                        self.teamStopAutoMatch(rmTeamId)
+                        self.doTeamStopAutoMatch(rmTeamId)
                 for rmPlayeId in matchedPlayers:
                     self.playerMatchedSucc(rmPlayeId)
             except Exception as e:
@@ -222,7 +222,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 fullTeams.append(teamId)
 
         for rmTeamId in fullTeams:
-            self.teamStopAutoMatch(rmTeamId)
+            self.doTeamStopAutoMatch(rmTeamId)
 
 class TeamMatchVal(userType.UserSingleType):
     def __init__(self, teamInfoDic, startTime):
@@ -231,7 +231,7 @@ class TeamMatchVal(userType.UserSingleType):
         self.teamCaptainGbId = teamInfoDic['teamCaptainGbId']
         self.teamMinLv = teamInfoDic['teamMinLv']
         self.teamMinScore = teamInfoDic['teamMinScore']
-        self.teamPlayerDic = teamInfoDic['teamPlayerDic']
+        self.teamPlayerDict = teamInfoDic['teamPlayerDict']
         self.startTime = startTime
         self.guildUUID = teamInfoDic.get('guildUUID', 0)
 
@@ -241,16 +241,16 @@ class TeamMatchVal(userType.UserSingleType):
         self.teamCaptainGbId = teamInfoDic['teamCaptainGbId']
         self.teamMinLv = teamInfoDic['teamMinLv']
         self.teamMinScore = teamInfoDic['teamMinScore']
-        self.teamPlayerDic = teamInfoDic['teamPlayerDic']
+        self.teamPlayerDict = teamInfoDic['teamPlayerDict']
         guildUUID = teamInfoDic.get('guildUUID')
         if guildUUID:
             self.guildUUID = guildUUID
 
     def addPlayerToTeam(self, pmVal):
-        self.teamPlayerDic[pmVal.playerGbId] = (pmVal.level, pmVal.playerName, pmVal.school, pmVal.sex)
-        extraNum = len(self.teamPlayerDic)-gameconst.TEAM_MEMBER_MAX_NUM
+        self.teamPlayerDict[pmVal.playerGbId] = (pmVal.level, pmVal.playerName, pmVal.school, pmVal.sex)
+        extraNum = len(self.teamPlayerDict)-gameconst.TEAM_MEMBER_MAX_NUM
         if extraNum > 0:
-            gameengine.panicStack('addPlayerToTeam, player exceed max num:', self.teamPlayerDic)
+            gameengine.panicStack('addPlayerToTeam, player exceed max num:', self.teamPlayerDict)
         pmVal.playerBox.cell.onPlayerMatchedTeam(self.teamId)
         return True
 
@@ -266,7 +266,7 @@ class TeamMatchVal(userType.UserSingleType):
         return True
 
     def isTeamFull(self):
-        return len(self.teamPlayerDic) >= gameconst.TEAM_MEMBER_MAX_NUM
+        return len(self.teamPlayerDict) >= gameconst.TEAM_MEMBER_MAX_NUM
 
     def isTimeOut(self):
         maxMatchTime = TMMCD.datas['maxMatchTime']['value']

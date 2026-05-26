@@ -58,7 +58,7 @@ teamInstance = TeamInfo()
 
 class ApplyJoinInfo(object):
     def createObjFromDict(self, dataDict):
-        teamObj = team.applyJoinPlayerVal(dataDict['gbId'],
+        teamObj = team.ApplyJoinPlayerVal(dataDict['gbId'],
                                           dataDict['playerName'],
                                           dataDict['level'],
                                           dataDict['school'],
@@ -71,7 +71,7 @@ class ApplyJoinInfo(object):
         return obj.toSavedDict()
 
     def isSameType(self, obj):
-        return type(obj) is team.applyJoinPlayerVal
+        return type(obj) is team.ApplyJoinPlayerVal
 
 applyJoinInfoInstance = ApplyJoinInfo()
 

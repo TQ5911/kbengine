@@ -1,0 +1,188 @@
+<root>
+    <Properties>
+        <leftCubeTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+        </leftCubeTimes>
+
+        <cubeUseCoinTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+        </cubeUseCoinTimes>
+
+        <cubeUseItemTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+        </cubeUseItemTimes>
+
+        <cubeRoomTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </cubeRoomTimerId>
+
+        <cubeEnterFloor>
+            <Type>          UINT8                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </cubeEnterFloor>
+
+        <fromCubeMapId>
+            <Type>          MAP_ID                      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </fromCubeMapId>
+
+        <todayCubeCowDur>
+            <Type>          UINT32                      </Type>
+            <Flags>         OWN_CLIENT                  </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </todayCubeCowDur>
+
+        <cubeCowTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </cubeCowTimerId>
+
+        <cubeQuota>
+            <Type>          CUBE_QUOTA_DATA_INFO        </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Persistent>    true                        </Persistent>
+        </cubeQuota>
+    </Properties>
+
+    <BaseMethods>
+        <beforeEnterCubeDecrementCnt>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </beforeEnterCubeDecrementCnt>
+
+        <reqUseItemAddCubeTimes> <Exposed/>
+            <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           BOOL                    </Arg>
+        </reqUseItemAddCubeTimes>
+
+        <useItemAddCubeTimes>
+            <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           UINT8                   </Arg>
+        </useItemAddCubeTimes>
+
+        <addRoomDurationFailed>
+            <Arg>           OP_UUID                 </Arg>
+            <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT16                  </Arg>
+        </addRoomDurationFailed>
+
+        <addRoomDurationFailedRewindTimes>
+        </addRoomDurationFailedRewindTimes>
+
+        <autoRenewCubeRoom>
+            <Arg>           CUBE_SWITCH             </Arg>
+            <Arg>           BOOL                    </Arg>
+        </autoRenewCubeRoom>
+
+        <afterEnterCubeDeductTimes>
+        </afterEnterCubeDeductTimes>
+
+        <onLogonEnterCubeGetSpaceBox>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+        </onLogonEnterCubeGetSpaceBox>
+    </BaseMethods>
+
+    <CellMethods>
+        <beginEnterCubeRoom>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </beginEnterCubeRoom>
+
+        <enterCube> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+        </enterCube>
+
+        <leaveCube> <Exposed/>
+        </leaveCube>
+
+        <reqChangeCubeAutoRenewSwitch> <Exposed/>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           CUBE_SWITCH             </Arg>
+        </reqChangeCubeAutoRenewSwitch>
+
+        <addCubeRoomRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addCubeRoomRewardRecord>
+
+        <toClientCubeLoginData>
+        </toClientCubeLoginData>
+
+        <checkAddCubeRoomDurationCondition>
+            <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT8                   </Arg>
+        </checkAddCubeRoomDurationCondition>
+
+        <directlyAddCubeRoomDuration>
+            <Arg>           STRING                  </Arg>
+            <Arg>           PYTHON                  </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </directlyAddCubeRoomDuration>
+
+        <setEnterCubeFloor> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+        </setEnterCubeFloor>
+
+        <followCaptainInCube> <Exposed/>
+        </followCaptainInCube>
+
+        <resetCubeCowDur>
+        </resetCubeCowDur>
+
+        <leaveCubeInternal>
+            <Arg>           UINT8                   </Arg>
+        </leaveCubeInternal>
+
+        <getCubeRoomLeftTime> <Exposed/>
+        </getCubeRoomLeftTime>
+
+        <randomCubeRoom> <Exposed/>
+        </randomCubeRoom>
+    </CellMethods>
+
+    <ClientMethods>
+        <onCubeRoomEndTime>
+            <Arg>           LONGTIME                </Arg>
+        </onCubeRoomEndTime>
+
+        <onCubeAutoRenewSwitch>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           CUBE_SWITCH             </Arg>
+        </onCubeAutoRenewSwitch>
+
+        <onAddCubeRoomRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onAddCubeRoomRewardRecord>
+
+        <onCubeLoginData>
+            <Arg>           LONGTIME                </Arg>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           CUBE_SWITCH             </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onCubeLoginData>
+
+        <onCubeRoomLeftTime>
+            <Arg>           LONGTIME                </Arg>
+        </onCubeRoomLeftTime>
+    </ClientMethods>
+</root>

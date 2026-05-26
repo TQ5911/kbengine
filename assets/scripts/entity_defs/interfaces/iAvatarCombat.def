@@ -158,14 +158,14 @@
             <Type>          HEAL_RATIO                      </Type>
             <Flags>         OWN_CLIENT                      </Flags>
             <Persistent>    true                            </Persistent>
-            <Default>       50                              </Default>
+            <Default>       80                              </Default>
         </healHpRatio>
 
         <healMpRatio>
             <Type>          HEAL_RATIO                      </Type>
             <Flags>         OWN_CLIENT                      </Flags>
             <Persistent>    true                            </Persistent>
-            <Default>       50                              </Default>
+            <Default>       80                              </Default>
         </healMpRatio>
 
         <autoDrinkPotionTimerId>
@@ -244,11 +244,6 @@
             <Flags>         CELL_PRIVATE    </Flags>
             <Default>       0               </Default>
         </flyResumeValue>
-
-        <flyCheckTimer>
-            <Type>          TIMER_ID        </Type>
-            <Flags>         CELL_PRIVATE    </Flags>
-        </flyCheckTimer>
     </Properties>
 
     <CellMethods>

@@ -33,7 +33,7 @@ import PKData_moralValueEffect as PKMVE
 import performanceLevel_set as PLSD
 import teamMatch_matchConfig as TMMCD
 import login_set as LGS
-import message_Message as MSG
+import message_Message as M_MD
 import cityBattle_firstTime as CBFT
 import cityBattle_config as CBC
 import conflict_status_def as C_S_DD
@@ -42,6 +42,10 @@ import creep_base as CBD
 import gacha_gachaPool as GGP
 import creep_coefficient as C_CD
 import branchData_set as BDS
+import cube_config
+import wonderLand_config
+import soul_soul
+import affix_affix
 
 import KBEngine
 from KBEDebug import *
@@ -241,6 +245,15 @@ def bhas(val, bit):
 def breset(val, bit):
     return (~(1 << bit)) & val
 
+def bgetIdxs(val):
+    idxList = []
+    idx = 0
+    while val > 0:
+        if val & 1:
+            idxList.append(idx)
+        val = val >> 1
+        idx += 1
+    return idxList
 
 
 def isJoinCombat(entity, src):
@@ -248,8 +261,10 @@ def isJoinCombat(entity, src):
             gameconst.BornStateType.joinCombatTup:
         return False
 
-    if entity.IsAICombatUnit and entity.aiController and entity.aiController.machine.speialAICombatTup and entity.bornState in \
-            gameconst.BornStateType.speialAIInvalidCombatTup\
+    if entity.IsAICombatUnit\
+            and entity.aiController\
+            and entity.aiController.stateMachine.speialAICombatTup\
+            and entity.bornState in gameconst.BornStateType.speialAIInvalidCombatTup\
             and bhas(entity.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
         return False
 
@@ -334,7 +349,7 @@ def reloadCls(cls):
     gameglobal.reloadedCls[cls.__name__] = 1
 
 
-def resetCls(obj):
+def resetClass(obj):
     _oldCls = obj.__class__
     _clsName = _oldCls.__name__
 
@@ -506,10 +521,10 @@ def countIntersDay(startTs):
         _tNow = time.localtime(curTS())
 
         days = (todayFiveTs - openFiveTs) // 86400
-        LOG_IFO('countIntersDay', todayFiveTs, openFiveTs, days)
+        LOG_INFO('countIntersDay', todayFiveTs, openFiveTs, days)
         if _tNow.tm_hour >= gameconst.GAME_REFRESH_OCLOCK:
             days += 1
-        LOG_IFO('countIntersDay111', todayFiveTs, openFiveTs, days)
+        LOG_INFO('countIntersDay111', todayFiveTs, openFiveTs, days)
     return days
 
 
@@ -641,6 +656,9 @@ def getDunGroupModuleData(dunNo: int):
     """get module datas in dun_xxx_g"""
     return _getDunXModuleData(dunNo, 'g')
 
+def getAirWallModuleData(dunNo: int):
+    """get module datas in dun_xxx_g"""
+    return _getDunXModuleData(dunNo, 'a', showErrMsg=False)
 
 def getDunStructModData(dunNo: int, actId: int = 0):
     """get module datas in dun_xxx_s"""
@@ -674,9 +692,9 @@ def _getDunXModuleName(dunNo: int, suffix: str = ''):
 
     return module_name
 
-def getEntityBoxGroupId(ent, spaceNo):
+def getEntityBoxGroupId(gameEntityId, spaceNo):
     _dunData = getDunModuleData(formula.fetchMapId(spaceNo))
-    _gid = parseGidFromGameEntityId(ent.gameEntityId)
+    _gid = parseGidFromGameEntityId(gameEntityId)
     _params = _dunData.get(str(_gid), None)
     if not _params:
         return 0
@@ -751,7 +769,7 @@ def man_outside_gm_cmds():
             if not _cmd.checkSide(gmAdmin.OUTSIDE):
                 continue
             _desc = _cmd.desc
-            args = ((i.__class__.__name__, i.getDesc()) for i in _cmd.args)
+            args = ((i.__class__.__name__, i.fetchDesc()) for i in _cmd.args)
 
             _len_name = len(_name)
             _len_desc = len(_desc)
@@ -1571,10 +1589,10 @@ def isEnemy(src, tgt):
     if src.IsAvatar and src.guildRelationVersion != gameglobal.guildRelationVersion:
         src.resetAllTargetTypeCache()
 
-    if tgt.id in src.enemyCacheSet:
+    if tgt.id in src.enemiesCacheSet:
         return True
 
-    elif tgt.id in src.notEnemyCacheSet:
+    elif tgt.id in src.notEnemiesCacheSet:
         return False
 
     if not (src.isReal() and tgt.isReal()):
@@ -1582,9 +1600,9 @@ def isEnemy(src, tgt):
 
     _bIsEnemy = _isEnemy(src, tgt)
     if _bIsEnemy:
-        src.enemyCacheSet.add(tgt.id)
+        src.enemiesCacheSet.add(tgt.id)
     else:
-        src.notEnemyCacheSet.add(tgt.id)
+        src.notEnemiesCacheSet.add(tgt.id)
 
     tgt.cacheSelfSet.add(src.id)
 
@@ -1675,10 +1693,10 @@ def isFriend(src, tgt):
     if src.id == tgt.id:
         return False
 
-    if tgt.id in src.friendCacheSet:
+    if tgt.id in src.friendsCacheSet:
         return True
 
-    elif tgt.id in src.notFriendCacheSet:
+    elif tgt.id in src.notFriendsCacheSet:
         return False
 
     if not (src.isReal() and tgt.isReal()):
@@ -1686,9 +1704,9 @@ def isFriend(src, tgt):
 
     bIsFriend = _isFriend(src, tgt)
     if bIsFriend:
-        src.friendCacheSet.add(tgt.id)
+        src.friendsCacheSet.add(tgt.id)
     else:
-        src.notFriendCacheSet.add(tgt.id)
+        src.notFriendsCacheSet.add(tgt.id)
 
     tgt.cacheSelfSet.add(src.id)
 
@@ -1897,7 +1915,7 @@ def checkTargetTypeValid(typeName, src, e, tgt=None):
     if not tgt:
         tgt = e
 
-    if not e.isAttackable(src):
+    if not e.canAttackable(src):
         return False
     _value = getFightTargetTypeFromCfgData(typeName)
     if not _value or len(_value) < 3:
@@ -1937,7 +1955,7 @@ def checkCachedTargetType(typeName, src, e, tgt=None):
     if not tgt:
         tgt = e
 
-    if not e.isAttackable(src):
+    if not e.canAttackable(src):
         return False
 
     _value = getFightTargetTypeFromCfgData(typeName)
@@ -1971,7 +1989,7 @@ def checkCachedTargetType(typeName, src, e, tgt=None):
 
 @functools.lru_cache(1024, typed=False)
 def hasSkillTagById(skillId, tag):
-    _tags = combatSkill.SkillBase.getTag(skillId)
+    _tags = combatSkill.SkillBaseClass.getTag(skillId)
     if not _tags:
         return False
 
@@ -1981,15 +1999,16 @@ def hasSkillTagById(skillId, tag):
 
 def doInitBaseProperties(entity, propCurveId=0):
     if not propCurveId:
-        propCurveId = entity.getConfigData().get('propCurveID')
+        propCurveId = entity.getCreepData().get('propCurveID')
 
     if not propCurveId:
-        raise RuntimeError('creep base entity must set propCurveId, {}'.format(entity.creepBaseId))
+        raise RuntimeError('creep base entity must set propCurveId, {} spaceNo:{}, gid:{}'.format(
+            entity.creepbaseId, entity.spaceNo, entity.gameEntityId))
 
     import prop_fightprop as PFPD
     import creep_base as CBD
 
-    creepData = CBD.datas.get(entity.creepBaseId)
+    creepData = CBD.datas.get(entity.creepbaseId)
     propId = creepData.get('propID')
     if propId:
         propType = creepData.get('propType')
@@ -2006,7 +2025,7 @@ def doInitBaseProperties(entity, propCurveId=0):
         propData = PFPD.datas.get(propId)
         cfgPropType = propData.get('type')
         if propType != cfgPropType:
-            LOG_ERR('doInitBaseProperties propType error', entity.creepBaseId, propType, cfgPropType)
+            LOG_ERR('doInitBaseProperties propType error', entity.creepbaseId, propType, cfgPropType)
             return
 
         _coefficientType = creepData['coefficientType']
@@ -2018,8 +2037,8 @@ def doInitBaseProperties(entity, propCurveId=0):
             _func = type(_oldVal)
             setattr(entity, prop, _func(val * _coefficientDic.get(prop, 1)))
 
-    entity.baseSpeed = float(entity.getConfigData().get('baseSpeed', 0))
-    entity.baseStateRate = entity.getConfigData().get('baseStateRate', 0.0)
+    entity.baseSpeed = float(entity.getCreepData().get('baseSpeed', 0))
+    entity.baseStateRate = entity.getCreepData().get('baseStateRate', 0.0)
 
     entity.speedStateRatio = gameconst.SpeedState.Normal
 
@@ -2058,7 +2077,7 @@ def checkComplexTeleportNeedCast(fromSpaceNo, toSpaceNo, teleportType, src, owne
     if fromSpaceNo == toSpaceNo:
         return False
 
-    if teleportType == gameconst.ComplexTeleportType.LEAVE and formula.inDungeonScene(fromSpaceNo):
+    if teleportType == gameconst.ComplexTeleportEnum.LEAVE and formula.inDungeonScene(fromSpaceNo):
         return False
 
     r = fetchSpaceEnterSceneBySpaceNo(fromSpaceNo, toSpaceNo)
@@ -2078,25 +2097,27 @@ def getMoralLevel(moralValue):
     LOG_WARN('getMoralLevel, level not found:', moralValue)
     return 0
 
-def getExpDecayRate(level, playerLevel, worldLevelDelta, src):
-    LOG_IFO("getExpDecayRate", level, playerLevel, worldLevelDelta, src)
-
+def getWorldLevelRatio(playerLevel, worldLevelDelta, src):
     worldLevelRatio = 1.0
-    if getSvrOpenDays() <= EC.datas["activateWorldLevel"]["value"] or src not in EC.datas["bonus_EXP_Sources"]["value"] \
-        or worldLevelDelta <= 0 or playerLevel <= V_VD.datas["worldLevel"]["level"]:
+    if getSvrOpenDays() < EC.datas["activateWorldLevel"]["value"] or src not in EC.datas["bonus_EXP_Sources"]["value"] \
+        or worldLevelDelta <= 0 or playerLevel < V_VD.datas["worldLevel"]["level"]:
         worldLevelRatio = 1.0
     else:
         for i in range(1, EGM.maxKey+1):
             if worldLevelDelta <= EGM.datas[i]['levelDifference']:
                 worldLevelRatio = 1.0 + EGM.datas[i]['multiplier']
                 break
-    LOG_IFO("worldLevelRatio", worldLevelRatio)
+    return worldLevelRatio
+
+def getExpDecayRate(level, playerLevel, worldLevelDelta, src):
+    LOG_INFO("getExpDecayRate", level, playerLevel, worldLevelDelta, src)
 
     datas = PKMVE.datas.get(level, None)
     if datas:
+        worldLevelRatio = getWorldLevelRatio(playerLevel, worldLevelDelta, src)
         expRate = 1 - datas['ExpGainReduced']
         expRate *= worldLevelRatio
-        LOG_DBG('getExpDecayRate, level:', level, 'rate:', expRate)
+        LOG_INFO('getExpDecayRate, level:', level, 'rate:', expRate, 'worldLevelRatio:', worldLevelRatio)
         return expRate
     else:
         LOG_WARN('getExpDecayRate, level not found:', level)
@@ -2120,7 +2141,7 @@ def buildChatChannelAvatarData(entityId, playerGBID, school, name, level, sex, p
     }
 
 def getConfirmMsgCooldown(mid, default=-1):
-    _messageData = MSG.datas.get(mid, {})
+    _messageData = M_MD.datas.get(mid, {})
     _to1 = _messageData.get('minDisplayTime', 0)
     if _to1 > 0:
         return _to1
@@ -2187,8 +2208,14 @@ def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
     if fromSpaceNo == 0 and gameconfig.isCrossServer():
         return True
 
+
     _fromMapId = formula.fetchMapId(fromSpaceNo)
     _toMapId = formula.fetchMapId(toSpaceNo)
+
+    # 相同地图不同分线
+    if _fromMapId == _toMapId:
+        return True
+
     _fromSceneType = GPGP.datas[_fromMapId]['sceneType']
     _toSceneType = GPGP.datas[_toMapId]['sceneType']
 
@@ -2199,7 +2226,7 @@ def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
     return True
 
 def getSkillLvParam(skillId):
-    return combatSkill.SkillBase.getSkillLvParam(skillId)
+    return combatSkill.SkillBaseClass.getSkillLvParam(skillId)
 
 def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
     poolsInfo = {}
@@ -2228,7 +2255,7 @@ def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
                 #LOG_DBG('checkDrawCardPoolTimeLimit before TimeLimit', curTimestamp, pool, endTimestamp)
                 continue
 
-            LOG_IFO('checkDrawCardPoolTimeLimit after TimeLimit', curTimestamp, pool, endTimestamp)
+            LOG_INFO('checkDrawCardPoolTimeLimit after TimeLimit', curTimestamp, pool, endTimestamp)
             poolsInfo[pool] = endTimestamp
 
         gameglobal.expiredDrawCardPoolCache.update(poolsInfo)
@@ -2454,22 +2481,22 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
 
         _mPrm = datas[str(gid)]
         className = _mPrm['ClassName']
-        bornPosition = (_mPrm['PosX'], _mPrm['PosY'], _mPrm['PosZ'])
+        _bornPosition = (_mPrm['PosX'], _mPrm['PosY'], _mPrm['PosZ'])
 
         if 'Dir' in _mPrm:
-            bornDirection = (0.0, 0.0, _mPrm['Dir'] * math.pi / 180)
+            _bornDirection = (0.0, 0.0, _mPrm['Dir'] * math.pi / 180)
         else:
-            bornDirection = gameconst.DEFAULT_DIRECTION
+            _bornDirection = gameconst.DEFAULT_DIRECTION
 
-        tmpProps = {'createIndex': gct}
+        _tmpProps = {'createIndex': gct}
 
-        params = {
+        _params = {
             'spaceNo': spaceNo,
             'spaceno': spaceNo,
             'gameEntityId': gameEntityId,
-            'direction': bornDirection,
-            'position': bornPosition,
-            'tmpProps': tmpProps,
+            'direction': _bornDirection,
+            'position': _bornPosition,
+            'tmpProps': _tmpProps,
         }
 
         if 'Props' in _mPrm:
@@ -2482,15 +2509,15 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                     continue
 
             if 'liveTimer' in _pP:
-                params['liveTime'] = _pP['liveTimer']
+                _params['liveTime'] = _pP['liveTimer']
 
             if 'Radius' in _pP:
-                radius = params['bornRadius'] = float(_pP['Radius'])
-                tmpProps['createRadius'] = radius
+                radius = _params['bornRadius'] = float(_pP['Radius'])
+                _tmpProps['createRadius'] = radius
 
             if 'RefreshNum' in _pP:
                 count = int(_pP['RefreshNum'])
-                tmpProps['createCount'] = count
+                _tmpProps['createCount'] = count
 
                 if count > 1000:
                     raise TypeError('Monster count must lower than 1000')
@@ -2500,17 +2527,17 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                 refreshTime = _pP['RefreshTime']
                 if type(refreshTime) is list:
                     if len(refreshTime) == 1:
-                        params['refreshTime'] = int(int(refreshTime[0]))
+                        _params['refreshTime'] = int(int(refreshTime[0]))
                     else:
-                        params['refreshTime'] = int(random.randint(int(refreshTime[0]), int(refreshTime[1])))
+                        _params['refreshTime'] = int(random.randint(int(refreshTime[0]), int(refreshTime[1])))
                 else:
-                    params['refreshTime'] = int(_pP['RefreshTime'])
+                    _params['refreshTime'] = int(_pP['RefreshTime'])
 
             if 'PathID' in _pP and _pP['PathID']:
-                params['pathId'] = int(_pP['PathID'])
+                _params['pathId'] = int(_pP['PathID'])
 
             if 'Level' in _pP:
-                params['level'] = int(_pP['Level'])
+                _params['level'] = int(_pP['Level'])
 
             if 'RandomRegion' in _pP \
                     and not (_pP.get('IsForSkill', 0) \
@@ -2518,19 +2545,22 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                 #存在随机区域，则改变出生位置
                 randomRegion = _pP['RandomRegion']
 
-                bornPosition = getRandomPositionFromMultiRegion(randomRegion, entityIDs, gid, RandomRegionAtLeastInfo)
-                params.update({
-                    'position': bornPosition,
+                _bornPosition = getRandomPositionFromMultiRegion(randomRegion, entityIDs, gid, RandomRegionAtLeastInfo)
+                _params.update({
+                    'position': _bornPosition,
                 })
 
             if 'LightPillar' in _pP:
                 if _pP['LightPillar']:
-                    params.update({
+                    _params.update({
                         'lightPillar': int(_pP['LightPillar']),
                     })
 
             if 'IsOnGround' in _pP:
-                params['isOnGround'] = bool(_pP['IsOnGround'])
+                _params['isOnGround'] = bool(_pP['IsOnGround'])
+
+            if 'MapEntityType' in _pP:
+                _params['mapEntityType'] = int(_pP['MapEntityType'])
 
         if className == 'Monster':
             _monsterId = int(_mPrm['EntityID'])
@@ -2544,7 +2574,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                     LOG_DBG("skip create monster", spaceNo, _monsterId, nameSuffixID, lineNo)
                     continue
             
-            params.update({
+            _params.update({
                 'monsterId': _monsterId,
                 'name': _mPrm['DisplayName'],
                 'instanceId': _mPrm['ID'],
@@ -2552,7 +2582,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
 
         elif className == 'Teleporter':
             teleporterId = _mPrm['EntityID']
-            params.update({
+            _params.update({
                 'name': _mPrm['DisplayName'],
                 'teleporterId': teleporterId,
                 'teleportType': _mPrm.get('Props', {}).get('GateType', 0),
@@ -2564,7 +2594,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                 continue
 
             _npcId = _mPrm['EntityID']
-            params.update({
+            _params.update({
                 'npcId': _npcId,
                 'name': _mPrm['DisplayName'],
             })
@@ -2576,30 +2606,30 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
 
             collectionId = _mPrm['EntityID']
             collectionType = NPD.datas.get(collectionId, {}).get('type', gameconst.CollectionType.NORMAL)
-            params.update({
+            _params.update({
                 'name': _mPrm['DisplayName'],
                 'collectionId': collectionId,
                 'type': collectionType,
             })
         elif className == 'MonsterGrp':
             _groupId = _mPrm['EntityID']
-            params.update({
+            _params.update({
                 'name': _mPrm['DisplayName'],
                 'groupId': _groupId,
             })
             radius = _mPrm.get('Props', {}).get('Radius', 0)
             if radius:
-                params['bornRadius'] = radius
+                _params['bornRadius'] = radius
         elif className in ('Barrier', 'AirWall'):
             className = 'Barrier'
             _barrierId = _mPrm['ID']
-            params.update({
+            _params.update({
                 'name': _mPrm['DisplayName'],
                 'barrierId': _barrierId,
             })
         elif className == 'CityBattleTeleporter':
             teleporterId = _mPrm['EntityID']
-            params.update({
+            _params.update({
                 'name': _mPrm['DisplayName'],
                 'teleporterId': teleporterId,
                 'cbID': _mPrm['ID'],
@@ -2609,12 +2639,12 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
             if not gameconfig.loadCreation():
                 continue
             _creationId = _mPrm['EntityID']
-            params.update({
+            _params.update({
                 'creationId': _creationId,
             })
         elif className == 'RebornPos':
             _RebornPosId = _mPrm['EntityID']
-            params.update({
+            _params.update({
                 'name': _mPrm['DisplayName'],
                 'rebornPosId': _RebornPosId,
             })
@@ -2624,7 +2654,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
             continue
 
         needCreateBase = 0
-        data = (gameEntityId, spaceNo, className, needCreateBase, bornPosition, bornDirection, params, 0)
+        data = (gameEntityId, spaceNo, className, needCreateBase, _bornPosition, _bornDirection, _params, 0)
         LOG_DBG("loadLineEntities for single ", spaceNo, className, gameEntityId)
         readyEntitiesList.append(data)
 
@@ -2636,8 +2666,8 @@ def isBelongTimerIdTag(timerIdTag):
     return gametimer.TIMER_ID_START <= timerIdTag < gametimer.TIMER_ID_END
 
 
-def getCollisionDistance(creepBaseId, default=0):
-    return CBD.datas[creepBaseId].get('collisionDistance', default)
+def getCollisionDistance(creepbaseId, default=0):
+    return CBD.datas[creepbaseId].get('collisionDistance', default)
 
 def getMarkLimit():
     limitConf = CCT.datas['teamMarkLimit']['value']
@@ -2758,9 +2788,9 @@ def getCrtMapNeedStatisticFlag(spaceNo):
     return mapData.get('dpsActive', 0) == 1
 
 
-def isInAttackArea(tgt, center, radius):
+def isAttackArea(tgt, center, radius):
     if tgt.IsMonster:
-        radius += tgt.getConfigData().get('attackDistanceCompensation', 0)
+        radius += tgt.getCreepData().get('attackDistanceCompensation', 0)
 
     distance = sMath.distance2DToCompareFrom3DPosition(tgt.position, center)
     return distance <= radius * radius
@@ -3138,3 +3168,154 @@ def select_positions(posList, m, radius):
             vaildList = selected
     
     return vaildList
+
+def compare4stageversion(clientStr, serverStr):
+    if not clientStr:
+        return True
+    if not serverStr:
+        return True
+
+    cliStage = clientStr.split('.')
+    serStage = serverStr.split('.')
+
+    if len(cliStage) != 4:
+        return True
+    if len(serStage) != 4:
+        return True
+
+    for i in range(len(serStage)):
+        stage1 = int(cliStage[i]) if cliStage[i].isdigit() else 0
+        stage2 = int(serStage[i]) if serStage[i].isdigit() else 0
+
+        if stage1 != stage2:
+            return stage1 < stage2
+
+    return False
+
+def check4stageversion(verStr):
+    if not verStr:
+        return False
+    verStage = verStr.split('.')
+    if len(verStage) != 4:
+        return False
+    for state in verStage:
+        if not state.isdigit():
+            return False
+    return True
+
+def getCubeCoinCostByTimes(times):
+    costCfg = cube_config.datas['cubeNumCoinCost'].get('value', ())
+    for costInfo in costCfg:
+        if times + 1 == costInfo[0]:
+            return costInfo[1], costInfo[2]
+    return 0, 0
+
+def getCubeAddTimesTypeByitemId(itemId):
+    if itemId == cube_config.datas['cubeNumItem']['value']:
+        return gameconst.CUBE_ADD_TIMES_TYPE_ITEM
+    costCfg = cube_config.datas['cubeNumCoinCost'].get('value', ())
+    for costInfo in costCfg:
+        if itemId != costInfo[1]:
+            continue
+        return gameconst.CUBE_ADD_TIMES_TYPE_COIN
+    
+    return gameconst.CUBE_ADD_TIMES_TYPE_NULL
+
+def getWonderLandCoinCostByTimes(times):
+    costCfg = wonderLand_config.datas['wonderLandNumCoinCost'].get('value', ())
+    totalCnt = wonderLand_config.datas['wonderLandNumCoinDailyLimit']['value']
+    for costInfo in costCfg:
+        if totalCnt - times + 1 == costInfo[0]:
+            return costInfo[1], costInfo[2]
+    return 0, 0
+
+def getWonderLandAddTimesTypeByitemId(itemId):
+    if itemId == wonderLand_config.datas['wonderLandNumItem']['value']:
+        return gameconst.CUBE_ADD_TIMES_TYPE_ITEM
+    costCfg = wonderLand_config.datas['wonderLandNumCoinCost'].get('value', ())
+    for costInfo in costCfg:
+        if itemId != costInfo[1]:
+            continue
+        return gameconst.CUBE_ADD_TIMES_TYPE_COIN
+    
+    return gameconst.CUBE_ADD_TIMES_TYPE_NULL
+
+def debugSoulData(data):
+    LOG_DBG("debugSoulData:")
+    for v in data:
+        LOG_INFO("--")
+        LOG_INFO("类型:", affix_affix.datas[v[0]]["prop"])
+        LOG_INFO("品质:", v[1])
+        LOG_INFO("数值:", v[2])
+
+def rollEquipSoulProps(itemId, schoolId):
+    soulSoulData = soul_soul.datas[itemId]
+
+    #随数量
+    numCount = []
+    numWeight = []
+    for numData in soulSoulData['propertyNum']:
+        numCount.append(numData[0])
+        numWeight.append(numData[1])
+    numRes = random.choices(numCount, weights=numWeight, k=1)[0]
+    #LOG_INFO("rollEquipSoulProps: num: %s" % numRes)
+    
+    #随词条(基础词条可重复，稀有词条不重复)
+    normalPropIds = []
+    normalPropWeight = []
+    rarePropIds = []
+    rarePropWeight = []
+    for propData in soulSoulData['baseProp']:
+        normalPropIds.append(propData[0])
+        normalPropWeight.append(propData[1])
+    for propData in soulSoulData['rareProp']:
+        rarePropIds.append(propData[0])
+        rarePropWeight.append(propData[1])
+        
+    propRes = []
+    for _ in range(numRes):
+        res = random.choices(normalPropIds + rarePropIds, weights=normalPropWeight + rarePropWeight, k=1)[0]
+        propRes.append(res)
+        if res in rarePropIds:
+            rarePropWeight[rarePropIds.index(res)] = 0
+    #LOG_INFO("rollEquipSoulProps: prop: %s" % propRes)
+
+    #随品质 and 具体数值
+    qualityRes = []
+    valueRes = []
+    qualityWeightData = soul_soul.datas[itemId]['qualityWeight']
+    for propId in propRes:
+        qualityIds = []
+        qualityWeight = []
+        for qualityData in qualityWeightData:
+            qualityId = qualityData[0]
+            qualityValue = affix_affix.datas[propId]['qualityValue'][qualityId]
+            # 属性区间是0到0则不参与随机(幸运词条只有紫和金)
+            if qualityValue[0] == 0 and qualityValue[1] == 0:
+                continue
+            qualityIds.append(qualityId)
+            qualityWeight.append(qualityData[1])
+        res = random.choices(qualityIds, weights=qualityWeight, k=1)[0]
+        qualityRes.append(res)
+
+        # 随机具体数值
+        qualityValue = affix_affix.datas[propId]['qualityValue'][res]
+        valueRes.append(random.randint(qualityValue[0], qualityValue[1]))
+    #LOG_INFO("rollEquipSoulProps: quality: %s" % qualityRes)
+    #LOG_INFO("rollEquipSoulProps: value: %s" % valueRes)
+
+    finalRes = []
+    for i in range(len(propRes)):
+        finalRes.append([propRes[i], qualityRes[i], valueRes[i]])
+    #debugSoulData(finalRes)
+    return finalRes
+
+def rollItemProps(itemId, itemSubType, schoolId):
+    if itemSubType == gameconst.ItemSubType.EQUIP_SOUL:
+        return rollEquipSoulProps(itemId, schoolId)
+    return []
+
+def getIntDateTime(now, offsetSeconds=gameconst.GENERAL_CYCLE_TIME):
+    now -= offsetSeconds
+    dateTimeStr = utils.getCommonTimeStrFromTimeStamp(now)
+    return int(dateTimeStr[0:8])

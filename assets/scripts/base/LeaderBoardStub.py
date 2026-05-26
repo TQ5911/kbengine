@@ -21,11 +21,12 @@ import iCycleEvent
 import redisUtils
 import json
 import gameconfig
+import experience_config as E_CDD
 
 class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
                             iTimer.ITimer, iCycleEvent.ICycleEvent):
     def __init__(self):
-        LOG_IFO('LeaderBoardAvatarStub init')
+        LOG_INFO('LeaderBoardAvatarStub init')
 
         iCycleEvent.ICycleEvent.__init__(self)
         self.leaderBoardList.leaderBoardType = self.leaderBoardType
@@ -47,23 +48,23 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             self._checkRushRankRefresh()
 
     def doNext(self):
-        LOG_IFO('LeaderBoardAvatarStub doNext')
+        LOG_INFO('LeaderBoardAvatarStub doNext')
         # gameglobal.localBaseApp.fullPrepare(self.classname())
         super().doNext()
 
     def onFirstCreate(self):
-        LOG_IFO('LeaderBoardAvatarStub onFirstCreate')
+        LOG_INFO('LeaderBoardAvatarStub onFirstCreate')
         self.writeToDB(self._onWriteToDB)
 
     def _onWriteToDB(self, ok, entity):
-        LOG_IFO('LeaderBoardAvatarStub _onWriteToDB')
+        LOG_INFO('LeaderBoardAvatarStub _onWriteToDB')
         if not ok:
             LOG_ERR('LeaderBoardAvatarStub _onWriteToDB failed')
         else:
             gamesql.recordLeaderBoardStub(self.leaderBoardType, self.databaseID, self._onRecordLeaderBoardStubCB)
 
     def _onRecordLeaderBoardStubCB(self, *args):
-        LOG_IFO('LeaderBoardAvatarStub _onRecordLeaderBoardStubCB')
+        LOG_INFO('LeaderBoardAvatarStub _onRecordLeaderBoardStubCB')
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -100,21 +101,21 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         dateStr = W_CDD.datas['LevelRankDeadLine']['value']
         date = datetime.strptime(dateStr, "%Y%m%d%H%M")
         date = int(date.timestamp())
-        LOG_IFO("rush rank need refresh: ", utils.curTS(), date)
+        LOG_INFO("rush rank need refresh: ", utils.curTS(), date)
         EPS = 2 * 60
         if utils.curTS() <= date or abs(utils.curTS() - date) <= EPS:
             return True
 
-        LOG_IFO("rush rank out of time", utils.curTS(), date)
+        LOG_INFO("rush rank out of time", utils.curTS(), date)
         return False
     
     def _genRushRankData(self):
         key = gameconst.RedisKey.LEVEL_RUSH_RANK_DATA_KEY + str(gameconfig.serverId()) + time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(utils.curTS()))
-        LOG_IFO("gen rush rank data key: ", key)
+        LOG_INFO("gen rush rank data key: ", key)
         
         td = time.time()
-        redisUtils.RedisUtils.set(key, json.dumps(self.leaderBoardList.toLeaderBoardListSavedDict(), separators=(',', ':'), indent=None), self._onGenRushRankDataCB)
-        LOG_IFO("gen rush rank data time: ", time.time() - td, "len: ", len(self.leaderBoardList))
+        redisUtils.RedisUtils.cmdSet(key, json.dumps(self.leaderBoardList.toLeaderBoardListSavedDict(), separators=(',', ':'), indent=None), self._onGenRushRankDataCB)
+        LOG_INFO("gen rush rank data time: ", time.time() - td, "len: ", len(self.leaderBoardList))
 
     def _checkRushRankRefresh(self):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK:
@@ -129,17 +130,17 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         now = utils.curTS()
         _dur = R_RCD.datas['refreshCD']['value']
         if date > now and date - now < _dur:
-            LOG_IFO("rush rank make callback", now, date, _dur)
+            LOG_INFO("rush rank make callback", now, date, _dur)
             self.addTimerCB(date - now, '_onLeaderBoardRefresh', (), gametimer.TIMER_TAG_RUSH_RANK_REFRESH)
 
     def _onGenRushRankDataCB(self, ok, data):
         if not ok:
-            LOG_IFO("gen rush rank data failed")
+            LOG_INFO("gen rush rank data failed")
         else:
-            LOG_IFO("gen rush rank data success", data)
+            LOG_INFO("gen rush rank data success", data)
 
     def _onLeaderBoardRefresh(self):
-        LOG_IFO('LeaderBoardAvatarStub _onLeaderBoardRefresh')
+        LOG_INFO('LeaderBoardAvatarStub _onLeaderBoardRefresh')
 
         if not self._needRefresh():
             return
@@ -183,7 +184,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         self.leaderBoardIdx += 1
 
         # 玩家数据需要计算成就，所以要通知到每个玩家
-        if _cls.calcSchool():
+        if _cls.calcSchool() or self.leaderBoardType == gameconst.LeaderBoardType.GUILD:
             _iter = self._sendLeaderBoardRankIdx()
             self.batchlyCall(_iter, 1, 0.1)
 
@@ -205,11 +206,18 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         _idx = 0
         while _idx < len(self.leaderBoardList):
             _lbcVal = self.leaderBoardList[_idx]
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [_lbcVal.gbId, ],
-                'onLeaderBoardRank',
-                (self.leaderBoardType, _idx + 1),
-                None, '', ())
+            if self.leaderBoardType == gameconst.LeaderBoardType.GUILD:
+                gameengine.getGlobalBase('GuildStub').callOnGuild(
+                    _lbcVal.guildUUID,
+                    'onLeaderBoardRank',
+                    (self.leaderBoardType, _idx + 1),
+                    None, '', ())
+            else:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    [_lbcVal.gbId, ],
+                    'onLeaderBoardRank',
+                    (self.leaderBoardType, _idx + 1),
+                    None, '', ())
 
             yield lambda *args: args
             _idx += 1
@@ -283,17 +291,15 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
 
         getattr(box.client, _func)(self.leaderBoardIdx, _list, school, page, _isEnd, _rank)
 
-    def _recalDynamicWorldLevel(self):
+    def _recalDynamicWorldLevel(self, *args):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
             return
         
-        _list = self.leaderBoardList
-        if len(_list) < 100:
-            return
-
-        avgLevel = int(sum(x.level for x in _list[:100]) / 100)
-        self.dynamicWorldLevel = avgLevel
-        LOG_IFO("recalDynamicWorldLevel", self.dynamicWorldLevel)
+        rankWorldLevel = E_CDD.datas['rankWorldLevel']['value'] - 1
+        if len(self.leaderBoardList) - 1 < rankWorldLevel:
+            rankWorldLevel = len(self.leaderBoardList) - 1
+        self.dynamicWorldLevel = self.leaderBoardList[rankWorldLevel].level
+        LOG_INFO("recalDynamicWorldLevel", self.dynamicWorldLevel)
 
     def getDynamicWorldLevel(self, box):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:

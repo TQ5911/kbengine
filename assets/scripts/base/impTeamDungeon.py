@@ -22,14 +22,14 @@ import gameclass
 
 class DungeonSheetMixin(object):
 
-    def _getPrmBydungeonNo(self, dungeonNo, pName):
+    def _getParamBydungeonNo(self, dungeonNo, pName):
         if dungeonNo in DDL.datas:
             prm = DDL.datas[dungeonNo]
             if pName in prm:
                 return prm[pName]
 
     def isTeamMemberSkipCheck(self, dungeonNo):
-        x = self._getPrmBydungeonNo(dungeonNo, 'teamMemberSkipCheck')
+        x = self._getParamBydungeonNo(dungeonNo, 'teamMemberSkipCheck')
         if x == 1:
             return True
         elif x == 2:
@@ -45,7 +45,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
     # GOODMAN CARD METHOD
 
     def getCurrentActRewardStatus(self, srcId=gameconst.DungeonSrcEnum.DEFAULT, playMode=gameconst.DungeonPlayModeEnum.UNKNOWN):
-        LOG_IFO('getCurrentActRewardStatus::', srcId, playMode)
+        LOG_INFO('getCurrentActRewardStatus::', srcId, playMode)
         actId, canGetReward = 0, False
 
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
@@ -120,7 +120,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
         return True, 'OK'
 
     def useItemAndEnterTeamDungeon(self, needDic, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        LOG_IFO('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
+        LOG_INFO('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
                   spaceMgrBox, extra)
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemDict(needDic)
@@ -146,6 +146,6 @@ class ImpTeamDungeon(DungeonSheetMixin):
             'eId': self.id,
         })
 
-        LOG_IFO('selfCheckAndEnterTeamDungeon::', teamId, dungeonNo, extra)
+        LOG_INFO('selfCheckAndEnterTeamDungeon::', teamId, dungeonNo, extra)
         teamStub = gameengine.getTeamStub(teamId)
         teamStub.enterTeamDungeonDirectly(self, self.gbID, teamId, dungeonNo, extra)

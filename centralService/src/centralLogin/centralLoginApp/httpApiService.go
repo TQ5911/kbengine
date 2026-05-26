@@ -374,6 +374,7 @@ func (self *HttpService) queryAccountServers(w http.ResponseWriter, r *http.Requ
 type ActivationCodeReply struct {
 	IsSuccess bool   `json:"isSuccess"`
 	TagType   string `json:"tagType"`
+	Code      int    `json:"code"`
 }
 
 type ActivationCodeData struct {
@@ -381,10 +382,19 @@ type ActivationCodeData struct {
 	Message string `json:"message"`
 }
 
-func (self *HttpService) replyActivationCode(w http.ResponseWriter, isSuccess bool, tagType string) {
+const (
+	ActivationCodeInvalid      int = 40001
+	ActivationCodeExpired      int = 40002
+	ActivationCodeUsed         int = 40003
+	ActivationCodeMultipleUsed int = 429
+	UnknownError               int = 500
+)
+
+func (self *HttpService) replyActivationCode(w http.ResponseWriter, isSuccess bool, tagType string, code int) {
 	response := ActivationCodeReply{}
 	response.IsSuccess = isSuccess
 	response.TagType = tagType
+	response.Code = code
 	data, err := json.Marshal(response)
 	if err != nil {
 		appLog.Error("replyActivationCode json response failed", err.Error())
@@ -440,7 +450,7 @@ func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *
 
 	codeType := getCodeType(code)
 	if codeType == "" {
-		self.replyActivationCode(w, false, "")
+		self.replyActivationCode(w, false, "", ActivationCodeInvalid)
 		log.Println("handleExchangeActivationCode: ", gameId, code, tagType, "invalid code")
 		return
 	}
@@ -473,7 +483,7 @@ func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *
 	req, err := http.NewRequest(http.MethodPost, reqURL, bytes.NewReader(jsonBody))
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode NewRequest: %s", err.Error()))
-		self.replyActivationCode(w, false, "")
+		self.replyActivationCode(w, false, "", UnknownError)
 		return
 	}
 
@@ -483,7 +493,7 @@ func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *
 	resp, err := client.Do(req)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode Do: %s", err.Error()))
-		self.replyActivationCode(w, false, "")
+		self.replyActivationCode(w, false, "", UnknownError)
 		return
 	}
 	defer resp.Body.Close()
@@ -491,7 +501,7 @@ func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode ReadAll: %s", err.Error()))
-		self.replyActivationCode(w, false, "")
+		self.replyActivationCode(w, false, "", UnknownError)
 		return
 	}
 
@@ -501,15 +511,15 @@ func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("handleExchangeActivationCode Unmarshal: %s", err.Error()))
-		self.replyActivationCode(w, false, "")
+		self.replyActivationCode(w, false, "", UnknownError)
 		return
 	}
 
 	if response.Code == 200 {
 		c := self.setRedisOfficialTagType(gameId, code)
-		self.replyActivationCode(w, true, c)
+		self.replyActivationCode(w, true, c, response.Code)
 	} else {
-		self.replyActivationCode(w, false, "")
+		self.replyActivationCode(w, false, "", response.Code)
 	}
 }
 

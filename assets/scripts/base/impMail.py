@@ -64,7 +64,7 @@ class ImpMail(object):
         return mailAssistor.checkGlobalMailConds(globalMail, self.accountEntity.accountType, self.getAvatarLevel(), self.birthInDB, self.tLoginBase)
 
     def sendOneGlobalMail(self, globalMail):
-        LOG_IFO('in sendOneGlobalMail:', globalMail.globalMailGBID)
+        LOG_INFO('in sendOneGlobalMail:', globalMail.globalMailGBID)
         if not self.checkGlobalMail(globalMail):
             return
         self.doInsertGlobalMail(0, globalMail)
@@ -75,7 +75,7 @@ class ImpMail(object):
         gamesql.loadLastGlobalMailInfo(self.gbID, self.loadLastGlobalMailInfoCallback)
 
     def loadLastGlobalMailInfoCallback(self, ret, num, insertId, err):
-        LOG_IFO('loadLastGlobalMailInfoCallback:', ret, num, insertId, err)
+        LOG_INFO('loadLastGlobalMailInfoCallback:', ret, num, insertId, err)
         if err:
             gameengine.panicStack(' loadLastGlobalMailInfoCallback, no lastGlobalMailInfo:', ret, num, insertId, err)
             return
@@ -102,7 +102,7 @@ class ImpMail(object):
             self.doInsertGlobalMail(opUUID, globalMail, True)
         else:
             #没有新的全服邮件
-            LOG_IFO('no global mail, mail init finished')
+            LOG_INFO('no global mail, mail init finished')
             self.mailInitFinishedOnLogin()
             self.startLoadMails(gameconst.MailLoadType.GLOBAL_AND_PLAYER_MAIL)
         return
@@ -116,14 +116,14 @@ class ImpMail(object):
         return
 
     def insertGlobalMailCallback(self, ret, num, insertId, err, mailGBID, opUUID, mailCreateTime, isLogin):
-        LOG_IFO('insertGlobalMailCallback:', ret, num, insertId, err, mailGBID, opUUID, mailCreateTime, isLogin)
+        LOG_INFO('insertGlobalMailCallback:', ret, num, insertId, err, mailGBID, opUUID, mailCreateTime, isLogin)
         if err:
             gameengine.panicStack('insertGlobalMailCallback, error:', ret, num, insertId, err)
 
         self.hasGotGlobalMails[mailGBID] = utils.curTS()
         insertGlobalMailList = utils.popCallbackTmpInfo(self, opUUID)
         if not insertGlobalMailList:
-            LOG_IFO('insert all global mail succ, mail init finished')
+            LOG_INFO('insert all global mail succ, mail init finished')
             self.mailInitFinishedOnLogin()
             mailLoadType = gameconst.MailLoadType.GLOBAL_MAIL
             if isLogin:
@@ -137,14 +137,14 @@ class ImpMail(object):
 
     def onNewMailInsertSucc(self, mailId, mailGBID, title, cont, attachStr, srcType, srcSubType, opUUID, desc, idipSource, isGlobal):
         # 有新普通邮件插入数据库表中
-        LOG_IFO('onNewMailInsertSucc:', mailId, isGlobal)
+        LOG_INFO('onNewMailInsertSucc:', mailId, isGlobal)
         mailLoadType = gameconst.MailLoadType.PLAYER_MAIL
         if isGlobal:
             mailLoadType = gameconst.MailLoadType.GLOBAL_MAIL
         self.startLoadMails(mailLoadType)
 
     def mailInitFinishedOnLogin(self):
-        LOG_IFO('mailInitFinishedOnLogin')
+        LOG_INFO('mailInitFinishedOnLogin')
         self.mailInitLockedTime = 0
         lastGlobalMailTime = mailAssistor.getLastGlobalMailTime()
         if lastGlobalMailTime:
@@ -152,10 +152,10 @@ class ImpMail(object):
                                             self._updateLastGlobalMailInfoCallback(ret, num, insertId, err, lastGlobalMailTime))
 
     def _updateLastGlobalMailInfoCallback(self, ret, num, insertId, err, lastGlobalMailTime):
-        LOG_IFO('_updateLastGlobalMailInfoCallback:', ret, num, insertId, err, lastGlobalMailTime)
+        LOG_INFO('_updateLastGlobalMailInfoCallback:', ret, num, insertId, err, lastGlobalMailTime)
 
     def delayStartLoadMails(self, mailLoadType):
-        LOG_IFO('delayStartLoadMails', mailLoadType)
+        LOG_INFO('delayStartLoadMails', mailLoadType)
         self.loadMailTimerId = 0
         self.startLoadMails(mailLoadType)
 
@@ -168,7 +168,7 @@ class ImpMail(object):
             # 到这里并且self.mailInitLockedTime不为0， 说明邮件初始化流程出错中断
             gameengine.panicStack('startLoadMails, init mail from db error')
 
-        LOG_IFO('startLoadMails:', mailLoadType, self.mailCacheData.lastPlayerMailTime, self.mailCacheData.lastGlobalMailTime)
+        LOG_INFO('startLoadMails:', mailLoadType, self.mailCacheData.lastPlayerMailTime, self.mailCacheData.lastGlobalMailTime)
         if utils.curTS() < self.loadMailCDTime:
             if not self.loadMailTimerId:
                 self.loadMailTimerId = self.addTimerCB(1, 'delayStartLoadMails', (mailLoadType,), gametimer.TIMER_TAG_LOAD_MAIL, 'loadMailTimerId')
@@ -195,7 +195,7 @@ class ImpMail(object):
             LOG_ERR('     in _loadMailsFromDBCallback, db op error:', isGlobal, ret, num, insertId, err)
             return
 
-        LOG_IFO('in _loadMailsFromDBCallback:', isGlobal, mailLoadType, len(ret))
+        LOG_INFO('in _loadMailsFromDBCallback:', isGlobal, mailLoadType, len(ret))
         maxMailNum = MACF.datas['mailNumMax']['value']
         if isGlobal:
             maxMailNum = MACF.datas['mailNumMax2']['value']
@@ -260,7 +260,7 @@ class ImpMail(object):
             gamesql.updateMultiMails(self.gbID, updateDueTimeGBIDList, lambda ret, num, insertId, err:
                                     self.updateMultiMailsCallback(ret, num, insertId, err, updateDueTimeGBIDList, AAC_AACDD.datas.BONUS_SRC_MAIL_CLEAR_DUETIME, 'clear due time'))
             
-        LOG_IFO('_loadMailsFromDBCallback:', isGlobal)
+        LOG_INFO('_loadMailsFromDBCallback:', isGlobal)
         rmCacheMailList = self.mailCacheData.getReplaceMailList(isGlobal)
         rmMails = self.mailCacheData.deleteMailsCache(rmCacheMailList)
         needDelete = False
@@ -332,12 +332,12 @@ class ImpMail(object):
 
     @gamedecorator.checkGameconfigEnable('mail')
     def reqReadOneMail(self, exposed, mailGBID):
-        LOG_IFO('in reqReadOneMail:', mailGBID)
+        LOG_INFO('in reqReadOneMail:', mailGBID)
         gamesql.setMailHasRead(self.gbID, mailGBID, lambda ret, num, insertId, err, mailGBID=mailGBID:
                                             self.setMailHasReadCallback(ret, num, insertId, err, mailGBID))
 
     def setMailHasReadCallback(self, ret, num, insertId, err, mailGBID):
-        LOG_IFO('in setMailHasReadCallback:', ret, num, insertId, err)
+        LOG_INFO('in setMailHasReadCallback:', ret, num, insertId, err)
         if err:
             LOG_WARN('setMailHasReadCallback failed:', err)
             return
@@ -347,7 +347,7 @@ class ImpMail(object):
     @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqGetOneMailAttach(self, exposed, mailGBID):
-        LOG_IFO('in reqGetOneMailAttach:', mailGBID)
+        LOG_INFO('in reqGetOneMailAttach:', mailGBID)
         mail = self.mailCacheData.getMailByGBID(mailGBID)
         if not mail:
             return
@@ -357,7 +357,7 @@ class ImpMail(object):
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     @gamedecorator.limitcall(2)
     def reqGetAllMailsAttach(self, exposed):
-        LOG_IFO('in reqGetAllMailsAttach')
+        LOG_INFO('in reqGetAllMailsAttach')
         mailList = self.mailCacheData.getMailsWithAttachHasNotGet()
         if not mailList:
             LOG_WARN('   reqGetAllMailsAttach, no mail with attach has not get')
@@ -415,7 +415,7 @@ class ImpMail(object):
                                       self.setMailAttachHasGetCallback(ret, num, insertId, err, mailGBIDList))
 
     def setMailAttachHasGetCallback(self, ret, num, insertId, err, mailGBIDList):
-        #LOG_IFO('in getMailAttachCallback:', ret, num, insertId, err)
+        #LOG_INFO('in getMailAttachCallback:', ret, num, insertId, err)
         self.unlockBag(gameconst.BagType.BAG_TYPE_NORMAL)
         if err:
             LOG_WARN('   setMailAttachHasGetCallback failed:', err)
@@ -450,12 +450,12 @@ class ImpMail(object):
         return
 
     def resetMailAttachState(self, opUUID, mailGBID, readState):
-        LOG_IFO('resetMailAttachState:', opUUID, mailGBID, readState)
+        LOG_INFO('resetMailAttachState:', opUUID, mailGBID, readState)
         gamesql.resetMailAttachNotState(self.gbID, mailGBID, readState, lambda ret, num, insertId, err, opUUID=opUUID:
                                             self.resetMailAttachStateCallback(ret, num, insertId, err, opUUID))
 
     def resetMailAttachStateCallback(self, ret, num, insertId, err, opUUID):
-        LOG_IFO('in resetMailAttachStateCallback:', ret, num, insertId, opUUID)
+        LOG_INFO('in resetMailAttachStateCallback:', ret, num, insertId, opUUID)
         mailGBIDList = utils.popCallbackTmpInfo(self, opUUID)
         if err:
             gameengine.panicStack('     resetMailAttachStateCallback failed:', ret, num, insertId, self.gbID, opUUID, mailGBIDList)
@@ -465,14 +465,14 @@ class ImpMail(object):
             mail = self.mailCacheData.getMailByGBID(mailGBID)
             mail and mail.setAttachState(gameconst.MailAttachState.NotGet)
 
-        LOG_IFO('resetMailAttachStateCallback, reset mail attach state succ:', mailGBIDList)
+        LOG_INFO('resetMailAttachStateCallback, reset mail attach state succ:', mailGBIDList)
         return
 
     @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqDelMails(self, exposed, mailGBIDList):
         # 删除选中的邮件
-        LOG_IFO('in reqDelMails:', mailGBIDList)
+        LOG_INFO('in reqDelMails:', mailGBIDList)
         if not mailGBIDList:
             return
         mailGBID = mailGBIDList[0]
@@ -482,7 +482,7 @@ class ImpMail(object):
             return
 
         if mail.canGetAttach():
-            LOG_IFO('reqDelMails, del mail failed, has attach:', mailGBID)
+            LOG_INFO('reqDelMails, del mail failed, has attach:', mailGBID)
             self.onMessagePre(MMD.datas.mailDelete_Fail, [])
             return
 
@@ -491,7 +491,7 @@ class ImpMail(object):
         return
 
     def deleteMailByMailGBIDCallback(self, ret, num, insertId, err, mailGBID):
-        LOG_IFO('deleteMailByMailGBIDCallback:', ret, num, insertId, err, mailGBID)
+        LOG_INFO('deleteMailByMailGBIDCallback:', ret, num, insertId, err, mailGBID)
         if err:
             gameengine.panicStack('   deleteMailByMailGBIDCallback failed:', mailGBID)
             return
@@ -501,7 +501,7 @@ class ImpMail(object):
     @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqDelAllMails(self, exposed):
-        LOG_IFO('in reqDelAllMails')
+        LOG_INFO('in reqDelAllMails')
         delMailGBIDList = self.mailCacheData.getMailListCanDelete()
         if not delMailGBIDList:
             LOG_WARN('reqDelAllMails, no mail can delete')

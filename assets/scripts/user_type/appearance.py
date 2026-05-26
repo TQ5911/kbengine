@@ -180,7 +180,7 @@ class Appearance(userType.UserSingleType):
         return
 
     def setEquip(self, owner, part, val, grade):
-        LOG_IFO("setEquip ", part, val, grade)
+        LOG_INFO("setEquip ", part, val, grade)
         realVal = 0
         if val > 0 and grade > 0:
             appearance = GBGBD.datas.get(val, {}).get('appearance', None)
@@ -198,9 +198,6 @@ class Appearance(userType.UserSingleType):
             self.breast = realVal
             owner.allClients.onAppearanceUpdated(part, realVal)
             owner.base.updateAccountCharacterAppearance({'breast':realVal})
-
-    def getItemIdByOutFitId(self, outFitId):
-        return AMRD.datas[outFitId].get('itemId')
 
     def setOutfitId(self, owner, outfitType, outfitId):
         if self.checkOutfitIdSetup(outfitType, outfitId):
@@ -225,83 +222,12 @@ class Appearance(userType.UserSingleType):
         else:
             LOG_ERR("setOutfitId wrong type", outfitId)
             return
-        owner.allClients.onAppearanceOutfitUpdated(outfitName, outfitId)
+        owner.allClients.onAppearanceOutfitUpdated(outfitType, outfitId)
         return
 
     def getOutFitId(self, school, sex, outfitType, outfitId):
         LOG_DBG("getOutFitId", school, sex, outfitType, outfitId)
         return school * 100000 + sex * 10000 + outfitType * 1000 + outfitId
-
-    def updateOutFit(self, owner, outFitIdList):
-        itemIdSet = set()
-        oldOutfitData = self.outfitData.toSavedDict()
-        # todo change if avatar has school
-        school = 1001
-        sex = owner.sex
-        for outFitId in outFitIdList:
-            outfitType = int(outFitId / 1000 % 10)
-            outfitId = int(outFitId % 1000)
-            LOG_DBG("updateOutFit", outFitId, outfitType, outfitId)
-            if outfitType == gameconst.OutfitType.wing:
-                self.outfitData.wingId = outfitId
-                outfitName = 'wingId'
-            elif outfitType == gameconst.OutfitType.hair:
-                oldOutfitId = self.getOutFitId(school, sex, outfitType, self.outfitData.hairId)
-                itemId = self.getItemIdByOutFitId(oldOutfitId)
-                self.outfitData.hairId = outfitId
-                outfitName = 'hairId'
-                itemIdSet.add(itemId)
-            elif outfitType == gameconst.OutfitType.clothes:
-                oldOutfitId = self.getOutFitId(school, sex, outfitType, self.outfitData.clothesId)
-                itemId = self.getItemIdByOutFitId(oldOutfitId)
-                self.outfitData.clothesId = outfitId
-                outfitName = 'clothesId'
-                itemIdSet.add(itemId)
-            elif outfitType == gameconst.OutfitType.picFrame:
-                self.outfitData.picFrameId = outfitId
-                outfitName = 'picFrameId'
-                # owner.updatePicFrameId(self.outfitData.picFrameId)
-            elif outfitType == gameconst.OutfitType.mount:
-                self.outfitData.mountId = outfitId
-                outfitName = 'mountId'
-            else:
-                LOG_ERR("setOutfitId wrong type", outfitId)
-                return
-            owner.allClients.onAppearanceOutfitUpdated(outfitName, outfitId)
-
-        newOutfitData = self.outfitData.toSavedDict()
-        return itemIdSet, oldOutfitData, newOutfitData
-
-    def updateOutfitByOld(self, owner, oldOutfitData):
-        for outfitName, outfitId in oldOutfitData.items():
-            if outfitName == 'hairId':
-                if outfitId == self.outfitData.hairId:
-                    continue
-                else:
-                    self.outfitData.hairId = outfitId
-            elif outfitName == 'clothesId':
-                if outfitId == self.outfitData.clothesId:
-                    continue
-                else:
-                    self.outfitData.clothesId = outfitId
-            elif outfitName == 'picFrameId':
-                if outfitId == self.outfitData.picFrameId:
-                    continue
-                else:
-                    self.outfitData.picFrameId = outfitId
-            elif outfitName == 'wingId':
-                if outfitId == self.outfitData.wingId:
-                    continue
-                else:
-                    self.outfitData.wingId = outfitId
-            elif outfitName == 'mountId':
-                if outfitId == self.outfitData.mountId:
-                    continue
-                else:
-                    self.outfitData.mountId = outfitId
-            else:
-                continue
-            owner.allClients.onAppearanceOutfitUpdated(outfitName, outfitId)
 
     def removeOutfitId(self, owner, outfitType, outfitId):
         if not self.checkOutfitIdSetup(outfitType, outfitId):
@@ -325,7 +251,7 @@ class Appearance(userType.UserSingleType):
         else:
             LOG_ERR("setOutfitId wrong type", outfitId, outfitType)
             return
-        owner.allClients.onAppearanceOutfitUpdated(outfitName, 0)
+        owner.allClients.onAppearanceOutfitUpdated(outfitType, 0)
         owner.base.updateAccountCharacterOutfit(outfitName, 0)
 
     def checkOutfitIdSetup(self, outfitType, outfitId):
@@ -369,16 +295,6 @@ class Appearance(userType.UserSingleType):
         if expireTime and utils.curTS() >= expireTime:
             self.removeAccountOutfitId(outfitType, outfitId)
         return True
-
-    def useAvatar(self, owner, avatarType, avatarId):
-        if avatarType == gameconst.AvatarPhotoType.AvatarPhoto:
-            avatarName = 'avatar'
-        elif avatarType == gameconst.AvatarPhotoType.AvatarFrame:
-            avatarName = 'avatarFrame'
-        else:
-            LOG_ERR("useAvatar wrong type", avatarId, avatarType)
-            return
-        owner.allClients.onAppearanceOutfitUpdated(avatarName, avatarId)
 
 
 class AvatarOutfit(userType.UserSingleType):
@@ -465,7 +381,7 @@ class AvatarOutfitInfo(userType.UserSingleType):
         return outfitList
 
     def addOutfit(self, owner, outfitType, outfitId, expireTime, isNew=True):
-        LOG_IFO("addOutfit ", outfitType, outfitId, expireTime)
+        LOG_INFO("addOutfit ", outfitType, outfitId, expireTime)
         outfit = self.getOutfitInfo(outfitType, outfitId)
         if not outfit:
             outfit = AvatarOutfit(outfitType, outfitId, expireTime, isNew)
@@ -480,7 +396,7 @@ class AvatarOutfitInfo(userType.UserSingleType):
             outfit.setExpireTime(expireTime)
 
     def removeOutfit(self, owner, outfitType, outfitId):
-        LOG_IFO("removeOutfit ", outfitType, outfitId)
+        LOG_INFO("removeOutfit ", outfitType, outfitId)
         outfit = self.getOutfitInfo(outfitType, outfitId)
         if not outfit:
             return

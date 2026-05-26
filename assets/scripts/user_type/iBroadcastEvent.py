@@ -185,6 +185,25 @@ class IBroadcastEvent(object):
         gameglobal.newAuctionItemCache[auctionId] = playerGBID
         LOG_DBG('in onSyncNewAuctionItemCache:', playerGBID, itemId, auctionId, playerGBIDSet)
 
+    def broadcastToAllAccountPatchVersion(self, platId, patchVerStr):
+        LOG_DBG('in broadcastToAllAccountPatchVersion:', platId, patchVerStr)
+        gameglobal.localBaseApp.batchlyCall(self._broadcastToAllAccountPatchVersion(platId, patchVerStr), self.BROADCAST_ACCOUNTS_NUM_PER_TIME, 0.1)
+
+    @staticmethod
+    def _broadcastToAllAccountPatchVersion(platId, patchVerStr):
+        LOG_DBG('in _broadcastToAllAccountPatchVersion:', platId, patchVerStr)
+        _boxList = list(gameglobal.localAccountCache.values())
+        for _box in _boxList:
+            if not _box or _box.isDestroyed:
+                continue
+            if _box.devicePlatId != platId:
+                continue
+            if not _box.client:
+                if _box.avatar:
+                    _box.avatar.client.onPatchVersion(patchVerStr)
+                continue
+            _box.client.onPatchVersion(patchVerStr)
+            yield utils.emptyFunc
     ################################### gm ##########################################
     def gmSendMailByEntityId(self, entId, mailId, dueTime, attach, despArgs, title, count, srcType):
         LOG_DBG('in gmSendMailByEntityId:', entId, mailId, dueTime, attach, despArgs, title, count, srcType)
@@ -196,6 +215,6 @@ class IBroadcastEvent(object):
     ################################### gm end ##########################################
 
     def onSyncCellAvatarCount(self, cellId, count):
-        LOG_IFO('onSyncCellAvatarCount:', cellId, count)
+        LOG_INFO('onSyncCellAvatarCount:', cellId, count)
         gameglobal.cellAvatarCountDict[cellId] = count
         return

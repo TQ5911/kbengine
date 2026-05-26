@@ -16,8 +16,24 @@
             <Type>      PY_LIST             </Type>
             <Flags>     BASE                </Flags>
         </actTimeQueue>
+
+        <announcementDict>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       {}              </Default>
+        </announcementDict>
     </Properties>
 
     <BaseMethods>
+        <updateAnnouncement>
+            <Arg>        UINT16         </Arg>
+            <Arg>        UINT16         </Arg>
+            <Arg>        INT64          </Arg>
+            <Arg>        INT64          </Arg>
+        </updateAnnouncement>
+
+        <getAnnouncement>
+            <Arg>           MAILBOX         </Arg>
+        </getAnnouncement>
     </BaseMethods>
 </root>

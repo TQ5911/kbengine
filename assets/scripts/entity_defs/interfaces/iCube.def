@@ -82,7 +82,9 @@
         </reqUseItemAddCubeTimes>
 
         <useItemAddCubeTimes>
+            <Arg>           UINT8                   </Arg>
             <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT32                  </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           BOOL                    </Arg>
             <Arg>           BOOL                    </Arg>
@@ -92,7 +94,9 @@
 
         <addRoomDurationFailed>
             <Arg>           OP_UUID                 </Arg>
+            <Arg>           UINT8                   </Arg>
             <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT32                  </Arg>
             <Arg>           UINT16                  </Arg>
         </addRoomDurationFailed>
 
@@ -150,7 +154,9 @@
         </toClientCubeLoginData>
 
         <checkAddCubeRoomDurationCondition>
+            <Arg>           UINT8                   </Arg>
             <Arg>           ITEM_ID                 </Arg>
+            <Arg>           UINT32                  </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           OP_UUID                 </Arg>
         </checkAddCubeRoomDurationCondition>
@@ -173,6 +179,7 @@
 
         <leaveCubeInternal>
             <Arg>           UINT8                   </Arg>
+            <Arg>           BOOL                    </Arg>
         </leaveCubeInternal>
 
         <getCubeRoomLeftTime> <Exposed/>

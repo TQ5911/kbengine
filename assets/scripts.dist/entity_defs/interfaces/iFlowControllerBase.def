@@ -1,0 +1,52 @@
+<root>
+    <!--<Interfaces>-->
+        <!--<Interface>iBaseNoCell</Interface>-->
+        <!--<Interface>iTimerBase</Interface>-->
+    <!--</Interfaces>-->
+
+    <Properties>
+        <!--<demoP>-->
+            <!--<Type>UINT8</Type>-->
+            <!--<Flags>BASE</Flags>-->
+            <!--<Default>0</Default>-->
+            <!--<Persistent>true</Persistent>-->
+        <!--</demoP>-->
+    </Properties>
+
+    <BaseMethods>
+        <flowCtrlOnTaskComplete>
+            <Arg>   TASK_ID     </Arg>
+        </flowCtrlOnTaskComplete>
+
+        <flowCtrlOnTaskFailed>
+            <Arg>   TASK_ID     </Arg>
+        </flowCtrlOnTaskFailed>
+
+        <flowCtrlOnTaskInProgress>
+            <Arg>   TASK_ID     </Arg>
+        </flowCtrlOnTaskInProgress>
+
+        <flowCtrlDungeonMonsterReleaseComplete>
+            <Arg>   PY_LIST     </Arg>
+        </flowCtrlDungeonMonsterReleaseComplete>
+
+        <flowCtrlDungeonMonsterKillNumIncreased>
+            <Arg>   GAME_ENTITY_ID  </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UINT32          </Arg>
+        </flowCtrlDungeonMonsterKillNumIncreased>
+
+        <flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId>
+            <Arg>   OBJECT_ID       </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UINT32          </Arg>
+        </flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId>
+
+    </BaseMethods>
+
+    <ClientMethods>
+
+    </ClientMethods>
+
+</root>
+

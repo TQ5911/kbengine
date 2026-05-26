@@ -1,0 +1,153 @@
+<root>
+    <Properties>
+        <fatal>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </fatal>
+        <mortal>
+            <Type>          FLOATATTR        </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </mortal>
+        <hit>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </hit>
+        <dodge>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </dodge>
+        <mpCostRatio>
+            <Type>          FLOATATTR          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+            <Default>       1.0               </Default>
+        </mpCostRatio>
+        <stunEnh>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </stunEnh>
+        <silentEnh>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </silentEnh>
+        <knockEnh>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </knockEnh>
+        <stunAnti>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </stunAnti>
+        <silentAnti>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </silentAnti>
+        <knockAnti>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </knockAnti>
+        <antiMortal>
+            <Type>          FLOATATTR          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </antiMortal>
+        <minPhysicalAtk>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </minPhysicalAtk>
+        <maxPhysicalAtk>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </maxPhysicalAtk>
+        <minMagicAtk>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </minMagicAtk>
+        <maxMagicAtk>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </maxMagicAtk>
+        <minPhysicalArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </minPhysicalArmor>
+        <maxPhysicalArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </maxPhysicalArmor>
+        <minMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </minMagicArmor>
+        <maxMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </maxMagicArmor>
+        <atkBless>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </atkBless>
+        <frozenEnh>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </frozenEnh>
+        <frozenAnti>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </frozenAnti>
+        <slowEnh>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </slowEnh>
+        <slowAnti>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </slowAnti>
+        <realDmg>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </realDmg>
+        <realDmgDef>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </realDmgDef>
+        <PVPDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </PVPDmg>
+        <PVPDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </PVPDmgAnti>
+        <monsterDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </monsterDmg>
+        <monsterDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </monsterDmgAnti>
+        <finalDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </finalDmg>
+        <finalDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </finalDmgAnti>
+        <skillCD>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </skillCD>
+        <drugsQuantity>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </drugsQuantity>
+        <pushEnh>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </pushEnh>
+        <pushAnti>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </pushAnti>
+    </Properties>
+</root>

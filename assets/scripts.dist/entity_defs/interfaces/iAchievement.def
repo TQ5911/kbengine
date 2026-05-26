@@ -1,0 +1,37 @@
+<root>
+    <Properties>
+        <achievementInfo>
+            <Type>          ACHIEVEMENTS_DATA_INFO      </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+        </achievementInfo>
+    </Properties>
+
+    <BaseMethods>
+        <takeAchievementRewards> <Exposed/>
+            <Arg>   ARRAY    <of>    ACHIEVE_ID                  </of>   </Arg>
+        </takeAchievementRewards>
+
+        <triggerAchievement>
+            <Arg>   ACHIEVE_TYPE                           </Arg>
+        </triggerAchievement>
+    </BaseMethods>
+
+    <CellMethods>
+
+    </CellMethods>
+
+    <ClientMethods>
+        <onUpdateAchieveDatas>
+            <Arg>   ARRAY <of>  ACHIEVEMENT_VAL_DATA_INFO   </of>   </Arg>
+        </onUpdateAchieveDatas>
+
+        <onTakeAchievementRewards>
+            <Arg>   ARRAY <of>  ACHIEVE_ID                  </of>   </Arg>
+            <Arg>   ACHIEVE_POINT                           </Arg>
+        </onTakeAchievementRewards>
+    </ClientMethods>
+</root>
+
+
+

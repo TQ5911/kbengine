@@ -28,7 +28,7 @@ class BotAIState_Init(AIState):
     def execute(self, owner):
         curMapId = owner.getSelfMapId()
         owner.debug("执行初始化状态逻辑 当前地图ID:%s" % curMapId)
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
         if int(curMapId) == owner.dstMapId:
             owner.runGmCommand('$dressallequipments 0')
@@ -69,7 +69,7 @@ class BotAIState_GoDistArea(AIState):
             return
         self.stateTime = now
         owner.debug("执行前往目标区域状态逻辑 %s %s %s" % (owner.state, str(owner.position), str(owner.dstPos)))
-        if owner.hasState(gameconst.State.Death):
+        if owner.hasState(gameconst.StateEnum.Death):
             owner.relive(2)
             return
         if owner.goDistArea():
@@ -128,7 +128,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             self.debug(f"到达目标区域范围 {self.dstRadius} 内")
             self.tryTimes = 0
             return True
-        if self.hasState(gameconst.State.Moving):
+        if self.hasState(gameconst.StateEnum.Moving):
             if self.lastPos and botUtils.distance2D(self.position, self.lastPos) < 1:
                 self.tryTimes += 1
                 self.debug(f"移动到目标区域 {self.dstPos} 失败，位置未改变,尝试次数{self.tryTimes}")

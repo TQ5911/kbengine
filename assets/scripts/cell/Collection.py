@@ -50,7 +50,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             LOG_ERR('create invalid collection!', self.collectionId)
             self.delaySafeDestroy(5)
 
-        self._initBornState()
+        self._doInitBornState()
 
         spaceMgr = self.spaceMgr
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
@@ -63,21 +63,25 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         elif spaceMgr:
             spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
 
+        self.awardContext = None
+        self.createTime = utils.curTS()
+        if hasattr(self, 'FBTime'):
+            self.fBProtectTime = self.createTime + self.FBTime
 
-    def _initBornState(self):
+    def _doInitBornState(self):
         ifBornState = NPD.datas[self.collectionId]['ifBornState']
         if ifBornState:
-            self.changeBornState(gameconst.BornStateType.invisible)
-            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
+            self.setBornState(gameconst.BornStateType.invisible)
+            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'setBornState',
                            (gameconst.BornStateType.static, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
-            self.changeBornState(gameconst.BornStateType.move)
+            self.setBornState(gameconst.BornStateType.move)
 
-    def changeBornState(self, newState):
+    def setBornState(self, newState):
         self.bornState = newState
 
     @property
-    def creepBaseId(self):
+    def creepbaseId(self):
         return self.collectionId
 
     def getPickTimes(self, collectionId):
@@ -92,7 +96,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             return 0
         return collData['timeCheck']
 
-    def checkEventListened(self, eventId):
+    def checkAIEventListened(self, eventId):
         return False
 
     def onTimer(self, tid, userData):
@@ -109,7 +113,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
         spaceMgr = self.spaceMgr
         if spaceMgr:
-            spaceMgr.onCollectionBeCollect(utils.parseGidFromGameEntityId(self.gameEntityId), self.creepBaseId)
+            spaceMgr.onCollectionBeCollect(utils.parseGidFromGameEntityId(self.gameEntityId), self.creepbaseId)
             if formula.isMineWarMineArea(self.spaceNo):
                 spaceMgr.onAvatarGetMineEntity(self.id, avatarId)
 
@@ -124,7 +128,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if self.dropEquipId != dropEquipId:
             return
 
-        LOG_IFO('Collection onEquipDropDestroy', self.id, dropEquipId)
+        LOG_INFO('Collection onEquipDropDestroy', self.id, dropEquipId)
         self.dropEquipId = 0
         self.delaySafeDestroy()
 
@@ -229,6 +233,12 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if pickTimes and self.gatherAvatars.get('gatherCnt', 0) >= pickTimes:
             return False
 
+        if hasattr(self, 'firstBloodTargetGbIds'):
+            #LOG_INFO("firstBloodTargetGbIds", self.firstBloodTargetGbIds)
+            if gbId not in self.firstBloodTargetGbIds:
+                if utils.curTS() - self.createTime < self.FBTime:
+                    return False
+
         return True
 
     def checkAvatarGatherPickTimes(self, avatarBase, gbId):
@@ -239,13 +249,13 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             avatarBase.client.onUpdateCollectionGatherPickTimes(self.id, curPickTimes, pickTimes)
 
     def getGatherPickTimes(self, gbId):
-        if self.type not in (gameconst.CollectionType.PERSONAL_BOX, gameconst.CollectionType.VIEWPOINT):
+        if self.type not in gameconst.CollectionType.ADD_PICK_AVATAR_CNT:
             return self.gatherAvatars.get('gatherCnt', 0), self.getPickTimes(self.collectionId)
 
         return self.gatherAvatars.get(gbId, 0), self.getSpecialPickTimes(self.collectionId)
 
     def setSpecialGatherAvatar(self, avatarId, gbId, gatherCnt):
-        if self.type not in (gameconst.CollectionType.PERSONAL_BOX, gameconst.CollectionType.VIEWPOINT):
+        if self.type not in gameconst.CollectionType.ADD_PICK_AVATAR_CNT:
             return
 
         self.gatherAvatars[gbId] = gatherCnt

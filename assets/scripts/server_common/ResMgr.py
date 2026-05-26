@@ -85,7 +85,7 @@ def loadAreaData():
         width = int(width)
         height = int(height)
 
-        LOG_IFO('load area data:', mapId, width, height)
+        LOG_INFO('load area data:', mapId, width, height)
         data = {}
 
         for i in range(height-1,-1,-1):

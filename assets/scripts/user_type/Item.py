@@ -43,6 +43,11 @@ class Item(BaseItem.BaseItem):
         if itemData.get('usableTime'):
             self.enableTime = utils.parseTimeStr(itemData['usableTime'])
         self.lockStatus = gameconst.ItemLockStatus.UNLOCKED
+        if kwargs.get('rollProps'):
+            self.rollProps = kwargs['rollProps']
+        else:
+            self.rollProps = utils.rollItemProps(self.itemId, self.itemSubType, 1001)
+
         return True
 
     def onSpecificItemChanged(self, attrJson):
@@ -63,6 +68,7 @@ class Item(BaseItem.BaseItem):
     def attr2Dict(self):
         m_dict = {}
         m_dict["lockStatus"] = self.lockStatus
+        m_dict["rollProps"] = self.rollProps
         return m_dict
 
     def canMerge(self, withIt, skipItemId=False, skipBindType=False, skipMaxStack=False,
@@ -78,6 +84,8 @@ class Item(BaseItem.BaseItem):
         if self.enableTime != withIt.enableTime:
             return False
         if self.lockStatus != withIt.lockStatus:
+            return False
+        if self.rollProps or withIt.rollProps:
             return False
         return True
 

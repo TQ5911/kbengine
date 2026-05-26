@@ -86,5 +86,13 @@ datas = _tools.RODict({
     "wechatFailedJump": _tools.RODict({
         "ID": "wechatFailedJump",
         "value": 54000390,
+    }),
+    "resourceRecoveryTimeDes": _tools.RODict({
+        "ID": "resourceRecoveryTimeDes",
+        "value": "可找回{0}天内未使用的免费次数",
+    }),
+    "recoveryCostFree": _tools.RODict({
+        "ID": "recoveryCostFree",
+        "value": "免费找回",
     })
 })

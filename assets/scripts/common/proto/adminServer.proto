@@ -50,7 +50,7 @@ message HttpAPICommandResponse
 service Admin
 {
     rpc registerServer(ServerInfoMessage) returns(Void);
-    rpc replyCommand(CommandResult) returns(Void);
+    rpc doReplyCommand(CommandResult) returns(Void);
     rpc activeTick(Void) returns(Void);
     rpc replyHttpCommand(HttpAPICommandResponse) returns(Void);
 }

@@ -41,7 +41,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             self.initCNpc()
         else:
             self.initNpc()
-        LOG_IFO('on create', self.spaceNo, self.position, self.npcId)
+        LOG_INFO('on create', self.spaceNo, self.position, self.npcId)
 
     def initNpc(self):
         if not self.level:
@@ -54,7 +54,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
         self.hp = self.fullHp
         self.mp = self.fullMp
-        self.speed = float(creep_base.datas.get(self.creepBaseId, {}).get('baseSpeed', 3.0))
+        self.speed = float(creep_base.datas.get(self.creepbaseId, {}).get('baseSpeed', 3.0))
 
         self.isNameDisplay = NPC_DATA.datas[self.npcId].get('isNameDisplay', 1)
         self.isSelectable = NPC_DATA.datas[self.npcId].get('isSelectable', 1)
@@ -89,8 +89,8 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         # if not self.IsCombatUnit and self.belongFestivalLoadId:
         #     dataUtils.allFestivalStubDo('festivalEntityLoad', (self.belongFestivalLoadId, self))
         self.addListener('onBeat', self.id, 'onBeAttacked', ())
-        self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
-        self.changeBornState(gameconst.BornStateType.move)
+        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
+        self.setBornState(gameconst.BornStateType.move)
 
     def initCNpc(self):
         iAICombatUnit.IAICombatUnit.__init__(self)
@@ -112,9 +112,9 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         self.direction = (0.0, 0.0, yaw)
         return
 
-    def changeBornState(self, state):
+    def setBornState(self, state):
         if self.bornState >= state:
-            LOG_ERR('changeBornState failed:', self.bornState, state)
+            LOG_ERR('setBornState failed:', self.bornState, state)
             return
 
         self.bornState = state
@@ -128,14 +128,14 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         elif state == gameconst.BornStateType.afterDialog:
             self.stopThink()
             self.interruptRouting()
-            self.cancelMoveController()
+            self.removeMoveController()
             self.killCastingSkill(gameconst.EndCasting.ECEnumCaptureMonster)
             self.killChannelingSkill(gameconst.ChannelingBreak.BREAK_TP_CAPTURE)
         elif state == gameconst.BornStateType.normal:
             self.addTimerCB(0.5, 'startThink', (), gametimer.TIMER_TAG_START_THINK)
 
     @property
-    def creepBaseId(self):
+    def creepbaseId(self):
         return NPC_DATA.datas[self.npcId].get('creepID', 0)
 
     def initBornAction(self):
@@ -145,16 +145,13 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         # no combat NPC doesn't need AI Controller
         pass
 
-    def onModifyShieldVal(self, val, releaseRoleId, srcType, srcId):
-        pass
-
     def onTimer(self, tid, userData):
         self._onTimer(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 
-        elif userData == gametimer.MONSTER_AI_THINK:
-            self.aiController and self.tickAI()
+        elif userData == gametimer.COMBAT_UNIT_AI_THINK:
+            self.aiController and self.aiTick()
 
         elif userData == gametimer.TIMER_CELL_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
@@ -164,7 +161,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         else:
             super().onTimer(tid, userData)
 
-    def tickAI(self):
+    def aiTick(self):
         self.aiController and self.aiController.tickOnce()
 
     def _addTrap(self):
@@ -177,7 +174,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
     def onBeAttacked(self, arg):
         attackerId = arg.triggerRoleId
-        self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
+        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
 
     def _preSafeDestory(self):
         super()._preSafeDestory()
@@ -187,7 +184,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
     def onDead(self, killer, *args, **kwargs):
         super().onDead(killer)
         self.removeAllBuff()
-        self.cancelMoveController()
+        self.removeMoveController()
         self.destroySummonOnDead()
 
         if killer:

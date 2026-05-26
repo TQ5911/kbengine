@@ -56,14 +56,14 @@ class LoginService(GameServer):
                                           banAccountReason, banPostReason, otherData)
 
     def onKickAccount(self, rpc_controller, reply, done):
-        LOG_IFO("onKickAccount", reply.accountName)
+        LOG_INFO("onKickAccount", reply.accountName)
         accountType = reply.accountType
         accountName = reply.accountName
         kickReason = reply.kickReason
         self.loginMgr.onKickAccount(accountType, accountName, kickReason)
 
     def onLockedLogin(self, rpc_controller, reply, done):
-        LOG_IFO("onLockedLogin", reply.accountName)
+        LOG_INFO("onLockedLogin", reply.accountName)
 
         SwitchServer.SwitchServerUtils.switchServer(
             reply.gbId,
@@ -150,7 +150,7 @@ class ICentralLogin(object):
         # 注册上限
         if extra and "isOverRegLimit" in extra:
             if extra["isOverRegLimit"]:
-                LOG_IFO('check server limit error.')
+                LOG_INFO('check server limit error.')
                 KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_MEET_REG_MAX)
                 return False
             
@@ -158,7 +158,7 @@ class ICentralLogin(object):
         nowTime = utils.curTS()
         openTime = gameconfig.serverOpenTime()
         if nowTime < openTime:
-            LOG_IFO('check server open time limit.', nowTime, openTime, str(openTime - nowTime))
+            LOG_INFO('check server open time limit.', nowTime, openTime, str(openTime - nowTime))
             KBEngine.accountLoginResponse(realAccountName, realAccountName, 
                     bytes(str(openTime - nowTime), encoding='utf-8'), 
                     0, gameconst.GAME_SERVER_ERR_SERVER_OPEN_TIME)
@@ -169,7 +169,7 @@ class ICentralLogin(object):
             tagTypeCode |= 1 << (int(tagType) - 1)
         # 激活码用户允许进入封闭服务器
         permitLogin = gameconfig.permitLogin()
-        LOG_IFO('check permit login', bin(tagTypeCode), bin(permitLogin), bin((tagTypeCode << 32) | permitLogin))
+        LOG_INFO('check permit login', bin(tagTypeCode), bin(permitLogin), bin((tagTypeCode << 32) | permitLogin))
         if tagTypeCode & permitLogin:
             return True
 
@@ -185,7 +185,7 @@ class ICentralLogin(object):
         if not userInfo:
             return
 
-        LOG_IFO('onVerifyLogin:', accountType, userId, accountName, resCode, userInfo, otherData)
+        LOG_INFO('onVerifyLogin:', accountType, userId, accountName, resCode, userInfo, otherData)
 
         tid, token, dataBytes, extra = userInfo
 
@@ -218,7 +218,7 @@ class ICentralLogin(object):
 
         curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
         antiAddictionSwitch = AASC.datas.get('antiAddictSwitchAge18', {}).get('value', 0)
-        LOG_IFO('onVerifyLogin: antiAddictionData', antiAddictionSwitch, gameglobal.antiAddictionData, curAge)
+        LOG_INFO('onVerifyLogin: antiAddictionData', antiAddictionSwitch, gameglobal.antiAddictionData, curAge)
         if utils.isMinorAccount(curAge) and (antiAddictionSwitch or gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT):
             #fmtMessage = MMD.datas[AASC.datas['antiAddictForbiddenTime']['value']]['Message']
             fmtMessage = ""
@@ -307,7 +307,7 @@ class ICentralLogin(object):
         if not serverId:
             return
 
-        LOG_IFO('register server on login:', serverId, centralServerId)
+        LOG_INFO('register server on login:', serverId, centralServerId)
 
         serverInfo = GameServerInfo()
         serverInfo.hostId = serverId
@@ -398,7 +398,7 @@ class ICentralLogin(object):
         loginClient.centralServerStub.onLoginComplete(None, account, None)
 
     def notifyCentralServerOnline(self, accountName, accountType, centralServerId, sessionIdStr):
-        LOG_IFO("notifyCentralServerOnline", accountName, accountType, centralServerId, sessionIdStr)
+        LOG_INFO("notifyCentralServerOnline", accountName, accountType, centralServerId, sessionIdStr)
         self.connectCentralServer(centralServerId)
 
         account = AccountOnlineVal()
@@ -414,7 +414,7 @@ class ICentralLogin(object):
         loginClient.centralServerStub.onAccountOnline(None, account, None)
 
     def notifyCentralServerOffline(self, accountName, accountType, centralServerId, sessionIdStr):
-        LOG_IFO("notifyCentralServerOffline", accountName, accountType, centralServerId, sessionIdStr)
+        LOG_INFO("notifyCentralServerOffline", accountName, accountType, centralServerId, sessionIdStr)
         self.connectCentralServer(centralServerId)
 
         account = AccountOfflineVal()

@@ -1,4 +1,37 @@
 datas ={
+  "31230001": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 28.17742,
+    "DisplayName": "",
+    "EntityID": 11011006,
+    "ID": 31230001,
+    "Name": "\u9752\u725b\u9524\u5175",
+    "PosX": 179.6978,
+    "PosY": 524.777,
+    "PosZ": 71.2398,
+    "Props": {
+      "ChestGroupID": "",
+      "GroupID": "",
+      "Level": 1,
+      "LightPillar": "",
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "ShowMonsterGroupID": ""
+    }
+  },
   "31238001": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -11,9 +44,9 @@ datas ={
     "EntityID": 0,
     "ID": 31238001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 211.364136,
-    "PosY": 533.784363,
-    "PosZ": 111.497177,
+    "PosX": 211.3641,
+    "PosY": 533.7844,
+    "PosZ": 111.4972,
     "Props": {
       "MapEntityType": 0,
       "Num": 0,
@@ -91,15 +124,14 @@ datas ={
     "PosY": 530.848,
     "PosZ": 97.31,
     "Props": {
-      "AreaType": 0,
+      "AreaType": 2,
       "Height": 6.0,
       "Length": 70.0,
-      "MPosX": 170.0,
+      "MPosX": 143.0,
       "MPosY": 530.85,
-      "MPosZ": 72.0,
+      "MPosZ": 50.0,
       "Remark": "",
-      "ShowInSceneMap": 1,
-      "Width": 0.0
+      "ShowInSceneMap": 1
     }
   },
   "31238007": {
@@ -118,15 +150,14 @@ datas ={
     "PosY": 533.4832,
     "PosZ": 130.9982,
     "Props": {
-      "AreaType": 0,
+      "AreaType": 2,
       "Height": 6.0,
       "Length": 70.0,
-      "MPosX": 164.0,
+      "MPosX": 142.0,
       "MPosY": 533.48,
-      "MPosZ": 102.0,
+      "MPosZ": 75.0,
       "Remark": "",
-      "ShowInSceneMap": 1,
-      "Width": 0.0
+      "ShowInSceneMap": 1
     }
   },
   "31238008": {
@@ -145,15 +176,14 @@ datas ={
     "PosY": 533.7844,
     "PosZ": 102.1208,
     "Props": {
-      "AreaType": 0,
+      "AreaType": 2,
       "Height": 6.0,
       "Length": 80.0,
-      "MPosX": 214.0,
+      "MPosX": 188.0,
       "MPosY": 533.78,
-      "MPosZ": 69.0,
+      "MPosZ": 38.0,
       "Remark": "",
-      "ShowInSceneMap": 1,
-      "Width": 0.0
+      "ShowInSceneMap": 1
     }
   }
 }

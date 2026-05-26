@@ -15,6 +15,9 @@
 
     <BaseMethods>
         <dropEquipItem>
+            <Arg>       SERVER_ID           </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       LONGTIME            </Arg>
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       ENTITYCALL          </Arg>
@@ -29,8 +32,10 @@
 
         <takeDropEquip>
             <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       SERVER_ID           </Arg>
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       ENTITYCALL          </Arg>
+            <Arg>       LONGTIME            </Arg>
         </takeDropEquip>
 
         <giveUpDropEquip>
@@ -83,10 +88,48 @@
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       ENTITYCALL          </Arg>
         </doCheckDropExpire>
+        
+        <setTakeEquipRedeemPrice>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       UINT32              </Arg>
+        </setTakeEquipRedeemPrice>
 
-        <getDropNotifyList>
+        <doCheckRedeemExpire>
+            <Arg>       UNIQUE_ID           </Arg>
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       ENTITYCALL          </Arg>
-        </getDropNotifyList>
+        </doCheckRedeemExpire>
+
+        <doGetBackEquip>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT32              </Arg>
+        </doGetBackEquip>
+
+        <custodyEquipItem>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT32              </Arg>
+            <Arg>       BLOB                </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       SERVER_ID           </Arg>
+            <Arg>       LONGTIME            </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       SERVER_ID           </Arg>
+        </custodyEquipItem>
+
+        <checkDropReturnExpire>
+        </checkDropReturnExpire>
+
+        <setDropEquipPayPrice>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       UINT32              </Arg>
+        </setDropEquipPayPrice>
    </BaseMethods>
 </root>

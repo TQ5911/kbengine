@@ -39,9 +39,9 @@ datas ={
     "EntityID": 18000747,
     "ID": 31164001,
     "Name": "\u64c2\u4e3b\u77f3",
-    "PosX": 126.93,
-    "PosY": 529.2494,
-    "PosZ": 13.62,
+    "PosX": 188.6794,
+    "PosY": 525.0,
+    "PosZ": 40.43717,
     "Props": {
       "IsOpen": 1,
       "MapEntityType": 0,

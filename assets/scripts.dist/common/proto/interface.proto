@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package gameInterface;
+
+option py_generic_services = true;
+
+message Void {
+}
+
+message ConfigVal
+{
+    string name = 1;
+    string val = 2;
+}
+
+message ListVal
+{
+    repeated string vals = 1;
+}
+
+message IntVal
+{
+    uint32 value = 1;
+}
+
+message SetAccountCompVal
+{
+    string accountName = 1;
+    uint64 compID = 2;
+    uint32 entityID = 3;
+}
+
+message SetAccountCompResult
+{
+    uint32 result = 1;
+    uint32 entityID = 2;
+}
+
+message AntiAddictionData
+{
+    uint32 timeType = 1;
+    uint64 timestamp = 2;
+}
+
+// Interface 进程的 service
+service Interface
+{
+    rpc gameConfigChangedOnBaseapp(ConfigVal) returns(Void);
+    rpc cacheConfigOnBaseapp(ConfigVal) returns(Void);
+    rpc syncCacheConfigOnBaseapp(ConfigVal) returns(Void);
+    rpc activeTick(Void) returns(Void);
+    rpc interfaceReload(Void) returns(Void);
+    rpc interfaceDataReload(ListVal) returns(Void);
+    rpc syncRegisterCount(IntVal) returns(Void);
+    rpc setAccountComp(SetAccountCompVal) returns(Void);
+    rpc updateAntiAddictionData(AntiAddictionData) returns(Void);
+}
+
+// BaseApp 的 service
+service BaseApp
+{
+    rpc activeTickCallback(Void) returns(Void);
+    rpc reqSyncCacheConfigOnBaseapp(Void) returns(Void);
+    rpc setAccountCompResult(SetAccountCompResult) returns(Void);
+}

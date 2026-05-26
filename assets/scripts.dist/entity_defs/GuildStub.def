@@ -1,0 +1,100 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <guildDic>
+            <Type>      PY_DICT         </Type>
+            <Flags>     BASE            </Flags>
+        </guildDic>
+    </Properties>
+
+    <BaseMethods>
+        <getGuildsGbIdAndBox>
+            <Arg>       ARRAY   <of>    GUILD_UUID  </of>     </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </getGuildsGbIdAndBox>
+
+        <doCreateGuild>
+            <Arg>       GUILD_CREATE_DATA       </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </doCreateGuild>
+
+        <guildWillDestroy>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </guildWillDestroy>
+
+        <getGuildBox>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </getGuildBox>
+
+        <doGetGuildList>
+            <Arg>       ENTITYCALL              </Arg>
+        </doGetGuildList>
+
+        <updateGuildCache>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </updateGuildCache>
+
+        <getGuildsCacheData>
+            <Arg>       ARRAY   <of>    GUILD_UUID  </of>     </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </getGuildsCacheData>
+
+        <broadcastToAllGuild>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </broadcastToAllGuild>
+
+        <checkGuildNameValid>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PYTHON                  </Arg>
+            <Arg>       UNICODE                 </Arg>
+        </checkGuildNameValid>
+
+        <callOnGuild>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </callOnGuild>
+
+        <broadcastGuildMemberClient>
+            <Arg>       ARRAY   <of>    GUILD_UUID  </of>     </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </broadcastGuildMemberClient>
+
+        <doOnCrossGuild>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       BLOB                    </Arg>
+            <Arg>       UUID                    </Arg>
+            <Arg>       SERVER_ID               </Arg>
+        </doOnCrossGuild>
+
+        <syncGuildMineWarToSpaceMgr>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       MAILBOX                  </Arg>
+            <Arg>       BOOL                    </Arg>
+        </syncGuildMineWarToSpaceMgr>
+
+    </BaseMethods>
+</root>

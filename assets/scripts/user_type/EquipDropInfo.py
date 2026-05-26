@@ -6,7 +6,7 @@ import itemFactory
 
 class EquipDropVal(userType.UserSingleType):
     '''EQUIP_DROP_DATA_INFO'''
-    def __init__(self, uniqueId=0, price=0, state=0, mapId=0, pos=None, equip=None, collEndTime=0, killerName='', endTime=0):
+    def __init__(self, uniqueId=0, price=0, state=0, mapId=0, pos=None, equip=None, collEndTime=0, killerName='', endTime=0, dropTime=0, redeemWaitTime=0):
         self.uniqueId = uniqueId
         self.price = price
         self.state = state
@@ -16,6 +16,8 @@ class EquipDropVal(userType.UserSingleType):
         self.collEndTime = collEndTime
         self.killerName = killerName
         self.endTime = endTime
+        self.dropTime = dropTime
+        self.redeemWaitTime = redeemWaitTime
 
     def toEquipDropSavedDict(self):
         return {
@@ -28,6 +30,8 @@ class EquipDropVal(userType.UserSingleType):
             'collEndTime': self.collEndTime,
             'killerName': self.killerName,
             'endTime': self.endTime,
+            'dropTime': self.dropTime,
+            'redeemWaitTime': self.redeemWaitTime,
         }
     
     def equipItem(self):

@@ -1,0 +1,20 @@
+<root>
+    <Properties>
+        <refreshRecords>
+            <Type>          PYTHON               </Type>
+            <Flags>         CELL_PRIVATE         </Flags>
+            <Default>       {}                   </Default>
+        </refreshRecords>
+    </Properties>
+
+    <CellMethods>
+        <onMonsterDestroy>
+            <Arg> STRING    </Arg>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+        </onMonsterDestroy>
+    </CellMethods>
+</root>

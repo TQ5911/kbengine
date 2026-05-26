@@ -764,10 +764,10 @@ def _87020016_remove(self, target, context):
     self.removePropByPassiveSkill([["adjHit",3]])
 
 def _87020017(self, target, context):
-    self.addPropByPassiveSkill([["adjFinalDmg",0.01]])
+    self.addPropByPassiveSkill([["adjFinalDmg",0.015]])
 
 def _87020017_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFinalDmg",0.01]])
+    self.removePropByPassiveSkill([["adjFinalDmg",0.015]])
 
 def _87020018(self, target, context):
     self.addPropByPassiveSkill([["adjDodge",3]])
@@ -818,10 +818,10 @@ def _87020025_remove(self, target, context):
     self.removePropByPassiveSkill([["adjFinalDmgAnti",0.025]])
 
 def _87020026(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiFatal",5]])
+    self.addBuffBySkill(target, context, 64002047, 1)
 
 def _87020026_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiFatal",5]])
+    self.removeBuffBySkill(target, context, 64002047)
 
 def _87020027(self, target, context):
     self.addBuffBySkill(target, context, 64002027, 1)
@@ -902,16 +902,16 @@ def _87020039_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002039)
 
 def _87020040(self, target, context):
-    self.addPropByPassiveSkill([["adjStunEnh",10],["adjKnockEnh",10],["adjPushEnh",10]])
+    self.addPropByPassiveSkill([["adjStunEnh",10],["adjSilentEnh",10],["adjKnockEnh",10],["adjPushEnh",10],["adjFrozenEnh",10],["adjSlowEnh",10]])
 
 def _87020040_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunEnh",10],["adjKnockEnh",10],["adjPushEnh",10]])
+    self.removePropByPassiveSkill([["adjStunEnh",10],["adjSilentEnh",10],["adjKnockEnh",10],["adjPushEnh",10],["adjFrozenEnh",10],["adjSlowEnh",10]])
 
 def _87020041(self, target, context):
-    self.addPropByPassiveSkill([["adjStunAnti",10],["adjKnockAnti",10],["adjPushAnti",10]])
+    self.addPropByPassiveSkill([["adjDmgArmor",0.05],["adjMinPhysicalArmor",30],["adjMaxPhysicalArmor",30],["adjMinMagicArmor",30],["adjMaxMagicArmor",30]])
 
 def _87020041_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunAnti",10],["adjKnockAnti",10],["adjPushAnti",10]])
+    self.removePropByPassiveSkill([["adjDmgArmor",0.05],["adjMinPhysicalArmor",30],["adjMaxPhysicalArmor",30],["adjMinMagicArmor",30],["adjMaxMagicArmor",30]])
 
 def _87020042(self, target, context):
     self.addPropByPassiveSkill([["adjPVPDmgAnti",0.08]])
@@ -926,10 +926,10 @@ def _87020043_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002041)
 
 def _87020044(self, target, context):
-    self.addPropByPassiveSkill([["adjIgnoreArmor",0.04]])
+    self.addPropByPassiveSkill([["adjIgnoreArmor",0.05],["adjMinPhysicalAtk",30],["adjMaxPhysicalAtk",30],["adjMinMagicAtk",30],["adjMaxMagicAtk",30]])
 
 def _87020044_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjIgnoreArmor",0.04]])
+    self.removePropByPassiveSkill([["adjIgnoreArmor",0.05],["adjMinPhysicalAtk",30],["adjMaxPhysicalAtk",30],["adjMinMagicAtk",30],["adjMaxMagicAtk",30]])
 
 def _87020045(self, target, context):
     self.addPropByPassiveSkill([["adjFullHp",50]])
@@ -968,28 +968,28 @@ def _87020050_remove(self, target, context):
     self.removePropByPassiveSkill([["adjPVPDmg",0.08]])
 
 def _87020051(self, target, context):
-    self.addPropByPassiveSkill([["adjMortal",0.01]])
+    self.addPropByPassiveSkill([["adjMortal",0.04]])
 
 def _87020051_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMortal",0.01]])
+    self.removePropByPassiveSkill([["adjMortal",0.04]])
 
 def _87020052(self, target, context):
-    self.addBuffBySkill(target, context, 64002057, 1)
+    self.addPropByPassiveSkill([["adjFatal",2]])
 
 def _87020052_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002057)
+    self.removePropByPassiveSkill([["adjFatal",2]])
 
 def _87020053(self, target, context):
-    self.addBuffBySkill(target, context, 64002087, 1)
+    self.addPropByPassiveSkill([["adjEvasion",1],["adjDodge",1]])
 
 def _87020053_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002087)
+    self.removePropByPassiveSkill([["adjEvasion",1],["adjDodge",1]])
 
 def _87020054(self, target, context):
-    self.addBuffBySkill(target, context, 64002059, 1)
+    self.addPropByPassiveSkill([["adjAccuracy",1],["adjHit",1]])
 
 def _87020054_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002059)
+    self.removePropByPassiveSkill([["adjAccuracy",1],["adjHit",1]])
 
 def _87020055(self, target, context):
     self.addPropByPassiveSkill([["adjMedicineRate",0.02]])
@@ -998,10 +998,10 @@ def _87020055_remove(self, target, context):
     self.removePropByPassiveSkill([["adjMedicineRate",0.02]])
 
 def _87020056(self, target, context):
-    self.addPropByPassiveSkill([["adjMortal",0.02]])
+    self.addPropByPassiveSkill([["adjMortal",0.06]])
 
 def _87020056_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMortal",0.02]])
+    self.removePropByPassiveSkill([["adjMortal",0.06]])
 
 def _87020057(self, target, context):
     self.addBuffBySkill(target, context, 64002065, 1)
@@ -1010,10 +1010,10 @@ def _87020057_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002065)
 
 def _87020058(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.02]])
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.03]])
 
 def _87020058_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.02]])
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.03]])
 
 def _87020059(self, target, context):
     self.addBuffBySkill(target, context, 64002089, 1)
@@ -1022,22 +1022,22 @@ def _87020059_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002089)
 
 def _87020060(self, target, context):
-    self.addPropByPassiveSkill([["adjCopper",0.15]])
+    self.addPropByPassiveSkill([["adjCopper",0.05]])
 
 def _87020060_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjCopper",0.15]])
+    self.removePropByPassiveSkill([["adjCopper",0.05]])
 
 def _87020061(self, target, context):
-    self.addBuffBySkill(target, context, 64002067, 1)
+    self.addPropByPassiveSkill([["adjAntiFatal",5],["adjFullHp",1800],["adjFullMp",200]])
 
 def _87020061_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002067)
+    self.removePropByPassiveSkill([["adjAntiFatal",5],["adjFullHp",1800],["adjFullMp",200]])
 
 def _87020062(self, target, context):
-    self.addPropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15]])
+    self.addPropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15],["adjMinMagicArmor",15],["adjMaxMagicArmor",15]])
 
 def _87020062_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15]])
+    self.removePropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15],["adjMinMagicArmor",15],["adjMaxMagicArmor",15]])
 
 def _87020063(self, target, context):
     self.addBuffBySkill(target, context, 64002069, 1)
@@ -1046,10 +1046,10 @@ def _87020063_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002069)
 
 def _87020064(self, target, context):
-    self.addPropByPassiveSkill([["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
+    self.addPropByPassiveSkill([["adjDodge",3],["adjEvasion",3]])
 
 def _87020064_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
+    self.removePropByPassiveSkill([["adjDodge",3],["adjEvasion",3]])
 
 def _87020065(self, target, context):
     self.addBuffBySkill(target, context, 64002071, 1)
@@ -1058,10 +1058,10 @@ def _87020065_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002071)
 
 def _87020066(self, target, context):
-    self.addPropByPassiveSkill([["adjMinPhysicalAtk",30],["adjMaxPhysicalAtk",30]])
+    self.addPropByPassiveSkill([["adjMinPhysicalAtk",15],["adjMaxPhysicalAtk",15],["adjMinMagicAtk",15],["adjMaxMagicAtk",15]])
 
 def _87020066_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMinPhysicalAtk",30],["adjMaxPhysicalAtk",30]])
+    self.removePropByPassiveSkill([["adjMinPhysicalAtk",15],["adjMaxPhysicalAtk",15],["adjMinMagicAtk",15],["adjMaxMagicAtk",15]])
 
 def _87020067(self, target, context):
     self.addBuffBySkill(target, context, 64002073, 1)
@@ -1070,10 +1070,10 @@ def _87020067_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002073)
 
 def _87020068(self, target, context):
-    self.addPropByPassiveSkill([["adjMinMagicAtk",30],["adjMaxMagicAtk",30]])
+    self.addPropByPassiveSkill([["adjAccuracy",3],["adjHit",3]])
 
 def _87020068_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMinMagicAtk",30],["adjMaxMagicAtk",30]])
+    self.removePropByPassiveSkill([["adjAccuracy",3],["adjHit",3]])
 
 def _87020069(self, target, context):
     self.addBuffBySkill(target, context, 64002075, 1)
@@ -1082,16 +1082,16 @@ def _87020069_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002075)
 
 def _87020070(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.1]])
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.08]])
 
 def _87020070_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.1]])
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.08]])
 
 def _87020071(self, target, context):
-    self.addPropByPassiveSkill([["adjFrozenEnh",10],["adjSlowEnh",10]])
+    self.addPropByPassiveSkill([["adjStunAnti",10],["adjSilentAnti",10],["adjKnockAnti",10],["adjPushAnti",10],["adjFrozenAnti",10],["adjSlowAnti",10]])
 
 def _87020071_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFrozenEnh",10],["adjSlowEnh",10]])
+    self.removePropByPassiveSkill([["adjStunAnti",10],["adjSilentAnti",10],["adjKnockAnti",10],["adjPushAnti",10],["adjFrozenAnti",10],["adjSlowAnti",10]])
 
 def _87020072(self, target, context):
     self.addBuffBySkill(target, context, 64002079, 1)
@@ -1100,16 +1100,16 @@ def _87020072_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002079)
 
 def _87020073(self, target, context):
-    self.addPropByPassiveSkill([["adjExpGrow",0.15]])
+    self.addPropByPassiveSkill([["adjAntiFatal",8]])
 
 def _87020073_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjExpGrow",0.15]])
+    self.removePropByPassiveSkill([["adjAntiFatal",8]])
 
 def _87020074(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.1]])
+    self.addPropByPassiveSkill([["adjAccuracy",6],["adjHit",6]])
 
 def _87020074_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.1]])
+    self.removePropByPassiveSkill([["adjAccuracy",6],["adjHit",6]])
 
 def _87020075(self, target, context):
     self.addBuffBySkill(target, context, 64002083, 1)
@@ -1118,16 +1118,16 @@ def _87020075_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002083)
 
 def _87020076(self, target, context):
-    self.addPropByPassiveSkill([["adjSkillCD",0.05]])
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.08]])
 
 def _87020076_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjSkillCD",0.05]])
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.08]])
 
 def _87020077(self, target, context):
-    self.addPropByPassiveSkill([["adjHit",10]])
+    self.addPropByPassiveSkill([["adjEvasion",6],["adjDodge",6]])
 
 def _87020077_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjHit",10]])
+    self.removePropByPassiveSkill([["adjEvasion",6],["adjDodge",6]])
 
 def _87020078(self, target, context):
     self.addBuffBySkill(target, context, 64002091, 1)
@@ -1196,28 +1196,28 @@ def _87020088_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002103)
 
 def _87020089(self, target, context):
-    self.addPropByPassiveSkill([["adjFullHp",60]])
+    self.addPropByPassiveSkill([["adjFullHp",750]])
 
 def _87020089_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFullHp",60]])
+    self.removePropByPassiveSkill([["adjFullHp",750]])
 
 def _87020090(self, target, context):
-    self.addBuffBySkill(target, context, 64002105, 1)
+    self.addPropByPassiveSkill([["adjDmgArmor",0.01]])
 
 def _87020090_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002105)
+    self.removePropByPassiveSkill([["adjDmgArmor",0.01]])
 
 def _87020091(self, target, context):
-    self.addPropByPassiveSkill([["adjDmgArmor",0.05]])
+    self.addPropByPassiveSkill([["adjDmgArmor",0.01]])
 
 def _87020091_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDmgArmor",0.05]])
+    self.removePropByPassiveSkill([["adjDmgArmor",0.01]])
 
 def _87020092(self, target, context):
-    self.addPropByPassiveSkill([["adjHit",6]])
+    self.addPropByPassiveSkill([["adjAccuracy",4]])
 
 def _87020092_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjHit",6]])
+    self.removePropByPassiveSkill([["adjAccuracy",4]])
 
 def _87020093(self, target, context):
     self.addBuffBySkill(target, context, 64002107, 1)
@@ -1336,7 +1336,7 @@ def _87020111_remove(self, target, context):
 datas = _tools.RODict({ 
     87010001: _tools.RODict({
         "ID": 87010001,
-        "name": "酒神的高脚杯",
+        "name": "酒神高脚杯·凡",
         "level": 0,
         "action": _87010001,
         "removeAction": _87010001_remove,
@@ -1346,7 +1346,7 @@ datas = _tools.RODict({
     }),
     87010002: _tools.RODict({
         "ID": 87010002,
-        "name": "永恒之果",
+        "name": "永恒之果·凡",
         "level": 0,
         "action": _87010002,
         "removeAction": _87010002_remove,
@@ -1356,7 +1356,7 @@ datas = _tools.RODict({
     }),
     87010003: _tools.RODict({
         "ID": 87010003,
-        "name": "忏悔者遗剑",
+        "name": "忏悔者遗剑·凡",
         "level": 0,
         "action": _87010003,
         "removeAction": _87010003_remove,
@@ -1366,7 +1366,7 @@ datas = _tools.RODict({
     }),
     87010004: _tools.RODict({
         "ID": 87010004,
-        "name": "龙息水晶",
+        "name": "龙息水晶·凡",
         "level": 0,
         "action": _87010004,
         "removeAction": _87010004_remove,
@@ -1376,7 +1376,7 @@ datas = _tools.RODict({
     }),
     87010005: _tools.RODict({
         "ID": 87010005,
-        "name": "龙角血珊瑚",
+        "name": "龙角血珊瑚·凡",
         "level": 0,
         "action": _87010005,
         "removeAction": _87010005_remove,
@@ -1386,7 +1386,7 @@ datas = _tools.RODict({
     }),
     87010006: _tools.RODict({
         "ID": 87010006,
-        "name": "新生之泪",
+        "name": "新生之泪·凡",
         "level": 0,
         "action": _87010006,
         "removeAction": _87010006_remove,
@@ -1396,7 +1396,7 @@ datas = _tools.RODict({
     }),
     87010007: _tools.RODict({
         "ID": 87010007,
-        "name": "无尽的金蛇",
+        "name": "无尽的金蛇·凡",
         "level": 0,
         "action": _87010007,
         "removeAction": _87010007_remove,
@@ -1406,7 +1406,7 @@ datas = _tools.RODict({
     }),
     87010008: _tools.RODict({
         "ID": 87010008,
-        "name": "戏影人假面",
+        "name": "戏影人假面·凡",
         "level": 0,
         "action": _87010008,
         "removeAction": _87010008_remove,
@@ -1416,7 +1416,7 @@ datas = _tools.RODict({
     }),
     87010009: _tools.RODict({
         "ID": 87010009,
-        "name": "四方降魔杵",
+        "name": "四方降魔杵·凡",
         "level": 0,
         "action": _87010009,
         "removeAction": _87010009_remove,
@@ -1426,7 +1426,7 @@ datas = _tools.RODict({
     }),
     87010010: _tools.RODict({
         "ID": 87010010,
-        "name": "荆棘牢笼",
+        "name": "荆棘牢笼·凡",
         "level": 0,
         "action": _87010010,
         "removeAction": _87010010_remove,
@@ -1436,7 +1436,7 @@ datas = _tools.RODict({
     }),
     87010011: _tools.RODict({
         "ID": 87010011,
-        "name": "飞鹰纹章",
+        "name": "飞鹰纹章·凡",
         "level": 0,
         "action": _87010011,
         "removeAction": _87010011_remove,
@@ -1446,7 +1446,7 @@ datas = _tools.RODict({
     }),
     87010012: _tools.RODict({
         "ID": 87010012,
-        "name": "龙鳞盾",
+        "name": "龙鳞盾·凡",
         "level": 0,
         "action": _87010012,
         "removeAction": _87010012_remove,
@@ -1456,7 +1456,7 @@ datas = _tools.RODict({
     }),
     87010013: _tools.RODict({
         "ID": 87010013,
-        "name": "海妖的低语",
+        "name": "海妖的低语·凡",
         "level": 0,
         "action": _87010013,
         "removeAction": _87010013_remove,
@@ -1466,7 +1466,7 @@ datas = _tools.RODict({
     }),
     87010014: _tools.RODict({
         "ID": 87010014,
-        "name": "紫府灵珠",
+        "name": "紫府灵珠·凡",
         "level": 0,
         "action": _87010014,
         "removeAction": _87010014_remove,
@@ -1476,7 +1476,7 @@ datas = _tools.RODict({
     }),
     87010015: _tools.RODict({
         "ID": 87010015,
-        "name": "禁言之书",
+        "name": "禁言之书·凡",
         "level": 0,
         "action": _87010015,
         "removeAction": _87010015_remove,
@@ -1486,7 +1486,7 @@ datas = _tools.RODict({
     }),
     87010016: _tools.RODict({
         "ID": 87010016,
-        "name": "丰饶的号角",
+        "name": "丰饶的号角·凡",
         "level": 0,
         "action": _87010016,
         "removeAction": _87010016_remove,
@@ -1496,7 +1496,7 @@ datas = _tools.RODict({
     }),
     87010017: _tools.RODict({
         "ID": 87010017,
-        "name": "古神拳套",
+        "name": "古神拳套·凡",
         "level": 0,
         "action": _87010017,
         "removeAction": _87010017_remove,
@@ -1506,7 +1506,7 @@ datas = _tools.RODict({
     }),
     87010018: _tools.RODict({
         "ID": 87010018,
-        "name": "幻兽尾羽",
+        "name": "幻兽尾羽·凡",
         "level": 0,
         "action": _87010018,
         "removeAction": _87010018_remove,
@@ -1516,7 +1516,7 @@ datas = _tools.RODict({
     }),
     87010019: _tools.RODict({
         "ID": 87010019,
-        "name": "冰封圣杯",
+        "name": "冰封圣杯·凡",
         "level": 0,
         "action": _87010019,
         "removeAction": _87010019_remove,
@@ -1526,7 +1526,7 @@ datas = _tools.RODict({
     }),
     87010020: _tools.RODict({
         "ID": 87010020,
-        "name": "不灭的火炬",
+        "name": "不灭的火炬·凡",
         "level": 0,
         "action": _87010020,
         "removeAction": _87010020_remove,
@@ -1536,7 +1536,7 @@ datas = _tools.RODict({
     }),
     87010021: _tools.RODict({
         "ID": 87010021,
-        "name": "雪国幻境",
+        "name": "雪国幻境·凡",
         "level": 0,
         "action": _87010021,
         "removeAction": _87010021_remove,
@@ -1546,7 +1546,7 @@ datas = _tools.RODict({
     }),
     87010022: _tools.RODict({
         "ID": 87010022,
-        "name": "远航的风帆",
+        "name": "远航的风帆·凡",
         "level": 0,
         "action": _87010022,
         "removeAction": _87010022_remove,
@@ -1556,7 +1556,7 @@ datas = _tools.RODict({
     }),
     87010023: _tools.RODict({
         "ID": 87010023,
-        "name": "颂诗竖琴",
+        "name": "颂诗竖琴·凡",
         "level": 0,
         "action": _87010023,
         "removeAction": _87010023_remove,
@@ -1566,7 +1566,7 @@ datas = _tools.RODict({
     }),
     87010024: _tools.RODict({
         "ID": 87010024,
-        "name": "秘银神灯",
+        "name": "秘银神灯·凡",
         "level": 0,
         "action": _87010024,
         "removeAction": _87010024_remove,
@@ -1576,7 +1576,7 @@ datas = _tools.RODict({
     }),
     87010025: _tools.RODict({
         "ID": 87010025,
-        "name": "招财荷包",
+        "name": "招财荷包·凡",
         "level": 0,
         "action": _87010025,
         "removeAction": _87010025_remove,
@@ -1586,7 +1586,7 @@ datas = _tools.RODict({
     }),
     87010026: _tools.RODict({
         "ID": 87010026,
-        "name": "精灵的秘册",
+        "name": "精灵的秘册·凡",
         "level": 0,
         "action": _87010026,
         "removeAction": _87010026_remove,
@@ -1596,7 +1596,7 @@ datas = _tools.RODict({
     }),
     87010027: _tools.RODict({
         "ID": 87010027,
-        "name": "女神的灵药",
+        "name": "女神的灵药·凡",
         "level": 0,
         "action": _87010027,
         "removeAction": _87010027_remove,
@@ -1606,7 +1606,7 @@ datas = _tools.RODict({
     }),
     87010101: _tools.RODict({
         "ID": 87010101,
-        "name": "酒神的高脚杯",
+        "name": "酒神高脚杯·良",
         "level": 0,
         "action": _87010101,
         "removeAction": _87010101_remove,
@@ -1616,7 +1616,7 @@ datas = _tools.RODict({
     }),
     87010102: _tools.RODict({
         "ID": 87010102,
-        "name": "永恒之果",
+        "name": "永恒之果·良",
         "level": 0,
         "action": _87010102,
         "removeAction": _87010102_remove,
@@ -1626,7 +1626,7 @@ datas = _tools.RODict({
     }),
     87010103: _tools.RODict({
         "ID": 87010103,
-        "name": "忏悔者遗剑",
+        "name": "忏悔者遗剑·良",
         "level": 0,
         "action": _87010103,
         "removeAction": _87010103_remove,
@@ -1636,7 +1636,7 @@ datas = _tools.RODict({
     }),
     87010104: _tools.RODict({
         "ID": 87010104,
-        "name": "龙息水晶",
+        "name": "龙息水晶·良",
         "level": 0,
         "action": _87010104,
         "removeAction": _87010104_remove,
@@ -1646,7 +1646,7 @@ datas = _tools.RODict({
     }),
     87010105: _tools.RODict({
         "ID": 87010105,
-        "name": "龙角血珊瑚",
+        "name": "龙角血珊瑚·良",
         "level": 0,
         "action": _87010105,
         "removeAction": _87010105_remove,
@@ -1656,7 +1656,7 @@ datas = _tools.RODict({
     }),
     87010106: _tools.RODict({
         "ID": 87010106,
-        "name": "新生之泪",
+        "name": "新生之泪·良",
         "level": 0,
         "action": _87010106,
         "removeAction": _87010106_remove,
@@ -1666,7 +1666,7 @@ datas = _tools.RODict({
     }),
     87010107: _tools.RODict({
         "ID": 87010107,
-        "name": "无尽的金蛇",
+        "name": "无尽的金蛇·良",
         "level": 0,
         "action": _87010107,
         "removeAction": _87010107_remove,
@@ -1676,7 +1676,7 @@ datas = _tools.RODict({
     }),
     87010108: _tools.RODict({
         "ID": 87010108,
-        "name": "戏影人假面",
+        "name": "戏影人假面·良",
         "level": 0,
         "action": _87010108,
         "removeAction": _87010108_remove,
@@ -1686,7 +1686,7 @@ datas = _tools.RODict({
     }),
     87010109: _tools.RODict({
         "ID": 87010109,
-        "name": "四方降魔杵",
+        "name": "四方降魔杵·良",
         "level": 0,
         "action": _87010109,
         "removeAction": _87010109_remove,
@@ -1696,7 +1696,7 @@ datas = _tools.RODict({
     }),
     87010110: _tools.RODict({
         "ID": 87010110,
-        "name": "荆棘牢笼",
+        "name": "荆棘牢笼·良",
         "level": 0,
         "action": _87010110,
         "removeAction": _87010110_remove,
@@ -1706,7 +1706,7 @@ datas = _tools.RODict({
     }),
     87010111: _tools.RODict({
         "ID": 87010111,
-        "name": "飞鹰纹章",
+        "name": "飞鹰纹章·良",
         "level": 0,
         "action": _87010111,
         "removeAction": _87010111_remove,
@@ -1716,7 +1716,7 @@ datas = _tools.RODict({
     }),
     87010112: _tools.RODict({
         "ID": 87010112,
-        "name": "龙鳞盾",
+        "name": "龙鳞盾·良",
         "level": 0,
         "action": _87010112,
         "removeAction": _87010112_remove,
@@ -1726,7 +1726,7 @@ datas = _tools.RODict({
     }),
     87010113: _tools.RODict({
         "ID": 87010113,
-        "name": "海妖的低语",
+        "name": "海妖的低语·良",
         "level": 0,
         "action": _87010113,
         "removeAction": _87010113_remove,
@@ -1736,7 +1736,7 @@ datas = _tools.RODict({
     }),
     87010114: _tools.RODict({
         "ID": 87010114,
-        "name": "紫府灵珠",
+        "name": "紫府灵珠·良",
         "level": 0,
         "action": _87010114,
         "removeAction": _87010114_remove,
@@ -1746,7 +1746,7 @@ datas = _tools.RODict({
     }),
     87010115: _tools.RODict({
         "ID": 87010115,
-        "name": "禁言之书",
+        "name": "禁言之书·良",
         "level": 0,
         "action": _87010115,
         "removeAction": _87010115_remove,
@@ -1756,7 +1756,7 @@ datas = _tools.RODict({
     }),
     87010116: _tools.RODict({
         "ID": 87010116,
-        "name": "丰饶的号角",
+        "name": "丰饶的号角·良",
         "level": 0,
         "action": _87010116,
         "removeAction": _87010116_remove,
@@ -1766,7 +1766,7 @@ datas = _tools.RODict({
     }),
     87010117: _tools.RODict({
         "ID": 87010117,
-        "name": "古神拳套",
+        "name": "古神拳套·良",
         "level": 0,
         "action": _87010117,
         "removeAction": _87010117_remove,
@@ -1776,7 +1776,7 @@ datas = _tools.RODict({
     }),
     87010118: _tools.RODict({
         "ID": 87010118,
-        "name": "幻兽尾羽",
+        "name": "幻兽尾羽·良",
         "level": 0,
         "action": _87010118,
         "removeAction": _87010118_remove,
@@ -1786,7 +1786,7 @@ datas = _tools.RODict({
     }),
     87010119: _tools.RODict({
         "ID": 87010119,
-        "name": "冰封圣杯",
+        "name": "冰封圣杯·良",
         "level": 0,
         "action": _87010119,
         "removeAction": _87010119_remove,
@@ -1796,7 +1796,7 @@ datas = _tools.RODict({
     }),
     87010120: _tools.RODict({
         "ID": 87010120,
-        "name": "不灭的火炬",
+        "name": "不灭的火炬·良",
         "level": 0,
         "action": _87010120,
         "removeAction": _87010120_remove,
@@ -1806,7 +1806,7 @@ datas = _tools.RODict({
     }),
     87010121: _tools.RODict({
         "ID": 87010121,
-        "name": "雪国幻境",
+        "name": "雪国幻境·良",
         "level": 0,
         "action": _87010121,
         "removeAction": _87010121_remove,
@@ -1816,7 +1816,7 @@ datas = _tools.RODict({
     }),
     87010122: _tools.RODict({
         "ID": 87010122,
-        "name": "远航的风帆",
+        "name": "远航的风帆·良",
         "level": 0,
         "action": _87010122,
         "removeAction": _87010122_remove,
@@ -1826,7 +1826,7 @@ datas = _tools.RODict({
     }),
     87010123: _tools.RODict({
         "ID": 87010123,
-        "name": "颂诗竖琴",
+        "name": "颂诗竖琴·良",
         "level": 0,
         "action": _87010123,
         "removeAction": _87010123_remove,
@@ -1836,7 +1836,7 @@ datas = _tools.RODict({
     }),
     87010124: _tools.RODict({
         "ID": 87010124,
-        "name": "秘银神灯",
+        "name": "秘银神灯·良",
         "level": 0,
         "action": _87010124,
         "removeAction": _87010124_remove,
@@ -1846,7 +1846,7 @@ datas = _tools.RODict({
     }),
     87010125: _tools.RODict({
         "ID": 87010125,
-        "name": "招财荷包",
+        "name": "招财荷包·良",
         "level": 0,
         "action": _87010125,
         "removeAction": _87010125_remove,
@@ -1856,7 +1856,7 @@ datas = _tools.RODict({
     }),
     87010126: _tools.RODict({
         "ID": 87010126,
-        "name": "精灵的秘册",
+        "name": "精灵的秘册·良",
         "level": 0,
         "action": _87010126,
         "removeAction": _87010126_remove,
@@ -1866,7 +1866,7 @@ datas = _tools.RODict({
     }),
     87010127: _tools.RODict({
         "ID": 87010127,
-        "name": "女神的灵药",
+        "name": "女神的灵药·良",
         "level": 0,
         "action": _87010127,
         "removeAction": _87010127_remove,
@@ -1876,7 +1876,7 @@ datas = _tools.RODict({
     }),
     87010201: _tools.RODict({
         "ID": 87010201,
-        "name": "酒神的高脚杯",
+        "name": "酒神高脚杯·珍",
         "level": 0,
         "action": _87010201,
         "removeAction": _87010201_remove,
@@ -1886,7 +1886,7 @@ datas = _tools.RODict({
     }),
     87010202: _tools.RODict({
         "ID": 87010202,
-        "name": "永恒之果",
+        "name": "永恒之果·珍",
         "level": 0,
         "action": _87010202,
         "removeAction": _87010202_remove,
@@ -1896,7 +1896,7 @@ datas = _tools.RODict({
     }),
     87010203: _tools.RODict({
         "ID": 87010203,
-        "name": "忏悔者遗剑",
+        "name": "忏悔者遗剑·珍",
         "level": 0,
         "action": _87010203,
         "removeAction": _87010203_remove,
@@ -1906,7 +1906,7 @@ datas = _tools.RODict({
     }),
     87010204: _tools.RODict({
         "ID": 87010204,
-        "name": "龙息水晶",
+        "name": "龙息水晶·珍",
         "level": 0,
         "action": _87010204,
         "removeAction": _87010204_remove,
@@ -1916,7 +1916,7 @@ datas = _tools.RODict({
     }),
     87010205: _tools.RODict({
         "ID": 87010205,
-        "name": "龙角血珊瑚",
+        "name": "龙角血珊瑚·珍",
         "level": 0,
         "action": _87010205,
         "removeAction": _87010205_remove,
@@ -1926,7 +1926,7 @@ datas = _tools.RODict({
     }),
     87010206: _tools.RODict({
         "ID": 87010206,
-        "name": "新生之泪",
+        "name": "新生之泪·珍",
         "level": 0,
         "action": _87010206,
         "removeAction": _87010206_remove,
@@ -1936,7 +1936,7 @@ datas = _tools.RODict({
     }),
     87010207: _tools.RODict({
         "ID": 87010207,
-        "name": "无尽的金蛇",
+        "name": "无尽的金蛇·珍",
         "level": 0,
         "action": _87010207,
         "removeAction": _87010207_remove,
@@ -1946,7 +1946,7 @@ datas = _tools.RODict({
     }),
     87010208: _tools.RODict({
         "ID": 87010208,
-        "name": "戏影人假面",
+        "name": "戏影人假面·珍",
         "level": 0,
         "action": _87010208,
         "removeAction": _87010208_remove,
@@ -1956,7 +1956,7 @@ datas = _tools.RODict({
     }),
     87010209: _tools.RODict({
         "ID": 87010209,
-        "name": "四方降魔杵",
+        "name": "四方降魔杵·珍",
         "level": 0,
         "action": _87010209,
         "removeAction": _87010209_remove,
@@ -1966,7 +1966,7 @@ datas = _tools.RODict({
     }),
     87010210: _tools.RODict({
         "ID": 87010210,
-        "name": "荆棘牢笼",
+        "name": "荆棘牢笼·珍",
         "level": 0,
         "action": _87010210,
         "removeAction": _87010210_remove,
@@ -1976,7 +1976,7 @@ datas = _tools.RODict({
     }),
     87010211: _tools.RODict({
         "ID": 87010211,
-        "name": "飞鹰纹章",
+        "name": "飞鹰纹章·珍",
         "level": 0,
         "action": _87010211,
         "removeAction": _87010211_remove,
@@ -1986,7 +1986,7 @@ datas = _tools.RODict({
     }),
     87010212: _tools.RODict({
         "ID": 87010212,
-        "name": "龙鳞盾",
+        "name": "龙鳞盾·珍",
         "level": 0,
         "action": _87010212,
         "removeAction": _87010212_remove,
@@ -1996,7 +1996,7 @@ datas = _tools.RODict({
     }),
     87010213: _tools.RODict({
         "ID": 87010213,
-        "name": "海妖的低语",
+        "name": "海妖的低语·珍",
         "level": 0,
         "action": _87010213,
         "removeAction": _87010213_remove,
@@ -2006,7 +2006,7 @@ datas = _tools.RODict({
     }),
     87010214: _tools.RODict({
         "ID": 87010214,
-        "name": "紫府灵珠",
+        "name": "紫府灵珠·珍",
         "level": 0,
         "action": _87010214,
         "removeAction": _87010214_remove,
@@ -2016,7 +2016,7 @@ datas = _tools.RODict({
     }),
     87010215: _tools.RODict({
         "ID": 87010215,
-        "name": "禁言之书",
+        "name": "禁言之书·珍",
         "level": 0,
         "action": _87010215,
         "removeAction": _87010215_remove,
@@ -2026,7 +2026,7 @@ datas = _tools.RODict({
     }),
     87010216: _tools.RODict({
         "ID": 87010216,
-        "name": "丰饶的号角",
+        "name": "丰饶的号角·珍",
         "level": 0,
         "action": _87010216,
         "removeAction": _87010216_remove,
@@ -2036,7 +2036,7 @@ datas = _tools.RODict({
     }),
     87010217: _tools.RODict({
         "ID": 87010217,
-        "name": "古神拳套",
+        "name": "古神拳套·珍",
         "level": 0,
         "action": _87010217,
         "removeAction": _87010217_remove,
@@ -2046,7 +2046,7 @@ datas = _tools.RODict({
     }),
     87010218: _tools.RODict({
         "ID": 87010218,
-        "name": "幻兽尾羽",
+        "name": "幻兽尾羽·珍",
         "level": 0,
         "action": _87010218,
         "removeAction": _87010218_remove,
@@ -2056,7 +2056,7 @@ datas = _tools.RODict({
     }),
     87010219: _tools.RODict({
         "ID": 87010219,
-        "name": "冰封圣杯",
+        "name": "冰封圣杯·珍",
         "level": 0,
         "action": _87010219,
         "removeAction": _87010219_remove,
@@ -2066,7 +2066,7 @@ datas = _tools.RODict({
     }),
     87010220: _tools.RODict({
         "ID": 87010220,
-        "name": "不灭的火炬",
+        "name": "不灭的火炬·珍",
         "level": 0,
         "action": _87010220,
         "removeAction": _87010220_remove,
@@ -2076,7 +2076,7 @@ datas = _tools.RODict({
     }),
     87010221: _tools.RODict({
         "ID": 87010221,
-        "name": "雪国幻境",
+        "name": "雪国幻境·珍",
         "level": 0,
         "action": _87010221,
         "removeAction": _87010221_remove,
@@ -2086,7 +2086,7 @@ datas = _tools.RODict({
     }),
     87010222: _tools.RODict({
         "ID": 87010222,
-        "name": "远航的风帆",
+        "name": "远航的风帆·珍",
         "level": 0,
         "action": _87010222,
         "removeAction": _87010222_remove,
@@ -2096,7 +2096,7 @@ datas = _tools.RODict({
     }),
     87010223: _tools.RODict({
         "ID": 87010223,
-        "name": "颂诗竖琴",
+        "name": "颂诗竖琴·珍",
         "level": 0,
         "action": _87010223,
         "removeAction": _87010223_remove,
@@ -2106,7 +2106,7 @@ datas = _tools.RODict({
     }),
     87010224: _tools.RODict({
         "ID": 87010224,
-        "name": "秘银神灯",
+        "name": "秘银神灯·珍",
         "level": 0,
         "action": _87010224,
         "removeAction": _87010224_remove,
@@ -2116,7 +2116,7 @@ datas = _tools.RODict({
     }),
     87010225: _tools.RODict({
         "ID": 87010225,
-        "name": "招财荷包",
+        "name": "招财荷包·珍",
         "level": 0,
         "action": _87010225,
         "removeAction": _87010225_remove,
@@ -2126,7 +2126,7 @@ datas = _tools.RODict({
     }),
     87010226: _tools.RODict({
         "ID": 87010226,
-        "name": "精灵的秘册",
+        "name": "精灵的秘册·珍",
         "level": 0,
         "action": _87010226,
         "removeAction": _87010226_remove,
@@ -2136,7 +2136,7 @@ datas = _tools.RODict({
     }),
     87010227: _tools.RODict({
         "ID": 87010227,
-        "name": "女神的灵药",
+        "name": "女神的灵药·珍",
         "level": 0,
         "action": _87010227,
         "removeAction": _87010227_remove,
@@ -2146,7 +2146,7 @@ datas = _tools.RODict({
     }),
     87010301: _tools.RODict({
         "ID": 87010301,
-        "name": "酒神的高脚杯",
+        "name": "酒神高脚杯·绝",
         "level": 0,
         "action": _87010301,
         "removeAction": _87010301_remove,
@@ -2156,7 +2156,7 @@ datas = _tools.RODict({
     }),
     87010302: _tools.RODict({
         "ID": 87010302,
-        "name": "永恒之果",
+        "name": "永恒之果·绝",
         "level": 0,
         "action": _87010302,
         "removeAction": _87010302_remove,
@@ -2166,7 +2166,7 @@ datas = _tools.RODict({
     }),
     87010303: _tools.RODict({
         "ID": 87010303,
-        "name": "忏悔者遗剑",
+        "name": "忏悔者遗剑·绝",
         "level": 0,
         "action": _87010303,
         "removeAction": _87010303_remove,
@@ -2176,7 +2176,7 @@ datas = _tools.RODict({
     }),
     87010304: _tools.RODict({
         "ID": 87010304,
-        "name": "龙息水晶",
+        "name": "龙息水晶·绝",
         "level": 0,
         "action": _87010304,
         "removeAction": _87010304_remove,
@@ -2186,7 +2186,7 @@ datas = _tools.RODict({
     }),
     87010305: _tools.RODict({
         "ID": 87010305,
-        "name": "龙角血珊瑚",
+        "name": "龙角血珊瑚·绝",
         "level": 0,
         "action": _87010305,
         "removeAction": _87010305_remove,
@@ -2196,7 +2196,7 @@ datas = _tools.RODict({
     }),
     87010306: _tools.RODict({
         "ID": 87010306,
-        "name": "新生之泪",
+        "name": "新生之泪·绝",
         "level": 0,
         "action": _87010306,
         "removeAction": _87010306_remove,
@@ -2206,7 +2206,7 @@ datas = _tools.RODict({
     }),
     87010307: _tools.RODict({
         "ID": 87010307,
-        "name": "无尽的金蛇",
+        "name": "无尽的金蛇·绝",
         "level": 0,
         "action": _87010307,
         "removeAction": _87010307_remove,
@@ -2216,7 +2216,7 @@ datas = _tools.RODict({
     }),
     87010308: _tools.RODict({
         "ID": 87010308,
-        "name": "戏影人假面",
+        "name": "戏影人假面·绝",
         "level": 0,
         "action": _87010308,
         "removeAction": _87010308_remove,
@@ -2226,7 +2226,7 @@ datas = _tools.RODict({
     }),
     87010309: _tools.RODict({
         "ID": 87010309,
-        "name": "四方降魔杵",
+        "name": "四方降魔杵·绝",
         "level": 0,
         "action": _87010309,
         "removeAction": _87010309_remove,
@@ -2236,7 +2236,7 @@ datas = _tools.RODict({
     }),
     87010310: _tools.RODict({
         "ID": 87010310,
-        "name": "荆棘牢笼",
+        "name": "荆棘牢笼·绝",
         "level": 0,
         "action": _87010310,
         "removeAction": _87010310_remove,
@@ -2246,7 +2246,7 @@ datas = _tools.RODict({
     }),
     87010311: _tools.RODict({
         "ID": 87010311,
-        "name": "飞鹰纹章",
+        "name": "飞鹰纹章·绝",
         "level": 0,
         "action": _87010311,
         "removeAction": _87010311_remove,
@@ -2256,7 +2256,7 @@ datas = _tools.RODict({
     }),
     87010312: _tools.RODict({
         "ID": 87010312,
-        "name": "龙鳞盾",
+        "name": "龙鳞盾·绝",
         "level": 0,
         "action": _87010312,
         "removeAction": _87010312_remove,
@@ -2266,7 +2266,7 @@ datas = _tools.RODict({
     }),
     87010313: _tools.RODict({
         "ID": 87010313,
-        "name": "海妖的低语",
+        "name": "海妖的低语·绝",
         "level": 0,
         "action": _87010313,
         "removeAction": _87010313_remove,
@@ -2276,7 +2276,7 @@ datas = _tools.RODict({
     }),
     87010314: _tools.RODict({
         "ID": 87010314,
-        "name": "紫府灵珠",
+        "name": "紫府灵珠·绝",
         "level": 0,
         "action": _87010314,
         "removeAction": _87010314_remove,
@@ -2286,7 +2286,7 @@ datas = _tools.RODict({
     }),
     87010315: _tools.RODict({
         "ID": 87010315,
-        "name": "禁言之书",
+        "name": "禁言之书·绝",
         "level": 0,
         "action": _87010315,
         "removeAction": _87010315_remove,
@@ -2296,7 +2296,7 @@ datas = _tools.RODict({
     }),
     87010316: _tools.RODict({
         "ID": 87010316,
-        "name": "丰饶的号角",
+        "name": "丰饶的号角·绝",
         "level": 0,
         "action": _87010316,
         "removeAction": _87010316_remove,
@@ -2306,7 +2306,7 @@ datas = _tools.RODict({
     }),
     87010317: _tools.RODict({
         "ID": 87010317,
-        "name": "古神拳套",
+        "name": "古神拳套·绝",
         "level": 0,
         "action": _87010317,
         "removeAction": _87010317_remove,
@@ -2316,7 +2316,7 @@ datas = _tools.RODict({
     }),
     87010318: _tools.RODict({
         "ID": 87010318,
-        "name": "幻兽尾羽",
+        "name": "幻兽尾羽·绝",
         "level": 0,
         "action": _87010318,
         "removeAction": _87010318_remove,
@@ -2326,7 +2326,7 @@ datas = _tools.RODict({
     }),
     87010319: _tools.RODict({
         "ID": 87010319,
-        "name": "冰封圣杯",
+        "name": "冰封圣杯·绝",
         "level": 0,
         "action": _87010319,
         "removeAction": _87010319_remove,
@@ -2336,7 +2336,7 @@ datas = _tools.RODict({
     }),
     87010320: _tools.RODict({
         "ID": 87010320,
-        "name": "不灭的火炬",
+        "name": "不灭的火炬·绝",
         "level": 0,
         "action": _87010320,
         "removeAction": _87010320_remove,
@@ -2346,7 +2346,7 @@ datas = _tools.RODict({
     }),
     87010321: _tools.RODict({
         "ID": 87010321,
-        "name": "雪国幻境",
+        "name": "雪国幻境·绝",
         "level": 0,
         "action": _87010321,
         "removeAction": _87010321_remove,
@@ -2356,7 +2356,7 @@ datas = _tools.RODict({
     }),
     87010322: _tools.RODict({
         "ID": 87010322,
-        "name": "远航的风帆",
+        "name": "远航的风帆·绝",
         "level": 0,
         "action": _87010322,
         "removeAction": _87010322_remove,
@@ -2366,7 +2366,7 @@ datas = _tools.RODict({
     }),
     87010323: _tools.RODict({
         "ID": 87010323,
-        "name": "颂诗竖琴",
+        "name": "颂诗竖琴·绝",
         "level": 0,
         "action": _87010323,
         "removeAction": _87010323_remove,
@@ -2376,7 +2376,7 @@ datas = _tools.RODict({
     }),
     87010324: _tools.RODict({
         "ID": 87010324,
-        "name": "秘银神灯",
+        "name": "秘银神灯·绝",
         "level": 0,
         "action": _87010324,
         "removeAction": _87010324_remove,
@@ -2386,7 +2386,7 @@ datas = _tools.RODict({
     }),
     87010325: _tools.RODict({
         "ID": 87010325,
-        "name": "招财荷包",
+        "name": "招财荷包·绝",
         "level": 0,
         "action": _87010325,
         "removeAction": _87010325_remove,
@@ -2396,7 +2396,7 @@ datas = _tools.RODict({
     }),
     87010326: _tools.RODict({
         "ID": 87010326,
-        "name": "精灵的秘册",
+        "name": "精灵的秘册·绝",
         "level": 0,
         "action": _87010326,
         "removeAction": _87010326_remove,
@@ -2406,7 +2406,7 @@ datas = _tools.RODict({
     }),
     87010327: _tools.RODict({
         "ID": 87010327,
-        "name": "女神的灵药",
+        "name": "女神的灵药·绝",
         "level": 0,
         "action": _87010327,
         "removeAction": _87010327_remove,
@@ -2580,7 +2580,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020017,
         "removeAction": _87020017_remove,
-        "propList": _tools.ROList([['adjFinalDmg', 0.01]]),
+        "propList": _tools.ROList([['adjFinalDmg', 0.015]]),
         "desBuff": None,
         "score": 0
     }),
@@ -2670,9 +2670,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020026,
         "removeAction": _87020026_remove,
-        "propList": _tools.ROList([['adjAntiFatal', 5]]),
-        "desBuff": None,
-        "score": 0
+        "propList": None,
+        "desBuff": 64002047,
+        "score": 250
     }),
     87020027: _tools.RODict({
         "ID": 87020027,
@@ -2810,7 +2810,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020040,
         "removeAction": _87020040_remove,
-        "propList": _tools.ROList([['adjStunEnh', 10], ['adjKnockEnh', 10], ['adjPushEnh', 10]]),
+        "propList": _tools.ROList([['adjStunEnh', 10], ['adjSilentEnh', 10], ['adjKnockEnh', 10], ['adjPushEnh', 10], ['adjFrozenEnh', 10], ['adjSlowEnh', 10]]),
         "desBuff": None,
         "score": 0
     }),
@@ -2820,7 +2820,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020041,
         "removeAction": _87020041_remove,
-        "propList": _tools.ROList([['adjStunAnti', 10], ['adjKnockAnti', 10], ['adjPushAnti', 10]]),
+        "propList": _tools.ROList([['adjDmgArmor', 0.05], ['adjMinPhysicalArmor', 30], ['adjMaxPhysicalArmor', 30], ['adjMinMagicArmor', 30], ['adjMaxMagicArmor', 30]]),
         "desBuff": None,
         "score": 0
     }),
@@ -2850,7 +2850,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020044,
         "removeAction": _87020044_remove,
-        "propList": _tools.ROList([['adjIgnoreArmor', 0.04]]),
+        "propList": _tools.ROList([['adjIgnoreArmor', 0.05], ['adjMinPhysicalAtk', 30], ['adjMaxPhysicalAtk', 30], ['adjMinMagicAtk', 30], ['adjMaxMagicAtk', 30]]),
         "desBuff": None,
         "score": 0
     }),
@@ -2920,7 +2920,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020051,
         "removeAction": _87020051_remove,
-        "propList": _tools.ROList([['adjMortal', 0.01]]),
+        "propList": _tools.ROList([['adjMortal', 0.04]]),
         "desBuff": None,
         "score": 0
     }),
@@ -2930,9 +2930,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020052,
         "removeAction": _87020052_remove,
-        "propList": None,
-        "desBuff": 64002057,
-        "score": 100
+        "propList": _tools.ROList([['adjFatal', 2]]),
+        "desBuff": None,
+        "score": 0
     }),
     87020053: _tools.RODict({
         "ID": 87020053,
@@ -2940,9 +2940,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020053,
         "removeAction": _87020053_remove,
-        "propList": None,
-        "desBuff": 64002087,
-        "score": 100
+        "propList": _tools.ROList([['adjEvasion', 1], ['adjDodge', 1]]),
+        "desBuff": None,
+        "score": 0
     }),
     87020054: _tools.RODict({
         "ID": 87020054,
@@ -2950,9 +2950,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020054,
         "removeAction": _87020054_remove,
-        "propList": None,
-        "desBuff": 64002059,
-        "score": 100
+        "propList": _tools.ROList([['adjAccuracy', 1], ['adjHit', 1]]),
+        "desBuff": None,
+        "score": 0
     }),
     87020055: _tools.RODict({
         "ID": 87020055,
@@ -2962,7 +2962,7 @@ datas = _tools.RODict({
         "removeAction": _87020055_remove,
         "propList": _tools.ROList([['adjMedicineRate', 0.02]]),
         "desBuff": None,
-        "score": 0
+        "score": 100
     }),
     87020056: _tools.RODict({
         "ID": 87020056,
@@ -2970,7 +2970,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020056,
         "removeAction": _87020056_remove,
-        "propList": _tools.ROList([['adjMortal', 0.02]]),
+        "propList": _tools.ROList([['adjMortal', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
@@ -2982,7 +2982,7 @@ datas = _tools.RODict({
         "removeAction": _87020057_remove,
         "propList": None,
         "desBuff": 64002065,
-        "score": 100
+        "score": 150
     }),
     87020058: _tools.RODict({
         "ID": 87020058,
@@ -2990,9 +2990,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020058,
         "removeAction": _87020058_remove,
-        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.02]]),
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.03]]),
         "desBuff": None,
-        "score": 100
+        "score": 0
     }),
     87020059: _tools.RODict({
         "ID": 87020059,
@@ -3002,7 +3002,7 @@ datas = _tools.RODict({
         "removeAction": _87020059_remove,
         "propList": None,
         "desBuff": 64002089,
-        "score": 100
+        "score": 150
     }),
     87020060: _tools.RODict({
         "ID": 87020060,
@@ -3010,7 +3010,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020060,
         "removeAction": _87020060_remove,
-        "propList": _tools.ROList([['adjCopper', 0.15]]),
+        "propList": _tools.ROList([['adjCopper', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3020,9 +3020,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020061,
         "removeAction": _87020061_remove,
-        "propList": None,
-        "desBuff": 64002067,
-        "score": 100
+        "propList": _tools.ROList([['adjAntiFatal', 5], ['adjFullHp', 1800], ['adjFullMp', 200]]),
+        "desBuff": None,
+        "score": 0
     }),
     87020062: _tools.RODict({
         "ID": 87020062,
@@ -3030,7 +3030,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020062,
         "removeAction": _87020062_remove,
-        "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15]]),
+        "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15], ['adjMinMagicArmor', 15], ['adjMaxMagicArmor', 15]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3042,7 +3042,7 @@ datas = _tools.RODict({
         "removeAction": _87020063_remove,
         "propList": None,
         "desBuff": 64002069,
-        "score": 100
+        "score": 250
     }),
     87020064: _tools.RODict({
         "ID": 87020064,
@@ -3050,9 +3050,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020064,
         "removeAction": _87020064_remove,
-        "propList": _tools.ROList([['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
+        "propList": _tools.ROList([['adjDodge', 3], ['adjEvasion', 3]]),
         "desBuff": None,
-        "score": 100
+        "score": 0
     }),
     87020065: _tools.RODict({
         "ID": 87020065,
@@ -3062,7 +3062,7 @@ datas = _tools.RODict({
         "removeAction": _87020065_remove,
         "propList": None,
         "desBuff": 64002071,
-        "score": 100
+        "score": 250
     }),
     87020066: _tools.RODict({
         "ID": 87020066,
@@ -3070,7 +3070,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020066,
         "removeAction": _87020066_remove,
-        "propList": _tools.ROList([['adjMinPhysicalAtk', 30], ['adjMaxPhysicalAtk', 30]]),
+        "propList": _tools.ROList([['adjMinPhysicalAtk', 15], ['adjMaxPhysicalAtk', 15], ['adjMinMagicAtk', 15], ['adjMaxMagicAtk', 15]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3082,7 +3082,7 @@ datas = _tools.RODict({
         "removeAction": _87020067_remove,
         "propList": None,
         "desBuff": 64002073,
-        "score": 100
+        "score": 250
     }),
     87020068: _tools.RODict({
         "ID": 87020068,
@@ -3090,7 +3090,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020068,
         "removeAction": _87020068_remove,
-        "propList": _tools.ROList([['adjMinMagicAtk', 30], ['adjMaxMagicAtk', 30]]),
+        "propList": _tools.ROList([['adjAccuracy', 3], ['adjHit', 3]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3102,7 +3102,7 @@ datas = _tools.RODict({
         "removeAction": _87020069_remove,
         "propList": None,
         "desBuff": 64002075,
-        "score": 100
+        "score": 400
     }),
     87020070: _tools.RODict({
         "ID": 87020070,
@@ -3110,7 +3110,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020070,
         "removeAction": _87020070_remove,
-        "propList": _tools.ROList([['adjPVPDmgAnti', 0.1]]),
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.08]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3120,7 +3120,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020071,
         "removeAction": _87020071_remove,
-        "propList": _tools.ROList([['adjFrozenEnh', 10], ['adjSlowEnh', 10]]),
+        "propList": _tools.ROList([['adjStunAnti', 10], ['adjSilentAnti', 10], ['adjKnockAnti', 10], ['adjPushAnti', 10], ['adjFrozenAnti', 10], ['adjSlowAnti', 10]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3132,7 +3132,7 @@ datas = _tools.RODict({
         "removeAction": _87020072_remove,
         "propList": None,
         "desBuff": 64002079,
-        "score": 100
+        "score": 400
     }),
     87020073: _tools.RODict({
         "ID": 87020073,
@@ -3140,7 +3140,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020073,
         "removeAction": _87020073_remove,
-        "propList": _tools.ROList([['adjExpGrow', 0.15]]),
+        "propList": _tools.ROList([['adjAntiFatal', 8]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3150,7 +3150,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020074,
         "removeAction": _87020074_remove,
-        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.1]]),
+        "propList": _tools.ROList([['adjAccuracy', 6], ['adjHit', 6]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3162,7 +3162,7 @@ datas = _tools.RODict({
         "removeAction": _87020075_remove,
         "propList": None,
         "desBuff": 64002083,
-        "score": 0
+        "score": 400
     }),
     87020076: _tools.RODict({
         "ID": 87020076,
@@ -3170,7 +3170,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020076,
         "removeAction": _87020076_remove,
-        "propList": _tools.ROList([['adjSkillCD', 0.05]]),
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.08]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3180,7 +3180,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020077,
         "removeAction": _87020077_remove,
-        "propList": _tools.ROList([['adjHit', 10]]),
+        "propList": _tools.ROList([['adjEvasion', 6], ['adjDodge', 6]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3292,7 +3292,7 @@ datas = _tools.RODict({
         "removeAction": _87020088_remove,
         "propList": None,
         "desBuff": 64002103,
-        "score": 100
+        "score": 150
     }),
     87020089: _tools.RODict({
         "ID": 87020089,
@@ -3300,19 +3300,19 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020089,
         "removeAction": _87020089_remove,
-        "propList": _tools.ROList([['adjFullHp', 60]]),
+        "propList": _tools.ROList([['adjFullHp', 750]]),
         "desBuff": None,
         "score": 0
     }),
     87020090: _tools.RODict({
         "ID": 87020090,
-        "name": "熊猫石方方技能2",
+        "name": "小僵尸晃晃技能2",
         "level": 0,
         "action": _87020090,
         "removeAction": _87020090_remove,
-        "propList": None,
-        "desBuff": 64002105,
-        "score": 100
+        "propList": _tools.ROList([['adjDmgArmor', 0.01]]),
+        "desBuff": None,
+        "score": 0
     }),
     87020091: _tools.RODict({
         "ID": 87020091,
@@ -3320,7 +3320,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020091,
         "removeAction": _87020091_remove,
-        "propList": _tools.ROList([['adjDmgArmor', 0.05]]),
+        "propList": _tools.ROList([['adjDmgArmor', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3330,7 +3330,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020092,
         "removeAction": _87020092_remove,
-        "propList": _tools.ROList([['adjHit', 6]]),
+        "propList": _tools.ROList([['adjAccuracy', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -3462,7 +3462,7 @@ datas = _tools.RODict({
         "removeAction": _87020105_remove,
         "propList": None,
         "desBuff": 64002131,
-        "score": 400
+        "score": 250
     }),
     87020106: _tools.RODict({
         "ID": 87020106,
@@ -3472,7 +3472,7 @@ datas = _tools.RODict({
         "removeAction": _87020106_remove,
         "propList": None,
         "desBuff": 64002133,
-        "score": 400
+        "score": 250
     }),
     87020107: _tools.RODict({
         "ID": 87020107,
@@ -3482,7 +3482,7 @@ datas = _tools.RODict({
         "removeAction": _87020107_remove,
         "propList": None,
         "desBuff": 64002135,
-        "score": 400
+        "score": 250
     }),
     87020108: _tools.RODict({
         "ID": 87020108,
@@ -3492,7 +3492,7 @@ datas = _tools.RODict({
         "removeAction": _87020108_remove,
         "propList": None,
         "desBuff": 64002137,
-        "score": 400
+        "score": 250
     }),
     87020109: _tools.RODict({
         "ID": 87020109,

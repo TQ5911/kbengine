@@ -894,5 +894,17 @@ datas = _tools.RODict({
     "greenCode_invalid": _tools.RODict({
         "ID": "greenCode_invalid",
         "value": 54002121,
+    }),
+    "patchUpdate_restart": _tools.RODict({
+        "ID": "patchUpdate_restart",
+        "value": 54002130,
+    }),
+    "patchUpdate_launcher": _tools.RODict({
+        "ID": "patchUpdate_launcher",
+        "value": 54002131,
+    }),
+    "fullUpdate_download": _tools.RODict({
+        "ID": "fullUpdate_download",
+        "value": 54002132,
     })
 })

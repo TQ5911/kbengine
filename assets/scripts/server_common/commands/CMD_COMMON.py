@@ -1,34 +1,25 @@
 # -*- coding: utf-8 -*-
-import gameconst
 import utils
+import gameglobal
+import gameconst
 import gmAdmin
 import gmCommand
 import random
 from KBEDebug import *
 import gametimer
 import gameclass
-import gameglobal
 
-BASE = gameconst.BASE
-CELL = gameconst.CELL
-ALL = gameconst.ALL
-INSIDE = gmAdmin.INSIDE
-ALLSIDE = gmAdmin.ALLSIDE
 
-gm_cmd = gmCommand.gm_cmd
-forwardGMCommand = gmCommand.forwardGMCommand
+BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
+    gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
 
-Int = gmCommand.Int
-Player = gmCommand.Player
-Str = gmCommand.Str
-Entity = gmCommand.Entity
-Float = gmCommand.Float
+gm_cmd, forwardGMCommand, callOnApps = gmCommand.gm_cmd, gmCommand.forwardGMCommand,\
+    gmCommand._callApps
 
-RARG = gmCommand.RARG
-RSU = gmCommand.RSU
-RSTUB = gmCommand.RSTUB
-RONE = gmCommand.RONE
-SELF = gmCommand.SELF
-RALL = gmCommand.RALL
+Int, Player, Str, Entity, Float = gmCommand.Int, gmCommand.Player,\
+    gmCommand.Str, gmCommand.Entity, gmCommand.Float
+
+RARG, RSU, RSTUB, RONE, SELF, RALL= gmCommand.RARG, gmCommand.RSU, gmCommand.RSTUB,\
+    gmCommand.RONE, gmCommand.SELF, gmCommand.RALL
 
 GOD_GROUPS = gmCommand.GOD_GROUPS

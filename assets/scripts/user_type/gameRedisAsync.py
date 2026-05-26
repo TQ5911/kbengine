@@ -14,7 +14,7 @@ class LuaScriptVal(object):
         self.sha = sha
 
     def onLoad(self, sha):
-        LOG_IFO('On Load Lua Script:', self.lid, sha)
+        LOG_INFO('On Load Lua Script:', self.lid, sha)
         if not self.sha:
             self.sha = sha
 
@@ -49,12 +49,12 @@ class RedisAsyncClient(object):
         self.port = port
         self.passwd = passwd
         self.connected = False
-        LOG_IFO("RedisAsyncClient::__init__ host={} port={} cid={}".format(self.host, self.port, self.cid))
+        LOG_INFO("RedisAsyncClient::__init__ host={} port={} cid={}".format(self.host, self.port, self.cid))
 
     # 连接redis数据库
     def onConnect(self):
         self.cid = GameCommon.connectRedis(self.host, self.port, self.connectCallback, self.disconnectCallback)
-        LOG_IFO("RedisAsyncClient::onConnect")
+        LOG_INFO("RedisAsyncClient::onConnect")
         return
 
     # 是否已经连接上redis数据库
@@ -70,13 +70,13 @@ class RedisAsyncClient(object):
         if connected:
             self.cid = cid
             self.connected = True
-            LOG_IFO("RedisAsyncClient::connectCallback is suc... connected={} cid={} host={} port={}".format(connected,
+            LOG_INFO("RedisAsyncClient::connectCallback is suc... connected={} cid={} host={} port={}".format(connected,
                                                                                                               self.cid,
                                                                                                               self.host,
                                                                                                               self.port))
             self.auth()
         else:
-            LOG_IFO(
+            LOG_INFO(
                 "RedisAsyncClient::connectCallback is error... connected={} cid={} host={} port={}".format(connected,
                                                                                                            self.cid,
                                                                                                            self.host,
@@ -87,14 +87,14 @@ class RedisAsyncClient(object):
     def disconnectCallback(self, cid):
         self.cid = 0
         self.connected = False
-        LOG_IFO("RedisAsyncClient::disconnectCallback cid={}".format(cid))
+        LOG_INFO("RedisAsyncClient::disconnectCallback cid={}".format(cid))
         return
 
     # 断开redis数据库连接
     def disconnectRedis(self):
         GameCommon.disconnectRedis(self.cid)
         self.cid = 0
-        LOG_IFO("RedisAsyncClient::disconnectRedis host={} port={} cid={}".format(self.host, self.port, self.cid))
+        LOG_INFO("RedisAsyncClient::disconnectRedis host={} port={} cid={}".format(self.host, self.port, self.cid))
         return True
 
     # 执行execute
@@ -258,7 +258,7 @@ class RedisAsyncClient(object):
         return self._executeRawRedis(cmd, resultCallback)
 
     # ---------------------------------------------------string-----------------------------------------------------
-    def set(self, tableName, value, resultCallback=None):
+    def cmdSet(self, tableName, value, resultCallback=None):
         if not tableName:
             LOG_ERR("RedisAsyncClient::set tableName={}".format(tableName))
             return False
@@ -632,17 +632,6 @@ class RedisAsyncClient(object):
 
 
 # ---------------------------- lua scripts register ------------------------------------
-@load_lua_script(gameconst.LuaScriptID.ADD_HOME_STORE_LIMIT)
-def _add_home_store_limit_():
-    return '''
-        local m = redis.call('HGET', KEYS[1], ARGV[1]) or 0
-        if tonumber(m) + tonumber(ARGV[2]) <= tonumber(ARGV[3]) then
-            m = redis.call('HINCRBY', KEYS[1], ARGV[1], ARGV[2])
-            return m
-        end
-        return -1
-    '''
-
 @load_lua_script(gameconst.LuaScriptID.GET_USERS_INFO)
 def _get_users_info_():
     return '''

@@ -54,6 +54,12 @@
             <Persistent>    true                </Persistent>
         </guildScore>
 
+        <maxGuildUnionNum>
+            <Type>          UINT32              </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>    true                </Persistent>
+        </maxGuildUnionNum>
+
         <guildLevel>
             <Type>          LEVEL           </Type>
             <Flags>         BASE            </Flags>
@@ -247,6 +253,11 @@
             <Default>   0          </Default>
         </openDungeonTimer>
 
+        <guildRankIdx>
+            <Type>          LEADER_BOARD_IDX </Type>
+            <Flags>         BASE             </Flags>
+            <Persistent>    true             </Persistent>
+        </guildRankIdx>
     </Properties>
 
     <BaseMethods>
@@ -810,5 +821,19 @@
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       ENTITYCALL          </Arg>
         </doGetGuildIronMine>
+
+        <onMineWarWin>
+            <Arg>       BOOL               </Arg>
+        </onMineWarWin>
+
+        <onLeaderBoardRank>
+            <Arg>       UINT8                               </Arg>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+        </onLeaderBoardRank>
+
+        <onGetGuildRelationAll>
+            <Arg>       ARRAY   <of>    GUILD_AND_RELATION          </of>   </Arg>
+            <Arg>       ENTITYCALL          </Arg>
+        </onGetGuildRelationAll>
     </BaseMethods>
 </root>

@@ -75,6 +75,21 @@ datas = _tools.RODict({
         "activityTask": 0,
         "openGuildLevel": 1,
         "firstUnlockPush": 1,
+    }),
+    32000005: _tools.RODict({
+        "ID": 32000005,
+        "name": "归墟",
+        "membersRequire": 0,
+        "isOpen": 1,
+        "needTeam": 0,
+        "refreshMode": 0,
+        "activityTime": -1,
+        "openLevel": 0,
+        "openTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
+        "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
+        "activityTask": 0,
+        "openGuildLevel": 1,
+        "firstUnlockPush": 1,
     })
 })
 
@@ -87,6 +102,7 @@ unlockNotifyAct = _tools.RODict({
         32000002:0,
         32000003:0,
         32000004:0,
+        32000005:0,
 })
 
 

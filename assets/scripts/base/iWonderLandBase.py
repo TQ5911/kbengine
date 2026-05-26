@@ -27,9 +27,11 @@ class IWonderLandBase(object):
         self._wonderLandRefreshDaily()
         self.wonderLandTicket = WL_CD.datas['dailyWonderLandNum']['value']
 
-    def _wonderLandRefreshDaily(self):
-        if self._isUIVisible(V_VD.UIWonderLandPanel):
-            self.wonderLandTicket = min(WL_CD.datas['wonderLandNumItemLimit']['value'], self.wonderLandTicket + WL_CD.datas['dailyWonderLandNum']['value'])
+    def _wonderLandRefreshDaily(self, *args):
+        tType = args[0] if len(args) >= 1 else 0
+        if tType == gameconst.CycleEventTriggerType.TIMED:
+            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.WONDER_LAND, self.wonderLandTicket, gameconst.FreeTicketUpdateType.RESET)
+        self.wonderLandTicket = WL_CD.datas['dailyWonderLandNum']['value']
 
         self.wonderLandAddTimes = WL_CD.datas['wonderLandNumCoinDailyLimit']['value']
 
@@ -52,7 +54,7 @@ class IWonderLandBase(object):
 
     @gamedecorator.checkGameconfigEnable('wonderLand')
     def addWonderLandTicket(self, exposed, itemId, num, isAddDuration):
-        LOG_IFO('IWonderLandBase::addWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}'.format(itemId, num, isAddDuration))
+        LOG_INFO('IWonderLandBase::addWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}'.format(itemId, num, isAddDuration))
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])
             return
@@ -67,7 +69,24 @@ class IWonderLandBase(object):
             self.cell.directlyAddWonderLandDuration('addWonderLandDurationFailedRewindTimes', (_opUUID, ))
             return
 
-        self.doAddWonderLandTicket(itemId, num, isAddDuration, False, gameconst.WonderAddTicketReason.FROM_CLIENT, _opUUID)
+        addType = utils.getWonderLandAddTimesTypeByitemId(itemId)
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_NULL:
+            LOG_ERR('addWonderLandTicket: invalid itemId', itemId)
+            return
+        
+        itemNum = 0
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_ITEM:
+            itemNum = 1
+        else:
+            if self.wonderLandAddTimes <= 0:
+                LOG_ERR('addWonderLandTicket: wonderLandAddTimes <= 0')
+                return
+            itemId, itemNum = utils.getWonderLandCoinCostByTimes(self.wonderLandAddTimes)
+            if not itemId:
+                LOG_ERR('addWonderLandTicket: invalid wonderLandAddTimes', self.wonderLandAddTimes)
+                return  
+            num = 1
+        self.doAddWonderLandTicket(addType, itemId, itemNum, num, isAddDuration, False, gameconst.WonderAddTicketReason.FROM_CLIENT, _opUUID)
 
     def modifyWonderLandTicket(self, delta, src, opUUID):
         if delta > 0:
@@ -91,25 +110,25 @@ class IWonderLandBase(object):
             opUUID,
         )
 
-    def doAddWonderLandTicket(self, itemId, num, isAddDuration, hasCheckCell, reason, opUUID):
-        LOG_IFO('IWonderLandBase::doAddWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(itemId, num, isAddDuration, hasCheckCell, reason))
+    def doAddWonderLandTicket(self, addType, itemId, itemNum, num, isAddDuration, hasCheckCell, reason, opUUID):
+        LOG_INFO('IWonderLandBase::doAddWonderLandTicket: addType: {}, itemId: {}, itemNum: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(addType, itemId, itemNum, num, isAddDuration, hasCheckCell, reason))
         if isAddDuration and num != 1:
             LOG_ERR('IWonderLandBase::addWonderLandTicket: invalid num: {}'.format(num))
             return
 
         if isAddDuration and not hasCheckCell:
-            self.cell.checkAddWonderLandDurationCondition(itemId, num, opUUID)
+            self.cell.checkAddWonderLandDurationCondition(addType, itemId, itemNum, num, opUUID)
             return
 
         _award = dropAward.DeductWealthVal()
-        if itemId == gameconst.ItemId.MONEY:
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             if num > self.wonderLandAddTimes:
                 LOG_ERR('IWonderLandBase::addWonderLandTicket: num > wonderLandAddTimes')
                 return
 
-            _award.addWealthByItemId(itemId, num * WL_CD.datas['wonderLandNumCoin']['value'])
+            _award.addWealthByItemId(itemId, num * itemNum)
 
-        elif itemId == WL_CD.datas['wonderLandNumItem']['value']:
+        elif addType == gameconst.CUBE_ADD_TIMES_TYPE_ITEM:
             _award.addWealthByItemId(itemId, num)
 
         else:
@@ -120,7 +139,7 @@ class IWonderLandBase(object):
             LOG_ERR('IWonderLandBase::addWonderLandTicket: can not deduct wealth')
             return
 
-        if itemId == gameconst.ItemId.MONEY:
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.wonderLandAddTimes -= num
 
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
@@ -128,17 +147,17 @@ class IWonderLandBase(object):
         self.deductWealth(_src, _award, opUUID, _detail)
 
         if isAddDuration:
-            self.cell.directlyAddWonderLandDuration('addWonderLandDurationFailed', (opUUID, itemId, num))
+            self.cell.directlyAddWonderLandDuration('addWonderLandDurFailed', (opUUID, addType, itemId, itemNum, num))
         else:
             self.modifyWonderLandTicket(num, _src, opUUID)
 
-    def addWonderLandDurFailed(self, opUUID, itemId, num):
+    def addWonderLandDurFailed(self, opUUID, addType, itemId, itemNum, num):
         _award = dropAward.AwardVal()
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
         _detail = gameclass.AwardDetail(reason='add wonderland duration failed')
 
-        if itemId == gameconst.ItemId.MONEY:
-            _award.addWealthByItemId(itemId, num * WL_CD.datas['wonderLandNumCoin']['value'])
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
+            _award.addWealthByItemId(itemId, num * itemNum)
             self.wonderLandAddTimes += num
         else:
             _award.addWealthByItemId(itemId, num)
@@ -150,9 +169,9 @@ class IWonderLandBase(object):
         _deductAward.addWealthByItemId(itemId, itemNum)
 
         if not self.canDeductWealth(_deductAward):
-            _msgId = WL_CD.datas['wonderLand_summoningFailed']['value']
+            _msgId = WL_CD.datas['wonderLand_summoningFailed2']['value']
             _bossName = CBD.datas[bossId]['name']
-            _args = [str(itemId), str(itemNum), utils.getTranslatedArg(_bossName)]
+            _args = [str(itemId), str(itemNum)]
             self.onMessagePre(_msgId, _args)
             return False
 
@@ -186,7 +205,7 @@ class IWonderLandBase(object):
 
     def autoRenewWonderLand(self, switchData):
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']):
-            LOG_IFO('IWonderLandBase::autoRenewWonderLand: wonderLandActID not open')
+            LOG_INFO('IWonderLandBase::autoRenewWonderLand: wonderLandActID not open')
             return
 
         _opUUID = KBEngine.genUUID64()
@@ -197,11 +216,17 @@ class IWonderLandBase(object):
 
         if self.wonderLandAddTimes > 0:
             if switchData['coinSwitch']:
+                coinType, coinNum = utils.getWonderLandCoinCostByTimes(self.wonderLandAddTimes)
+                if not coinType:
+                    LOG_ERR('autoRenewWonderLand: invalid wonderLandAddTimes', self.wonderLandAddTimes)
+                    return  
                 _deductVal = dropAward.DeductWealthVal()
-                _deductVal.addWealthByItemId(gameconst.WONDERLAND_COIN_ITEM_ID, WL_CD.datas['wonderLandNumCoin']['value'])
+                _deductVal.addWealthByItemId(coinType, coinNum)
                 if self.canDeductWealth(_deductVal):
                     self.doAddWonderLandTicket(
-                        gameconst.WONDERLAND_COIN_ITEM_ID,
+                        gameconst.CUBE_ADD_TIMES_TYPE_COIN,
+                        coinType,
+                        coinNum,
                         1,
                         True,
                         True,
@@ -219,7 +244,9 @@ class IWonderLandBase(object):
             return
 
         self.doAddWonderLandTicket(
+            gameconst.CUBE_ADD_TIMES_TYPE_ITEM,
             WL_CD.datas['wonderLandNumItem']['value'],
+            1,
             1,
             True,
             True,

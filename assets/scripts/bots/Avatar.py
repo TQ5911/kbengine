@@ -268,7 +268,7 @@ class PlayerAvatarSkillsCDMixin(object):
 
 
 @rpc_counted_class
-class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
+class PlayerAvatar(Avatar, botAI.BotAI, PlayerAvatarSkillsCDMixin):
     # 帮战相关
     battleFieldDungeonMatchingBeginTime = 0
     taskingType = 0
@@ -276,7 +276,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
     def __init__(self):
         super(PlayerAvatar, self).__init__()
         super(Avatar, self).__init__()
-        super(botAI.botAI, self).__init__()
+        super(botAI.BotAI, self).__init__()
         DEBUG_MSG("PlayerAvatar::__init__")
         
         self.spawnPosition = Math.Vector3(self.position)

@@ -1,0 +1,24 @@
+<root>
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+        <reqWorkshopMF> <Exposed/>
+            <Arg>       ITEM_ID    </Arg>
+            <Arg>       UINT8      </Arg>
+            <Arg>       BOOL       </Arg>
+        </reqWorkshopMF>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onWorkshopMF>
+            <Arg>  UINT8                                                   </Arg>
+            <Arg>  BOOL                                                    </Arg>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onWorkshopMF>
+    </ClientMethods>
+</root>

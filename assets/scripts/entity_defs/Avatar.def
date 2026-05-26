@@ -51,6 +51,7 @@
         <Interface>         iWarehouse                  </Interface>
         <Interface>         iLeaderBoard                </Interface>
         <Interface>         iAvatarCoinAuction          </Interface>
+        <Interface>         iAvatarLease                </Interface>
         <Interface>         iAchievement                </Interface>
         <Interface>         iEnemy                      </Interface>
         <Interface>         iWonderLand                 </Interface>
@@ -72,7 +73,10 @@
         <Interface>         iBindPhone                  </Interface>
         <Interface>         iBounty                     </Interface>
         <Interface>         iWorldLevel                 </Interface>
-        <Interface>         iEmote                     </Interface>
+        <Interface>         iEmote                      </Interface>
+        <Interface>         iSpeedCheck                 </Interface>
+        <Interface>         iResourceRecovery           </Interface>
+        <Interface>         iReport                     </Interface>
     </Interfaces>
 
     <Properties>
@@ -472,6 +476,18 @@
             <Default>       0                   </Default>
         </showCompleteNum>
 
+        <lastSetCompleteNumTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </lastSetCompleteNumTime>
+
+        <showCompleteNumTimer>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </showCompleteNumTimer>
+
         <teleportInfoDict>
             <Type>          PY_DICT             </Type>
             <Flags>         CELL_PRIVATE        </Flags>
@@ -556,53 +572,6 @@
             <Flags>         BASE                        </Flags>
             <Persistent>    true                        </Persistent>
         </banLogin>
-
-        <lastSpeed>
-            <Type>          DOUBLE                      </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </lastSpeed>
-
-        <lastPosition>
-            <Type>          POSITION_ARG                </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-        </lastPosition>
-
-        <continuousTickCount>
-            <Type>          INT16                       </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </continuousTickCount>
-
-        <continuousIllegalCount>
-            <Type>          INT16                       </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </continuousIllegalCount>
-
-        <isInitCheck>
-            <Type>          BOOL                        </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       1                           </Default>
-        </isInitCheck>
-
-        <speedCheckStart>
-            <Type>          DOUBLE                      </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </speedCheckStart>
-
-        <isLastOverSpeed>
-            <Type>          BOOL                        </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </isLastOverSpeed>
-
-        <overSpeedCheckTimer>
-            <Type>     TIMER_ID            </Type>
-            <Flags>    CELL_PRIVATE        </Flags>
-            <Default>  0                   </Default>
-        </overSpeedCheckTimer>
 
     </Properties>
 
@@ -929,6 +898,10 @@
         <setCellFlags>
             <Arg>   UINT8                   </Arg>
         </setCellFlags>
+
+        <getShowMapEntityInfo> <Exposed/>
+            <Arg>       MAP_ID            </Arg>
+        </getShowMapEntityInfo>
     </CellMethods>
 
     <ClientMethods>
@@ -1005,7 +978,7 @@
         </onAppearanceUpdated>
 
         <onAppearanceOutfitUpdated>
-            <Arg>        STRING        </Arg>
+            <Arg>        UINT8         </Arg>
             <Arg>        OUTFIT_ID     </Arg>
         </onAppearanceOutfitUpdated>
 
@@ -1042,5 +1015,20 @@
 
         <onBreakAwayStuckSuccess>
         </onBreakAwayStuckSuccess>
+
+        <onAnnouncement>
+            <Arg>        UINT16         </Arg>
+            <Arg>        UINT16         </Arg>
+            <Arg>        UINT64         </Arg>
+        </onAnnouncement>
+
+        <onPatchVersion>
+            <Arg>   STRING              </Arg>
+        </onPatchVersion>
+
+        <onShowMapEntityInfo>
+            <Arg>           SPACE_NO         </Arg>
+            <Arg>           ARRAY       <of>        OBJECT_ID       </of>   </Arg>
+        </onShowMapEntityInfo>
     </ClientMethods>
 </root>

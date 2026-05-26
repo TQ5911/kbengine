@@ -10,20 +10,17 @@ import utils
 import gameconst
 import gameengine
 
+import itemData_set as ID_SET
 import itemData_itemData as ITEMDATA
 import gearBase_gearBase as GBGBD
 import const_const as CONSTD
-import conflict_status as CSD
+import conflict_status as C_SD
 import value_value as VVD
 import formula_generalFormula as FMLGD
 import antiAddictCategory_antiAddictCategory as AACADCD
 import taskdata as TSKD
 import taskEditorConfig_taskEditorInfo as TECTEID
 import taskClass_taskMsg as TCTMD
-import appearance_dressUpData as ADUD
-import appearance_wingData as AWD
-import appearance_hairData as AHD
-import appearance_avatarFrame as AAF
 import taskDesc_taskDesc as TDTD
 import taskDesc_taskGroup as TTG
 import taskRandTargetPoint as TRTPD
@@ -33,7 +30,7 @@ import rewardData_rewardData as RWDRWDD
 import creep_base as CBD
 import creep_coefficient as C_CD
 import gearBase_typeExplanation as GBTED
-import fightProp_define as FDD
+import fightProp_define as FP_DD
 import petData_petData as PDPD
 import petData_rank as PDRK
 import passiveSkill_passiveSkill as PSPSD
@@ -45,13 +42,14 @@ import skill_skill as SSD
 import raid_raidConst as RAID_CONST
 import gearBase_gearConst as GBGCD
 import skill_specialMonsterAI as S_SMAD
-import character_charData as CCD
+import character_charData as C_C_DD
 import teamMatch_matchConfig as TMMCD
 import fightProp_atkBlessScore as FASD
 import cube_config
 import gearEnhance_gearconst as GEGCD
 import gearEnhance_equipmentClass as GEES
 import mail_mail as MAMAD
+import appearance_ModelResource as AMRD
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -137,7 +135,7 @@ def getConstVal(keyName, default=None):
 
 
 def getStateEventId(state):
-    return CSD.datas.get(state, {}).get('event')
+    return C_SD.datas.get(state, {}).get('event')
 
 
 def getAddItemExtraDesp(srcType):
@@ -170,21 +168,21 @@ def getRealRewardId(rewardId, context, timeStamp=0):
 
 
 @functools.lru_cache(128)
-def getTaskData(taskId):
+def getTaskCfg(taskId):
     taskData = TSKD.datas.get(str(taskId))
     if not taskData:
-        gameengine.panicStack('getTaskData, no taskdata:', taskId)
+        gameengine.panicStack('getTaskCfg, no taskdata:', taskId)
     return taskData
 
 
 def getRootTaskData(taskId):
-    taskData = getTaskData(taskId)
+    taskData = getTaskCfg(taskId)
     fatherTaskId = taskData.get('FatherTaskId', 0)
     loopCnt = 0
     while fatherTaskId != 0 and loopCnt < 10:
         loopCnt += 1
-        taskData = getTaskData(fatherTaskId)
-        fatherTaskId = taskFieldVal(taskData, 'FatherTaskId')
+        taskData = getTaskCfg(fatherTaskId)
+        fatherTaskId = getTaskFieldVal(taskData, 'FatherTaskId')
     return taskData
 
 
@@ -192,18 +190,18 @@ def getRootTaskId(taskId):
     return getRootTaskData(taskId).get('TaskId')
 
 
-def taskFieldVal(taskData, key):
+def getTaskFieldVal(taskData, key):
     return taskData.get(key, TECTEID.datas[key]['value'])
 
 
 def isRootTask(taskId):
-    return 0 == taskFieldVal(getTaskData(taskId), 'FatherTaskId')
+    return 0 == getTaskFieldVal(getTaskCfg(taskId), 'FatherTaskId')
 
 
 def isSingleSupportTeamTask(taskId):
     # 支持单人的组队任务
     rootTaskData = getRootTaskData(taskId)
-    if taskFieldVal(rootTaskData, 'ClaimCondCheckTeam').get('IsTaskSharing', False):
+    if getTaskFieldVal(rootTaskData, 'ClaimCondCheckTeam').get('IsTaskSharing', False):
         return rootTaskData.get('ClaimCondCheckTeam', {}).get('SupportSingle', False)
     else:
         return False
@@ -225,7 +223,7 @@ def isTaskInOpenTime(taskId):
     return True
 
 
-def taskMsgId(msgName):
+def getTaskMsgId(msgName):
     return TCTMD.datas[msgName]['value']
 
 
@@ -235,11 +233,11 @@ def getRandTargetPointTaskIds(rootTaskId):
 
 def isTeamTask(taskId):
     rootTaskData = getRootTaskData(taskId)
-    return taskFieldVal(rootTaskData, 'ClaimCondCheckTeam').get('IsTaskSharing', False)
+    return getTaskFieldVal(rootTaskData, 'ClaimCondCheckTeam').get('IsTaskSharing', False)
 
 
 def isLeafTask(taskId, taskData=None):
-    taskData = taskData or getTaskData(taskId)
+    taskData = taskData or getTaskCfg(taskId)
     return len(taskData['ChildTaskIds']) == 0
 
 
@@ -249,10 +247,10 @@ def getTaskRoundInfo(taskData):
     roundActList = []
     roundParamList = []
     # openCondTaskRound finRoundRewardID等导出的默认值可能是 None
-    openCondTaskRound = taskFieldVal(taskData, 'OpenCondTaskRound')
-    finRoundRewardID = taskFieldVal(taskData, 'FinRoundRewardID')
-    roundActionNames = taskFieldVal(taskData, 'FinRoundEventName')
-    roundActionParams = taskFieldVal(taskData, 'FinRoundEventParam')
+    openCondTaskRound = getTaskFieldVal(taskData, 'OpenCondTaskRound')
+    finRoundRewardID = getTaskFieldVal(taskData, 'FinRoundRewardID')
+    roundActionNames = getTaskFieldVal(taskData, 'FinRoundEventName')
+    roundActionParams = getTaskFieldVal(taskData, 'FinRoundEventParam')
 
     openCondTaskRound = openCondTaskRound if openCondTaskRound else ''
     openCondTaskRound = openCondTaskRound.strip(' []')
@@ -281,9 +279,9 @@ def filterChildTaskIds(childTaskIds, level, excludedChildTaskIds=None):
         if childTaskId in excludedChildTaskIds:
             continue
 
-        childTaskData = getTaskData(childTaskId)
-        minLevel = taskFieldVal(childTaskData, 'ClaimCondLevelMin')
-        maxLevel = taskFieldVal(childTaskData, 'ClaimCondLevelMax')
+        childTaskData = getTaskCfg(childTaskId)
+        minLevel = getTaskFieldVal(childTaskData, 'ClaimCondLevelMin')
+        maxLevel = getTaskFieldVal(childTaskData, 'ClaimCondLevelMax')
         if 0 == maxLevel:
             maxLevel = utils.getPlayerMaxLevel()
         if minLevel <= level <= maxLevel:
@@ -302,7 +300,7 @@ def calcChildTaskIds(taskData, cfgChildTaskIds, checkLevel, seed=0, excludedChil
     childTaskIds = filterChildTaskIds(cfgChildTaskIds, checkLevel, excludedChildTaskIds=excludedChildTaskIds)
     if len(childTaskIds) > 0:
         # 随机取任务且不是按照权重取的，那就是随机打乱子任务列表
-        if taskFieldVal(taskData, 'ChildDoInRandom') and not taskFieldVal(taskData, 'RandomWithWeight'):
+        if getTaskFieldVal(taskData, 'ChildDoInRandom') and not getTaskFieldVal(taskData, 'RandomWithWeight'):
             shuffleChildTaskIds(seed, childTaskIds)
             LOG_DBG('     in Task::calcChildTaskIds, ChildDoInRandom, childTaskIds:', childTaskIds)
     return childTaskIds
@@ -327,17 +325,14 @@ def getMailId(srcType, ctxMailId):
     if not abandonWhenBagFull and not ctxMailId:
         return gameconst.MailConstID.REWARD_MAIL_ID, abandonWhenBagFull
     return ctxMailId, abandonWhenBagFull
+    
 def getOutfitConfigData(outfitType, outfitId):
-    if outfitType == gameconst.OutfitType.wing:
-        return AWD.datas.get(outfitId, None)
-    if outfitType == gameconst.OutfitType.hair:
-        return AHD.datas.get(outfitId, None)
-    if outfitType == gameconst.OutfitType.clothes:
-        return ADUD.datas.get(outfitId, None)
-    if outfitType == gameconst.OutfitType.picFrame:
-        return AAF.datas.get(outfitId, None)
     if outfitType == gameconst.OutfitType.mount:
         return MOUNTS.datas.get(outfitId)
+    else:
+        appeId = AMRD.outfitId2appeId.get(outfitId, None)
+        if appeId:
+            return AMRD.datas.get(appeId)
     return
 
 def checkOutfitOpen(outfitType, outfitId):
@@ -345,8 +340,6 @@ def checkOutfitOpen(outfitType, outfitId):
     if not configData:
         return False
     isOpen = configData.get('isOpen', None)
-    if isOpen == None:
-        return True
     if not isOpen:
         return False
     return True
@@ -501,7 +494,7 @@ def getCreepMD(creepId):
     return CBD.datas.get(creepId, {}).get('magicDrop', 0)
 
 def getPropBaseScore(propName, school = 0):
-    cfgData = FDD.datas.get(propName, None)
+    cfgData = FP_DD.datas.get(propName, None)
     if not cfgData:
         LOG_ERR("getPropScore cfgData not found:", propName)
         return 0
@@ -609,8 +602,8 @@ def checkEquipmentSpiritType(equipType):
 def checkEquipmentUpgradeType(equipType):
     return True
 
-def checkEquipGrowingForbidden(equipItem):
-    if not equipItem.isGood():
+def checkEquipGrowingForbidden(gbId, equipItem):
+    if not equipItem.isGood(gbId):
         return True
     data = GBGCD.datas['equipGrowingForbidden']['value']
     if data and equipItem.itemId in data:
@@ -673,12 +666,12 @@ def isCubeCow(mapId):
     return _cubeData['type'] == gameconst.CubeRoomType.COW
 
 def filterFightPropScore(school, propName):
-    cfgData = FDD.datas.get(propName, None)
+    cfgData = FP_DD.datas.get(propName, None)
     if not cfgData:
         LOG_WARN("filterFightPropScore fight cfg not found:", propName)
         return 0
 
-    characterData = CCD.datas.get(school, None)
+    characterData = C_C_DD.datas.get(school, None)
     if characterData:
         # 角色表里需要排除的属性类型
         if characterData['excludePropType'] == cfgData['propType']:
@@ -756,3 +749,46 @@ def addAwardsCallBackKey():
 def checkMailType(mailId, mailType):
     mailData = MAMAD.datas[mailId]
     return mailData and mailData['type'] == mailType
+
+# 背包分解默认的开关
+def getAutoDisassemblyStatus():
+    disassemblyStatus = gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL
+    # 对应客户端背包分解里的优秀开关
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.GREEN
+    # 武器
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.WEAPON
+    # 衣服
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.CLOTHES
+    # 头盔
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.HELMET
+    # 腰带 
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.BELT
+    # 项链
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.NECKLACE
+    # 鞋子
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.SHOES
+    # 戒指
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.RING
+    # 手镯
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.BRACELET
+    return disassemblyStatus
+
+# 检测自动分解来源
+def checkAutoDisassembly(srcType):
+    # 狩猎
+    autoResolveSrcTypes = ID_SET.datas['autoResolve_kill']['value']
+    if autoResolveSrcTypes and srcType in autoResolveSrcTypes:
+        return True
+    # 副本
+    autoResolveSrcTypes = ID_SET.datas['autoResolve_dun']['value']
+    if autoResolveSrcTypes and srcType in autoResolveSrcTypes:
+        return True
+    # 宝箱
+    autoResolveSrcTypes = ID_SET.datas['autoResolve_chest']['value']
+    if autoResolveSrcTypes and srcType in autoResolveSrcTypes:
+        return True
+    return False
+
+def getItemTypeID(itemId):
+    itemData = ITEMDATA.datas.get(itemId)
+    return itemData['type'] * 1000 + itemData['subType']

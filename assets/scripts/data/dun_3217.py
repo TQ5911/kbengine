@@ -43,11 +43,12 @@ datas ={
     "PosY": 524.8943,
     "PosZ": 65.75397,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
-      "MapEntityType": 0,
+      "MapEntityType": "18",
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
@@ -105,9 +106,9 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 0,
       "TelDir": 312.6052,
-      "TelX": 207.849182,
+      "TelX": 207.849777,
       "TelY": 527.7394,
-      "TelZ": 22.7596054
+      "TelZ": 22.7593079
     }
   },
   "32178003": {

@@ -19,7 +19,7 @@ class IGlobal(object):
             self.entireDestroy(False, False)
             return
 
-        LOG_IFO('onGlobalBase', self.classname(), globalName)
+        LOG_INFO('onGlobalBase', self.classname(), globalName)
         if globalName:
             gameengine.setGlobalData(globalName, self)
         else:

@@ -63,7 +63,7 @@ class IWelfareSignIn(object):
         self._reqWelfareSignIn(welfareType, signInDayNo)
     
     def _reqWelfareSignIn(self, welfareType, signInDayNo):
-        LOG_IFO('call reqWelfareSignIn', welfareType, signInDayNo)
+        LOG_INFO('call reqWelfareSignIn', welfareType, signInDayNo)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
             LOG_ERR('call reqWelfareSignIn: no welfareType', welfareType)
@@ -111,7 +111,7 @@ class IWelfareSignIn(object):
     
     @gamedecorator.checkGameconfigEnable('welfare_levelReward')
     def reqLevelWelfare(self, exposed, slotNo, welfareType):
-        LOG_IFO('call reqLevelWelfare', slotNo, welfareType)
+        LOG_INFO('call reqLevelWelfare', slotNo, welfareType)
         if welfareType not in self.welfareLevelInfos:
             LOG_ERR('call reqLevelWelfare: no welfareType', welfareType)
             return
@@ -162,7 +162,7 @@ class IWelfareSignIn(object):
         
 
     def addSignInAward(self, signInDayNo, welfareType):
-        LOG_IFO('call addSignInAward')
+        LOG_INFO('call addSignInAward')
         key = WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0)
         if not key:
             LOG_ERR('call addSignInAward: no key', welfareType, signInDayNo)
@@ -181,44 +181,44 @@ class IWelfareSignIn(object):
         return opUUID
 
     def welfareSignInOnLogin(self):
-        LOG_IFO('call welfareSignInOnLogin')
+        LOG_INFO('call welfareSignInOnLogin')
         self.checkAndUnlockWelfareSignIn(updateFlag = True)
         self.checkAndUpdateWelfareSignIn(updateFlag = False)
 
     def checkAndUnlockWelfareSignIn(self, updateFlag = True, offsetSeconds = gameconst.GENERAL_CYCLE_TIME):
-        LOG_IFO('call checkAndUnlockWelfareSignIn')
+        LOG_INFO('call checkAndUnlockWelfareSignIn')
 
         for welfareType, welfareSignInInfo in self.welfareSignInInfos.items():
             if welfareSignInInfo.welfareSignInDay:
-                LOG_IFO('call checkAndUnlockWelfareSignIn, already lock', welfareSignInInfo.welfareSignInDay)
+                LOG_INFO('call checkAndUnlockWelfareSignIn, already lock', welfareSignInInfo.welfareSignInDay)
                 continue
             
             if welfareType not in signInIDS:
                 continue
 
             if not self.checkUnlock(signInIDS[welfareType]):
-                LOG_IFO('call checkAndUnlockWelfareSignIn: can not lock')
+                LOG_INFO('call checkAndUnlockWelfareSignIn: can not lock')
                 continue
 
             self.onWelfareSignInUpdate(updateFlag, offsetSeconds, welfareType)
 
         for welfareType in self.welfareLevelInfos.keys():
             if not self.checkUnlock(levelWelfareIDS[welfareType]):
-                LOG_IFO('call checkAndUnlockWelfareSignIn: can not lock')
+                LOG_INFO('call checkAndUnlockWelfareSignIn: can not lock')
                 continue
 
             self.sendLevelWelfareInfo(welfareType)
 
-    def checkAndUpdateWelfareSignIn(self, updateFlag = True, offsetSeconds = gameconst.GENERAL_CYCLE_TIME):
-        LOG_IFO('call checkAndUpdateWelfareSignIn')
+    def checkAndUpdateWelfareSignIn(self, tType = 0, updateFlag = True, offsetSeconds = gameconst.GENERAL_CYCLE_TIME):
+        LOG_INFO('call checkAndUpdateWelfareSignIn')
         for welfareType, welfareSignInInfo in self.welfareSignInInfos.items():
             if not welfareSignInInfo.welfareSignInDay:
-                LOG_IFO('call checkAndUpdateWelfareSignIn, not lock')
+                LOG_INFO('call checkAndUpdateWelfareSignIn, not lock')
                 continue
             self.onWelfareSignInUpdate(updateFlag, offsetSeconds, welfareType)
 
     def onWelfareSignInUpdate(self, updateFlag, offsetSeconds, welfareType):
-        LOG_IFO('call onWelfareSignInUpdate',updateFlag, offsetSeconds, welfareType)
+        LOG_INFO('call onWelfareSignInUpdate',updateFlag, offsetSeconds, welfareType)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
             LOG_ERR('call onWelfareSignInUpdate: no welfareType', welfareType)
@@ -229,7 +229,7 @@ class IWelfareSignIn(object):
         
         maxSignInDay = WSLCONFIG.maxDayData[welfareType]
         if welfareSignInInfo.welfareSignInDay >= maxSignInDay:
-            LOG_IFO('call onWelfareSignInUpdate: all signed in', welfareSignInInfo.welfareSignInDay)
+            LOG_INFO('call onWelfareSignInUpdate: all signed in', welfareSignInInfo.welfareSignInDay)
             return
 
         newDaySignIn = updateFlag
@@ -238,7 +238,7 @@ class IWelfareSignIn(object):
             newDaySignIn = utils.checkDiffDay(curTimestamp, welfareSignInInfo.welfareLastSignInTimestamp, offsetSeconds)
 
         if not newDaySignIn:
-            LOG_IFO('call onWelfareSignInUpdate: alerady signed in today', welfareSignInInfo.welfareLastSignInTimestamp)
+            LOG_INFO('call onWelfareSignInUpdate: alerady signed in today', welfareSignInInfo.welfareLastSignInTimestamp)
             return
 
         self.updateWelfareSignIn(curTimestamp, welfareType)
@@ -253,41 +253,41 @@ class IWelfareSignIn(object):
             self.sendLevelWelfareInfo(welfareType)
 
     def sendWelfareSignInInfo(self, welfareType):
-        LOG_IFO('call sendWelfareSignInInfo', welfareType)
+        LOG_INFO('call sendWelfareSignInInfo', welfareType)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
             LOG_ERR('call sendWelfareSignInInfo: no welfareType', welfareType)
             return
 
         if not welfareSignInInfo.welfareSignInDay:
-            LOG_IFO('call sendWelfareSignInInfo: not lock')
+            LOG_INFO('call sendWelfareSignInInfo: not lock')
             return
 
         if not self.client:
-            LOG_IFO('call sendWelfareSignInInfo: no client')
+            LOG_INFO('call sendWelfareSignInInfo: no client')
             return
 
         self.client.onGetWelfareSignInInfo(welfareSignInInfo, welfareType)
-        LOG_IFO('call sendWelfareSignInInfo done', welfareSignInInfo)
+        LOG_INFO('call sendWelfareSignInInfo done', welfareSignInInfo)
 
     def sendLevelWelfareInfo(self, welfareType):
-        LOG_IFO('call sendLevelWelfareInfo', welfareType)
+        LOG_INFO('call sendLevelWelfareInfo', welfareType)
         if welfareType not in self.welfareLevelInfos:
             LOG_ERR('call sendLevelWelfareInfo: no welfareType', welfareType)
             return
         
         if not self.client:
-            LOG_IFO('call sendLevelWelfareInfo: no client')
+            LOG_INFO('call sendLevelWelfareInfo: no client')
             return
 
         welfareLevelInfo = self.welfareLevelInfos[welfareType]
         self.client.onGetLevelWelfareInfo(welfareLevelInfo, welfareType)
-        LOG_IFO('call sendLevelWelfareInfo done', welfareLevelInfo)
+        LOG_INFO('call sendLevelWelfareInfo done', welfareLevelInfo)
 
     def checkUnlock(self, welfareID):
         uid = WWCONFIG.datas.get(welfareID, {}).get('unlockID', None)
         isUnlock = self._isUIVisibleStr(uid)
-        LOG_IFO('call checkUnlock', isUnlock)
+        LOG_INFO('call checkUnlock', isUnlock)
         return isUnlock
 
     def updateWelfareSignIn(self, curTimestamp, welfareType):
@@ -303,14 +303,14 @@ class IWelfareSignIn(object):
             welfareSignInDay = min(utils.getSvrOpenDays(), maxSignInDay)
             if welfareSignInDay < 0:
                 welfareSignInDay = 0
-            LOG_IFO('call updateWelfareSignIn: TenSign', welfareSignInDay)
+            LOG_INFO('call updateWelfareSignIn: TenSign', welfareSignInDay)
             welfareSignInInfo.welfareSignInDay = welfareSignInDay
         else:
             welfareSignInInfo.welfareSignInDay += 1
         welfareSignInInfo.welfareLastSignInTimestamp = curTimestamp
 
     def gmUpdateWelfareSignIn(self, flag, welfareType):
-        LOG_IFO('call gmUpdateWelfareSignIn', flag, welfareType)
+        LOG_INFO('call gmUpdateWelfareSignIn', flag, welfareType)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
             LOG_ERR('call gmUpdateWelfareSignIn: no welfareType', welfareType)
@@ -318,7 +318,7 @@ class IWelfareSignIn(object):
 
 
         if not welfareSignInInfo.welfareSignInDay:
-            LOG_IFO('call gmUpdateWelfareSignIn, not lock', welfareSignInInfo.welfareSignInDay)
+            LOG_INFO('call gmUpdateWelfareSignIn, not lock', welfareSignInInfo.welfareSignInDay)
             return False, '未解锁福利签到'
 
         success = True
@@ -327,17 +327,17 @@ class IWelfareSignIn(object):
             welfareSignInInfo.welfareSignInDay = 1
             welfareSignInInfo.welfareLastSignInTimestamp = utils.curTS()
             welfareSignInInfo.welfareSignInData = 0
-            LOG_IFO('call gmUpdateWelfareSignIn: reset all', welfareSignInInfo.welfareSignInDay)
+            LOG_INFO('call gmUpdateWelfareSignIn: reset all', welfareSignInInfo.welfareSignInDay)
             msg = '重置签到天数成功'
         else:
             maxSignInDay = WSLCONFIG.maxKey
             if welfareSignInInfo.welfareSignInDay >= maxSignInDay:
-                LOG_IFO('call gmUpdateWelfareSignIn: all signed in', welfareSignInInfo.welfareSignInDay)
+                LOG_INFO('call gmUpdateWelfareSignIn: all signed in', welfareSignInInfo.welfareSignInDay)
                 msg ='已经达到最大签到天数'
                 success = False
             else:
                 self.updateWelfareSignIn(utils.curTS(), welfareType)
-                LOG_IFO('call gmUpdateWelfareSignIn: add signin day', welfareSignInInfo.welfareSignInDay)
+                LOG_INFO('call gmUpdateWelfareSignIn: add signin day', welfareSignInInfo.welfareSignInDay)
                 msg ='已累增1天'
 
         self.sendWelfareSignInInfo(welfareType)

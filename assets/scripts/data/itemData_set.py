@@ -39,6 +39,10 @@ datas = _tools.RODict({
         "ID": "itemID_darkiron",
         "value": 30000013,
     }),
+    "itemID_appearanceCoin": _tools.RODict({
+        "ID": "itemID_appearanceCoin",
+        "value": 30000242,
+    }),
     "itemID_guildMoney": _tools.RODict({
         "ID": "itemID_guildMoney",
         "value": 30000006,
@@ -290,5 +294,25 @@ datas = _tools.RODict({
     "sellingAmountText": _tools.RODict({
         "ID": "sellingAmountText",
         "value": "回收数量：",
+    }),
+    "autoResolve_kill": _tools.RODict({
+        "ID": "autoResolve_kill",
+        "value": (1,),
+    }),
+    "autoResolve_dun": _tools.RODict({
+        "ID": "autoResolve_dun",
+        "value": (100, 101, 102, 103, 104, 105),
+    }),
+    "autoResolve_chest": _tools.RODict({
+        "ID": "autoResolve_chest",
+        "value": (9,),
+    }),
+    "autoResolve_resourceText": _tools.RODict({
+        "ID": "autoResolve_resourceText",
+        "value": ('狩猎', '副本', '宝箱'),
+    }),
+    "mesg_getItemType5": _tools.RODict({
+        "ID": "mesg_getItemType5",
+        "value": 54000666,
     })
 })

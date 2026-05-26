@@ -18,7 +18,7 @@ import random
 import utils
 import StaticSpaceVal
 
-import branchData_branchData as BBD
+import branchData_branchData as B_BD
 
 import lineSpace
 import iMapRefresher
@@ -35,7 +35,7 @@ class ILineSpaceStub(object):
 
     def createLines(self):
         for ln in range(utils.fetchLineMaxNumber(self.lineType)):
-            lineMaxCnt = BBD.datas[self.lineType]['N1']
+            lineMaxCnt = B_BD.datas[self.lineType]['N1']
             spaceWeight = utils.calcSpaceWeight(0, False, gameconst.EntNumPerPlayerInAOI.worldLine, lineMaxCnt/10)
             self.addTimerCB(ln*0.2, '_createLineSpaceRemote', (ln,spaceWeight), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
 
@@ -44,7 +44,6 @@ class ILineSpaceStub(object):
         return StaticSpaceVal.StaticSpaceVal(lineType, lineNo)
 
     def getLineSpaceVal(self, lineNo):
-        #TODO临时改动，等正式策划案出来再正式改
         lineNo = min(len(self.lineSpaces)-1, lineNo)
         return self.lineSpaces[lineNo]
 
@@ -61,7 +60,7 @@ class ILineSpaceStub(object):
         self.lineSpaces[lineNo] = self.newLineSpaceVal(self.lineType, lineNo)
 
         cellappIndx = lineNo + 1 + gameconst.getWorldLineCellIdx(self.lineType)
-        LOG_IFO('zt: create line', lineNo, spaceNo, spaceWeight, self.lineType, cellappIndx)
+        LOG_INFO('zt: create line', lineNo, spaceNo, spaceWeight, self.lineType, cellappIndx)
         KBEngine.createEntityAnywhere('Space',
                                       {
                                           'spaceno': spaceNo,
@@ -76,7 +75,7 @@ class ILineSpaceStub(object):
 
     def _createLineSpaceLocal(self, lineNo, spaceWeight=10):
         spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
-        LOG_IFO('zt: create line locally', lineNo, spaceNo, spaceWeight)
+        LOG_INFO('zt: create line locally', lineNo, spaceNo, spaceWeight)
 
         self.lineSpaces[lineNo] = self.newLineSpaceVal(self.lineType, lineNo)
 
@@ -97,8 +96,17 @@ class ILineSpaceStub(object):
         sVal = self.getLineSpaceVal(lineNo)
         sVal.lineSpaceBox = spaceBox
 
+    def isSpaceReadyEnter(self, lineType, lineNo):
+        sVal = self.getLineSpaceVal(lineNo)
+        return sVal.isReadyEnter()
+    
+    def getSpaceAvatarNo(self, spaceNo):
+        lineNo = formula.parseLineNo(spaceNo)
+        linePlayers = self.allPlayers.getLinePlayers(lineNo)
+        return 0 if not linePlayers else len(linePlayers)
+
     def onLineSpaceReady(self, spaceNo):
-        LOG_IFO('onLineSpaceReady', spaceNo)
+        LOG_INFO('onLineSpaceReady', spaceNo)
         lineNo = formula.parseLineNo(spaceNo)
         self.lineSpaces[lineNo].lineSpaceReady()
         
@@ -120,7 +128,7 @@ class ILineSpaceStub(object):
         gameengine.callBaseApps('gameglobal.onLineEntityReady', (spaceNo,))
 
     def handleCellappDeath(self, groupOrder):
-        LOG_IFO('handleCellappDeath', groupOrder)
+        LOG_INFO('handleCellappDeath', groupOrder)
         if groupOrder not in self.deadApps:
             self.deadApps.append(groupOrder)
 
@@ -134,13 +142,13 @@ class ILineSpaceStub(object):
     def onCellappRelive(self, groupOrder):
         if groupOrder not in self.relivedCellapps:
             self.relivedCellapps.append(groupOrder)
-        LOG_IFO('LineStub:onCellappRelive', groupOrder, self.deadApps, self.relivedCellapps)
+        LOG_INFO('LineStub:onCellappRelive', groupOrder, self.deadApps, self.relivedCellapps)
 
         self._tryRecoverLines()
 
     def _tryRecoverLines(self):
         if len(self.relivedCellapps) == len(self.deadApps):
-            LOG_IFO('recove lines:', self.missedLines)
+            LOG_INFO('recove lines:', self.missedLines)
             delay = 0
             for ln, order in self.missedLines.items():
                 self.willRecoverLine(ln)
@@ -248,3 +256,8 @@ class ILineSpaceStub(object):
 
         spaceVal = self.getLineSpaceVal(formula.parseLineNo(info['spaceNo']))
         spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))
+
+    def onGetShowMapEntityInfo(self, player, mapId, lineNo):
+        LOG_DBG("ILineSpaceStub::onGetShowMapEntityInfo", mapId, lineNo)
+        spaceVal = self.getLineSpaceVal(lineNo)
+        spaceVal.lineSpaceBox.cell.callOnSpaceMgr('onGetShowMapEntityInfo', (player, ))

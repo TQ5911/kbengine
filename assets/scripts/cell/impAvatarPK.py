@@ -11,17 +11,15 @@ import utils
 import gametimer
 import formula
 import LogTrackingMgr
+import gamedecorator
 
 import PKData_PKData as PKD
-import formula_generalFormula as FGFD
 import message_Message_def as MMD
 import gamePlay_gamePlay as GPGP
-import gamedecorator
-import const_const as CONST
 import PKData_moralValueEffect as PKMVE
 import duel_config as D_CD
 import agent_agentConfig as A_ACD
-
+import taskClass_taskTarget as TCCTD
 
 class ImpAvatarPK(object):
 
@@ -40,7 +38,7 @@ class ImpAvatarPK(object):
             self.pkModelBefore = pkModelBefore
 
     def setPKModel(self, pkModel):
-        self._setPKModel(pkModel)
+        return self._setPKModel(pkModel)
 
     def _setPKModel(self, pkModel, showMsg=True, resetTargetTypeCache=True):
         if self.pkModel != pkModel:
@@ -77,6 +75,10 @@ class ImpAvatarPK(object):
         if not gameconst.PKModel.PEACE <= model <= gameconst.PKModel.MAX_PK:
             gameengine.panicStack("switchPKModel:: pk model error")
             return
+        
+        self.onSwitchPKModel(model)
+
+    def onSwitchPKModel(self, model):
 
         self.tSwitchPKModel = utils.curTS()
 
@@ -92,7 +94,8 @@ class ImpAvatarPK(object):
 
         if ret:
             self.changePKModeResetTargetId()
-
+            self.base.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterChangePk'], ())
+        
     @gamedecorator.crossServer
     @utils.isMyself
     def setPKProtect(self, exposed, protectType, isSet):
@@ -191,7 +194,7 @@ class ImpAvatarPK(object):
         if not sceneInfo:
             return True
 
-        if formula.inWorldLineScene(self.spaceNo) or formula.inWonderLandScene(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo) or formula.inWonderLandScene(self.spaceNo) or formula.inCubeScene(self.spaceNo):
             if self.areaId:
                 return utils.isInWorldPKSafeAreaByAreaId(self.areaId)
 
@@ -303,7 +306,11 @@ class ImpAvatarPK(object):
             if target.hasBuff(gameconst.SIEGEWAR_WANTED_BUFF):
                 return False
 
+            _isCurGrey = utils.curTS() - self.tGreyNameStart <= PKD.datas['grayNameDuration']['value']
             self.tGreyNameStart = utils.curTS()
+            if not _isCurGrey:
+                # 如果本来就是灰名这里还清缓存，一是没必要，二是太耗了
+                self.resetAllTargetTypeCache(True)
 
     def isGreyName(self):
         if self.inRedName():

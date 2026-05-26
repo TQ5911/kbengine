@@ -628,7 +628,6 @@ datas ={
         1148,
         1149,
         1156,
-        1162,
         1164
       ]
     }
@@ -698,7 +697,6 @@ datas ={
         1150,
         1155,
         1158,
-        1163,
         1168
       ]
     }
@@ -752,32 +750,6 @@ datas ={
     "entityID": [
       21048010
     ],
-    "transition": {}
-  },
-  "1162": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21040001
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
-    "transition": {}
-  },
-  "1163": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21040002
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
     "transition": {}
   },
   "1164": {

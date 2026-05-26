@@ -1,0 +1,153 @@
+<root>
+    <Properties>
+        <fatal>
+            <Type>          INT32        </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </fatal>
+        <mortal>
+            <Type>          FLOATATTR        </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </mortal>
+        <hit>
+            <Type>          INT32        </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </hit>
+        <dodge>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </dodge>
+        <mpCostRatio>
+            <Type>          FLOATATTR          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+            <Default>       1.0               </Default>
+        </mpCostRatio>
+        <stunEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </stunEnh>
+        <silentEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </silentEnh>
+        <knockEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </knockEnh>
+        <stunAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </stunAnti>
+        <silentAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </silentAnti>
+        <knockAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </knockAnti>
+        <antiMortal>
+            <Type>          FLOATATTR          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </antiMortal>
+        <minPhysicalAtk>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </minPhysicalAtk>
+        <maxPhysicalAtk>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </maxPhysicalAtk>
+        <minMagicAtk>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </minMagicAtk>
+        <maxMagicAtk>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </maxMagicAtk>
+        <minPhysicalArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </minPhysicalArmor>
+        <maxPhysicalArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </maxPhysicalArmor>
+        <minMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </minMagicArmor>
+        <maxMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </maxMagicArmor>
+        <atkBless>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </atkBless>
+        <frozenEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </frozenEnh>
+        <frozenAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </frozenAnti>
+        <slowEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </slowEnh>
+        <slowAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </slowAnti>
+        <realDmg>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </realDmg>
+        <realDmgDef>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </realDmgDef>
+        <PVPDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </PVPDmg>
+        <PVPDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </PVPDmgAnti>
+        <monsterDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </monsterDmg>
+        <monsterDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </monsterDmgAnti>
+        <finalDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </finalDmg>
+        <finalDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </finalDmgAnti>
+        <skillCD>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </skillCD>
+        <drugsQuantity>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </drugsQuantity>
+        <pushEnh>
+            <Type>          INT32        </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </pushEnh>
+        <pushAnti>
+            <Type>          INT32        </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </pushAnti>
+    </Properties>
+</root>

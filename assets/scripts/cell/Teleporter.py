@@ -71,7 +71,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             pass
 
     def userDoTeleport(self, userId, desTelId, lineNo=-1, src=None):
-        LOG_IFO("selfDoTeleport::", userId, desTelId, lineNo, src)
+        LOG_INFO("selfDoTeleport::", userId, desTelId, lineNo, src)
         user = KBEngine.entities.get(userId)
         if self._checkBadEnt(user):
             return
@@ -81,7 +81,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{0}'.format(*x))
     def doTeleport(self, exposed, desTelId, lineNo=-1):
         lineNo = -1
-        LOG_IFO('doTeleport::~', exposed, desTelId, lineNo)
+        LOG_INFO('doTeleport::~', exposed, desTelId, lineNo)
         user = KBEngine.entities.get(exposed)
         if self._checkBadEnt(user):
             return
@@ -121,15 +121,15 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
 
     def _checkBadEnt(self, ent):
         if not ent or ent.isDestroyed:
-            LOG_IFO('Teleporter._checkBadEnt: invalid entity')
+            LOG_INFO('Teleporter._checkBadEnt: invalid entity')
             return True
 
         if not ent.IsAvatar:
-            LOG_IFO('Teleporter._checkBadEnt: not Avatar')
+            LOG_INFO('Teleporter._checkBadEnt: not Avatar')
             return True
 
         if ent.spaceNo != self.spaceNo:
-            LOG_IFO('Teleporter._checkBadEnt: not in same space')
+            LOG_INFO('Teleporter._checkBadEnt: not in same space')
             return True
 
     def _ttlDestroy(self):

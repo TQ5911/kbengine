@@ -99,6 +99,11 @@
 			<Flags>			ALL_CLIENTS 		</Flags>
 		</scopeAddRatio>
 
+		<fBProtectTime>
+			<Type>			LONGTIME			</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+		</fBProtectTime>
+
 	</Properties>
 
 	<BaseMethods>

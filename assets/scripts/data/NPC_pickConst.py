@@ -70,5 +70,13 @@ datas = _tools.RODict({
     "pickTimeLessen": _tools.RODict({
         "ID": "pickTimeLessen",
         "value": ((0, 1), (300, 0.5), (480, 0.2)),
+    }),
+    "pickupPrompt": _tools.RODict({
+        "ID": "pickupPrompt",
+        "value": "{0}后可拾取",
+    }),
+    "pickupPermissionTime": _tools.RODict({
+        "ID": "pickupPermissionTime",
+        "value": 60,
     })
 })

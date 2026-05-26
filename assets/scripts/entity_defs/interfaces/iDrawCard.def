@@ -32,6 +32,10 @@
             <Arg>   UINT16      </Arg>
         </reqOpenPetCard>
 
+        <reqOpenPetCards> <Exposed/>
+            <Arg>   UINT16      </Arg>
+        </reqOpenPetCards>
+
         <triggerTimeLimitGuaranteedReward>
             <Arg>   ARRAY <of> UINT32 </of>    </Arg>
         </triggerTimeLimitGuaranteedReward>

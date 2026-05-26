@@ -169,7 +169,7 @@ class ICityOwnerMgr(object):
                 self.orderRemainTimesDict[key][0] = value['Times']
         self.cityDataChanged = True
 
-    def _onCityOwnerDailyEvent(self):
+    def _onCityOwnerDailyEvent(self, *args):
         finalTax = int(self.dailyCumulativeTax * (CBC.datas['cityBattle_taxProportion']['value'] / 100.0))
         self.lastDailyFinalTax = finalTax
         self.dailyCumulativeTax = 0

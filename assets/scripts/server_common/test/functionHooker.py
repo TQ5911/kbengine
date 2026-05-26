@@ -226,9 +226,9 @@ class FunctionHooker:
             old_trace = None
             if self.show_variables:
                 # 获取函数源代码并解析AST
-                import distance
+                import dis
                 # 获取函数的字节码
-                bytecode = distance.Bytecode(func)
+                bytecode = dis.Bytecode(func)
                 
                 # 分析字节码，找出所有STORE_*操作的目标变量
                 local_var_names = set()

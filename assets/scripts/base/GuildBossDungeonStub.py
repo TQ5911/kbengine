@@ -87,7 +87,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
                 self.spaces.pop(spaceNo)
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
-        LOG_IFO('destoryDungeonSpace', spaceNo, spaceUUID, reason)
+        LOG_INFO('destoryDungeonSpace', spaceNo, spaceUUID, reason)
         if spaceNo not in self.spaces:
             LOG_WARN('wl: destoryDungeonSpace cannot find space:', spaceNo)
             return
@@ -104,7 +104,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
             sVal.toDestoryDungeon()
 
-            LOG_IFO('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, sVal.markDestroy)
+            LOG_INFO('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, sVal.markDestroy)
             return
 
         # real destroy dungeon
@@ -117,7 +117,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             self.spaces.pop(spaceNo)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGBID, guildUUID, extra):
-        LOG_IFO("leaveDungeonSpaceSucc::", spaceNo, playerBox, playerGBID, guildUUID, extra)
+        LOG_INFO("leaveDungeonSpaceSucc::", spaceNo, playerBox, playerGBID, guildUUID, extra)
         if spaceNo not in self.spaces:
             LOG_ERR('leaveDungeonSpaceSucc::cannot get space', spaceNo)
             return
@@ -127,7 +127,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             founderVal.onAvatarLeave(playerGBID, isOffline=False)
 
     def onAvatarOffline(self, spaceNo, playerGbId):
-        LOG_IFO('onAvatarOffline::', spaceNo, playerGbId)
+        LOG_INFO('onAvatarOffline::', spaceNo, playerGbId)
         if spaceNo not in self.spaces:
             LOG_ERR('onAvatarOffline::cannot get space', spaceNo)
             return
@@ -141,7 +141,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
-        LOG_IFO('onDungeonStarted::', spaceNo, tCreate)
+        LOG_INFO('onDungeonStarted::', spaceNo, tCreate)
         if spaceNo not in self.spaces:
             LOG_ERR('onDungeonStarted::cannot get space', spaceNo)
             return
@@ -151,11 +151,11 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         sVal.spaceMgr.cell.onDungeonStarted(sVal.tCreate)
 
     def completeGuildBossDungeon(self, spaceNo, guildUUID, win, delay, reasonType):
-        LOG_IFO('in completeGuildBossDungeon:', spaceNo, guildUUID, win, delay, reasonType)
+        LOG_INFO('in completeGuildBossDungeon:', spaceNo, guildUUID, win, delay, reasonType)
         self._onGuildBossDungeonCompleted(spaceNo, guildUUID, win, delay, reasonType)
 
     def _onGuildBossDungeonCompleted(self, spaceNo, guildUUID, win, delay, reasonType):
-        LOG_IFO('in _onGuildBossDungeonCompleted:', spaceNo, guildUUID, win, delay, reasonType)
+        LOG_INFO('in _onGuildBossDungeonCompleted:', spaceNo, guildUUID, win, delay, reasonType)
         if spaceNo not in self.spaces:
             if guildUUID:
                 LOG_WARN('_onGuildBossDungeonCompleted:: cannot get space', spaceNo, guildUUID)
@@ -191,7 +191,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             self._onGuildBossDungeonCompletedCallback(spaceNo, sVal.spaceUUID, sVal.guildUUID, win, 'dungeon complete')
 
     def _onGuildBossDungeonCompletedCallback(self, spaceNo, spaceUUID, guildUUID, win, reason):
-        LOG_IFO('_onGuildBossDungeonCompletedCallback::', spaceNo, spaceUUID, guildUUID, win, reason)
+        LOG_INFO('_onGuildBossDungeonCompletedCallback::', spaceNo, spaceUUID, guildUUID, win, reason)
         if spaceNo not in self.spaces:
             LOG_ERR('_onGuildBossDungeonCompletedCallback::cannot get space', spaceNo)
             return
@@ -216,18 +216,18 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         sVal.toDestoryDungeon()
 
     def _kickOutAllFounders(self, spaceNo, extra):
-        LOG_IFO('RaidDungeonStub _kickOutAllFounders:: kickout', spaceNo, extra)
+        LOG_INFO('RaidDungeonStub _kickOutAllFounders:: kickout', spaceNo, extra)
         spaceVal = self.spaces[spaceNo]
         _needDestoryGBIDs = []
         dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         for gbId, founderVal in spaceVal.founders.items():
             base = founderVal.playerBox
             if founderVal.hasAvatar() and base and not utils.checkBoxOffline(base) and base.cell:
-                LOG_IFO('GuildBossDungeonStub _kickoutAllFounders:: kickout', founderVal.playerGBID)
+                LOG_INFO('GuildBossDungeonStub _kickoutAllFounders:: kickout', founderVal.playerGBID)
                 founderVal.playerBox.cell.doLeaveGuildBossDungeon(extra)
                 founderVal.playerBox.cell.clearGuildBossDungeonID(dungeonNo)
             else:
-                LOG_IFO('GuildBossDungeonStub _kickoutAllFounders:: destroy', founderVal.playerGBID)
+                LOG_INFO('GuildBossDungeonStub _kickoutAllFounders:: destroy', founderVal.playerGBID)
                 _needDestoryGBIDs.append(gbId)
         for i in _needDestoryGBIDs:
             spaceVal.founders.destoryFounder(i)
@@ -253,9 +253,9 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
 
         spaceMgr.cell.doEnterGuildBossDungeon(box, gbId, spaceUUID, spaceBox, extra)
 
-    def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, guildUUID, extra):
+    def enterDungeonSpaceSuccess(self, spaceNo, playerBox, playerGbId, guildUUID, extra):
         """进入副本成功后回调"""
-        LOG_IFO('enterDungeonSpaceSucc::', spaceNo, playerBox, playerGbId, guildUUID, extra)
+        LOG_INFO('enterDungeonSpaceSuccess::', spaceNo, playerBox, playerGbId, guildUUID, extra)
         if not self._checkAfterEnterDungeon(spaceNo, playerBox, playerGbId, guildUUID, extra):
             extra = {}
             extra['guildUUID'] = guildUUID
@@ -308,7 +308,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             return gameconst.SpaceType.getClonedSpaceNoRange(self.dungeonNo)
 
     def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, guildUUID, extra):
-        LOG_IFO('_loadDungeonSpaceEntities::')
+        LOG_INFO('_loadDungeonSpaceEntities::')
         # ready first
         self.onLoadDungeonSpaceReady(playerBox, playerGbId, spaceNo, guildUUID, extra)
         # use iCreateDungeonMonster function
@@ -316,7 +316,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             spaceNo, playerBox, playerGbId, guildUUID, extra)
 
     def onLoadDungeonSpaceReady(self, playerBox, playerGbId, spaceNo, guildUUID, extra):
-        LOG_IFO('onLoadDungeonSpaceReady::', playerBox, playerGbId, spaceNo, guildUUID, extra)
+        LOG_INFO('onLoadDungeonSpaceReady::', playerBox, playerGbId, spaceNo, guildUUID, extra)
         
         if spaceNo not in self.spaces:
             LOG_ERR('onLoadDungeonSpaceReady:: failed, missing space data', playerBox, playerGbId, spaceNo, guildUUID, extra)
@@ -327,7 +327,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         playerBox.onGuildChallengeDungeonCreated(guildUUID, self.dungeonNo, spaceNo, spaceVal.spaceUUID, spaceVal.spaceBox, spaceVal.spaceMgr, extra)
 
     def leaveGuildBossDungeon(self, spaceNo, guildUUID, src, playerBox, playerGBID):
-        LOG_IFO("leaveGuildBossDungeon~ ", spaceNo, guildUUID, src, playerBox)
+        LOG_INFO("leaveGuildBossDungeon~ ", spaceNo, guildUUID, src, playerBox)
         if spaceNo not in self.spaces:
             LOG_ERR('leaveGuildBossDungeon:: failed, missing space data', spaceNo, src, playerBox)
             return

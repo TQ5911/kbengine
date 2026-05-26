@@ -70,7 +70,7 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if client and client.channel.dispatcher: continue
 
             addr, port = host['addr'], int(host['port'])
-            LOG_IFO('connect admincenter:', addr, port)
+            LOG_INFO('connect admincenter:', addr, port)
             self.gmClient[key] = AdminStubService(self, (addr, port))
 
     def _checkGmCenterActive(self):
@@ -81,7 +81,7 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if client and client.channel.dispatcher:
                 client.serviceStub.activeTick(None, Void(), None)
 
-    def replyCommand(self, tag, account, cmdUUID, message, success):
+    def doReplyCommand(self, tag, account, cmdUUID, message, success):
         client = self.gmClient.get(tag, None)
         if client and client.channel.dispatcher:
             cmdResult = CommandResult()
@@ -89,16 +89,16 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             cmdResult.uuid = cmdUUID
             cmdResult.resultCode = success
             cmdResult.result = message
-            client.serviceStub.replyCommand(None, cmdResult, None)
+            client.serviceStub.doReplyCommand(None, cmdResult, None)
 
     def replyHttpCommand(self, tag, cmdUUID, result, retErrMsg, resultObj):
         LOG_DBG('in AdminStub.replyHttpCommand ', tag, cmdUUID, result, retErrMsg, resultObj)
         try:
             if hasattr(resultObj, 'toJsonBytes'):
-                LOG_IFO('replyHttpCommand HTTPAgent toJsonBytes')
+                LOG_INFO('replyHttpCommand HTTPAgent toJsonBytes')
                 bodyBytes = resultObj.toJsonBytes()
             else:
-                LOG_IFO('replyHttpCommand HTTPAgent encode utf-8')
+                LOG_INFO('replyHttpCommand HTTPAgent encode utf-8')
                 bodyBytes = json.dumps(resultObj).encode('utf-8')
         except:
             LOG_ERR('replyHttpCommand: result to json err')
@@ -202,7 +202,7 @@ class AdminStubService(GameServer):
             _, bRetCode, bRetErrMsg, bRetStr = result[0]
             retCode = int(bRetCode)
             retErrMsg = bRetErrMsg.decode('uft-8')
-            LOG_IFO("onCheckHttpCommandSerial---", bRetErrMsg, bRetStr)
+            LOG_INFO("onCheckHttpCommandSerial---", bRetErrMsg, bRetStr)
             if cmdStr == '$notifymallaction':
                 self._reportHttpCmdError(request, gameconst.GMCommandErr.GM_RET_CMD_SERIAL_EXISTS, 'seqId duplicated')
             else:
@@ -223,7 +223,7 @@ class AdminStubService(GameServer):
             self._reportHttpCmdError(request, gameconst.GMCommandErr.GM_RET_ARGS_ERR, 'invalid command args')
             return
 
-        LOG_IFO('_doHttpCommand', cmdName, cmdArgs, seqIdStr)
+        LOG_INFO('_doHttpCommand', cmdName, cmdArgs, seqIdStr)
 
         agent = gmCommand.HTTPAgent(self.adminStub, self.tag, 'HTTP', gmGroup.MANAGER_GROUP_GOD, cmdUUID, seqIdStr,
                                     cmdName.lower(), gameglobal.localBaseApp)

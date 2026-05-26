@@ -85,7 +85,7 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
-        LOG_IFO('updateLingShouBattleList', battleIndex, petId, slotId)
+        LOG_INFO('updateLingShouBattleList', battleIndex, petId, slotId)
         myLevel = gameglobal.roleCache[self.id]['level']
         unlockRank = PDUD.datas[slotId+1]['unlockRank']
         if myLevel < unlockRank:
@@ -244,7 +244,7 @@ class ImpAvatarPet(object):
         self.cell.onPendingCheckItem(pendingCheckId, gameconst.UseItem.TRUE)
 
     def useLingShouEggItemBase(self, pendingUseId, bagType, opUUID):
-        LOG_IFO('useLingShouEggItemBase')
+        LOG_INFO('useLingShouEggItemBase')
         dataDic = self.getTempMiscProp(gameconst.EntityPropsEnum.useBagItemData)
         if not dataDic:
             LOG_WARN('useLingShouEggItemBase, no popPersistentMiscProp data')
@@ -264,7 +264,7 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def useLingShouEquip(self, exposed, gridId, petId, slotId):
-        LOG_IFO("useLingShouEquip ", gridId, petId, slotId)
+        LOG_INFO("useLingShouEquip ", gridId, petId, slotId)
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
             return
@@ -284,7 +284,7 @@ class ImpAvatarPet(object):
             return
 
         deductWealthVal = dropAward.DeductWealthVal().addWealthByObjList([item])
-        LOG_IFO('useLingShouEquip itemId:', itemId)
+        LOG_INFO('useLingShouEquip itemId:', itemId)
         if not self.canDeductWealth(deductWealthVal, sendMsg=True):
             return False
 
@@ -303,7 +303,7 @@ class ImpAvatarPet(object):
             actionContext.AchievementCtx())
 
     def addLingShouBase(self, addContext):
-        LOG_IFO("addLingShouBase ", addContext.__dict__)
+        LOG_INFO("addLingShouBase ", addContext.__dict__)
         if addContext.reason == gameconst.AddLingShouReason.normal:
             self.lingShouInfo.addLingShou(self, addContext)
 
@@ -320,7 +320,7 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def levelUpPet(self, exposed, gridIds, petId):
-        LOG_IFO("levelUpPet ", exposed, gridIds, petId)
+        LOG_INFO("levelUpPet ", exposed, gridIds, petId)
         # 检查消耗的格子数
         if len(gridIds) == 0:
             LOG_ERR("levelUpPet, lack of materials ", gridIds, petId)
@@ -399,7 +399,7 @@ class ImpAvatarPet(object):
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
         
         topExps = leveUpExps[curLevel - 1:]
-        LOG_IFO("levelUpPet begin:", petId, curLevel, curExp, totalExp, leveUpExps, topExps)
+        LOG_INFO("levelUpPet begin:", petId, curLevel, curExp, totalExp, leveUpExps, topExps)
         # 处理等级和经验
         isTopLevel = False
         curExp += totalExp
@@ -421,7 +421,7 @@ class ImpAvatarPet(object):
         pet.setLevelAndExp(oldLevel, curLevel, curExp, self)
         newScore = pet.baseScore - oldScore
         LogTrackingMgr.LogTrackingMgr.Pet_LevelUp(self.gbID, opUUID, pet.petId, pet.quality, oldLevel, pet.level, pet.equipList, newScore)
-        LOG_IFO("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
+        LOG_INFO("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
         # 更新客户端宠物数据   
         self.client.onLevelUpPet(petId, curLevel, curExp, isTopLevel)
         return True
@@ -429,7 +429,7 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def remodelingPet(self, exposed, gridId):
-        LOG_IFO("remodelingPet ", exposed, gridId)
+        LOG_INFO("remodelingPet ", exposed, gridId)
         itemObj = self.petBag.getItemObjByGridId(gridId)
         if not itemObj:
             LOG_WARN('remodelingPet pet bag is not found', gridId)

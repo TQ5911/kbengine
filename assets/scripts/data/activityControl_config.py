@@ -18,5 +18,17 @@ datas = _tools.RODict({
     "activity_notOpen": _tools.RODict({
         "ID": "activity_notOpen",
         "value": 54001967,
+    }),
+    "worldBossLevel": _tools.RODict({
+        "ID": "worldBossLevel",
+        "value": "推荐等级：{0}",
+    }),
+    "worldBossRefresh": _tools.RODict({
+        "ID": "worldBossRefresh",
+        "value": "每日{0}",
+    }),
+    "worldBossSign": _tools.RODict({
+        "ID": "worldBossSign",
+        "value": "/",
     })
 })

@@ -47,9 +47,9 @@ class ISiegeWarBase(object):
     #用户登录时发送给客户端城战阶段数据
     def sendSiegeWarLoginData(self):
         firstTime, firstTimeValid, limitTime = utils.getSiegeWarFirstTimeInfo()
-        LOG_IFO('[lj]try get siege war state', firstTime, firstTimeValid, limitTime)
+        LOG_INFO('[lj]try get siege war state', firstTime, firstTimeValid, limitTime)
         if utils.curTS() < firstTime:
-            LOG_IFO('[lj]try get siege war state not in first time')
+            LOG_INFO('[lj]try get siege war state not in first time')
             return
         gameengine.getGlobalBase('SiegeWarStub').getSiegeWarState(self)
         #登录时检查竞拍失败红点

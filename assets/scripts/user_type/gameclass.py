@@ -17,9 +17,9 @@ class BoolResult(userType.UserSingleType):
         return '%s, %s' % (self.boolVal, self.extra)
 
 
-class TaskCondResult(BoolResult):
+class TaskCondResultCls(BoolResult):
     def __init__(self, boolVal, msgId=0, msgArgs=(), playerName=''):
-        super(TaskCondResult, self).__init__(boolVal)
+        super(TaskCondResultCls, self).__init__(boolVal)
         self.msgId = msgId
         self.msgArgs = msgArgs
         self.playerName = playerName

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell </Interface>
+        <Interface> iTimerBase </Interface>
+    </Interfaces>
+
+    <Properties>
+        <timerToLoad>
+            <Type>          UINT32          </Type>
+            <Flags>         BASE            </Flags>
+        </timerToLoad>
+
+        <entityToLoad>
+            <Type>          PYTHON          </Type>
+            <Flags>         BASE            </Flags>
+        </entityToLoad>
+
+        <cursorToLoad>
+            <Type>          UINT16          </Type>
+            <Flags>         BASE            </Flags>
+        </cursorToLoad>
+
+        <startGbId>
+            <Type>          UINT32          </Type>
+            <Flags>         BASE            </Flags>
+        </startGbId>
+
+        <timerToLoadCell>
+            <Type>          UINT32          </Type>
+            <Flags>         BASE            </Flags>
+        </timerToLoadCell>
+
+        <entityToLoadCell>
+            <Type>          PYTHON          </Type>
+            <Flags>         BASE            </Flags>
+        </entityToLoadCell>
+
+        <cursorToLoadCell>
+            <Type>          UINT16          </Type>
+            <Flags>         BASE            </Flags>
+        </cursorToLoadCell>
+
+        <gatherLoadDataBegin>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       {}              </Default>
+        </gatherLoadDataBegin>
+
+        <callObjQueue>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+        </callObjQueue>
+
+        <asyncTimer>
+            <Type>          TIMER_ID          </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </asyncTimer>
+
+        <lockDict>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </lockDict>
+
+        <nonce>
+            <Type>          UINT32          </Type>
+            <Flags>			BASE			</Flags>
+            <Default>       1               </Default>
+        </nonce>
+
+        <addictAccountIds>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       []              </Default>
+        </addictAccountIds>
+
+        <officialMesTimerDic>
+            <Type>          PY_DICT          </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </officialMesTimerDic>
+
+        <officialMesTickTimerDic>
+            <Type>          PY_DICT          </Type>
+            <Flags>         BASE            </Flags>
+        </officialMesTickTimerDic>
+
+        <localStubCreated>
+            <Type>          BOOL           </Type>
+            <Flags>         BASE            </Flags>
+        </localStubCreated>
+
+        <baseappDataListener>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </baseappDataListener>
+
+        <globalDataListener>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </globalDataListener>
+
+        <lastCheckDrawCardPoolTimestamp>
+            <Type>          TIMESTAMP       </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </lastCheckDrawCardPoolTimestamp>
+
+        <baseAppStateLock>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </baseAppStateLock>
+    </Properties>
+
+    <BaseMethods>
+        <setStartGbId>
+            <Arg>           UINT32      </Arg>
+            <Arg>           UINT32      </Arg>
+        </setStartGbId>
+
+        <onWorldRefreshEntityReady>
+            <Arg>           UINT32       </Arg>
+            <Arg>           BOOL         </Arg>
+        </onWorldRefreshEntityReady>
+
+        <onLineReady>
+            <Arg>           LINE_TYPE    </Arg>
+            <Arg>           BOOL         </Arg>
+        </onLineReady>
+
+        <createUnarchiveStub>
+            <Arg>           ENT_TYPE    </Arg>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           STRING      </Arg>
+        </createUnarchiveStub>
+
+        <createArchiveStub>
+            <Arg>           ENT_TYPE    </Arg>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           STRING      </Arg>
+        </createArchiveStub>
+
+        <destroyMarker>
+            <Arg>           SPACE_NO    </Arg>
+        </destroyMarker>
+
+        <createLocalStubs>
+        </createLocalStubs>
+
+        <onGmLookUpAvatar>
+            <Arg> PYTHON </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> UNICODE </Arg>
+            <Arg> UINT8 </Arg>
+            <Arg> BOOL </Arg>
+        </onGmLookUpAvatar>
+
+        <onGmFindEntity>
+            <Arg> PYTHON </Arg>
+            <Arg> STRING </Arg>
+        </onGmFindEntity>
+
+        <onGmFindAccount>
+            <Arg> PYTHON </Arg>
+            <Arg> UNICODE </Arg>
+            <Arg> UINT8 </Arg>
+            <Arg> UINT8 </Arg>
+            <Arg> STRING </Arg>
+        </onGmFindAccount>
+
+        <onDoCmdSucc>
+            <Arg> STRING   </Arg>
+        </onDoCmdSucc>
+
+        <onDoCmdFail>
+            <Arg> STRING   </Arg>
+        </onDoCmdFail>
+
+        <doRONECommand>
+            <Arg> PYTHON   </Arg>
+        </doRONECommand>
+
+        <onBaseappSumIncrement>
+            <Arg> STRING </Arg>
+            <Arg> INT32   </Arg>
+        </onBaseappSumIncrement>
+
+        <forwardAttrMethodCall>
+            <Arg> STRING </Arg>
+            <Arg> STRING </Arg>
+            <Arg> PYTHON </Arg>
+        </forwardAttrMethodCall>
+
+        <onCellappRelive>
+            <Arg>       UINT8         </Arg>
+        </onCellappRelive>
+
+        <onGetAllPlayer>
+            <Arg>       PYTHON         </Arg>
+            <Arg>       PYTHON         </Arg>
+        </onGetAllPlayer>
+
+        <recordOfflinePlayerMailLog>
+            <Arg>         AVATARGBID_LIST        </Arg>
+            <Arg>         MAILID        </Arg>
+            <Arg>         MAIL_GBID     </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UINT32        </Arg>
+            <Arg>         UINT32        </Arg>
+            <Arg>         OP_UUID       </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UINT32        </Arg>
+        </recordOfflinePlayerMailLog>
+
+        <replyHttpCommand>
+            <Arg>       MAILBOX     </Arg>
+            <Arg>       STRING      </Arg>
+            <Arg>       STRING      </Arg>
+            <Arg>       INT32       </Arg>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       STRING      </Arg>
+        </replyHttpCommand>
+
+        <setBaseAppLockState>
+            <Arg>       ENTITYCALL  </Arg>
+            <Arg>       UINT8       </Arg>
+        </setBaseAppLockState>
+
+        <onSetBaseAppLockResult>
+            <Arg>       BOOL        </Arg>
+            <Arg>       UINT8       </Arg>
+        </onSetBaseAppLockResult>
+    </BaseMethods>
+</root>

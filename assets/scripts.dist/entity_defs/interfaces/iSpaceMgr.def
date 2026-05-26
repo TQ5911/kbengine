@@ -1,0 +1,166 @@
+<root>
+
+    <Interfaces>
+        <Interface>     iFlowControllerCell     </Interface>
+        <Interface>     iFlowControllerBase     </Interface>
+        <Interface>     iMapMonsterRefresh      </Interface>
+        <Interface>     iTimerEntityRefresh     </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaceEntities>
+            <Type>            PYTHON             </Type>
+            <Flags>           CELL_PRIVATE       </Flags>
+            <Default>         {}                 </Default>
+        </spaceEntities>
+
+        <taggedEntities>
+            <Type>            PYTHON              </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+            <Default>         {}                 </Default>
+        </taggedEntities>
+
+        <players>
+            <Type>            PYTHON              </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+            <Default>         {}                  </Default>
+        </players>
+
+        <spaceVars>
+            <Type>            PY_DICT             </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+            <Default>         {}                  </Default>
+        </spaceVars>
+
+        <aiController>
+            <Type>            PYTHON              </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+        </aiController>
+
+        <flowController>
+            <Type>            PYTHON                </Type>
+            <Flags>           CELL_PRIVATE          </Flags>
+        </flowController>
+
+        <thinkTimer>
+            <Type>            TIMER_ID            </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+        </thinkTimer>
+
+        <aiEvents>
+            <Type>            PYTHON              </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+            <Default>         {}                  </Default>
+        </aiEvents>
+
+        <aiEventListener>
+            <Type>            PYTHON              </Type>
+            <Flags>           CELL_PRIVATE        </Flags>
+            <Default>         {}                  </Default>
+        </aiEventListener>
+
+        <notifyNearPosList>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       []                      </Default>
+        </notifyNearPosList>
+        <entsForControl>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </entsForControl>
+        <collBeCollectedDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </collBeCollectedDict>
+
+        <spaceState>
+            <Type>          UINT8                   </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </spaceState>
+
+        <lightPillarDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </lightPillarDict>
+    </Properties>
+
+    <CellMethods>
+        <destroyAllEntities>
+        </destroyAllEntities>
+
+        <destroyEntityById>
+            <Arg>        OBJECT_ID         </Arg>
+        </destroyEntityById>
+
+        <onPlayerEnter>
+            <Arg>         UINT32            </Arg>
+        </onPlayerEnter>
+        <teleportEntityById>
+            <Arg>        OBJECT_ID         </Arg>
+            <Arg>        POSITION_ARG      </Arg>
+            <Arg>        DIRECTION_ARG     </Arg>
+        </teleportEntityById>
+
+        <onPlayerLeave>
+            <Arg>        PLAYER_GBID        </Arg>
+            <Arg>        OBJECT_ID          </Arg>
+            <Arg>        MAILBOX            </Arg>
+        </onPlayerLeave>
+
+        <onPlayerOffline>
+            <Arg>        OBJECT_ID          </Arg>
+            <Arg>        PLAYER_GBID        </Arg>
+        </onPlayerOffline>
+
+        <onPlayerRelogin>
+            <Arg>        MAILBOX            </Arg>
+            <Arg>        PLAYER_GBID        </Arg>
+        </onPlayerRelogin>
+
+        <onPlayerRelive>
+            <Arg>        MAILBOX            </Arg>
+            <Arg>        PLAYER_GBID        </Arg>
+        </onPlayerRelive>
+
+        <onPlayerDead>
+            <Arg>        MAILBOX            </Arg>
+            <Arg>        PLAYER_GBID        </Arg>
+        </onPlayerDead>
+
+        <beNotifiedSpaceEvent>
+            <Arg>        UINT32            </Arg>
+            <Arg>        STRING            </Arg>
+            <Arg>        PYTHON            </Arg>
+        </beNotifiedSpaceEvent>
+
+        <addEntity>
+            <Arg>        OBJECT_ID         </Arg>
+            <Arg>        PYTHON            </Arg>
+        </addEntity>
+
+        <innerSetSpaceVar>
+            <Arg>       UUID          </Arg>
+            <Arg>       VALUE_SRC     </Arg>
+            <Arg>       UNICODE       </Arg>
+            <Arg>       VALUE_ID      </Arg>
+            <Arg>       UINT32        </Arg>
+            <Arg>       PY_LIST       </Arg>
+            <Arg>       PY_DICT       </Arg>
+        </innerSetSpaceVar>
+        <setSpaceVar>
+            <Arg>       VALUE_ID      </Arg>
+            <Arg>       UINT32        </Arg>
+            <Arg>       UUID          </Arg>
+            <Arg>       VALUE_SRC     </Arg>
+            <Arg>       UNICODE       </Arg>
+        </setSpaceVar>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>
+

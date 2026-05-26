@@ -148,7 +148,7 @@ def TLOG(name="", logData="", fromTracking=False):
 
     logFlag = gameconfig.logFlag()
     if logFlag == gameconst.LogType.NORMAL:
-        LOG_IFO(logData)
+        LOG_INFO(logData)
     elif logFlag == gameconst.LogType.WLOG:
         LOG_DBG(logData)
         if platform.system() == 'Linux':

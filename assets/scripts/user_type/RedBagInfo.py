@@ -86,7 +86,7 @@ class RedBagFetchVal(userType.UserSingleType):
         return playerGbId in self.fetchPlayerDict
 
     def doFetch(self, playerGbId, name, _money):
-        LOG_IFO('doFetch: playerGbId=%d name=%s _money=%d' % (playerGbId, name, _money))
+        LOG_INFO('doFetch: playerGbId=%d name=%s _money=%d' % (playerGbId, name, _money))
 
         if self.hasFetched(playerGbId):
             LOG_DBG('doFetch: playerGbId=%d already fetch' % playerGbId)

@@ -18,7 +18,7 @@ import MaxHeap
 class TargetHate(object):
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
 
     def __init__(self, targetId, hate=0):
         self.targetId = targetId
@@ -95,7 +95,7 @@ class MonsterHate(object):
 
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
 
         for hv in self._hateDict.values():
             hv.reloadScript()
@@ -142,7 +142,7 @@ class MonsterHate(object):
         for tid in self._hateDict:
             ent = KBEngine.entities.get(tid)
             if ent:
-                if (self.owner and self.owner.isVisible(ent) or _canSeeHiddenEnt) and ent.isAttackable(self.owner):
+                if (self.owner and self.owner.isVisible(ent) or _canSeeHiddenEnt) and ent.canAttackable(self.owner):
                     return False
         return True
 
@@ -159,7 +159,7 @@ class MonsterHate(object):
                 continue
             if not self.owner.isVisible(ent) and not _canSeeHiddenEnt:
                 continue
-            if not ent.isAttackable(self.owner):
+            if not ent.canAttackable(self.owner):
                 continue
             if withOutArea:
                 if ent.position.x > withOutArea[0].x and ent.position.x < withOutArea[1].x:
@@ -182,7 +182,7 @@ class MonsterHate(object):
                 continue
             if not self.owner.isVisible(ent) and not _canSeeHiddenEnt:
                 continue
-            if not ent.isAttackable(self.owner):
+            if not ent.canAttackable(self.owner):
                 continue
             entDic[tid] = hateVal
         return max(entDic.items(), key=lambda hate: hate[1].currentHate, default=(0, None))
@@ -322,10 +322,10 @@ class MonsterHate(object):
     def getTarget(self, targetId):
         return KBEngine.entities.get(targetId)
 
-    def increaseHateByAttack(self, targetId, damage, **kwargs):
+    def incHateByAttack(self, targetId, damage, **kwargs):
         value = self._calcIncreaseHate(damage, **kwargs)
         currentHate = self._hateDict[targetId].increase(value)
-        # LOG_DBG("MonsterHate increaseHateByAttack targetId, targetLevel, value",
+        # LOG_DBG("MonsterHate incHateByAttack targetId, targetLevel, value",
         #           targetId, damage, value, self.__repr__())
         return currentHate
 
@@ -340,7 +340,7 @@ class MonsterHate(object):
         target and target.IsAvatar and self._dmgSrcSet.add(target.gbId)
 
 
-    def addToHateListByAttack(self, targetId, damage, **kwargs):
+    def addHateListByAttack(self, targetId, damage, **kwargs):
         value = self._calcIncreaseFirstHate(damage, **kwargs) if self.isEmpty() \
             else self._calcIncreaseHate(damage, **kwargs)
         currentHate = self._hateDict[targetId] = TargetHate(targetId, value)
@@ -372,13 +372,13 @@ class MonsterHate(object):
     def _calcIncreaseFirstHate(self, damage, **kwargs):
         return self.calculateHate(damage, x=5.0)
 
-    def decreaseHateByValue(self, targetId, value, **kwargs):
+    def decHateByValue(self, targetId, value, **kwargs):
         if self.isInHateList(targetId):
             targetHate = self._hateDict[targetId]
             targetHate.decrease(value)
             return targetHate
 
-    def decreaseHateByPercentage(self, targetId, value, **kwargs):
+    def decHateByPercentage(self, targetId, value, **kwargs):
         def isPctValidate():
             return True if 0 < value < 1 else False
 
@@ -393,8 +393,6 @@ class MonsterHate(object):
             return targetHate
 
     def removeHate(self, targetId):
-        # if getattr(self.owner.aiController, 'logHate', 0):
-        #     LOG_DBG("MonsterHate removeHate targetId~~~~~~~~~~~~~~~~~~~~~~", targetId)
         if self.isInHateList(targetId):
             self.owner and self.owner.unsetTargetHateRecord(targetId)
             d = self._hateDict.pop(targetId, None)
@@ -426,8 +424,8 @@ class MonsterHate(object):
                 continue
             if targetHate.currentHate <= 0:
                 continue
-            LOG_DBG("inheritHate increaseHate", inheritor.id, targetHate.currentHate)
-            target.aiController.increaseHate(inheritor.id, targetHate.currentHate)
+            LOG_DBG("inheritHate doIncreaseHate", inheritor.id, targetHate.currentHate)
+            target.aiController.doIncreaseHate(inheritor.id, targetHate.currentHate)
 
     def clearSourceHate(self, owner):
         for targetId in self._hateDict:

@@ -5,11 +5,11 @@
     </Interfaces>
 
     <Properties>
-        <aiVars>
+        <aiVariables>
             <Type>            PYTHON              </Type>
             <Flags>           CELL_PRIVATE        </Flags>
             <Default>         {}                  </Default>
-        </aiVars>
+        </aiVariables>
 
         <aiEvents>
             <Type>            PYTHON              </Type>
@@ -108,6 +108,12 @@
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       0                   </Default>
         </warningTimerId>
+
+        <firstHateTargetId>
+            <Type>          OBJECT_ID           </Type>
+            <Flags>         OTHER_CLIENTS        </Flags>
+            <Default>       0                   </Default>
+        </firstHateTargetId>
     </Properties>
 
     <BaseMethods>

@@ -3,7 +3,7 @@ from KBEDebug import *
 
 import KBEngine
 
-from common.KBEDebug import LOG_IFO
+from common.KBEDebug import LOG_INFO
 import formula
 import gameconst
 import gameengine
@@ -17,13 +17,14 @@ import gameglobal
 import dungeonSrc
 
 import message_Message_def as MMD
-import conflict_conflict_def as CCD
+import conflict_conflict_def as C_C_DD
 import const_const as CONST
 import gamePlay_gamePlay as GGD
 import branchData_set as BDS
 import gametimer
 
 import branchData_switchLines as BDSL
+import branchData_branchData as BD_BDD
 
 class ImpLine(object):
     def _buildEnterLineExtra(self, position, dataDic=None):
@@ -64,13 +65,13 @@ class ImpLine(object):
             return
 
         if formula.checkDuelMapId(lineType):
-            _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
+            _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
             self.tryRegiTeleportOutsideRecord(self.spaceNo, _options)
 
         self.applyEnterLineInternal(lineType, lineNo, enterPos, direction, {"telToMainCityWhenFull": False})
 
     def applyEnterLineInternal(self, lineType, lineNo, position, direction, extra=None):
-        LOG_IFO('zt: applyEnterLineInternal', lineType, lineNo, position, direction, extra)
+        LOG_INFO('zt: applyEnterLineInternal', lineType, lineNo, position, direction, extra)
         if formula.inDungeonScene(self.spaceNo):
             # 从副本进入大世界一定要走icomplexTeleport过来
             if not (isinstance(extra, dict) and extra.get('toLine')):
@@ -85,8 +86,8 @@ class ImpLine(object):
 
     # 已经在LineStub占了人数坑位，如果进入失败需要释放坑位
     def beginEnterLine(self, lineType, lineNo, spaceBox, position, direction, extra):
-        LOG_IFO('zt: beginEnterLine', lineType, lineNo, spaceBox.id)
-        cmpLineType = gameconst.TeleportLock.ENTER_LINE
+        LOG_INFO('zt: beginEnterLine', lineType, lineNo, spaceBox.id)
+        cmpLineType = gameconst.TeleportLockEnum.ENTER_LINE
 
         if extra.get('isLogin'):
             self._onEnterLine(0, lineType, lineNo, extra)
@@ -107,7 +108,7 @@ class ImpLine(object):
                                 (self.spaceNo, lineType, lineNo, extra))
 
     def _onEnterLine(self, fromSpaceNo, lineType, lineNo, extra):
-        LOG_IFO('_onEnterLine', fromSpaceNo, lineType, lineNo, extra)
+        LOG_INFO('_onEnterLine', fromSpaceNo, lineType, lineNo, extra)
 
         succInfo = {}
         succInfo['teamUUID'] = self.teamId if self.teamId else self.raidId
@@ -124,7 +125,7 @@ class ImpLine(object):
             fromSpaceMgrBox.onPlayerLeave(self.gbId, self.id, self.base)
 
         if self.teleportLock:
-            self.releaseTeleportLock(gameconst.TeleportLock.ENTER_LINE)
+            self.releaseTeleportLock(gameconst.TeleportLockEnum.ENTER_LINE)
 
         gameengine.getLineStub(lineType).enterLineSuccess(lineNo, self.base, self.gbId, succInfo)
 
@@ -157,11 +158,20 @@ class ImpLine(object):
     @utils.isMyself
     def applySwitchLine(self, exposed, toLineNo):
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+
+        if formula.inCubeScene(self.spaceNo):
+            self.switchCubeLine(exposed, toLineNo)
+            return
+        
+        if formula.inWonderLandScene(self.spaceNo):
+            gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, {})
+            return
+
         self.switchLineAndPosition(toLineNo, None, src=src, needPending=False)
 
     def switchLineAndPosition(self, toLineNo, toPosition, src=None, extra=None, needPending=True):
         canSwitch = self._checkSwitchLine(toLineNo)
-        LOG_IFO('applySwitchLine', self.spaceNo, toLineNo, canSwitch, src, extra)
+        LOG_INFO('applySwitchLine', self.spaceNo, toLineNo, canSwitch, src, extra)
         if not canSwitch:
             return
 
@@ -191,7 +201,7 @@ class ImpLine(object):
         return True
 
     def onCheckSwitchLine(self, checkCode, checksumSpaceNo, toLineNo, toPosition, src, extra):
-        LOG_IFO("onCheckSwitchLine::", checkCode, checksumSpaceNo, toLineNo, toPosition, src, extra)
+        LOG_INFO("onCheckSwitchLine::", checkCode, checksumSpaceNo, toLineNo, toPosition, src, extra)
         if checkCode == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
             _result = self._onCheckSwitchLineReCheckCond(checkCode, checksumSpaceNo, toLineNo)
             extra = extra if extra is not None else {}
@@ -216,7 +226,7 @@ class ImpLine(object):
             _fn and _fn(checkCode, *failArgs)
 
     def _switchLineInternal(self, toLineNo, toPosition=None, toDir=None, extra=None):
-        LOG_IFO('_switchLineInternal', self.spaceNo, toLineNo)
+        LOG_INFO('_switchLineInternal', self.spaceNo, toLineNo)
         extra = extra or {}
         _cbfn = "_switchLineInternalAfterCast"
         _cbargs = (toLineNo, toPosition, toDir, extra if extra else {})
@@ -224,12 +234,21 @@ class ImpLine(object):
         if extra.get('hasCast'):
             getattr(self, _cbfn)(*_cbargs)
         else:
-            self._commonNeedCast(CCD.datas.teleportCast, gameconst.StateEnum.Teleporting, gameconst.CastType.teleport,
+            self._commonNeedCast(C_C_DD.datas.teleportCast, gameconst.StateEnum.Teleporting, gameconst.CastType.teleport,
                                 _cbfn, _cbargs)
 
     def onMergeLine(self, toLineNo):
         LOG_DBG("onMergeLine", self.spaceNo, toLineNo)
         self.client.beginMergeLine()
+        #合线要跳过读条
+        if formula.inCubeScene(self.spaceNo):
+            self._switchCubeLine(toLineNo)
+            return
+        
+        if formula.inWonderLandScene(self.spaceNo):
+            gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, {'isMerge': True})
+            return
+
         self._switchLineInternalAfterCast(toLineNo, None, None, {})
 
     def _switchLineInternalAfterCast(self, toLineNo, toPosition, toDir, extra):
@@ -247,14 +266,14 @@ class ImpLine(object):
 
     # 已经在目标分线占了人数坑位，如果进入失败需要释放坑位
     def beginSwitchLine(self, lineType, fromLineNo, toLineNo, toSpaceBox, extra):
-        LOG_IFO('beginSwitchLine', lineType, self.spaceNo, fromLineNo, toLineNo, toSpaceBox.id)
+        LOG_INFO('beginSwitchLine', lineType, self.spaceNo, fromLineNo, toLineNo, toSpaceBox.id)
 
-        if self.teleportLock and self.teleportLock!=gameconst.TeleportLock.SWITCH_LINE:
+        if self.teleportLock and self.teleportLock!=gameconst.TeleportLockEnum.SWITCH_LINE:
             failReason = 'locked:%s'%self.teleportLock
             gameengine.getLineStub(lineType).switchLineFailed(fromLineNo, toLineNo, self.base, self.gbId, {'reason':failReason})
             return
 
-        self.aquireTeleportLock(gameconst.TeleportLock.SWITCH_LINE)
+        self.aquireTeleportLock(gameconst.TeleportLockEnum.SWITCH_LINE)
 
         spaceNo = formula.combineLineSpaceNo(lineType, toLineNo)
         enterPos = extra.pop('position', self.position)
@@ -267,11 +286,11 @@ class ImpLine(object):
                             (lineType, fromLineNo, toLineNo, extra))
 
     def _onSwitchLine(self, lineType, fromLineNo, toLineNo, extra):
-        LOG_IFO('_onSwitchLine', lineType, fromLineNo, toLineNo, extra)
+        LOG_INFO('_onSwitchLine', lineType, fromLineNo, toLineNo, extra)
         gameengine.getLineStub(lineType).switchLineSuccess(fromLineNo, toLineNo, self.base, self.gbId, extra)
 
         if self.teleportLock:
-            self.releaseTeleportLock(gameconst.TeleportLock.SWITCH_LINE)
+            self.releaseTeleportLock(gameconst.TeleportLockEnum.SWITCH_LINE)
 
         if extra and extra.get('callback'):
             func = getattr(self, extra['callback'])
@@ -286,7 +305,7 @@ class ImpLine(object):
 
     @utils.isMyself
     def applyLeaveLine(self, exposed):
-        LOG_IFO('applyLeaveLine', self.spaceNo)
+        LOG_INFO('applyLeaveLine', self.spaceNo)
         if formula.inDuelScene(self.spaceNo):
             mapId, outRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo)
             if outRecord:
@@ -300,7 +319,7 @@ class ImpLine(object):
     # 有的时候已经离开分线了，调用这个接口清除分线状态，需要传fromSpaceNo，因为self.spaceNo已经是离开后场景了
     # toSpaceNo==0时是传到了其他场景后清除源分线的状态
     def _applyLeaveLineInternal(self, fromSpaceNo, toSpaceNo, toPosition, toDirection):
-        LOG_IFO('_applyLeaveLineInternal', self.spaceNo, fromSpaceNo, toSpaceNo)
+        LOG_INFO('_applyLeaveLineInternal', self.spaceNo, fromSpaceNo, toSpaceNo)
         if toSpaceNo and not formula.inLineScene(self.spaceNo):
             return
 
@@ -318,7 +337,7 @@ class ImpLine(object):
                                                                 gameconst.POSITION_ZERO, gameconst.DIRECTION_ZERO)
 
     def beginLeaveLine(self, fromSpaceNo, toSpaceNo, toPosition, toDirection):
-        LOG_IFO('beginLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo, toPosition, toDirection)
+        LOG_INFO('beginLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo, toPosition, toDirection)
 
         # 可以不指定toSpaceNo，比如从分线内进入分线，已经离开老分线后才调用_applyLeaveLineInternal，这里只
         # 执行上老分线的离开函数
@@ -333,16 +352,16 @@ class ImpLine(object):
             LOG_ERR('teleport to %s is not supported' % toSpaceNo)
 
     def _onLeaveLine(self, fromSpaceNo, toSpaceNo):
-        LOG_IFO('_onLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo)
+        LOG_INFO('_onLeaveLine', self.spaceNo, fromSpaceNo, toSpaceNo)
 
     def beginGoBackLine(self, lineSpaceNo, spaceBox, dstPos, dstDir, callback, callbackArgs):
-        LOG_IFO('beginGoBackLine', lineSpaceNo, callback, callbackArgs)
+        LOG_INFO('beginGoBackLine', lineSpaceNo, callback, callbackArgs)
         fromSpaceNo = self.spaceNo
         self.teleportToCell(spaceBox.cell, lineSpaceNo, dstPos, dstDir, '_onGoBackLine',
                             (fromSpaceNo, callback, callbackArgs))
 
     def _onGoBackLine(self, fromSpaceNo, callback, callbackArgs):
-        LOG_IFO('_onGoBackLine', fromSpaceNo, callback, callbackArgs)
+        LOG_INFO('_onGoBackLine', fromSpaceNo, callback, callbackArgs)
 
         func = getattr(self, callback)
         func and func(*callbackArgs)
@@ -370,9 +389,16 @@ class ImpLine(object):
 
     @gamedecorator.crossServer
     @utils.isMyself
+    @gamedecorator.limitcall(0.1)
     def queryLineInfo(self, exposed, lineType):
-        if self._getCubeRoomTypeByMapId(lineType) == gameconst.CubeRoomType.READY:
-            gameengine.getCubeStub(1).doGetCubeReadyLineCnt(self.base)
+        if formula.inCubeScene(self.spaceNo):
+            LOG_INFO("queryLineInfo cube room", lineType)
+            gameengine.getCubeStubBySpaceNo(self.spaceNo).doGetCubeReadyLineCnt(self.base, lineType)
+            return
+
+        if formula.inWonderLandScene(self.spaceNo):
+            LOG_INFO("queryLineInfo wonder land", lineType)
+            gameengine.getWonderLandStub(lineType).doGetWonderLandLineInfo(self.base)
             return
 
         if lineType not in gameconst.lineStubMap():

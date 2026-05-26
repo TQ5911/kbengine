@@ -28,14 +28,14 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimer(tid, userArg)
 
     def test(self):
-        LOG_IFO("CrossServerStub test")
+        LOG_INFO("CrossServerStub test")
 
     def onGetSwitchServerData(self, data):
-        LOG_IFO("onGetSwitchServerData: {}".format(len(data)))
+        LOG_INFO("onGetSwitchServerData: {}".format(len(data)))
         SwitchServer.SwitchServerUtils.saveData(data)
 
     def onReqCrossServer(self, accountName, reasonNo, crossServerEntityCall):
-        LOG_IFO("onReqCrossServer", accountName, reasonNo)
+        LOG_INFO("onReqCrossServer", accountName, reasonNo)
         ret = True
         if accountName in self.accountDic:
             LOG_WARN("onReqCrossServer accountName has in accountDic", accountName)
@@ -48,7 +48,7 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         crossServerEntityCall.onCrossServerResp(ret, token, reasonNo)
 
     def onEndCrossServer(self, accountName):
-        LOG_IFO("onEndCrossServer", accountName)
+        LOG_INFO("onEndCrossServer", accountName)
         if accountName not in self.accountDic:
             LOG_ERR("onGobackServer accountName not in accountDic", accountName)
             return
@@ -56,7 +56,7 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.accountDic.pop(accountName)
 
     def onCheckCrossServerToken(self, accountName, token, crossServerEntityCall):
-        LOG_IFO("onCheckCrossServerToken", accountName, token, crossServerEntityCall)
+        LOG_INFO("onCheckCrossServerToken", accountName, token, crossServerEntityCall)
         ret, _ = self._checkCrossServerToken(accountName, token)
         crossServerEntityCall.onCheckCrossServerTokenResp(ret)
 
@@ -76,14 +76,14 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return ret, crossServerEntityCall
 
     def checkCrossServerToken(self, accountName, token, box, callBackFunc, callBackArgs):
-        LOG_IFO("checkCrossServerToken", accountName, token, box, callBackFunc, callBackArgs)
+        LOG_INFO("checkCrossServerToken", accountName, token, box, callBackFunc, callBackArgs)
         ret, crossServerEntityCall = self._checkCrossServerToken(accountName, token)
         args = [ret, crossServerEntityCall]
         args.extend(callBackArgs)
         getattr(box, callBackFunc)(*args)
 
     def onGobackServer(self, accountName):
-        LOG_IFO("onGobackServer", accountName)
+        LOG_INFO("onGobackServer", accountName)
         if accountName not in self.accountDic:
             LOG_ERR("onGobackServer accountName not in accountDic", accountName)
             return
@@ -91,7 +91,7 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.accountDic.pop(accountName)
 
     def doGmModifyServertime(self, su, modifyTime):
-        LOG_IFO("doGmModifyServertime", su, modifyTime)
+        LOG_INFO("doGmModifyServertime", su, modifyTime)
         import gameconfig
         import iRouter
         import gmCommand
@@ -113,7 +113,7 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     #gm改变整个跨服组上服务器的时间（包括跨服）
     def onGmModifyAllServertimeInCrossGroup(self, su, modifyTime):
-        LOG_IFO("onGmModifyAllServertimeInCrossGroup", su, modifyTime)
+        LOG_INFO("onGmModifyAllServertimeInCrossGroup", su, modifyTime)
         import gameconfig
         import iRouter
 

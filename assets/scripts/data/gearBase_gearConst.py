@@ -250,5 +250,21 @@ datas = _tools.RODict({
     "equipUnbindMsg": _tools.RODict({
         "ID": "equipUnbindMsg",
         "value": 54000308,
+    }),
+    "equipRedeemMailID": _tools.RODict({
+        "ID": "equipRedeemMailID",
+        "value": 37002014,
+    }),
+    "equipDisappearMailID": _tools.RODict({
+        "ID": "equipDisappearMailID",
+        "value": 37002015,
+    }),
+    "equipReturnMailID": _tools.RODict({
+        "ID": "equipReturnMailID",
+        "value": 37002016,
+    }),
+    "equipRedeemWaitTime": _tools.RODict({
+        "ID": "equipRedeemWaitTime",
+        "value": 3600,
     })
 })

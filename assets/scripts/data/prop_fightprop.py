@@ -620,6 +620,31 @@ datas = _tools.RODict({
         "type": 2,
         "propList": _tools.RODict({"adjFullHp":4900000,"adjMinPhysicalArmor":820,"adjMaxPhysicalArmor":820,"adjMinMagicArmor":820,"adjMaxMagicArmor":820})
     }),
+    52004031: _tools.RODict({
+        "propID": 52004031,
+        "type": 2,
+        "propList": _tools.RODict({"adjFullHp":1125000,"adjMinPhysicalArmor":320,"adjMaxPhysicalArmor":320,"adjMinMagicArmor":320,"adjMaxMagicArmor":320})
+    }),
+    52004032: _tools.RODict({
+        "propID": 52004032,
+        "type": 2,
+        "propList": _tools.RODict({"adjFullHp":1350000,"adjMinPhysicalArmor":390,"adjMaxPhysicalArmor":390,"adjMinMagicArmor":390,"adjMaxMagicArmor":390})
+    }),
+    52004033: _tools.RODict({
+        "propID": 52004033,
+        "type": 2,
+        "propList": _tools.RODict({"adjFullHp":1800000,"adjMinPhysicalArmor":500,"adjMaxPhysicalArmor":500,"adjMinMagicArmor":500,"adjMaxMagicArmor":500})
+    }),
+    52004034: _tools.RODict({
+        "propID": 52004034,
+        "type": 2,
+        "propList": _tools.RODict({"adjFullHp":2700000,"adjMinPhysicalArmor":690,"adjMaxPhysicalArmor":690,"adjMinMagicArmor":690,"adjMaxMagicArmor":690})
+    }),
+    52004035: _tools.RODict({
+        "propID": 52004035,
+        "type": 2,
+        "propList": _tools.RODict({"adjFullHp":3250000,"adjMinPhysicalArmor":820,"adjMaxPhysicalArmor":820,"adjMinMagicArmor":820,"adjMaxMagicArmor":820})
+    }),
     52009001: _tools.RODict({
         "propID": 52009001,
         "type": 2,

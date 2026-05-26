@@ -6,6 +6,7 @@
         <Interface>     iMapMonsterRefresh      </Interface>
         <Interface>     iTimerEntityRefresh     </Interface>
         <Interface>     iBoxGroupRefresh        </Interface>
+        <Interface>     iShowMapEntityType      </Interface>
     </Interfaces>
 
     <Properties>

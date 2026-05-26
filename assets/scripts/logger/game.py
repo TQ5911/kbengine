@@ -13,7 +13,7 @@ def onLoggerAppReady():
     KBEngine method.
     logger已经准备好了
     """
-    LOG_IFO('onLoggerAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
+    LOG_INFO('onLoggerAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
              (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
 
 
@@ -22,7 +22,7 @@ def onLoggerAppShutDown():
     KBEngine method.
     这个logger被关闭前的回调函数
     """
-    LOG_IFO('onLoggerAppShutDown()')
+    LOG_INFO('onLoggerAppShutDown()')
 
 
 def onReadyForShutDown():
@@ -32,7 +32,7 @@ def onReadyForShutDown():
     如果返回True，则进程会进入shutdown的流程，其它值会使得进程在过一段时间后再次询问。
     用户可以在收到消息时进行脚本层的数据清理工作，以让脚本层的工作成果不会因为shutdown而丢失。
     """
-    LOG_IFO('onReadyForShutDown()')
+    LOG_INFO('onReadyForShutDown()')
     return True
 
 

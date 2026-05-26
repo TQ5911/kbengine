@@ -1,0 +1,32 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <leaderBoardCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </leaderBoardCache>
+
+        <levelLeaderBoard>
+            <Type>          LEADER_BOARD_AVATAR_LIST_DATA_INFO              </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+        </levelLeaderBoard>
+
+        <scoreLeaderBoard>
+            <Type>          LEADER_BOARD_AVATAR_LIST_DATA_INFO              </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+        </scoreLeaderBoard>
+    </Properties>
+
+    <BaseMethods>
+        <onGetLeaderBoardAvatarCache>
+            <Arg>       LEADER_BOARD_AVATAR_CACHE_DATA_INFO         </Arg>
+        </onGetLeaderBoardAvatarCache>
+    </BaseMethods>
+</root>

@@ -63,6 +63,10 @@ datas = _tools.RODict({
         "ID": "petTeamSwitchCD_msgID",
         "value": 54000953,
     }),
+    "petBagLimitText": _tools.RODict({
+        "ID": "petBagLimitText",
+        "value": "精灵背包（{0}/{1}）",
+    }),
     "petBagCapacity": _tools.RODict({
         "ID": "petBagCapacity",
         "value": 350,

@@ -160,6 +160,7 @@
     <ClientMethods>
         <onGetPublicBountyList>
             <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
             <Arg>           ARRAY <of> BOUNTY_ITEM_CLIENT_VAL  </of>       </Arg>
             <Arg>           BOOL            </Arg>
             <Arg>           UINT32          </Arg>

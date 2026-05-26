@@ -11,12 +11,13 @@ class AccountBase(KBEngine.Entity):
     def onCreateAvatarFailed(self, arg0): pass
     def onCreateAvatarResult(self, arg0, arg1): pass
     def onGameConfigChanged(self, arg0, arg1): pass
-    def onGetAuthOfflineTimeClient(self, arg0, arg1): pass
+    def onGetAuthOfflineTimeClient(self, arg0, arg1, arg2): pass
     def onHotfixVersion(self, arg0): pass
     def onKickAnotherAccount(self): pass
     def onKickAnotherAvatar(self): pass
     def onLoginNeedReconnect(self): pass
     def onMessage(self, arg0, arg1): pass
+    def onPatchVersion(self, arg0): pass
     def onRemoveAvatar(self, arg0): pass
     def onReqAvatarGBID(self, arg0): pass
     def onReqAvatarList(self, arg0, arg1, arg2): pass

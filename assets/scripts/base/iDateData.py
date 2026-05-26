@@ -72,7 +72,7 @@ class IDateData(object):
 
 
     def onDayChanged(self, lastUpdateTime, now):
-        LOG_IFO("IDateData::onDayChanged: %i => %i" % (lastUpdateTime, now))
+        LOG_INFO("IDateData::onDayChanged: %i => %i" % (lastUpdateTime, now))
         try:
             for key, val in self.dateDailyDataDict.items():
                 self.onExpireDailyData(key, val)
@@ -83,11 +83,11 @@ class IDateData(object):
         self.dateDailyDataDict.clear()
     
     def onExpireDailyData(self, key, val):
-        LOG_IFO('dateData daily expire')
+        LOG_INFO('dateData daily expire')
         
 
     def onWeekChanged(self, lastUpdateTime, now):
-        LOG_IFO("IDateData::onWeekChanged: %i => %i" % (lastUpdateTime, now))
+        LOG_INFO("IDateData::onWeekChanged: %i => %i" % (lastUpdateTime, now))
         try:
             for key, val in self.dateWeeklyDataDict.items():
                 self.onExpireWeeklyData(key, val)
@@ -98,7 +98,7 @@ class IDateData(object):
         self.dateWeeklyDataDict.clear()
     
     def onExpireWeeklyData(self, key, val):
-        LOG_IFO('dateData weekly expire')
+        LOG_INFO('dateData weekly expire')
 
     def checkKeyValid(self, key):
         if key not in gameconst.AvatarDailyProps.__dict__.values():
@@ -131,7 +131,7 @@ class IDateData(object):
         self.dateWeeklyDataDict[key] = newVal
 
     def gmGetDateData(self):
-        LOG_IFO('dateTimeDataDict: ', self.dateTimeDataDict)
-        LOG_IFO('dayUpdateTimeStamp: ', utils.getCommonTimeStr(self.dateTimeDataDict[DateType.DAY]), utils.getCommonTimeStr(self.dateTimeDataDict[DateType.WEEK]))
-        LOG_IFO('dateDailyDataDict: ', self.dateDailyDataDict)
-        LOG_IFO('dateWeeklyDataDict: ', self.dateWeeklyDataDict)
+        LOG_INFO('dateTimeDataDict: ', self.dateTimeDataDict)
+        LOG_INFO('dayUpdateTimeStamp: ', utils.getCommonTimeStr(self.dateTimeDataDict[DateType.DAY]), utils.getCommonTimeStr(self.dateTimeDataDict[DateType.WEEK]))
+        LOG_INFO('dateDailyDataDict: ', self.dateDailyDataDict)
+        LOG_INFO('dateWeeklyDataDict: ', self.dateWeeklyDataDict)

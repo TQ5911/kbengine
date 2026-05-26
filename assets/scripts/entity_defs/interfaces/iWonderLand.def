@@ -40,7 +40,9 @@
         </checkAndEnterWonderLand>
 
         <doAddWonderLandTicket>
+            <Arg>          UINT8                        </Arg>
             <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
@@ -56,7 +58,9 @@
 
         <addWonderLandDurFailed>
             <Arg>          OP_UUID                      </Arg>
+            <Arg>          UINT8                        </Arg>
             <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
             <Arg>          UINT8                        </Arg>
         </addWonderLandDurFailed>
 
@@ -110,6 +114,13 @@
             <Arg>          PY_DICT                      </Arg>
         </beginEnterWonderLand>
 
+        <doSwitchWonderLandLine>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+            <Arg>          PY_DICT                      </Arg>
+        </doSwitchWonderLandLine>
+
         <directlyAddWonderLandDuration>
             <Arg>          STRING                       </Arg>
             <Arg>          PYTHON                       </Arg>
@@ -128,7 +139,9 @@
         </reqChangeWonderLandSwitch>
 
         <checkAddWonderLandDurationCondition>
+            <Arg>           UINT8                       </Arg>
             <Arg>           ITEM_ID                     </Arg>
+            <Arg>           UINT32                      </Arg>
             <Arg>           UINT8                       </Arg>
             <Arg>           OP_UUID                     </Arg>
         </checkAddWonderLandDurationCondition>

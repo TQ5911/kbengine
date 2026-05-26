@@ -96,7 +96,7 @@ datas = _tools.RODict({
         "ID": 37000008,
         "type": 2,
         "title": "装备受损通知",
-        "content": "您的<link item id={0} gbid={1}>已受损，能量晶核遗失在<link position x={2} z={3} spaceNo={4}>。",
+        "content": "您的<link item id={0} gbid={1}>已受损，能量晶核遗失在<color=#54e7f2><link position x={2} z={3} spaceNo={4}></color>。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "1",
@@ -510,10 +510,21 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
+    37001024: _tools.RODict({
+        "ID": 37001024,
+        "type": 2,
+        "title": "同盟解散",
+        "content": "猛兽独行，牛羊成群，您的同盟数量已超出上限，已将所有同盟自行解散，特此通知。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
     37002001: _tools.RODict({
         "ID": 37002001,
         "type": 2,
-        "title": "杀手击杀成功（杀手通知）",
+        "title": "杀手击杀成功",
         "content": "你已经击败<color=#d35a66>{0}</color>，完成了<color=#ffb638>{1}</color>的悬赏单。特此通知。",
         "isOpen": 1,
         "rewardId": 0,
@@ -524,7 +535,7 @@ datas = _tools.RODict({
     37002002: _tools.RODict({
         "ID": 37002002,
         "type": 2,
-        "title": "杀手击杀成功（雇主通知）",
+        "title": "杀手击杀成功",
         "content": "你雇佣的杀手<color=#ffb638>{0}</color>，已经击败<color=#d35a66>{1}</color>，完成了悬赏单。特此通知。",
         "isOpen": 1,
         "rewardId": 0,
@@ -535,7 +546,7 @@ datas = _tools.RODict({
     37002003: _tools.RODict({
         "ID": 37002003,
         "type": 2,
-        "title": "杀手击杀失败通知（雇主通知）",
+        "title": "杀手击杀失败通知",
         "content": "你雇佣的杀手<color=#ffb638>{0}</color>未能完成击杀<color=#d35a66>{1}</color>的的悬赏。特此通知。这是退回的悬赏金。",
         "isOpen": 1,
         "rewardId": 0,
@@ -546,7 +557,7 @@ datas = _tools.RODict({
     37002004: _tools.RODict({
         "ID": 37002004,
         "type": 2,
-        "title": "杀手击杀失败通知（杀手通知）",
+        "title": "杀手击杀失败通知",
         "content": "你在规定时间里未能完成对<color=#d35a66>{0}</color>的悬赏单。特此通知。",
         "isOpen": 1,
         "rewardId": 0,
@@ -557,7 +568,7 @@ datas = _tools.RODict({
     37002005: _tools.RODict({
         "ID": 37002005,
         "type": 2,
-        "title": "杀手接单成功提醒（杀手通知）",
+        "title": "杀手接单成功提醒",
         "content": "你已经成功接取了<color=#d35a66>{0}</color>的悬赏单。",
         "isOpen": 1,
         "rewardId": 0,
@@ -568,7 +579,7 @@ datas = _tools.RODict({
     37002006: _tools.RODict({
         "ID": 37002006,
         "type": 2,
-        "title": "杀手接单成功提醒（雇主通知）",
+        "title": "杀手接单成功提醒",
         "content": "杀手<color=#d35a66>{0}</color>已经接取了您对<color=#d35a66>{1}</color>的悬赏单。",
         "isOpen": 1,
         "rewardId": 0,
@@ -590,7 +601,7 @@ datas = _tools.RODict({
     37002008: _tools.RODict({
         "ID": 37002008,
         "type": 2,
-        "title": "保证金退回（杀手）",
+        "title": "保证金退回",
         "content": "恭喜你完成对<color=#d35a66>{0}</color>的暗杀，契银如数退还",
         "isOpen": 1,
         "rewardId": 0,
@@ -601,7 +612,7 @@ datas = _tools.RODict({
     37002009: _tools.RODict({
         "ID": 37002009,
         "type": 2,
-        "title": "保证金退回（雇主）",
+        "title": "保证金退回",
         "content": "恭喜您雇佣的杀手完成对<color=#d35a66>{0}</color>的暗杀，契银如数退还",
         "isOpen": 1,
         "rewardId": 0,
@@ -612,7 +623,7 @@ datas = _tools.RODict({
     37002010: _tools.RODict({
         "ID": 37002010,
         "type": 2,
-        "title": "指定杀手击杀成功（雇主通知）",
+        "title": "指定杀手击杀成功",
         "content": "你雇佣的杀手<color=#ffb638>{0}</color>，已经击败<color=#d35a66>{1}</color>，完成了悬赏单。特此通知。以下是退还的契银。",
         "isOpen": 1,
         "rewardId": 0,
@@ -623,8 +634,8 @@ datas = _tools.RODict({
     37002011: _tools.RODict({
         "ID": 37002011,
         "type": 2,
-        "title": "公开榜杀手成功收到的全额奖励邮件",
-        "content": "恭喜你完成对<color=#d35a66>{0}</color>的暗杀，这是你的全额赏金",
+        "title": "悬红榜单成功奖励",
+        "content": "恭喜你完成对<color=#d35a66>{0}</color>的暗杀，这是您退回的契银<#itemId={1}>*{2}和赏金<#itemId={3}>*{4}",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -634,7 +645,7 @@ datas = _tools.RODict({
     37002012: _tools.RODict({
         "ID": 37002012,
         "type": 2,
-        "title": "指定榜杀手成功后收到的悬赏金奖励邮件",
+        "title": "暗杀成功奖励",
         "content": "恭喜你完成对<color=#d35a66>{0}</color>的暗杀，这是你的赏金",
         "isOpen": 1,
         "rewardId": 0,
@@ -645,8 +656,41 @@ datas = _tools.RODict({
     37002013: _tools.RODict({
         "ID": 37002013,
         "type": 2,
-        "title": "指定杀手拒绝指定单退回给雇主的邮件",
-        "content": "你指定的杀手<color=#ffb638>{0}</color>拒绝了对<color=#d35a66>{1}</color>的暗杀，这是退回的赏金和契银。",
+        "title": "杀手拒绝通知",
+        "content": "你指定的杀手<color=#ffb638>{0}</color>拒绝了对<color=#d35a66>{1}</color>的暗杀，这是退回的契银<#itemId={2}>*{3}和赏金<#itemId={4}>*{5}。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37002014: _tools.RODict({
+        "ID": 37002014,
+        "type": 2,
+        "title": "装备赎金",
+        "content": "装备<color=#d35a66>{0}</color>已被赎回，这是您的赎金",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37002015: _tools.RODict({
+        "ID": 37002015,
+        "type": 2,
+        "title": "装备消失",
+        "content": "您的装备<color=#d35a66>{0}</color>因掉落数量太多 或 未能及时赎回，已消失",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37002016: _tools.RODict({
+        "ID": 37002016,
+        "type": 2,
+        "title": "租赁归还",
+        "content": "您的装备<color=#d35a66>{0}</color>租赁时间已到，现在归还给您",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -655,7 +699,7 @@ datas = _tools.RODict({
     })
 })
 minKey = 37000001
-maxKey = 37002013
+maxKey = 37002016
 
 MailArgsNumMap = _tools.RODict({ 
         37000001:0,
@@ -703,6 +747,7 @@ MailArgsNumMap = _tools.RODict({
         37001021:3,
         37001022:1,
         37001023:1,
+        37001024:0,
         37002001:2,
         37002002:2,
         37002003:2,
@@ -713,7 +758,10 @@ MailArgsNumMap = _tools.RODict({
         37002008:1,
         37002009:1,
         37002010:2,
-        37002011:1,
+        37002011:5,
         37002012:1,
-        37002013:2,
+        37002013:6,
+        37002014:1,
+        37002015:1,
+        37002016:1,
 })

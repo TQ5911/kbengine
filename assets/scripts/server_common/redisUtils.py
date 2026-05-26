@@ -11,7 +11,7 @@ import utils
 import json
 import gzip
 
-import const_const as CCD
+import const_const as C_C_DD
 import relationConfig_relationConfig as RC_RCD
 
 
@@ -75,8 +75,8 @@ class FriendCacheVal(object):
 
 class RedisUtils(object):
     @classmethod
-    def set(cls, key, val, callback=None):
-        gameglobal.localBaseApp.getRedisClient().set(key, val,
+    def cmdSet(cls, key, val, callback=None):
+        gameglobal.localBaseApp.getRedisClient().cmdSet(key, val,
                                                       functools.partial(cls.onSetRedis, callback, key, val))
 
     @classmethod
@@ -313,7 +313,7 @@ class RedisUtils(object):
 
     @classmethod
     def saveTestStr(cls, val):
-        gameglobal.localBaseApp.getRedisClient().set('testStr', val)
+        gameglobal.localBaseApp.getRedisClient().cmdSet('testStr', val)
 
     @classmethod
     def getTestStr(cls, func):
@@ -331,6 +331,10 @@ class RedisUtils(object):
     @classmethod
     def getSVIPFlag(cls, accountName, cb):
         gameglobal.localBaseApp.getRedisClient().get(gameconst.PrivilegeRedisKey.SVIP + accountName, cb)
+    
+    @classmethod
+    def getFullPlayerInfo(cls, gbId, cb):
+        gameglobal.localBaseApp.getRedisClient().get(gameconst.RedisKey.FULL_PLAYER_INFO_KEY + ":" + str(gbId), cb)
 
 class FriendUtils(object):
     @classmethod
@@ -479,7 +483,7 @@ class AccountUtils(object):
 
     @classmethod
     def addAvatar(cls, accountName, gbId):
-        LOG_IFO("AccountUtils addAvatar", accountName, gbId)
+        LOG_INFO("AccountUtils addAvatar", accountName, gbId)
         gameglobal.localBaseApp.getRedisClient().sadd(cls.getTableName(accountName), [gbId], functools.partial(
             cls.resultCallback_addAvatar, gbId))
 
@@ -492,7 +496,7 @@ class AccountUtils(object):
 
     @classmethod
     def removeAvatar(cls, accountName, gbId):
-        LOG_IFO("AccountUtils removeAvatar", accountName, gbId)
+        LOG_INFO("AccountUtils removeAvatar", accountName, gbId)
         gameglobal.localBaseApp.getRedisClient().srem(cls.getTableName(accountName), gbId, functools.partial(
             cls.resultCallback_removeAvatar, gbId))
 
@@ -681,6 +685,76 @@ class SetUtils(object):
             cb
         )
 
+class PlayerLeaseRecord(object):
+
+    @staticmethod
+    def _getKey(gbId, rtype=1):
+        # rtype: 1=我的出租 2=我的租赁
+        return "{server_id}_lease_rcd_{gbId}_{rtype}".format(
+            server_id=str(gameconfig.serverId()),
+            gbId=gbId, rtype=rtype)
+
+    @staticmethod
+    def _encodeMessage(timestamp, itemId, uniqueId, itemName, leaseTime, bindGold, gold, cost):
+        _message = (timestamp, itemId, uniqueId, itemName, leaseTime, bindGold, gold, cost)
+        ret = cPickle.dumps(_message)
+        return gzip.compress(ret)
+
+    @staticmethod
+    def _decodeMessage(base64Msg):
+        message = gzip.decompress(base64Msg)
+        return cPickle.loads(message)
+
+    @classmethod
+    def recordMessage(cls, timestamp, leeorGBID, leessGBID, itemId, uniqueId, bindGold=0, gold=0, cost=0):
+        LOG_DBG(f'{cls.__name__}.recordMessage::', timestamp, leeorGBID, leessGBID, itemId, uniqueId, bindGold, gold, cost)
+
+        key = cls._getKey(leeorGBID, gameconst.LeaseRecordType.LEASE_OUT)
+        msg = cls._encodeMessage(timestamp, itemId, uniqueId, bindGold, gold, cost)
+        gameglobal.localBaseApp.getRedisClient().lpush(key, msg)
+        expireT = utils.curTS() + 30 * gameconst.ONE_DAY_COST_SECONDS
+        gameglobal.localBaseApp.getRedisClient().expireat(key, expireT)
+
+        key = cls._getKey(leessGBID, gameconst.LeaseRecordType.LEASE_IN)
+        msg = cls._encodeMessage(timestamp, itemId, uniqueId, bindGold, gold, cost)
+        gameglobal.localBaseApp.getRedisClient().lpush(key, msg)
+        expireT = utils.curTS() + 30 * gameconst.ONE_DAY_COST_SECONDS
+        gameglobal.localBaseApp.getRedisClient().expireat(key, expireT)
+
+    @classmethod
+    def getMessageRecord(cls, box, gbId, number=-1, rtype=1):
+        LOG_DBG(f"{cls.__name__}.getMessageRecord::", gbId, box, rtype)
+        key = cls._getKey(gbId, rtype)
+
+        def _onGetMessageRecordWarpper(cid, error, result):
+            return cls.onGetMessageRecord(cid, error, result, box, gbId)
+
+        number = max(-1, number - 1)
+        gameglobal.localBaseApp.getRedisClient().lrange(key, 0, number, _onGetMessageRecordWarpper)
+
+    @classmethod
+    def onGetMessageRecord(cls, cid, error, result, box, gbId):
+        LOG_DBG(f"{cls.__name__}.onGetMessageRecord::", error)
+        if error != "":
+            LOG_WARN(f"{cls.__name__}.onGetMessageRecord::cache missing", error)
+            return
+
+        lastRecords = []
+        for encodedMsg in result:
+            timestamp, itemId, uniqueId, bindGold, gold, cost = cls._decodeMessage(encodedMsg)
+            _data = {
+                "timestamp": timestamp,
+                "itemId": itemId,
+                "uniqueId": uniqueId,
+                "bindGold": bindGold,
+                "gold": gold,
+                "cost": cost,
+            }
+            lastRecords.append(_data)
+
+        box.client.onLeaseRecords(lastRecords)
+
+
 class PlayerCoinAuctionRecord(object):
 
     @staticmethod
@@ -776,16 +850,6 @@ class PlayerCoinAuctionRecord(object):
         # box.client.onGetPlayerCoinAuctionRecords(gbId, lastRecords)
         box.streamStringProxy(gzip.compress(json.dumps(lastRecords).encode('ascii')),
                               '', gameconst.StreamStringID.COIN_AUCTION_SALE_RECORD)
-
-    @classmethod
-    def clearMessageRecord(cls, gbId):
-        LOG_DBG(f'{cls.__name__}.clearMessageRecord::', gbId)
-        cls._clearMessageRecord(gbId)
-
-    @classmethod
-    def _clearMessageRecord(cls, gbId):
-        key = cls._getKey(gbId)
-        gameglobal.localBaseApp.getRedisClient().deletaTable(key)
 
     @classmethod
     def clearExpiredMessageRecords(cls, gbId):
@@ -916,16 +980,6 @@ class PlayerBuyAuctionItemRecord(object):
         LOG_DBG(f'{cls.__name__}.onGetMessageRecord:: messge --> ', cid, len(lastRecords))
         box.streamStringProxy(gzip.compress(json.dumps(lastRecords).encode('ascii')),
                               '', gameconst.StreamStringID.COIN_AUCTION_BUY_RECORD)
-
-    @classmethod
-    def clearMessageRecord(cls, gbId):
-        LOG_DBG(f'{cls.__name__}.clearMessageRecord::', gbId)
-        cls._clearMessageRecord(gbId)
-
-    @classmethod
-    def _clearMessageRecord(cls, gbId):
-        key = cls._getKey(gbId)
-        gameglobal.localBaseApp.getRedisClient().deletaTable(key)
 
     @classmethod
     def clearExpiredMessageRecords(cls, gbId):

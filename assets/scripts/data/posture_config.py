@@ -25,6 +25,6 @@ datas = _tools.RODict({
     }),
     "postureFailMsg": _tools.RODict({
         "ID": "postureFailMsg",
-        "value": 54000953,
+        "value": 54001810,
     })
 })

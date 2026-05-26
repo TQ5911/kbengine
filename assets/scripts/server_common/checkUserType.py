@@ -100,7 +100,7 @@ def checkValueProperty(pNameList, value, checkValue):
     # LOG_DBG("checkValueProperty checkValue ",  type(checkValue), checkValue)
     if isinstance(value, Iterable):
         checkIterProperty(pNameList, value, checkValue)
-    elif isinstance(value, userType.UserType):
+    elif isinstance(value, userType.UserTypeBase):
         checkObjProperty(pNameList, value, checkValue)
     elif value.__class__.__base__.__name__ == 'UserSingleType':
         checkObjProperty(pNameList, value, checkValue)

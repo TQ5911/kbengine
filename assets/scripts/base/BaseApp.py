@@ -28,7 +28,7 @@ import mailAssistor
 import elasticUtils
 
 from proto.interface_pb2 import BaseApp as BaseAppService
-from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal, AntiAddictionData, MapleServerInfo
+from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal, AntiAddictionData, MapleServerInfo, PatchVersionData
 
 from rpc import RpcChannel
 
@@ -118,7 +118,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         elasticUtils.ElasticUtils.init(self._initElasitc)
 
     def _initElasitc(self, *args):
-        LOG_IFO('init elastic', args)
+        LOG_INFO('init elastic', args)
 
     def setStartGbId(self, cursor, num):
         self.startGbId = cursor * ((1 << gameconst.SERVER_TIMESTAMP_BIT_SHIFT) // num)
@@ -134,7 +134,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
 
     def initAysncore(self):
         if not self.asyncTimer:
-            LOG_IFO('initAysncore')
+            LOG_INFO('initAysncore')
             self.asyncTimer = self.pyAddTimer(1, 0.1, gametimer.ASYNCORE_TICK)
 
     def onTimer(self, timerID, userData):
@@ -143,7 +143,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         if userData == gametimer.BASEAPP_TIMER_INIT:
             if self.initProcedures:
                 self.pyAddTimer(0.5, 0, gametimer.BASEAPP_TIMER_INIT)
-                LOG_IFO('waitting for baseapp init:', list(self.initProcedures.keys()))
+                LOG_INFO('waitting for baseapp init:', list(self.initProcedures.keys()))
                 return
             hostName = utils.getPythonAddr()
             stubIndex = formula.fetchStubIndex()
@@ -215,7 +215,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             if client and client.channel.dispatcher: continue
 
             addr, port = host['addr'], int(host['port'])
-            LOG_IFO('connect interface', addr, port)
+            LOG_INFO('connect interface', addr, port)
             self.interfaceClient[key] = InterfaceBaseappClient(self, (addr, port))
 
     def _callInterfaceApp(self, func, *args):
@@ -242,7 +242,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         poolsInfo = utils.checkDrawCardPoolTimeLimit(curTimestamp, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_TYPE_TIMER)
 
         if len(poolsInfo):
-            LOG_IFO('_checkDrawCardPoolTimeLimit', lastTimestamp, curTimestamp, poolsInfo)
+            LOG_INFO('_checkDrawCardPoolTimeLimit', lastTimestamp, curTimestamp, poolsInfo)
             self.broadcastToAllAvatar(gameconst.BASE, 'triggerTimeLimitGuaranteedReward', (poolsInfo,))
 
     # 以归档模式创建base实体，首先查询数据库中是否存在该实体，若存在则调用createBaseLocallyFromDB来创建
@@ -250,7 +250,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     def createArchiveStub(self, clsName, properties, globalName):
         self.preparingEntTypes.append(clsName)
         dbid = gameglobal.entityTypeToDBID.get(clsName)
-        LOG_IFO('createArchiveStub', clsName, globalName, dbid)
+        LOG_INFO('createArchiveStub', clsName, globalName, dbid)
         if not dbid:
             self._onArchiveStubLookup(clsName, 0, False, properties, globalName)
         else:
@@ -266,7 +266,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         return
 
     def _onArchiveStubLookup(self, clsName, dbid, box, properties, globalName):
-        LOG_IFO('_onArchiveStubLookup', clsName, dbid, box, globalName, properties)
+        LOG_INFO('_onArchiveStubLookup', clsName, dbid, box, globalName, properties)
         if box == False:
             if dbid:
                 # lookUpEntityByDBID的box参数只有两种情况会返回false
@@ -289,13 +289,13 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
                        globalName=globalName: self._onArchiveStubLoad(clsName, ent, databaseID, wasActive, globalName)
             )
         else:
-            LOG_IFO('[%s %s] has been loaded' % (clsName, dbid,))
+            LOG_INFO('[%s %s] has been loaded' % (clsName, dbid,))
 
         return
 
     def _onArchiveStubLoad(self, clsName, ent, databaseID, wasActive, globalName):
         if ent:
-            LOG_IFO('successful to load [%s %s] from database' % (clsName, databaseID,))
+            LOG_INFO('successful to load [%s %s] from database' % (clsName, databaseID,))
             # TODO:查下registerGlobally
             ent.onGlobalBase(True, globalName)
         else:
@@ -352,7 +352,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         gmCommand.onLookUpAvatar(base, role, uid, index, raw)
 
     def onDoCmdSucc(self, uid):
-        gmCommand.onBroadcastCmdSucc(uid)
+        gmCommand.onBroadcastCmdSuccess(uid)
 
     def onDoCmdFail(self, uid):
         gmCommand.onBroadcastCmdFail(uid)
@@ -407,7 +407,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self._callInterfaceApp('syncRegisterCount', None, intVal, None)
 
     def readhotfix(self):
-        LOG_IFO('do hotfix')
+        LOG_INFO('do hotfix')
         # hotfix = ''
         # with open(gameconst.HOTFIX_PATH, 'r', encoding='utf-8') as f:
         #     hotfix = f.read()
@@ -530,7 +530,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.doBaseappDataCallback(key, val)
 
     def sendDataToRelivedBaseapp(self, fromHostName, fromGroupOrder, fromBaseapp, accountNum, avatarNum):
-        LOG_IFO('sendDataToRelivedBaseapp', fromHostName, fromGroupOrder, fromBaseapp, accountNum, avatarNum)
+        LOG_INFO('sendDataToRelivedBaseapp', fromHostName, fromGroupOrder, fromBaseapp, accountNum, avatarNum)
         import game
         key = gameconst.GLOBALDATA_KEY_BASEAPP + ':' + fromHostName
         game.onGlobalData(key, fromBaseapp)
@@ -542,7 +542,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.avatarNum = avatarNum
 
         if gameglobal.localLoginStub:
-            LOG_IFO('set account counter', self.avatarNum)
+            LOG_INFO('set account counter', self.avatarNum)
             gameglobal.localLoginStub.accountNumCounter.setSum(self.accountNum)
 
     def onCellappRelive(self, cellIndex):
@@ -610,12 +610,12 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             if isOk:
                 self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
             else:
-                LOG_IFO('still waiting for all stub full prepare in lock')
+                LOG_INFO('still waiting for all stub full prepare in lock')
                 self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
 
     def doAntiAddiction(self):
         antiAddictionData = gameglobal.antiAddictionData
-        LOG_IFO("baseapp doAntiAddiction", antiAddictionData)
+        LOG_INFO("baseapp doAntiAddiction", antiAddictionData)
         if antiAddictionData[0] == gameconst.AntiAddictionTimeType.PERMIT:
             LOG_DBG("baseapp doAntiAddiction PERMIT", antiAddictionData[1])
         elif antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT:
@@ -624,17 +624,17 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             self.kickAllMinorAccountBatchly(iter(minorAccountCacheList), 10, 0.1)
 
     def kickAllMinorAccountBatchly(self, accountIter, batchNum, interval):
-        LOG_IFO("kickAllMinorAccountBatchly-----------", batchNum, interval)
+        LOG_INFO("kickAllMinorAccountBatchly-----------", batchNum, interval)
         for i in range(batchNum):
             (minorAccountName) = next(accountIter, (""))
             if not minorAccountName:
-                LOG_IFO("kickAllMinorAccountBatchly finish kick all minor account")
+                LOG_INFO("kickAllMinorAccountBatchly finish kick all minor account")
                 return
             minorAccount = gameglobal.localMinorAccountCache.get(minorAccountName, None)
             if not minorAccount:
-                LOG_IFO("kickAllMinorAccountBatchly minor account alerady logout")
+                LOG_INFO("kickAllMinorAccountBatchly minor account alerady logout")
                 return
-            LOG_IFO("kickAllMinorAccountBatchly account=%s" % (minorAccount.__ACCOUNT_NAME__))
+            LOG_INFO("kickAllMinorAccountBatchly account=%s" % (minorAccount.__ACCOUNT_NAME__))
             minorAccount.destroyAccount(gameconst.OFFLINE_REASON_ANIT_ADDICTION)
         self.addTimerCB(interval, 'kickAllMinorAccountBatchly', (accountIter, batchNum, interval), gametimer.TIMER_TAG_KICK_ALL_MINOR_ACCOUNT_TIMER)
 
@@ -655,3 +655,18 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         for client in self.interfaceClient.values():
             if client and client.channel.dispatcher:
                 client.interfaceStub.setMapleServerInfo(None, _req, None)
+
+    def updateRequiredClientVersion(self, platId, patchVerStr):
+        LOG_DBG("updateRequiredClientVersion", platId, patchVerStr)
+        _req = PatchVersionData()
+        _req.platId = platId
+        _req.patchVerStr = patchVerStr
+
+        for client in self.interfaceClient.values():
+            if client and client.channel.dispatcher:
+                client.interfaceStub.updatePatchVersionData(None, _req, None)
+
+    def doUpdateFreeTicketNumConfig(self, subType, expandInfoList):
+        now = utils.curTS()
+        LOG_INFO("doUpdateFreeTicketNumConfig", now, subType, expandInfoList)
+        self.broadcastToAllAvatar(gameconst.BASE, 'onUpdateFreeTicketNumConfig', (subType,))

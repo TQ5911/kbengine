@@ -25,9 +25,6 @@ class IFeiShu():
         self.lastFSTime = int(time.time())
 
     def reportErrorMsg(self, msg):
-        # if "engine can't find navigate point" in msg:
-        #     return
-
         if len(self.msgList) == 0:
             self.msgList.append("time: %s\n" % time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         self.msgList.append("%s \n\n" % msg)
@@ -102,7 +99,7 @@ class IFeiShu():
                            timeoutSec=1)
 
     def onReportResult(self, httpcode, data, headers, success, url, msgs, channel):
-        LOG_IFO('onReportResult: code: {}, data: {}, headers: {}, success: {}, url: {}, channel: {}'.format(httpcode, data, headers, success, url, channel))
+        LOG_INFO('onReportResult: code: {}, data: {}, headers: {}, success: {}, url: {}, channel: {}'.format(httpcode, data, headers, success, url, channel))
         if channel != 'wechat' and (httpcode != 200 or KBEngine.publish()):
             # report to wechat
             self.wxReportDirect(msgs)

@@ -1456,7 +1456,7 @@ class LogTrackingMgr:
 
     # 非法速度统计
     @staticmethod
-    def Illegal_Speed_Stat(gbId, entityId, playerName, spaceNo, position, speed, overRate, continuousCount, **kwargs):
+    def Illegal_Speed_Stat(gbId, entityId, playerName, spaceNo, position, speed, overRate, speedCheckWindowSize, speedCheckCountPerWindow, speedCheckContinuousUnit, **kwargs):
         args = {}
         args["trackName"] = "Illegal_Speed_Stat"
         args["gbId"] = gbId
@@ -1466,7 +1466,9 @@ class LogTrackingMgr:
         args["position"] = str(position)
         args["speed"] = speed
         args["overRate"] = overRate
-        args["continuousCount"] = continuousCount
+        args["speedCheckWindowSize"] = speedCheckWindowSize
+        args["speedCheckCountPerWindow"] = speedCheckCountPerWindow
+        args["speedCheckContinuousUnit"] = speedCheckContinuousUnit
         LogTrackingMgr.LOG(args, kwargs)
 
     @staticmethod

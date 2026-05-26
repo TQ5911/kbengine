@@ -17,6 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
+        "typeID": 1,
         "currencyFrom": 30000001,
         "currencyTo": 30000002,
         "exchangeType": 0,
@@ -26,6 +27,7 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
+        "typeID": 1,
         "currencyFrom": 30000021,
         "currencyTo": 30000002,
         "exchangeType": 0,
@@ -35,6 +37,7 @@ datas = _tools.RODict({
     }),
     3: _tools.RODict({
         "ID": 3,
+        "typeID": 2,
         "currencyFrom": 30000001,
         "currencyTo": 30000013,
         "exchangeType": 0,
@@ -44,6 +47,7 @@ datas = _tools.RODict({
     }),
     4: _tools.RODict({
         "ID": 4,
+        "typeID": 2,
         "currencyFrom": 30000021,
         "currencyTo": 30000013,
         "exchangeType": 0,
@@ -53,6 +57,7 @@ datas = _tools.RODict({
     }),
     5: _tools.RODict({
         "ID": 5,
+        "typeID": 3,
         "currencyFrom": 30000013,
         "currencyTo": 30000021,
         "exchangeType": 1,
@@ -62,6 +67,7 @@ datas = _tools.RODict({
     }),
     6: _tools.RODict({
         "ID": 6,
+        "typeID": 4,
         "currencyFrom": 30000001,
         "currencyTo": 30000235,
         "exchangeType": 1,
@@ -71,6 +77,7 @@ datas = _tools.RODict({
     }),
     7: _tools.RODict({
         "ID": 7,
+        "typeID": 5,
         "currencyFrom": 30000001,
         "currencyTo": 30000021,
         "exchangeType": 0,

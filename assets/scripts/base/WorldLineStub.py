@@ -33,8 +33,8 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         interval = 60 * branchData_set.datas["Branch_mergeInterval"]["value"]
         waitTime = 60 * branchData_set.datas["Branch_mergeWaitingTime"]["value"]
 
-        self.pyAddTimer(interval, interval, gametimer.WORLD_LINE_CHECK_LINE_MERGE)
-        self.pyAddTimer(interval + waitTime, interval, gametimer.WORLD_LINE_DO_LINE_MERGE)
+        self.pyAddTimer(interval, interval, gametimer.CHECK_LINE_MERGE)
+        self.pyAddTimer(interval + waitTime, interval, gametimer.DO_LINE_MERGE)
         self.pyAddTimer(5, 5, gametimer.CLEAR_WORLDLINE_ENTER_TIME_OUT)
 
     def doNext(self):
@@ -45,9 +45,9 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onTimer(self, tid, userArg):
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
-        elif userArg == gametimer.WORLD_LINE_CHECK_LINE_MERGE:
+        elif userArg == gametimer.CHECK_LINE_MERGE:
             self._checkLineMerge()
-        elif userArg == gametimer.WORLD_LINE_DO_LINE_MERGE:
+        elif userArg == gametimer.DO_LINE_MERGE:
             self._doLineMerge()
         elif userArg == gametimer.CLEAR_WORLDLINE_ENTER_TIME_OUT:
             self.onClearEnterTimeOut(gameconst.WORLDLINE_ENTER_TIME_OUT_DUR)
@@ -75,7 +75,7 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             self.lineReadRecoverList.append(lineNo)
 
     def onLineSpaceReady(self, spaceNo):
-        LOG_IFO('onLineSpaceReady', spaceNo)
+        LOG_INFO('onLineSpaceReady', spaceNo)
         iLineStubBase.ILineStubBase.onLineSpaceReady(self, spaceNo)
         lineNo = formula.parseLineNo(spaceNo)
 
@@ -86,7 +86,7 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         super(WorldLineStub, self).onCellappRelive(groupOrder)
 
     def enterLineSuccess(self, lineNo, box, gbId, succInfo):
-        LOG_IFO('enterLineSuccess', lineNo, box.id, gbId, succInfo)
+        LOG_INFO('enterLineSuccess', lineNo, box.id, gbId, succInfo)
         super(WorldLineStub, self).enterLineSuccess(lineNo, box, gbId, succInfo)
         playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not playerVal:

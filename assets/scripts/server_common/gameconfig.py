@@ -271,7 +271,7 @@ def gmGetCutomConfig(name):
 def setCustomConfig(name, value, isMasterBaseapp=True, isInitSet=False):
     import utils
 
-    LOG_IFO('setCustomConfig', name, value)
+    LOG_INFO('setCustomConfig', name, value)
     info = CONFIG.get(name)
     if not info:
         return "cannot find config [%s]" % name, False
@@ -416,6 +416,30 @@ def tapTapBindPhoneVerifyUrl():
     except:
         url = ''
     return url
+
+@cache
+def reportUrl():
+    try:
+        url = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/reportUrl')
+    except:
+        url = ''
+    return url
+
+@cache
+def patchVersion():
+    try:
+        versionStr = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/patchVersion')
+    except:
+        versionStr = '0.0.0.0'
+    return versionStr
+
+@cache
+def appVersion():
+    try:
+        versionStr = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/appVersion')
+    except:
+        versionStr = '0.0.0.0'
+    return versionStr
 
 @cache
 def gmHttpAPISecret():
@@ -962,6 +986,18 @@ def auctionServerHost():
     except:
         host = '192.168.10.31:2010'
     return host
+
+@cache
+def leaseServerAddress():
+    try:
+        host = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/leaseServerHost')
+    except:
+        host = '127.0.0.1:2015'
+    return host
+
+@config(Bool, None, '是否开启租赁行', (ConfigFlag.CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+def enableLease():
+    return 0
 
 @cache
 def isCrossServer():

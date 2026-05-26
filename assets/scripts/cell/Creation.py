@@ -66,7 +66,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 self.setState(gameconst.StateEnum.Moving)
         elif creationType == 'LockTarget':
             if not self.releaseTarget:
-                LOG_IFO('Creation has no releaseTarget', self.creationId)
+                LOG_INFO('Creation has no releaseTarget', self.creationId)
                 return
             self.addTimerCB(0.5, '_moveToTarget', (), gametimer.TIMER_TAG_MOVE_TO_TARGET)
 
@@ -79,7 +79,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
         elif creationType == 'FollowTarget':
             if not self.releaseTarget:
-                LOG_IFO('Creation has no releaseTarget', self.creationId)
+                LOG_INFO('Creation has no releaseTarget', self.creationId)
                 return
             self.addTimerCB(0.5, '_moveToTarget', (), gametimer.TIMER_TAG_MOVE_TO_TARGET)
 
@@ -349,7 +349,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     def getHost(self):
         return KBEngine.entities.get(self.hostId, None)
 
-    def isAttackable(self, src):
+    def canAttackable(self, src):
         return False
 
     def _addTrap(self):
@@ -510,7 +510,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         else:
             super(Creation, self).onTimer(tid, userData)
 
-    def onMoveOver( self, controllerID, userData ):
+    def onMoveOver( self, controllerId, userData ):
         if userData==gamemove.ROUND_TRIP_MOVE:
             distance = self.speed * self.creationLiveTime/2.0
             dstPosition = sMath.getForwardPos(self.position, self.direction[2]+math.pi, distance)
@@ -518,7 +518,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Moving)):
                 self.setState(gameconst.StateEnum.Moving)
         else:
-            super(Creation, self).onMoveOver(controllerID, userData)
+            super(Creation, self).onMoveOver(controllerId, userData)
 
         self.moveController = 0
         self.removeState(gameconst.StateEnum.Moving)
@@ -596,7 +596,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         hostEnt = self.getHost()
         if hostEnt:
             hostEnt.removeCreation(self.id)
-        self.clearAllTargetTypeCache(True)
+        self.doClearAllTargetTypeCache(True)
 
     def getTargetEntityIds(self):
         if self.selectActionType==self.CREATION_AREA_CIRCLE:
@@ -614,7 +614,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if not self.checkCombatRangeY(e):
                     continue
 
-                if not utils.isInAttackArea(e, self.position, _radius):
+                if not utils.isAttackArea(e, self.position, _radius):
                     continue
 
                 if utils.checkTargetTypeValid(self.target, self, e):
@@ -763,8 +763,8 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if self.useTargetTypeCacheFlag and entity.IsCombatUnit:
             utils.isEnemy(self, entity)
             utils.isFriend(self, entity)
-            if not self.checkTargetTypeTimeId:
-                self.checkTargetTypeTimeId = self.pyAddTimer(5, 5, gametimer.CHECK_TARGET_TYPE_TIMER)
+            if not self.checkTargetTypeTimerId:
+                self.checkTargetTypeTimerId = self.pyAddTimer(5, 5, gametimer.CHECK_TARGET_TYPE_TIMER)
 
     def removeEnterTrapEntity(self, entity):
         if entity.id in self.trapEntities:
@@ -772,10 +772,10 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
         if entity.IsCombatUnit:
             self.removeTargetTypeCache(entity)
-            allCacheSetLen = len(self.enemyCacheSet) + len(self.notEnemyCacheSet)
-            if allCacheSetLen == 0 and self.checkTargetTypeTimeId > 0:
-                self.pyDelTimer(self.checkTargetTypeTimeId, gametimer.CHECK_TARGET_TYPE_TIMER)
-                self.checkTargetTypeTimeId = 0
+            allCacheSetLen = len(self.enemiesCacheSet) + len(self.notEnemiesCacheSet)
+            if allCacheSetLen == 0 and self.checkTargetTypeTimerId > 0:
+                self.pyDelTimer(self.checkTargetTypeTimerId, gametimer.CHECK_TARGET_TYPE_TIMER)
+                self.checkTargetTypeTimerId = 0
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         if self.delayDestroyTimerID > 0:
@@ -790,7 +790,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         #enter时不checkTargetType，关系可能会变
         if self.checkArea(entity):
             if self.type == 'Linar' or self.type == 'LockTarget':
-                self.cancelMoveController()
+                self.removeMoveController()
                 self.cancleLockTarget = True
 
             self.addEnterTrapEntity(entity)
@@ -805,7 +805,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     if len(effectEntIds) < self.targetNum:
                         self.doEnterAction(entity)
 
-    def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerID, userArg):
+    def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         if self.delayDestroyTimerID > 0:
             return
 
@@ -822,19 +822,19 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, effectEntIds)
                     self.reChooseTarget()
 
-    def cancelMoveController(self):
+    def removeMoveController(self):
         if self.moveController:
             self.cancelController(self.moveController)
 
         self.moveController = 0
 
-    def onMove(self, controllerID, userData):
+    def onMove(self, controllerId, userData):
         pass
 
     def initCombatProps(self, hpPercent, mpPercent):
         pass
 
-    def onMoveFailure(self, controllerID, userData):
+    def onMoveFailure(self, controllerId, userData):
         LOG_DBG('myh: onMoveFailure', userData)
         # self.moveController = self.moveToPoint(userData, 5.0, 0.0, None, 1, 1)
 

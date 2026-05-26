@@ -17,6 +17,7 @@ import meridian_meridian as MMD
 import meridian_acupoint as MAD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import LogTrackingMgr
+import actionContext
 
 class IMeridian(object):
     """ 
@@ -35,7 +36,7 @@ class IMeridian(object):
         """经脉系统登录处理"""
         if not self.checkMeridianLimit():
             return
-        # LOG_IFO("IMeridian.meridianOnLogin")
+        # LOG_INFO("IMeridian.meridianOnLogin")
         self._refreshMeridianProperty()
         
         #
@@ -75,7 +76,7 @@ class IMeridian(object):
                 indexList.append(slotIdx)
 
             self.cell.onMeridianAward(indexList)
-            # LOG_IFO("IMeridian._refreshMeridianProperty: {}".format(indexList))
+            # LOG_INFO("IMeridian._refreshMeridianProperty: {}".format(indexList))
             indexList = []
 
     @gamedecorator.checkGameconfigEnable('UIPracticePanel')
@@ -95,7 +96,7 @@ class IMeridian(object):
         """
         meridianData = self.meridianData.toClientDict()
         if login:
-            LOG_IFO("IMeridian._syncMeridianDataToClient: {}".format(meridianData))
+            LOG_INFO("IMeridian._syncMeridianDataToClient: {}".format(meridianData))
         self.client.onGetMeridianData(meridianData['curSlot'], meridianData['maxSlots'], meridianData['slots'])
 
     @gamedecorator.checkGameconfigEnable('UIPracticePanel')
@@ -154,7 +155,7 @@ class IMeridian(object):
 
         self.deductWealth(srcType, deductVal, opUUID, detail)
         ret, newLevel = self.meridianData.levelUpPoint(slotIdx, pointIdx)
-        LOG_IFO("IMeridian.reqLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
+        LOG_INFO("IMeridian.reqLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
         if ret:
             self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)])
             self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
@@ -162,6 +163,7 @@ class IMeridian(object):
             self._syncMeridianDataToClient()
             
             LogTrackingMgr.LogTrackingMgr.Meridian_UpGrade(opUUID, self.gbID, slotIdx, pointIdx, newLevel)
+            self.triggerAchievementWithCtx(gameconst.AchieveType.MERIDIAN, actionContext.AchievementCtx(slotIdx=slotIdx))
         else:
             LOG_DBG("IMeridian.reqLevelUpMeridianPoint: level up failed {}, {}, {}".format(
                 slotIdx, pointIdx, ret))
@@ -214,7 +216,7 @@ class IMeridian(object):
             
         self.deductWealth(srcType, deductVal, opUUID, detail)
         ret, newSlot = self.meridianData.doEnhanceCurSlot(slotIdx)
-        LOG_IFO("IMeridian.reqEnhanceMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
+        LOG_INFO("IMeridian.reqEnhanceMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
         if ret:
             self.cell.onMeridianAward([slotIdx])
             self.client.onEnhanceMeridian(slotIdx)
@@ -238,7 +240,7 @@ class IMeridian(object):
 
         for _ in range(num):
             ret, newLevel = self.meridianData.levelUpPoint(slotIdx, pointIdx)
-            LOG_IFO("IMeridian.gmLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
+            LOG_INFO("IMeridian.gmLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
             if ret:
                 self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)])
                 self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
@@ -256,7 +258,7 @@ class IMeridian(object):
             return
         
         ret, newSlot = self.meridianData.doEnhanceCurSlot(slotIdx)
-        LOG_IFO("IMeridian.gmLevelUpMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
+        LOG_INFO("IMeridian.gmLevelUpMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
         if ret:
             self.cell.onMeridianAward([slotIdx])
             self.client.onEnhanceMeridian(slotIdx)

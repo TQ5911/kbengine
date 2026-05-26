@@ -30,18 +30,6 @@
             <Default> {} </Default>
         </dungeonPlayerReliveRecordDic>
 
-        <dungeonGoodManColl>
-            <Type> PYTHON </Type>
-            <Flags> CELL_PRIVATE </Flags>
-            <Default> set() </Default>
-        </dungeonGoodManColl>
-
-        <dungeonGoodManActId>
-            <Type>      ACTIVITY_ID        </Type>
-            <Flags>     CELL_PRIVATE       </Flags>
-            <Default>   0                  </Default>
-        </dungeonGoodManActId>
-
         <dungeonCompleteDelayNotifyTimer>
             <Type> UINT64 </Type>
             <Flags> CELL_PRIVATE </Flags>

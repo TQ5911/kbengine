@@ -34,15 +34,15 @@ class Baseapp2InterfaceRpcService(Interface):
         pass
 
     def gameConfigChangedOnBaseapp(self, rpc_controller, request, done):
-        LOG_IFO('gameConfigChangedOnBaseapp: ', request.name, request.val)
+        LOG_INFO('gameConfigChangedOnBaseapp: ', request.name, request.val)
         gameconfig.gmSetCutomConfig(request.name, request.val, False)
 
     def cacheConfigOnBaseapp(self, rpc_controller, request, done):
-        LOG_IFO('cacheConfigOnBaseapp: ', request.name, request.val)
+        LOG_INFO('cacheConfigOnBaseapp: ', request.name, request.val)
         gameconfig.setCacheConfig(request.name, request.val)
 
     def syncCacheConfigOnBaseapp(self, rpc_controller, request, done):
-        LOG_IFO('syncCacheConfigOnBaseapp', request.name, request.val)
+        LOG_INFO('syncCacheConfigOnBaseapp', request.name, request.val)
         names, values = gameconfig.unpackInterfaceDiffCache(request.name, request.val)
         for i in range(0, min(len(names), len(values))):
             gameconfig.setCacheConfig(names[i], values[i])
@@ -59,7 +59,7 @@ class Baseapp2InterfaceRpcService(Interface):
         gamerefresh.refreshData(args)
 
     def syncRegisterCount(self, rpc_controller, request, done):
-        LOG_IFO('sync register count from base:', request.value)
+        LOG_INFO('sync register count from base:', request.value)
         gameglobal.registerCount = int(request.value)
 
     def activeTick(self, rpc_controller, request, done):
@@ -67,7 +67,7 @@ class Baseapp2InterfaceRpcService(Interface):
         self.baseappStub.activeTickCallback(None, Void(), None)
 
     def setAccountComp(self, rpc_controller, request, done):
-        LOG_IFO('setAccountComp:', request)
+        LOG_INFO('setAccountComp:', request)
         _expire = utils.curTS() + gameconst.AUTH_AVATAR_LOGIN_EXPIRE_TIME
         gameglobal.accountCompIdCache[request.accountName] = (_expire, request.compID)
 
@@ -83,12 +83,18 @@ class Baseapp2InterfaceRpcService(Interface):
     def updateAntiAddictionData(self, rpc_controller, request, done):
         timeType = request.timeType
         timestamp = request.timestamp
-        LOG_IFO('updateAntiAddictionData:', timeType, timestamp)
+        LOG_INFO('updateAntiAddictionData:', timeType, timestamp)
         gameglobal.antiAddictionData = [timeType, timestamp]
 
     def setMapleServerInfo(self, rpc_controller, request, done):
         gameglobal.mapleServerInfo = json.loads(request.data)
-        LOG_IFO('setMapleServerInfo:', gameglobal.mapleServerInfo)
+        LOG_INFO('setMapleServerInfo:', gameglobal.mapleServerInfo)
+
+    def updatePatchVersionData(self, rpc_controller, request, done):
+        platId = request.platId
+        patchVerStr = request.patchVerStr
+        LOG_INFO('updatePatchVersionData:', platId, patchVerStr)
+        gameglobal.requiredClientVersion[platId] = patchVerStr
 
 class BaseappClientMgr(object):
     def __init__(self):
@@ -96,7 +102,7 @@ class BaseappClientMgr(object):
         self.syncFlag = False
 
     def handleNewConnection(self, tcpConn):
-        LOG_IFO('handleNewConnection', tcpConn.peername)
+        LOG_INFO('handleNewConnection', tcpConn.peername)
         interfaceService = Baseapp2InterfaceRpcService(self, tcpConn)
         tcpConn.set_channel_interface_obj(interfaceService)
         self.clients[tcpConn.peername] = interfaceService
@@ -112,7 +118,7 @@ class BaseappClientMgr(object):
                 invalidClients.append(name)
 
         for name in invalidClients:
-            LOG_IFO('checkClicentsActive: remove baseapp client', name)
+            LOG_INFO('checkClicentsActive: remove baseapp client', name)
             self.clients.pop(name)
 
 
@@ -125,10 +131,10 @@ def startRpcServer():
     hostList = gameconfig.interfaceRpcHostList()
     for host in hostList:
         addr, port = host['addr'], int(host['port'])
-        LOG_IFO('start rpc server on:', addr, port)
+        LOG_INFO('start rpc server on:', addr, port)
         try:
             tcpServer = TcpServer.TcpServer(addr, port, None, connMgr)
             KBEngine.addTimer(1, 60, lambda timerId: connMgr.checkClicentsActive())
             break
         except Exception as e:
-            LOG_IFO('start rpc server on: %s, %s, fail: %s' % (addr, port, e))
+            LOG_INFO('start rpc server on: %s, %s, fail: %s' % (addr, port, e))

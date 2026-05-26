@@ -88,6 +88,10 @@ class ClientBuffs(userType.UserDictType):
 
 
 class ServerBuffs(userType.UserDictType):
+    """
+    SERVER_BUFFS
+    Skillmanager.buffMgrDic
+    """
     def __init__(self):
         super(ServerBuffs, self).__init__()
         self.buffTagSet = set()
@@ -119,8 +123,8 @@ class ServerBuffs(userType.UserDictType):
         return self[buffId].get(buffSrcKey)
 
     def doAddBuff(self, owner, buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs):
-        LOG_DBG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
-        owner.combatDebugMsg('doAddBuff: buffId:%s, level:%s, duration:%s, releaseRoleId:%s, releaseRoleName:%s, buffSrcType:%s, srcKey:%s, rootContext:%s',
+        #LOG_DBG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
+        owner.debugCombatMsg('doAddBuff: buffId:%s, level:%s, duration:%s, releaseRoleId:%s, releaseRoleName:%s, buffSrcType:%s, srcKey:%s, rootContext:%s',
                                      buffId, level, duration, releaseRoleId, releaseRoleName, srcType, srcKey, rootContext)
         self.setdefault(buffId, {})
         isAddBySelf = True if releaseRoleId == owner.id else False
@@ -132,7 +136,7 @@ class ServerBuffs(userType.UserDictType):
         else :
             buffVal.initBuff(owner,**kwargs)
         self.buffTagSet = buffVal.addBuffTags(self.buffTagSet)
-        LOG_DBG('added buff', buffVal)
+        #LOG_DBG('added buff', buffVal)
         return buffVal
 
     def hasBuffTag(self, tag):
@@ -158,7 +162,7 @@ class ServerBuffs(userType.UserDictType):
         if buffId not in self:
             return
         LOG_DBG("trace removeBuff ", buffId, buffSrcKeys, isFinished, removeType)
-        owner.combatDebugMsg('removeBuff: buffId:%s, buffSrcKeys:%s, isFinished:%s, removeType:%s',
+        owner.debugCombatMsg('removeBuff: buffId:%s, buffSrcKeys:%s, isFinished:%s, removeType:%s',
                                      buffId, buffSrcKeys, isFinished, removeType)
         buffSrcKeys = buffSrcKeys or list(self[buffId].keys())
         if type(buffSrcKeys) not in (tuple, list):
@@ -192,12 +196,6 @@ class ServerBuffs(userType.UserDictType):
 
             removedKeys.append(buffKey)
 
-            # fromEnt = KBEngine.entities.get(buffVal.releaseRoleId)
-            # if fromEnt and fromEnt.id != owner.id:
-            #     fromEnt.sendCombatMsg(MBD.datas.targetLoseBuff, [buffVal.level, buffVal.getBuffName(buffVal.buffId),
-            #                                                      owner.name])
-            # owner.sendCombatMsg(MBD.datas.loseBuff, [buffVal.level, buffVal.getBuffName(buffVal.buffId)])
-
         if not isModify:
             return
 
@@ -214,8 +212,6 @@ class ServerBuffs(userType.UserDictType):
         for buffMap in self.values():
             for buff in buffMap.values():
                 self.buffTagSet = buff.addBuffTags(self.buffTagSet)
-
-        owner.broadcastRemoveBuffEvent(buffId)
 
     def checkValidOnLogin(self, owner,tsLastOffline):
         rmBuffs = {}
@@ -288,7 +284,7 @@ class Buff(userType.UserSingleType):
         cls.getBuffData.cache_clear()
         cls.getBuffEffectList.cache_clear()
         cls.getKind.cache_clear()
-        cls.getDeadDontRemove.cache_clear()
+        cls.fetchDeadDontRemove.cache_clear()
         cls.getEndByTime.cache_clear()
         cls.getEndBySkill.cache_clear()
         cls.getEndByBeat.cache_clear()
@@ -423,7 +419,7 @@ class Buff(userType.UserSingleType):
 
     @staticmethod
     @functools.lru_cache(1024)
-    def getDeadDontRemove(buffId):
+    def fetchDeadDontRemove(buffId):
         return Buff.getBuffData(buffId).get('deadDontRemove')
 
     @staticmethod
@@ -630,7 +626,7 @@ class Buff(userType.UserSingleType):
             owner.removeListener('onHit', eventKey)
 
         if isFinished:
-            owner.onEffectEvent('onBuffEnd', owner.id, owner.id, effectEventCtx.BuffEventCtx(self.buffId,
+            owner.onEffectEventCall('onBuffEnd', owner.id, owner.id, effectEventCtx.BuffEventCtx(self.buffId,
                                                                                              self.getTag(self.buffId),
                                                                                              removeType))
 
@@ -679,7 +675,7 @@ class Buff(userType.UserSingleType):
             owner.removeBuff(self.buffId, (self.srcKey,), True, gameconst.RemoveType.RTEnumEndByAtt)
 
     def isRemoveOnDead(self):
-        if self.getDeadDontRemove(self.buffId):
+        if self.fetchDeadDontRemove(self.buffId):
             return False
         return True
 
@@ -687,30 +683,6 @@ class Buff(userType.UserSingleType):
         if self.getOffLineLast(self.buffId):
             return True
         return False
-
-    def pauseEffects(self, owner):
-        if self.isPause:
-            LOG_WARN("pauseEffects has already paused", self.buffId)
-            return
-
-        self.isPause = True
-        buffCaller = self._getEffectCaller()
-        for effectId in list(self.effectDic.keys()):
-            effect = self.effectDic.get(effectId)
-            LOG_DBG("pauseEffects effect ", effect)
-            effect and effect.pauseEffect(owner, buffCaller)
-
-    def restartEffects(self, owner):
-        if not self.isPause:
-            LOG_WARN("restartEffects has not paused", self.buffId)
-            return
-
-        self.isPause = False
-        buffCaller = self._getEffectCaller()
-        for effectId in list(self.effectDic.keys()):
-            effect = self.effectDic.get(effectId)
-            LOG_DBG("restartEffects effect ", effect)
-            effect and effect.restartEffect(owner, buffCaller)
 
     def resetTimerId(self):
         self.removeTimerId = 0

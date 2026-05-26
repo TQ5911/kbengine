@@ -52,7 +52,7 @@ class IGuildTrainCell(object):
         targetValue = func(targetLevel)
         propName = gtData['fightProp']
 
-        LOG_IFO('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel, score)
+        LOG_INFO('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel, score)
         self.addProp(propName, targetValue - curValue, gameconst.SourceType.SrcTpGuildTrain)
         self.onUpdateGuildTrainScore(score)
 

@@ -98,7 +98,28 @@ datas = _tools.RODict({
     }),
     242241: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
+    }),
+    242251: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
+    242261: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
+    242271: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
+    242281: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
+    242301: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
+    242311: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
+    242321: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
     })
 })
 minKey = 241001
-maxKey = 242241
+maxKey = 242321

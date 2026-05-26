@@ -1674,7 +1674,117 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": (1, 2)
+    }),
+    167: _tools.RODict({
+        "ID": 167,
+        "name": "BONUS_SRC_REDEEM_EXPIRE_TAKE_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    168: _tools.RODict({
+        "ID": 168,
+        "name": "BONUS_SRC_DROP_RETURN_BACK_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    169: _tools.RODict({
+        "ID": 169,
+        "name": "BONUS_SRC_DROP_REMOVE_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    170: _tools.RODict({
+        "ID": 170,
+        "name": "BONUS_SRC_EQUIP_SOUL",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    171: _tools.RODict({
+        "ID": 171,
+        "name": "BONUS_SRC_RECOVERY_TICKET",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    172: _tools.RODict({
+        "ID": 172,
+        "name": "BONUS_SRC_ENTER_ABYSS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    173: _tools.RODict({
+        "ID": 173,
+        "name": "BONUS_SRC_ADD_ABYSS_TIMES",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    174: _tools.RODict({
+        "ID": 174,
+        "name": "BONUS_SRC_ABYSS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001998,
+        "rewardMessage": ('<color=&color211>归墟奖励</color>', '战利品：{0}'),
+        "group": 1
+    }),
+    175: _tools.RODict({
+        "ID": 175,
+        "name": "BONUS_SRC_ENTER_ABYSS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    176: _tools.RODict({
+        "ID": 176,
+        "name": "BONUS_SRC_ABYSS_AUTO_RENEW",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    177: _tools.RODict({
+        "ID": 177,
+        "name": "BONUS_SRC_ABYSS_FAILED_REWIND",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
     })
 })
 minKey = 1
-maxKey = 166
+maxKey = 177

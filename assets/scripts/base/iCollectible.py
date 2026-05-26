@@ -10,10 +10,11 @@ import collect_details as  PDETAIL
 from avatarCollectInfo import collectItem
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import LogTrackingMgr
+import actionContext
 
 class ICollectible(object):
     def collectOnLogin(self):
-        LOG_IFO('call collectOnLogin')
+        LOG_INFO('call collectOnLogin')
         self._refreshProperty()
 
     def _refreshProperty(self):
@@ -33,7 +34,7 @@ class ICollectible(object):
             propIndexList.append(propIndex)
 
         self.cell.onCollectAward(propIndexList, 0)
-        LOG_IFO('call _refreshProperty done')
+        LOG_INFO('call _refreshProperty done')
 
     def sendCollectInfo(self):
         # 发送当前属性信息和收集情况
@@ -43,12 +44,12 @@ class ICollectible(object):
                 item.toSavedDict()
             )
         self.client.onGetCollectInfo(clientData)
-        LOG_IFO('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
+        LOG_INFO('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
 
     @gamedecorator.checkGameconfigEnable('collection')
     def reqMark(self, exposed, collectID, isMark):
         # 标记收集项高亮显示
-        LOG_IFO('begin reqMark collectID', collectID, ' isMark', isMark)
+        LOG_INFO('begin reqMark collectID', collectID, ' isMark', isMark)
         info = PDETAIL.datas.get(collectID, None)
         if not info:
             gameengine.panicStack('in reqMark, collectID not exist in table, id :', collectID)
@@ -59,12 +60,12 @@ class ICollectible(object):
         self.collectibleData.collectibleDict.setdefault(collectID, collectItem(collectID))
         self.collectibleData.collectibleDict[collectID].onMark(isMark)
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
-        LOG_IFO('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
+        LOG_INFO('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
 
     @gamedecorator.checkGameconfigEnable('collection')
     def reqCollect(self, exposed, bagType, bagGridID, itemUniqueID, useBind, collectID, collectGridID):
         # 获取收集项的要求
-        LOG_IFO('begin reqCollect bagType', bagType, ' bagGridID', bagGridID, ' itemUniqueID', itemUniqueID, ' collectID', collectID, ' collectGridID', collectGridID)
+        LOG_INFO('begin reqCollect bagType', bagType, ' bagGridID', bagGridID, ' itemUniqueID', itemUniqueID, ' collectID', collectID, ' collectGridID', collectGridID)
         info = PDETAIL.datas.get(collectID, None)
         if not info:
             gameengine.panicStack('in reqCollect, collectID not exist in table, id :', collectID)
@@ -100,10 +101,10 @@ class ICollectible(object):
             LOG_WARN('in reqCollect, _completeCollect not succeed, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
             return
         # 更新收集进度
-        LOG_IFO('before update, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+        LOG_INFO('before update, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
         self.collectibleData.collectibleDict[collectID].onComplete(collectGridID)
         if not self.collectibleData.collectibleDict[collectID].isCompleteAll(equipment_len + prop_len):
-            LOG_IFO('reqCollect not Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+            LOG_INFO('reqCollect not Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
             self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
             LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
                 self.gbID,
@@ -119,7 +120,13 @@ class ICollectible(object):
         self._onScore(collectProp, opUUID)
         # 发送进度信息给客户端
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
-        LOG_IFO('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+        LOG_INFO('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
+
+        self.achievementInfo.triggerAchieveByType(
+            self,
+            gameconst.AchieveType.COLLECT,
+            actionContext.AchievementCtx()
+        )
 
     def _completeCollect(self, bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, opUUID):
         itemCount = 1
@@ -151,7 +158,7 @@ class ICollectible(object):
             return False
 
         if bagItem.isEquipmentItem():
-            if not bagItem.isGood():
+            if not bagItem.isGood(self.gbID):
                 LOG_WARN('     in _completeCollect, item is not good:', bagGridID)
                 return False
 
@@ -168,7 +175,7 @@ class ICollectible(object):
                 return False
             deductWealthVal.addWealthByObjList([bagItem])
         else:
-            LOG_IFO(' try use item ', itemID, ' itemCount ', itemCount, ' useBind', useBind)
+            LOG_INFO(' try use item ', itemID, ' itemCount ', itemCount, ' useBind', useBind)
             if useBind == gameconst.ItemBindType.BIND:
                 deductWealthVal.addWealthByItemId(itemID, itemCount, gameconst.ItemBindType.BIND)
             elif useBind == gameconst.ItemBindType.NORMAL:
@@ -190,7 +197,7 @@ class ICollectible(object):
         propIndexList = [collectProp] if collectProp else []
 
         self.cell.onCollectAward(propIndexList, opUUID)
-        LOG_IFO('_onScore propList ', propIndexList)
+        LOG_INFO('_onScore propList ', propIndexList)
 
 
     def _checkInUnavailableClass(self, info, collectID):

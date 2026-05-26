@@ -10,8 +10,8 @@ import DuelAttrInfo
 import gametimer
 import gamedecorator
 import duel_config as D_CD
-import conflict_conflict_def as CCD
-import conflict_status_def as CSD
+import conflict_conflict_def as C_C_DD
+import conflict_status_def as C_SD
 import gamePlay_gamePlay as GP_GPD
 import worldConfig_Area as WC_AD
 import buff_buff as B_BD
@@ -26,7 +26,7 @@ class IDuelCell(object):
     @gamedecorator.checkGameconfigEnable('duel')
     @utils.isMyself
     def reqDuel(self, exposed, targetId):
-        LOG_IFO('reqDuel: ', targetId)
+        LOG_INFO('reqDuel: ', targetId)
         _mapId = formula.fetchMapId(self.spaceNo)
         if not GP_GPD.datas[_mapId].get('ifSinglePK', 0):
             self.showMsg(D_CD.datas['duel_forbidScene']['value'], [])
@@ -45,11 +45,11 @@ class IDuelCell(object):
             LOG_ERR('reqDuel target not found:', targetId)
             return
 
-        if not self.checkConflictState(CCD.datas.duel, bMsg=False):
+        if not self.checkConflictState(C_C_DD.datas.duel, bMsg=False):
             self.showMsg(D_CD.datas['duel_wrongState1']['value'], [])
             return
 
-        if not target.checkConflictState(CCD.datas.duel, bMsg=False):
+        if not target.checkConflictState(C_C_DD.datas.duel, bMsg=False):
             self.showMsg(D_CD.datas['duel_wrongState2']['value'], [])
             return
 
@@ -180,7 +180,7 @@ class IDuelCell(object):
     @gamedecorator.checkGameconfigEnable('duel')
     @utils.isMyself
     def dealDuelReq(self, exposed, accept, isBlack):
-        LOG_IFO('dealDuelReq: ', accept, isBlack)
+        LOG_INFO('dealDuelReq: ', accept, isBlack)
         if not accept:
             self._rejectDuelReq(isBlack)
             return
@@ -214,18 +214,18 @@ class IDuelCell(object):
             self.clearAllRequest(target)
             return
 
-        if not self.checkConflictState(CCD.datas.duel, bMsg=False):
+        if not self.checkConflictState(C_C_DD.datas.duel, bMsg=False):
             self.showMsg(D_CD.datas['duel_wrongState1']['value'], [])
             self.clearAllRequest(target)
             return
 
-        if not target.checkConflictState(CCD.datas.duel, bMsg=False):
+        if not target.checkConflictState(C_C_DD.datas.duel, bMsg=False):
             self.showMsg(D_CD.datas['duel_wrongState2']['value'], [])
             self.clearAllRequest(target)
             return
 
-        self.setState(CSD.datas.duel)
-        target.setState(CSD.datas.duel)
+        self.setState(C_SD.datas.duel)
+        target.setState(C_SD.datas.duel)
 
         self.changeToDuelReady(self.currentRecvDuelReqId)
         target.changeToDuelReady(self.id)
@@ -279,16 +279,8 @@ class IDuelCell(object):
         self.resetAllTargetTypeCache()
         self.client.onDuelFlagsChanged(self.duelAttr.duelFlags)
 
-    def removeBuffsByTag(self,  tag):
-        for buffId in list(self.buffDic.keys()):
-            if buffId not in self.buffDic:
-                continue
-
-            if B_BD.datas[buffId][tag]:
-                self.removeBuff(buffId)
-
     def leaveDuelState(self):
-        self.removeState(CSD.datas.Fighting, gameconst.RemoveStateReason.EXIT_DUEL)
+        self.removeState(C_SD.datas.Fighting, gameconst.RemoveStateReason.EXIT_DUEL)
         self.duelAttr.reset()
         self.duelAttr = self.duelAttr
         self.resetAllTargetTypeCache()
@@ -307,7 +299,7 @@ class IDuelCell(object):
         self.showPkModelMsg(self.pkModel)
 
     def onDuelFinished(self, finishReason):
-        self.removeState(CSD.datas.duel)
+        self.removeState(C_SD.datas.duel)
         self.base.completeGuildTask(
             gameconst.GuildTaskType.DUEL,
             0,

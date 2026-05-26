@@ -47,12 +47,12 @@
             <Arg>   PYTHON      </Arg>
         </onCreateAndEnterRaidDungeonAllMemberPreCheck>
 
-        <onCreateAndEnterRaidDungeonCheckComplete>
+        <onCreateAndEnterRaidDungeonCheckOk>
             <Arg>   RAID_ID     </Arg>
             <Arg>   DUNGEON_NO  </Arg>
             <Arg>   DUNGEON_SRC     </Arg>
             <Arg>   PYTHON      </Arg>
-        </onCreateAndEnterRaidDungeonCheckComplete>
+        </onCreateAndEnterRaidDungeonCheckOk>
 
         <doCreateAndEnterRaidDungeon>
             <Arg>   RAID_ID     </Arg>

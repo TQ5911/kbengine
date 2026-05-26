@@ -53,7 +53,7 @@ class IGameEntity(object):
         cellSpace = self.getCurrentSpace()
         cellAvatarMgrId = getattr(self, 'spaceMgrId', 0)
         cellSpace.doLoadSpecifiedEntities(attachedGIDStrList, cellAvatarMgrId, self.id)
-        LOG_IFO("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
+        LOG_INFO("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
 
     def beAttachedToHost(self):
         attachedHostId = self.getTempMiscProp(gameconst.EntityPropsEnum.beAttachedHostID, 0)
@@ -63,7 +63,7 @@ class IGameEntity(object):
         if not attachedHost:
             return
 
-        LOG_IFO("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
+        LOG_INFO("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
         attachedIDList = attachedHost.getTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, [])
         attachedIDList.append(self.id)
         attachedHost.setTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, attachedIDList)
@@ -93,7 +93,7 @@ class IGameEntity(object):
             return True, Math.Vector3(_l[0])
 
         LOG_ERR("engine can't find navigate point, use origin:",
-                  self.gameEntityId, self.creepBaseId, self.spaceNo, self.position, radius)
+                  self.gameEntityId, self.creepbaseId, self.spaceNo, self.position, radius)
         return False, self.position
 
     @property

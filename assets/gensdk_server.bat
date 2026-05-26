@@ -36,3 +36,8 @@ cd %curpath%
 cd %curpath%/scripts/kbengine_unity3d_plugins
 python ModifyProperty.py
 
+
+cd %curpath%
+.\tools\gen_lua\gen_client_lua.exe --config .\tools\gen_lua\config.json
+
+@pause

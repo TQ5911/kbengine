@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+option go_package = "./proto";
+option py_generic_services = true;
+
+package cross;
+
+message Void {
+}
+message ActivityIDReq{
+  uint32 id = 1;
+}
+
+message GetVoteActResultReq{
+  uint32 id = 1;
+  uint64 uArg = 2;
+  repeated uint32 choisIDs  = 3; 
+}
+
+
+message RegisterReq {
+  uint32 serverID = 1;
+}
+
+message VoteDataCommitReq{
+  uint32 id = 1;
+  uint32 serverID = 2;
+  uint64 uArg = 3;
+  map<uint32, uint32> choiseVals = 4;
+}
+
+message VoteData{
+  uint32 actID = 1;
+  bool   push=2;
+  map<uint32, uint32> choiseVals = 3;
+  uint64 uArg = 4;
+}
+
+message BRData{
+  uint64 playerID = 1;
+  uint32 propID = 2;
+}
+
+message BlessingRewardsReq{
+  uint32 blessID = 1;
+  uint32 rewardType = 2;
+  uint32 index =3;
+  uint64 uArg = 4;
+}
+
+message BlessingRewardsData{
+  uint32 blessID = 1;
+  uint32 rewardType = 2;
+  uint32 index =3;
+  uint64 uArg = 4;
+  bytes data = 5;
+  uint32 totalUNum=6;
+  uint32 totalRUNum =7;
+  uint32 totalTimes =8;
+  string rCertUrl =9;
+}
+
+message BlessingRewardsInfo{
+  uint32 blessID = 1;
+  uint32 totalUNum=2;
+  uint32 totalRUNum =3;
+  uint32 totalTimes =4;
+  string rCertUrl =5;
+}
+
+message BlessIDMessage{
+  uint32 id = 1;
+  uint64 uArg = 2;
+}
+
+message BlessingState{
+  uint32 id = 1;
+  uint32 state = 2;
+  uint64 uArg = 3;
+  uint32 serverID = 4;
+}
+
+message BlessingInfo{
+  uint32 id = 1;
+  uint32 totalTimes = 2;
+  uint32 totalUserNum = 3;
+}
+
+message BlessActivityReq {
+  uint32 blessID = 1;
+  uint64 playerID = 2;
+  uint64 uArg = 3; 
+  uint32 blessTimes = 4; 
+  string playerName = 5;
+  uint32 codeTimes =6;
+  uint32 value =7;
+  uint32 serverID = 8;
+}
+
+message BlessActivityResp {
+  uint32 blessID = 1;
+  uint64 playerID = 2;
+  uint64 uArg = 3;   
+  uint32 blessTimes = 4; 
+}
+
+message BlessCodeTimesUpdateReq {
+  uint32 blessID = 1;
+  uint64 playerID = 2;
+  uint64 uArg = 3; 
+  uint32 codeTimes = 4; 
+}
+
+
+message RewardItem{
+  uint32 id = 1;
+  uint32 num = 2;
+}
+
+message BlessInitReq {
+  uint32 blessID = 1;
+  uint64 cancelTime = 2; 
+  string merchantSessionNumber = 3; 
+  string merchantStoreNumber = 4; 
+  string merchantItemNumber=5;
+  string channelId = 6;
+  string activityName =7;
+  uint64 awardsQuantity = 8; 
+  uint64 reservationStartTime = 9; 
+  uint64 reservationEndTime = 10;
+  uint64 reservationCodeSyncEndTime =11;
+  string activityRuleDetail =12;
+  uint64 uArg = 13;
+  uint32 rewardAmount1 =14;
+  repeated RewardItem prayReward1 =15;
+  uint32 rewardAmount2 =16;
+  repeated RewardItem prayReward2 =17;
+  uint32 rewardAmount3 =18;
+  repeated RewardItem prayReward3 =19; 
+
+}
+
+message MyBlessingRewardsReq{
+  uint32 id = 1;
+  uint64 playerID = 2;
+  uint64 uArg = 4;
+}
+message MyBlessingRewardsInfo{
+  uint32 id = 1;
+  int32  rType = 2;
+  uint64 uArg = 3;
+  uint32 rId = 4;
+
+}
+
+message BlessRewardItem{
+  uint64 playerId = 1;
+  uint32 rewardId = 2;
+}
+
+message BlessRewardPub{
+  uint64 blessId = 1;
+  repeated BlessRewardItem datas = 2;
+}
+
+service CrossServer
+{
+  rpc register(RegisterReq) returns(Void);
+  rpc commitVoteData(VoteDataCommitReq) returns(Void);
+  rpc getTotalVoteData(GetVoteActResultReq) returns(VoteData);
+  rpc activeTick(Void) returns(Void);
+  rpc initBlessingActivity(BlessInitReq) returns(Void);
+  rpc blessActivity(BlessActivityReq) returns(Void);
+  rpc getBlessingRewardsData(BlessingRewardsReq) returns(Void);
+  rpc updateBlessingState(BlessingState) returns(Void);
+  rpc getMyBlessingRewardsInfo(MyBlessingRewardsReq) returns(Void);
+  rpc updateBlessingCodeTimes(BlessCodeTimesUpdateReq) returns(Void);
+
+}
+
+// game service api
+service GameServer
+{
+  rpc pushTotalVoteData(VoteData) returns(Void);
+  rpc activeTickCallback(Void) returns(Void);
+  rpc pushBlessingRewardsData(BlessingRewardsData) returns(Void);
+  rpc onInitBlessingActivity(BlessIDMessage) returns(Void);
+  rpc onBlessActivity(BlessActivityResp) returns(Void);
+  rpc onUpdateBlessingState(BlessingInfo) returns(Void);
+  rpc onGetMyBlessingRewardsInfo(MyBlessingRewardsInfo) returns(Void);
+  rpc onGetBlessingRewardsData(BlessRewardPub) returns(Void);
+  rpc pushBlessingRewardsInfo(BlessingRewardsInfo) returns(Void);
+  rpc onUpdateBlessingCodeTimes(BlessCodeTimesUpdateReq) returns(Void);
+
+}

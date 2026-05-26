@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='adminGsManager',
   syntax='proto3',
   serialized_options=_b('Z\014../gsmanager\220\001\001'),
-  serialized_pb=_b('\n\x11\x61\x64minServer.proto\x12\x0e\x61\x64minGsManager\"\x06\n\x04Void\"=\n\x0b\x43ommandInfo\x12\x0c\n\x04uuid\x18\x01 \x01(\x0c\x12\x0f\n\x07\x61\x63\x63ount\x18\x02 \x01(\t\x12\x0f\n\x07\x63ommand\x18\x03 \x01(\t\"R\n\rCommandResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x0c\x12\x0f\n\x07\x61\x63\x63ount\x18\x02 \x01(\t\x12\x12\n\nresultCode\x18\x03 \x01(\r\x12\x0e\n\x06result\x18\x04 \x01(\t\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\r\x12\x12\n\nserverName\x18\x03 \x01(\t\"H\n\x0eHttpAPICommand\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0b\n\x03\x63md\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\t\x12\r\n\x05seqId\x18\x04 \x01(\t\"W\n\x16HttpAPICommandResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\x05\x12\x11\n\tretErrMsg\x18\x03 \x01(\t\x12\x0c\n\x04\x62ody\x18\x04 \x01(\x0c\x32\xa3\x02\n\x05\x41\x64min\x12I\n\x0eregisterServer\x12!.adminGsManager.ServerInfoMessage\x1a\x14.adminGsManager.Void\x12\x43\n\x0creplyCommand\x12\x1d.adminGsManager.CommandResult\x1a\x14.adminGsManager.Void\x12\x38\n\nactiveTick\x12\x14.adminGsManager.Void\x1a\x14.adminGsManager.Void\x12P\n\x10replyHttpCommand\x12&.adminGsManager.HttpAPICommandResponse\x1a\x14.adminGsManager.Void2\xd5\x01\n\nGameServer\x12>\n\tdoCommand\x12\x1b.adminGsManager.CommandInfo\x1a\x14.adminGsManager.Void\x12\x45\n\rdoHttpCommand\x12\x1e.adminGsManager.HttpAPICommand\x1a\x14.adminGsManager.Void\x12@\n\x12\x61\x63tiveTickCallback\x12\x14.adminGsManager.Void\x1a\x14.adminGsManager.VoidB\x11Z\x0c../gsmanager\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x11\x61\x64minServer.proto\x12\x0e\x61\x64minGsManager\"\x06\n\x04Void\"=\n\x0b\x43ommandInfo\x12\x0c\n\x04uuid\x18\x01 \x01(\x0c\x12\x0f\n\x07\x61\x63\x63ount\x18\x02 \x01(\t\x12\x0f\n\x07\x63ommand\x18\x03 \x01(\t\"R\n\rCommandResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x0c\x12\x0f\n\x07\x61\x63\x63ount\x18\x02 \x01(\t\x12\x12\n\nresultCode\x18\x03 \x01(\r\x12\x0e\n\x06result\x18\x04 \x01(\t\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\r\x12\x12\n\nserverName\x18\x03 \x01(\t\"H\n\x0eHttpAPICommand\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0b\n\x03\x63md\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\t\x12\r\n\x05seqId\x18\x04 \x01(\t\"W\n\x16HttpAPICommandResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\x05\x12\x11\n\tretErrMsg\x18\x03 \x01(\t\x12\x0c\n\x04\x62ody\x18\x04 \x01(\x0c\x32\xa5\x02\n\x05\x41\x64min\x12I\n\x0eregisterServer\x12!.adminGsManager.ServerInfoMessage\x1a\x14.adminGsManager.Void\x12\x45\n\x0e\x64oReplyCommand\x12\x1d.adminGsManager.CommandResult\x1a\x14.adminGsManager.Void\x12\x38\n\nactiveTick\x12\x14.adminGsManager.Void\x1a\x14.adminGsManager.Void\x12P\n\x10replyHttpCommand\x12&.adminGsManager.HttpAPICommandResponse\x1a\x14.adminGsManager.Void2\xd5\x01\n\nGameServer\x12>\n\tdoCommand\x12\x1b.adminGsManager.CommandInfo\x1a\x14.adminGsManager.Void\x12\x45\n\rdoHttpCommand\x12\x1e.adminGsManager.HttpAPICommand\x1a\x14.adminGsManager.Void\x12@\n\x12\x61\x63tiveTickCallback\x12\x14.adminGsManager.Void\x1a\x14.adminGsManager.VoidB\x11Z\x0c../gsmanager\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -356,7 +356,7 @@ _ADMIN = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   serialized_start=431,
-  serialized_end=722,
+  serialized_end=724,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerServer',
@@ -368,8 +368,8 @@ _ADMIN = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='replyCommand',
-    full_name='adminGsManager.Admin.replyCommand',
+    name='doReplyCommand',
+    full_name='adminGsManager.Admin.doReplyCommand',
     index=1,
     containing_service=None,
     input_type=_COMMANDRESULT,
@@ -406,8 +406,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=725,
-  serialized_end=938,
+  serialized_start=727,
+  serialized_end=940,
   methods=[
   _descriptor.MethodDescriptor(
     name='doCommand',

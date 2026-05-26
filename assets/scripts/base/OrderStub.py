@@ -56,7 +56,7 @@ class OrderStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         host = gameconfig.orderServerHost()
         if not (self.orderService and self.orderService.channel.dispatcher):
-            LOG_IFO('connect orderService---------:', host)
+            LOG_INFO('connect orderService---------:', host)
             self.orderService = OrderStubService(self, host)
 
     def _checkOrderServiceActive(self):
@@ -84,11 +84,11 @@ class OrderStubService(GameServer):
         self.channel.connect((address[0], int(address[1])))
 
     def on_connected(self):
-        LOG_IFO("connected from order service:", self.address)
+        LOG_INFO("connected from order service:", self.address)
         self._reportServerId()
 
     def on_disconnected(self):
-        LOG_IFO("disconnected from order service:", self.address)
+        LOG_INFO("disconnected from order service:", self.address)
 
     def _reportServerId(self):
         request = ServerInfoMessage()
@@ -107,7 +107,7 @@ class OrderStubService(GameServer):
         gbId = request.gbId
         itemId = request.itemId
         itemCount = request.itemCount
-        LOG_IFO("notifyOrder:", serverId, outTradeNo, gbId, itemId, itemCount)
+        LOG_INFO("notifyOrder:", serverId, outTradeNo, gbId, itemId, itemCount)
 
         resp = OrderResponse()
         resp.outTradeNo = outTradeNo

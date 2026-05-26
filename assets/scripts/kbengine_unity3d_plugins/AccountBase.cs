@@ -30,7 +30,7 @@ namespace KBEngine
 		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 
 		public virtual void onCreateAvatarFailed(Byte arg1) {} 
 		public virtual void onCreateAvatarResult(Byte arg1, UInt64 arg2) {} 
-		public virtual void onGetAuthOfflineTimeClient(UInt64 arg1, UInt32 arg2) {} 
+		public virtual void onGetAuthOfflineTimeClient(UInt64 arg1, UInt32 arg2, UInt32 arg3) {} 
 		public virtual void onKickAnotherAccount() {} 
 		public virtual void onKickAnotherAvatar() {} 
 		public virtual void onLoginNeedReconnect() {} 
@@ -167,7 +167,8 @@ namespace KBEngine
 				case 460:
 					UInt64 onGetAuthOfflineTimeClient_arg1 = stream.readUint64();
 					UInt32 onGetAuthOfflineTimeClient_arg2 = stream.readUint32();
-					onGetAuthOfflineTimeClient(onGetAuthOfflineTimeClient_arg1, onGetAuthOfflineTimeClient_arg2);
+					UInt32 onGetAuthOfflineTimeClient_arg3 = stream.readUint32();
+					onGetAuthOfflineTimeClient(onGetAuthOfflineTimeClient_arg1, onGetAuthOfflineTimeClient_arg2, onGetAuthOfflineTimeClient_arg3);
 					break;
 				case 49:
 					string onHotfixVersion_arg1 = stream.readString();
@@ -186,6 +187,10 @@ namespace KBEngine
 					Int32 onMessage_arg1 = stream.readInt32();
 					List<string> onMessage_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					onMessage(onMessage_arg1, onMessage_arg2);
+					break;
+				case 555:
+					string onPatchVersion_arg1 = stream.readString();
+					onPatchVersion(onPatchVersion_arg1);
 					break;
 				case 10:
 					UInt64 onRemoveAvatar_arg1 = stream.readUint64();

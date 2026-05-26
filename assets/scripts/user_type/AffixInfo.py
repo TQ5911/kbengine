@@ -190,7 +190,7 @@ def genBlessAffix(iLevel, affixId):
 
 def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, attrSrcType, afxValStartIdx=0, afxValEndIdx=-1):
     #词条对avatar单属性的加成
-    LOG_IFO('in applyAffixPropEffectToAvatar:',  attrNameList, attrValList)
+    LOG_INFO('in applyAffixPropEffectToAvatar:',  attrNameList, attrValList)
     valNum = len(attrValList)
     if afxValEndIdx >= valNum:
         gameengine.panicStack('applyAffixPropEffectToAvatar, afx end idx error:', attrValList, afxValStartIdx, afxValEndIdx)
@@ -207,9 +207,9 @@ def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, at
     return
 
 def removeAffixEffectFromAvatar(owner, affixItem, baseAttrAddValDic, attrSrcType):
-    LOG_IFO('in removeAffixEffectFromAvatar')
+    LOG_INFO('in removeAffixEffectFromAvatar')
     # 移除单属性加成
-    LOG_IFO('     in removeAffixEffectFromAvatar, baseAttrsByAfxVal:', baseAttrAddValDic)
+    LOG_INFO('     in removeAffixEffectFromAvatar, baseAttrsByAfxVal:', baseAttrAddValDic)
     for propName, val in baseAttrAddValDic.items():
         owner.addProp(propName, -1 * val, attrSrcType)
     # # 移除技能加成

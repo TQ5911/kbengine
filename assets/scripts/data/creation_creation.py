@@ -1308,6 +1308,17 @@ def _66000132_enter(self, target, context):
 
 def _66000133_enter(self, target, context):
     self.spaceMgr.onAvatarGetBuffCreation(self.id, target, 64007007)
+    self.spaceMgr.onAvatarGetBuffCreation(self.id, target, 64007010)
+
+def _66000134_enter(self, target, context):
+    self.spaceMgr.onAvatarGetBuffCreation(self.id, target, 64007011)
+
+def _66000135(self, target, context):
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1.5)
 
 datas = _tools.RODict({ 
     65000001: _tools.RODict({
@@ -5059,7 +5070,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 2,
-        "selectPar": (20, 5),
+        "selectPar": (30, 10),
         "delayTime": 0.0,
     }),
     66000102: _tools.RODict({
@@ -5357,7 +5368,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 1.0,
         "hurtNumber": 10,
-        "areaLoop": 10,
+        "areaLoop": 0,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -5368,7 +5379,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 5,
-        "delayTime": 1.0,
+        "delayTime": 0.5,
     }),
     66000113: _tools.RODict({
         "ID": 66000113,
@@ -5676,7 +5687,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 2,
         "selectPar": (20, 20),
-        "delayTime": 5.0,
+        "delayTime": 5.3,
     }),
     66000124: _tools.RODict({
         "ID": 66000124,
@@ -5704,7 +5715,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 2,
         "selectPar": (20, 20),
-        "delayTime": 5.0,
+        "delayTime": 0.0,
     }),
     66000125: _tools.RODict({
         "ID": 66000125,
@@ -5957,7 +5968,63 @@ datas = _tools.RODict({
         "selectType": 1,
         "selectPar": 1,
         "delayTime": 0.0,
+    }),
+    66000134: _tools.RODict({
+        "ID": 66000134,
+        "name": "矿战矿石",
+        "type": "FixPosition",
+        "isAttackSkill": 0,
+        "classTag": 3,
+        "relyOnMaster": 0,
+        "inherit": 0,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": None,
+        "time": 0.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.0,
+        "hurtNumber": 0,
+        "areaLoop": 0,
+        "enterAction": _66000134_enter,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 1,
+        "delayTime": 0.0,
+    }),
+    66000135: _tools.RODict({
+        "ID": 66000135,
+        "name": "5008阶段3生成龙卷风",
+        "type": "FollowTarget",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000135,
+        "time": 10.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.5,
+        "hurtNumber": 99,
+        "areaLoop": 20,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 5.0,
+        "selectType": 1,
+        "selectPar": 6,
+        "delayTime": 0.0,
     })
 })
 minKey = 65000001
-maxKey = 66000133
+maxKey = 66000135

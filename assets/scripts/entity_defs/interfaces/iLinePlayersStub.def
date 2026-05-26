@@ -143,7 +143,7 @@
         </debugPlayerAreaInfo>
 
         <onFightingPlayersCntSync>
-            <Arg>       LINE_NO        </Arg>
+            <Arg>       SPACE_NO       </Arg>
             <Arg>       INT32          </Arg>
         </onFightingPlayersCntSync>
     </BaseMethods>

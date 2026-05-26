@@ -41,6 +41,12 @@
             <Flags>     CELL_PRIVATE     </Flags>
             <Default>   0                </Default>
         </createTime>
+
+        <mapEntityType>
+            <Type>      UINT16           </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>       0            </Default>
+        </mapEntityType>
     </Properties>
 
 </root>

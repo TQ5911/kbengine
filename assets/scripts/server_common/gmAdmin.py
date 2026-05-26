@@ -13,8 +13,8 @@ class _DUMMY_SU():
     def feedbackCommandFail(self, *args):
         LOG_DBG('DUMMY.feedbackCommandFail', *args)
 
-    def replyCommand(self, *args):
-        LOG_DBG('DUMMY.replyCommand', *args)
+    def doReplyCommand(self, *args):
+        LOG_DBG('DUMMY.doReplyCommand', *args)
 
 
 DUMMY_SU = _DUMMY_SU()

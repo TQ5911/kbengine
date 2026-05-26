@@ -24,7 +24,7 @@ class ImpDungeonCommon(object):
         try:
             return ImpDungeonCommon.getMapInfoByDungeonNo(dungeonNo)
         except (KeyError, AttributeError):
-            return self._getPrmBydungeonNo(dungeonNo, 'mapInfo')
+            return self._getParamBydungeonNo(dungeonNo, 'mapInfo')
 
     @staticmethod
     def getMapInfoByDungeonNo(dungeonNo):
@@ -47,7 +47,7 @@ class ImpDungeonCommon(object):
             d, *_ = dunSData['BornPos'].values()
             return d['Dir']
 
-    def _getPrmBydungeonNo(self, dungeonNo, pName):
+    def _getParamBydungeonNo(self, dungeonNo, pName):
         if pName == 'entrance':
             return self._getEntranceByDungeonNo(dungeonNo)
 

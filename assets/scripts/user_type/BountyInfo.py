@@ -53,6 +53,13 @@ class bountyItem(userType.UserSingleType):
         setattr(self, prop, value)
         return [self.gbid, self.preyGbId, self.hunterGbId]
 
+    def getLeftTime(self, now):
+        self.refreshTime(now)
+        if self.state == gameconst.BountyState.PUBLISHED:
+            return self.leftTime
+        elif self.state == gameconst.BountyState.ACCEPTED:
+            return self.acceptedLeftTime
+                
     def refreshTime(self, now):
         if self.state == gameconst.BountyState.PUBLISHED:
             self.refreshLeftTime(now)
@@ -170,10 +177,10 @@ class bountyItem(userType.UserSingleType):
     
 class bountyInfo(userType.UserDictType):
     def __init__(self):
-        DEBUG_MSG('bountyInfo::__init__')
+        LOG_DBG('bountyInfo::__init__')
 
     def initFromDict(self, dataDict):
-        DEBUG_MSG('bountyInfo::initFromDict', dataDict['bountyList'])
+        #LOG_DBG('bountyInfo::initFromDict', dataDict['bountyList'])
         for item in dataDict['bountyList']:
             bounty = bountyItem()
             bounty.initFromDict(item)
@@ -187,7 +194,7 @@ class bountyInfo(userType.UserDictType):
         dataDict = {
             'bountyList': bountyList,
         }
-        DEBUG_MSG('bountyInfo::toSavedDict', dataDict)
+        #LOG_DBG('bountyInfo::toSavedDict', dataDict)
         return dataDict
 
     def toSyncDict(self):
@@ -198,7 +205,7 @@ class bountyInfo(userType.UserDictType):
         dataDict = {
             'bountyList': bountyList,
         }
-        DEBUG_MSG('bountyInfo::toSyncDict', dataDict)
+        #LOG_DBG('bountyInfo::toSyncDict', dataDict)
         return dataDict
     
 class bountyInstance(object):
@@ -220,20 +227,21 @@ class hunterRankItem(userType.UserSingleType):
     def __init__(self, hunterGbId=0, hunterName='', online=False):
         self.hunterGbId = hunterGbId
         self.hunterName = hunterName
-        self.successedCnt = 0
-        self.failedCnt = 0
+        self.successedCnt = [0 for _ in range(gameconst.BountyRankSubType.MAX)]
+        self.failedCnt = [0 for _ in range(gameconst.BountyRankSubType.MAX)]
         self.lastUpdateTimestamp = 0
 
         self.online = online
 
         # other
-        self.isInList = False
+        self.isInList = [False for _ in range(gameconst.BountyRankSubType.MAX)]
 
     def updateRankInfo(self, isSuccess, now, rankData):
-        if isSuccess:
-            self.successedCnt += 1
-        else:
-            self.failedCnt += 1
+        for subType in gameconst.BountyRankSubType.ALL_VALID_RANK_TYPE:
+            if isSuccess:
+                self.successedCnt[subType] += 1
+            else:
+                self.failedCnt[subType] += 1
         self.lastUpdateTimestamp = now
         rankData.update(self)
 
@@ -247,16 +255,20 @@ class hunterRankItem(userType.UserSingleType):
     def initFromDict(self, dataDict):
         self.hunterGbId = dataDict['hunterGbId']
         self.hunterName = dataDict['hunterName']
-        self.successedCnt = dataDict['successedCnt']
-        self.failedCnt = dataDict['failedCnt']
+        self.successedCnt[gameconst.BountyRankSubType.TOTAL] = dataDict['successedCnt']
+        self.failedCnt[gameconst.BountyRankSubType.TOTAL] = dataDict['failedCnt']
+        self.successedCnt[gameconst.BountyRankSubType.WEEK] = dataDict['successedCntWeek']
+        self.failedCnt[gameconst.BountyRankSubType.WEEK] = dataDict['failedCntWeek']
         self.lastUpdateTimestamp = dataDict['lastUpdateTimestamp']
     
     def toSavedDict(self):
         return {
             'hunterGbId': self.hunterGbId,
             'hunterName': self.hunterName,
-            'successedCnt': self.successedCnt,
-            'failedCnt': self.failedCnt,
+            'successedCnt': self.successedCnt[gameconst.BountyRankSubType.TOTAL],
+            'failedCnt': self.failedCnt[gameconst.BountyRankSubType.TOTAL],
+            'successedCntWeek': self.successedCnt[gameconst.BountyRankSubType.WEEK],
+            'failedCntWeek': self.failedCnt[gameconst.BountyRankSubType.WEEK],
             'lastUpdateTimestamp': self.lastUpdateTimestamp,
         }
 
@@ -268,7 +280,16 @@ class hunterRankItem(userType.UserSingleType):
         syncDict['baseInfo'] = self.toSavedDict()
         return syncDict
 
-    def toClientDict(self):
+    def toClientDictBySubType(self, subType):
+        return {
+            'hunterGbId': self.hunterGbId,
+            'hunterName': self.hunterName,
+            'lastUpdateTimestamp': self.lastUpdateTimestamp,
+            'successedCnt': self.successedCnt[subType],
+            'failedCnt': self.failedCnt[subType],
+        }
+
+    def toClientDict(self, subType):
         '''
         data = {
             'id': self.hunterGbId,
@@ -278,16 +299,21 @@ class hunterRankItem(userType.UserSingleType):
         return data
         '''
         clientDict = {}
-        clientDict['baseInfo'] = self.toSavedDict()
+        clientDict['baseInfo'] = self.toClientDictBySubType(subType)
         clientDict["online"] = self.online
         return clientDict
+    
+    def reset(self, subType):
+        self.successedCnt[subType] = 0
+        self.failedCnt[subType] = 0
+        self.isInList[subType] = False
 
 class hunterRankInfo(userType.UserDictType):
     def __init__(self):
-        DEBUG_MSG('hunterRankInfo::__init__')
+        LOG_DBG('hunterRankInfo::__init__')
 
     def initFromDict(self, dataDict):
-        DEBUG_MSG('hunterRankInfo::initFromDict', dataDict['hunterRankList'])
+        #LOG_DBG('hunterRankInfo::initFromDict', dataDict['hunterRankList'])
         for rankItem in dataDict['hunterRankList']:
             hunterRank = hunterRankItem()
             hunterRank.initFromDict(rankItem)
@@ -301,7 +327,7 @@ class hunterRankInfo(userType.UserDictType):
         dataDict = {
             'hunterRankList': hunterRankList,
         }
-        DEBUG_MSG('hunterRankInfo::toSavedDict', dataDict)
+        #LOG_DBG('hunterRankInfo::toSavedDict', dataDict)
         return dataDict
 
     def toSyncDict(self):
@@ -312,7 +338,7 @@ class hunterRankInfo(userType.UserDictType):
         dataDict = {
             'hunterRankList': hunterRankList,
         }
-        DEBUG_MSG('hunterRankInfo::toSyncDict', dataDict)
+        #LOG_DBG('hunterRankInfo::toSyncDict', dataDict)
         return dataDict
     
 class hunterRankInstance(object):
@@ -333,11 +359,11 @@ hunterRankInfoInstance = hunterRankInstance()
 class rankData(object):
     def __init__(self, brType):
         self.brType = brType
-        self.beUpdate = True
-        self.versionId = 1
-        self.rankList = []
-        self.clientData = {}
-        DEBUG_MSG('rankData::__init__', self.brType)
+        self.beUpdate = [True for _ in range(gameconst.BountyRankSubType.MAX)]
+        self.versionId = [1 for _ in range(gameconst.BountyRankSubType.MAX)]
+        self.rankList = [[] for _ in range(gameconst.BountyRankSubType.MAX)]
+        self.clientData = [{} for _ in range(gameconst.BountyRankSubType.MAX)]
+        LOG_DBG('rankData::__init__', self.brType)
 
     def __str__(self):
         return f'rankData(brType={self.brType}, beUpdate={self.beUpdate}, versionId={self.versionId}, rankList={self.rankList})'
@@ -346,36 +372,45 @@ class rankData(object):
         self.append(rankItem)
 
     def append(self, rankItem):
-        self.beUpdate = True
-        self.versionId += 1
-        if rankItem.isInList:
-            return
+        for subType in gameconst.BountyRankSubType.ALL_VALID_RANK_TYPE:
+            self.beUpdate[subType] = True
+            self.versionId[subType] += 1
+            if rankItem.isInList[subType]:
+                continue
 
-        rankItem.isInList = True
-        self.rankList.append(rankItem)
+            rankItem.isInList[subType] = True
+            self.rankList[subType].append(rankItem)
 
     def sort(self):
-        self.rankList.sort(key=self.sortKeyFunc())
+        for subType in gameconst.BountyRankSubType.ALL_VALID_RANK_TYPE:
+            self.rankList[subType].sort(key=self.sortKeyFunc(subType))
 
-    def sortKeyFunc(self):
+    def sortKeyFunc(self, subType):
         return None
 
-    def toClientDict(self):
-        if self.beUpdate:
-            self.clientData["type"] = self.brType
-            self.clientData["vId"] = self.versionId
-            rankList = []
-            for rankItem in self.rankList[0:100]:
-                rankList.append(rankItem.toClientDict())
-            self.clientData['list'] = rankList
+    def reset(self, subType):
+        for rankItem in self.rankList[subType]:
+            rankItem.reset(subType)
+        self.rankList[subType].clear()
+        self.beUpdate[subType] = True
+        self.versionId[subType] += 1
 
-        self.beUpdate = False
-        return self.clientData
+    def toClientDict(self, subType):
+        if self.beUpdate[subType]:
+            self.clientData[subType]["type"] = self.brType
+            self.clientData[subType]["vId"] = self.versionId[subType]
+            rankList = []
+            for rankItem in self.rankList[subType][0:100]:
+                rankList.append(rankItem.toClientDict(subType))
+            self.clientData[subType]['list'] = rankList
+
+        self.beUpdate[subType] = False
+        return self.clientData[subType]
 
 class hunterRankData(rankData):
     def __init__(self, brType=0):
         rankData.__init__(self, brType)
-        DEBUG_MSG('hunterRankData::__init__')
+        LOG_DBG('hunterRankData::__init__')
 
-    def sortKeyFunc(self):
-        return lambda x: (-x.successedCnt, x.failedCnt, x.lastUpdateTimestamp)
+    def sortKeyFunc(self, subType):
+        return lambda x: (-x.successedCnt[subType], x.failedCnt[subType], x.lastUpdateTimestamp)

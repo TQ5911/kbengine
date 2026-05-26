@@ -53,7 +53,7 @@ class RaidDungeonCreatingMixin(object):
 
     def getRaidDungeonCreatingLock(self, raidUUID, playerGBID, timeout=3):
         """获得raidCreating锁"""
-        LOG_IFO('lockRaidCreating::', raidUUID, playerGBID, timeout)
+        LOG_INFO('lockRaidCreating::', raidUUID, playerGBID, timeout)
         if self.isRaidDungeonCreating(raidUUID):
             return 0
         self.addRaidDungeonCreatingRecord(raidUUID, playerGBID)
@@ -61,7 +61,7 @@ class RaidDungeonCreatingMixin(object):
 
     def releaseRaidDungeonCreatingLock(self, raidUUID):
         """释放raidCreating锁"""
-        LOG_IFO('unlockRaidCreating::', raidUUID)
+        LOG_INFO('unlockRaidCreating::', raidUUID)
         self.popRaidDungeonCreatingRecord(raidUUID, None)
 
 
@@ -147,7 +147,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
-        LOG_IFO('destoryDungeonSpace::', spaceNo, spaceUUID, reason)
+        LOG_INFO('destoryDungeonSpace::', spaceNo, spaceUUID, reason)
         spaceVal, err = self._destroyRaidDungeonSpace(spaceNo, spaceUUID)
         if err == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
             # 强制清除raid中副本cache(如果有的话)
@@ -220,24 +220,24 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         return spaceVal, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_SKIP
 
     def _kickOutAllFounders(self, spaceNo):
-        LOG_IFO('RaidDungeonStub _kickOutAllFounders:: kickout', spaceNo)
+        LOG_INFO('RaidDungeonStub _kickOutAllFounders:: kickout', spaceNo)
         spaceVal = self.spaces[spaceNo]     # type: dungeon.RaidDungeonSpaceVal
         _needDestoryGBIDs = []
         src = dungeonSrc.KickoutFromDungeon(kickReason=gameconst.DungeonSrcKickReason.TIMEOUT)
         for gbId, founderVal in spaceVal.founders.items():
             base = founderVal.playerBox
             if founderVal.hasAvatar() and base and not utils.checkBoxOffline(base) and base.cell:
-                LOG_IFO('RaidDungeonStub _kickoutAllFounders:: kickout', founderVal.playerGBID)
+                LOG_INFO('RaidDungeonStub _kickoutAllFounders:: kickout', founderVal.playerGBID)
                 founderVal.playerBox.cell.selfLeaveRaidDungeon(src)
             else:
-                LOG_IFO('RaidDungeonStub _kickoutAllFounders:: destroy', founderVal.playerGBID)
+                LOG_INFO('RaidDungeonStub _kickoutAllFounders:: destroy', founderVal.playerGBID)
                 _needDestoryGBIDs.append(gbId)
         for i in _needDestoryGBIDs:
             spaceVal.founders.destoryFounder(i)
 
     def onAvatarOffline(self, spaceNo, playerGbId):
         """玩家下线时回调"""
-        LOG_IFO('onAvatarOffline::', spaceNo, playerGbId)
+        LOG_INFO('onAvatarOffline::', spaceNo, playerGbId)
 
         def _check():
             if spaceNo not in self.spaces:
@@ -260,7 +260,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
     def onDungeonStarted(self, spaceNo, tCreate):
         """副本开始时回调"""
-        LOG_IFO('onDungeonStarted::', spaceNo, tCreate)
+        LOG_INFO('onDungeonStarted::', spaceNo, tCreate)
 
         def _check():
             if spaceNo not in self.spaces:
@@ -280,7 +280,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         return self._onRaidDungeonCompleted(spaceNo, raidUUID, win, delay, reasonType)
 
     def _onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, reasonType):
-        LOG_IFO('_onRaidDungeonCompleted:', spaceNo, raidUUID, win, delay, reasonType)
+        LOG_INFO('_onRaidDungeonCompleted:', spaceNo, raidUUID, win, delay, reasonType)
 
         def _check():
             if spaceNo not in self.spaces:
@@ -321,7 +321,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             self._onRaidDungeonCompletedCallback(spaceNo, sVal.spaceUUID, 'dungeon complete', win)
 
     def _onRaidDungeonCompletedCallback(self, spaceNo, spaceUUID, reason, win):
-        LOG_IFO('_onRaidDungeonCompletedCallback::', spaceNo, spaceUUID, reason, win)
+        LOG_INFO('_onRaidDungeonCompletedCallback::', spaceNo, spaceUUID, reason, win)
         if spaceNo not in self.spaces:
             LOG_ERR('_onRaidDungeonCompletedCallback::cannot get space', spaceNo)
             return
@@ -340,7 +340,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         sVal.completeDungeon(win)
         sVal.toDestoryDungeon()
         self._kickOutAllFounders(spaceNo)
-        gameengine.getRaidStub(sVal.raidUUID).onRaidDungeonCompletedCallback(sVal.raidUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
+        gameengine.getRaidStub(sVal.raidUUID).onRaidDungeonCompletedCB(sVal.raidUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
 
     def doEnterDungeon(self, box, gbId, raidUUID, spaceNo, extra):
         """玩家执行进入副本时调用"""
@@ -379,7 +379,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
     def onLoadDungeonSpaceReady(self, playerBox, playerGBID, spaceNo, raidUUID, extra):
         """团队副本准备完毕后回调"""
-        LOG_IFO('onLoadDungeonSpaceReady::')
+        LOG_INFO('onLoadDungeonSpaceReady::')
         spaceVal = self.spaces[spaceNo]
         spaceUUID = spaceVal.spaceUUID
         spaceBox = spaceVal.spaceBox
@@ -388,13 +388,13 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             playerBox, playerGBID, raidUUID, self.dungeonNo,
             spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
 
-    def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, raidUUID, extra):
+    def enterDungeonSpaceSuccess(self, spaceNo, playerBox, playerGbId, raidUUID, extra):
         """团队成员进入副本成功后回调"""
-        LOG_IFO('enterDungeonSpaceSucc::', spaceNo, playerBox, playerGbId, raidUUID, extra)
+        LOG_INFO('enterDungeonSpaceSuccess::', spaceNo, playerBox, playerGbId, raidUUID, extra)
         src = extra.pop('src')  # 这里一定要有dungeonSrc
         founderVal, err = self._enterDungeonSpaceSucc(spaceNo, playerBox, playerGbId, raidUUID, src)
         if err != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
-            LOG_ERR('enterDungeonSpaceSucc:: failed, {}'.format(err))
+            LOG_ERR('enterDungeonSpaceSuccess:: failed, {}'.format(err))
             # NOTE: 进入团队副本后出现问题, 执行离开逻辑
             playerBox.cell.leaveRaidDungeon()
         else:
@@ -426,7 +426,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, raidUUID, extra):
         """团队成员离开副本成功后回调"""
-        LOG_IFO('leaveDungeonSpaceSucc::', spaceNo, playerBox, playerGbId, raidUUID, extra)
+        LOG_INFO('leaveDungeonSpaceSucc::', spaceNo, playerBox, playerGbId, raidUUID, extra)
         founderVla, err = self._leaveDungeonSpaceSucc(spaceNo, playerBox, playerGbId, raidUUID)
         if err != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
             LOG_ERR('leaveDungeonSpaceSucc:: failed, {}'.format(err))
@@ -446,7 +446,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         return founderVal, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
     def leaveRaidDungeon(self, spaceNo, raidUUID, src, playerBox):
-        LOG_IFO("leaveRaidDungeon~ ", spaceNo, raidUUID, src, playerBox)
+        LOG_INFO("leaveRaidDungeon~ ", spaceNo, raidUUID, src, playerBox)
         if spaceNo not in self.spaces:
             LOG_ERR('leaveRaidDungeon:: failed, missing space data', spaceNo, src, playerBox)
             return

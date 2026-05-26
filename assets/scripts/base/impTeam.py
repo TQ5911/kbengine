@@ -28,7 +28,7 @@ class ImpTeam(object):
 
 	def notifyCaptainTeamMemOffline(self, teamId, gbId):
 		# 不是夫妻或结拜关系的队员，离线后踢出队伍
-		gameengine.getTeamStub(teamId).kickTeamMember(self, teamId, self.gbID, gbId, True)
+		gameengine.getTeamStub(teamId).kickTeamMember(teamId, self.gbID, gbId, True)
 
 	def isForbidVoiceChat(self):
 		return False

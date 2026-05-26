@@ -4,6 +4,7 @@ from KBEDebug import *
 import iGlobal
 import iBaseNoCell
 import iTimer
+import iCycleEvent
 import gameconst
 import gametimer
 import utils
@@ -21,10 +22,10 @@ import math
 import dropAward
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
-class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
+class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def __init__(self):
-        INFO_MSG("BountyStub::__init__")
-        super(BountyStub, self).__init__()
+        LOG_INFO("BountyStub::__init__")
+        iCycleEvent.ICycleEvent.__init__(self)
         self.addDatetimeTimerTick()
 
         self.publishBountyDict = {}
@@ -34,7 +35,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.checkExpiredBountyHeap = []
         self.bountyListVersionId = 1
         self.persistentVersionId = 1
-        self.lastPersistentTimestamp = 0
+        self.lastPersistentTimestamp = utils.curTS()
 
         self.allRankInfoDataList = []
 
@@ -45,7 +46,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doNext(self):
         super().doNext()
-        INFO_MSG("BountyStub::doNext")
+        LOG_INFO("BountyStub::doNext")
 
         self.sortShowPublicBountyList()
         self.sortShowPublicRankList()
@@ -55,20 +56,25 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.startUpdateExpiredBountyTimer()
         self.startPersistentBountyTimer()
 
+        self.registerWeekEvent('onResetPublicRankWeekly', cycleTime=0)
+        self.onDailyEvent()
+
     def onTimer(self, timerID, userData):
         self._onTimer(timerID, userData)
         if userData == gametimer.UPDATE_EXPIRED_BOUNTY:
             self.onUpdateExpiredBountyTimerCallback()
-        if userData == gametimer.PERSISTENT_EXPIRED_BOUNTY:
+        elif userData == gametimer.PERSISTENT_BOUNTY:
             self.onPersistentBountyTimerCallback()
         elif utils.isBelongTimerTag(userData):
             self._onTimerCallback(timerID)
         elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userData == gametimer.CYCLE_EVENT_TICK_TIMER:
+            self.onCycleEventTick()
 
     def initClassifyBountyInfoData(self):
         now = utils.curTS()
-        INFO_MSG("BountyStub::initClassifyBountyInfoData", now)
+        LOG_INFO("BountyStub::initClassifyBountyInfoData", now)
         for uuid, item in self.bountyInfoData.items():
             self.publishBountyDict.setdefault(item.gbid, []).append(item)
             self.preyBountyDict[item.preyGbId] = item
@@ -92,7 +98,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.allRankInfoDataList = [None for _ in range(gameconst.BountyRankType.MAX)]
         self.showPublicRankDataList = [None for _ in range(gameconst.BountyRankType.MAX)]
         now = utils.curTS()
-        INFO_MSG("BountyStub::initClassifyRankInfoData", now)
+        LOG_INFO("BountyStub::initClassifyRankInfoData", now)
         for brType in gameconst.BountyRankType.ALL_VALID_RANK_TYPE:
             if brType == gameconst.BountyRankType.HUNTER:
                 self.allRankInfoDataList[brType] = self.hunterRankInfoData
@@ -100,17 +106,23 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 for hunterGbId, rankItem in self.allRankInfoDataList[brType].items():
                     self.showPublicRankDataList[brType].append(rankItem)
 ################################################################################
+    def onResetPublicRankWeekly(self, *args):
+        LOG_INFO('BountyStub::onResetPublicRankWeekly:', args)
+        for brType in gameconst.BountyRankType.ALL_VALID_RANK_TYPE:
+            self.showPublicRankDataList[brType].reset(gameconst.BountyRankSubType.WEEK)
+        self.persistentVersionId += 1
+################################################################################
     def sortShowPublicBountyList(self):
         self.showPublicBountyList.sort(key=lambda x: (-x.totalMoney, x.timestamp))
-        DEBUG_MSG("BountyStub::sortShowPublicBountyList", self.showPublicBountyList)
+        LOG_DBG("BountyStub::sortShowPublicBountyList", self.showPublicBountyList)
 
     def sortShowPublicRankList(self, brTypeSet=gameconst.BountyRankType.ALL_VALID_RANK_TYPE):
-        DEBUG_MSG("BountyStub::sortShowPublicRankList", brTypeSet)
+        LOG_DBG("BountyStub::sortShowPublicRankList", brTypeSet)
         for brType in brTypeSet:
             self.showPublicRankDataList[brType].sort()
 #########################################################################################
     def initCheckExpiredBountyTimer(self):
-        DEBUG_MSG("BountyStub::initCheckExpiredBountyTimer")
+        LOG_DBG("BountyStub::initCheckExpiredBountyTimer")
         if not self.checkExpiredBountyHeap:
             return
             
@@ -118,13 +130,13 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.startCheckExpiredBountyTimer()
 
     def startCheckExpiredBountyTimer(self):
-        DEBUG_MSG("BountyStub::startCheckExpiredBountyTimer")
+        LOG_DBG("BountyStub::startCheckExpiredBountyTimer")
         self.cannelCheckExpiredBountyTimer()
         if not self.checkExpiredBountyHeap:
             return
 
         nextExpiredItem = heapq.nsmallest(1, self.checkExpiredBountyHeap)[0]
-        DEBUG_MSG("BountyStub::startCheckExpiredBountyTimer", len(self.checkExpiredBountyHeap), nextExpiredItem)
+        LOG_DBG("BountyStub::startCheckExpiredBountyTimer", len(self.checkExpiredBountyHeap), nextExpiredItem)
         self.checkExpiredBountyTimerId = self._datetimeCallback(nextExpiredItem.expiredTimestamp, 'onCheckExpiredBountyTimerCallback', (), gametimer.TIMER_TAG_CHECK_EXPIRED_BOUNTY_TIMER, 'checkExpiredBountyTimerId')
 
     def onCheckExpiredBountyTimerCallback(self):
@@ -133,7 +145,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return
 
         expiredItem = heapq.heappop(self.checkExpiredBountyHeap)
-        DEBUG_MSG("BountyStub::onCheckExpiredBountyTimerCallback", expiredItem)
+        LOG_DBG("BountyStub::onCheckExpiredBountyTimerCallback", expiredItem)
         if expiredItem.state == gameconst.BountyState.PUBLISHED:
             self.onHandlePublishedBountyExpired(expiredItem)
         elif expiredItem.state == gameconst.BountyState.ACCEPTED:
@@ -142,37 +154,37 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.startCheckExpiredBountyTimer()
 
     def cannelCheckExpiredBountyTimer(self):
-        DEBUG_MSG("BountyStub::cannelCheckExpiredBountyTimer")
+        LOG_DBG("BountyStub::cannelCheckExpiredBountyTimer")
         if not self.checkExpiredBountyTimerId:
             return
         self._cancelDatetimeCallback(self.checkExpiredBountyTimerId, gametimer.TIMER_TAG_CHECK_EXPIRED_BOUNTY_TIMER)
         self.checkExpiredBountyTimerId = 0
 
     def addCheckExpiredBounty(self, checkItem):
-        DEBUG_MSG("BountyStub::addCheckExpiredBounty", checkItem)
+        LOG_DBG("BountyStub::addCheckExpiredBounty", checkItem)
         self.cannelCheckExpiredBountyTimer()
         heapq.heappush(self.checkExpiredBountyHeap, checkItem)
         self.startCheckExpiredBountyTimer()
 
     def delCheckExpiredBounty(self, checkItem):
-        DEBUG_MSG("BountyStub::delCheckExpiredBounty", checkItem)
+        LOG_DBG("BountyStub::delCheckExpiredBounty", checkItem)
         self.cannelCheckExpiredBountyTimer()
         self.checkExpiredBountyHeap.remove(checkItem)
         self.initCheckExpiredBountyTimer()
 #########################################################################################
     def initUpdateExpiredBountyTimer(self):
-        DEBUG_MSG("BountyStub::initUpdateExpiredBountyTimer")
+        LOG_DBG("BountyStub::initUpdateExpiredBountyTimer")
         if not self.checkExpiredBountyHeap:
             return
             
         self.startUpdateExpiredBountyTimer()
 
     def startUpdateExpiredBountyTimer(self):
-        DEBUG_MSG("BountyStub::startUpdateExpiredBountyTimer")
+        LOG_DBG("BountyStub::startUpdateExpiredBountyTimer")
         self.pyAddTimer(10, 60, gametimer.UPDATE_EXPIRED_BOUNTY)
 
     def onUpdateExpiredBountyTimerCallback(self):
-        DEBUG_MSG("BountyStub::onUpdateExpiredBountyTimerCallback")
+        LOG_DBG("BountyStub::onUpdateExpiredBountyTimerCallback")
         if not self.checkExpiredBountyHeap:
             return
         
@@ -181,39 +193,40 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         for item in self.checkExpiredBountyHeap:
             item.refreshTime(now)
             updateBountyTypeSet.add(item.bountyType)
-            DEBUG_MSG("BountyStub::onUpdateExpiredBountyTimerCallback", item)
+            LOG_DBG("BountyStub::onUpdateExpiredBountyTimerCallback", item)
         if gameconst.BountyType.PUBLIC in updateBountyTypeSet:
             self.bountyListVersionId += 1
         self.persistentVersionId += 1
+        LOG_DBG("BountyStub::onUpdateExpiredBountyTimerCallback end", self.bountyListVersionId, self.persistentVersionId)
 
     def cannelUpdateExpiredBountyTimer(self):
-        DEBUG_MSG("BountyStub::cannelUpdateExpiredBountyTimer")
+        LOG_DBG("BountyStub::cannelUpdateExpiredBountyTimer")
         if not self.updateExpiredBountyTimerId:
             return
         self.cancelTimerCB(self.updateExpiredBountyTimerId, gametimer.TIMER_TAG_UPDATE_EXPIRED_BOUNTY_TIMER)
         self.updateExpiredBountyTimerId = 0
 
     def startPersistentBountyTimer(self):
-        DEBUG_MSG("BountyStub::startPersistentBountyTimer")
-        self.pyAddTimer(10, 30, gametimer.PERSISTENT_EXPIRED_BOUNTY)
+        LOG_DBG("BountyStub::startPersistentBountyTimer")
+        self.pyAddTimer(10, 30, gametimer.PERSISTENT_BOUNTY)
 
     def onPersistentBountyTimerCallback(self):
-        DEBUG_MSG("BountyStub::onPersistentBountyTimerCallback")
+        LOG_DBG("BountyStub::onPersistentBountyTimerCallback")
         now = utils.curTS()
-        if self.persistentVersionId > 100 or self.lastPersistentTimestamp + 60 >= now:
+        if self.persistentVersionId > 100 or now >= self.lastPersistentTimestamp + 60:
             self.persistentVersionId = 1
             self.lastPersistentTimestamp = now
             self.writeToDB(self.onSaveCallback)
-            DEBUG_MSG("BountyStub::onPersistentBountyTimerCallback writeToDB")
+            LOG_DBG("BountyStub::onPersistentBountyTimerCallback writeToDB")
 
     def onSaveCallback(self, success, baseRef):
-        INFO_MSG("BountyStub::onSaveCallback: success:", success, baseRef.databaseID, self.databaseID)
+        LOG_INFO("BountyStub::onSaveCallback: success:", success, baseRef.databaseID, self.databaseID)
         if not success:
-            ERROR_MSG("BountyStub::onSaveCallback failed to save!")
+            LOG_ERR("BountyStub::onSaveCallback failed to save!")
 
 #########################################################################################
     def onHandlePublishedBountyExpired(self, expiredItem):
-        INFO_MSG("BountyStub::onHandlePublishedBountyExpired", expiredItem)
+        LOG_INFO("BountyStub::onHandlePublishedBountyExpired", expiredItem)
         self.onTakeDownBounty(expiredItem)
         expiredItem.flag = gameconst.BountyFlag.NULL
         expiredItem.state = gameconst.BountyState.NULL
@@ -231,7 +244,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onHandleAcceptedBountyExpired(self, expiredItem):
         now = utils.curTS()
-        INFO_MSG("BountyStub::onHandleAcceptedBountyExpired", expiredItem)
+        LOG_INFO("BountyStub::onHandleAcceptedBountyExpired", expiredItem)
         beType = 0
         preyGbId = expiredItem.preyGbId
         hunterGbId = expiredItem.hunterGbId
@@ -271,29 +284,29 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                             self, 'onNoticeExpiredBountyFailed', (expiredItem.toSyncDict(), gameconst.BountyAvatarType.HUNTER, beType))
 
     def onNoticeExpiredBountyFailed(self, gbIds, complateDict, baType, beType):
-        INFO_MSG("BountyStub::onNoticeExpiredBountyFailed", gbIds, complateDict, baType, beType)
+        LOG_INFO("BountyStub::onNoticeExpiredBountyFailed", gbIds, complateDict, baType, beType)
 ###################################req#############################################
     def publishBounty(self, playerbox, bountyDict):
-        INFO_MSG("BountyStub::publishBounty", bountyDict)
+        LOG_INFO("BountyStub::publishBounty", bountyDict)
         prePublishItem = bountyItem()
         prePublishItem.initFromSyncDict(bountyDict)
 
         publishList = self.publishBountyDict.get(prePublishItem.gbid, [])
         publishCntLimit = CONST.datas['rewardLimit'].get("value", 5)
         if len(publishList) >= publishCntLimit:
-            WARNING_MSG("BountyStub::publishBounty num limit", len(publishList), publishCntLimit)
+            LOG_WARN("BountyStub::publishBounty num limit", len(publishList), publishCntLimit)
             playerbox.publishBountyRes(bountyDict, gameconst.PublishBountyResType.PUBLISH_CNT_LIMIT)
             return
         
         preyItem = self.preyBountyDict.get(prePublishItem.preyGbId, None)
         if preyItem:
-            WARNING_MSG("BountyStub::publishBounty alerady in prey bounty list", preyItem.toSyncDict())
+            LOG_WARN("BountyStub::publishBounty alerady in prey bounty list", preyItem.toSyncDict())
             playerbox.publishBountyRes(bountyDict, gameconst.PublishBountyResType.ALERADY_PREY)
             return
         
         hunterItem = self.hunterBountyDict.get(prePublishItem.hunterGbId, None)
         if hunterItem:
-            WARNING_MSG("BountyStub::publishBounty alerady in hunter bounty list", hunterItem.toSyncDict())
+            LOG_WARN("BountyStub::publishBounty alerady in hunter bounty list", hunterItem.toSyncDict())
             playerbox.publishBountyRes(bountyDict, gameconst.PublishBountyResType.ALERADY_HUNTER)
             return
 
@@ -309,10 +322,10 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                                                                   (prePublishItem.toSyncDict(), playerbox, self, ),
                                                                   self, 'onNoticeAssignedHunterFailed', (prePublishItem.toSyncDict(), playerbox, ))
 
-        INFO_MSG("BountyStub::publishBounty end")
+        LOG_INFO("BountyStub::publishBounty end")
 
     def onPublisherPrePublishBountyRes(self, playerbox, bountyDict, resCode):
-        INFO_MSG("BountyStub::onPublisherPrePublishBountyRes", bountyDict, resCode)
+        LOG_INFO("BountyStub::onPublisherPrePublishBountyRes", bountyDict, resCode)
         prePublishItem = bountyItem()
         prePublishItem.initFromSyncDict(bountyDict)
 
@@ -321,31 +334,27 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 prePublishItem = self.onDelPrePublishBounty(prePublishItem)
                 playerbox.publishBountyRes(prePublishItem.toSyncDict(), resCode)
                 return
-            prePublishItem = self.onReleasePublicPrePublishBounty(prePublishItem)
-            playerbox.publishBountyRes(prePublishItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS)
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([prePublishItem.preyGbId], 'onNoticeBecomePrey',
-                                                                  (prePublishItem.toSyncDict(), ),
-                                                                  self, 'onNoticeBecomePreyFailed', (prePublishItem.uuid, ))
-            INFO_MSG("BountyStub::onPublisherPrePublishBountyRes success", prePublishItem.toSyncDict())
+            LOG_INFO("BountyStub::onPublisherPrePublishBountyRes pre success", prePublishItem.toSyncDict())
+            gameengine.getGlobalBase('PlayerStub').isOnLine(prePublishItem.preyGbId, self, 'onReleaseBountyCheckPreyOnlineCallback', (playerbox, None, prePublishItem.toSyncDict(), ))
         elif prePublishItem.bountyType == gameconst.BountyType.ASSIGN:
-            DEBUG_MSG("BountyStub::onPublisherPrePublishBountyRes ASSIGN")
+            LOG_DBG("BountyStub::onPublisherPrePublishBountyRes ASSIGN")
             if resCode != gameconst.PublishBountyResType.SUCCESS:
                 self.onPrePublishBountyChecked(prePublishItem, gameconst.BountyAvatarType.PUBLISHER, False, resCode)
             else:
                 self.onPrePublishBountyChecked(prePublishItem, gameconst.BountyAvatarType.PUBLISHER, True, resCode)
 
     def onHunterPrePublishBountyRes(self, playerbox, bountyDict, replyCode):
-        INFO_MSG("BountyStub::onHunterPrePublishBountyRes", bountyDict, replyCode)
+        LOG_INFO("BountyStub::onHunterPrePublishBountyRes", bountyDict, replyCode)
         hunterItem = bountyItem()
         hunterItem.initFromSyncDict(bountyDict)
         prePublishItem = self.hunterBountyDict.get(hunterItem.hunterGbId, None)
         if not prePublishItem:
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_ASSIGN_HUNTER)
-            WARNING_MSG("BountyStub::onHunterPrePublishBountyRes not in hunter list", bountyDict)
+            LOG_WARN("BountyStub::onHunterPrePublishBountyRes not in hunter list", bountyDict)
             return
         if prePublishItem.state != gameconst.BountyState.PRE_PUBLISH:
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_PRE_PUBLISH_STATE)
-            WARNING_MSG("BountyStub::onHunterPrePublishBountyRes bounty state error", prePublishItem.state)
+            LOG_WARN("BountyStub::onHunterPrePublishBountyRes bounty state error", prePublishItem.state)
             return
 
         # 这里可以从hunterItem更新下数据ztq_todo
@@ -358,17 +367,17 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onDelPrePublishBounty(self, prePublishItem):
         prePublishItem = self.preyBountyDict.pop(prePublishItem.preyGbId, None)
         prePublishList = self.publishBountyDict.get(prePublishItem.gbid, [])
-        INFO_MSG("BountyStub::onDelPrePublishBounty", len(prePublishList), prePublishItem.toSyncDict())
+        LOG_INFO("BountyStub::onDelPrePublishBounty", len(prePublishList), prePublishItem.toSyncDict())
         prePublishList.remove(prePublishItem)
         if not len(prePublishList):
             self.publishBountyDict.pop(prePublishItem.gbid, None)
         self.hunterBountyDict.pop(prePublishItem.hunterGbId, None)
-        INFO_MSG("BountyStub::onDelPrePublishBounty", len(prePublishList), prePublishItem.toSyncDict())
+        LOG_INFO("BountyStub::onDelPrePublishBounty", len(prePublishList), prePublishItem.toSyncDict())
         return prePublishItem
     
     def onReleasePublicPrePublishBounty(self, prePublishItem):
         now = utils.curTS()
-        INFO_MSG("BountyStub::onReleasePublicPrePublishBounty")
+        LOG_INFO("BountyStub::onReleasePublicPrePublishBounty")
         prePublishItem = self.preyBountyDict[prePublishItem.preyGbId]
         prePublishItem.totalMoney = prePublishItem.publishMoney
         prePublishItem.timestamp = now
@@ -389,67 +398,75 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return prePublishItem
 
     def onNoticeBecomePreyFailed(self, gbIds, uuid):
-        INFO_MSG("BountyStub::onNoticeBecomePreyFailed", gbIds, uuid)
+        LOG_INFO("BountyStub::onNoticeBecomePreyFailed", gbIds, uuid)
 ##########################################################################################
     def onNoticeAssignedHunterFailed(self, gbIds, prePublishDict, playerbox):
-        INFO_MSG("BountyStub::onNoticeAssignedHunterFailed", gbIds, prePublishDict)
+        LOG_INFO("BountyStub::onNoticeAssignedHunterFailed", gbIds, prePublishDict)
         prePublishItem = bountyItem()
         prePublishItem.initFromSyncDict(prePublishDict)
         prePublishItem = self.onDelPrePublishBounty(prePublishItem)
         playerbox.publishBountyRes(prePublishItem.toSyncDict(), gameconst.PublishBountyResType.HUNTER_NOT_ONLINE)
         
-    def onWaitForPrePublishBounty(self, prePublishDict):
-        INFO_MSG("BountyStub::onWaitForPrePublishBounty", prePublishDict)
+    def onWaitForPrePublishBounty(self, playerbox, prePublishDict):
+        LOG_INFO("BountyStub::onWaitForPrePublishBounty", prePublishDict)
         prePublishItem = bountyItem()
         prePublishItem.initFromSyncDict(prePublishDict)
         prePublishItem = self.hunterBountyDict[prePublishItem.hunterGbId]
         self.bountyInfoData[prePublishItem.uuid] = prePublishItem
         prePublishItem.waitForCheckTimerId = self.addTimerCB(60, 'onWaitForPrePublishBountyCallBack', (prePublishItem, ), gametimer.TIMER_TAG_WAIT_FOR_PRE_PUBLISH_BOUNTY_TIMER)
         self.persistentVersionId += 1
+        playerbox.onPublisherPrePublishBounty(prePublishDict)
 
     def onWaitForPrePublishBountyCallBack(self, prePublishItem):
-        INFO_MSG("BountyStub::onWaitForPrePublishBountyCallBack", id(prePublishItem), prePublishItem)
+        LOG_INFO("BountyStub::onWaitForPrePublishBountyCallBack", id(prePublishItem), prePublishItem)
         notCheckedTypeList = prePublishItem.getNotCheckedTypeBitIdxs(0)
-        INFO_MSG("BountyStub::onWaitForPrePublishBountyCallBack", notCheckedTypeList)
+        LOG_INFO("BountyStub::onWaitForPrePublishBountyCallBack", notCheckedTypeList)
         publishResCode = 0
         acceptResCode = 0
         if gameconst.BountyAvatarType.PUBLISHER not in notCheckedTypeList:
+            '''
             attachVal = dropAward.MailWealthVal()
             attachVal.addWealthByItemId(gameconst.ItemId.MONEY, prePublishItem.publishMoney + prePublishItem.depositMoney)
             mailAssistor.sendMailToPlayers([prePublishItem.gbid], CONST.datas['Bounty_RefuseOrder']['value'], extraAttach=attachVal, opUUID=prePublishItem.uuid, 
-                                           despArgs=(prePublishItem.hunterName, prePublishItem.preyName,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
-            
-            INFO_MSG("BountyStub::onWaitForPrePublishBountyCallBack publisher return money")
+                                           despArgs=(prePublishItem.hunterName, prePublishItem.preyName, gameconst.ItemId.MONEY, prePublishItem.depositMoney, gameconst.ItemId.MONEY, prePublishItem.publishMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
+            '''
+            LOG_INFO("BountyStub::onWaitForPrePublishBountyCallBack publisher return money")
         else:
-            ERROR_MSG("BountyStub::onWaitForPrePublishBountyCallBack publisher timeout error")
+            LOG_ERR("BountyStub::onWaitForPrePublishBountyCallBack publisher timeout error")
             self.onPrePublishBountyChecked(prePublishItem, gameconst.BountyAvatarType.PUBLISHER, False, gameconst.PublishBountyResType.PUBLISHER_CHECK_TIME_OUT)
             return
 
         if gameconst.BountyAvatarType.HUNTER in notCheckedTypeList:
-            INFO_MSG("BountyStub::onWaitForPrePublishBountyCallBack hunter timeout refuse")
+            LOG_INFO("BountyStub::onWaitForPrePublishBountyCallBack hunter timeout refuse")
             self.onPrePublishBountyChecked(prePublishItem, gameconst.BountyAvatarType.HUNTER, False, gameconst.AcceptBountyResType.HUNTER_CHECK_TIME_OUT)
             return
         else:
-            ERROR_MSG("BountyStub::onWaitForPrePublishBountyCallBack hunter error")
+            LOG_ERR("BountyStub::onWaitForPrePublishBountyCallBack hunter error")
         
     def onPrePublishBountyChecked(self, prePublishItem, baType, replyCode, resCode):
-        INFO_MSG("BountyStub::onPrePublishBountyChecked", baType, replyCode, resCode, prePublishItem)
+        LOG_INFO("BountyStub::onPrePublishBountyChecked", baType, replyCode, resCode, prePublishItem)
         prePublishItem = self.hunterBountyDict[prePublishItem.hunterGbId]
         prePublishItem.setBitCheckedByIdx(baType, replyCode)
-        INFO_MSG("BountyStub::onPrePublishBountyChecked", prePublishItem)
+        LOG_INFO("BountyStub::onPrePublishBountyChecked", prePublishItem)
         
         self.persistentVersionId += 1
         publishResCode = 0
         acceptResCode = 0
         if not replyCode:
-            INFO_MSG("BountyStub::onPrePublishBountyChecked replyCode false")
+            LOG_INFO("BountyStub::onPrePublishBountyChecked replyCode false")
             if baType == gameconst.BountyAvatarType.PUBLISHER:
                 publishResCode = resCode
                 acceptResCode = gameconst.PUBLISH_BOUNTY_RES_2_ACCEPT_BOUNTY_RES[publishResCode]
             elif baType == gameconst.BountyAvatarType.HUNTER:
                 acceptResCode = resCode
                 publishResCode = gameconst.ACCEPT_BOUNTY_RES_RES_2_PUBLISH_BOUNTY_RES[acceptResCode]
-            INFO_MSG("BountyStub::onPrePublishBountyChecked res", publishResCode, acceptResCode)
+                notCheckedResList = prePublishItem.getNotCheckedTypeBitIdxs(1)
+                if gameconst.BountyAvatarType.PUBLISHER not in notCheckedResList:
+                    attachVal = dropAward.MailWealthVal()
+                    attachVal.addWealthByItemId(gameconst.ItemId.MONEY, prePublishItem.publishMoney + prePublishItem.depositMoney)
+                    mailAssistor.sendMailToPlayers([prePublishItem.gbid], CONST.datas['Bounty_RefuseOrder']['value'], extraAttach=attachVal, opUUID=prePublishItem.uuid, 
+                                                despArgs=(prePublishItem.hunterName, prePublishItem.preyName, gameconst.ItemId.MONEY, prePublishItem.depositMoney, gameconst.ItemId.MONEY, prePublishItem.publishMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
+            LOG_INFO("BountyStub::onPrePublishBountyChecked res", publishResCode, acceptResCode)
             prePublishItem = self.onDelPrePublishBounty(prePublishItem)
             self.bountyInfoData.pop(prePublishItem.uuid, None)
             if prePublishItem.waitForCheckTimerId:
@@ -464,30 +481,19 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         else:
             # ztq_todo，在这里可以做更新玩家信息的操作
             if not prePublishItem.isAllTypeBitsChecked():
-                INFO_MSG("BountyStub::onPrePublishBountyChecked wait for type checked", prePublishItem.getNotCheckedTypeBitIdxs(0))
+                LOG_INFO("BountyStub::onPrePublishBountyChecked wait for type checked", prePublishItem.getNotCheckedTypeBitIdxs(0))
                 return
             
             if prePublishItem.waitForCheckTimerId:
                 self.cancelTimerCB(prePublishItem.waitForCheckTimerId, gametimer.TIMER_TAG_WAIT_FOR_PRE_PUBLISH_BOUNTY_TIMER)
                 prePublishItem.waitForCheckTimerId = 0
 
-            preAcceptItem = self.onReleaseAssignPrePublishBounty(prePublishItem)
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.gbid], 'publishBountyRes',
-                                                                  (preAcceptItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS, ),
-                                                                  self, 'publishBountyResFailed', (preAcceptItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS, ))
-            mailAssistor.sendMailToPlayers([preAcceptItem.gbid], CONST.datas['Bounty_KillingAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.hunterName, preAcceptItem.preyName,))
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.preyGbId], 'onNoticeBecomePreyHunter',
-                                                                  (preAcceptItem.toSyncDict(), ),
-                                                                  self, 'onNoticeBecomePreyHunterFailed', (preAcceptItem.uuid, ))
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.hunterGbId], 'acceptBountyRes',
-                                                                  (preAcceptItem.toSyncDict(), gameconst.AcceptBountyResType.SUCCESS, ),
-                                                                  self, 'acceptBountyResFailed', (preAcceptItem.toSyncDict(), gameconst.AcceptBountyResType.SUCCESS, ))
-            mailAssistor.sendMailToPlayers([preAcceptItem.hunterGbId], CONST.datas['Bounty_OrderAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.name,))
-            INFO_MSG("BountyStub::onPrePublishBountyChecked success", preAcceptItem)
+            LOG_INFO("BountyStub::onPrePublishBountyChecked pre success", prePublishItem.toSyncDict())
+            gameengine.getGlobalBase('PlayerStub').isOnLine(prePublishItem.preyGbId, self, 'onReleaseBountyCheckPreyOnlineCallback', (None, None, prePublishItem.toSyncDict(), ))
 
     def onReleaseAssignPrePublishBounty(self, preAcceptItem):
         now = utils.curTS()
-        INFO_MSG("BountyStub::onReleaseAssignPrePublishBounty")
+        LOG_INFO("BountyStub::onReleaseAssignPrePublishBounty")
         acceptItem = self.hunterBountyDict[preAcceptItem.hunterGbId]
         acceptItem.totalMoney = acceptItem.publishMoney + acceptItem.depositMoney
         acceptItem.flag = gameconst.BountyFlag.PREY_HUNTER
@@ -505,60 +511,103 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return acceptItem
 
     def publishBountyResFailed(self, gbIds, publishDict, publishResCode):
-        INFO_MSG("BountyStub::publishBountyResFailed", publishDict, publishResCode)
+        LOG_INFO("BountyStub::publishBountyResFailed", publishDict, publishResCode)
 
     def acceptBountyResFailed(self, gbIds, publishDict, acceptResCode):
-        INFO_MSG("BountyStub::acceptBountyResFailed", publishDict, acceptResCode)
+        LOG_INFO("BountyStub::acceptBountyResFailed", publishDict, acceptResCode)
+
+##########################################################################################
+    def onReleaseBountyCheckPreyOnlineCallback(self, beOnline, preybox, playerbox, hunterBox, bountyDict):
+        LOG_INFO("BountyStub::onReleaseBountyCheckPreyOnlineCallback")
+        prePublishItem = bountyItem()
+        prePublishItem.initFromSyncDict(bountyDict)
+        if prePublishItem.bountyType == gameconst.BountyType.PUBLIC:
+            prePublishItem = self.onReleasePublicPrePublishBounty(prePublishItem)
+            prePublishItem.preyOnline = beOnline
+            playerbox.publishBountyRes(prePublishItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS)
+            if preybox:
+                preybox.onNoticeBecomePrey(prePublishItem.toSyncDict())
+            else:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([prePublishItem.preyGbId], 'onNoticeBecomePrey',
+                                                                    (prePublishItem.toSyncDict(), ),
+                                                                    self, 'onNoticeBecomePreyFailed', (prePublishItem.uuid, ))
+            LOG_INFO("BountyStub::onReleaseBountyCheckPreyOnlineCallback success", prePublishItem)
+        elif prePublishItem.bountyType == gameconst.BountyType.ASSIGN:
+            preAcceptItem = self.onReleaseAssignPrePublishBounty(prePublishItem)
+            preAcceptItem.preyOnline = beOnline
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.gbid], 'publishBountyRes',
+                                                                  (preAcceptItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS, ),
+                                                                  self, 'publishBountyResFailed', (preAcceptItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS, ))
+            mailAssistor.sendMailToPlayers([preAcceptItem.gbid], CONST.datas['Bounty_KillingAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.hunterName, preAcceptItem.preyName,))
+            if preybox:
+                preybox.onNoticeBecomePreyHunter(preAcceptItem.toSyncDict())
+            else:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.preyGbId], 'onNoticeBecomePreyHunter',
+                                                                    (preAcceptItem.toSyncDict(), ),
+                                                                    self, 'onNoticeBecomePreyHunterFailed', (preAcceptItem.uuid, ))
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.hunterGbId], 'acceptBountyRes',
+                                                                  (preAcceptItem.toSyncDict(), gameconst.AcceptBountyResType.SUCCESS, ),
+                                                                  self, 'acceptBountyResFailed', (preAcceptItem.toSyncDict(), gameconst.AcceptBountyResType.SUCCESS, ))
+            mailAssistor.sendMailToPlayers([preAcceptItem.hunterGbId], CONST.datas['Bounty_OrderAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.name,))
+            LOG_INFO("BountyStub::onReleaseBountyCheckPreyOnlineCallback success", preAcceptItem)
 ##########################################################################################
     def acceptBounty(self, playerbox, bountyDict):
-        INFO_MSG("BountyStub::acceptBounty", bountyDict)
+        now = utils.curTS()
+        LOG_INFO("BountyStub::acceptBounty", bountyDict)
         acceptItem = bountyItem()
         acceptItem.initFromSyncDict(bountyDict)
 
         hunterItem = self.hunterBountyDict.get(acceptItem.hunterGbId, None)
         if hunterItem:
-            WARNING_MSG("BountyStub::acceptBounty alerady in hunter bounty list", hunterItem.toSyncDict())
+            LOG_WARN("BountyStub::acceptBounty alerady in hunter bounty list", hunterItem.toSyncDict())
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.ALERADY_HUNTER)
             return
         
         preAcceptItem = self.bountyInfoData.get(acceptItem.uuid, None)
         if not preAcceptItem:
-            WARNING_MSG("BountyStub::acceptBounty bounty not exist", acceptItem.uuid)
+            LOG_WARN("BountyStub::acceptBounty bounty not exist", acceptItem.uuid)
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_EXIST)
             return
 
         if preAcceptItem.bountyType != gameconst.BountyType.PUBLIC:
-            WARNING_MSG("BountyStub::acceptBounty bounty type error", preAcceptItem.bountyType)
+            LOG_WARN("BountyStub::acceptBounty bounty type error", preAcceptItem.bountyType)
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_PUBLIC_TYPE)
             return
 
         if preAcceptItem.state != gameconst.BountyState.PUBLISHED:
-            WARNING_MSG("BountyStub::acceptBounty bounty state error", preAcceptItem.state)
+            LOG_WARN("BountyStub::acceptBounty bounty state error", preAcceptItem.state)
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_PUBLISHED_STATE)
             return
         
         if preAcceptItem.gbid == acceptItem.hunterGbId:
-            WARNING_MSG("BountyStub::acceptBounty bounty publisher is self", preAcceptItem.gbid)
+            LOG_WARN("BountyStub::acceptBounty bounty publisher is self", preAcceptItem.gbid)
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.PUBLISHER_IS_SELF)
             return
 
         if preAcceptItem.preyGbId == acceptItem.hunterGbId:
-            WARNING_MSG("BountyStub::acceptBounty bounty prey is self", preAcceptItem.preyGbId)
+            LOG_WARN("BountyStub::acceptBounty bounty prey is self", preAcceptItem.preyGbId)
             playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.PREY_IS_SELF)
             return
 
-        DEBUG_MSG("BountyStub::acceptBounty", preAcceptItem)
+        leftTime = preAcceptItem.getLeftTime(now)
+        needTime = CONST.datas['Bounty_OutOrder'].get("value", 60)
+        if leftTime <= needTime:
+            LOG_WARN("BountyStub::acceptBounty bounty not enough accept left time", leftTime, needTime)
+            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_ENOUGH_ACCEPT_LEFT_TIME)
+            return
+        
+        LOG_DBG("BountyStub::acceptBounty", preAcceptItem)
 
         preAcceptItem.state = gameconst.BountyState.PRE_ACCEPT
         preAcceptItem.hunterGbId = acceptItem.hunterGbId
         self.hunterBountyDict[acceptItem.hunterGbId] = preAcceptItem
-        DEBUG_MSG("BountyStub::acceptBounty", preAcceptItem)
+        LOG_DBG("BountyStub::acceptBounty", preAcceptItem)
         playerbox.onHunterPreAcceptBounty(preAcceptItem.toSyncDict())
 
-        INFO_MSG("BountyStub::acceptBounty end")
+        LOG_INFO("BountyStub::acceptBounty end")
 
     def onHunterPreAcceptBountyRes(self, playerbox, bountyDict, resCode):
-        INFO_MSG("BountyStub::onHunterPreAcceptBountyRes", bountyDict, resCode)
+        LOG_INFO("BountyStub::onHunterPreAcceptBountyRes", bountyDict, resCode)
         preAcceptItem = bountyItem()
         preAcceptItem.initFromSyncDict(bountyDict)
 
@@ -578,13 +627,13 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                                                                   (preAcceptItem.toSyncDict(), ),
                                                                   self, 'onNoticeHasAcceptedFailed', (preAcceptItem.uuid, ))
             mailAssistor.sendMailToPlayers([preAcceptItem.gbid], CONST.datas['Bounty_KillingAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.hunterName, preAcceptItem.preyName,))            
-            INFO_MSG("BountyStub::onHunterPreAcceptBountyRes success", preAcceptItem.toSyncDict())
+            LOG_INFO("BountyStub::onHunterPreAcceptBountyRes success", preAcceptItem.toSyncDict())
         elif preAcceptItem.bountyType == gameconst.BountyType.ASSIGN:
             pass
 
     def onDelPreAcceptBounty(self, preAcceptItem):
         preAcceptItem = self.bountyInfoData[preAcceptItem.uuid]
-        INFO_MSG("BountyStub::onDelPreAcceptBounty", preAcceptItem.toSyncDict())
+        LOG_INFO("BountyStub::onDelPreAcceptBounty", preAcceptItem.toSyncDict())
         self.hunterBountyDict.pop(preAcceptItem.hunterGbId, None)
         preAcceptItem.state = gameconst.BountyState.PUBLISHED
         preAcceptItem.hunterGbId = 0
@@ -593,7 +642,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     
     def onReleasePublicPreAcceptBounty(self, preAcceptItem):
         now = utils.curTS()
-        INFO_MSG("BountyStub::onReleasePublicPreAcceptBounty")
+        LOG_INFO("BountyStub::onReleasePublicPreAcceptBounty")
         acceptItem = self.bountyInfoData[preAcceptItem.uuid]
         acceptItem.totalMoney += acceptItem.depositMoney
         acceptItem.flag = gameconst.BountyFlag.PREY_HUNTER
@@ -612,13 +661,13 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return acceptItem
 
     def onNoticeBecomePreyHunterFailed(self, gbIds, uuid):
-        INFO_MSG("BountyStub::onNoticeBecomePreyHunterFailed", gbIds, uuid)
+        LOG_INFO("BountyStub::onNoticeBecomePreyHunterFailed", gbIds, uuid)
 
     def onNoticeHasAcceptedFailed(self, gbIds, uuid):
-        INFO_MSG("BountyStub::onNoticeHasAcceptedFailed", gbIds, uuid)
+        LOG_INFO("BountyStub::onNoticeHasAcceptedFailed", gbIds, uuid)
 
     def complateBounty(self, preyBox, hunterBox, uuid):
-        INFO_MSG("BountyStub::complateBounty", preyBox, hunterBox, uuid)
+        LOG_INFO("BountyStub::complateBounty", preyBox, hunterBox, uuid)
         complateItem = bountyItem(uuid)
 
         complateItem = self.onTakeDownBounty(complateItem)
@@ -636,11 +685,13 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         mailAssistor.sendMailToPlayers([complateItem.hunterGbId], CONST.datas['Bounty_KillingSuccess']['value'], opUUID=complateItem.uuid, despArgs=(complateItem.preyName, complateItem.name, ))
         if complateItem.bountyType == gameconst.BountyType.PUBLIC:
             attachVal = dropAward.MailWealthVal()
-            taxMoney = math.ceil(complateItem.totalMoney * CONST.datas['BountyTaxRate'].get("value", 10) / 100)
+            totalBountyMoney = complateItem.totalMoney - complateItem.depositMoney
+            taxMoney = math.ceil(totalBountyMoney * CONST.datas['BountyTaxRate'].get("value", 10) / 100)
             totalMoney = complateItem.totalMoney - taxMoney
+            bountyMoney = totalBountyMoney - taxMoney
             attachVal.addWealthByItemId(gameconst.ItemId.MONEY, totalMoney)
             mailAssistor.sendMailToPlayers([complateItem.hunterGbId], CONST.datas['Bounty_AllMoneyGet']['value'], extraAttach=attachVal, opUUID=complateItem.uuid, 
-                                           despArgs=(complateItem.preyName,), srcType=AAC_AACDD.datas.BONUS_SRC_REWARD_BACK)
+                                           despArgs=(complateItem.preyName, gameconst.ItemId.MONEY, complateItem.depositMoney, gameconst.ItemId.MONEY, bountyMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_REWARD_BACK)
         elif complateItem.bountyType == gameconst.BountyType.ASSIGN:
             attachVal1 = dropAward.MailWealthVal()
             attachVal1.addWealthByItemId(gameconst.ItemId.MONEY, complateItem.depositMoney)
@@ -655,10 +706,10 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.onUpdateHunterRankInfo(complateItem, True)
 
     def onTakeDownBounty(self, takeDownItem):
-        INFO_MSG("BountyStub::onTakeDownBounty", takeDownItem)
+        LOG_INFO("BountyStub::onTakeDownBounty", takeDownItem)
         takeDownItem = self.bountyInfoData.pop(takeDownItem.uuid, None)
         publishList = self.publishBountyDict.get(takeDownItem.gbid, [])
-        INFO_MSG("BountyStub::onTakeDownBounty1", len(publishList), publishList, id(takeDownItem), takeDownItem.toSyncDict())
+        LOG_INFO("BountyStub::onTakeDownBounty1", len(publishList), publishList, id(takeDownItem), takeDownItem.toSyncDict())
         publishList.remove(takeDownItem)
         if not len(publishList):
             self.publishBountyDict.pop(takeDownItem.gbid, None)
@@ -672,15 +723,15 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             pass
 
         self.persistentVersionId += 1
-        INFO_MSG("BountyStub::onTakeDownBounty2", len(publishList), publishList)
+        LOG_INFO("BountyStub::onTakeDownBounty2", len(publishList), publishList)
         return takeDownItem
     
     def onNoticeComplateBountyFailed(self, gbIds, complateDict, baType):
-        INFO_MSG("BountyStub::onNoticeComplateBountyFailed", gbIds, complateDict, baType)
+        LOG_INFO("BountyStub::onNoticeComplateBountyFailed", gbIds, complateDict, baType)
 
     def initQueryBountyInfo(self, playerbox, gbid):
         now = utils.curTS()
-        INFO_MSG("BountyStub::initQueryBountyInfo")
+        LOG_INFO("BountyStub::initQueryBountyInfo")
         infoDictList = []
         publishList = self.publishBountyDict.get(gbid, [])
         for item in publishList:
@@ -703,7 +754,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         playerbox.initQueryBountyInfoRes(infoDictList, preyItem.toSyncDict(), hunterItem.toSyncDict())
 
     def updateBountyAvatarInfo(self, gbid, updateInfoDict):
-        INFO_MSG("BountyStub::updateBountyAvatarInfo", gbid, updateInfoDict)
+        LOG_INFO("BountyStub::updateBountyAvatarInfo", gbid, updateInfoDict)
         updateBountyTypeSet = set()
         updateBountyAvatarKeySet = set()
         noticeInfoDict = {}
@@ -711,7 +762,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         conversionDict = gameconst.BOUNTY_AVATAR_TYPE_2_CONVERSION_DICT[baType]
         publishList = self.publishBountyDict.get(gbid, [])
         for publishItem in publishList:
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo publishItem bef", publishItem, conversionDict)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo publishItem bef", publishItem, conversionDict)
             for key, value in updateInfoDict.items():
                 publisherProp = conversionDict.get(key, None)
                 if not publisherProp:
@@ -721,13 +772,13 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 updateBountyAvatarKeySet.add(key)
                 for batype, gbId in enumerate(gbIds):
                     noticeInfoDict.setdefault(gbId, {}).setdefault(batype, set()).add(publishItem.uuid)
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo publishItem aft", publishItem)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo publishItem aft", publishItem)
 
         baType = gameconst.BountyAvatarType.PREY
         conversionDict = gameconst.BOUNTY_AVATAR_TYPE_2_CONVERSION_DICT[baType]
         preyItem = self.preyBountyDict.get(gbid, None)
         if preyItem:
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo preyItem bef", preyItem, conversionDict)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo preyItem bef", preyItem, conversionDict)
             for key, value in updateInfoDict.items():
                 preyProp = conversionDict.get(key, None)
                 if not preyProp:
@@ -737,13 +788,13 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 updateBountyAvatarKeySet.add(key)
                 for batype, gbId in enumerate(gbIds):
                     noticeInfoDict.setdefault(gbId, {}).setdefault(batype, set()).add(preyItem.uuid)
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo preyItem aft", preyItem)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo preyItem aft", preyItem)
 
         baType = gameconst.BountyAvatarType.HUNTER
         conversionDict = gameconst.BOUNTY_AVATAR_TYPE_2_CONVERSION_DICT[baType]
         hunterItem = self.hunterBountyDict.get(gbid, None)
         if hunterItem:
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo hunterItem bef", hunterItem, conversionDict)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo hunterItem bef", hunterItem, conversionDict)
             for key, value in updateInfoDict.items():
                 hunterProp = conversionDict.get(key, None)
                 if not hunterProp:
@@ -753,9 +804,9 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 updateBountyAvatarKeySet.add(key)
                 for batype, gbId in enumerate(gbIds):
                     noticeInfoDict.setdefault(gbId, {}).setdefault(batype, set()).add(hunterItem.uuid)
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo hunterItem aft", hunterItem)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo hunterItem aft", hunterItem)
 
-        DEBUG_MSG("BountyStub::updateBountyAvatarInfo", noticeInfoDict)
+        LOG_DBG("BountyStub::updateBountyAvatarInfo", noticeInfoDict)
         for gbId, noticeInfo in noticeInfoDict.items():
             if not gbId:
                 continue
@@ -771,27 +822,28 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 continue
 
             conversionDict = gameconst.BOUNTY_RANK_TYPE_2_CONVERSION_DICT[brType]
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo rankInfoData bef", rankItem, conversionDict)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo rankInfoData bef", rankItem, conversionDict)
             for key, value in updateInfoDict.items():
                 hunterProp = conversionDict.get(key, None)
                 if not hunterProp:
                     continue
                 rankItem.updateAvatarInfo(hunterProp, value, self.showPublicRankDataList[brType])
                 updateBountyAvatarKeySet.add(key)
-            DEBUG_MSG("BountyStub::updateBountyAvatarInfo rankInfoData aft", rankItem)
+            LOG_DBG("BountyStub::updateBountyAvatarInfo rankInfoData aft", rankItem)
 
         if gameconst.BountyType.PUBLIC in updateBountyTypeSet:
             self.bountyListVersionId += 1
         if not updateBountyAvatarKeySet.isdisjoint(gameconst.UpdateBountyAvatarKey.PERSISTENT_KEYS):
             self.persistentVersionId += 1
+        LOG_DBG("BountyStub::updateBountyAvatarInfo end", self.bountyListVersionId, self.persistentVersionId)
 
     def updateBounty(self, playerBox, needUpdateInfo):
-        INFO_MSG("BountyStub::updateBounty 1", needUpdateInfo)
+        LOG_INFO("BountyStub::updateBounty 1", needUpdateInfo)
         now = utils.curTS()
         updateInfo = {}
         for uuid, baType in needUpdateInfo.items():
             publishItem = self.bountyInfoData.get(uuid, None)
-            DEBUG_MSG("BountyStub::updateBounty 2", publishItem)
+            LOG_DBG("BountyStub::updateBounty 2", publishItem)
             if not publishItem:
                 continue
             if publishItem.state not in gameconst.BountyState.PUBLISHED_SET:
@@ -799,12 +851,12 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
             publishItem.refreshTime(now)
             updateInfo.setdefault(baType, []).append(publishItem.toSyncDict())
-        DEBUG_MSG("BountyStub::updateBounty 3", updateInfo)
+        LOG_DBG("BountyStub::updateBounty 3", updateInfo)
         if updateInfo:
             playerBox.updateBountyRes(updateInfo)
 
     def getShowPublicRankList(self, playerBox, brType, versionId):
-        INFO_MSG("BountyStub::getShowPublicRankList", brType, versionId)
+        LOG_INFO("BountyStub::getShowPublicRankList", brType, versionId)
         if brType not in gameconst.BountyRankType.ALL_VALID_RANK_TYPE:
             return
 
@@ -815,37 +867,46 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         playerBox.streamStringProxy(data, '', gameconst.StreamStringID.BOUNTY_RANK_DATA)
 
     def genShowPublicRankListStreamData(self, brType, versionId):
+        subType = gameconst.BountyRankSubType.WEEK
         rankInfo = self.showPublicRankDataList[brType]
-        INFO_MSG("BountyStub::genRankListStreamData", brType, versionId, rankInfo.beUpdate, rankInfo.versionId)
-        if versionId >= rankInfo.versionId:
+        LOG_INFO("BountyStub::genRankListStreamData", brType, subType, versionId, rankInfo.beUpdate[subType], rankInfo.versionId[subType])
+        if versionId >= rankInfo.versionId[subType]:
             return "", False
         
-        rankDict = rankInfo.toClientDict()
+        rankDict = rankInfo.toClientDict(subType)
         jsonStr = json.dumps(rankDict).encode('ascii')
-        DEBUG_MSG('BountyStub::genRankListStreamData jsonStr:', len(jsonStr))
+        LOG_DBG('BountyStub::genRankListStreamData jsonStr:', len(jsonStr))
         zStr = gzip.compress(jsonStr)
-        DEBUG_MSG('BountyStub::genRankListStreamData gzipStr:', len(zStr))
+        LOG_DBG('BountyStub::genRankListStreamData gzipStr:', len(zStr))
         return zStr, True
 
     def getShowPublicBountyList(self, playerBox, startIdx, versionId):
-        INFO_MSG("BountyStub::getShowPublicBountyList", startIdx, versionId)
+        LOG_INFO("BountyStub::getShowPublicBountyList", startIdx, versionId)
         if startIdx < 0:
             return
         if versionId >= self.bountyListVersionId:
             return
         
-        endIdx = startIdx + gameconst.BOUNTY_PAGE_SIZE
-        isEnd = endIdx >= len(self.showPublicBountyList)
-        bountyList = self.showPublicBountyList[startIdx : endIdx]
         clientDictList = []
-        for item in bountyList:
+        isEnd = False
+        endIdx = startIdx
+        while not isEnd:
+            if endIdx >= len(self.showPublicBountyList):
+                isEnd = True
+                break
+            if len(clientDictList) >= gameconst.BOUNTY_PAGE_SIZE:
+                break
+            item = self.showPublicBountyList[endIdx]
+            endIdx += 1
+            if item.state != gameconst.BountyState.PUBLISHED:
+                continue
             clientDictList.append(item.toClientDict())
-        DEBUG_MSG("BountyStub::getShowPublicBountyList list", bountyList)
-        DEBUG_MSG("BountyStub::getShowPublicBountyList clientList", clientDictList)
-        playerBox.client.onGetPublicBountyList(startIdx, clientDictList, isEnd, self.bountyListVersionId)
+
+        LOG_DBG("BountyStub::getShowPublicBountyList clientList", startIdx, endIdx, isEnd, clientDictList)
+        playerBox.client.onGetPublicBountyList(startIdx, endIdx, clientDictList, isEnd, self.bountyListVersionId)
 ################################################################################
     def onUpdateHunterRankInfo(self, bountyItem, isSuccess):
-        INFO_MSG("BountyStub::genRankListStreamData", isSuccess, bountyItem)
+        LOG_INFO("BountyStub::genRankListStreamData", isSuccess, bountyItem)
         if gameconst.BountyRankType.HUNTER not in gameconst.BountyRankType.ALL_VALID_RANK_TYPE:
             return
 
@@ -855,48 +916,50 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.sortShowPublicRankList((gameconst.BountyRankType.HUNTER,))
 ################################################################################
     def gmShowBountyInfo(self):
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo bountyInfoData----------")
-        DEBUG_MSG("BountyStub::", self.bountyInfoData.toSyncDict())
+        LOG_DBG("----------BountyStub::gmShowBountyInfo bountyInfoData----------")
+        LOG_DBG("BountyStub::", self.bountyInfoData.toSyncDict())
         for gbid, item in self.bountyInfoData.items():
-            DEBUG_MSG("BountyStub::", id(item), item)
+            LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo publishBountyDict----------")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo publishBountyDict----------")
         for gbid, list in self.publishBountyDict.items():
-            DEBUG_MSG("BountyStub::publishBountyDict list", gbid, len(list))
+            LOG_DBG("BountyStub::publishBountyDict list", gbid, len(list))
             for item in list:
-                DEBUG_MSG("BountyStub::", id(item), item)
+                LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo preyBountyDict----------")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo preyBountyDict----------")
         for gbid, item in self.preyBountyDict.items():
-            DEBUG_MSG("BountyStub::", id(item), item)
+            LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo hunterBountyDict----------")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo hunterBountyDict----------")
         for gbid, item in self.hunterBountyDict.items():
-            DEBUG_MSG("BountyStub::", id(item), item)
+            LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo showPublicBountyList----------")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo showPublicBountyList----------")
         for item in self.showPublicBountyList:
-            DEBUG_MSG("BountyStub::", id(item), item)
+            LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo checkExpiredBountyHeap----------")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo checkExpiredBountyHeap----------")
         for item in self.checkExpiredBountyHeap:
-            DEBUG_MSG("BountyStub::", id(item), item)
+            LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("=========================================================")
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo allRankInfoDataList----------")
+        LOG_DBG("=========================================================")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo allRankInfoDataList----------")
         for brType, rankInfoData in enumerate(self.allRankInfoDataList):
             if not rankInfoData:
                 continue
-            DEBUG_MSG("BountyStub::", brType, rankInfoData.toSyncDict())
+            LOG_DBG("BountyStub::", brType, rankInfoData.toSyncDict())
             for gbid, item in rankInfoData.items():
-                DEBUG_MSG("BountyStub::", id(item), item)
+                LOG_DBG("BountyStub::", id(item), item)
 
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo showPublicRankDataList----------")
+        LOG_DBG("----------BountyStub::gmShowBountyInfo showPublicRankDataList----------")
         for brType, rankData in enumerate(self.showPublicRankDataList):
             if not rankData:
                 continue
-            DEBUG_MSG("BountyStub::", rankData.brType, rankData.beUpdate, rankData.versionId)
-            for item in rankData.rankList:
-                DEBUG_MSG("BountyStub::", id(item), item)
-        DEBUG_MSG("----------BountyStub::gmShowBountyInfo versionId----------")
-        DEBUG_MSG("BountyStub::", self.bountyListVersionId, self.persistentVersionId)
+            LOG_DBG("BountyStub::", rankData.brType)
+            for subType, rankList in enumerate(rankData.rankList):
+                LOG_DBG("BountyStub::subType", subType, rankData.beUpdate[subType], rankData.versionId[subType], len(rankList))
+                for item in rankList:
+                    LOG_DBG("BountyStub::", id(item), item)
+        LOG_DBG("----------BountyStub::gmShowBountyInfo versionId----------")
+        LOG_DBG("BountyStub::", self.bountyListVersionId, self.persistentVersionId)

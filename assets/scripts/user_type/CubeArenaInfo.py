@@ -7,7 +7,9 @@ import userType
 import formula
 import cube_floor
 import cube_room
+import cube_config
 import utils
+import gameconst
 
 
 class CubeArenaVal(userType.UserSingleType):
@@ -31,7 +33,7 @@ class CubeArenaVal(userType.UserSingleType):
 
     def setArenaKing(self, player, spaceMgr):
         if self.arenaKing:
-            LOG_IFO('arenaKing is not 0', self.arenaKing, player.id)
+            LOG_INFO('arenaKing is not 0', self.arenaKing, player.id)
             return self.arenaKing == player.id
 
         self.arenaKing = player.id
@@ -43,7 +45,7 @@ class CubeArenaVal(userType.UserSingleType):
         player.removeBuff(self.getChallengerBuff(player.spaceNo))
         player.addBuff(self.kingBuffId, 1, player.id)
         spaceMgr.dealWithArenaTimer()
-        LOG_IFO('arena king by set', player.gbId)
+        LOG_INFO('arena king by set', player.gbId)
         spaceMgr.syncPlayer(lambda box: box.client.onArenaKing(self.arenaKing))
         return True
 
@@ -67,11 +69,21 @@ class CubeArenaVal(userType.UserSingleType):
         self.kingBuffId = 0
 
         if killerPlayer.IsAvatar:
-            LOG_IFO('arena king by kill', killerPlayer.gbId)
+            LOG_INFO('arena king by kill', killerPlayer.gbId)
             self.setArenaKing(killerPlayer, spaceMgr)
         else:
             spaceMgr.dealWithArenaTimer()
         return True
+
+    def onArenaChangeSafeArea(self, player, beSafe, spaceMgr):
+        if beSafe:
+            if player.id == self.arenaKing and self.onPlayerLeaveArena(self.arenaKing, spaceMgr):
+                player.showMsg(cube_config.datas['cube_championDefenderLose']['value'], [])
+        else:
+            if player.id == self.arenaKing:
+                LOG_WARN("onArenaChangeSafeArea", self.arenaKing)
+            else:
+                player.onSwitchPKModel(gameconst.PKModel.ATTACK)
 
     def doAddStage(self, curStage, spaceMgr):
         if not self.arenaStage:

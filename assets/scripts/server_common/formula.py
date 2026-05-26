@@ -310,6 +310,13 @@ def getMineWarBattleArea(spaceNo):
 def isMineWarMineArea(spaceNo):
     return getMineWarBattleArea(spaceNo) > 0
 
+def getMineWarBuffPosition(spaceNo):
+    mapId = fetchMapId(spaceNo)
+    for _, data in MBMA.datas.items():
+        if mapId in data['sceneList']:
+            return data['buffPosition']
+    return []
+
 def checkSpaceForbidTeamFollow(spaceNo):
     if not spaceNo:
         return True

@@ -13,16 +13,37 @@ import LogTrackingMgr
 
 import workShop_config as WSC
 import workShop_produce as WSP
+import workShop_limit as WSL
+import itemData_itemData as ITEM_DATA
 import antiAddictCategory_antiAddictCategory_def as AAC_AACD
 
 class IWorkshop(object):
     def __init__(self):
         pass
+
+    def sendWorkShopMonthlyLimit(self):
+        keys = []
+        values = []
+        for k, v in self.monthlyLimit.items():
+            keys.append(k)
+            values.append(v)
+        self.client.onWorkshopMonthlyLimit(keys, values)
+
+    def onWorkshopMonthlyUpdate(self, *args):
+        self.monthlyLimit = {}
+        self.sendWorkShopMonthlyLimit()
+
+    @gamedecorator.checkGameconfigEnable('workshop')
+    @gamedecorator.limitcall(1)
+    def reqWorkshopMonthlyLimit(self, exposed):
+        LOG_INFO("reqWorkshopMonthlyLimit ", exposed)
+        self.sendWorkShopMonthlyLimit()
+
     #------------------------------------------------client api------------------------------------------------------------------
     @gamedecorator.checkGameconfigEnable('workshop')
     @gamedecorator.limitcall(1)
     def reqWorkshopMF(self, exposed, itemID, batchCount, gridIds, gridNums):    
-        LOG_IFO("reqWorkshopMF ", exposed, itemID, batchCount, gridIds, gridNums)
+        LOG_INFO("reqWorkshopMF ", exposed, itemID, batchCount, gridIds, gridNums)
         normalDatas = []
         luckyDatas = []
         if not gameconfig.enableWorkshop():
@@ -67,6 +88,18 @@ class IWorkshop(object):
             self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BATCH_COUNT, normalDatas, luckyDatas)
             return
         
+        # 检查每月次数限制
+        itemTypeId = dataUtils.getItemTypeID(itemID)
+        wslData = WSL.datas.get(itemTypeId)
+        if wslData:
+            usedCount = self.monthlyLimit.get(itemTypeId, None)
+            if usedCount is None:
+                self.monthlyLimit[itemTypeId] = 0
+            else:
+                if usedCount + batchCount > wslData['limit']:
+                    self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_OVER_MONTHLY_LIMIT, normalDatas, luckyDatas)
+                    return
+            
         datas = self.calculateComsumeItems(gridIds, gridNums)
         if not datas:
             LOG_ERR("reqWorkshopMF ~ item is not enough", itemID, batchCount)
@@ -74,9 +107,18 @@ class IWorkshop(object):
             return
         
         ret, normalDatas, luckyDatas = self.doWorkshopManufactoring(itemID, batchCount, datas, gridIds, gridNums)
+        # 不成功，清空数据
         if ret != gameconst.WorkshopResult.WORKSHOP_SUCCESS:
             normalDatas = []
             luckyDatas = []
+        else:
+            # 成功处理，记录次数
+            itemTypeId = dataUtils.getItemTypeID(itemID)
+            usedCount = self.monthlyLimit.get(itemTypeId, None)
+            if not (usedCount is None):
+                totalCount = usedCount + batchCount
+                self.monthlyLimit[itemTypeId] = totalCount
+
         self.client.onWorkshopMF(ret, normalDatas, luckyDatas)
     #------------------------------------------------client api------------------------------------------------------------------
 
@@ -211,7 +253,7 @@ class IWorkshop(object):
         return ret, None, None
 
     def calculateWorkshopMaterials(self, itemID, batchCount, costCurrency, normalItems, luckyItems, datas):
-        LOG_IFO("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, normalItems, luckyItems, datas)
+        LOG_INFO("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, normalItems, luckyItems, datas)
         produceCfgData = WSP.datas.get(itemID)
         if not produceCfgData:
             LOG_WARN("calculateWorkshopMaterials ~ this item has no configuration", produceCfgData, itemID, batchCount)

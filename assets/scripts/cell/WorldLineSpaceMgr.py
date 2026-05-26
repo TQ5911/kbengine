@@ -16,7 +16,7 @@ import branchData_set as BDS
 
 class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWarSpaceMgr.IMineWarSpaceMgr):
     def __init__(self):
-        LOG_IFO('WorldLineSpaceMgr init', self.spaceNo, self.spaceID)
+        LOG_INFO('WorldLineSpaceMgr init', self.spaceNo, self.spaceID)
 
         iMineWarSpaceMgr.IMineWarSpaceMgr.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
@@ -31,7 +31,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
             ])
         stubName = 'WorldLineStub{}'.format(formula.fetchMapId(self.spaceNo))
         gameengine.getGlobalBase(stubName).onSpaceMgrReady(self.spaceNo, self)
-        LOG_IFO('WorldLineSpaceMgr init done', self.spaceNo, self.spaceID, stubName)
+        LOG_INFO('WorldLineSpaceMgr init done', self.spaceNo, self.spaceID, stubName)
 
         # 矿战另外处理
         if not formula.inMineWarScene(self.spaceNo):
@@ -134,6 +134,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         iMineWarSpaceMgr.IMineWarSpaceMgr.onPlayerLeave(self, gbId, playerId, box)
 
     def onPlayerRelogin(self, player, gbId):
+        super().onPlayerRelogin(player, gbId)
         if not formula.inWolrdBossScene(self.spaceNo):
             return
 
@@ -189,4 +190,4 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
 
         if lastCnt != self.fightingPlayersCnt:
             stubName = 'WorldLineStub{}'.format(formula.fetchMapId(self.spaceNo))
-            gameengine.getGlobalBase(stubName).onFightingPlayersCntSync(formula.parseLineNo(self.spaceNo), self.fightingPlayersCnt)
+            gameengine.getGlobalBase(stubName).onFightingPlayersCntSync(self.spaceNo, self.fightingPlayersCnt)

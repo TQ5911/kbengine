@@ -543,6 +543,7 @@
         </onQixieChanged>
 
         <onGuildRelationAll>
+            <Arg>       UINT32                               </Arg>
             <Arg>       ARRAY   <of>    GUILD_AND_RELATION          </of>   </Arg>
         </onGuildRelationAll>
 

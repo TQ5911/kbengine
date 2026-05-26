@@ -10,6 +10,8 @@ import utils
 import gameengine
 import heapq
 import userType
+import gameconst
+import activityControl_activityNotice as ACAN
 
 
 class ActTimeType(object):
@@ -29,20 +31,41 @@ class ActTimeVal(userType.UserSingleType):
     def __str__(self):
         return f'ActTimeVal(actId={self.actId}, fireTime={self.fireTime}, fireType={self.fireType})'
 
+class AnnouncementVal(object):
+    def __init__(self, aType, uaType, beginTime, endTime):
+        self.aType = aType
+        self.uaType = uaType
+        self.beginTime = beginTime
+        self.endTime = endTime
+        self.beAnnouncement = False
+
+    def needAnnouncement(self, now):
+        return self.beginTime <= now < self.endTime
+
+    def leftTime(self, now):
+        return self.endTime - now
+    
+    def __str__(self):
+        return f'AnnouncementVal(aType={self.aType}, uaType={self.uaType}, beginTime={self.beginTime}, endTime={self.endTime}, beAnnouncement={self.beAnnouncement})'
+
 
 class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
+        self.announcementDict = {}
         self.addDatetimeTimerTick()
         self._resetActData()
 
     def onTimer(self, tid, userArg):
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.TIMER_CHECK_ANNOUNCEMENT:
+            self.checkAnnouncement()
         else:
             self._onTimer(tid, userArg)
 
     def doNext(self):
         super().doNext()
+        self.pyAddTimer(1, 2, gametimer.TIMER_CHECK_ANNOUNCEMENT)
 
     def _resetActData(self):
         now = utils.curTS()
@@ -124,4 +147,54 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             gameengine.callAllApps('gameengine.modifyGlobalActData', (_val.actId, 0))
 
         self._startActTimer()
+
+    def updateAnnouncement(self, aType, uaType, triggerTime, endTime):
+        now = utils.curTS()
+        LOG_INFO('updateAnnouncement', now, aType, uaType, triggerTime, endTime)
+        preShowTime = ACAN.datas.get(aType, {}).get('preShowTime', 0)
+
+        advanceTime = 0
+        if uaType in (gameconst.UpdateAnnouncementType.WORLD_BOSS1_UPCOMING, gameconst.UpdateAnnouncementType.WORLD_BOSS2_UPCOMING):
+            advanceTime = gameconst.ONE_MINUTE_COST_SECONDS * preShowTime
+        elif uaType in (gameconst.UpdateAnnouncementType.WORLD_BOSS1_ONGOING, gameconst.UpdateAnnouncementType.WORLD_BOSS2_ONGOING):
+            advanceTime = gameconst.ONE_MINUTE_COST_SECONDS * preShowTime
+            endTime += advanceTime
+        elif uaType in (gameconst.UpdateAnnouncementType.MINE_WAR_UPCOMING, gameconst.UpdateAnnouncementType.MINE_WAR_ONGOING,
+                        gameconst.UpdateAnnouncementType.SIEGE_WAR_BIDDING, gameconst.UpdateAnnouncementType.SIEGE_WAR_UPCOMING, gameconst.UpdateAnnouncementType.SIEGE_WAR_ONGOING):
+            advanceTime = endTime - triggerTime
+        else:
+            LOG_ERR('updateAnnouncement unknown uaType', uaType)
+            return
+        announcementVal = AnnouncementVal(aType, uaType, endTime - advanceTime, endTime)
+        self.announcementDict[uaType] = announcementVal
+        LOG_DBG('updateAnnouncement val', announcementVal)
+
+        if not announcementVal.needAnnouncement(now):
+            return
+        announcementVal.beAnnouncement = True
+        LOG_DBG('updateAnnouncement send val', announcementVal)
+        gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onAnnouncement', (announcementVal.aType, announcementVal.uaType, announcementVal.endTime)))
+
+    def checkAnnouncement(self):
+        now = utils.curTS()
+        for uaType, announcementVal in self.announcementDict.items():
+            if announcementVal.beAnnouncement:
+                continue
+            if not announcementVal.needAnnouncement(now):
+                continue
+            announcementVal.beAnnouncement = True
+            LOG_DBG('checkAnnouncement send val', announcementVal)
+            gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onAnnouncement', (announcementVal.aType, announcementVal.uaType, announcementVal.endTime)))
+
+    def getAnnouncement(self, playerBox):
+        now = utils.curTS()
+        LOG_DBG('getAnnouncement', now)
+        for uaType, announcementVal in self.announcementDict.items():
+            self.sendAnnouncement(playerBox, announcementVal, now)
+
+    def sendAnnouncement(self, playerBox, announcementVal, now):
+        if not announcementVal.needAnnouncement(now):
+            return
+        LOG_DBG('sendAnnouncement val', announcementVal)
+        playerBox.client.onAnnouncement(announcementVal.aType, announcementVal.uaType, announcementVal.endTime)
 

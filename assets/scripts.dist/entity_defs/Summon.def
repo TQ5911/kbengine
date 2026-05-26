@@ -1,0 +1,115 @@
+<root>
+    <Volatile>
+        <position/>
+        <!--<position> 0 </position> Don't update-->
+        <yaw/>
+        <!--<pitch> 20 </pitch>-->
+        <optimized> false </optimized>
+    </Volatile>
+
+    <Interfaces>
+        <Interface>    iAICombatUnit    </Interface>
+        <Interface>    iTimerCell    </Interface>
+        <Interface>    iEventMgr     </Interface>
+        <Interface>    iFubenSpace    </Interface>
+        <Interface>    iBaseWithCell    </Interface>
+        <Interface>    iClient          </Interface>
+        <Interface>    iMonsterGrp      </Interface>
+        <Interface>    iMonsterDungeon  </Interface>
+        <Interface>    iGameEntity      </Interface>
+    </Interfaces>
+
+    <Properties>
+        <summonId>
+            <Type>  OBJECT_ID                       </Type>
+            <Flags> OTHER_CLIENTS                   </Flags>
+            <WitnessName>     true                  </WitnessName>
+        </summonId>
+
+        <hostId>
+            <Type>  OBJECT_ID                       </Type>
+            <Flags> OTHER_CLIENTS                   </Flags>
+            <WitnessName>     true                  </WitnessName>
+        </hostId>
+
+        <bindedEntityId>
+            <Type>  OBJECT_ID                         </Type>
+            <Flags> OTHER_CLIENTS               </Flags>
+            <Default>       0         </Default>
+        </bindedEntityId>
+
+        <name>
+            <Type>  UNICODE                         </Type>
+            <Flags> OTHER_CLIENTS                   </Flags>
+            <WitnessName>   true                    </WitnessName>
+        </name>
+
+        <dieWithHost>
+            <Type>  BOOL                            </Type>
+            <Flags> CELL_PRIVATE                    </Flags>
+        </dieWithHost>
+
+        <moveController>
+            <Type>  UINT32                      </Type>
+            <Flags> CELL_PRIVATE            </Flags>
+        </moveController>
+
+        <hateTrapId>
+            <Type>  UINT32                      </Type>
+            <Flags> CELL_PRIVATE            </Flags>
+        </hateTrapId>
+
+        <bornPosition>
+            <Type>  POSITION3D              </Type>
+            <Flags> CELL_PRIVATE            </Flags>
+        </bornPosition>
+
+        <route>
+            <Type>      PYTHON        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>    []            </Default>
+        </route>
+
+        <thinkTimer>
+            <Type>      TIMER_ID        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </thinkTimer>
+
+        <inheritPropRatio>
+            <Type>      FLOAT              </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>       0.0          </Default>
+        </inheritPropRatio>
+
+        <siegeWarCamp>
+            <Type>          INT32           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </siegeWarCamp>
+
+        <mineWarCamp>
+            <Type>          UINT8           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </mineWarCamp>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <setAI>
+            <Arg>        STRING        </Arg>
+            <Arg>        PYTHON        </Arg>
+        </setAI>
+    </CellMethods>
+
+    <ClientMethods>
+        <onDead>
+            <Arg>        OBJECT_ID        </Arg>
+        </onDead>
+    </ClientMethods>
+</root>

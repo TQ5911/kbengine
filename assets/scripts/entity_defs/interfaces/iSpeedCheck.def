@@ -1,0 +1,68 @@
+<root>
+    <Properties>
+        <lastSpeed>
+            <Type>          DOUBLE                      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </lastSpeed>
+
+        <lastPosition>
+            <Type>          POSITION_ARG                </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+        </lastPosition>
+
+        <speedCheckWindowSize>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </speedCheckWindowSize>
+
+        <speedCheckCountPerWindow>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </speedCheckCountPerWindow>
+
+        <speedCheckWindowSizeLimit>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </speedCheckWindowSizeLimit>
+
+        <speedCheckCountPerWindowLimit>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </speedCheckCountPerWindowLimit>
+
+        <speedCheckContinuousUnit>
+            <Type>          INT16                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </speedCheckContinuousUnit>
+
+        <overSpeedCheckTimer>
+            <Type>     TIMER_ID            </Type>
+            <Flags>    CELL_PRIVATE        </Flags>
+            <Default>  0                   </Default>
+        </overSpeedCheckTimer>
+
+        <speedCheckRecord>
+            <Type>     PYTHON              </Type>
+            <Flags>    CELL_PRIVATE        </Flags>
+            <Default>  []                  </Default>
+        </speedCheckRecord>
+    </Properties>
+
+    <BaseMethods>
+       
+    </BaseMethods>
+
+    <CellMethods>
+        
+    </CellMethods>
+
+    <ClientMethods>
+        
+    </ClientMethods>
+</root>

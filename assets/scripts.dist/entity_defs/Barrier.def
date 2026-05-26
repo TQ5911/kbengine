@@ -1,0 +1,32 @@
+<root>
+
+	<Interfaces>
+		<Interface>	   iCell    </Interface>
+		<Interface>	   iTimerCell 	</Interface>
+		<Interface>	   iBaseWithCell    </Interface>
+		<Interface>	   iFubenSpace    </Interface>
+		<Interface>	   iGameEntity  	</Interface>
+		<Interface>    iLargeEnt 		</Interface>
+	</Interfaces>
+
+	<Properties>
+		<barrierId>
+			<Type>	OBJECT_ID 	</Type>
+			<Flags>	ALL_CLIENTS 	</Flags>
+			<Default>	0  	</Default>
+		</barrierId>
+	</Properties>
+
+	<BaseMethods>
+
+	</BaseMethods>
+
+	<CellMethods>
+
+	</CellMethods>
+
+	<ClientMethods>
+
+	</ClientMethods>
+</root>
+

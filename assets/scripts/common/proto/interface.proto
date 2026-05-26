@@ -47,6 +47,12 @@ message MapleServerInfo
     string data = 1;
 }
 
+message PatchVersionData
+{
+    uint32 platId = 1;
+    string patchVerStr = 2;
+}
+
 // Interface 进程的 service
 service Interface
 {
@@ -60,6 +66,7 @@ service Interface
     rpc setAccountComp(SetAccountCompVal) returns(Void);
     rpc updateAntiAddictionData(AntiAddictionData) returns(Void);
     rpc setMapleServerInfo(MapleServerInfo) returns(Void);
+    rpc updatePatchVersionData(PatchVersionData) returns(Void);
 }
 
 // BaseApp 的 service

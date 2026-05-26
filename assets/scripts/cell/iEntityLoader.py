@@ -70,7 +70,7 @@ class IEntityLoader(object):
 
         yield utils.emptyFunc
 
-    def loadMonsterGroups(self, spaceNo, spaceMgrId):
+    def _loadMonsterGroups(self, spaceNo, spaceMgrId):
         _mapId = formula.fetchMapId(spaceNo)
         if not utils.isDunGroupModuleDataExist(_mapId):
             return
@@ -96,7 +96,7 @@ class IEntityLoader(object):
                     yield utils.emptyFunc
                     break
                 except SystemError as e:
-                    LOG_WARN('loadMonsterGroups::SystemError', e)
+                    LOG_WARN('_loadMonsterGroups::SystemError', e)
                     yield utils.emptyFunc
 
 
@@ -106,16 +106,21 @@ class IEntityLoader(object):
             self.doLoadEntitiesEnd()
             return
 
+        self.loadCommonEntities(spaceMgrId)
+        self.loadMonsterGroups(spaceMgrId)
+
+    def loadMonsterGroups(self, spaceMgrId):
+        _iter = self._loadMonsterGroups(self.spaceNo, spaceMgrId)
+        self.batchlyCall(_iter, 1, 0.1)
+        self.doLoadTimerEntities(spaceMgrId)
+
+    def loadCommonEntities(self, spaceMgrId):
         entityIDs = self._initEntities(self.spaceNo)
         readyEntitiesList = []
         self.loadLineEntities(self.spaceNo, entityIDs, readyEntitiesList)
         self.loadEntitiesBatchly(self.spaceNo, iter(readyEntitiesList),
                                  gameconfig.entityLoadSpeed(),
                                  gameconst.LoadEntitySetting.BATCH_DELAY, True, spaceMgrId)
-
-        _iter = self.loadMonsterGroups(self.spaceNo, spaceMgrId)
-        self.batchlyCall(_iter, 1, 0.1)
-        self.doLoadTimerEntities(spaceMgrId)
 
     def _initEntities(self, spaceNo):
         _mapId = formula.fetchMapId(spaceNo)
@@ -167,16 +172,22 @@ class IEntityLoader(object):
             gameengine.getGlobalBase('SiegeWarSpaceStub').onLoadEntitiesEnd(self.spaceNo)
 
         else:
-            LOG_IFO('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
+            LOG_INFO('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
 
     def doEntityRefresh(self, gameEntityId, spaceMgrId, pointData):
         _entityProps = []
         utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
+            spaceMgr = None
             if spaceMgrId:
                 _params['spaceMgrId'] = spaceMgrId
+                spaceMgr = KBEngine.entities.get(spaceMgrId)
 
-            self.createCellLocally(_className, _pos, _dir, _params)
+            boxGroupId = utils.getEntityBoxGroupId(gameEntityId, self.spaceNo)
+            if boxGroupId > 0 and spaceMgr:
+                spaceMgr.addBoxGroupCollect(_className, _pos, _dir, _params)
+            else:
+                self.createCellLocally(_className, _pos, _dir, _params)
 
         self.removeEntityRefreshTimer(gameEntityId, spaceMgrId, pointData)
 

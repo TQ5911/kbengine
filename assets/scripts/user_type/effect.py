@@ -4,7 +4,7 @@ import random
 import gameconst
 from KBEDebug import *
 
-import buff_buff as BBD
+import buff_buff as B_BD
 import effect_basic as EBD
 import effect_event as EED
 import effect_timer as ETD
@@ -50,7 +50,7 @@ class BuffCaller(EffectCaller):
     callerType = EffectCaller.BUFF
 
     def getCaller(self, owner):
-        return owner.buffDic.getBuffVal(self.buffId, self.buffKey)
+        return owner.buffMgrDic.getBuffVal(self.buffId, self.buffKey)
 
     def getFromEntId(self, owner):
         buffVal = self.getCaller(owner)
@@ -65,7 +65,7 @@ class BuffCaller(EffectCaller):
         return 'effect_%s_%s_%s%s'%(self.buffId, self.buffKey, effectId, effectIndex)
 
     def getEffectList(self, owner):
-        effectList = BBD.datas.get(self.buffId, {}).get('effectList')
+        effectList = B_BD.datas.get(self.buffId, {}).get('effectList')
         return effectList
 
     def getCallerSrc(self):
@@ -122,13 +122,10 @@ class EffectBase(userType.UserSingleType):
         pass
 
     def onOverlayBuff(self, owner, callerInfo):
-        pass
-
-    def pauseEffect(self, owner, buffCaller):
-        pass
-
-    def restartEffect(self, owner, buffCaller):
-        pass
+        effectData = self.getEffectData()
+        funcName = effectData.get('Func')
+        if funcName == 'setStatus':
+            owner.onOverlayStatus(self.getStatus(owner, callerInfo))
 
 class BasicEffect(EffectBase):
     EFFECT_TYPE = gameconst.EffecType.ENUM_EFFECT_BASIC
@@ -204,9 +201,12 @@ class BasicEffect(EffectBase):
     def undoSetSkillUnBroken(self, owner, callerInfo, isOverleap):
         owner.onEffectUnsetProp('skillBroken', callerInfo, self.effectId, self.effectIndex)
 
-    def setStatus(self, owner, callerInfo):
+    def getStatus(self, owner, callerInfo):
         effectDict = self.getEffectDict(owner, callerInfo)
-        status = effectDict.get('Status')
+        return effectDict.get('Status')
+
+    def setStatus(self, owner, callerInfo):
+        status = self.getStatus(owner, callerInfo)
         if owner.checkConflictState(dataUtils.getStateEventId(status)):
             owner.setState(status)
 
@@ -249,7 +249,7 @@ class BasicEffect(EffectBase):
             skillVal = owner.skillDic.doGetSkill(skillId, reportErr=False)
             if skillVal:
                 if isMul:
-                    cd = skillVal.getSkillData(skillId).get('CD', 0)
+                    cd = skillVal.getSkillCfg(skillId).get('CD', 0)
                     cdDelta = cd * values[idx]
                 else :
                     cdDelta = values[idx]
@@ -272,7 +272,7 @@ class BasicEffect(EffectBase):
             skillVal = owner.skillDic.doGetSkill(skillId, reportErr=False)
             if skillVal:
                 if isMul:
-                    cd = skillVal.getSkillData(skillId).get('CD', 0)
+                    cd = skillVal.getSkillCfg(skillId).get('CD', 0)
                     cdDelta = cd * -values[idx]
                 else :
                     cdDelta = -values[idx]
@@ -394,17 +394,6 @@ class BasicEffect(EffectBase):
             undoFunc = 'undo'+funcName[:1].upper()+funcName[1:]
             getattr(self, undoFunc)(owner, callerInfo, isOverleap)
 
-    def pauseEffect(self, owner, buffCaller):
-        effectData = self.getEffectData()
-        funcName = effectData.get('Func')
-        if funcName in ("addFightParam", "setUnControl", "setSkillUnBroken"):
-            self.removeEffect(owner, buffCaller)
-
-    def restartEffect(self, owner, buffCaller):
-        effectData = self.getEffectData()
-        funcName = effectData.get('Func')
-        if funcName in ("addFightParam", "setUnControl", "setSkillUnBroken"):
-            self.setupEffect(owner, buffCaller)
 
 class EventEffect(EffectBase):
     EFFECT_TYPE = gameconst.EffecType.ENUM_EFFECT_BY_EVENT
@@ -420,7 +409,6 @@ class EventEffect(EffectBase):
             pass
         self.tNextTime = triggerTime
         #LOG_DBG('init EventEffect', self.effectId, self.tNextTime, utils.getNowTimeStr(self.tNextTime))
-
 
     def getEffectData(self):
         return EED.datas.get(self.effectId, {})

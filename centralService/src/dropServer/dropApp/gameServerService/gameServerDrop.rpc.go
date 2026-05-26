@@ -97,12 +97,47 @@ func DropServer_CheckDropExpire_Handler(endPoint prpc.IEndPoint, dec func(interf
     }
     return endPoint.(IDropServerInterface).CheckDropExpire(in)
 }
-func DropServer_GetDropNotifyList_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(GetDropNotifyListRequest)
+func DropServer_SetTakeEquipRedeemPrice_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SetTakeEquipRedeemPriceRequest)
     if err := dec(in); err != nil {
         return nil, err
     }
-    return endPoint.(IDropServerInterface).GetDropNotifyList(in)
+    return endPoint.(IDropServerInterface).SetTakeEquipRedeemPrice(in)
+}
+func DropServer_CheckRedeemExpire_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(CheckRedeemExpireRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IDropServerInterface).CheckRedeemExpire(in)
+}
+func DropServer_GetBackEquip_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(GetBackEquipRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IDropServerInterface).GetBackEquip(in)
+}
+func DropServer_Custody_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(CustodyRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IDropServerInterface).Custody(in)
+}
+func DropServer_CheckDropReturnExpire_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(CheckDropReturnExpireRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IDropServerInterface).CheckDropReturnExpire(in)
+}
+func DropServer_SetDropEquipPayPrice_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SetDropEquipPayPriceRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IDropServerInterface).SetDropEquipPayPrice(in)
 }
 var DropServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "DropGameServer.DropServer",
@@ -173,9 +208,34 @@ var DropServerServiceDesc = prpc.ServiceDesc{
             Handler:     DropServer_CheckDropExpire_Handler,
         },
         {
-            MethodName:  "GetDropNotifyList",
+            MethodName:  "SetTakeEquipRedeemPrice",
             MethodIndex: 13,
-            Handler:     DropServer_GetDropNotifyList_Handler,
+            Handler:     DropServer_SetTakeEquipRedeemPrice_Handler,
+        },
+        {
+            MethodName:  "CheckRedeemExpire",
+            MethodIndex: 14,
+            Handler:     DropServer_CheckRedeemExpire_Handler,
+        },
+        {
+            MethodName:  "GetBackEquip",
+            MethodIndex: 15,
+            Handler:     DropServer_GetBackEquip_Handler,
+        },
+        {
+            MethodName:  "Custody",
+            MethodIndex: 16,
+            Handler:     DropServer_Custody_Handler,
+        },
+        {
+            MethodName:  "CheckDropReturnExpire",
+            MethodIndex: 17,
+            Handler:     DropServer_CheckDropReturnExpire_Handler,
+        },
+        {
+            MethodName:  "SetDropEquipPayPrice",
+            MethodIndex: 18,
+            Handler:     DropServer_SetDropEquipPayPrice_Handler,
         },
     },
 }
@@ -243,8 +303,28 @@ func (self *DropServerClient) CheckDropExpire(in *CheckDropExpireRequest) (*Void
     err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[12], in)
     return &Void{}, err
 }
-func (self *DropServerClient) GetDropNotifyList(in *GetDropNotifyListRequest) (*Void, error) {
+func (self *DropServerClient) SetTakeEquipRedeemPrice(in *SetTakeEquipRedeemPriceRequest) (*Void, error) {
     err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[13], in)
+    return &Void{}, err
+}
+func (self *DropServerClient) CheckRedeemExpire(in *CheckRedeemExpireRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[14], in)
+    return &Void{}, err
+}
+func (self *DropServerClient) GetBackEquip(in *GetBackEquipRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[15], in)
+    return &Void{}, err
+}
+func (self *DropServerClient) Custody(in *CustodyRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[16], in)
+    return &Void{}, err
+}
+func (self *DropServerClient) CheckDropReturnExpire(in *CheckDropReturnExpireRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[17], in)
+    return &Void{}, err
+}
+func (self *DropServerClient) SetDropEquipPayPrice(in *SetDropEquipPayPriceRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&DropServerServiceDesc.Methods[18], in)
     return &Void{}, err
 }
 type IDropServerInterface interface {
@@ -261,7 +341,12 @@ type IDropServerInterface interface {
     SendRepairDropMail(*SendRepairDropMailRequest) (*Void, error)
     UpdateCollEndTime(*UpdateCollEndTimeRequest) (*Void, error)
     CheckDropExpire(*CheckDropExpireRequest) (*Void, error)
-    GetDropNotifyList(*GetDropNotifyListRequest) (*Void, error)
+    SetTakeEquipRedeemPrice(*SetTakeEquipRedeemPriceRequest) (*Void, error)
+    CheckRedeemExpire(*CheckRedeemExpireRequest) (*Void, error)
+    GetBackEquip(*GetBackEquipRequest) (*Void, error)
+    Custody(*CustodyRequest) (*Void, error)
+    CheckDropReturnExpire(*CheckDropReturnExpireRequest) (*Void, error)
+    SetDropEquipPayPrice(*SetDropEquipPayPriceRequest) (*Void, error)
 }
 
 func GameServer_OnDrop_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
@@ -307,7 +392,7 @@ func GameServer_OnGiveUp_Handler(endPoint prpc.IEndPoint, dec func(interface{}) 
     return endPoint.(IGameServerInterface).OnGiveUp(in)
 }
 func GameServer_OnDropTypeChange_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(DropTypeChangeRequest)
+    in := new(DropTypeChangeNotify)
     if err := dec(in); err != nil {
         return nil, err
     }
@@ -362,19 +447,54 @@ func GameServer_OnCheckDropExpire_Handler(endPoint prpc.IEndPoint, dec func(inte
     }
     return endPoint.(IGameServerInterface).OnCheckDropExpire(in)
 }
-func GameServer_OnAddDropNotify_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(AddDropNotify)
+func GameServer_OnSetTakeEquipRedeemPrice_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SetTakeEquipRedeemPriceResponse)
     if err := dec(in); err != nil {
         return nil, err
     }
-    return endPoint.(IGameServerInterface).OnAddDropNotify(in)
+    return endPoint.(IGameServerInterface).OnSetTakeEquipRedeemPrice(in)
 }
-func GameServer_OnGetDropNotifyList_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(GetDropNotifyListResponse)
+func GameServer_OnCheckRedeemExpire_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(CheckRedeemExpireResponse)
     if err := dec(in); err != nil {
         return nil, err
     }
-    return endPoint.(IGameServerInterface).OnGetDropNotifyList(in)
+    return endPoint.(IGameServerInterface).OnCheckRedeemExpire(in)
+}
+func GameServer_OnCustody_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(CustodyResponse)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnCustody(in)
+}
+func GameServer_OnCheckDropReturnExpire_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(CheckDropReturnExpireResponse)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnCheckDropReturnExpire(in)
+}
+func GameServer_OnSetDropEquipPayPrice_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SetDropEquipPayPriceResponse)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnSetDropEquipPayPrice(in)
+}
+func GameServer_OnNotifyCleanCollection_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(NotifyCleanCollections)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnNotifyCleanCollection(in)
+}
+func GameServer_OnNotifyCustodyEquip_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(NotifyCustodyEquip)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnNotifyCustodyEquip(in)
 }
 var GameServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "DropGameServer.GameServer",
@@ -450,14 +570,39 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             Handler:     GameServer_OnCheckDropExpire_Handler,
         },
         {
-            MethodName:  "OnAddDropNotify",
+            MethodName:  "OnSetTakeEquipRedeemPrice",
             MethodIndex: 14,
-            Handler:     GameServer_OnAddDropNotify_Handler,
+            Handler:     GameServer_OnSetTakeEquipRedeemPrice_Handler,
         },
         {
-            MethodName:  "OnGetDropNotifyList",
+            MethodName:  "OnCheckRedeemExpire",
             MethodIndex: 15,
-            Handler:     GameServer_OnGetDropNotifyList_Handler,
+            Handler:     GameServer_OnCheckRedeemExpire_Handler,
+        },
+        {
+            MethodName:  "OnCustody",
+            MethodIndex: 16,
+            Handler:     GameServer_OnCustody_Handler,
+        },
+        {
+            MethodName:  "OnCheckDropReturnExpire",
+            MethodIndex: 17,
+            Handler:     GameServer_OnCheckDropReturnExpire_Handler,
+        },
+        {
+            MethodName:  "OnSetDropEquipPayPrice",
+            MethodIndex: 18,
+            Handler:     GameServer_OnSetDropEquipPayPrice_Handler,
+        },
+        {
+            MethodName:  "OnNotifyCleanCollection",
+            MethodIndex: 19,
+            Handler:     GameServer_OnNotifyCleanCollection_Handler,
+        },
+        {
+            MethodName:  "OnNotifyCustodyEquip",
+            MethodIndex: 20,
+            Handler:     GameServer_OnNotifyCustodyEquip_Handler,
         },
     },
 }
@@ -497,7 +642,7 @@ func (self *GameServerClient) OnGiveUp(in *GiveUpResponse) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[5], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnDropTypeChange(in *DropTypeChangeRequest) (*Void, error) {
+func (self *GameServerClient) OnDropTypeChange(in *DropTypeChangeNotify) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[6], in)
     return &Void{}, err
 }
@@ -529,12 +674,32 @@ func (self *GameServerClient) OnCheckDropExpire(in *CheckDropExpireResponse) (*V
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[13], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnAddDropNotify(in *AddDropNotify) (*Void, error) {
+func (self *GameServerClient) OnSetTakeEquipRedeemPrice(in *SetTakeEquipRedeemPriceResponse) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[14], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnGetDropNotifyList(in *GetDropNotifyListResponse) (*Void, error) {
+func (self *GameServerClient) OnCheckRedeemExpire(in *CheckRedeemExpireResponse) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[15], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) OnCustody(in *CustodyResponse) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[16], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) OnCheckDropReturnExpire(in *CheckDropReturnExpireResponse) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[17], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) OnSetDropEquipPayPrice(in *SetDropEquipPayPriceResponse) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[18], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) OnNotifyCleanCollection(in *NotifyCleanCollections) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[19], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) OnNotifyCustodyEquip(in *NotifyCustodyEquip) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[20], in)
     return &Void{}, err
 }
 type IGameServerInterface interface {
@@ -544,7 +709,7 @@ type IGameServerInterface interface {
     ActiveTickCallback(*Void) (*Void, error)
     OnGetBackEquip(*GetBackEquipResponse) (*Void, error)
     OnGiveUp(*GiveUpResponse) (*Void, error)
-    OnDropTypeChange(*DropTypeChangeRequest) (*Void, error)
+    OnDropTypeChange(*DropTypeChangeNotify) (*Void, error)
     OnGetTakeReward(*GetTakeRewardResponse) (*Void, error)
     OnFetchDropEquip(*FetchDropEquipResponse) (*Void, error)
     OnGetDropInfo(*GetDropInfoResponse) (*Void, error)
@@ -552,7 +717,12 @@ type IGameServerInterface interface {
     OnRemoveDropInfoNotifyTaker(*RemoveDropInfoNotifyTaker) (*Void, error)
     OnSendRepairDropMail(*SendRepairDropMailResponse) (*Void, error)
     OnCheckDropExpire(*CheckDropExpireResponse) (*Void, error)
-    OnAddDropNotify(*AddDropNotify) (*Void, error)
-    OnGetDropNotifyList(*GetDropNotifyListResponse) (*Void, error)
+    OnSetTakeEquipRedeemPrice(*SetTakeEquipRedeemPriceResponse) (*Void, error)
+    OnCheckRedeemExpire(*CheckRedeemExpireResponse) (*Void, error)
+    OnCustody(*CustodyResponse) (*Void, error)
+    OnCheckDropReturnExpire(*CheckDropReturnExpireResponse) (*Void, error)
+    OnSetDropEquipPayPrice(*SetDropEquipPayPriceResponse) (*Void, error)
+    OnNotifyCleanCollection(*NotifyCleanCollections) (*Void, error)
+    OnNotifyCustodyEquip(*NotifyCustodyEquip) (*Void, error)
 }
 

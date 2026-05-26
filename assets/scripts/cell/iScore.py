@@ -19,7 +19,7 @@ class IScore(object):
         self.initAvatarScores()
 
     def initAvatarScores(self):
-        LOG_IFO('initAvatarScores')
+        LOG_INFO('initAvatarScores')
         self.scoreInitFinished = False
         self.totalScore = 0
         m_dict = {i: False for i in AvatarScores.AvatarScores.__attrs__}
@@ -35,7 +35,7 @@ class IScore(object):
         self.updateGuildScoreFromInit()
 
     def onInitAvatarBaseScores(self, data):
-        LOG_IFO('onInitAvatarBaseScores::', data)
+        LOG_INFO('onInitAvatarBaseScores::', data)
         data = data or {}
         for k, v in data.items():
             self._changeScore(k, v)
@@ -48,7 +48,7 @@ class IScore(object):
         self.onAllAvatarScoreBeInited(timeout=True)
 
     def onAllAvatarScoreBeInited(self, timeout=False):
-        LOG_IFO("onAllAvatarScoreBeInited, timeout:", timeout)
+        LOG_INFO("onAllAvatarScoreBeInited, timeout:", timeout)
         self.scoreInitFinished = True
         self.popTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist)
         self.client.onAvatarTotalScoreInitCompleted()
@@ -63,7 +63,7 @@ class IScore(object):
         if key not in m_avatarScoresInitChecklist:
             LOG_ERR("markAvatarScoreBeInited:: un-known key", key)
             return
-        LOG_IFO('markAvatarScoreBeInited, score has init:', key)
+        LOG_INFO('markAvatarScoreBeInited, score has init:', key)
         m_avatarScoresInitChecklist[key] = True
         if not all(m_avatarScoresInitChecklist.values()):
             return

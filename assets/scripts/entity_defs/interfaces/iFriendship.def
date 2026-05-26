@@ -36,6 +36,11 @@
             <Type>          TIMER_ID                    </Type>
             <Flags>         BASE                        </Flags>
         </authExpireTimerId>
+
+        <mainChnUIStatus>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+        </mainChnUIStatus>
     </Properties>
 
     <BaseMethods>
@@ -51,6 +56,10 @@
         <acceptRequest> <Exposed/>
             <Arg>           PLAYER_GBID             </Arg>
         </acceptRequest>
+
+        <setMainChnUIStatus> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+        </setMainChnUIStatus>
 
         <onAcceptFriendOffline>
             <Arg>       ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
@@ -80,6 +89,7 @@
 
         <searchFriend> <Exposed/>
             <Arg>           UNICODE                 </Arg>
+            <Arg>           UINT8                   </Arg>
         </searchFriend>
 
         <blockPlayer> <Exposed/>
@@ -235,6 +245,7 @@
         <onSearchFriends>
             <Arg>       UINT8                                   </Arg>
             <Arg>       ARRAY   <of>    FRIEND_SEARCH_VAL       </of>   </Arg>
+            <Arg>       UINT8                                   </Arg>
         </onSearchFriends>
 
         <onUpdateBlocks>

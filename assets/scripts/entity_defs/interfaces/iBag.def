@@ -34,6 +34,13 @@
             <Persistent>    true            </Persistent>
         </darkIron>
 
+        <appearanceCoin>
+            <Type>          APPEARANCE_COIN </Type>
+            <Flags>         BASE_AND_CLIENT </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </appearanceCoin>
+
         <coin>
             <Type>          SCOIN           </Type>
             <Flags>         BASE_AND_CLIENT </Flags>
@@ -103,25 +110,27 @@
             <Persistent>    true        </Persistent>
         </giftKeyRecordDic>
 
-        <currencyRecordDic>
-            <Type>    PY_DICT            </Type>
-            <Flags>   BASE              </Flags>
-            <Default>       {}          </Default>
-            <Persistent>    true        </Persistent>
-        </currencyRecordDic>
-
         <title>
             <Type>          INT32         </Type>
             <Flags>         ALL_CLIENTS   </Flags>
             <Default>       0              </Default>
             <Persistent>    true            </Persistent>
         </title>
+
         <titleList>
             <Type>          PY_LIST         </Type>
             <Flags>         BASE            </Flags>
             <Default>       []              </Default>
             <Persistent>    true            </Persistent>
         </titleList>
+
+        <currencyRecordDic>
+            <Type>    PY_DICT            </Type>
+            <Flags>   BASE              </Flags>
+            <Default>       {}          </Default>
+            <Persistent>    true        </Persistent>
+        </currencyRecordDic>
+        
     </Properties>
 
     <BaseMethods>
@@ -243,6 +252,7 @@
             <Arg>       PYTHON     </Arg>
             <Arg>       UINT8     </Arg>
             <Arg>       UINT64     </Arg>
+            <Arg>       PYTHON     </Arg>
         </baseDoApplyGather>
 
         <unlockBag>
@@ -355,6 +365,10 @@
             <Arg>       UINT32      </Arg>
         </reqUpgradeSynthesis>
 
+        <reqRandomUpgradeSynthesis><Exposed/>
+            <Arg>      ARRAY <of> RANDOM_UPGRADE_SYNTHESIS_NUM_INFO </of>     </Arg>
+        </reqRandomUpgradeSynthesis>
+        
         <onUpdateCollectionGatherFlag>
             <Arg>       ENTITY_ID    </Arg>
             <Arg>       BOOL         </Arg>
@@ -425,9 +439,6 @@
         <exchangeGiftKeyReward> <Exposed/>
             <Arg>           UNICODE         </Arg>
         </exchangeGiftKeyReward>
-
-        <queryCurrencyExchangeData> <Exposed/>
-        </queryCurrencyExchangeData>
 
         <exchangeCurrency> <Exposed/>
             <Arg>       UINT32      </Arg>
@@ -535,6 +546,13 @@
             <Arg>       UNIQUE_ID   </Arg>
             <Arg>       UINT8       </Arg>
         </bodyItemLock>
+        <setTitleCell>
+            <Arg>       UINT32         </Arg>
+            <Arg>       BOOL           </Arg>
+        </setTitleCell>
+        <removeTitleCell>
+            <Arg>       UINT32         </Arg>
+        </removeTitleCell>
     </CellMethods>
 
     <ClientMethods>
@@ -648,11 +666,6 @@
             <Arg>       ITEM_ID     </Arg>
             <Arg>       UINT32      </Arg>
         </onSellItemSucc>
-
-        <onQueryCurrencyExchangeData>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-            <Arg>       ARRAY    <of>   INT64    </of>     </Arg>
-        </onQueryCurrencyExchangeData>
 
         <onQueryCanShareReward>
             <Arg>       BOOL      </Arg>

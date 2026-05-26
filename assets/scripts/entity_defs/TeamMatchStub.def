@@ -16,9 +16,9 @@
         <onTeamInfoUpdate>
             <Arg>           PY_DICT         </Arg>
         </onTeamInfoUpdate>
-        <teamStopAutoMatch>
+        <doTeamStopAutoMatch>
             <Arg>           TEAMID          </Arg>
-        </teamStopAutoMatch>
+        </doTeamStopAutoMatch>
         <playerAutoMatch>
             <Arg>           PY_DICT         </Arg>
         </playerAutoMatch>

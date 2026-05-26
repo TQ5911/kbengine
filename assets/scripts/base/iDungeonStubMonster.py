@@ -450,7 +450,7 @@ class IDungeonStubMonster(object):
         LOG_DBG('_checkEntitiesCellLoaded::', spaceNo, sVal.homeEnts)
         if all(sVal.homeEnts):
             # todo  配置AI
-            # LOG_IFO('_checkEntitiesCellLoaded::config monster ai')
+            # LOG_INFO('_checkEntitiesCellLoaded::config monster ai')
             self._onDungeonEntitiesLoaded(spaceNo, extra)
         else:
             _timerId = self.addTimerCB(1, '_checkEntitiesCellLoaded', (spaceNo, extra, currentCount+1),
@@ -511,7 +511,7 @@ class IDungeonStubMonster(object):
     def _defaultCheckCondition(self, *args, **kwargs):
         return True
 
-    def addKillCount(self, spaceNo, flagId, creepBaseId):
+    def addKillCount(self, spaceNo, flagId, creepbaseId):
         if spaceNo not in self.spaces:
             LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
             return
@@ -522,15 +522,15 @@ class IDungeonStubMonster(object):
         #     return
 
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
-        if not (flagId or creepBaseId):
-            LOG_ERR('addKillCount:: must set flagId or creepBaseId')
+        if not (flagId or creepbaseId):
+            LOG_ERR('addKillCount:: must set flagId or creepbaseId')
             return
 
         # 【【任务】副本编辑器新节点-指定怪物原型死亡数量】
         dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         dunData = utils.getDunModuleData(dungeonNo)
-        if not creepBaseId:
-            creepBaseId = dunData.get(str(flagId), {}).get('EntityID', 0)
+        if not creepbaseId:
+            creepbaseId = dunData.get(str(flagId), {}).get('EntityID', 0)
 
         LOG_DBG('------ addKillCount in {}/{}'.format(spaceNo, flagId))
         _needAddCreepBaseKillNumFlag = True
@@ -544,10 +544,10 @@ class IDungeonStubMonster(object):
                 flagId, sVal.getTimeLine(flagId).kills, sVal.killSum)
 
         # 【【任务】副本编辑器新节点-指定怪物原型死亡数量】
-        if creepBaseId:
-            sVal.addKillByCreepBaseId(creepBaseId, _needAddCreepBaseKillNumFlag)
+        if creepbaseId:
+            sVal.addKillByCreepBaseId(creepbaseId, _needAddCreepBaseKillNumFlag)
             sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(
-                creepBaseId, sVal.getCreepBaseKilledNum(creepBaseId), sVal.killSum)
+                creepbaseId, sVal.getCreepBaseKilledNum(creepbaseId), sVal.killSum)
 
         LOG_DBG('----- NOW KILL {} MONSTERS in space {}'
                   '-----'.format(sVal.killSum, spaceNo))

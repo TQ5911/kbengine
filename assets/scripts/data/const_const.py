@@ -141,11 +141,11 @@ datas = _tools.RODict({
     }),
     "dropTime": _tools.RODict({
         "ID": "dropTime",
-        "value": 5.0,
+        "value": 4.0,
     }),
     "dropDelay": _tools.RODict({
         "ID": "dropDelay",
-        "value": 3.0,
+        "value": 2.0,
     }),
     "dropShareRange": _tools.RODict({
         "ID": "dropShareRange",
@@ -397,7 +397,7 @@ datas = _tools.RODict({
     }),
     "autoHealHpAndMpPct": _tools.RODict({
         "ID": "autoHealHpAndMpPct",
-        "value": (0.5, 0.5),
+        "value": (0.8, 0.8),
     }),
     "lackOfItem_msgID": _tools.RODict({
         "ID": "lackOfItem_msgID",
@@ -1089,7 +1089,7 @@ datas = _tools.RODict({
     }),
     "fallFastEndTime": _tools.RODict({
         "ID": "fallFastEndTime",
-        "value": 1.2,
+        "value": 0.6,
     }),
     "fallEndTime": _tools.RODict({
         "ID": "fallEndTime",
@@ -1215,6 +1215,26 @@ datas = _tools.RODict({
         "ID": "Bounty_LoserDebuff",
         "value": 64008002,
     }),
+    "Bounty_DesignatedKiller": _tools.RODict({
+        "ID": "Bounty_DesignatedKiller",
+        "value": 54002205,
+    }),
+    "Bounty_KillerAgree": _tools.RODict({
+        "ID": "Bounty_KillerAgree",
+        "value": 54002206,
+    }),
+    "Bounty_KillerAccept": _tools.RODict({
+        "ID": "Bounty_KillerAccept",
+        "value": 54002200,
+    }),
+    "Bounty_Countdown": _tools.RODict({
+        "ID": "Bounty_Countdown",
+        "value": 60,
+    }),
+    "Bounty_OutOrder": _tools.RODict({
+        "ID": "Bounty_OutOrder",
+        "value": 60,
+    }),
     "autoPathStop": _tools.RODict({
         "ID": "autoPathStop",
         "value": 54001520,
@@ -1259,12 +1279,88 @@ datas = _tools.RODict({
         "ID": "speedCheckTimeUnit",
         "value": 1,
     }),
+    "speedCheckSpeedillegallyOverRate": _tools.RODict({
+        "ID": "speedCheckSpeedillegallyOverRate",
+        "value": 30.0,
+    }),
+    "speedCheckFrameillegallyOverCount": _tools.RODict({
+        "ID": "speedCheckFrameillegallyOverCount",
+        "value": 3,
+    }),
+    "speedCheckWindowSize": _tools.RODict({
+        "ID": "speedCheckWindowSize",
+        "value": (2, 5),
+    }),
     "speedCheckContinuousUnit": _tools.RODict({
         "ID": "speedCheckContinuousUnit",
         "value": 30,
     }),
-    "speedCheckillegallyOverRate": _tools.RODict({
-        "ID": "speedCheckillegallyOverRate",
-        "value": 30.0,
+    "lowHPAutoCounter": _tools.RODict({
+        "ID": "lowHPAutoCounter",
+        "value": 20,
+    }),
+    "defaultInitialRatioHP": _tools.RODict({
+        "ID": "defaultInitialRatioHP",
+        "value": 80,
+    }),
+    "defaultInitialRatioMP": _tools.RODict({
+        "ID": "defaultInitialRatioMP",
+        "value": 80,
+    }),
+    "blazeMaxSpeed": _tools.RODict({
+        "ID": "blazeMaxSpeed",
+        "value": 35,
+    }),
+    "navAgentWidth": _tools.RODict({
+        "ID": "navAgentWidth",
+        "value": 0.5,
+    }),
+    "ChangeTitleCD": _tools.RODict({
+        "ID": "ChangeTitleCD",
+        "value": 2,
+    }),
+    "maxSkillMove": _tools.RODict({
+        "ID": "maxSkillMove",
+        "value": 10,
+    }),
+    "MonsterDamageReductionBuff": _tools.RODict({
+        "ID": "MonsterDamageReductionBuff",
+        "value": 64004098,
+    }),
+    "characterSurroundArea": _tools.RODict({
+        "ID": "characterSurroundArea",
+        "value": 5.0,
+    }),
+    "cameraDirectionArea": _tools.RODict({
+        "ID": "cameraDirectionArea",
+        "value": 55.0,
+    }),
+    "dropThrowRange": _tools.RODict({
+        "ID": "dropThrowRange",
+        "value": (1, 2.5),
+    }),
+    "dropLocationRange": _tools.RODict({
+        "ID": "dropLocationRange",
+        "value": (0.8, 2.9),
+    }),
+    "dropGravityAcc": _tools.RODict({
+        "ID": "dropGravityAcc",
+        "value": 16.0,
+    }),
+    "dropBounceCount": _tools.RODict({
+        "ID": "dropBounceCount",
+        "value": 3,
+    }),
+    "dropEnergyDecreaseRatio": _tools.RODict({
+        "ID": "dropEnergyDecreaseRatio",
+        "value": 0.2,
+    }),
+    "dropInterval": _tools.RODict({
+        "ID": "dropInterval",
+        "value": (0.03, 0.5),
+    }),
+    "highFrameNotice": _tools.RODict({
+        "ID": "highFrameNotice",
+        "value": 54001339,
     })
 })

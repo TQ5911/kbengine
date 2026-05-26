@@ -228,7 +228,7 @@ datas = _tools.RODict({
     58000155: _tools.RODict({
         "ID": 58000155,
         "name": "gearDisassembled",
-        "Message": "装备自动分解成功！",
+        "Message": "自动分解获得<link item id={1} gbid={2}>×{0}",
         "channelID": (6,)
     }),
     58000108: _tools.RODict({
@@ -252,13 +252,13 @@ datas = _tools.RODict({
     58000203: _tools.RODict({
         "ID": 58000203,
         "name": "mineBattle_chatChannelMsg3",
-        "Message": "<color=#54e7f2>{0}</color>矿区的荣誉旗帜正在遭受攻击，请前往保护！立即前往",
+        "Message": "<color=#54e7f2>{0}</color>矿区的荣誉旗帜正在遭受攻击，请前往保护！<link mineBattleTeleport mapId={1}>立即前往</link>",
         "channelID": (3,)
     }),
     58000204: _tools.RODict({
         "ID": 58000204,
         "name": "mineBattle_chatChannelMsg4",
-        "Message": "<color=#54e7f2>{0}</color>矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，帮会权威受到挑战",
+        "Message": "<color=#54e7f2>{0}</color>矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，本次损失{3}玄铁，帮会权威受到挑战",
         "channelID": (2, 3)
     }),
     58000205: _tools.RODict({
@@ -320,7 +320,25 @@ datas = _tools.RODict({
         "name": "unknownCauseMsg",
         "Message": "你因异常伤害，失去意识！",
         "channelID": (6,)
+    }),
+    58000215: _tools.RODict({
+        "ID": 58000215,
+        "name": "boss_born5004",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>世界花</color>现身于<color=#54e7f2>五毒石窟六层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "channelID": (2, 99)
+    }),
+    58000216: _tools.RODict({
+        "ID": 58000216,
+        "name": "boss_born5003",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>空域王</color>现身于<color=#54e7f2>流沙故城五层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "channelID": (2, 99)
+    }),
+    58000217: _tools.RODict({
+        "ID": 58000217,
+        "name": "boss_born5005",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>杜格教主</color>现身于<color=#54e7f2>杜格教廷五层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "channelID": (2, 99)
     })
 })
 minKey = 58000001
-maxKey = 58000214
+maxKey = 58000217

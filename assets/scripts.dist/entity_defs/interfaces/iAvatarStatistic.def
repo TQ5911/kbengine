@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+        <currStatisticSpaceNo>
+            <Type>      SPACE_NO           </Type>
+            <Flags>     CELL_PRIVATE       </Flags>
+            <Default>   0                  </Default>
+        </currStatisticSpaceNo>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+        <reqGetTeamStatisticData> <Exposed/>
+            <Arg>           UINT8          </Arg>
+        </reqGetTeamStatisticData>
+        <reqClearTeamStatisticData> <Exposed/>
+        </reqClearTeamStatisticData>
+        <onGetTeamStatisticData>
+            <Arg>           UINT8          </Arg>
+            <Arg>           UNICODE          </Arg>
+            <Arg>  ARRAY <of> TEAM_STATISTIC_PLAYER_VAL </of>   </Arg>
+        </onGetTeamStatisticData>
+    </CellMethods>
+
+    <ClientMethods>
+        <sendTeamStatisticData>
+            <Arg>           UINT8          </Arg>
+            <Arg>  ARRAY <of> TEAM_STATISTIC_PLAYER_VAL </of>   </Arg>
+        </sendTeamStatisticData>
+    </ClientMethods>
+</root>

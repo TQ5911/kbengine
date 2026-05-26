@@ -37,14 +37,14 @@ class GlyphData(userType.UserSingleType):
         return data
     
     def cleanInscriptionEffects(self, owner):
-        LOG_IFO("GlyphData-->cleanInscriptionEffects, begin~ ", self.inscriptionEffects)
+        LOG_INFO("GlyphData-->cleanInscriptionEffects, begin~ ", self.inscriptionEffects)
         self.inscriptionEffects = {}
-        LOG_IFO("GlyphData-->cleanInscriptionEffects, end~ ", self.inscriptionEffects)
+        LOG_INFO("GlyphData-->cleanInscriptionEffects, end~ ", self.inscriptionEffects)
 
     def calculateAllInscriptionEffects(self, owner, glyphAffixes):
-        LOG_IFO("GlyphData-->calculateAllInscriptionEffects, begin~ ", self.inscriptionEffects)
+        LOG_INFO("GlyphData-->calculateAllInscriptionEffects, begin~ ", self.inscriptionEffects)
         self.doCalculateInscriptionEffects(owner, glyphAffixes)
-        LOG_IFO("GlyphData-->calculateAllInscriptionEffects, end~", self.inscriptionEffects)
+        LOG_INFO("GlyphData-->calculateAllInscriptionEffects, end~", self.inscriptionEffects)
 
     def doCalculateInscriptionEffects(self, owner, glyphAffixes):
         if not glyphAffixes:
@@ -75,7 +75,7 @@ class GlyphData(userType.UserSingleType):
 
     # TODO: 这里可以优化一些网络IO合并，比如把addskillLv和changeSkill进行有向连接计算，降低消耗
     def applyInscriptionEffects(self, owner):
-        LOG_IFO("GlyphData-->applyInscriptionEffects, clean begin~", self.inscriptionRecords)
+        LOG_INFO("GlyphData-->applyInscriptionEffects, clean begin~", self.inscriptionRecords)
         # 1.清理旧的已应用的铭文效果
         for dataKey, oldEffectValue in self.inscriptionRecords.items():
             skillID, inscriptionType = utils.splitInscriptionKey(dataKey)
@@ -93,9 +93,9 @@ class GlyphData(userType.UserSingleType):
                 self.addSkillLv(self, owner, [skillID], [-1*oldEffectValue[1]])
         self.inscriptionRecords = {}
 
-        LOG_IFO("GlyphData-->applyInscriptionEffects, clean end~", self.inscriptionRecords)
+        LOG_INFO("GlyphData-->applyInscriptionEffects, clean end~", self.inscriptionRecords)
 
-        LOG_IFO("GlyphData-->applyInscriptionEffects, apply begin~", self.inscriptionEffects)
+        LOG_INFO("GlyphData-->applyInscriptionEffects, apply begin~", self.inscriptionEffects)
         # 2.重新应用新的铭文效果
         appliedEffectDataKeys = []
         for dataKey, effectValue in self.inscriptionEffects.items():
@@ -118,7 +118,7 @@ class GlyphData(userType.UserSingleType):
                 self.inscriptionRecords[dataKey] = effectValue
                 appliedEffectDataKeys.append(dataKey)
 
-        LOG_IFO("GlyphData-->applyInscriptionEffects, apply end~", self.inscriptionEffects, self.inscriptionRecords)
+        LOG_INFO("GlyphData-->applyInscriptionEffects, apply end~", self.inscriptionEffects, self.inscriptionRecords)
         owner.client.onGlyphReplacedSkillIdx(list(self.replacedSkillIdx.keys()), list(self.replacedSkillIdx.values()))
 
     def _getEffect(self, skillID, effectType):
@@ -148,7 +148,7 @@ class GlyphData(userType.UserSingleType):
         return True, effectDatas[1:]
     
     def getInscriptionSrcSkillId(self, skillId):
-        LOG_IFO("GlyphData-->getInscriptionSrcSkillId~", skillId, self.sourceSkillIdx, self.replacedSkillIdx)
+        LOG_INFO("GlyphData-->getInscriptionSrcSkillId~", skillId, self.sourceSkillIdx, self.replacedSkillIdx)
         newSkillId = self.replacedSkillIdx.get(skillId, None)
         if newSkillId:
             return skillId, newSkillId

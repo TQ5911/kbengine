@@ -4767,5 +4767,32 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1
     }
+  },
+  "10018078": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 13.01537,
+    "DisplayName": "",
+    "EntityID": 16000129,
+    "ID": 10018078,
+    "Name": "\u5408\u6210\u5b9d\u7bb1",
+    "PosX": 111.0752,
+    "PosY": 1.788073,
+    "PosZ": 343.1958,
+    "Props": {
+      "ChestGroupID": "",
+      "IsOnGround": 1,
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
   }
 }

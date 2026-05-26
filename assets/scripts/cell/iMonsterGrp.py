@@ -36,9 +36,9 @@ class IMonsterGrp(object):
         if self.monsterGroup:
             return self.monsterGroup.sync(self.id, funcName, args, kwargs)
 
-    def syncIncreaseHateInGroupCB(self, *args, **kwargs):
+    def syncIncHateInGroupCB(self, *args, **kwargs):
         if self.aiController:
-            self.aiController.syncIncreaseHateInGroupCB(*args, **kwargs)
+            self.aiController.syncIncHateInGroupCB(*args, **kwargs)
 
     def syncTelBackCB(self, *args, **kwargs):
         if self.aiController:

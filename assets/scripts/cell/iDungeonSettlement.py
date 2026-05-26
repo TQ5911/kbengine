@@ -26,8 +26,8 @@ class IDungeonSettlement(object):
     def getSettlementRankList(self, exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset):
         if not self.checkDungeonVisibleConfigEnabled(dungeonPlayMode):
             return
-        LOG_IFO('IDungeonSettlement::getSettlementRankList:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
-        if rankType not in gameconst.StatisticType.DUNGEON_VALID_TYPES:
+        LOG_INFO('IDungeonSettlement::getSettlementRankList:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
+        if rankType not in gameconst.StatisticEnum.DUNGEON_VALID_TYPES:
             LOG_ERR('IDungeonSettlement::getSettlementRankList, wrong args 0:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
             return
         dungeonNo, dungeonEnterType = self._calcDungeonEnterType(dungeonNo, dungeonPlayMode)
@@ -38,7 +38,7 @@ class IDungeonSettlement(object):
             LOG_ERR('IDungeonSettlement::getSettlementRankList, wrong args 1:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
 
     def checkDungeonVisibleConfigEnabled(self, dungeonPlayMode):
-        LOG_IFO('IDungeonSettlement::checkDungeonVisibleConfigEnabled: begin ', dungeonPlayMode)
+        LOG_INFO('IDungeonSettlement::checkDungeonVisibleConfigEnabled: begin ', dungeonPlayMode)
         ret = True
         if dungeonPlayMode == gameconst.DungeonPlayModeEnum.CRUSADE:
             if not gameconfig.visibleConfigEnabled('teamDungeon'):
@@ -50,5 +50,5 @@ class IDungeonSettlement(object):
             if not gameconfig.visibleConfigEnabled('guildBossChallenge'):
                 ret = False
 
-        LOG_IFO('IDungeonSettlement::checkDungeonVisibleConfigEnabled: end ', dungeonPlayMode, ret)
+        LOG_INFO('IDungeonSettlement::checkDungeonVisibleConfigEnabled: end ', dungeonPlayMode, ret)
         return ret

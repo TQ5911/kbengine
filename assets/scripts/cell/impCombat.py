@@ -26,13 +26,13 @@ import character_charData as CHD
 import const_const as CONST
 import message_Message_def as MMD
 import taskClass_taskTarget as TCCTD
-import message_Message as MSG
-import buff_buff as BBD
+import message_Message as M_MD
+import buff_buff as B_BD
 import gamePlay_gamePlay as DDL
-import conflict_status as CSD
+import conflict_status as C_SD
 import conflict_status_def as CSDD
-
 import experience_exp as EPED
+import fightProp_define as FDD
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import performanceLevel_set as PLSD
@@ -42,7 +42,6 @@ import PKData_PKData as PKD
 import skill_skill as SSD
 import creep_base as CBD
 import guild_guildConst as G_GCD
-import wonderLand_floor as WL_FD
 import experience_config as EXPC
 import gameengine
 
@@ -80,7 +79,7 @@ class AvatarBuildsMixin(object):
         skill = self.skillDic.doGetSkill(skillId, False)
         if not skill:
             return
-        skill.setLevel(self, toLv)
+        skill.setSkillLevel(toLv)
 
 
 class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
@@ -152,13 +151,13 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def restoreBuffs(self):
         LOG_DBG('restoreBuffs')
         tsLastOffline = self.popTempMiscProp(gameconst.EntityPropsEnum.offlineTimeForRestoreBuff)
-        self.buffDic.update(self.savedBuffDic)
+        self.buffMgrDic.update(self.savedBuffDic)
         self.savedBuffDic.clear()
         self.savedBuffDic.buffTagSet = set()
-        self.buffDic.checkValidOnLogin(self, tsLastOffline)
+        self.buffMgrDic.checkValidOnLogin(self, tsLastOffline)
 
-        for buffId in list(self.buffDic.keys()):
-            buffMap = self.buffDic.get(buffId)
+        for buffId in list(self.buffMgrDic.keys()):
+            buffMap = self.buffMgrDic.get(buffId)
             if not buffMap:
                 continue
             for buffSrcKey in list(buffMap.keys()):
@@ -168,8 +167,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                     buffVal.onRestored(self)
 
     def saveBuffs(self):
-        for buffId in list(self.buffDic.keys()):
-            buffMap = self.buffDic.get(buffId)
+        for buffId in list(self.buffMgrDic.keys()):
+            buffMap = self.buffMgrDic.get(buffId)
             if not buffMap:
                 continue
             for buffSrcKey in list(buffMap.keys()):
@@ -189,9 +188,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.client.onAddSkill(
                 skillId,
                 skillLv,
-                skill.getExtraLv(self),
+                skill.getExtraLevel(self),
                 skill.tNextCast,
-                skill.getCD(self),
+                skill.getCDDur(self),
                 skillSwitch)
 
         return skill
@@ -200,7 +199,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         skill = SkillManager.SkillManager.addSkillInEntity(self, skillId, skillLv, tNextCast)
         if skill:
             skillSwitch = self.skillDic.getSkillSwitch(skillId)
-            self.client.onAddSkill(skillId, skillLv, skill.getExtraLv(self), skill.tNextCast, skill.getCD(self), skillSwitch)
+            self.client.onAddSkill(skillId, skillLv, skill.getExtraLevel(self), skill.tNextCast, skill.getCDDur(self), skillSwitch)
         return self.skillDic.doGetSkill(skillId, True)
 
     def unlockDodgeSkill(self, oldLevel, newLevel):
@@ -261,7 +260,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.client.onDead(killer.id)
         self.destroySummonOnDead()
         self.removeBuffOnDead()
-        self.cancelMoveController()
+        self.removeMoveController()
         self.unsetAllHateRecord(gameconst.UnsetAllHateReason.dead)
 
         creationId = 0
@@ -295,7 +294,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if _duelFlagEnt:
                 _duelFlagEnt.onAvatarDuelFailed(self.id)
 
-        posMsg = "<link position x={} z={} spaceNo={}>".format(int(self.position.x), int(self.position.z), self.spaceNo)
+        posMsg = "<link position x={} z={} spaceNo={} colorId=0>".format(int(self.position.x), int(self.position.z), self.spaceNo)
         if _hostIsAvatar and host.id != self.id:
             _msgId = utils.getTranslatedMsgId(G_GCD.datas['guild_pkPrompt']['value'])
             _mapId = formula.fetchMapId(self.spaceNo)
@@ -356,6 +355,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def onKillAvatar(self, deadAvatar):
         if self.IsAvatar:
             self.client.onKillAvatar(deadAvatar.name)
+
+            if formula.inWonderLandScene(self.spaceNo):
+                self.base.triggerAchievement(gameconst.AchieveType.WONDERLAND_KILL)
         # self.showMsg(PKD.datas['killPlayer']['value'], [deadAvatar.name, str(deadAvatar.gbId)])
         pass
 
@@ -366,10 +368,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return gameclass.BoolResult(True, -1)
 
         remState = []
-        eventName = self._getConflictEventName(eventId)
-        cfgData = self.getConflictEventCfgData(eventId)
+        eventName = self._fetchConflictEventName(eventId)
+        cfgData = self.fetchConflictEventCfgData(eventId)
         for state in self.stateList:
-            stateEventId = CSD.datas[state].get('event')
+            stateEventId = C_SD.datas[state].get('event')
             if isInit and stateEventId == eventId:
                 continue
 
@@ -377,7 +379,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if val == 1:
                 continue
             elif val == 0:
-                bMsg and self.client and self.showMsg(MMD.datas.CUSTOM_STRING41, [self._getConflictStatusName(state),
+                bMsg and self.client and self.showMsg(MMD.datas.CUSTOM_STRING41, [self._fetchConflictStatusName(state),
                                                                                   eventName])
                 return gameclass.BoolResult(False, state)
             elif val == 2 and remConflctState:
@@ -385,7 +387,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             elif val == 3:
                 LOG_DBG('Avatar.checkConflictState', eventId, state)
                 return gameclass.BoolResult(False, state)
-            elif MSG.datas.get(val, None):
+            elif M_MD.datas.get(val, None):
                 bMsg and self.client and self.showMsg(val, [])
                 LOG_WARN(
                     "checkConflictState has conflict eventId=[{}] state=[{}] val=[{}]".format(eventId, state, val))
@@ -425,6 +427,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.setState(state, reportErr=False)
         self.setTempMiscProp(gameconst.EntityPropsEnum.AvatarActiveTimestamp, utils.curTS())
 
+        self.checkIdleStatus(True)
+
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
     def clientRemoveState(self, exposed, state):
@@ -440,6 +444,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         if state == gameconst.StateEnum.Moving and self.autoCombat == gameconst.AutoCombatState.Suspending:
             self.addTimerCB(0.1, 'recoverAndTickOnce', (), gametimer.TIMER_TAG_REMOVE_MOVE_AND_AUTO_COMBAT)
+        
+        self.checkIdleStatus(True)
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
@@ -476,7 +482,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
     def clientSetIsOnGround(self, exposed, isOnGround):
-        # DEBUG_MSG('clientSetIsOnGround', isOnGround)
+        # LOG_DBG('clientSetIsOnGround', isOnGround)
         self.isClientOnGround = isOnGround
 
     def regen(self):
@@ -534,7 +540,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if not self.hasState(gameconst.StateEnum.Death):
             return
 
-        self.onEffectEvent('onDeadLater', killerId, self.id, effectEventCtx.EE_DEFAULT_CONTEXT)
+        self.onEffectEventCall('onDeadLater', killerId, self.id, effectEventCtx.EE_DEFAULT_CONTEXT)
 
     def enterFightingState(self):
         if not self.hasBuff(64000067):
@@ -555,15 +561,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.removeBuff(64000067)
 
         self.clearDamageSetOutofFighting()
-        # self.stopStatisticsRecorded()
         if formula.inWorldLineScene(self.spaceNo):
             self.resetStatisticsData()
-
-        # self.unsetAllHateRecord(gameconst.UnsetAllHateReason.leaveFightingState)
-        # if self.rmFightStateTimeId > 0:
-        #     self.pyDelTimer(self.rmFightStateTimeId, gametimer.FIGHTING_STATE_TICK)
-        # self.rmFightStateTimeId = 0
-        # self.showMsg(MMD.datas.quitFight, [])
 
     def enterSprintingState(self):
         if not self.hasBuff(64000007):
@@ -575,7 +574,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def goDie(self, killer, srcType, srcId, forceDead=False, context=None):
         dmgHostEnt = utils.getHostEntity(killer)
-        posMsg = "<link position x={} z={} spaceNo={}>".format(int(self.position.x), int(self.position.z), self.spaceNo)
+        posMsg = "<link position x={} z={} spaceNo={} colorId=0>".format(int(self.position.x), int(self.position.z), self.spaceNo)
         if self.hasState(gameconst.StateEnum.Fall):
             self.showMsg(CONST.datas['highFallingMsgID']['value'], [])
         else:
@@ -596,15 +595,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         super(ImpCombat, self).goDie(killer, srcType, srcId, forceDead, context)
 
-    def onDoDamage(self, targetId, damageVal, absorbVal, srcType, srcId):
-        super(ImpCombat, self).onDoDamage(targetId, damageVal, absorbVal, srcType, srcId)
-
     def doAutoRelive(self, reliveType=gameconst.RELIVE_TYPE_TO_NEAR):
-        LOG_IFO('in doAutoRelive', reliveType, self.spaceNo)
+        LOG_INFO('in doAutoRelive', reliveType, self.spaceNo)
         self._cancelAutoReliveTimerId()
         if not self.isDie():
             return
-        LOG_IFO('     in doAutoRelive, start doRelive')
+        LOG_INFO('     in doAutoRelive, start doRelive')
         self.doRelive(reliveType)
         return
 
@@ -731,7 +727,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def levelUp(self, level, opUUID, src, detail):
         level = min(level, utils.getPlayerMaxLevel())
         if level <= self.level:
-            LOG_IFO('levelUp: level <= self.level', level)
+            LOG_INFO('levelUp: level <= self.level', level)
             return
 
         oldFullHp = self.fullHp
@@ -800,7 +796,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def getBuffMirrorData(self):
         buffMirrorData = {'buffs': []}
         buffList = buffMirrorData['buffs']
-        for buffId, buffMap in self.buffDic.items():
+        for buffId, buffMap in self.buffMgrDic.items():
             for buffSrcKey, buffVal in buffMap.items():
                 data = {
                     'tStartTime': buffVal.tStartTime,
@@ -819,7 +815,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return buffMirrorData
 
     def getMirrorData(self, gbId, box, callbackFun, callbackArgs):
-        LOG_IFO('getMirrorData', gbId, box, callbackFun, callbackArgs)
+        LOG_INFO('getMirrorData', gbId, box, callbackFun, callbackArgs)
         if gbId != self.gbId:
             LOG_ERR('getMirrorData gbId error', gbId, self.gbId)
             return
@@ -834,17 +830,11 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             'fullHp': self.fullHp,
             'fullMp': self.fullMp,
             'skillDic': self.skillDic.toDict(),
-            'buffDic': buffMirrorDate
+            'buffMgrDic': buffMirrorDate
         }
-        LOG_IFO('mirrorDataDic', mirrorDataDic)
+        LOG_INFO('mirrorDataDic', mirrorDataDic)
         if hasattr(box, callbackFun):
             getattr(box, callbackFun)(mirrorDataDic, *callbackArgs)
-
-    def _castSkillByServer(self):
-        if self.autoCombat:
-            return True
-
-        return self.isBot()
 
     def _useTargetSkillPreCheck(self, skillID, targetID, isClient):
         """
@@ -904,7 +894,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 if not gameconfig.visibleConfigEnabled('skillWarrior'):
                     return
                 
-        LOG_IFO("skill useTargetSkill", skillID, targetID, arr, compensateTime)
+        LOG_INFO("skill useTargetSkill", skillID, targetID, arr, compensateTime)
         self.setTempMiscProp(gameconst.EntityPropsEnum.AvatarActiveTimestamp, utils.curTS())
         if not self._useTargetSkillPreCheck(skillID, targetID, True):
             return
@@ -922,7 +912,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     def castingSkill(self, exposed, skillID, targetID, arr):
-        LOG_IFO("skill castingSkill", skillID, targetID, arr)
+        LOG_INFO("skill castingSkill", skillID, targetID, arr)
         self.setTempMiscProp(gameconst.EntityPropsEnum.AvatarActiveTimestamp, utils.curTS())
         _skill = self.skillDic.doGetSkill(skillID)
         actionCtx = actionContext.UseSkillCtx(
@@ -937,20 +927,20 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     def cancelCastingSkill(self, exposed, skillId):
-        self._endCastingSkill(gameconst.EndCasting.ECEnumClientCancel)
+        self._onEndCastingSkill(gameconst.EndCasting.ECEnumClientCancel)
 
     @utils.isMyself
     def cancelChannelingSkill(self, exposed, skillId):
         self.killChannelingSkill(gameconst.ResetSkillReason.ReasonDefault, False, notifyClient=False)
 
-    def recordUseSkill(self, skillVal, targetId):
+    def recordUsingSkill(self, skillVal, targetId):
         if not self.hasTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill):
             self.setTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, {})
 
         curUseSkill = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill)
         curUseSkill[skillVal.skillId] = (skillVal, targetId)
 
-    def removeUseSkillRecord(self, skillId):
+    def removeUsingSkillRecord(self, skillId):
         curUseSkill = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, {})
         curUseSkill.pop(skillId, None)
 
@@ -981,14 +971,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def isVisible(self, target):
         if self.IsAvatar and target.IsAvatar:
-            # if (self.teamId and self.teamId == target.teamId) or (
-            #         self.guildUUID and self.guildUUID == target.guildUUID):
             return True
 
         return super().isVisible(target)
-
-    def sendCombatMsg(self, msgId, args):
-        args = [str(arg) for arg in args]
 
     def onBeDamaged(self, srcEntId, damageVal, absorbVal, srcType, srcId):
         # 采集时受到伤害
@@ -1011,7 +996,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.cloneList.clear()
 
     def getBuffSrcKey(self, buffId, srcId=None):
-        bd = BBD.datas.get(buffId, {})
+        bd = B_BD.datas.get(buffId, {})
         if bd.get('isCover', 1):
             return 0
         return srcId if srcId is not None else self.gbId
@@ -1024,15 +1009,15 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.selectedTargetId = 0
             return
 
-        self.setSelectedTargetId(targetId)
+        self.doSetSelectedTargetId(targetId)
 
-    def setSelectedTargetId(self, targetId):
+    def doSetSelectedTargetId(self, targetId):
         if self.selectedTargetId != targetId:
             self._breakGeneralSkill()
             
         ent = KBEngine.entities.get(targetId)
         if ent and not ent.IsCombatUnit:
-            gameengine.panicStack("setSelectedTargetId target is not combat unit", targetId, ent.__class__.__name__)
+            gameengine.panicStack("doSetSelectedTargetId target is not combat unit", targetId, ent.__class__.__name__)
 
         self.selectedTargetId = targetId
 
@@ -1143,7 +1128,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     def setShowCompleteNum(self, exposed, showCompleteNum):
-        LOG_IFO("setShowCompleteNum", exposed, showCompleteNum)
+        LOG_INFO("setShowCompleteNum", exposed, showCompleteNum)
 
         if self.showCompleteNumTimer:
             self.cancelTimerCB(self.showCompleteNumTimer, gametimer.TIMER_TAG_SET_COMPLETE_NUM)
@@ -1218,8 +1203,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         target = KBEngine.entities.get(entityId)
-        if target and target.buffDic:
-            self.client.onGetBuffIdInfo(entityId, target.buffDic.getClientBuffIds())
+        if target and target.buffMgrDic:
+            self.client.onGetBuffIdInfo(entityId, target.buffMgrDic.getClientBuffIds())
 
     def modifyHP(self, *args, **kwargs):
         ret = super().modifyHP(*args, **kwargs)
@@ -1249,7 +1234,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def clearStateOffline(self):
         rmStates = []
         for state in self.stateList:
-            val = CSD.datas.get(state)
+            val = C_SD.datas.get(state)
             if val and val.get('clearOnline'):
                 rmStates.append(state)
 
@@ -1289,7 +1274,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 return
             if self.flyValue <= 0:
                 # 报警
-                ERROR_MSG('flyValue is not enough, can not fly!!! gbId={}'.format(self.gbId))
+                LOG_ERR('flyValue is not enough, can not fly!!! gbId={}'.format(self.gbId))
 
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Flying)):
                 self.topSpeed = gameconst.TopSpeedType.FlyingTopSpeed
@@ -1304,6 +1289,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 LOG_WARN('jumpType error:', jumpType)
         else:
             LOG_WARN('jumpType error:', jumpType)
+        self.checkIdleStatus(True)
 
     def _checkFristFly(self):
         if self.getPersistentMiscProp(gameconst.EntityPropsEnum.firstFly, False):
@@ -1313,10 +1299,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.setPersistentMiscProp(gameconst.EntityPropsEnum.firstFly, True)
 
     def checkAttachmentEntityRelationType(self, target):
-        # for cid in list(self.cloneList):
-        #     cln = KBEngine.entities.get(cid)
-        #     cln and cln.onEnterTrap(target, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
-
         for summonId in list(self.petList):
             summon = KBEngine.entities.get(summonId)
             summon and summon.onEnterTrap(target, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
@@ -1330,7 +1312,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     def setSkillAutoCombat(self, exposed, skillId, status):
-        LOG_IFO('setSkillAutoCombat', skillId, status)
+        LOG_INFO('setSkillAutoCombat', skillId, status)
         self.skillDic.setSkillSwitch(self, skillId, status)
 
     def addPropByPassiveSkill(self, propInfoList):
@@ -1409,7 +1391,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.base.changeMorphStateBase(morphState)
 
     def setSummonSlotIdx(self, slotIdx):
-        LOG_IFO('cell setSummonSlotIdx set', slotIdx, self.summonSlotIdx)
+        LOG_INFO('cell setSummonSlotIdx set', slotIdx, self.summonSlotIdx)
         if slotIdx and self.hasState(gameconst.StateEnum.Fighting):
             LOG_WARN('cell setSummonSlotIdx in Fighting')
             self.showMsg(CONST.datas['SummonChangeTips']['value'], [])
@@ -1419,7 +1401,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         for summonId in list(self.petList):
             summon = KBEngine.entities.get(summonId)
             summon and summon.killSelf(gameconst.SourceType.SrcTpDefault)
-        #LOG_IFO('cell setSummonSlotIdx get', self.getSummonId())
+        #LOG_INFO('cell setSummonSlotIdx get', self.getSummonId())
 
     def getSummonId(self):
         slotIdx = SRSU.minKey
@@ -1433,9 +1415,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @gamedecorator.checkGameconfigEnable('skillUpgrade')
     def levelUpSkill(self, exposed, skillId, levelDelta):
-        LOG_IFO('levelUpSkill 1', skillId, levelDelta)
+        LOG_INFO('levelUpSkill 1', skillId, levelDelta)
         newSkillId, oldSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)
-        LOG_IFO('levelUpSkill 2, after check inscription', skillId, newSkillId, oldSkillId, levelDelta)
+        LOG_INFO('levelUpSkill 2, after check inscription', skillId, newSkillId, oldSkillId, levelDelta)
         self.base.baseLevelUpSkill(newSkillId, oldSkillId, levelDelta)
 
     def checkCombatRangeY(self, target):
@@ -1453,11 +1435,13 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def calcPkSafeArea(self):
         if self.inPKSafeArea():
             self.cellFlags = utils.bset(self.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
+            return True
         else:
             self.cellFlags = utils.breset(self.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
+            return False
 
     def changeSkillCDStatus(self, skillId, status):
-        LOG_IFO('changeSkillCDStatus, ', skillId, status)
+        LOG_INFO('changeSkillCDStatus, ', skillId, status)
         if status not in gameconst.SkillCDStatus.VALID:
             LOG_ERR('changeSkillCDStatus, invalid status, ', skillId, status)
             return False
@@ -1477,16 +1461,16 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         skill.setTempData(self, gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, status)
         if status == gameconst.SkillCDStatus.ENABLED:
             # 重新进入cd
-            skill.enterCDTime(self)
+            skill.doEnterCDTime(self)
             # 刷新时间置零，通知客户端启用技能
-            self.client.onSetAddSkillCd(skill.skillId, float(skill.getCD(self)), float(skill.tNextCast), False, skill.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), skill.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), skill.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not skill.isSkillCDStatusFrozen())
+            self.client.onSetAddSkillCd(skill.skillId, float(skill.getCDDur(self)), float(skill.tNextCast), False, skill.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), skill.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), skill.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not skill.isSkillCDStatusFrozen())
         elif status == gameconst.SkillCDStatus.DISABLED:
             # 刷新时间置零，通知客户端禁用技能
             pass
         return True
     
     def getSourceSkillId(self, context):
-        LOG_DBG('getSourceSkillId, 1', context)
+        #LOG_DBG('getSourceSkillId, 1', context)
         if context:
             context = context.getTopCtxFromActionQueue(actionContext.ACTION_USE_SKILL)
             if context:
@@ -1499,36 +1483,21 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.flyValue -= CONST.datas['flyEpCostRate']['value']
 
         self.cancelFlyResumeTimer()
-        
-        if self.flyCheckTimer > 0:
-            self.pyDelTimer(self.flyCheckTimer, gametimer.TIMER_ON_FLYING_CHECK)
-            if self.IsAvatar:
-                self.leaveFlySpeed()
-            self.flyCheckTimer = 0
 
-        if self.flyCheckTimer == 0:
-            self.flyCheckTimer = self.pyAddTimer(gameconst.FlyTimerArgs.Delay, gameconst.FlyTimerArgs.Interval, gametimer.TIMER_ON_FLYING_CHECK)
-            if self.IsAvatar:
-                self.enterFlySpeed()
+        self.enterFlySpeed()
 
     def leaveFlyingState(self):
         LOG_DBG('leaveFlyingState, 1')
         self.startFlyResumeTimer()
-
-    def onTickFlyingCheck(self):
-        if self.IsAvatar:
-            self.leaveFlySpeed()
-        if self.flyCheckTimer > 0:
-            self.pyDelTimer(self.flyCheckTimer, gametimer.TIMER_ON_FLYING_CHECK)
-            self.flyCheckTimer = 0
+        self.leaveFlySpeed()
 
     def startFlyResumeTimer(self):
-        # DEBUG_MSG('startFlyResumeTimer: ', self.flyResumeTimer, self.flyValue)
+        # LOG_DBG('startFlyResumeTimer: ', self.flyResumeTimer, self.flyValue)
         if self.flyResumeTimer == 0 and self.flyValue < CONST.datas['flyEpMax']['value']:
             self.flyResumeTimer = self.pyAddTimer(0, 1, gametimer.TIMER_ON_FLY_RESUME)
 
     def cancelFlyResumeTimer(self):
-        # DEBUG_MSG('cancelFlyResumeTimer: ', self.flyResumeTimer)
+        # LOG_DBG('cancelFlyResumeTimer: ', self.flyResumeTimer)
         if self.flyResumeTimer:
             self.pyDelTimer(self.flyResumeTimer, gametimer.TIMER_ON_FLY_RESUME)
             self.flyResumeTimer = 0
@@ -1538,7 +1507,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.flyResumeValue = 0
 
     def onTickFlyingResume(self):
-        # DEBUG_MSG('onTickFlyingResume: ', self.flyResumeValue, self.flyValue)
+        # LOG_DBG('onTickFlyingResume: ', self.flyResumeValue, self.flyValue)
         self.flyResumeValue += 1
         if self.flyResumeValue >= CONST.datas['flyEpRate']['value']:
             self.flyResumeValue = 0
@@ -1546,3 +1515,33 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if self.flyValue >= CONST.datas['flyEpMax']['value']:
                 self.flyValue = CONST.datas['flyEpMax']['value']
                 self.cancelFlyResumeTimer()
+
+    def checkIdleStatus(self, isClient=False):
+        self.setTempMiscProp(gameconst.EntityPropsEnum.clientIdleChangeSpeed, isClient)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.idleChangeSpeed, True)
+        try:
+            if self.hasState(gameconst.StateEnum.serverControl):
+                self.recalculateSpeed()
+            else:
+                conflictStatus = self.getConflictStatus(29100003)
+                if conflictStatus & self.state == 0:
+                    self.setProp('speed', 0, gameconst.SourceType.SrcTpIDLE)
+                else:
+                    if self.speed <= 0:
+                        self.recalculateSpeed()
+        except Exception as e:
+            LOG_ERR('Error: failed in checkIdleStatus, reason:%s.' % (repr(e)))
+
+        self.popTempMiscProp(gameconst.EntityPropsEnum.idleChangeSpeed)
+        self.popTempMiscProp(gameconst.EntityPropsEnum.clientIdleChangeSpeed)
+        LOG_DBG("checkIdleStatus: ", self.speed)
+
+    def recalculateSpeed(self):
+        value = self.calculateCurrentSpeed()
+        if value != gameconst.scriptNone:
+            self.setProp('speed', value, gameconst.SourceType.SrcTpIDLE)
+
+    def calculateCurrentSpeed(self):
+        func = FDD.datas.get('speed').get('formulaPlayer')
+        value = func(self)
+        return value

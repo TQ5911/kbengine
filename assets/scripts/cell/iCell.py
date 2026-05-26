@@ -11,6 +11,8 @@ import gameconst
 import sMath
 import gameglobal
 
+import const_const as CONST
+
 
 class ICell(KBEngine.Entity):
     IsNpc = False
@@ -158,7 +160,7 @@ class ICell(KBEngine.Entity):
 
     def onTeleportNear(self, fromCell, pos, dir, spaceNo):
         gameglobal.cellAvatarCount += 1
-        LOG_IFO("add avatar cnt when teleport", gameglobal.cellAvatarCount)
+        LOG_INFO("add avatar cnt when teleport", gameglobal.cellAvatarCount)
         fromCell.safeTeleport(self, pos, dir, spaceNo)
         return
 
@@ -294,7 +296,7 @@ class ICell(KBEngine.Entity):
     def isVisible(self, target):
         return True
 
-    def checkEventListened(self, eventId):
+    def checkAIEventListened(self, eventId):
         """All Entity need check event listened method"""
         return False
 
@@ -306,7 +308,23 @@ class ICell(KBEngine.Entity):
     def scriptNavigate(self, dstPos, speed, distance=0, faceMovement=True, layer=gameconst.SpaceLayer.DEFAULT,
                        userData=None):
         maxDis = 128  # 引擎预留参数，暂时没有意义
-        navController = self.navigate(dstPos, speed, distance, maxDis, maxDis, faceMovement, layer, True, userData)
+        _width = CONST.datas['navAgentWidth']['value']
+        navController = self.navigate(
+            dstPos, 
+            speed, 
+            distance, 
+            maxDis, 
+            maxDis, 
+            faceMovement, 
+            layer, 
+            True, 
+            userData,
+            {
+                'sl': _width, # 搜索起始点的长
+                'sw': _width, # 搜索起始点的宽
+                'sh': 4.0, # 搜索起始点的高
+            }
+        )
         return navController
 
     def __repr__(self):

@@ -330,12 +330,12 @@
             <Arg>   PYTHON  </Arg>
         </onBeKickedOutRaidByRaidDeputy>
 
-        <onRaidTeamCaptainKickOutRaidMember>
+        <onRaidCaptainKickOutRaidMember>
             <Arg>   RAID_ID     </Arg>
             <Arg>   UINT8   </Arg>
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   PYTHON      </Arg>
-        </onRaidTeamCaptainKickOutRaidMember>
+        </onRaidCaptainKickOutRaidMember>
 
         <onBeKickedOutRaidByRaidTeamCaptain>
             <Arg>   RAID_ID     </Arg>

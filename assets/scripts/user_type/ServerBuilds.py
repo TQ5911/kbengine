@@ -9,7 +9,7 @@ import userType
 import utils
 import gameconst
 
-import character_charData as CCD
+import character_charData as C_C_DD
 import skill_skill as SSD
 import skillRelevant_skillConst as SRSC
 import skillRelevant_skillUpgrade as SRSUD
@@ -20,6 +20,7 @@ import gameclass
 import gameglobal
 import dataUtils
 import LogTrackingMgr
+import actionContext
 
 class Build(userType.UserSingleType):
     """BUILD_INFO"""
@@ -72,7 +73,7 @@ class Build(userType.UserSingleType):
             else:
                 return None
 
-        charData = CCD.datas.get(gameglobal.roleCache[owner.id]['school'])
+        charData = C_C_DD.datas.get(gameglobal.roleCache[owner.id]['school'])
         if not charData:
             return None
 
@@ -89,7 +90,7 @@ class Build(userType.UserSingleType):
     def containSkill(self, skillId):
         return skillId in self.activeSkills
 
-    def getSkillData(self):
+    def getSkillCfg(self):
         slots = self.activeSkills
         return [{
             'skillId': skillId,
@@ -104,7 +105,7 @@ class Build(userType.UserSingleType):
 
     def getData(self, isNeedActive=True, isNeedLevel=True):
         return {
-            'skills': self.getSkillData() if isNeedActive else [],
+            'skills': self.getSkillCfg() if isNeedActive else [],
             'skillLevels': self.getLevelsData() if isNeedLevel else [],
         }
 
@@ -271,6 +272,10 @@ class Build(userType.UserSingleType):
         owner.onChangeSkillLv(skillId, newLevel)
         owner.client.onUpdateSkillLevel(skillIdList, [newLevel] * len(skillIdList))
         #
+        owner.achievementInfo.triggerAchieveByType(
+            owner,
+            gameconst.AchieveType.LEVEL_UP_SKILL,
+            actionContext.AchievementCtx(oldLevel=oldLevel, newLevel=newLevel))
         LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
         return True
 

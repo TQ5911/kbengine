@@ -1,0 +1,96 @@
+<root>
+
+    <Properties>
+        <lineSpaces>
+            <Type>      PYTHON    </Type>
+            <Flags>     BASE      </Flags>
+            <Default>   {}        </Default>
+        </lineSpaces>
+
+        <missedLines>
+            <Type>      PYTHON    </Type>
+            <Flags>     BASE      </Flags>
+            <Default>   {}        </Default>
+        </missedLines>
+
+        <deadApps>
+            <Type>      PYTHON    </Type>
+            <Flags>     BASE      </Flags>
+            <Default>   []        </Default>
+        </deadApps>
+
+        <relivedCellapps>
+            <Type>      PYTHON    </Type>
+            <Flags>     BASE      </Flags>
+            <Default>   []        </Default>
+        </relivedCellapps>
+
+        <collectionSharedLimitDic>
+            <Type>      PY_DICT     </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}          </Default>
+        </collectionSharedLimitDic>
+
+        <lineStubIdx>
+            <Type>          UINT16          </Type>
+            <Flags>			BASE			</Flags>
+        </lineStubIdx>
+
+    </Properties>
+
+    <BaseMethods>
+        <checkAllLineSpaceReady>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </checkAllLineSpaceReady>
+
+        <onLineSpaceReady>
+            <Arg>       SPACE_NO       </Arg>
+        </onLineSpaceReady>
+
+        <onLineSpaceGone>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       UINT8       </Arg>
+        </onLineSpaceGone>
+
+        <handleCellappDeath>
+            <Arg>       UINT8         </Arg>
+        </handleCellappDeath>
+
+        <onCellappRelive>
+            <Arg>       UINT8         </Arg>
+        </onCellappRelive>
+
+        <createCellEntityInLine>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       SPACE_NO       </Arg>
+        </createCellEntityInLine>
+
+        <onCollectionBeCollectAndDestroyed>
+            <Arg>       SPACE_NO    </Arg>
+            <Arg>       OBJECT_ID   </Arg>
+            <Arg>       GAME_ENTITY_ID  </Arg>
+        </onCollectionBeCollectAndDestroyed>
+
+        <createCellEntityInSpace>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       UNICODE       </Arg>
+            <Arg>       POSITION_ARG       </Arg>
+            <Arg>       DIRECTION_ARG       </Arg>
+            <Arg>       PY_DICT       </Arg>
+        </createCellEntityInSpace>
+
+        <onLoadGroupEntities>
+            <Arg>       PY_DICT       </Arg>
+        </onLoadGroupEntities>
+
+        <onRefreshGroupEntities>
+            <Arg>       PY_DICT       </Arg>
+        </onRefreshGroupEntities>
+
+        <onLoadEntitiesEnd>
+            <Arg>       SPACE_NO        </Arg>
+        </onLoadEntitiesEnd>
+    </BaseMethods>
+</root>

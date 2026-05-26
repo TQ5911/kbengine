@@ -48,7 +48,7 @@ class EventMgr(object):
         if not self.eventDic[name]:
             self.eventDic.pop(name)
 
-    def onEffectEvent(self, name, triggerId, targetId, eventContext):
+    def onEffectEventCall(self, name, triggerId, targetId, eventContext):
         event = EffectEvent(name, triggerId, targetId, eventContext)
         self.raiseEvent(name, event)
 

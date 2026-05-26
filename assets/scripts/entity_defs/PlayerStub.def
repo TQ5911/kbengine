@@ -117,6 +117,13 @@
             <Arg>           METHOD_ARGS </Arg>
         </doOnOthersClient>
 
+        <isOnLine>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           METHOD_NAME     </Arg>
+            <Arg>           METHOD_ARGS     </Arg>
+        </isOnLine>
+
         <isAllAvatarsOnline>
             <Arg>           ARRAY       <of>    PLAYER_GBID               </of>   </Arg>
             <Arg>           MAILBOX     </Arg>

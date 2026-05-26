@@ -86,7 +86,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
 
         self.triggeredFlowControllerRestNumIncreased()
 
-        self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
+        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
 
         if not self.ttl:
             self.ttl = float(CBD.datas[self.summonId].get('time', 0))
@@ -94,17 +94,17 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if self.ttl:
             self.pyAddTimer(self.ttl, 0, gametimer.TIMER_CELL_TTL_DESTROY)
 
-    def _initBornState(self):
+    def _doInitBornState(self):
         ifBornState = CBD.datas[self.summonId]['ifBornState']
         if ifBornState:
-            self.changeBornState(gameconst.BornStateType.invisible)
-            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
+            self.setBornState(gameconst.BornStateType.invisible)
+            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'setBornState',
                            (gameconst.BornStateType.static, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
-            self.changeBornState(gameconst.BornStateType.move)
+            self.setBornState(gameconst.BornStateType.move)
 
     @property
-    def creepBaseId(self):
+    def creepbaseId(self):
         return self.summonId
 
     def initBornAction(self):
@@ -121,36 +121,39 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         # 召唤物对特定对象召唤的话记录对象EntityID
         return KBEngine.entities.get(self.bindedEntityId)
 
-    def getConfigData(self):
+    def getCreepData(self):
         monsterId = self.summonId
         return CBD.datas.get(monsterId, {})
+
+    def getConfigData(self):
+        return CBD.datas.get(self.summonId, {})
 
     def _ttlDestroy(self):
         self.safeDestroy()
 
     def baseFullHpRatio(self):
         if self.inheritPropRatio:
-            return CBD.datas[self.creepBaseId].get('inheritFullHpRatio', 1.0)
+            return CBD.datas[self.creepbaseId].get('inheritFullHpRatio', 1.0)
         return super(Summon, self).baseFullHpRatio()
 
     def basePhysicalArmorRatio(self):
         if self.inheritPropRatio:
-            return CBD.datas[self.creepBaseId].get('inheritPhysicalArmotRatio', 1.0)
+            return CBD.datas[self.creepbaseId].get('inheritPhysicalArmotRatio', 1.0)
         return super(Summon, self).basePhysicalArmorRatio()
 
     def baseMagicArmorRatio(self):
         if self.inheritPropRatio:
-            return CBD.datas[self.creepBaseId].get('inheritMagicArmotRatio', 1.0)
+            return CBD.datas[self.creepbaseId].get('inheritMagicArmotRatio', 1.0)
         return super(Summon, self).baseMagicArmorRatio()
 
     def baseMinAtkRatio(self):
         if self.inheritPropRatio:
-            return CBD.datas[self.creepBaseId].get('inheritMinAtkRatio', 1.0)
+            return CBD.datas[self.creepbaseId].get('inheritMinAtkRatio', 1.0)
         return super(Summon, self).baseMinAtkRatio()
 
     def baseMaxAtkRatio(self):
         if self.inheritPropRatio:
-            return CBD.datas[self.creepBaseId].get('inheritMaxAtkRatio', 1.0)
+            return CBD.datas[self.creepbaseId].get('inheritMaxAtkRatio', 1.0)
         return super(Summon, self).baseMaxAtkRatio()
 
     def doInitBaseProperties(self):
@@ -193,8 +196,8 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 
-        elif userData == gametimer.MONSTER_AI_THINK:
-            self.tickAI()
+        elif userData == gametimer.COMBAT_UNIT_AI_THINK:
+            self.aiTick()
 
         elif userData == gametimer.TIMER_CELL_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
@@ -202,7 +205,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         else:
             super(Summon, self).onTimer(tid, userData)
 
-    def tickAI(self):
+    def aiTick(self):
         self.aiController and self.aiController.tickOnce()
 
     def _addTrap(self):
@@ -245,14 +248,11 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if self.getHost():
             self.getHost().removeSummon(self.id)
 
-    def onModifyShieldVal(self, val, releaseRoleId, srcType, srcId):
-        pass
-
     def onDead(self, killer, *args, **kwargs):
         LOG_DBG('Summon::onDead', killer)
         super(Summon, self).onDead(killer, hostId=self.hostId)
         self.removeAllBuff()
-        self.cancelMoveController()
+        self.removeMoveController()
         self.destroySummonOnDead()
         if killer:
             self.allClients.onDead(killer.id)
@@ -282,11 +282,11 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         self.aiController = aiController.AIController(self.id, self.aiName, self.isActiveAttack())
         self.startThink()
 
-    def changeBornState(self, newState):
+    def setBornState(self, newState):
         if newState == gameconst.BornStateType.static:
             ifBornState = CBD.datas[self.summonId].get('ifBornState', 1)
             nextState = gameconst.BornStateType.move
-            self.addTimerCB(CBSD.datas[ifBornState]['bornStateTime'], 'changeBornState', (nextState, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
+            self.addTimerCB(CBSD.datas[ifBornState]['bornStateTime'], 'setBornState', (nextState, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         elif newState == gameconst.BornStateType.move:
             self.setAI(self.aiName)
             self.addTimerCB(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
@@ -302,7 +302,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
     def enterFightingState(self):
         super(Summon, self).enterFightingState()
         if self.isMoving():
-            self.cancelMoveController()
+            self.removeMoveController()
         self.setProp('adjSpeed', self.getProp('adjSpeed') + CBD.datas[self.summonId].get('adjSpeed', 0),
                      gameconst.SourceType.SrcTpFight)
 

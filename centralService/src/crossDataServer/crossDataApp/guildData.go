@@ -108,14 +108,15 @@ func (gd *GuildData) getGuildInfo(guildUUID uint64) *gameServerService.GuildInfo
 		return nil
 	}
 	return &gameServerService.GuildInfo{
-		GuildUUID:  guildInfo.guildUUID,
-		GuildName:  guildInfo.guildName,
-		ServerId:   guildInfo.serverId,
-		Flag:       guildInfo.flag,
-		GuildScore: guildInfo.guildScore,
-		GuildLevel: guildInfo.guildLevel,
-		GuildIcon:  guildInfo.guildIcon,
-		MemberCnt:  guildInfo.memberCnt,
+		GuildUUID:        guildInfo.guildUUID,
+		GuildName:        guildInfo.guildName,
+		ServerId:         guildInfo.serverId,
+		Flag:             guildInfo.flag,
+		GuildScore:       guildInfo.guildScore,
+		GuildLevel:       guildInfo.guildLevel,
+		GuildIcon:        guildInfo.guildIcon,
+		MemberCnt:        guildInfo.memberCnt,
+		MaxGuildUnionNum: guildInfo.maxGuildUnionNum,
 	}
 }
 
@@ -127,14 +128,15 @@ func (gd *GuildData) getGuildInfos(excludeServerId uint32) []*gameServerService.
 		}
 
 		guildInfos = append(guildInfos, &gameServerService.GuildInfo{
-			GuildUUID:  guildInfo.guildUUID,
-			GuildName:  guildInfo.guildName,
-			ServerId:   guildInfo.serverId,
-			Flag:       guildInfo.flag,
-			GuildScore: guildInfo.guildScore,
-			GuildLevel: guildInfo.guildLevel,
-			GuildIcon:  guildInfo.guildIcon,
-			MemberCnt:  guildInfo.memberCnt,
+			GuildUUID:        guildInfo.guildUUID,
+			GuildName:        guildInfo.guildName,
+			ServerId:         guildInfo.serverId,
+			Flag:             guildInfo.flag,
+			GuildScore:       guildInfo.guildScore,
+			GuildLevel:       guildInfo.guildLevel,
+			GuildIcon:        guildInfo.guildIcon,
+			MemberCnt:        guildInfo.memberCnt,
+			MaxGuildUnionNum: guildInfo.maxGuildUnionNum,
 		})
 	}
 	return guildInfos
@@ -149,14 +151,15 @@ func (gd *GuildData) getGuildInfosByGuildUUID(guildUUIDs []uint64) []*gameServer
 		}
 
 		guildInfos = append(guildInfos, &gameServerService.GuildInfo{
-			GuildUUID:  guildInfo.guildUUID,
-			GuildName:  guildInfo.guildName,
-			ServerId:   guildInfo.serverId,
-			Flag:       guildInfo.flag,
-			GuildScore: guildInfo.guildScore,
-			GuildLevel: guildInfo.guildLevel,
-			GuildIcon:  guildInfo.guildIcon,
-			MemberCnt:  guildInfo.memberCnt,
+			GuildUUID:        guildInfo.guildUUID,
+			GuildName:        guildInfo.guildName,
+			ServerId:         guildInfo.serverId,
+			Flag:             guildInfo.flag,
+			GuildScore:       guildInfo.guildScore,
+			GuildLevel:       guildInfo.guildLevel,
+			GuildIcon:        guildInfo.guildIcon,
+			MemberCnt:        guildInfo.memberCnt,
+			MaxGuildUnionNum: guildInfo.maxGuildUnionNum,
 		})
 	}
 	return guildInfos
@@ -281,7 +284,7 @@ func (gd *GuildData) AddGuildRelation(
 	} else {
 		relationNum1 := gd.getGuildRelationNum(guildUUID1, relationType)
 		if relationType == RELATION_TYPE_UNION {
-			if relationNum1 >= CrossDataConfig.UnionMaxNum {
+			if relationNum1 >= int(gd.guildInfos[guildUUID1].maxGuildUnionNum) {
 				appLog.Info("guild union num max:", guildUUID1)
 				return nil, ERROR_CODE_RELATION_MAX_NUM_GUILD1
 			}
@@ -294,7 +297,7 @@ func (gd *GuildData) AddGuildRelation(
 
 		relationNum2 := gd.getGuildRelationNum(guildUUID2, relationType)
 		if relationType == RELATION_TYPE_UNION {
-			if relationNum2 >= CrossDataConfig.UnionMaxNum {
+			if relationNum2 >= int(gd.guildInfos[guildUUID2].maxGuildUnionNum) {
 				appLog.Info("guild union num max:", guildUUID2)
 				return nil, ERROR_CODE_RELATION_MAX_NUM_GUILD2
 			}
@@ -447,15 +450,16 @@ func (gd *GuildData) getEnemyGuildInfos(guildUUID uint64) []*gameServerService.E
 		}
 
 		guildInfos = append(guildInfos, &gameServerService.EnemyGuildInfo{
-			GuildUUID:  anotherGuildUUID,
-			GuildName:  guildInfo.GuildName,
-			ServerId:   guildInfo.ServerId,
-			Flag:       guildInfo.Flag,
-			GuildScore: guildInfo.GuildScore,
-			GuildLevel: guildInfo.GuildLevel,
-			EndTime:    uint32(guildRelation.endTime),
-			MemberCnt:  guildInfo.MemberCnt,
-			GuildIcon:  guildInfo.GuildIcon,
+			GuildUUID:        anotherGuildUUID,
+			GuildName:        guildInfo.GuildName,
+			ServerId:         guildInfo.ServerId,
+			Flag:             guildInfo.Flag,
+			GuildScore:       guildInfo.GuildScore,
+			GuildLevel:       guildInfo.GuildLevel,
+			EndTime:          uint32(guildRelation.endTime),
+			MemberCnt:        guildInfo.MemberCnt,
+			GuildIcon:        guildInfo.GuildIcon,
+			MaxGuildUnionNum: guildInfo.MaxGuildUnionNum,
 		})
 	}
 

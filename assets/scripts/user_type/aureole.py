@@ -96,7 +96,7 @@ class ServerAureoles(userType.UserDictType):
 
     def removeAureola(self, owner, aureoleId):
         #0 to remove all aureoles
-        disabledAureoleIds = self.disableAureole(owner, aureoleId)
+        disabledAureoleIds = self.doDisableAura(owner, aureoleId)
 
         for aureoleId in disabledAureoleIds:
             if owner.isWholeAreaAureole(aureoleId):
@@ -109,7 +109,7 @@ class ServerAureoles(userType.UserDictType):
             self._ctrlIdToIdMap.pop(aVal.aureoleTrapId, 0)
             owner.allClients.onRemoveAureole(aureoleId)
 
-    def disableAureole(self, owner, aureoleId):
+    def doDisableAura(self, owner, aureoleId):
         aureoleIds = (aureoleId,) if aureoleId else self.keys()
         disabledAureoleIds = []
         for aureoleId in aureoleIds:
@@ -193,24 +193,24 @@ class Aureole(userType.UserSingleType):
 
         remainTime = self.getRemainTime()
         if remainTime > 0:
-            owner.addTimerCB(remainTime, 'removeAureola', (self.aureoleId,), gametimer.TIMER_TAG_REMOVE_AUREOLE)
+            owner.addTimerCB(remainTime, 'removeAureolaById', (self.aureoleId,), gametimer.TIMER_TAG_REMOVE_AUREOLE)
 
     def getRemainTime(self):
         return self.tStartTime+self.duration-time.time()
 
     def addAureoleTrap(self, owner):
-        owner.aureoleDic._pendingTrapAureoId = self.aureoleId
+        owner.auraDic._pendingTrapAureoId = self.aureoleId
         # 在添加trap的一瞬间会触发身边所有人的trap，但是这时候trapId还没生成
         # 所以这里加个pending，类似于一个状态，表示处于加trap中
         self.aureoleTrapId = owner.addProximity(self.radius, self.radius, gameconst.AURA_TRAP)
 
-        if owner.aureoleDic._pendingTrapAureoId is None:
+        if owner.auraDic._pendingTrapAureoId is None:
             # 走到这里说明 trap 添加时候触发了
             return
 
-        owner.aureoleDic._pendingTrapAureoId = None
-        owner.aureoleDic._idToCtrlIdMap[self.aureoleId] = self.aureoleTrapId
-        owner.aureoleDic._ctrlIdToIdMap[self.aureoleTrapId] = self.aureoleId
+        owner.auraDic._pendingTrapAureoId = None
+        owner.auraDic._idToCtrlIdMap[self.aureoleId] = self.aureoleTrapId
+        owner.auraDic._ctrlIdToIdMap[self.aureoleTrapId] = self.aureoleId
 
         # if self.radius != -1 :
         #     for e in owner.entitiesInRange(self.radius+0.1):
@@ -220,7 +220,7 @@ class Aureole(userType.UserSingleType):
         #     LOG_DBG('add aureole trap done', self)
 
     def addWholeAreaAureole(self, owner):
-        owner.aureoleDic._wholeAreaAureoleList.append(self.aureoleId)
+        owner.auraDic._wholeAreaAureoleList.append(self.aureoleId)
 
         for eid in list(owner.spaceMgr.spaceEntities.keys()):
             e = KBEngine.entities.get(eid)

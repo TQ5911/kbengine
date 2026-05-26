@@ -86,7 +86,7 @@ class MonsterGrp(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace,
 
     def syncCreatedMonstersToCell(self, ids, totalCount):
         if not self.cell or len(ids) < totalCount:
-            LOG_IFO('Still waiting for creating monsters.')
+            LOG_INFO('Still waiting for creating monsters.')
             self.addTimerCB(0.5, 'syncCreatedMonstersToCell', (ids, totalCount), gametimer.TIMER_TAG_SYNC_CREATED_MONSTERS_TO_CELL)
             return
 

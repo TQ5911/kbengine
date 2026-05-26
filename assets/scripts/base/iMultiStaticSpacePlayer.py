@@ -7,6 +7,7 @@ import random
 import gameconst
 import linePlayers
 import utils
+import branchData_branchData as B_BD
 
 
 class IMultiStaticSpacePlayer(object):
@@ -115,3 +116,19 @@ class IMultiStaticSpacePlayer(object):
 
         _linePlayers.doAddLinePlayerVal(_playerVal, _isLeader)
 
+    def getMapBranchLinePlayers(self, lineType):
+        LOG_INFO('getMapBranchLinePlayers', lineType)
+        ret = {}
+        if lineType not in B_BD.datas:
+            LOG_ERR('getMapBranchLinePlayers:lineType not found', lineType)
+            return ret
+        for lineNo in range(gameconst.getBranchLineCnt(lineType)):
+            _spaceNo = formula.combineLineSpaceNo(lineType, lineNo)
+            _linePlayers = self.allLines.get(_spaceNo)
+            if not _linePlayers:
+                _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(_spaceNo))
+                self.allLines[_spaceNo] = _linePlayers
+            ret[lineNo] = _linePlayers
+            LOG_INFO('getMapBranchLinePlayers:lineNo={}, linePlayers={}'.format(lineNo, _linePlayers))
+
+        return ret

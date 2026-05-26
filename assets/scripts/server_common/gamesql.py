@@ -393,19 +393,19 @@ ItemDataSqlClass = collections.namedtuple('ItemDataSqlClass', itemDataSqlKeys)
 
 def queryAvatarLoginTimeByAccountName(accountName, callback):
     sql = f"select sm_tLoginBase from tbl_Avatar where sm_accountName = '{accountName}'"
-    LOG_IFO(sql)
+    LOG_INFO(sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def queryAvatarGBIDByAccountName(accountName, callback):
     sql = f"select sm_gbId from tbl_Avatar where sm_accountName = '{accountName}'"
-    LOG_IFO(sql)
+    LOG_INFO(sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def queryCountAccountNum(callback):
     sql = 'select count(id) from tbl_Account'
-    LOG_IFO(sql)
+    LOG_INFO(sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
@@ -511,7 +511,7 @@ def _sendMailCallback(ret, num, insertId, err, toGBID, mailVal, onSendCallback):
 
 def queryAccountDid(gbid, callback):
     sql = f'select sm_did from tbl_Account a join tbl_Avatar b on a.id=b.sm_accountDBID where b.sm_gbID={gbid};'
-    LOG_IFO('sql')
+    LOG_INFO('sql')
     KBEngine.executeRawDatabaseCommand(sql, lambda ret, num, insertId, err: callback(ret, err))
 
 
@@ -519,14 +519,14 @@ def delAccountClearDB(realAccount, callback):
     accountType, accountName = utils.fetchAccountTypeAndName(realAccount)
     sql = f'update tbl_Account set sm_userName="", sm_identityCard="", sm_isDelete=1 where sm_accountType={accountType} and \
         sm_accountName="{accountName}")'
-    LOG_IFO('delAccountClearDB', sql)
+    LOG_INFO('delAccountClearDB', sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def recoverAccountDB(realAccount, callback):
     accountType, accountName = utils.fetchAccountTypeAndName(realAccount)
     sql = f'update tbl_Account set sm_isDelete=0 where sm_accountType={accountType} and sm_accountName="{accountName}")'
-    LOG_IFO('recoverAccountDB', sql)
+    LOG_INFO('recoverAccountDB', sql)
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
@@ -550,7 +550,7 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
             hasNum = 0
             wealthVal = dropAward.DeductWealthVal().addWealthByItemId(itemId, needDeductTotal)
 
-            LOG_IFO(f'checkOfflineDeductWealth: {gbId} need remove {needDeductTotal} {coinVal}')
+            LOG_INFO(f'checkOfflineDeductWealth: {gbId} need remove {needDeductTotal} {coinVal}')
 
             itemData = dataUtils.getCommItemData(itemId)
             if not itemData:
@@ -600,7 +600,7 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
 
 def getAccountDid(gbid, callback):
     sql = f'select sm_did from tbl_Account a join tbl_Avatar b on a.sm_avatarGBID=b.sm_gbID where b.sm_gbID={gbid};'
-    LOG_IFO(f'getAccountDid, gbid:{gbid}')
+    LOG_INFO(f'getAccountDid, gbid:{gbid}')
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
@@ -895,6 +895,6 @@ def disbanLogin(gbId, callback):
 
 
 def getAvatarAuthOfflineTime(gbId, callback):
-    _sql = f'SELECT sm_gbID, sm_authStatistics_authOffline FROM tbl_Avatar WHERE sm_gbID={gbId}'
+    _sql = f'SELECT sm_gbID, sm_authStatistics_authOffline, sm_tsLastOfflineBase FROM tbl_Avatar WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 # --------------------------- auth avatar end --------------------------------

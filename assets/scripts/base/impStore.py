@@ -61,7 +61,7 @@ class ImpStore(object):
     def buyStoreItems(self, storeId, itemId, itemNum, propSlot):
         LOG_DBG('in buyStoreItems:', storeId, itemId, itemNum, propSlot)
         if self.isDestroyed:
-            LOG_IFO('buyStoreItems: avatar is offline', storeId, itemId, itemNum)
+            LOG_INFO('buyStoreItems: avatar is offline', storeId, itemId, itemNum)
             return
 
         if not self.storeData.canBuyStoreItems(self, storeId, itemId, itemNum):

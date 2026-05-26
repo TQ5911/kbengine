@@ -1,0 +1,51 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+        <chiefInfo>
+            <Type>  CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ   </Type>
+            <Flags> BASE_AND_CLIENT  </Flags>
+            <Persistent>true</Persistent>
+        </chiefInfo>
+    </Properties>
+
+    <CellMethods>
+        <enterChiefDungeon>
+            <Exposed/>
+        </enterChiefDungeon>
+
+        <autoStartChiefDungeon>
+        </autoStartChiefDungeon>
+    </CellMethods>
+
+    <BaseMethods>
+        <useItemToIncreaseChiefRewardNumber>
+            <Exposed/>
+            <Arg>   UINT8   </Arg>
+        </useItemToIncreaseChiefRewardNumber>
+
+        <useCoinToIncreaseChiefRewardNumber>
+            <Exposed/>
+            <Arg>   UINT8   </Arg>
+        </useCoinToIncreaseChiefRewardNumber>
+
+        <onUseItemToIncreaseChiefRewardNumber>
+            <Arg>   ITEM_ID     </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onUseItemToIncreaseChiefRewardNumber>
+
+        <onEnterChiefDungeon>
+            <Arg>           SPACE_NO          </Arg>
+            <Arg>           DUNGEON_NO        </Arg>
+            <Arg>           MAILBOX           </Arg>
+            <Arg>           PYTHON            </Arg>
+        </onEnterChiefDungeon>
+    </BaseMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>
+

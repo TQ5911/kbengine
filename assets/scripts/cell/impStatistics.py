@@ -26,7 +26,7 @@ class IStatistics(object):
         if self.currStatisticSpaceNo == self.spaceNo:
             return
         self.currStatisticSpaceNo = self.spaceNo
-        LOG_IFO('IStatistics::startReportStatistics: entityID={}'.format(self.id))
+        LOG_INFO('IStatistics::startReportStatistics: entityID={}'.format(self.id))
 
         stub = gameengine.getStatisticStub(self.spaceNo)
         stub.startReportStatistics(self.gbId, self.base, self.spaceNo, {'name': self.name, 'school': self.school})
@@ -35,7 +35,7 @@ class IStatistics(object):
         """
         停止统计数据并上报
         """
-        LOG_IFO('IStatistics::stopReportStatistics: entityID={}'.format(self.id))
+        LOG_INFO('IStatistics::stopReportStatistics: entityID={}'.format(self.id))
         
     # 上报统计数据
     def recordStatistic(self, key, value):
@@ -45,7 +45,7 @@ class IStatistics(object):
         if not utils.getCrtMapNeedStatisticFlag(self.spaceNo):
             return
 
-        LOG_IFO('IStatistics::recordStatistic: entityID={}, key={}, value={}'.format(self.id, key, value))
+        LOG_INFO('IStatistics::recordStatistic: entityID={}, key={}, value={}'.format(self.id, key, value))
         stub = gameengine.getStatisticStub(self.spaceNo)
         stub.reportStatistics(self.gbId, self.spaceNo, {key: value})
 

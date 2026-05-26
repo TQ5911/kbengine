@@ -18,14 +18,14 @@ import gameclass
 
 class ImpSingleDungeon(object):
 
-    def _getPrmBydungeonNo(self, dungeonNo, pName):
+    def _getParamBydungeonNo(self, dungeonNo, pName):
         if dungeonNo in DDL.datas:
             prm = DDL.datas[dungeonNo]
             if pName in prm:
                 return prm[pName]
 
     def checkSingleDungeonCondition(self, dungeonNo, extra):
-        LOG_IFO('checkSingleDungeonCondition::', dungeonNo, extra)
+        LOG_INFO('checkSingleDungeonCondition::', dungeonNo, extra)
         checkBox, reason = self._checkSingleDungeonCondition(dungeonNo, extra)
         reasonDic = {}
         return self.cell.onCheckSingleDungeonCondition(
@@ -36,7 +36,7 @@ class ImpSingleDungeon(object):
 
     def useItemAndEnterSingleDungeon(self, needDic, spaceBox, spaceMgrBox, spaceMgrId,
                                      spaceNo, playerBox, playerGbId, teamUUID, extra):
-        LOG_IFO('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
+        LOG_INFO('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
                   spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemDict(needDic)

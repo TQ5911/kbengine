@@ -84,7 +84,7 @@ class ImpAvatarPet(object):
         LogTrackingMgr.LogTrackingMgr.Pet_Follow(self.gbId, formula.fetchMapId(self.spaceNo), petId, followData[0], followData[1], followData[2], followType)
 
     def onSetLingShouBattleList(self, battleList, battleIdx, battleData):
-        LOG_IFO('onSetLingShouBattleList', battleList)
+        LOG_INFO('onSetLingShouBattleList', battleList)
         if self.lingShouBattleList:
             for petId, equipList in self.lingShouBattleList:
                 skills = self.getPetSkills(petId)
@@ -113,7 +113,7 @@ class ImpAvatarPet(object):
         LogTrackingMgr.LogTrackingMgr.Pet_ChangeTeam(self.gbId, formula.fetchMapId(self.spaceNo), battleIdx, battleData)
 
     def onUpdateLingShouBattleList(self, petInfo, slotId):
-        LOG_IFO('onUpdateLingShouBattleList', petInfo, slotId)
+        LOG_INFO('onUpdateLingShouBattleList', petInfo, slotId)
         petId, equipList = petInfo
         oldPetId, oldEquipList = self.lingShouBattleList[slotId]
         if oldPetId:

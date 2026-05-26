@@ -384,6 +384,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             LOG_DBG('[lj]force declare war time:', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.declareWarTime)))
         self.calOfficialWarStartTime()
         self.siegeWarState = gameconst.SiegeWarState.WAR_COUNT_DOWN
+        self.siegeWarStateEndTime = self.officialWarStartTime
         self.siegeWarStateChanged = True
 
         #进攻防守方

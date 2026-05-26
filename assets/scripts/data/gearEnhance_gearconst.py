@@ -389,7 +389,7 @@ datas = _tools.RODict({
     }),
     "Secondary_confirmation_condition2": _tools.RODict({
         "ID": "Secondary_confirmation_condition2",
-        "value": 2,
+        "value": 3,
     }),
     "Secondary_confirmation_prompt2": _tools.RODict({
         "ID": "Secondary_confirmation_prompt2",
@@ -398,5 +398,37 @@ datas = _tools.RODict({
     "Material_shortage_prompt": _tools.RODict({
         "ID": "Material_shortage_prompt",
         "value": 54003308,
+    }),
+    "AutoProgressBtnTextFuling": _tools.RODict({
+        "ID": "AutoProgressBtnTextFuling",
+        "value": "停止附灵",
+    }),
+    "AutoProgressBtnTextRune": _tools.RODict({
+        "ID": "AutoProgressBtnTextRune",
+        "value": "停止打造",
+    }),
+    "AutoProgressBtnTextBless": _tools.RODict({
+        "ID": "AutoProgressBtnTextBless",
+        "value": "停止祝福",
+    }),
+    "AutoProgressEndBtnText": _tools.RODict({
+        "ID": "AutoProgressEndBtnText",
+        "value": "完成",
+    }),
+    "AutoProgressTipText": _tools.RODict({
+        "ID": "AutoProgressTipText",
+        "value": "自动培养中",
+    }),
+    "AutoProgressEndTipText": _tools.RODict({
+        "ID": "AutoProgressEndTipText",
+        "value": "自动培养完成",
+    }),
+    "AutoRuneDefaultTargetQuality": _tools.RODict({
+        "ID": "AutoRuneDefaultTargetQuality",
+        "value": 2,
+    }),
+    "AutoFulingDefaultTargetQuality": _tools.RODict({
+        "ID": "AutoFulingDefaultTargetQuality",
+        "value": 2,
     })
 })

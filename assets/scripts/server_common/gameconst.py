@@ -7,6 +7,7 @@ import time
 import re
 import functools
 import enum
+import MineGlobalData
 import itemData_set as IDSD
 import const_const as CSTD
 import gearBase_gearConst as GBGCD
@@ -14,6 +15,7 @@ import gamePlay_gamePlay as GGD
 import character_charData as CCDD
 import wonderLand_floor as WL_FD
 import branchData_branchData as BD_BDD
+
 
 # baseapp和cellapp上都有的数据key
 GLOBALDATA_KEY_SPACE_TO_ITS_BASE = 'kSpaceTobase'
@@ -49,6 +51,7 @@ GLOBAL_BASE_STUB_ARCHIVE = [
     'RedBagStub',
     'MineWarStub',
     'BountyStub',
+    'ResourceRecoveryStub',
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
     'PlayerStub',
@@ -249,11 +252,11 @@ class StateEnum(metaclass=UniqueIntEnum):
 
     @staticmethod
     def _allStates():
-        attrs = dir(State)
+        attrs = dir(StateEnum)
         realAttrs = {}
         for attrName in attrs:
             if not attrName.startswith('_'):
-                realAttrs[attrName] = getattr(State, attrName)
+                realAttrs[attrName] = getattr(StateEnum, attrName)
         return realAttrs
 
 
@@ -332,8 +335,9 @@ class MapIdDef(object):
 MapIdDef.mapWorldSet.add(MapIdDef.mapDuelGround)
 
 class SpaceLayer(object):
-    DEFAULT = COMMON = 0
+    COMMON = 0
     AIRWALL = 1
+    DEFAULT = AIRWALL
 
 
 INIT_CLIENT_SEND = (
@@ -343,7 +347,7 @@ INIT_CLIENT_SEND = (
         ('sendServerOpenTime', True),
         ('sendTaskList', True),
         ('sendCliSkillBuildInfo', True),
-        ('sendCliConfigData', True),
+        ('sendCliConfigData', False),
         ('sendOutfitData', True),
         ('sendLingShouInfo', True),
         ('emitMiniPayload', True),
@@ -368,6 +372,8 @@ INIT_CLIENT_SEND = (
         ('updateRedisVIPFlag', True),
         ('sendClaimPcLoginRewardInfo', True),
         ('sendAvatarBountyInfo', True),
+        ('getAnnouncement', True),
+        ('sendMineWarState', True),
 )
 
 class ItemType(object):
@@ -385,6 +391,7 @@ class ItemSubType(object):
     Equipment = 4
     EQUIP_CORE = 6
     TASK = 15
+    EQUIP_SOUL = 27
     ExtractReward = 52
 
 class LingShouSubType(object):
@@ -541,10 +548,17 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     bountyInfoInited = 402
     waitForBountyInfoInitedTimer = 403
     waitForBountyInfoInitedTimer1 = 404
+    idleChangeSpeed = 405
+    blazeTimer = 406
+
+    recordPreReport = 410
+    preReport = 411
+    reportTimestamp = 412
+    clientIdleChangeSpeed = 413
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
-    ShiftingSkillTopSpeed = 1000.0
+    ShiftingSkillTopSpeed = 5000.0
     TeleportSkillTopSpeed = 10000.0
     FlyingTopSpeed = 1000.0
 
@@ -584,6 +598,7 @@ class ItemId(object):
     GUILD_EXP = IDSD.datas['itemID_guildExp']['value']
     COLL_SKIP_MSG_HANDLE = ()
     BIND_MONEY = IDSD.datas['itemID_bind_money']['value']
+    APPEARANCE_COIN = IDSD.datas['itemID_appearanceCoin']['value']
 
 class ItemBindType(object):
     BIND = 0
@@ -810,7 +825,7 @@ class EntNumPerPlayerInAOI(object):
     teamDungeon = 3
 
 
-class TeleportLock(metaclass=UniqueIntEnum):
+class TeleportLockEnum(metaclass=UniqueIntEnum):
     FREE_TO_TELEPORT = 0
     ENTER_CUBE = 1
     ENTER_WONDERLAND = 2
@@ -841,7 +856,7 @@ TASK_EVENT_SUBMIT = 2
 TASK_EVENT_QUIT = 3
 
 
-class TaskStat(object):
+class TaskStatEnum(object):
     TASK_STAT_DEFAULT = TASK_STAT_UNKNOWN = 0
     TASK_STAT_OPEN = 1
     TASK_STAT_CAN_CLAIMED = 2
@@ -864,7 +879,7 @@ class TaskType(object):
     TASK_TYPE_CRUSADE = 7 # 讨伐任务
     TASK_TYPE_SPIRIT = 8 # 附灵任务
 
-class TaskNotSuccReason(object):
+class TaskNotSuccReasonEnum(object):
     UNKNOWN = 0
     MANUAL_QUIT = 1  # 手动放弃任务
     QUIT_ACT = 2  # 主动退出任务关联的活动
@@ -892,7 +907,7 @@ class TaskNotSuccReason(object):
     GROUP_TIMEOUT_QUIT = 24  # 任务组过期放弃
 
 
-class VarChangeSrc(object):
+class VarChangeSrcEnum(object):
     VAR_SRC_TASK_CLAIM = 1
     VAR_SRC_TASK_QUIT = 2
     VAR_SRC_TASK_SUBMIT = 3
@@ -983,10 +998,11 @@ class CollectionType(object):
     VIEWPOINT = 4
     SUMMON_OBJECT = 5 # 召唤物件
     DECAY_BOX = 7 # 衰减宝箱
+    MINE_DROP = 8 # 矿战掉落采集物
 
     VALID_RANGE_ACHIEVEMENT = (MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT)
-    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX)
-
+    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX, MINE_DROP)
+    ADD_PICK_AVATAR_CNT = (PERSONAL_BOX, VIEWPOINT, MINE_DROP)
 
 class CollectionPickType(object):
     Countdown_1 = 0  # 读条采集，客户端不屏蔽UI点击
@@ -1088,6 +1104,7 @@ class RedisKey(object):
     NORMAL_ONLINE_NUM = 'g:normal_online_num'
     SERVER_OPEN_TIME = 'g:server_open_time'
     SERVER_OPEN_STATE = 'g:server_open_state'
+    FULL_PLAYER_INFO_KEY = 'g:full_player_info'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1137,7 +1154,6 @@ class ModifyNameResult(object):
 
 
 class LuaScriptID:
-    ADD_HOME_STORE_LIMIT = 1
     GET_USERS_INFO = 2
     FRIEND_INIT = 3
     SEND_FRINED_REQUEST = 4
@@ -1215,7 +1231,7 @@ class BuffSrcTypeEnum(object):
     Combat = 1
 
 
-class SkillScope(metaclass=UniqueIntEnum):
+class SkillScopeEnum(metaclass=UniqueIntEnum):
     CIRCLE_CENTER_SELF = 1  # 1=以自身为中心的圆形范围  参数=半径
     CIRCLE_CENTER_TARGET = 2  # 2=以目标为中心的圆形范围  参数=半径
     SELF_TO_TARGET_RECTANGLE = 3  # 3=以目标为方向，以自身为起点的矩形 参数=direction
@@ -1331,6 +1347,10 @@ class SourceType(metaclass=UniqueIntEnum):
     SrcTpDropDeath = 43
     SrcTpMeridianProp = 44
     SrcTpHealWounds = 45
+    SrcTpIDLE = 46
+    SrcTpAction = 47
+    SrcTpCoefficient = 48
+    SrcTpAppearance = 49
 
 MAX_BUFF_COUNT = 50
 
@@ -1381,6 +1401,7 @@ class UseSkillCheck(object):
     USC_ENUM_SINGLE_HEAL_OUT_OF_RANGE = 1<<10
     USC_ENUM_SHOOTER_SKILL_CANNOT_USE = 1<<11
     USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH = 1<<12
+    USC_ENUM_TARGET_NOT_FOUND = 1<<13
 
     #起手延迟结算时检查需要忽略的条件
     USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
@@ -1671,7 +1692,7 @@ class DungeonSrcEnum(object):
 
     COLL_FROM_TASK = (FROM_TASK, )
 
-class CompleteTeleportLeaveFailedReason(object):
+class CompleteTeleportLeaveFailReason(object):
     ARGS_DEFINED = 1
     UNDEFINED_FUNC = 2
     UNDEFINED_SPACE = 3
@@ -1688,7 +1709,7 @@ class CastType(object):
     teleportByUseItem = 4
     teleportAnchor = 5
 
-class ComplexTeleportType(object):
+class ComplexTeleportEnum(object):
     UNKNOWN = 0
     ENTER = 1
     LEAVE = 2
@@ -1701,7 +1722,7 @@ class ComplexTeleportMethodTypeEnum(object):
     postAfterEnter = 5
     postAfterLeave = 6
 
-class GamePlayRecoverEnum(object):
+class GameSpaceRecoverEnum(object):
     RCV_NO_ACTION = 0
     RCV_FULL_HP_IO = 1
     RCV_FULL_HP_IN = 2
@@ -1711,10 +1732,10 @@ class GamePlayRecoverEnum(object):
     COLL_LEAVE_RCV = (RCV_FULL_HP_IO, RCV_FULL_HP_OUT)
 
 # TeamStub个数
-TEAMSTUB_CONFIG_NUM = 5
+TEAMSTUB_CONF_NUM = 5
 TEAM_MEMBER_MAX_NUM = 5
 TEAM_APPLY_JOIN_MAX_NUM = 20
-TEAM_LIST_MAX_NUM = 15
+TEAM_MAX_LIST_NUM = 15
 
 RAIDSTUB_CONFIG_NUM = 5
 RAID_TEAM_MEMBER_MAX_NUM = 5
@@ -1742,7 +1763,7 @@ class TeamMountState(object):
     ride = 1
     fly = 2
 
-class RaidJoinType(object):
+class RaidJoinTypeEnum(object):
     SINGLE = 1
     TEAM = 2
 
@@ -1781,7 +1802,7 @@ class _RaidErrno(object):
 
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
         self._lateReload()
 
     ENUM_UNKNOWN                                 = _errno(0)         # 未知错误
@@ -2159,7 +2180,7 @@ class _RaidDungeonErrno(object):
 
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
         self._lateReload()
 
     ENUM_UNKNOWN                                 = _errno(0)         # 未知错误
@@ -2333,6 +2354,12 @@ class DungeonFlowEventType(object):
 
     EVnotifyStartBattleCD = 'notifyStartBattleCD' # 开始战斗前的倒计时
     EVcreateBreakAwayStuckPos = 'createBreakAwayStuckPos'                     # 脱离卡点
+
+
+FLOW_REST_MONSTER_TAG_GID = 1
+FLOW_REST_MONSTER_TAG_CBID = 2
+FLOW_REST_MONSTER_TAG_ALL = 3
+
 
 class DungeonFlowPlayerChooseEnum(object):
     UNKNOWN = 0
@@ -2600,7 +2627,7 @@ class CliConfigDef(object):
 
     EQUIP_AUTO_DISA_DEFAULT_VAL = 0                        #装备进背包是否自动分解默认值: 0 不分解
 
-class AUTO_DISA_QUALITY_KEY(object):
+class AUTO_DISA_KEY(object):
     # 白
     WHITE = 0
     # 绿
@@ -2617,6 +2644,40 @@ class AUTO_DISA_QUALITY_KEY(object):
     TRADE = 7
     # 自动分解开关
     AUTOS_WITCH = 8
+    # 狩猎 
+    HUNTER = 10
+    # 副本
+    DUNGEON = 11
+    # 宝箱
+    BOX = 12
+    # 武器
+    WEAPON = 20
+    # 衣服
+    CLOTHES = 21
+    # 头盔
+    HELMET = 22
+    # 腰带 
+    BELT = 23
+    # 项链
+    NECKLACE = 24
+    # 鞋子
+    SHOES = 25
+    # 戒指
+    RING = 26
+    # 手镯
+    BRACELET = 27
+
+class AUTO_DISA_MAP(object):
+    datas = {
+        EquipTypes.MAIN_TYPE_WEAPON: AUTO_DISA_KEY.WEAPON,
+        EquipTypes.MAIN_TYPE_CLOTHES: AUTO_DISA_KEY.CLOTHES,
+        EquipTypes.MAIN_TYPE_HEAD: AUTO_DISA_KEY.HELMET,
+        EquipTypes.MAIN_TYPE_SHOE: AUTO_DISA_KEY.BELT,
+        EquipTypes.MAIN_TYPE_NECKLACE: AUTO_DISA_KEY.NECKLACE,
+        EquipTypes.MAIN_TYPE_RING: AUTO_DISA_KEY.SHOES,
+        EquipTypes.MAIN_TYPE_BRACELET: AUTO_DISA_KEY.RING,
+        EquipTypes.MAIN_TYPE_BELT: AUTO_DISA_KEY.BRACELET,
+    }
 
 class MessageType(object):
     MSG_TYPE_1 = 1
@@ -2868,6 +2929,9 @@ CUBE_DAILY_TIMES = 1
 CUBE_COIN_ITEM_ID = ItemId.MONEY
 CUBE_ENTER_TIME_OUT_DUR = 60
 WORLDLINE_ENTER_TIME_OUT_DUR = 60
+CUBE_ADD_TIMES_TYPE_NULL = 0
+CUBE_ADD_TIMES_TYPE_COIN = 1
+CUBE_ADD_TIMES_TYPE_ITEM = 2
 
 MONSTER_BE_ATTACK_CLEAR_DUR = 5 * 60
 
@@ -2938,6 +3002,7 @@ class DropShareRewardType(object):
     RANDOM_ONE = 0
     SELF = 1
     ALL_TEAMMATE = 2
+    FIRST_BLOOD = 3
 
 # 每轮刷怪的最大数目
 INIT_EACH_EN_LOOP_COUNT = 40
@@ -2967,7 +3032,7 @@ class _AuctionErrno(object):
 
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
         self._lateReload()
 
 
@@ -3075,15 +3140,30 @@ class DrawCardPoolMacro(object):
     CHECK_TIME_LIMIT_TYPE_TIMER = 2
 
 class DropType(object):
-    TYPE_DROP   = 1 #// 掉落
-    TYPE_TAKE   = 2 #// 有人捡起了这个掉落
-    TYPE_REDEEM = 3 #// 主人赎回
-    TYPE_GIVEUP = 4 #// 捡起掉落的人主动放弃
+    TYPE_DROP                        = 1 #// 掉落
+    TYPE_TAKE                        = 2 #// 拾取
+    TYPE_TAKE_WAIT_DROP_GET          = 3 #// 捡起来等待领取
+    TYPE_REDEEM_WAIT_DROP_GET        = 4 #// 赎回等待领取
+    TYPE_GIVEUP_WAIT_DROP_GET        = 5 #// 捡起掉落的人主动放弃, 待失主领取
+    TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET = 6 #// 赎回倒计时结束，待拾取者领取
+    TYPE_RETURN_WAIT                 = 7 #// 等待返还
+    TYPE_RETURN_GET                  = 8 #// 待原主人领取
+    TYPE_REWARD                      = 9 #// 领取奖励
 
 class DropNotifyType(object):
-    NOTIFY_DROP_EXPIRE = 1 # 你掉落的装备过期了
-    NOTIFY_TAKE_EXPIRE = 2 # 你捡起的装备过期了
-
+    NOTIFY_REMOVE_TAKE                      = -2 #// 移除拾取
+    NOTIFY_REMOVE_DROP                      = -1 #// 移除掉落
+    NOTIFY_REMOVE_ALL                       = 0  #// 移除所有
+    NOTIFY_TYPE_DROP                        = 1  #// 掉落
+    NOTIFY_TYPE_TAKE                        = 2  #// 拾取
+    NOTIFY_TYPE_TAKE_WAIT_DROP_GET          = 3  #// 捡起来等待领取
+    NOTIFY_TYPE_REDEEM_WAIT_DROP_GET        = 4  #// 赎回等待领取
+    NOTIFY_TYPE_GIVEUP_WAIT_DROP_GET        = 5  #// 捡起掉落的人主动放弃, 待失主领取
+    NOTIFY_TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET = 6  #// 赎回倒计时结束，待拾取者领取
+    NOTIFY_TYPE_RETURN_WAIT                 = 7  #// 等待返还
+    NOTIFY_TYPE_RETURN_GET                  = 8  #// 待原主人领取
+    NOTIFY_TYPE_REWARD                      = 9  #// 领取奖励
+    
 class DropWayType(object):
     DROP_WAY_TYPE_1 = 1 # 一个库内，不放回，随出若干件道具，不重复
     DROP_WAY_TYPE_2 = 2 # 一个库内，放回，随出若干件道具，可以重复
@@ -3103,6 +3183,15 @@ class DropTatgerType(object):
     PACKAGE = 2 # 子包
     EQUIPMENT = 3 # 装备
     OTHER = 4 # 其他
+
+class ItemReturnReason(object):
+    NOT_RETURN = 0 # 不退回
+    DROP_EXPIRE = 1 # 掉落过期
+    LEASE_EXPIRE = 2 # 租赁过期
+
+class LeaseRecordType(object):
+    LEASE_OUT = 1 # 出租
+    LEASE_IN = 2 # 租入
 
 class EnemyRecordType(object):
     KILL_ENEMY = 1 # 击杀敌人
@@ -3184,14 +3273,36 @@ class AchieveType(object):
     SUB_TASK = 20 # 支线任务
     MAIN_TASK = 21 # 主线任务
     HOOK_TASK_REWARD = 22 # 悬赏任务
-    COLLECT = 23 # 收集
     LEADER_BOARD = 24 # 排行榜
     SIEGE_KILL = 25 # 城战击杀
     PERSONAL_BOX = 26 # 个人宝箱
     VIEWPOINT = 27 # 景观点
     KILL_TAR_SUFFIX_MONSTER = 28 # 击杀特殊词缀怪物
     KILL_TAR_MONSTER = 29 # 击杀特定怪物
+    ENEMY = 30 # 仇敌
+    DUEL = 31 # 切磋
+    WONDERLAND_KILL = 32 # 野外击杀
+    BOUNTY = 33 # 悬赏
+    CRUSADE = 34 # 普通讨伐
+    CHIEF = 35 # 首领讨伐
+    COLLECT = 38 # 收集
+    EQUIP_QUALITY = 39 # 穿戴装备品质
+    MINE_COLLECT = 40 # 矿石采集
+    SYNTHESIS = 41 # 合成
+    MAX_MONEY = 42 # 携带非绑元宝
+    AUCTION_MONEY = 43 # 交易行获得元宝
+    INSCRIPTION = 44 # 铭文
+    MERIDIAN = 45 # 经脉
+    GUILD_CONTRIB = 46 # 帮会贡献
+    GUILD_ACTIVITY = 47 # 帮会活动
 
+class AchieveGuildActivityType(object):
+    BOSS = 1 #帮会副本boss
+
+class AchieveBountyType(object):
+    BE_BOUNTY = 1
+    PUBLISH_BOUNTY = 2
+    FINISH_BOUNTY = 3
 
 class DuelFlag(object):
     IN_DUEL = 0
@@ -3561,7 +3672,6 @@ WORLD_BOSS_MOCK_REFRESH_TIME = 300
 
 
 # ----------------------------- cube mock start -----------------------------
-MAX_CUBE_LINE = 2
 CUBE_HALL_MAX_NUM = 150
 CUBE_COW_DUR_INTERVAL = 5
 
@@ -3668,6 +3778,7 @@ class WorkshopResult(object):
     WORKSHOP_LIMIT_BATCH_COUNT              = 10005 # 批量制造次数限制
     WORKSHOP_LIMIT_CURRENCY_IS_NOT_ENOUGH   = 10006 # 货币不足
     WORKSHOP_LIMIT_ITEM_IS_NOT_ENOUGH       = 10007 # 道具不足
+    WORKSHOP_LIMIT_OVER_MONTHLY_LIMIT       = 10008 # 超出每月限制
 
 class WorkshopOpenStatus(object):
     CLOSE = 0 # 关闭
@@ -3727,7 +3838,7 @@ TEAM_STATISTIC_TYPE_TO_KEY = {
     TeamStatisticType.DEAD: 'dead',
 }
 
-class StatisticType(object):
+class StatisticEnum(object):
     STA_TYPE_DAMAGE = 1
     STA_TYPE_HEAL = 2
     STA_TYPE_HURT = 3
@@ -3779,10 +3890,13 @@ class TeamApplyResult(object):
     # 队伍UI不可见
     TEAM_APPLY_RAID_UI_IS_NOT_VISIBLE = 10015
 
+
+MINE_HUB_BROKEN_HP = 1
+
 class MINE_WAR_STATE(object):
-    PREPARE = 1
-    RUNNING = 2
-    END = 3
+    PREPARE = MineGlobalData.MineGlobalData.MINE_STATE_PREPARE
+    RUNNING = MineGlobalData.MineGlobalData.MINE_STATE_START
+    END = MineGlobalData.MineGlobalData.MINE_STATE_END
 
 class MineWarMonsterCustomId(object):
     MINE_CORE = 'mineCore'      #矿战核心
@@ -3956,7 +4070,8 @@ class DevicePlatId(object):
     SWITCH = 6          # Switch client
     PS_CLIENT = 7       # PS client
     XBOX_CLIENT = 8     # XBOX client
-    UNKNOWN = 9
+    UNKNOWN = 9         # unkonwn
+    OSX = 10            # OSX
 
 class CollectibleDetailStatus(object):
     COLLECTING = 1
@@ -4085,6 +4200,8 @@ GAME_SERVER_ERR_NO_LOGIN_MGR        = 2009 # 登录管理器不存在
 GAME_SERVER_ERR_REG_SWITCH          = 2010 # 注册开关关闭
 GAME_SERVER_ERR_REJECT_LOGIN        = 2011 # 拒绝登录
 GAME_SERVER_ERR_NO_LOGIN_MGR2       = 2012 # 登录管理器不存在
+GAME_SERVER_ERR_APP_VERSION         = 2013 # 登录时整包强更
+GAME_SERVER_ERR_PATCH_VERSION       = 2014 # 登录时PATCH强更
 
 class EquipMultiEnhanceResult(object):
     # 成功
@@ -4156,6 +4273,7 @@ class AcceptBountyResType(object):
     PUBLISHER_NOT_ENOUGH_MONEY = 11
     PUBLISHER_IS_SELF = 12
     PREY_IS_SELF = 13
+    NOT_ENOUGH_ACCEPT_LEFT_TIME = 14
 
 PUBLISH_BOUNTY_RES_2_ACCEPT_BOUNTY_RES = {
     PublishBountyResType.PUBLISHER_CHECK_TIME_OUT: AcceptBountyResType.PUBLISHER_CHECK_TIME_OUT,
@@ -4230,6 +4348,12 @@ class BountyRankType(object):
     MAX = HUNTER + 1
     ALL_VALID_RANK_TYPE=(HUNTER,)
 
+class BountyRankSubType(object):
+    TOTAL = 0
+    WEEK = 1
+    MAX = WEEK + 1
+    ALL_VALID_RANK_TYPE=(TOTAL, WEEK,)
+
 class AvatarBountyInfoUpdateType(object):
     LOGIN = 0
     CLIENT = 1
@@ -4298,6 +4422,7 @@ class StopPlayEmoteReason(object):
     BeDamaged = 2
     CrossServer = 3
     TimeOut = 4
+    LOGIN = 5
 
 class FlyTimerArgs(object):
     Delay = 2.5
@@ -4313,3 +4438,67 @@ class RemodelingPetResult(object):
     WRONG_ARGS = 2
     ITEM_NOT_ENOUGH = 3
     BAG_IS_FULL = 4
+
+class AnnouncementType(object):
+    WORLD_BOSS1= 1
+    MINE_WAR = 2
+    SIEGE_WAR = 3
+    WORLD_BOSS2= 4
+
+class UpdateAnnouncementType(object):
+    NULL = 0
+    MINE_WAR_UPCOMING = 1
+    MINE_WAR_ONGOING = 2
+    WORLD_BOSS1_UPCOMING = 3
+    WORLD_BOSS1_ONGOING = 4
+    WORLD_BOSS2_UPCOMING = 5
+    WORLD_BOSS2_ONGOING = 6
+    SIEGE_WAR_BIDDING = 7
+    SIEGE_WAR_UPCOMING = 8
+    SIEGE_WAR_ONGOING = 9
+
+ANNOUNCEMENT_TYPE_2_UPDATE_ANNOUNCEMENT_TYPE = {
+    AnnouncementType.WORLD_BOSS1: [UpdateAnnouncementType.WORLD_BOSS1_UPCOMING, UpdateAnnouncementType.WORLD_BOSS1_ONGOING],
+    AnnouncementType.MINE_WAR: [UpdateAnnouncementType.MINE_WAR_UPCOMING, UpdateAnnouncementType.MINE_WAR_ONGOING],
+    AnnouncementType.SIEGE_WAR: [UpdateAnnouncementType.SIEGE_WAR_BIDDING, UpdateAnnouncementType.SIEGE_WAR_UPCOMING, UpdateAnnouncementType.SIEGE_WAR_ONGOING],
+    AnnouncementType.WORLD_BOSS2: [UpdateAnnouncementType.WORLD_BOSS2_UPCOMING, UpdateAnnouncementType.WORLD_BOSS2_ONGOING],
+}
+
+SIEGE_WAR_STATE_2_UPDATE_ANNOUNCEMENT_TYPE = {
+    SiegeWarState.SIGN_UP: UpdateAnnouncementType.SIEGE_WAR_BIDDING,
+    SiegeWarState.WAR_COUNT_DOWN: UpdateAnnouncementType.SIEGE_WAR_UPCOMING,
+    SiegeWarState.WAR: UpdateAnnouncementType.SIEGE_WAR_ONGOING,
+}
+
+class FullPlayerInfoUnlockType:
+    Ach = 1
+    Collect = 1 << 2
+    Pet = 1 << 3
+    Mount = 1 << 4
+    Meridian = 1 << 5
+    Rank = 1 << 6
+    Guild = 1 << 7
+
+class ResourceRecoveryType(object):
+    NULL = 0
+    FREE_TICKET = 1
+
+class FreeTicketSubType(object):
+    WONDER_LAND = 0
+    CUBE = 1
+
+    VALID_SUB_TYPE = (WONDER_LAND, CUBE,)
+    MAX_CNT = CUBE + 1
+
+class FreeTicketUpdateType(object):
+    LOGIN = 0
+    OFFLINE = 1
+    RESET = 2
+    UPDATE = 3
+
+class CycleEventTriggerType(object):
+    NULL = 0
+    LOGIN = 1
+    TIMED = 2
+
+RESOURCE_RECOVER_TIME_POINT_STR = '050000'

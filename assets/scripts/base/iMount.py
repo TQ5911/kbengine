@@ -31,7 +31,7 @@ class IMount(object):
                         self.cell.updatePropByMount(outfit.outfitId, True)
 
     def doAddMount(self, pid, mountId, durationDays):
-        LOG_IFO('doAddMount:', pid, mountId, durationDays)
+        LOG_INFO('doAddMount:', pid, mountId, durationDays)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         hasUnlock = False
         if outfit:
@@ -63,7 +63,7 @@ class IMount(object):
                 actionContext.AchievementCtx())
 
     def setCurMount(self, exposed, mountId):
-        LOG_IFO(' set cur mount:', mountId)
+        LOG_INFO(' set cur mount:', mountId)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if outfit is None:
             return
@@ -75,7 +75,7 @@ class IMount(object):
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountRide'])
 
     def _eventActionAddMount(self, eventActionSrc, mountId, durationDays, *args, **kwargs):
-        LOG_IFO('_eventActionAddMount:', mountId, durationDays)
+        LOG_INFO('_eventActionAddMount:', mountId, durationDays)
         durationSeconds = int(float(durationDays) * gameconst.ONE_DAY_COST_SECONDS)
         mountId = int(mountId)
         if mountId not in MOUNTS.datas:
@@ -94,7 +94,7 @@ class IMount(object):
             self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_EVENT)
 
     def _eventActionRemoveMount(self, eventActionSrc, mountId, *args, **kwargs):
-        LOG_IFO('_eventActionRemoveMount', mountId)
+        LOG_INFO('_eventActionRemoveMount', mountId)
         mountId = int(mountId)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if not outfit:

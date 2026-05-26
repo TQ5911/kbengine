@@ -6,29 +6,29 @@
     </Interfaces>
 
     <Properties>
-        <raidDic>
+        <raidDict>
             <Type>  PY_DICT     </Type>
             <Flags>     BASE    </Flags>
             <Default>   {}  </Default>
-        </raidDic>
+        </raidDict>
 
-        <raidTeamMembersJoinRecordDic>
+        <raidTeamMembersJoinRecordsDic>
             <Type>  PY_DICT     </Type>
             <Flags> BASE    </Flags>
             <Default>   {}  </Default>
-        </raidTeamMembersJoinRecordDic>
+        </raidTeamMembersJoinRecordsDic>
 
-        <raidTeamMembersInviteRecordDic>
+        <raidTeamMembersInviteRecordsDic>
             <Type>  PY_DICT     </Type>
             <Flags> BASE        </Flags>
             <Default>   {}      </Default>
-        </raidTeamMembersInviteRecordDic>
+        </raidTeamMembersInviteRecordsDic>
 
-        <raidStandbyCheckerDic>
+        <raidStandbyCheckerDict>
             <Type>  PY_DICT     </Type>
             <Flags> BASE        </Flags>
             <Default>   {}      </Default>
-        </raidStandbyCheckerDic>
+        </raidStandbyCheckerDict>
     </Properties>
 
     <BaseMethods>
@@ -431,12 +431,12 @@
             <Arg>   UUID        </Arg>
         </clearRaidDungeonInfo>
 
-        <onRaidDungeonCompletedCallback>
+        <onRaidDungeonCompletedCB>
             <Arg>   RAID_ID     </Arg>
             <Arg>   DUNGEON_NO  </Arg>
             <Arg>   SPACE_NO    </Arg>
             <Arg>   UUID        </Arg>
-        </onRaidDungeonCompletedCallback>
+        </onRaidDungeonCompletedCB>
 
         <createAndEnterRaidDungeonPreCheck>
             <Arg>   MAILBOX     </Arg>

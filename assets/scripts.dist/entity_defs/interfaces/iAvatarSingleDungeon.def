@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+
+    </Properties>
+
+    <CellMethods>
+
+        <onCheckSingleDungeonCondition>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   BOOL            </Arg>
+            <Arg>   PY_DICT         </Arg>
+            <Arg>   PYTHON          </Arg>
+        </onCheckSingleDungeonCondition>
+
+        <selfEnterSingleDungeon>
+            <Arg>           DUNGEON_NO         </Arg>
+            <Arg>           DUNGEON_SRC        </Arg>
+        </selfEnterSingleDungeon>
+
+        <onSingleDungeonSpaceReady>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           OBJECT_ID          </Arg>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           PLAYER_GBID        </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           PYTHON             </Arg>
+        </onSingleDungeonSpaceReady>
+
+        <readyUseItemAndEnterSingleDungeon>
+            <Arg>           UINT8              </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           OBJECT_ID          </Arg>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           PLAYER_GBID        </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           PYTHON             </Arg>
+        </readyUseItemAndEnterSingleDungeon>
+
+        <leaveSingleDungeon> <Exposed/>
+            <Arg>           DUNGEON_NO         </Arg>
+        </leaveSingleDungeon>
+
+        <leaveTutorialIsComplete>
+            <Arg>           DUNGEON_NO         </Arg>
+        </leaveTutorialIsComplete>
+
+        <selfLeaveSingleDungeon>
+            <Arg>           DUNGEON_NO         </Arg>
+            <Arg>           PYTHON             </Arg>
+        </selfLeaveSingleDungeon>
+
+        <doLeaveSingleDungeon>
+            <Arg>           DUNGEON_NO         </Arg>
+            <Arg>           PYTHON             </Arg>
+            <Arg>           STRING             </Arg>
+        </doLeaveSingleDungeon>
+
+    </CellMethods>
+
+    <BaseMethods>
+
+        <checkSingleDungeonCondition>
+            <Arg>       DUNGEON_NO          </Arg>
+            <Arg>       PYTHON              </Arg>
+        </checkSingleDungeonCondition>
+
+        <useItemAndEnterSingleDungeon>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           OBJECT_ID          </Arg>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           PLAYER_GBID        </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           PYTHON             </Arg>
+        </useItemAndEnterSingleDungeon>
+
+    </BaseMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>

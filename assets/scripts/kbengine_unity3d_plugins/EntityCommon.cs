@@ -25,12 +25,14 @@ namespace KBEngine
 		public virtual void onHotfixVersion(string arg1) {} //Account Avatar 
 		public virtual void onMessage(Int32 arg1, List<string> arg2) {} //Account Avatar Monster Summon Npc Creation 
 		public virtual void onOthersSkillDamage(Int32 arg1, List<Int32> arg2) {} //Avatar Monster Summon Npc Creation 
+		public virtual void onPatchVersion(string arg1) {} //Account Avatar 
 		public virtual void onRemoveAureole(Int32 arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onRemoveAureoleFromOthers(Int32 arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onRemoveBuff(Int32 arg1, List<UInt64> arg2) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onSetAddSkillCd(UInt32 arg1, float arg2, double arg3, Byte arg4, double arg5, SByte arg6, SByte arg7, Byte arg8) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onShooterSkillCanUse(UInt32 arg1, double arg2, Byte arg3) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onSkillDamage(SKILL_DAMAGE_INFO arg1) {} //Avatar Monster Summon Npc Creation 
+		public virtual void onStateChangedForce(Byte arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onUpdateAureoles(CLIENT_AUREOLES arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onUpdateAureolesFromOthers(AUREOLE_FROM_OTHERS arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onUpdateBuff(CLIENT_BUFF_VAL arg1) {} //Avatar Monster Summon Npc Creation 
@@ -48,6 +50,7 @@ namespace KBEngine
 		public virtual void onBePushedSpeedChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onBornStateChanged(Byte oldValue) {}	//Monster Summon Npc Collection 
 		public virtual void onDmgArmorChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
+		public virtual void onFirstHateTargetIdChanged(Int32 oldValue) {}	//Monster Summon Npc 
 		public virtual void onForceChanged(Int32 oldValue) {}	//Space CubeSpaceMgr WonderLandSpaceMgr WorldLineSpaceMgr SiegeWarSpaceMgr DungeonSpaceMgr MonsterGrp Avatar Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation DuelFlag RebornPos 
 		public virtual void onFullHpChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFullMpChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 

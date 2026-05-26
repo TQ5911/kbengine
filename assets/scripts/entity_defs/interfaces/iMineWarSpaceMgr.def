@@ -16,11 +16,11 @@
             <Arg>       LINE_TYPE        </Arg>
             <Arg>       GUILD_UUID     </Arg>
         </transferAllAvatarInSpace>
-        <onMineWarStateChange>
+        <onMineWarStateChangeInSpace>
             <Arg>       GUILD_UUID     </Arg>
             <Arg>       UINT8          </Arg>
             <Arg>       UINT8          </Arg>
-        </onMineWarStateChange>
+        </onMineWarStateChangeInSpace>
         <onMineWarDayChange>
             <Arg>       GUILD_UUID     </Arg>
             <Arg>       TIMESTAMP      </Arg>
@@ -61,5 +61,11 @@
         <onMineWarFlagChangeAttack>
             <Arg>       BOOL          </Arg>
         </onMineWarFlagChangeAttack>
+        
+        <doDropFlagCollection>
+            <Arg>       UINT32          </Arg>
+            <Arg>       PY_LIST         </Arg>
+            <Arg>       PY_LIST         </Arg>
+        </doDropFlagCollection>
     </CellMethods>
 </root>

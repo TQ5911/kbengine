@@ -46,10 +46,14 @@ datas = _tools.RODict({
     8: _tools.RODict({
         "ID": 8,
         "name": "TaskCounterTargetUseItem"
+    }),
+    9: _tools.RODict({
+        "ID": 9,
+        "name": "TaskCounterChangePk"
     })
 })
 minKey = 1
-maxKey = 8
+maxKey = 9
 
 couterTargetDic = _tools.RODict({ 
         'TaskCounterTargetSetHp':1,
@@ -60,4 +64,5 @@ couterTargetDic = _tools.RODict({
         'TaskCounterTargetFly':6,
         'TaskCounterTargetMountActivated':7,
         'TaskCounterTargetUseItem':8,
+        'TaskCounterChangePk':9,
 })

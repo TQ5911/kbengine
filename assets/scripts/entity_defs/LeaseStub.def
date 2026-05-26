@@ -1,0 +1,82 @@
+<root>
+
+    <Interfaces>
+        <Interface> iBaseNoCell </Interface>
+        <Interface> iGlobal     </Interface>
+        <Interface> iTimerBase  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <globalIdx>
+            <Type>      UINT16     </Type>
+            <Flags>     BASE        </Flags>
+        </globalIdx>
+    </Properties>
+
+    <BaseMethods>
+        <addItemPrepare>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       PYTHON          </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       LONGTIME        </Arg>
+            <Arg>       UNICODE         </Arg>
+            <Arg>       PYTHON          </Arg>
+        </addItemPrepare>
+
+        <addItemCommit>
+            <Arg>       UNIQUE_ID       </Arg>
+            <Arg>       PYTHON          </Arg>
+        </addItemCommit>
+
+        <addItemRollback>
+            <Arg>       UNIQUE_ID       </Arg>
+            <Arg>       PYTHON          </Arg>
+        </addItemRollback>
+
+        <leaseItemPrepare>
+            <Arg>       UNIQUE_ID       </Arg>
+            <Arg>       SERVER_ID       </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </leaseItemPrepare>
+
+        <leaseItemCommit>
+            <Arg>       UNIQUE_ID       </Arg>
+        </leaseItemCommit>
+
+        <leaseItemRollback>
+            <Arg>       UNIQUE_ID       </Arg>
+        </leaseItemRollback>
+
+        <cancelItem>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
+        </cancelItem>
+
+        <getShopSummary>
+            <Arg>       SERVER_ID       </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </getShopSummary>
+
+        <getShopItems>
+            <Arg>       SERVER_ID       </Arg>
+            <Arg>       ITEMID          </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </getShopItems>
+
+        <getMySaleList>
+            <Arg>       SERVER_ID       </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </getMySaleList>
+    </BaseMethods>
+</root>

@@ -17,6 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     6: _tools.RODict({
         "ID": 6,
+        "refNumber": 1,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "probList": (0, 0.1, 0.05, 0.05, 0, 0),
         "upgradeNum": (0, 0, 30, 30, 0, 0),
@@ -24,20 +25,7 @@ datas = _tools.RODict({
     }),
     21: _tools.RODict({
         "ID": 21,
-        "qualityTypes": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.05, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 30, 30, 0, 0),
-        "isOpen": 1
-    }),
-    22: _tools.RODict({
-        "ID": 22,
-        "qualityTypes": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.05, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 30, 30, 0, 0),
-        "isOpen": 1
-    }),
-    23: _tools.RODict({
-        "ID": 23,
+        "refNumber": 1,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "probList": (0, 0.1, 0.05, 0.05, 0, 0),
         "upgradeNum": (0, 0, 30, 30, 0, 0),
@@ -45,6 +33,7 @@ datas = _tools.RODict({
     }),
     11: _tools.RODict({
         "ID": 11,
+        "refNumber": 2,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "probList": (0, 0.1, 0.05, 0.05, 0, 0),
         "upgradeNum": (0, 0, 30, 30, 0, 0),
@@ -52,6 +41,7 @@ datas = _tools.RODict({
     }),
     1000: _tools.RODict({
         "ID": 1000,
+        "refNumber": 3,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "probList": (0, 0.1, 0.05, 0.05, 0, 0),
         "upgradeNum": (0, 0, 30, 30, 0, 0),
@@ -59,6 +49,7 @@ datas = _tools.RODict({
     }),
     1001: _tools.RODict({
         "ID": 1001,
+        "refNumber": 4,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "probList": (0, 0.1, 0.05, 0.05, 0, 0),
         "upgradeNum": (0, 0, 30, 30, 0, 0),

@@ -59,7 +59,7 @@ class IPay(object):
 
     @gamedecorator.checkGameconfigEnable('pay')
     def clientBuyGoods(self, exposed, buyCreditId):
-        LOG_IFO('clientBuyGoods', buyCreditId)
+        LOG_INFO('clientBuyGoods', buyCreditId)
         cfgData = BC_BCD.datas.get(buyCreditId)
         if not cfgData:
             LOG_ERR('clientBuyGoods buyCreditId not in config', buyCreditId)
@@ -186,7 +186,7 @@ class IPay(object):
     def reqQueryPlayerPayInfo(self):
         self._sendPlayerPayInfo()
 
-    def _onBuyCreditDailyUpdate(self):
+    def _onBuyCreditDailyUpdate(self, *args):
         clientBuyCreditIds = []
         clientBuyCreditNums = []
         for buyCreditId, buyNum in self.buyCreditNumDic.items():
@@ -198,7 +198,7 @@ class IPay(object):
                     clientBuyCreditNums.append(0)
         self.client.onUpdateCreditNum(clientBuyCreditIds, clientBuyCreditNums)
 
-    def _onBuyCreditWeeklyUpdate(self):
+    def _onBuyCreditWeeklyUpdate(self, *args):
         clientBuyCreditIds = []
         clientBuyCreditNums = []
         for buyCreditId, buyNum in self.buyCreditNumDic.items():
@@ -210,7 +210,7 @@ class IPay(object):
                     clientBuyCreditNums.append(0)
         self.client.onUpdateCreditNum(clientBuyCreditIds, clientBuyCreditNums)
 
-    def _onBuyCreditMonthlyUpdate(self):
+    def _onBuyCreditMonthlyUpdate(self, *args):
         clientBuyCreditIds = []
         clientBuyCreditNums = []
         for buyCreditId, buyNum in self.buyCreditNumDic.items():

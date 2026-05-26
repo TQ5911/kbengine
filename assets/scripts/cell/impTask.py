@@ -39,13 +39,14 @@ class ImpTask(impTalk.ImpTalk):
             return
 
         distance = sMath.distance2D(self.position, npcEnt.position)
-        if distance >= self.speed * 2:
+        curSpeed = self.calculateCurrentSpeed()
+        if distance >= curSpeed * 2:
             LOG_WARN('reqUpdateTaskByTalkToNpc, not enough distance:', self.position, npcEnt.position)
             return
 
         npcId = npcEnt.npcId
         # 跟随npc校验
-        taskData = dataUtils.getTaskData(taskId)
+        taskData = dataUtils.getTaskCfg(taskId)
         if taskData and taskData.get('CheckFollowNPC', False) and taskData.get('TaskFollowNPC', []):
             for followInfo in taskData.get('TaskFollowNPC', []):
                 if followInfo['NpcFollowID'] == npcId:
@@ -57,21 +58,21 @@ class ImpTask(impTalk.ImpTalk):
         elif opType == gameconst.TaskOpTypeByTalkToPNC.SUBMIT_TASK:
             self.cellCheckTaskSubmitCond(taskId, 0)
         elif opType == gameconst.TaskOpTypeByTalkToPNC.FAIL_TASK:
-            self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReason.NPC_DIALOG)
+            self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReasonEnum.NPC_DIALOG)
         elif opType == gameconst.TaskOpTypeByTalkToPNC.NPC_TALK_TARGET:
             self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_TALK_NPC, taskId, (npcId, dialogId))
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqClaimTask(self, exposed, claimSrcType, taskId, paramStr):
-        LOG_IFO('in reqClaimTask:', taskId)
+        LOG_INFO('in reqClaimTask:', taskId)
         if paramStr == "reset":
             self.base.reqQuitTask(taskId)
         self.startClaimTask(taskId)
         return
 
     def startClaimTask(self, taskId, itemMethodName='', itemArgs=(), taskCtx=None):
-        LOG_IFO('startClaimTask:', taskId)
+        LOG_INFO('startClaimTask:', taskId)
         if not taskCtx:
             taskCtx = actionContext.ClaimTaskCtx()
 
@@ -109,10 +110,10 @@ class ImpTask(impTalk.ImpTalk):
     def _checkPlayerClaimTaskCellCond(self, taskData):
         # 自动放弃任务不可接取
         if taskData.get('IsAutoQuit'):
-            return gameclass.TaskCondResult(False, playerName=self.name)
+            return gameclass.TaskCondResultCls(False, playerName=self.name)
         taskId = taskData.get("TaskId", 0)
         if not dataUtils.isTaskInOpenTime(taskId):
-            return gameclass.TaskCondResult(False, playerName=self.name)
+            return gameclass.TaskCondResultCls(False, playerName=self.name)
         # level condition
         levelCondResult = self._checkTaskPlayerLevelCond(taskData)
         if not levelCondResult:
@@ -120,22 +121,22 @@ class ImpTask(impTalk.ImpTalk):
 
         # 职业
         # openCondCheckProfres 默认值可能是 字符串 "0"、空字符串、整数0
-        openCondCheckProfres = dataUtils.taskFieldVal(taskData, 'OpenCondCheckProfres')
+        openCondCheckProfres = dataUtils.getTaskFieldVal(taskData, 'OpenCondCheckProfres')
         if openCondCheckProfres:
             openCondCheckProfresList = openCondCheckProfres.split('|')
             if str(self.school) not in openCondCheckProfresList:
                 LOG_WARN('   _checkPlayerClaimTaskCellCond, OpenCondCheckProfres failed:', openCondCheckProfres, self.school)
-                return gameclass.TaskCondResult(False, playerName=self.name)
+                return gameclass.TaskCondResultCls(False, playerName=self.name)
 
         # 性别校验
-        openCondCheckSex = dataUtils.taskFieldVal(taskData, 'OpenCondCheckSex')
+        openCondCheckSex = dataUtils.getTaskFieldVal(taskData, 'OpenCondCheckSex')
         if openCondCheckSex and openCondCheckSex != self.sex:
             LOG_WARN('   _checkPlayerClaimTaskCellCond, openCondCheckSex failed:', openCondCheckSex, self.sex)
-            return gameclass.TaskCondResult(False, playerName=self.name)
+            return gameclass.TaskCondResultCls(False, playerName=self.name)
 
         # 触发区域校验
         if taskData.get('OpenCondIsTriggerArea'):
-            openCondTriggerArea = dataUtils.taskFieldVal(taskData, 'OpenCondTriggerArea')
+            openCondTriggerArea = dataUtils.getTaskFieldVal(taskData, 'OpenCondTriggerArea')
             mapId = openCondTriggerArea.get('MapId', 0)
             posX = openCondTriggerArea.get('X', 0.0)
             posZ = openCondTriggerArea.get('Z', 0.0)
@@ -146,7 +147,7 @@ class ImpTask(impTalk.ImpTalk):
             if mapId != dungeonNo:
                 LOG_WARN('   _checkPlayerClaimTaskCellCond, mapId failed:', taskData['TaskId'], self.spaceNo,
                             openCondTriggerArea)
-                return gameclass.TaskCondResult(False, playerName=self.name)
+                return gameclass.TaskCondResultCls(False, playerName=self.name)
 
             widthDelta = abs(self.position[0] - posX)
             lenthDelta = abs(self.position[2] - posZ)
@@ -154,30 +155,30 @@ class ImpTask(impTalk.ImpTalk):
                 if math.pow(widthDelta, 2) + math.pow(lenthDelta, 2) > math.pow(triggerDis + 3, 2):
                     LOG_WARN('   _checkPlayerClaimTaskCellCond, area cond failed:', taskData['TaskId'],
                                 self.position, openCondTriggerArea)
-                    return gameclass.TaskCondResult(False, playerName=self.name)
+                    return gameclass.TaskCondResultCls(False, playerName=self.name)
             else:
                 if widthDelta > width / 2 + 3 or lenthDelta > length / 2 + 3:
                     LOG_WARN('   _checkPlayerClaimTaskCellCond, area cond failed:', taskData['TaskId'],
                                 self.position, openCondTriggerArea)
-                    return gameclass.TaskCondResult(False, playerName=self.name)
-        return gameclass.TaskCondResult(True)
+                    return gameclass.TaskCondResultCls(False, playerName=self.name)
+        return gameclass.TaskCondResultCls(True)
 
     def _checkTaskPlayerLevelCond(self, taskData):
-        ClaimCondLevelMin = dataUtils.taskFieldVal(taskData, 'ClaimCondLevelMin')
-        ClaimCondLevelMax = dataUtils.taskFieldVal(taskData, 'ClaimCondLevelMax')
+        ClaimCondLevelMin = dataUtils.getTaskFieldVal(taskData, 'ClaimCondLevelMin')
+        ClaimCondLevelMax = dataUtils.getTaskFieldVal(taskData, 'ClaimCondLevelMax')
         if 0 == ClaimCondLevelMax:
             ClaimCondLevelMax = utils.getPlayerMaxLevel()
         if self.level < ClaimCondLevelMin or self.level > ClaimCondLevelMax:
             LOG_WARN('in _checkTaskPlayerLevelCond, level check failed:', taskData['TaskId'])
-            return gameclass.TaskCondResult(False, dataUtils.taskMsgId('taskClaimAlert_Team_LevelCheck'),
+            return gameclass.TaskCondResultCls(False, dataUtils.getTaskMsgId('taskClaimAlert_Team_LevelCheck'),
                                             msgArgs=(self.name,), playerName=self.name)
-        return gameclass.TaskCondResult(True)
+        return gameclass.TaskCondResultCls(True)
 
     def _getReachAreaPoints(self, taskId):
         randomPoints = {}
         randTargetTaskIds = dataUtils.getRandTargetPointTaskIds(taskId)
         for tid in randTargetTaskIds:
-            taskData = dataUtils.getTaskData(tid)
+            taskData = dataUtils.getTaskCfg(tid)
             point = self._getTaskRandomPoint(taskData)
             if not point:
                 continue
@@ -187,11 +188,11 @@ class ImpTask(impTalk.ImpTalk):
     def _getTaskRandomPoint(self, taskData):
         if not taskData:
             return None
-        if not dataUtils.taskFieldVal(taskData, 'FinCondIsTriggerArea'):
+        if not dataUtils.getTaskFieldVal(taskData, 'FinCondIsTriggerArea'):
             return None
-        triggerDis = dataUtils.taskFieldVal(taskData, 'FinCondReachArea').get('TriggerDis', 0)
+        triggerDis = dataUtils.getTaskFieldVal(taskData, 'FinCondReachArea').get('TriggerDis', 0)
         if triggerDis > 0:
-            areaData = dataUtils.taskFieldVal(taskData, 'FinCondReachArea')
+            areaData = dataUtils.getTaskFieldVal(taskData, 'FinCondReachArea')
             center = (areaData['X'], areaData['Y'], areaData['Z'])
             radi = min(areaData['Width'], areaData['Length'])
             for x in range(10):
@@ -201,16 +202,16 @@ class ImpTask(impTalk.ImpTalk):
                 return posList[0]
         return None
 
-    def claimTaskFailed(self, taskId, taskCtx, msgId=dataUtils.taskMsgId('taskClaimAlert_OtherFail'), msgArgs=None):
-        LOG_IFO('in claimTaskFailed:', taskId, msgId)
+    def claimTaskFailed(self, taskId, taskCtx, msgId=dataUtils.getTaskMsgId('taskClaimAlert_OtherFail'), msgArgs=None):
+        LOG_INFO('in claimTaskFailed:', taskId, msgId)
         self._sendTaskFailedMsg(taskId, taskCtx, msgId, msgArgs)
         self._doTaskClaimCallback(False, taskId, taskCtx.callbackUUID)
         if taskCtx.claimSrc == gameconst.ClaimTaskSrcEnum.TASK_SRC_REWARD_TASK:
             self.base.baseTaskClaimedFailed(taskCtx, taskId)
 
     def _sendTaskFailedMsg(self, taskId, taskCtx, msgId, msgArgs):
-        taskData = dataUtils.getTaskData(taskId)
-        if not taskData or dataUtils.taskFieldVal(taskData, 'DispHiddenTask') or dataUtils.taskFieldVal(taskData,
+        taskData = dataUtils.getTaskCfg(taskId)
+        if not taskData or dataUtils.getTaskFieldVal(taskData, 'DispHiddenTask') or dataUtils.getTaskFieldVal(taskData,
                                                                                                         'ClaimCondAutoTake'):
             return
         if msgArgs is None:
@@ -239,41 +240,42 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskFailedLeaveArea(self, srcEntityID, taskId):
-        LOG_IFO('in taskFailedLeaveArea:', srcEntityID, taskId)
-        taskData = dataUtils.getTaskData(taskId)
-        if dataUtils.taskFieldVal(taskData, 'FailCondIsLeaveArea'):
-            area = dataUtils.taskFieldVal(taskData, 'FailCondLeaveArea')
+        LOG_INFO('in taskFailedLeaveArea:', srcEntityID, taskId)
+        taskData = dataUtils.getTaskCfg(taskId)
+        if dataUtils.getTaskFieldVal(taskData, 'FailCondIsLeaveArea'):
+            area = dataUtils.getTaskFieldVal(taskData, 'FailCondLeaveArea')
             deltaX = abs(area['X'] - self.position[0])
             deltaZ = abs(area['Z'] - self.position[2])
             if deltaX > area['Width'] / 2 or deltaZ > area['Length']:
-                self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReason.LEAVE_AREA)
+                self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReasonEnum.LEAVE_AREA)
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskFailedEnterArea(self, srcEntityID, taskId):
-        LOG_IFO('in taskFailedEnterArea:', srcEntityID, taskId)
-        taskData = dataUtils.getTaskData(taskId)
-        if dataUtils.taskFieldVal(taskData, 'FailCondIsEnterArea'):
-            area = dataUtils.taskFieldVal(taskData, 'FailCondEnterArea')
+        LOG_INFO('in taskFailedEnterArea:', srcEntityID, taskId)
+        taskData = dataUtils.getTaskCfg(taskId)
+        if dataUtils.getTaskFieldVal(taskData, 'FailCondIsEnterArea'):
+            area = dataUtils.getTaskFieldVal(taskData, 'FailCondEnterArea')
             deltaX = abs(area['X'] - self.position[0])
             deltaZ = abs(area['Z'] - self.position[2])
             if deltaX < area['Width'] / 2 and deltaZ < area['Length']:
-                self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReason.ENTER_AREA)
+                self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReasonEnum.ENTER_AREA)
 
     def checkTaskCompleteActionTarget(self, taskId, tgtType, tgtId):
-        taskData = dataUtils.getTaskData(taskId)
+        taskData = dataUtils.getTaskCfg(taskId)
         curDungonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         result = False
-        if dataUtils.taskFieldVal(taskData, 'FinCondIsTriggerAction'):
-            for oneTgtData in dataUtils.taskFieldVal(taskData, 'FinCondTriggerAction'):
+        if dataUtils.getTaskFieldVal(taskData, 'FinCondIsTriggerAction'):
+            curSpeed = self.calculateCurrentSpeed()
+            for oneTgtData in dataUtils.getTaskFieldVal(taskData, 'FinCondTriggerAction'):
                 actionId = oneTgtData.get('ActionId')
                 if not actionId or actionId != tgtId:
                     continue
                 cfgPos = (oneTgtData['X'], oneTgtData['Y'], oneTgtData['Z'])
                 distance = sMath.distance2D(self.position, cfgPos)
-                if oneTgtData['MapId'] == curDungonNo and distance < self.speed * 2:
+                if oneTgtData['MapId'] == curDungonNo and distance < curSpeed * 2:
                     result = True
-                break
+                    break
         self.base.onCheckTaskCompleteActionTargetCallback(result, taskId, tgtType, tgtId)
 
 
@@ -291,12 +293,12 @@ class ImpTask(impTalk.ImpTalk):
             self.claimTaskFailed(taskId, taskCtx)
             return
         if not self.isCaptain():
-            self.claimTaskFailed(taskId, taskCtx, msgId=dataUtils.taskMsgId('taskClaimAlert_Team_LeaderCheck'))
+            self.claimTaskFailed(taskId, taskCtx, msgId=dataUtils.getTaskMsgId('taskClaimAlert_Team_LeaderCheck'))
             return
         rootTaskData = dataUtils.getRootTaskData(taskId)
         memberNumLimit = rootTaskData.get('ClaimCondCheckTeam', {}).get('TeamCountLimit', 0)
         if self.teamInfo.howManyMember() < memberNumLimit:
-            self.claimTaskFailed(taskId, taskCtx, msgId=dataUtils.taskMsgId('taskClaimAlert_Team_PalNumCheck'),
+            self.claimTaskFailed(taskId, taskCtx, msgId=dataUtils.getTaskMsgId('taskClaimAlert_Team_PalNumCheck'),
                                  msgArgs=[str(memberNumLimit), ])
             return
 
@@ -308,7 +310,7 @@ class ImpTask(impTalk.ImpTalk):
         self.setTempMiscProp(gameconst.EntityPropsEnum.teamTaskCondCheck, {})
         onlineTeamMemGBIds = self.teamInfo.onlineMembers()
         for memGbId in onlineTeamMemGBIds:
-            teamPlayerVal = self.teamInfo.teamPlayerDic[memGbId]
+            teamPlayerVal = self.teamInfo.teamPlayerDict[memGbId]
             if memGbId == self.gbId:
                 self.checkTeamTaskPlayerCond(taskId, self.base, self.position, taskCtx)
             else:
@@ -326,7 +328,7 @@ class ImpTask(impTalk.ImpTalk):
         self.base.checkTeamTaskBasePlayerCond(taskId, captainBox, taskCtx)
         return
 
-    def checkTeamTaskPlayerCondCB(self, taskId, checkResult:gameclass.TaskCondResult, fromGbId, taskCtx):
+    def checkTeamTaskPlayerCondCB(self, taskId, checkResult:gameclass.TaskCondResultCls, fromGbId, taskCtx):
         teamCheckDic = self.getTempMiscProp(gameconst.EntityPropsEnum.teamTaskCondCheck, None)
         if teamCheckDic is None:
             LOG_WARN('checkTeamTaskPlayerCondCB, no teamCheckDic')
@@ -335,9 +337,9 @@ class ImpTask(impTalk.ImpTalk):
         if len(teamCheckDic) < len(self.teamInfo.onlineMembers()):
             return
         self.popTempMiscProp(gameconst.EntityPropsEnum.teamTaskCondCheck)
-        specialFailedMsgIds = [dataUtils.taskMsgId('taskClaimAlert_Team_LevelCheck'),
-                               dataUtils.taskMsgId('taskClaimAlert_Team_NearbyCheck'),
-                               dataUtils.taskMsgId('taskClaimAlert_Team_FollowCheck'),
+        specialFailedMsgIds = [dataUtils.getTaskMsgId('taskClaimAlert_Team_LevelCheck'),
+                               dataUtils.getTaskMsgId('taskClaimAlert_Team_NearbyCheck'),
+                               dataUtils.getTaskMsgId('taskClaimAlert_Team_FollowCheck'),
                                ]
         failedPlayerNames = ''
         failedMsgId = -1
@@ -385,22 +387,22 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqStartPlayCinema(self, srcEntityID, cinemaId):
-        LOG_IFO('in startPlayCinema:', cinemaId)
+        LOG_INFO('in startPlayCinema:', cinemaId)
         self.prepareStartPlayCinema(cinemaId)
 
     def prepareStartPlayCinema(self, cinemaId):
-        LOG_IFO('in prepareStartPlayCinema:', cinemaId)
+        LOG_INFO('in prepareStartPlayCinema:', cinemaId)
         self.client.onStartPlayCinema(cinemaId)
         self.afterPlayCinema(cinemaId)
 
     def afterPlayCinema(self, cinemaId):
-        LOG_IFO('in afterPlayCinema:', cinemaId)
+        LOG_INFO('in afterPlayCinema:', cinemaId)
         self.resetAllTargetTypeCache()
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def cinemaPlayEnd(self, srcEntityID, cinemaId):
-        LOG_IFO('in cinemaPlayingEnd:', cinemaId)
+        LOG_INFO('in cinemaPlayingEnd:', cinemaId)
         self.onCinemaPlayingEnd(cinemaId)
 
     def onCinemaPlayingEnd(self, cinemaId):
@@ -415,10 +417,10 @@ class ImpTask(impTalk.ImpTalk):
             LOG_WARN('   in startSyncTasksFromCaptain, cant sync tasks, spaceNo not match:',
                         dungonNo, captainSpaceNo, self.spaceNo)
             return
-        self.teamInfo.getCaptainBox().cell.captainSyncTasksToNewMem(self.teamId, self.gbId, self.base)
+        self.teamInfo.fetchCaptainBox().cell.captainSyncTasksToNewMem(self.teamId, self.gbId, self.base)
 
     def captainSyncTasksToNewMem(self, teamId, newMemGbId, newMemBox):
-        LOG_IFO("captainSyncTasksToNewMem::", teamId, newMemGbId, newMemBox)
+        LOG_INFO("captainSyncTasksToNewMem::", teamId, newMemGbId, newMemBox)
         captainInfoDic = {"captainSpaceNo": self.spaceNo,
                           "captainPosition": self.position}
         self.base.captainSyncTasksToNewMem(teamId, newMemGbId, newMemBox, captainInfoDic)
@@ -436,10 +438,10 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def cellTaskCondCheckOnAddTeam(self, teamTaskList, captainInfoDic):
-        LOG_IFO('in onCellTaskNewMemAddTeam:', [t.taskId for t in teamTaskList], captainInfoDic)
+        LOG_INFO('in onCellTaskNewMemAddTeam:', [t.taskId for t in teamTaskList], captainInfoDic)
         rmIdxList = []
         for idx, task in enumerate(teamTaskList):
-            taskData = dataUtils.getTaskData(task.taskId)
+            taskData = dataUtils.getTaskCfg(task.taskId)
             if not self._checkTaskPlayerLevelCond(taskData):
                 rmIdxList.append(idx)
                 continue
@@ -452,7 +454,7 @@ class ImpTask(impTalk.ImpTalk):
 
     ######################### 组任务相关 end ###################################
     def taskPreEnterSpace(self, taskId, dungeonNo, dstPos, dstDir):
-        LOG_IFO("taskPreEnterSpace 1", taskId, dungeonNo, dstPos, dstDir)
+        LOG_INFO("taskPreEnterSpace 1", taskId, dungeonNo, dstPos, dstDir)
         if not dstPos:
             #如果使用原位置传送，当前场景和目标场景只能是大世界或大世界副本
             if not formula.inWorldLineScene(self.spaceNo) and not formula.isBigWorldNaviCostLikedSpace(self.spaceNo):
@@ -466,15 +468,15 @@ class ImpTask(impTalk.ImpTalk):
             dstDir = self.direction
 
         if formula.checkWorldLineType(dungeonNo):
-            LOG_IFO("taskPreEnterSpace 2", taskId, dungeonNo, dstPos, dstDir)
+            LOG_INFO("taskPreEnterSpace 2", taskId, dungeonNo, dstPos, dstDir)
             self.taskEnterWorldLine(taskId, dungeonNo, dstPos, dstDir)
             return
         if dungeonNo not in gamePlay_gamePlay.datas:
-            LOG_IFO("taskPreEnterSpace 3", taskId, dungeonNo, dstPos, dstDir)
+            LOG_INFO("taskPreEnterSpace 3", taskId, dungeonNo, dstPos, dstDir)
             return
         dungeonSpaceType = gamePlay_gamePlay.datas[dungeonNo]['type']
         dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
-        LOG_IFO('in taskPreEnterSpace:', taskId, dungeonNo, dungeonSpaceType, dungeonEnterType, self.spaceNo, self.direction)
+        LOG_INFO('in taskPreEnterSpace:', taskId, dungeonNo, dungeonSpaceType, dungeonEnterType, self.spaceNo, self.direction)
         if gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType) or gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
             #单人任务才能进单人副本
             not dataUtils.isTeamTask(taskId) and self.taskSelfEnterSingleDungeon(dungeonNo, dstPos, dstDir, taskId)
@@ -495,7 +497,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def taskEnterWorldLine(self, taskId, dungeonNo, dstPos, dstDir):
-        LOG_IFO('in taskEnterWorldLine:', taskId, dstPos, dstDir, self.spaceNo, dungeonNo)
+        LOG_INFO('in taskEnterWorldLine:', taskId, dstPos, dstDir, self.spaceNo, dungeonNo)
         if formula.inWorldLineScene(self.spaceNo):
             self.onTelToMainCityWithCast(None, dungeonNo, dstPos, dstDir, None, None, None, None)
         else:
@@ -509,9 +511,9 @@ class ImpTask(impTalk.ImpTalk):
             LOG_ERR('_onCheckLineAreaByTaskTeltoPos failed, ', checkCode, dstPos)
 
     def taskSelfEnterSingleDungeon(self, dungeonNo, dstPos, dstDir, taskId):
-        LOG_IFO('in taskSelfEnterSingleDungeon:', self.spaceNo, dungeonNo, dstPos, dstDir, taskId)
+        LOG_INFO('in taskSelfEnterSingleDungeon:', self.spaceNo, dungeonNo, dstPos, dstDir, taskId)
         # TODO(DUNGEON_SRC): use task src
-        finRewardInstance = dataUtils.taskFieldVal(dataUtils.getTaskData(taskId), 'FinRewardInstance')
+        finRewardInstance = dataUtils.getTaskFieldVal(dataUtils.getTaskCfg(taskId), 'FinRewardInstance')
         NeedPlayFx = finRewardInstance.get('NeedPlayFx', True)
         if NeedPlayFx:
             self.client.onNoNeedPlayFx()
@@ -520,7 +522,7 @@ class ImpTask(impTalk.ImpTalk):
         myDungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if dungeonNo == myDungeonNo:
             # 相同單人副本之間的傳送到指定位置
-            LOG_IFO('in taskSelfEnterSingleDungeon: do same dungeonNo telport, ', self.spaceNo, dungeonNo, dstPos, dstDir)
+            LOG_INFO('in taskSelfEnterSingleDungeon: do same dungeonNo telport, ', self.spaceNo, dungeonNo, dstPos, dstDir)
             self._resetTeleportCache(self.spaceNo, None, None)
             self.client.startTeleport(self.spaceNo, dstPos)
             self._stopCommonCast()
@@ -545,7 +547,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def taskSelfEnterTeamDungeon(self, taskId, dungeonNo):
-        LOG_IFO('in taskSelfEnterTeamDungeon:', taskId, dungeonNo)
+        LOG_INFO('in taskSelfEnterTeamDungeon:', taskId, dungeonNo)
         if not self.isInTeam(self.gbId) or not self.isCaptain():
             return
 
@@ -559,7 +561,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def onTaskRwdLeaveDungeon(self, taskId, dungeonNo, claimSrc):
-        LOG_IFO('in onTaskRwdLeaveDungeon:', taskId, self.spaceNo, dungeonNo)
+        LOG_INFO('in onTaskRwdLeaveDungeon:', taskId, self.spaceNo, dungeonNo)
         if claimSrc==gameconst.ClaimTaskSrcEnum.TASK_SRC_GM_FINISH_NEWBIE and dungeonNo and not formula.inDungeonScene(self.spaceNo):
             return
 
@@ -571,7 +573,7 @@ class ImpTask(impTalk.ImpTalk):
             LOG_WARN('   in onTaskRwdLeaveDungeon, player already in line space')
             return
 
-        leaveDelay = dataUtils.taskFieldVal(dataUtils.getTaskData(taskId), 'FinRewardLevInsDelay')
+        leaveDelay = dataUtils.getTaskFieldVal(dataUtils.getTaskCfg(taskId), 'FinRewardLevInsDelay')
         box = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
         if box:
             if formula.inSingleDungeonScene(self.spaceNo):
@@ -587,7 +589,7 @@ class ImpTask(impTalk.ImpTalk):
         if myDungeonNo == dungeonNo:
             LOG_WARN('   cellEnterTaskTargetDungeon, already in dungeon:', dungeonNo)
             return
-        LOG_IFO('cellEnterTaskTargetDungeon:', taskId, dungeonNo, extra)
+        LOG_INFO('cellEnterTaskTargetDungeon:', taskId, dungeonNo, extra)
         src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DungeonSrcEnum.FROM_TASK,
                                          playerBox=self.base, playerGBID=self.gbId)
         if dataUtils.isTeamTask(taskId):
@@ -602,7 +604,7 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskReachArea(self, srcEntityID, taskId):
-        LOG_IFO('in taskReachArea:', taskId)
+        LOG_INFO('in taskReachArea:', taskId)
         # 到达指定区域任务目标由服务端检验
         dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         areaTaskInCurDun = self.getTempMiscProp(gameconst.EntityPropsEnum.taskAreaTarget, {}).get(dungeonNo, {})
@@ -654,7 +656,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def removeAreaTargetTask(self, taskId, dungeonNo):
-        LOG_IFO('removeAreaTargetTask:', taskId, dungeonNo)
+        LOG_INFO('removeAreaTargetTask:', taskId, dungeonNo)
         areaTaskDic = self.getTempMiscProp(gameconst.EntityPropsEnum.taskAreaTarget, None)
         if areaTaskDic is None:
             LOG_WARN('removeAreaTargetTask, areaTaskDic is None')
@@ -677,15 +679,15 @@ class ImpTask(impTalk.ImpTalk):
             self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_MONSTERS, 0, (self.spaceNo, monsterId, monsterUID))
 
     def checkSameMap(self, taskID):
-        LOG_IFO("checkSameMap ", taskID)
-        taskData = dataUtils.getTaskData(taskID)
+        LOG_INFO("checkSameMap ", taskID)
+        taskData = dataUtils.getTaskCfg(taskID)
         if not taskData:
             LOG_ERR("checkSameMap, missing task cfg ", taskID)
             return
-        if not dataUtils.taskFieldVal(taskData, 'ClaimCanTransIns'):
-            LOG_IFO("checkSameMap, no ClaimCanTransIns ", taskID)
+        if not dataUtils.getTaskFieldVal(taskData, 'ClaimCanTransIns'):
+            LOG_INFO("checkSameMap, no ClaimCanTransIns ", taskID)
             return
-        claimTransData = dataUtils.taskFieldVal(taskData, 'ClaimTransInstance')
+        claimTransData = dataUtils.getTaskFieldVal(taskData, 'ClaimTransInstance')
         dungeonNo = claimTransData.get('MapId')
         if dungeonNo is None:
             LOG_WARN('checkSameMap, map id is None', taskID, claimTransData)

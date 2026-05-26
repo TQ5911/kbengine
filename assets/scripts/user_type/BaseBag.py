@@ -112,10 +112,9 @@ class BaseBag(itemContainer.ItemContainer):
 
         return clientData
 
-    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
-                         srcSubType=0, idipSource=0):
+    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True):
         opStat, planDict = super(BaseBag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDict, notify,
-                                                                 syncToClient, srcSubType, idipSource)
+                                                                 syncToClient)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
             return opStat, planDict
         if src == AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
@@ -134,11 +133,17 @@ class BaseBag(itemContainer.ItemContainer):
 
         return opStat, planDict
 
-    def addItemsToNewGrid(self, owner, itemObj, opUUID, src, detail, gridId=None, notify=True, syncToClient=True,
-                          srcSubType=0, idipSource=0):
-        opStat, gridId = super(BaseBag, self).addItemsToNewGrid(owner, itemObj, opUUID, src, detail, gridId,
-                                                                notify=notify, syncToClient=syncToClient, srcSubType=0,
-                                                                idipSource=0)
+    def addItemsToNewGrid(self, owner, itemObj, opUUID, src, detail, gridId=None, syncToClient=True):
+        opStat, gridId = super(BaseBag, self).addItemsToNewGrid(
+            owner, 
+            itemObj, 
+            opUUID, 
+            src, 
+            detail, 
+            gridId, 
+            syncToClient=syncToClient
+        )
+
         if opStat == gameconst.BagOPStat.OPERATE_BAG_STAT_OK and syncToClient:
             if itemObj.isEquipmentItem():
                 owner.client.onAddBagItems(
@@ -175,10 +180,8 @@ class BaseBag(itemContainer.ItemContainer):
         sendClient and owner.client.onUpdateGridItemsNum(self.bagType, clientData)
         return
 
-    def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True, srcSubType=0,
-                          idipSource=0):
-        cleanItem = super(BaseBag, self).cleanGridByGridId(owner, gridId, itemId, opUUID, srcType, detail, sendClient,
-                                                           srcSubType, idipSource=idipSource)
+    def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True):
+        cleanItem = super(BaseBag, self).cleanGridByGridId(owner, gridId, itemId, opUUID, srcType, detail, sendClient)
 
         if sendClient and cleanItem:
             owner.client.onUpdateGridItemsNum(self.bagType, [{'gridId': gridId, 'itemNum': 0}])
@@ -194,8 +197,8 @@ class BaseBag(itemContainer.ItemContainer):
         now = utils.curTS()
         if now < self.lastSortBag + dataUtils.getConstVal('bankSortCooldown', 5):
             return False
-        bak_gridId2GridObj = cPickle.dumps(self.gridId2GridObj)
-        bak_itemId2gridIds = cPickle.dumps(self.itemId2gridIds)
+        bak_gridId2GridObj = cPickle.dumps(self.gridIdToGridObj)
+        bak_itemId2gridIds = cPickle.dumps(self.itemIdToGridIds)
         try:
             def _sortFunc(gridObj):
                 itemData = dataUtils.getCommItemData(gridObj.itemId)
@@ -204,7 +207,7 @@ class BaseBag(itemContainer.ItemContainer):
                 return (sortKey, -1 * gridObj.quality, equipLevel,
                         -gridObj.equipAttr.equipLv if gridObj.isEquipmentItem() else 0, gridObj.itemId, gridObj.bindType, 0)
 
-            gridObjs = self.gridId2GridObj.values()
+            gridObjs = self.gridIdToGridObj.values()
             gridObjs = sorted(gridObjs, key=sortFunc or _sortFunc)
             self.reset()
             opUUID = KBEngine.genUUID64()
@@ -213,13 +216,13 @@ class BaseBag(itemContainer.ItemContainer):
             if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 # raise Exception
                 gameengine.panicStack('!!!!! doBagSort error:', opStat)
-                self.gridId2GridObj = cPickle.loads(bak_gridId2GridObj)
-                self.itemId2gridIds = cPickle.loads(bak_itemId2gridIds)
+                self.gridIdToGridObj = cPickle.loads(bak_gridId2GridObj)
+                self.itemIdToGridIds = cPickle.loads(bak_itemId2gridIds)
                 return
             self.lastSortBag = utils.curTS()
             return True
         except Exception as e:
             gameengine.panicStack('!!!!! doBagSort Exception:%s' % e)
-            self.gridId2GridObj = cPickle.loads(bak_gridId2GridObj)
-            self.itemId2gridIds = cPickle.loads(bak_itemId2gridIds)
+            self.gridIdToGridObj = cPickle.loads(bak_gridId2GridObj)
+            self.itemIdToGridIds = cPickle.loads(bak_itemId2gridIds)
             return True

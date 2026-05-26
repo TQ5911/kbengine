@@ -79,6 +79,7 @@ class ItemFactory(object):
         itemId = dataDict.get('itemId', 0)
         if not dataUtils.isValidItemId(itemId):
             return
+
         return BaseItem.PureItem(dataDict)
 
     @classmethod

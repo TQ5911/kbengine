@@ -11,10 +11,11 @@ import LogTrackingMgr
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import raidBossChallenge_config as RBC_CFG
+import actionContext
 
 class IChief(object):
     def onChiefDailyRewardNumUpdate(self, *args):
-        LOG_IFO('onChiefDailyRewardNumUpdate::')
+        LOG_INFO('onChiefDailyRewardNumUpdate::')
         dailyRewardNum = self.chiefInfo.dailyRewardNum
         if self.chiefInfo.rewardNumber < dailyRewardNum:
             self.chiefInfo.addRewardNumByDefault(dailyRewardNum - self.chiefInfo.rewardNumber)
@@ -24,7 +25,7 @@ class IChief(object):
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     def increaseChiefRewardNumber(self, exposed, coinNum, itemNum):
-        LOG_IFO('increaseChiefRewardNumber::', coinNum, itemNum)
+        LOG_INFO('increaseChiefRewardNumber::', coinNum, itemNum)
         retCoin = self._useCoinToIncreaseChiefRewardNumber(coinNum, {}, needMsg = False)
         retItem = self._useItemToIncreaseChiefRewardNumber(itemNum, {}, needMsg = False)
         if retCoin or retItem:
@@ -37,19 +38,19 @@ class IChief(object):
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     def useItemToIncreaseChiefRewardNumber(self, exposed, useNum):
-        LOG_IFO('useItemToIncreaseChiefRewardNumber::', useNum)
+        LOG_INFO('useItemToIncreaseChiefRewardNumber::', useNum)
         
         self._useItemToIncreaseChiefRewardNumber(useNum, {})
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     def useCoinToIncreaseChiefRewardNumber(self, exposed, useNum):
-        LOG_IFO('useCoinToIncreaseChiefRewardNumber::', useNum)
+        LOG_INFO('useCoinToIncreaseChiefRewardNumber::', useNum)
 
         self._useCoinToIncreaseChiefRewardNumber(useNum, {})
 
     def _useItemToIncreaseChiefRewardNumber(self, itemNum, extra, needMsg = True):
         itemId = int(RBC_CFG.datas['rewardNumItem']['value'])
-        LOG_IFO('_useItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra)
+        LOG_INFO('_useItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra)
 
         if itemNum <= 0:
             return False
@@ -70,14 +71,14 @@ class IChief(object):
         return True
     
     def onUseItemToIncreaseChiefRewardNumber(self, itemId, itemNum, extra, needMsg = True):
-        LOG_IFO('onUseItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra, needMsg)
+        LOG_INFO('onUseItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra, needMsg)
         self.chiefInfo.addRewardNumByUseSpecialItem(itemNum)
         self.chiefInfo = self.chiefInfo
         if needMsg:
             self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(itemNum)])
 
     def _useCoinToIncreaseChiefRewardNumber(self, useNum, extra, needMsg = True):
-        LOG_IFO('_useCoinToIncreaseChiefRewardNumber::', useNum)
+        LOG_INFO('_useCoinToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
             return False
         
@@ -102,7 +103,7 @@ class IChief(object):
         return True
     
     def onUseCoinToIncreaseChiefRewardNumber(self, useNum, extra, needMsg):
-        LOG_IFO('onUseCoinToIncreaseChiefRewardNumber::', useNum, extra, needMsg)
+        LOG_INFO('onUseCoinToIncreaseChiefRewardNumber::', useNum, extra, needMsg)
         self.chiefInfo.addRewardNumByUseCoin(useNum)
         self.chiefInfo = self.chiefInfo
         if needMsg:
@@ -127,4 +128,4 @@ class IChief(object):
             self.getRoleCacheAttr('level')
         )
 
-        LOG_IFO('in onEnterChiefDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)
+        LOG_INFO('in onEnterChiefDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

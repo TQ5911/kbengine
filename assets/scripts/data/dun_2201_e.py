@@ -57,8 +57,7 @@ datas ={
       "finished": [
         1020,
         1021,
-        1031,
-        1061
+        1031
       ]
     }
   },
@@ -221,11 +220,7 @@ datas ={
     "buffID": [
       64004957
     ],
-    "transition": {
-      "finished": [
-        1062
-      ]
-    }
+    "transition": {}
   },
   "1057": {
     "type": "castSkill",
@@ -260,11 +255,7 @@ datas ={
     "buffID": [
       64004957
     ],
-    "transition": {
-      "finished": [
-        1063
-      ]
-    }
+    "transition": {}
   },
   "1022": {
     "type": "addBuffToMonster",
@@ -305,45 +296,6 @@ datas ={
       22010001
     ],
     "dialogID": 19021001,
-    "transition": {}
-  },
-  "1061": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22010001
-    ],
-    "buffID": [
-      64004087
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 60.0,
-    "transition": {}
-  },
-  "1062": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22010001
-    ],
-    "buffID": [
-      64004088
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 60.0,
-    "transition": {}
-  },
-  "1063": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22010001
-    ],
-    "buffID": [
-      64004089
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 60.0,
     "transition": {}
   }
 }

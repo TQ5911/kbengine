@@ -96,5 +96,11 @@
         <onLoadEntitiesEnd>
             <Arg>       SPACE_NO        </Arg>
         </onLoadEntitiesEnd>
+
+        <onGetShowMapEntityInfo>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       MAP_ID          </Arg>
+            <Arg>       LINE_NO         </Arg>
+        </onGetShowMapEntityInfo>
     </BaseMethods>
 </root>

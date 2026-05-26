@@ -25,6 +25,8 @@ namespace KBEngine
 		
 		public virtual void onCreationIdChanged(Int32 oldValue) {}
 		public float dmgArmor = 0f;
+		public UInt32 fBProtectTime = 0;
+		public virtual void onFBProtectTimeChanged(UInt32 oldValue) {}
 		
 		
 		
@@ -239,6 +241,10 @@ namespace KBEngine
 					SKILL_DAMAGE_INFO onSkillDamage_arg1 = ((DATATYPE_SKILL_DAMAGE_INFO)method.args[0]).createFromStreamEx(stream);
 					onSkillDamage(onSkillDamage_arg1);
 					break;
+				case 539:
+					Byte onStateChangedForce_arg1 = stream.readUint8();
+					onStateChangedForce(onStateChangedForce_arg1);
+					break;
 				case 600:
 					CLIENT_AUREOLES onUpdateAureoles_arg1 = ((DATATYPE_CLIENT_AUREOLES)method.args[0]).createFromStreamEx(stream);
 					onUpdateAureoles(onUpdateAureoles_arg1);
@@ -420,6 +426,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDmgArmorChanged(oldval_dmgArmor);
+						}
+
+						break;
+					case 280:
+						UInt32 oldval_fBProtectTime = fBProtectTime;
+						fBProtectTime = stream.readUint32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFBProtectTimeChanged(oldval_fBProtectTime);
+						}
+						else
+						{
+							if(inWorld)
+								onFBProtectTimeChanged(oldval_fBProtectTime);
 						}
 
 						break;
@@ -880,6 +902,27 @@ namespace KBEngine
 					else
 					{
 						onDmgArmorChanged(oldval_dmgArmor);
+					}
+				}
+			}
+
+			UInt32 oldval_fBProtectTime = fBProtectTime;
+			Property prop_fBProtectTime = pdatas[5];
+			if(prop_fBProtectTime.isBase())
+			{
+				if(inited && !inWorld)
+					onFBProtectTimeChanged(oldval_fBProtectTime);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fBProtectTime.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFBProtectTimeChanged(oldval_fBProtectTime);
 					}
 				}
 			}

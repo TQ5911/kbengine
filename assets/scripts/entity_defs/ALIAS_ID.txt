@@ -11,6 +11,7 @@ Account method onKickAnotherAccount 8
 Account method onKickAnotherAvatar 9
 Account method onLoginNeedReconnect 6
 Account method onMessage 10
+Account method onPatchVersion 18
 Account method onRemoveAvatar 12
 Account method onReqAvatarGBID 13
 Account method onReqAvatarList 3
@@ -24,6 +25,7 @@ Avatar property adjCD 10
 Avatar property antiFatal 65
 Avatar property antiMortal 67
 Avatar property appearance 11
+Avatar property appearanceCoin 46
 Avatar property atkBless 64
 Avatar property authPermission 160
 Avatar property authStatistics 139
@@ -97,6 +99,7 @@ Avatar property leftCubeTimes 96
 Avatar property leftGuildTS 100
 Avatar property level 5
 Avatar property lingShouId 37
+Avatar property mainChnUIStatus 41
 Avatar property maxMagicArmor 164
 Avatar property maxMagicAtk 77
 Avatar property maxPhysicalArmor 165
@@ -136,6 +139,7 @@ Avatar property raidId 33
 Avatar property realDmg 140
 Avatar property realDmgDef 141
 Avatar property remainHangupMinutes 8
+Avatar property reportCnt 53
 Avatar property saleItemMoney 113
 Avatar property school 6
 Avatar property selectedTargetId 168
@@ -212,6 +216,7 @@ Creation method onRemoveBuff 19
 Creation method onSetAddSkillCd 22
 Creation method onShooterSkillCanUse 23
 Creation method onSkillDamage 24
+Creation method onStateChangedForce 10
 Creation method onUpdateAureoles 26
 Creation method onUpdateAureolesFromOthers 27
 Creation method onUpdateBuff 28
@@ -224,6 +229,7 @@ Creation property antiFatal 28
 Creation property bePushedSpeed 33
 Creation property creationId 40
 Creation property dmgArmor 94
+Creation property fBProtectTime 5
 Creation property force 46
 Creation property fullHp 49
 Creation property fullMp 50
@@ -271,6 +277,7 @@ Monster method onRemoveBuff 22
 Monster method onSetAddSkillCd 25
 Monster method onShooterSkillCanUse 26
 Monster method onSkillDamage 27
+Monster method onStateChangedForce 14
 Monster method onTelBack 10
 Monster method onUpdateAureoles 29
 Monster method onUpdateAureolesFromOthers 30
@@ -282,6 +289,7 @@ Monster method onUseSkill 35
 Monster method popDialog 37
 Monster method showPopoverMsg 39
 Monster method showPopoverMsgWithArg 40
+Monster property FirstBloodTargetId 10
 Monster property adjCD 16
 Monster property antiFatal 58
 Monster property bePushedSpeed 17
@@ -290,6 +298,7 @@ Monster property belongGbId 6
 Monster property bornState 64
 Monster property bossDeadDisappearTime 9
 Monster property dmgArmor 50
+Monster property firstHateTargetId 8
 Monster property force 190
 Monster property fullHp 81
 Monster property fullMp 82
@@ -336,6 +345,7 @@ Npc method onRemoveBuff 25
 Npc method onSetAddSkillCd 28
 Npc method onShooterSkillCanUse 29
 Npc method onSkillDamage 30
+Npc method onStateChangedForce 13
 Npc method onUpdateAureoles 32
 Npc method onUpdateAureolesFromOthers 33
 Npc method onUpdateBuff 34
@@ -352,6 +362,7 @@ Npc property bePushedSpeed 22
 Npc property bornState 17
 Npc property deathTime 5
 Npc property dmgArmor 55
+Npc property firstHateTargetId 4
 Npc property force 184
 Npc property fullHp 80
 Npc property fullMp 81
@@ -399,6 +410,7 @@ Summon method onRemoveBuff 21
 Summon method onSetAddSkillCd 24
 Summon method onShooterSkillCanUse 25
 Summon method onSkillDamage 26
+Summon method onStateChangedForce 12
 Summon method onUpdateAureoles 28
 Summon method onUpdateAureolesFromOthers 29
 Summon method onUpdateBuff 30
@@ -415,6 +427,7 @@ Summon property bePushedSpeed 33
 Summon property bindedEntityId 34
 Summon property bornState 36
 Summon property dmgArmor 97
+Summon property firstHateTargetId 6
 Summon property force 47
 Summon property fullHp 50
 Summon property fullMp 51

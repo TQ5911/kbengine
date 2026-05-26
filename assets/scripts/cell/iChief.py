@@ -17,7 +17,7 @@ class IChief(object):
 	@gamedecorator.checkGameconfigEnable('raidDungeon')
 	@utils.isMyself
 	def enterChiefDungeon(self, exposed):
-		LOG_IFO('enterChiefDungeon::')
+		LOG_INFO('enterChiefDungeon::')
 
 		if not self.isInRaid():
 			LOG_ERR('enterChiefDungeon:: not in raid', self.gbId)

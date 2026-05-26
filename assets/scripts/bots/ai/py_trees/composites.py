@@ -826,7 +826,7 @@ class Condition(object):
 
     def reloadScript(self):
         import utils
-        utils.resetCls(self)
+        utils.resetClass(self)
 
 class ConditionNOT(Condition):
     def __init__(self, conditionObj = None, *args, **kwargs):

@@ -12,6 +12,7 @@ enum AccountType
     ACCOUNT_CROSS_SERVER = 3;
     ACCOUNT_TAPTAP = 4;
     ACCOUNT_OFFICIAL = 5;
+	ACCOUNT_BOT = 6;
 }
 
 message Void {

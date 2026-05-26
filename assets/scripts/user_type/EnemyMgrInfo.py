@@ -38,10 +38,10 @@ class EnemyMgrVal(userType.UserSingleType):
                 _val = {'name': _recordVal.name, 'gbId': gbId, 'school': _recordVal.school, 'level': _recordVal.level, 'sex': _recordVal.sex}
                 _val.update(_record.toEnemyRecordSavedDict())
                 if len(recordHeap) < maxSize:
-                    heapq.heappush(recordHeap, (_val['ts'], _val))
+                    heapq.heappush(recordHeap, ((_val['ts'], _val['gbId']), _val))
                 else:
-                    if _val['ts'] > recordHeap[0][0]:
-                        heapq.heapreplace(recordHeap, (_val['ts'], _val))
+                    if _val['ts'] > recordHeap[0][0][0]:
+                        heapq.heapreplace(recordHeap, ((_val['ts'], _val['gbId']), _val))
 
         self.recordList = [item[1] for item in recordHeap]
         self.recordList.sort(key=lambda x: x['ts'])
@@ -84,6 +84,9 @@ class EnemyMgrVal(userType.UserSingleType):
 
     def getAllEnemyies(self):
         return [enemy for enemy in self.enemyDict.values()]
+
+    def getEnemyCount(self):
+        return len(self.enemyDict)
 
     def toEnemyMgrSavedDict(self):
         return {

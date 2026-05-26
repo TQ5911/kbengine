@@ -49,7 +49,7 @@ def _reloadSingleModule(module, mros=('root',), warningDepth=15, fatalDepth=100)
     if module.__name__ in gameglobal.reloadedModuleMap or id(module) in gameglobal.reloadedModuleIdMap:
         return
 
-    LOG_IFO('[REALOD-MODULE]{intent} {mros} --- ({moduleName})'.format(
+    LOG_INFO('[REALOD-MODULE]{intent} {mros} --- ({moduleName})'.format(
         intent=depth * 2 * '',
         moduleName=module.__name__,
         mros=' -> '.join(mros), ))
@@ -258,7 +258,7 @@ def _mismatchSingleObjectBasesClsCheck(e, links=(), __class__=object, __child_cl
 
 
 def refreshData(includeModules=None):
-    LOG_IFO('refreshData with args:', includeModules)
+    LOG_INFO('refreshData with args:', includeModules)
     try:
         _refreshData(includeModules)
     finally:
@@ -328,9 +328,9 @@ def _refreshData(includeModules):
     # clear ai controller poll when refresh ai_ai data cfg
     cacheList = [
         ('aiControllerPool', 'pool', 'clearAllPool'),
-        ('combatSkill', 'SkillBase', 'clearAllCache'),
+        ('combatSkill', 'SkillBaseClass', 'clearAllCache'),
         ('buff', 'Buff', 'clearAllCache'),
-        ('dataUtils', 'getTaskData', 'cache_clear'),
+        ('dataUtils', 'getTaskCfg', 'cache_clear'),
         ('iMapMonsterRefresh', 'IMapMonsterRefresh', 'clearAllCache')
     ]
 

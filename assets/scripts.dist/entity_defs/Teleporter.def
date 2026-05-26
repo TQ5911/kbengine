@@ -1,0 +1,48 @@
+<root>
+    <Interfaces>
+        <Interface>	   iCell            </Interface>
+        <Interface>	   iBaseWithCell    </Interface>
+        <Interface>	   iFubenSpace      </Interface>
+        <Interface>	   iTimerCell    </Interface>
+        <Interface>    iGameEntity      </Interface>
+    </Interfaces>
+
+    <Properties>
+        <name>
+            <Type>      UNICODE         </Type>
+            <Flags>     ALL_CLIENTS     </Flags>
+        </name>
+
+        <teleporterId>
+            <Type>	OBJECT_ID						</Type>
+            <Flags>	OTHER_CLIENTS					</Flags>
+        </teleporterId>
+
+        <teleportType>
+            <Type>	UINT8                           </Type>
+            <Flags>	CELL_PRIVATE                    </Flags>
+            <Default>	0                               </Default>
+        </teleportType>
+
+        <mapIds>
+            <Type>	ARRAY   <of>    MAP_ID    </of>    </Type>
+            <Flags>	CELL_PRIVATE                    </Flags>
+        </mapIds>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <doTeleport>
+            <Exposed/>
+            <Arg>        TELEPORTER_ID  </Arg>
+            <Arg>        INT16          </Arg>
+        </doTeleport>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>

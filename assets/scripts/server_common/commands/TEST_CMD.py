@@ -1,32 +1,47 @@
 # -*- coding: utf-8 -*-
 import KBEngine
 from KBEDebug import *
-from commands.CMD_COMMON import *
+
 import gzip
 import json
+import random
 import utils
 import dataUtils
-import gameconfig
 import gameengine
 import dropAward
 import awardContext
-import buff_buff as BBD
 import base64
 import importlib
 import inspect
 import ast
-import time
-import types
-import fightProp_define as FDD
+import gameglobal
+import gamerefresh
+import actionContext
+import sys
+import traceback
+import collect_details as  PDETAIL
+from avatarCollectInfo import collectItem
+from commands.CMD_COMMON import *
+
+import gearEnhance_gearconst as GEGCD
+import gearEnhance_gearconst as GEGCD
+import gearBase_typeTab as GBTT
+import gearEnhance_gearStrengthen as GEGS
+import itemData_itemData as ID
+import petData_petData as PD
+import gearBase_typeExplanation as GBE
+import gearBase_gearBase as GBG
+import buff_buff as B_BD
+import skill_skill as SSD
+import skill_skill as SSD
+import skillRelevant_skillUpgrade as SRSUD
+import fightProp_define as FP_DD
+import visible_visible as V_VD
+import tutorConst_triggerReleat as TTRD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 # 判断当前进程类型
 IS_BASE = (KBEngine.component == 'baseapp')
-import skill_skill as SSD
-import visible_visible as UVVD
-import actionContext
-import gamerefresh
-
 callOnApps = gmCommand._callApps
 forwardGMCommand = gmCommand.forwardGMCommand
 
@@ -46,7 +61,7 @@ def getAllPlayers(su):
         return
     gameengine.callBaseApps("utils.getAllAvatarByGm", (su, gameglobal.localBaseApp))
 
-@gm_cmd('$getAvatarAoiMonster', (Player("gbId/Id"), Int("range")), RARG(0), CELL, '获取玩家AOI附近怪物', ALLSIDE, GOD_GROUPS, minArgs=1)
+@gm_cmd('$getAvatarAoiMonster', (Player("gbId or Id"), Int("int range")), RARG(0), CELL, '获取玩家AOI附近怪物', ALLSIDE, GOD_GROUPS, minArgs=1)
 def getAvatarAoiMonster(su, player, range=30):
     monsterdata = []
     for ent in player.entitiesInRange(range, 'Monster'):
@@ -60,7 +75,7 @@ def getAvatarAoiMonster(su, player, range=30):
 @gm_cmd('$getEntprop', (Entity('entid'),), RARG(0), CELL, '获取实体属性', ALLSIDE, GOD_GROUPS)
 def getEntprop(su, ent):
     entprops = {}
-    for propName, propData in FDD.datas.items():
+    for propName, propData in FP_DD.datas.items():
         if not hasattr(ent, propName):
             continue
         entprops[propName] = {
@@ -76,7 +91,7 @@ def getEntprop(su, ent):
     
     return su.onCommandResult(0, 'ok', {"data": entprops})
 
-@gm_cmd('$setEntProp', (Entity('entid'),Str("propName"), Float("value"),), RARG(0), gameconst.CELL, '修改属性', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$setEntProp', (Entity('entid'),Str("str propName"), Float("value"),), RARG(0), gameconst.CELL, '修改属性', ALLSIDE, GOD_GROUPS)
 def setEntProp(su, ent, propName, value):
     if not hasattr(ent, propName):
         return su.onCommandResult(0, f'Faild,{ent.name} 没有 {propName} 属性', {})
@@ -123,8 +138,6 @@ def getEntSkillDic(su, ent):
 
 
 def update_skills_by_playerLevel(ent, playerLevel, skillLevel=0):
-    import skill_skill as SSD
-    import skillRelevant_skillUpgrade as SRSUD
     skill_dicts = {
     1001: {},
     1002: {},
@@ -187,8 +200,6 @@ def update_skills_by_playerLevel(ent, playerLevel, skillLevel=0):
         update_skill_levels(ent, skill_dicts[school])
 
 def getPetItemList():
-    import itemData_itemData as ID
-    import petData_petData as PD
     petItemListValid = []
     for itemId, itemData in ID.datas.items():
         itemType = itemData.get('type', None)
@@ -197,10 +208,31 @@ def getPetItemList():
             petItemListValid.append(itemId)
     return petItemListValid
 
+def activatePets(player, itemId=0):
+    #  1.获得道具
+    itemList = getPetItemList() if itemId == 0 else [itemId]
+    bindType = 0
+    for itemId in itemList:
+        player.gmAddItems(0, itemId, 1, 'gm_cmd:$enhanceRole', bindType)
+    #  2.使用道具
+    opUUID = KBEngine.genUUID64()
+    for itemId in itemList:
+        gridId, it = player.petBag.getItemObjByItemID(itemId, bindType)
+        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': it, 'school':player.getAvatarSchool()})
+        player.addLingShouBase(abCtx)
+    #  3.设置出战
+    battleIndex = player.battleIndex
+    allPetIds = list(player.lingShouInfo.pets.keys())
+    slotNum = len(player.lingShouInfo.getBattleListByIndex(battleIndex))
+    slotNum = min(slotNum, len(allPetIds))
+    petIds = random.sample(allPetIds, slotNum)
+    for slotId, petId in enumerate(petIds):
+        player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
+    #  4.穿戴装备
+    #  5.设置跟随
+    player.setFollowPet(player.id, True, petIds[0])
 
 def _getItems(school, quality, awardCtx):
-    import gearBase_typeExplanation as GBE
-    import gearBase_gearBase as GBG
     _targetList = []
     for k, v in GBE.auctionDic.items():
         # k : (1, 1001), v: [(1, 11), (2, 21), (3, 31), (4, 41)]
@@ -229,23 +261,20 @@ def _getItems(school, quality, awardCtx):
 
     return _items
 
-@gm_cmd('$dropEquip', (Player("gbId/Id"), Int("slotId")), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$dropEquip', (Player("gbId or Id"), Int("int slotId")), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
 def dropEquip(su, player, slotId):
     player.dropEquip(slotId, player.gbId, player.name)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$dropWithoutDress', (Player("gbId/Id"), Int('count')), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$dropWithoutDress', (Player("gbId or Id"), Int('count')), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
 def dropWithoutDress(su, player, count):
     _items = _getItems(player.school, 3, 3, awardContext.CommonContext(0))
     for _item in _items[:count]:
         player.dropEquipByItem(_item, player.name)
 
-    return True, '执行成功'
+    return True, 'command success'
 
 def _gmGetEquipment(player, school, quality, grade, enhanceLv):
-    import gearEnhance_gearconst as GEGCD
-    import gearBase_typeTab as GBTT
-    import gearEnhance_gearStrengthen as GEGS
     awardCtx = awardContext.CommonContext(0)
     awardVal = dropAward.AwardVal()
     if school == 0:
@@ -274,19 +303,17 @@ def _gmGetEquipment(player, school, quality, grade, enhanceLv):
         detail="_gmGetEquipment",
         awardCtx=awardCtx,
         )
-    return True, '执行成功', _items
+    return True, 'command success', _items
 
-@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('grade'), Int('enhanceLv')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$getEquipment', (Player("gbId or Id"), Int('school'), Int('quality'), Int('grade'), Int('enhanceLv')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
 def gmGetEquipment(su, player, school, quality, grade, enhanceLv):
     ret, msg, _ = _gmGetEquipment(player, school, quality, grade, enhanceLv)
     return ret, msg
     
 
-@gm_cmd('$enhanceRole', (Player("gbId/Id"),Int('enhanceLevel')), RARG(0), gameconst.BASE, '根据配置强化角色', ALLSIDE, GOD_GROUPS, minArgs=1)
+@gm_cmd('$enhanceRole', (Player("gbId or Id"),Int('enhanceLevel')), RARG(0), gameconst.BASE, '根据配置强化角色', ALLSIDE, GOD_GROUPS, minArgs=1)
 def enhanceRole(su, player, enhanceLevel=0):
     # from test.roleStrengthConfig import data as roleStrengthData
-    import random
-    import gearEnhance_gearconst as GEGCD
     # 等级设置
     maxRoleLevel = utils.getPlayerMaxLevel()
     forwardGMCommand(su,"$setlv", player.id, maxRoleLevel)
@@ -316,29 +343,7 @@ def enhanceRole(su, player, enhanceLevel=0):
     # 1.技能升级
     update_skills_by_playerLevel(player, maxRoleLevel)
     # 精灵穿戴
-    #  1.获得道具
-    itemList = getPetItemList()
-    bindType = 0
-    for itemId in itemList:
-        player.gmAddItems(0, itemId, 1, 'gm_cmd:$enhanceRole', bindType)
-    #  2.使用道具
-    import actionContext
-    opUUID = KBEngine.genUUID64()
-    for itemId in itemList:
-        gridId, it = player.petBag.getItemObjByItemID(itemId, bindType)
-        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': it, 'school':player.getAvatarSchool()})
-        player.addLingShouBase(abCtx)
-    #  3.设置出战
-    battleIndex = player.battleIndex
-    allPetIds = list(player.lingShouInfo.pets.keys())
-    slotNum = len(player.lingShouInfo.getBattleListByIndex(battleIndex))
-    slotNum = min(slotNum, len(allPetIds))
-    petIds = random.sample(allPetIds, slotNum)
-    for slotId, petId in enumerate(petIds):
-        player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
-    #  4.穿戴装备
-    #  5.设置跟随
-    player.setFollowPet(player.id, True, petIds[0])
+    activatePets(player)
 
     # 收集系统
     _gmFinishCollect(player, 0)
@@ -346,10 +351,10 @@ def enhanceRole(su, player, enhanceLevel=0):
     player.gmUnlockAllMeridian()
     return su.onCommandResult(0, 'ok', {})
 
-@gm_cmd('$modifyAttrByLevel', (Player("gbId/Id"),Int('level')), RARG(0), gameconst.CELL, '根据等级设置角色属性', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$modifyAttrByLevel', (Player("gbId or Id"),Int('level')), RARG(0), gameconst.CELL, '根据等级设置角色属性', ALLSIDE, GOD_GROUPS)
 def modifyAttrByLevel(su, player, level):
+    # 测试专用导入
     from test import roleLevelAttribute
-    
     roleAttrData = roleLevelAttribute.data.get(str(level), None)
     if not roleAttrData:
         return False, '执行失败，等级属性配置不存在'
@@ -363,9 +368,9 @@ def modifyAttrByLevel(su, player, level):
     for attrName, attrVal in roleAttrData.items():
         if attrName in ['level']:
             continue
-        if attrName not in FDD.datas:
+        if attrName not in FP_DD.datas:
             continue
-        fightDefineData = FDD.datas[attrName]
+        fightDefineData = FP_DD.datas[attrName]
         # 兼容
         prefix = 'adj'
         if attrName.startswith('base') or attrName.startswith('adj'):
@@ -383,12 +388,44 @@ def modifyAttrByLevel(su, player, level):
             attrList.append((attrName, delta))
     forwardGMCommand(su, '$addAwardFightProps', player.id, str(attrList))
 
-@gm_cmd('$setskillLv', (Player("gbId/Id"), Int("skillLevel"),), RARG(0), gameconst.BASE, '设置技能等级', ALLSIDE, GOD_GROUPS, minArgs=0)
+@gm_cmd('$activeMount', (Player("gbId or Id"), Int("itemId"),), RARG(0), gameconst.CELL, '激活坐骑', ALLSIDE, GOD_GROUPS, minArgs=0)
+def activeMount(su, player, itemId=0):
+    # 激活坐骑逻辑
+    opUUID = KBEngine.genUUID64()
+    ctx = actionContext.UseItemCtx()
+    mountSubType = 5  # 坐骑激活道具的subType
+    if itemId:
+        itemData = ID.datas.get(itemId, None)
+        if not itemData:
+            return False, '执行失败，物品不存在'
+        itemType = itemData.get('type', None)
+        itemSubType = itemData.get('subType', None)
+        if itemType != gameconst.ItemType.Normal or itemSubType != mountSubType:
+            return False, '执行失败，物品不是坐骑激活道具'
+    else:
+        # 如果没有指定itemId，随机选择一个坐骑激活道具
+        itemIds = []
+        for id, data in ID.datas.items():
+            if data.get('type') == gameconst.ItemType.Normal and data.get('subType') == mountSubType:
+                itemIds.append(id)
+        itemId = random.choice(itemIds) if itemIds else 0
+    if not itemId:
+        return False, '执行失败，没有可用的坐骑激活道具'
+    player.doAddMountAction(opUUID, ctx, itemId, 0)
+    player.setCurMountCell(mountId=ID.datas[itemId]['indexID'])
+    player._enterRidingWithCast(True, False)
+    return True, 'command success'
+
+@gm_cmd('$activePet', (Player("gbId or Id"), Int("itemId"),), RARG(0), gameconst.BASE, '激活宠物', ALLSIDE, GOD_GROUPS, minArgs=0)
+def activePet(su, player, itemId=0):
+    activatePets(player, itemId)
+
+@gm_cmd('$setskillLv', (Player("gbId or Id"), Int("int skillLevel"),), RARG(0), gameconst.BASE, '设置技能等级', ALLSIDE, GOD_GROUPS, minArgs=0)
 def setskillLv(su, player, skillLevel=0):
     update_skills_by_playerLevel(player, 0, skillLevel)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$addAwardFightProps', (Player("gbId/Id"),Str('attrList')), RARG(0), gameconst.BASE, '增加奖励战斗属性', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$addAwardFightProps', (Player("gbId or Id"),Str('attrList')), RARG(0), gameconst.BASE, '增加奖励战斗属性', ALLSIDE, GOD_GROUPS)
 def addAwardFightProps(su, player, attrList):
     try:
         attrList = eval(attrList)
@@ -397,20 +434,20 @@ def addAwardFightProps(su, player, attrList):
     player.addAwardFightProps(attrList, gameconst.SourceType.SrcTpItem, 0, 0, "_gmAddAwardFightProps")
     return su.onCommandResult(0, 'ok,替换成功', {'attrList': attrList})
 
-@gm_cmd('$Alladdbuff', (Int("buffid"),), RALL, gameconst.CELL, '所有人添加buff', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$Alladdbuff', (Int("int buffid"),), RALL, gameconst.CELL, '所有人添加buff', ALLSIDE, GOD_GROUPS)
 def Alladdbuff(su, buffid):
     if buffid:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
                 e.addBuff(buffid,1,e.id)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$AllsetskillLV', (Int("playerLevel"),), RALL, gameconst.BASE, '所有人技能升级', ALLSIDE, GOD_GROUPS, minArgs=0)
+@gm_cmd('$AllsetskillLV', (Int("int playerLevel"),), RALL, gameconst.BASE, '所有人技能升级', ALLSIDE, GOD_GROUPS, minArgs=0)
 def AllsetskillLV(su, playerLevel=0):
     for e in KBEngine.entities.values():
         if e.className == 'Avatar':
             update_skills_by_playerLevel(e, playerLevel)
-    return True, '执行成功'
+    return True, 'command success'
 
 @gm_cmd('$replaceMonsterSkill', (Entity('entid'),Str('skillList')), RARG(0), gameconst.CELL, '替换怪物技能', ALLSIDE, GOD_GROUPS)
 def replaceMonsterSkill(su, ent, skillList):
@@ -422,16 +459,16 @@ def replaceMonsterSkill(su, ent, skillList):
     ent.changeAllSkill(newSkillList)
     return su.onCommandResult(0, 'ok,替换成功', {})
 
-@gm_cmd('$getEntBuffinfo', (Player("gbId/Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体buff信息', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$getEntBuffinfo', (Player("gbId or Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体buff信息', ALLSIDE, GOD_GROUPS)
 def getEntBuffinfo(su, player,entid):
-    import utils
+    
     entbuffdic = {}
     ent = KBEngine.entities.get(entid)
     mod = importlib.import_module('buff_buff')
     datas = getattr(mod, 'datas', None)
-    if not hasattr(ent, 'buffDic'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 buffDic 方法', {})
-    for buffid,buffmap in ent.buffDic.items():
+    if not hasattr(ent, 'buffMgrDic'):
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 buffMgrDic 方法', {})
+    for buffid,buffmap in ent.buffMgrDic.items():
         if not buffmap:
             continue  
         buffdict = None
@@ -458,16 +495,16 @@ def getEntBuffinfo(su, player,entid):
 @gm_cmd('$GMtoolsaddEntBuff', (Int('entityid'), Int('buffId'), Int('lv'), Int('time')), RONE, CELL, 'GM工具给实体加buff', ALLSIDE, GOD_GROUPS,minArgs=3)
 def GMtoolsaddEntBuff(su, entityid, buffId, buffLv,time=-1):
     ent = KBEngine.entities.get(entityid)
-    if buffId in BBD.datas and ent:
+    if buffId in B_BD.datas and ent:
         ent.addBuff(buffId, buffLv, entityid,time)
-        return True, '执行成功'
+        return True, 'command success'
     else:
         return False, '执行失败'
     
 @gm_cmd('$delEntBuff', (Entity('entid'),Int('buffid')), RARG(0), gameconst.CELL, '删除实体buff', ALLSIDE, GOD_GROUPS)
 def delEntBuff(su, ent,buffid):
-    if not hasattr(ent, 'buffDic'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 buffDic 方法', {})
+    if not hasattr(ent, 'buffMgrDic'):
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 buffMgrDic 方法', {})
     ent.removeBuff(buffid)
     return su.onCommandResult(0, 'ok,获取实体buff信息成功', {})
     
@@ -566,19 +603,15 @@ def getEntBodyEquipmentInfo(su, ent):
 
     
 
-@gm_cmd('$unlockAllFunc', (Player("gbId/Id"), Int("onlyTask")), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS, minArgs=1)
+@gm_cmd('$unlockAllFunc', (Player("gbId or Id"), Int("int onlyTask")), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS, minArgs=1)
 def unlockAllFunc(su, player, onlyTask=0):
-    import actionContext
-    import tutorConst_newbieStep as TCNSD
-    import visible_visible as V_VD
-    import tutorConst_triggerReleat as TTRD
     maxLv = 0
     roleMaxLv = utils.getPlayerMaxLevel()
     needCompleteTasks = set()
     for _, data in V_VD.datas.items():
         lvLimit = data.get('level', 0)
         taskId = data.get('task', 0)
-        if taskId > 0 and dataUtils.getTaskData(taskId):
+        if taskId > 0 and dataUtils.getTaskCfg(taskId):
             needCompleteTasks.add(taskId)
         if lvLimit > maxLv and lvLimit <= roleMaxLv:
             maxLv = lvLimit
@@ -592,15 +625,15 @@ def unlockAllFunc(su, player, onlyTask=0):
             continue
         finishedRootTasks.append(rootTaskId)
         player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM), needCheck=False)
-        taskData = dataUtils.getTaskData(rootTaskId)
+        taskData = dataUtils.getTaskCfg(rootTaskId)
         for subTaskId in taskData.get('ChildTaskIds', []):
             player.taskInfo.tasks.pop(subTaskId, None)
 
-            player.taskInfo.taskRecordDic[subTaskId] = gameconst.TaskStat.TASK_STAT_SUBMITTED
+            player.taskInfo.taskRecordDic[subTaskId] = gameconst.TaskStatEnum.TASK_STAT_SUBMITTED
             if subTaskId in V_VD.taskDic:
                 player.updateVisibleByList(V_VD.taskDic[subTaskId])
         player.taskInfo.tasks.pop(rootTaskId, None)
-        player.taskInfo.taskRecordDic[rootTaskId] = gameconst.TaskStat.TASK_STAT_SUBMITTED
+        player.taskInfo.taskRecordDic[rootTaskId] = gameconst.TaskStatEnum.TASK_STAT_SUBMITTED
         if taskId in V_VD.taskDic:
             player.updateVisibleByList(V_VD.taskDic[taskId])
     player.unlockSkill(True, 0, 0)
@@ -608,11 +641,11 @@ def unlockAllFunc(su, player, onlyTask=0):
         player.setNewbieGuideId(player.id, newbieGuideId, 1)
     player.gmFinishedNewbie(0)
 
-    return True, '执行成功'
+    return True, 'command success'
 
 
 # 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
-@gm_cmd('$statDropByDropId', (Int("rewardId"), Int("count"), Int("Level"), Int("school"), Int("sex"), Int("isMonthCardExpired"), Int("avatarScoreRank"), Int("isCrossServer")), RSTUB('PlayerStub'), BASE, 
+@gm_cmd('$statDropByDropId', (Int("int rewardId"), Int("int count"), Int("int Level"), Int("int school"), Int("int sex"), Int("int isMonthCardExpired"), Int("int avatarScoreRank"), Int("int isCrossServer")), RSTUB('PlayerStub'), BASE, 
     '根据掉落id统计掉落', ALLSIDE, GOD_GROUPS, minArgs=2)
 def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, isMonthCardExpired=0, avatarScoreRank=0, isCrossServer=0):
     from test import dropTest
@@ -632,7 +665,7 @@ def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, 
         su.onCommandResult(0, 'wait', {'msg': data, 'process_info': process_info})
 
 
-@gm_cmd('$statDropByDunNo', (Int("dunNo"), Int("count")), RSTUB('PlayerStub'), BASE, 
+@gm_cmd('$statDropByDunNo', (Int("int dunNo"), Int("int count")), RSTUB('PlayerStub'), BASE, 
     '根据副本编号统计掉落', ALLSIDE, GOD_GROUPS)
 def statDropByDunNo(su, playerStub, dunNo, count):
     from test import dropTest
@@ -644,40 +677,37 @@ def statDropByDunNo(su, playerStub, dunNo, count):
     else:
         su.onCommandResult(0, 'wait', {'msg': content, 'process_info': process_info})
 
-@gm_cmd('$hookModuleFunc', (Str("moduleName"), Str("prefix"), Str("preCall"), Str("postCall")), RALL, ALL, 
+@gm_cmd('$hookModuleFunc', (Str("str moduleName"), Str("str prefix"), Str("str preCall"), Str("str postCall")), RALL, ALL, 
     'hook模块方法，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=1)
 def hookModuleFunc(su, moduleName, prefix='', preCall='', postCall=''):
-    from test import functionHooker
-    import sys
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
+    from test import functionHooker
     functionHooker.hook_specific_module(moduleName, prefix=prefix, verbose=True, pre_call_func_type=preCall, post_call_func_type=postCall)
     return su.onCommandResult(0, f'hook module {moduleName} success', {})
 
-@gm_cmd('$hookClassFunc', (Str("moduleName"), Str("className"), Str("prefix")), RALL, ALL, 
+@gm_cmd('$hookClassFunc', (Str("str moduleName"), Str("str className"), Str("str prefix")), RALL, ALL, 
     'hook类方法，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=2)
 def hookClassFunc(su, moduleName, className, prefix=''):
-    from test import functionHooker
-    import sys
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
+    from test import functionHooker
     functionHooker.hook_specific_class(moduleName, className, prefix=prefix, verbose=True)
     return su.onCommandResult(0, f'hook class {className} in module {moduleName} success', {})
 
-@gm_cmd('$hookFunc', (Str("moduleName"), Str("className"), Str("funcName"), Int("traceDepth"), Str("prefix")), RALL, ALL, 
+@gm_cmd('$hookFunc', (Str("str moduleName"), Str("str className"), Str("str funcName"), Int("int traceDepth"), Str("str prefix")), RALL, ALL, 
     'hook指定函数，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=3)
 def hookFunc(su, moduleName, className, funcName, traceDepth=0, prefix=''):
-    from test import functionHooker
-    import sys
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
+    from test import functionHooker
     functionHooker.hook_specific_class_method(moduleName, className, funcName, prefix=prefix, show_traceback=bool(traceDepth), traceback_depth=traceDepth, verbose=True)
     return su.onCommandResult(0, f'hook class {className} func {funcName} in module {moduleName} success', {})
 
-@gm_cmd('$hookShowLog', (Int("is_open"),), RALL, ALL, 
+@gm_cmd('$hookShowLog', (Int("int is_open"),), RALL, ALL, 
     'hook打印开关', ALLSIDE, GOD_GROUPS)
 def hookShowLog(su, is_open):
     from test import functionHooker
@@ -691,7 +721,6 @@ def refreshData(su, moduleName=None):
     # 确定当前进程类型
     process_type = 'BaseApp' if IS_BASE else 'CellApp'
     try:
-        import gamerefresh
         if moduleName and moduleName.strip():
             gamerefresh.refreshData(moduleName)
             return su.onCommandResult(0, f'{process_type}进程刷新 {moduleName} 数据成功', {})
@@ -715,7 +744,7 @@ def _translateValue(value, valueType, module_dict=None):
     """根据valueType转换value"""
     try:
         LOG_DBG(f'_translateValue:: {value} {type(value)} to {valueType}')
-        import ast
+        
         if valueType == 'int':
             if type(value) is bool:
                 value = 1 if value else 0
@@ -765,7 +794,6 @@ def _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, proc
     """在指定进程中修改内存数据的公共逻辑"""
     try:
         # 导入模块
-        import sys
         mod = sys.modules.get(moduleName)
         if mod is None:
             return su.onCommandResult(1, f'{processType}进程: 模块 {moduleName} 未加载', {})
@@ -810,7 +838,6 @@ def _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, proc
                 target_data[attrName] = parsed_value
         except Exception as e:
             return su.onCommandResult(1, f'{processType}进程: 值设置失败: {str(e)}', {})
-        import gamerefresh
         gamerefresh.refreshData(' ') # 主要为了调用clearCacheInTick
         return su.onCommandResult(0, f'{processType}进程修改 {moduleName}.datas[{key_cast}].{attrName} 成功 {target_data[attrName]}', {attrName: value})
     except Exception as e:
@@ -827,7 +854,6 @@ def _getTableValue(value):
                 func_source = value.__source_code__
             else:
                 # 普通函数，用inspect获取源码
-                import inspect
                 func_source = inspect.getsource(value).strip()
         except:
             # 无法获取源码，显示函数名和类型
@@ -847,7 +873,7 @@ def _getTableValue(value):
 @gm_cmd('$getdata', (Str('moduleName'), Str('key'), Str('attrName')), RONE, CELL, '获取内存数据', ALLSIDE, GOD_GROUPS, minArgs=2)
 def getMemoryData(su, moduleName, key, attrName=None):
     # 导入模块
-    import sys
+    
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f' 模块 {moduleName} 未加载', {})
@@ -877,14 +903,14 @@ def getMemoryData(su, moduleName, key, attrName=None):
         LOG_DBG("GM: getMemoryData ~ ", new_data)
         return su.onCommandResult(0, 'ok', new_data)
 
-@gm_cmd('$reqWorkshopSetAutoMF', (Player("gbId/Id"), Int('autoMF')), RARG(0), gameconst.BASE, '测试开启自动合成制作', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$reqWorkshopSetAutoMF', (Player("gbId or Id"), Int('autoMF')), RARG(0), gameconst.BASE, '测试开启自动合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopSetAutoMF(su, player, autoMF):
-    LOG_IFO("GM: reqWorkshopSetAutoMF ~ ", autoMF)
+    LOG_INFO("GM: reqWorkshopSetAutoMF ~ ", autoMF)
     return player.reqWorkshopSetAutoMF(autoMF)
 
-@gm_cmd('$reqWorkshopMF', (Player("gbId/Id"), Int('itemID'), Int('batchCount')), RARG(0), gameconst.BASE, '测试合成制作', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$reqWorkshopMF', (Player("gbId or Id"), Int('itemID'), Int('batchCount')), RARG(0), gameconst.BASE, '测试合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopMF(su, player, itemID, batchCount):
-    LOG_IFO("GM: reqWorkshopMF ~ ", itemID, batchCount)
+    LOG_INFO("GM: reqWorkshopMF ~ ", itemID, batchCount)
     return player.reqWorkshopMF(itemID, batchCount)
 
 @gm_cmd('$getServerAllEntities', (), RALL, ALL, '获取服务器所有实体', ALLSIDE, GOD_GROUPS)
@@ -949,7 +975,7 @@ def getServerAllEntities(su):
     return su.onCommandResult(0, f'{process_name}进程实体统计完成', result_data)
 
 
-@gm_cmd('$getStubAllProp', (Str("processType"), Int('entityId'), Str('attrPath')), RALL, ALL, '获取指定进程实体属性', ALLSIDE, GOD_GROUPS, minArgs=2)
+@gm_cmd('$getStubAllProp', (Str("str processType"), Int('entityId'), Str('attrPath')), RALL, ALL, '获取指定进程实体属性', ALLSIDE, GOD_GROUPS, minArgs=2)
 def getStubAllProp(su, processType, entityId, attrPath=""):
     """获取指定实体的所有属性，按类型分类显示"""
     try:
@@ -996,8 +1022,11 @@ def getStubAllProp(su, processType, entityId, attrPath=""):
         })
         
     except Exception as e:
-        import traceback
         return su.onCommandResult(1, f"获取实体属性时出错: {str(e)}\n{traceback.format_exc()}", {})
+
+
+def _is_fixed_array(obj):
+    return "FixedArray" in type(obj).__name__
 
 
 def _get_entity_attributes_classified(target_obj, process_name):
@@ -1005,6 +1034,15 @@ def _get_entity_attributes_classified(target_obj, process_name):
     classified = {"公共": {}, "私有": {}, "函数/方法": {}, "特殊属性": {}}
     
     try:
+        # KBEngine 持久化数组（如 GlobalMailStub.mailList）
+        if _is_fixed_array(target_obj):
+            for i in range(len(target_obj)):
+                try:
+                    classified["公共"][str(i)] = _get_simple_value(target_obj[i])
+                except Exception:
+                    classified["公共"][str(i)] = "<error>"
+            return classified
+
         # 处理容器类型：字典、RODict、列表
         if isinstance(target_obj, dict) or type(target_obj).__name__ == 'RODict':
             # 字典类型展开键值对
@@ -1085,6 +1123,8 @@ def _get_simple_value(value):
             return str(value)
         elif isinstance(value, str):
             return f'"{value[:50]}..."' if len(value) > 50 else f'"{value}"'
+        elif _is_fixed_array(value):
+            return f"FixedArray[{len(value)}] [可展开]"
         elif isinstance(value, (list, tuple)):
             # 列表和元组也可以展开查看内容
             return f"{type(value).__name__}[{len(value)}] [可展开]"
@@ -1160,30 +1200,30 @@ def broadcastSystemMsg(su, message):
         return su.onCommandResult(1, f'系统消息广播失败: {str(e)}', {})
 
 # --------------------------dev test only cmd segment----------------------------------------------------------------------------------------------------------------------------------------- 
-@gm_cmd('$modifyEquipEnhanceLevel', (Player("gbId/Id"), Int("slotID"), Int("enhanceLevel")), RARG(0), gameconst.CELL, '修改装备强化等级', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$modifyEquipEnhanceLevel', (Player("gbId or Id"), Int("int slotID"), Int("int enhanceLevel")), RARG(0), gameconst.CELL, '修改装备强化等级', ALLSIDE, GOD_GROUPS)
 def modifyEquipEnhanceLevel(su, player, slotID, enhanceLevel):
     ret = player.gmModifyEquipEnhanceLevel(slotID, enhanceLevel)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$dressAllEquipments', (Player("gbId/Id"), Int("quality")), RARG(0), gameconst.CELL, '穿戴所有装备', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$dressAllEquipments', (Player("gbId or Id"), Int("int quality")), RARG(0), gameconst.CELL, '穿戴所有装备', ALLSIDE, GOD_GROUPS)
 def dressAllEquipments(su, player, quality):
     if quality not in gameconst.ItemQuality.COLL_QUALITY:
         return False, '执行失败，无效品质'
     ret = player.gmDressEquips(quality)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$glyphWashingEquipments', (Player("gbId/Id"), Int("equipPos"), Int("slotId"), Int("itemId"), Int("affixId1"), Int("affixId2")), RARG(0), gameconst.CELL, '给指定的装备洗铭文', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$glyphWashingEquipments', (Player("gbId or Id"), Int("int equipPos"), Int("int slotId"), Int("int itemId"), Int("int affixId1"), Int("int affixId2")), RARG(0), gameconst.CELL, '给指定的装备洗铭文', ALLSIDE, GOD_GROUPS)
 def glyphWashingEquipments(su, player, equipPos, slotId, itemId, affixId1, affixId2):
     ret = player.gmGlyphWashingEquips(equipPos, slotId, itemId, affixId1, affixId2)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$glyphWashingEquipmentsInEquip', (Player("gbId/Id"), Int("equipPos"), Str("affixIds")), RARG(0), gameconst.CELL, '给穿戴的装备洗铭文', ALLSIDE, GOD_GROUPS, minArgs=1)
+@gm_cmd('$glyphWashingEquipmentsInEquip', (Player("gbId or Id"), Int("int equipPos"), Str("str affixIds")), RARG(0), gameconst.CELL, '给穿戴的装备洗铭文', ALLSIDE, GOD_GROUPS, minArgs=1)
 def glyphWashingEquipmentsInEquip(su, player, equipPos=0, affixIds=''):
     equipPos = equipPos or gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT
     equipItem = player.bodyEquipData.getEquipItem(equipPos)
@@ -1203,37 +1243,37 @@ def glyphWashingEquipmentsInEquip(su, player, equipPos=0, affixIds=''):
         ret = player.gmGlyphWashingEquips(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, itemId, affixId1, affixId2)
         if not ret:
             return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$openGuildDungeon', (Player("gbId/Id"), Int("openTime"), Int("openType"), Int("openID")), RARG(0), gameconst.CELL, '测试公会boss开启', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$openGuildDungeon', (Player("gbId or Id"), Int("int openTime"), Int("int openType"), Int("int openID")), RARG(0), gameconst.CELL, '测试公会boss开启', ALLSIDE, GOD_GROUPS)
 def openGuildDungeon(su, player, openTime, openType, openID):
     ret = player.openGuildDungeon(player.id, openTime, openType, openID)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$cancelGuildDungeonOrder', (Player("gbId/Id"), Int("openID")), RARG(0), gameconst.CELL, '测试公会boss预约取消', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$cancelGuildDungeonOrder', (Player("gbId or Id"), Int("int openID")), RARG(0), gameconst.CELL, '测试公会boss预约取消', ALLSIDE, GOD_GROUPS)
 def cancelGuildDungeonOrder(su, player, openID):
     ret = player.cancelGuildDungeonOrder(player.id, openID)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$enterBossChallengeDungeon', (Player("gbId/Id"), Int("openID")), RARG(0), gameconst.CELL, '测试公会boss进入', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$enterBossChallengeDungeon', (Player("gbId or Id"), Int("int openID")), RARG(0), gameconst.CELL, '测试公会boss进入', ALLSIDE, GOD_GROUPS)
 def enterBossChallengeDungeon(su, player, openID):
     ret = player.enterBossChallengeDungeon(player.id, openID)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$leaveBossChallengeDungeon', (Player("gbId/Id"), Int("openID")), RARG(0), gameconst.CELL, '测试公会boss离开', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$leaveBossChallengeDungeon', (Player("gbId or Id"), Int("int openID")), RARG(0), gameconst.CELL, '测试公会boss离开', ALLSIDE, GOD_GROUPS)
 def leaveBossChallengeDungeon(su, player, openID):
     ret = player.leaveBossChallengeDungeon(player.id, openID)
     if not ret:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$modifyGuildFund', (Player("gbId/Id"), Int("addCount")), RARG(0), gameconst.BASE, '加公会资金', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$modifyGuildFund', (Player("gbId or Id"), Int("int addCount")), RARG(0), gameconst.BASE, '加公会资金', ALLSIDE, GOD_GROUPS)
 def modifyGuildFund(su, player, addCount):
     opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
@@ -1243,9 +1283,9 @@ def modifyGuildFund(su, player, addCount):
     elif player.guildBox is None:
         return False, '当前玩家没有帮会'
     player.guildBox.modifyGuildFund(addCount, src, opUUID, detail)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$modifyGuildMoney', (Player("gbId/Id"), Int("addCount")), RARG(0), gameconst.BASE, '加公会金币', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$modifyGuildMoney', (Player("gbId or Id"), Int("int addCount")), RARG(0), gameconst.BASE, '加公会金币', ALLSIDE, GOD_GROUPS)
 def modifyGuildMoney(su, player, addCount):
     opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
@@ -1255,77 +1295,77 @@ def modifyGuildMoney(su, player, addCount):
     elif player.guildBox is None:
         return False, '当前玩家没有帮会'
     player.guildBox.modifyGuildMoney(addCount, src, opUUID, detail)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$modifyGuildDungeonStatus', (Player("gbId/Id"), Int("status")), RARG(0), gameconst.BASE, '修改公会副本状态', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$modifyGuildDungeonStatus', (Player("gbId or Id"), Int("int status")), RARG(0), gameconst.BASE, '修改公会副本状态', ALLSIDE, GOD_GROUPS)
 def modifyGuildDungeonStatus(su, player, status):
     if player.guildBox is None:
         return False, '当前玩家没有帮会'
     player.guildBox.gmModifyGuildBossChallengeStatus(status)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$resetGuildDungeonOpenCount', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '重置公会副本开启次数', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$resetGuildDungeonOpenCount', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '重置公会副本开启次数', ALLSIDE, GOD_GROUPS)
 def resetGuildDungeonOpenCount(su, player):
     if player.guildBox is None:
         return False, '当前玩家没有帮会'
     player.guildBox.gmResetGuildDungeonOpenCount()
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$resetGuildDungeonAllData', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '重置公会副本数据', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$resetGuildDungeonAllData', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '重置公会副本数据', ALLSIDE, GOD_GROUPS)
 def resetGuildDungeonAllData(su, player):
     if player.guildBox is None:
         return False, '当前玩家没有帮会'
     player.guildBox.gmResetGuildDungeonAllData()
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$resetCrusadeNum', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '重置组队次数', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$resetCrusadeNum', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '重置组队次数', ALLSIDE, GOD_GROUPS)
 def resetCrusadeNum(su, player):
     if player is None:
         return False, '执行失败'
     player.onCrusadeDailyRewardNumUpdate()
-    return True, '执行成功'
+    return True, 'command success'
 
 
-@gm_cmd('$resetChiefNum', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '重置团队次数', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$resetChiefNum', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '重置团队次数', ALLSIDE, GOD_GROUPS)
 def resetChiefNum(su, player):
     if player is None:
         return False, '执行失败'
     player.onChiefDailyRewardNumUpdate()
-    return True, '执行成功'
+    return True, 'command success'
 
 
-@gm_cmd('$clearCrusadeNum', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '清理组队次数', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$clearCrusadeNum', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '清理组队次数', ALLSIDE, GOD_GROUPS)
 def clearCrusadeNum(su, player):
     if player is None:
         return False, '执行失败'
     player.crusadeInfo.clear()
     player.crusadeInfo = player.crusadeInfo
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$clearChiefNum', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '清理团队次数', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$clearChiefNum', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '清理团队次数', ALLSIDE, GOD_GROUPS)
 def clearChiefNum(su, player):
     if player is None:
         return False, '执行失败'
     player.chiefInfo.clear()
     player.chiefInfo = player.chiefInfo
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$resetGuildBossChallengeWeeklyNum', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '清理公会副本挑战次数', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$resetGuildBossChallengeWeeklyNum', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '清理公会副本挑战次数', ALLSIDE, GOD_GROUPS)
 def resetGuildBossChallengeWeeklyNum(su, player):
     if player is None:
         return False, '执行失败'
     player.dungeonSettlementWeeklyReset()
-    return True, '执行成功'
+    return True, 'command success'
 
 
-@gm_cmd('$getSettlementRankList', (Player("gbId/Id"), Int("statisticType"), Int("dungeonNo"), Int("dungeonPlayMode"), Int("idx"), Int("offset"),), RARG(0), gameconst.CELL, '获取副本排名数据', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$getSettlementRankList', (Player("gbId or Id"), Int("int statisticType"), Int("int dungeonNo"), Int("int dungeonPlayMode"), Int("int idx"), Int("int offset"),), RARG(0), gameconst.CELL, '获取副本排名数据', ALLSIDE, GOD_GROUPS)
 def getSettlementRankList(su, player, statisticType, dungeonNo, dungeonPlayMode, idx, offset):
     if player is None:
         return False, '执行失败'
     player.getSettlementRankList(player.id, statisticType, dungeonNo, dungeonPlayMode, idx, offset)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$MoveWarehouseOrBag', (Player("gbId/Id"), Int("gridID"), Int("itemID"), Int("itemNum"), Int("moveType"),), RARG(0), gameconst.BASE, '仓库背包互相移动', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$MoveWarehouseOrBag', (Player("gbId or Id"), Int("int gridID"), Int("int itemID"), Int("int itemNum"), Int("int moveType"),), RARG(0), gameconst.BASE, '仓库背包互相移动', ALLSIDE, GOD_GROUPS)
 def MoveWarehouseOrBag(su, player, gridID, itemID, itemNum, moveType):
     if player is None:
         return False, '执行失败'
@@ -1337,13 +1377,13 @@ def MoveWarehouseOrBag(su, player, gridID, itemID, itemNum, moveType):
         player.reqMoveItemToWarehouse(player.id, gridID, itemID, itemNum)
     else:
         return False, '执行失败'
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$showPetDraw', (Player("gbId/Id"), Str("petItemList"),), RARG(0), gameconst.CELL, '模拟精灵抽卡结果（需要打开抽卡界面）', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$showPetDraw', (Player("gbId or Id"), Str("str petItemList"),), RARG(0), gameconst.CELL, '模拟精灵抽卡结果（需要打开抽卡界面）', ALLSIDE, GOD_GROUPS)
 def showPetDraw(su, player, petItemList):
     if player is None:
         return False, '执行失败'
-    import random
+    
     petItemList = [int(item) for item in petItemList.split(',') if item.isdigit()]
     if len(petItemList) == 0:
         return False, '执行失败，精灵石列表不能为空'
@@ -1355,11 +1395,9 @@ def showPetDraw(su, player, petItemList):
         petItemList = petItemList + random.sample(petItemListValid, 11 - len(petItemList))
         petItemList = petItemList[:11]
     player.client.onRandomSummonPet(petItemList)
-    return True, '执行成功'
+    return True, 'command success'
 
 def _gmFinishCollect(player, collectId):
-    import collect_details as  PDETAIL
-    from avatarCollectInfo import collectItem
     school = player.getAvatarSchool()
     if collectId == 0:
         propIndexList = []
@@ -1390,76 +1428,68 @@ def _gmFinishCollect(player, collectId):
             player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
         player.cell.onCollectAward([collectId], 0)
         player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toSavedDict()])
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$gmFinishCollect', (Player("gbId/Id"), Int('collectId')), RARG(0), gameconst.BASE, '完成收集系统', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$gmFinishCollect', (Player("gbId or Id"), Int('collectId')), RARG(0), gameconst.BASE, '完成收集系统', ALLSIDE, GOD_GROUPS)
 def gmFinishCollect(su, player, collectId):
     if player is None:
         return False, '执行失败'
     return _gmFinishCollect(player, collectId)
 
-@gm_cmd('$gmUnlockAllMeridian', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '经脉升至满级', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$gmUnlockAllMeridian', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '经脉升至满级', ALLSIDE, GOD_GROUPS)
 def gmUnlockAllMeridian(su,player):
     if player is None:
         return False, '执行失败'
     player.gmUnlockAllMeridian()
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$gmLevelUpMeridianSlot', (Player("gbId/Id"),Int("slotId"),), RARG(0), gameconst.BASE, '将经脉x所有穴位升至满级并贯通', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$gmLevelUpMeridianSlot', (Player("gbId or Id"),Int("int slotId"),), RARG(0), gameconst.BASE, '将经脉x所有穴位升至满级并贯通', ALLSIDE, GOD_GROUPS)
 def gmLevelUpMeridianSlot(su,player,slotId):
     if player is None:
         return False, '执行失败'
     player.gmLevelUpMeridianSlot(slotId)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$gmLevelUpMeridianPoint', (Player("gbId/Id"),Int("slotId"), Int("pointId"), Int("level"),), RARG(0), gameconst.BASE, '升级指定经脉的指定穴位1级或至满级', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$gmLevelUpMeridianPoint', (Player("gbId or Id"),Int("int slotId"), Int("int pointId"), Int("int level"),), RARG(0), gameconst.BASE, '升级指定经脉的指定穴位1级或至满级', ALLSIDE, GOD_GROUPS)
 def gmLevelUpMeridianPoint(su,player,slotId,pointId,level):
     if player is None:
         return False, '执行失败'
     player.gmLevelUpMeridianPoint(slotId,pointId,level)
-    return True, '执行成功'
+    return True, 'command success'
 
 
-@gm_cmd('$levelUpPet', (Player("gbId/Id"),Int("gridId"), Int("petId")), RARG(0), gameconst.BASE, '升级宠物等级', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$levelUpPet', (Player("gbId or Id"),Int("int gridId"), Int("int petId")), RARG(0), gameconst.BASE, '升级宠物等级', ALLSIDE, GOD_GROUPS)
 def levelUpPet(su, player, gridId, petId):
     if player is None:
         return False, '执行失败'
     player.levelUpPet(player.id, [gridId], petId)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$saleItemInCoinAuction', (Player("gbId/Id"),Int("itemId"), Int("uniqueId"), Int("totalPrice"), Int("number"), Int("bagType")), RARG(0), gameconst.BASE, '升级宠物等级', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$saleItemInCoinAuction', (Player("gbId or Id"),Int("int itemId"), Int("int uniqueId"), Int("int totalPrice"), Int("int number"), Int("int bagType")), RARG(0), gameconst.BASE, '升级宠物等级', ALLSIDE, GOD_GROUPS)
 def saleItemInCoinAuction(su, player, itemId, uniqueId, totalPrice, number, bagType):
     if player is None:
         return False, '执行失败'
     player.saleItemInCoinAuction(player.id, itemId, uniqueId, totalPrice, number, bagType)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$testBagLock', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '测试背包锁住', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$testBagLock', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '测试背包锁住', ALLSIDE, GOD_GROUPS)
 def testBagLock(su, player):
     if player is None:
         return False, '执行失败'
     player.bagData.tryLockBag(lockDesc='testBagLock', lockSecs=30)
     player.petBag.tryLockBag(lockDesc='testBagLock', lockSecs=30)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$testcurrencyexchange', (Player("gbId/Id"),Int('cid'),Int('cost')), RARG(0), gameconst.BASE, '测试货币兑换', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$testcurrencyexchange', (Player("gbId or Id"),Int('cid'),Int('cost')), RARG(0), gameconst.BASE, '测试货币兑换', ALLSIDE, GOD_GROUPS)
 def testcurrencyexchange(su, player, cid, cost):
     player.exchangeCurrency(player.id, cid, cost)
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$testspeedStatsConditions', (Player("gbId/Id"), Str('values')), RARG(0), gameconst.CELL, '测试设置引擎参数', ALLSIDE, GOD_GROUPS)
-def testspeedStatsConditions(su, player, values):
-    if player is None:
-        return False, '执行失败'
-    datas = [float(item) for item in values.split(',')]
-    player.gmTestSpeedStatConditions(datas)
-    return True, '执行成功'
-
-@gm_cmd('$testremodelingPet', (Player("gbId/Id"), Int('gridId')), RARG(0), gameconst.BASE, '测试重塑', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$testremodelingPet', (Player("gbId or Id"), Int('gridId')), RARG(0), gameconst.BASE, '测试重塑', ALLSIDE, GOD_GROUPS)
 def remodelingPet(su, player, gridId):
     if player is None:
         return False, '执行失败'
     player.remodelingPet(player.id, gridId)
-    return True, '执行成功'
+    return True, 'command success'
 
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

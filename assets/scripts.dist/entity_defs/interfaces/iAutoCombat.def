@@ -1,0 +1,125 @@
+<root>
+    <Interfaces>
+        <Interface>         iRoute              </Interface>
+    </Interfaces>
+
+    <Properties>
+        <autoCombat>
+            <Type>          UINT8               </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <Default>       0                   </Default>
+        </autoCombat>
+
+        <followtSuspendReason>
+            <Type>          UINT8               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    False                    </Persistent>
+        </followtSuspendReason>
+
+        <autoCombatSuspendReason>
+            <Type>          UINT8               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    False                    </Persistent>
+        </autoCombatSuspendReason>
+
+        <autoCombatInfo>
+            <Type>          PY_DICT             </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       {}                  </Default>
+        </autoCombatInfo>
+
+        <controlledByReasonDic>
+            <Type>          PY_DICT             </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       {}                  </Default>
+        </controlledByReasonDic>
+
+        <setControlledByTimer>
+            <Type>          TIMER_ID             </Type>
+            <Flags>         CELL_PRIVATE         </Flags>
+            <Default>       0                    </Default>
+        </setControlledByTimer>
+
+        <autoCombatInterval>
+            <Type>          FLOAT               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </autoCombatInterval>
+
+        <combatReturnInfo>
+            <Type>          COMBAT_RETURN_IDLE_DATA_INFO        </Type>
+            <Flags>         CELL_PRIVATE                        </Flags>
+        </combatReturnInfo>
+
+        <fightBackTimerId>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </fightBackTimerId>
+
+        <fightBackTarget>
+            <Type>          OBJECT_ID           </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </fightBackTarget>
+
+        <autoCombatReliveReturnTimes>
+            <Type>          UINT8               </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    true                </Persistent>
+        </autoCombatReliveReturnTimes>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <tryChangeCombatStateFollowTeamCaptain>
+            <Arg>   UINT8     </Arg>
+        </tryChangeCombatStateFollowTeamCaptain>
+
+        <enterTeamCaptainTrap>
+            <Arg>   UINT8     </Arg>
+        </enterTeamCaptainTrap>
+
+        <captainEnterFightingStateChangeAutoCombat>
+        </captainEnterFightingStateChangeAutoCombat>
+
+        <startAutoCombat><Exposed/>
+            <Arg>   BOOL      </Arg>
+        </startAutoCombat>
+
+        <stopAutoCombat><Exposed/>
+        </stopAutoCombat>
+
+        <breakFollowAndAutoCombat><Exposed/>
+        </breakFollowAndAutoCombat>
+
+        <selectAutoCombatTarget><Exposed/>
+            <Arg>        OBJECT_ID              </Arg>
+        </selectAutoCombatTarget>
+
+        <selectAutoCombatPriorityTarget><Exposed/>
+            <Arg>        OBJECT_ID              </Arg>
+        </selectAutoCombatPriorityTarget>
+
+        <setAutoCombatReliveReturnTimes> <Exposed/>
+            <Arg>        UINT8              </Arg>
+        </setAutoCombatReliveReturnTimes>
+
+        <onGetEnemyPosInfo>
+            <Arg>        ENTITYCALL             </Arg>
+        </onGetEnemyPosInfo>
+    </CellMethods>
+
+    <ClientMethods>
+        <onStartAutoCombat>
+        </onStartAutoCombat>
+
+        <onStopAutoCombat>
+        </onStopAutoCombat>
+    </ClientMethods>
+</root>

@@ -23,9 +23,13 @@ datas = _tools.RODict({
         "ID": "cubeNumCoin",
         "value": 100,
     }),
+    "cubeNumCoinCost": _tools.RODict({
+        "ID": "cubeNumCoinCost",
+        "value": ((1, 30000021, 100), (2, 30000001, 100)),
+    }),
     "cubeNumCoinDailyLimit": _tools.RODict({
         "ID": "cubeNumCoinDailyLimit",
-        "value": 1,
+        "value": 2,
     }),
     "cubeNumItem": _tools.RODict({
         "ID": "cubeNumItem",
@@ -238,6 +242,14 @@ datas = _tools.RODict({
     "cube_prayMutualExclusion": _tools.RODict({
         "ID": "cube_prayMutualExclusion",
         "value": 54003275,
+    }),
+    "cube_floorJudge2": _tools.RODict({
+        "ID": "cube_floorJudge2",
+        "value": 54003158,
+    }),
+    "cube_championDefenderLose": _tools.RODict({
+        "ID": "cube_championDefenderLose",
+        "value": 54003425,
     }),
     "cube_ticketAutoLimit": _tools.RODict({
         "ID": "cube_ticketAutoLimit",

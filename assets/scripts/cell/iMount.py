@@ -10,7 +10,7 @@ import gametimer
 
 import message_Message_def as MMD
 import mounts_mounts as MOUNTS
-import conflict_conflict_def as CCD
+import conflict_conflict_def as C_C_DD
 import gamePlay_gamePlay as GPGPD
 import mounts_set as MSD
 
@@ -30,7 +30,7 @@ class IMount(object):
             self.setCurMountSpeedBuff(False)
 
     def doAddMountAction(self, opUUID, ctx, itemId, durationDays):
-        LOG_IFO('do get mount action:', itemId, durationDays)
+        LOG_INFO('do get mount action:', itemId, durationDays)
         itemData = dataUtils.getCommItemData(itemId)
         if not itemData:
             LOG_ERR('itemData invalid:', itemId)
@@ -66,7 +66,7 @@ class IMount(object):
 
     def _enterRidingWithCast(self, bMsg, isCast, finishFunc='', finishArgs=None):
         if isCast:
-            self._commonNeedCast(CCD.datas.summonMount, gameconst.StateEnum.summonMount, gameconst.CastType.ride,
+            self._commonNeedCast(C_C_DD.datas.summonMount, gameconst.StateEnum.summonMount, gameconst.CastType.ride,
                                  '_enterRiding', (bMsg, finishFunc, finishArgs), failedFunc=finishFunc, failedArgs=finishArgs)
         else:
             self._enterRiding(bMsg, finishFunc, finishArgs)
@@ -83,7 +83,7 @@ class IMount(object):
 
     def _enterRiding(self, bMsg, finishFunc, finishArgs):
         if not self._isCanRide(bMsg) or\
-                (not self.checkConflictState(CCD.datas.ride, bMsg=bMsg)) or\
+                (not self.checkConflictState(C_C_DD.datas.ride, bMsg=bMsg)) or\
                 (not self._setMountState(gameconst.StateEnum.riding)):
             if finishFunc:
                 getattr(self, finishFunc)(*finishArgs)
@@ -110,7 +110,7 @@ class IMount(object):
         if ret:
             opUUID = KBEngine.genUUID64()
             self.base.setAvatarVariableByTag('curMountID', self.curMountId, opUUID,
-                                             gameconst.VarChangeSrc.VAR_SRC_ENTER_MOUNT, 'enter mount state:{}'.format(state))
+                                             gameconst.VarChangeSrcEnum.VAR_SRC_ENTER_MOUNT, 'enter mount state:{}'.format(state))
         return ret
 
     def _onExitRiding(self, byConflictState):
@@ -118,7 +118,7 @@ class IMount(object):
         self._removeCurMountSpeedBuff(False)
         opUUID = KBEngine.genUUID64()
         self.base.setAvatarVariableByTag('curMountID', 0, opUUID,
-                                         gameconst.VarChangeSrc.VAR_SRC_EXIT_MOUNT, 'exit mount state')
+                                         gameconst.VarChangeSrcEnum.VAR_SRC_EXIT_MOUNT, 'exit mount state')
 
     def getMountState(self):
         if self.hasState(gameconst.StateEnum.riding):

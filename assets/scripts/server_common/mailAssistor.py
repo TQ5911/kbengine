@@ -66,7 +66,7 @@ def sendMailToPlayers(toGBIDList, mailId, extraAttach: dropAward.MailWealthVal=N
                       globalMailGBID=0, createTime=0, expiredTime=0, title=None, cont=None, srcType=0, srcSubType=0,
                       opUUID=0, desc='', idipSource=0, callback=None, isGlobal=False, dueTime=0):
     
-    LOG_IFO('sendMailToPlayers:', len(toGBIDList), mailId)
+    LOG_INFO('sendMailToPlayers:', len(toGBIDList), mailId)
 
     if not toGBIDList:
         callback and callback(None, None, None, "sendMailToPlayers no target", mailId)
@@ -101,7 +101,7 @@ def sendMailToPlayers(toGBIDList, mailId, extraAttach: dropAward.MailWealthVal=N
 
 def _sendMailToSinglePlayer(toGBID, mailId, dueTime, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, fromGBID,
                       globalMailGBID, createTime, expiredTime, srcType, srcSubType, opUUID, desc, idipSource, isGlobal, callback):
-    LOG_IFO('_sendMailToSinglePlayer:', toGBID, mailId, dueTime, globalMailGBID, isGlobal)
+    LOG_INFO('_sendMailToSinglePlayer:', toGBID, mailId, dueTime, globalMailGBID, isGlobal)
     if len(despArgs) != MAMAD.MailArgsNumMap[mailId]:
         gameengine.panicStack(' _sendMailToSinglePlayer, despArgs num error:', mailId, despArgs)
         callback and callback(None, None, None, "_sendMailToSinglePlayer despArgs err", mailId)
@@ -153,7 +153,7 @@ def _sendMailToSinglePlayer(toGBID, mailId, dueTime, extraAttach:dropAward.MailW
 
 def _sendMailToPlayerCallback(ret, num, insertId, err, toGBID, mailId, mailGBID, title, cont, attachStr, srcType, srcSubType,
                               opUUID, desc, idipSource, isGlobal, senderCallback=None, dueTime = 0):
-    LOG_IFO('_sendMailToPlayerCallback:', ret, num, insertId, err, toGBID, mailId, isGlobal, dueTime)
+    LOG_INFO('_sendMailToPlayerCallback:', ret, num, insertId, err, toGBID, mailId, isGlobal, dueTime)
     senderCallback and senderCallback(ret, num, insertId, err, mailGBID)
     if err:
         gameengine.panicStack('_sendMailToPlayerCallback:', err, toGBID)
@@ -177,7 +177,7 @@ def _onSendMailByGBIDSucc(toGBID, mailId, mailGBID, title, cont, attachStr, srcT
     LogTrackingMgr.LogTrackingMgr.Mail_Send(toGBID, mailId, mailData['type'], mailGBID, srcType, srcSubType, opUUID, idipSource, attachStr) 
 
 def getMyGlobalsMails(lastGBMailTime, roleChannel, roleRegTime, roleLoginTime, roleLevel, hasGotGlobalMails):
-    LOG_IFO('in getMyGlobalsMails, lastGBMailTime:', lastGBMailTime, roleChannel, roleRegTime, roleLoginTime, roleLevel)
+    LOG_INFO('in getMyGlobalsMails, lastGBMailTime:', lastGBMailTime, roleChannel, roleRegTime, roleLoginTime, roleLevel)
     gbMails = []
     mailMaxNum = MACF.datas['mailNumMax2']['value']
     for mail in reversed(gameglobal.globalMailsCacheList):
@@ -217,13 +217,13 @@ def getLastGlobalMailTime():
 AccountMailNumDic = {}
 
 def checkAccountMails(accountName, accountType, playerGBID, entityId):
-    LOG_IFO('checkAccountMails:', accountName, accountType, playerGBID, entityId)
+    LOG_INFO('checkAccountMails:', accountName, accountType, playerGBID, entityId)
     gamesql.loadMailByAccountInfo(accountName,accountType,playerGBID,
     lambda ret, num, insertId, err, playerGBID=playerGBID, entityId=entityId:
                 _checkAccountMailsCallback(ret, num, insertId, err, playerGBID, entityId))
 
 def _checkAccountMailsCallback(ret, num, insertId, err, playerGBID, entityId):
-    LOG_IFO('_checkAccountMailsCallback:', ret, num, insertId, err, playerGBID, entityId)
+    LOG_INFO('_checkAccountMailsCallback:', ret, num, insertId, err, playerGBID, entityId)
     if err:
         gameengine.panicStack('_checkAccountMailsCallback:', err, playerGBID, entityId)
         _onCheckAccountMailFinished(entityId)
@@ -233,7 +233,7 @@ def _checkAccountMailsCallback(ret, num, insertId, err, playerGBID, entityId):
         _onCheckAccountMailFinished(entityId)
         return
 
-    LOG_IFO('_checkAccountMailsCallback, found account mail:', ret)
+    LOG_INFO('_checkAccountMailsCallback, found account mail:', ret)
     AccountMailNumDic[playerGBID] = len(ret)
     for accountMailData in ret:
         #accountName = accountMailData[0].decode()
@@ -261,7 +261,7 @@ def _checkAccountMailsCallback(ret, num, insertId, err, playerGBID, entityId):
     return
 
 def _sendAccountMailToPlayerCallback(ret, num, insertId, err, mailGBID, playerGBID, entityId):
-    LOG_IFO('_sendAccountMailCallback:', ret, num, insertId, err, mailGBID, playerGBID, entityId)
+    LOG_INFO('_sendAccountMailCallback:', ret, num, insertId, err, mailGBID, playerGBID, entityId)
     if err:
         LOG_ERR('_sendAccountMailCallback:', ret, num, insertId, err, mailGBID, playerGBID, entityId)
 
@@ -308,7 +308,7 @@ def sendIDIPMailByGBID(su, toGBID, dueTime, extraAttach, title, cont, srcType, s
     return
 
 def _sendIDIPMailByGBIDCallback(ret, num, insertId, err, su, mailGBID, toGBID):
-    LOG_IFO('_sendIDIPMailByGBIDCallback, mailGBID:', mailGBID)
+    LOG_INFO('_sendIDIPMailByGBIDCallback, mailGBID:', mailGBID)
     if err:
         gameengine.panicStack('_sendIDIPMailByGBIDCallback:', err, toGBID)
         su.onCommandResult(gameconst.GMCommandErr.GM_RET_SEND_MAIL_ERR, err, {'gbID': toGBID, 'mailID': mailGBID})

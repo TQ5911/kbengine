@@ -168,6 +168,54 @@
             <Flags>         CELL_PRIVATE          </Flags>
             <Default>       0                     </Default>
         </lightPillar>
+
+        <coefficientDmgPercent>
+            <Type>    FLOAT        </Type>
+            <Flags>   CELL_PRIVATE </Flags>
+            <Default> 0.0          </Default>
+        </coefficientDmgPercent>
+
+        <coefficientLimit>
+            <Type>    FLOAT       </Type>
+            <Flags>   CELL_PRIVATE </Flags>
+            <Default> 0.0          </Default>
+        </coefficientLimit>
+
+        <needCoefficient>
+            <Type>    BOOL       </Type>
+            <Flags>   CELL_PRIVATE </Flags>
+            <Default> False          </Default>
+        </needCoefficient>
+
+        <hasCoefficient>
+            <Type>    BOOL       </Type>
+            <Flags>   CELL_PRIVATE </Flags>
+            <Default> False          </Default>
+        </hasCoefficient>
+
+        <FirstBloodTargetId>
+            <Type>          OBJECT_ID           </Type>
+            <Flags>         OTHER_CLIENTS        </Flags>
+            <Default>       0                   </Default>
+        </FirstBloodTargetId>
+
+        <FirstBloodOriTargetId>
+            <Type>          OBJECT_ID           </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </FirstBloodOriTargetId>
+
+        <lastBeFTAttackTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </lastBeFTAttackTime>
+
+        <lastLoseFTTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </lastLoseFTTime>
     </Properties>
 
     <BaseMethods>

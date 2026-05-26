@@ -25,6 +25,7 @@
 	<Guild/>
 	<LeaderBoardStub/>
 	<AuctionStub/>
+	<LeaseStub/>
 	<DropStub/>
 	<WonderLandStub/>
 	<WonderLandSpaceMgr/>
@@ -61,4 +62,5 @@
 	<GuildBossDungeonStub/>
 	<StatisticStub/>
 	<BountyStub/>
+	<ResourceRecoveryStub/>
 </root>

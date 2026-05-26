@@ -28,17 +28,9 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         iCell.ICell.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
 
-        # try:
-        #     # raise error if fail to init engine airwall
-        #     self.addEngineAirWall()
-        # except:
-        #     LOG_ERR('Barrier.__init__:: add Engine airwall failed')
-        #     import traceback
-        #     traceback.print_exc()
-
         spaceMgr = self.spaceMgr
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         if formula.inDungeonScene(self.spaceNo):
-            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
             dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.barrierId),
@@ -50,6 +42,18 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         elif formula.inSiegeWarScene(self.spaceNo):
             if spaceMgr:
                 spaceMgr.addEntity(self.id, ('', self.__class__.__name__,))
+
+        _area = self._getNavArea()
+        if _area:
+            LOG_INFO('addAirwallAreas', self.spaceID, _area)
+            KBEngine.addAirwallAreas(self.spaceID, [_area])
+
+    def _getNavArea(self):
+        gid = utils.parseGidFromGameEntityId(self.gameEntityId)
+        _mapId = formula.fetchMapId(self.spaceNo)
+        _airData = utils.getAirWallModuleData(_mapId)
+
+        return _airData.get(gid, 0)
 
     def _getBarrierLargeEntLength(self, dungeonNo, gid):
         dunAllDatas = utils.getDunModuleData(dungeonNo)
@@ -110,21 +114,10 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
 
     def _preSafeDestory(self):
         LOG_DBG('_preSafeDestory::')
-        self.removeEngineAirWall()
-
-    # def _preDelaySafeDestroy(self, delay):
-    #     LOG_DBG('_preDelaySafeDestroy::', delay)
-    #     self.removeEngineAirWall()
-
-    def removeEngineAirWall(self):
-        try:
-            x, y = self.getTmxAnchorPoint()
-            LOG_DBG('~~~~~~~~ DESTROY BARRIER AIR WALL ENGINE MARK', x, y)
-            # KBEngine.removeLayerOneTilesGeometryMapping(self.spaceID, x, y)
-        except:
-            LOG_ERR('Barrier._preDelaySafeDestroy:: remove Engine airwall failed')
-            import traceback
-            traceback.print_exc()
+        _area = self._getNavArea()
+        if _area:
+            LOG_INFO('removeAirwallAreas', self.spaceID, _area)
+            KBEngine.removeAirwallAreas(self.spaceID, [_area])
 
     def safeDestroy(self, forceDestroy=False):
         self.unsetBodySize()

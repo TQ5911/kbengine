@@ -21,7 +21,7 @@ import creep_base
 import gameconst
 import creep_bornState as CBSD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import const_const as CCD
+import const_const as C_C_DD
 import PKData_PKData as PPD
 import gameclass
 import iFubenSpace
@@ -31,6 +31,7 @@ import iRoute
 import iLargeEnt
 import iClient
 import sMath
+import creep_coefficient as CCF
 
 import gamePlay_gamePlay as GP_GP
 import message_Message_def as M_M_D
@@ -109,8 +110,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.monsterId),
                                              'gid_{}'.format(gid), self.__class__.__name__))
                 self.isBoss and spaceMgr.setBossEntity(self.id)
-        #     spaceMgr.addEntity(self.id, (str(self.monsterId), 'gid_{}'.format(gid), self.__class__.__name__))
-        #     self.isBoss and spaceMgr.setBossEntity(self.id)
+
         elif spaceMgr:
             if _isLarge:
                 _args = (str(self.monsterId), 'gid_{}'.format(gid), self.__class__.__name__, 'largeEnt')
@@ -122,16 +122,26 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.triggeredFlowControllerRestNumIncreased()
 
         self.addListener('onBeat', self.id, 'onBeAttacked', ())
-        self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
+        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
 
         if self.ttl:
             self.pyAddTimer(self.ttl, 0, gametimer.TIMER_CELL_TTL_DESTROY)
+        
+        coefficientType = monData.get('coefficientType', 0)
+        coefficient = CCF.datas.get(coefficientType, {}).get('coefficient', None)
+        
+        self.coefficientTimer = None
+        self.firstBloodTimer = None
+        self.isFirstBloodMonster = self.isFirstBloodRewardMonster()
+        if coefficient:
+            self.needCoefficient = True
+            self.coefficientLimit = coefficient[1]
 
         pathId = monData.get('pathID', 0) or self.pathId
         if pathId:
             self.addTimerCB(1, 'setRoute', (pathId, True if self.aiController else False), gametimer.TIMER_TAG_SET_ROUTE)
 
-        LOG_IFO('on create', self.spaceNo, self.gameEntityId, self.creepBaseId, self.aiName, self.position)
+        LOG_INFO('on create', self.spaceNo, self.gameEntityId, self.creepbaseId, self.aiName, self.position)
         self.overwriteProps()
         self.lastClearBeAttackAvatarsTime = 0
 
@@ -179,7 +189,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         if propsData:
             # 检测是否在战斗区内
-            if utils.checkInCombatArea(self.creepBaseId, self.bornPosition, propsData):
+            if utils.checkInCombatArea(self.creepbaseId, self.bornPosition, propsData):
                 return True, propsData
         return False, propsData
 
@@ -252,7 +262,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                     self.refreshDataKey = dataKey
                     self.combatAreaID = combatAreaID
                     self.combatRefreshID = '{}_{}'.format(combatAreaID, dataKey)
-                    LOG_IFO("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
+                    LOG_INFO("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
                     break
 
     def _createMonsterGrpInDungeon(self):
@@ -284,17 +294,20 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.monsterGroupId = _monsterGrp.id
         self.addInMonsterGroup(self.monsterGroupId)
 
-    def _initBornState(self):
+    def fetchAttackDistanceCompensation(self):
+        return self.getCreepData().get('attackDistanceCompensation')
+
+    def _doInitBornState(self):
         monData = creep_base.datas[self.monsterId]
         ifBornState = monData['ifBornState']
         if self.isBornDoNothing():
             pass
         elif ifBornState:
-            self.changeBornState(gameconst.BornStateType.invisible)
-            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'changeBornState',
+            self.setBornState(gameconst.BornStateType.invisible)
+            self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'setBornState',
                            (gameconst.BornStateType.static,), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
-            self.changeBornState(gameconst.BornStateType.move)
+            self.setBornState(gameconst.BornStateType.move)
 
     def isBornDoNothing(self):
         return self.bornState in gameconst.BornStateType.bornDoNothing
@@ -303,13 +316,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if self.bornState not in gameconst.BornStateType.bornDoNothing:
             return
 
-        self.changeBornState(gameconst.BornStateType.flowConvTup[flowBornState])
+        self.setBornState(gameconst.BornStateType.flowConvTup[flowBornState])
 
-    def changeBornState(self, newState):
+    def setBornState(self, newState):
         if newState == gameconst.BornStateType.static:
             ifBornState = creep_base.datas[self.monsterId].get('ifBornState', 1)
             nextState = gameconst.BornStateType.move
-            self.addTimerCB(CBSD.datas[ifBornState]['bornStateTime'], 'changeBornState', (nextState,),
+            self.addTimerCB(CBSD.datas[ifBornState]['bornStateTime'], 'setBornState', (nextState,),
                            gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         elif newState == gameconst.BornStateType.move:
             if self.bornState in gameconst.BornStateType.bornDoNothing:
@@ -328,10 +341,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # reset AI
         self.aiController.reset()
         # clear buff
-        self.removeAureola(0)
+        self.removeAureolaById(0)
         self.removeAllBuff()
         # reset controller
-        self.cancelMoveController()
+        self.removeMoveController()
         self.clearHateRecord()
         # reset hp/mp
         self.hp = self.fullHp
@@ -342,17 +355,20 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.initBornAction()
         # re
         self.addListener('onBeat', self.id, 'onBeAttacked', ())
-        self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
+        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
 
         # call enterTrap
         for c in self.entitiesInRange(8):
             self.onEnterTrap(c, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
     @property
-    def creepBaseId(self):
+    def creepbaseId(self):
         return self.monsterId
 
     def getConfigData(self):
+        return creep_base.datas.get(self.monsterId, {})
+
+    def getCreepData(self):
         return creep_base.datas.get(self.monsterId, {})
 
     def getSpaceCell(self):
@@ -390,8 +406,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 
-        elif userData == gametimer.MONSTER_AI_THINK:
-            self.tickAI()
+        elif userData == gametimer.COMBAT_UNIT_AI_THINK:
+            self.aiTick()
 
         elif userData == gametimer.TIMER_CELL_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
@@ -403,13 +419,17 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.checkUnVisibleTargets()
         elif userData == gametimer.GUILD_BOSS_SYNC_HP:
             self.onTimerSyncGuildBossHP()
+        elif userData == gametimer.TIMER_COEFFICIENT:
+            self.onTimerCoefficient()
+        elif userData == gametimer.TIMER_FIRST_BLOOD:
+            self.onTimerFirstBlood()
         else:
             super(Monster, self).onTimer(tid, userData)
 
     def _ttlDestroy(self):
         self.safeDestroy()
 
-    def tickAI(self):
+    def aiTick(self):
         self.aiController and self.aiController.tickOnce()
 
     def _addTrap(self):
@@ -471,24 +491,21 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     def _postSafeDestory(self):
         pass
 
-    def onModifyShieldVal(self, val, releaseRoleId, srcType, srcId):
-        pass
-
     def onLiveTimerEnded(self):
         super(Monster, self).onLiveTimerEnded()
         return
 
     def enterFightingState(self):
         super(Monster, self).enterFightingState()
-        self.combatDebugMsg('enterFightingState')
+        self.debugCombatMsg('enterFightingState')
         if self.isMoving():
-            self.cancelMoveController()
+            self.removeMoveController()
         self.setProp('adjSpeed', self.getProp('adjSpeed') + creep_base.datas[self.monsterId].get('adjSpeed', 0),
                      gameconst.SourceType.SrcTpFight)
 
     def leaveFightingState(self):
         super(Monster, self).leaveFightingState()
-        self.combatDebugMsg('leaveFightingState')
+        self.debugCombatMsg('leaveFightingState')
         if self.isDie():
             return
 
@@ -512,14 +529,14 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def doMonsterDestroy(self):
         self.removeAllBuff()
-        self.cancelMoveController()
+        self.removeMoveController()
         self.destroySummonOnDead()
         self.cancelRouting()
         self.triggeredFlowControllerRestNumDecreased()
         # DEFAULT TO DESTROY
         delay = self.getDestroyDelay()
         if creep_base.datas[self.monsterId]['ifDeadDisappear']:
-            delay += CCD.datas['deadDisappearTime_max']['value']
+            delay += C_C_DD.datas['deadDisappearTime_max']['value']
             self.bossDeadDisappearTime = round(time.time(), 2) + delay
         self.delaySafeDestroy(delay)
         if self.isMonsterInGroup():
@@ -539,7 +556,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
             self.allClients.onDead(killer.id)
 
-            self.aiTriggerEvent(self.id, gameconst.AI_EVENT_DEAD, (killer.id,))
+            self.triggerAIEvent(self.id, gameconst.AI_EVENT_DEAD, (killer.id,))
 
             self._addAttackAvatarId(killer.id)
             self.triggerAllAttackerTask()
@@ -549,7 +566,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             detail = gameclass.AwardDetail(monsterId=self.monsterId, spaceNo=self.spaceNo)
             rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
             factor = 1.0
-            if formula.inLineScene(self.spaceNo) and self.getConfigData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.NORMAL:
+            if formula.inLineScene(self.spaceNo) and self.getCreepData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.NORMAL:
                 host = utils.getEntityRealEntity(killer)
                 if host and host.IsAvatar:
                     factor = host.getKillMonsterAwardFactor(self.level)
@@ -564,6 +581,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             dropCtx.addContextVar('opUUID', opUUID)
             dropCtx.addContextVar('detail', detail)
 
+            if not self.FirstBloodTargetId:
+                self.FirstBloodTargetId = killer.id
+            dropCtx.addContextVar('FBtargetId', self.FirstBloodTargetId)
+
             self.doDispatchAward(killer, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
 
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
@@ -577,7 +598,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         self.notifyGuildBossOnDead(killer)
 
-        if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
+        if self.getCreepData().get('type', 0) == gameconst.MonsterType.ADVANCE:
             self.spaceMgr.onWorldBossDead(self.refreshTime)
         elif self.isNeedRefresh():
             # 非计数刷新才需要在这里做立即刷新
@@ -587,7 +608,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         host = utils.getHostEntity(killer)
         if host and host.IsAvatar:
             host.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
-            host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_SUFFIX_MONSTER, {'suffixId': self.getConfigData().get('nameSuffixID', 0)})
+            host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_SUFFIX_MONSTER, {'suffixId': self.getCreepData().get('nameSuffixID', 0)})
             host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_MONSTER, {'monsterId': self.monsterId})
 
         # 需要计数或者刷新的怪物:
@@ -637,7 +658,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def onBeAttacked(self, arg):
         self._addAttackAvatarId(arg.triggerRoleId)
-        #self.aiTriggerEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
+        #self.triggerAIEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
 
     def triggerAllAttackerTask(self):
         aoi = GP_GP.datas[formula.fetchMapId(self.spaceNo)]['AOI']
@@ -660,7 +681,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                     continue
 
             triggerTaskAvatars[attackerId] = ent
-            for _member in ent.teamInfo.teamPlayerDic.values():
+            for _member in ent.teamInfo.teamPlayerDict.values():
                 if not _member.playerBox:
                     continue
 
@@ -710,7 +731,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     def _initBelongHate(self, aiController):
         belongGuideNpcId = self.getBelongGuideNpcId()
         if belongGuideNpcId:
-            aiController.increaseHate(belongGuideNpcId, 2000)
+            aiController.doIncreaseHate(belongGuideNpcId, 2000)
 
     def setAI(self, aiName):
         if not aiName:
@@ -750,7 +771,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         return summon
 
     def setCanBeAttack(self, canBeAttack):
-        LOG_IFO("setCanBeAttack", canBeAttack)
+        LOG_INFO("setCanBeAttack", canBeAttack)
         self.canBeAttack = canBeAttack
 
     def modifyHP(self, hpVal, releaseRoleId, srcType, srcId, forceDead=False, context=None):
@@ -758,30 +779,17 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.notifySiegeWarOnModifyHP(hpVal)
         self.notifyMineWarOnModifyHP(hpVal, releaseRoleId)
         self.notifyGuildBossOnModifyHP(hpVal)
+        self.addCoefficient(hpVal)
         return hpVal
 
     def getAIParam(self):
         return dataUtils.getAIParameters(self.monsterId)
 
-    def calculateRefreshTimeMonster(self):
-        _refreshTime = self.calculateRefreshTime()
-        if formula.inMineWarScene(self.spaceNo) and gameconfig.visibleConfigEnabled('mineBattle'):
-            startOffsetSec = utils.getMineWarStartOffsetSec()
-            startTime = utils.getCurWeekTS(offsetSec=startOffsetSec)
-            endOffsetSec = utils.getMineWarEndOffsetSec()
-            entTime = utils.getCurWeekTS(offsetSec=endOffsetSec)
-            if entTime > utils.curTS():
-                if startTime <= utils.curTS() + _refreshTime < entTime:
-                    _refreshTime = max(0, entTime - utils.curTS())
-                LOG_DBG('IEntityRefresh.calculateRefreshTime: mine war refresh time calculated, refreshTime=%d' % _refreshTime)
-
-        return _refreshTime
-
     def onEntityRefresh(self):
         # 解耦，spaceNo在iCell， posIndex 在iGameEntity
-        _refreshTime = self.calculateRefreshTimeMonster()
+        _refreshTime = self.calculateRefreshTime()
         if self.monsterGroupId:
-            boxGroupId = utils.getEntityBoxGroupId(self, self.spaceNo)
+            boxGroupId = utils.getEntityBoxGroupId(self.gameEntityId, self.spaceNo)
             self.monsterGroup.addTimerCB(_refreshTime, 'doEntityRefreshGrp', (boxGroupId, self.gameEntityId,), gametimer.TIMER_TAG_MONSTER_GRP_DO_REFRESH)
             return
 
@@ -808,7 +816,138 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if attackHeightLimit:
             heightLimit = attackHeightLimit
         else:
-            heightLimit = CCD.datas['damageHeightLimit'].get('value')
+            heightLimit = C_C_DD.datas['damageHeightLimit'].get('value')
 
         return abs(self.position[1] - target.position[1]) <= heightLimit
 
+    def setToBattle(self):
+        self.force = gameconst.ForceTypeEnum.Monster
+        LOG_DBG('Monster::setToBattle: {}, {}'.format(self.id, self.force))
+
+    def onTimerCoefficient(self):
+        self.coefficientDmgPercent = 0.0
+        if self.hasCoefficient:
+            self._doModifyCoefficient(False)
+            self.hasCoefficient = False
+
+    def _doModifyCoefficient(self, isAdd):
+        monData = creep_base.datas[self.monsterId]
+        coefficientType = monData.get('coefficientType', 1)
+        coefficient = CCF.datas[coefficientType].get('coefficient', None)
+        
+        prop = coefficient[2]
+        percent = coefficient[3]
+        v = self.getProp(prop) + percent if isAdd else self.getProp(prop) - percent
+        self.setProp(prop, v, gameconst.SourceType.SrcTpCoefficient)
+        
+        buffId = C_C_DD.datas['MonsterDamageReductionBuff']['value']
+        hasBuff = self.hasBuff(buffId)
+        if isAdd and not hasBuff:
+            self.addBuff(buffId, 1, self.id)
+        elif not isAdd and hasBuff:
+            self.removeBuff(buffId)
+        #LOG_INFO("Monster-->_doModifyCoefficient ", self.id, prop, v, isAdd, self.getProp(prop))
+
+    def addCoefficient(self, hpVal):
+        if not self.needCoefficient:
+            return
+
+        self.startCoefficientTimer()
+
+        if self.hasCoefficient:
+            return
+
+        self.coefficientDmgPercent += -hpVal / self.fullHp
+        #LOG_INFO("Monster-->addCoefficient ", self.id, self.coefficientDmgPercent, self.coefficientLimit)
+
+        if self.coefficientDmgPercent >= self.coefficientLimit:
+            self._doModifyCoefficient(True)
+            self.hasCoefficient = True
+
+    def startCoefficientTimer(self):
+        if not self.coefficientTimer:
+            monData = creep_base.datas[self.monsterId]
+            coefficientType = monData.get('coefficientType', 0)
+            coefficient = CCF.datas.get(coefficientType, {}).get('coefficient', None)
+            self.coefficientTimer = self.pyAddTimer(0, coefficient[0], gametimer.TIMER_COEFFICIENT)
+
+    def stopCoefficientTimer(self):
+        if self.coefficientTimer:
+            self.pyDelTimer(self.coefficientTimer, gametimer.TIMER_COEFFICIENT)
+            self.coefficientTimer = None
+    
+    def isFirstBloodRewardMonster(self):
+        shareRewardIDList = self.getCreepData().get('shareReward', [])
+        LOG_INFO("isFirstBloodRewardMonster", gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList, shareRewardIDList)
+        return gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList
+
+    def clearFirstBlood(self, srcId):
+        if not self.isFirstBloodMonster:
+            return
+        if srcId == self.FirstBloodTargetId:
+            LOG_INFO("clear FBT", self.FirstBloodTargetId, "->", 0)
+            self.FirstBloodTargetId = 0
+            self.lastLoseFTTime = 0
+        if srcId == self.FirstBloodOriTargetId:
+            LOG_INFO("clear FBOT", self.FirstBloodOriTargetId, "->", 0)
+            self.FirstBloodOriTargetId = 0
+            self.lastLoseFTTime = 0
+    
+    def onTimerFirstBlood(self):
+        if not self.isFirstBloodMonster:
+            return
+            
+        now = utils.curTS()
+        #归属者时间内未造成伤害则失去归属权，但此时还是原归属者
+        if self.lastBeFTAttackTime and self.FirstBloodTargetId and now - self.lastBeFTAttackTime > 6:
+            LOG_INFO("lose FBT", self.FirstBloodTargetId, "->", 0)
+            self.FirstBloodTargetId = 0
+            self.lastLoseFTTime = now
+        
+        #原归属者到期
+        if self.lastLoseFTTime and self.FirstBloodOriTargetId and now - self.lastLoseFTTime > 6:
+            LOG_INFO("lose FBOT", self.FirstBloodOriTargetId, "->", 0)
+            self.FirstBloodOriTargetId = 0
+            self.lastLoseFTTime = 0
+        
+        #归属者不在仇恨列表(下线，正常失去仇恨)
+        if self.FirstBloodTargetId and self.aiController and not self.aiController.hateDict.isInHateList(self.FirstBloodTargetId):
+            LOG_INFO("lose FBT by hate", self.FirstBloodTargetId, "->", 0)
+            self.FirstBloodTargetId = 0
+            self.lastLoseFTTime = now
+
+    def calcFirstBloodTarget(self, srcId):
+        if not self.isFirstBloodMonster:
+            return
+
+        if not self.firstBloodTimer:
+            self.firstBloodTimer = self.pyAddTimer(0, 1, gametimer.TIMER_FIRST_BLOOD)
+
+        srcHost = utils.getHostEntity(KBEngine.entities.get(srcId))
+        if not srcHost or not srcHost.IsAvatar:
+            return
+
+        #当前无归属
+        if not self.FirstBloodTargetId:
+            LOG_INFO("change FBT", self.FirstBloodTargetId, "->", srcId)
+            self.FirstBloodTargetId = srcId
+            self.lastBeFTAttackTime = utils.curTS()
+            #当前无原归属者
+            if not self.FirstBloodOriTargetId:
+                LOG_INFO("change FBOT", self.FirstBloodOriTargetId, "->", srcId)
+                self.FirstBloodOriTargetId = srcId
+                self.lastLoseFTTime = 0
+                return
+
+        #src是当前归属者
+        if self.FirstBloodTargetId == srcId:
+            self.lastBeFTAttackTime = utils.curTS()
+            self.lastLoseFTTime = 0
+            return
+
+        #src不是当前归属, 但是原归属者
+        if self.FirstBloodOriTargetId == srcId:
+            LOG_INFO("reget FBT", self.FirstBloodTargetId, "->", srcId)
+            self.FirstBloodTargetId = srcId
+            self.lastLoseFTTime = 0
+            return

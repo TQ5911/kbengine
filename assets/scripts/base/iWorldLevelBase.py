@@ -10,5 +10,5 @@ class IWorldLevelBase(object):
     def __init__(self):
         pass
 
-    def _onWorldLevelDailyUpdate(self):
+    def _onWorldLevelDailyUpdate(self, *args):
         self.cell.onWorldLevelDailyUpdate()

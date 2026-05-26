@@ -26,8 +26,8 @@ class ICollectionBossForMgr(object):
         box.client.onWonderLandBossInfo(_bossList)
 
     def removeCollToBoss(self, bossId):
-        for collectionId, bossId in self.collToBoss.items():
-            if bossId == bossId:
+        for collectionId, _bossId in self.collToBoss.items():
+            if _bossId == bossId:
                 self.collToBoss.pop(collectionId)
                 self.notifyPlayerCurBossInfo()
                 break

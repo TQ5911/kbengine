@@ -13,12 +13,12 @@ class Event(object):
     HATE        = 8
 
 # 状态枚举
-class State(object):
+class StateEnum(object):
     UNKNOWN         = 0 # 未知
     IDLE            = 1 # 闲置
     STAND           = 2 # 驻守
-    PATROL          = 3 # 巡逻
-    ANGRY           = 4 # 激怒
+    ANGRY           = 3 # 激怒
+    PATROL          = 4 # 巡逻
     BACK            = 5 # 脱战
     MOVE            = 6 # 移动
     ON_BE_ATTACK    = 7 # 被攻击
@@ -27,14 +27,13 @@ class State(object):
     RESET_ANIM      = 10 # 重置动画,比如缩地回去，或者重回雕像
 
 
-eventMap = {}
-stateMap = {}
+STATE_MAP = {}
 
 # 状态对象装饰器
 def withName(name):
     def func(cls):
-        global stateMap
-        stateMap[name] = cls()
+        global STATE_MAP
+        STATE_MAP[name] = cls()
         return cls
     return func
 
@@ -42,834 +41,660 @@ def withName(name):
 
 
 # 状态对象
-class StateImp(object):
-    name = State.UNKNOWN
+class StateImpCls(object):
+    name = StateEnum.UNKNOWN
     mask = 0 # 如果想屏蔽某个，就把他放进mask里面
 
-    def tick(self, ctrl): pass
+    def tick(self, aiController): pass
 
 @withName('idle')
-class StateIdle(StateImp):
+class StateIdle(StateImpCls):
     '''通用闲置（自动巡逻）'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.patrol()
+            aiController.patrol()
 
 @withName('idleEx')
-class StateIdleEx(StateImp):
+class StateIdleEx(StateImpCls):
     '''通用闲置（自动驻守）'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.stand()
+            aiController.stand()
 
 @withName('idleNoMove')
-class StateIdleNoMove(StateImp):
+class StateIdleNoMove(StateImpCls):
     '''无法移动'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
 
 @withName('idleNoMoveWithBuff')
-class StateIdleNoMoveWithBuff(StateImp):
+class StateIdleNoMoveWithBuff(StateImpCls):
     '''无法移动'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
-        elif ctrl.checkSpecialMonsterHasBuff():
-            ctrl.useTargetTypeSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
+        elif aiController.checkSpecialMonsterHasBuff():
+            aiController.useTargetTypeSkill()
 
 @withName('waitAnim')
-class StateWaitAnim(StateImp):
+class StateWaitAnim(StateImpCls):
     '''无法移动'''
-    name = State.IDLE
+    name = StateEnum.IDLE
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.transformPlayAnimation()
-            ctrl.changeBornState(gameconst.BornStateType.bornAnim)
-            ctrl.tickOnce()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.transformPlayAnimation()
+            aiController.setBornState(gameconst.BornStateType.bornAnim)
+            aiController.tickOnce()
 
 @withName('playAnim')
-class StatePlayAnim(StateImp):
+class StatePlayAnim(StateImpCls):
     '''无法移动'''
-    name = State.PLAY_ANIM
+    name = StateEnum.PLAY_ANIM
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.isAnimationEnd():
-            ctrl.trasformAngrySpawn()
-            ctrl.changeBornState(gameconst.BornStateType.afterBornMove)
-            ctrl.tickOnce()
-        elif not ctrl.isInTickCallBack():
-            ctrl.setTickCallBack(ctrl.getLeftAnimationTime())
+    def tick(self, aiController):
+        if aiController.isAnimationEnd():
+            aiController.trasformAngrySpawn()
+            aiController.setBornState(gameconst.BornStateType.afterBornMove)
+            aiController.tickOnce()
+        elif not aiController.isInTickCallBack():
+            aiController.setTickCallBack(aiController.getLeftAnimationTime())
 
 
 @withName('playAnimAndAngry')
-class StatePlayAnimAndAngry(StateImp):
+class StatePlayAnimAndAngry(StateImpCls):
     '''无法移动'''
-    name = State.PLAY_ANIM
+    name = StateEnum.PLAY_ANIM
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.isAnimationEnd():
-            ctrl.combat()
-            ctrl.changeBornState(gameconst.BornStateType.afterBornMove)
-            ctrl.tickOnce()
-        elif not ctrl.isInTickCallBack():
-            ctrl.setTickCallBack(ctrl.getLeftAnimationTime())
+    def tick(self, aiController):
+        if aiController.isAnimationEnd():
+            aiController.combat()
+            aiController.setBornState(gameconst.BornStateType.afterBornMove)
+            aiController.tickOnce()
+        elif not aiController.isInTickCallBack():
+            aiController.setTickCallBack(aiController.getLeftAnimationTime())
 
 
 @withName('angrySpawn')
-class StateSpawn(StateImp):
+class StateSpawn(StateImpCls):
     '''无法移动'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
 
-    def tick(self, ctrl):
-        if ctrl.needSpawnNewSummon():
-            ctrl.spawnSummon()
+    def tick(self, aiController):
+        if aiController.needSpawnNewSummon():
+            aiController.spawnSummon()
 
 
 @withName('turnOnBeAttack')
-class turnOnBeAttack(StateImp):
+class turnOnBeAttack(StateImpCls):
     '''被攻击转向'''
-    name = State.ON_BE_ATTACK
+    name = StateEnum.ON_BE_ATTACK
 
-    def tick(self, ctrl):
-        ctrl.turnOnBeAttacked()
+    def tick(self, aiController):
+        aiController.turnOnBeAttacked()
 
 @withName('stand')
-class StateStand(StateImp):
+class StateStand(StateImpCls):
     '''通用驻守'''
-    name = State.STAND
+    name = StateEnum.STAND
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
 
 
 @withName('standAndRestart')
-class StateStandAndRestart(StateImp):
+class StateStandAndRestart(StateImpCls):
     '''驻守并重启'''
-    name = State.STAND
+    name = StateEnum.STAND
 
-    def tick(self, ctrl):
-        ctrl.addContinueBuff()
-        ctrl.restart()
+    def tick(self, aiController):
+        aiController.addContinueBuff()
+        aiController.restart()
 
 
 @withName('standWaitResetAnim')
-class StateStandWaitResetAnim(StateImp):
+class StateStandWaitResetAnim(StateImpCls):
     '''驻守并播放重启动画'''
-    name = State.STAND
+    name = StateEnum.STAND
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.combat()
-        elif ctrl.finishWaitResetAnimTime():
-            ctrl.addContinueBuff()
-            ctrl.transformResetAnim()
-            ctrl.changeBornState(gameconst.BornStateType.resetAnim)
-            ctrl.tickOnce()
-        elif not ctrl.isInTickCallBack():
-            ctrl.setTickCallBack(ctrl.getLeftFinishWaitResetAnimTime())
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.combat()
+        elif aiController.finishWaitResetAnimTime():
+            aiController.addContinueBuff()
+            aiController.transformResetAnim()
+            aiController.setBornState(gameconst.BornStateType.resetAnim)
+            aiController.tickOnce()
+        elif not aiController.isInTickCallBack():
+            aiController.setTickCallBack(aiController.getLeftFinishWaitResetAnimTime())
 
 
 @withName('resetAnim')
-class StateResetAnim(StateImp):
+class StateResetAnim(StateImpCls):
     '''播放重启动画'''
-    name = State.RESET_ANIM
+    name = StateEnum.RESET_ANIM
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.isFinishResetAnim():
-            ctrl.restart()
-            ctrl.changeBornState(gameconst.BornStateType.reMove)
-        elif not ctrl.isInTickCallBack():
-            ctrl.setTickCallBack(ctrl.getLeftFinishResetAnimTime())
+    def tick(self, aiController):
+        if aiController.isFinishResetAnim():
+            aiController.restart()
+            aiController.setBornState(gameconst.BornStateType.reMove)
+        elif not aiController.isInTickCallBack():
+            aiController.setTickCallBack(aiController.getLeftFinishResetAnimTime())
 
 
 @withName('patrol')
-class StatePatrol(StateImp):
+class StatePatrol(StateImpCls):
     '''通用巡逻'''
-    name = State.PATROL
+    name = StateEnum.PATROL
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
             return
-        if ctrl.inMoving():
+        if aiController.inMoving():
             return
-        if not ctrl.patrolTickSkip():
-            ctrl.patrol()
+        if not aiController.patrolTickSkip():
+            aiController.patrol()
 
 @withName('angry')
-class StateAngry(StateImp):
+class StateAngry(StateImpCls):
     '''通用激怒（会脱战）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.farFromHome():
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndGoHome()
+    def tick(self, aiController):
+        if aiController.farFromHome():
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
             return
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndGoHome()
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
 
 
 @withName('angryAndBlink')
-class StateAngryAndBlink(StateImp):
+class StateAngryAndBlink(StateImpCls):
     '''激怒后瞬移回去（会脱战）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
 
-    def tick(self, ctrl):
-        if ctrl.farFromHome():
-            ctrl.stand(False)
-            ctrl.tickOnce()
+    def tick(self, aiController):
+        if aiController.farFromHome():
+            aiController.stand(False)
+            aiController.tickOnce()
             return
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.stand(False)
-            ctrl.tickOnce()
+            aiController.stand(False)
+            aiController.tickOnce()
 
 
 @withName('angryEx')
-class StateAngryEx(StateImp):
+class StateAngryEx(StateImpCls):
     '''通用激怒（不脱战）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndGoHome()
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
 
 @withName('back')
-class StateBack(StateImp):
+class StateBack(StateImpCls):
     '''通用脱战'''
-    name = State.BACK
+    name = StateEnum.BACK
     mask = Event.ATTACK | Event.HATE
 
-    def tick(self, ctrl):
-        if ctrl.getHome():
-            ctrl.addContinueBuff()
-            ctrl.addHomeBuff()
-            ctrl.restart()
+    def tick(self, aiController):
+        if aiController.getHome():
+            aiController.addContinueBuff()
+            aiController.addHomeBuff()
+            aiController.restart()
 
-        elif not ctrl.inMoving():
-            if not ctrl.clearHateAndGoHome():
+        elif not aiController.inMoving():
+            if not aiController.clearHateAndGoHome():
                 # 寻路失败了也算到家了
-                ctrl.addContinueBuff()
-                ctrl.addHomeBuff()
-                ctrl.restart()
+                aiController.addContinueBuff()
+                aiController.addHomeBuff()
+                aiController.restart()
 
 
 @withName('telBackAfterResetAnim')
-class StateTelBackAfterResetAnim(StateImp):
+class StateTelBackAfterResetAnim(StateImpCls):
     '''通用脱战'''
-    name = State.BACK
+    name = StateEnum.BACK
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.isFinishResetAnim():
-            ctrl.clearHateAndTelBack()
-            ctrl.restart()
-            ctrl.changeBornState(gameconst.BornStateType.reMove)
-        elif not ctrl.isInTickCallBack():
-            ctrl.setTickCallBack(ctrl.getLeftFinishResetAnimTime())
+    def tick(self, aiController):
+        if aiController.isFinishResetAnim():
+            aiController.clearHateAndTelBack()
+            aiController.restart()
+            aiController.setBornState(gameconst.BornStateType.reMove)
+        elif not aiController.isInTickCallBack():
+            aiController.setTickCallBack(aiController.getLeftFinishResetAnimTime())
 
 @withName('standAndResetAnim')
-class StateStandAndResetAnim(StateImp):
+class StateStandAndResetAnim(StateImpCls):
     '''驻守等待放重启动画'''
-    name = State.STAND
+    name = StateEnum.STAND
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        ctrl.addHomeBuff()
-        ctrl.transformBack()
-        ctrl.changeBornState(gameconst.BornStateType.resetAnim)
-        ctrl.tickOnce()
+    def tick(self, aiController):
+        aiController.addHomeBuff()
+        aiController.transformBack()
+        aiController.setBornState(gameconst.BornStateType.resetAnim)
+        aiController.tickOnce()
 
 @withName('restart')
-class StateRestart(StateImp):
+class StateRestart(StateImpCls):
     '''通用重启'''
-    name = State.RESTART
+    name = StateEnum.RESTART
 
-    def tick(self, ctrl):
-        ctrl.restart()
+    def tick(self, aiController):
+        aiController.restart()
 
 
 @withName('patrolDunAutoAttack')
-class StatePatrolDunAutoAttack(StateImp):
+class StatePatrolDunAutoAttack(StateImpCls):
     '''巡逻（自动攻击副本内玩家）'''
-    name = State.PATROL
+    name = StateEnum.PATROL
 
-    def tick(self, ctrl):
-        ctrl.chooseDungeonTarget()
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        aiController.chooseDungeonTarget()
+        if aiController.inHate():
+            aiController.executeRandomSkill()
             return
-        if ctrl.inMoving():
+        if aiController.inMoving():
             return
-        if not ctrl.patrolTickSkip():
-            ctrl.patrol()
+        if not aiController.patrolTickSkip():
+            aiController.patrol()
 
 @withName('standDunAutoAttack')
-class StateStandDunAutoAttack(StateImp):
+class StateStandDunAutoAttack(StateImpCls):
     '''驻守（自动攻击副本内玩家）'''
-    name = State.STAND
+    name = StateEnum.STAND
 
-    def tick(self, ctrl):
-        ctrl.chooseDungeonTarget()
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        aiController.chooseDungeonTarget()
+        if aiController.inHate():
+            aiController.executeRandomSkill()
 
 @withName('angryRemoveBuff')
-class StateAngryRemoveBuff(StateImp):
+class StateAngryRemoveBuff(StateImpCls):
     '''激怒（放出的圈被踩完时移除buff）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.creationCleared():
-            ctrl.removeBuffWithMsg()
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.creationCleared():
+            aiController.removeBuffWithMsg()
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndGoHome()
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
 
 @withName('angryNoMove')
-class StateAngryNoMove(StateImp):
+class StateAngryNoMove(StateImpCls):
     '''激怒（无法移动）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.stand()
+            aiController.stand()
 
 @withName('angryNoMoveWithBuff')
-class StateAngryNoMoveWithBuff(StateImp):
+class StateAngryNoMoveWithBuff(StateImpCls):
     '''激怒（无法移动）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
-        elif ctrl.checkSpecialMonsterHasBuff():
-            ctrl.useTargetTypeSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
+        elif aiController.checkSpecialMonsterHasBuff():
+            aiController.useTargetTypeSkill()
         else:
-            ctrl.stand()
+            aiController.stand()
 
-@withName('kunkun')
-class ST_Kunkun(StateImp):
-    '''鲲鲲'''
-    name = State.IDLE
-
-    def tick(self, ctrl):
-        if ctrl.hasGiveTimes():
-            ctrl.whaleShowTag()
 
 @withName('follow')
-class StatePetFollow(StateImp):
+class StatePetFollow(StateImpCls):
     '''宝宝（跟随）'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        ctrl.adjustPetDistanceNormal()
+    def tick(self, aiController):
+        aiController.adjustPetDistanceNormal()
 
 @withName('attack')
-class StatePetAttact(StateImp):
+class StatePetAttact(StateImpCls):
     '''宝宝（主动）'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.adjustPetDistanceAttack()
-            if ctrl.inMoving(): return
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.adjustPetDistanceAttack()
+            if aiController.inMoving(): return
 
-            ctrl.useRandomSkill()
+            aiController.executeRandomSkill()
         else:
-            ctrl.adjustPetDistanceNormal()
+            aiController.adjustPetDistanceNormal()
 
 @withName('defense')
-class StatePetDefense(StateImp):
+class StatePetDefense(StateImpCls):
     '''宝宝（防御）'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate() or ctrl.inHostStateFighting():
-            ctrl.adjustPetDistanceAttack()
-            if ctrl.inMoving(): return
+    def tick(self, aiController):
+        if aiController.inHate() or aiController.inHostStateFighting():
+            aiController.adjustPetDistanceAttack()
+            if aiController.inMoving(): return
 
-            ctrl.useRandomSkill()
+            aiController.executeRandomSkill()
         else:
-            ctrl.adjustPetDistanceNormal()
+            aiController.adjustPetDistanceNormal()
 
-@withName('idleBattle')
-class StateIdleBattle(StateImp):
-    '''闲置（战场机器人）'''
-    name = State.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inBattleTime():
-            ctrl.goBattlePoint()
-
-@withName('standBattle')
-class StateStandBattle(StateImp):
-    '''驻守（战场机器人）'''
-    name = State.STAND
-
-    def tick(self, ctrl):
-        if not ctrl.inBattleTime():
-            return
-        if ctrl.isOccupied():
-            ctrl.goBattlePoint()
-
-@withName('angryBattle')
-class StateAngryBattle(StateImp):
-    '''激怒（战场机器人）'''
-    name = State.ANGRY
-    mask = Event.ATTACK
-
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
-        else:
-            ctrl.goBattlePoint()
-
-@withName('moveBattle')
-class StateMoveBattle(StateImp):
-    '''占领移动（战场机器人）'''
-    name = State.MOVE
-
-    def tick(self, ctrl):
-        if ctrl.getBattlePoint():
-            ctrl.stand()
-        else:
-            ctrl.goBattlePoint()
 @withName('summonPet')
-class StateIdleSummonPet(StateImp):
+class StateIdleSummonPet(StateImpCls):
     '''新召唤物'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.isSummonHostFighting():
-            ctrl.addAdjSpeed()
-            if ctrl.summonFarFromHostAttack():
-                ctrl.goBackToHost(True)
+    def tick(self, aiController):
+        if aiController.isSummonHostFighting():
+            aiController.addAdjSpeed()
+            if aiController.summonFarFromHostAttack():
+                aiController.goBackToHost(True)
                 return
-            ctrl.useRandomSkill()
+            aiController.executeRandomSkill()
         else:
-            if ctrl.summonFarFromHostNormal():
-                ctrl.goBackToHost(True)
+            if aiController.summonFarFromHostNormal():
+                aiController.goBackToHost(True)
+
 
 @withName('summon')
-class StateIdleSummon(StateImp):
+class StateIdleSummon(StateImpCls):
     '''召唤物'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            if ctrl.summonFarFromHostAttack():
-                ctrl.goBackToHost(True)
+    def tick(self, aiController):
+        if aiController.inHate():
+            if aiController.summonFarFromHostAttack():
+                aiController.goBackToHost(True)
                 return
-            ctrl.useRandomSkill()
-        elif ctrl.summonFarFromHostNormal():
-            ctrl.goBackToHost()
+            aiController.executeRandomSkill()
+        elif aiController.summonFarFromHostNormal():
+            aiController.goBackToHost()
 
 @withName('summonBoss')
-class StateIdleSummon2(StateImp):
+class StateIdleSummon2(StateImpCls):
     '''龙蛭'''
-    name = State.IDLE
+    name = StateEnum.IDLE
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.summonFarFromHostYL():
-            ctrl.goBackToHost()
+    def tick(self, aiController):
+        if aiController.summonFarFromHostYL():
+            aiController.goBackToHost()
         else:
-            ctrl.useRandomSkill()
+            aiController.executeRandomSkill()
 
-@withName('summonBossEx')
-class StateIdleSummon3(StateImp):
-    '''Boss召唤物（夔鼓）'''
-    name = State.IDLE
-
-    def tick(self, ctrl):
-        if not ctrl.inSelfStateFighting():
-            ctrl.goSelfStateFighting()
-        else:
-            ctrl.useRandomSkill()
-
-@withName('idleGuild')
-class StateIdleGuild(StateImp):
-    '''闲置（帮战压测机器人）'''
-    name = State.IDLE
-
-    def tick(self, ctrl):
-        if ctrl.inGuildTime():
-            if not ctrl.inGuildArea() or ctrl.isGuildAreaOccupied():
-                ctrl.goRandomGuildArea()
-
-@withName('transBoss')
-class StateStandGuild(StateImp):
-    '''驻守（帮战压测机器人）'''
-    name = State.STAND
-
-    def tick(self, ctrl):
-        if not ctrl.inGuildTime():
-            return
-        if not ctrl.inTransGuildBoss():
-            ctrl.transGuildBossOver()
-
-@withName('angryGuild')
-class StateAngryGuild(StateImp):
-    '''激怒（帮战压测机器人）'''
-    name = State.ANGRY
-    mask = Event.ATTACK
-
-    def tick(self, ctrl):
-        if ctrl.inGuildTime():
-            if ctrl.inGuildArea():
-                if not ctrl.isGuildAreaOccupied():
-                    if ctrl.isGuildBossDead():
-                        if ctrl.canTransGuildBoss():
-                            ctrl.transGuildBoss()
-                        elif ctrl.inHate():
-                            ctrl.useRandomSkill()
-                        else:
-                            ctrl.attackGuildRandom()
-                    else:
-                        ctrl.attackGuildBoss()
-                else:
-                    if ctrl.inHate():
-                        ctrl.useRandomSkill()
-                    else:
-                        ctrl.goRandomGuildArea()
-            else:
-                if ctrl.inHate():
-                    ctrl.useRandomSkill()
-                else:
-                    ctrl.goRandomGuildArea()
-
-@withName('moveGuild')
-class StateMoveGuild(StateImp):
-    '''移动占领（帮战压测机器人）'''
-    name = State.MOVE
-
-    def tick(self, ctrl):
-        if ctrl.inGuildTime():
-            if ctrl.inGuildArea() and not ctrl.isGuildAreaOccupied():
-                if ctrl.isGuildBossDead():
-                    if ctrl.canTransGuildBoss():
-                        ctrl.transGuildBoss()
-                    else:
-                        ctrl.attackGuildRandom()
-                else:
-                    ctrl.attackGuildBoss()
-            else:
-                ctrl.goRandomGuildArea()
 
 @withName('idleCombatRobot')
-class StateCombatRobotIdle(StateImp):
+class StateCombatRobotIdle(StateImpCls):
     '''组队机器人'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.combatStart():
-            ctrl.combat()
+    def tick(self, aiController):
+        if aiController.combatStart():
+            aiController.combat()
         else:
-            ctrl.follow()
+            aiController.follow()
 
 @withName('followCombatRobot')
-class StateCombatRobotFollow(StateImp):
+class StateCombatRobotFollow(StateImpCls):
     '''组队机器人'''
-    name = State.MOVE
+    name = StateEnum.MOVE
 
-    def tick(self, ctrl):
-        if ctrl.combatStart():
-            ctrl.combat()
+    def tick(self, aiController):
+        if aiController.combatStart():
+            aiController.combat()
             return
-        ctrl.adjDisWithPlayerNormal()
+        aiController.adjDisWithPlayerNormal()
 
 @withName('fightCombatRobot')
-class StateCombatRobotFight(StateImp):
+class StateCombatRobotFight(StateImpCls):
     '''组队机器人'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        ctrl.adjDisWithPlayerCombat()
-        if ctrl.inMoving(): return
+    def tick(self, aiController):
+        aiController.adjDisWithPlayerCombat()
+        if aiController.inMoving(): return
 
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+        if aiController.inHate():
+            aiController.executeRandomSkill()
         else:
-            ctrl.chooseMonsterTarget()
+            aiController.chooseMonsterTarget()
 
 @withName('routingRoutePatrol')
-class StateRoutePatrol(StateImp):
+class StateRoutePatrol(StateImpCls):
     '''路点巡逻 '''
-    name = State.PATROL
+    name = StateEnum.PATROL
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
-            ctrl.stopRoutingMove()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
+            aiController.stopRoutingMove()
             return
-        if ctrl.inMoving():
-            ctrl.PatrolRecoveryHp()
+        if aiController.inMoving():
+            aiController.PatrolRecoveryHp()
             return
-        elif ctrl.inRoutePatrolTime():
-            if not ctrl.patrolTickSkip():
-                ctrl.routePatrol()
+        elif aiController.inRoutePatrolTime():
+            if not aiController.patrolTickSkip():
+                aiController.routePatrol()
         else:
-            ctrl.starRoutePatrol()
+            aiController.starRoutePatrol()
 
 @withName('luckyMonsterAngry')
-class StateluckyMonsterAngry(StateImp):
+class StateluckyMonsterAngry(StateImpCls):
     '''路点巡逻 激怒'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
-            ctrl.stopRoutingMove()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
+            aiController.stopRoutingMove()
         else:
-            ctrl.clearHateAndRoute()
-            ctrl.starRoutePatrol()
+            aiController.clearHateAndRoute()
+            aiController.starRoutePatrol()
 
 @withName('luckyGroupAngry')
-class StateluckyGroupAngry(StateImp):
+class StateluckyGroupAngry(StateImpCls):
     '''守宝团巡逻 激怒'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
 
-    def tick(self, ctrl):
-        if not ctrl.owner.checkInCombatArea(ctrl.owner.position) or not ctrl.inHate():
-            ctrl.luckyGroupStand()
+    def tick(self, aiController):
+        if not aiController.owner.checkInCombatArea(aiController.owner.position) or not aiController.inHate():
+            aiController.luckyGroupStand()
         else:
-            ctrl.useRandomSkill()
-            ctrl.stopRoutingMove()
+            aiController.executeRandomSkill()
+            aiController.stopRoutingMove()
 
 
 @withName('routingPatrol')
-class StateRoutiongPatrol(StateImp):
+class StateRoutiongPatrol(StateImpCls):
     '''路点巡逻 闲置'''
-    name = State.IDLE
+    name = StateEnum.IDLE
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
-        elif ctrl.inRoutePatrolTime():
-            if not ctrl.patrolTickSkip():
-                ctrl.routePatrol()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
+        elif aiController.inRoutePatrolTime():
+            if not aiController.patrolTickSkip():
+                aiController.routePatrol()
         else:
-            ctrl.clearHateAndRoute()
-            ctrl.starRoutePatrol()
+            aiController.clearHateAndRoute()
+            aiController.starRoutePatrol()
 
 @withName('routingMove')
-class StateRoutingMove(StateImp):
+class StateRoutingMove(StateImpCls):
     '''路点移动'''
-    name = State.IDLE
+    name = StateEnum.IDLE
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        ctrl.startRoutingMove()
+    def tick(self, aiController):
+        aiController.startRoutingMove()
 
 @withName('routingBoss')
-class StateRoutingBoss(StateImp):
+class StateRoutingBoss(StateImpCls):
     '''联赛boss'''
-    name = State.IDLE
+    name = StateEnum.IDLE
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.stopRoutingMove()
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.stopRoutingMove()
+            aiController.executeRandomSkill()
         else:
-            ctrl.startRoutingMove()
+            aiController.startRoutingMove()
 
-@withName('randomAttack')
-class StateRandomAttack(StateImp):
-    '''元宵副本boss'''
-    name = State.IDLE
-    mask = Event.ATTACK
-
-    def tick(self, ctrl):
-        if ctrl.selectRandomPlayerInDun():
-            ctrl.useRandomSkill()
-
-
-@withName('routingHanQingKunKun')
-class StateHanQingKunKun(StateImp):
-    '''寒清节鲲鲲'''
-    name = State.IDLE
-    mask = Event.ATTACK
-
-    def tick(self, ctrl):
-        if ctrl.inHate() and ctrl.haveSkill():
-            ctrl.stopRoutingMove()
-            ctrl.useRandomSkill()
-        else:
-            ctrl.startRoutingMove()
-
-@withName('waitAndAttack')
-class StateWaitAndAttack(StateImp):
-    '''职业联赛假人'''
-    name = State.IDLE
-
-    def tick(self, ctrl):
-        if ctrl.inZhiyeBattleTime():
-            if ctrl.inHate():
-                ctrl.useRandomSkill()
-            else:
-                ctrl.chooseZhiyeBattleTarget()
-
-@withName('angryUseSkillWhenFar')
-class StateAngryUseSkillWhenFar(StateImp):
-    '''激怒（雷震子）'''
-    name = State.ANGRY
-
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            if ctrl.farFromTarget():
-                ctrl.useSkillWhenFarFromTarget()
-            else:
-                ctrl.useRandomSkill()
 
 @withName('backAndTurn')
-class StateBackAndTurn(StateImp):
+class StateBackAndTurn(StateImpCls):
     '''通用脱战,回到出生地之后转向'''
-    name = State.BACK
+    name = StateEnum.BACK
 
-    def tick(self, ctrl):
-        if ctrl.getHome():
-            ctrl.turnAndRestart()
-        elif not ctrl.inMoving():
-            ctrl.clearHateAndGoHome()
+    def tick(self, aiController):
+        if aiController.getHome():
+            aiController.turnAndRestart()
+        elif not aiController.inMoving():
+            aiController.clearHateAndGoHome()
 
 @withName('angryWithAiSkill')
-class StateAngryWithAiSkill(StateImp):
+class StateAngryWithAiSkill(StateImpCls):
     '''激怒（会执行aiAction）'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
 
-    def tick(self, ctrl):
-        if ctrl.farFromHome():
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndGoHome()
+    def tick(self, aiController):
+        if aiController.farFromHome():
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
             return
-        if ctrl.inHate():
-            ctrl.doAiAction()
-            ctrl.useRandomSkill()
+        if aiController.inHate():
+            aiController.doAiAction()
+            aiController.executeRandomSkill()
         else:
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndGoHome()
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
 
 @withName('siegeWarBossIdle')
-class StateSiegeWarBossIdle(StateImp):
+class StateSiegeWarBossIdle(StateImpCls):
     '''攻城兽'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        if ctrl.owner.isSiegeWarBossInvoked:
-            ctrl.starRoutePatrol()
-            #ctrl.moveToPos(ctrl.owner.siegeWarBossTargetPos)
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.owner.isSiegeWarBossInvoked:
+            aiController.starRoutePatrol()
+            #aiController.moveToPosition(aiController.owner.siegeWarBossTargetPos)
+        if aiController.inHate():
+            aiController.executeRandomSkill()
 
 @withName('siegeWarBossAngry')
-class StateSiegeWarBossAngry(StateImp):
+class StateSiegeWarBossAngry(StateImpCls):
     '''攻城兽'''
-    name = State.ANGRY
+    name = StateEnum.ANGRY
     mask = Event.ATTACK
 
-    def tick(self, ctrl):
-        if ctrl.inHate():
-            ctrl.useRandomSkill()
+    def tick(self, aiController):
+        if aiController.inHate():
+            aiController.executeRandomSkill()
 
 @withName('siegeWarStoneThrower')
-class SiegeWarStoneThrower(StateImp):
+class SiegeWarStoneThrower(StateImpCls):
     '''投石车'''
-    name = State.IDLE
+    name = StateEnum.IDLE
 
-    def tick(self, ctrl):
-        ctrl.useRandomSkill()
+    def tick(self, aiController):
+        aiController.executeRandomSkill()
 
 @withName('luckyGroupStand')
-class StateLuckyGroupStand(StateImp):
+class StateLuckyGroupStand(StateImpCls):
     '''守宝团stand'''
-    name = State.STAND
+    name = StateEnum.STAND
 
-    def tick(self, ctrl):
-        ctrl.luckyGroupTick()
+    def tick(self, aiController):
+        aiController.luckyGroupTick()
 
 
 # 状态机对象
-class MachineImp(object):
+class MachineImpCls(object):
     def __init__(self, stMap):
-        global stateMap
-        self.stateMap = {}
+        global STATE_MAP
+        self.stateDic = {}
         for state, name in stMap.items():
-            self.stateMap[state] = stateMap[name]
-        self.state = self.stateMap[State.IDLE]
+            self.stateDic[state] = STATE_MAP[name]
+        self.state = self.stateDic[StateEnum.IDLE]
 
         self.moveable = True
         self.turnable = True
         self.onBeAttack = False
         self.speialAICombatTup = False
 
-    def tick(self, ctrl):
-        if not ctrl.dealForceQue():
-            self.state.tick(ctrl)
-
-    def transform(self, ctrl, name):
-        if name in self.stateMap and self.state.name != name:
-            self.state = self.stateMap[name]
+    def tick(self, aiController):
+        if not aiController.dealForceQue():
+            self.state.tick(aiController)
 
     def tell(self):
         return self.state.name
 
+    def transform(self, aiController, name):
+        if name in self.stateDic and self.state.name != name:
+            self.state = self.stateDic[name]
+
     def testEvent(self, event):
         return not self.state.mask & event
 
-    def doLoseWitnessTask(self, ctrl):
+    def doLoseWitnessTask(self, aiController):
         pass
 
 
-class MachineWithChangeTime(MachineImp):
+class MachineWithChangeTime(MachineImpCls):
     def __init__(self, stMap):
         super(MachineWithChangeTime, self).__init__(stMap)
         self.changeStateTime = 0
         self.changeTimer = 0
 
-    def transform(self, ctrl, name):
-        super(MachineWithChangeTime, self).transform(ctrl, name)
+    def transform(self, aiController, name):
+        super(MachineWithChangeTime, self).transform(aiController, name)
         self.changeStateTime = time.time()
-        ctrl.cancelTickCallBack(self.changeTimer)
+        aiController.cancelTickCallBack(self.changeTimer)
         self.changeTimer = 0
 
     def elapsedTime(self):
@@ -881,14 +706,14 @@ class MachineWithChangeTime(MachineImp):
     def getChangeTimer(self):
         return self.changeTimer
 
-class MachineBlank(MachineImp):
+class MachineBlank(MachineImpCls):
     def __init__(self): pass
-    def tick(self, ctrl): pass
-    def transform(self, ctrl, name): pass
+    def tick(self, aiController): pass
+    def transform(self, aiController, name): pass
     def tell(self): pass
     def testEvent(self, event): return False
 
-class Machine3001(MachineImp):
+class Machine3001(MachineImpCls):
     '''大世界小怪
     1. 巡逻
     2. 攻击仇恨目标
@@ -896,13 +721,13 @@ class Machine3001(MachineImp):
     '''
     def __init__(self):
         super(Machine3001, self).__init__({
-            State.IDLE: 'idle',
-            State.PATROL: 'patrol',
-            State.ANGRY: 'angry',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idle',
+            StateEnum.PATROL: 'patrol',
+            StateEnum.ANGRY: 'angry',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3002(MachineImp):
+class Machine3002(MachineImpCls):
     '''大世界boss
     1. 驻守
     2. 攻击仇恨目标
@@ -910,39 +735,39 @@ class Machine3002(MachineImp):
     '''
     def __init__(self):
         super(Machine3002, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'stand',
-            State.ANGRY: 'angry',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'stand',
+            StateEnum.ANGRY: 'angry',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3004(MachineImp):
+class Machine3004(MachineImpCls):
     '''副本小怪
     1. 巡逻
     2. 攻击仇恨目标
     '''
     def __init__(self):
         super(Machine3004, self).__init__({
-            State.IDLE: 'idle',
-            State.PATROL: 'patrol',
-            State.ANGRY: 'angryEx',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idle',
+            StateEnum.PATROL: 'patrol',
+            StateEnum.ANGRY: 'angryEx',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3006(MachineImp):
+class Machine3006(MachineImpCls):
     '''副本boss
     1. 驻守
     2. 攻击仇恨目标
     '''
     def __init__(self):
         super(Machine3006, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'stand',
-            State.ANGRY: 'angryEx',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'stand',
+            StateEnum.ANGRY: 'angryEx',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3003(MachineImp):
+class Machine3003(MachineImpCls):
     '''spec
     1. 巡逻
     2. 随机选择副本中的玩家加入仇恨
@@ -950,13 +775,13 @@ class Machine3003(MachineImp):
     '''
     def __init__(self):
         super(Machine3003, self).__init__({
-            State.IDLE: 'idle',
-            State.PATROL: 'patrolDunAutoAttack',
-            State.ANGRY: 'angryEx',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idle',
+            StateEnum.PATROL: 'patrolDunAutoAttack',
+            StateEnum.ANGRY: 'angryEx',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3036(MachineImp):
+class Machine3036(MachineImpCls):
     '''spec
     1. 驻守
     2. 随机选择副本中的玩家加入仇恨
@@ -964,13 +789,13 @@ class Machine3036(MachineImp):
     '''
     def __init__(self):
         super(Machine3036, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'standDunAutoAttack',
-            State.ANGRY: 'angryEx',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'standDunAutoAttack',
+            StateEnum.ANGRY: 'angryEx',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3007(MachineImp):
+class Machine3007(MachineImpCls):
     '''spec
     1. 驻守
     2. 攻击仇恨目标
@@ -978,13 +803,13 @@ class Machine3007(MachineImp):
     '''
     def __init__(self):
         super(Machine3007, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'stand',
-            State.ANGRY: 'angryRemoveBuff',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'stand',
+            StateEnum.ANGRY: 'angryRemoveBuff',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3010(MachineImp):
+class Machine3010(MachineImpCls):
     '''spec
     1. 驻守
     2. 攻击仇恨目标
@@ -992,25 +817,25 @@ class Machine3010(MachineImp):
     '''
     def __init__(self):
         super(Machine3010, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'stand',
-            State.ANGRY: 'angryUseSkillWhenFar',
-            State.BACK: 'back'
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'stand',
+            StateEnum.ANGRY: 'angryUseSkillWhenFar',
+            StateEnum.BACK: 'back'
         })
 
-class Machine3022(MachineImp):
+class Machine3022(MachineImpCls):
     '''
     木桩
     '''
     def __init__(self):
         super(Machine3022, self).__init__({
-            State.IDLE: 'idleNoMove',
-            State.ON_BE_ATTACK: 'turnOnBeAttack'
+            StateEnum.IDLE: 'idleNoMove',
+            StateEnum.ON_BE_ATTACK: 'turnOnBeAttack'
         })
         self.moveable = False
         self.onBeAttack = True
 
-class Machine3034(MachineImp):
+class Machine3034(MachineImpCls):
     '''spec
     1. 驻守
     2. 攻击仇恨目标
@@ -1018,32 +843,32 @@ class Machine3034(MachineImp):
     '''
     def __init__(self):
         super(Machine3034, self).__init__({
-            State.IDLE: 'idleNoMove',
-            State.ANGRY: 'angryNoMove',
-            State.STAND: 'standAndRestart',
+            StateEnum.IDLE: 'idleNoMove',
+            StateEnum.ANGRY: 'angryNoMove',
+            StateEnum.STAND: 'standAndRestart',
         })
         self.moveable = False
 
-class Machine3035(MachineImp):
+class Machine3035(MachineImpCls):
     '''鲲鲲
     1. 剩余投喂次数时弹出对话气泡
     '''
     def __init__(self):
         super(Machine3035, self).__init__({
-            State.IDLE: 'kunkun',
+            StateEnum.IDLE: 'kunkun',
         })
 
-class Machine2024(MachineImp):
+class Machine2024(MachineImpCls):
     '''宝宝（跟随）
     1. 与host保持在一定距离内
     2. 有仇恨时释放辅助技能
     '''
     def __init__(self):
         super(Machine2024, self).__init__({
-            State.IDLE: 'follow',
+            StateEnum.IDLE: 'follow',
         })
 
-class Machine2025(MachineImp):
+class Machine2025(MachineImpCls):
     '''宝宝（主动）
     1. 与host保持在一定距离内
     2. 进入视野的单位加入仇恨
@@ -1052,10 +877,10 @@ class Machine2025(MachineImp):
     '''
     def __init__(self):
         super(Machine2025, self).__init__({
-            State.IDLE: 'attack',
+            StateEnum.IDLE: 'attack',
         })
 
-class Machine2026(MachineImp):
+class Machine2026(MachineImpCls):
     '''宝宝（防御）
     1. 与host保持在一定距离内
     2. 有仇恨时，首选攻击host的目标
@@ -1063,10 +888,10 @@ class Machine2026(MachineImp):
     '''
     def __init__(self):
         super(Machine2026, self).__init__({
-            State.IDLE: 'defense',
+            StateEnum.IDLE: 'defense',
         })
 
-class Machine2031(MachineImp):
+class Machine2031(MachineImpCls):
     '''战场机器人
     1. 未开始，啥也不干
     2. 战场开始，前往占领点
@@ -1077,13 +902,13 @@ class Machine2031(MachineImp):
     '''
     def __init__(self):
         super(Machine2031, self).__init__({
-            State.IDLE: 'idleBattle',
-            State.STAND: 'standBattle',
-            State.ANGRY: 'angryBattle',
-            State.MOVE: 'moveBattle'
+            StateEnum.IDLE: 'idleBattle',
+            StateEnum.STAND: 'standBattle',
+            StateEnum.ANGRY: 'angryBattle',
+            StateEnum.MOVE: 'moveBattle'
         })
 
-class Machine2033(MachineImp):
+class Machine2033(MachineImpCls):
     '''召唤物和分身
     1. 与host保持在一定距离内
     2. 有仇恨时，首选攻击host的目标
@@ -1091,31 +916,31 @@ class Machine2033(MachineImp):
     '''
     def __init__(self):
         super(Machine2033, self).__init__({
-            State.IDLE: 'summon',
+            StateEnum.IDLE: 'summon',
         })
 
-class Machine2035(MachineImp):
+class Machine2035(MachineImpCls):
     '''boss召唤物
     1. 与host保持在一定距离内
     3. 攻击最高仇恨目标
     '''
     def __init__(self):
         super(Machine2035, self).__init__({
-            State.IDLE: 'summonBoss',
+            StateEnum.IDLE: 'summonBoss',
         })
         self.turnable = False
 
-class Machine2036(MachineImp):
+class Machine2036(MachineImpCls):
     '''boss召唤物（夔鼓）
     1. 不会移动，出生后持续使用随机技能
     '''
     def __init__(self):
         super(Machine2036, self).__init__({
-            State.IDLE: 'summonBossEx',
+            StateEnum.IDLE: 'summonBossEx',
         })
         self.turnable = False
 
-class Machine2037(MachineImp):
+class Machine2037(MachineImpCls):
     '''帮战压测机器人
     1. 未开始，啥也不干
     2. 开始，前往占领点
@@ -1128,13 +953,13 @@ class Machine2037(MachineImp):
     '''
     def __init__(self):
         super(Machine2037, self).__init__({
-            State.IDLE: 'idleGuild',
-            State.STAND: 'transBoss',
-            State.ANGRY: 'angryGuild',
-            State.MOVE: 'moveGuild'
+            StateEnum.IDLE: 'idleGuild',
+            StateEnum.STAND: 'transBoss',
+            StateEnum.ANGRY: 'angryGuild',
+            StateEnum.MOVE: 'moveGuild'
         })
 
-class Machine2038(MachineImp):
+class Machine2038(MachineImpCls):
     '''匹配机器人
     1. 未开始，啥也不干
     2. 副本战斗开始，随机攻击周围的怪物
@@ -1142,21 +967,21 @@ class Machine2038(MachineImp):
     '''
     def __init__(self):
         super(Machine2038, self).__init__({
-            State.IDLE: 'idleCombatRobot',
-            State.ANGRY: 'fightCombatRobot',
-            State.MOVE: 'followCombatRobot'
+            StateEnum.IDLE: 'idleCombatRobot',
+            StateEnum.ANGRY: 'fightCombatRobot',
+            StateEnum.MOVE: 'followCombatRobot'
         })
 
-class Machine3031(MachineImp):
+class Machine3031(MachineImpCls):
     '''路点移动
     1. 沿路点移动
     '''
     def __init__(self):
         super(Machine3031, self).__init__({
-            State.IDLE: 'routingMove',
+            StateEnum.IDLE: 'routingMove',
         })
 
-class Machine3038(MachineImp):
+class Machine3038(MachineImpCls):
     '''炮塔
     1. 不能转向
     2. 不能移动
@@ -1164,51 +989,51 @@ class Machine3038(MachineImp):
     '''
     def __init__(self):
         super(Machine3038, self).__init__({
-            State.IDLE: 'idleNoMove',
-            State.ANGRY: 'angryNoMove',
+            StateEnum.IDLE: 'idleNoMove',
+            StateEnum.ANGRY: 'angryNoMove',
         })
         self.moveable = False
         self.turnable = False
 
-class Machine3037(MachineImp):
+class Machine3037(MachineImpCls):
     '''联赛boss
     1. 沿路点移动
     2. 只会拆塔
     '''
     def __init__(self):
         super(Machine3037, self).__init__({
-            State.IDLE: 'routingBoss',
+            StateEnum.IDLE: 'routingBoss',
         })
 
-class Machine3039(MachineImp):
+class Machine3039(MachineImpCls):
     '''职业联赛机器人
     1. 待机一定时间后攻击副本内玩家
     '''
     def __init__(self):
         super(Machine3039, self).__init__({
-            State.IDLE: 'waitAndAttack',
+            StateEnum.IDLE: 'waitAndAttack',
         })
 
-class Machine3040(MachineImp):
+class Machine3040(MachineImpCls):
     '''元宵副本boss
     1. 攻击随机目标
     '''
     def __init__(self):
         super(Machine3040, self).__init__({
-            State.IDLE: 'randomAttack',
+            StateEnum.IDLE: 'randomAttack',
         })
 
-class Machine3041(MachineImp):
+class Machine3041(MachineImpCls):
     '''寒清节鲲鲲
     1. 沿路点移动
     2. 放技能
     '''
     def __init__(self):
         super(Machine3041, self).__init__({
-            State.IDLE: 'routingHanQingKunKun',
+            StateEnum.IDLE: 'routingHanQingKunKun',
         })
 
-class Machine3042(MachineImp):
+class Machine3042(MachineImpCls):
     '''驻守，到家后转向
     1. 驻守
     2. 攻击仇恨目标
@@ -1217,13 +1042,13 @@ class Machine3042(MachineImp):
     '''
     def __init__(self):
         super(Machine3042, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'stand',
-            State.ANGRY: 'angry',
-            State.BACK: 'backAndTurn'
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'stand',
+            StateEnum.ANGRY: 'angry',
+            StateEnum.BACK: 'backAndTurn'
         })
 
-class Machine3043(MachineImp):
+class Machine3043(MachineImpCls):
     '''大世界boss 带aiAction
     1. 驻守
     2. 攻击仇恨目标
@@ -1231,57 +1056,57 @@ class Machine3043(MachineImp):
     '''
     def __init__(self):
         super(Machine3043, self).__init__({
-            State.IDLE: 'idleEx',
-            State.STAND: 'stand',
-            State.ANGRY: 'angryWithAiSkill',
-            State.BACK: 'back',
+            StateEnum.IDLE: 'idleEx',
+            StateEnum.STAND: 'stand',
+            StateEnum.ANGRY: 'angryWithAiSkill',
+            StateEnum.BACK: 'back',
         })
 
-class Machine3044(MachineImp):
+class Machine3044(MachineImpCls):
     '''木桩（不转向版）
     '''
     def __init__(self):
         super(Machine3044, self).__init__({
-            State.IDLE: 'idleNoMove'
+            StateEnum.IDLE: 'idleNoMove'
         })
         self.moveable = False
 
-class Machine3045(MachineImp):
+class Machine3045(MachineImpCls):
     '''城战守城战弩
     1. 不能移动
     2. 攻击仇恨目标
     '''
     def __init__(self):
         super(Machine3045, self).__init__({
-            State.IDLE: 'idleNoMove',
-            State.ANGRY: 'angryNoMove',
+            StateEnum.IDLE: 'idleNoMove',
+            StateEnum.ANGRY: 'angryNoMove',
         })
         self.moveable = False
 
-class Machine3046(MachineImp):
+class Machine3046(MachineImpCls):
     '''城战攻城兽
     1. 只能攻击城门
     2. 被激活后移动
     '''
     def __init__(self):
         super(Machine3046, self).__init__({
-            State.IDLE: 'siegeWarBossIdle',
-            State.ANGRY: 'siegeWarBossAngry',
+            StateEnum.IDLE: 'siegeWarBossIdle',
+            StateEnum.ANGRY: 'siegeWarBossAngry',
         })
 
-class Machine3047(MachineImp):
+class Machine3047(MachineImpCls):
     '''幸运怪
     1 定点走路线
     2 脱战后选择最近路点走路点
     '''
     def __init__(self):
         super(Machine3047, self).__init__({
-            State.IDLE: 'routingPatrol',
-            State.ANGRY: 'luckyMonsterAngry',
-            State.PATROL: 'routingRoutePatrol',
+            StateEnum.IDLE: 'routingPatrol',
+            StateEnum.ANGRY: 'luckyMonsterAngry',
+            StateEnum.PATROL: 'routingRoutePatrol',
         })
 
-class Machine3048(MachineImp):
+class Machine3048(MachineImpCls):
     '''新召唤物
     1 与host保持在一定距离内
     2 有仇恨时，首选攻击host的目标
@@ -1293,16 +1118,16 @@ class Machine3048(MachineImp):
     '''
     def __init__(self):
         super(Machine3048, self).__init__({
-            State.IDLE: 'summonPet',
+            StateEnum.IDLE: 'summonPet',
         })
 
-class Machine3049(MachineImp):
+class Machine3049(MachineImpCls):
     '''城战投石车
     1 无论何时都会进行攻击
     '''
     def __init__(self):
         super(Machine3049, self).__init__({
-            State.IDLE: 'siegeWarStoneThrower'
+            StateEnum.IDLE: 'siegeWarStoneThrower'
         })
         self.moveable = False
         self.turnable = False
@@ -1317,17 +1142,17 @@ class Machine3050(MachineWithChangeTime):
     '''
     def __init__(self):
         super(Machine3050, self).__init__({
-            State.IDLE: 'waitAnim',
-            State.PLAY_ANIM: 'playAnim',
-            State.ANGRY: 'angrySpawn',
+            StateEnum.IDLE: 'waitAnim',
+            StateEnum.PLAY_ANIM: 'playAnim',
+            StateEnum.ANGRY: 'angrySpawn',
         })
         self.moveable = False
         self.turnable = False
         self.speialAICombatTup = True
 
-    def doLoseWitnessTask(self, ctrl):
-        ctrl.backEgg()
-        ctrl.changeBornState(gameconst.BornStateType.reMove)
+    def doLoseWitnessTask(self, aiController):
+        aiController.backEgg()
+        aiController.setBornState(gameconst.BornStateType.reMove)
 
 
 class Machine3051(MachineWithChangeTime):
@@ -1339,18 +1164,18 @@ class Machine3051(MachineWithChangeTime):
     '''
     def __init__(self):
         super(Machine3051, self).__init__({
-            State.IDLE: 'waitAnim',
-            State.PLAY_ANIM: 'playAnimAndAngry',
-            State.ANGRY: 'angryNoMove',
-            State.STAND: 'standWaitResetAnim',
-            State.RESET_ANIM: 'resetAnim'
+            StateEnum.IDLE: 'waitAnim',
+            StateEnum.PLAY_ANIM: 'playAnimAndAngry',
+            StateEnum.ANGRY: 'angryNoMove',
+            StateEnum.STAND: 'standWaitResetAnim',
+            StateEnum.RESET_ANIM: 'resetAnim'
         })
         self.moveable = False
         self.speialAICombatTup = True
 
-    def doLoseWitnessTask(self, ctrl):
-        ctrl.backWait()
-        ctrl.changeBornState(gameconst.BornStateType.reMove)
+    def doLoseWitnessTask(self, aiController):
+        aiController.backWait()
+        aiController.setBornState(gameconst.BornStateType.reMove)
 
 
 class Machine3052(MachineWithChangeTime):
@@ -1362,21 +1187,21 @@ class Machine3052(MachineWithChangeTime):
     '''
     def __init__(self):
         super(Machine3052, self).__init__({
-            State.IDLE: 'waitAnim',
-            State.PLAY_ANIM: 'playAnimAndAngry',
-            State.ANGRY: 'angryAndBlink',
-            State.STAND: 'standAndResetAnim',
-            State.BACK: 'telBackAfterResetAnim'
+            StateEnum.IDLE: 'waitAnim',
+            StateEnum.PLAY_ANIM: 'playAnimAndAngry',
+            StateEnum.ANGRY: 'angryAndBlink',
+            StateEnum.STAND: 'standAndResetAnim',
+            StateEnum.BACK: 'telBackAfterResetAnim'
         })
         self.speialAICombatTup = True
 
-    def doLoseWitnessTask(self, ctrl):
-        ctrl.addHomeBuff()
-        ctrl.clearHateAndTelBack()
-        ctrl.backWait()
-        ctrl.changeBornState(gameconst.BornStateType.reMove)
+    def doLoseWitnessTask(self, aiController):
+        aiController.addHomeBuff()
+        aiController.clearHateAndTelBack()
+        aiController.backWait()
+        aiController.setBornState(gameconst.BornStateType.reMove)
 
-class Machine3053(MachineImp):
+class Machine3053(MachineImpCls):
     '''spec
     1. 驻守
     2. 攻击仇恨目标,若无仇恨目标,当自身携带某种buff时,也会释放无目标技能
@@ -1384,23 +1209,23 @@ class Machine3053(MachineImp):
     '''
     def __init__(self):
         super(Machine3053, self).__init__({
-            State.IDLE: 'idleNoMoveWithBuff',
-            State.ANGRY: 'angryNoMoveWithBuff',
-            State.STAND: 'standAndRestart',
+            StateEnum.IDLE: 'idleNoMoveWithBuff',
+            StateEnum.ANGRY: 'angryNoMoveWithBuff',
+            StateEnum.STAND: 'standAndRestart',
         })
         self.moveable = False
 
-class Machine3054(MachineImp):
+class Machine3054(MachineImpCls):
     '''守宝团
     1 定点走路线
     2 脱战后群体传送回出生点
     '''
     def __init__(self):
         super(Machine3054, self).__init__({
-            State.IDLE: 'routingPatrol',
-            State.ANGRY: 'luckyGroupAngry',
-            State.PATROL: 'routingRoutePatrol',
-            State.STAND: 'luckyGroupStand',
+            StateEnum.IDLE: 'routingPatrol',
+            StateEnum.ANGRY: 'luckyGroupAngry',
+            StateEnum.PATROL: 'routingRoutePatrol',
+            StateEnum.STAND: 'luckyGroupStand',
         })
 
 _machineDic = {

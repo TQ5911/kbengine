@@ -62,5 +62,9 @@ datas = _tools.RODict({
     "visibleWorldLevel": _tools.RODict({
         "ID": "visibleWorldLevel",
         "value": "worldLevel",
+    }),
+    "rankWorldLevel": _tools.RODict({
+        "ID": "rankWorldLevel",
+        "value": 300,
     })
 })

@@ -12,7 +12,7 @@ def onDBMgrReady():
     KBEngine method.
     dbmgr已经准备好了
     """
-    LOG_IFO('onDBMgrReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
+    LOG_INFO('onDBMgrReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
              (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
 
 
@@ -21,7 +21,7 @@ def onDBMgrReady():
 def onTick(timerID):
     """
     """
-    LOG_IFO('onTick()')
+    LOG_INFO('onTick()')
 
 
 def onDBMgrShutDown():
@@ -29,7 +29,7 @@ def onDBMgrShutDown():
     KBEngine method.
     这个dbmgr被关闭前的回调函数
     """
-    LOG_IFO('onDBMgrShutDown()')
+    LOG_INFO('onDBMgrShutDown()')
 
 
 def onSelectAccountDBInterface(accountName):

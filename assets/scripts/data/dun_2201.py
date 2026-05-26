@@ -10,21 +10,25 @@ datas ={
     "DisplayName": "",
     "EntityID": 11031001,
     "ID": 22010001,
-    "Name": "\u5c0f\u9b3c\u949f\u9997",
+    "Name": "\u9634\u9633\u9b3c\u5224",
     "PosX": 1.576267,
     "PosY": -0.02,
     "PosZ": -0.1514535,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 25,
+      "LightPillar": "",
       "MapEntityScale": 0,
-      "MapEntityType": "18",
+      "MapEntityType": "22",
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -44,9 +48,12 @@ datas ={
     "PosY": -0.02,
     "PosZ": 0.01949835,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 10.0,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "22018002": {
@@ -65,9 +72,12 @@ datas ={
     "PosY": -0.02,
     "PosZ": 0.05580091,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 10.0,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

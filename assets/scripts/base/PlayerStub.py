@@ -94,7 +94,7 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self._setOnlineMass(gbid, False)
 
     def getAvatarBox(self, gbId):
-        return self.gbId2box.get(gbId)
+        return self.gbId2box.get(gbId, None)
 
     def getAvatarBoxByRoleName(self, roleName):
         return self.role2box.get(roleName)
@@ -200,11 +200,12 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def isOnLine(self, gbid, box, callbackFunc='', callbackArgs=()):
         bOnline = False
-        if gbid in self.gbId2box:
+        _box = self.getAvatarBox(gbid)
+        if _box:
             bOnline = True
 
         if callbackFunc:
-            getattr(box, callbackFunc)(bOnline, *callbackArgs)
+            getattr(box, callbackFunc)(bOnline, _box, *callbackArgs)
 
     def isAllAvatarsOnline(self, gbIds, box):
         stateList = []
@@ -266,7 +267,7 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return self.avatarCounter.dataSum
 
     def recordOfflineCallback(self, failGbIds, playerGbId, callbackFuncName, callbackArgs):
-        LOG_IFO("recordOfflineCallback", failGbIds, playerGbId, callbackFuncName, callbackArgs)
+        LOG_INFO("recordOfflineCallback", failGbIds, playerGbId, callbackFuncName, callbackArgs)
         for gbId in failGbIds:
             gamesql.recordAvatarOfflineCallback(gbId, callbackFuncName, callbackArgs)
 
@@ -278,105 +279,50 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         box.onAvatarReceiveMail(mailVal, True)
 
     def getPlayerInfoOffline(self, tarGbId, srcBase):
-        # 缓存60秒
-        if tarGbId in self.PlayerInfoCache:
-            cacheTime, zStr = self.PlayerInfoCache[tarGbId]
-            if utils.curTS() - cacheTime < 60:
-                LOG_DBG('getPlayerInfoOffline cache hit', tarGbId)
-                srcBase.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)
-                return
-            else:
-                self.PlayerInfoCache.pop(tarGbId)
+        redisUtils.RedisUtils.getFullPlayerInfo(tarGbId, functools.partial(self._onGetPlayerInfoOffline, tarGbId, srcBase))
 
-        gamesql.getAvatarPersonalInfo(tarGbId,
-                                      lambda ret, num, insertId, err, tarGbId=tarGbId, srcBase=srcBase: self._onGetPlayerInfoOffline(
-                                        ret, num, insertId, err, tarGbId, srcBase))
-
-    def _onGetPlayerInfoOffline(self, ret, num, insertId, err, tarGbId, srcBase):
+    def _onGetPlayerInfoOffline(self, tarGbId, srcBase, cid, err, res):
+        LOG_INFO("_onGetPlayerInfoOffline ", tarGbId, "err", err)
         if err:
-            LOG_ERR('getPlayerInfoOffline error:', err)
+            LOG_ERR("_onGetPlayerInfoOffline", "err", err)
             return
 
-        if not ret:
-            LOG_ERR('getPlayerInfoOffline ret is empty:', ret, num, insertId, err, srcBase)
-            return
+        s = res.decode()          
+        hex_str = s.replace('\\x', '')
+        compressed_bin = bytes.fromhex(hex_str)
 
-        redisUtils.RedisUtils.getSingleUserInfo(
-            tarGbId,
-            lambda fcVal: self._onRedisGetSingleUserInfo(fcVal, ret, srcBase))
-
-    def _onRedisGetSingleUserInfo(self, fcVal, ret, srcBase):
-        guildUUID = fcVal.guildUUID
-        guildName = fcVal.guildName
-        gbId = fcVal.gbId
+        uncompressed_str = gzip.decompress(compressed_bin)
+        json_str = uncompressed_str.decode('ascii')
+        data = json.loads(json_str)
+        
+        guildUUID = data.get('guildUUID')
+        guildName = data.get('guildName')
+        gbId = data.get('gbId')
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             guildUUID,
             'getMemberJobAndGuildCache',
-            (gbId, self, (ret, guildUUID, guildName, gbId, srcBase)),
+            (gbId, self, (data, srcBase)),
             self,
             'onGetMemberJobAndGuildCache',
-            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0), (ret, guildUUID, guildName, gbId, srcBase)),
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), (data, srcBase)),
         )
 
-    def concatAppearanceJson(self, ret):
-        appearance = {}
-        appearance['weapon'] = utils.getAvatarFieldVal('APPEARANCE_WEAPON', ret[0]).decode()
-        appearance['breast'] = utils.getAvatarFieldVal('APPEARANCE_BREAST', ret[0]).decode()
-        appearance['outfitData'] = {}
-        appearance['outfitData']['hairId'] = utils.getAvatarFieldVal('APPEARANCE_HAIR_ID', ret[0]).decode()
-        appearance['outfitData']['clothesId'] = utils.getAvatarFieldVal('APPEARANCE_CLOTHES_ID', ret[0]).decode()
-        appearance['outfitData']['picFrameId'] = utils.getAvatarFieldVal('APPEARANCE_PIC_FRAME_ID', ret[0]).decode()
-        appearance['outfitData']['wingId'] = utils.getAvatarFieldVal('APPEARANCE_WING_ID', ret[0]).decode()
-        appearance['outfitData']['mountId'] = utils.getAvatarFieldVal('APPEARANCE_MOUNT_ID', ret[0]).decode()
-        appearance['faceData'] = {}
-        appearance['faceData']['suitId'] = utils.getAvatarFieldVal('APPEARANCE_FACE_SUIT_ID', ret[0]).decode()
-        appearance['faceData']['hairIdFaceId'] = utils.getAvatarFieldVal('APPEARANCE_FACE_HAIR_ID', ret[0]).decode()
-        appearance['faceData']['hairColorIdSkinColorId'] = utils.getAvatarFieldVal('APPEARANCE_FACE_COLOR', ret[0]).decode()
-        return json.dumps(appearance)
-
     def onGetMemberJobAndGuildCache(self, guildData, args):
-        ret, guildUUID, guildName, tarGbId, srcBase = args
-        data = {}
-        #个人信息
-        data['gbId'] = tarGbId
-        data['name'] = utils.getAvatarFieldVal('NAME', ret[0]).decode()
-        data['level'] = utils.getAvatarFieldVal('LEVEL', ret[0]).decode()
-        data['school'] = utils.getAvatarFieldVal('SCHOOL', ret[0]).decode()
-        data['totalScore'] = utils.getAvatarFieldVal('TOTAL_SCORE', ret[0]).decode()
-        data['sex'] = utils.getAvatarFieldVal('SEX', ret[0]).decode()
-        data['guildName'] = guildName
-        data['guildUUID'] = guildUUID
+        data, srcBase = args
+
         data['guildJob'] = guildData[0]
         data['guildDspFlag'] = guildData[1]
         data['guildIcon'] = guildData[2]
-        data['appearance'] = self.concatAppearanceJson(ret)
-        data['bodyEquipList'] = []
-        data['mountId'] = 0 # TODO: playerInfo
-        data['mountActiveNum'] = 9 # TODO: playerInfo
-        data['lingShouBattleList'] = [] # TODO: playerInfo
-        data['meridianCurSlot'] = 0 # TODO: playerInfo
-        data['lingShouNum'] = 0 # TODO: playerInfo
-        data['achieveNum'] = 0 # TODO: playerInfo
-        data['exp'] = 0 # TODO: playerInfo
-        data['unlock'] = 0 # TODO: playerInfo
-        for d in ret:
-            if utils.getEquipFieldsVal('GRID_ID', d).decode():
-                data['bodyEquipList'].append({
-                    'slotId': utils.getEquipFieldsVal('GRID_ID', d).decode(),
-                    'attrJson': utils.getEquipFieldsVal('ATTR_JSON', d).decode(),
-                    'itemId': utils.getEquipFieldsVal('ITEM_ID', d).decode(),
-                    'createTime': utils.getEquipFieldsVal('CREATE_TIME', d).decode(),
-                    'expireTime': utils.getEquipFieldsVal('EXPIRE_TIME', d).decode(),
-                    'uniqueId': utils.getEquipFieldsVal('UNIQUE_ID', d).decode(),
-                    'bindType': utils.getEquipFieldsVal('BIND_TYPE', d).decode(),
-                    'lockStatus': utils.getEquipFieldsVal('LOCK_STATUS', d).decode(),
-                })
+        data['guildRankIdx'] = guildData[3]
+        if data["guildRankIdx"] > 0:
+            data["avatarRankData"][gameconst.LeaderBoardType.GUILD] = data["guildRankIdx"]
 
-        jsonStr = json.dumps(data).encode('ascii')
+        def json_default(obj):
+            # 处理 KBEngine 的 FixedArray，转成普通列表
+            if "FixedArray" in str(type(obj)):
+                return list(obj)
+            # 其他无法序列化的类型，转字符串
+            return str(obj)
+        jsonStr = json.dumps(data, default=json_default).encode('ascii')
         zStr = gzip.compress(jsonStr)
-        self.PlayerInfoCache[tarGbId] = (utils.curTS(), zStr)
-        self.PlayerInfoCache.move_to_end(tarGbId)
-        if len(self.PlayerInfoCache) > 1024:
-            self.PlayerInfoCache.popitem(last=False)
-        LOG_DBG("_onGetPlayerInfoOffline", len(zStr), len(jsonStr), len(self.PlayerInfoCache), jsonStr)
         srcBase.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)

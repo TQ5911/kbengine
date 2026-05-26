@@ -110,7 +110,7 @@ class _ElementHotReloadMixin(userType.UserSingleType):
             if callable(v) and not inspect.isfunction(v):
                 LOG_DBG('    |-- {}::_lateReload param\'s method: {} id: [{}]'.format(
                     self.classname(), v.__name__, self.id))
-                utils.resetCls(v.__self__)
+                utils.resetClass(v.__self__)
             else:
                 getattr(v, 'reloadScript', utils.emptyFunc)()
 
@@ -290,7 +290,7 @@ class WaitingTaskCompleteEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMi
         if (checkNow or checkOnce) and taskId:
             spaceMgr = self.controller.owner
             if spaceMgr:
-                _args = (taskId, self.id, gameconst.TaskStat.TASK_STAT_SUBMITTED, checkOnce)
+                _args = (taskId, self.id, gameconst.TaskStatEnum.TASK_STAT_SUBMITTED, checkOnce)
                 spaceMgr.syncPlayer(lambda box: box.base.getTaskCurrentState(taskId, box, 'flowCtrlIsTaskCompleteCallback', _args))
 
     def fetchWaitingKey(self, ctx):
@@ -320,7 +320,7 @@ class WaitingTaskFailureEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMix
         if not spaceMgr:
             return
 
-        _innerArgs = (taskId, self.id, gameconst.TaskStat.TASK_STAT_FAILED, checkOnce)
+        _innerArgs = (taskId, self.id, gameconst.TaskStatEnum.TASK_STAT_FAILED, checkOnce)
         spaceMgr.syncPlayer(lambda box: box.base.getTaskCurrentState(taskId, box, 'flowCtrlIsTaskCompleteCallback', _innerArgs))
 
     def fetchWaitingKey(self, ctx):
@@ -350,7 +350,7 @@ class WaitingTaskInProgressEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReload
         if not spaceMgr:
             return
 
-        _args = (taskId, self.id, gameconst.TaskStat.TASK_STAT_RUNNING, checkOnce)
+        _args = (taskId, self.id, gameconst.TaskStatEnum.TASK_STAT_RUNNING, checkOnce)
         spaceMgr.syncPlayer(lambda box: box.base.getTaskCurrentState(taskId, box, 'flowCtrlIsTaskCompleteCallback', _args))
 
     def fetchWaitingKey(self, ctx):
@@ -820,7 +820,7 @@ class DungeonMoveEntityToFixPosEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRe
                 userData.update({"fc_OriginMoveAni": _entity.moveAni})
                 _entity.moveAni =_newMoveAni
 
-            _entity.cancelMoveController()
+            _entity.removeMoveController()
             if _entity.aiController:
                 _entity.aiController.moveToFixedPositionInForce(_pos, userData)
             else:
@@ -919,11 +919,11 @@ class MonsterHpMonitorTriggerEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRelo
 
 class MonsterRestNumberEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
-    __selfParams__ = ('monsterGID', 'symbol', 'restNum')
+    __selfParams__ = ('monsterGIDs', 'symbol', 'restNum')
 
-    def __init__(self, eventId, controller, monsterGID, symbol, number, checkNow, checkOnce, eventHandler=None, **kwargs):
+    def __init__(self, eventId, controller, monsterGIDs, symbol, number, checkNow, checkOnce, eventHandler=None, **kwargs):
         super(MonsterRestNumberEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
-        self.putArgument('monsterGID', monsterGID)
+        self.putArgument('monsterGIDs', monsterGIDs)
         self.putArgument('symbol', symbol)
         self.putArgument('restNum', number)
         self.putArgument('checkNow', checkNow)
@@ -936,65 +936,41 @@ class MonsterRestNumberEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixi
             obj.tid, waitingE=self,
             waitingArgs=_w_args,
             waitingKwargs=_w_kwargs)
-        monsterGID = self.fetchArgument('monsterGID', 0)
+        monsterGIDs = self.fetchArgument('monsterGIDs', ())
         symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
         number = self.fetchArgument('restNum', -1)
         usePrototypeID = self.fetchArgument('usePrototypeID', False)
-        if usePrototypeID:
-            monsterGID = "cbid{}".format(monsterGID)
+        if monsterGIDs[0] == -1:
+            _tag = gameconst.FLOW_REST_MONSTER_TAG_ALL
+        elif usePrototypeID:
+            _tag = gameconst.FLOW_REST_MONSTER_TAG_CBID
+        else:
+            _tag = gameconst.FLOW_REST_MONSTER_TAG_GID
 
         checkNow = self.fetchArgument('checkNow', False)
         checkOnce = self.fetchArgument('checkOnce', False)
         if not (checkOnce or checkNow):
             self._controller.waitingForMonsterRestNumberTrigger(
-                self, ctx, monsterGID, symbol, number)
+                self, ctx, monsterGIDs, _tag, symbol, number)
 
         else:
             _spaceMgr = self.controller.owner
-            if monsterGID > 0:
-                _tagOfGid = 'gid_{}'.format(monsterGID)
-            else:
-                # NOTE()(FLOW_CONTROLLER): rest number checkOnce All only support monster
-                _tagOfGid = 'Monster'
+            _currentNum = _spaceMgr.getMonsterNumByGIDsAndTag(monsterGIDs, _tag)
 
-            _currentNum = 0
-            for _eid in _spaceMgr.tagEntities.get(_tagOfGid, ()):
-                _entity = KBEngine.entities.get(_eid)
-                if _entity and not _entity.isDie():
-                    _currentNum += 1
             _ret = gameconst.DungeonFlowCompSym.compare(symbol, _currentNum, number)
             if _ret:
                 self.continueHandleBeTriggered(ctx)
 
             elif checkNow:
                 self._controller.waitingForMonsterRestNumberTrigger(
-                    self, ctx, monsterGID, symbol, number)
+                    self, ctx, monsterGIDs, _tag, symbol, number)
 
             else:
                 LOG_WARN("DUNGEON FLOW -- EVENT[{}]: rest number checkonce failed --"
                             " symbol={}, {} {}".format(self.id, symbol, _currentNum, number))
 
     def cancelWait(self, ctx):
-        _monsterGID = self.fetchArgument('monsterGID', 0)
-        symbol = self.fetchArgument('symbol', gameconst.DungeonFlowCompSym.un)
-        number = self.fetchArgument('restNum', -1)
-
-        ctrl = self.controller
-
-        _popList = []
-        _eList = ctrl.monsterAwaitDic\
-            .get(_monsterGID, {})\
-            .get(ctrl.MONSTER_AWAIT_REST_NUM, {})\
-            .get(symbol, {})\
-            .get(number)
-
-        if _eList:
-            for idx, (e, eCtx) in enumerate(_eList):
-                if eCtx.tid == ctx.tid:
-                    _popList.append(idx)
-
-            for i in reversed(_popList):
-                _eList.pop(i)
+        self.controller.clearRestMonsterTrigger(self.id)
 
 
 class DungeonMonsterKillerNumberEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):

@@ -1,0 +1,59 @@
+<root>
+    <Properties>
+        <midasTotalPay>
+            <Type>          UINT64                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </midasTotalPay>
+
+        <idipTotalPay>
+            <Type>          UINT32                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </idipTotalPay>
+
+        <firstBuyCreditDic>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </firstBuyCreditDic>
+
+        <buyCreditNumDic>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </buyCreditNumDic>
+    </Properties>
+
+    <BaseMethods>
+        <clientBuyGoods> <Exposed/>
+            <Arg>           BUY_CREDIT_ID           </Arg>
+        </clientBuyGoods>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onUpdateCreditNum>
+            <Arg>           BUY_CREDIT_ID           </Arg>
+            <Arg>           UINT32                  </Arg>
+        </onUpdateCreditNum>
+
+        <onAddFirstBuyCredit>
+            <Arg>           BUY_CREDIT_ID           </Arg>
+        </onAddFirstBuyCredit>
+
+        <onGetPlayerPayInfo>
+            <Arg>           UINT64                  </Arg>
+            <Arg>           ARRAY <of> UINT32 </of>   </Arg>
+            <Arg>           ARRAY <of> CLI_BUY_CREDIT_NUM_DATA </of>   </Arg>
+        </onGetPlayerPayInfo>
+
+        <onBuyCreditSuccess>
+            <Arg>           BUY_CREDIT_ID           </Arg>
+        </onBuyCreditSuccess>
+    </ClientMethods>
+</root>

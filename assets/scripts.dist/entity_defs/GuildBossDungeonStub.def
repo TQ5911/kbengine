@@ -1,0 +1,45 @@
+<root>
+
+    <Interfaces>
+        <Interface> iDungeonStub </Interface>
+        <Interface> iDungeonStubMonsterMixin </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaces>
+            <Type>          PY_DICT        </Type>
+            <Flags>         BASE           </Flags>
+            <Default>       {}             </Default>
+        </spaces>
+
+        <creatingGuildBossDic>
+            <Type>      PY_DICT     </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}          </Default>
+        </creatingGuildBossDic>
+
+    </Properties>
+
+    <BaseMethods>
+        <completeGuildBossDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            GUILD_UUID      </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            UINT32          </Arg>
+        </completeGuildBossDungeon>
+
+        <leaveGuildBossDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            GUILD_UUID      </Arg>
+            <Arg>            PYTHON          </Arg>
+            <Arg>            MAILBOX         </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
+        </leaveGuildBossDungeon>
+
+        <syncGuildBossHP>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   INT32       </Arg>
+            <Arg>   INT32       </Arg>
+        </syncGuildBossHP>
+    </BaseMethods>
+</root>

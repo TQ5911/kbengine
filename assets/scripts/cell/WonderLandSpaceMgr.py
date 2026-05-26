@@ -14,15 +14,16 @@ import gametimer
 import iTimer
 import gameconst
 import iCollectionBossForMgr
-
+import branchData_set as BDS
 
 class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.IStaticSpaceMgr):
     def __init__(self):
-        LOG_IFO("WonderLandSpaceMgr __init__")
+        LOG_INFO("WonderLandSpaceMgr __init__")
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)
         iCollectionBossForMgr.ICollectionBossForMgr.__init__(self)
         gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
         self.addTimerCB(1, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
+        self.fightingPlayersCnt = 0
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -38,7 +39,7 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
     def addEntity(self, entId, tags):
         entity = KBEngine.entities.get(entId, None)
         if entity and entity.IsMonster:
-            eTags = CBD.datas.get(entity.creepBaseId, {}).get('tag', [])
+            eTags = CBD.datas.get(entity.creepbaseId, {}).get('tag', [])
             eTags = [] if not eTags else eTags
             for tag in eTags:
                 if tag == gameconst.CREEP_TAG_WONDERLAND_FIXED_BOSS:
@@ -73,7 +74,7 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
         _ent.client.onWonderLandBossInfo(_bossList)
 
     def summonRandomBoss(self):
-        LOG_IFO("summonRandomBoss")
+        LOG_INFO("summonRandomBoss")
         _dungeonNo = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunStructModData(_dungeonNo)
         if not _dunData:
@@ -137,3 +138,18 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
         _delay = _bossData['Props']['RefreshTime']
         self.addTimerCB(_delay, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
 
+    def _statisticFightingCount(self):
+        now = utils.curTS()
+        lastCnt = self.fightingPlayersCnt
+        self.fightingPlayersCnt = 0
+        dt = BDS.datas["Branch_activePlayer"]["value"] * 60
+        for pid in self.players:
+            ent = KBEngine.entities.get(pid)
+            if not ent:
+                continue
+            #5分钟内有进入过战斗视为"活跃用户"
+            if now - ent.lastFightTime < dt:
+                self.fightingPlayersCnt += 1
+
+        if lastCnt != self.fightingPlayersCnt:
+            gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onFightingPlayersCntSync(self.spaceNo, self.fightingPlayersCnt)

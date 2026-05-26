@@ -452,8 +452,12 @@ namespace KBEngine
                     buffs.buffs[i].srcKey == arg1.srcKey)
                 {
                     exist = true;
+                    double oldEndTime = buffs.buffs[i].endTimeStamp;
                     buffs.buffs[i] = arg1;
-                    BuffManager.Instance.RefreshBuff(this, arg1);
+                    if (arg1.endTimeStamp == 0 || arg1.endTimeStamp >= oldEndTime)
+                    {
+                        BuffManager.Instance.RefreshBuff(this, arg1);
+                    }
                     break;
                 }
             }
@@ -693,7 +697,7 @@ namespace KBEngine
 
         //public override void onMortalChanged(float oldValue) { }
 
-        
+
         //public override void onMulBloodSuckChanged(float oldValue) { }
         public override void onMulCDChanged(float oldValue)
         {
@@ -745,6 +749,16 @@ namespace KBEngine
             }
         }
 
+        public override void onStateChangedForce(byte state)
+        {
+            //已有此状态后，又被设置一次才会触发此接口
+            //目前只有击倒
+            if (hasView)
+            {
+                view.RefreshStateAnim(state);
+            }
+        }
+
         //public override void onStunAntiChanged(Int32 oldValue) { }
         //public override void onStunEnhChanged(Int32 oldValue) { }
         //public override void onSummonIdChanged(Int32 oldValue) { }
@@ -772,7 +786,14 @@ namespace KBEngine
             //EventMgr.Instance.SendEvent(EventDef.EVENT_GATHER_ONSELECT_COLLECTION, this.selectedTargetId);
         }
 
-        
+        /// <summary>
+        /// 怪物仇恨目标改变
+        /// </summary>
+        /// <param name="oldValue"></param>
+        public override void onFirstHateTargetIdChanged(int oldValue)
+        {
+            EventMgr.Instance.SendEvent(EventDef.EVENT_TARGET_ONHATETARGETCHANGED, this.id);
+        }
 
         public override void onAntiFatalChanged(int oldValue)
         {
@@ -798,7 +819,7 @@ namespace KBEngine
             }
         }
 
-        
+
 
         #endregion 属性变化
 
@@ -919,7 +940,7 @@ namespace KBEngine
 
         public override void onEnterWorld()
         {
-           
+
             base.onEnterWorld();
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_ENTER_WORLD, this);
             BattleManager.Instance.OnHandleEnterWorld(this);
@@ -1012,5 +1033,22 @@ namespace KBEngine
                 PropCalculator.Instance.SetServerValue(PropDataConsant.MulSpeed, oldValue);
             }
         }
+
+        #region patch
+        public override void onPatchVersion(string patchVersion)
+        {
+            if (string.IsNullOrEmpty(patchVersion))
+            {
+                GLog.LogError("Error:patch content is null or empty");
+                return;
+            }
+
+            GLog.Log("min patch version:{0}", patchVersion);
+            if (MyUtils.Compare4StopsVersion(MainStart.GetPatchVersion(), patchVersion) < 0)
+            {
+                UITipsManager.ShowMessage(Table_login_set.m_PatchUpdate_restart, AppRestart.Instance.Restart);
+            }
+        }
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import collections
+import MineGlobalData
 
 # 记录了全局所有baseapp的地址到其mailbox的映射
 baseAppCache = {}
@@ -84,6 +85,7 @@ localBaseApp = None
 localAdminStub = None
 localLoginStub = None
 localAuctionStub = None
+localLeaseStub = None
 localOrderStub = None
 cellAvatarCountDict = {}
 
@@ -108,6 +110,7 @@ spaceGeometryTaskData = None
 
 globalActData = {}
 
+freeTicketNumConfig = {}
 antiAddictionData = [0, 0]
 localMinorAccountCache = {}
 
@@ -137,3 +140,6 @@ hookDict = {}
 
 # 全服屏蔽的任务记录
 forbiddenTaskIds = {}
+
+mineGlobalData = MineGlobalData.MineGlobalData()
+

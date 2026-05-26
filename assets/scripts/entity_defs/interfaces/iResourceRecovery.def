@@ -1,0 +1,36 @@
+<root>
+    <Properties>
+        <freeTicketUseInfo>
+            <Type>          PY_DICT                     </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       {}                           </Default>
+        </freeTicketUseInfo>
+        <freeTickeRecoveryInfo>
+            <Type>          PY_DICT                     </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       {}                          </Default>
+        </freeTickeRecoveryInfo>
+    </Properties>
+
+    <BaseMethods>
+        <reqFreeTicketRecovery>
+            <Arg>   UINT16       </Arg>
+            <Arg>   UINT32       </Arg>
+        </reqFreeTicketRecovery>
+
+        <onUpdateFreeTicketNumConfig>
+            <Arg>   UINT16       </Arg>
+        </onUpdateFreeTicketNumConfig>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onFreeTicketRecoveryInfo>
+            <Arg>   UINT16       </Arg>
+            <Arg>   ARRAY   <of>    FREE_TICKET_RECOVERY_CLIENT_VAL     </of>   </Arg>
+        </onFreeTicketRecoveryInfo>
+    </ClientMethods>
+</root>

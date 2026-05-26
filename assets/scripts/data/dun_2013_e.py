@@ -78,8 +78,7 @@ datas ={
     "transition": {
       "finished": [
         1026,
-        1021,
-        1028
+        1021
       ]
     }
   },
@@ -150,19 +149,6 @@ datas ={
       20130003
     ],
     "dialogID": 19013002,
-    "transition": {}
-  },
-  "1028": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      20130003
-    ],
-    "buffID": [
-      64004085
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 30.0,
     "transition": {}
   }
 }

@@ -17,7 +17,7 @@ import dataUtils
 import gametimer
 import gamemove
 
-import creation_creation as CCD
+import creation_creation as C_C_DD
 import creep_base as CBD
 import skill_skill as SSD
 import const_const as CONST
@@ -66,9 +66,9 @@ class IEventActions(object):
             _level = args[1]
 
         if self.hasAureola(_aureoleId):
-            self.removeAureola(_aureoleId)
+            self.removeAureolaById(_aureoleId)
 
-        self.aureoleDic.addAureole(self, _aureoleId, _level)
+        self.auraDic.addAureole(self, _aureoleId, _level)
 
     def removeAureola(self, targetEnt, context, *args):
         if len(args) <= 0:
@@ -76,7 +76,7 @@ class IEventActions(object):
             return
 
         _aureoleId = int(args[0])
-        self.removeAureola(_aureoleId)
+        self.removeAureolaById(_aureoleId)
 
     #普通攻击
     def attack(self, targetEnt, context, *args, **checkArgs):
@@ -223,7 +223,7 @@ class IEventActions(object):
             toLevel = min(buff.level+1, _maxLevel)
 
             buff.overlayBuff(targetEnt, toLevel, endTime)
-            targetEnt.allClientsOnUpdateBuff(_buffId, buff.getClientStream())
+            targetEnt.allClientsCallOnUpdateBuff(_buffId, buff.getClientStream())
         else:
             targetEnt.addBuff(_buffId, 1, self.id, endTime, context)
 
@@ -235,7 +235,7 @@ class IEventActions(object):
         return True
 
     def addBuffBySkill(self, targetEnt, context, *args, **kwargs):
-        LOG_DBG("addBuffBySkill ", targetEnt.id if targetEnt else 0, context, *args)
+        #LOG_DBG("addBuffBySkill ", targetEnt.id if targetEnt else 0, context, *args)
         # 设置默认值元组
         defaults = (0, 0, 1.0, -1.0)
         # 将传入的 args 与默认值合并（args 覆盖前面的部分）
@@ -281,7 +281,7 @@ class IEventActions(object):
             buff.overlayBuff(targetRole, _level, endTime)
             if int(oldBuffStartTime) != int(buff.tStartTime):
                 if not targetRole.isDestroyed:
-                    targetRole.allClientsOnUpdateBuff(_buffId, buff.getClientStream())
+                    targetRole.allClientsCallOnUpdateBuff(_buffId, buff.getClientStream())
         else:
             targetRole.addBuff(_buffId, _level, self.id, endTime, context,kwargs)
 
@@ -538,7 +538,7 @@ class IEventActions(object):
             skillArgs = skill.getSkillArr(self, targetEnt, direction)
 
         fixDir = None
-        doSetState = True
+        isSetState = True
         if not skill.hasSkillTag(gameconst.SkillTag.Casting):
 
             category = SSD.datas[skillID].get('category')
@@ -548,7 +548,7 @@ class IEventActions(object):
                     yaw = sMath.getYawFromDirection(direction)
                     fixDir = (0.0, 0.0, yaw)
 
-            doSetState = (not self.IsAvatar and category == gameconst.SkillCategory.CATEGORY_CAST_SKILL_WITH_ACTION)
+            isSetState = (not self.IsAvatar and category == gameconst.SkillCategory.CATEGORY_CAST_SKILL_WITH_ACTION)
 
         actionCtx = actionContext.UseSkillCtx(
             self.id,
@@ -559,7 +559,7 @@ class IEventActions(object):
             checkInRange=checkInRange,
             skillObj=skill,
         )
-        self.doUseSkill(skill, actionCtx, 0, doSetState, fixDir, ignoreReasons)
+        self.doUseSkill(skill, actionCtx, 0, isSetState, fixDir, ignoreReasons)
 
     def removeFullBuff(self, targetEnt, context, *args):
         _buffId = 0
@@ -646,7 +646,7 @@ class IEventActions(object):
         if not _aureoleId:
             return 0
 
-        _aureole = self.aureoleDic.get(_aureoleId, None)
+        _aureole = self.auraDic.get(_aureoleId, None)
         if _aureole:
             return _aureole.level
         return 0
@@ -811,7 +811,7 @@ class IEventActions(object):
             fixedPos, _fixedDir = skill.getSkillPosAndDir(self, targetEnt, context.skillArgs)
 
             if not fixedPos:
-                if (skill.getEffectTarget(skill.skillId) == 'Enemy' or skill.getEffectTarget(skill.skillId) == 'PlayerEnemy' ) and targetEnt:
+                if (skill.getEffectTargetType(skill.skillId) == 'Enemy' or skill.getEffectTargetType(skill.skillId) == 'PlayerEnemy' ) and targetEnt:
                     fixedPos = targetEnt.position
 
             _fixedDir = _fixedDir or sMath.getDirFromYaw(self.direction[2])
@@ -879,7 +879,7 @@ class IEventActions(object):
         return True
 
     def inheritCombatProps(self, creationId, combatProps):
-        if CCD.datas[creationId].get('inherit'):
+        if C_C_DD.datas[creationId].get('inherit'):
             combatProps['minPhysicalAtk'] = self.getProp('minPhysicalAtk')
             combatProps['maxPhysicalAtk'] = self.getProp('maxPhysicalAtk')
             combatProps['minMagicAtk'] = self.getProp('minMagicAtk')
@@ -950,7 +950,7 @@ class IEventActions(object):
                 _timeEx = CBD.datas[targetEnt.npcCreepId].get('bePushedExTime', 0)
 
         if _dist <= 0 and _timeEx <= 0:
-            LOG_IFO('Cannot push targetEnt, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
+            LOG_INFO('Cannot push targetEnt, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
             return
         LOG_DBG('pushTarget, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
         _dstPosition = sMath.getForwardPos(targetEnt.position, sMath.getYawFromPoints(targetEnt.position, self.position), _dist)
@@ -971,7 +971,7 @@ class IEventActions(object):
             _dist = min(args[0], sMath.distance2D(self.position, targetEnt.position) - 1.0)
 
         if _dist <= 0 and _timeEx <= 0:
-            LOG_IFO('Cannot push targetEnt, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
+            LOG_INFO('Cannot push targetEnt, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
             return False
 
         _dstPosition = sMath.getForwardPos(targetEnt.position, sMath.getYawFromPoints(self.position, targetEnt.position), _dist)
@@ -1006,7 +1006,7 @@ class IEventActions(object):
             _dist = min(args[0], sMath.distance2D(_dstPosition, targetEnt.position) - 1.0)
 
         if _dist <= 0 and _timeEx <= 0:
-            LOG_IFO('Cannot drag targetEnt, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
+            LOG_INFO('Cannot drag targetEnt, targetID : %d, _dist: %f, speed: %f, _timeEx: %f' % (targetEnt.id, _dist, speed, _timeEx))
             return
 
         _dstPosition = sMath.getForwardPos(targetEnt.position, sMath.getYawFromPoints(_dstPosition, targetEnt.position), _dist)
@@ -1025,7 +1025,7 @@ class IEventActions(object):
         skill.clearCD(self)
 
     def chongfeng(self, targetEnt, context, *args):
-        beginSkillPosition = Math.Vector3(self.position)
+        beginSkillPos = Math.Vector3(self.position)
         skillVal = self._getSkillByActionContext(context)
         speed = args[0]
 
@@ -1044,7 +1044,7 @@ class IEventActions(object):
 
         length = sMath.distance2D(self.position, _dstPosition)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
-        skillVal.setTempData(self, gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION, beginSkillPosition)
+        skillVal.setTempData(self, gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION, beginSkillPos)
         self.topSpeed = gameconst.TopSpeedType.ShiftingSkillTopSpeed
         self.setNeedUpdateWitnessPosDir(0)
         if self.IsAvatar:
@@ -1065,7 +1065,7 @@ class IEventActions(object):
         return True
 
     def lunge(self, targetEnt, context, speed, distance):
-        beginSkillPosition = Math.Vector3(self.position)
+        beginSkillPos = Math.Vector3(self.position)
         skillVal = self._getSkillByActionContext(context)
         _realDstPos = tuple(context.skillArgs[-3:])
         if sMath.distance2D(self.position, _realDstPos) > distance*2:
@@ -1077,7 +1077,8 @@ class IEventActions(object):
         else:
             return False
 
-        skillVal.setTempData(self, gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION, beginSkillPosition)
+        self.topSpeed = gameconst.TopSpeedType.ShiftingSkillTopSpeed
+        skillVal.setTempData(self, gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION, beginSkillPos)
         length = sMath.distance2D(self.position, _realDstPos)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
         self.setNeedUpdateWitnessPosDir(0)
@@ -1098,7 +1099,7 @@ class IEventActions(object):
         return True
 
     def jumpbackward(self, targetEnt, context, speed, distance):
-        beginSkillPosition = Math.Vector3(self.position)
+        beginSkillPos = Math.Vector3(self.position)
         skillVal = self._getSkillByActionContext(context)
         _realDstPos = tuple(context.skillArgs[-3:])
         if sMath.distance2D(self.position, _realDstPos) > distance*2:
@@ -1110,7 +1111,8 @@ class IEventActions(object):
         else:
             return False
 
-        skillVal.setTempData(self, gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION, beginSkillPosition)
+        self.topSpeed = gameconst.TopSpeedType.ShiftingSkillTopSpeed
+        skillVal.setTempData(self, gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION, beginSkillPos)
         length = sMath.distance2D(self.position, _realDstPos)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
         self.setNeedUpdateWitnessPosDir(0)
@@ -1130,13 +1132,17 @@ class IEventActions(object):
         self.setTempMiscProp(gameconst.EntityPropsEnum.lungeSkillData, (context, delayTime,))
         return True
 
-    def dodgeSkill(self,targetEnt, context, speed, distance):
+    def dodgeSkill(self, targetEnt, context, speed, distance):
         skillVal = self._getSkillByActionContext(context)
-
         _realDstPos = tuple(context.skillArgs[-3:])
-        if sMath.distance2D(self.position, _realDstPos) > distance*2:
-            LOG_WARN('dodgeSkill distance too far')
-            return False
+        if context.parentContext and context.parentContext.lastBlinkPos:
+            if sMath.distance2D(context.parentContext.lastBlinkPos, _realDstPos) > distance + 1 + CONST.datas['maxSkillMove']['value']:
+                LOG_WARN('dodgeSkill distance too far 1 ', context.parentContext.lastBlinkPos, self.position, _realDstPos, distance)
+                return False
+        else:
+            if sMath.distance2D(self.position, _realDstPos) > distance + 1:
+                LOG_WARN('dodgeSkill distance too far 2 ', self.position, _realDstPos, distance)
+                return False
 
         # 非闪避技能，不设置闪避状态
         #【【战斗】自动战斗下，法师来回移动下释放移形换影，小概率位移失效，见附件】
@@ -1148,6 +1154,7 @@ class IEventActions(object):
             else:
                 return False
 
+        self.topSpeed = gameconst.TopSpeedType.ShiftingSkillTopSpeed
         length = sMath.distance2D(self.position, _realDstPos)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
         self.setNeedUpdateWitnessPosDir(0)
@@ -1177,7 +1184,7 @@ class IEventActions(object):
         if not utils.isEnemy(self, targetEnt):
             return
 
-        if not targetEnt.isAttackable(self):
+        if not targetEnt.canAttackable(self):
             return
 
         if not targetEnt.IsAICombatUnit:
@@ -1299,7 +1306,7 @@ class IEventActions(object):
             LOG_WARN('interactArenaKing fail: not cube space', self.spaceNo)
             return
 
-        LOG_IFO('interactArenaKing')
+        LOG_INFO('interactArenaKing')
         self.spaceMgr.doInteractArenaKing(self)
 
     def broadMsg(self, msgId):

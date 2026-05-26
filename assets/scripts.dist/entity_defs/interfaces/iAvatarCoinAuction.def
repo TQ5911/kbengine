@@ -1,0 +1,331 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+        <coinAuctionInfo>
+            <Type>     AUCTION_PLAYER_CACHE         </Type>
+            <Flags>    BASE                         </Flags>
+            <Persistent>    true                    </Persistent>
+        </coinAuctionInfo>
+
+        <saleItemMoney>
+            <Type>          MONEY                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </saleItemMoney>
+
+        <collectionAuctionIdList>
+            <Type>      ARRAY <of>  AUCTION_ITEM_UUID </of>    </Type>
+            <Flags>     BASE                                   </Flags>
+        </collectionAuctionIdList>
+
+        <collectionAuctionIdCategoryList>
+            <Type>      ARRAY <of>  ITEMID </of>    </Type>
+            <Flags>     BASE                                   </Flags>
+        </collectionAuctionIdCategoryList>
+
+        <collectionAuctionItemCategoryList>
+            <Type>      ARRAY <of>  ITEMID </of>    </Type>
+            <Flags>     BASE                                   </Flags>
+        </collectionAuctionItemCategoryList>
+    </Properties>
+
+    <BaseMethods>
+        <!-- API: 客户端获取用户CoinAuction信息 -->
+        <getCoinAuctionPlayerInfo>
+            <Exposed/>
+        </getCoinAuctionPlayerInfo>
+
+        <onGetCoinAuctionPlayerInfo>
+            <Arg> AUCTION_ITEM_LIST </Arg>
+            <Arg> PYTHON </Arg>
+        </onGetCoinAuctionPlayerInfo>
+
+        <!-- 用户登录后刷新自身CoinAuction缓存 -->
+        <onLoadPlayerCoinAuctionData>
+            <Arg> UUID_LIST </Arg>
+            <Arg> PYTHON </Arg>
+        </onLoadPlayerCoinAuctionData>
+
+        <!-- API: 通过物品ID搜索具体交易物品信息 -->
+        <searchCoinAuctionItemsByItemId>
+            <Exposed/>
+            <Arg> ITEMID_LIST </Arg>
+            <Arg> RESTFUL_LIMIT      </Arg>
+            <Arg> RESTFUL_OFFSET      </Arg>
+            <Arg> AUCTION_ITEM_UUID   </Arg>
+            <Arg> UINT8 </Arg>
+        </searchCoinAuctionItemsByItemId>
+
+        <onSearchCoinAuctionItemsByItemId>
+            <Arg> ITEMID_LIST </Arg>
+            <Arg> RESTFUL_LIMIT </Arg>
+            <Arg> RESTFUL_OFFSET </Arg>
+            <Arg> AUCTION_ITEM_LIST </Arg>
+            <Arg> UINT64 </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> UINT8 </Arg>
+        </onSearchCoinAuctionItemsByItemId>
+
+        <!-- API: 玩家上架商品 -->
+        <saleItemInCoinAuction>
+            <Exposed/>
+            <Arg> ITEMID </Arg>
+            <Arg> UINT64 </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> UINT8 </Arg>
+        </saleItemInCoinAuction>
+
+        <doSaleItemInCoinAuction>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> PYTHON </Arg>
+        </doSaleItemInCoinAuction>
+
+        <onSaleItemInCoinAuction>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> PYTHON </Arg>
+        </onSaleItemInCoinAuction>
+
+        <!-- API: 根据交易物品UUID购买CoinAuction中物品 -->
+        <buyItemInCoinAuctionByAuctionItemUUID>
+            <Exposed/>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> UINT32 </Arg>
+        </buyItemInCoinAuctionByAuctionItemUUID>
+
+        <doBuyItemInCoinAuctionByAuctionItemUUID>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> PYTHON </Arg>
+        </doBuyItemInCoinAuctionByAuctionItemUUID>
+
+        <onBuyItemInCoinAuctionByAuctionItemUUID>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> PYTHON </Arg>
+        </onBuyItemInCoinAuctionByAuctionItemUUID>
+
+        <onPlayerGlobalAuctionItemBeSaled>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> LONGTIME </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> PYTHON </Arg>
+        </onPlayerGlobalAuctionItemBeSaled>
+
+        <!-- API: 下架出售的物品 -->
+        <cancelSaleItemInCoinAuction>
+            <Exposed/>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> BOOL </Arg>
+        </cancelSaleItemInCoinAuction>
+
+        <cancelSaleItemInCoinAuctionCallback>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> PYTHON </Arg>
+        </cancelSaleItemInCoinAuctionCallback>
+
+        <doCancelSaleItemInCoinAuction>
+            <Arg> ERRNO </Arg>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> PYTHON </Arg>
+        </doCancelSaleItemInCoinAuction>
+
+        <onCancelSaleItemInCoinAuction>
+            <Arg> ERRNO </Arg>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> PYTHON </Arg>
+        </onCancelSaleItemInCoinAuction>
+
+        <onCancelSaleItemInCoinAuctionFail>
+            <Arg> ERRNO </Arg>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> PYTHON </Arg>
+        </onCancelSaleItemInCoinAuctionFail>
+
+        <!-- API: 客户端获取玩家出售记录 -->
+        <getPlayerCoinAuctionRecords>
+            <Exposed/>
+            <Arg> UINT32 </Arg>
+            <Arg> BOOL </Arg>
+        </getPlayerCoinAuctionRecords>
+
+        <!-- API: 客户端获取物品最近价格和平均价格 -->
+        <getItemLastAndAvgPrice>
+            <Exposed/>
+            <Arg> ITEMID </Arg>
+        </getItemLastAndAvgPrice>
+
+        <onGetItemLastAndAvgPrice>
+            <Arg> ITEMID </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> FLOAT </Arg>
+            <Arg> FLOAT </Arg>
+            <Arg> PYTHON </Arg>
+        </onGetItemLastAndAvgPrice>
+
+        <getAuctionItemNumByCategoryId>
+            <Exposed/>
+            <Arg> UINT32 </Arg>
+            <Arg> SCHOOL </Arg>
+            <Arg> UINT8  </Arg>
+            <Arg> UINT8  </Arg>
+        </getAuctionItemNumByCategoryId>
+
+        <onGetItemNumByCategoryIdResp>
+            <Arg> UINT32 </Arg>
+            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
+            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
+            <Arg>   ARRAY <of>  FLOAT  </of>      </Arg>
+            <Arg> UINT8 </Arg>
+        </onGetItemNumByCategoryIdResp>
+
+        <!-- API: 客户端获取当前物品最低售价的3个物品信息 -->
+        <getCurrentSaleItemInfo>
+            <Exposed/>
+            <Arg> ITEMID </Arg>
+            <Arg> UINT8 </Arg>
+        </getCurrentSaleItemInfo>
+
+        <onGetCurrentSaleItemInfoResp>
+        	<Arg> ITEMID </Arg>
+        	<Arg> FLOAT </Arg>
+        	<Arg> FLOAT </Arg>
+        	<Arg> PYTHON </Arg>
+            <Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
+            <Arg> UINT8 </Arg>
+        </onGetCurrentSaleItemInfoResp>
+
+        <!-- API: 客户端获取玩家购买记录 -->
+        <getPlayerBuyAuctionItemRecords>
+            <Exposed/>
+            <Arg> UINT32 </Arg>
+            <Arg> BOOL </Arg>
+        </getPlayerBuyAuctionItemRecords>
+
+        <getAuctionItemNumByItemIdList>
+            <Exposed/>
+			<Arg> ITEMID_LIST </Arg>
+            <Arg> BOOL        </Arg>
+        </getAuctionItemNumByItemIdList>
+
+        <getAuctionSaleItemMoney>
+            <Exposed/>
+        </getAuctionSaleItemMoney>
+
+        <tipPlayerAuctionItemCollection>
+            <Arg> PY_DICT </Arg>
+        </tipPlayerAuctionItemCollection>
+
+        <getAuctionItemsByAuctionIdList>
+            <Exposed/>
+			<Arg> AUCTIONID_LIST </Arg>
+        </getAuctionItemsByAuctionIdList>
+        
+        <onGetAuctionItemsByAuctionIdsResp>
+            <Arg> UINT32 </Arg>
+            <Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
+        </onGetAuctionItemsByAuctionIdsResp>
+
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onGetCoinAuctionPlayerInfo>
+            <Arg> BOOL </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> AUCTION_ITEM_CLIENT_LIST </Arg>
+        </onGetCoinAuctionPlayerInfo>
+
+        <onSearchCoinAuctionItemsByItemId>
+            <Arg> ITEMID_LIST </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> AUCTION_ITEM_CLIENT_LIST </Arg>
+            <Arg> UINT64 </Arg>
+            <Arg> UINT8 </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
+        </onSearchCoinAuctionItemsByItemId>
+
+        <onSaleItemInCoinAuction>
+            <Arg> ITEMID </Arg>
+            <Arg> UINT64 </Arg>
+            <Arg> AUCTION_ITEM_CLIENT </Arg>
+        </onSaleItemInCoinAuction>
+
+        <onBuyItemInCoinAuctionByAuctionItemUUID>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> ITEMID </Arg>
+            <Arg> UUID </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> UINT16 </Arg>
+        </onBuyItemInCoinAuctionByAuctionItemUUID>
+
+        <onBuyItemInCoinAuctionByAuctionItemUUIDFailed>
+            <Arg> ERRNO </Arg>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+        </onBuyItemInCoinAuctionByAuctionItemUUIDFailed>
+
+        <onPlayerCoinAuctionItemBeSaled>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> UINT64 </Arg>
+        </onPlayerCoinAuctionItemBeSaled>
+
+        <onCancelSaleItemInCoinAuction>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> UUID </Arg>
+            <Arg> BOOL </Arg>
+        </onCancelSaleItemInCoinAuction>
+
+        <onCancelSaleCanStackedItemInCoinAuction>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+            <Arg> ITEMID </Arg>
+            <Arg> UINT64 </Arg>
+            <Arg> BOOL </Arg>
+        </onCancelSaleCanStackedItemInCoinAuction>
+
+        <onCancelSaleItemInCoinAuctionFail>
+            <Arg> AUCTION_ITEM_UUID </Arg>
+        </onCancelSaleItemInCoinAuctionFail>
+
+        <onGetItemLastAndAvgPrice>
+            <Arg> ITEMID </Arg>
+            <Arg> FLOAT </Arg>
+            <Arg> FLOAT </Arg>
+        </onGetItemLastAndAvgPrice>
+
+        <onGetItemNumByCategoryIdResp>
+            <Arg> UINT32 </Arg>
+            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
+            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
+            <Arg>   ARRAY <of>  FLOAT  </of>      </Arg>
+            <Arg> UINT8 </Arg>
+        </onGetItemNumByCategoryIdResp>
+
+        <onGetCurrentSaleItemInfoResp>
+        	<Arg> ITEMID </Arg>
+        	<Arg> FLOAT </Arg>
+        	<Arg> FLOAT </Arg>
+        	<Arg>   AUCTION_ITEM_CLIENT_LIST      </Arg>
+            <Arg> UINT8 </Arg>
+        </onGetCurrentSaleItemInfoResp>
+
+        <onNotiyNewAuctionItemCollection>
+        	<Arg>   ARRAY <of>  AUCTION_ITEM_UUID  </of>      </Arg>
+        </onNotiyNewAuctionItemCollection>
+
+        <onGetAuctionItemsByAuctionIdsResp>
+            <Arg> UINT32 </Arg>
+            <Arg> AUCTION_ITEM_CLIENT_LIST      </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
+        </onGetAuctionItemsByAuctionIdsResp>
+    </ClientMethods>
+</root>

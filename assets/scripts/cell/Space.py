@@ -44,7 +44,7 @@ class SpaceEntityGenerateMixin(object):
 
 class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader, iGroupEntityLoader.IGroupEntityLoader, iFubenSpace.IFubenSpace):
     def __init__(self):
-        LOG_IFO("Space#__init__", self.spaceNo, self.spaceID, self.dungeonId, KBEngine.getComponentGroupOrder())
+        LOG_INFO("Space#__init__", self.spaceNo, self.spaceID, self.dungeonId, KBEngine.getComponentGroupOrder())
         iEntityLoader.IEntityLoader.__init__(self)
         iGroupEntityLoader.IGroupEntityLoader.__init__(self)
         gameglobal.localSpaceNoMap[self.spaceNo] = self
@@ -122,7 +122,7 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
             self._onTimerCallback(tid)
 
     def onEntireConstruct(self):
-        LOG_IFO('zt: onEntireConstruct', self.id, self.spaceNo)
+        LOG_INFO('zt: onEntireConstruct', self.id, self.spaceNo)
 
     def calculateSpawnTime(self):
         # space only have default spawnspan
@@ -143,7 +143,7 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
         box.onHomeByteMapSet(self.spaceNo)
 
     def updateSpaceWeight(self, spaceWeight):
-        LOG_IFO('updateSpaceWeight', self.spaceID, spaceWeight)
+        LOG_INFO('updateSpaceWeight', self.spaceID, spaceWeight)
         self.setSpaceWeight(self.spaceID, spaceWeight)
 
     def callOnSpaceMgr(self, func, args):

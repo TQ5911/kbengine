@@ -52,7 +52,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             pass
 
     def onRedBagCheck(self):
-        LOG_IFO('onRedBagCheck', len(self.redbagDict))
+        LOG_INFO('onRedBagCheck', len(self.redbagDict))
         try:
             self.getRankFromRedis()
 
@@ -69,7 +69,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
                 self.checkTimerId = self._datetimeCallback(nextCheckTime,
                            'onRedBagCheck', (), gametimer.TIMER_TAG_RED_BAG_CHECK_EXPIRE, 'checkTimerId')
                 
-                LOG_IFO('onRedBagCheck set next check time:', nextCheckTime)
+                LOG_INFO('onRedBagCheck set next check time:', nextCheckTime)
         except Exception as e:
             LOG_ERR('onRedBagCheck exception:', e)
 
@@ -88,7 +88,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         if result is None:
             return
 
-        LOG_IFO('_onGetRedBagRankList: playerbox={} result={}'.format(playerbox, result[:5]))
+        LOG_INFO('_onGetRedBagRankList: playerbox={} result={}'.format(playerbox, result[:5]))
         # 做个缓存
         self.rankCacheList = result
         if not playerbox:   # 系统拉的数据，不用往下执行
@@ -130,10 +130,10 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             rankList = rankList[:maxNum]
             
         if len(delList) > 0:
-            LOG_IFO('doGetRedBagRankList: delList={}'.format(delList))
+            LOG_INFO('doGetRedBagRankList: delList={}'.format(delList))
             redisUtils.RedBagUtils.removeRedBagRankData(delList, 0, None)
         
-        # LOG_IFO('doGetRedBagRankList: rankList={}'.format(rankList))
+        # LOG_INFO('doGetRedBagRankList: rankList={}'.format(rankList))
         #playerbox.client.onGetRedBagRankList(rankList)
         playerbox.getRedBagRankListCB(self.version, rankList)
 
@@ -163,11 +163,11 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
         infoList = canFetchList + hasFetchList + emptyList
         if len(delList) > 0:
-            LOG_IFO('doGetRedBagList: delList={}'.format(delList))
+            LOG_INFO('doGetRedBagList: delList={}'.format(delList))
             redisUtils.RedBagUtils.removeRedBagRankData(delList, 0, 
                                                         functools.partial(self.onDelRedBagCache, playerbox, delList))
 
-        # LOG_IFO('doGetRedBagList: infoList={}'.format(infoList))
+        # LOG_INFO('doGetRedBagList: infoList={}'.format(infoList))
         playerbox.client.onGetRedBagMyList(infoList)
 
     def onDelRedBagCache(self, playerBox, delList, error):
@@ -182,7 +182,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         return self.lastReleaseTime
        
     def doCreateRedBag(self, playerbox, redbagId, playerGbId, playerName, guildUUID, redbagType, channel, money, num, desc):
-        LOG_IFO('doCreateRedBag: redbagId={}, playerGbId={}, playerName={}, guildUUID={}, redbagType={}, channel={}, money={}, num={}, desc={}'.format
+        LOG_INFO('doCreateRedBag: redbagId={}, playerGbId={}, playerName={}, guildUUID={}, redbagType={}, channel={}, money={}, num={}, desc={}'.format
                  (redbagId, playerGbId, playerName, guildUUID, redbagType, channel, money, num, desc))
         if redbagId in self.redbagDict:
             LOG_DBG('doCreateRedBag: redbagId={} is exist'.format(redbagId))
@@ -198,7 +198,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         LogTrackingMgr.LogTrackingMgr.Release_RedBag(playerGbId, redbagType, channel, num, gameconst.ItemId.MONEY, money, redbagId)
 
     def _onCreateRedBagRank(self, playerbox, _RbVal, error):
-        LOG_IFO('_onCreateRedBagRank: redbagId={} error={}'.format(_RbVal.redbagId, error))
+        LOG_INFO('_onCreateRedBagRank: redbagId={} error={}'.format(_RbVal.redbagId, error))
         if error != "":
             self.redbagDict.pop(_RbVal.redbagId)
             playerbox.onReleaseRedBagFail(_RbVal.redbagId, _RbVal.money)
@@ -225,7 +225,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
 
     def doFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name, showOnly=False):
-        # LOG_IFO('doFetchRedBag: redbagId=%d, playerGbId=%d, guildUUID=%d, name=%s' % (redbagId, playerGbId, guildUUID, name))
+        # LOG_INFO('doFetchRedBag: redbagId=%d, playerGbId=%d, guildUUID=%d, name=%s' % (redbagId, playerGbId, guildUUID, name))
         if redbagId not in self.redbagDict:
             LOG_DBG('doFetchRedBag: redbagId=%d not exist' % redbagId)
             return
@@ -251,7 +251,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         self._doFetchRedBag(playerbox, redbagId, playerGbId, guildUUID, name, showOnly)
 
     def _doFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name, showOnly=False):
-        # LOG_IFO('_doFetchRedBag: redbagId=%d playerGbId=%d guildUUID=%d name=%s' % (redbagId, playerGbId, guildUUID, name))
+        # LOG_INFO('_doFetchRedBag: redbagId=%d playerGbId=%d guildUUID=%d name=%s' % (redbagId, playerGbId, guildUUID, name))
 
         if self.checkExpire(redbagId):
             LOG_DBG('_doFetchRedBag fail: redbagId={} is expire'.format(redbagId))
@@ -292,7 +292,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             LOG_DBG('_doFetchRedBag error: redbagId=%d _money=%d' % (redbagId, _money))
             self.showRedBagFetchInfo(playerbox, redbagId, 0)
             return
-        LOG_IFO('_doFetchRedBag: redbagId={} playerGbId={} guildUUID={} name={}'.format(redbagId, playerGbId, guildUUID, name))
+        LOG_INFO('_doFetchRedBag: redbagId={} playerGbId={} guildUUID={} name={}'.format(redbagId, playerGbId, guildUUID, name))
         _FpVal = _FcVal.doFetch(playerGbId, name, _money)
         if _FpVal is None:
             return
@@ -308,7 +308,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         LogTrackingMgr.LogTrackingMgr.Fetch_RedBag(playerGbId, _RbVal.redbagType, _RbVal.channel, gameconst.ItemId.MONEY, _money, _RbVal.leftNum, gameconst.ItemId.MONEY, _RbVal.leftMoney, redbagId)
         
     def _onAddRedbagFetchInfo(self, playerbox, redbagId, _money, releaseTime):
-        LOG_IFO('_onAddRedbagFetchInfo: redbagId={} _money={}'.format(redbagId, _money))
+        LOG_INFO('_onAddRedbagFetchInfo: redbagId={} _money={}'.format(redbagId, _money))
 
         self.showRedBagFetchInfo(playerbox, redbagId, _money)
 
@@ -331,13 +331,13 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             return False
         _RbVal = self.redbagDict[redbagId]
         if _RbVal.isExpire():
-            LOG_IFO('redbag expire : redbagId={} is expire, player is {}, name is {}'.format(redbagId, _RbVal.playerGbId, _RbVal.playerName))
+            LOG_INFO('redbag expire : redbagId={} is expire, player is {}, name is {}'.format(redbagId, _RbVal.playerGbId, _RbVal.playerName))
             redisUtils.RedBagUtils.removeRedBagRankData(redbagId, 0, functools.partial(self._removeRankDataCallback, redbagId))
             return True
         return False
 
     def _removeRankDataCallback(self, redbagId, error):
-        LOG_IFO('_removeRankDataCallback: redbagId={}'.format(redbagId))
+        LOG_INFO('_removeRankDataCallback: redbagId={}'.format(redbagId))
         if error != '':
             LOG_DBG('_removeRankDataCallback error: redbagId={} error={}'.format(redbagId, error))
             return
@@ -345,7 +345,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         redisUtils.RedBagUtils.removeRedBagFetch(redbagId, functools.partial(self._removeFetchInfoCallback, redbagId))
 
     def _removeFetchInfoCallback(self, redbagId, error):
-        LOG_IFO('_removeFetchInfoCallback: redbagId={}'.format(redbagId))
+        LOG_INFO('_removeFetchInfoCallback: redbagId={}'.format(redbagId))
         if error != '':
             LOG_DBG('_removeFetchInfoCallback error: redbagId={} error={}'.format(redbagId, error))
             return
@@ -382,12 +382,12 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
     #
     def showData(self):
-        LOG_IFO('redbagStub showData:', len(self.redbagDict), len(self.fetchCacheDict))
+        LOG_INFO('redbagStub showData:', len(self.redbagDict), len(self.fetchCacheDict))
         for redbagId, _RbVal in self.redbagDict.items():
-            LOG_IFO('redbagDict: {}'.format(_RbVal.toSaveDict()))
+            LOG_INFO('redbagDict: {}'.format(_RbVal.toSaveDict()))
         
         for redbagId, _FcVal in self.fetchCacheDict.items():
-            LOG_IFO('fetchCacheDict: {}: {}'.format(redbagId, _FcVal.toSaveDict()))
+            LOG_INFO('fetchCacheDict: {}: {}'.format(redbagId, _FcVal.toSaveDict()))
             
             
         

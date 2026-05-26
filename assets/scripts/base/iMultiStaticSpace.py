@@ -18,7 +18,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet = set()
 
     def _createStaticSpace(self, mapId, spaceWeight=10, lineNo=0):
-        LOG_IFO('_createStaticSpace:', mapId, lineNo)
+        LOG_INFO('_createStaticSpace:', mapId, lineNo)
         _spaceNo = formula.combineLineSpaceNo(mapId, lineNo)
         _spaceVal = StaticSpaceVal.StaticSpaceVal(
             mapId,
@@ -39,7 +39,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet.add(_spaceNo)
 
     def _onCraeteLineSpace(self, spaceBox, spaceNo):
-        LOG_IFO('_onCraeteLineSpace', spaceNo)
+        LOG_INFO('_onCraeteLineSpace', spaceNo)
         _spaceVal = self.staticSpaces[spaceNo]
         _spaceVal.lineSpaceBox = spaceBox
 
@@ -52,9 +52,17 @@ class IMultiStaticSpace(iGlobal.IGlobal):
             return False
 
         return _spaceVal.spaceMgrBoxCell is not None
+    
+    def isSpaceReadyEnter(self, lineType, lineNo):
+        spaceNo = formula.combineLineSpaceNo(lineType, lineNo)
+        _spaceVal = self.staticSpaces.get(spaceNo)
+        if not _spaceVal:
+            return False
+
+        return _spaceVal.isReadyEnter()
 
     def onStaticSpaceReady(self, spaceNo):
-        LOG_IFO('onStaticSpaceReady', spaceNo)
+        LOG_INFO('onStaticSpaceReady', spaceNo)
         self.staticSpaces[spaceNo].lineSpaceReady()
 
         _pos = gameconst.SPACE_FIX_POS
@@ -139,14 +147,14 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         _spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onLoadEntitiesEnd(self, spaceNo):
-        LOG_IFO('onLoadEntitiesEnd:', spaceNo)
+        LOG_INFO('onLoadEntitiesEnd:', spaceNo)
         self.loadWaitSet.remove(spaceNo)
         if not self.loadWaitSet and not self.doNextFlag:
             self.doNextFlag = 1
             iGlobal.IGlobal.doNext(self)
 
     def onSpaceCellAppDeath(self, spaceNo):
-        LOG_IFO('onSpaceCellAppDeath', spaceNo)
+        LOG_INFO('onSpaceCellAppDeath', spaceNo)
         _mapId = formula.fetchMapId(spaceNo)
         self._createStaticSpace(_mapId)
 

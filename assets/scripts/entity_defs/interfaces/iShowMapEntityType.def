@@ -1,0 +1,18 @@
+<root>
+    <Properties>
+        <showMapEntityDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </showMapEntityDict>
+
+        <showMapEntitySet>
+            <Type>          PY_SET                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       set()                   </Default>
+        </showMapEntitySet>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+</root>

@@ -21,7 +21,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "shoolFilter": 1,
         "topListMgrClassType": 1,
-        "minLevel": 15,
+        "minLevel": 18,
         "displayNum": 100,
         "maxNum": 3000
     }),
@@ -31,7 +31,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "shoolFilter": 1,
         "topListMgrClassType": 1,
-        "minLevel": 15,
+        "minLevel": 18,
         "displayNum": 100,
         "maxNum": 3000
     }),
@@ -51,7 +51,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "shoolFilter": 0,
         "topListMgrClassType": 1,
-        "minLevel": 15,
+        "minLevel": 18,
         "displayNum": 100,
         "maxNum": 3000
     })

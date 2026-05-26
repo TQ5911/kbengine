@@ -188,7 +188,7 @@ class ICycleEvent(object):
                     LOG_DBG('in _checkUpdateEvent', eventObj.eventType, eventObj.cbFunc)
                     try:
                         func = getattr(self, eventObj.cbFunc, None)
-                        func and func(*eventObj.cbArg)
+                        func and func(gameconst.CycleEventTriggerType.LOGIN, *eventObj.cbArg)
                     except Exception as e:
                         gameengine.panicStack("_checkUpdateEvent exception:", e, eventObj.cbFunc)
 
@@ -211,7 +211,7 @@ class ICycleEvent(object):
                 break
             if newObj is not cmpObj:
                 try:
-                    getattr(self, newObj.cbFunc)(*newObj.cbArg)
+                    getattr(self, newObj.cbFunc)(gameconst.CycleEventTriggerType.TIMED, *newObj.cbArg)
                 except Exception as e:
                     gameengine.panicStack('onDailyEvent, exception:', e, newObj.cbFunc)
                 newObj.calcNextCBTime(self)
@@ -242,7 +242,7 @@ class ICycleEvent(object):
 
             if newObj is not cmpObj:
                 try:
-                    getattr(self, newObj.cbFunc)(*newObj.cbArg)
+                    getattr(self, newObj.cbFunc)(gameconst.CycleEventTriggerType.TIMED, *newObj.cbArg)
                 except Exception as e:
                     gameengine.panicStack('onDailyEvent, exception:', e, newObj.cbFunc)
                 newObj.calcNextCBTime(self)

@@ -59,8 +59,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     junXuArchitecture: JunXuArchitectureInfo.JunXuArchitectureVal
 
     def __init__(self):
-        LOG_IFO('Guild::__init__:', self.guildUUID)
+        LOG_INFO('Guild::__init__:', self.guildUUID)
         iCycleEvent.ICycleEvent.__init__(self)
+        self._initMaxGuildUnionNum()
         self._initBuilding()
         self._initGuildChallenge()
         self._initPermissions()
@@ -147,7 +148,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
 
     def _checkGuildChallengeData(self, *args):
-        LOG_IFO('_checkGuildChallengeData ~')
+        LOG_INFO('_checkGuildChallengeData ~')
         self.guildChallengeData.reset()
 
     def _checkDissolveGuild(self, *args):
@@ -182,15 +183,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         return G_CKED.datas[self.guildBuilding.cangKu.level]['guildMoneyLimit']
 
     def modifyGuildFund(self, delta, src, opUUID, detail):
-        LOG_IFO('modifyGuildFund', delta, src, opUUID, detail)
+        LOG_INFO('modifyGuildFund', delta, src, opUUID, detail)
         self.guildFund += delta
         if self.guildFund < 0:
             self.guildFund = 0
-            LOG_IFO('Guild::modifyGuildFund: guildFund < 0:', delta, src, opUUID, detail)
+            LOG_INFO('Guild::modifyGuildFund: guildFund < 0:', delta, src, opUUID, detail)
 
         elif self.guildFund > self.maxGuildFundNum():
             self.guildFund = self.maxGuildFundNum()
-            LOG_IFO('Guild::modifyGuildFund: guildFund > max:', delta, src, opUUID, detail)
+            LOG_INFO('Guild::modifyGuildFund: guildFund > max:', delta, src, opUUID, detail)
 
         LogTrackingMgr.LogTrackingMgr.Guild_Info(
             self.guildUUID,
@@ -205,7 +206,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
 
     def modifyGuildMoney(self, delta, src, opUUID, detail):
-        LOG_IFO('modifyGuildMoney', delta, src, opUUID, detail)
+        LOG_INFO('modifyGuildMoney', delta, src, opUUID, detail)
         self.guildMoney += delta
         if self.guildMoney < 0:
             self.guildMoney = 0
@@ -228,7 +229,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
 
     def modifyGuildIronMine(self, delta, src, opUUID, detail):
-        LOG_IFO('modifyGuildIronMine', delta, src, opUUID, detail)
+        LOG_INFO('modifyGuildIronMine', delta, src, opUUID, detail)
         self.guildIronMine += delta
         if self.guildIronMine < 0:
             self.guildIronMine = 0
@@ -327,7 +328,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 _gbIds.append(_gbId)
 
         if _gbIds:
-            LOG_IFO('Guild::_checkGuildApplyExp:', _gbIds)
+            LOG_INFO('Guild::_checkGuildApplyExp:', _gbIds)
             self.broadcastByPermission(
                 GA_AI_DD.datas.allowApplication,
                 lambda box: box.client.onRemoveGuildApplys(_gbIds))
@@ -486,6 +487,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
             _gmVal.updateFromFcVal(_fcVal)
 
+    def _initMaxGuildUnionNum(self):
+        if self.maxGuildUnionNum != 0:
+            LOG_INFO('Guild::_initMaxGuildUnionNum: maxGuildUnionNum already set:', self.maxGuildUnionNum)
+            return
+
+        self.maxGuildUnionNum = G_GCD.datas['guild_unionNum']['value']
+
     def _initBuilding(self):
         if self.guildBuilding.juYing.level != 0:
             return
@@ -527,7 +535,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 # self.permissions[_job].addHidenPermission(_data)
 
     def _onFirstSaveGuild(self, ok, baseRef):
-        LOG_IFO('_onFirstSaveGuild', ok, baseRef)
+        LOG_INFO('_onFirstSaveGuild', ok, baseRef)
         if not ok:
             LOG_ERR('_onFirstSaveGuild: writeToDB failed.')
             return
@@ -835,7 +843,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         })
 
     def _dissolveGuild(self, reason):
-        LOG_IFO('_dissolveGuild', self.guildUUID, reason)
+        LOG_INFO('_dissolveGuild', self.guildUUID, reason)
         if utils.bhas(self.guildFlag, gameconst.GuildFlags.DISSOLVE):
             return
 
@@ -886,7 +894,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.entireDestroy(True, False)
 
     def modifyGuildJoinCond(self, oprGbId, oprBox, guildJoinCondVal):
-        LOG_IFO('modifyGuildJoinCond', oprGbId, guildJoinCondVal)
+        LOG_INFO('modifyGuildJoinCond', oprGbId, guildJoinCondVal)
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.allowApplication):
             LOG_WARN('modifyGuildJoinCond: no permission', oprGbId)
             return
@@ -908,7 +916,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
 
     def doApplyJoinGuild(self, gbId, box, applyData):
-        LOG_IFO('doApplyJoinGuild', gbId)
+        LOG_INFO('doApplyJoinGuild', gbId)
         _inviterGbId = applyData['inviterGbId']
         _hasPermission = self._checkHasPermission(_inviterGbId, GA_AI_DD.datas.allowApplication)
         _auto = _hasPermission or self.joinCond.auto
@@ -956,7 +964,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def _doApplyJoinGuildAfterModifyDB(self, gbId, box, ret, num, insertId, err):
         if err:
-            LOG_IFO("_doApplyJoinGuildAfterModifyDB:", err)
+            LOG_INFO("_doApplyJoinGuildAfterModifyDB:", err)
             self.removeGuildMember(gbId, gameconst.ExitGuildReason.DB_ERROR)
             box.joinGuildCB(gameconst.JoinGuildEvent.HAS_GUILD, self.toGuildApplyedVal())
             return
@@ -998,7 +1006,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self._doOnAfterJoin(fcVal, gameconst.JoinGuildReason.APPLY_JOIN)
 
     def doDealGuildApply(self, oprGbId, oprBox, gbId, isAgree):
-        LOG_IFO('doDealGuildApply', oprGbId, gbId, isAgree)
+        LOG_INFO('doDealGuildApply', oprGbId, gbId, isAgree)
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.allowApplication):
             LOG_WARN('doDealGuildApply: no permission', oprGbId)
             return
@@ -1041,7 +1049,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def _doDealGuildApplyAfterModifyDB(self, gbId, oprGbId, oprBox, ret, num, insertId, err):
         if err:
-            LOG_IFO("_doDealGuildApplyAfterModifyDB:", err)
+            LOG_INFO("_doDealGuildApplyAfterModifyDB:", err)
             self.removeGuildMember(gbId, gameconst.ExitGuildReason.DB_ERROR)
             return
 
@@ -1137,13 +1145,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
 
     def doBroadcastGuildMemberBase(self, func, *args):
-        LOG_IFO('doBroadcastGuildMemberBase', func, args)
+        LOG_INFO('doBroadcastGuildMemberBase', func, args)
         self._braodcastAsync(
             lambda box: getattr(box, func)(*args[0]),
             0
         )
     def addGuildExp(self, delta, src, opUUID, detail):
-        LOG_IFO('addGuildExp', delta, src, opUUID, detail)
+        LOG_INFO('addGuildExp', delta, src, opUUID, detail)
         if delta < 0:
             LOG_ERR('Guild::addGuildExp: delta < 0:', delta)
             return
@@ -1735,7 +1743,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             lambda box: box.client.onGuildDispChanged(self.dspFlag),
             0
         )
-        LOG_IFO('doModifyGuildDisp: dspFlag changed', self.guildUUID, self.dspFlag)
+        LOG_INFO('doModifyGuildDisp: dspFlag changed', self.guildUUID, self.dspFlag)
         self.syncMineWarSpaceMgrForChange()
 
     def doInviteJoinGuild(self, oprGbId, oprBox, beInvitedGbId, oprName):
@@ -1765,21 +1773,21 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def doSiegeWarSignUpBidding(self, gbId, box):
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.cityBattleSignUp):
-            LOG_IFO('[lj]doSiegeWarSignUpBidding: no permission', gbId)
+            LOG_INFO('[lj]doSiegeWarSignUpBidding: no permission', gbId)
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.NO_PERMISSION)
             return
 
         if self.siegeWarSignUped:
-            LOG_IFO('[lj]doSiegeWarSignUpBidding: already sign up', gbId)
+            LOG_INFO('[lj]doSiegeWarSignUpBidding: already sign up', gbId)
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.ALREADY_SIGN_UP)
             return
 
         if self.isCityOwner:
-            LOG_IFO('[lj]doSiegeWarSignUpBidding: is city owner', gbId)
+            LOG_INFO('[lj]doSiegeWarSignUpBidding: is city owner', gbId)
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.IS_CITY_OWNER)
             return
 
-        LOG_IFO('[lj]doSiegeWarSignUpBidding: guildMoney:', self.guildFund, self.siegeWarSignUped)
+        LOG_INFO('[lj]doSiegeWarSignUpBidding: guildMoney:', self.guildFund, self.siegeWarSignUped)
         cost = G_CBD.datas['cityBattle_biddingCost']['value'][1]
         if self.guildFund >= cost:
             self.modifyGuildFund(-cost, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_SIGN_UP, gbId, gameclass.AwardDetail())
@@ -1789,7 +1797,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.NO_MONEY)
 
     def onResetSiegeWarSignUpData(self):
-        LOG_IFO('[lj]onResetSiegeWarSignUpData name:', self.guildName, self.siegeWarSignUped, "-> False")
+        LOG_INFO('[lj]onResetSiegeWarSignUpData name:', self.guildName, self.siegeWarSignUped, "-> False")
         self.siegeWarSignUped = False
         self.haveYuXi = False
         self.siegeWarDeclared = False
@@ -1797,7 +1805,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     #清空帮会攻城令
     def onResetSiegeWarCityBattleToken(self):
-        LOG_IFO('[lj]onResetSiegeWarCityBattleToken', self.guildName, self.guildUUID)
+        LOG_INFO('[lj]onResetSiegeWarCityBattleToken', self.guildName, self.guildUUID)
         if self.cityBattleToken != 0:
             _eId = M_GL_DD.datas.guild_siegeOrderExpire
             _args = [str(self.cityBattleToken)]
@@ -1805,23 +1813,23 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.cityBattleToken = 0
 
     def onSiegeWarBiddingWin(self):
-        LOG_IFO('[lj]onSiegeWarBiddingWin', self.guildName, self.guildUUID)
+        LOG_INFO('[lj]onSiegeWarBiddingWin', self.guildName, self.guildUUID)
         self.haveYuXi = True
         self.broadcastMemberClient('onYuxiFlagChange', (self.haveYuXi, ))
 
     def onSiegeWarDeclareWarQuery(self, gbId, box):
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.cityBattleDeclare):
-            LOG_IFO('[lj]onSiegeWarDeclareWar: no permission', gbId)
+            LOG_INFO('[lj]onSiegeWarDeclareWar: no permission', gbId)
             box.onSiegeWarDeclareWarGuildResult(False, gameconst.SiegeWarDeclareWarResult.NO_PERMISSION, self.guildName, self.guildUUID)
             return
 
         if not self.haveYuXi:
-            LOG_IFO('[lj]onSiegeWarDeclareWar: no yuxi', gbId)
+            LOG_INFO('[lj]onSiegeWarDeclareWar: no yuxi', gbId)
             box.onSiegeWarDeclareWarGuildResult(False, gameconst.SiegeWarDeclareWarResult.NO_YUXI, self.guildName, self.guildUUID)
             return
 
         if self.siegeWarDeclared:
-            LOG_IFO('[lj]onSiegeWarDeclareWar: already declared', gbId)
+            LOG_INFO('[lj]onSiegeWarDeclareWar: already declared', gbId)
             box.onSiegeWarDeclareWarGuildResult(False, gameconst.SiegeWarDeclareWarResult.ALREADY_DECLARED, self.guildName, self.guildUUID)
             return
 
@@ -1835,7 +1843,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.broadcastMemberClient('onYuxiFlagChange', (self.haveYuXi, ))
 
         _curRelationType = utils.getGuildRelation(self.guildUUID, guildUUID)
-        LOG_IFO('[lj]onSiegeWarDeclareWarOfficial', self.guildName, self.guildUUID, guildUUID, _curRelationType)
+        LOG_INFO('[lj]onSiegeWarDeclareWarOfficial', self.guildName, self.guildUUID, guildUUID, _curRelationType)
         if _curRelationType == gameconst.GuildRelationType.UNION:
             gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
                 self.guildUUID, guildUUID, gameconst.GuildRelationType.UNION, None, self)
@@ -1878,18 +1886,18 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def onChangeCityOwnerFlag(self, flag):
         self.isCityOwner = flag
-        LOG_IFO('[lj]onChangeCityOwnerFlag', self.guildName, self.guildUUID, flag)
+        LOG_INFO('[lj]onChangeCityOwnerFlag', self.guildName, self.guildUUID, flag)
 
     def checkCanChangeCityMoneyToGuildMoney(self, srcGbId, box, val):
         canChange = False
         if self._checkHasPermission(srcGbId, GA_AI_DD.datas.guildMoneyToCoin):
             canChange = True
 
-        LOG_IFO('[lj]checkCanChangeCityMoneyToGuildMoney', canChange, self.guildUUID, val)
+        LOG_INFO('[lj]checkCanChangeCityMoneyToGuildMoney', canChange, self.guildUUID, val)
         box.onCanChangeCityMoneyToGuildMoneyResult(canChange, self.guildUUID, val)
 
     def doChangeCityMoneyToGuildMoney(self, srcGbId, val):
-        LOG_IFO('[lj]doChangeCityMoneyToGuildMoney', val)
+        LOG_INFO('[lj]doChangeCityMoneyToGuildMoney', val)
         _opUUID = KBEngine.genUUID64()
         self.modifyGuildFund(val, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_MONEY_TO_COIN, _opUUID, gameclass.AwardDetail())
 
@@ -1902,10 +1910,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def getMemberJobAndGuildCache(self, gbId, box, args):
         _gmVal = self.members.get(gbId)
         if not _gmVal:
-            box.onGetMemberJobAndGuildCache((GA_A_DD.datas.BONUS_SRC_UNKNOWN, self.dspFlag, self.guildIcon), args)
+            box.onGetMemberJobAndGuildCache((GA_A_DD.datas.BONUS_SRC_UNKNOWN, self.dspFlag, self.guildIcon, self.guildRankIdx), args)
             return
 
-        box.onGetMemberJobAndGuildCache((_gmVal.job, self.dspFlag, self.guildIcon), args)
+        box.onGetMemberJobAndGuildCache((_gmVal.job, self.dspFlag, self.guildIcon, self.guildRankIdx), args)
 
     def reqShareBonusFromMineWar(self, mapId, srcGbId, shareList, box):
         if srcGbId != self.leaderGbId:
@@ -1921,11 +1929,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             box.client.onMineWarShareBonusResult(False)
             return
         
-        self.modifyGuildIronMine(-sum, srcType, opUUID, gameclass.AwardDetail())
-        playerList = []
-        bonusNumList = []
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_MINE_WAR_GUILD_SHARE
+        self.modifyGuildIronMine(-sum, srcType, opUUID, gameclass.AwardDetail())
+
+        playerList = []
+        bonusNumList = []
         itemId = MBC.datas['mineBattle_MoneyID']['value']
         itemName = IDID.datas[itemId]['name']
         for val in shareList:
@@ -1938,7 +1947,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             mailAssistor.sendMailToPlayers([playerGbId],
                                           MBC.datas['mineBatte_dividendMail']['value'],
                                           extraAttach=awardVal,
-                                          despArgs=(self.self.members[self.leaderGbId].name, itemName),
+                                          despArgs=(self.members[self.leaderGbId].name, itemName),
                                           srcType=srcType, opUUID=opUUID)
             
         box.client.onMineWarShareBonusResult(True)
@@ -1970,7 +1979,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             return
         res = self.getJunxuQiXieLevel()
         for box in self.mineWarSpaceMgrBoxs:
-            LOG_IFO('syncMineWarSpaceMgrForChange: ', self.guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res)
+            LOG_INFO('syncMineWarSpaceMgrForChange: ', self.guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res)
             box.onSyncMineWarGuildInfo(self.guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res)
         
     def _toMineWarData(self):
@@ -1998,6 +2007,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             'guildLevel': self.guildLevel,
             'guildIcon': self.guildIcon,
             'memberCnt': len(self.members),
+            'maxGuildUnionNum': self.maxGuildUnionNum,
         }
         return _data
 
@@ -2023,6 +2033,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             return True
 
         if crossData['guildIcon'] != gsdtcdc['guildIcon']:
+            return True
+
+        if crossData['maxGuildUnionNum'] != gsdtcdc['maxGuildUnionNum']:
             return True
 
         return False
@@ -2368,7 +2381,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         src.onCityBattleTokenDeducted(True, cnt, guildName, guildUUID)
 
     def onBiddingFailed(self, cnt, ec):
-        LOG_IFO('[lj]on bidding failed, cnt:', cnt, ec, self.guildUUID)
+        LOG_INFO('[lj]on bidding failed, cnt:', cnt, ec, self.guildUUID)
         self.modifyCityBattleToken(
             cnt,
             AAC_AACDD.datas.BONUS_SRC_GUILD_TOKEN_BID_FAILED, 
@@ -2472,7 +2485,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     # ------------------------------------- cross data end -------------------------------------
 
     def openGuildChallenge(self, gbID, box, openType, openID, openedTime):
-        LOG_IFO('openGuildChallenge', gbID, openType, openID, openedTime)
+        LOG_INFO('openGuildChallenge', gbID, openType, openID, openedTime)
         if self.isForbidNewMember(gbID):
             self.showForbidNewMemberMsg(box, GA_ACT.guildChallengeEnter)
             return
@@ -2575,13 +2588,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         else:
             self._doDungeonOpen(openID)    
 
-        LOG_IFO('openGuildChallenge:', openedTime, openType, openID, datetime.datetime.fromtimestamp(openedTime))
+        LOG_INFO('openGuildChallenge:', openedTime, openType, openID, datetime.datetime.fromtimestamp(openedTime))
 
         box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OK, openType, openID)
         box.client and box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
 
     def _doAppointOpenCD(self, openID):
-        LOG_IFO('_doAppointOpenCD', self.guildUUID, openID)
+        LOG_INFO('_doAppointOpenCD', self.guildUUID, openID)
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT_CD)
         _mailId = int(GCC.datas['emailCountdown']['value'])
         _mailArgs = [GCBI.datas[openID]['name']]
@@ -2592,7 +2605,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
 
     def _doDungeonOpen(self, openID):
-        LOG_IFO('_doDungeonOpen', self.guildUUID, openID)
+        LOG_INFO('_doDungeonOpen', self.guildUUID, openID)
         self.doGuildCreateDungeon()
         _mailId = int(GCC.datas['emailStart']['value'])
         _mailArgs = [GCBI.datas[openID]['name']]
@@ -2606,13 +2619,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             player.box.client.onGetChagllengeDataInfo(guildChallengeData)
 
     def _updateGuildChallengeDungeonStatus(self, status):
-        LOG_IFO('_updateGuildChallengeDungeonStatus', self.guildUUID, status)
+        LOG_INFO('_updateGuildChallengeDungeonStatus', self.guildUUID, status)
         if status in gameconst.GuildBossChallengeStatus.VALID_STATUS:
             self.guildChallengeData.openedDungeonStatus = status
             self._broadcastChallengeDataInfo()
 
     def onGuildChallengeDungeonCreated(self, guildUUID, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        LOG_IFO('onGuildChallengeDungeonCreated', guildUUID, dungeonNo, spaceNo, spaceUUID, extra)
+        LOG_INFO('onGuildChallengeDungeonCreated', guildUUID, dungeonNo, spaceNo, spaceUUID, extra)
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED)
         extra.update({'spaceUUID': spaceUUID})
         extra.update({'guildUUID': self.guildUUID})
@@ -2629,12 +2642,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         )
         
     def onGuildChallengeDungeonSettlement(self, settlementTimestamp):
-        LOG_IFO('onGuildChallengeDungeonSettlement', self.guildUUID, settlementTimestamp)
+        LOG_INFO('onGuildChallengeDungeonSettlement', self.guildUUID, settlementTimestamp)
         self.guildChallengeData.settleTs = settlementTimestamp
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.SETTLEMENT)
 
     def onGuildChallengeDungeonStartBattleCD(self, startBattleTimestamp):
-        LOG_IFO('onGuildChallengeDungeonStartBattleCD', self.guildUUID, startBattleTimestamp)
+        LOG_INFO('onGuildChallengeDungeonStartBattleCD', self.guildUUID, startBattleTimestamp)
         self.guildChallengeData.settleTs = startBattleTimestamp
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.START_BATTLE_CD)
         # 挂延时, 通知正式开启战斗
@@ -2642,7 +2655,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.addTimerCB(cdTime, '_updateGuildChallengeDungeonStatus', (gameconst.GuildBossChallengeStatus.START_BATTLE,), gametimer.TIMER_TAG_GUILD_CHALLENGE_UPDATE_DUNGEON_STATUS)
         
     def onGuildChallengeDungeonCompleted(self):
-        LOG_IFO('onGuildChallengeDungeonCompleted', self.guildUUID)
+        LOG_INFO('onGuildChallengeDungeonCompleted', self.guildUUID)
         self.guildChallengeData.completeDungeon()
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
 
@@ -2656,7 +2669,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         mailAssistor.sendMailToPlayers(_gbIds, mailID, opUUID=_opUUID, despArgs=mailArgs)
 
     def getChangllengeDataInfo(self, gbID, box):
-        LOG_IFO('getChangllengeDataInfo', gbID)
+        LOG_INFO('getChangllengeDataInfo', gbID)
         _gmVal = self.members.get(gbID)
         if not _gmVal:
             LOG_WARN('getChangllengeDataInfo: gbId not in guild', gbID)
@@ -2664,10 +2677,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo()) 
 
     def cancelGuildDungeonOrder(self, gbID, box, openId):
-        LOG_IFO('cancelGuildDungeonOrder', self.guildUUID, gbID)
+        LOG_INFO('cancelGuildDungeonOrder', self.guildUUID, gbID)
         dungeonID = GCBI.datas[openId]['dunID']
         if dungeonID != self.guildChallengeData.openedDungeonId:
-            LOG_IFO('cancelGuildDungeonOrder, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
+            LOG_INFO('cancelGuildDungeonOrder, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
             return        
         _gmVal = self.members.get(gbID)
         if not _gmVal:
@@ -2753,14 +2766,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.guildChallengeData.waitEnterDungeonData[gbID] = {'box':box, 'extra':extra}
 
     def enterBossChallengeDungeon(self, gbID, box, openId, extra):
-        LOG_IFO('enterBossChallengeDungeon', self.guildUUID, gbID, openId, extra)
+        LOG_INFO('enterBossChallengeDungeon', self.guildUUID, gbID, openId, extra)
         if self.isForbidNewMember(gbID):
             self.showForbidNewMemberMsg(box, GA_ACT.guildChallengeEnter)
             return
 
         dungeonID = GCBI.datas[openId]['dunID']
         if dungeonID != self.guildChallengeData.openedDungeonId:
-            LOG_IFO('enterBossChallengeDungeon, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId, extra)
+            LOG_INFO('enterBossChallengeDungeon, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId, extra)
             return
         if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING):
             # 进入等待队列
@@ -2771,7 +2784,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.doGuildEnterDungeon(box, gbID, extra)
 
     def doGuildCreateDungeon(self):
-        LOG_IFO('doGuildCreateDungeon', self.guildUUID)
+        LOG_INFO('doGuildCreateDungeon', self.guildUUID)
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING)
         extra = {}
         extra['dungeonNo'] = self.guildChallengeData.openedDungeonId
@@ -2781,34 +2794,34 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         dungeonStub.applyCreateDungeon(self, self.guildUUID, self.guildUUID, extra)
                 
     def doGuildEnterDungeon(self, box, gbID, extra):
-        LOG_IFO('doGuildEnterDungeon', self.guildUUID, gbID, extra)
+        LOG_INFO('doGuildEnterDungeon', self.guildUUID, gbID, extra)
         extra.update({'guildUUID':self.guildUUID})
 
         dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterTypeEnum.GUILD)
         dungeonStub.doEnterDungeon(box, gbID, self.guildUUID, self.guildChallengeData.spaceNo, extra)
 
     def leaveBossChallengeDungeon(self, gbID, box, openId):
-        LOG_IFO('leaveBossChallengeDungeon', self.guildUUID, gbID)
+        LOG_INFO('leaveBossChallengeDungeon', self.guildUUID, gbID)
         dungeonID = GCBI.datas[openId]['dunID']
         if dungeonID != self.guildChallengeData.openedDungeonId:
-            LOG_IFO('leaveBossChallengeDungeon, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
+            LOG_INFO('leaveBossChallengeDungeon, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
             return
         dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterTypeEnum.GUILD)
         dungeonStub.leaveGuildBossDungeon(self.guildChallengeData.spaceNo, self.guildUUID, 0, box, gbID)
 
     def gmModifyGuildBossChallengeStatus(self, status):
-        LOG_IFO('gmModifyGuildBossChallengeStatus', self.guildUUID, status)
+        LOG_INFO('gmModifyGuildBossChallengeStatus', self.guildUUID, status)
         self._updateGuildChallengeDungeonStatus(status)
         self._broadcastChallengeDataInfo()
         
     def gmResetGuildDungeonOpenCount(self):
-        LOG_IFO('gmResetGuildDungeonOpenCount', self.guildUUID)
+        LOG_INFO('gmResetGuildDungeonOpenCount', self.guildUUID)
         self.guildChallengeData.openedFundCount = 0
         self.guildChallengeData.openedMoneyCount = 0
         self._broadcastChallengeDataInfo()
 
     def gmResetGuildDungeonAllData(self):
-        LOG_IFO('gmResetGuildDungeonAllData', self.guildUUID)
+        LOG_INFO('gmResetGuildDungeonAllData', self.guildUUID)
         self.guildChallengeData.reset()
         self._broadcastChallengeDataInfo() 
 
@@ -2821,26 +2834,26 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LOG_DBG('getGuildBossHP', self.guildUUID, gbID, self.guildChallengeData.curHP, self.guildChallengeData.fullHP)
         dungeonID = GCBI.datas[openId]['dunID']
         if dungeonID != self.guildChallengeData.openedDungeonId:
-            LOG_IFO('getGuildBossHP, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
+            LOG_INFO('getGuildBossHP, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
             return
         box.client.onGetGuildBossHP(openId, self.guildChallengeData.curHP, self.guildChallengeData.fullHP)
 
     def recoverGuildBossDungeonData(self):
-        LOG_IFO('recoverGuildBossDungeonData 1', self.guildChallengeData)
+        LOG_INFO('recoverGuildBossDungeonData 1', self.guildChallengeData)
         # 服务器重启或者异常状态
         if self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.INIT:
             return
         
         # 结算阶段不处理补偿, 通过运营手段统一处理
         if self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.SETTLEMENT:
-            LOG_IFO('recoverGuildBossDungeonData 2', self.guildChallengeData)
+            LOG_INFO('recoverGuildBossDungeonData 2', self.guildChallengeData)
             # 结束副本记录
             self.guildChallengeData.completeDungeon()
             # 通知帮会成员
             self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
             return
         
-        LOG_IFO('recoverGuildBossDungeonData 3', self.guildChallengeData)
+        LOG_INFO('recoverGuildBossDungeonData 3', self.guildChallengeData)
         curTime = utils.curTS()
         # 预约还没开启，不处理, 需要把cd挂回去
         if self.guildChallengeData.openedType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
@@ -2848,7 +2861,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             if self.guildChallengeData.openedTime > curTime:
                 # 预约中
                 if self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.APPOINT:
-                    LOG_IFO('recoverGuildBossDungeonData 4', self.guildChallengeData)
+                    LOG_INFO('recoverGuildBossDungeonData 4', self.guildChallengeData)
                     # 开启前N分钟发通知邮件
                     cdTime = self.guildChallengeData.openedTime - curTime - int(GCC.datas['countdownOpen']['value'])
                     # 还没到CD通知时间, 挂cd
@@ -2860,7 +2873,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                     self.openDungeonTimer = self.addTimerCB(cdTime, '_doDungeonOpen', (self.guildChallengeData.openedId,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
                     return
                 elif self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.APPOINT_CD:
-                    LOG_IFO('recoverGuildBossDungeonData 5', self.guildChallengeData)
+                    LOG_INFO('recoverGuildBossDungeonData 5', self.guildChallengeData)
                     # 开启副本发通知邮件
                     cdTime = self.guildChallengeData.openedTime - curTime
                     # 挂副本开启cd
@@ -2868,7 +2881,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                         self.openDungeonTimer = self.addTimerCB(cdTime, '_doDungeonOpen', (self.guildChallengeData.openedId,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
                         return
         
-        LOG_IFO('recoverGuildBossDungeonData 6', self.guildChallengeData)
+        LOG_INFO('recoverGuildBossDungeonData 6', self.guildChallengeData)
         _opUUID = self.guildChallengeData.opUUID
         # 回退副本开启消耗
         dungeonID = self.guildChallengeData.openedDungeonId
@@ -2905,7 +2918,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.guildChallengeData.completeDungeon()
         # 通知帮会成员
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
-        LOG_IFO('recoverGuildBossDungeonData 7', self.guildChallengeData)
+        LOG_INFO('recoverGuildBossDungeonData 7', self.guildChallengeData)
 
     def doExitDungeon(self, gbId, box):
         self.guildChallengeData.waitEnterDungeonData.pop(gbId, None)
@@ -2925,7 +2938,51 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         return _gmVal.job
 
     def doAddGuildIronMineFromStub(self, num):
-        self.modifyGuildIronMine(num, AAC_AACDD.datas.BONUS_SRC_GUILD_IRON_MINE, KBEngine.genUUID64(), gameclass.AwardDetail())
+        self.modifyGuildIronMine(num, AAC_AACDD.datas.BONUS_SRC_MINE_WAR_GUILD_SHARE, KBEngine.genUUID64(), gameclass.AwardDetail())
 
     def doGetGuildIronMine(self, gbId, box):
         box.client.onGetGuildIronMine(self.guildIronMine)
+
+    def onMineWarWin(self, isWin):
+        oldMaxGuildUnionNum = self.maxGuildUnionNum
+        if not isWin:
+            self.maxGuildUnionNum = G_GCD.datas['guild_unionNum']['value']
+        else:
+            #上次已经赢了
+            if self.maxGuildUnionNum == G_GCD.datas['guild_unionNum2']['value'] or self.maxGuildUnionNum == G_GCD.datas['guild_unionNum3']['value']:
+                self.maxGuildUnionNum = G_GCD.datas['guild_unionNum3']['value']
+            else:
+                self.maxGuildUnionNum = G_GCD.datas['guild_unionNum2']['value']
+            _guildUUIDs = utils.getGuildUUIDsByRelationType(self.guildUUID, gameconst.GuildRelationType.UNION)
+            #解散所有同盟
+            if len(_guildUUIDs) > self.maxGuildUnionNum:
+                for _guildUUID in _guildUUIDs:
+                    gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
+                        self.guildUUID, _guildUUID, gameconst.GuildRelationType.UNION, None, self)
+                _opUUID = KBEngine.genUUID64()
+                _mailId = G_GCD.datas['guild_relieveUnionMail']['value']
+                mailAssistor.sendMailToPlayers(
+                    [self.leaderGbId],
+                    _mailId,
+                    opUUID=_opUUID)
+                LOG_INFO("onMineWarWin: removeGuildRelation", self.guildUUID, _guildUUIDs)
+        LOG_INFO('onMineWarWin: maxGuildUnionNum:', oldMaxGuildUnionNum, self.maxGuildUnionNum)
+        if oldMaxGuildUnionNum != self.maxGuildUnionNum:
+            self.broadcastAllMaxGuildUnionNum()
+
+    def onLeaderBoardRank(self, leaderBoardType, rank):
+        self.guildRankIdx = rank
+        LOG_INFO('onLeaderBoardRank: guildRankIdx:', self.guildRankIdx)
+
+    def onGetGuildRelationAll(self, datas, box):
+        box.client.onGuildRelationAll(self.maxGuildUnionNum, datas)
+
+    def broadcastAllMaxGuildUnionNum(self):
+        _datas = []
+        for _guildUUID, _relationType in utils.iterGuildAndRelation(self.guildUUID):
+            _datas.append({
+                'guildUUID': _guildUUID,
+                'relationType': _relationType,
+            })
+        LOG_INFO('broadcastAllMaxGuildUnionNum', self.guildUUID, self.maxGuildUnionNum, _datas)
+        self.broadcastMemberClient('onGuildRelationAll', (self.maxGuildUnionNum, _datas))

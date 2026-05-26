@@ -18,7 +18,7 @@ class ICentralStub(object):
         self.csClients = {}
 
     def initCentralServers(self, configName, idName):
-        LOG_IFO('ICentralStub initCentralServers', configName, idName)
+        LOG_INFO('ICentralStub initCentralServers', configName, idName)
         _configFunc = getattr(gameconfig, configName)
         for _info in _configFunc():
             _csInfo = CentralServerInfo(_info[idName], _info['ip'], _info['port'])

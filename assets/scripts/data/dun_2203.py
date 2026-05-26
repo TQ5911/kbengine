@@ -15,11 +15,12 @@ datas ={
     "PosY": 102.4753,
     "PosZ": 358.683,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 45,
       "LightPillar": "",
       "MapEntityScale": 0,
-      "MapEntityType": "18",
+      "MapEntityType": "22",
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
@@ -47,6 +48,7 @@ datas ={
     "PosY": 102.4753,
     "PosZ": 358.683,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 45,
       "LightPillar": "",
@@ -79,6 +81,7 @@ datas ={
     "PosY": 102.4753,
     "PosZ": 358.683,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 45,
       "LightPillar": "",

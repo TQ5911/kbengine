@@ -1,0 +1,165 @@
+<root>
+
+    <Properties>
+        <tDungeonCheckDic>
+            <Type>      PY_DICT       </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>       {}           </Default>
+        </tDungeonCheckDic>
+    </Properties>
+
+    <BaseMethods>
+        <checkTeamNeedItem>
+            <Arg>   UINT32  </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   PYTHON      </Arg>
+        </checkTeamNeedItem>
+
+        <checkCaptainTeamDungeonConditions>
+            <Arg> DUNGEON_NO </Arg>
+            <Arg> TEAMID </Arg>
+            <Arg> PYTHON  </Arg>
+        </checkCaptainTeamDungeonConditions>
+
+        <checkMemberTeamDungeonConditions>
+            <Arg> DUNGEON_NO </Arg>
+            <Arg> TEAMID </Arg>
+            <Arg> MAILBOX </Arg>
+            <Arg> PYTHON </Arg>
+        </checkMemberTeamDungeonConditions>
+
+        <useItemAndEnterTeamDungeon>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           PYTHON             </Arg>
+        </useItemAndEnterTeamDungeon>
+
+        <selfCheckAndEnterTeamDungeon>
+            <Arg>   TEAMID          </Arg>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   PYTHON          </Arg>
+        </selfCheckAndEnterTeamDungeon>
+    </BaseMethods>
+
+    <CellMethods>
+
+        <onCheckTeamNeedItem>
+            <Arg>   UINT32  </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onCheckTeamNeedItem>
+
+        <doCheckTeamDungeonConditions>
+            <Arg>   MAILBOX        </Arg>
+            <Arg>   PLAYER_GBID    </Arg>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   TEAMID         </Arg>
+            <Arg>   PYTHON         </Arg>
+        </doCheckTeamDungeonConditions>
+
+        <leaveTeamDungeon>
+            <Exposed/>
+        </leaveTeamDungeon>
+
+        <selfEnterTeamDungeon>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   DUNGEON_SRC     </Arg>
+        </selfEnterTeamDungeon>
+
+        <selfLeaveTeamDungeon>
+            <Arg>   PYTHON  </Arg>
+        </selfLeaveTeamDungeon>
+
+        <checkMembersTeamDungeonConditions>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+        </checkMembersTeamDungeonConditions>
+
+        <checkMemberTeamDungeonConditions>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+        </checkMemberTeamDungeonConditions>
+
+        <onCheckCaptainTeamDungeonConditionsSucceed>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onCheckCaptainTeamDungeonConditionsSucceed>
+
+        <onCheckCaptainTeamDungeonConditionsFailed>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onCheckCaptainTeamDungeonConditionsFailed>
+
+        <onCheckMemberTeamDungeonConditionsSucceed>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onCheckMemberTeamDungeonConditionsSucceed>
+
+        <onCheckMemberTeamDungeonConditionsFailed>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onCheckMemberTeamDungeonConditionsFailed>
+
+        <onCheckTeamDungeonConditions>
+            <Arg>   PLAYER_GBID    </Arg>
+            <Arg>   PYTHON         </Arg>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onCheckTeamDungeonConditions>
+
+        <onTeammateBeConfirmed>
+            <Exposed/>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   BOOL        </Arg>
+        </onTeammateBeConfirmed>
+
+        <onTeammateBeConfirmedFromTeamMember>
+            <Arg>   PLAYER_GBID    </Arg>
+            <Arg>   BOOL           </Arg>
+            <Arg>   DUNGEON_NO     </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onTeammateBeConfirmedFromTeamMember>
+
+        <onReadyCheckTeamDungeon>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   PYTHON          </Arg>
+        </onReadyCheckTeamDungeon>
+
+        <doEnterTeamDungeon>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           PYTHON             </Arg>
+        </doEnterTeamDungeon>
+
+        <readyUseItemAndEnterTeamDungeon>
+            <Arg>           UINT8              </Arg>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>           PYTHON             </Arg>
+        </readyUseItemAndEnterTeamDungeon>
+    </CellMethods>
+
+    <ClientMethods>
+
+        <onTeammateConfirm>
+            <Arg>       DUNGEON_NO          </Arg>
+        </onTeammateConfirm>
+
+        <onTeammateConfirmBroadcastStatus>
+            <Arg>       DUNGEON_NO          </Arg>
+            <Arg>   UNICODE     </Arg>
+        </onTeammateConfirmBroadcastStatus>
+    </ClientMethods>
+</root>

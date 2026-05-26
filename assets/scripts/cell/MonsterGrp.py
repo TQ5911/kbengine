@@ -26,15 +26,14 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
 
     def __init__(self):
         iCell.ICell.__init__(self)
-        LOG_IFO('create monster group: {}'.format(self.id))
-        if formula.inDungeonScene(self.spaceNo):
-            if self.spaceMgr:
-                self.spaceMgr.addEntity(
-                    self.id,
-                    ('mgid_{}'.format(self.groupId), self.__class__.__name__))
-
-        else:
+        LOG_INFO('create monster group: {}'.format(self.id))
+        if not formula.inDungeonScene(self.spaceNo):
             self.initAllMonsters()
+
+        if self.spaceMgr:
+            self.spaceMgr.addEntity(
+                self.id,
+                ('mgid_{}'.format(self.groupId), self.__class__.__name__))
 
     def initAllMonsters(self):
         _mapId = formula.fetchMapId(self.spaceNo)

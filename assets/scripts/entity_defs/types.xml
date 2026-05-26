@@ -142,6 +142,7 @@
     <NEW_BIE_STEP>    UINT32            </NEW_BIE_STEP>
     <GUILD_LEVEL>    UINT8            </GUILD_LEVEL>
     <DARK_IRON>          INT64       </DARK_IRON>
+    <APPEARANCE_COIN>          INT64       </APPEARANCE_COIN>
     <SCENE_STATE>       UINT16          </SCENE_STATE>
     <LEADER_BOARD_PAGE>     UINT8       </LEADER_BOARD_PAGE>
     <RANK>              UINT16          </RANK>
@@ -511,6 +512,9 @@
             <maxEnhanceLv>
                 <Type> UINT8 </Type>
             </maxEnhanceLv>
+            <returnTime>
+                <Type>  LONGTIME   </Type>
+            </returnTime>
         </Properties>
     </CLI_EQUIP_ITEM_VAL>
 
@@ -2410,6 +2414,9 @@
             <offlineTime>
                 <Type>  LONGTIME        </Type>
             </offlineTime>
+            <bountyId>
+                <Type>  UUID        </Type>
+            </bountyId>
         </Properties>
     </AVATAR_INTER_VAL>
 
@@ -2627,6 +2634,17 @@
             </itemNumEx>
         </Properties>
     </RANDOM_SYNTHESIS_ITEM_INFO>
+
+    <RANDOM_UPGRADE_SYNTHESIS_NUM_INFO> FIXED_DICT
+        <Properties>
+            <key>
+                <Type>  GRIDID   </Type>
+            </key>
+            <num>
+                <Type>  UINT16   </Type>
+            </num>
+        </Properties>
+    </RANDOM_UPGRADE_SYNTHESIS_NUM_INFO>
 
     <CLIENT_RANDOM_SYNTHESIS_NUM_VAL> FIXED_DICT
         <Properties>
@@ -4102,6 +4120,9 @@
             <endTime>
                 <Type>      LONGTIME            </Type>
             </endTime>
+            <redeemWaitTime>
+                <Type>  LONGTIME            </Type>
+            </redeemWaitTime>
         </Properties>
     </EQUIP_DROP_DATA_INFO>
 
@@ -4123,6 +4144,12 @@
             <price>
                 <Type>  UINT32              </Type>
             </price>
+            <redeemWaitTime>
+                <Type>  LONGTIME            </Type>
+            </redeemWaitTime>
+            <hasPrice>
+                <Type>  BOOL              </Type>
+            </hasPrice>
         </Properties>
     </EQUIP_DROP_TAKER_DATA_INFO>
 
@@ -4953,6 +4980,9 @@
             <leaderName>
                 <Type>  UNICODE            </Type>
             </leaderName>
+            <leaderGbId>
+                <Type>  PLAYER_GBID            </Type>
+            </leaderGbId>
             <revenue>
                 <Type>  UINT32                  </Type>
             </revenue>
@@ -5649,6 +5679,12 @@
             <failedCnt>
                 <Type>  UINT32          </Type>
             </failedCnt>
+            <successedCntWeek>
+                <Type>  UINT16          </Type>
+            </successedCntWeek>
+            <failedCntWeek>
+                <Type>  UINT16          </Type>
+            </failedCntWeek>
             <lastUpdateTimestamp>
                 <Type>  LONGTIME          </Type>
             </lastUpdateTimestamp>
@@ -5674,4 +5710,198 @@
             </expireTime>
         </Properties>
     </TITLE_VAL_INFO>
+
+    <MINE_WAR_FLAG_STATE_INFO> FIXED_DICT
+        <Properties>
+            <mapId>
+                <Type>  LINE_NO      </Type>
+            </mapId>
+            <flagDestroyed>
+                <Type>  BOOL        </Type>
+            </flagDestroyed>
+        </Properties>
+    </MINE_WAR_FLAG_STATE_INFO>
+
+    <FREE_TICKET_RECOVERY_ITEM_VAL> FIXED_DICT
+        <Properties>
+            <rType>
+                <Type>      UINT16       </Type>
+            </rType>
+            <dateNumInfo>
+                <Type> UNICODE </Type>
+                <DatabaseLength> 10240 </DatabaseLength>
+            </dateNumInfo>
+        </Properties>
+    </FREE_TICKET_RECOVERY_ITEM_VAL>
+
+    <RESOURCE_RECOVERY_INFO>   FIXED_DICT
+        <implementedBy>     RecoveryInfo.resourceRecoveryInfoInstance    </implementedBy>
+        <Properties>
+            <freeTicket>
+                <Type>  FREE_TICKET_RECOVERY_ITEM_VAL   </Type>
+            </freeTicket>
+        </Properties>
+    </RESOURCE_RECOVERY_INFO>
+
+    <FREE_TICKET_RECOVERY_CLIENT_VAL> FIXED_DICT
+        <Properties>
+            <num>
+                <Type>      UINT16           </Type>
+            </num>
+            <itemId>
+                <Type>      UINT32          </Type>
+            </itemId>
+            <itemNum>
+                <Type>      UINT32          </Type>
+            </itemNum>
+        </Properties>
+    </FREE_TICKET_RECOVERY_CLIENT_VAL>
+
+    <!-- 租赁系统自定义类型 begin -->
+
+    <LEASE_SHOP_SUMMARY> FIXED_DICT
+        <Properties>
+            <itemId>
+                <Type>  ITEMID  </Type>
+            </itemId>
+            <quality>
+                <Type>  UINT8   </Type>
+            </quality>
+            <equipType>
+                <Type>  UINT8   </Type>
+            </equipType>
+            <equipSubType>
+                <Type>  UINT8   </Type>
+            </equipSubType>
+            <school>
+                <Type>  UINT8   </Type>
+            </school>
+            <itemName>
+                <Type>  UNICODE </Type>
+            </itemName>
+            <onSaleCount>
+                <Type>  UINT32  </Type>
+            </onSaleCount>
+            <minPrice>
+                <Type>  UINT32  </Type>
+            </minPrice>
+        </Properties>
+    </LEASE_SHOP_SUMMARY>
+
+    <LEASE_MARKET_ITEM> FIXED_DICT
+        <Properties>
+            <uniqueId>
+                <Type>  UNIQUE_ID   </Type>
+            </uniqueId>
+            <itemId>
+                <Type>  ITEMID      </Type>
+            </itemId>
+            <leaseOwnerGbId>
+                <Type>  PLAYER_GBID </Type>
+            </leaseOwnerGbId>
+            <pricePerDay>
+                <Type>  UINT32      </Type>
+            </pricePerDay>
+            <returnEndTime>
+                <Type>  UINT32      </Type>
+            </returnEndTime>
+            <quality>
+                <Type>  UINT8       </Type>
+            </quality>
+            <equipType>
+                <Type>  UINT8       </Type>
+            </equipType>
+            <equipSubType>
+                <Type>  UINT8       </Type>
+            </equipSubType>
+            <school>
+                <Type>  UINT8       </Type>
+            </school>
+            <score>
+                <Type>  UINT32      </Type>
+            </score>
+            <itemName>
+                <Type>  UNICODE     </Type>
+            </itemName>
+            <isDropEquip>
+                <Type>  UINT8       </Type>
+            </isDropEquip>
+            <leaseOwnerServerId>
+                <Type>  UINT32      </Type>
+            </leaseOwnerServerId>
+        </Properties>
+    </LEASE_MARKET_ITEM>
+
+    <LEASE_MY_SALE_ITEM> FIXED_DICT
+        <Properties>
+            <uniqueId>
+                <Type>  UNIQUE_ID   </Type>
+            </uniqueId>
+            <itemId>
+                <Type>  ITEMID      </Type>
+            </itemId>
+            <leaseOwnerGbId>
+                <Type>  PLAYER_GBID </Type>
+            </leaseOwnerGbId>
+            <pricePerDay>
+                <Type>  UINT32      </Type>
+            </pricePerDay>
+            <returnEndTime>
+                <Type>  UINT32      </Type>
+            </returnEndTime>
+            <quality>
+                <Type>  UINT8       </Type>
+            </quality>
+            <equipType>
+                <Type>  UINT8       </Type>
+            </equipType>
+            <equipSubType>
+                <Type>  UINT8       </Type>
+            </equipSubType>
+            <school>
+                <Type>  UINT8       </Type>
+            </school>
+            <score>
+                <Type>  UINT32      </Type>
+            </score>
+            <itemName>
+                <Type>  UNICODE     </Type>
+            </itemName>
+            <isDropEquip>
+                <Type>  UINT8       </Type>
+            </isDropEquip>
+            <leaseOwnerServerId>
+                <Type>  UINT32      </Type>
+            </leaseOwnerServerId>
+            <incomeBindGold>
+                <Type>  UINT64  </Type>
+            </incomeBindGold>
+            <incomeGold>
+                <Type>  UINT64  </Type>
+            </incomeGold>
+        </Properties>
+    </LEASE_MY_SALE_ITEM>
+
+    <LEASE_RECORD> FIXED_DICT
+        <Properties>
+            <timestamp>
+                <Type>  UINT32  </Type>
+            </timestamp>
+            <itemId>
+                <Type>  ITEMID  </Type>
+            </itemId>
+            <bindGold>
+                <Type>  UINT64  </Type>
+            </bindGold>
+            <gold>
+                <Type>  UINT64  </Type>
+            </gold>
+            <cost>
+                <Type>  UINT64  </Type>
+            </cost>
+        </Properties>
+    </LEASE_RECORD>
+
+    <!-- 租赁系统自定义类型 end -->
+
 </root>

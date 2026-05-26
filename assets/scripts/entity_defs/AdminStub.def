@@ -14,13 +14,13 @@
     </Properties>
 
     <BaseMethods>
-        <replyCommand>
+        <doReplyCommand>
             <Arg>       STRING      </Arg>
             <Arg>       STRING      </Arg>
             <Arg>       BLOB        </Arg>
             <Arg>       UNICODE     </Arg>
             <Arg>       UINT8       </Arg>
-        </replyCommand>
+        </doReplyCommand>
 
         <replyHttpCommand>
             <Arg>       STRING      </Arg>

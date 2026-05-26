@@ -14,21 +14,21 @@ class IAuctionMixin(object):
     """玩家AuctionMixin"""
 
     def _loadPlayerAuctionData(self, auctionInfo):
-        LOG_IFO('_loadPlayerAuctionData::', auctionInfo and auctionInfo.__dict__)
+        LOG_INFO('_loadPlayerAuctionData::', auctionInfo and auctionInfo.__dict__)
         m_extra = {}
         self.stub.loadPlayerAuctionItem(self.gbID, m_extra)
 
     def _getAuctionPlayerInfo(self, auctionInfo):
-        LOG_IFO("_getAuctionPlayerInfo::", auctionInfo and auctionInfo.__dict__)
+        LOG_INFO("_getAuctionPlayerInfo::", auctionInfo and auctionInfo.__dict__)
         if not gameconfig.enableAuction():
-            LOG_IFO("_getAuctionPlayerInfo not enableAuction")
+            LOG_INFO("_getAuctionPlayerInfo not enableAuction")
             return gameconst.AuctionErrno.ERR_AUCTION_IDIP_GM_BAN
         m_extra = {}
         self.stub.getPlayerAuctionItems(self.gbID, m_extra)
         return gameconst.AuctionErrno.ERR_AUCTION_OK
 
     def _saleItemInAuctioCommonCheck(self, auctionInfo, itemId, uniqueId, totalPrice, number, bagType):
-        LOG_IFO("_saleItemInAuctionCheck::", itemId, uniqueId, totalPrice, number, bagType)
+        LOG_INFO("_saleItemInAuctionCheck::", itemId, uniqueId, totalPrice, number, bagType)
         _r_False = (None, {})
 
         if not auctionInfo.isCacheInited():
@@ -62,7 +62,7 @@ class IAuctionMixin(object):
             if 0 < _w_itemObj.expireTime <= curTime:
                 return gameconst.AuctionErrno.ERR_AUCTION_IS_EXPIRED
 
-            if _w_itemObj.isEquipmentItem() and (not _w_itemObj.isGood() or _w_itemObj.hasBindValue()):
+            if _w_itemObj.isEquipmentItem() and (not _w_itemObj.isGood(self.gbID) or _w_itemObj.hasBindValue()):
                 return gameconst.AuctionErrno.ERR_AUCTION_EQUIP_IN_DROP_REPAIR
             
             if not dataUtils.checkAuctionAllowListing(_w_itemObj.itemId):
@@ -93,12 +93,12 @@ class IAuctionMixin(object):
 
             _i_errno = __itemCommonCheck(i_itemObj)
             if _i_errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
-                LOG_IFO("_saleItemInAuctionCheck:: skipped {}".format(_i_errno),
+                LOG_INFO("_saleItemInAuctionCheck:: skipped {}".format(_i_errno),
                           i_gridId, i_itemObj.itemId)
                 continue
 
             if not m_itemObj.canMerge(i_itemObj):
-                LOG_IFO("_saleItemInAuctionCheck:: skipped, cannot be merged",
+                LOG_INFO("_saleItemInAuctionCheck:: skipped, cannot be merged",
                           m_gridId, m_itemObj.itemId, i_gridId, i_itemObj.itemId)
                 continue
 

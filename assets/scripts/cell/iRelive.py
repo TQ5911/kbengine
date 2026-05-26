@@ -94,6 +94,15 @@ class IRelive(object):
         else:
             self.curReliveCD = 0
 
+        # 矿战特殊处理cd
+        if self.spaceMgr:
+            mineWarCD = self.getMineWarReliveCD()
+            # LOG_DBG('_onDeadPenalty: ', mineWarCD)
+            if mineWarCD >= 0:
+                self.curReliveCD = mineWarCD
+                self.deathResetCD = _now + mineWarCD
+                self.deathPenaltyTimes = 0
+
         # 死亡扣除经验
         _opUUID = KBEngine.genUUID64()
         _deductExp = 0
@@ -177,7 +186,7 @@ class IRelive(object):
 
 
     def doRelive(self, reliveType):
-        LOG_IFO('in doRelive:', reliveType, self.spaceNo, self.gbId)
+        LOG_INFO('in doRelive:', reliveType, self.spaceNo, self.gbId)
         _mapId = formula.fetchMapId(self.spaceNo)
 
         if formula.inMineWarScene(self.spaceNo) \
@@ -215,7 +224,7 @@ class IRelive(object):
     @utils.isMyself
     @gamedecorator.limitcall(2)
     def relive(self, exposed, reliveType):
-        LOG_IFO('relive', reliveType, self.spaceNo)
+        LOG_INFO('relive', reliveType, self.spaceNo)
         if not self._isMyself(exposed):
             return
 

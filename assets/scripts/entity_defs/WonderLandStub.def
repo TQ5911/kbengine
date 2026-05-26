@@ -33,6 +33,28 @@
         <logonEnterWonderLand>
             <Arg>          ENTITYCALL                   </Arg>
             <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          SPACE_NO                     </Arg>
         </logonEnterWonderLand>
+
+        <doGetWonderLandLineInfo>
+            <Arg>          ENTITYCALL                   </Arg>
+        </doGetWonderLandLineInfo>
+
+        <doSwitchWonderLandLine>
+            <Arg>          LINE_NO                      </Arg>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </doSwitchWonderLandLine>
+
+        <onLeaveWonderLandWithToSpaceNo>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+        </onLeaveWonderLandWithToSpaceNo>
+
+        <onFightingPlayersCntSync>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       INT32          </Arg>
+        </onFightingPlayersCntSync>
     </BaseMethods>
 </root>

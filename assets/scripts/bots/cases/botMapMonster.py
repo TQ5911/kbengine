@@ -40,7 +40,7 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
         owner.debug("执行初始化状态逻辑 当前地图ID:%s" % curMapId)
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
         owner.unlockAllFunc()
         if owner.isInDungeonSpace():
@@ -69,7 +69,7 @@ class BotAIState_GoDstMap(AIState):
             return
         self.stateTime = now
         owner.debug("执行前往目标地图状态逻辑 当前地图ID:%s 目标地图ID:%s" % (curMapId, owner.dstMapId))
-        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+        if owner.hasState(gameconst.StateEnum.Teleporting) or owner.hasState(gameconst.StateEnum.Teleport):
             return
         if int(curMapId) == owner.dstMapId:
             owner.runGmCommand('$goto 0 %s %s %s' % (owner.dstPos.x, owner.dstPos.y, owner.dstPos.z))
@@ -93,13 +93,13 @@ class BotAIState_Combat(AIState):
 
     def execute(self, owner):
         owner.debug("执行战斗状态逻辑 %s" % owner.state)
-        if owner.hasState(gameconst.State.Death) or not owner.goBattleArea():
+        if owner.hasState(gameconst.StateEnum.Death) or not owner.goBattleArea():
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
             return
-        if not owner.hasState(gameconst.State.autoFight):
+        if not owner.hasState(gameconst.StateEnum.autoFight):
             owner.cell.startAutoCombat(False)
             return
-        if owner.hasState(gameconst.State.Fighting):
+        if owner.hasState(gameconst.StateEnum.Fighting):
             return
         if owner.needChangeDstMap():
             owner.changeAIState(AISTATE_GO_DSTMAP)
@@ -125,7 +125,7 @@ class BotAIState_GoBattleArea(AIState):
             owner.changeAIState(AISTATE_GO_DSTMAP)
             return
         owner.debug("执行前往战斗区域状态逻辑 %s %s" % (owner.state, str(owner.position)))
-        if owner.hasState(gameconst.State.Death):
+        if owner.hasState(gameconst.StateEnum.Death):
             owner.relive(2)
             return
         if owner.goBattleArea():
@@ -223,7 +223,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
         if botUtils.distance2D(self.position, self.dstPos) < self.pointRadius:
             self.debug(f"到达战斗区域")
             return True
-        if self.hasState(gameconst.State.Moving):
+        if self.hasState(gameconst.StateEnum.Moving):
             return False
         dstPos = botUtils.getRandomPosVec3(self.dstPos, self.pointRadius)
         self.moveTo(dstPos)

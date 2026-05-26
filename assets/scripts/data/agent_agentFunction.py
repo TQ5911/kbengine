@@ -134,10 +134,35 @@ datas = _tools.RODict({
         "functionID": 24,
         "isControl": 0,
         "isOpen": 0,
+    }),
+    25: _tools.RODict({
+        "functionID": 25,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    26: _tools.RODict({
+        "functionID": 26,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    27: _tools.RODict({
+        "functionID": 27,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    28: _tools.RODict({
+        "functionID": 28,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    29: _tools.RODict({
+        "functionID": 29,
+        "isControl": 1,
+        "isOpen": 1,
     })
 })
 minKey = 1
-maxKey = 24
+maxKey = 29
 
 
 UIBusinessPanel = 1
@@ -164,3 +189,8 @@ SellRoot = 21
 PullRoot = 22
 deFriended = 23
 deMail = 24
+UIEquipIntensifyPage = 25
+UIEquipClassPage = 26
+UIEquipRunePage = 27
+UIEquipBlessPage = 28
+UlEquipSoul = 29

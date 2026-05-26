@@ -14,7 +14,7 @@ import impDungeonCommon
 import math
 
 import message_Message_def as MMD
-import conflict_conflict_def as CCD
+import conflict_conflict_def as C_C_DD
 import gamePlay_gamePlay as DDID
 import tutorConst_guideConfig as TCGCD
 
@@ -47,7 +47,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             if exitCount == self.DEFAULT_EXIT_COUNT:
                 self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
 
-            LOG_IFO('_singleDungeonTrapCallback::outside team dungeon range, '
+            LOG_INFO('_singleDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
             exitCount -= 1
         elif self.DEFAULT_EXIT_COUNT != exitCount:
@@ -59,7 +59,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     @gamedecorator.limitcall(2, msgId=MMD.datas.dungeonRefused)
     def selfEnterSingleDungeon(self, dungeonNo, src):
-        LOG_IFO('selfEnterSingleDungeon:', dungeonNo, src)
+        LOG_INFO('selfEnterSingleDungeon:', dungeonNo, src)
 
         _targetSpaceNo = formula.combineLineSpaceNo(dungeonNo, 0)
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
@@ -101,14 +101,14 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         self.onCheckSingleDungeonCondition(dungeonNo, True, {}, extra)
 
     def onCheckSingleDungeonCondition(self, dungeonNo, result, reasonDic, extra):
-        LOG_IFO('onCheckSingleDungeonCondition::', dungeonNo, result, reasonDic)
+        LOG_INFO('onCheckSingleDungeonCondition::', dungeonNo, result, reasonDic)
         if not result:
             LOG_WARN('onCheckSingleDungeonCondition:: failed', dungeonNo, reasonDic)
             return
 
         _hasCast = extra.get('hasCast', False)
         _spaceTemplateNo = gameconst.SpaceType.getSingleDungeonSpaceRange(dungeonNo)[0]
-        if not _hasCast and utils.checkComplexTeleportNeedCast(self.spaceNo, _spaceTemplateNo, gameconst.ComplexTeleportType.ENTER, None, owner=self):
+        if not _hasCast and utils.checkComplexTeleportNeedCast(self.spaceNo, _spaceTemplateNo, gameconst.ComplexTeleportEnum.ENTER, None, owner=self):
             self.enterSpaceCommonNeedCast('_enterSingleDungeonAfterCast', (dungeonNo, extra))
             return
 
@@ -128,7 +128,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def _checkEnterSingleDungeon(self, dungeonNo, src=None, checkSameDungeon=True):
         if dungeonNo not in DDID.datas:
-            LOG_IFO('{0} invalid'.format(dungeonNo))
+            LOG_INFO('{0} invalid'.format(dungeonNo))
             return False
 
         if checkSameDungeon and formula.parseDungeonNoBySpaceNo(self.spaceNo) == dungeonNo:
@@ -141,18 +141,18 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         dungeonInfo = DDID.datas[dungeonNo]
         if not gameconst.DungeonTypeJudge.isSingleDungeon(dungeonInfo['type'],
                                                      dungeonInfo['enterType']):
-            LOG_IFO('{0} not single dungeon'.format(dungeonNo))
+            LOG_INFO('{0} not single dungeon'.format(dungeonNo))
             # TODO()(DUNGEON_EXTEND): add message
             # self.showMsg(MMD.datas.CUSTOM_STRING6, ['该副本无法单人进入'])
             return False
 
-        if not self.checkConflictState(CCD.datas.teleport):
-            LOG_IFO('checkConflictState error')
+        if not self.checkConflictState(C_C_DD.datas.teleport):
+            LOG_INFO('checkConflictState error')
             return False
 
         # 【【任务】战斗状态&&进入副本判断】
         if not dungeonInfo["fightConflict"] and self.hasState(gameconst.StateEnum.Fighting):
-            LOG_IFO("_checkEnterSingleDungeon:: fight state failed")
+            LOG_INFO("_checkEnterSingleDungeon:: fight state failed")
             self.showMsg(MMD.datas.enterDunFailFightSingle, [])
             return False
 
@@ -174,26 +174,26 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             LOG_ERR('Enter singleDungeon Failed, use item error: code={}, spaceNo={}'.format(state, spaceNo))
             return
 
-        eContext = {'spaceMgrBox': spaceMgrBox,
+        eCtx = {'spaceMgrBox': spaceMgrBox,
                     'spaceBox': spaceBox,
                     'playerBox': playerBox,
                     'playerGbId': playerGbId,
                     'teamUUID': teamUUID,
                     'extra': extra}
-        lContext = {}
+        lCtx = {}
         src = extra.get('src')
-        context = {'e': eContext, 'l': lContext, 'src': src}
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
+        context = {'e': eCtx, 'l': lCtx, 'src': src}
+        options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
 
-        canLeave = self.packageComplexTeleportLeaveData(lContext, judgeLeaveSrc=src)
+        canLeave = self.packComplexTeleportLeaveData(lCtx, judgeLeaveSrc=src)
         if not canLeave:
-            if canLeave.extra not in gameconst.CompleteTeleportLeaveFailedReason.COLL_USEROPRERRNO:
+            if canLeave.extra not in gameconst.CompleteTeleportLeaveFailReason.COLL_USEROPRERRNO:
                 gameengine.panicStack('readyUseItemAndEnterSingleDungeon::fatal error when try to enter single dungeon space', self.spaceNo, spaceNo, context)
             else:
                 LOG_WARN("readyUseItemAndEnterSingleDungeon::failed, errno={}".format(canLeave.extra), self.spaceNo, spaceNo, context)
             return
 
-        self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
+        self.telFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     @gamedecorator.limitcall(5)
     def leaveSingleDungeon(self, exposed, dungeonNo):
@@ -207,12 +207,12 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         self.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
 
     def leaveTutorialIsComplete(self, dungeonNo):
-        LOG_IFO('leaveTutorialIsComplete:', dungeonNo)
+        LOG_INFO('leaveTutorialIsComplete:', dungeonNo)
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
 
     def selfLeaveSingleDungeon(self, dungeonNo, src):
-        LOG_IFO('selfLeaveSingleDungeon:', dungeonNo, src)
+        LOG_INFO('selfLeaveSingleDungeon:', dungeonNo, src)
         _now = utils.curTS()
         if self.isGlobalTeleportLocked(now=_now):
             LOG_WARN("selfLeaveSingleDungeon:: teleport locked", dungeonNo, src, self.teleportGlobalLockRlsT)
@@ -221,11 +221,11 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         self.doLeaveSingleDungeon(dungeonNo, src, 'server leave')
 
     def doLeaveSingleDungeon(self, dungeonNo, src, reason):
-        LOG_IFO('wl: doLeaveSingleDungeon', dungeonNo, src, reason)
+        LOG_INFO('wl: doLeaveSingleDungeon', dungeonNo, src, reason)
         if not formula.inDungeonScene(self.spaceNo):
             return
 
-        spaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
+        spaceType = self._getParamBydungeonNo(dungeonNo, 'type')
         enterType = gameengine.getDungeonEnterTypeBySpaceNo(self.spaceNo)
         if enterType and enterType != gameconst.DungeonEnterTypeEnum.SINGLE:
             LOG_WARN('doLeaveSingleDungeon:: leave single but got team, auto change',
@@ -237,13 +237,13 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
                 LOG_ERR('doLeaveSingleDungeon::unknown enterType', dungeonNo, enterType)
             return
 
-        _m_mapId, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
-        spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
+        _mMapId, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
+        spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
 
-        lContext = {'spaceMgrBox': self.spaceMgr.base, 'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID}
-        eContext = {}
-        context = {'e': eContext, 'l': lContext, 'src': src}
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.LEAVE)
+        lCtx = {'spaceMgrBox': self.spaceMgr.base, 'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID}
+        eCtx = {}
+        context = {'e': eCtx, 'l': lCtx, 'src': src}
+        options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
 
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 
@@ -252,20 +252,20 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def doLeaveSingleDungeonWithDstPos(self, dstNo, dstPos, dstDir):
         """task使用, 这个接口只用于从单人副本返回到大世界分线"""
-        LOG_IFO('in doLeaveSingleDungeonWithDstPos: 1', self.spaceNo, dstNo, dstPos, dstDir)
+        LOG_INFO('in doLeaveSingleDungeonWithDstPos: 1', self.spaceNo, dstNo, dstPos, dstDir)
         if not formula.inDungeonScene(self.spaceNo):
-            LOG_IFO('in doLeaveSingleDungeonWithDstPos: 2', self.spaceNo, dstNo, dstPos, dstDir)
+            LOG_INFO('in doLeaveSingleDungeonWithDstPos: 2', self.spaceNo, dstNo, dstPos, dstDir)
             return
 
         dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
-        spaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
+        spaceType = self._getParamBydungeonNo(dungeonNo, 'type')
         if self.autoCombat and DDID.datas[dungeonNo].get('leaveDungeonDisableAutoFight', 0):
             self.stopAutoCombat(self.id)
 
-        lContext = {'spaceMgrBox': self.spaceMgr.base, 'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID,
+        lCtx = {'spaceMgrBox': self.spaceMgr.base, 'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID,
                     'overwrite': {'position': dstPos, 'direction': dstDir}}
-        context = {'e': {}, 'l': lContext}
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.LEAVE)
+        context = {'e': {}, 'l': lCtx}
+        options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
         spaceNo = formula.combineLineSpaceNo(dstNo)
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 

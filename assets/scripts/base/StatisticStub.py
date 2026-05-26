@@ -19,7 +19,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def __init__(self):
         super(StatisticStub, self).__init__()
-        LOG_IFO("StatisticStub  __init__", self.classname())
+        LOG_INFO("StatisticStub  __init__", self.classname())
         self.statisticDic = {}
         return
 
@@ -50,7 +50,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
 
     def startReportStatistics(self, gbId, playerBox, spaceNo, extraDic):
-        LOG_IFO("startReportStatistics", gbId, spaceNo, extraDic)
+        LOG_INFO("startReportStatistics", gbId, spaceNo, extraDic)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
             LOG_ERR("startReportStatistics space cannot statistic", gbId, spaceNo)
             return
@@ -63,13 +63,13 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         sVal.addMemberForSta(gbId, playerBox, extraDic)
 
     def stopReportStatistics(self, gbId, playBox, spaceNo):
-        LOG_IFO("startReportStatistics", gbId, spaceNo)
+        LOG_INFO("startReportStatistics", gbId, spaceNo)
         sVal = self.statisticDic.get(spaceNo, None)
         if sVal:
             sVal.delMember(gbId)
 
     def reportStatistics(self, gbId, spaceNo, statisticDic):
-        LOG_IFO("reportStatistics", gbId, spaceNo, statisticDic)
+        LOG_INFO("reportStatistics", gbId, spaceNo, statisticDic)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
             LOG_ERR("reportStatistics space cannot statistic", gbId, spaceNo)
             return
@@ -82,7 +82,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         sVal.updateStatistics(gbId, statisticDic)
 
     def startGetStatistics(self, gbId, playerBox, spaceNo, statisticType, extraDic):
-        # LOG_IFO("startGetStatistics", statisticType)
+        # LOG_INFO("startGetStatistics", statisticType)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
             LOG_ERR("startGetStatistics space cannot statistic", gbId, spaceNo)
             return
@@ -97,7 +97,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def stopGetStatistics(self, gbId, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            LOG_IFO("stopGetStatistics space cannot statistic", gbId, spaceNo)
+            LOG_INFO("stopGetStatistics space cannot statistic", gbId, spaceNo)
             return
 
         if spaceNo not in self.statisticDic:
@@ -108,11 +108,11 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onSpaceGone(self, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            LOG_IFO("onSpaceGone space cannot statistic", spaceNo)
+            LOG_INFO("onSpaceGone space cannot statistic", spaceNo)
             return
 
         if spaceNo in self.statisticDic:
-            LOG_IFO("onSpaceGone", spaceNo)
+            LOG_INFO("onSpaceGone", spaceNo)
             self.statisticDic.pop(spaceNo)
 
     def showData(self):

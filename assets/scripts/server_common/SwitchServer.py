@@ -250,7 +250,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onGetAvatarOnlineInfo(cls, ret, num, insertId, err, ctx):
-        LOG_IFO("onGetAvatarOnlineInfo ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
+        LOG_INFO("onGetAvatarOnlineInfo ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
         if err:
             LOG_ERR("onGetAvatarOnlineInfo error={}".format(err))
             return
@@ -274,7 +274,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def switchServer(cls, gbId, dbId, serverId, accountName, accountType):
-        LOG_IFO('switchServer gbId={}, dbId={}'.format(gbId, dbId))
+        LOG_INFO('switchServer gbId={}, dbId={}'.format(gbId, dbId))
         _ctx = SwitchContext(gbId, dbId, 'tbl_Avatar', serverId, accountName, accountType)
         _entityType = KBEngine.getUTType('Avatar')
         gamesql.queryAvatarOnline(
@@ -320,7 +320,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def afterSaveSwitchServerRecord(cls, accountName, *args):
-        LOG_IFO('afterSaveSwitchServerRecord args={}'.format(args))
+        LOG_INFO('afterSaveSwitchServerRecord args={}'.format(args))
 
         gameglobal.localLoginStub.unlockLoginSwitchServer(accountName)
 
@@ -358,7 +358,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onSaveMailsData(cls, ret, num, insertId, err, ctx):
-        LOG_IFO("onSaveMailsData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
+        LOG_INFO("onSaveMailsData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
         if err:
             LOG_ERR("onSaveMailsData error={}".format(err))
             return
@@ -426,7 +426,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onSaveTableData(cls, ret, num, insertId, err, ctx):
-        LOG_IFO("onSaveTableData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
+        LOG_INFO("onSaveTableData ret=%s, num=%s, insertId=%s, err=%s" % (ret, num, insertId, err))
         if err:
             LOG_ERR("onSaveTableData error={} {}".format(err, ctx.curWriteTbName))
             return
@@ -452,7 +452,7 @@ class SwitchServerUtils(object):
 
     @classmethod
     def onGetTestSaveData(cls, cid, err, ret):
-        LOG_IFO('onGetTestSaveData cid={}, err={}, ret={}'.format(cid, err, ret))
+        LOG_INFO('onGetTestSaveData cid={}, err={}, ret={}'.format(cid, err, ret))
         if err:
             LOG_ERR('onGetTestSaveData error={}'.format(err))
             return

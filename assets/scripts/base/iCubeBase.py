@@ -23,6 +23,9 @@ class ICubeBase(object):
     def _cubeDailyRefresh(self, *args):
         # leftCubeTimes 这个现在是每天的免费次数
         # paidCubeTimes 这个是有一定消耗获得的次数
+        tType = args[0] if len(args) >= 1 else 0
+        if tType == gameconst.CycleEventTriggerType.TIMED:
+            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.CUBE, self.leftCubeTimes, gameconst.FreeTicketUpdateType.RESET)
         self.leftCubeTimes = cube_config.datas['dailyCubeNum']['value']
         self.cubeUseCoinTimes = 0
         self.cubePrayTimes = 0
@@ -31,7 +34,6 @@ class ICubeBase(object):
         self.cubeUseItemTimes = 0
 
     def getCubeReadyLineCnt(self, exposed):
-        #gameengine.getCubeStub(1).doGetCubeReadyLineCnt(self)
         pass
 
     def sumCubeTimes(self):
@@ -43,6 +45,7 @@ class ICubeBase(object):
             return False
 
         extra['enterCubeType'] = gameconst.ENTER_CUBE_DEDUCT_TIMES
+        extra['hasCast'] = False
         gameengine.getCubeStub(1).doEnterCubeReady(
             self, self.gbID, extra)
 
@@ -51,7 +54,7 @@ class ICubeBase(object):
 
     def autoRenewCubeRoom(self, switchData, cubeDurCtx):
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
-            LOG_IFO('ICubeBase::autoRenewCubeRoom: cubeActID not open')
+            LOG_INFO('ICubeBase::autoRenewCubeRoom: cubeActID not open')
             return
 
         _opUUID = KBEngine.genUUID64()
@@ -62,10 +65,14 @@ class ICubeBase(object):
 
         if self.cubeUseCoinTimes < cube_config.datas['cubeNumCoinDailyLimit']['value']:
             if switchData['coinSwitch']:
+                coinType, coinNum = utils.getCubeCoinCostByTimes(self.cubeUseCoinTimes)
+                if not coinType:
+                    LOG_ERR('autoRenewCubeRoom: invalid cubeUseCoinTimes', self.cubeUseCoinTimes)
+                    return  
                 _deductVal = dropAward.DeductWealthVal()
-                _deductVal.addWealthByItemId(gameconst.CUBE_COIN_ITEM_ID, cube_config.datas['cubeNumCoin']['value'])
+                _deductVal.addWealthByItemId(coinType, coinNum)
                 if self.canDeductWealth(_deductVal):
-                    if not self.useItemAddCubeTimes(gameconst.CUBE_COIN_ITEM_ID, 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_COIN, _opUUID):
+                    if not self.useItemAddCubeTimes(gameconst.CUBE_ADD_TIMES_TYPE_COIN, coinType, coinNum, 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_COIN, _opUUID):
                         pass
                     return
 
@@ -79,11 +86,11 @@ class ICubeBase(object):
             LOG_WARN('ICubeBase::autoRenewCubeRoom: can not deduct wealth')
             return
 
-        if not self.useItemAddCubeTimes(cube_config.datas['cubeNumItem']['value'], 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_ITEM, _opUUID):
+        if not self.useItemAddCubeTimes(gameconst.CUBE_ADD_TIMES_TYPE_ITEM, cube_config.datas['cubeNumItem']['value'], 1, 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_ITEM, _opUUID):
             pass
 
     def onLogonEnterCubeGetSpaceBox(self, spaceBox, spaceMgrId, spaceNo):
-        LOG_IFO('onLogonEnterCubeGetSpaceBox', spaceBox.id)
+        LOG_INFO('onLogonEnterCubeGetSpaceBox', spaceBox.id)
         self.cellData['spaceNo'] = spaceNo
         self.addCreateCellCB('onLogonEnterCubeCB', (spaceMgrId,))
         spaceBox.createCellNearSelf(self)
@@ -94,7 +101,7 @@ class ICubeBase(object):
     @gamedecorator.checkGameconfigEnable('square')
     @AuthClsWraper.authWithPermission(A_AFD.UISquarePanel)
     def reqUseItemAddCubeTimes(self, exposed, itemId, num, isAddDuration):
-        LOG_IFO('reqUseItemAddCubeTimes: {} {}'.format(itemId, num), isAddDuration)
+        LOG_INFO('reqUseItemAddCubeTimes: {} {}'.format(itemId, num), isAddDuration)
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])
             return
@@ -110,26 +117,43 @@ class ICubeBase(object):
             self.cell.directlyAddCubeRoomDuration('addRoomDurationFailedRewindTimes', (_opUUID,), _ctx)
             return
 
-        self.useItemAddCubeTimes(itemId, num, isAddDuration, False, gameconst.CubeAddTimesReason.FROM_CLIENT, _opUUID)
+        addType = utils.getCubeAddTimesTypeByitemId(itemId)
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_NULL:
+            LOG_ERR('reqUseItemAddCubeTimes: invalid itemId', itemId)
+            return
+        
+        itemNum = 0
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_ITEM:
+            itemNum = 1
+        else:
+            if self.cubeUseCoinTimes >= cube_config.datas['cubeNumCoinDailyLimit']['value']:
+                LOG_ERR('reqUseItemAddCubeTimes: cubeUseCoinTimes >= cubeNumCoinDailyLimit')
+                return
+            itemId, itemNum = utils.getCubeCoinCostByTimes(self.cubeUseCoinTimes)
+            if not itemId:
+                LOG_ERR('reqUseItemAddCubeTimes: invalid cubeUseCoinTimes', self.cubeUseCoinTimes)
+                return  
+            num = 1
+        self.useItemAddCubeTimes(addType, itemId, itemNum, num, isAddDuration, False, gameconst.CubeAddTimesReason.FROM_CLIENT, _opUUID)
 
-    def useItemAddCubeTimes(self, itemId, num, isAddDuration, hasCheckCell, reason, opUUID):
-        LOG_IFO('useItemAddCubeTimes: {} {}'.format(itemId, num), reason, isAddDuration, hasCheckCell)
+    def useItemAddCubeTimes(self, addType, itemId, itemNum, num, isAddDuration, hasCheckCell, reason, opUUID):
+        LOG_INFO('useItemAddCubeTimes: {} {} {} {}'.format(addType, itemId, itemNum, num), reason, isAddDuration, hasCheckCell)
         if isAddDuration and num != 1:
             LOG_ERR('useItemAddCubeTimes: invalid num', isAddDuration, num)
             return False
 
         if isAddDuration and not hasCheckCell:
-            self.cell.checkAddCubeRoomDurationCondition(itemId, num, opUUID)
+            self.cell.checkAddCubeRoomDurationCondition(addType, itemId, itemNum, num, opUUID)
             return True
 
-        if itemId == gameconst.CUBE_COIN_ITEM_ID:
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             if self.cubeUseCoinTimes >= cube_config.datas['cubeNumCoinDailyLimit']['value']:
                 LOG_ERR('useItemAddCubeTimes: cubeUseCoinTimes >= cubeNumCoinDailyLimit')
                 return False
 
-            _num = num * cube_config.datas['cubeNumCoin']['value']
+            _num = num * itemNum
 
-        elif itemId == cube_config.datas['cubeNumItem']['value']:
+        elif addType == gameconst.CUBE_ADD_TIMES_TYPE_ITEM:
             _num = num
 
         else:
@@ -146,14 +170,14 @@ class ICubeBase(object):
         _src = AAC_AACDD.datas.BONUS_SRC_CUBE_ROOM_ADD_TIMES
         _detail = gameclass.AwardDetail(cubeTimes=num)
         self.deductWealth(_src, _award, opUUID, _detail)
-        if itemId == gameconst.CUBE_COIN_ITEM_ID:
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.cubeUseCoinTimes += num
         else:
             self.cubeUseItemTimes = min(self.cubeUseItemTimes + num, 255)
 
         if isAddDuration:
             _ctx = actionContext.CubeDurCtx(self)
-            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailed', (opUUID, itemId, num), _ctx)
+            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailed', (opUUID, addType, itemId, itemNum, num), _ctx)
         else:
             self.modifyLeftCubeTimes(num, _src, opUUID)
 
@@ -181,11 +205,11 @@ class ICubeBase(object):
             opUUID,
         )
 
-    def addRoomDurationFailed(self, opUUID, itemId, num):
-        LOG_IFO('addRoomDurationFailed: {}'.format(opUUID))
+    def addRoomDurationFailed(self, opUUID, addType, itemId, itemNum, num):
+        LOG_INFO('addRoomDurationFailed: {}'.format(opUUID))
         _src = AAC_AACDD.datas.BONUS_SRC_CUBE_ROOM_ADD_TIMES
-        if itemId == gameconst.CUBE_COIN_ITEM_ID:
-            _addNum = num * cube_config.datas['cubeNumCoin']['value']
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
+            _addNum = num * itemNum
         else:
             _addNum = num
 
@@ -195,18 +219,18 @@ class ICubeBase(object):
         _detail = gameclass.AwardDetail(reason='add room duration failed')
 
         self.addWealth(_src, _award, _opUUID, _detail)
-        if itemId == gameconst.CUBE_COIN_ITEM_ID:
+        if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.cubeUseCoinTimes = max(0, self.cubeUseCoinTimes - num)
         else:
             self.cubeUseItemTimes = max(0, self.cubeUseItemTimes - num)
 
-    def _resetCubeCowDur(self):
+    def _resetCubeCowDur(self, *args):
         self.cell.resetCubeCowDur()
 
     # ----------------------- 祈福之间 start ---------------------
     @gamedecorator.checkGameconfigEnable('square')
     def cubePray(self, exposed, costType):
-        LOG_IFO('ICubeCell::cubePray: isCostItem={}'.format(costType))
+        LOG_INFO('ICubeCell::cubePray: isCostItem={}'.format(costType))
         if self.cubePrayTimes >= cube_config.datas['cube_prayTimesEveryDay']['value']:
             self.onMessagePre(cube_config.datas['cube_prayNoTimes']['value'], [])
             return

@@ -1,0 +1,28 @@
+<root>
+    <Properties>
+        <state>
+            <Type>          STATE64                </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <Default>           1             </Default>
+            <Persistent>    true            </Persistent>
+            <WitnessName>   true            </WitnessName>
+        </state>
+        <state2>
+            <Type>          STATE64                 </Type>
+            <Flags>         ALL_CLIENTS             </Flags>
+            <Default>           0                   </Default>
+            <Persistent>    true                    </Persistent>
+            <WitnessName>   true            </WitnessName>
+        </state2>
+        <stateList>
+            <Type>          PYTHON                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       []                      </Default>
+        </stateList>
+    </Properties>
+
+    <CellMethods>
+        <clearStateOffline> 
+        </clearStateOffline>
+    </CellMethods>
+</root>

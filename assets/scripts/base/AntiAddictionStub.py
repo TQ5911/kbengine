@@ -42,7 +42,7 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
         super().doNext()
 
     def initAntiAddictionData(self, now):
-        LOG_IFO("_resetAntiAddictionData")
+        LOG_INFO("_resetAntiAddictionData")
 
         self.permitTimeLimitList = [[[], []], [[], []]]
         for id, holidayData in AASCH.datas.items():
@@ -102,11 +102,11 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
             self._cancelDatetimeCallback(self.switchTimeTypeTimerId, gametimer.TIMER_TAG_SWITCH_ANIT_ADDICTION_TIME_TYPE_TIMER)
             self.switchTimeTypeTimerId = 0
 
-        LOG_IFO("startSwitchTimeTypeTimer", self.antiAddictionTimeVal)
+        LOG_INFO("startSwitchTimeTypeTimer", self.antiAddictionTimeVal)
         self.switchTimeTypeTimerId = self._datetimeCallback(self.antiAddictionTimeVal.nextStartTime, 'onSwitchTimeTypeTimerCallback', (), gametimer.TIMER_TAG_SWITCH_ANIT_ADDICTION_TIME_TYPE_TIMER, 'switchTimeTypeTimerId')
 
     def onSwitchTimeTypeTimerCallback(self):
-        LOG_IFO("onSwitchTimeTypeTimerCallback", self.antiAddictionTimeVal)
+        LOG_INFO("onSwitchTimeTypeTimerCallback", self.antiAddictionTimeVal)
         now = utils.curTS()
         if self.antiAddictionTimeVal.timeType == gameconst.AntiAddictionTimeType.PERMIT:
             permitDateType, startPermitTimeCron, nextStartPermitTime = self.getNextTime(gameconst.AntiAddictionTimeType.PERMIT, now)

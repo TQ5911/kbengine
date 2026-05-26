@@ -45,7 +45,7 @@ datas = _tools.RODict({
     }),
     "typeName": _tools.RODict({
         "ID": "typeName",
-        "value": ('合成一', '合成二'),
+        "value": ('核心一', '核心二'),
     }),
     "synthesisIntervalTime": _tools.RODict({
         "ID": "synthesisIntervalTime",
@@ -70,5 +70,21 @@ datas = _tools.RODict({
     "synthesisUnboundProbability": _tools.RODict({
         "ID": "synthesisUnboundProbability",
         "value": _tools.ROList([0, 0, 25, 50, 100]),
+    }),
+    "synthesRandomType": _tools.RODict({
+        "ID": "synthesRandomType",
+        "value": _tools.ROList([6, 22]),
+    }),
+    "synthesRandomPityCounter": _tools.RODict({
+        "ID": "synthesRandomPityCounter",
+        "value": 30,
+    }),
+    "synthesNumShortageMsg": _tools.RODict({
+        "ID": "synthesNumShortageMsg",
+        "value": 54003500,
+    }),
+    "synthesRandomMsg": _tools.RODict({
+        "ID": "synthesRandomMsg",
+        "value": 54003501,
     })
 })

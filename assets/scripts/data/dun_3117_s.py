@@ -44,16 +44,79 @@ datas ={
           "PosY": 524.8943,
           "PosZ": 65.75397,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 28,
+            "LightPillar": "",
+            "MapEntityScale": 0,
+            "MapEntityType": "18",
+            "MonsterGroupID": "",
+            "PathID": "",
+            "Radius": 0.0,
+            "RefreshNum": 0,
+            "RefreshTime": 0.0,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
+          }
+        },
+        "31170003": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 222.1502,
+          "DisplayName": "",
+          "EntityID": 11011006,
+          "ID": 31170003,
+          "PosX": 172.85,
+          "PosY": 524.8254,
+          "PosZ": 53.94,
+          "Props": {
+            "ChestGroupID": "",
+            "GroupID": "",
+            "Level": 30,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
-            "RefreshNum": 0,
-            "RefreshTime": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 10.0,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
+          }
+        },
+        "31170004": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 222.1502,
+          "DisplayName": "",
+          "EntityID": 11011006,
+          "ID": 31170004,
+          "PosX": 213.4315,
+          "PosY": 527.7394,
+          "PosZ": 15.31841,
+          "Props": {
+            "ChestGroupID": "",
+            "GroupID": "",
+            "Level": 30,
+            "LightPillar": "",
+            "MapEntityScale": 0,
+            "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -76,6 +139,7 @@ datas ={
           "PosY": 524.8943,
           "PosZ": 57.75644,
           "Props": {
+            "ChestGroupID": "",
             "IsOnGround": 1,
             "IsOpen": 1,
             "Radius": 0.0,
@@ -134,6 +198,57 @@ datas ={
             "TelZ": 25.71411
           }
         }
+      },
+      "AirWall": {
+        "31178006": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 9,
+          "ID": 31178006,
+          "PosX": 167.6096,
+          "PosY": 524.8254,
+          "PosZ": 57.91521,
+          "Props": {
+            "AreaType": 1,
+            "Height": 10.0,
+            "MPosX": 135.0,
+            "MPosY": 524.83,
+            "MPosZ": 25.0,
+            "Radius": 30.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "31178007": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 310.5688,
+          "DisplayName": "",
+          "EntityID": 7,
+          "ID": 31178007,
+          "PosX": 211.85,
+          "PosY": 527.7394,
+          "PosZ": 18.84,
+          "Props": {
+            "AreaType": 0,
+            "Height": 10.0,
+            "Length": 30.0,
+            "MPosX": 192.0,
+            "MPosY": 527.74,
+            "MPosZ": -2.0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "Width": 20.0
+          }
+        }
       }
     },
     "TimerEntities": {},
@@ -158,9 +273,9 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 0,
             "TelDir": 312.6052,
-            "TelX": 207.849854,
+            "TelX": 207.850677,
             "TelY": 527.7394,
-            "TelZ": 22.7593
+            "TelZ": 22.7591019
           }
         },
         "31178003": {

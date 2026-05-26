@@ -26,6 +26,7 @@ namespace KBEngine
 		public UInt32 deathTime = 0;
 		public virtual void onDeathTimeChanged(UInt32 oldValue) {}
 		public float dmgArmor = 0f;
+		public Int32 firstHateTargetId = 0;
 		
 		
 		
@@ -250,6 +251,10 @@ namespace KBEngine
 					SKILL_DAMAGE_INFO onSkillDamage_arg1 = ((DATATYPE_SKILL_DAMAGE_INFO)method.args[0]).createFromStreamEx(stream);
 					onSkillDamage(onSkillDamage_arg1);
 					break;
+				case 538:
+					Byte onStateChangedForce_arg1 = stream.readUint8();
+					onStateChangedForce(onStateChangedForce_arg1);
+					break;
 				case 242:
 					CLIENT_AUREOLES onUpdateAureoles_arg1 = ((DATATYPE_CLIENT_AUREOLES)method.args[0]).createFromStreamEx(stream);
 					onUpdateAureoles(onUpdateAureoles_arg1);
@@ -460,6 +465,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDmgArmorChanged(oldval_dmgArmor);
+						}
+
+						break;
+					case 242:
+						Int32 oldval_firstHateTargetId = firstHateTargetId;
+						firstHateTargetId = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFirstHateTargetIdChanged(oldval_firstHateTargetId);
+						}
+						else
+						{
+							if(inWorld)
+								onFirstHateTargetIdChanged(oldval_firstHateTargetId);
 						}
 
 						break;
@@ -925,6 +946,27 @@ namespace KBEngine
 					else
 					{
 						onDmgArmorChanged(oldval_dmgArmor);
+					}
+				}
+			}
+
+			Int32 oldval_firstHateTargetId = firstHateTargetId;
+			Property prop_firstHateTargetId = pdatas[4];
+			if(prop_firstHateTargetId.isBase())
+			{
+				if(inited && !inWorld)
+					onFirstHateTargetIdChanged(oldval_firstHateTargetId);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_firstHateTargetId.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFirstHateTargetIdChanged(oldval_firstHateTargetId);
 					}
 				}
 			}

@@ -9,6 +9,8 @@ import gameconst
 import creep_base
 import copy
 import creep_timedRefresh as CTR
+import activityControl_activityNotice as ACAN
+import gameengine
 
 class TimedIntervalsEntityVal(userType.UserSingleType):
     def __init__(self, refreshTimedID, nextStartTime, interval, refreshDataList):
@@ -50,7 +52,7 @@ class ITimerEntityRefresh(object):
         if not readyTimerEntitiesMap:
             return
 
-        LOG_IFO("initTimerEntities readyTimerEntitiesMap", readyTimerEntitiesMap)
+        LOG_INFO("initTimerEntities readyTimerEntitiesMap", readyTimerEntitiesMap)
         now = utils.curTS()
         for refreshTimedID, refreshDataList in readyTimerEntitiesMap.items():
             refreshCfg = CTR.datas.get(refreshTimedID, {})
@@ -81,6 +83,16 @@ class ITimerEntityRefresh(object):
             elif refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
                 self.startTimeLimitedEntityRefreshTimer()
 
+    def checkAnnouncement(self, val, idx=0):
+        for refreshData in val.refreshDataList:
+            (id_, entityType, extraData) = refreshData
+            entityID = extraData["EntityID"]
+            if entityType == gameconst.EntityType.MONSTER and creep_base.datas.get(entityID, {}).get('type', 0) == gameconst.MonsterType.ADVANCE and entityID in ACAN.bossIDSet:
+                LOG_DBG("checkAnnouncement", entityID, idx)
+                aType = ACAN.bossID2AnnoId.get(entityID, 0)
+                uaType = gameconst.ANNOUNCEMENT_TYPE_2_UPDATE_ANNOUNCEMENT_TYPE.get(aType, [0, 0])[idx]
+                gameengine.getGlobalBase('ActStub').updateAnnouncement(aType, uaType, utils.curTS(), val.nextStartTime)
+
 ########################################################################################################
     def initTimedIntervalsEntityVal(self, refreshCfg, now, refreshDataList, subRefreshType=1):
         startTimeCron, _ = utils.nextByCronTupleList(refreshCfg['initialRefresh'], now)
@@ -97,7 +109,9 @@ class ITimerEntityRefresh(object):
                 tmpNextStartTime += interval
         else:
             pass
-        self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIMED_INTERVALS].append(TimedIntervalsEntityVal(refreshCfg['ID'], tmpNextStartTime, interval, refreshDataList))
+        timedIntervalsEntityVal = TimedIntervalsEntityVal(refreshCfg['ID'], tmpNextStartTime, interval, refreshDataList)
+        self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIMED_INTERVALS].append(timedIntervalsEntityVal)
+        self.checkAnnouncement(timedIntervalsEntityVal, 0)
 
     def startTimedIntervalsEntityRefreshTimer(self):
         if self.timedIntervalsEntityTimerId:
@@ -108,7 +122,7 @@ class ITimerEntityRefresh(object):
             return
 
         _val = heapq.nsmallest(1, self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIMED_INTERVALS])[0]
-        LOG_IFO('startTimedIntervalsEntityRefreshTimer ', _val)
+        LOG_INFO('startTimedIntervalsEntityRefreshTimer ', _val)
         self.timedIntervalsEntityTimerId = self._datetimeCallback(_val.nextStartTime, 'onTimedIntervalsEntityRefreshTimerCallback', (), gametimer.TIMER_TAG_TIMED_INTERVALS_ENTITY_REFRESH_TIMER, 'timedIntervalsEntityTimerId')
 
     def onTimedIntervalsEntityRefreshTimerCallback(self):
@@ -116,23 +130,25 @@ class ITimerEntityRefresh(object):
             return
 
         _val = heapq.heappop(self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIMED_INTERVALS])
-        LOG_IFO('onTimedIntervalsEntityRefreshTimerCallback', _val)
+        LOG_INFO('onTimedIntervalsEntityRefreshTimerCallback', _val)
         self.doTimedIntervalsEntityRefresh(_val)
         now = utils.curTS()
         # 刷新策略
         while _val.nextStartTime <= now:
             _val.nextStartTime += _val.interval
 
+        self.checkAnnouncement(_val, 0)
         heapq.heappush(self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIMED_INTERVALS], _val)
 
         self.startTimedIntervalsEntityRefreshTimer()
 
     def doTimedIntervalsEntityRefresh(self, timedIntervalsEntityVal):
-        LOG_IFO('doTimedIntervalsEntityRefresh1', timedIntervalsEntityVal)
+        LOG_INFO('doTimedIntervalsEntityRefresh1', timedIntervalsEntityVal)
+        self.checkAnnouncement(timedIntervalsEntityVal, 1)
         for refreshData in timedIntervalsEntityVal.refreshDataList:
             (id_, entityType, extraData) = refreshData
             ents = self.listEntitiesByTag('gid_{}'.format(id_))
-            LOG_IFO('doTimedIntervalsEntityRefresh2', 'gid_{}'.format(id_), len(ents))
+            LOG_INFO('doTimedIntervalsEntityRefresh2', 'gid_{}'.format(id_), len(ents))
             if ents:
                 continue
 
@@ -160,7 +176,8 @@ class ITimerEntityRefresh(object):
                 nextEndTime += 86400
         else:
             pass
-        self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED].append(TimeLimitedEntityVal(refreshCfg['ID'], gameconst.TimeLimitedStageType.START, tmpNextStartTime, 86400, refreshDataList))
+        timeLimitedEntityVal = TimeLimitedEntityVal(refreshCfg['ID'], gameconst.TimeLimitedStageType.START, tmpNextStartTime, 86400, refreshDataList)
+        self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED].append(timeLimitedEntityVal)
 
     def startTimeLimitedEntityRefreshTimer(self):
         if self.timeLimitedEntityTimerId:
@@ -171,7 +188,7 @@ class ITimerEntityRefresh(object):
             return
 
         _val = heapq.nsmallest(1, self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED])[0]
-        LOG_IFO('startTimeLimitedEntityRefreshTimer ', _val)
+        LOG_INFO('startTimeLimitedEntityRefreshTimer ', _val)
         self.timeLimitedEntityTimerId = self._datetimeCallback(_val.nextStartTime, 'onTimeLimitedEntityRefreshTimerCallback', (), gametimer.TIMER_TAG_TIME_LIMITED_ENTITY_REFRESH_TIMER, 'timeLimitedEntityTimerId')
 
     def onTimeLimitedEntityRefreshTimerCallback(self):
@@ -179,7 +196,7 @@ class ITimerEntityRefresh(object):
             return
 
         _val = heapq.heappop(self.refreshEntityQueue[gameconst.TimerEntityRefreshType.TIME_LIMITED])
-        LOG_IFO('onTimeLimitedEntityRefreshTimerCallback', _val)
+        LOG_INFO('onTimeLimitedEntityRefreshTimerCallback', _val)
         now = utils.curTS()
         # 刷新策略
         refreshCfg = CTR.datas.get(_val.refreshTimedID, {})
@@ -202,11 +219,11 @@ class ITimerEntityRefresh(object):
         self.startTimeLimitedEntityRefreshTimer()
 
     def doTimeLimitedEntityRefresh(self, timeLimitedEntityVal):
-        LOG_IFO("doTimeLimitedEntityRefresh", timeLimitedEntityVal)
+        LOG_INFO("doTimeLimitedEntityRefresh", timeLimitedEntityVal)
         for refreshData in timeLimitedEntityVal.refreshDataList:
             (id_, entityType, extraData) = refreshData
             ents = self.listEntitiesByTag('gid_{}'.format(id_))
-            LOG_IFO('doTimeLimitedEntityRefresh2', 'gid_{}'.format(id_), len(ents))
+            LOG_INFO('doTimeLimitedEntityRefresh2', 'gid_{}'.format(id_), len(ents))
             if ents:
                 continue
 
@@ -236,12 +253,12 @@ class ITimerEntityRefresh(object):
 
 ########################################################################################################
     def onTemporaryDestroyTimerEntities(self, entityTypes):
-        LOG_IFO("onAddTemporaryDestroyTimerEntities", entityTypes)
+        LOG_INFO("onAddTemporaryDestroyTimerEntities", entityTypes)
         for refreshType, refreshQueue in enumerate(self.refreshEntityQueue):
             if not refreshQueue:
                 continue
             for val in refreshQueue:
-                LOG_IFO("onAddTemporaryDestroyTimerEntities", val)
+                LOG_INFO("onAddTemporaryDestroyTimerEntities", val)
                 tmpVal = copy.deepcopy(val)
                 tmpVal.refreshDataList = []
                 for refreshData in tmpVal.srcRefreshDataList:
@@ -259,12 +276,12 @@ class ITimerEntityRefresh(object):
                     self.doTimeLimitedEntityDestroy(tmpVal)
 
     def onRestoreTemporaryDestroyTimerEntities(self):
-        LOG_IFO("onRestoreTemporaryDestroyTimerEntities")
+        LOG_INFO("onRestoreTemporaryDestroyTimerEntities")
         for refreshType, refreshQueue in enumerate(self.refreshEntityQueue):
             if not refreshQueue:
                 continue
             for val in refreshQueue:
-                LOG_IFO("onRestoreTemporaryDestroyTimerEntities", val)
+                LOG_INFO("onRestoreTemporaryDestroyTimerEntities", val)
                 val.refreshDataList = copy.deepcopy(val.srcRefreshDataList)
 
                 if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
@@ -273,10 +290,10 @@ class ITimerEntityRefresh(object):
                     pass
                 elif refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
                     if val.stageType == gameconst.TimeLimitedStageType.END:
-                        LOG_IFO("onRestoreTemporaryDestroyTimerEntities END")
+                        LOG_INFO("onRestoreTemporaryDestroyTimerEntities END")
                         self.doTimeLimitedEntityRefresh(val)
                     elif val.stageType == gameconst.TimeLimitedStageType.START:
-                        LOG_IFO("onRestoreTemporaryDestroyTimerEntities START")
+                        LOG_INFO("onRestoreTemporaryDestroyTimerEntities START")
                         pass
 
     def onDestroyGroupEntities(self, info):
@@ -314,7 +331,7 @@ class ITimerEntityRefresh(object):
             self.getCurrentSpace().doLoadSpecifiedEntities([str(id_)], self.id)
 
     def onAddEntityRefreshTimer(self, gid, timerId):
-        LOG_IFO("onAddEntityRefreshTimer", gid, timerId)
+        LOG_INFO("onAddEntityRefreshTimer", gid, timerId)
         if gid in self.refreshGID2TimerListMap[gameconst.TimerEntityRefreshType.TIMED_INTERVALS]:
             LOG_WARN("onAddTimerEntityRefresh gid cfg, refreshTime not 0")
 
@@ -322,7 +339,7 @@ class ITimerEntityRefresh(object):
             self.refreshGID2TimerListMap[gameconst.TimerEntityRefreshType.TIME_LIMITED][gid].add(timerId)
 
     def onCancelEntityRefreshTimer(self, gid, timerId=0):
-        LOG_IFO("onCancelEntityRefreshTimer", gid, timerId)
+        LOG_INFO("onCancelEntityRefreshTimer", gid, timerId)
         if gid in self.refreshGID2TimerListMap[gameconst.TimerEntityRefreshType.TIMED_INTERVALS]:
             LOG_WARN("onCancelTimerEntityRefresh gid cfg, refreshTime not 0")
 

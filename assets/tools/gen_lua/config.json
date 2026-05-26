@@ -1,0 +1,6 @@
+{
+  "input_file": ".\\scripts",
+  "output_base_dir": ".\\scripts\\bots",
+  "lua_output_rel_path": "entity_def.lua",
+  "xml_output_rel_path": ""
+}

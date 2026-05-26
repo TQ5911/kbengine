@@ -107,7 +107,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return gameconfig
 
     def onCentralServerConnected(self, centralServerId):
-        LOG_IFO('onCentralServerConnected', centralServerId, KBEngine.getComponentGroupOrder())
+        LOG_INFO('onCentralServerConnected', centralServerId, KBEngine.getComponentGroupOrder())
         if KBEngine.getComponentGroupOrder()==1:
             self.tryRegisterServer(centralServerId)
 
@@ -123,7 +123,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.registerServer(centralServerId)
 
     def onAccountDestroy(self, accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr):
-        LOG_IFO("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr)
+        LOG_INFO("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr)
         realAccountName = utils.mixRealAccountName(accountType, accountName)
         self.account2box.pop(realAccountName, None)
         # deduct account online num
@@ -139,11 +139,11 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         redisUtils.RedisUtils.getSVIPFlag(accountName, self._onDecSVIPAccount)
 
     def incSVIPOnlineNumBySetSVIP(self):
-        LOG_IFO("incSVIPOnlineNumBySetSVIP")
+        LOG_INFO("incSVIPOnlineNumBySetSVIP")
         self.SVIPOnlineNum.incSum(self)
 
     def _onIncSVIPAccount(self, cid, err, res):
-        LOG_IFO("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
+        LOG_INFO("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
         if err:
             LOG_ERR("_onIncSVIPAccount", "err", err)
             return
@@ -152,7 +152,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.SVIPOnlineNum.incSum(self)
 
     def _onDecSVIPAccount(self, cid, err, res):
-        LOG_IFO("_onDecSVIPAccount", "cid", cid, "err", err, "res", res)
+        LOG_INFO("_onDecSVIPAccount", "cid", cid, "err", err, "res", res)
         if err:
             LOG_ERR("_onDecSVIPAccount", "err", err)
             return
@@ -161,10 +161,10 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.SVIPOnlineNum.decSum(self)
 
     def updateSVIPOnlineNum(self):
-        redisUtils.RedisUtils.set(gameconst.RedisKey.NORMAL_ONLINE_NUM + str(gameconfig.serverId()), self.accountNumCounter.dataSum - self.SVIPOnlineNum.dataSum)
+        redisUtils.RedisUtils.cmdSet(gameconst.RedisKey.NORMAL_ONLINE_NUM + str(gameconfig.serverId()), self.accountNumCounter.dataSum - self.SVIPOnlineNum.dataSum)
 
     def onAccountLogin(self, accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr):
-        LOG_IFO("onAccountLogin::", accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr)
+        LOG_INFO("onAccountLogin::", accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr)
         realAccountName = utils.mixRealAccountName(accountType, accountName)
         if realAccountName in self.kickAccountSet:
             self.onKickAccount(accountType, accountName, gameconst.OFFLINE_REASON_KICK_BY_CENTRAL_SERVER)
@@ -175,7 +175,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.notifyCentralServerOnline(accountName, accountType, centralServerId, sessionIdStr)
 
     def onAccountCreated(self, accountName, devicePlatId, isNew, channelId):
-        LOG_IFO("onAccountCreated::", accountName, devicePlatId, isNew, channelId)
+        LOG_INFO("onAccountCreated::", accountName, devicePlatId, isNew, channelId)
         # add account online num
         self.accountNumCounter.incSum(self)
 
@@ -234,7 +234,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
 
         self.accountRegNum.setSum(self, int(ret[0][0]))
-        LOG_IFO('LoginStub::_initAccountRegSet init reg num:', self.accountRegNum.dataSum)
+        LOG_INFO('LoginStub::_initAccountRegSet init reg num:', self.accountRegNum.dataSum)
 
     def gmLookUpAccount(self, cbBox, realAccountName, uid, index, raw):
         accountBox = self.account2box.get(realAccountName, None)

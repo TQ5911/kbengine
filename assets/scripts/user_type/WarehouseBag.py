@@ -23,13 +23,13 @@ class WarehouseBag(BaseBag.BaseBag):
         self.bagType = gameconst.BagType.BAG_TYPE_WAREHOUSE
 
     def warehouseDailyUpdate(self):
-        for itemObj in self.gridId2GridObj.values():
+        for itemObj in self.gridIdToGridObj.values():
             itemObj.onItemDailyUpdate()
         return
 
     @utils.checkBagLocked
     def doUnlockWarehouseGrids(self, owner, gridNum):
-        LOG_IFO('in doUnlockWarehouseGrids', gridNum)
+        LOG_INFO('in doUnlockWarehouseGrids', gridNum)
         bankCapacity = BagDataSet.datas['bankCapacity']['value']
         if self.capacity >= bankCapacity:
             LOG_WARN('   in doUnlockWarehouseGrids, reach limit:', self.capacity)

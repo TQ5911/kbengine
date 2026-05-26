@@ -21,7 +21,7 @@ datas = _tools.RODict({
         "discard": 0,
         "openTimeCron": _tools.ROList([[[0], [5], [28], [4], [], [2024]]]),
         "endTimeCron": _tools.ROList([[[0], [5], [5], [5], [], [2024]]]),
-        "giftList": (68000200, 68000201, 68000202)
+        "giftList": (68000101,)
     })
 })
 minKey = 1

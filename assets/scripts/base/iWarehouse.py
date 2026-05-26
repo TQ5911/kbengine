@@ -46,7 +46,7 @@ class IWarehouse(object):
         return
 
     def warehouseExpansion(self, pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context):
-        LOG_IFO("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
+        LOG_INFO("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
         bankCapacity = BGDSD.datas['bankCapacity']['value']
         if self.warehouse.capacity >= bankCapacity:
             LOG_WARN('   in warehouseExpansion, reach limit 1:', self.warehouse.capacity)
@@ -80,7 +80,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqUnlockWarehouse(self, exposed, gridNum):
-        LOG_IFO('in reqUnlockWarehouse', gridNum)
+        LOG_INFO('in reqUnlockWarehouse', gridNum)
         if gridNum <= 0:
             LOG_ERR('reqUnlockWarehouse error:', gridNum)
             return
@@ -92,7 +92,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToWarehouse(self, exposed, gridId, itemId, itemNum):
-        LOG_IFO('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
+        LOG_INFO('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
             LOG_WARN('     in reqMoveItemToWarehouse, bag locked')
             return
@@ -114,6 +114,10 @@ class IWarehouse(object):
          
         if itemObj.itemNum < itemNum or itemNum <= 0:
             LOG_WARN('reqMoveItemToWarehouse, move item is over limit:', gridId, itemId, itemObj.itemNum, itemNum)
+            return
+        
+        if itemObj.isEquipmentItem() and not itemObj.isGood(self.gbID):
+            LOG_WARN('reqMoveItemToWarehouse, item is not good:', gridId, itemId, itemObj.itemNum, itemNum)
             return
         
         opUUID = KBEngine.genUUID64()
@@ -154,7 +158,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToBag(self, exposed, gridId, itemId, itemNum):
-        LOG_IFO('in reqMoveItemToBag:', gridId, itemId, itemNum)
+        LOG_INFO('in reqMoveItemToBag:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
             LOG_WARN('in reqMoveItemToBag, bag locked')
             return
@@ -174,6 +178,10 @@ class IWarehouse(object):
         
         if self.checkBagItemLimit(itemObj.itemId, itemObj.itemNum):
             self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(self.drugsQuantityBase)])
+            return
+        
+        if itemObj.isEquipmentItem() and not itemObj.isGood(self.gbID):
+            LOG_WARN('reqMoveItemToBag, item is not good:', gridId, itemId, itemObj.itemNum, itemNum)
             return
         
         opUUID = KBEngine.genUUID64()
@@ -214,7 +222,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseSort(self, exposed):
-        LOG_IFO('in reqWarehouseSort:')
+        LOG_INFO('in reqWarehouseSort:')
         if self.warehouse.doBagSort(self):
             dic = self.warehouse.toBagSavedDict()
             jsonStr = json.dumps(dic).encode('ascii')
@@ -224,7 +232,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseLockItem(self, exposed, gridId, itemId, uniqueId, lockStatus):
-        LOG_IFO('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
+        LOG_INFO('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
         if not dataUtils.checkLockAvailableStatus(itemId):
             LOG_ERR('in reqWarehouseLockItem, item locker is not opened', itemId)
             return

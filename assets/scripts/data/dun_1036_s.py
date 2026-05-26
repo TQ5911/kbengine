@@ -18,12 +18,13 @@ datas ={
           "PosY": 98.02,
           "PosZ": 334.2467,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "InitLoad": 0,
             "Level": 40,
             "LightPillar": "",
             "MapEntityScale": 0,
-            "MapEntityType": "18",
+            "MapEntityType": "22",
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
@@ -49,6 +50,7 @@ datas ={
           "PosY": 133.9444,
           "PosZ": 351.0136,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": 1,
             "Level": 38,
             "LightPillar": "",
@@ -140,6 +142,7 @@ datas ={
           "PosY": 170.0011,
           "PosZ": 455.4116,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 40,
             "LightPillar": "",
@@ -170,6 +173,7 @@ datas ={
           "PosY": 146.5151,
           "PosZ": 548.3714,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 39,
             "LightPillar": "",
@@ -200,6 +204,7 @@ datas ={
           "PosY": 118.565,
           "PosZ": 427.0269,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 35,
             "LightPillar": "",
@@ -230,6 +235,7 @@ datas ={
           "PosY": 98.99622,
           "PosZ": 189.7374,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 36,
             "LightPillar": "",
@@ -260,6 +266,7 @@ datas ={
           "PosY": 98.68167,
           "PosZ": 239.9524,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 37,
             "LightPillar": "",
@@ -290,6 +297,7 @@ datas ={
           "PosY": 98.67841,
           "PosZ": 429.4,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 36,
             "LightPillar": "",
@@ -496,10 +504,11 @@ datas ={
           "DisplayName": "",
           "EntityID": 11227018,
           "ID": 10360038,
-          "PosX": 190.839569,
-          "PosY": 98.771965,
-          "PosZ": 422.338623,
+          "PosX": 190.8396,
+          "PosY": 98.77197,
+          "PosZ": 422.3386,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 36,
             "LightPillar": "",
@@ -706,10 +715,11 @@ datas ={
           "DisplayName": "",
           "EntityID": 11227016,
           "ID": 10360045,
-          "PosX": 172.637329,
-          "PosY": 98.687294,
-          "PosZ": 450.613739,
+          "PosX": 172.6373,
+          "PosY": 98.68729,
+          "PosZ": 450.6137,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 36,
             "LightPillar": "",
@@ -920,6 +930,7 @@ datas ={
           "PosY": 98.71086,
           "PosZ": 429.5134,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 36,
             "LightPillar": "",
@@ -7854,7 +7865,7 @@ datas ={
           "ID": 10368027,
           "PosX": 357.3505,
           "PosY": 98.02,
-          "PosZ": 334.2467,
+          "PosZ": 334.05,
           "Props": {
             "AreaType": 1,
             "Height": 10.0,
@@ -7883,7 +7894,10 @@ datas ={
           "PosY": 98.89569,
           "PosZ": 343.9507,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -7906,7 +7920,10 @@ datas ={
           "PosY": 100.4963,
           "PosZ": 328.1265,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -7929,7 +7946,10 @@ datas ={
           "PosY": 119.92,
           "PosZ": 446.774,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -7952,7 +7972,10 @@ datas ={
           "PosY": 125.8826,
           "PosZ": 221.0206,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -7975,7 +7998,10 @@ datas ={
           "PosY": 133.5957,
           "PosZ": 174.6993,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -7998,7 +8024,10 @@ datas ={
           "PosY": 98.61678,
           "PosZ": 176.5013,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -8026,12 +8055,13 @@ datas ={
         "PosY": 98.02,
         "PosZ": 334.2467,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "InitLoad": 0,
           "Level": 40,
           "LightPillar": "",
           "MapEntityScale": 0,
-          "MapEntityType": "18",
+          "MapEntityType": "22",
           "MonsterGroupID": "",
           "PathID": "",
           "Radius": 0.0,
@@ -8057,6 +8087,7 @@ datas ={
         "PosY": 170.0011,
         "PosZ": 455.4116,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "Level": 40,
           "LightPillar": "",
@@ -8087,6 +8118,7 @@ datas ={
         "PosY": 146.5151,
         "PosZ": 548.3714,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "Level": 39,
           "LightPillar": "",
@@ -8117,6 +8149,7 @@ datas ={
         "PosY": 118.565,
         "PosZ": 427.0269,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "Level": 35,
           "LightPillar": "",
@@ -8147,6 +8180,7 @@ datas ={
         "PosY": 98.99622,
         "PosZ": 189.7374,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "Level": 36,
           "LightPillar": "",
@@ -8177,6 +8211,7 @@ datas ={
         "PosY": 98.68167,
         "PosZ": 239.9524,
         "Props": {
+          "ChestGroupID": "",
           "GroupID": "",
           "Level": 37,
           "LightPillar": "",

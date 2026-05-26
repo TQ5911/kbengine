@@ -899,10 +899,55 @@ datas = _tools.RODict({
         "limitNumber": 10,
         "isBound": 0,
         "weight": 0
+    }),
+    210: _tools.RODict({
+        "ID": 210,
+        "itemId": 30000553,
+        "groupId": 0,
+        "exType": 0,
+        "propItem": ((30770100, 10),),
+        "costItem": None,
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0,
+        "isBound": 0,
+        "weight": 0
+    }),
+    211: _tools.RODict({
+        "ID": 211,
+        "itemId": 30000554,
+        "groupId": 0,
+        "exType": 0,
+        "propItem": ((30770100, 100),),
+        "costItem": None,
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0,
+        "isBound": 0,
+        "weight": 0
+    }),
+    212: _tools.RODict({
+        "ID": 212,
+        "itemId": 30000555,
+        "groupId": 0,
+        "exType": 0,
+        "propItem": ((30770100, 1000),),
+        "costItem": None,
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0,
+        "isBound": 0,
+        "weight": 0
     })
 })
 minKey = 1
-maxKey = 209
+maxKey = 212
 
 group2ID = _tools.RODict({
 })

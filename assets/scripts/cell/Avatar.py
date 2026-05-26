@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 import KBEngine
-
-import gamelog
 from KBEDebug import *
+
+import random
+import time
+import math
+import gzip
+import json
+
 import gmCmds  # 这个不能删，否则gm命令没有任何地方import
 import gmCommand
 
-import iTimer
-
-import iFubenSpace
-import iBag
-
-import impLine
-
-import impRaidDungeon
-import iMount
 import utils
 import sMath
 import gametimer
@@ -23,37 +19,24 @@ import formula
 import gamedecorator
 import gameengine
 import gameconst
-import random
-import time
 import gameglobal
 import dungeonSrc
-import impOutfit
 import gameconfig
-import math
-import iLargeEnt
 import gameclass
 import Math
-
 import dropAward
-import gamePlay_gamePlay as DDL
-import conflict_status as CSD
-import const_const as CONST
-import message_Message_def as MMD
-import NPC_teleporter as NPC_T
-import conflict_conflict_def as CCD
-import gamePlay_set as GBS
-import conflict_status_def as C_S_DD
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dataUtils
 import actionContext
 import checkUserType
-import gamePlay_set as GP_SD
-import visible_visible as V_VD
-import message_chatMessage as MCMD
-import guildAuthorization_authorization_def as GA_A_DD
-import buff_buff as B_BD
-import message_Message_def as M_M_DD
 
+import iTimer
+import iFubenSpace
+import iBag
+import impLine
+import impRaidDungeon
+import iMount
+import impOutfit
+import iLargeEnt
 import iFubenSpace
 import impTask
 import impCombat
@@ -85,9 +68,6 @@ import iSiegeWarCell
 import iChief
 import iNewbie
 import iCrossServer
-import gzip
-import json
-import LogTrackingMgr
 import iWorldLevel
 
 import iMeridian
@@ -96,8 +76,27 @@ import iMineWarCell
 import iGuildBossChallenge
 import impStatistics
 import iDungeonSettlement
+import iSpeedCheck
+
+import LogTrackingMgr
+
 import fightProp_uiAttrProp as F_U_AP
 import jumpData_set as JD_S
+import gamePlay_gamePlay as DDL
+import conflict_status as C_SD
+import const_const as CONST
+import message_Message_def as MMD
+import NPC_teleporter as NPC_T
+import conflict_conflict_def as C_C_DD
+import gamePlay_set as GBS
+import conflict_status_def as C_S_DD
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import gamePlay_set as GP_SD
+import visible_visible as V_VD
+import message_chatMessage as MCMD
+import guildAuthorization_authorization_def as GA_A_DD
+import buff_buff as B_BD
+import message_Message_def as M_M_DD
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -110,7 +109,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief, iBounty.IBounty, iEmote.IEmote,
              iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell,
              iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iDungeonSettlement.IDungeonSettlement,
-             iWorldLevel.IWorldLevel):
+             iWorldLevel.IWorldLevel, iSpeedCheck.ISpeedCheck):
 
     IsAvatar = True
     IsCombatUnit = True
@@ -137,6 +136,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iBounty.IBounty.__init__(self)
         iWorldLevel.IWorldLevel.__init__(self)
         iEmote.IEmote.__init__(self)
+        iSpeedCheck.ISpeedCheck.__init__(self)
+
         self.addDatetimeTimerTick()
 
         # 设置每秒允许的最快速度, 超速会被拉回去
@@ -156,27 +157,19 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if not KBEngine.publish():
             self.pyAddTimer(1, 15, gametimer.AVATAR_PROPERTY_CHECK)
         self.pyAddTimer(60, 60, gametimer.CLEAR_TELEPORT_INFO_CACHE)
-        self.resetOverSpeedCheckTimer()
+        self.resetOverSpeedCheckTimer(0, True)
         gameglobal.roleGBIDToEntId[self.gbId] = self.id
         self.showCompleteNum = utils.fetchShowCompleteModelNum()
         self.checkPickedCollections()
-        LOG_IFO('on create', self.spaceNo, self.position)
-        # LOG_IFO('test review')
+        LOG_INFO('on create', self.spaceNo, self.position)
+        # LOG_INFO('test review')
         self._updateExpRateToBase()
         self.viewMgr = KBEngine.getNewViewManager()
         # 上线重算下是否可战斗区域
         self.calcPkSafeArea()
 
         gameglobal.cellAvatarCount += 1
-        LOG_IFO("add avatar cnt when create", gameglobal.cellAvatarCount)
-    
-    def resetOverSpeedCheckTimer(self):
-        if self.overSpeedCheckTimer > 0:
-            self.pyDelTimer(self.overSpeedCheckTimer, gametimer.SPEED_STAT_CHECK)
-            self.overSpeedCheckTimer = 0
-        speedCheckTimeUnit = CONST.datas['speedCheckTimeUnit']['value']
-        self.overSpeedCheckTimer = self.pyAddTimer(0, speedCheckTimeUnit, gametimer.SPEED_STAT_CHECK)
-        self.isInitCheck = True
+        LOG_INFO("add avatar cnt when create", gameglobal.cellAvatarCount)
 
     @property
     def group(self):
@@ -222,12 +215,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             checkUserType.checkProperty(self)
         elif userData == gametimer.MINE_WAR_PLAYER_GET_SCORE:
             self.mineWarPlayerGetScoreTick()
-        elif userData == gametimer.TIMER_ON_FLYING_CHECK:
-            self.onTickFlyingCheck()
         elif userData == gametimer.TIMER_ON_FLY_RESUME:
             self.onTickFlyingResume()
         elif userData == gametimer.SPEED_STAT_CHECK:
-            # self.recordSpeedStatData()
             self.calculateOverSpeed()
         else:
             super(Avatar, self).onTimer(tid, userData)
@@ -244,14 +234,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         KBEngine method.
         entity销毁
         """
-        LOG_IFO("Avatar::onDestroy: %i." % self.id)
+        LOG_INFO("Avatar::onDestroy: %i." % self.id)
 
         # destroy pet
         try:
             super(Avatar, self)._preSafeDestory()
             if gameglobal.cellAvatarCount > 0:
                 gameglobal.cellAvatarCount -= 1
-                LOG_IFO("del avatar cnt when destroy", gameglobal.cellAvatarCount)
+                LOG_INFO("del avatar cnt when destroy", gameglobal.cellAvatarCount)
             self.unsetAllHateRecord(gameconst.UnsetAllHateReason.destory)
             self.saveBuffs()
             self.removeAllBuff()
@@ -276,7 +266,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.base.backSelectCharacterBase(exposed > 0)
 
     def backSelectCharacterFromCrossServer(self):
-        LOG_IFO("backSelectCharacterFromCrossServer::")
+        LOG_INFO("backSelectCharacterFromCrossServer::")
         self.setCrossServerWaitingClientInitReason(gameconst.CrossServerWaitingClientInitTuple.BACKSELECTCHARACTER)
         # self.base.backSelectCharacterBase()
 
@@ -304,16 +294,17 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._offline(reason)
 
     def offlineFromCrossServer(self, reason):
-        LOG_IFO("offlineFromCrossServer::", reason)
+        LOG_INFO("offlineFromCrossServer::", reason)
         self.setCrossServerWaitingClientInitReason(gameconst.CrossServerWaitingClientInitTuple.OFFLINE,
                                                    reasonArgs=(reason, ), timeout=0.1)
         # self._offline(reason)
 
     def _offline(self, reason):
-        LOG_IFO('zt: avatar offline', reason, self.isDestroyed)
+        LOG_INFO('zt: avatar offline', reason, self.isDestroyed)
         if self.isDestroyed:
             return
 
+        self.recordRedisFullPlayerInfoWhenOffline()
         # todo x 玩家下线更新排行榜数据
         self._clearRaidJoinRecords()
         self.leaveTeamAuto()
@@ -352,7 +343,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             gameengine.getRaidStub(self.raidUUID).onAvatarLogin(self.base, self.gbId, self.raidUUID)
 
         # TODO:玩家上线时在base.onClientGetCell时调用，此处发送给客户端需要显示但存储在cell的数据，例如技能列表，任务列表等
-        LOG_IFO('zt: initClientOnCell', isRelogin)
+        LOG_INFO('zt: initClientOnCell', isRelogin)
 
         self.sendTeamInfo(isRelogin)
         self.sendAutoCombat()
@@ -363,8 +354,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         # self.sendCommonFlagCellInfo()
         self.sendAllPickedCollections()
         self.client.sendAllSkills(self.skillDic.getClientData(self))
-        self.client.onUpdateBuffs(self.buffDic.getClientData(self))
-        self.client.onUpdateAureoles(self.aureoleDic.getClientData())
+        self.client.onUpdateBuffs(self.buffMgrDic.getClientData(self))
+        self.client.onUpdateAureoles(self.auraDic.getClientData())
         self.client.onUpdateAureolesFromOthers(self.aureoleFormOtherDic)
 
         curAOI = self.getViewRadius()
@@ -380,6 +371,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.handleCrossServerWaitingClientInitReason()
         self.toClientCubeLoginData()
         self._sendRoomKickLeftTime(self.spaceNo)
+        self.stopPlayEmote(gameconst.StopPlayEmoteReason.LOGIN)
 
     # 客户端加载完成的回调
     @gamedecorator.crossServer
@@ -421,7 +413,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     # onGetWitness时，客户端已经enterWorld了，这里通知base
     # 调用initClientBase及initClientOnCell根据是否重登初始化客户端需要的数据
     def onGetWitness(self, chn):
-        LOG_IFO('zt: onGetWitness', self.novice, chn)
+        LOG_INFO('zt: onGetWitness', self.novice, chn)
         self.base.onCellGetWitness(chn)
 
     def clientDeath(self):
@@ -434,7 +426,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         pass
 
     def onBaseGetCell(self):
-        LOG_IFO('onBaseGetCell', self.gbId, self.spaceNo)
+        LOG_INFO('onBaseGetCell', self.gbId, self.spaceNo)
         if formula.inLineScene(self.spaceNo) and not self.isCrossServerInOtherServer:
             lineType = formula.fetchMapId(self.spaceNo)
             lineNo = formula.parseLineNo(self.spaceNo)
@@ -491,16 +483,16 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         gmCommand.realDoCommand(*args)
 
     def feedbackCommandSucc(self, message):
-        LOG_IFO('gm command succ:', message)
+        LOG_INFO('gm command succ:', message)
 
     def feedbackCommandFail(self, message):
-        LOG_IFO('gm command fail:', message)
+        LOG_INFO('gm command fail:', message)
 
     def _onSetGmMode(self, gmMode):
         self.gmModeCell = gmMode
 
     def isTeleportLocked(self, lockReason, now) -> bool:
-        if self.teleportLock == gameconst.TeleportLock.FREE_TO_TELEPORT or now >= self.teleportLockRlsT:
+        if self.teleportLock == gameconst.TeleportLockEnum.FREE_TO_TELEPORT or now >= self.teleportLockRlsT:
             return False
         if self.teleportLock == lockReason:
             return False
@@ -519,10 +511,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def releaseTeleportLock(self, lockReason) -> bool:
         LOG_DBG('releaseTeleportLock::', lockReason)
-        if self.teleportLock not in (lockReason, gameconst.TeleportLock.FREE_TO_TELEPORT):
+        if self.teleportLock not in (lockReason, gameconst.TeleportLockEnum.FREE_TO_TELEPORT):
             LOG_WARN('releaseTeleportLock:: mismatch:', lockReason, self.teleportLock, self.teleportLockRlsT)
             return False
-        self.teleportLock = gameconst.TeleportLock.FREE_TO_TELEPORT
+        self.teleportLock = gameconst.TeleportLockEnum.FREE_TO_TELEPORT
         self.teleportLockRlsT = 0
         return True
 
@@ -550,7 +542,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @gamedecorator.crossServer
     def reachNewArea(self, exposed, areaId):
-        LOG_IFO('reachNewArea', areaId, self.position)
+        LOG_INFO('reachNewArea', areaId, self.position)
         if areaId != self.areaId:
             self.areaId = areaId
             self.resetAllTargetTypeCache()
@@ -559,7 +551,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 if curAreaId != self.areaId:
                     LOG_WARN("reachNewArea areaId != self.areaId", curAreaId, self.areaId, self.position)
 
-            self.calcPkSafeArea()
+            beSafe = self.calcPkSafeArea()
+            if formula.inCubeScene(self.spaceNo):
+                self.spaceMgr and self.spaceMgr.onChangeSafeArea(self, beSafe)
 
     @utils.isMyself
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
@@ -572,7 +566,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             return
 
         self._commonNeedCast(
-            CCD.datas.teleportCast,
+            C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
             gameconst.CastType.teleportAnchor,
             '_reqTransmitWithMapPoint',
@@ -609,7 +603,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.base.onCheckAndCostWealth(gameconst.CELL, AAC_AACDD.datas.BONUS_SRC_TRANSPORT_COST, 'transmitWithMapPointCallback', deductWealthVal, extraProps)
 
     def transmitWithMapPointCallback(self, checkResult, extraProps):
-        LOG_IFO("transmitWithMapPointCallback", checkResult, extraProps)
+        LOG_INFO("transmitWithMapPointCallback", checkResult, extraProps)
         if not checkResult:
             self.showMsg(MMD.datas.itemNotEnough, [str(gameconst.ItemId.COIN)])
             LOG_WARN('transmitWithMapPointCallback checkResult')
@@ -666,38 +660,38 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def hasMovementController(self):
         return self.autoCombatInfo.get('moveController', 0) > 0
 
-    def onMoveOver(self, controllerID, userData):
-        # LOG_DBG('onMoveOver:', self.position, controllerID, userData)
-        if hasattr(self, 'botMoveController') and controllerID == self.botMoveController:
+    def onMoveOver(self, controllerId, userData):
+        # LOG_DBG('onMoveOver:', self.position, controllerId, userData)
+        if hasattr(self, 'botMoveController') and controllerId == self.botMoveController:
             # self.client and self.client.onBotMoveOver()
             self.onBotMoveOver()
-        elif self.autoCombat == gameconst.AutoCombatState.Fighting and controllerID == self.autoCombatInfo.get('moveController', 0):
+        elif self.autoCombat == gameconst.AutoCombatState.Fighting and controllerId == self.autoCombatInfo.get('moveController', 0):
             self.moveToCombatTargetCB(True)
 
         elif userData == gamemove.SPACE_ROUTE_MOVE_DONE:
             _controller = self.getSpaceRouteController()
             if _controller:
-                _controller.onMoveOver(controllerID)
+                _controller.onMoveOver(controllerId)
         elif userData == gamemove.ROUTE_NODE_MOVE:
             self.moveToRouteNodeCB(True)
         else:
-            super(Avatar, self).onMoveOver(controllerID, userData)
+            super(Avatar, self).onMoveOver(controllerId, userData)
 
     def onBotMoveOver(self):
         pass
 
-    def onMoveFailure(self, controllerID, userData):
-        # LOG_DBG('onMoveFailure:', self.position, controllerID, userData)
-        if self.autoCombat == gameconst.AutoCombatState.Fighting and controllerID == self.autoCombatInfo.get('moveController', 0):
+    def onMoveFailure(self, controllerId, userData):
+        # LOG_DBG('onMoveFailure:', self.position, controllerId, userData)
+        if self.autoCombat == gameconst.AutoCombatState.Fighting and controllerId == self.autoCombatInfo.get('moveController', 0):
             self.moveToCombatTargetCB(False)
         elif userData == gamemove.SPACE_ROUTE_MOVE_DONE:
             _controller = self.getSpaceRouteController()
             if _controller:
-                _controller.onMoveFail(controllerID)
+                _controller.onMoveFail(controllerId)
         elif userData == gamemove.ROUTE_NODE_MOVE:
             self.moveToRouteNodeCB(False)
         else:
-            super(Avatar, self).onMoveFailure(controllerID, userData)
+            super(Avatar, self).onMoveFailure(controllerId, userData)
 
     #################### for bots method ##################
 
@@ -764,8 +758,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if self.useTargetTypeCacheFlag and e.IsCombatUnit:
             utils.isEnemy(self, e)
             utils.isFriend(self, e)
-            if not self.checkTargetTypeTimeId:
-                self.checkTargetTypeTimeId = self.pyAddTimer(5, 5, gametimer.CHECK_TARGET_TYPE_TIMER)
+            if not self.checkTargetTypeTimerId:
+                self.checkTargetTypeTimerId = self.pyAddTimer(5, 5, gametimer.CHECK_TARGET_TYPE_TIMER)
 
         self._onEnterView(e)
 
@@ -785,10 +779,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         if e.IsCombatUnit:
             self.removeTargetTypeCache(e)
-            allCacheSetLen = len(self.enemyCacheSet) + len(self.notEnemyCacheSet)
-            if allCacheSetLen == 0 and self.checkTargetTypeTimeId > 0:
-                self.pyDelTimer(self.checkTargetTypeTimeId, gametimer.CHECK_TARGET_TYPE_TIMER)
-                self.checkTargetTypeTimeId = 0
+            allCacheSetLen = len(self.enemiesCacheSet) + len(self.notEnemiesCacheSet)
+            if allCacheSetLen == 0 and self.checkTargetTypeTimerId > 0:
+                self.pyDelTimer(self.checkTargetTypeTimerId, gametimer.CHECK_TARGET_TYPE_TIMER)
+                self.checkTargetTypeTimerId = 0
 
         if gameconfig.enableViewMgr():
             self.viewMgr.removeViewRelation(e.id)
@@ -929,7 +923,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def beforeTeleport(self, toSpaceNo):
         if self.spaceNo != toSpaceNo:
             self.destroyAllSummon()
-            self.clearAllTargetTypeCache(True)
+            self.doClearAllTargetTypeCache(True)
             self.removeBuffsByTag('scenesClear')
             # self.teammateEntIdInAoiSet.clear()
         self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.Teleport)
@@ -966,8 +960,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 self.teleportInfoDict.pop(spaceNo)
 
     def teleportToCell(self, toCell, spaceNo, dstPos, dstDir, callback, callbackArgs):
-        LOG_IFO('in teleportToCell:', self.position, toCell.id, spaceNo, dstPos, dstDir, callback, callbackArgs)
-        if not self.checkConflictState(CCD.datas.teleport, remConflctState=True):
+        LOG_INFO('in teleportToCell:', self.position, toCell.id, spaceNo, dstPos, dstDir, callback, callbackArgs)
+        if not self.checkConflictState(C_C_DD.datas.teleport, remConflctState=True):
             LOG_ERR('status conflict while teleporting')
 
         self._resetTeleportCache(spaceNo, callback, callbackArgs)
@@ -982,7 +976,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if toCell:
             if gameglobal.cellAvatarCount > 0:
                 gameglobal.cellAvatarCount -= 1
-                LOG_IFO("del avatar cnt when teleport", gameglobal.cellAvatarCount)
+                LOG_INFO("del avatar cnt when teleport", gameglobal.cellAvatarCount)
             toCell.onTeleportNear(self, dstPos, dstDir, spaceNo)
         else:
             # 传送出异常会导致其他模块出错，例如副本无法关闭等，这里处理掉
@@ -993,16 +987,16 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         #清除缓存必须放在最下面
         self.teammateEntIdInAoiSet.clear()
         self.raidmateEntIdInAoiSet.clear()
-        self.clearAllTargetTypeCache(True)
+        self.doClearAllTargetTypeCache(True)
 
     @gamedecorator.crossServer
     @utils.isMyself
     def breakAwayStuck(self, exposed):
-        LOG_IFO('breakAwayStuck::~')
+        LOG_INFO('breakAwayStuck::~')
         self._breakAwayStuck()
 
     def selfBreakAwayStuck(self):
-        LOG_IFO('selfBreakAwayStuck::')
+        LOG_INFO('selfBreakAwayStuck::')
         self._breakAwayStuck()
 
     def _breakAwayStuck(self):
@@ -1019,7 +1013,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             if dunPos:
                 pos = dunPos
                 direction = self.spaceMgr.breakStuckDir
-                # LOG_IFO('breakAwayStuck:: use dun breakStuckPos', pos, direction)
+                # LOG_INFO('breakAwayStuck:: use dun breakStuckPos', pos, direction)
             else:
                 pos, direction = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position, True)
 
@@ -1030,7 +1024,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             LOG_ERR('breakAwayStuck:', self.spaceNo, self.position)
             return
 
-        if not self.checkConflictState(CCD.datas.Unstuck, bMsg=True, remConflctState=True):
+        if not self.checkConflictState(C_C_DD.datas.Unstuck, bMsg=True, remConflctState=True):
             LOG_WARN('_breakAwayStuck conflict state')
             return
 
@@ -1098,13 +1092,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def resetStateTeleport(self, oldSpaceNo):
         for i in self.stateList:
             if self.hasState(i):
-                val = CSD.datas[i].get('clearTeleport', 0)
+                val = C_SD.datas[i].get('clearTeleport', 0)
                 if val == 1:
                     self.removeState(i, gameconst.RemoveStateReason.TELEPORT)
-                    LOG_IFO("resetStateTeleport", self.id, i)
+                    LOG_INFO("resetStateTeleport", self.id, i)
 
     def _onTeleportSuccess(self, nearbyEntity):
-        LOG_IFO('zt: onTeleportSuccess', self.gbId, self.spaceNo, self._getTeleportInfoCache())
+        LOG_INFO('zt: onTeleportSuccess', self.gbId, self.spaceNo, self._getTeleportInfoCache())
         self.refreshAreaTaskTimer()
         self.base.setBaseSpaceNo(self.spaceNo)
         self.resetStateTeleport(self.lastTeleportSpaceNoRecord)
@@ -1144,7 +1138,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             teleportationProtectionBuffId = int(teleportationProtectionBuffIdCfg['value'])
             teleportationProtectionTime = int(teleportationProtectionTimeCfg['value'])
             if teleportationProtectionTime > 0 and teleportationProtectionBuffId in B_BD.datas:
-                LOG_IFO('_onTeleportSuccess, add protection buff: ', teleportationProtectionBuffId, teleportationProtectionTime)
+                LOG_INFO('_onTeleportSuccess, add protection buff: ', teleportationProtectionBuffId, teleportationProtectionTime)
                 self.addBuff(teleportationProtectionBuffId, 1, self.id, duration = teleportationProtectionTime)
         return True
 
@@ -1170,7 +1164,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def setAvatarArrowTrackerState(self, exposed, state, arrowUUID):
-        LOG_IFO('setAvatarArrowTrackerState::~', state, arrowUUID)
+        LOG_INFO('setAvatarArrowTrackerState::~', state, arrowUUID)
 
     # -------------------------------------------------------------------
 
@@ -1191,7 +1185,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         super(Avatar, self).onEnterTrap(entity, rangeXZ, rangeY, controllerId, userArg)
         if userArg == gameconst.AGGRO_TRIGGER_TRAP:
-            if entity.IsCombatUnit and utils.isEnemy(self, entity) and entity.isAttackable(self):
+            if entity.IsCombatUnit and utils.isEnemy(self, entity) and entity.canAttackable(self):
                 aiController = self.getTempMiscProp(gameconst.EntityPropsEnum.aiController, None)
                 if aiController:
                     aiController.onEnemyEnter(entity.id)
@@ -1226,7 +1220,23 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                        userData=None):
         # LOG_DBG('scriptNavigate', dstPos)
         maxDis = 128  # 引擎预留参数，暂时没有意义
-        navController = self.navigate(dstPos, speed, distance, maxDis, maxDis, faceMovement, layer, False, userData)
+        _width = CONST.datas['navAgentWidth']['value']
+        navController = self.navigate(
+            dstPos, 
+            speed, 
+            distance, 
+            maxDis, 
+            maxDis, 
+            faceMovement, 
+            layer, 
+            False, 
+            userData,
+            {
+                'sl': _width, # 搜索起始点的长
+                'sw': _width, # 搜索起始点的宽
+                'sh': 4.0, # 搜索起始点的高
+            }
+        )
         return navController
 
     def isDefaultValue(self, attrObj):
@@ -1252,13 +1262,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.name = name
 
     def cancelAllTeamAndRaidJoinRequest(self):
-        LOG_IFO("cancelAllTeamAndRaidJoinRequest::")
+        LOG_INFO("cancelAllTeamAndRaidJoinRequest::")
         self._cancelAllRaidJoinRequest()
         self._cancelAllTeamJoinRequest()
 
     def pyWriteToDB(self):
         if self.isCrossServerInOtherServer:
-            LOG_IFO("pyWriteToDB isCrossServerInOtherServer")
+            LOG_INFO("pyWriteToDB isCrossServerInOtherServer")
             return
 
         self.writeToDB()
@@ -1410,7 +1420,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         getattr(self, funcName)(*args)
 
     def onTelToMainCityWithCast(self, toCell, lineType, dstPos, dstDir, callback, callbackArgs, fCallback, fCallbackArgs):
-        LOG_IFO("onTelToMainCityWithCast::", toCell, lineType, dstPos, dstDir, callback, callbackArgs, self.spaceNo)
+        LOG_INFO("onTelToMainCityWithCast::", toCell, lineType, dstPos, dstDir, callback, callbackArgs, self.spaceNo)
         if dstPos is None or dstDir is None:
             gameengine.panicStack("onTelToMainCityWithCast:: Type ERROR -> pos or dir",
                                       toCell, lineType, dstPos, dstDir, callback, callbackArgs, self.spaceNo)
@@ -1476,7 +1486,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     @gamedecorator.limitcall(1)
     def tryHealWoundsFromNpc(self, exposed):
         if not self._hasWoundsCanHeal():
-            LOG_IFO('tryHealWoundsFromNpc:: no wounds can heal')
+            LOG_INFO('tryHealWoundsFromNpc:: no wounds can heal')
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
             return
 
@@ -1535,10 +1545,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         data['guildJob'] = guildData[0]
         data['guildDspFlag'] = guildData[1]
         data['guildIcon'] = guildData[2]
+        data['guildRankIdx'] = guildData[3]
         data['appearance'] = self.appearance.toJsonString()
+        data['exp'] = self.exp
+        data['title'] = self.title
         #装备
         dic = self.bodyEquipData.toBodyEquipsClientDict()
         data['bodyEquipList'] = dic
+        data["summonSlotIdx"] = self.summonSlotIdx
 
         #属性
         data['attrList'] = {}
@@ -1550,6 +1564,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         return data
 
+    def recordRedisFullPlayerInfoWhenOffline(self):
+        data = self._concatPlayerInfo((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0))
+        self.base.onGetFullPlayerInfo(data, self)
+
     def onGetTargetPlayerInfo(self, src):
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             self.guildUUID,
@@ -1557,7 +1575,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             (self.gbId, self, src),
             self,
             'onGetMemberJobAndGuildCache',
-            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0), src),
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), src),
         )
 
     def onGetMemberJobAndGuildCache(self, guildData, src):
@@ -1567,7 +1585,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 # ----------------------------------------- blazing start --------------------------------------
     @utils.isMyself
     def blaze(self, exposed, blazeId):
-        LOG_IFO('blaze::', blazeId)
+        LOG_INFO('blaze::', blazeId)
         _mapId = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         _fastMoveData = _dunData.get(str(blazeId))
@@ -1585,9 +1603,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if not _checkOk:
             LOG_WARN('blaze:: blazeId not in range', blazeId, self.position)
 
-        if not self.checkConflictState(CCD.datas.blaze):
+        if not self.checkConflictState(C_C_DD.datas.blaze):
             return
-
+        
         self.setState(C_S_DD.datas.blazing)
         self.blazeStartTime = utils.curTS()
         self.blazeId = blazeId
@@ -1604,7 +1622,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @utils.isMyself
     def blazeEnd(self, exposed):
-        LOG_IFO('blazeEnd::')
+        LOG_INFO('blazeEnd::')
         _mapId = formula.fetchMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         _d = _dunData.get(str(self.blazeId))
@@ -1705,129 +1723,17 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def setCellFlags(self, flags):
         self.cellFlags = utils.bset(self.cellFlags, flags)
 
-    def gmTestSpeedStatConditions(self, datas):
-        LOG_DBG('gmTestSpeedStatConditions 1, ', self.id, datas)
-        self.speedStatsConditions = datas
-        LOG_DBG('gmTestSpeedStatConditions 2, ', self.speedStatsConditions)
-
-    def recordSpeedStatData(self):
-        LOG_DBG('recordSpeedStatData 1, ', self.id)
-        # 先做下不同版本的引擎代码的兼容
-        if not hasattr(self, 'speedStatsConditions'):
+    @utils.isMyself
+    def getShowMapEntityInfo(self, exposed, mapId):
+        LOG_DBG('getShowMapEntityInfo', mapId)
+        _dunData = utils.getDunModuleData(mapId)
+        if not _dunData:
+            LOG_ERR('getShowMapEntityInfo: error mapId: {}'.format(mapId))
             return
-        # 获取当前统计数据，并清空
-        speedStatsConditions = self.speedStatsConditions
-        if len(speedStatsConditions) > 0:
-            LOG_DBG('recordSpeedStatData 2, ', self.id, speedStatsConditions)
-            LogTrackingMgr.LogTrackingMgr.Speed_Stat(self.gbId, self.id, self.name, self.spaceNo, self.position, speedStatsConditions)
-            self.speedStatsConditions = []
-        # 重新设置统计指标
-        datas = gameconfig.speedStatConditions()
-        if datas and len(datas) > 0:
-            conds = [float(d) for d in datas]
-            self.speedStatsConditions = conds
-
-    def calculateOverSpeed(self):
-        if not gameconfig.overSpeedCheckSwitch():
+        if not formula.inLineScene(self.spaceNo):
+            LOG_WARN('getShowMapEntityInfo: error mapId: {}'.format(mapId))
             return
-        # 读取引擎层移动距离统计
-        moveDistance = self.moveDistance
-        # 重置引擎层移动距离统计
-        self.moveFlag = True
+        lineNo = formula.parseLineNo(self.spaceNo)
+        gameengine.getLineStub(mapId).onGetShowMapEntityInfo(self, mapId, lineNo)
 
-        if self.hasState(C_S_DD.datas.blazing):
-            self.speedCheckStart = time.time()
-            return
-        
-        if self.isInitCheck:
-            self.isInitCheck = False
-            self.moveFlag = True
-            if self.lastSpeed <= 0:
-                if self.hasState(gameconst.StateEnum.Flying):
-                    self.lastSpeed = int(JD_S.datas['thirdFlyHorizontalSpeed']['value'])
-                else:
-                    self.lastSpeed = self.speed
-            self.lastPosition = Math.Vector3(self.position.x, self.position.y, self.position.z)
-            self.continuousTickCount = 0
-            self.speedCheckStart = time.time()
-            self.isLastOverSpeed = True
-            #LOG_DBG('calculateOverSpeed 1, ', self.lastSpeed, self.lastPosition, self.continuousTickCount)
-            return
-        elapsedTime = round(time.time() - self.speedCheckStart, 3)
-        speedCheckillegallyOverRate = CONST.datas['speedCheckillegallyOverRate']['value']
-        if elapsedTime < round(0.1/(speedCheckillegallyOverRate/100), 3):
-            elapsedTime += 0.1
-        # 客户端实际的移动距离
-        realClientDistance = moveDistance
-        # 服务端计算的真实的移动距离
-        realServerDistance = self.lastSpeed * elapsedTime
-        if realServerDistance <= 0:
-            self.speedCheckStart = time.time()
-            return
-        #LOG_DBG('calculateOverSpeed 2, ', elapsedTime, self.lastSpeed, realClientDistance, realServerDistance)
-        # 超速百分比
-        overRate = 0.0
-        isOverSpeed = False
-        if realClientDistance > realServerDistance:
-            overRate = round(abs((realClientDistance - realServerDistance) / realServerDistance), 2)
-            if overRate >= speedCheckillegallyOverRate / 100.0:
-                LOG_DBG('calculateOverSpeed 3, ', realClientDistance, realServerDistance, elapsedTime, self.lastSpeed, \
-                        self.lastPosition, self.position, overRate)
-                isOverSpeed = True
-                # 超速了，拽回到上次的位置
-                self.position = Math.Vector3(self.lastPosition.x, self.lastPosition.y, self.lastPosition.z)
-
-        # 超速超过一定次数
-        if self.continuousTickCount >= CONST.datas['speedCheckContinuousUnit']['value']:
-            self.continuousTickCount = 0
-            # 记录处罚
-            # LOG_DBG('calculateOverSpeed 4, ', moveDistance)
-        # 连续超速累计
-        if isOverSpeed and self.isLastOverSpeed:
-            self.continuousTickCount += 1
-        else:
-            # 本次未连续超速置空
-            self.continuousTickCount = 0
-        # 记录上次的超速状态
-        self.isLastOverSpeed = isOverSpeed
-
-        self.lastPosition = Math.Vector3(self.position.x, self.position.y, self.position.z)
-
-        self.speedCheckStart = time.time()
-        # 只记录有超速的
-        if overRate > 0:
-            LogTrackingMgr.LogTrackingMgr.Illegal_Speed_Stat(self.gbId, self.id, self.name, self.spaceNo, self.position, self.lastSpeed, overRate, self.continuousTickCount)
-        #LOG_DBG('calculateOverSpeed 5, ', moveDistance, self.lastSpeed, self.lastPosition, self.continuousTickCount)
-            
-    def speedChanged(self, newSpeed, oldSpeed):
-        LOG_DBG('speedChanged, 1 ', newSpeed, oldSpeed)
-        self.addTimerCB(1, 'delayUpdateSpeed', (newSpeed, oldSpeed), gametimer.TIMER_TAG_DELAY_SPEED_UPDATE)
-
-    def delayUpdateSpeed(self, newSpeed, oldSpeed):
-        self.lastSpeed = oldSpeed
-        self.calculateOverSpeed()
-        self.lastSpeed = newSpeed
-        if self.hasState(gameconst.StateEnum.Flying):
-            self.lastSpeed = int(JD_S.datas['thirdFlyHorizontalSpeed']['value'])
-    
-    def enterFlySpeed(self):
-        LOG_DBG('enterFlySpeed, 1')
-        self.calculateOverSpeed()
-        self.lastSpeed = int(JD_S.datas['thirdFlyHorizontalSpeed']['value'])
-
-    def leaveFlySpeed(self):
-        LOG_DBG('leaveFlySpeed, 1')
-        self.calculateOverSpeed()
-        self.lastSpeed = self.speed
-
-    def leaveBlazeState(self):
-        LOG_DBG('leaveBlazeState, 1')
-        self.moveFlag = True
-        self.speedCheckStart = time.time()
-        self.lastSpeed = self.speed
-
-    def leaveShiftOrDodgeState(self):
-        LOG_DBG('leaveShiftOrDodgeState, 1')
-        self.calculateOverSpeed()
-        self.lastSpeed = self.speed
 

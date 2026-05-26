@@ -118,7 +118,7 @@ class DropUnit():
             else:
                 genNum = leftTimes
                 leftTimes = 0
-            LOG_IFO("DropUnit: batchGenAward rewardId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
+            LOG_INFO("DropUnit: batchGenAward rewardId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
             self._update_process_info(cacheKey, genNum)
             if genNum > 0:
                 # 调用 getAward 并将结果添加到合并列表中
@@ -316,7 +316,7 @@ class DropUnit():
 
     def writeToJsonFile(self, data):
         file_path = '/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/output.json'
-        LOG_IFO(f"DropUnit: writeToJsonFile {file_path}")
+        LOG_INFO(f"DropUnit: writeToJsonFile {file_path}")
         # 先判断一下目录是否存在，不存在就不写入了
         import os
         if not os.path.exists(os.path.dirname(file_path)):
@@ -328,7 +328,7 @@ class DropUnit():
 def doTest():
     dropUnit = DropUnit(None, 10000)
     dropUnit.batchGenAward(40020261, {'awardId': 40020261, 'playerLevel': 1, 'school': 1003, 'sex': 0})
-    LOG_IFO("DropUnit: doTest")
+    LOG_INFO("DropUnit: doTest")
 
 
 '''

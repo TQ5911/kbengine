@@ -107,7 +107,7 @@ class DungeonPlayModePlayerMiXin(userType.UserSingleType):
             self.rewardCoinNumber = newNum
 
     def deductRewardNum(self):
-        LOG_IFO('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
+        LOG_INFO('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
         if self.rewardNumber > 0:
             # 优先使用金币购买的次数
             if self.rewardCoinNumber > 0:
@@ -123,7 +123,7 @@ class DungeonPlayModePlayerMiXin(userType.UserSingleType):
                     self.ticketType = gameconst.DungeonTicketType.ITEM
         else:
             gameengine.panicStack(f"{self.__class__.__name__}::deductRewardNum:: remain count is zero !!!", self)
-        LOG_IFO('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
+        LOG_INFO('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
 
     def hasCoinCount(self):
         return self.rewardCoinNumber > 0

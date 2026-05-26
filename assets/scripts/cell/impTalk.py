@@ -27,7 +27,7 @@ class ImpTalk(object):
         # if the npc talk is not being interrupted, then continue the process
         if not isNPCTalkDone:
             self.doNPCTalk(npcEntityID, npcId, taskId, dialogId, idx)
-            LOG_IFO('in _doTalkToNPC, doNPCTalk:', npcEntityID, npcId, taskId, dialogId, idx)
+            LOG_INFO('in _doTalkToNPC, doNPCTalk:', npcEntityID, npcId, taskId, dialogId, idx)
 
     def makeTalkToNPC(self, npcEntityId, npcId, taskId, dialogId, idx):
         self._doTalkToNPC(npcEntityId, npcId, taskId, dialogId, idx)
@@ -39,7 +39,7 @@ class ImpTalk(object):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToNpc(self, exposed, npcEntityId, taskId, dialogId, idx):
-        LOG_IFO('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
+        LOG_INFO('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
         npcId = 0
         if npcEntityId:
             ent = KBEngine.entities.get(npcEntityId)
@@ -63,13 +63,13 @@ class ImpTalk(object):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToClientNpc(self, exposed, npcId, taskId, dialogId, idx):
-        LOG_IFO('in talkToClientNpc:', taskId, npcId, dialogId, idx)
+        LOG_INFO('in talkToClientNpc:', taskId, npcId, dialogId, idx)
         self.makeTalkToNPC(0, npcId, taskId, dialogId, idx)
 
     # npc talk
     def doNPCTalk(self, npcEntityId, npcId, taskId, dialogId, idx):
         if taskId > 0:
-            taskData = dataUtils.getTaskData(taskId)
+            taskData = dataUtils.getTaskCfg(taskId)
             if taskData and taskData.get('CheckFollowNPC', False) and taskData.get('TaskFollowNPC', []):
                 for followInfo in taskData.get('TaskFollowNPC', []):
                     if followInfo['NpcFollowID'] == npcId:
@@ -88,7 +88,7 @@ class ImpTalk(object):
 
         param_str = dialogData.get('parm')
         param_list = param_str.split('|')
-        LOG_IFO('in _checkDialogEventConfig:', event_list, param_list)
+        LOG_INFO('in _checkDialogEventConfig:', event_list, param_list)
         if 0 < len(event_list) < idx:
             LOG_ERR('in _checkDialogEventConfig, event idx error:', idx)
             return None, None
@@ -121,14 +121,14 @@ class ImpTalk(object):
         return True
 
     def _checkTaskFollowNPC(self, targetId, taskId, npcId, dialogId):
-        talkToNpcData = dataUtils.getTaskData(taskId).get('TaskFollowNPC', [])
+        talkToNpcData = dataUtils.getTaskCfg(taskId).get('TaskFollowNPC', [])
         for followInfo in talkToNpcData:
             if followInfo['NpcFollowID'] == npcId:
                 worldAreaIds = followInfo['WorldAreaID'].split('|')
                 if str(self.areaId) in worldAreaIds:
                     # self._doTaskTalkToNPC(targetId, taskId, npcId, dialogId, idx)
                     return True
-        LOG_IFO('_checkTaskFollowNPC failed', taskId, npcId, dialogId)
+        LOG_INFO('_checkTaskFollowNPC failed', taskId, npcId, dialogId)
         return False
     
     def _checkEventNpc(self, npcId, eventName):
@@ -188,6 +188,6 @@ class ImpTalk(object):
         self.startClaimTask(newTaskId, taskCtx=actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_FROM_ACTION))
 
     def _eventActionAddUltraSkillPower(self, eventActionSrc, *args, **kwargs):
-        LOG_IFO('_eventActionAddUltraSkillPower:', eventActionSrc, args, kwargs)
+        LOG_INFO('_eventActionAddUltraSkillPower:', eventActionSrc, args, kwargs)
 
         self.addUltraSkillPower(int(args[0]))

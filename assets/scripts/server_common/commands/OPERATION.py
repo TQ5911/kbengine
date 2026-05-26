@@ -9,33 +9,30 @@ import gmAdmin
 import gamesql
 import gmCommand
 import gameengine
+import mailAssistor
 from KBEDebug import *
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import dropAward
+import itemFactory
 
-BASE = gameconst.BASE
-CELL = gameconst.CELL
-ALL = gameconst.ALL
-INSIDE = gmAdmin.INSIDE
-ALLSIDE = gmAdmin.ALLSIDE
+BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
+    gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
 
-Int = gmCommand.Int
-Str = gmCommand.Str
-Float = gmCommand.Float
-Player = gmCommand.Player
-Entity = gmCommand.Entity
+
+Int, Player, Str, Entity, Float = gmCommand.Int, gmCommand.Player,\
+    gmCommand.Str, gmCommand.Entity, gmCommand.Float
+
 PlayerAccount = gmCommand.PlayerAccount
 
-gm_cmd = gmCommand.gm_cmd
-forwardGMCommand = gmCommand.forwardGMCommand
-callOnApps = gmCommand._callApps
+gm_cmd, forwardGMCommand, callOnApps = gmCommand.gm_cmd, gmCommand.forwardGMCommand,\
+    gmCommand._callApps
 
-RARG = gmCommand.RARG
-RSU = gmCommand.RSU
-RSTUB = gmCommand.RSTUB
-RONE = gmCommand.RONE
-RALL = gmCommand.RALL
+RARG, RSU, RSTUB, RONE, SELF, RALL= gmCommand.RARG, gmCommand.RSU, gmCommand.RSTUB,\
+    gmCommand.RONE, gmCommand.SELF, gmCommand.RALL
+
 
 GOD_GROUPS = gmCommand.GOD_GROUPS
-DEV_GROUPS = gmCommand.DEV_GROUPS
+DEVE_GROUPS = gmCommand.DEVE_GROUPS
 
 
 class Operation:
@@ -55,8 +52,8 @@ class DoFuncOfflineSafeCtx(object):
         self.dbId = dbId
 
 # ------------------------- 跑马灯 ---------------------------
-@gm_cmd('$gmTestMarquee', (Player('gbId/Id', raw=True), Int('mid'), Str('content'), Str('channels')),
-        RARG(0), BASE, '测试跑马灯', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$gmTestMarquee', (Player('gbId or Id', raw=True), Int('mid'), Str('content'), Str('channels')),
+        RARG(0), BASE, '测试跑马灯', ALLSIDE, DEVE_GROUPS)
 def gmTestMarquee(su, operator, mid, content, channels):
     if mid == 0:
         su.onCommandResult(-1, '跑马灯id为0', {})
@@ -66,11 +63,11 @@ def gmTestMarquee(su, operator, mid, content, channels):
     gameglobal.localBaseApp.sendOfficialMessageForTest(playerGbId, content, channels, mid)
 
     su.onCommandResult(0, '', {})
-    return True, '执行成功'
+    return True, 'command success'
 
 
 @gm_cmd('$gmPublishMarquee', (Int('mid'), Str('content'), Int('startTime'), Int('endTime'), Int('tick'),
-                              Int('priority'), Str('channels')), RALL, BASE, '发布跑马灯', ALLSIDE, DEV_GROUPS)
+                              Int('priority'), Str('channels')), RALL, BASE, '发布跑马灯', ALLSIDE, DEVE_GROUPS)
 def gmPublishMarquee(su, mid, content, startTime, endTime, tick, priority, channels):
     if mid == 0:
         su.onCommandResult(-1, '跑马灯id为0', {})
@@ -79,10 +76,10 @@ def gmPublishMarquee(su, mid, content, startTime, endTime, tick, priority, chann
     gameglobal.localBaseApp.sendOfficialMessage(startTime, endTime, content, tick, channels, mid, priority)
 
     su.onCommandResult(0, '', {})
-    return True, '执行成功'
+    return True, 'command success'
 
 
-@gm_cmd('$gmRevokeMarquee', (Int('mid'),), RALL, BASE, '撤销跑马灯', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$gmRevokeMarquee', (Int('mid'),), RALL, BASE, '撤销跑马灯', ALLSIDE, DEVE_GROUPS)
 def gmRevokeMarquee(su, mid):
     if mid == 0:
         su.onCommandResult(-1, '跑马灯id为0', {})
@@ -91,7 +88,7 @@ def gmRevokeMarquee(su, mid):
     gameglobal.localBaseApp.stopOfficialMessage(mid)
 
     su.onCommandResult(0, '', {})
-    return True, '执行成功'
+    return True, 'command success'
 
 
 # ------------------------- 离线安全 ----------
@@ -153,38 +150,49 @@ def _banAvatarAgain(gbId, endTime, *args):
         '',
         ())
 
-@gm_cmd('$banAvatar', (Player("gbId/Id", raw=True), Int('endTime')), RONE, BASE, '封禁角色', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$banAvatar', (Player("gbId or Id", raw=True), Int('endTime')), RONE, BASE, '封禁角色', ALLSIDE, DEVE_GROUPS)
 def banAvatar(su, player, endTime):
-    LOG_IFO('banAvatar', player, endTime)
+    LOG_INFO('banAvatar', player, endTime)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         gamesql.banLogin(gbId, endTime, functools.partial(_afterBanLogin, gbId, endTime))
     else:
         player.gmBanAvatar(endTime)
-    return True, '执行成功'
+    return True, 'command success'
 
 
-@gm_cmd('$disbanAvatar', (Int('gbId'),), RONE, BASE, '解除封禁角色', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$disbanAvatar', (Int('gbId'),), RONE, BASE, '解除封禁角色', ALLSIDE, DEVE_GROUPS)
 def disbanAvatar(su, gbId):
-    LOG_IFO('disbanAvatar', gbId)
-    gamesql.disbanLogin(gbId, lambda *args: LOG_IFO('disbanAvatar success', args))
-    return True, '执行成功'
+    LOG_INFO('disbanAvatar', gbId)
+    gamesql.disbanLogin(gbId, lambda *args: LOG_INFO('disbanAvatar success', args))
+    return True, 'command success'
 
 
-@gm_cmd('$addWhite', (Str('accountName'),), RONE, BASE, '添加白名单', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$addWhite', (Str('accountName'),), RONE, BASE, '添加白名单', ALLSIDE, DEVE_GROUPS)
 def addWhite(su, accountName):
-    LOG_IFO('addWhite', accountName)
+    LOG_INFO('addWhite', accountName)
     gamesql.addAccountWhiteList(accountName.split(','))
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$deleteWhite', (Str('accountName'),), RONE, BASE, '移除白名单', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$deleteWhite', (Str('accountName'),), RONE, BASE, '移除白名单', ALLSIDE, DEVE_GROUPS)
 def deleteWhite(su, accountName):
-    LOG_IFO('deleteWhite', accountName)
+    LOG_INFO('deleteWhite', accountName)
     gamesql.deleteAccountWhiteList(accountName.split(','))
-    return True, '执行成功'
+    return True, 'command success'
 
-@gm_cmd('$sendHotfixToPlayer', (Player("gbId/Id"), Str('version')), RARG(0), BASE, '发送热更到玩家', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$sendHotfixToPlayer', (Player("gbId or Id"), Str('version')), RARG(0), BASE, '发送热更到玩家', ALLSIDE, GOD_GROUPS)
 def sendHotfixToPlayer(su, player, version):
     player.sendHotfix(version)
-    return True, '执行成功'
+    return True, 'command success'
 
+@gm_cmd('$sendEquipSoul', (Str("toGBID"), Int("itemId"), Int("bindType"), Str("rollProps")), RONE, BASE, '向指定玩家发一封邮件', ALLSIDE, DEVE_GROUPS)
+def gm_sendEquipSoul(superUser, toGBID, itemId, bindType, rollProps):
+    _toGBID = int(toGBID)
+    _addVal = dropAward.MailWealthVal()
+    rollProps = json.loads(rollProps)
+    item = itemFactory.ItemFactory.createItem(itemId, 1, bindType, rollProps=rollProps)
+    _addVal.addWealthByObjList([item])
+    opUUID = KBEngine.genUUID64()
+    mailAssistor.sendMailToPlayers([_toGBID], 37000003, extraAttach=_addVal,
+                                    srcType=AAC_AACDD.datas.BONUS_SRC_GM, opUUID=opUUID)
+    return True, 'command success'

@@ -51,7 +51,7 @@ class IRedBag(object):
         deleteList = []
         for redbagId in self.releaseRedBagDict.keys():
             if self.releaseRedBagDict[redbagId] + CC_CCD.datas['returnPacketTime']['value']*3600 < utils.curTS():
-                # LOG_IFO('checkRedBagExpire delete : ', redbagId, self.releaseRedBagDict[redbagId], utils.curTS())
+                # LOG_INFO('checkRedBagExpire delete : ', redbagId, self.releaseRedBagDict[redbagId], utils.curTS())
                 deleteList.append(redbagId)
         for redbagId in deleteList:
             self.releaseRedBagDict.pop(redbagId)
@@ -192,14 +192,14 @@ class IRedBag(object):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(self.moneyItemId, _realMoney)
         m_desc = "req-release-redbag-{}-{}-{}-{}".format(redbagType, channel, money, num)
-        LOG_IFO('deductWealth', _realMoney, m_desc)
+        LOG_INFO('deductWealth', _realMoney, m_desc)
         self.deductWealth(src, deductWealthVal, redbagId, m_desc)
         self.setTempMiscProp(redbagId, _realMoney)
 
         gameengine.getGlobalBase('RedBagStub').doCreateRedBag(self, redbagId, self.gbID, self.characterName, self.guildUUIDBase, redbagType, channel, money, num, desc)
 
     def onReleaseRedBag(self, redbagId, redbagType, channel, money, releaseTime, desc):
-        LOG_IFO("onReleaseRedBag:", redbagId, redbagType, channel, money, releaseTime, desc)
+        LOG_INFO("onReleaseRedBag:", redbagId, redbagType, channel, money, releaseTime, desc)
         #
         self.addDailyData(gameconst.AvatarDailyProps.releaseRbNum, 1)
         # 保存数据
@@ -236,7 +236,7 @@ class IRedBag(object):
         self._reqFetchRedBag(redbagId, autoReply)
 
     def _reqFetchRedBag(self, redbagId, autoReply=True):
-        # LOG_IFO("reqFetchRedBag: %s" % redbagId)
+        # LOG_INFO("reqFetchRedBag: %s" % redbagId)
         if not self.checkPlayerLimit():
             return
         if self.getDailyData(gameconst.AvatarDailyProps.fetchRbNum, 0) >= CC_CCD.datas['receivePacketLimit']['value']:
@@ -253,8 +253,19 @@ class IRedBag(object):
         self.setTempMiscProp(redbagId, autoReply)
         gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, False)
 
+    def _calNeedAutoReplay(self, fetchDict):
+        num = fetchDict['num']
+        if len(fetchDict['fetchPlayerList']) == 1 or len(fetchDict['fetchPlayerList']) == num:
+            return True
+
+        totalMoney = fetchDict['money']
+        rate = CC_CCD.datas['thankMsgRate']['value'] + totalMoney / (CC_CCD.datas['thankMsgRateLimit']['value'] * 100.0)
+        LOG_INFO("_calNeedAutoReplay: {} {} {} {}".format(self.gbID, totalMoney, rate, fetchDict))
+        if random.random() < rate:
+            return True
+
     def onFetchRedBag(self, redbagId, money, releaseTime, fetchDict):
-        LOG_IFO("onFetchRedBag: {} {} {}".format(redbagId, money, fetchDict))
+        LOG_INFO("onFetchRedBag: {} {} {}".format(redbagId, money, fetchDict))
 
         autoReply = self.popTempMiscProp(redbagId)
         # 领红包
@@ -271,13 +282,14 @@ class IRedBag(object):
             # fetchDict['hasFetch'] = 1
 
             if autoReply and self.gbID != fetchDict['playerGbId']:
-                thankMsgs = CC_CCD.datas.get('receivePacketThankMsg', {}).get('value')
-                # 自动回复
-                replyMsg = random.choice(thankMsgs).format(fetchDict['playerName'])
-                if fetchDict['channel'] == gameconst.RedBagChannel.WORLD:
-                    self.afterCheckWorldChatMsg(replyMsg)
-                else:
-                    self.afterCheckGuildChatMsg(True, False, True, replyMsg)
+                if self._calNeedAutoReplay(fetchDict):
+                    thankMsgs = CC_CCD.datas.get('receivePacketThankMsg', {}).get('value')
+                    # 自动回复
+                    replyMsg = random.choice(thankMsgs).format(fetchDict['playerName'])
+                    if fetchDict['channel'] == gameconst.RedBagChannel.WORLD:
+                        self.afterCheckWorldChatMsg(replyMsg)
+                    else:
+                        self.afterCheckGuildChatMsg(True, False, True, replyMsg)
 
         # 展示红包数据
         self.client.onShowRedBagInfo(redbagId, money, fetchDict)
@@ -304,7 +316,7 @@ class IRedBag(object):
     def onDelRedBagCache(self, delList):
         for redbagId in delList:
             if redbagId in self.releaseRedBagDict:
-                LOG_IFO("onDelRedBagCache: {} {}".format(self.gbID, redbagId))
+                LOG_INFO("onDelRedBagCache: {} {}".format(self.gbID, redbagId))
                 self.releaseRedBagDict.pop(redbagId)
 
     # 获取玩家信息
@@ -314,7 +326,7 @@ class IRedBag(object):
     def _reqRedBagPlayerInfo(self):
         if not self.checkPlayerLimit(notity=False):
             return
-        #LOG_IFO("reqRedBagPlayerInfo: ", self.gbID)
+        #LOG_INFO("reqRedBagPlayerInfo: ", self.gbID)
         dailyReleaseNum = self.getDailyData(gameconst.AvatarDailyProps.releaseRbNum, 0)
         dailyFetchNum = self.getDailyData(gameconst.AvatarDailyProps.fetchRbNum, 0)
 
@@ -327,8 +339,8 @@ class IRedBag(object):
         self._reqFetchRedBag(redbagId, autoReply)
 
     def gmShowData(self):
-        LOG_IFO('gmPlayerShowReleaseData: ', self.releaseRedBagDict.keys())
-        LOG_IFO('gmPlayerShowFetchData: ', self.fetchRedBagDict.keys())
+        LOG_INFO('gmPlayerShowReleaseData: ', self.releaseRedBagDict.keys())
+        LOG_INFO('gmPlayerShowFetchData: ', self.fetchRedBagDict.keys())
 
         gameengine.getGlobalBase('RedBagStub').showData()
 

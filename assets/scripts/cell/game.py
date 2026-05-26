@@ -46,20 +46,20 @@ def countCellAppAvatar(timerId):
     for e in KBEngine.entities.values():
         if e.__class__.__name__ == "Avatar":
             count += 1
-    LOG_IFO("CellApp countAvatar", count)
+    LOG_INFO("CellApp countAvatar", count)
     if gameglobal.cellAvatarCount != count:
         gameglobal.cellAvatarCount = count
         LOG_WARN("CellApp countAvatar changed", gameglobal.cellAvatarCount, count)
 
 def broadcastCellAvatarCount(timerId):
     if gameglobal.lastBroadcastCellAvatarCount != gameglobal.cellAvatarCount:
-        LOG_IFO("broadcastCellAvatarCount", KBEngine.getComponentGroupOrder(), gameglobal.cellAvatarCount)
+        LOG_INFO("broadcastCellAvatarCount", KBEngine.getComponentGroupOrder(), gameglobal.cellAvatarCount)
         gameengine.broadcastBaseapp('onSyncCellAvatarCount', (KBEngine.getComponentGroupOrder(), gameglobal.cellAvatarCount))
         gameglobal.lastBroadcastCellAvatarCount = gameglobal.cellAvatarCount
 
 def checkSpecialSpaceOnNewCellappStarted(timerId):
     if not gameglobal.staticCell:
-        LOG_IFO('checkSpecialSpaceOnNewCellappStarted:', gameglobal.staticCell)
+        LOG_INFO('checkSpecialSpaceOnNewCellappStarted:', gameglobal.staticCell)
 
 
 def onGlobalData(key, value):
@@ -164,13 +164,13 @@ def outputExposedMethodStats(timerId):
 
 def _outputExposedMethodStats(stats, fromIdx, num):
     if fromIdx == 0:
-        LOG_IFO('exposed method call stats, onlineNum={} timestamp={}'.format(
+        LOG_INFO('exposed method call stats, onlineNum={} timestamp={}'.format(
             KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_ONLINE_NUM, 0), utils.curTS()))
 
     endIdx = min(len(stats), fromIdx + num)
     for i in range(fromIdx, endIdx):
         info = stats[i]
-        LOG_IFO('call stats: {} {}'.format(info[1], info[0]))
+        LOG_INFO('call stats: {} {}'.format(info[1], info[0]))
 
     if endIdx < len(stats):
         KBEngine.addTimer(0.1, 0, lambda tid: _outputExposedMethodStats(stats, endIdx, num))
@@ -180,7 +180,7 @@ def _outputExposedMethodStats(stats, fromIdx, num):
 
 def onInited():
     gorder = KBEngine.getComponentGroupOrder()
-    LOG_IFO('cellapp onInited!!!', gorder)
+    LOG_INFO('cellapp onInited!!!', gorder)
     gameengine.setGlobalData('%s:%s' % (gameconst.GLOBALDATA_KEY_CELLAPP_INITED, gorder), gorder)
 
     if KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):

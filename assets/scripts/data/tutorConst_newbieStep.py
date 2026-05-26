@@ -94,17 +94,6 @@ datas = _tools.RODict({
     }),
     100107: _tools.RODict({
         "ID": 100107,
-        "startTask": 86060087,
-        "taskTag": 86060087,
-        "lockDun": 4002,
-        "bornPos": (397, 81, 348),
-        "bornRotation": 272.0795,
-        "setValue": None,
-        "rewardTag": 0,
-        "allowleave": 0
-    }),
-    100108: _tools.RODict({
-        "ID": 100108,
         "startTask": 86060097,
         "taskTag": 86060097,
         "lockDun": 4002,
@@ -114,8 +103,8 @@ datas = _tools.RODict({
         "rewardTag": 0,
         "allowleave": 0
     }),
-    100109: _tools.RODict({
-        "ID": 100109,
+    100108: _tools.RODict({
+        "ID": 100108,
         "startTask": 86060099,
         "taskTag": 86060099,
         "lockDun": 4002,
@@ -125,8 +114,8 @@ datas = _tools.RODict({
         "rewardTag": 0,
         "allowleave": 0
     }),
-    100110: _tools.RODict({
-        "ID": 100110,
+    100109: _tools.RODict({
+        "ID": 100109,
         "startTask": 86060104,
         "taskTag": 86060104,
         "lockDun": 4001,
@@ -136,8 +125,8 @@ datas = _tools.RODict({
         "rewardTag": 0,
         "allowleave": 0
     }),
-    100111: _tools.RODict({
-        "ID": 100111,
+    100110: _tools.RODict({
+        "ID": 100110,
         "startTask": 0,
         "taskTag": 0,
         "lockDun": 0,
@@ -149,4 +138,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 100100
-maxKey = 100111
+maxKey = 100110
