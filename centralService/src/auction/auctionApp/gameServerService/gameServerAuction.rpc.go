@@ -423,6 +423,13 @@ func GameServer_OnItemBeSaled_Handler(endPoint prpc.IEndPoint, dec func(interfac
     }
     return endPoint.(IGameServerInterface).OnItemBeSaled(in)
 }
+func GameServer_OnItemSaling_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(OnItemSalingInfo)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnItemSaling(in)
+}
 func GameServer_ReplyDoCommand_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(DoCommandResp)
     if err := dec(in); err != nil {
@@ -527,28 +534,33 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             Handler:     GameServer_OnItemBeSaled_Handler,
         },
         {
-            MethodName:  "ReplyDoCommand",
+            MethodName:  "OnItemSaling",
             MethodIndex: 13,
+            Handler:     GameServer_OnItemSaling_Handler,
+        },
+        {
+            MethodName:  "ReplyDoCommand",
+            MethodIndex: 14,
             Handler:     GameServer_ReplyDoCommand_Handler,
         },
         {
             MethodName:  "ReplyGetAuctionItemNumByCategoryId",
-            MethodIndex: 14,
+            MethodIndex: 15,
             Handler:     GameServer_ReplyGetAuctionItemNumByCategoryId_Handler,
         },
         {
             MethodName:  "ReplyBuyItemByItemId",
-            MethodIndex: 15,
+            MethodIndex: 16,
             Handler:     GameServer_ReplyBuyItemByItemId_Handler,
         },
         {
             MethodName:  "ReplyDoBuyItemByItemId",
-            MethodIndex: 16,
+            MethodIndex: 17,
             Handler:     GameServer_ReplyDoBuyItemByItemId_Handler,
         },
         {
             MethodName:  "ReplyGetAuctionItemsByAuctionIds",
-            MethodIndex: 17,
+            MethodIndex: 18,
             Handler:     GameServer_ReplyGetAuctionItemsByAuctionIds_Handler,
         },
     },
@@ -617,24 +629,28 @@ func (self *GameServerClient) OnItemBeSaled(in *OnItemBeSaledInfo) (*Void, error
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[12], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyDoCommand(in *DoCommandResp) (*Void, error) {
+func (self *GameServerClient) OnItemSaling(in *OnItemSalingInfo) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[13], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyGetAuctionItemNumByCategoryId(in *GetItemNumByCategoryIdResp) (*Void, error) {
+func (self *GameServerClient) ReplyDoCommand(in *DoCommandResp) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[14], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyBuyItemByItemId(in *BuyItemByItemIdResp) (*Void, error) {
+func (self *GameServerClient) ReplyGetAuctionItemNumByCategoryId(in *GetItemNumByCategoryIdResp) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[15], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyDoBuyItemByItemId(in *DoBuyItemByItemIdResp) (*Void, error) {
+func (self *GameServerClient) ReplyBuyItemByItemId(in *BuyItemByItemIdResp) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[16], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyGetAuctionItemsByAuctionIds(in *GetAuctionItemByAuctionIdsResp) (*Void, error) {
+func (self *GameServerClient) ReplyDoBuyItemByItemId(in *DoBuyItemByItemIdResp) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[17], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) ReplyGetAuctionItemsByAuctionIds(in *GetAuctionItemByAuctionIdsResp) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[18], in)
     return &Void{}, err
 }
 type IGameServerInterface interface {
@@ -651,6 +667,7 @@ type IGameServerInterface interface {
     ReplyGetPlayerAuctionItems(*GetPlayerAuctionItemsResp) (*Void, error)
     ReplyLoadPlayerAuctionItem(*LoadPlayerAuctionItemResp) (*Void, error)
     OnItemBeSaled(*OnItemBeSaledInfo) (*Void, error)
+    OnItemSaling(*OnItemSalingInfo) (*Void, error)
     ReplyDoCommand(*DoCommandResp) (*Void, error)
     ReplyGetAuctionItemNumByCategoryId(*GetItemNumByCategoryIdResp) (*Void, error)
     ReplyBuyItemByItemId(*BuyItemByItemIdResp) (*Void, error)

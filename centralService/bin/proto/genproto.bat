@@ -10,8 +10,8 @@ protoc.exe -I../../src/queueServer/queueApp/gameServerService --go_out=../../src
 
 protoc.exe -I../../src/auction/auctionApp/gameServerService --go_out=../../src/auction/auctionApp/gameServerService gameServerAuction.proto
 protoc.exe -I../../src/dropServer/dropApp/gameServerService --go_out=../../src/dropServer/dropApp/gameServerService gameServerDrop.proto
+protoc.exe -I../../src/leaseServer/leaseApp/gameServerService --go_out=../../src/leaseServer/leaseApp/gameServerService gameServerLease.proto
 protoc.exe -I../../src/crossDataServer/crossDataApp/gameServerService --go_out=../../src/crossDataServer/crossDataApp/gameServerService gameServerCrossData.proto
-
 protoc.exe -I../../src/orderService/service --go_out=../../src/orderService/service orderService.proto
 
 protoc.exe -I../../src/AdminServer/adminProto/gsmanager --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/AdminServer/adminProto/gsmanager adminServer.proto
@@ -22,6 +22,7 @@ protoc.exe -I../../src/queueServer/queueApp/clientService --plugin=protoc-gen-cu
 protoc.exe -I../../src/queueServer/queueApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/queueServer/queueApp/gameServerService gameServerQueue.proto
 protoc.exe -I../../src/auction/auctionApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/auction/auctionApp/gameServerService gameServerAuction.proto
 protoc.exe -I../../src/dropServer/dropApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/dropServer/dropApp/gameServerService gameServerDrop.proto
+protoc.exe -I../../src/leaseServer/leaseApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/leaseServer/leaseApp/gameServerService gameServerLease.proto
 protoc.exe -I../../src/crossDataServer/crossDataApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/crossDataServer/crossDataApp/gameServerService gameServerCrossData.proto
 
 protoc.exe -I../../src/orderService/service --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/orderService/service orderService.proto
@@ -34,4 +35,5 @@ protoc.exe -I%srcPath%/dropServer/dropApp/gameServerService --python_out=%srcPat
 protoc.exe -I%srcPath%/centralLogin/centralLoginApp/gameServerService --python_out=%srcPath%/centralLogin/centralLoginApp/gameServerService gameServerLogin.proto
 protoc.exe -I%srcPath%/crossDataServer/crossDataApp/gameServerService --python_out=%srcPath%/crossDataServer/crossDataApp/gameServerService gameServerCrossData.proto
 protoc.exe -I%srcPath%/orderService/service --python_out=%srcPath%/orderService/service orderService.proto
+protoc.exe -I%srcPath%/auction/auctionApp/gameServerService --python_out=%srcPath%/auction/auctionApp/gameServerService gameServerAuction.proto
 @pause

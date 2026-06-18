@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 定义所有服务目录
-SERVICES="login admin router maple dropServer auction crossDataServer queueServer orderService"
+SERVICES="login admin router maple dropServer leaseServer auction crossDataServer queueServer orderService"
 
 # 遍历每个目录
 for dir in $SERVICES; do
@@ -23,4 +23,4 @@ for dir in $SERVICES; do
 done
 
 # 最后检查进程状态
-ps -ef | grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|crossDataServer|queueServer|orderService'
+ps -ef | grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|leaseServer|crossDataServer|queueServer|orderService'

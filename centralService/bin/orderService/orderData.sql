@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `orderData`
     `outTradeNo` varchar(64) not null DEFAULT '',
     `createTime` int unsigned not null DEFAULT 0,
     `gameId` varchar(16) not null DEFAULT '',
-    `userGameId` bigint not null DEFAULT 0,
+    `userGameId` varchar(64) not null DEFAULT '',
     `userId` bigint not null DEFAULT 0,
     `userRoleId` bigint not null DEFAULT 0,
     `roleName` varchar(32) not null DEFAULT '',
@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `orderData`
     `payType` varchar(8) not null DEFAULT '',
     `orderSource` varchar(8) not null DEFAULT '',
     `orderProcessStatus` tinyint not null DEFAULT 0,
+    `addToSafe` tinyint not null DEFAULT 0,
     UNIQUE INDEX (`orderNo`),
     UNIQUE INDEX (`outTradeNo`),
     PRIMARY KEY idKey (id)

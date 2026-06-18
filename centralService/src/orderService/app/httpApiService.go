@@ -64,7 +64,7 @@ type OrderData struct {
 	/**
 	* GID - 账号在游戏中的唯一ID
 	 */
-	UserGameId int64 `json:"UserGameId"`
+	UserGameId string `json:"UserGameId"`
 
 	/**
 	* UID - 账号在我司的唯一ID
@@ -150,6 +150,10 @@ type OrderData struct {
 	* 订单来源：APP PC H5
 	 */
 	OrderSource string `json:"OrderSource"`
+	/**
+	* 是否进保管箱-手动，1-自动
+	 */
+	AddToSafe uint8 `json:"AddToSafe"`
 }
 
 type CommandResponse struct {

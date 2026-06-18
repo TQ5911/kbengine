@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='CrossDataServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x19gameServerCrossData.proto\x12\x0f\x43rossDataServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x9f\x01\n\tGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tguildIcon\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\"<\n\x19GetEnemyGuildInfosRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\xb5\x01\n\x0e\x45nemyGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\"b\n\x18GetEnemyGuildInfosResult\x12\x38\n\x0f\x65nemyGuildInfos\x18\x01 \x03(\x0b\x32\x1f.CrossDataServer.EnemyGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"R\n\x13\x41\x64\x64GuildInfoRequest\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\"\n\x12\x41\x64\x64GuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"6\n\x14GetGuildInfosRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x1fGetGuildInfosByGuildUUIDRequest\x12\x12\n\nguildUUIDs\x18\x01 \x03(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"S\n\x13GetGuildInfosResult\x12.\n\nguildInfos\x18\x01 \x03(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"+\n\x16RemoveGuildInfoRequest\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"v\n\x17\x41\x64\x64GuildRelationRequest\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"w\n\x16\x41\x64\x64GuildRelationResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12-\n\tguildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0f\n\x07\x65rrCode\x18\x04 \x01(\r\"M\n\rGuildRelation\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\"w\n\x1c\x42roadcastGuildRelationSingle\x12\x35\n\rguildRelation\x18\x01 \x01(\x0b\x32\x1e.CrossDataServer.GuildRelation\x12\x0f\n\x07version\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\"[\n\x10GuildRelationAll\x12\x36\n\x0eguildRelations\x18\x01 \x03(\x0b\x32\x1e.CrossDataServer.GuildRelation\x12\x0f\n\x07version\x18\x02 \x01(\r\"h\n\x1aRemoveGuildRelationRequest\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"i\n\x19RemoveGuildRelationResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12-\n\tguildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"W\n\x1c\x42roadcastRemoveGuildRelation\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x0f\n\x07version\x18\x03 \x01(\r\"Z\n\x16\x41pplyGuildUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x15\x41pplyGuildUnionResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x35\n\x11receiverGuildInfo\x18\x02 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"\x83\x01\n\x18OnApplyGuildUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\x12\x33\n\x0fsenderGuildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"w\n\x15OnNotifyGuildRelation\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x14\n\x0crelationType\x18\x02 \x01(\x05\x12\x19\n\x11receiverGuildUUID\x18\x03 \x01(\x04\"d\n\x18OnNotifyGuildCancelUnion\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"Z\n$RemoveReceiverGuildApplyUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"Y\n#NotifyRemoveReceiverGuildApplyUnion\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"[\n GetCrossServerGuildDetailRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"a\n&GetCrossServerGuildDetailToOtherServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x98\x01\n\x0fGuildDetailInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x12\n\nleaderName\x18\x03 \x01(\t\x12\x11\n\tleaderSex\x18\x04 \x01(\r\x12\x14\n\x0cleaderSchool\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x12\n\nleaderGbId\x18\x07 \x01(\x04\"\x8b\x01\n(GetCrossServerGuildDetailFromOtherServer\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"j\n\x1fGetCrossServerGuildDetailResult\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"T\n\x15\x44oOnCrossGuildRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"q\n\x1a\x44oOnCrossGuildToGameServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x05 \x01(\r\"E\n\x14\x44oOnCrossGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0e\n\x06result\x18\x03 \x01(\x0c\"[\n\x18\x44oOnCrossGuildResultBack\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x0e\n\x06result\x18\x04 \x01(\x0c\x32\xe0\n\n\x0f\x43rossDataServer\x12W\n\x12registerGameServer\x12*.CrossDataServer.RegisterGameServerRequest\x1a\x15.CrossDataServer.Void\x12:\n\nactiveTick\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12K\n\x0c\x61\x64\x64GuildInfo\x12$.CrossDataServer.AddGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12M\n\rgetGuildInfos\x12%.CrossDataServer.GetGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12\x63\n\x18getGuildInfosByGuildUUID\x12\x30.CrossDataServer.GetGuildInfosByGuildUUIDRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0fremoveGuildInfo\x12\'.CrossDataServer.RemoveGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12S\n\x10\x61\x64\x64GuildRelation\x12(.CrossDataServer.AddGuildRelationRequest\x1a\x15.CrossDataServer.Void\x12Y\n\x13removeGuildRelation\x12+.CrossDataServer.RemoveGuildRelationRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0f\x61pplyGuildUnion\x12\'.CrossDataServer.ApplyGuildUnionRequest\x1a\x15.CrossDataServer.Void\x12W\n\x12getEnemyGuildInfos\x12*.CrossDataServer.GetEnemyGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12m\n\x1dremoveReceiverGuildApplyUnion\x12\x35.CrossDataServer.RemoveReceiverGuildApplyUnionRequest\x1a\x15.CrossDataServer.Void\x12\x65\n\x19getCrossServerGuildDetail\x12\x31.CrossDataServer.GetCrossServerGuildDetailRequest\x1a\x15.CrossDataServer.Void\x12|\n(getCrossServerGuildDetailFromOtherServer\x12\x39.CrossDataServer.GetCrossServerGuildDetailFromOtherServer\x1a\x15.CrossDataServer.Void\x12V\n\x15\x64oOnCrossGuildRequest\x12&.CrossDataServer.DoOnCrossGuildRequest\x1a\x15.CrossDataServer.Void\x12\\\n\x18\x64oOnCrossGuildResultBack\x12).CrossDataServer.DoOnCrossGuildResultBack\x1a\x15.CrossDataServer.Void2\x97\r\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12L\n\x0eonAddGuildInfo\x12#.CrossDataServer.AddGuildInfoResult\x1a\x15.CrossDataServer.Void\x12N\n\x0fonGetGuildInfos\x12$.CrossDataServer.GetGuildInfosResult\x1a\x15.CrossDataServer.Void\x12\x66\n\x1eonBroadcastGuildRelationSingle\x12-.CrossDataServer.BroadcastGuildRelationSingle\x1a\x15.CrossDataServer.Void\x12N\n\x12onGuildRelationAll\x12!.CrossDataServer.GuildRelationAll\x1a\x15.CrossDataServer.Void\x12\x66\n\x1eonBroadcastRemoveGuildRelation\x12-.CrossDataServer.BroadcastRemoveGuildRelation\x1a\x15.CrossDataServer.Void\x12Z\n\x15onRemoveGuildRelation\x12*.CrossDataServer.RemoveGuildRelationResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onAddGuildRelation\x12\'.CrossDataServer.AddGuildRelationResult\x1a\x15.CrossDataServer.Void\x12U\n\x11onApplyGuildUnion\x12).CrossDataServer.OnApplyGuildUnionRequest\x1a\x15.CrossDataServer.Void\x12V\n\x15onNotifyGuildRelation\x12&.CrossDataServer.OnNotifyGuildRelation\x1a\x15.CrossDataServer.Void\x12\\\n\x18onNotifyGuildCancelUnion\x12).CrossDataServer.OnNotifyGuildCancelUnion\x1a\x15.CrossDataServer.Void\x12X\n\x14onGetEnemyGuildInfos\x12).CrossDataServer.GetEnemyGuildInfosResult\x1a\x15.CrossDataServer.Void\x12X\n\x17onApplyGuildUnionResult\x12&.CrossDataServer.ApplyGuildUnionResult\x1a\x15.CrossDataServer.Void\x12t\n%onNotifyRemoveReceiverGuildApplyUnion\x12\x34.CrossDataServer.NotifyRemoveReceiverGuildApplyUnion\x1a\x15.CrossDataServer.Void\x12\x66\n\x1bonGetCrossServerGuildDetail\x12\x30.CrossDataServer.GetCrossServerGuildDetailResult\x1a\x15.CrossDataServer.Void\x12z\n(onGetCrossServerGuildDetailToOtherServer\x12\x37.CrossDataServer.GetCrossServerGuildDetailToOtherServer\x1a\x15.CrossDataServer.Void\x12\x62\n\x1conDoOnCrossGuildToGameServer\x12+.CrossDataServer.DoOnCrossGuildToGameServer\x1a\x15.CrossDataServer.Void\x12V\n\x16onDoOnCrossGuildResult\x12%.CrossDataServer.DoOnCrossGuildResult\x1a\x15.CrossDataServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x19gameServerCrossData.proto\x12\x0f\x43rossDataServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\xb9\x01\n\tGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tguildIcon\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\x12\x18\n\x10maxGuildUnionNum\x18\t \x01(\r\"<\n\x19GetEnemyGuildInfosRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\xcf\x01\n\x0e\x45nemyGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\x12\x18\n\x10maxGuildUnionNum\x18\n \x01(\r\"b\n\x18GetEnemyGuildInfosResult\x12\x38\n\x0f\x65nemyGuildInfos\x18\x01 \x03(\x0b\x32\x1f.CrossDataServer.EnemyGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"R\n\x13\x41\x64\x64GuildInfoRequest\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\"\n\x12\x41\x64\x64GuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"6\n\x14GetGuildInfosRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x1fGetGuildInfosByGuildUUIDRequest\x12\x12\n\nguildUUIDs\x18\x01 \x03(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"S\n\x13GetGuildInfosResult\x12.\n\nguildInfos\x18\x01 \x03(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"+\n\x16RemoveGuildInfoRequest\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"v\n\x17\x41\x64\x64GuildRelationRequest\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"w\n\x16\x41\x64\x64GuildRelationResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12-\n\tguildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0f\n\x07\x65rrCode\x18\x04 \x01(\r\"M\n\rGuildRelation\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\"w\n\x1c\x42roadcastGuildRelationSingle\x12\x35\n\rguildRelation\x18\x01 \x01(\x0b\x32\x1e.CrossDataServer.GuildRelation\x12\x0f\n\x07version\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\"[\n\x10GuildRelationAll\x12\x36\n\x0eguildRelations\x18\x01 \x03(\x0b\x32\x1e.CrossDataServer.GuildRelation\x12\x0f\n\x07version\x18\x02 \x01(\r\"h\n\x1aRemoveGuildRelationRequest\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"i\n\x19RemoveGuildRelationResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12-\n\tguildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"W\n\x1c\x42roadcastRemoveGuildRelation\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x0f\n\x07version\x18\x03 \x01(\r\"Z\n\x16\x41pplyGuildUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x15\x41pplyGuildUnionResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x35\n\x11receiverGuildInfo\x18\x02 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"\x83\x01\n\x18OnApplyGuildUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\x12\x33\n\x0fsenderGuildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"w\n\x15OnNotifyGuildRelation\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x14\n\x0crelationType\x18\x02 \x01(\x05\x12\x19\n\x11receiverGuildUUID\x18\x03 \x01(\x04\"d\n\x18OnNotifyGuildCancelUnion\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"Z\n$RemoveReceiverGuildApplyUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"Y\n#NotifyRemoveReceiverGuildApplyUnion\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"[\n GetCrossServerGuildDetailRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"a\n&GetCrossServerGuildDetailToOtherServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x98\x01\n\x0fGuildDetailInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x12\n\nleaderName\x18\x03 \x01(\t\x12\x11\n\tleaderSex\x18\x04 \x01(\r\x12\x14\n\x0cleaderSchool\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x12\n\nleaderGbId\x18\x07 \x01(\x04\"\x8b\x01\n(GetCrossServerGuildDetailFromOtherServer\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"j\n\x1fGetCrossServerGuildDetailResult\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"T\n\x15\x44oOnCrossGuildRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"q\n\x1a\x44oOnCrossGuildToGameServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x05 \x01(\r\"E\n\x14\x44oOnCrossGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0e\n\x06result\x18\x03 \x01(\x0c\"[\n\x18\x44oOnCrossGuildResultBack\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x0e\n\x06result\x18\x04 \x01(\x0c\x32\xe0\n\n\x0f\x43rossDataServer\x12W\n\x12registerGameServer\x12*.CrossDataServer.RegisterGameServerRequest\x1a\x15.CrossDataServer.Void\x12:\n\nactiveTick\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12K\n\x0c\x61\x64\x64GuildInfo\x12$.CrossDataServer.AddGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12M\n\rgetGuildInfos\x12%.CrossDataServer.GetGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12\x63\n\x18getGuildInfosByGuildUUID\x12\x30.CrossDataServer.GetGuildInfosByGuildUUIDRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0fremoveGuildInfo\x12\'.CrossDataServer.RemoveGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12S\n\x10\x61\x64\x64GuildRelation\x12(.CrossDataServer.AddGuildRelationRequest\x1a\x15.CrossDataServer.Void\x12Y\n\x13removeGuildRelation\x12+.CrossDataServer.RemoveGuildRelationRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0f\x61pplyGuildUnion\x12\'.CrossDataServer.ApplyGuildUnionRequest\x1a\x15.CrossDataServer.Void\x12W\n\x12getEnemyGuildInfos\x12*.CrossDataServer.GetEnemyGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12m\n\x1dremoveReceiverGuildApplyUnion\x12\x35.CrossDataServer.RemoveReceiverGuildApplyUnionRequest\x1a\x15.CrossDataServer.Void\x12\x65\n\x19getCrossServerGuildDetail\x12\x31.CrossDataServer.GetCrossServerGuildDetailRequest\x1a\x15.CrossDataServer.Void\x12|\n(getCrossServerGuildDetailFromOtherServer\x12\x39.CrossDataServer.GetCrossServerGuildDetailFromOtherServer\x1a\x15.CrossDataServer.Void\x12V\n\x15\x64oOnCrossGuildRequest\x12&.CrossDataServer.DoOnCrossGuildRequest\x1a\x15.CrossDataServer.Void\x12\\\n\x18\x64oOnCrossGuildResultBack\x12).CrossDataServer.DoOnCrossGuildResultBack\x1a\x15.CrossDataServer.Void2\x97\r\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12L\n\x0eonAddGuildInfo\x12#.CrossDataServer.AddGuildInfoResult\x1a\x15.CrossDataServer.Void\x12N\n\x0fonGetGuildInfos\x12$.CrossDataServer.GetGuildInfosResult\x1a\x15.CrossDataServer.Void\x12\x66\n\x1eonBroadcastGuildRelationSingle\x12-.CrossDataServer.BroadcastGuildRelationSingle\x1a\x15.CrossDataServer.Void\x12N\n\x12onGuildRelationAll\x12!.CrossDataServer.GuildRelationAll\x1a\x15.CrossDataServer.Void\x12\x66\n\x1eonBroadcastRemoveGuildRelation\x12-.CrossDataServer.BroadcastRemoveGuildRelation\x1a\x15.CrossDataServer.Void\x12Z\n\x15onRemoveGuildRelation\x12*.CrossDataServer.RemoveGuildRelationResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onAddGuildRelation\x12\'.CrossDataServer.AddGuildRelationResult\x1a\x15.CrossDataServer.Void\x12U\n\x11onApplyGuildUnion\x12).CrossDataServer.OnApplyGuildUnionRequest\x1a\x15.CrossDataServer.Void\x12V\n\x15onNotifyGuildRelation\x12&.CrossDataServer.OnNotifyGuildRelation\x1a\x15.CrossDataServer.Void\x12\\\n\x18onNotifyGuildCancelUnion\x12).CrossDataServer.OnNotifyGuildCancelUnion\x1a\x15.CrossDataServer.Void\x12X\n\x14onGetEnemyGuildInfos\x12).CrossDataServer.GetEnemyGuildInfosResult\x1a\x15.CrossDataServer.Void\x12X\n\x17onApplyGuildUnionResult\x12&.CrossDataServer.ApplyGuildUnionResult\x1a\x15.CrossDataServer.Void\x12t\n%onNotifyRemoveReceiverGuildApplyUnion\x12\x34.CrossDataServer.NotifyRemoveReceiverGuildApplyUnion\x1a\x15.CrossDataServer.Void\x12\x66\n\x1bonGetCrossServerGuildDetail\x12\x30.CrossDataServer.GetCrossServerGuildDetailResult\x1a\x15.CrossDataServer.Void\x12z\n(onGetCrossServerGuildDetailToOtherServer\x12\x37.CrossDataServer.GetCrossServerGuildDetailToOtherServer\x1a\x15.CrossDataServer.Void\x12\x62\n\x1conDoOnCrossGuildToGameServer\x12+.CrossDataServer.DoOnCrossGuildToGameServer\x1a\x15.CrossDataServer.Void\x12V\n\x16onDoOnCrossGuildResult\x12%.CrossDataServer.DoOnCrossGuildResult\x1a\x15.CrossDataServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -145,6 +145,13 @@ _GUILDINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='maxGuildUnionNum', full_name='CrossDataServer.GuildInfo.maxGuildUnionNum', index=8,
+      number=9, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -158,7 +165,7 @@ _GUILDINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=102,
-  serialized_end=261,
+  serialized_end=287,
 )
 
 
@@ -195,8 +202,8 @@ _GETENEMYGUILDINFOSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=263,
-  serialized_end=323,
+  serialized_start=289,
+  serialized_end=349,
 )
 
 
@@ -270,6 +277,13 @@ _ENEMYGUILDINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='maxGuildUnionNum', full_name='CrossDataServer.EnemyGuildInfo.maxGuildUnionNum', index=9,
+      number=10, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -282,8 +296,8 @@ _ENEMYGUILDINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=326,
-  serialized_end=507,
+  serialized_start=352,
+  serialized_end=559,
 )
 
 
@@ -320,8 +334,8 @@ _GETENEMYGUILDINFOSRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=509,
-  serialized_end=607,
+  serialized_start=561,
+  serialized_end=659,
 )
 
 
@@ -358,8 +372,8 @@ _ADDGUILDINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=609,
-  serialized_end=691,
+  serialized_start=661,
+  serialized_end=743,
 )
 
 
@@ -389,8 +403,8 @@ _ADDGUILDINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=693,
-  serialized_end=727,
+  serialized_start=745,
+  serialized_end=779,
 )
 
 
@@ -427,8 +441,8 @@ _GETGUILDINFOSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=729,
-  serialized_end=783,
+  serialized_start=781,
+  serialized_end=835,
 )
 
 
@@ -465,8 +479,8 @@ _GETGUILDINFOSBYGUILDUUIDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=785,
-  serialized_end=852,
+  serialized_start=837,
+  serialized_end=904,
 )
 
 
@@ -503,8 +517,8 @@ _GETGUILDINFOSRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=854,
-  serialized_end=937,
+  serialized_start=906,
+  serialized_end=989,
 )
 
 
@@ -534,8 +548,8 @@ _REMOVEGUILDINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=939,
-  serialized_end=982,
+  serialized_start=991,
+  serialized_end=1034,
 )
 
 
@@ -593,8 +607,8 @@ _ADDGUILDRELATIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=984,
-  serialized_end=1102,
+  serialized_start=1036,
+  serialized_end=1154,
 )
 
 
@@ -645,8 +659,8 @@ _ADDGUILDRELATIONRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1104,
-  serialized_end=1223,
+  serialized_start=1156,
+  serialized_end=1275,
 )
 
 
@@ -690,8 +704,8 @@ _GUILDRELATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1225,
-  serialized_end=1302,
+  serialized_start=1277,
+  serialized_end=1354,
 )
 
 
@@ -735,8 +749,8 @@ _BROADCASTGUILDRELATIONSINGLE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1304,
-  serialized_end=1423,
+  serialized_start=1356,
+  serialized_end=1475,
 )
 
 
@@ -773,8 +787,8 @@ _GUILDRELATIONALL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1425,
-  serialized_end=1516,
+  serialized_start=1477,
+  serialized_end=1568,
 )
 
 
@@ -825,8 +839,8 @@ _REMOVEGUILDRELATIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1518,
-  serialized_end=1622,
+  serialized_start=1570,
+  serialized_end=1674,
 )
 
 
@@ -870,8 +884,8 @@ _REMOVEGUILDRELATIONRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1624,
-  serialized_end=1729,
+  serialized_start=1676,
+  serialized_end=1781,
 )
 
 
@@ -915,8 +929,8 @@ _BROADCASTREMOVEGUILDRELATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1731,
-  serialized_end=1818,
+  serialized_start=1783,
+  serialized_end=1870,
 )
 
 
@@ -960,8 +974,8 @@ _APPLYGUILDUNIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1820,
-  serialized_end=1910,
+  serialized_start=1872,
+  serialized_end=1962,
 )
 
 
@@ -998,8 +1012,8 @@ _APPLYGUILDUNIONRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1912,
-  serialized_end=2004,
+  serialized_start=1964,
+  serialized_end=2056,
 )
 
 
@@ -1043,8 +1057,8 @@ _ONAPPLYGUILDUNIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2007,
-  serialized_end=2138,
+  serialized_start=2059,
+  serialized_end=2190,
 )
 
 
@@ -1088,8 +1102,8 @@ _ONNOTIFYGUILDRELATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2140,
-  serialized_end=2259,
+  serialized_start=2192,
+  serialized_end=2311,
 )
 
 
@@ -1126,8 +1140,8 @@ _ONNOTIFYGUILDCANCELUNION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2261,
-  serialized_end=2361,
+  serialized_start=2313,
+  serialized_end=2413,
 )
 
 
@@ -1164,8 +1178,8 @@ _REMOVERECEIVERGUILDAPPLYUNIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2363,
-  serialized_end=2453,
+  serialized_start=2415,
+  serialized_end=2505,
 )
 
 
@@ -1202,8 +1216,8 @@ _NOTIFYREMOVERECEIVERGUILDAPPLYUNION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2455,
-  serialized_end=2544,
+  serialized_start=2507,
+  serialized_end=2596,
 )
 
 
@@ -1247,8 +1261,8 @@ _GETCROSSSERVERGUILDDETAILREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2546,
-  serialized_end=2637,
+  serialized_start=2598,
+  serialized_end=2689,
 )
 
 
@@ -1292,8 +1306,8 @@ _GETCROSSSERVERGUILDDETAILTOOTHERSERVER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2639,
-  serialized_end=2736,
+  serialized_start=2691,
+  serialized_end=2788,
 )
 
 
@@ -1365,8 +1379,8 @@ _GUILDDETAILINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2739,
-  serialized_end=2891,
+  serialized_start=2791,
+  serialized_end=2943,
 )
 
 
@@ -1410,8 +1424,8 @@ _GETCROSSSERVERGUILDDETAILFROMOTHERSERVER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2894,
-  serialized_end=3033,
+  serialized_start=2946,
+  serialized_end=3085,
 )
 
 
@@ -1448,8 +1462,8 @@ _GETCROSSSERVERGUILDDETAILRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3035,
-  serialized_end=3141,
+  serialized_start=3087,
+  serialized_end=3193,
 )
 
 
@@ -1500,8 +1514,8 @@ _DOONCROSSGUILDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3143,
-  serialized_end=3227,
+  serialized_start=3195,
+  serialized_end=3279,
 )
 
 
@@ -1559,8 +1573,8 @@ _DOONCROSSGUILDTOGAMESERVER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3229,
-  serialized_end=3342,
+  serialized_start=3281,
+  serialized_end=3394,
 )
 
 
@@ -1604,8 +1618,8 @@ _DOONCROSSGUILDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3344,
-  serialized_end=3413,
+  serialized_start=3396,
+  serialized_end=3465,
 )
 
 
@@ -1656,8 +1670,8 @@ _DOONCROSSGUILDRESULTBACK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3415,
-  serialized_end=3506,
+  serialized_start=3467,
+  serialized_end=3558,
 )
 
 _GETENEMYGUILDINFOSRESULT.fields_by_name['enemyGuildInfos'].message_type = _ENEMYGUILDINFO
@@ -1972,8 +1986,8 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=3509,
-  serialized_end=4885,
+  serialized_start=3561,
+  serialized_end=4937,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerGameServer',
@@ -2122,8 +2136,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=4888,
-  serialized_end=6575,
+  serialized_start=4940,
+  serialized_end=6627,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',

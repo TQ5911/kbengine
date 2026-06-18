@@ -86,7 +86,7 @@ var once sync.Once
 var report *QiWeiReport
 
 // 全局有且仅执行一次初始化
-func InitQiWeiReport(addr string, serverID int, serverName string, interval int, perTimeMaxLimit int, cacheMaxLimit int) bool {
+func InitQiWeiReport(addr string, ipAddr string, serverID int, serverName string, interval int, perTimeMaxLimit int, cacheMaxLimit int) bool {
 	if len(addr) == 0 || serverID < 0 || len(serverName) == 0 || interval <= 0 || perTimeMaxLimit <= 0 || cacheMaxLimit <= 0 {
 		return false
 	}
@@ -107,7 +107,7 @@ func InitQiWeiReport(addr string, serverID int, serverName string, interval int,
 					}
 				}()
 				var reportDatas string
-				reportDatas = fmt.Sprintf("ms report, server name: %v, server id: %v, time: %v", report.reportServerName, report.reportServerID, time.Now())
+				reportDatas = fmt.Sprintf("ms report, ip addr list: %v, server name: %v, server id: %v, time: %v", ipAddr, report.reportServerName, report.reportServerID, time.Now())
 				for _, data := range datas {
 					reportDatas += "\n"
 					reportDatas += data
@@ -120,7 +120,7 @@ func InitQiWeiReport(addr string, serverID int, serverName string, interval int,
 				}
 				respData, err := httputil.PostJson(addr, params)
 				if err != nil {
-					log.Printf("qiwei report error, report data: %v, resp data: %v, err: %v\n", reportDatas, respData, err.Error())
+					log.Printf("qiwei report error, ip addr list: %v, report data: %v, resp data: %v, err: %v\n", ipAddr, reportDatas, respData, err.Error())
 				}
 			},
 		}

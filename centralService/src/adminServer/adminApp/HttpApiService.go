@@ -40,9 +40,9 @@ const (
 	HTTP_CMD_ERR_INVALID_UNBAN                = -210
 	HTTP_CMD_ERR_UNSUPPORTED_CMD              = -211
 	HTTP_CMD_REQUEST_ERR                      = -212
-	HTTP_CMD_SIGN_ERR                         = -213
-	HTTP_CMD_ARGS_ERR                         = -213
-	HTTP_CMD_ARGS_LEN_LIMIT                   = -214
+	HTTP_CMD_SIGN_ERR                         int32 = -213
+	HTTP_CMD_ARGS_ERR                         int32 = -218
+	HTTP_CMD_ARGS_LEN_LIMIT                   int32 = -214
 	HTTP_CMD_ERR_INNER                        = -215
 	HTTP_CMD_ERR_SERVER                       = -216
 	HTTP_CMD_ERR_SERVER_TIMEOUT               = -217
@@ -75,13 +75,26 @@ func StrToUInt32(str string) uint32 {
 }
 
 type HttpCommandService struct {
-	app               *AdminApp
-	rateLimiter       *rate.Limiter
-	idempotencyMap    map[string]*CommandResponse      // Stores processed requests for idempotency
-	idempotencyMutex  sync.RWMutex                     // Protects the idempotency map
-	pendingRequests   map[string][]chan *CommandResponse  // Tracks pending requests
-	pendingMutex      sync.Mutex                      // Protects the pending requests map
+	app              *AdminApp
+	rateLimiter      *rate.Limiter
+	idempotencyMap   map[string]*idempotencyEntry    // Stores processed requests for idempotency
+	idempotencyMutex sync.RWMutex                    // Protects the idempotency map
+	pendingRequests  map[string][]chan *CommandResponse // Tracks pending requests
+	pendingMutex     sync.Mutex                      // Protects the pending requests map
 }
+
+// 幂等缓存条目：保存成功响应与过期时间
+type idempotencyEntry struct {
+	resp     *CommandResponse
+	expireAt time.Time
+}
+
+const (
+	// 幂等缓存的默认 TTL：5 分钟，覆盖客户端常见重试窗口
+	idempotencyTTL = 5 * time.Minute
+	// janitor 周期清理间隔
+	idempotencyCleanupInterval = 1 * time.Minute
+)
 
 func (self *HttpCommandService) _buildErrResponse(errCode int32, errMsg string) []byte {
 	respData := CommandResponse{Result: errCode, Msg: errMsg, Body: nil}
@@ -104,6 +117,7 @@ func (self *HttpCommandService) buildIDIPResponse(gameserverResponse *gsmanager.
 	req.SendTime = uint32(tNow.Year())*1000 + uint32(tNow.Month())*100 + uint32(tNow.Day())
 
 	var cmdResult map[string]interface{}
+
 	if gameserverResponse.Result == HTTP_CMD_OK {
 		jsonDecoder := json.NewDecoder(bytes.NewReader(gameserverResponse.Body))
 		jsonDecoder.UseNumber()
@@ -211,64 +225,89 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 		sn = strconv.FormatUint(reqData.Seqid, 10)
 	}
 
-	// Initialize idempotency map if nil
-	if self.idempotencyMap == nil {
-		self.idempotencyMap = make(map[string]*CommandResponse)
-	}
-
-	// Idempotency check: return stored response if already processed (fast path)
+	// 幂等快路径：已处理过且未过期，直接返回缓存响应（避免重复打到下游 game server）
 	self.idempotencyMutex.RLock()
-	if storedResp, exists := self.idempotencyMap[sn]; exists {
-		self.idempotencyMutex.RUnlock()
-		respBytes, _ := json.Marshal(storedResp)
-		self.sendIDIPResponse(w, 200, respBytes)
-		return
-	}
+	entry, exists := self.idempotencyMap[sn]
 	self.idempotencyMutex.RUnlock()
 
-	// Check and handle concurrent requests
-	// Initialize response channel
-	var finalResp *CommandResponse
+	if exists {
+		if time.Now().Before(entry.expireAt) {
+			respBytes, _ := json.Marshal(entry.resp)
+			self.sendIDIPResponse(w, 200, respBytes)
+			return
+		}
+		// 已过期：懒删除（仅当条目未被并发覆盖时删除）
+		self.idempotencyMutex.Lock()
+		if cur, ok := self.idempotencyMap[sn]; ok && cur == entry {
+			delete(self.idempotencyMap, sn)
+		}
+		self.idempotencyMutex.Unlock()
+	}
 
-	// Check pending requests
+	// 主请求的最终响应（非 nil 表示成功，可进缓存）
+	var finalResp *CommandResponse
+	// 失败时构造的错误响应，仅用于广播给同 sn 的等待方，不进缓存
+	var lastErrResp *CommandResponse
+
+	// 同 sn 并发合并：等待方通过 channel 拿主请求的结果
 	respChan := make(chan *CommandResponse, 1)
 
 	self.pendingMutex.Lock()
 	if pendingChans, exists := self.pendingRequests[sn]; exists {
-		// Request already in progress
+		// 已有主请求在跑，把自己挂到等待列表
 		self.pendingRequests[sn] = append(pendingChans, respChan)
 		self.pendingMutex.Unlock()
 
-		// Wait for response from ongoing request
+		// 阻塞等待主请求处理完（无论成功失败都会被通知）
 		appLog.Info("Waiting for concurrent request to complete\n")
-		finalResp := <-respChan
-		respBytes, _ := json.Marshal(finalResp)
+		resp := <-respChan
+		respBytes, _ := json.Marshal(resp)
 		self.sendIDIPResponse(w, 200, respBytes)
 		return
-	} else {
-		// Start processing the first request
-		self.pendingRequests[sn] = []chan *CommandResponse{respChan}
-		self.pendingMutex.Unlock()
 	}
+	// 自己就是主请求，注册 channel 等待列表
+	self.pendingRequests[sn] = []chan *CommandResponse{respChan}
+	self.pendingMutex.Unlock()
 
-	// Ensure we clean up and notify pending requests
+	// 兜底清理 + 广播：无论主请求成功或失败都执行，避免等待方 goroutine 泄漏
 	defer func() {
-		if finalResp != nil {
-			// Store response in idempotency map
-			self.idempotencyMutex.Lock()
-			self.idempotencyMap[sn] = finalResp
-			self.idempotencyMutex.Unlock()
+		// 1. 取走并清空 pendingRequests[sn]（无论 finalResp 是否为 nil）
+		self.pendingMutex.Lock()
+		pendingChans, hasWaiters := self.pendingRequests[sn]
+		if hasWaiters {
+			delete(self.pendingRequests, sn)
+		}
+		self.pendingMutex.Unlock()
 
-			// Notify all pending requests
-			self.pendingMutex.Lock()
-			if pendingChans, exists := self.pendingRequests[sn]; exists {
-				for _, ch := range pendingChans {
-					ch <- finalResp
-					close(ch)
-				}
-				delete(self.pendingRequests, sn)
+		if !hasWaiters {
+			return
+		}
+
+		// 2. 仅成功的 finalResp 才进幂等缓存（错误的响应不应被后续重试命中）
+		if finalResp != nil {
+			self.idempotencyMutex.Lock()
+			self.idempotencyMap[sn] = &idempotencyEntry{
+				resp:     finalResp,
+				expireAt: time.Now().Add(idempotencyTTL),
 			}
-			self.pendingMutex.Unlock()
+			self.idempotencyMutex.Unlock()
+		}
+
+		// 3. 决定广播给等待方的响应：成功用 finalResp，失败用 lastErrResp
+		var broadcast *CommandResponse
+		if finalResp != nil {
+			broadcast = finalResp
+		} else {
+			broadcast = lastErrResp
+		}
+		if broadcast == nil {
+			return
+		}
+
+		// 4. 通知所有等待方（包括主请求自己的 channel，发送是非阻塞的因 channel 有缓冲）
+		for _, ch := range pendingChans {
+			ch <- broadcast
+			close(ch)
 		}
 	}()
 
@@ -278,6 +317,10 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 			partition = self.app.GetRandomServerId()
 			if partition == 0 {
 				appLog.Error("handleHttpCmdRequest: partition err:\n", partition, reqData.Partition)
+				// 错误：随机选取 server 失败，构造 lastErrResp 给等待方
+				errMsg := "cannot get random server"
+				responseBytes = self._buildErrResponse(HTTP_CMD_ERR_INNER, errMsg)
+				lastErrResp = &CommandResponse{Result: HTTP_CMD_ERR_INNER, Msg: errMsg, Body: map[string]interface{}{}}
 				w.WriteHeader(400)
 				return
 			}
@@ -291,6 +334,8 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 			appLog.Errorf("invalid serverId: %v %d\n", reqData, serverId)
 			errMsg := "partition not found"
 			responseBytes = self._buildErrResponse(HTTP_CMD_ERR_PARTITION_NOT_FOUND, errMsg)
+			// 同步构造 lastErrResp，避免 defer 中再解析一次
+			lastErrResp = &CommandResponse{Result: HTTP_CMD_ERR_PARTITION_NOT_FOUND, Msg: errMsg, Body: map[string]interface{}{}}
 			self.sendIDIPResponse(w, 200, responseBytes)
 			return
 		}
@@ -302,6 +347,10 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 		if err != nil {
 			gameserver.RemovePendingHttpCommands(uuidStr)
 			appLog.Errorf("invalid request args: %v %s\n", reqData, err.Error())
+			// 错误：rpc 调用失败，构造 lastErrResp
+			errMsg := "do command failed"
+			responseBytes = self._buildErrResponse(HTTP_CMD_ERR_INNER, errMsg)
+			lastErrResp = &CommandResponse{Result: HTTP_CMD_ERR_INNER, Msg: errMsg, Body: map[string]interface{}{}}
 			w.WriteHeader(500)
 			return
 		}
@@ -314,7 +363,7 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 			}
 			responseBytes = self.buildIDIPResponse(response, &reqData)
 
-			// Parse responseBytes to CommandResponse
+			// 把响应字节解析成 CommandResponse 作为 finalResp（用于缓存 + 广播）
 			var resp CommandResponse
 			if json.Unmarshal(responseBytes, &resp) == nil {
 				finalResp = &resp
@@ -324,13 +373,9 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 			gameserver.RemovePendingHttpCommands(uuidStr)
 			errMsg := "game server timeout"
 			responseBytes = self._buildErrResponse(HTTP_CMD_ERR_GAME_SERVER_TIMEOUT, errMsg)
+			// 超时也算失败：构造 lastErrResp 给等待方，不进缓存
+			lastErrResp = &CommandResponse{Result: HTTP_CMD_ERR_GAME_SERVER_TIMEOUT, Msg: errMsg, Body: map[string]interface{}{}}
 			statusCode = 400
-
-			// Parse responseBytes to CommandResponse
-			var resp CommandResponse
-			if json.Unmarshal(responseBytes, &resp) == nil {
-				finalResp = &resp
-			}
 		}
 
 	} else {
@@ -480,7 +525,10 @@ func (self *HttpCommandService) handlePlayerHttpCmdRequest(w http.ResponseWriter
 		var resp CommandResponse
 		if err := json.Unmarshal(responseBytes, &resp); err == nil {
 			self.idempotencyMutex.Lock()
-			self.idempotencyMap[sn] = &resp
+			self.idempotencyMap[sn] = &idempotencyEntry{
+				resp:     &resp,
+				expireAt: time.Now().Add(idempotencyTTL),
+			}
 			self.idempotencyMutex.Unlock()
 		}
 	}
@@ -941,6 +989,23 @@ OUT_LOOP:
 	self.sendIDIPResponse(w, statusCode, responseBytes)
 }
 
+// 周期清理过期的幂等缓存条目，防止长期运行内存无界增长
+func (self *HttpCommandService) idempotencyJanitor(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for range ticker.C {
+		now := time.Now()
+		// 扫描并删除已过期的条目
+		self.idempotencyMutex.Lock()
+		for k, v := range self.idempotencyMap {
+			if now.After(v.expireAt) {
+				delete(self.idempotencyMap, k)
+			}
+		}
+		self.idempotencyMutex.Unlock()
+	}
+}
+
 // CORS middleware to add appropriate headers to HTTP responses
 func (self *HttpCommandService) corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -963,6 +1028,9 @@ func (self *HttpCommandService) corsMiddleware(next http.HandlerFunc) http.Handl
 }
 
 func (self *HttpCommandService) startHttpApiServer(listenAddr string) {
+	// 启动幂等缓存周期清理协程，扫描并删除已过期的条目，避免长期运行内存膨胀
+	go self.idempotencyJanitor(idempotencyCleanupInterval)
+
 	// Wrap all handlers with CORS middleware
 	http.HandleFunc("/docmd", self.corsMiddleware(self.handleHttpCmdRequest))
 	http.HandleFunc("/doPlayerCmd", self.corsMiddleware(self.handlePlayerHttpCmdRequest))

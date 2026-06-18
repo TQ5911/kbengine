@@ -1,0 +1,25 @@
+{
+    "serverName": "leaseServer",
+    "serverId": 1,
+    "GameServerServiceAddr": "0.0.0.0:2015",
+    "AddressForDebug": "localhost:9393",
+    "LogPath": "lease.log",
+    "LogLevel": 0,
+    "LogRotateSize": 500,
+    "Mysql": {
+        "addr": "127.0.0.1",
+        "user": "fengyan",
+        "passwd": "123456",
+        "db": "lease"
+    },
+    "RedisServer": {
+        "addr": "127.0.0.1:6379",
+        "passwd": "",
+        "db": ""
+    },
+    "RateLimit": {
+        "r": 50,
+        "b": 80
+    },
+    "reportAddr": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}

@@ -5,7 +5,9 @@ import (
 	"centralService/src/common"
 	"centralService/src/common/report"
 	"log"
+	"net"
 	"os"
+	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -100,12 +102,47 @@ func initReport(cfg *viper.Viper) bool {
 	if cacheMaxLimit == 0 {
 		cacheMaxLimit = 100
 	}
-	ret := report.InitQiWeiReport(reportAddr, serverId, serverName, interval, perTimeMaxLimit, cacheMaxLimit)
+	ips, err := getLocalIPv4Addresses()
+	if err != nil {
+		log.Println("获取失败:", err)
+		return false
+	}
+
+	ret := report.InitQiWeiReport(reportAddr, strings.Join(ips, " "), serverId, serverName, interval, perTimeMaxLimit, cacheMaxLimit)
 	if !ret {
 		log.Println("base server init fail:", "report init failed", reportAddr)
 		return false
 	}
 	return true
+}
+
+func getLocalIPv4Addresses() ([]string, error) {
+	var ips []string
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return nil, err
+	}
+	for _, iface := range ifaces {
+		// 跳过关闭、回环、虚拟网卡（可根据需要调整）
+		if iface.Flags&net.FlagUp == 0 || iface.Flags&net.FlagLoopback != 0 {
+			continue
+		}
+		// 跳过常见虚拟网卡名称
+		name := strings.ToLower(iface.Name)
+		if strings.Contains(name, "docker") || strings.Contains(name, "veth") || strings.Contains(name, "vmnet") {
+			continue
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			continue
+		}
+		for _, addr := range addrs {
+			if ipNet, ok := addr.(*net.IPNet); ok && ipNet.IP.To4() != nil {
+				ips = append(ips, ipNet.IP.String())
+			}
+		}
+	}
+	return ips, nil
 }
 
 func initServer(serverInstance func() common.IApp) bool {

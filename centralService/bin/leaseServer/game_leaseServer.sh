@@ -1,0 +1,58 @@
+#!/bin/bash
+export GOTRACEBACK=crash
+binName='leaseServer'
+binPath=`pwd`'/'$binName
+
+if [ -n "$2" ]; then
+    INST_ID=$2
+else
+    INST_ID=0
+fi
+
+pidFileName="leaseServer_${INST_ID}.pid"
+
+function stop_gameapp(){
+    if [ -f ${pidFileName} ]; then
+        kill `cat ${pidFileName}`
+    fi
+}
+
+function start_gameapp(){
+    if [ -f $pidFileName ]; then
+        pid=`cat ${pidFileName}`
+        pl=`ps -A | grep $pid`
+
+        if [ "$pl" == "" ]; then
+            pc=0
+        else
+            pc=`echo $pl | wc -l`
+        fi
+
+        pn=`echo $pl | awk -F ' ' '{print $4}'`
+
+        if (("$pc" == "0")); then
+            echo "$binName - delete untracked pid file $pidFileName $pid"
+            rm -f $pidFileName
+        elif [ "$pn" == "$binName" ]; then
+            echo "$binName - start server failed, process running, pid=$pid"
+            exit 255
+        else
+            echo "$binName - delete outdate pid file $pidFileName $pid $pn"
+            rm -f $pidFileName
+        fi
+    fi
+
+    nohup $binPath --instid=$INST_ID 2>&1 > nohup.out &
+}
+
+case $1 in
+    start) start_gameapp
+    ;;
+    stop) stop_gameapp
+    ;;
+    restart)
+    stop_gameapp
+    start_gameapp
+    ;;
+    *) echo "(Arguments shuld be start|stop|restart,OK?!" ;;
+esac

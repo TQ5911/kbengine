@@ -39,6 +39,6 @@ func (gs *OrderService) ActiveTick(_ *service.Void) (*service.Void, error) {
 }
 
 func (gs *OrderService) FinishOrder(in *service.OrderResponse) (*service.Void, error) {
-	gs.app.NotifyOrder(in.OutTradeNo)
+	gs.app.NotifyOrder(in.OutTradeNo, in.Result)
 	return nil, nil
 }

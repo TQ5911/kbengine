@@ -30,6 +30,7 @@ type DropApp struct {
 	gameServers   map[string]*GameServerService
 	channelToHost map[uuid.UUID]*GameServerService
 	db            *sql.DB
+	dropItemLock  DropItemLocker
 }
 
 func NewDropApp() *DropApp {
@@ -49,12 +50,13 @@ func NewDropApp() *DropApp {
 		return nil
 	}
 
-	app := DropApp{common.App{AppName: "DropApp"},
-		sync.RWMutex{},
-		make(map[string]*GameServerService),
-		make(map[uuid.UUID]*GameServerService),
-		db,
+	app := DropApp{App: common.App{AppName: "DropApp"},
+		serversLock:   sync.RWMutex{},
+		gameServers:   make(map[string]*GameServerService),
+		channelToHost: make(map[uuid.UUID]*GameServerService),
+		db:            db,
 	}
+
 	return &app
 }
 

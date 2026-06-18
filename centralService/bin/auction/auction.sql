@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `auction_auctionItemData`
     `extraInfo` varchar(1024) not null DEFAULT '',
     `tCreate` int unsigned not null DEFAULT 0,
 	`fromPlayerGBID` bigint unsigned not null DEFAULT 0,
-    `isPublicity` tinyint unsigned not null DEFAULT 0,
+    `addPublicityTime` int unsigned not null DEFAULT 0,
     UNIQUE INDEX (`auctionItemUUID`),
     PRIMARY KEY idKey (id)
     );
@@ -59,3 +59,21 @@ CREATE TABLE IF NOT EXISTS `auction_priceRecord_avgPrices`
     INDEX (`itemId`),
     PRIMARY KEY idKey (id)
     );
+
+SET @db_name = DATABASE();
+SET @table_name = 'auction_auctionItemData';
+SET @column_name = 'addPublicityTime';
+SET @column_def = 'int(10) unsigned NOT NULL DEFAULT 0';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;

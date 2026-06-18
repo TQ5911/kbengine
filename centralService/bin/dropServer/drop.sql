@@ -15,12 +15,13 @@ CREATE TABLE `drop_info` (
   `equipInfo` BLOB NOT NULL,
   `extraInfo` BLOB NOT NULL,
   `collectionId` INT UNSIGNED NOT NULL,
-  `redeemTime` INT UNSIGNED NOT NULL,
+  `redeemWaitTime` INT UNSIGNED NOT NULL,
   `hasRedeemPrice` INT UNSIGNED NOT NULL,
   `hasPayment` INT UNSIGNED NOT NULL,
   `returnTime` BIGINT UNSIGNED NOT NULL,
   `ownerGbId` BIGINT UNSIGNED NOT NULL,
   `ownerServerId` INT UNSIGNED NOT NULL,
+  `returnTimeBack` INT UNSIGNED NOT NULL,
   KEY (`id`),
   KEY (`dropGbId`),
   KEY (`takerGbId`),
@@ -50,7 +51,7 @@ CREATE TABLE `custody_info` (
   `holderGbId` BIGINT UNSIGNED NOT NULL,
   `holderServerId` INT UNSIGNED NOT NULL,
   `returnTime` INT UNSIGNED NOT NULL,
-  `ownerGbId` INT UNSIGNED NOT NULL,
+  `ownerGbId` BIGINT UNSIGNED NOT NULL,
   `ownerServerId` INT UNSIGNED NOT NULL,
   KEY (`id`),
   KEY (`holderGbId`),
@@ -66,7 +67,7 @@ ALTER TABLE `reward_info` DEFAULT character set utf8mb4;
 SET @db_name = DATABASE();
 SET @table_name = 'drop_info';
 
-SET @column_name = 'redeemTime';
+SET @column_name = 'redeemWaitTime';
 SET @column_def = 'INT UNSIGNED NOT NULL';
 
 SET @sql = IF(
@@ -113,3 +114,24 @@ SET @sql = IF(
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @column_name = 'returnTimeBack';
+SET @column_def = 'INT UNSIGNED NOT NULL';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+

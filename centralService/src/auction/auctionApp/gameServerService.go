@@ -5,15 +5,33 @@ import (
 	gameServerService "centralService/src/auction/auctionApp/gameServerService"
 	"centralService/src/trpc"
 	"sync"
+	"time"
 )
 
 // 给游戏服务器提供的接口
 type GameServerService struct {
 	*trpc.ServerEndPoint
-	app      *AuctionApp
-	serverId uint32
-	compId   uint32
-	status   int8
+	app       *AuctionApp
+	serverId  uint32
+	compId    uint32
+	status    int8
+	pushQueue chan *gameServerService.OnItemSalingInfo
+}
+
+func BuildGameServerService(endPoint *trpc.ServerEndPoint, app *AuctionApp) *GameServerService {
+	gs := &GameServerService{
+		ServerEndPoint: endPoint,
+		app:            app,
+		pushQueue:      make(chan *gameServerService.OnItemSalingInfo, 10000),
+	}
+	go gs.pushConsumer()
+	return gs
+}
+
+var onItemSalingInfoPool = sync.Pool{
+	New: func() interface{} {
+		return &gameServerService.OnItemSalingInfo{}
+	},
 }
 
 var protoAuctionItemPool = sync.Pool{
@@ -134,6 +152,7 @@ func (gs *GameServerService) putAuctionItem(auctionItem *gameServerService.Aucti
 }
 
 func (gs *GameServerService) OnLoseConnection() {
+	close(gs.pushQueue)
 	gs.status = ServiceStatus_Disconnected
 	gs.app.unRegisterServer(gs)
 }
@@ -180,6 +199,7 @@ func (gs *GameServerService) transAuctionItem(auctionItem *AuctionItem, dstAucti
 	dstAuctionItem.ExtraInfo = auctionItem.ExtraInfo
 	dstAuctionItem.TCreate = auctionItem.TCreate
 	dstAuctionItem.FromPlayerGBID = auctionItem.FromPlayerGBID
+	dstAuctionItem.AddPublicityTime = auctionItem.AddPublicityTime
 
 	return dstAuctionItem
 }
@@ -202,8 +222,8 @@ func (gs *GameServerService) transItemData(itemData *ItemData, dstItemData *game
 func (gs *GameServerService) SaleItem(in *gameServerService.SaleItemReq) (*gameServerService.Void, error) {
 	go func() {
 
-		appLog.Infow("SaleItem", "PlayerGBID", in.PlayerGBID, "ItemDict", in.ItemDict, "EachPrice", in.TotalPrice, "Number", in.Number, "Extra", in.Extra)
-		auctionItem, extra, err := gs.app.SaleItem(in.PlayerGBID, in.ItemDict, in.TotalPrice, in.Number, uint8(in.BagType), in.Extra)
+		appLog.Infow("SaleItem", "PlayerGBID", in.PlayerGBID, "ItemDict", in.ItemDict, "EachPrice", in.TotalPrice, "Number", in.Number, "Extra", in.Extra, "addPublicityType", in.AddPublicityTime)
+		auctionItem, extra, err := gs.app.SaleItem(in.PlayerGBID, in.ItemDict, in.TotalPrice, in.Number, uint8(in.BagType), in.Extra, in.AddPublicityTime)
 		if err != nil || auctionItem == nil {
 			appLog.Errorw("SaleItem", "err", err)
 			return
@@ -278,7 +298,7 @@ func (gs *GameServerService) RefreshPlayerCoinAuctionData(playerGBID uint64, auc
 func (gs *GameServerService) BuyItem(in *gameServerService.BuyItemReq) (*gameServerService.Void, error) {
 	go func() {
 		appLog.Infow("BuyItem", "PlayerGBID", in.PlayerGBID, "AuctionItemUUID", in.AuctionItemUUID, "Number", in.Number, "Extra", in.Extra)
-		auctionItemUUID, extra, price, code, err := gs.app.BuyItem(in.PlayerGBID, in.AuctionItemUUID, in.Number, in.Extra)
+		auctionItemUUID, extra, price, publicityEndTime, code, buyType, err := gs.app.BuyItem(in.PlayerGBID, in.AuctionItemUUID, in.Number, in.Extra)
 		if err != nil {
 			appLog.Errorw("BuyItem", "err", err)
 			return
@@ -288,6 +308,8 @@ func (gs *GameServerService) BuyItem(in *gameServerService.BuyItemReq) (*gameSer
 		response.PlayerGBID = in.PlayerGBID
 		response.AuctionItemUUID = auctionItemUUID
 		response.Price = price
+		response.PublicityEndTime = publicityEndTime
+		response.BuyType = buyType
 		response.Extra = extra
 		response.Code = code
 
@@ -327,6 +349,48 @@ func (gs *GameServerService) DoBuyItem(in *gameServerService.DoBuyItemReq) (*gam
 		doBuyItemRespPool.Put(response)
 	}
 	return nil, nil
+}
+
+const onSaleChatPushPerSec int = 300 // 每秒每个serverId最大推送数量
+
+func (gs *GameServerService) pushConsumer() {
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+	for range ticker.C {
+		// 每个周期内批量处理多条
+		for i := 0; i < onSaleChatPushPerSec; i++ {
+			isEnd := false
+			select {
+			case info, ok := <-gs.pushQueue:
+				if !ok {
+					appLog.Errorw("OnItemSaling channel is closed")
+					return
+				}
+				_, err := gs.GetClientEndPoint().(*gameServerService.GameServerClient).OnItemSaling(info)
+				if err != nil {
+					appLog.Errorw("OnItemSaling send failed", "err", err)
+				}
+				info.Reset()
+				onItemSalingInfoPool.Put(info)
+			default:
+				isEnd = true
+				// channel 为空，提前结束本批次
+				break // 跳出内层 for 循环
+			}
+			if isEnd {
+				break
+			}
+		}
+	}
+}
+
+func (gs *GameServerService) OnItemSaling(auctionItemUUID uint64, itemId uint32, gbId uint64) {
+	info := onItemSalingInfoPool.Get().(*gameServerService.OnItemSalingInfo)
+	info.AuctionItemUUID = auctionItemUUID
+	info.ItemId = itemId
+	info.GbId = gbId
+
+	gs.pushQueue <- info
 }
 
 func (gs *GameServerService) OnItemBeSaled(playerGBID uint64, auctionItem *AuctionItem, number uint32, extra string) (*gameServerService.Void, error) {

@@ -217,10 +217,13 @@ func (self *CentralLoginApp) getClient(accountType uint32, accountName string) *
 func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType uint32, accountName string, token string) (bool, uint32, string, string) {
 	cs := self.getClient(accountType, accountName)
 	if cs == nil {
-		appLog.Error("checkClientLogin failed: cannot find client", accountType, accountName)
-		return false, 0, "", "{}"
+		return self.checkClientLoginFromRedis(accountType, accountName, token)
 	}
 
+	if !cs.checkAccountType(clientService.AccountType(accountType)) {
+		appLog.Error("checkClientLogin failed: unsupported accountType", LoginConfig.AccountTypes, accountType)
+		return false, 0, "", "{}"
+	}
 	if cs.loginResult == clientService.LoginReply_LOGIN_SUCCESS && token == cs.loginToken {
 		return true, cs.channelId, cs.userId, cs.otherJsonData
 	} else {
@@ -228,6 +231,42 @@ func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType
 	}
 
 	return false, 0, "", "{}"
+}
+
+func (self *CentralLoginApp) checkClientLoginFromRedis(accountType uint32, accountName string, token string) (bool, uint32, string, string) {
+	conn := self.redisPool.Get()
+	defer conn.Close()
+
+	key := fmt.Sprintf("login:accountinfo:%d:%s", accountType, accountName)
+	values, err := redis.Values(conn.Do("HGETALL", key))
+	if err != nil {
+		appLog.Error("checkClientLoginFromRedis HGETALL failed", key, err.Error())
+		return false, 0, "", "{}"
+	}
+
+	var loginInfo struct {
+		Token         string `redis:"token"`
+		ChannelId     uint32 `redis:"channelId"`
+		UserId        string `redis:"userId"`
+		OtherJsonData string `redis:"otherJsonData"`
+	}
+	err = redis.ScanStruct(values, &loginInfo)
+	if err != nil {
+		appLog.Error("checkClientLoginFromRedis ScanStruct failed", key, err.Error())
+		return false, 0, "", "{}"
+	}
+
+	if loginInfo.Token == "" {
+		appLog.Error("checkClientLoginFromRedis failed: cannot get token:", accountType, accountName)
+		return false, 0, "", "{}"
+	}
+
+	if loginInfo.Token != token {
+		appLog.Error("checkClientLoginFromRedis failed: token mismatch", loginInfo.Token, token)
+		return false, 0, "", "{}"
+	}
+
+	return true, loginInfo.ChannelId, loginInfo.UserId, loginInfo.OtherJsonData
 }
 
 func (self *CentralLoginApp) addGameServer(service *GameServerService) {

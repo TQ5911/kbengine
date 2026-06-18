@@ -53,6 +53,7 @@ const (
 	AUCTION_PLAYER_MAIL_SPACE_FULL       = 20040 // 玩家邮件剩余空间不足
 	AUCTION_SALED_ITEM_REJECTED          = 20041 // 交易行对应物品无法出售
 	AUCTION_ITEM_IS_IN_PUBLICITY         = 20042 // 交易行物品正在公示期
+	AUCTION_ITEM_IS_NOT_IN_SNATCH        = 20046 // 交易行物品正不在抢购期
 
 	AUCTION_IDIP_GM_BAN = 20100 // IDIP禁止
 )
@@ -96,17 +97,28 @@ const (
 )
 
 const (
-	CFG_TYPE_AUCTION_CONST = "1"
-	CFG_TYPE_ITEM_DATA     = "2"
-	CFG_TYPE_EQUIP_DATA    = "3"
+	CFG_TYPE_AUCTION_CONST          = "1"
+	CFG_TYPE_ITEM_DATA              = "2"
+	CFG_TYPE_EQUIP_DATA             = "3"
+	CFG_TYPE_AUCTION_ONSALECHATTING = "4"
+)
+
+const (
+	BUY_TYPE_NORMAL = 1
+	BUY_TYPE_SNATCH = 2
+)
+
+const (
+	SNATCH_LOCK_ID = 1
 )
 
 // 设置配置数据
 func GetCfgFiles() map[string]string {
 	datas := map[string]string{
-		CFG_TYPE_AUCTION_CONST: "../data/auction.auctionConst.txt",
-		CFG_TYPE_ITEM_DATA:     "../data/itemData.itemData.txt",
-		CFG_TYPE_EQUIP_DATA:    "../data/gearBase.gearBase.txt",
+		CFG_TYPE_AUCTION_CONST:          "../data/auction.auctionConst.txt",
+		CFG_TYPE_ITEM_DATA:              "../data/itemData.itemData.txt",
+		CFG_TYPE_EQUIP_DATA:             "../data/gearBase.gearBase.txt",
+		CFG_TYPE_AUCTION_ONSALECHATTING: "../data/auction.onSaleChatting.txt",
 	}
 	return datas
 }

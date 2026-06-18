@@ -320,15 +320,6 @@ func (mg *OrderApp) doReleaseOrderLock(outTradeNo string) error {
 
 func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w http.ResponseWriter) {
 	appLog.Debugf("ProcessOrder, outTradeNo: %v", order.OutTradeNo)
-	// server id先不检查，因为可能订单过来的时候，游戏服还没连上来，导致server id错误，所以只检查user role id和server id的关系
-	if uint32(order.UserRoleId>>48) != uint32(order.ServerId) {
-		appLog.Errorf("ProcessOrder roleId error, roleId: %v, serverId: %v outTradeNo: %v", order.UserRoleId, order.ServerId, order.OutTradeNo)
-		errMsg := "serverid or userroleid error"
-		responseBytes := svc._buildErrResponse(ARGS_ERR, errMsg)
-		svc.sendIDIPResponse(w, 200, responseBytes)
-		return
-	}
-
 	// createTime
 	layout := "2006-01-02 15:04:05"
 	createTime, err := time.Parse(layout, order.CreateTime)
@@ -433,36 +424,8 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 			errMsg := "success"
 			responseBytes := svc._buildErrResponse(SUCCESS, errMsg)
 			svc.sendIDIPResponse(w, 200, responseBytes)
-			mg.NotifyOrder(order.OutTradeNo)
 		} else if orderProcessStatus == 0 {
-			orderService := mg.GetOrderService(uint32(serverId), 0)
-			if orderService != nil {
-				respose := &service.OrderRequest{}
-				respose.ServerId = order.ServerId
-				respose.OutTradeNo = order.OutTradeNo
-				respose.ItemId = int32(itemId)
-				respose.ItemCount = int32(itemCount)
-				respose.GbId = int64(gbId)
-				_, err := orderService.GetClientEndPoint().(service.IGameServerInterface).NotifyOrder(respose)
-				if err != nil {
-					appLog.Errorf("ProcessOrder send order to game error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
-					errMsg := "game server error"
-					responseBytes := svc._buildErrResponse(SERVER_ERROR, errMsg)
-					svc.sendIDIPResponse(w, 200, responseBytes)
-					return
-				} else {
-					appLog.Debugf("ProcessOrder, in delivery, outTradeNo: %v", order.OutTradeNo)
-					errMsg := "in delivery"
-					responseBytes := svc._buildErrResponse(IN_DELIVERY, errMsg)
-					svc.sendIDIPResponse(w, 200, responseBytes)
-				}
-			} else {
-				appLog.Errorf("ProcessOrder get game service error: missing, outTradeNo: %v", order.OutTradeNo)
-				errMsg := "game server missing"
-				responseBytes := svc._buildErrResponse(SERVER_MISSING, errMsg)
-				svc.sendIDIPResponse(w, 200, responseBytes)
-				return
-			}
+			mg.SendToGameServer(order, svc, w, createTime.Unix(), int32(itemId), int32(itemCount), order.PayableAmount, uint64(gbId), uint32(serverId))
 		}
 		return
 	}
@@ -470,12 +433,12 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 	sql = "INSERT INTO `orderData` (`orderNo`, `outTradeNo`,`createTime`,`gameId`,`userGameId`," +
 		"`userId`, `userRoleId`, `roleName`, `serverId`, `serverName`, `productId`,`productCode`," +
 		"`channelProductId`, `productName`, `buyNum`, `payTime`, `payableAmount`, `actualAmount`," +
-		"`payType`, `orderSource`, `orderProcessStatus`)" +
-		" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		"`payType`, `orderSource`, `orderProcessStatus`, `addToSafe`)" +
+		" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	result, err := mg.db.Exec(sql, order.OrderNo, order.OutTradeNo, createTime.Unix(), order.GameId, order.UserGameId,
 		order.UserId, order.UserRoleId, order.RoleName, order.ServerId, order.ServerName, order.ProductId,
 		order.ProductCode, order.ChannelProductId, order.ProductName, order.BuyNum, payTime.Unix(), order.PayableAmount,
-		order.ActualAmount, order.PayType, order.OrderSource, 0)
+		order.ActualAmount, order.PayType, order.OrderSource, 0, order.AddToSafe)
 	if err != nil {
 		appLog.Errorf("ProcessOrder insert order to db error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
 		errMsg := "mysql error"
@@ -500,19 +463,60 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 		svc.sendIDIPResponse(w, 200, responseBytes)
 	}
 
-	errMsg := "success"
-	responseBytes := svc._buildErrResponse(SUCCESS, errMsg)
-	svc.sendIDIPResponse(w, 200, responseBytes)
+	mg.SendToGameServer(order, svc, w, createTime.Unix(), order.ProductCode, int32(order.BuyNum), order.PayableAmount, uint64(order.UserRoleId), uint32(order.ServerId))
 
 	appLog.Debugf("ProcessOrder success, outTradeNo: %v", order.OutTradeNo)
 	return
 }
 
-func (mg *OrderApp) NotifyOrder(OutTradeNo string) {
+func (mg *OrderApp) SendToGameServer(order *OrderData, svc *HttpCommandService, w http.ResponseWriter, createTime int64, itemId int32, itemCount int32, itemPrice float32, gbId uint64, serverId uint32) {
+	orderService := mg.GetOrderService(uint32(serverId), 0)
+	if orderService != nil {
+		respose := &service.OrderRequest{}
+		respose.ServerId = order.ServerId
+		respose.OutTradeNo = order.OutTradeNo
+		respose.CreateTime = createTime
+		respose.ItemId = int32(itemId)
+		respose.ItemCount = int32(itemCount)
+		respose.GbId = int64(gbId)
+		respose.Price = float64(itemPrice)
+		respose.AddToSafe = order.AddToSafe == 1
+		_, err := orderService.GetClientEndPoint().(service.IGameServerInterface).NotifyOrder(respose)
+		if err != nil {
+			appLog.Errorf("ProcessOrder send order to game error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
+			errMsg := "game server error"
+			responseBytes := svc._buildErrResponse(SERVER_ERROR, errMsg)
+			svc.sendIDIPResponse(w, 200, responseBytes)
+			return
+		} else {
+			appLog.Debugf("ProcessOrder, in delivery, outTradeNo: %v", order.OutTradeNo)
+			errMsg := "in delivery"
+			responseBytes := svc._buildErrResponse(IN_DELIVERY, errMsg)
+			svc.sendIDIPResponse(w, 200, responseBytes)
+		}
+	} else {
+		appLog.Errorf("ProcessOrder get game service error: missing, gbId: %v, outTradeNo: %v, serverId: %v, itemId: %v, itemCount:%v, itemPrice: %v", gbId, order.OutTradeNo, serverId, itemId, itemCount, itemPrice)
+		errMsg := "game server missing"
+		responseBytes := svc._buildErrResponse(SERVER_MISSING, errMsg)
+		svc.sendIDIPResponse(w, 200, responseBytes)
+		return
+	}
+}
+
+func (mg *OrderApp) NotifyOrder(OutTradeNo string, OrderResult int32) {
 	appLog.Debugf("NotifyOrder, outTradeNo: %v", OutTradeNo)
-	go func(OutTradeNo string) {
+	if OrderResult != SUCCESS {
+		return
+	}
+	common.ExecuteConcurrentlyWithArgs(func(OutTradeNo string) {
+		sql := "UPDATE `orderData` SET `orderProcessStatus` = 1 WHERE `outTradeNo`=?"
+		_, err := mg.db.Exec(sql, OutTradeNo)
+		if err != nil {
+			appLog.Errorf("NotifyOrder update error: %v, outTradeNo:%v", err.Error(), OutTradeNo)
+			return
+		}
 		params := map[string]interface{}{
-			"outTradeNo": "OutTradeNo",
+			"outTradeNo": OutTradeNo,
 		}
 		jsonData, err := json.Marshal(params)
 		if err != nil {
@@ -533,5 +537,5 @@ func (mg *OrderApp) NotifyOrder(OutTradeNo string) {
 			return
 		}
 		appLog.Debugf("NotifyOrder result: %v, sign:%v, data:%v", respData, sign, string(jsonData))
-	}(OutTradeNo)
+	}, OutTradeNo)
 }

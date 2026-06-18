@@ -12,6 +12,7 @@ enum AccountType
     ACCOUNT_CROSS_SERVER = 3;
     ACCOUNT_TAPTAP = 4;
     ACCOUNT_OFFICIAL = 5;
+	ACCOUNT_BOT = 6;
 }
 
 message Void {
@@ -83,15 +84,6 @@ message LoginReply
         LOGIN_NEED_CDKEY = 4;
         LOGIN_DEVICE_LIMIT = 5;
         LOGIN_THIRD_FAILED = 6;
-        // TAPTAP
-        LOGIN_THIRD_TAPTAP_ACCESS_DENIED = 401;
-        LOGIN_THIRD_TAPTAP_FORBIDDEN = 402;
-        LOGIN_THIRD_TAPTAP_SERVER_ERROR = 403;
-        LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE = 404;
-        // 官服
-        LOGIN_THIRD_OFFICIAL_401 = 501;
-        LOGIN_THIRD_OFFICIAL_500 = 502;
-        LOGIN_THIRD_OFFICIAL_1001 = 503;
     }
 
     LoginResult result=1;
@@ -156,12 +148,6 @@ enum CaptchaType
     CT_NULL = 0;
     //登录
     CT_Login = 1;
-    //发布会
-    CT_Press = 2;
-    //领取奖励
-    CT_Award = 3;
-    //集市入口
-    CT_Market = 4;
 }
 
 //弹出验证通知

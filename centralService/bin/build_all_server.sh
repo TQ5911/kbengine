@@ -14,6 +14,9 @@ sh build.sh
 cd ../dropServer/
 echo building... $(pwd)
 sh build.sh
+cd ../leaseServer/
+echo building... $(pwd)
+sh build.sh
 cd ../maple/
 echo building... $(pwd)
 sh build.sh

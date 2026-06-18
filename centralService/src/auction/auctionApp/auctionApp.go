@@ -212,7 +212,7 @@ func (au *AuctionApp) NewService(conn net.Conn, serviceType uint8) trpc.IServerE
 	if serviceType == SERVICE_GAME_SERVER {
 		rpcUUID := uuid.New()
 		channel := trpc.NewRpcChannel(rpcUUID, conn)
-		service = &GameServerService{ServerEndPoint: gameServerService.NewAuctionServerService(gameServerService.NewGameServerClient(channel)), app: au}
+		service = BuildGameServerService(gameServerService.NewAuctionServerService(gameServerService.NewGameServerClient(channel)), au)
 		channel.SetEndPoint(service)
 	}
 
@@ -282,7 +282,7 @@ func (au *AuctionApp) GetGameServer(serverId uint32, compId uint32) *GameServerI
 	return nil
 }
 
-func (au *AuctionApp) SaleItem(playerGBID uint64, itemDict string, totalPrice uint64, number uint32, bagType uint8, extra string) (*AuctionItem, string, error) {
+func (au *AuctionApp) SaleItem(playerGBID uint64, itemDict string, totalPrice uint64, number uint32, bagType uint8, extra string, addPublicityTime uint32) (*AuctionItem, string, error) {
 	var item *ItemData
 	if err := json.Unmarshal([]byte(itemDict), &item); err != nil {
 		appLog.Errorw("SaleItem: json.Unmarshal err", "itemDict", itemDict)
@@ -304,14 +304,8 @@ func (au *AuctionApp) SaleItem(playerGBID uint64, itemDict string, totalPrice ui
 		return nil, extra, err
 	}
 
-	isPublicity, err := m["isPublicity"].(json.Number).Int64()
-	if err != nil {
-		appLog.Errorw("SaleItem: isPublicity err", "extra", extra)
-		return nil, extra, err
-	}
-
 	addTime := time.Now().Unix()
-	auctionItem, err := au.auctionMgr.AddAuctionItem(AUCTION_TYPE_COIN, uint64(auctionItemUUID), addTime, item, totalPrice, number, bagType, AUCTION_SOURCE_PLAYER, AUCTION_STATUS_INIT, 0, extra, playerGBID, uint32(isPublicity))
+	auctionItem, err := au.auctionMgr.AddAuctionItem(AUCTION_TYPE_COIN, uint64(auctionItemUUID), addTime, item, totalPrice, number, bagType, AUCTION_SOURCE_PLAYER, AUCTION_STATUS_INIT, 0, extra, playerGBID, addPublicityTime)
 	if err != nil {
 		appLog.Errorw("SaleItem: AddAuctionItem err", "err", err)
 		return nil, extra, err
@@ -337,16 +331,10 @@ func (au *AuctionApp) DoSaleItem(auctionItemUUID uint64, playerGBID uint64, extr
 			return nil, extra, err
 		}
 
-		isPublicity, err := m["isPublicity"].(json.Number).Int64()
-		if err != nil {
-			appLog.Errorw("DoSaleItem: isPublicity err", "extra", extra)
-			return nil, extra, err
-		}
-
 		status := AUCTION_STATUS_SELLING
 		curTime := time.Now().Unix()
 		// 检查是否需要公示
-		if isPublicity == 1 && auctionItem.GetPublicityGap()+auctionItem.AddTime > curTime {
+		if auctionItem.GetPublicityGap()+auctionItem.AddTime > curTime {
 			status = AUCTION_STATUS_PUBLICITY
 		}
 
@@ -375,10 +363,14 @@ func (au *AuctionApp) DoSaleItem(auctionItemUUID uint64, playerGBID uint64, extr
 			}
 
 			duration := auctionItem.GetPublicityGap() + auctionItem.AddTime - curTime
-			timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
-				au.auctionMgr.setItemSelling(auctionItemUUID)
-			})
-			au.auctionMgr.endPublicityTimerMap.Set(auctionItemUUIDStr, timer)
+			if duration > 0 {
+				timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
+					au.auctionMgr.setItemSelling(auctionItemUUID, true)
+				})
+				au.auctionMgr.endPublicityTimerMap.Set(auctionItemUUIDStr, timer)
+			} else {
+				au.auctionMgr.setItemSelling(auctionItemUUID, false)
+			}
 		}
 
 		au.RefreshPlayerCoinAuctionData(playerGBID, service)
@@ -424,10 +416,10 @@ func (au *AuctionApp) GenUUID() uint64 {
 }
 
 // 购买物品
-func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number uint32, extra string) (uint64, string, uint64, uint32, error) {
+func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number uint32, extra string) (uint64, string, uint64, int64, uint32, uint32, error) {
 	appLog.Debugw("BuyItem", "playerGBID", playerGBID, "auctionItemUUID", auctionItemUUID, "number", number, "extra", extra)
 
-	auctionItem, ret := au.auctionMgr.CheckBuyItem(auctionItemUUID, number, playerGBID)
+	auctionItem, ret := au.auctionMgr.CheckBuyItem(auctionItemUUID, number)
 	if ret != AUCTION_OK {
 		switch ret {
 		case AUCTION_NOT_IN_AUCTION:
@@ -441,14 +433,25 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 		default:
 			appLog.Errorw("BuyItem: failed", "ret", ret, "auctionItemUUID", auctionItemUUID)
 		}
-		return auctionItemUUID, extra, 0, uint32(ret), nil
+		return auctionItemUUID, extra, 0, 0, uint32(ret), 0, nil
 	}
-
-	getLock := auctionItem.lock(60, playerGBID, au, true)
-	if !getLock {
-		appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
-		ret = AUCTION_ITEM_IS_LOCKED
-		return auctionItemUUID, extra, 0, uint32(ret), nil
+	buyType := BUY_TYPE_NORMAL
+	// 抢购中的，用1做通用的锁，然后时间设定为抢购的两倍时间
+	if auctionItem.CheckInSnatch() {
+		buyType = BUY_TYPE_SNATCH
+		getLock := auctionItem.lock(uint32(auctionItem.getSnatchTime())*2, SNATCH_LOCK_ID, au, true)
+		if !getLock {
+			appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
+			ret = AUCTION_ITEM_IS_LOCKED
+			return auctionItemUUID, extra, 0, 0, uint32(ret), 0, nil
+		}
+	} else {
+		getLock := auctionItem.lock(60, playerGBID, au, true)
+		if !getLock {
+			appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
+			ret = AUCTION_ITEM_IS_LOCKED
+			return auctionItemUUID, extra, 0, 0, uint32(ret), 0, nil
+		}
 	}
 
 	var m map[string]interface{}
@@ -458,7 +461,7 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 	if err != nil {
 		ret = PARAM_ERROR
 		appLog.Errorw("BuyItem: NewDecoder err", "err", err)
-		return auctionItemUUID, extra, 0, uint32(ret), err
+		return auctionItemUUID, extra, 0, 0, uint32(ret), 0, err
 	}
 
 	m["selectItemLocked"] = auctionItem.LockPlayerGBID
@@ -469,10 +472,10 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 	if err != nil {
 		ret = PARAM_ERROR
 		appLog.Errorw("BuyItem: Marshal err", "err", err)
-		return auctionItemUUID, extra, 0, uint32(ret), err
+		return auctionItemUUID, extra, 0, 0, uint32(ret), 0, err
 	}
 	price := auctionItem.Price
-	return auctionItemUUID, string(extraB), price, uint32(ret), nil
+	return auctionItemUUID, string(extraB), price, auctionItem.GetPublicityEndTime(), uint32(ret), uint32(buyType), nil
 }
 
 func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno uint32, price uint64, extra string, service *GameServerService) (*AuctionItem, string, error) {
@@ -503,7 +506,7 @@ func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno
 		return auctionItem, extra, err
 	}
 
-	if uint64(itemLock) != auctionItem.LockPlayerGBID {
+	if auctionItem.LockPlayerGBID > 0 && uint64(itemLock) != auctionItem.LockPlayerGBID {
 		appLog.Errorw("DoBuyItem: m_auctionItemLocked != auctionItem.LockPlayerGBID", "itemLock", itemLock, "auctionItem.LockPlayerGBID", auctionItem.LockPlayerGBID)
 		return auctionItem, extra, errors.New("DoBuyItem: m_auctionItemLocked != auctionItem.LockPlayerGBID")
 	}
@@ -569,6 +572,28 @@ func (au *AuctionApp) onItemBeSaled(auctionItem *AuctionItem, buyNumber uint32, 
 	if err != nil {
 		appLog.Errorw("onItemBeSaled: OnItemBeSaled err", "err", err, "auctionItem", auctionItem, "buyNumber", buyNumber, "extra", extra, "fromPlayerGBID", fromPlayerGBID)
 		return
+	}
+}
+
+func (au *AuctionApp) getAllServerIds() []uint32 {
+	au.serversMutex.RLock()
+	defer au.serversMutex.RUnlock()
+	serverIds := make([]uint32, 0)
+	for serverId, _ := range au.gameServers {
+		serverIds = append(serverIds, serverId)
+	}
+	return serverIds
+}
+
+func (au *AuctionApp) broadcastOnItemSaling(auctionUUID uint64, itemID uint32, gbId uint64) {
+	au.serversMutex.RLock()
+	defer au.serversMutex.RUnlock()
+	allServerIds := au.getAllServerIds()
+	for _, serverId := range allServerIds {
+		gameServer := au.GetGameServer(serverId, 0)
+		if nil != gameServer {
+			gameServer.AuctionService.(*GameServerService).OnItemSaling(auctionUUID, itemID, gbId)
+		}
 	}
 }
 
@@ -1362,7 +1387,7 @@ func (au *AuctionApp) buyItemByItemId(playerGbId uint64, itemId uint32, num uint
 	defer lockedBtree.mu.Unlock()
 
 	lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
-		if auctionItem.isLocked() {
+		if auctionItem.isLocked(0) {
 			return true
 		}
 
