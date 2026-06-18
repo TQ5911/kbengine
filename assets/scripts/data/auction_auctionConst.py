@@ -145,7 +145,7 @@ datas = _tools.RODict({
     }),
     "auctionPublicityTime": _tools.RODict({
         "key": "auctionPublicityTime",
-        "value": ((2, 20), (3, 480), (4, 480)),
+        "value": ((2, 10), (3, 30), (4, 60)),
     }),
     "auctionOnSale": _tools.RODict({
         "key": "auctionOnSale",
@@ -178,5 +178,93 @@ datas = _tools.RODict({
     "auctionOnShowRefer": _tools.RODict({
         "key": "auctionOnShowRefer",
         "value": "公示参考",
+    }),
+    "auctionPaymentDelayTime": _tools.RODict({
+        "key": "auctionPaymentDelayTime",
+        "value": 20,
+    }),
+    "auctionPaymentDelayText": _tools.RODict({
+        "key": "auctionPaymentDelayText",
+        "value": "<color=#c60c0c>入账中</color>",
+    }),
+    "auctionPaymentClaimText": _tools.RODict({
+        "key": "auctionPaymentClaimText",
+        "value": "<color=#038304>已到账</color>",
+    }),
+    "auctionPaymentWithdrawText": _tools.RODict({
+        "key": "auctionPaymentWithdrawText",
+        "value": "（当前可提取{0}，剩余{1}入账中）",
+    }),
+    "auctionSellNeedMonthCard": _tools.RODict({
+        "key": "auctionSellNeedMonthCard",
+        "value": 54000260,
+    }),
+    "auctionChannel_jumpToBuy": _tools.RODict({
+        "key": "auctionChannel_jumpToBuy",
+        "value": 58000035,
+    }),
+    "auctionLuckyBuyTime": _tools.RODict({
+        "key": "auctionLuckyBuyTime",
+        "value": 10,
+    }),
+    "auctionLuckyBuyCheck": _tools.RODict({
+        "key": "auctionLuckyBuyCheck",
+        "value": 54000310,
+    }),
+    "auctionLuckyBuyFail": _tools.RODict({
+        "key": "auctionLuckyBuyFail",
+        "value": 54000311,
+    }),
+    "auctionLuckyBuyMail": _tools.RODict({
+        "key": "auctionLuckyBuyMail",
+        "value": 37000024,
+    }),
+    "auctionLuckyBuyTag": _tools.RODict({
+        "key": "auctionLuckyBuyTag",
+        "value": "<color=#038304>抢购中</color>",
+    }),
+    "auctionPublicityTag": _tools.RODict({
+        "key": "auctionPublicityTag",
+        "value": "<color=#b35b00>公示中</color>",
+    }),
+    "auctionSoulScoreRule": _tools.RODict({
+        "key": "auctionSoulScoreRule",
+        "value": ((1, 1), (2, 3), (3, 5), (4, 8)),
+    }),
+    "auctionSoulPubScore": _tools.RODict({
+        "key": "auctionSoulPubScore",
+        "value": 8,
+    }),
+    "auctionSoulPubAddTime": _tools.RODict({
+        "key": "auctionSoulPubAddTime",
+        "value": ((8, 14, 10), (15, 19, 20), (20, 99, 30)),
+    }),
+    "rentalProp01": _tools.RODict({
+        "key": "rentalProp01",
+        "value": (0.1, 0.2, 0.7),
+    }),
+    "rentalProp02": _tools.RODict({
+        "key": "rentalProp02",
+        "value": (0.3, 0.7, 0),
+    }),
+    "rentalTime": _tools.RODict({
+        "key": "rentalTime",
+        "value": (3, 10),
+    }),
+    "rentalCost": _tools.RODict({
+        "key": "rentalCost",
+        "value": 1000,
+    }),
+    "rentalTimelimit": _tools.RODict({
+        "key": "rentalTimelimit",
+        "value": 1,
+    }),
+    "rentalAutoUnlist": _tools.RODict({
+        "key": "rentalAutoUnlist",
+        "value": 24,
+    }),
+    "rentalInitShelfNum": _tools.RODict({
+        "key": "rentalInitShelfNum",
+        "value": 10,
     })
 })

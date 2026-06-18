@@ -17,11 +17,11 @@
             <Persistent>    False                    </Persistent>
         </autoCombatSuspendReason>
 
-        <autoCombatInfo>
+        <autoCmbtDic>
             <Type>          PY_DICT             </Type>
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       {}                  </Default>
-        </autoCombatInfo>
+        </autoCmbtDic>
 
         <controlledByReasonDic>
             <Type>          PY_DICT             </Type>

@@ -55,13 +55,13 @@
             <Arg>       METHOD_ARGS    </Arg>
         </autoSwitchLineToMainCity>
 
-        <switchLine>
+        <doSwitchLine>
             <Arg>       LINE_NO        </Arg>
             <Arg>       LINE_NO        </Arg>
             <Arg>       MAILBOX        </Arg>
             <Arg>       PLAYER_GBID    </Arg>
             <Arg>       PYTHON         </Arg>
-        </switchLine>
+        </doSwitchLine>
 
         <switchLineSuccess>
             <Arg>       LINE_NO        </Arg>

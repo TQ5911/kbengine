@@ -16,7 +16,7 @@ class IGlobal(object):
     def onGlobalBase(self, ok, globalName='', recordDbid=False):
         if ok == False:
             print('fail to create base:', self.classname())
-            self.entireDestroy(False, False)
+            self.doEntireDestroy(False, False)
             return
 
         LOG_INFO('onGlobalBase', self.classname(), globalName)

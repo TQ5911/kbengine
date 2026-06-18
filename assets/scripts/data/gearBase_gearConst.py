@@ -103,9 +103,13 @@ datas = _tools.RODict({
         "ID": "equipRepairCostAmount",
         "value": 34000014,
     }),
-    "equipRepairRatioForPicker": _tools.RODict({
-        "ID": "equipRepairRatioForPicker",
-        "value": 0.5,
+    "equipRepairCost": _tools.RODict({
+        "ID": "equipRepairCost",
+        "value": 30000001,
+    }),
+    "equipRepairRatioForTax": _tools.RODict({
+        "ID": "equipRepairRatioForTax",
+        "value": 0.1,
     }),
     "equipRepairTime": _tools.RODict({
         "ID": "equipRepairTime",
@@ -266,5 +270,17 @@ datas = _tools.RODict({
     "equipRedeemWaitTime": _tools.RODict({
         "ID": "equipRedeemWaitTime",
         "value": 3600,
+    }),
+    "equipReturnText": _tools.RODict({
+        "ID": "equipReturnText",
+        "value": 54482009,
+    }),
+    "equipReturnChange": _tools.RODict({
+        "ID": "equipReturnChange",
+        "value": 54482010,
+    }),
+    "GearPricingError": _tools.RODict({
+        "ID": "GearPricingError",
+        "value": 54482016,
     })
 })

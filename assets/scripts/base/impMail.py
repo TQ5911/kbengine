@@ -61,6 +61,13 @@ class ImpMail(object):
         self.startLoadSyncGlobalMailInfo()
 
     def checkGlobalMail(self, globalMail):
+        # 检查是否被ban无法收到此类型邮件
+        LOG_DBG("checkGlobalMail", self.banMail, globalMail.createTime)
+        if self.banMail and globalMail.mailTag in self.banMail:
+            startTime, endTime = self.banMail[globalMail.mailTag]
+            createTime = globalMail.createTime
+            if createTime > startTime and createTime < endTime:
+                return False
         return mailAssistor.checkGlobalMailConds(globalMail, self.accountEntity.accountType, self.getAvatarLevel(), self.birthInDB, self.tLoginBase)
 
     def sendOneGlobalMail(self, globalMail):
@@ -79,8 +86,8 @@ class ImpMail(object):
         if err:
             gameengine.panicStack(' loadLastGlobalMailInfoCallback, no lastGlobalMailInfo:', ret, num, insertId, err)
             return
-        dbMailRowData = ret[0]
-        lastGlobalMailTime = int(dbMailRowData[2].decode())
+        mailRowData = ret[0]
+        lastGlobalMailTime = int(mailRowData[2].decode())
         myLevel = self.getAvatarLevel()
         if not myLevel:
             gameengine.panicStack('loadLastGlobalMailInfoCallback, has no avatar level')
@@ -135,9 +142,9 @@ class ImpMail(object):
             self.doInsertGlobalMail(opUUID, globalMail, isLogin)
         return
 
-    def onNewMailInsertSucc(self, mailId, mailGBID, title, cont, attachStr, srcType, srcSubType, opUUID, desc, idipSource, isGlobal):
+    def onInsertNewMailSucc(self, mailId, mailGBID, title, cont, attachStr, srcType, srcSubType, opUUID, desc, idipSource, isGlobal):
         # 有新普通邮件插入数据库表中
-        LOG_INFO('onNewMailInsertSucc:', mailId, isGlobal)
+        LOG_INFO('onInsertNewMailSucc:', mailId, isGlobal)
         mailLoadType = gameconst.MailLoadType.PLAYER_MAIL
         if isGlobal:
             mailLoadType = gameconst.MailLoadType.GLOBAL_MAIL
@@ -206,12 +213,12 @@ class ImpMail(object):
             validMailGBIDSet = set()
             minMailTime = int(ret[-1][5].decode())
             minMailTiemMailList = []
-            for dbMailRowData in ret:
-                mailGBID = int(dbMailRowData[2].decode())
-                readStat = int(dbMailRowData[4].decode())
-                attachStat = int(dbMailRowData[10].decode())
+            for mailRowData in ret:
+                mailGBID = int(mailRowData[2].decode())
+                readStat = int(mailRowData[4].decode())
+                attachStat = int(mailRowData[10].decode())
                 if attachStat == gameconst.MailAttachState.NotGet or readStat == gameconst.MailReadState.NotRead:
-                    createTime = int(dbMailRowData[6].decode())
+                    createTime = int(mailRowData[6].decode())
                     validMailGBIDSet.add(mailGBID)
                     if createTime == minMailTime:
                         minMailTiemMailList.append(mailGBID)
@@ -220,12 +227,12 @@ class ImpMail(object):
 
             delMailGBIDList = []
             leftNum = maxMailNum-len(validMailGBIDSet)
-            for dbMailRowData in ret:
-                mailGBID = int(dbMailRowData[2].decode())
+            for mailRowData in ret:
+                mailGBID = int(mailRowData[2].decode())
                 if mailGBID in validMailGBIDSet:
-                    validMailList.append(dbMailRowData)
+                    validMailList.append(mailRowData)
                 elif leftNum > 0:
-                    validMailList.append(dbMailRowData)
+                    validMailList.append(mailRowData)
                     leftNum-=1
                 else:
                     delMailGBIDList.append(mailGBID)
@@ -241,9 +248,9 @@ class ImpMail(object):
         expiredMailObjs = {}
         expiredMailGBIDList = []
         validMailList = validMailList or ret
-        for dbMailRowData in validMailList:
+        for mailRowData in validMailList:
             mailObj = Mail.Mail()
-            mailObj.initFromDBMailData(dbMailRowData)
+            mailObj.initFromDBMailData(mailRowData)
             # 判断过期或者不在登录窗口有效期内
             if mailObj.isExpired() or not mailObj.isInLoginWindow(self.tLoginBase):
                 expiredMailGBIDList.append(mailObj.mailGBID)
@@ -375,7 +382,7 @@ class ImpMail(object):
                 LOG_WARN('getMailAttachByMailList mail expired:', mail.expiredTime)
                 continue
 
-            if not mail.canGetAttach():
+            if not mail.coudlGetAttach():
                 LOG_WARN('getMailAttachByMailList, can not get mail attach:', mail.toMailSavedDict())
                 continue
 
@@ -416,7 +423,7 @@ class ImpMail(object):
 
     def setMailAttachHasGetCallback(self, ret, num, insertId, err, mailGBIDList):
         #LOG_INFO('in getMailAttachCallback:', ret, num, insertId, err)
-        self.unlockBag(gameconst.BagType.BAG_TYPE_NORMAL)
+        self.unlockBag(gameconst.BagTypeEnum.BAG_TYPE_NORMAL)
         if err:
             LOG_WARN('   setMailAttachHasGetCallback failed:', err)
             return
@@ -441,11 +448,11 @@ class ImpMail(object):
             mail.setReadState(gameconst.MailReadState.HasRead)
             wealthVal.scrubWealthItemObjs(createTime=now)
             srcType = mail.srcType if mail.srcType else AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH
-            detail = gameclass.AwardDetail(mailId=mail.mailId, mailGBID=[mailGBID], desc=mail.desc, popRewardUUID=popRewardUUID)
+            detail = gameclass.AwardDetailCls(mailId=mail.mailId, mailGBID=[mailGBID], desc=mail.desc, popRewardUUID=popRewardUUID)
             self.addWealth(srcType, wealthVal, opUUID, detail=detail, srcSubType=mail.srcSubType, idipSource=mail.source, directly=False)
 
-            LogTrackingMgr.LogTrackingMgr.Mail_Get(self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
-        self._showPopReward(AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH, popRewardUUID, gameclass.AwardDetail(mailGBID=_mailGBIDs))
+            LogTrackingMgr.LogTrackingMgr.Mail_Get(self.gbID, self.accountEntity.clientDistinctId, self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
+        self._showPopReward(AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH, popRewardUUID, gameclass.AwardDetailCls(mailGBID=_mailGBIDs))
         self.client.onGetMailAttach(_mailGBIDs)
         return
 
@@ -481,7 +488,7 @@ class ImpMail(object):
             LOG_WARN('reqDelMails, no mail:', mailGBIDList)
             return
 
-        if mail.canGetAttach():
+        if mail.coudlGetAttach():
             LOG_INFO('reqDelMails, del mail failed, has attach:', mailGBID)
             self.onMessagePre(MMD.datas.mailDelete_Fail, [])
             return
@@ -535,5 +542,5 @@ class ImpMail(object):
         return
 
     def doRecordDeleteMailLog(self, mail, opUUID, srcType, srcSubType, desc, idipSource, mailGBID):
-        LogTrackingMgr.LogTrackingMgr.Mail_Delete(self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach, srcType)
+        LogTrackingMgr.LogTrackingMgr.Mail_Delete(self.gbID, self.accountEntity.clientDistinctId, self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach, srcType)
 

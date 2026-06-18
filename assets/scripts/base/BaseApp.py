@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
+import functools
 import KBEngine
 from KBEDebug import *
-
-import math
 
 import gameengine
 import gamebase
@@ -24,7 +23,7 @@ import iBaseNoCell
 import asyncore
 import iBroadcastEvent
 import iGameStart
-import mailAssistor
+import iWaitMapGameStart
 import elasticUtils
 
 from proto.interface_pb2 import BaseApp as BaseAppService
@@ -35,27 +34,27 @@ from rpc import RpcChannel
 
 class InterfaceBaseappClient(BaseAppService):
     def __init__(self, baseapp, address):
-        self.baseapp = baseapp
         self.channel = RpcChannel.RpcChannel(self)
+        self.baseapp = baseapp
         self.interfaceStub = Interface_Stub(self.channel)
 
         self.channel.connect(address)
 
-    def on_connected(self):
-        pass
-
     def on_disconnected(self):
         pass
 
-    def activeTickCallback(self, rpc_controller, request, done):
+    def on_connected(self):
         pass
 
     def reqSyncCacheConfigOnBaseapp(self, rpc_controller, request, done):
-        nameStr, valueStr = gameconfig.packInterfaceDiffCache()
-        if nameStr and valueStr:
+        _nameStr, valueStr = gameconfig.packInterfaceDiffCache()
+        if _nameStr and valueStr:
             configVal = ConfigVal()
-            configVal.name, configVal.val = nameStr, valueStr
+            configVal.name, configVal.val = _nameStr, valueStr
             self.interfaceStub.syncCacheConfigOnBaseapp(None, configVal, None)
+
+    def activeTickCallback(self, rpc_controller, request, done):
+        pass
 
     def setAccountCompResult(self, rpc_controller, reply, done):
         if not reply.result:
@@ -70,38 +69,35 @@ class InterfaceBaseappClient(BaseAppService):
         _ent.onSetAccountCompSuccess()
 
 
-class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcastEvent, iGameStart.IGameStart, iRouter.IRouter):
+class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcastEvent, iWaitMapGameStart.IWaitMapGameStart, iGameStart.IGameStart, iRouter.IRouter):
     INITIAL_INIT = 0.1
-    INITIAL_MARKER = 1
-    INTERVAL_MARKER = 10
 
     def __init__(self):
         super(BaseApp, self).__init__()
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
 
         self._loadEntityTypeToDBID()
         self.buildAreaData()
-        self.redisAsyncClient = gameRedisAsync.RedisAsyncClient(gameconfig.redisServer(), gameconfig.redisPort(),
-                                                                gameconfig.redisPassword())
+        self.redisAsyncClient = gameRedisAsync.AsyncRedisClient(
+            gameconfig.redisServer(), gameconfig.redisPort(),
+            gameconfig.redisPassword(), gameconfig.redisUsername())
         self.redisAsyncClient.onConnect()
+        self.redisAttrsCache = {}
         self.lockDict = {}
-        self.redisAttrs = {}
         self.interfaceClient = {}
         self.gmCmdDic = {}
         self.initAysncore()
         self.accountNum = 0
         self.avatarNum = 0
 
-        # self.ssClient = None
-        # self._addLoopTimer()
-        self.pyAddTimer(5, 1, gametimer.REDIS_HEART_BEAT)
-        self.pyAddTimer(1, 5, gametimer.BASEAPP_CONN_INTERFACE)
-        self.pyAddTimer(gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL,
+        self.pyAddTimer(5, 1, gametimer.TIMER_REDIS_HEART_BEAT)
+        self.pyAddTimer(1, 5, gametimer.TIMER_BASEAPP_CONN_INTERFACE)
+        self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL,
                         gametimer.BASEAPP_INTERFACE_ACTIVE)
 
-        self.pyAddTimer(1, 1, gametimer.BASEAPP_ASYNC_TICK)
+        self.pyAddTimer(1, 1, gametimer.TIMER_BASEAPP_ASYNC_TICK)
 
-        self.pyAddTimer(gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gametimer.BASEAPP_ACTIVE_TICK)
+        self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gametimer.BASEAPP_ACTIVE_TICK)
 
         self.addTimerCB(30, '_handleCallQueue', (), gametimer.TIMER_TAG_HANDLE_CALL_QUEUE)
 
@@ -123,22 +119,24 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     def setStartGbId(self, cursor, num):
         self.startGbId = cursor * ((1 << gameconst.SERVER_TIMESTAMP_BIT_SHIFT) // num)
 
+    def getRedisClient(self):
+        return self.redisAsyncClient
+
     def getStartGbId(self):
         return self.startGbId
 
-    def getRedisClient(self):
-        return self.redisAsyncClient
+    def initAysncore(self):
+        if self.asyncTimer:
+            return
+
+        LOG_INFO('initAysncore')
+        self.asyncTimer = self.pyAddTimer(1, 0.1, gametimer.TIMER_ASYNCORE_TICK)
 
     def preReloadScript(self):
         return
 
-    def initAysncore(self):
-        if not self.asyncTimer:
-            LOG_INFO('initAysncore')
-            self.asyncTimer = self.pyAddTimer(1, 0.1, gametimer.ASYNCORE_TICK)
-
     def onTimer(self, timerID, userData):
-        self._onTimer(timerID, userData)
+        self._onTimerTrigger(timerID, userData)
 
         if userData == gametimer.BASEAPP_TIMER_INIT:
             if self.initProcedures:
@@ -151,31 +149,34 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_BASEAPP_IDX + ':' + str(stubIndex), self)
             self.setTempMiscProp(gameconst.GLOBALDATA_KEY_BASEAPP_IDX, stubIndex)
             # self.pyAddTimer(1, 10, gametimer.BASEAPP_TIMER_CREATE_SPACE_MARKER)
-            self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
+            if gameconfig.isWaitMapServer():
+                self.pyAddTimer(1, 0, gametimer.WAITMAP_TIMER_START)
+            else:
+                self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
 
         elif utils.isBelongTimerTag(userData):
             self._onTimerCallback(timerID)
 
-        elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
-            self._onDatetimeTimerTick()
-
-        elif userData == gametimer.ASYNCORE_TICK:
+        elif userData == gametimer.TIMER_ASYNCORE_TICK:
             asyncore.loop(0, True, None, 1)
 
-        elif userData == gametimer.REDIS_HEART_BEAT:
+        elif userData == gametimer.TIMER_REDIS_HEART_BEAT:
             self._onRedisHeartBeat()
+
+        elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
+            self._onDatetimeTimerTick()
 
         elif userData == gametimer.BASEAPP_INTERFACE_ACTIVE:
             self._checkInterfaceActive()
 
-        elif userData == gametimer.BASEAPP_CONN_INTERFACE:
+        elif userData == gametimer.TIMER_BASEAPP_CONN_INTERFACE:
             self._connectInterfaceApp()
 
         elif userData == gametimer.BASEAPP_ACTIVE_TICK:
             if gameconfig.enableRouterServer():
                 self.checkAllRouterServerActive()
 
-        elif userData == gametimer.BASEAPP_ASYNC_TICK:
+        elif userData == gametimer.TIMER_BASEAPP_ASYNC_TICK:
             self.connectAllRouterServer()
 
         elif userData == gametimer.CHECK_TIP_PLAYER_AUCTION_ITEM_COLLECTION:
@@ -185,7 +186,10 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             self._checkDrawCardPoolTimeLimit()
 
         else:
-            iGameStart.IGameStart.onTimer(self, timerID, userData)
+            if gameconfig.isWaitMapServer():
+                iWaitMapGameStart.IWaitMapGameStart.onWaitMapTimer(self, timerID, userData)
+            else:
+                iGameStart.IGameStart.onTimer(self, timerID, userData)
 
     def onRouterServerConnected(self, routerServerId):
         self.tryRegisterBaseApp(routerServerId)
@@ -203,25 +207,25 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             self.redisAsyncClient.onConnect()
 
     def _checkInterfaceActive(self):
-        for client in self.interfaceClient.values():
-            if client and client.channel.dispatcher:
-                client.interfaceStub.activeTick(None, Void(), None)
+        for _client in self.interfaceClient.values():
+            if _client and _client.channel.dispatcher:
+                _client.interfaceStub.activeTick(None, Void(), None)
 
     def _connectInterfaceApp(self):
-        hostList = gameconfig.interfaceRpcHostList()
-        for host in hostList:
-            key = ':'.join(host.values())
-            client = self.interfaceClient.get(key, None)
-            if client and client.channel.dispatcher: continue
+        _hostList = gameconfig.interfaceRpcHostList()
+        for _host in _hostList:
+            key = ':'.join(_host.values())
+            _client = self.interfaceClient.get(key, None)
+            if _client and _client.channel.dispatcher: continue
 
-            addr, port = host['addr'], int(host['port'])
-            LOG_INFO('connect interface', addr, port)
-            self.interfaceClient[key] = InterfaceBaseappClient(self, (addr, port))
+            _addr, _port = _host['addr'], int(_host['port'])
+            LOG_INFO('connect interface', _addr, _port)
+            self.interfaceClient[key] = InterfaceBaseappClient(self, (_addr, _port))
 
     def _callInterfaceApp(self, func, *args):
-        for client in self.interfaceClient.values():
-            if client and client.channel.dispatcher:
-                method = getattr(client.interfaceStub, func)
+        for _client in self.interfaceClient.values():
+            if _client and _client.channel.dispatcher:
+                method = getattr(_client.interfaceStub, func)
                 if method:
                     method(*args)
 
@@ -249,24 +253,19 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     # 否则，使用gamebase.createGlobal的方式直接创建
     def createArchiveStub(self, clsName, properties, globalName):
         self.preparingEntTypes.append(clsName)
-        dbid = gameglobal.entityTypeToDBID.get(clsName)
-        LOG_INFO('createArchiveStub', clsName, globalName, dbid)
-        if not dbid:
-            self._onArchiveStubLookup(clsName, 0, False, properties, globalName)
+        _dbid = gameglobal.entityTypeToDBID.get(clsName)
+        LOG_INFO('createArchiveStub', clsName, globalName, _dbid)
+        if not _dbid:
+            self._onArchiveStubLookup(clsName, 0, properties, globalName, False)
         else:
             KBEngine.lookUpEntityByDBID(
                 clsName,
-                dbid,
-                lambda box,
-                       clsName=clsName,
-                       dbid=dbid,
-                       globalName=globalName: self._onArchiveStubLookup(clsName, dbid, box, properties, globalName)
+                _dbid,
+                functools.partial(self._onArchiveStubLookup, clsName, _dbid, properties, globalName),
             )
 
-        return
-
-    def _onArchiveStubLookup(self, clsName, dbid, box, properties, globalName):
-        LOG_INFO('_onArchiveStubLookup', clsName, dbid, box, globalName, properties)
+    def _onArchiveStubLookup(self, clsName, dbid, props, globalName, box):
+        LOG_INFO('_onArchiveStubLookup', clsName, dbid, box, globalName, props)
         if box == False:
             if dbid:
                 # lookUpEntityByDBID的box参数只有两种情况会返回false
@@ -276,24 +275,19 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
                 # 如果对应dbid的实体已经创建则返回实体的entity_call
                 LOG_ERR('_onArchiveStubLookup: lookup entity failed')
             else:
-                gamebase.createArchiveStubGlobal(clsName, properties, globalName)
+                gamebase.createArchiveStubGlobal(clsName, props, globalName)
         elif box == True:
             KBEngine.createEntityFromDBID(
                 clsName,
                 dbid,
-                lambda ent,
-                       databaseID,
-                       wasActive,
-                       clsName=clsName,
-                       dbid=dbid,
-                       globalName=globalName: self._onArchiveStubLoad(clsName, ent, databaseID, wasActive, globalName)
+                functools.partial(self._onArchiveStubLoad, clsName, globalName),
             )
         else:
             LOG_INFO('[%s %s] has been loaded' % (clsName, dbid,))
 
         return
 
-    def _onArchiveStubLoad(self, clsName, ent, databaseID, wasActive, globalName):
+    def _onArchiveStubLoad(self, clsName, globalName, ent, databaseID, wasActive):
         if ent:
             LOG_INFO('successful to load [%s %s] from database' % (clsName, databaseID,))
             # TODO:查下registerGlobally
@@ -306,21 +300,18 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     def createUnarchiveStub(self, clsName, props, globalName):
         self.preparingEntTypes.append(clsName)
         gamebase.createGlobal(clsName, props, globalName)
-        return
 
     def destroyMarker(self, spaceNo):
         sm = gamebase.getSpaceMarkerBaseByNo(spaceNo)
         if sm:
-            sm.entireDestroy(False, False)
-
-        return
+            sm.doEntireDestroy(False, False)
 
     def _loadEntityTypeToDBID(self):
         self.addInitProcedure(gameconst.BaseAppIniting.LOAD_ENTITY_DBID)
-        sql = 'SELECT entityType, entityDBID FROM game_entity_dbid'
+        _sql = 'SELECT entityType, entityDBID FROM game_entity_dbid'
         KBEngine.executeRawDatabaseCommand(
-            sql,
-            lambda ret, num, insertId, err: self._onGetEntityDBIDFromDB(ret, num, insertId, err)
+            _sql,
+            self._onGetEntityDBIDFromDB,
         )
 
     def _onGetEntityDBIDFromDB(self, result, num, insertId, error):
@@ -333,23 +324,23 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         if not result:
             return
 
-        for entityType, dbid in result:
-            entityType = utils.bytesToString(entityType)
+        for _entityType, dbid in result:
+            _entityType = utils.bytesToString(_entityType)
             try:
-                __import__(entityType)
+                __import__(_entityType)
             except:
-                gamesql.deleteEntityDBID(entityType)
+                gamesql.deleteEntityDBID(_entityType)
                 continue
-            gameglobal.entityTypeToDBID[entityType] = int(dbid)
+            gameglobal.entityTypeToDBID[_entityType] = int(dbid)
+
+    def onGmFindAccount(self, result, accountName, idx, raw, uid):
+        gmCommand.onFindAccount(result, accountName, idx, raw, uid)
 
     def onGmFindEntity(self, result, uid):
         gmCommand.onFindEntity(result, uid)
 
-    def onGmFindAccount(self, result, accountName, index, raw, uid):
-        gmCommand.onFindAccount(result, accountName, index, raw, uid)
-
-    def onGmLookUpAvatar(self, base, role, uid, index, raw):
-        gmCommand.onLookUpAvatar(base, role, uid, index, raw)
+    def onGmLookUpAvatar(self, base, role, uid, idx, raw):
+        gmCommand.onLookUpAvatar(base, role, uid, idx, raw)
 
     def onDoCmdSucc(self, uid):
         gmCommand.onBroadcastCmdSuccess(uid)
@@ -366,130 +357,121 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.lockDict[key] = now
         return True
 
+    def pushRedisAttrs(self, gbId, attrs):
+        if gbId in self.redisAttrsCache:
+            self.redisAttrsCache[gbId].update(attrs)
+        else:
+            self.redisAttrsCache[gbId] = attrs
+
     def unlockKey(self, key):
         self.lockDict.pop(key, None)
 
-    def pushRedisAttrs(self, gbId, attrs):
-        if gbId in self.redisAttrs:
-            self.redisAttrs[gbId].update(attrs)
-        else:
-            self.redisAttrs[gbId] = attrs
-
     def popRedisAttrs(self, gbId):
-        return self.redisAttrs.pop(gbId, {})
+        return self.redisAttrsCache.pop(gbId, {})
 
     def notifyInterfaceConfigChanged(self, name, val):
-        configVal = ConfigVal()
-        configVal.name = name
-        configVal.val = val
+        _configVal = ConfigVal()
+        _configVal.name = name
+        _configVal.val = val
 
-        self._callInterfaceApp('gameConfigChangedOnBaseapp', None, configVal, None)
+        self._callInterfaceApp('gameConfigChangedOnBaseapp', None, _configVal, None)
 
     def notifyInterfaceCacheConfigChanged(self, name, val):
-        configVal = ConfigVal()
-        configVal.name = name
-        configVal.val = val
+        _configVal = ConfigVal()
+        _configVal.name = name
+        _configVal.val = val
 
-        self._callInterfaceApp('cacheConfigOnBaseapp', None, configVal, None)
+        self._callInterfaceApp('cacheConfigOnBaseapp', None, _configVal, None)
+
+    def notifyInterfaceDataReload(self, args):
+        _listVal = ListVal()
+        for arg in args:
+            _listVal.vals.append(arg)
+        self._callInterfaceApp('interfaceDataReload', None, _listVal, None)
 
     def notifyInterfaceReload(self):
         self._callInterfaceApp('interfaceReload', None, Void(), None)
 
-    def notifyInterfaceDataReload(self, args):
-        listVal = ListVal()
-        for arg in args:
-            listVal.vals.append(arg)
-        self._callInterfaceApp('interfaceDataReload', None, listVal, None)
-
     def notifyInterfaceSyncRegisterCount(self, count):
-        intVal = IntVal()
-        intVal.value = count
-        self._callInterfaceApp('syncRegisterCount', None, intVal, None)
+        _intVal = IntVal()
+        _intVal.value = count
+        self._callInterfaceApp('syncRegisterCount', None, _intVal, None)
 
     def readhotfix(self):
         LOG_INFO('do hotfix')
-        # hotfix = ''
-        # with open(gameconst.HOTFIX_PATH, 'r', encoding='utf-8') as f:
-        #     hotfix = f.read()
-        #
-        # dic = {'hotfix': hotfix}
-        # jsonStr = json.dumps(dic).encode('utf-8')
-        # zStr = gzip.compress(jsonStr)
-        # gameglobal.hotfix = zStr
-        # self.broadcastToAllAccountHotfix()
 
     def _handleCallQueue(self):
         if not self.callObjQueue:
             self.addTimerCB(1, '_handleCallQueue', (), gametimer.TIMER_TAG_HANDLE_CALL_QUEUE)
             return
 
-        cnt = 50
-        for callObj in self.callObjQueue[:cnt]:
+        _cnt = 50
+        for callObj in self.callObjQueue[:_cnt]:
             try:
                 callObj()
             except Exception as e:
                 gameengine.panicStack('handleCallQueue error:', e, callObj)
 
-        self.callObjQueue = self.callObjQueue[cnt:]
+        self.callObjQueue = self.callObjQueue[_cnt:]
         self.addTimerCB(0.2, '_handleCallQueue', (), gametimer.TIMER_TAG_HANDLE_CALL_QUEUE)
 
-    def addCallQueue(self, callableObj):
+    def addToCallQueue(self, callableObj):
         self.callObjQueue.append(callableObj)
 
     def sendOfficialMessageForTest(self, gbId, content, registerChannel, seqId):
         channelList = registerChannel.split(',')
         playerStub = gameengine.getGlobalBase('PlayerStub')
-        playerStub.doOnOthersClient([gbId, ], 'onOfficialMessage', (95, content, 1, channelList, seqId), None, '', ())
+        playerStub.doOnOthersClient([gbId, ], 'onOfficialMessage', (95, content, 1, channelList, seqId, '', 0), None, '', ())
 
-    def sendOfficialMessage(self, beginTime, endTime, content, tick, registerChannel, seqId, priority=0):
-        if seqId in self.officialMesTimerDic:
+    def sendOfficialMessage(self, beginTime, endTime, content, tick, registerChannel, seqId, priority=0, chatChannelList='', chatType=0):
+        if seqId in self.officialMesTimerDict:
             LOG_ERR('official message is already exist', seqId)
             return
 
-        if seqId in self.officialMesTickTimerDic:
+        if seqId in self.officialMesTickTimerDict:
             LOG_ERR('official message is already exist', seqId)
             return
 
         channelList = registerChannel.split(',')
         officialMesTimerId = self._datetimeCallback(beginTime, '_sendOfficialMessage',
-                                                    (content, tick, channelList, seqId, endTime, priority),
+                                                    (content, tick, channelList, seqId, endTime, priority, chatChannelList, chatType),
                                                     gametimer.TIMER_GM_OFFICIAL_MESSAGE)
 
-        self.officialMesTimerDic[seqId] = officialMesTimerId
+        self.officialMesTimerDict[seqId] = officialMesTimerId
         if gameglobal.isBootstrap:
             value = ";".join((str(beginTime), str(endTime), content, str(tick), registerChannel))
             self.getRedisClient().hset(gameconst.RedisKey.IDIPMARQUEE_KEY, str(seqId), value)
 
     def _overOfficialMessage(self, seqId):
-        if self.officialMesTickTimerDic.get(seqId, 0):
-            self.cancelTimerCB(self.officialMesTickTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
-        if self.officialMesTimerDic.get(seqId, 0):
-            self._cancelDatetimeCallback(self.officialMesTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
-        self.officialMesTimerDic.pop(seqId, None)
-        self.officialMesTickTimerDic.pop(seqId, None)
+        if self.officialMesTickTimerDict.get(seqId, 0):
+            self.cancelTimerCB(self.officialMesTickTimerDict.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
+        if self.officialMesTimerDict.get(seqId, 0):
+            self._cancelDatetimeCallback(self.officialMesTimerDict.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
+        self.officialMesTimerDict.pop(seqId, None)
+        self.officialMesTickTimerDict.pop(seqId, None)
         if gameglobal.isBootstrap:
             self.getRedisClient().hdel(gameconst.RedisKey.IDIPMARQUEE_KEY, str(seqId))
 
-    def _sendOfficialMessage(self, content, tick, channelList, seqId, endTime=None, priority=0):
-        self.officialMesTimerDic.pop(seqId, None)
-        self.officialMesTickTimerDic.pop(seqId, None)
-        self.onBroadcastToAllClients('onOfficialMessage', (95, content, 1, channelList, seqId))
+    def _sendOfficialMessage(self, content, tick, channelList, seqId, endTime=None, priority=0, chatChannelList='', chatType=0):
+        self.officialMesTimerDict.pop(seqId, None)
+        self.officialMesTickTimerDict.pop(seqId, None)
+        self.onBroadcastToAllClients('onOfficialMessage', (95, content, 1, channelList, seqId, chatChannelList, chatType))
         if endTime is None or utils.curTS() > endTime or tick <= 0:
             return
 
         tick += priority / 100
         officialMesTickTimerId = self.addTimerCB(tick, '_sendOfficialMessage',
-                                                (content, tick, channelList, seqId, endTime),
+                                                (content, tick, channelList, seqId, endTime, priority, chatChannelList, chatType),
                                                 gametimer.TIMER_GM_OFFICIAL_MESSAGE, )
-        self.officialMesTickTimerDic[seqId] = officialMesTickTimerId
+        self.officialMesTickTimerDict[seqId] = officialMesTickTimerId
 
     def stopOfficialMessage(self, seqId):
-        if self.officialMesTickTimerDic.get(seqId, 0):
-            self.cancelTimerCB(self.officialMesTickTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
-        if self.officialMesTimerDic.get(seqId, 0):
-            self._cancelDatetimeCallback(self.officialMesTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
-        self.officialMesTimerDic.pop(seqId, None)
-        self.officialMesTickTimerDic.pop(seqId, None)
+        if self.officialMesTickTimerDict.get(seqId, 0):
+            self.cancelTimerCB(self.officialMesTickTimerDict.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
+        if self.officialMesTimerDict.get(seqId, 0):
+            self._cancelDatetimeCallback(self.officialMesTimerDict.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
+        self.officialMesTimerDict.pop(seqId, None)
+        self.officialMesTickTimerDict.pop(seqId, None)
         self.onBroadcastToAllClients('stopOfficialMessage', (seqId,))
 
         self.getRedisClient().hdel(gameconst.RedisKey.IDIPMARQUEE_KEY, str(seqId))
@@ -593,9 +575,9 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         _req.compID = compId
         _req.entityID = entId
 
-        for client in self.interfaceClient.values():
-            if client and client.channel.dispatcher:
-                client.interfaceStub.setAccountComp(None, _req, None)
+        for _client in self.interfaceClient.values():
+            if _client and _client.channel.dispatcher:
+                _client.interfaceStub.setAccountComp(None, _req, None)
 
     def setBaseAppLockState(self, baseapp, state):
         LOG_DBG('setBaseAppLockState', baseapp.id, state)
@@ -608,10 +590,16 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         LOG_DBG('onSetBaseAppLockResult', isOk, state)
         if state == gameconst.BASEAPP_STATE_LOCK_WAIT_FULL_PREPARE:
             if isOk:
-                self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
+                if gameconfig.isWaitMapServer():
+                    self.pyAddTimer(0.1, 0, gametimer.WAITMAP_TIMER_SET_SERVER_STATE)
+                else:
+                    self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
             else:
                 LOG_INFO('still waiting for all stub full prepare in lock')
-                self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
+                if gameconfig.isWaitMapServer():
+                    self.pyAddTimer(0.5, 0, gametimer.WAITMAP_TIMER_GLOBAL_STUBS_FULL_PREPARE)
+                else:
+                    self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
 
     def doAntiAddiction(self):
         antiAddictionData = gameglobal.antiAddictionData

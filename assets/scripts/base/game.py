@@ -215,7 +215,10 @@ def onGlobalData(key, val):
                 gameglobal.deadBaseapps.pop(groupOrder)
         elif key.startswith(gameconst.GLOBALDATA_KEY_CELLAPP_INITED):
             if gameglobal.localBaseApp:
-                gameglobal.localBaseApp.addInitedCellapp(val)
+                if gameconfig.isWaitMapServer():
+                    gameglobal.localBaseApp.waitMapAddInitedCellapp(val)
+                else:
+                    gameglobal.localBaseApp.addInitedCellapp(val)
 
         if gameglobal.localBaseApp:
             gameglobal.localBaseApp.doGlobalDataCallback(key, val)
@@ -248,7 +251,7 @@ def onBaseAppData(key, value):
     KBEngine method.
     baseAppData有改变
     """
-    print('onBaseAppData:', key, value)
+    LOG_DBG('onBaseAppData:', key, value)
     if not type(key) is str:
         return
 

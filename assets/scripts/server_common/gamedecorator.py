@@ -162,39 +162,42 @@ def offlineCallback(fn):
 
     return __
 
+def doCheckGameConfig(avatar, name, needMsg = True):
+    info = gameconfig.CONFIG.get(name)
+    if not info:
+        LOG_ERR('gameconfig not found: 1', name)
+        return False
+    configName, convFunc, default, defaultV, desc, cid, flags = info
+    v = KBEngine.globalData['CONFIG'][configName]
+    if not v:
+        if KBEngine.component == 'cellapp':
+            avatar.showMsg(C_CD.datas['systemSwitch']['value'], [])
+        else:
+            avatar.onMessagePre(C_CD.datas['systemSwitch']['value'], [])
+        #LOG_WARN('gameconfig not enable: 2', name)
+        return False
+    
+    # 检查是否存在主从系统开关
+    mainSwitch = UVVD.typeToMain.get(name)
+    if mainSwitch:
+        if name != mainSwitch:
+            info = gameconfig.CONFIG.get(mainSwitch)
+            if not info:
+                LOG_ERR('gameconfig not found: 3', mainSwitch)
+                return False
+            configName, convFunc, default, defaultV, desc, cid, flags = info
+            v = KBEngine.globalData['CONFIG'][configName]
+            if not v:
+                LOG_WARN('gameconfig not enable: 4', name)
+                return False
+    return True
 
 def checkGameconfigEnable(name):
     def f(func):
         @functools.wraps(func)
         def wrapper(*args):
-            info = gameconfig.CONFIG.get(name)
-            if not info:
-                LOG_ERR('gameconfig not found: 1', name)
-                return
-            configName, convFunc, default, defaultV, desc, cid, flags = info
-            v = KBEngine.globalData['CONFIG'][configName]
-            if not v:
-                if KBEngine.component == 'cellapp':
-                    args[0].showMsg(C_CD.datas['systemSwitch']['value'], [])
-                else:
-                    args[0].onMessagePre(C_CD.datas['systemSwitch']['value'], [])
-                #LOG_WARN('gameconfig not enable: 2', name)
-                return
-            
-            # 检查是否存在主从系统开关
-            mainSwitch = UVVD.typeToMain.get(name)
-            if mainSwitch:
-                if name != mainSwitch:
-                    info = gameconfig.CONFIG.get(mainSwitch)
-                    if not info:
-                        LOG_ERR('gameconfig not found: 3', mainSwitch)
-                        return
-                    configName, convFunc, default, defaultV, desc, cid, flags = info
-                    v = KBEngine.globalData['CONFIG'][configName]
-                    if not v:
-                        LOG_WARN('gameconfig not enable: 4', name)
-                        return 
-            return func(*args)
+            if doCheckGameConfig(args[0], name):
+                return func(*args)
 
         return wrapper
 

@@ -18,11 +18,17 @@ localAccountCache = {}
 
 roleCache = {}
 
+# 等待服 Avataring 实体缓存，key: entityId, value: roleInfo dict
+avataringCache = {}
+
+mallItemPriceCache = {}
+mallItemLastUpdateTime = {}
+
 # 记录role gbId到entityId的映射
 roleGBIDToEntId = {}
 
-reloadedModuleMap = {}
-reloadedModuleIdMap = {}
+reloadedModuleDic = {}
+reloadedModuleIdDic = {}
 reloadedCls = {}
 
 gmCmdData = {}
@@ -142,4 +148,7 @@ hookDict = {}
 forbiddenTaskIds = {}
 
 mineGlobalData = MineGlobalData.MineGlobalData()
+mineCanAttackBits = 0
+
+
 

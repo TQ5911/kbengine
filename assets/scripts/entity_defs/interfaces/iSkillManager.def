@@ -779,6 +779,11 @@
             <Type>          TIMER_ID            </Type>
             <Flags>         CELL_PRIVATE        </Flags>
         </checkShieldTimerId>
+
+        <skillForbidTagDic>
+            <Type>              PY_DICT             </Type>
+            <Flags>             CELL_PRIVATE        </Flags>
+        </skillForbidTagDic>
     </Properties>
 
     <CellMethods>
@@ -830,9 +835,9 @@
             <Arg>        OBJECT_ID        </Arg>
         </removeCreation>
 
-        <removeSummon>
+        <removeSummonById>
             <Arg>        OBJECT_ID        </Arg>
-        </removeSummon>
+        </removeSummonById>
 
         <displacedBySkill>
             <Arg>        OBJECT_ID        </Arg>
@@ -872,6 +877,10 @@
             <Arg>           SKILLID        </Arg>
             <Arg>           BOOL           </Arg>
         </removeSkill>
+
+        <changeMorphPreAddSkill>
+            <Arg>          MORPH_STATE  </Arg>
+        </changeMorphPreAddSkill>
     </CellMethods>
 
     <ClientMethods>
@@ -1023,5 +1032,16 @@
         <onStateChangedForce>
             <Arg>        UINT8              </Arg>
         </onStateChangedForce>
+
+        <drawCube>
+            <Arg>        POSITION3D         </Arg>
+            <Arg>        POSITION3D         </Arg>
+            <Arg>        FLOAT              </Arg>
+            <Arg>        FLOAT              </Arg>
+        </drawCube>
+
+        <updateForbidSkillTags>
+            <Arg>        ARRAY <of> UINT16 </of>     </Arg>
+        </updateForbidSkillTags>
     </ClientMethods>
 </root>

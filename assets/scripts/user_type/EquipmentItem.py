@@ -44,7 +44,7 @@ import traceback
 class EquipmentItem(BaseItem.BaseItem):
     def __init__(self, itemId, itemNum=1, bindType=dataUtils.getItemDefaultBindType(),  **kwargs):
         super().__init__(itemId, 1, bindType=bindType)
-        if itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID:
+        if itemId == gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID:
             gameengine.panicStack('EquipmentItem.__init__, comm itemId found')
             return
         self.itemType = gameconst.ItemType.Normal
@@ -338,7 +338,7 @@ class EquipmentItem(BaseItem.BaseItem):
             dissassemblyReward = gearBaseData['disassemblyReward2']
         # 是否绑定相关的掉落
         if dissassemblyReward:
-            awardCtx = owner._getAvatarAwardCtx(dissassemblyReward, None)
+            awardCtx = owner.getAvatarAwardCtx(dissassemblyReward, None)
             awardVal = dropAward.getAwardOne(dissassemblyReward, awardCtx)
         else:
             awardVal = dropAward.AwardVal()
@@ -486,10 +486,8 @@ class EquipmentItem(BaseItem.BaseItem):
             self.onEquipAffixChanged()
         return ret, oldSpiritAffixes, newSpiritAffixes
     
-    def doEquipSoulSocket(self, owner, rollProps):
-        ret = self.equipAttr.soulSocket(rollProps)
-        if ret:
-            self.onEquipAffixChanged()
+    def doEquipSoulSocket(self, owner, rollProps, itemId, isEquip=False):
+        ret = self.equipAttr.soulSocket(rollProps, itemId)
         return ret
 
     def doEquipGlyphWashing(self, owner, glyphPos, affixIds = None):
@@ -789,7 +787,24 @@ class EquipmentItem(BaseItem.BaseItem):
         return self.equipAttr.quality
 
     def getBlessVal(self):
-        return self.equipAttr.baseAttrsByAfxVal.get('adjAtkBless', 0)
+        blessVal = 0
+        for affixe in self.equipAttr.soulAffixes:
+            affixData = AFAFD.datas.get(affixe.afxId)
+            if not affixData:
+                continue
+            prop = affixData.get('prop', None)
+            if not prop or prop != 'adjAtkBless':
+                continue
+            blessVal += affixe.affixVal
+        for affixe in self.equipAttr.blessAffixes:
+            affixData = AFAFD.datas.get(affixe.afxId)
+            if not affixData:
+                continue
+            prop = affixData.get('prop', None)
+            if not prop or prop != 'adjAtkBless':
+                continue
+            blessVal += affixe.affixVal
+        return blessVal
 
     def getAttrClientData(self, datas):
         ret = {k:v for k, v in datas.items()}
@@ -837,17 +852,37 @@ class EquipmentItem(BaseItem.BaseItem):
         return self.equipAttr.maxBlessLv
     
     def updateOwnerInfo(self, gbId, serverId):
+        # 这个每次流转都要记
+        self.equipAttr.whyInMyBag = gameconst.ItemReturnReason.DROP
+
         # 只能首次处理，后面归还完成之后，把这个数据重新置掉
         if self.equipAttr.ownerGbId == 0:
             self.equipAttr.ownerGbId = gbId
             self.equipAttr.ownerServerId = serverId
-            # 返还时间等于装备表配置的returnTime*3600+当前时间
-            self.equipAttr.returnTime = utils.curTS() + GBGBD.datas[self.itemId]["returnTime"] * 3600
+            # 返还时间等于装备表配置的returnTime*86400+当前时间
+            self.equipAttr.returnTime = utils.curTS() + GBGBD.datas[self.itemId]["returnTime"] * 86400
+            self.equipAttr.returnReason = gameconst.ItemReturnReason.DROP
+            return True
+        return False
+    
+    def updateOwnerInfoByLease(self, gbid, serverId, returnTime):
+        # 这个每次流转都要记
+        self.equipAttr.whyInMyBag = gameconst.ItemReturnReason.LEASE
+
+        if self.equipAttr.returnReason == gameconst.ItemReturnReason.NORMAL:
+            self.equipAttr.ownerGbId = gbid
+            self.equipAttr.ownerServerId = serverId
+            self.equipAttr.returnTime = returnTime
+            self.equipAttr.returnReason = gameconst.ItemReturnReason.LEASE
+            return True
+        return False
     
     def resetOwnerInfo(self):
         self.equipAttr.ownerGbId = 0
         self.equipAttr.ownerServerId = 0
         self.equipAttr.returnTime = 0
+        self.equipAttr.returnReason = gameconst.ItemReturnReason.NORMAL
+        self.equipAttr.whyInMyBag = gameconst.ItemReturnReason.NORMAL
 
     def getOwnerGbId(self):
         return self.equipAttr.ownerGbId
@@ -857,6 +892,148 @@ class EquipmentItem(BaseItem.BaseItem):
     
     def getReturnTime(self):
         return self.equipAttr.returnTime
+
+    def getWashNeedItems(self, washType, count):
+        """获取洗涤消耗的非绑材料 {itemId: num}，不需要洗涤返回 None"""
+        if washType == gameconst.EquipWashType.ENHANCE:
+            if self.equipAttr.bindEnhanceCost <= 0:
+                return None
+            key = self.equipAttr.getEnhanceLevelKey(0)
+            cfgData = GEGS.datas.get(key)
+            if not cfgData:
+                return None
+            costItem = cfgData.get('costItem')
+            if not costItem or costItem == 0:
+                return None
+            itemId = costItem[0][0]
+            num = gameconst.EquipWashConfig.DEFAULT_ENHANCE_COST_NUM * count
+            return {itemId: num}
+
+        elif washType == gameconst.EquipWashType.BLESS:
+            if self.equipAttr.bindBlessCost <= 0:
+                return None
+            cfgData = self.equipAttr.getBlessCfgData(0)
+            if not cfgData:
+                return None
+            gearBlessItem = cfgData.get('gearBlessItem')
+            if not gearBlessItem:
+                return None
+            itemId = gearBlessItem[0][0]
+            num = gameconst.EquipWashConfig.DEFAULT_BLESS_COST_NUM * count
+            return {itemId: num}
+
+        elif washType == gameconst.EquipWashType.UPGRADE:
+            if self.equipAttr.bindValue <= 0:
+                return None
+            result = {}
+            for coreItemId, coreItemNum in GBGBD.datas[self.itemId]['washConsumeItem']:
+                result[coreItemId] = coreItemNum * count
+            return result
+
+        return None
+
+    def checkEquipWashCost(self, washType, count):
+        """校验洗涤条件，返回 (resultCode, actualCount, costItemDic)
+        resultCode: EquipWashResult.OK 或错误码
+        actualCount: 校验后实际可洗涤次数
+        costItemDic: 洗涤消耗 {itemId: num}，失败时可能为 None
+        """
+        if count <= 0 or count > gameconst.EquipWashConfig.MAX_WASH_COUNT:
+            return gameconst.EquipWashResult.WASH_COUNT_ERR, 0, None
+
+        if washType not in gameconst.EquipWashType.DIRECT_WASH_TYPES:
+            return gameconst.EquipWashResult.WASH_TYPE_ERR, 0, None
+
+        # 品质检查
+        minQuality = GEGCD.datas['Equipment_unbinding_quality']['value']
+        if self.quality < minQuality:
+            return gameconst.EquipWashResult.QUALITY_NOT_ENOUGH, 0, None
+
+        # 计算实际最大需要洗涤次数
+        if washType == gameconst.EquipWashType.ENHANCE:
+            maxCount = self.equipAttr.bindEnhanceCost
+        elif washType == gameconst.EquipWashType.BLESS:
+            maxCount = self.equipAttr.bindBlessCost
+        elif washType == gameconst.EquipWashType.UPGRADE:
+            maxCount = self.equipAttr.bindValue
+        else:
+            maxCount = 0
+        count = min(count, maxCount)
+        if count <= 0:
+            return gameconst.EquipWashResult.NO_NEED_WASH, 0, None
+
+        # 获取洗涤消耗
+        costItemDic = self.getWashNeedItems(washType, count)
+        if not costItemDic:
+            return gameconst.EquipWashResult.WASH_TYPE_ERR, 0, None
+
+        return gameconst.EquipWashResult.OK, count, costItemDic
+
+    def doEquipWash(self, washType, count):
+        """执行洗涤，扣除绑定材料计数"""
+        if washType == gameconst.EquipWashType.ENHANCE:
+            self.equipAttr.bindEnhanceCost = max(0, self.equipAttr.bindEnhanceCost - count)
+        elif washType == gameconst.EquipWashType.BLESS:
+            self.equipAttr.bindBlessCost = max(0, self.equipAttr.bindBlessCost - count)
+        elif washType == gameconst.EquipWashType.UPGRADE:
+            self.equipAttr.bindValue = max(0, self.equipAttr.bindValue - count)
+        else:
+            return False
+
+        # 全部洗涤完成后解除绑定，变为可交易
+        if self.isAllWashCompleted():
+            self.bindType = gameconst.ItemBindType.NORMAL
+        return True
+
+    def isWashNeed(self, washType):
+        """判断某类洗涤是否还需要"""
+        if washType == gameconst.EquipWashType.ENHANCE:
+            return self.equipAttr.bindEnhanceCost > 0
+        elif washType == gameconst.EquipWashType.BLESS:
+            return self.equipAttr.bindBlessCost > 0
+        elif washType == gameconst.EquipWashType.UPGRADE:
+            return self.equipAttr.bindValue > 0
+        elif washType == gameconst.EquipWashType.GLYPH:
+            for glyphData in self.equipAttr.glyphInfo:
+                pos = glyphData.getGlyphPos()
+                bindType = self.equipAttr.glyphBindTypes.get(pos, gameconst.ItemBindType.BIND)
+                if bindType == gameconst.ItemBindType.BIND:
+                    return True
+            return False
+        elif washType == gameconst.EquipWashType.SPIRIT:
+            for idx, spiritData in enumerate(self.equipAttr.spiritDatas):
+                if not spiritData.spiritAffixes:
+                    continue
+                bindType = self.equipAttr.spiritBindTypes.get(idx, gameconst.ItemBindType.BIND)
+                if bindType == gameconst.ItemBindType.BIND:
+                    return True
+            return False
+        elif washType == gameconst.EquipWashType.SOUL:
+            return self.equipAttr.soulBindType == gameconst.ItemBindType.BIND
+        return False
+
+    def isAllWashCompleted(self):
+        """判断全部养成项是否均洗涤完成"""
+        if self.equipAttr.bindEnhanceCost > 0:
+            return False
+        if self.equipAttr.bindBlessCost > 0:
+            return False
+        if self.equipAttr.bindValue > 0:
+            return False
+        for glyphData in self.equipAttr.glyphInfo:
+            pos = glyphData.getGlyphPos()
+            bindType = self.equipAttr.glyphBindTypes.get(pos, gameconst.ItemBindType.BIND)
+            if bindType == gameconst.ItemBindType.BIND:
+                return False
+        for idx, spiritData in enumerate(self.equipAttr.spiritDatas):
+            if not spiritData.spiritAffixes:
+                continue
+            bindType = self.equipAttr.spiritBindTypes.get(idx, gameconst.ItemBindType.BIND)
+            if bindType == gameconst.ItemBindType.BIND:
+                return False
+        if self.equipAttr.soulBindType == gameconst.ItemBindType.BIND:
+            return False
+        return True
 
 class EquipAttr(userType.UserSingleType):
 
@@ -873,6 +1050,7 @@ class EquipAttr(userType.UserSingleType):
         self.spiritDatas = []
         # 附灵编组
         self.soulAffixes = []
+        self.soulItemId = 0
         self.spiritGroup = 0
         # 铭文数据
         self.glyphInfo = []
@@ -905,8 +1083,17 @@ class EquipAttr(userType.UserSingleType):
         # 装备归还时间
         self.returnTime = 0
 
-        self.returnReason = 0           # 归还原因 1=爆装 2=租赁
-        self.leaseTag = 0               # 租赁标记 0=正常 1=租赁
+        self.returnReason = 0
+        # 装备为什么在我手里（爆装/租赁流转记录）
+        self.whyInMyBag = 0
+
+        # 装备洗涤新增字段
+        self.bindEnhanceCost = 0        # 强化累计消耗的绑定强化石数量
+        self.bindBlessCost = 0          # 祝福累计消耗的绑定祝福石数量
+        # self.bindUpgradeEquipCost = 0   # 升阶累计消耗的绑定装备（或核心）数量；这里直接使用原来的 bindValue
+        self.glyphBindTypes = {}        # 铭文各槽位绑定状态 {glyphPos: bindType}
+        self.spiritBindTypes = {}       # 附灵各槽位绑定状态 {spiritPos: bindType}
+        self.soulBindType = 0           # 魂魄绑定状态 0=未镶嵌 1=绑定 2=非绑
 
         self.setDirtyFlag(False)
 
@@ -1015,11 +1202,20 @@ class EquipAttr(userType.UserSingleType):
         for oneAffix in self.soulAffixes:
             soulAffixes.append(oneAffix.toAfxClientDic())
 
+        glyphBindTypes = []
+        for pos, bind in self.glyphBindTypes.items():
+            glyphBindTypes.append({'pos': pos, 'bindType': bind})
+
+        spiritBindTypes = []
+        for pos, bind in self.spiritBindTypes.items():
+            spiritBindTypes.append({'pos': pos, 'bindType': bind})
+
         return {
             'spiritDatas': spiritDatas,
             'spiritGroup': self.spiritGroup,
             'blessAffixes': blessAffixes,
             'soulAffixes': soulAffixes,
+            'soulItemId': self.soulItemId,
             'glyphInfos': glyphInfos,
             'glyphGroup': self.glyphGroup,
             'enhanceLv': self.enhanceLv,
@@ -1032,8 +1228,14 @@ class EquipAttr(userType.UserSingleType):
             'grade': self.grade,
             'maxEnhanceLv': self.maxEnhanceLv,
             'returnTime': self.returnTime,
+            'ownerId': self.ownerGbId,
             'returnReason': self.returnReason,
-            'leaseTag': self.leaseTag,
+            'whyInMyBag': self.whyInMyBag,
+            'bindEnhanceCost': self.bindEnhanceCost,
+            'bindBlessCost': self.bindBlessCost,
+            'glyphBindTypes': glyphBindTypes,
+            'spiritBindTypes': spiritBindTypes,
+            'soulBindType': self.soulBindType,
         }
     
     def toDict(self, extraAttrs=None):
@@ -1060,6 +1262,7 @@ class EquipAttr(userType.UserSingleType):
             'spiritGroup': self.spiritGroup,
             'blessAffixes': blessAffixes,
             'soulAffixes': soulAffixes,
+            'soulItemId': self.soulItemId,
             'glyphInfos': glyphInfos,
             'glyphGroup': self.glyphGroup,
             'washingLuckData': self.washingLuckData,
@@ -1079,7 +1282,12 @@ class EquipAttr(userType.UserSingleType):
             'ownerServerId': self.ownerServerId,
             'ownerId': self.ownerGbId,
             'returnReason': self.returnReason,
-            'leaseTag': self.leaseTag,
+            'whyInMyBag': self.whyInMyBag,
+            'bindEnhanceCost': self.bindEnhanceCost,
+            'bindBlessCost': self.bindBlessCost,
+            'glyphBindTypes': self.glyphBindTypes,
+            'spiritBindTypes': self.spiritBindTypes,
+            'soulBindType': self.soulBindType,
         }
 
         if extraAttrs:
@@ -1132,6 +1340,8 @@ class EquipAttr(userType.UserSingleType):
                 affixObj = AffixInfo.Affix(oneAffixVal[0])
                 affixObj.fromAffixValList(oneAffixVal)
                 self.soulAffixes.append(affixObj)
+            
+            self.soulItemId = value.get('soulItemId', 0)
 
             self.washingLuckData = value.get('washingLuckData', {})
 
@@ -1149,6 +1359,11 @@ class EquipAttr(userType.UserSingleType):
 
             self.bindValue = value.get('bindValue', 0)
             self.isAddBindValue = value.get('isAddBindValue', False)
+            self.bindEnhanceCost = value.get('bindEnhanceCost', 0)
+            self.bindBlessCost = value.get('bindBlessCost', 0)
+            self.glyphBindTypes = value.get('glyphBindTypes', {})
+            self.spiritBindTypes = value.get('spiritBindTypes', {})
+            self.soulBindType = value.get('soulBindType', 0)
             blessLvFailedCount = value.get('blessLvFailedCount', {})
             for k,v in blessLvFailedCount.items():
                 self.blessLvFailedCount[int(k)] = v
@@ -1170,7 +1385,7 @@ class EquipAttr(userType.UserSingleType):
             self.ownerServerId = value.get('ownerServerId', 0)
 
             self.returnReason = value.get('returnReason', 0)
-            self.leaseTag = value.get('leaseTag', 0)
+            self.whyInMyBag = value.get('whyInMyBag', 0)
             oldScore = value.get('score', 0)
             self.calcScore()
 
@@ -1449,12 +1664,13 @@ class EquipAttr(userType.UserSingleType):
                     break
         return blessAffixId
 
-    def soulSocket(self, rollProps):
+    def soulSocket(self, rollProps, itemId):
         self.soulAffixes = []
         for propData in rollProps:
             affixObj = AffixInfo.Affix(propData[0])
             affixObj.affixVal = propData[2]
             self.soulAffixes.append(affixObj)
+        self.soulItemId = itemId
         self.calcScore()
         self.setDirtyFlag()
         return True
@@ -1675,6 +1891,10 @@ class EquipAttr(userType.UserSingleType):
             self.glyphGroup = groupId
             self.calcScore()
             ret = True
+            # 重置下应用的明文状态
+            for glyphData in self.glyphInfo:
+                for glyphAffix in glyphData.glyphAffixes:
+                    glyphAffix.setEffected(False)
         return ret
 
     def applySpiritGroupId(self, groupId):

@@ -16,13 +16,13 @@ class IStaticSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
         LOG_INFO('IStaticSpaceMgr.__init__', self.spaceNo)
         iCell.ICell.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
 
     def onTimer(self, tid, userData):
         if userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         else:
-            self._onTimer(tid, userData)
+            self._onTimerTrigger(tid, userData)
 
     def initStaticSpace(self):
         _space = gameglobal.localSpaceIDMap[self.spaceID]

@@ -216,6 +216,13 @@
         <doGetAuthOfflineTime>
             <Arg>           ENTITYCALL                      </Arg>
         </doGetAuthOfflineTime>
+
+        <doInviteCheck>
+            <Arg>           PLAYER_GBID           </Arg>
+            <Arg>           UINT8                 </Arg>
+            <Arg>           UINT8                 </Arg>
+            <Arg>           BOOL                  </Arg>
+        </doInviteCheck>
     </BaseMethods>
 
     <CellMethods>

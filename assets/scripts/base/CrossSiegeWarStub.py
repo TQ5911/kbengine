@@ -25,7 +25,7 @@ import gameglobal
 
 
 #城战
-class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCityOwnerMgr.ICityOwnerMgr, iCycleEvent.ICycleEvent):
+class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCityOwnerMgr.ICityOwnerMgr, iCycleEvent.ICycleEventMixin):
     def __init__(self):
         self.crossServerGroupID = 2
         if gameconfig.serverId() in gameglobal.mapleServerInfo:
@@ -71,7 +71,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.updateSiegeWarStateAndEndTime()
 
         iCityOwnerMgr.ICityOwnerMgr.__init__(self)
-        iCycleEvent.ICycleEvent.__init__(self)
+        iCycleEvent.ICycleEventMixin.__init__(self)
 
         self.registerDailyEvent('_onCityOwnerDailyEvent')
         self.onDailyEvent()
@@ -84,7 +84,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         super().doNext()
 
     def onTimer(self, timer, userData):
-        self._onTimer(timer, userData)
+        self._onTimerTrigger(timer, userData)
         if userData == gametimer.CROSS_SIEGE_WAR_STATE_CHECK:
             self.checkBroadcastBiddingData()
             self.checkBattleStart()

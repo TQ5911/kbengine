@@ -11,6 +11,7 @@ import iGameEntity
 import iEntityRefresh
 import iClient
 import utils
+import awardContext
 
 import gameengine
 import gameconst
@@ -67,15 +68,17 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         self.createTime = utils.curTS()
         if hasattr(self, 'FBTime'):
             self.fBProtectTime = self.createTime + self.FBTime
+            self.awardContext = awardContext.DropAwardCtx(self.collectionId, 1)
+            self.awardContext.addContextVar('customAward', [{'itemId': self.FBItemId, 'count': 1}])
 
     def _doInitBornState(self):
         ifBornState = NPD.datas[self.collectionId]['ifBornState']
         if ifBornState:
-            self.setBornState(gameconst.BornStateType.invisible)
+            self.setBornState(gameconst.BornStateEnum.invisible)
             self.addTimerCB(CBSD.datas[ifBornState]['refreshTime'], 'setBornState',
-                           (gameconst.BornStateType.static, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
+                           (gameconst.BornStateEnum.static, ), gametimer.TIMER_TAG_CHANGE_BORN_STATE)
         else:
-            self.setBornState(gameconst.BornStateType.move)
+            self.setBornState(gameconst.BornStateEnum.move)
 
     def setBornState(self, newState):
         self.bornState = newState
@@ -100,7 +103,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         return False
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
         else:
@@ -133,11 +136,11 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         self.delaySafeDestroy()
 
     def _preSafeDestory(self):
-        super()._preSafeDestory()
+        super(Collection, self)._preSafeDestory()
 
         spaceMgr = self.spaceMgr
         if spaceMgr:
-            spaceMgr.removeEntityById(self.id)
+            spaceMgr.removeEntById(self.id)
         if self.dropEquipId and self.gatherAvatars.get('gatherCnt', 0) == 0:
             # 过5秒后检查状态并向玩家发送提醒邮件
             KBEngine.addTimer(5, 0, lambda *args: gameengine.getGlobalBase('DropStub').sendRepairDropMail(self.dropEquipId))

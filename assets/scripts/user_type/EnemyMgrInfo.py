@@ -28,22 +28,24 @@ class EnemyMgrVal(userType.UserSingleType):
         # 构造恩怨簿
         self.constructRecordList()
 
+    @classmethod
+    def _checkIgnores_(cls):
+        return 'recordList',
+
     def constructRecordList(self):
         self.recordList = []
-        recordHeap = []
-        maxSize = RC_RCD.datas['enemyRecordNumLimit']['value']
-
         for gbId, _recordVal in self.killDict.items():
             for _record in _recordVal.recordList:
-                _val = {'name': _recordVal.name, 'gbId': gbId, 'school': _recordVal.school, 'level': _recordVal.level, 'sex': _recordVal.sex}
+                _val = {
+                    'name': _recordVal.name, 
+                    'gbId': gbId, 
+                    'school': _recordVal.school, 
+                    'level': _recordVal.level, 
+                    'sex': _recordVal.sex,
+                }
                 _val.update(_record.toEnemyRecordSavedDict())
-                if len(recordHeap) < maxSize:
-                    heapq.heappush(recordHeap, ((_val['ts'], _val['gbId']), _val))
-                else:
-                    if _val['ts'] > recordHeap[0][0][0]:
-                        heapq.heapreplace(recordHeap, ((_val['ts'], _val['gbId']), _val))
+                self.recordList.append(_val)
 
-        self.recordList = [item[1] for item in recordHeap]
         self.recordList.sort(key=lambda x: x['ts'])
 
     def addRecord(self, gbId, name, school, level, sex, recordType, spaceNo):

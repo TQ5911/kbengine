@@ -45,6 +45,8 @@ class LeaderBoardGuildVal(userType.UserSingleType):
     # 必须实现
     def leaderBoardLog(self, leaderType, rank):
         LogTrackingMgr.LogTrackingMgr.LeaderBoard_Guild(
+            'LeaderBoardGuild',
+            '',
             leaderType,
             rank,
             self.guildUUID,

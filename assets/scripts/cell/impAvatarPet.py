@@ -13,7 +13,7 @@ import petData_set as PDSD
 import petData_petData as PDPDD
 import passiveSkill_passiveSkill as PSPSD
 import petData_petGear as PDPGD
-
+import avatarPet
 
 class ImpAvatarPet(object):
     def onInitPetProps(self, petIdList, petLevels):
@@ -53,14 +53,14 @@ class ImpAvatarPet(object):
 
     # ---------------------------      item  action  ------------------------------------
     def checkLingShouEggItemCond(self, gridId, itemId, useNum, ctx):
-        pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx)
+        pendingCheckId = self.cachePendingCheckId(gridId, itemId, useNum, ctx)
         self.base.checkLingShouEggItemCondBase(pendingCheckId)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def useLingShouEggItem(self, opUUID, ctx):
         pendingUseId = self.setPendingUseId(opUUID, ctx)
-        self.base.useLingShouEggItemBase(pendingUseId, gameconst.BagType.BAG_TYPE_LINGSHOU_PEN, opUUID)
-        return gameconst.UseItem.PENDING
+        self.base.useLingShouEggItemBase(pendingUseId, gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN, opUUID)
+        return gameconst.UseItemEnum.PENDING
 
     @staticmethod
     @functools.lru_cache(1024)
@@ -81,9 +81,9 @@ class ImpAvatarPet(object):
         else:
             self.lingShouId = 0
 
-        LogTrackingMgr.LogTrackingMgr.Pet_Follow(self.gbId, formula.fetchMapId(self.spaceNo), petId, followData[0], followData[1], followData[2], followType)
+        LogTrackingMgr.LogTrackingMgr.pet_follow_change(self.gbId, self.clientDistinctIdCell, self.gbId, formula.fetchMapId(self.spaceNo), petId, followData[0], followData[1], followData[2], followType)
 
-    def onSetLingShouBattleList(self, battleList, battleIdx, battleData):
+    def onSetLingShouBattleList(self, battleList, battleIdx, battleData, isLogin):
         LOG_INFO('onSetLingShouBattleList', battleList)
         if self.lingShouBattleList:
             for petId, equipList in self.lingShouBattleList:
@@ -110,7 +110,11 @@ class ImpAvatarPet(object):
                         action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList = battleList
-        LogTrackingMgr.LogTrackingMgr.Pet_ChangeTeam(self.gbId, formula.fetchMapId(self.spaceNo), battleIdx, battleData)
+        if not isLogin:
+            petTeamInfo = []
+            for petData in battleData:
+                petTeamInfo.append(avatarPet.LingShou.getPetInfo(petData[0], petData[1], petData[2], petData[3]))
+            LogTrackingMgr.LogTrackingMgr.pet_change_team(self.gbId, self.clientDistinctIdCell, self.gbId, formula.fetchMapId(self.spaceNo), battleIdx, petTeamInfo)
 
     def onUpdateLingShouBattleList(self, petInfo, slotId):
         LOG_INFO('onUpdateLingShouBattleList', petInfo, slotId)

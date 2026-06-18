@@ -9,21 +9,36 @@
 
     <Interfaces>
         <Interface>    iAICombatUnit    </Interface>
-        <Interface>    iTimerCell    </Interface>
-        <Interface>    iEventMgr     </Interface>
-        <Interface>    iFubenSpace    </Interface>
-        <Interface>    iBaseWithCell    </Interface>
-        <Interface>    iClient          </Interface>
-        <Interface>    iMonsterGrp      </Interface>
-        <Interface>    iMonsterDungeon  </Interface>
+        <Interface>    iTimerCell       </Interface>
+        <Interface>    iEventMgr        </Interface>
+        <Interface>    iFubenSpace      </Interface>
         <Interface>    iGameEntity      </Interface>
+        <Interface>    iMonsterGrp      </Interface>
     </Interfaces>
 
     <Properties>
         <avatarGbId>
-            <Type>          OBJECT_ID               </Type>
+            <Type>          PLAYER_GBID               </Type>
             <Flags>         CELL_PRIVATE            </Flags>
         </avatarGbId>
+
+        <avatarId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         OTHER_CLIENTS           </Flags>
+            <WitnessName>     true                  </WitnessName>
+        </avatarId>
+
+        <replicaId>
+            <Type>  OBJECT_ID                       </Type>
+            <Flags> OTHER_CLIENTS                   </Flags>
+            <WitnessName>     true                  </WitnessName>
+        </replicaId>
+
+        <arType>
+            <Type>	        UINT8				    </Type>
+            <Flags>	        OTHER_CLIENTS		    </Flags>
+            <WitnessName>   true                    </WitnessName>
+        </arType>
 
         <name>
             <Type>	        UNICODE				    </Type>
@@ -48,25 +63,23 @@
             <Flags>         OTHER_CLIENTS           </Flags>
         </appearance>
 
-        <moveController>
-            <Type>	        UINT32				    </Type>
-            <Flags>	        CELL_PRIVATE 			</Flags>
-        </moveController>
+        <summonSlotIdx>
+            <Type>          SLOTID                      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </summonSlotIdx>
 
-        <hateTrapId>
-            <Type>          UINT32                  </Type>
-            <Flags>         CELL_PRIVATE            </Flags>
-        </hateTrapId>
-    
-        <bornPosition>
-            <Type>          POSITION3D              </Type>
-            <Flags>         CELL_PRIVATE            </Flags>
-        </bornPosition>
+        <ultraSkillPower>
+            <Type>          UINT8                       </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </ultraSkillPower>
 
-        <thinkTimer>
-            <Type>          TIMER_ID                </Type>
+        <glyphEquipData>
+            <Type>          GLYPH_EQUIP_INFO        </Type>
             <Flags>         CELL_PRIVATE            </Flags>
-        </thinkTimer>
+        </glyphEquipData>
+
     </Properties>
 
     <BaseMethods>
@@ -81,6 +94,8 @@
     </CellMethods>
 
     <ClientMethods>
+        <onBornAction> </onBornAction>
+
         <onDead>
             <Arg>        OBJECT_ID        </Arg>
         </onDead>

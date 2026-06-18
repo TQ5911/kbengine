@@ -10,11 +10,11 @@
 
     <BaseMethods>
         <reqReport> <Exposed/>
-            <Arg>   UINT64            </Arg>
-            <Arg>   STRING            </Arg>
+            <Arg>   UINT64          </Arg>
+            <Arg>   UNICODE         </Arg>
             <Arg>   ARRAY    <of>    UINT8        </of>   </Arg>
-            <Arg>   STRING            </Arg>
-            <Arg>   STRING            </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   UNICODE         </Arg>
         </reqReport>
     </BaseMethods>
 

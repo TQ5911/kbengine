@@ -15,6 +15,7 @@ import teamDunChallenge_basicInfo as TDC_BI
 class ICrusade(object):
 	@gamedecorator.checkGameconfigEnable('teamDungeon')
 	@utils.isMyself
+	@gamedecorator.limitcall(0.5)
 	def enterCrusadeDungeon(self, exposed):
 		LOG_DBG('enterCrusadeDungeon::')
 
@@ -58,7 +59,7 @@ class ICrusade(object):
 		heroicStoryPlayMode = dungeonPlayMode.CrusadeDungeonPlayMode(dunLevel=dunLevel, teamUUID = self.teamId)
 		extra = {'dungeonPlayMode': heroicStoryPlayMode, 'src': src, 'score': targetInfo['minScore']}
 
-		gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
+		gameengine.getTeamStub(self.teamId).doTeamPrepareStopAutoMatch(self.teamId)
 		gameengine.getTeamStub(self.teamId).enterTeamCrusadeDungeon(self.base, self.gbId, self.teamId, dungeonNo, extra)
 		# self.resetStatisticsData()
 

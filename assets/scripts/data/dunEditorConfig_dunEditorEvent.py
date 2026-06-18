@@ -661,7 +661,7 @@ datas = _tools.RODict({
     }),
     93: _tools.RODict({
         "ID": 93,
-        "name": "通知开始战斗CD",
+        "name": "通知相关/通知开始战斗CD",
         "value": "notifyStartBattleCD",
         "param": "3006",
         "description": "副本阶段内，开始战斗倒计时"
@@ -686,7 +686,21 @@ datas = _tools.RODict({
         "value": "TotalNumberOfMonstersKilled",
         "param": "1041,1042,1051,2203,2202,2206",
         "description": "检测副本中所击杀怪物总数量（从该节点被触发开始计算，可以填多个怪物ID），则表示检测对应ID的怪物的击杀总数量\n如果要检测原型数量，则在ID处填写原型ID，并在是否制定原型ID处填1。"
+    }),
+    97: _tools.RODict({
+        "ID": 97,
+        "name": "放出单位/放出心魔幻象",
+        "value": "createInnerDemon",
+        "param": "1011,2408",
+        "description": "参数为地图编辑器中对应心魔的实例ID，即放出对应ID的心魔幻象，支持填写多个实例ID，表示同时放出所有对应实例；\n等级=玩家自己\n血量倍率可填"
+    }),
+    98: _tools.RODict({
+        "ID": 98,
+        "name": "通知相关/通知心魔死亡",
+        "value": "notifyInnerDemonData",
+        "param": "1011",
+        "description": "心魔死亡时记录挑战时长"
     })
 })
 minKey = 1
-maxKey = 96
+maxKey = 98

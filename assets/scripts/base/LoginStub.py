@@ -71,7 +71,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         gameglobal.localBaseApp.initAysncore()
 
     def onTimer(self, timerID, userData):
-        self._onTimer(timerID, userData)
+        self._onTimerTrigger(timerID, userData)
         if userData == gametimer.LOGIN_STUB_ASYNC_TICK:
             self.connectAllCentralServer()
 
@@ -98,6 +98,8 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         
         elif userData == gametimer.LOGIN_STUB_LOG_TRACKING_PCU:
             LogTrackingMgr.LogTrackingMgr.Server_Pcu(
+                'LoginStub',
+                '', 
                 self.getGlobalAccountNum(),
             )
 
@@ -114,7 +116,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if self.heartBeatTimer:
             self.pyDelTimer(self.heartBeatTimer, gametimer.LOGIN_STUB_ACTIVE_TICK)
 
-        self.heartBeatTimer = self.pyAddTimer(gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gametimer.LOGIN_STUB_ACTIVE_TICK)
+        self.heartBeatTimer = self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gametimer.LOGIN_STUB_ACTIVE_TICK)
 
     def tryRegisterServer(self, centralServerId):
         if not KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):

@@ -16,7 +16,7 @@ import AvatarScores
 import cityBattle_config as CBC
 
 class ICrossServer(object):
-    CROSSSERVER_TIMEOUT = 120
+    CROSSSERVER_TIMEOUT = 10
 
     def __init__(self):
         pass
@@ -111,13 +111,13 @@ class ICrossServer(object):
 
     def stopCrossServerHeartbeat(self):
         if self.crossServerHeartbeatTimer:
-            self.pyDelTimer(self.crossServerHeartbeatTimer, gametimer.CROSS_SERVER_HEARTBEAT_TIMER)
+            self.pyDelTimer(self.crossServerHeartbeatTimer, gametimer.TIMER_CROSS_SERVER_HEARTBEAT)
             self.crossServerHeartbeatTimer = 0
             self.crossServerTickStartTime = 0
 
     def startCrossServerHeartbeat(self):
         self.stopCrossServerHeartbeat()
-        self.crossServerHeartbeatTimer = self.pyAddTimer(1, 300, gametimer.CROSS_SERVER_HEARTBEAT_TIMER)
+        self.crossServerHeartbeatTimer = self.pyAddTimer(1, 300, gametimer.TIMER_CROSS_SERVER_HEARTBEAT)
 
     def crossServerHeartbeat(self):
         if not self.otherServerAvatarBox:
@@ -345,6 +345,17 @@ class ICrossServer(object):
         getattr(self, fnname)(*fnargs)
 
     # CrossServer
+    def syncMethodCallToCrossServerBase(self, fnname, fnargs):
+        LOG_DBG("syncMethodCallToCrossServerBase::", fnname, fnargs)
+        if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
+            self.otherServerAvatarBox.beSyncMethodCallFromLocalServerBase(fnname, fnargs)
+
+    # localServer
+    def beSyncMethodCallFromLocalServerBase(self, fnname, fnargs):
+        LOG_DBG("beSyncMethodCallFromLocalServerBase::", fnname, fnargs)
+        getattr(self, fnname)(*fnargs)
+
+    # CrossServer
     def syncMethodCallToLocalServerCell(self, fnname, fnargs):
         LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
         if self.isCrossServerInOtherServer and self.otherServerAvatarBox:
@@ -353,7 +364,7 @@ class ICrossServer(object):
     # localServer
     def beSyncMethodCallFromCrossServerCell(self, fnname, fnargs):
         LOG_DBG("beSyncMethodCallFromCrossServerCell::", fnname, fnargs)
-        getattr(self.cell, fnname)(*fnargs)
+        self.cell.beSyncMethodCallFromCrossServerCell(fnname, fnargs)
 
     def onMessagePre_localCross(self, msgId, args):
         LOG_INFO("onMessagePre_localCross::", msgId, args)

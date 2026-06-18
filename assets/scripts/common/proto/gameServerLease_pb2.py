@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='LeaseGameServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x15gameServerLease.proto\x12\x0fLeaseGameServer\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\x05\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\x05\x12\x12\n\nserverName\x18\x03 \x01(\t\"\x06\n\x04Void\"\xed\x01\n\x16LeaseAddItemPrepareReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x10\n\x08itemData\x18\x02 \x01(\t\x12\x13\n\x0bpricePerDay\x18\x03 \x01(\r\x12\x11\n\tleaseDays\x18\x04 \x01(\r\x12\x0e\n\x06itemId\x18\x05 \x01(\r\x12\x10\n\x08uniqueId\x18\x06 \x01(\x04\x12\x14\n\x0creturnServer\x18\x07 \x01(\x05\x12\x13\n\x0breturnOwner\x18\x08 \x01(\x04\x12\x12\n\nreturnTime\x18\t \x01(\r\x12\x14\n\x0creturnReason\x18\n \x01(\r\x12\x0e\n\x06opUUID\x18\x0b \x01(\x04\"_\n\x17LeaseAddItemPrepareResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\"M\n\x15LeaseAddItemCommitReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06opUUID\x18\x03 \x01(\x04\"^\n\x16LeaseAddItemCommitResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\";\n\x17LeaseAddItemRollbackReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06opUUID\x18\x02 \x01(\x04\"a\n\x13LeaseItemPrepareReq\x12\x11\n\tbuyerGBID\x18\x01 \x01(\x04\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x15\n\rbuyerServerId\x18\x03 \x01(\r\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\"p\n\x14LeaseItemPrepareResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x12\n\ntotalPrice\x18\x03 \x01(\r\x12\x0e\n\x06result\x18\x04 \x01(\x05\x12\x0e\n\x06opUUID\x18\x05 \x01(\x04\"6\n\x12LeaseItemCommitReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06opUUID\x18\x02 \x01(\x04\"\xeb\x01\n\x13LeaseItemCommitResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\x12\x16\n\x0eleaseStartTime\x18\x05 \x01(\r\x12\x14\n\x0cleaseEndTime\x18\x06 \x01(\r\x12\x11\n\tleaseCost\x18\x07 \x01(\r\x12\x11\n\tleaseGold\x18\x08 \x01(\r\x12\x15\n\rleaseBindGold\x18\t \x01(\r\x12\x10\n\x08leaseTax\x18\n \x01(\r\x12\x11\n\tOwnerGbId\x18\x0b \x01(\x04\"8\n\x14LeaseItemRollbackReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06opUUID\x18\x02 \x01(\x04\":\n\x12LeaseCancelItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\"]\n\x13LeaseCancelItemResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x10\n\x08itemData\x18\x04 \x01(\t\"M\n\x14LeaseShopSummaryItem\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12\x13\n\x0bonSaleCount\x18\x02 \x01(\r\x12\x10\n\x08minPrice\x18\x03 \x01(\r\"R\n\x13LeaseShopSummaryReq\x12\x11\n\tequipType\x18\x01 \x01(\r\x12\x14\n\x0c\x65quipSubType\x18\x02 \x01(\r\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\"`\n\x14LeaseShopSummaryResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x34\n\x05items\x18\x02 \x03(\x0b\x32%.LeaseGameServer.LeaseShopSummaryItem\"~\n\rLeaseShopItem\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x12\n\nlessorGbId\x18\x03 \x01(\x04\x12\x13\n\x0bpricePerDay\x18\x04 \x01(\r\x12\x10\n\x08leftTime\x18\x05 \x01(\r\x12\x10\n\x08itemData\x18\x06 \x01(\t\"W\n\x11LeaseShopItemsReq\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12\x0c\n\x04page\x18\x02 \x01(\r\x12\x10\n\x08pageSize\x18\x03 \x01(\r\x12\x12\n\nplayerGBID\x18\x04 \x01(\x04\"g\n\x12LeaseShopItemsResp\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12-\n\x05items\x18\x02 \x03(\x0b\x32\x1e.LeaseGameServer.LeaseShopItem\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\"l\n\x0fLeaseMySaleItem\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x13\n\x0bpricePerDay\x18\x03 \x01(\r\x12\x10\n\x08leftTime\x18\x04 \x01(\r\x12\x10\n\x08itemData\x18\x05 \x01(\t\"(\n\x12LeaseMySaleListReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\"Z\n\x13LeaseMySaleListResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12/\n\x05items\x18\x02 \x03(\x0b\x32 .LeaseGameServer.LeaseMySaleItem\"\x90\x01\n\x11LeaseAddIncomeReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\x12\x10\n\x08\x62indGold\x18\x04 \x01(\x04\x12\x0c\n\x04gold\x18\x05 \x01(\x04\x12\x15\n\rreturnEndTime\x18\x06 \x01(\r\x12\x0e\n\x06opUUID\x18\x07 \x01(\x04\"\xc7\x01\n\x10LeaseGiveItemReq\x12\x1b\n\x13returnOwnerServerId\x18\x01 \x01(\r\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x10\n\x08itemData\x18\x03 \x01(\t\x12\x10\n\x08uniqueId\x18\x04 \x01(\x04\x12\x15\n\rreturnEndTime\x18\x05 \x01(\r\x12\x17\n\x0freturnOwnerGbId\x18\x06 \x01(\x04\x12\x0e\n\x06opUUID\x18\x07 \x01(\x04\x12\x10\n\x08\x62indGold\x18\x08 \x01(\x04\x12\x0c\n\x04gold\x18\t \x01(\x04\"L\n\x12LeaseRemoveItemReq\x12\x10\n\x08serverId\x18\x01 \x01(\x05\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\"^\n\x12LeaseReturnItemReq\x12\x10\n\x08serverId\x18\x01 \x01(\x05\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x10\n\x08itemData\x18\x03 \x01(\t\x12\x10\n\x08uniqueId\x18\x04 \x01(\x04\x32\xb0\x07\n\x0bLeaseServer\x12:\n\nactiveTick\x12\x15.LeaseGameServer.Void\x1a\x15.LeaseGameServer.Void\x12K\n\x0eregisterServer\x12\".LeaseGameServer.ServerInfoMessage\x1a\x15.LeaseGameServer.Void\x12P\n\x0e\x61\x64\x64ItemPrepare\x12\'.LeaseGameServer.LeaseAddItemPrepareReq\x1a\x15.LeaseGameServer.Void\x12N\n\raddItemCommit\x12&.LeaseGameServer.LeaseAddItemCommitReq\x1a\x15.LeaseGameServer.Void\x12R\n\x0f\x61\x64\x64ItemRollback\x12(.LeaseGameServer.LeaseAddItemRollbackReq\x1a\x15.LeaseGameServer.Void\x12O\n\x10leaseItemPrepare\x12$.LeaseGameServer.LeaseItemPrepareReq\x1a\x15.LeaseGameServer.Void\x12M\n\x0fleaseItemCommit\x12#.LeaseGameServer.LeaseItemCommitReq\x1a\x15.LeaseGameServer.Void\x12Q\n\x11leaseItemRollback\x12%.LeaseGameServer.LeaseItemRollbackReq\x1a\x15.LeaseGameServer.Void\x12H\n\ncancelItem\x12#.LeaseGameServer.LeaseCancelItemReq\x1a\x15.LeaseGameServer.Void\x12M\n\x0egetShopSummary\x12$.LeaseGameServer.LeaseShopSummaryReq\x1a\x15.LeaseGameServer.Void\x12I\n\x0cgetShopItems\x12\".LeaseGameServer.LeaseShopItemsReq\x1a\x15.LeaseGameServer.Void\x12K\n\rgetMySaleList\x12#.LeaseGameServer.LeaseMySaleListReq\x1a\x15.LeaseGameServer.Void2\xe8\x07\n\nGameServer\x12V\n\x13replyAddItemPrepare\x12(.LeaseGameServer.LeaseAddItemPrepareResp\x1a\x15.LeaseGameServer.Void\x12T\n\x12replyAddItemCommit\x12\'.LeaseGameServer.LeaseAddItemCommitResp\x1a\x15.LeaseGameServer.Void\x12U\n\x15replyLeaseItemPrepare\x12%.LeaseGameServer.LeaseItemPrepareResp\x1a\x15.LeaseGameServer.Void\x12S\n\x14replyLeaseItemCommit\x12$.LeaseGameServer.LeaseItemCommitResp\x1a\x15.LeaseGameServer.Void\x12N\n\x0freplyCancelItem\x12$.LeaseGameServer.LeaseCancelItemResp\x1a\x15.LeaseGameServer.Void\x12P\n\x10replyShopSummary\x12%.LeaseGameServer.LeaseShopSummaryResp\x1a\x15.LeaseGameServer.Void\x12L\n\x0ereplyShopItems\x12#.LeaseGameServer.LeaseShopItemsResp\x1a\x15.LeaseGameServer.Void\x12N\n\x0freplyMySaleList\x12$.LeaseGameServer.LeaseMySaleListResp\x1a\x15.LeaseGameServer.Void\x12L\n\x10giveItemToPlayer\x12!.LeaseGameServer.LeaseGiveItemReq\x1a\x15.LeaseGameServer.Void\x12R\n\x14removeItemFromPlayer\x12#.LeaseGameServer.LeaseRemoveItemReq\x1a\x15.LeaseGameServer.Void\x12O\n\x11returnItemToOwner\x12#.LeaseGameServer.LeaseReturnItemReq\x1a\x15.LeaseGameServer.Void\x12M\n\x10\x61\x64\x64IncomeToOwner\x12\".LeaseGameServer.LeaseAddIncomeReq\x1a\x15.LeaseGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x15gameServerLease.proto\x12\x0fLeaseGameServer\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\x05\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\x05\x12\x12\n\nserverName\x18\x03 \x01(\t\"\x06\n\x04Void\"\xed\x01\n\x16LeaseAddItemPrepareReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x10\n\x08itemData\x18\x02 \x01(\t\x12\x13\n\x0bpricePerDay\x18\x03 \x01(\x03\x12\x11\n\tleaseDays\x18\x04 \x01(\r\x12\x0e\n\x06itemId\x18\x05 \x01(\r\x12\x10\n\x08uniqueId\x18\x06 \x01(\x04\x12\x14\n\x0creturnServer\x18\x07 \x01(\x05\x12\x13\n\x0breturnOwner\x18\x08 \x01(\x04\x12\x12\n\nreturnTime\x18\t \x01(\r\x12\x14\n\x0creturnReason\x18\n \x01(\r\x12\x0e\n\x06opUUID\x18\x0b \x01(\x04\"_\n\x17LeaseAddItemPrepareResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\"M\n\x15LeaseAddItemCommitReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06opUUID\x18\x03 \x01(\x04\"^\n\x16LeaseAddItemCommitResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\";\n\x17LeaseAddItemRollbackReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06opUUID\x18\x02 \x01(\x04\"a\n\x13LeaseItemPrepareReq\x12\x11\n\tbuyerGBID\x18\x01 \x01(\x04\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x15\n\rbuyerServerId\x18\x03 \x01(\r\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\"p\n\x14LeaseItemPrepareResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x12\n\ntotalPrice\x18\x03 \x01(\x03\x12\x0e\n\x06result\x18\x04 \x01(\x05\x12\x0e\n\x06opUUID\x18\x05 \x01(\x04\"J\n\x12LeaseItemCommitReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06opUUID\x18\x02 \x01(\x04\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\"\x91\x02\n\x13LeaseItemCommitResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x0e\n\x06opUUID\x18\x04 \x01(\x04\x12\x16\n\x0eleaseStartTime\x18\x05 \x01(\r\x12\x14\n\x0cleaseEndTime\x18\x06 \x01(\r\x12\x11\n\tleaseCost\x18\x07 \x01(\x03\x12\x11\n\tleaseGold\x18\x08 \x01(\x03\x12\x15\n\rleaseBindGold\x18\t \x01(\x03\x12\x10\n\x08leaseTax\x18\n \x01(\x03\x12\x12\n\nlessorGBID\x18\x0b \x01(\x04\x12\x10\n\x08itemData\x18\x0c \x01(\t\x12\x11\n\townerGBID\x18\r \x01(\x04\"8\n\x14LeaseItemRollbackReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06opUUID\x18\x02 \x01(\x04\":\n\x12LeaseCancelItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\"]\n\x13LeaseCancelItemResp\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x0e\n\x06result\x18\x03 \x01(\x05\x12\x10\n\x08itemData\x18\x04 \x01(\t\"M\n\x14LeaseShopSummaryItem\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12\x13\n\x0bonSaleCount\x18\x02 \x01(\r\x12\x10\n\x08minPrice\x18\x03 \x01(\x03\"N\n\x13LeaseShopSummaryReq\x12\x12\n\ncategoryId\x18\x01 \x01(\r\x12\x0f\n\x07itemIds\x18\x02 \x03(\r\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\"t\n\x14LeaseShopSummaryResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x34\n\x05items\x18\x02 \x03(\x0b\x32%.LeaseGameServer.LeaseShopSummaryItem\x12\x12\n\ncategoryId\x18\x03 \x01(\r\"\xad\x01\n\rLeaseShopItem\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x12\n\nlessorGbId\x18\x03 \x01(\x04\x12\x13\n\x0bpricePerDay\x18\x04 \x01(\x03\x12\x10\n\x08leaseDay\x18\x05 \x01(\r\x12\x10\n\x08itemData\x18\x06 \x01(\t\x12\x16\n\x0elessorServerId\x18\x07 \x01(\r\x12\x15\n\rreturnEndTime\x18\x08 \x01(\r\"W\n\x11LeaseShopItemsReq\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12\x0c\n\x04page\x18\x02 \x01(\r\x12\x10\n\x08pageSize\x18\x03 \x01(\r\x12\x12\n\nplayerGBID\x18\x04 \x01(\x04\"\x87\x01\n\x12LeaseShopItemsResp\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12-\n\x05items\x18\x02 \x03(\x0b\x32\x1e.LeaseGameServer.LeaseShopItem\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\x12\x0c\n\x04page\x18\x04 \x01(\r\x12\x10\n\x08pageSize\x18\x05 \x01(\r\"\x83\x01\n\x0fLeaseMySaleItem\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x13\n\x0bpricePerDay\x18\x03 \x01(\x03\x12\x10\n\x08leaseDay\x18\x04 \x01(\r\x12\x10\n\x08itemData\x18\x05 \x01(\t\x12\x15\n\rreturnEndTime\x18\x06 \x01(\r\"(\n\x12LeaseMySaleListReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\"Z\n\x13LeaseMySaleListResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12/\n\x05items\x18\x02 \x03(\x0b\x32 .LeaseGameServer.LeaseMySaleItem\"\xa2\x01\n\x11LeaseAddIncomeReq\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x12\n\nplayerGBID\x18\x03 \x01(\x04\x12\x10\n\x08\x62indGold\x18\x04 \x01(\x03\x12\x0c\n\x04gold\x18\x05 \x01(\x03\x12\x15\n\rreturnEndTime\x18\x06 \x01(\r\x12\x0e\n\x06opUUID\x18\x07 \x01(\x04\x12\x10\n\x08itemData\x18\x08 \x01(\t\"\xc7\x01\n\x10LeaseGiveItemReq\x12\x1b\n\x13returnOwnerServerId\x18\x01 \x01(\r\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\x10\n\x08itemData\x18\x03 \x01(\t\x12\x10\n\x08uniqueId\x18\x04 \x01(\x04\x12\x15\n\rreturnEndTime\x18\x05 \x01(\r\x12\x17\n\x0freturnOwnerGbId\x18\x06 \x01(\x04\x12\x0e\n\x06opUUID\x18\x07 \x01(\x04\x12\x10\n\x08\x62indGold\x18\x08 \x01(\x03\x12\x0c\n\x04gold\x18\t \x01(\x03\x32\xb0\x07\n\x0bLeaseServer\x12:\n\nactiveTick\x12\x15.LeaseGameServer.Void\x1a\x15.LeaseGameServer.Void\x12K\n\x0eregisterServer\x12\".LeaseGameServer.ServerInfoMessage\x1a\x15.LeaseGameServer.Void\x12P\n\x0e\x61\x64\x64ItemPrepare\x12\'.LeaseGameServer.LeaseAddItemPrepareReq\x1a\x15.LeaseGameServer.Void\x12N\n\raddItemCommit\x12&.LeaseGameServer.LeaseAddItemCommitReq\x1a\x15.LeaseGameServer.Void\x12R\n\x0f\x61\x64\x64ItemRollback\x12(.LeaseGameServer.LeaseAddItemRollbackReq\x1a\x15.LeaseGameServer.Void\x12O\n\x10leaseItemPrepare\x12$.LeaseGameServer.LeaseItemPrepareReq\x1a\x15.LeaseGameServer.Void\x12M\n\x0fleaseItemCommit\x12#.LeaseGameServer.LeaseItemCommitReq\x1a\x15.LeaseGameServer.Void\x12Q\n\x11leaseItemRollback\x12%.LeaseGameServer.LeaseItemRollbackReq\x1a\x15.LeaseGameServer.Void\x12H\n\ncancelItem\x12#.LeaseGameServer.LeaseCancelItemReq\x1a\x15.LeaseGameServer.Void\x12M\n\x0egetShopSummary\x12$.LeaseGameServer.LeaseShopSummaryReq\x1a\x15.LeaseGameServer.Void\x12I\n\x0cgetShopItems\x12\".LeaseGameServer.LeaseShopItemsReq\x1a\x15.LeaseGameServer.Void\x12K\n\rgetMySaleList\x12#.LeaseGameServer.LeaseMySaleListReq\x1a\x15.LeaseGameServer.Void2\xc3\x06\n\nGameServer\x12V\n\x13replyAddItemPrepare\x12(.LeaseGameServer.LeaseAddItemPrepareResp\x1a\x15.LeaseGameServer.Void\x12T\n\x12replyAddItemCommit\x12\'.LeaseGameServer.LeaseAddItemCommitResp\x1a\x15.LeaseGameServer.Void\x12U\n\x15replyLeaseItemPrepare\x12%.LeaseGameServer.LeaseItemPrepareResp\x1a\x15.LeaseGameServer.Void\x12S\n\x14replyLeaseItemCommit\x12$.LeaseGameServer.LeaseItemCommitResp\x1a\x15.LeaseGameServer.Void\x12N\n\x0freplyCancelItem\x12$.LeaseGameServer.LeaseCancelItemResp\x1a\x15.LeaseGameServer.Void\x12P\n\x10replyShopSummary\x12%.LeaseGameServer.LeaseShopSummaryResp\x1a\x15.LeaseGameServer.Void\x12L\n\x0ereplyShopItems\x12#.LeaseGameServer.LeaseShopItemsResp\x1a\x15.LeaseGameServer.Void\x12N\n\x0freplyMySaleList\x12$.LeaseGameServer.LeaseMySaleListResp\x1a\x15.LeaseGameServer.Void\x12L\n\x10giveItemToPlayer\x12!.LeaseGameServer.LeaseGiveItemReq\x1a\x15.LeaseGameServer.Void\x12M\n\x10\x61\x64\x64IncomeToOwner\x12\".LeaseGameServer.LeaseAddIncomeReq\x1a\x15.LeaseGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -119,7 +119,7 @@ _LEASEADDITEMPREPAREREQ = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='pricePerDay', full_name='LeaseGameServer.LeaseAddItemPrepareReq.pricePerDay', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -459,7 +459,7 @@ _LEASEITEMPREPARERESP = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='totalPrice', full_name='LeaseGameServer.LeaseItemPrepareResp.totalPrice', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -516,6 +516,13 @@ _LEASEITEMCOMMITREQ = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='playerGBID', full_name='LeaseGameServer.LeaseItemCommitReq.playerGBID', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -529,7 +536,7 @@ _LEASEITEMCOMMITREQ = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=911,
-  serialized_end=965,
+  serialized_end=985,
 )
 
 
@@ -584,35 +591,49 @@ _LEASEITEMCOMMITRESP = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='leaseCost', full_name='LeaseGameServer.LeaseItemCommitResp.leaseCost', index=6,
-      number=7, type=13, cpp_type=3, label=1,
+      number=7, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='leaseGold', full_name='LeaseGameServer.LeaseItemCommitResp.leaseGold', index=7,
-      number=8, type=13, cpp_type=3, label=1,
+      number=8, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='leaseBindGold', full_name='LeaseGameServer.LeaseItemCommitResp.leaseBindGold', index=8,
-      number=9, type=13, cpp_type=3, label=1,
+      number=9, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='leaseTax', full_name='LeaseGameServer.LeaseItemCommitResp.leaseTax', index=9,
-      number=10, type=13, cpp_type=3, label=1,
+      number=10, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='OwnerGbId', full_name='LeaseGameServer.LeaseItemCommitResp.OwnerGbId', index=10,
+      name='lessorGBID', full_name='LeaseGameServer.LeaseItemCommitResp.lessorGBID', index=10,
       number=11, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='itemData', full_name='LeaseGameServer.LeaseItemCommitResp.itemData', index=11,
+      number=12, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ownerGBID', full_name='LeaseGameServer.LeaseItemCommitResp.ownerGBID', index=12,
+      number=13, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -629,8 +650,8 @@ _LEASEITEMCOMMITRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=968,
-  serialized_end=1203,
+  serialized_start=988,
+  serialized_end=1261,
 )
 
 
@@ -667,8 +688,8 @@ _LEASEITEMROLLBACKREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1205,
-  serialized_end=1261,
+  serialized_start=1263,
+  serialized_end=1319,
 )
 
 
@@ -705,8 +726,8 @@ _LEASECANCELITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1263,
-  serialized_end=1321,
+  serialized_start=1321,
+  serialized_end=1379,
 )
 
 
@@ -757,8 +778,8 @@ _LEASECANCELITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1323,
-  serialized_end=1416,
+  serialized_start=1381,
+  serialized_end=1474,
 )
 
 
@@ -785,7 +806,7 @@ _LEASESHOPSUMMARYITEM = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='minPrice', full_name='LeaseGameServer.LeaseShopSummaryItem.minPrice', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -802,8 +823,8 @@ _LEASESHOPSUMMARYITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1418,
-  serialized_end=1495,
+  serialized_start=1476,
+  serialized_end=1553,
 )
 
 
@@ -815,16 +836,16 @@ _LEASESHOPSUMMARYREQ = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='equipType', full_name='LeaseGameServer.LeaseShopSummaryReq.equipType', index=0,
+      name='categoryId', full_name='LeaseGameServer.LeaseShopSummaryReq.categoryId', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='equipSubType', full_name='LeaseGameServer.LeaseShopSummaryReq.equipSubType', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
+      name='itemIds', full_name='LeaseGameServer.LeaseShopSummaryReq.itemIds', index=1,
+      number=2, type=13, cpp_type=3, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -847,8 +868,8 @@ _LEASESHOPSUMMARYREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1497,
-  serialized_end=1579,
+  serialized_start=1555,
+  serialized_end=1633,
 )
 
 
@@ -873,6 +894,13 @@ _LEASESHOPSUMMARYRESP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='categoryId', full_name='LeaseGameServer.LeaseShopSummaryResp.categoryId', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -885,8 +913,8 @@ _LEASESHOPSUMMARYRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1581,
-  serialized_end=1677,
+  serialized_start=1635,
+  serialized_end=1751,
 )
 
 
@@ -920,13 +948,13 @@ _LEASESHOPITEM = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='pricePerDay', full_name='LeaseGameServer.LeaseShopItem.pricePerDay', index=3,
-      number=4, type=13, cpp_type=3, label=1,
+      number=4, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leftTime', full_name='LeaseGameServer.LeaseShopItem.leftTime', index=4,
+      name='leaseDay', full_name='LeaseGameServer.LeaseShopItem.leaseDay', index=4,
       number=5, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -936,6 +964,20 @@ _LEASESHOPITEM = _descriptor.Descriptor(
       name='itemData', full_name='LeaseGameServer.LeaseShopItem.itemData', index=5,
       number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='lessorServerId', full_name='LeaseGameServer.LeaseShopItem.lessorServerId', index=6,
+      number=7, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='returnEndTime', full_name='LeaseGameServer.LeaseShopItem.returnEndTime', index=7,
+      number=8, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -951,8 +993,8 @@ _LEASESHOPITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1679,
-  serialized_end=1805,
+  serialized_start=1754,
+  serialized_end=1927,
 )
 
 
@@ -1003,8 +1045,8 @@ _LEASESHOPITEMSREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1807,
-  serialized_end=1894,
+  serialized_start=1929,
+  serialized_end=2016,
 )
 
 
@@ -1036,6 +1078,20 @@ _LEASESHOPITEMSRESP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='page', full_name='LeaseGameServer.LeaseShopItemsResp.page', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='pageSize', full_name='LeaseGameServer.LeaseShopItemsResp.pageSize', index=4,
+      number=5, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1048,8 +1104,8 @@ _LEASESHOPITEMSRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1896,
-  serialized_end=1999,
+  serialized_start=2019,
+  serialized_end=2154,
 )
 
 
@@ -1076,13 +1132,13 @@ _LEASEMYSALEITEM = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='pricePerDay', full_name='LeaseGameServer.LeaseMySaleItem.pricePerDay', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leftTime', full_name='LeaseGameServer.LeaseMySaleItem.leftTime', index=3,
+      name='leaseDay', full_name='LeaseGameServer.LeaseMySaleItem.leaseDay', index=3,
       number=4, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -1092,6 +1148,13 @@ _LEASEMYSALEITEM = _descriptor.Descriptor(
       name='itemData', full_name='LeaseGameServer.LeaseMySaleItem.itemData', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='returnEndTime', full_name='LeaseGameServer.LeaseMySaleItem.returnEndTime', index=5,
+      number=6, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -1107,8 +1170,8 @@ _LEASEMYSALEITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2001,
-  serialized_end=2109,
+  serialized_start=2157,
+  serialized_end=2288,
 )
 
 
@@ -1138,8 +1201,8 @@ _LEASEMYSALELISTREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2111,
-  serialized_end=2151,
+  serialized_start=2290,
+  serialized_end=2330,
 )
 
 
@@ -1176,8 +1239,8 @@ _LEASEMYSALELISTRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2153,
-  serialized_end=2243,
+  serialized_start=2332,
+  serialized_end=2422,
 )
 
 
@@ -1211,14 +1274,14 @@ _LEASEADDINCOMEREQ = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='bindGold', full_name='LeaseGameServer.LeaseAddIncomeReq.bindGold', index=3,
-      number=4, type=4, cpp_type=4, label=1,
+      number=4, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='gold', full_name='LeaseGameServer.LeaseAddIncomeReq.gold', index=4,
-      number=5, type=4, cpp_type=4, label=1,
+      number=5, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1237,6 +1300,13 @@ _LEASEADDINCOMEREQ = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='itemData', full_name='LeaseGameServer.LeaseAddIncomeReq.itemData', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1249,8 +1319,8 @@ _LEASEADDINCOMEREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2246,
-  serialized_end=2390,
+  serialized_start=2425,
+  serialized_end=2587,
 )
 
 
@@ -1312,14 +1382,14 @@ _LEASEGIVEITEMREQ = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='bindGold', full_name='LeaseGameServer.LeaseGiveItemReq.bindGold', index=7,
-      number=8, type=4, cpp_type=4, label=1,
+      number=8, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='gold', full_name='LeaseGameServer.LeaseGiveItemReq.gold', index=8,
-      number=9, type=4, cpp_type=4, label=1,
+      number=9, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1336,105 +1406,8 @@ _LEASEGIVEITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2393,
-  serialized_end=2592,
-)
-
-
-_LEASEREMOVEITEMREQ = _descriptor.Descriptor(
-  name='LeaseRemoveItemReq',
-  full_name='LeaseGameServer.LeaseRemoveItemReq',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='serverId', full_name='LeaseGameServer.LeaseRemoveItemReq.serverId', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='playerGBID', full_name='LeaseGameServer.LeaseRemoveItemReq.playerGBID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uniqueId', full_name='LeaseGameServer.LeaseRemoveItemReq.uniqueId', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2594,
-  serialized_end=2670,
-)
-
-
-_LEASERETURNITEMREQ = _descriptor.Descriptor(
-  name='LeaseReturnItemReq',
-  full_name='LeaseGameServer.LeaseReturnItemReq',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='serverId', full_name='LeaseGameServer.LeaseReturnItemReq.serverId', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='playerGBID', full_name='LeaseGameServer.LeaseReturnItemReq.playerGBID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='itemData', full_name='LeaseGameServer.LeaseReturnItemReq.itemData', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uniqueId', full_name='LeaseGameServer.LeaseReturnItemReq.uniqueId', index=3,
-      number=4, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2672,
-  serialized_end=2766,
+  serialized_start=2590,
+  serialized_end=2789,
 )
 
 _LEASESHOPSUMMARYRESP.fields_by_name['items'].message_type = _LEASESHOPSUMMARYITEM
@@ -1465,8 +1438,6 @@ DESCRIPTOR.message_types_by_name['LeaseMySaleListReq'] = _LEASEMYSALELISTREQ
 DESCRIPTOR.message_types_by_name['LeaseMySaleListResp'] = _LEASEMYSALELISTRESP
 DESCRIPTOR.message_types_by_name['LeaseAddIncomeReq'] = _LEASEADDINCOMEREQ
 DESCRIPTOR.message_types_by_name['LeaseGiveItemReq'] = _LEASEGIVEITEMREQ
-DESCRIPTOR.message_types_by_name['LeaseRemoveItemReq'] = _LEASEREMOVEITEMREQ
-DESCRIPTOR.message_types_by_name['LeaseReturnItemReq'] = _LEASERETURNITEMREQ
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ServerInfoMessage = _reflection.GeneratedProtocolMessageType('ServerInfoMessage', (_message.Message,), dict(
@@ -1644,20 +1615,6 @@ LeaseGiveItemReq = _reflection.GeneratedProtocolMessageType('LeaseGiveItemReq', 
   ))
 _sym_db.RegisterMessage(LeaseGiveItemReq)
 
-LeaseRemoveItemReq = _reflection.GeneratedProtocolMessageType('LeaseRemoveItemReq', (_message.Message,), dict(
-  DESCRIPTOR = _LEASEREMOVEITEMREQ,
-  __module__ = 'gameServerLease_pb2'
-  # @@protoc_insertion_point(class_scope:LeaseGameServer.LeaseRemoveItemReq)
-  ))
-_sym_db.RegisterMessage(LeaseRemoveItemReq)
-
-LeaseReturnItemReq = _reflection.GeneratedProtocolMessageType('LeaseReturnItemReq', (_message.Message,), dict(
-  DESCRIPTOR = _LEASERETURNITEMREQ,
-  __module__ = 'gameServerLease_pb2'
-  # @@protoc_insertion_point(class_scope:LeaseGameServer.LeaseReturnItemReq)
-  ))
-_sym_db.RegisterMessage(LeaseReturnItemReq)
-
 
 DESCRIPTOR._options = None
 
@@ -1667,8 +1624,8 @@ _LEASESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=2769,
-  serialized_end=3713,
+  serialized_start=2792,
+  serialized_end=3736,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTick',
@@ -1790,8 +1747,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=3716,
-  serialized_end=4716,
+  serialized_start=3739,
+  serialized_end=4574,
   methods=[
   _descriptor.MethodDescriptor(
     name='replyAddItemPrepare',
@@ -1875,27 +1832,9 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='removeItemFromPlayer',
-    full_name='LeaseGameServer.GameServer.removeItemFromPlayer',
-    index=9,
-    containing_service=None,
-    input_type=_LEASEREMOVEITEMREQ,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='returnItemToOwner',
-    full_name='LeaseGameServer.GameServer.returnItemToOwner',
-    index=10,
-    containing_service=None,
-    input_type=_LEASERETURNITEMREQ,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='addIncomeToOwner',
     full_name='LeaseGameServer.GameServer.addIncomeToOwner',
-    index=11,
+    index=9,
     containing_service=None,
     input_type=_LEASEADDINCOMEREQ,
     output_type=_VOID,

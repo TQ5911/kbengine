@@ -35,7 +35,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         elif userArg == gametimer.STATISTIC_STUB_UPDATE:

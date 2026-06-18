@@ -37,7 +37,7 @@ class InstantPotionSlotsVal(userType.UserSingleType):
                 continue
 
             avatar.useItemWithActionInternal(
-                gameconst.BagType.BAG_TYPE_NORMAL,
+                gameconst.BagTypeEnum.BAG_TYPE_NORMAL,
                 potion.itemId,
                 avatar.id,
             )

@@ -114,6 +114,39 @@
             <Flags>         OTHER_CLIENTS        </Flags>
             <Default>       0                   </Default>
         </firstHateTargetId>
+    
+        <route>
+            <Type>      PYTHON          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>    []             </Default>
+        </route>
+
+        <thinkTimer>
+            <Type>      TIMER_ID        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </thinkTimer>
+
+        <bornPosition>
+            <Type>          POSITION3D              </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </bornPosition>
+
+        <hateTrapId>
+            <Type>          UINT32                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </hateTrapId>
+
+        <moveController>
+            <Type>	        UINT32				    </Type>
+            <Flags>	        CELL_PRIVATE 			</Flags>
+        </moveController>
+
+        <siegeWarCamp>
+            <Type>          INT32           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </siegeWarCamp>
     </Properties>
 
     <BaseMethods>

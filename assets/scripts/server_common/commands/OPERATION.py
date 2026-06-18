@@ -14,6 +14,8 @@ from KBEDebug import *
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dropAward
 import itemFactory
+import utils
+import _pickle as cPickle
 
 BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
     gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
@@ -66,14 +68,16 @@ def gmTestMarquee(su, operator, mid, content, channels):
     return True, 'command success'
 
 
+#chatType 0表示跑马灯+聊天频道， 1表示只有跑马灯， 2表示只有聊天频道
 @gm_cmd('$gmPublishMarquee', (Int('mid'), Str('content'), Int('startTime'), Int('endTime'), Int('tick'),
-                              Int('priority'), Str('channels')), RALL, BASE, '发布跑马灯', ALLSIDE, DEVE_GROUPS)
-def gmPublishMarquee(su, mid, content, startTime, endTime, tick, priority, channels):
+                              Int('priority'), Str('channels'), Str('chatChannelList'), Int('chatType')), RALL, BASE, '发布跑马灯', ALLSIDE, DEVE_GROUPS)
+def gmPublishMarquee(su, mid, content, startTime, endTime, tick, priority, channels, chatChannelList, chatType):
+    LOG_INFO('gmPublishMarquee', mid, content, startTime, endTime, tick, priority, channels, chatChannelList, chatType)
     if mid == 0:
         su.onCommandResult(-1, '跑马灯id为0', {})
         return False, 'id is zero'
     content = base64.b64decode(content.encode('ascii'), b'_-').decode('utf-8')
-    gameglobal.localBaseApp.sendOfficialMessage(startTime, endTime, content, tick, channels, mid, priority)
+    gameglobal.localBaseApp.sendOfficialMessage(startTime, endTime, content, tick, channels, mid, priority, chatChannelList, chatType)
 
     su.onCommandResult(0, '', {})
     return True, 'command success'
@@ -133,40 +137,164 @@ def doOnAccounOfflineSafeByGbId(gbId, func, args):
     KBEngine.executeRawDatabaseCommand(_sql, functools.partial(doOnAccounOfflineSafeByGbIdAfterGetParentId, ctx))
 
 
-def _afterBanLogin(gbId, endTime, ret, num, insertId, err):
+def _setChatForbidden(superUser, playerEnt, endTime, isAuto, banType):
+    # 离线玩家处理
+    _args = (gameconst.IDIPBanType.CHAT, endTime, isAuto)
+    if gmCommand.isRawPlayer(playerEnt):
+        gbId, name, accountName, dbId = playerEnt
+        LOG_INFO(f"gm offline setChatForbidden, gbID:{gbId}")
+        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPBanState', _args)
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
+    # 在线玩家处理
+    else:
+        LOG_INFO(f"gm online setChatForbidden, gbID:{playerEnt.gbID}")
+        if not playerEnt.IDIPBanState(*_args):
+            superUser.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': playerEnt.gbID, 'isOffline': False})
+            return False, '执行失败'
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': playerEnt.gbID, 'isOffline': False})
+    return True, 'command success'
+
+def _removeChatForbidden(superUser, playerEnt):
+    # 离线玩家处理
+    _args = (gameconst.IDIPBanType.CHAT,)
+    if gmCommand.isRawPlayer(playerEnt):
+        gbId, name, accountName, dbId = playerEnt
+        LOG_INFO(f"gm offline removeChatForbidden, gbID:{gbId}")
+        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPRemoveBanState', _args)
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
+    # 在线玩家处理
+    else:
+        LOG_INFO(f"gm online removeChatForbidden, gbID:{playerEnt.gbID}")
+        if not playerEnt.IDIPRemoveBanState(*_args):
+            superUser.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': playerEnt.gbID, 'isOffline': False})
+            return False, '执行失败'
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': playerEnt.gbID, 'isOffline': False})
+    return True, 'command success'
+
+def _afterBanLogin(gbId, endTime, isAuto, ret, num, insertId, err):
     if err:
         LOG_ERR('_afterBanLogin', err, ret)
         return
 
-    KBEngine.addTimer(2, 0, functools.partial(_banAvatarAgain, gbId, endTime))
+    KBEngine.addTimer(2, 0, functools.partial(_banAvatarAgain, gbId, endTime, isAuto))
 
-def _banAvatarAgain(gbId, endTime, *args):
+def _banAvatarAgain(gbId, endTime, isAuto, *args):
     # 再次封印一次，以防止出现极端情况
     gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
         [gbId],
         'gmBanAvatar',
-        (endTime, ),
+        (endTime, isAuto),
         None,
         '',
         ())
 
-@gm_cmd('$banAvatar', (Player("gbId or Id", raw=True), Int('endTime')), RONE, BASE, '封禁角色', ALLSIDE, DEVE_GROUPS)
-def banAvatar(su, player, endTime):
-    LOG_INFO('banAvatar', player, endTime)
+def _onBeginBanLogin(gbId, endTime, isAuto, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_onBeginBanLogin err:', err)
+        return
+
+    if not ret:
+        LOG_ERR('_onBeginBanLogin: not found')
+        return
+    autoBanFlag, banLogin = ret[0]
+    autoBanFlag = int(autoBanFlag.decode())
+    banLogin = int(banLogin.decode())
+    LOG_INFO('_onBeginBanLogin: autoBanFlag:', autoBanFlag, 'banLogin:', banLogin)
+    if isAuto:
+        #当前封禁中并且是手动的，自动ban不能覆盖，且要报错
+        if banLogin >= utils.curTS() and autoBanFlag == gameconst.AutoBanType.MANUAL:
+            LOG_ERR('gmBanAvatar but autoBanLoginFlag is MANUAL')
+        #自动ban时间更久，才覆盖
+        if endTime > banLogin:
+            LOG_INFO('gmBanAvatar but autoBanLoginFlag is AUTO, and endTime is more than banLogin', endTime, banLogin)
+            gamesql.banLogin(gbId, gameconst.AutoBanType.AUTO, endTime, functools.partial(_afterBanLogin, gbId, endTime, isAuto))
+    else:
+        LOG_INFO('gmBanAvatar but banType is MANUAL', endTime)
+        gamesql.banLogin(gbId, gameconst.AutoBanType.MANUAL, endTime, functools.partial(_afterBanLogin, gbId, endTime, isAuto))
+
+@gm_cmd('$banAvatar', (Player("gbId or Id", raw=True), Int('endTime'), Int('isAuto'), Int('banType')), RONE, BASE, '封禁角色', ALLSIDE, DEVE_GROUPS)
+def banAvatar(su, player, endTime, isAuto, banType):
+    LOG_INFO('banAvatar', player, endTime, isAuto, banType)
+    if banType == gameconst.WebBanType.CHAT:
+        return _setChatForbidden(su, player, endTime, isAuto, banType)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        gamesql.banLogin(gbId, endTime, functools.partial(_afterBanLogin, gbId, endTime))
+        gamesql.beginBanLogin(gbId, functools.partial(_onBeginBanLogin, gbId, endTime, isAuto))
     else:
-        player.gmBanAvatar(endTime)
+        player.gmBanAvatar(endTime, isAuto)
     return True, 'command success'
 
 
-@gm_cmd('$disbanAvatar', (Int('gbId'),), RONE, BASE, '解除封禁角色', ALLSIDE, DEVE_GROUPS)
-def disbanAvatar(su, gbId):
-    LOG_INFO('disbanAvatar', gbId)
-    gamesql.disbanLogin(gbId, lambda *args: LOG_INFO('disbanAvatar success', args))
+@gm_cmd('$disbanAvatar', (Player("gbId or Id", raw=True), Int('banType')), RONE, BASE, '解除封禁角色', ALLSIDE, DEVE_GROUPS)
+def disbanAvatar(su, player, banType):
+    LOG_INFO('disbanAvatar', player, banType)
+    if banType == gameconst.WebBanType.CHAT:
+        return _removeChatForbidden(su, player)
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        gamesql.disbanLogin(gbId, lambda *args: LOG_INFO('disbanAvatar success', args))
+    else:
+        LOG_ERR('disbanAvatar error, player is online!!!!!!!', player)
     return True, 'command success'
 
+@gm_cmd('$banMail', (Player("gbId or Id", raw=True), Int('endTime'), Int('banType')), RONE, BASE, '封禁邮件', ALLSIDE, DEVE_GROUPS)
+def banMail(su, player, endTime, banType):
+    LOG_INFO('banMail', player, endTime, banType)
+    _args = (endTime, banType)
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        gamesql.recordAvatarOfflineCallback(gbId, 'gmBanMail', _args)
+    else:
+        player.gmBanMail(*_args)
+    return True, 'command success'
+
+def _onQueryBanInfo(su, gbId, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_onQueryBanInfo err:', err)
+        return
+
+    if not ret:
+        LOG_ERR('_onQueryBanInfo: not found')
+        return
+    autoBanFlag, banLogin, idipBanDict, idipBanDataDict = ret[0]
+    autoBanFlag = int(autoBanFlag.decode())
+    banLogin = int(banLogin.decode())
+    idipBanDict = cPickle.loads(idipBanDict)
+    idipBanDataDict = cPickle.loads(idipBanDataDict)
+
+    resp = {}
+    resp.update(_genBanInfoResp(gameconst.WebBanType.LOGIN, banLogin, autoBanFlag))
+    resp.update(_genBanInfoResp(gameconst.WebBanType.CHAT, 
+                                idipBanDict.get(gameconst.IDIPBanType.CHAT, 0), 
+                                idipBanDataDict.get(gameconst.IDIPBanType.CHAT, {}).get('isAuto', -1)))
+    LOG_INFO('_onQueryBanInfo: resp', resp)
+    return su.onCommandResult(0, f'command success', resp)
+
+def _genBanInfoResp(banType, expireTime, isAuto):
+    webBanType2Key = {
+        gameconst.WebBanType.LOGIN : 'ban',
+        gameconst.WebBanType.CHAT : 'mute',
+    }
+    return {
+        webBanType2Key[banType] : {
+            'effective' : 1 if expireTime > utils.curTS() else 0,
+            'expireTime' : expireTime,
+            'isAuto' : isAuto,
+        }
+    }
+
+@gm_cmd('$queryAvatarBanInfo', (Player("gbId or Id", raw=True), ), RONE, BASE, '查询封禁信息', ALLSIDE, DEVE_GROUPS)
+def queryAvatarBanInfo(su, player):
+    LOG_INFO('queryAvatarBanInfo', player)
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        gamesql.queryBanInfo(gbId, functools.partial(_onQueryBanInfo, su, gbId))
+    else:
+        resp = {}
+        resp.update(_genBanInfoResp(gameconst.WebBanType.LOGIN, player.banLogin, player.autoBanLoginFlag))
+        resp.update(_genBanInfoResp(gameconst.WebBanType.CHAT, player.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0), player.idipBanDataDict.get(gameconst.IDIPBanType.CHAT, -1)))
+        LOG_INFO('queryAvatarBanInfo: resp:', resp)
+        return su.onCommandResult(0, f'command success', resp)
 
 @gm_cmd('$addWhite', (Str('accountName'),), RONE, BASE, '添加白名单', ALLSIDE, DEVE_GROUPS)
 def addWhite(su, accountName):
@@ -188,11 +316,13 @@ def sendHotfixToPlayer(su, player, version):
 @gm_cmd('$sendEquipSoul', (Str("toGBID"), Int("itemId"), Int("bindType"), Str("rollProps")), RONE, BASE, '向指定玩家发一封邮件', ALLSIDE, DEVE_GROUPS)
 def gm_sendEquipSoul(superUser, toGBID, itemId, bindType, rollProps):
     _toGBID = int(toGBID)
-    _addVal = dropAward.MailWealthVal()
+    _addVal = dropAward.MailAttachVal()
     rollProps = json.loads(rollProps)
+    if not utils.checkGmSoulProp(rollProps):
+        return False, '执行失败, 灵魂属性错误'
     item = itemFactory.ItemFactory.createItem(itemId, 1, bindType, rollProps=rollProps)
     _addVal.addWealthByObjList([item])
     opUUID = KBEngine.genUUID64()
-    mailAssistor.sendMailToPlayers([_toGBID], 37000003, extraAttach=_addVal,
+    mailAssistor.sendMailToPlayers([_toGBID], 37002017, extraAttach=_addVal,
                                     srcType=AAC_AACDD.datas.BONUS_SRC_GM, opUUID=opUUID)
     return True, 'command success'

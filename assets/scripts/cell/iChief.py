@@ -16,10 +16,11 @@ import raidBossChallenge_basicInfo as RBC_BI
 class IChief(object):
 	@gamedecorator.checkGameconfigEnable('raidDungeon')
 	@utils.isMyself
+	@gamedecorator.limitcall(0.5)
 	def enterChiefDungeon(self, exposed):
 		LOG_INFO('enterChiefDungeon::')
 
-		if not self.isInRaid():
+		if not self.inRaid():
 			LOG_ERR('enterChiefDungeon:: not in raid', self.gbId)
 			return
 			

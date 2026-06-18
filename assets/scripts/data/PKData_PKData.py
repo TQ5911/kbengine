@@ -17,11 +17,11 @@ import crontab
 datas = _tools.RODict({ 
     "upperLimitOfMoralValues": _tools.RODict({
         "ID": "upperLimitOfMoralValues",
-        "value": 10000,
+        "value": 5000,
     }),
     "lowerLimitOfMoralValues": _tools.RODict({
         "ID": "lowerLimitOfMoralValues",
-        "value": -50000,
+        "value": -5000,
     }),
     "deductingMoralValues": _tools.RODict({
         "ID": "deductingMoralValues",

@@ -1,0 +1,60 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+        <Interface> iMultiStaticSpace           </Interface>
+        <Interface> iMultiStaticSpacePlayer     </Interface>
+    </Interfaces>
+
+    <Properties>
+        <floor>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE                        </Flags>
+        </floor>
+    </Properties>
+
+    <BaseMethods>
+        <doEnterAbyss>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </doEnterAbyss>
+
+        <onEnterAbyssSuccess>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+        </onEnterAbyssSuccess>
+
+        <onLeaveAbyss>
+            <Arg>          PLAYER_GBID                  </Arg>
+        </onLeaveAbyss>
+
+        <logonEnterAbyss>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+        </logonEnterAbyss>
+
+        <doGetAbyssLineInfo>
+            <Arg>          ENTITYCALL                   </Arg>
+        </doGetAbyssLineInfo>
+
+        <doSwitchAbyssLine>
+            <Arg>          LINE_NO                      </Arg>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </doSwitchAbyssLine>
+
+        <onLeaveAbyssWithToSpaceNo>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+        </onLeaveAbyssWithToSpaceNo>
+
+        <onFightingPlayersCntSync>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       INT32          </Arg>
+        </onFightingPlayersCntSync>
+    </BaseMethods>
+</root>

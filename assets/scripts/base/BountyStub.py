@@ -22,11 +22,11 @@ import math
 import dropAward
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
-class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
+class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     def __init__(self):
         LOG_INFO("BountyStub::__init__")
-        iCycleEvent.ICycleEvent.__init__(self)
-        self.addDatetimeTimerTick()
+        iCycleEvent.ICycleEventMixin.__init__(self)
+        self.initDatetimeTimerTick()
 
         self.publishBountyDict = {}
         self.preyBountyDict = {}
@@ -60,7 +60,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         self.onDailyEvent()
 
     def onTimer(self, timerID, userData):
-        self._onTimer(timerID, userData)
+        self._onTimerTrigger(timerID, userData)
         if userData == gametimer.UPDATE_EXPIRED_BOUNTY:
             self.onUpdateExpiredBountyTimerCallback()
         elif userData == gametimer.PERSISTENT_BOUNTY:
@@ -234,8 +234,8 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([expiredItem.gbid], 'onNoticeExpiredBounty',
                             (expiredItem.toSyncDict(), gameconst.BountyAvatarType.PUBLISHER, gameconst.BountyExpiredType.PUBLIC_PUBLISHED_DOWN),
                             self, 'onNoticeExpiredBountyFailed', (expiredItem.toSyncDict(), gameconst.BountyAvatarType.PUBLISHER, gameconst.BountyExpiredType.PUBLIC_PUBLISHED_DOWN))
-        attachVal = dropAward.MailWealthVal()
-        attachVal.addWealthByItemId(gameconst.ItemId.MONEY, expiredItem.publishMoney)
+        attachVal = dropAward.MailAttachVal()
+        attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, expiredItem.publishMoney)
         mailAssistor.sendMailToPlayers([expiredItem.gbid], CONST.datas['Bounty_OrderDue']['value'], extraAttach=attachVal, opUUID=expiredItem.uuid, 
                                        despArgs=(expiredItem.preyName,), srcType=AAC_AACDD.datas.BONUS_SRC_BOUNTY_BACK)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([expiredItem.preyGbId], 'onNoticeExpiredBounty',
@@ -267,8 +267,8 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
             self.onTakeDownBounty(expiredItem)
             expiredItem.flag = gameconst.BountyFlag.NULL
             expiredItem.state = gameconst.BountyState.NULL
-            attachVal = dropAward.MailWealthVal()
-            attachVal.addWealthByItemId(gameconst.ItemId.MONEY, expiredItem.publishMoney)
+            attachVal = dropAward.MailAttachVal()
+            attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, expiredItem.publishMoney)
             mailAssistor.sendMailToPlayers([expiredItem.gbid], CONST.datas['Bounty_OrderFailed']['value'], extraAttach=attachVal, opUUID=expiredItem.uuid, 
                                            despArgs=(expiredItem.hunterName, expiredItem.preyName,), srcType=AAC_AACDD.datas.BONUS_SRC_BOUNTY_BACK)
 
@@ -399,6 +399,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
 
     def onNoticeBecomePreyFailed(self, gbIds, uuid):
         LOG_INFO("BountyStub::onNoticeBecomePreyFailed", gbIds, uuid)
+        gameengine.getGlobalBase('PlayerStub').recordOfflineCallback(gbIds, 0, 'onNoticeBecomePreyOffline', ())
 ##########################################################################################
     def onNoticeAssignedHunterFailed(self, gbIds, prePublishDict, playerbox):
         LOG_INFO("BountyStub::onNoticeAssignedHunterFailed", gbIds, prePublishDict)
@@ -425,10 +426,10 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         acceptResCode = 0
         if gameconst.BountyAvatarType.PUBLISHER not in notCheckedTypeList:
             '''
-            attachVal = dropAward.MailWealthVal()
-            attachVal.addWealthByItemId(gameconst.ItemId.MONEY, prePublishItem.publishMoney + prePublishItem.depositMoney)
+            attachVal = dropAward.MailAttachVal()
+            attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, prePublishItem.publishMoney + prePublishItem.depositMoney)
             mailAssistor.sendMailToPlayers([prePublishItem.gbid], CONST.datas['Bounty_RefuseOrder']['value'], extraAttach=attachVal, opUUID=prePublishItem.uuid, 
-                                           despArgs=(prePublishItem.hunterName, prePublishItem.preyName, gameconst.ItemId.MONEY, prePublishItem.depositMoney, gameconst.ItemId.MONEY, prePublishItem.publishMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
+                                           despArgs=(prePublishItem.hunterName, prePublishItem.preyName, gameconst.ItemIdEnum.MONEY, prePublishItem.depositMoney, gameconst.ItemIdEnum.MONEY, prePublishItem.publishMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
             '''
             LOG_INFO("BountyStub::onWaitForPrePublishBountyCallBack publisher return money")
         else:
@@ -462,10 +463,10 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
                 publishResCode = gameconst.ACCEPT_BOUNTY_RES_RES_2_PUBLISH_BOUNTY_RES[acceptResCode]
                 notCheckedResList = prePublishItem.getNotCheckedTypeBitIdxs(1)
                 if gameconst.BountyAvatarType.PUBLISHER not in notCheckedResList:
-                    attachVal = dropAward.MailWealthVal()
-                    attachVal.addWealthByItemId(gameconst.ItemId.MONEY, prePublishItem.publishMoney + prePublishItem.depositMoney)
+                    attachVal = dropAward.MailAttachVal()
+                    attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, prePublishItem.publishMoney + prePublishItem.depositMoney)
                     mailAssistor.sendMailToPlayers([prePublishItem.gbid], CONST.datas['Bounty_RefuseOrder']['value'], extraAttach=attachVal, opUUID=prePublishItem.uuid, 
-                                                despArgs=(prePublishItem.hunterName, prePublishItem.preyName, gameconst.ItemId.MONEY, prePublishItem.depositMoney, gameconst.ItemId.MONEY, prePublishItem.publishMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
+                                                despArgs=(prePublishItem.hunterName, prePublishItem.preyName, gameconst.ItemIdEnum.MONEY, prePublishItem.depositMoney, gameconst.ItemIdEnum.MONEY, prePublishItem.publishMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_ALL)
             LOG_INFO("BountyStub::onPrePublishBountyChecked res", publishResCode, acceptResCode)
             prePublishItem = self.onDelPrePublishBounty(prePublishItem)
             self.bountyInfoData.pop(prePublishItem.uuid, None)
@@ -512,6 +513,8 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
 
     def publishBountyResFailed(self, gbIds, publishDict, publishResCode):
         LOG_INFO("BountyStub::publishBountyResFailed", publishDict, publishResCode)
+        if publishResCode == gameconst.PublishBountyResType.SUCCESS:
+            gameengine.getGlobalBase('PlayerStub').recordOfflineCallback(gbIds, 0, 'onPublishBountyOffline', ())
 
     def acceptBountyResFailed(self, gbIds, publishDict, acceptResCode):
         LOG_INFO("BountyStub::acceptBountyResFailed", publishDict, acceptResCode)
@@ -540,11 +543,11 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
                                                                   self, 'publishBountyResFailed', (preAcceptItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS, ))
             mailAssistor.sendMailToPlayers([preAcceptItem.gbid], CONST.datas['Bounty_KillingAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.hunterName, preAcceptItem.preyName,))
             if preybox:
-                preybox.onNoticeBecomePreyHunter(preAcceptItem.toSyncDict())
+                preybox.onNoticeBecomePreyHunter(preAcceptItem.toSyncDict(), gameconst.BountyFlag.PREY_HUNTER)
             else:
                 gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.preyGbId], 'onNoticeBecomePreyHunter',
-                                                                    (preAcceptItem.toSyncDict(), ),
-                                                                    self, 'onNoticeBecomePreyHunterFailed', (preAcceptItem.uuid, ))
+                                                                    (preAcceptItem.toSyncDict(), gameconst.BountyFlag.PREY_HUNTER),
+                                                                    self, 'onNoticeBecomePreyHunterFailed', (preAcceptItem.uuid, gameconst.BountyFlag.PREY_HUNTER))
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.hunterGbId], 'acceptBountyRes',
                                                                   (preAcceptItem.toSyncDict(), gameconst.AcceptBountyResType.SUCCESS, ),
                                                                   self, 'acceptBountyResFailed', (preAcceptItem.toSyncDict(), gameconst.AcceptBountyResType.SUCCESS, ))
@@ -621,8 +624,8 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
             mailAssistor.sendMailToPlayers([preAcceptItem.hunterGbId], CONST.datas['Bounty_OrderAccept']['value'], opUUID=preAcceptItem.uuid, despArgs=(preAcceptItem.name,))
 
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.preyGbId], 'onNoticeBecomePreyHunter',
-                                                                  (preAcceptItem.toSyncDict(), ),
-                                                                  self, 'onNoticeBecomePreyHunterFailed', (preAcceptItem.uuid, ))
+                                                                  (preAcceptItem.toSyncDict(), gameconst.BountyFlag.PREY),
+                                                                  self, 'onNoticeBecomePreyHunterFailed', (preAcceptItem.uuid, gameconst.BountyFlag.PREY))
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([preAcceptItem.gbid], 'onNoticeHasAccepted',
                                                                   (preAcceptItem.toSyncDict(), ),
                                                                   self, 'onNoticeHasAcceptedFailed', (preAcceptItem.uuid, ))
@@ -660,8 +663,10 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
 
         return acceptItem
 
-    def onNoticeBecomePreyHunterFailed(self, gbIds, uuid):
-        LOG_INFO("BountyStub::onNoticeBecomePreyHunterFailed", gbIds, uuid)
+    def onNoticeBecomePreyHunterFailed(self, gbIds, uuid, curFlag):
+        LOG_INFO("BountyStub::onNoticeBecomePreyHunterFailed", gbIds, uuid, curFlag)
+        if curFlag == gameconst.BountyFlag.PREY_HUNTER:
+            gameengine.getGlobalBase('PlayerStub').recordOfflineCallback(gbIds, 0, 'onNoticeBecomePreyHunterOffline', ())
 
     def onNoticeHasAcceptedFailed(self, gbIds, uuid):
         LOG_INFO("BountyStub::onNoticeHasAcceptedFailed", gbIds, uuid)
@@ -684,23 +689,23 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         hunterBox.onNoticeComplateBounty(complateItem.toSyncDict(), gameconst.BountyAvatarType.HUNTER)
         mailAssistor.sendMailToPlayers([complateItem.hunterGbId], CONST.datas['Bounty_KillingSuccess']['value'], opUUID=complateItem.uuid, despArgs=(complateItem.preyName, complateItem.name, ))
         if complateItem.bountyType == gameconst.BountyType.PUBLIC:
-            attachVal = dropAward.MailWealthVal()
+            attachVal = dropAward.MailAttachVal()
             totalBountyMoney = complateItem.totalMoney - complateItem.depositMoney
             taxMoney = math.ceil(totalBountyMoney * CONST.datas['BountyTaxRate'].get("value", 10) / 100)
             totalMoney = complateItem.totalMoney - taxMoney
             bountyMoney = totalBountyMoney - taxMoney
-            attachVal.addWealthByItemId(gameconst.ItemId.MONEY, totalMoney)
+            attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, totalMoney)
             mailAssistor.sendMailToPlayers([complateItem.hunterGbId], CONST.datas['Bounty_AllMoneyGet']['value'], extraAttach=attachVal, opUUID=complateItem.uuid, 
-                                           despArgs=(complateItem.preyName, gameconst.ItemId.MONEY, complateItem.depositMoney, gameconst.ItemId.MONEY, bountyMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_REWARD_BACK)
+                                           despArgs=(complateItem.preyName, gameconst.ItemIdEnum.MONEY, complateItem.depositMoney, gameconst.ItemIdEnum.MONEY, bountyMoney,), srcType=AAC_AACDD.datas.BONUS_SRC_REWARD_BACK)
         elif complateItem.bountyType == gameconst.BountyType.ASSIGN:
-            attachVal1 = dropAward.MailWealthVal()
-            attachVal1.addWealthByItemId(gameconst.ItemId.MONEY, complateItem.depositMoney)
+            attachVal1 = dropAward.MailAttachVal()
+            attachVal1.addWealthByItemId(gameconst.ItemIdEnum.MONEY, complateItem.depositMoney)
             mailAssistor.sendMailToPlayers([complateItem.gbid], CONST.datas['Bounty_DepositReturn']['value'], extraAttach=attachVal1, opUUID=complateItem.uuid, 
                                            despArgs=(complateItem.hunterName,), srcType=AAC_AACDD.datas.BONUS_SRC_DEPOSIT_REFUND)
-            attachVal2 = dropAward.MailWealthVal()
+            attachVal2 = dropAward.MailAttachVal()
             taxMoney = math.ceil(complateItem.publishMoney * CONST.datas['BountyTaxRate'].get("value", 10) / 100)
             totalMoney = complateItem.publishMoney - taxMoney
-            attachVal2.addWealthByItemId(gameconst.ItemId.MONEY, totalMoney)
+            attachVal2.addWealthByItemId(gameconst.ItemIdEnum.MONEY, totalMoney)
             mailAssistor.sendMailToPlayers([complateItem.hunterGbId], CONST.datas['Bounty_MoneyGet']['value'], extraAttach=attachVal2, opUUID=complateItem.uuid, 
                                            despArgs=(complateItem.preyName,), srcType=AAC_AACDD.datas.BONUS_SRC_REWARD_BACK)
         self.onUpdateHunterRankInfo(complateItem, True)

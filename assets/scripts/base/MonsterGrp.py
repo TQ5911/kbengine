@@ -27,7 +27,7 @@ class MonsterGrp(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace,
         return
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
 

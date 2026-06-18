@@ -49,7 +49,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
     def _doInitBornState(self):
         if not self.bornState:
-            self.setBornState(gameconst.BornStateType.move)
+            self.setBornState(gameconst.BornStateEnum.move)
 
     @property
     def fieldPosInfo(self):
@@ -238,6 +238,9 @@ class IAICombatUnit(SkillManager.SkillManager):
         if self.skillPropInfo:
             propList = []
             for i,skillId in enumerate(self.skillPropInfo[0]):
+                if self.checkForbidSkill(skillId):
+                    continue
+
                 skillVal = self.skillDic.doGetSkill(skillId, False)
                 if not skillVal:
                     continue
@@ -261,6 +264,8 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         for skillId, skillVal in self.skillDic.items():
             if targetType and skillVal.getTarget(skillId) != targetType:
+                continue
+            if self.checkForbidSkill(skillId):
                 continue
             if not skillVal.inCDTime():
                 _skillList.append(skillId)
@@ -379,7 +384,7 @@ class IAICombatUnit(SkillManager.SkillManager):
     def getConfigData(self):
         return {}
 
-    def isActiveAttack(self):
+    def checkActiveAttack(self):
         value = int(self.getCreepData().get('activeAttack', 0))
         return True if value else False
 
@@ -396,7 +401,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         return self.canBeAttack and utils.isJoinCombat(self, src)
 
     def triggerAIEvent(self, srcId, eventId, args):
-        if not self.IsMonster or not self.isActiveAttack():
+        if not self.IsMonster or not self.checkActiveAttack():
             return
         if eventId == gameconst.AI_EVENT_ENENY_ENTER_TRAP:
             target = KBEngine.entities.get(args[0])
@@ -584,7 +589,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.stopThink()
         self.thinkTimer = self.pyAddTimer(thinkDelay, _thinkInterval, gametimer.COMBAT_UNIT_AI_THINK)
 
-    def initBornAction(self):
+    def initEntBornAction(self):
         _bornAction = self.getBornAction()
         _bornAction and _bornAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
         self.otherClients.onBornAction()
@@ -644,14 +649,20 @@ class IAICombatUnit(SkillManager.SkillManager):
                         self.position, _c.position) <= _c.getAlertDistance()):
                 _c.onEnterTrap(self, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
+    def delayDeadAction(self):
+        _deadAction = self.getDeadAction()
+        _deadAction and _deadAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
 
     def onDead(self, killer, *args, **kwargs):
         if self.aiController:
             _hostId = kwargs.get('_hostId', None)
             self.aiController.inheritSourceHate(_hostId)
             self.aiController.clearSourceHate()
-        _deadAction = self.getDeadAction()
-        _deadAction and _deadAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
+        delay = kwargs.get('delay', 0)
+        if delay:
+            self.addTimerCB(delay, 'delayDeadAction', (), gametimer.TIMER_TAG_DELAY_DEAD_ACTION)
+        else:
+            self.delayDeadAction()
 
     def _preSafeDestory(self):
         super(IAICombatUnit, self)._preSafeDestory()
@@ -760,7 +771,7 @@ class IAICombatUnit(SkillManager.SkillManager):
                 self.checkTargetTypeTimerId = 0
 
     def onCloneInitMoveover(self):
-        self.setBornState(gameconst.BornStateType.normal)
+        self.setBornState(gameconst.BornStateEnum.normal)
 
     def setBornState(self, newState):
         self.bornState = newState
@@ -774,10 +785,6 @@ class IAICombatUnit(SkillManager.SkillManager):
         monsterGoHomeBuffList = C_C_DD.datas['monsterGoHomeBuffList']['value']
         for buffId in monsterGoHomeBuffList:
             self.removeBuff(buffId)
-
-    def followPlayer(self):
-        if self.IsAvatarMirror:
-            return KBEngine.entities.get(self.teamRobotHostId)
 
     def tickCallBack(self):
         if not self.aiController:

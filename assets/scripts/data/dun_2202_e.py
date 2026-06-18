@@ -56,7 +56,7 @@ datas ={
       22020002
     ],
     "num": 1,
-    "lv": "35",
+    "lv": "45",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -203,7 +203,7 @@ datas ={
       22020001
     ],
     "num": 1,
-    "lv": "35",
+    "lv": "45",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -240,7 +240,7 @@ datas ={
   },
   "1005": {
     "type": "dunEnd",
-    "exitTime": 65.0,
+    "exitTime": 30.0,
     "isDungeonDone": 1,
     "transition": {}
   },
@@ -1571,7 +1571,7 @@ datas ={
   },
   "1024": {
     "type": "dunFailed",
-    "exitTime": 5.0,
+    "exitTime": 30.0,
     "transition": {}
   }
 }

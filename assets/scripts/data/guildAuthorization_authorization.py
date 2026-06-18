@@ -19,21 +19,21 @@ datas = _tools.RODict({
         "ID": 1,
         "guildJob": "leader",
         "name": "帮主",
-        "authorization": _tools.ROList([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]),
+        "authorization": _tools.ROList([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]),
         "level": 1
     }),
     2: _tools.RODict({
         "ID": 2,
         "guildJob": "coleader",
         "name": "副帮主",
-        "authorization": _tools.ROList([2, 4, 5, 6, 9, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23]),
+        "authorization": _tools.ROList([2, 4, 5, 6, 9, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]),
         "level": 2
     }),
     3: _tools.RODict({
         "ID": 3,
         "guildJob": "elders",
         "name": "长老",
-        "authorization": _tools.ROList([5, 6, 11, 12]),
+        "authorization": _tools.ROList([5, 6, 11, 12, 24, 25, 28]),
         "level": 3
     }),
     4: _tools.RODict({
@@ -72,4 +72,9 @@ authorization2Job = _tools.RODict({
     21: _tools.ROList(['1', '2']),
     22: _tools.ROList(['1', '2']),
     23: _tools.ROList(['1', '2']),
+    24: _tools.ROList(['1', '2', '3']),
+    25: _tools.ROList(['1', '2', '3']),
+    26: _tools.ROList(['1', '2']),
+    27: _tools.ROList(['1', '2']),
+    28: _tools.ROList(['1', '2', '3']),
 })

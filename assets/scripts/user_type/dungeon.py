@@ -14,47 +14,48 @@ import gamePlay_gamePlay as DDL
 
 
 class DungeonSpaceVal(userType.UserSingleType):
-    SPACE_STATE_INIT = 1
-    SPACE_STATE_DURING = 2
-    SPACE_STATE_COMPLETE = 3
-    SPACE_STATE_TO_DESTORY = 4
-    SPACE_STATE_FAILED = 5
+    SPACE_STATUS_INIT = 1
+    SPACE_STATUS_DURING = 2
+    SPACE_STATUS_COMPLETE = 3
+    SPACE_STATUS_TO_DESTORY = 4
+    SPACE_STATUS_FAILED = 5
 
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1, extraPropsDic = {}, dungeonSpaceValType=gameconst.DungeonSpaceValType.NONE):
-        self.spaceNo = spaceNo
         self.spaceUUID = spaceUUID
+        self.spaceNo = spaceNo
         self.spaceBox = spaceBox
         self.spaceMgr = spaceMgr
         self.spaceLevel = spaceLevel
         self.tCreate = utils.curTS()
-        self.nDestoryCnt = 0
         self.destroyTimer = 0
+        self.nDestoryCnt = 0
         self.completeDungeonTimer = 0
         self.loadingDungeonEntitiesTimerDic = {}
         self.loadDungeonEntitiesCheckTimerDic = {}
-        self.state = self.SPACE_STATE_DURING
+        self.state = self.SPACE_STATUS_DURING
         self.src = 0
         self.extraProps = extraPropsDic
         self.dungeonSpaceValType = dungeonSpaceValType
         self.completedReasonType = gameconst.DunegonCompleteReasonType.DEFAULT
+        self.challengeEndTime = 0
 
     def isActive(self):
-        return self.state == self.SPACE_STATE_DURING
+        return self.state == self.SPACE_STATUS_DURING
 
     def completeDungeon(self, win=True):
-        self.state = self.SPACE_STATE_COMPLETE if win else self.SPACE_STATE_FAILED
+        self.state = self.SPACE_STATUS_COMPLETE if win else self.SPACE_STATUS_FAILED
 
     def isCompleted(self):
-        return self.state in (self.SPACE_STATE_COMPLETE, self.SPACE_STATE_FAILED)
+        return self.state in (self.SPACE_STATUS_COMPLETE, self.SPACE_STATUS_FAILED)
 
     def isFailed(self):
-        return self.state == self.SPACE_STATE_FAILED
+        return self.state == self.SPACE_STATUS_FAILED
 
     def toDestoryDungeon(self):
-        self.state = self.SPACE_STATE_TO_DESTORY
+        self.state = self.SPACE_STATUS_TO_DESTORY
 
     def isToDestory(self):
-        return self.state == self.SPACE_STATE_TO_DESTORY
+        return self.state == self.SPACE_STATUS_TO_DESTORY
 
     def getRemainTime(self, dungeonNo=None):
         dungeonNo = dungeonNo or formula.fetchMapId(self.spaceNo)
@@ -64,9 +65,9 @@ class DungeonSpaceVal(userType.UserSingleType):
             return 0
 
         timeout = DDL.datas[dungeonNo]['timeOut'] * 60
-        lostT = utils.curTS() - self.tCreate
+        _lostT = utils.curTS() - self.tCreate
 
-        remainT = int(timeout - lostT)
+        remainT = int(timeout - _lostT)
 
         # remain time should not less than zero
         return remainT if remainT > 0 else 0
@@ -88,25 +89,32 @@ class DungeonSpaceVal(userType.UserSingleType):
 
 class DungeonSpaceTimeLineMixin(object):
     def __init__(self, dungeonTimeLineDic=None, killSum=0):
-        self.dungeonTimeLineDic = dungeonTimeLineDic or {}
-        self.dungeonCreepBaseKillDic = {}
+        if dungeonTimeLineDic is None:
+            self.dungeonTimeLineDic = {}
+        else:
+            self.dungeonTimeLineDic = dungeonTimeLineDic
+
         self.killSum = killSum
+        self.dungeonCreepBaseKillDic = {}
 
     def addTimeLine(self, flagId, *args, **kwargs):
         if 'flagId' in kwargs:
-            del kwargs['flagId']
+            kwargs.pop('flagId')
+
         self.dungeonTimeLineDic[flagId] = DungeonSpaceTimeLineVal(
             flagId, *args, **kwargs)
+
+    def addKill(self, flagId, addKillSumFlag=True):
+        if flagId not in self.dungeonTimeLineDic:
+            return
+
+        self.dungeonTimeLineDic[flagId].kills += 1
+        if addKillSumFlag:
+            self.killSum += 1
 
     def getTimeLine(self, flagId):
         if flagId in self.dungeonTimeLineDic:
             return self.dungeonTimeLineDic[flagId]
-
-    def addKill(self, flagId, addKillSumFlag=True):
-        if flagId in self.dungeonTimeLineDic:
-            self.dungeonTimeLineDic[flagId].kills += 1
-            if addKillSumFlag:
-                self.killSum += 1
 
     def addKillByCreepBaseId(self, creepbaseId, addKillSumFlag=True):
         if creepbaseId not in self.dungeonCreepBaseKillDic:
@@ -119,26 +127,29 @@ class DungeonSpaceTimeLineMixin(object):
         return self.dungeonCreepBaseKillDic.get(creepbaseId, 0)
 
     def clearKills(self, flagId):
-        if flagId in self.dungeonTimeLineDic:
-            sumKill = self.killSum - self.dungeonTimeLineDic[flagId].kills
-            self.killSum = sumKill if sumKill > 0 else 0
-            self.dungeonTimeLineDic[flagId].kills = 0
+        if flagId not in self.dungeonTimeLineDic:
+            return
+
+        _sumKill = self.killSum - self.dungeonTimeLineDic[flagId].kills
+        self.killSum = _sumKill if _sumKill > 0 else 0
+        self.dungeonTimeLineDic[flagId].kills = 0
 
 
 class DungeonSpaceTimeLineVal(userType.UserSingleType):
-    def __init__(self, flagId=0, refreshCount=0, nextRefreshTime=0, stopRefresh=False, kills=0):
-        self.flagId = flagId
+    def __init__(self, flagId=0, refreshCount=0, nextRefreshTime=0, 
+                 stopRefresh=False, kills=0, **kwargs):
         self.refreshCount = refreshCount
+        self.flagId = flagId
         self.nextRefreshTime = nextRefreshTime
-        self.stopRefresh = stopRefresh
         self.kills = kills
+        self.stopRefresh = stopRefresh
+
+    def stop(self):
+        self.stopRefresh = True
 
     def updateRefreshTime(self, newTime):
         self.nextRefreshTime = newTime
         self.refreshCount += 1
-
-    def stop(self):
-        self.stopRefresh = True
 
 # ======================================================
 
@@ -148,104 +159,107 @@ class DungeonSpaceTimeLineVal(userType.UserSingleType):
 # ======================================================
 
 class DungeonEntityDefine(object):
-    def __init__(self, entType='', entProps=None, loadStatus=gameconst.DungeonEntityLoadStatus.UNLOAD):
-        self.entType = entType
+    def __init__(self, entType='', entProps=None, 
+                 loadStatus=gameconst.DungeonEntityLoadEnum.UNLOAD):
         self.entProps = entProps or {}
         self.loadStatus = loadStatus
+        self.entType = entType
 
 
 class DungeonEntityGeneratorVal(object):
     def __init__(self, genUUID, entityList, withBase=False, extra=None):
-        self.genUUID = genUUID
         self.entityList = entityList    # type: list[DungeonEntityDefineStruct,]
-        self.withBase = withBase
+        self.genUUID = genUUID
         self.extra = extra or {}
+        self.withBase = withBase
+
+    def isAllEntityLoaded(self):
+        for entVal in self.entityList:
+            if entVal.loadStatus != gameconst.DungeonEntityLoadEnum.LOADED:
+                return False
+        return True
 
     def getEntityNum(self):
         return len(self.entityList)
 
-    def isAllEntityLoaded(self):
-        for entVal in self.entityList:
-            if entVal.loadStatus != gameconst.DungeonEntityLoadStatus.LOADED:
-                return False
-        return True
-
     def getEntityStatusVal(self, status):
         _num = 0
-        for entVal in self.entityList:
-            if entVal.loadStatus != status:
+        for _entVal in self.entityList:
+            if _entVal.loadStatus != status:
                 _num += 1
         return _num
 
 
 class DungeonEntityGeneratorQueueMixin(object):
     def __init__(self, dungeonEntityGenerateQueue=None):
-        self.dungeonEntityGenerateQueue = dungeonEntityGenerateQueue or collections.OrderedDict()
+        if not dungeonEntityGenerateQueue:
+            self.dungeonEntityGenerateQueue = collections.OrderedDict()
+
         self.dungeonEntityCreatingQueue = collections.OrderedDict()
+        self._gameEntityIdReversedDic = {}
         self._gameEntityIdentifyIDReversedDict = {}
-        self._gameEntityIdReversedDict = {}
+
+    def isCreatingEntity(self):
+        for genVal in self.dungeonEntityCreatingQueue.values():
+            if genVal.getEntityStatusVal(gameconst.DungeonEntityLoadEnum.UNLOAD) > 0:
+                return True
+        return False
 
     def isNeedCreateEntity(self):
         if self.dungeonEntityGenerateQueue or self.dungeonEntityCreatingQueue:
             return True
         return False
 
-    def isCreatingEntity(self):
-        for genVal in self.dungeonEntityCreatingQueue.values():
-            if genVal.getEntityStatusVal(gameconst.DungeonEntityLoadStatus.UNLOAD) > 0:
-                return True
-        return False
-
     def isFlagIdInEntityGenerator(self, flagId):
-        if flagId not in self._gameEntityIdReversedDict:
+        if flagId not in self._gameEntityIdReversedDic:
             return False
-        if not self._gameEntityIdReversedDict[flagId]:
+        if not self._gameEntityIdReversedDic[flagId]:
             return False
         return True
 
     def clearEntityGeneratorQueue(self):
-        self.dungeonEntityGenerateQueue.clear()
         self.dungeonEntityCreatingQueue.clear()
+        self.dungeonEntityGenerateQueue.clear()
+        self._gameEntityIdReversedDic.clear()
         self._gameEntityIdentifyIDReversedDict.clear()
-        self._gameEntityIdReversedDict.clear()
 
-    def addEntityGeneratorVal(self, val: DungeonEntityGeneratorVal):
-        if val.genUUID in self.dungeonEntityGenerateQueue or val.genUUID in self.dungeonEntityCreatingQueue:
+    def addEntityGeneratorVal(self, genVal: DungeonEntityGeneratorVal):
+        if genVal.genUUID in self.dungeonEntityGenerateQueue or genVal.genUUID in self.dungeonEntityCreatingQueue:
             return
 
-        self.dungeonEntityGenerateQueue[val.genUUID] = val
+        self.dungeonEntityGenerateQueue[genVal.genUUID] = genVal
 
-        for entVal in val.entityList:
-            self._gameEntityIdentifyIDReversedDict[entVal.entProps["gameEntityIdentifyID"]] = val.genUUID
+        for entVal in genVal.entityList:
+            self._gameEntityIdentifyIDReversedDict[entVal.entProps["gameEntityIdentifyID"]] = genVal.genUUID
             _gid = utils.parseGidFromGameEntityId(entVal.entProps["gameEntityId"])
-            self._gameEntityIdReversedDict.setdefault(_gid, set()).add(val.genUUID)
+            self._gameEntityIdReversedDic.setdefault(_gid, set()).add(genVal.genUUID)
 
     def popEntityGeneratorVal(self, genUUID, default=None):
         _isCreating = genUUID in self.dungeonEntityCreatingQueue
-        _isQueue = genUUID in self.dungeonEntityGenerateQueue
-        if not (_isCreating or _isQueue):
+        _isQue = genUUID in self.dungeonEntityGenerateQueue
+        if not (_isCreating or _isQue):
             return default
 
         if _isCreating:
-            val = self.dungeonEntityCreatingQueue.pop(genUUID)
+            _val = self.dungeonEntityCreatingQueue.pop(genUUID)
 
-        if _isQueue:
-            val = self.dungeonEntityGenerateQueue.pop(genUUID)
+        if _isQue:
+            _val = self.dungeonEntityGenerateQueue.pop(genUUID)
 
-        for entVal in val.entityList:
+        for entVal in _val.entityList:
             self._gameEntityIdentifyIDReversedDict.pop(entVal.entProps["gameEntityIdentifyID"], None)
             _gid = utils.parseGidFromGameEntityId(entVal.entProps["gameEntityId"])
-            self._gameEntityIdReversedDict.get(_gid, set()).discard(genUUID)
-        return val
+            self._gameEntityIdReversedDic.get(_gid, set()).discard(genUUID)
+        return _val
 
 
     def makeNextEntityGeneratorValInCreatingQueue(self, default=None):
         if not self.dungeonEntityGenerateQueue:
             return default
 
-        genUUID, val = self.dungeonEntityGenerateQueue.popitem(last=False)
-        self.dungeonEntityCreatingQueue[genUUID] = val
-        return val
+        genUUID, _val = self.dungeonEntityGenerateQueue.popitem(last=False)
+        self.dungeonEntityCreatingQueue[genUUID] = _val
+        return _val
 
     def onDungeonEntityCreated(self, gameEntityIdentifyID):
         if gameEntityIdentifyID not in self._gameEntityIdentifyIDReversedDict:
@@ -255,114 +269,136 @@ class DungeonEntityGeneratorQueueMixin(object):
 
         genUUID = self._gameEntityIdentifyIDReversedDict[gameEntityIdentifyID]
         if genUUID in self.dungeonEntityCreatingQueue:
-            val = self.dungeonEntityCreatingQueue[genUUID]
+            _val = self.dungeonEntityCreatingQueue[genUUID]
         else:
-            val = self.dungeonEntityGenerateQueue[genUUID]
+            _val = self.dungeonEntityGenerateQueue[genUUID]
 
-        for entVal in val.entityList:
+        for entVal in _val.entityList:
             if entVal.entProps["gameEntityIdentifyID"] == gameEntityIdentifyID:
-                entVal.loadStatus = gameconst.DungeonEntityLoadStatus.LOADED
+                entVal.loadStatus = gameconst.DungeonEntityLoadEnum.LOADED
 
-        if val.isAllEntityLoaded():
+        if _val.isAllEntityLoaded():
             self.popEntityGeneratorVal(genUUID)
 
-        return val
+        return _val
 
 # ======================================================
 
 
 #----------------------------单人副本----------------------------------------------
-class SingleDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, ownerGbId, spaceLevel=1):
-        super(SingleDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=spaceLevel,dungeonSpaceValType=gameconst.DungeonSpaceValType.SINGLE)
+class SingleDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, 
+                            DungeonEntityGeneratorQueueMixin):
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, ownerGbId,\
+                 spaceLevel=1, **kwargs):
+        super(SingleDungeonSpaceVal, self).__init__(
+            spaceNo, spaceUUID, 
+            spaceBox, spaceMgr, 
+            spaceLevel=spaceLevel,
+            dungeonSpaceValType=gameconst.DungeonSpaceValType.SINGLE)
+
         super(DungeonSpaceVal, self).__init__()
         super(DungeonSpaceTimeLineMixin, self).__init__()
 
-        self.ownerGbId = ownerGbId
         self.homeEnts = []
+        self.ownerGbId = ownerGbId
 
 class SingleDungeonFounders(userType.UserDictType):
     def addFounder(self, spaceNo, spaceUUID, playerGbId, playerBox):
-        key = self.getFounderKey(playerGbId, spaceUUID)
-        self[key] = SingleDungeonFounderVal(spaceNo, spaceUUID, playerGbId, playerBox)
+        _key = self.getFounderKey(playerGbId, spaceUUID)
+        self[_key] = SingleDungeonFounderVal(spaceNo, spaceUUID, playerGbId, playerBox)
 
     def getFounderVal(self, playerGbId, spaceUUID):
-        key = self.getFounderKey(playerGbId, spaceUUID)
-        if key in self:
-            return self[key]
+        _key = self.getFounderKey(playerGbId, spaceUUID)
+        if _key in self:
+            return self[_key]
         return None
 
     def destoryFounder(self, playerGbId, spaceUUID):
-        key = self.getFounderKey(playerGbId, spaceUUID)
-        self.pop(key, None)
+        _key = self.getFounderKey(playerGbId, spaceUUID)
+        self.pop(_key, None)
 
     def getFounderKey(self, playerGbId, spaceUUID):
         return playerGbId, spaceUUID
 
 class SingleDungeonFounderVal(userType.UserSingleType):
     def __init__(self, spaceNo, spaceUUID, playerGbId, playerBox, tEnter=0, tLeave=0):
-        self.spaceNo = spaceNo
         self.spaceUUID = spaceUUID
+        self.spaceNo = spaceNo
         self.playerGbId = playerGbId
         self.playerBox = playerBox
-        self.tEnter = tEnter
         self.tLeave= tLeave
+        self.tEnter = tEnter
 
     def onAvatarEnter(self, gbId):
-        if gbId == self.playerGbId:
-            self.tEnter = utils.curTS()
-            self.tLeave = 0
+        if gbId != self.playerGbId:
+            return
 
-    def onAvatarLeave(self, gbId, isOffline=False):
-        if gbId == self.playerGbId:
-            self.tEnter = 0
-            self.tLeave = utils.curTS()
-            if isOffline:
-                self.playerBox = None
+        self.tEnter = utils.curTS()
+        self.tLeave = 0
 
     def hasAvatar(self):
         return self.tEnter and not self.tLeave
 
+    def onAvatarLeave(self, gbId, isOffline=False):
+        if gbId != self.playerGbId:
+            return
+
+        self.tEnter = 0
+        self.tLeave = utils.curTS()
+        if isOffline:
+            self.playerBox = None
+
 class SingleDungeonFoundersInfo(userType.UserDictType):
     def createObjFromDict(self, dict):
-        founders = SingleDungeonFounders()
+        _founders = SingleDungeonFounders()
 
-        for fVal in dict['founders']:
-            founders.addFounder(fVal['spaceNo'], fVal['spaceUUID'], fVal['playerGbId'], fVal['playerBox'], fVal['tEnter'], fVal['tLeave'])
+        for _fVal in dict['founders']:
+            _founders.addFounder(
+                _fVal['spaceNo'], 
+                _fVal['spaceUUID'], 
+                _fVal['playerGbId'], 
+                _fVal['playerBox'], 
+                _fVal['tEnter'], 
+                _fVal['tLeave'])
 
-        return founders
+        return _founders
 
     def getDictFromObj(self, obj):
-        d = {'founders': []}
-        founders = d['founders']
+        _d = {'founders': []}
+        founders = _d['founders']
 
         for fVal in obj.values():
             founders.append({
-                'spaceNo':fVal.spaceNo,
                 'spaceUUID':fVal.spaceUUID,
+                'spaceNo':fVal.spaceNo,
                 'playerGbId':fVal.playerGbId,
                 'playerBox': fVal.playerBox,
-                'tEnter':fVal.tEnter,
                 'tLeave':fVal.tLeave,
+                'tEnter':fVal.tEnter,
             })
 
-        return d
+        return _d
 
     def isSameType(self, obj):
         return type(obj) is SingleDungeonFounders
 
-SingleDungeonFoundersInstance = SingleDungeonFoundersInfo()
 
 #----------------------------队伍副本--------------------------------------------------------
 class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, teamUUID, spaceLevel=1,extraDic={}):
-        super(TeamDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel,extraDic,dungeonSpaceValType=gameconst.DungeonSpaceValType.TEAM)
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, teamUUID,\
+                 spaceLevel=1,extraDic={}, **kwargs):
+
+        super(TeamDungeonSpaceVal, self).__init__(
+            spaceNo, spaceUUID, spaceBox, spaceMgr, 
+            spaceLevel,extraDic,
+            dungeonSpaceValType=gameconst.DungeonSpaceValType.TEAM)
+
         super(DungeonSpaceVal, self).__init__()
         super(DungeonSpaceTimeLineMixin, self).__init__()
-        self.teamUUID=teamUUID
         self.markCreate = True
-        self.markDestroy = 0
+        self.teamUUID=teamUUID
         self.homeEnts = []
+        self.markDestroy = 0
 
 
 # ----------------------------------------------------------------------
@@ -372,45 +408,52 @@ class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEnt
 class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
     """RaidStub 团队副本Space结构体"""
 
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, raidUUID, spaceLevel=1):
-        super(RaidDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel,dungeonSpaceValType=gameconst.DungeonSpaceValType.RAID)
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, raidUUID,\
+                 spaceLevel=1, **kwargs):
+
+        super(RaidDungeonSpaceVal, self).__init__(
+            spaceNo, spaceUUID, spaceBox, spaceMgr, 
+            spaceLevel,
+            dungeonSpaceValType=gameconst.DungeonSpaceValType.RAID)
+
         super(DungeonSpaceVal, self).__init__()
         super(DungeonSpaceTimeLineMixin, self).__init__()
-        self.founders = RaidDungeonFounders()
         self.raidUUID = raidUUID
+        self.founders = RaidDungeonFounders()
         self.homeEnts = []
         self.tMarkDestroy = 0            # 标记删除时间, 在该时间内保证玩家可以安全离开副本space, 最后销毁副本
-        self.raidSrc = 0
         self.extraProps = {}
+        self.raidSrc = 0
+
+    def getAllPlayerGbidAndNamePair(self):
+        _result = []
+        for i in self.founders.values():
+            if i.playerName:
+                _result.append((i.playerGBID, i.playerName))
+        return _result
 
     def _lateReload(self):
         self.founders.reloadScript()
 
-    def getAllPlayerGbidAndNamePair(self):
-        result = []
-        for i in self.founders.values():
-            if i.playerName:
-                result.append((i.playerGBID, i.playerName))
-        return result
 
 class RaidDungeonFounders(userType.UserDictType):
     """RaidStub 团队副本中存在成员集合字典"""
 
     def _lateReload(self):
-        for founderVal in self.values():
-            founderVal.reloadScript()
+        for _founderVal in self.values():
+            _founderVal.reloadScript()
 
     def isNoFounders(self):
-        for founderVal in self.values():
-            if founderVal.hasAvatar():
+        for _founderVal in self.values():
+            if _founderVal.hasAvatar():
                 return False
         return True
 
-    def addFounder(self, spaceNo, spaceUUID, playerGBID, playerBox):
-        self[playerGBID] = RaidDungeonFounderVal(spaceNo, spaceUUID, playerBox, playerGBID)
-
     def getFounderVal(self, playerGBID):
         return self[playerGBID] if playerGBID in self else None
+
+    def addFounder(self, spaceNo, spaceUUID, gbId, playerBox):
+        self[gbId] = RaidDungeonFounderVal(spaceNo, spaceUUID, playerBox, gbId)
 
     def destoryFounder(self, playerGBID):
         self.pop(playerGBID, None)
@@ -420,14 +463,14 @@ class RaidDungeonFounderVal(userType.UserSingleType):
     """RaidStub 团队副本中存在成员结构体"""
 
     def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0,
-                 playerName=""):
-        self.spaceNo = spaceNo
+                 playerName="", **kwargs):
         self.spaceUUID = spaceUUID
+        self.spaceNo = spaceNo
         self.playerBox = playerBox
         self.playerGBID = playerGBID
         self.tEnter = tEnter            # 进入时间
-        self.tLeave = tLeave            # 离开时间
         self.playerName = playerName
+        self.tLeave = tLeave            # 离开时间
 
     def onAvatarEnter(self, gbId):
         if gbId == self.playerGBID:
@@ -435,11 +478,13 @@ class RaidDungeonFounderVal(userType.UserSingleType):
             self.tLeave = 0
 
     def onAvatarLeave(self, gbId, isOffline=False):
-        if gbId == self.playerGBID:
-            self.tEnter = 0
-            self.tLeave = utils.curTS()
-            if isOffline:
-                self.playerBox = None
+        if gbId != self.playerGBID:
+            return
+
+        self.tEnter = 0
+        self.tLeave = utils.curTS()
+        if isOffline:
+            self.playerBox = None
 
     def hasAvatar(self):
         return self.tEnter and not self.tLeave
@@ -498,14 +543,15 @@ class DungeonStatisticMixin(userType.UserSingleType):
         return self.rank
 
 class DungeonFounderValMixin(userType.UserSingleType):
-    def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0, playerName=""):
-        self.spaceNo = spaceNo
+    def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, 
+                 tLeave=0, playerName="", **kwargs):
         self.spaceUUID = spaceUUID
+        self.spaceNo = spaceNo
         self.playerBox = playerBox
         self.playerGBID = playerGBID
         self.tEnter = tEnter            # 进入时间
-        self.tLeave = tLeave            # 离开时间
         self.playerName = playerName
+        self.tLeave = tLeave            # 离开时间
 
     def onAvatarEnter(self, gbId):
         if gbId == self.playerGBID:
@@ -513,11 +559,13 @@ class DungeonFounderValMixin(userType.UserSingleType):
             self.tLeave = 0
 
     def onAvatarLeave(self, gbId, isOffline=False):
-        if gbId == self.playerGBID:
-            self.tEnter = 0
-            self.tLeave = utils.curTS()
-            if isOffline:
-                self.playerBox = None
+        if gbId != self.playerGBID:
+            return
+
+        self.tEnter = 0
+        self.tLeave = utils.curTS()
+        if isOffline:
+            self.playerBox = None
 
     def hasAvatar(self):
         return self.tEnter and not self.tLeave
@@ -528,12 +576,12 @@ class DungeonStatisticFounderVal(DungeonStatisticMixin):
 
 class DungeonStatisticFounderVals(userType.UserDictType):
     def _lateReload(self):
-        for founderVal in self.values():
-            founderVal.reloadScript()
+        for _founderVal in self.values():
+            _founderVal.reloadScript()
 
     def isNoFounders(self):
-        for founderVal in self.values():
-            if founderVal.hasAvatar():
+        for _founderVal in self.values():
+            if _founderVal.hasAvatar():
                 return False
         return True
 
@@ -556,12 +604,12 @@ class DungeonFounderVals(userType.UserDictType):
         self.totalFounders = 0
 
     def _lateReload(self):
-        for founderVal in self.values():
-            founderVal.reloadScript()
+        for _founderVal in self.values():
+            _founderVal.reloadScript()
 
     def isNoFounders(self):
-        for founderVal in self.values():
-            if founderVal.hasAvatar():
+        for _founderVal in self.values():
+            if _founderVal.hasAvatar():
                 return False
         return True
 
@@ -582,3 +630,5 @@ class DungeonFounderVals(userType.UserDictType):
     def getFounderGBIDs(self):
         return list(self.keys())   
 
+
+SingleDungeonFoundersInstance = SingleDungeonFoundersInfo()

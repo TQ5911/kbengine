@@ -849,7 +849,7 @@ def _66000066(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 1.5)
 
 def _66000067(self, target, context):
     self.castSkill(target, context, 91028090)
@@ -863,7 +863,7 @@ def _66000068_enter(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 1.5)
 
 def _66000069(self, target, context):
     import action_FightAction
@@ -931,7 +931,7 @@ def _66000076_enter(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 1)
 
 def _66000077(self, target, context):
     self.castSkill(target, context, 91031015)
@@ -1129,7 +1129,7 @@ def _66000104(self, target, context):
         self.attack(ent, context, 2)
 
 def _66000105(self, target, context):
-    self.castSkill(target, context, 91032008)
+    self.castSkill(target, context, 91036014)
 
 def _66000106(self, target, context):
     import action_FightAction
@@ -1244,16 +1244,15 @@ def _66000117(self, target, context):
             continue
         self.attack(ent, context, 1.5)
 
-# 生成的技能代码
 def _66000121(self, target, context):
-
-
+    import action_FightAction
     # 技能执行逻辑
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 3)
+        self.attack(ent, context, 4)
+        action_FightAction.pushTarget(self, ent, context, 3, 8)
 
 # 生成的技能代码
 def _66000122(self, target, context):
@@ -1264,10 +1263,18 @@ def _66000122(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 3)
+        self.attack(ent, context, 8)
 
+# 生成的技能代码
 def _66000123(self, target, context):
-    self.castSkill(target, context, 91027090)
+
+
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 8)
 
 def _66000125(self, target, context):
     self.createCreation(self, context, 66000126,self.level,1,2,8)
@@ -1279,7 +1286,7 @@ def _66000126(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2)
+        self.attack(ent, context, 6)
 
 def _66000127(self, target, context):
     for tid in context.effectedEntIds:
@@ -1319,6 +1326,59 @@ def _66000135(self, target, context):
         if not ent:
             continue
         self.attack(ent, context, 1.5)
+
+# 生成的技能代码
+def _66000136(self, target, context):
+    import KBEngine
+    import action_FightAction
+
+
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1.75)
+        action_FightAction.stun(self, ent, context, 1.5, 1, 0, 0, 2)
+
+# 生成的技能代码
+def _66000137(self, target, context):
+    import action_FightAction
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1.5)
+
+# 生成的技能代码
+def _66000137byend(self, target, context):
+    # 技能执行逻辑
+    self.createCreation(self, context, 66000137, self.level, 1, 6, 12, 0, 0,0, 180)
+
+# 生成的技能代码
+def _66000138(self, target, context):
+    import action_FightAction
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1.5)
+
+def _66000139(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 3)
+
+def _64000140_enter(self, target, context):
+    self.addBuffBySkill(target, context, 64004040, 1, 1.0, 5)
+
+def _64000140_leave(self, target, context):
+    self.removeBuffBySkill(target, context, 64004040)
 
 datas = _tools.RODict({ 
     65000001: _tools.RODict({
@@ -5910,7 +5970,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 5,
+        "selectPar": 4,
         "delayTime": 3.0,
     }),
     66000132: _tools.RODict({
@@ -6024,7 +6084,147 @@ datas = _tools.RODict({
         "selectType": 1,
         "selectPar": 6,
         "delayTime": 0.0,
+    }),
+    66000136: _tools.RODict({
+        "ID": 66000136,
+        "name": "5008技能(机制5)",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000136,
+        "time": 1.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 1.1,
+        "hurtNumber": 3,
+        "areaLoop": 1,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 5,
+        "delayTime": 0.0,
+    }),
+    66000137: _tools.RODict({
+        "ID": 66000137,
+        "name": "5019技能5创生物A",
+        "type": "Linar",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000137,
+        "time": 6.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.5,
+        "hurtNumber": 99,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": _66000137byend,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 3.0,
+        "selectType": 1,
+        "selectPar": 4,
+        "delayTime": 0.5,
+    }),
+    66000138: _tools.RODict({
+        "ID": 66000138,
+        "name": "5019技能5创生物B",
+        "type": "Linar",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000138,
+        "time": 6.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.5,
+        "hurtNumber": 99,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 3.0,
+        "selectType": 1,
+        "selectPar": 4,
+        "delayTime": 0.5,
+    }),
+    66000139: _tools.RODict({
+        "ID": 66000139,
+        "name": "7027_10技能4创生物",
+        "type": "FixPosition",
+        "isAttackSkill": 0,
+        "classTag": 1,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000139,
+        "time": 8.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 1.0,
+        "hurtNumber": 10,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 6,
+        "delayTime": 0.5,
+    }),
+    66000140: _tools.RODict({
+        "ID": 66000140,
+        "name": "6016无敌罩子",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 3,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": None,
+        "time": 6.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 1.0,
+        "hurtNumber": 30,
+        "areaLoop": 0,
+        "enterAction": _64000140_enter,
+        "enterLoop": 0,
+        "leaveAction": _64000140_leave,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 4,
+        "delayTime": 0.0,
     })
 })
 minKey = 65000001
-maxKey = 66000135
+maxKey = 66000140

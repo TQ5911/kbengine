@@ -5,56 +5,72 @@ def refreshCell():
     # --auto genterate mark--
     pass
 def refreshBase():
+    import KBEngine
+    import dropAward
+    import gameclass
+    import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+    import gacha_gachaSet as GGS
+    import gacha_gachaPool as GGP
     import gameconst
-    import utils
-    from BountyInfo import bountyItem, hunterRankItem, hunterRankData
-    import const_const as CONST
-    import BountyStub
-    def acceptBounty(self, playerbox, bountyDict):
-        now = utils.curTS()
-        LOG_INFO('BountyStub::acceptBounty', bountyDict)
-        acceptItem = bountyItem()
-        acceptItem.initFromSyncDict(bountyDict)
-        hunterItem = self.hunterBountyDict.get(acceptItem.hunterGbId, None)
-        if hunterItem:
-            LOG_WARN('BountyStub::acceptBounty alerady in hunter bounty list', hunterItem.toSyncDict())
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.ALERADY_HUNTER)
+    import dataUtils
+    import gamedecorator
+    import iDrawCard
+    @gamedecorator.checkGameconfigEnable('drawPet')
+    def reqRandomSummonPet(self, exposed, pool, summonNum, cType):
+        LOG_INFO('call reqRandomSummonPet', pool, summonNum, cType)
+        if cType not in gameconst.DrawCardCostType.VAILD_COST_TYPE:
+            LOG_ERR('call reqRandomSummonPet cType')
             return
-        preAcceptItem = self.bountyInfoData.get(acceptItem.uuid, None)
-        if not preAcceptItem:
-            LOG_WARN('BountyStub::acceptBounty bounty not exist', acceptItem.uuid)
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_EXIST)
+        if not self.checkGachaPoolVaild(pool):
             return
-        if preAcceptItem.bountyType != gameconst.BountyType.PUBLIC:
-            LOG_WARN('BountyStub::acceptBounty bounty type error', preAcceptItem.bountyType)
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_PUBLIC_TYPE)
+        poolData = GGP.datas[pool]
+        curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool), GGS.datas['dailyCoinRollTime']['value'])
+        if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
+            self.onMessagePre(GGS.datas['guaranteeMaxFull']['value'], [])
+            LOG_WARN('call reqRandomSummonPet: guaranteed limit', curPoolInfo.guaranteed, GGS.datas['maxStack']['value'])
             return
-        if preAcceptItem.state != gameconst.BountyState.PUBLISHED:
-            LOG_WARN('BountyStub::acceptBounty bounty state error', preAcceptItem.state)
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_PUBLISHED_STATE)
+        prop = gameconst.DRAW_CARD_COST_TYPE_2_PROP_TYPE[cType]
+        if not curPoolInfo.hasLeftTimes(prop, summonNum):
+            LOG_ERR('call reqRandomSummonPet prop, leftTime', prop, curPoolInfo.getLeftTimes(prop), summonNum)
             return
-        if preAcceptItem.gbid == acceptItem.hunterGbId:
-            LOG_WARN('BountyStub::acceptBounty bounty publisher is self', preAcceptItem.gbid)
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.PUBLISHER_IS_SELF)
+        suffix = gameconst.DRAW_CARD_COST_TYPE_2_SUFFIX_TYPE[cType]
+        rollCostKey = str(summonNum) + str('rollCost') + str(suffix)
+        rollCost = poolData.get(rollCostKey, None)
+        rollRewardKey = str(summonNum) + str('rollReward')
+        rollReward = poolData.get(rollRewardKey, 0)
+        gatchaTypeReward = GGS.datas['gatchaTypeReward']['value']
+        realRollNum = 0
+        LOG_INFO('call reqRandomSummonPet cat', prop, rollCostKey, rollRewardKey)
+        if not rollCost:
+            LOG_ERR('call reqRandomSummonPet rollCost not found in config')
             return
-        if preAcceptItem.preyGbId == acceptItem.hunterGbId:
-            LOG_WARN('BountyStub::acceptBounty bounty prey is self', preAcceptItem.preyGbId)
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.PREY_IS_SELF)
+        if not rollReward:
+            LOG_ERR('call reqRandomSummonPet rollReward not found in config')
             return
-        leftTime = preAcceptItem.getLeftTime(now)
-        needTime = CONST.datas['Bounty_OutOrder'].get('value', 60)
-        if leftTime <= needTime:
-            LOG_WARN('BountyStub::acceptBounty bounty not enough accept left time', leftTime, needTime)
-            playerbox.acceptBountyRes(bountyDict, gameconst.AcceptBountyResType.NOT_ENOUGH_ACCEPT_LEFT_TIME)
+        for itemNum, rollNum in gatchaTypeReward:
+            if itemNum == summonNum:
+                realRollNum = rollNum
+                break
+        if not realRollNum:
+            LOG_ERR('call reqRandomSummonPet summonNum not found in config')
             return
-        LOG_DBG('BountyStub::acceptBounty', preAcceptItem)
-        preAcceptItem.state = gameconst.BountyState.PRE_ACCEPT
-        preAcceptItem.hunterGbId = acceptItem.hunterGbId
-        self.hunterBountyDict[acceptItem.hunterGbId] = preAcceptItem
-        LOG_DBG('BountyStub::acceptBounty', preAcceptItem)
-        playerbox.onHunterPreAcceptBounty(preAcceptItem.toSyncDict())
-        LOG_INFO('BountyStub::acceptBounty end')
-    BountyStub.BountyStub.acceptBounty = acceptBounty
+        petRollTicket = rollCost
+        deductWealthVal = dropAward.DeductWealthVal()
+        for itemId, costNum in petRollTicket:
+            deductWealthVal.addWealthByItemId(itemId, costNum)
+        if not self.canDeductWealth(deductWealthVal):
+            LOG_ERR('reqRandomSummonPet items not enough:', deductWealthVal)
+            return
+        detail = gameclass.AwardDetailCls(summonNum=summonNum)
+        opUUID = KBEngine.genUUID64()
+        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_PETROLL_COST, deductWealthVal, opUUID, detail)
+        rewardId = rollReward
+        awardCtx = self.getAvatarAwardCtx(rewardId, None)
+        awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onRandomSummonPetResult')
+        awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID, 'cType': cType})
+        detail = gameclass.AwardDetailCls(rewardId=rewardId)
+        self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)
+    iDrawCard.IDrawCard.reqRandomSummonPet = reqRandomSummonPet
     # --auto genterate mark--
     pass
 def refreshInterface():

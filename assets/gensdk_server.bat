@@ -31,7 +31,7 @@ echo KBE_BIN_PATH = %KBE_BIN_PATH%
 cd %curpath%
 
 %KBE_BIN_PATH%/kbcmd.exe --clientsdk=unity --outpath=scripts\kbengine_unity3d_plugins
-%KBE_BIN_PATH%/kbcmd.exe --clientsdk=bot --outpath=scripts\bots
+@rem %KBE_BIN_PATH%/kbcmd.exe --clientsdk=bot --outpath=scripts\bots
 
 cd %curpath%/scripts/kbengine_unity3d_plugins
 python ModifyProperty.py
@@ -39,5 +39,6 @@ python ModifyProperty.py
 
 cd %curpath%
 .\tools\gen_lua\gen_client_lua.exe --config .\tools\gen_lua\config.json
+@rem move /y ".\scripts\bots\*py" "..\..\..\..\tools\gamebot\scripts\bots"
 
 @pause

@@ -30,5 +30,9 @@ datas = _tools.RODict({
     "worldBossSign": _tools.RODict({
         "ID": "worldBossSign",
         "value": "/",
+    }),
+    "isActivityNotice": _tools.RODict({
+        "ID": "isActivityNotice",
+        "value": 54001435,
     })
 })

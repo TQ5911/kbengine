@@ -6,6 +6,7 @@ import functools
 import random
 import math
 import cube_room
+import cube_config
 
 import gamePlay_gamePlay as GGD
 import decimal
@@ -137,6 +138,9 @@ def inCubeReadyScene(spaceNo):
 def inWonderLandScene(spaceNo):
     return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceWonderLand
 
+def inAbyssScene(spaceNo):
+    return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceAbyss
+
 def inSiegeWarScene(spaceNo):
     return getSpaceType(spaceNo) == gameconst.SpaceType.SpaceSiegeWar
 
@@ -172,14 +176,14 @@ def combineLineSpaceNo(lineType, lineNo=-1):
 
 
 def parseLineNo(spaceNo):
-    if not (inLineScene(spaceNo) or inCubeScene(spaceNo)):
+    if not (inLineScene(spaceNo) or inCubeScene(spaceNo) or inWonderLandScene(spaceNo) or inAbyssScene(spaceNo)):
         return -1
 
     return spaceNo % gameconst.SPACE_NO_INTERVAL
 
 
 def parseLineType(spaceNo):
-    if not inLineScene(spaceNo):
+    if not (inLineScene(spaceNo) or inCubeScene(spaceNo) or inWonderLandScene(spaceNo) or inAbyssScene(spaceNo)):
         return 0
 
     return spaceNo // gameconst.SPACE_NO_INTERVAL
@@ -400,3 +404,15 @@ def getKillMonsterRewardConfig(monsterLevel, playerLevel):
 
     config = ERD.revenueLevelGapDic[levelDelta]
     return config
+
+def _isArenaSpace(spaceNo):
+    _mapId = fetchMapId(spaceNo)
+    return cube_room.datas.get(_mapId, {}).get('sign', 0) == gameconst.CUBE_SIGN_ARENA
+
+def _isInnerDemonSpace(spaceNo):
+    _mapId = fetchMapId(spaceNo)
+    return cube_room.datas.get(_mapId, {}).get('sign', 0) == gameconst.CUBE_SIGN_DEMON
+    
+def _isInnerDemonDungeonSpace(spaceNo):
+    _mapId = fetchMapId(spaceNo)
+    return cube_config.datas['cube_innerDemon']['value'] == _mapId

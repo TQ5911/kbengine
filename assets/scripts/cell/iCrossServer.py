@@ -19,7 +19,7 @@ CrossServerWaitingClientInitTuple = collections.namedtuple(
 )
 
 class ICrossServer(object):
-    CROSSSERVER_TIMEOUT = 120
+    CROSSSERVER_TIMEOUT = 10
 
     @property
     def crossServerWaitingClientInitTimerId(self):
@@ -48,7 +48,7 @@ class ICrossServer(object):
             # NOTE(QZZ)(CROSS_SERVER): 经验时间， 需要尽量保证在正常情况下客户端在该时间内loading完数据并回调initClientOnCell
             timeout = 40
 
-        self.crossServerWaitingClientInitTimerId = self.toCallbackAfter(
+        self.crossServerWaitingClientInitTimerId = self.asyncCallbackAfter(
             timeout, gametimer.TIMER_TAG_CROSS_SERVER_WAITING_CLIENT_INIT
         ).handleCrossServerWaitingClientInitReasonTimeout(timeout)
 
@@ -147,6 +147,10 @@ class ICrossServer(object):
         LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
         if self.isCrossServerInOtherServer:
             self.base.syncMethodCallToLocalServerCell(fnname, fnargs)
+    
+    def beSyncMethodCallFromCrossServerCell(self, fnname, fnargs):
+        LOG_DBG("beSyncMethodCallFromCrossServerCell::", fnname, fnargs)
+        getattr(self, fnname)(*fnargs)
 
     def beforeReqCrossServer(self, toServerId, reasonNo):
         LOG_INFO("beforeReqCrossServer::", toServerId, reasonNo)
@@ -160,7 +164,7 @@ class ICrossServer(object):
         self.resetUsingSkills(gameconst.ResetSkillReason.ReasonTeleport)
         self.doClearAllTargetTypeCache(True)
 
-        self.selfStopAutoCombat(gameconst.SuspendAutoCombatReason.Teleport)
+        self.selfStopAutoCombat(gameconst.SuspendAutoCombatReasonEnum.Teleport)
         self.endApplyGather(gameconst.CancelGatherReason.CrossServer)
         self.stopPlayEmote(gameconst.StopPlayEmoteReason.CrossServer)
         self.applyLeaveTeam(self.id)

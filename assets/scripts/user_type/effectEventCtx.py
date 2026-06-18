@@ -33,7 +33,7 @@ class SkillEventCtx(EffectEventContext):
         self.skillObj = skillObj                #技能对象
         self.castBySkill = castBySkill          #在别的技能action里释放的
 
-class BuffEventCtx(EffectEventContext):
+class BuffEventContext(EffectEventContext):
     eventType = EVENT_BUFF
     def __init__(self, buffId, buffTag='', endType=0):
         self.buffId = buffId

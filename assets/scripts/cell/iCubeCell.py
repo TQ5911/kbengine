@@ -332,12 +332,12 @@ class ICubeCell(object):
             self._genCubeRoomFilterTypes()
         )
 
-    def enterCubeByFloorConfig(self):
-        LOG_INFO('ICubeCell::enterCubeByFloorConfig: {}'.format(self.cubeEnterFloor))
+    def enterCubeByFloorConfig(self, signType=gameconst.CUBE_SIGN_ARENA):
+        LOG_INFO('ICubeCell::enterCubeByFloorConfig: {}, {}'.format(self.cubeEnterFloor, signType))
         if not self.cubeEnterFloor:
             self.cubeEnterFloor = 1
 
-        _mapIds = cube_room.floor2SignMapIds[self.cubeEnterFloor]
+        _mapIds = cube_room.floor2SignMapIds[self.cubeEnterFloor][signType]
         extra = {'hasCast': False}
         self.enterCubeByMapIds(_mapIds, extra)
 
@@ -452,7 +452,8 @@ class ICubeCell(object):
             'l': _lContext,
             'src': _src,
             'hasCast': hasCast,
-            'cube': extra
+            'cube': extra,
+            'hasCheck': extra.get('hasCheck', False)
         }
         _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
 
@@ -465,7 +466,7 @@ class ICubeCell(object):
 
     def enterCubeRoomFailed(self, fromSpaceNo, toSpaceNo):
         LOG_DBG("ICubeCell::enterCubeRoomFailed", fromSpaceNo, toSpaceNo)
-        gameengine.getCubeStubBySpaceNo(fromSpaceNo).onLeaveCube(self.gbId, fromSpaceNo, toSpaceNo)
+        gameengine.getCubeStubBySpaceNo(toSpaceNo).onLeaveCube(self.gbId, toSpaceNo, fromSpaceNo)
 
     def _startCubeTimeOutTimer(self, cubeCBType):
         self._cancelCubeRoomTimer()

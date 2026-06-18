@@ -272,15 +272,38 @@ public class KBEMain : MonoBehaviour
 		KBEngine.Event.clear();
 		MonoBehaviour.print("clientapp::OnDestroy(): end");
 	}
-	
-	protected virtual void FixedUpdate() 
+
+    protected virtual void FixedUpdate() 
 	{
-		KBEUpdate();
+
+        KBEUpdate();
+
 	}
     private static readonly CustomSampler _testSampler = CustomSampler.Create("KBEUpdate.gameapp.process");
     private static readonly CustomSampler _processOutSampler = CustomSampler.Create("KBEUpdate.processOutEvents");
-	public virtual void KBEUpdate()
+
+#if GM
+    private float _lastProcessTime = 0;
+#endif
+    public virtual void KBEUpdate()
 	{
+#if GM
+        ///GM面板中设置了网络处理延迟时间时，才会启用这个逻辑
+        if (UIGMPanel.Instance != null && UIGMPanel.Instance.NetworkProcessDelayTime.HasValue)
+        {
+            if (_lastProcessTime == 0)
+            {
+                _lastProcessTime = Time.realtimeSinceStartup;
+            }
+            if (Time.realtimeSinceStartup - _lastProcessTime < UIGMPanel.Instance.NetworkProcessDelayTime.Value)
+            {
+                return;
+            }
+            UIGMPanel.Instance.NetworkProcessDelayTime = null;
+            _lastProcessTime = 0;
+        }
+#endif
+
         if (gameapp == null)
             return;
 		// 单线程模式必须自己调用

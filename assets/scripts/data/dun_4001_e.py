@@ -37,7 +37,8 @@ datas ={
         1003,
         1034,
         1035,
-        1036
+        1036,
+        1041
       ]
     }
   },
@@ -325,6 +326,11 @@ datas ={
     "num": 1,
     "lv": "9",
     "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1041": {
+    "type": "taskUndertake",
+    "taskID": 86030005,
     "transition": {}
   }
 }

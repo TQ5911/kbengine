@@ -17,13 +17,15 @@ class ItemContainer(userType.UserSingleType):
 
         self.gridIdToGridObj = {}
         self.itemIdToGridIds = {}
+        self.waitExpireEquipList = {}
 
     def _lateReload(self):
         super(ItemContainer, self)._lateReload()
 
         for v in self.gridIdToGridObj.values():
             v.reloadScript()
-
+        for v in self.waitExpireEquipList.values():
+            v.reloadScript()
         return
 
     def initFromDict(self, savedDataDict):
@@ -48,6 +50,9 @@ class ItemContainer(userType.UserSingleType):
             if itemId not in self.itemIdToGridIds:
                 self.itemIdToGridIds[itemId] = set()
             self.itemIdToGridIds[itemId].add(gridId)
+
+            if gridObj.isEquipmentItem() and gridObj.getOwnerGbId() > 0:
+                self.waitExpireEquipList[gridObj.uniqueId] = gridObj
 
     def getBagData(self):
         _gridIds = self.gridIdToGridObj.keys()
@@ -117,7 +122,10 @@ class ItemContainer(userType.UserSingleType):
             _gridIds.remove(gridId)
         if len(_gridIds) == 0:
             self.itemIdToGridIds.pop(itemId, None)
-        self.gridIdToGridObj.pop(gridId, None)
+        gridObj = self.gridIdToGridObj.pop(gridId, None)
+        if gridObj:
+            # 从背包移除了，清理下待过期的装备列表
+            self.waitExpireEquipList.pop(gridObj.uniqueId, None)
 
     def getItemCount(self, gbId, itemId, bindType):
         _itemCount = 0
@@ -152,6 +160,8 @@ class ItemContainer(userType.UserSingleType):
         # 装备入包需要设置一下职业，战力计算需要
         if dataUtils.isEquipItemByItemId(itemObj.itemId):
             itemObj.setEquipSchool(owner.getAvatarSchool())
+            if itemObj.getOwnerGbId() > 0:
+                self.waitExpireEquipList[itemObj.uniqueId] = itemObj
 
         self.gridIdToGridObj[gridId] = itemObj
         self.itemIdToGridIds.setdefault(itemObj.itemId, set()).add(gridId)
@@ -259,6 +269,9 @@ class ItemContainer(userType.UserSingleType):
                 if gridObj.isLocked() :
                     LOG_ERR('calcDeductItemsPlan: item is locked', item.uniqueId, gridObj.itemId)
                     return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, gridObj.itemId
+                if gridId in removeDict:
+                    LOG_ERR('calcDeductItemsPlan: grid id is repeated', item.uniqueId, gridObj.itemId)
+                    return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, gridObj.itemId 
                 removeDict[gridId] = item.itemNum
 
         for _itemId, _itemInfo in itemsDict.items():
@@ -306,12 +319,12 @@ class ItemContainer(userType.UserSingleType):
 
         return -1, None
 
-    def getItemByItemIdAndUniqueId(self, itemId, uniqueId, withGridId=False):
+    def fetchItemByItemIdAndUniqueId(self, itemId, uniqueId, withGridId=False):
         # FIXME()(AUCTION): 现在非特殊物品没有uniqueId, 以后会有
         # 该方法可以使用`getItemByUniqueId`代替
         _gridId, itemObj = -1, None
-        for i_gridId, i_it in self.iterGetItemByItemIdAndUniqueId(itemId, uniqueId):
-            _gridId, itemObj = i_gridId, i_it
+        for iGridId, i_it in self.iterGetItemByItemIdAndUniqueId(itemId, uniqueId):
+            _gridId, itemObj = iGridId, i_it
             break
 
         if withGridId:
@@ -343,13 +356,13 @@ class ItemContainer(userType.UserSingleType):
         return cleanItem
 
     # 调用前需要判断好每个grid的数量是否足够，这里面不做检查,保证执行成功，不够直接raise
-    def deductItemsByGrid(self, owner, grid2ItemNum, opUUID, srcType, detail, sendClient=True):
+    def deductItemsByGridId(self, owner, grid2ItemNum, opUUID, srcType, detail, sendClient=True):
         for _gridId, deductNum in grid2ItemNum.items():
             item = self.getItemObjByGridId(_gridId)
             if deductNum < 0:
                 deductNum = item.itemNum
             if deductNum > item.itemNum:
-                raise Exception('deductItemsByGrid error: %s %s %s %s' % (owner.id, _gridId, item.itemNum, grid2ItemNum))
+                raise Exception('deductItemsByGridId error: %s %s %s %s' % (owner.id, _gridId, item.itemNum, grid2ItemNum))
             item.setItemNum(item.itemNum - deductNum)
             if item.itemNum == 0:
                 self._recycleGrid(_gridId, item.itemId)
@@ -371,7 +384,7 @@ class ItemContainer(userType.UserSingleType):
         if deductPlan == gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN:
             return gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH, None
 
-        self.deductItemsByGrid(owner, planDict, opUUID, srcType, detail)
+        self.deductItemsByGridId(owner, planDict, opUUID, srcType, detail)
 
         return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDict
 
@@ -511,3 +524,33 @@ class ItemContainer(userType.UserSingleType):
 
         return False, None, None
     
+    def checkEquipExpire(self, owner):
+        expiredEquipItemIdToUniqueIds = {}
+        curTime = utils.curTS()
+        equipUniques = self.waitExpireEquipList.keys()
+        for equipUnique in equipUniques:
+            equipItem = self.waitExpireEquipList.get(equipUnique)
+            if equipItem.getOwnerGbId() != owner.gbID:
+                if curTime >= equipItem.getReturnTime():
+                    uniqueIds = expiredEquipItemIdToUniqueIds.get(equipItem.itemId, None)
+                    if uniqueIds is None:
+                        uniqueIds = []
+                        expiredEquipItemIdToUniqueIds[equipItem.itemId] = uniqueIds
+                    uniqueIds.append(equipItem.uniqueId)
+
+        if len(expiredEquipItemIdToUniqueIds) == 0:
+            return
+        uniqueIds = []
+        for itemId, uniqueIds in expiredEquipItemIdToUniqueIds.items():
+            gridIds = self.itemIdToGridIds.get(itemId, None)
+            if not gridIds:
+                continue
+            for gridId in gridIds:
+                gridObj = self.gridIdToGridObj.get(gridId, None)
+                if not gridObj:
+                    continue
+                if gridObj.uniqueId in uniqueIds:
+                    uniqueIds.append(gridObj.uniqueId)
+
+        if len(uniqueIds) > 0:
+            owner.onNotifyRemoveEquip(uniqueIds)

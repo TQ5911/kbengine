@@ -31,7 +31,6 @@ namespace KBEngine
 		public virtual void onCreateAvatarFailed(Byte arg1) {} 
 		public virtual void onCreateAvatarResult(Byte arg1, UInt64 arg2) {} 
 		public virtual void onGetAuthOfflineTimeClient(UInt64 arg1, UInt32 arg2, UInt32 arg3) {} 
-		public virtual void onKickAnotherAccount() {} 
 		public virtual void onKickAnotherAvatar() {} 
 		public virtual void onLoginNeedReconnect() {} 
 		public virtual void onRemoveAvatar(UInt64 arg1) {} 

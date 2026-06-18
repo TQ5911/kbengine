@@ -85,6 +85,21 @@
             <Default>   0                   </Default>
             <Flags>     ALL_CLIENTS       </Flags>
         </groupLock>
+
+		<fBProtectTime>
+			<Type>			LONGTIME			</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+		</fBProtectTime>
+
+		<fBItemId>
+			<Type>			ITEMID    			</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+		</fBItemId>
+
+		<fromMonsterId>
+			<Type>			OBJECT_ID        	</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+		</fromMonsterId>
     </Properties>
 
     <BaseMethods>
@@ -100,14 +115,9 @@
     </CellMethods>
 
     <ClientMethods>
-        <onEnterCollect>
-        </onEnterCollect>
-
-        <onCancelCollect>
-        </onCancelCollect>
-
-        <onAfterCollect>
-        </onAfterCollect>
+        <syncIsFBTarget>
+            <Arg>       BOOL     </Arg>
+        </syncIsFBTarget>
     </ClientMethods>
 
 </root>

@@ -260,6 +260,18 @@ namespace KBEngine
         //    EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_UPDATE_CD, id, skillID, isReset == 1 ? true : false);
         //}
 
+        public override void drawCube(Vector3 position, Vector3 forward, float width, float height)
+        {
+#if GM
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            GameObject.Destroy(cube.GetComponent<BoxCollider>());
+            cube.transform.position = position;
+            cube.transform.forward = forward;
+            cube.transform.localScale = new Vector3(width, 1, height);
+            DestroyObjectByTime d = cube.AddComponent<DestroyObjectByTime>();
+            d.DestroyByTime(5);
+#endif
+        }
         #endregion 技能相关
 
         ////Monster Summon Pet AvatarMirror

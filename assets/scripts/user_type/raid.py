@@ -116,6 +116,7 @@ class RaidVal(userType.UserSTSoleType):
         self.siegeWarCamp = siegeWarCamp
         self.autoStartTimer = 0
         self.isInDungeon = False
+        self.lastDungeonFinishedTime = 0
 
     @property
     def maxTeamNum(self):
@@ -177,6 +178,7 @@ class RaidVal(userType.UserSTSoleType):
             'recruitInfo': self.recruitInfo,
             'password': self.password,
             'isInDungeon': self.isInDungeon,
+            'lastDungeonFinishedTime': self.lastDungeonFinishedTime,
         }
         return dic
 
@@ -204,6 +206,7 @@ class RaidVal(userType.UserSTSoleType):
         self.isAutoExpedition = dataDic['isAutoExpedition']
         self.password = dataDic['password']
         self.isInDungeon = dataDic['isInDungeon']
+        self.lastDungeonFinishedTime = dataDic['lastDungeonFinishedTime']
         return self
 
     def toClientData(self):
@@ -232,6 +235,7 @@ class RaidVal(userType.UserSTSoleType):
             'isAutoExpedition': self.isAutoExpedition,
             'password': self.password,
             'siegeWarCamp': self.siegeWarCamp,
+            'lastDungeonFinishedTime': self.lastDungeonFinishedTime,
             }
         return clientData
 
@@ -832,6 +836,8 @@ class RaidVal(userType.UserSTSoleType):
 
                 _blockList.append(_raidMemberVal.playerGbId)
 
+        toClient and self.broadcastAllRaidMembersClient('onSyncAllRaidMemberMicsStatus',
+                                                        (self.raidUUID, _onList, _offList, _blockList))
         return _onList, _offList, _blockList
 
     def switchRaidMiscMode(self, srcAvatarGbId, mode, extraProps, toClient=False):
@@ -863,6 +869,7 @@ class RaidVal(userType.UserSTSoleType):
 
         self.raidMicsSwitch = mode
 
+        self.broadcastAllRaidMembersClient('onSwitchRaidMicsMode', (self.raidUUID, srcAvatarGbId, oldMode, mode))
         return self, gameconst.RaidErrno.ENUM_RAID_OK
 
     def _onRaidMiscModeSwitchOff(self):
@@ -956,7 +963,8 @@ class RaidVal(userType.UserSTSoleType):
             _memberVal.enableMics = True
 
         if toClient:
-            _unblockMics and self.broadcastAllRaidMembersClient('onUnblockRaidMemberMisc', (self.raidUUID, teamIDX, playerGBID))
+            _unblockMics and self.broadcastAllRaidMembersClient('onUnblockRaidMemberMics', (self.raidUUID, teamIDX, playerGBID))
+            self.broadcastAllRaidMembersClient('onTurnOnRaidMemberMics', (srcAvatarGbId, self.raidUUID, teamIDX, playerGBID))
 
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1007,6 +1015,9 @@ class RaidVal(userType.UserSTSoleType):
         if blockMics or self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             _memberVal.isBlockMics = True
 
+        if toClient:
+            self.broadcastAllRaidMembersClient('onTurnOffRaidMemberMics', (srcAvatarGbId, self.raidUUID, teamIDX, playerGBID, blockMics))
+
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     def unblockRaidMemberMisc(self, srcAvatarGbId, teamIDX, playerGBID, toClient=False):
@@ -1032,7 +1043,7 @@ class RaidVal(userType.UserSTSoleType):
         _memberVal.isBlockMics = False
 
         if toClient:
-            self.broadcastAllRaidMembersClient('onUnblockRaidMemberMisc', (self.raidUUID, teamIDX, playerGBID))
+            self.broadcastAllRaidMembersClient('onUnblockRaidMemberMics', (self.raidUUID, teamIDX, playerGBID))
 
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1140,8 +1151,10 @@ class RaidVal(userType.UserSTSoleType):
                 if hasattr(box, func):
                     getattr(box, func, lambda *_, **__: None)(*args)
 
-    def broadcastToAllMembersCell(self, func, args):
+    def broadcastToAllMembersCell(self, func, args, exclude=None):
         for gbID, raidPlayerVal in self.iterRaidPlayers():
+            if exclude and gbID in exclude:
+                continue
             box = raidPlayerVal.playerBox
             if not raidPlayerVal.bOnline:
                 continue
@@ -1285,7 +1298,10 @@ class RaidVal(userType.UserSTSoleType):
             funcName = "onUpdateRaidMemberLevel"
             args = (playerGBID, playerUpdateProps['level'])
             self.broadcastAllRaidMembersClient(funcName, args)
-
+        if 'playerName' in playerUpdateProps:
+            funcName = "onUpdateRaidMemberName"
+            args = (playerGBID, playerUpdateProps['playerName'])
+            self.broadcastAllRaidMembersClient(funcName, args)
 
 class RaidTeamVal(userType.UserSTSoleType):
 
@@ -1295,7 +1311,7 @@ class RaidTeamVal(userType.UserSTSoleType):
 
         self.teamIDX = teamIDX                      # type: int
         self.teamCaptainGBID = teamCaptainGBID      # type: int
-        self.teamPlayerDict = teamPlayerDict          # type: dict[int, RaidTeamMemberVal]
+        self.teamPlayerDict = teamPlayerDict          # type: dict[int, RaidAndTeamMemberVal]
 
     @property
     def memberNum(self):
@@ -1324,7 +1340,7 @@ class RaidTeamVal(userType.UserSTSoleType):
     def initFromDict(self, dataDic):
         self.teamCaptainGBID = dataDic['teamCaptainGBID']
         self.teamIDX = dataDic['teamIDX']
-        self.teamPlayerDict = {_i['playerGbId']: RaidTeamMemberVal(**_i)
+        self.teamPlayerDict = {_i['playerGbId']: RaidAndTeamMemberVal(**_i)
                               for _i in dataDic['teamPlayerList']}
         return self
 
@@ -1339,7 +1355,7 @@ class RaidTeamVal(userType.UserSTSoleType):
     def addTeamMember(self, gbId, props, pos=0):
         if gbId in self.teamPlayerDict:
             return None, gameconst.RaidErrno.ENUM_RAID_PLAYER_GBID_REPEAT.initkvbody(source='addTeamMember')
-        _memberVal = RaidTeamMemberVal(**props)
+        _memberVal = RaidAndTeamMemberVal(**props)
         if pos == 0 or not self.teamPlayerDict or pos > len(self.teamPlayerDict):
             self.teamPlayerDict[gbId] = _memberVal
         else:
@@ -1392,7 +1408,7 @@ class RaidTeamVal(userType.UserSTSoleType):
             return True
         return False
 
-RaidTeamMemberVal = team.TeamMemberCacheVal
+RaidAndTeamMemberVal = team.TeamMemberCacheVal
 
 
 class RaidApplyJoinPlayerVal(userType.UserSTSoleType):

@@ -21,8 +21,8 @@ datas = _tools.RODict({
         "appearanceId": 2,
         "name": "灵韵山海",
         "prop": _tools.ROList([['adjFullHp', 50], ['adjHit', 2], ['adjDodge', 2]]),
-        "event": "",
-        "param": "",
+        "event": "Openinterface",
+        "param": "UIPayStorePanel,2003,0",
         "isOpen": 1
     }),
     200003002: _tools.RODict({
@@ -31,8 +31,8 @@ datas = _tools.RODict({
         "appearanceId": 2,
         "name": "灵韵山海(体验)",
         "prop": None,
-        "event": "",
-        "param": "",
+        "event": "Openinterface",
+        "param": "UIPayStorePanel,2003,0",
         "isOpen": 1
     }),
     100001001: _tools.RODict({
@@ -41,8 +41,8 @@ datas = _tools.RODict({
         "appearanceId": 5,
         "name": "仲夏之梦",
         "prop": _tools.ROList([['adjFullHp', 100], ['adjHit', 5], ['adjDodge', 5]]),
-        "event": "",
-        "param": "",
+        "event": "Openinterface",
+        "param": "UIPayStorePanel,2003,0",
         "isOpen": 1
     })
 })

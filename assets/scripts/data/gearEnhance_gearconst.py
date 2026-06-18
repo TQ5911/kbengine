@@ -151,9 +151,13 @@ datas = _tools.RODict({
         "ID": "gearButtonAction_class",
         "value": "Openinterface,UIEquipTrainingPanel,3",
     }),
+    "gearButtonAction_soul": _tools.RODict({
+        "ID": "gearButtonAction_soul",
+        "value": "Openinterface,UIEquipTrainingPanel,6",
+    }),
     "gearButtonAction_unbounding": _tools.RODict({
         "ID": "gearButtonAction_unbounding",
-        "value": "findNearestEntityByTempleteIds,18000019,18000067,18000119",
+        "value": "Openinterface,UIEquipTrainingPanel,7",
     }),
     "gearButtonLimitID_train": _tools.RODict({
         "ID": "gearButtonLimitID_train",
@@ -179,13 +183,17 @@ datas = _tools.RODict({
         "ID": "gearButtonLimitID_class",
         "value": "UIEquipClassPage",
     }),
+    "gearButtonLimitID_soul": _tools.RODict({
+        "ID": "gearButtonLimitID_soul",
+        "value": "UIEquipSoul",
+    }),
     "gearButtonLimitID_make": _tools.RODict({
         "ID": "gearButtonLimitID_make",
         "value": "UIEquipMakePanel",
     }),
     "gearButtonLimitID_unbundle": _tools.RODict({
         "ID": "gearButtonLimitID_unbundle",
-        "value": "UIEquipUnbundlePanel",
+        "value": "UIEquipWashPanel",
     }),
     "gearStrengthenMax": _tools.RODict({
         "ID": "gearStrengthenMax",
@@ -430,5 +438,57 @@ datas = _tools.RODict({
     "AutoFulingDefaultTargetQuality": _tools.RODict({
         "ID": "AutoFulingDefaultTargetQuality",
         "value": 2,
+    }),
+    "VerbEnhance": _tools.RODict({
+        "ID": "VerbEnhance",
+        "value": "强化",
+    }),
+    "VerbUpgrade": _tools.RODict({
+        "ID": "VerbUpgrade",
+        "value": "升阶",
+    }),
+    "VerbFuling": _tools.RODict({
+        "ID": "VerbFuling",
+        "value": "附灵",
+    }),
+    "VerbRune": _tools.RODict({
+        "ID": "VerbRune",
+        "value": "打造",
+    }),
+    "VerbBless": _tools.RODict({
+        "ID": "VerbBless",
+        "value": "祝福",
+    }),
+    "Equipment_unbinding_quality": _tools.RODict({
+        "ID": "Equipment_unbinding_quality",
+        "value": 2,
+    }),
+    "Replacement_confirmation": _tools.RODict({
+        "ID": "Replacement_confirmation",
+        "value": 54003309,
+    }),
+    "Confirmation_of_spirit_attachment": _tools.RODict({
+        "ID": "Confirmation_of_spirit_attachment",
+        "value": 54003310,
+    }),
+    "Abandoning_confirmation": _tools.RODict({
+        "ID": "Abandoning_confirmation",
+        "value": 54003311,
+    }),
+    "Secondary_confirmation_condition3": _tools.RODict({
+        "ID": "Secondary_confirmation_condition3",
+        "value": 4,
+    }),
+    "Secondary_confirmation_prompt3": _tools.RODict({
+        "ID": "Secondary_confirmation_prompt3",
+        "value": 54482011,
+    }),
+    "Secondary_confirmation_prompt4": _tools.RODict({
+        "ID": "Secondary_confirmation_prompt4",
+        "value": 54482012,
+    }),
+    "Soul_Unselect": _tools.RODict({
+        "ID": "Soul_Unselect",
+        "value": 54482013,
     })
 })

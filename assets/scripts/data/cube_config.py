@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "dailyCubeNum": _tools.RODict({
         "ID": "dailyCubeNum",
-        "value": 2,
+        "value": 1,
     }),
     "cubeNumCoin": _tools.RODict({
         "ID": "cubeNumCoin",
@@ -25,7 +25,7 @@ datas = _tools.RODict({
     }),
     "cubeNumCoinCost": _tools.RODict({
         "ID": "cubeNumCoinCost",
-        "value": ((1, 30000021, 100), (2, 30000001, 100)),
+        "value": ((1, 30000021, 50), (2, 30000001, 100)),
     }),
     "cubeNumCoinDailyLimit": _tools.RODict({
         "ID": "cubeNumCoinDailyLimit",
@@ -298,5 +298,37 @@ datas = _tools.RODict({
     "cube_transportProtection": _tools.RODict({
         "ID": "cube_transportProtection",
         "value": 3,
+    }),
+    "cube_innerDemon": _tools.RODict({
+        "ID": "cube_innerDemon",
+        "value": 3125,
+    }),
+    "cube_whiteListOfInnerDemon": _tools.RODict({
+        "ID": "cube_whiteListOfInnerDemon",
+        "value": _tools.ROList([1, 8, 13, 14, 21, 47, 48, 56]),
+    }),
+    "cube_innerDemonTimeline": _tools.RODict({
+        "ID": "cube_innerDemonTimeline",
+        "value": 98000001,
+    }),
+    "cube_innerDemonExit": _tools.RODict({
+        "ID": "cube_innerDemonExit",
+        "value": 54003427,
+    }),
+    "cube_innerDemonNoTimes": _tools.RODict({
+        "ID": "cube_innerDemonNoTimes",
+        "value": 54003428,
+    }),
+    "cube_innerDemonTime": _tools.RODict({
+        "ID": "cube_innerDemonTime",
+        "value": 300,
+    }),
+    "cube_prayFreeVerb": _tools.RODict({
+        "ID": "cube_prayFreeVerb",
+        "value": "求签",
+    }),
+    "cube_prayPaidVerb": _tools.RODict({
+        "ID": "cube_prayPaidVerb",
+        "value": "祈福",
     })
 })

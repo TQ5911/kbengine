@@ -7,12 +7,26 @@
             <Persistent>    true                    </Persistent>
         </monthCardExpireTime>
 
+        <bigMonthCardExpireTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </bigMonthCardExpireTime>
+
         <lastMonthCardDailyRewardTime>
             <Type>          LONGTIME             </Type>
-            <Flags>         BASE                 </Flags>
+            <Flags>         BASE_AND_CLIENT      </Flags>
             <Default>       0                    </Default>
             <Persistent>    true                 </Persistent>
         </lastMonthCardDailyRewardTime>
+
+        <lastBigMonthCardDailyRewardTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE_AND_CLIENT      </Flags>
+            <Default>       0                    </Default>
+            <Persistent>    true                 </Persistent>
+        </lastBigMonthCardDailyRewardTime>
 
         <remainHangupMinutes>
             <Type>          UINT32               </Type>
@@ -48,6 +62,19 @@
             <Default>       0                    </Default>
             <Persistent>    true                 </Persistent>
         </lastMonthcardLoginTime>
+        <monthCardExpireTimeCell>
+            <Type>          LONGTIME                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </monthCardExpireTimeCell>
+
+        <bigMonthCardExpireTimeCell>
+            <Type>          LONGTIME                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </bigMonthCardExpireTimeCell>
     </Properties>
 
     <BaseMethods>
@@ -58,6 +85,7 @@
         </addMonthCardByItem>
 
         <tryGetMonthCardDailyReward> <Exposed/>
+            <Arg>       UINT8       </Arg>
         </tryGetMonthCardDailyReward>
 
         <reqGetOfflineExp> <Exposed/>
@@ -65,9 +93,17 @@
 
         <reqOfflineHangupData> <Exposed/>
         </reqOfflineHangupData>
+
+        <clientBuyPremiumGoods> <Exposed/>
+            <Arg>       UINT32       </Arg>
+        </clientBuyPremiumGoods>
     </BaseMethods>
 
     <CellMethods>
+        <syncMonthCardInfo>
+            <Arg>       LONGTIME       </Arg>
+            <Arg>       LONGTIME       </Arg>
+        </syncMonthCardInfo>
     </CellMethods>
 
     <ClientMethods>

@@ -75,8 +75,7 @@ class IRelive(object):
 
         _dpData = self._spaceDeathPenaltyData(srcType)
 
-        if _dpData['dropGear']:
-            self._dealDeathDrop(killerGbId, killerName)
+        self._dealDeathDrop(killerGbId, killerName, _dpData['dropGear'])
 
         # 处理cd时间
         if _dpData['addReliveTime']:
@@ -114,7 +113,7 @@ class IRelive(object):
             _deductExp = int(_levelExp * _deductExpRate / 100)
             _deductExp = int(min(_deductExp, self.exp)) # TODO: DEAD_PENALTY
             _src = AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY # TODO: DEAD_PENALTY
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             self._modifyExp(-_deductExp, _opUUID, _src, _detail)
 
         # 死亡扣除金币

@@ -80,6 +80,7 @@ class IMeridian(object):
             indexList = []
 
     @gamedecorator.checkGameconfigEnable('UIPracticePanel')
+    @gamedecorator.crossServer
     def reqGetMeridianData(self, exposed):
         """
             客户端请求获取经脉数据
@@ -142,7 +143,7 @@ class IMeridian(object):
 
         srcType = AAC_AACDD.datas.BONUS_SRC_LEVEL_UP_MERIDIAN
         deductVal = dropAward.DeductWealthVal()
-        detail = gameclass.AwardDetail()
+        detail = gameclass.AwardDetailCls()
         opUUID = KBEngine.genUUID64()
         
         for itemId, itemNum in needItems.items():
@@ -162,7 +163,7 @@ class IMeridian(object):
             
             self._syncMeridianDataToClient()
             
-            LogTrackingMgr.LogTrackingMgr.Meridian_UpGrade(opUUID, self.gbID, slotIdx, pointIdx, newLevel)
+            LogTrackingMgr.LogTrackingMgr.Meridian_UpGrade(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx, pointIdx, newLevel)
             self.triggerAchievementWithCtx(gameconst.AchieveType.MERIDIAN, actionContext.AchievementCtx(slotIdx=slotIdx))
         else:
             LOG_DBG("IMeridian.reqLevelUpMeridianPoint: level up failed {}, {}, {}".format(
@@ -203,7 +204,7 @@ class IMeridian(object):
 
         srcType = AAC_AACDD.datas.BONUS_SRC_ENHANCE_MERIDIAN
         deductVal = dropAward.DeductWealthVal()
-        detail = gameclass.AwardDetail()
+        detail = gameclass.AwardDetailCls()
         opUUID = KBEngine.genUUID64()
         
         for itemId, itemNum in needItems.items():
@@ -223,7 +224,7 @@ class IMeridian(object):
             
             self._syncMeridianDataToClient()
             
-            LogTrackingMgr.LogTrackingMgr.Meridian_Enhance(opUUID, self.gbID, slotIdx)
+            LogTrackingMgr.LogTrackingMgr.Meridian_Enhance(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx)
         else:
             LOG_DBG("IMeridian.reqEnhanceMeridianSlot: enhance failed {}".format(slotIdx))
 

@@ -492,6 +492,12 @@ datas = _tools.RODict({
     24110705: _tools.RODict({
         "conditionArgs": "",
     }),
+    24110801: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110802: _tools.RODict({
+        "conditionArgs": "",
+    }),
     24210201: _tools.RODict({
         "conditionArgs": "",
     }),
@@ -712,6 +718,30 @@ datas = _tools.RODict({
         "conditionArgs": "",
     }),
     24203210: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203211: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203301: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203302: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203303: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203304: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203305: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203306: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24203307: _tools.RODict({
         "conditionArgs": "",
     })
 })

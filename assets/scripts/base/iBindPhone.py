@@ -113,7 +113,7 @@ class IBindPhone(object):
     @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('phoneBind', {}).get('type', 'welfare'))
     def reqBindPhone(self, exposed, phone):
-        LOG_INFO("IBindPhone reqBindPhone", phone, self.gbID, self.accountName)
+        LOG_INFO("IBindPhone reqBindPhone", phone, self.gbID, self.accountName, self.accountEntity.webToken)
         if self.accountType != centralLogin.ACCOUNT_TAPTAP:
             LOG_WARN("IBindPhone reqBindPhone channel error", self.accountType, self.accountName, centralLogin.ACCOUNT_TAPTAP)
             return
@@ -128,12 +128,17 @@ class IBindPhone(object):
             return
 
         url = gameconfig.tapTapBindPhoneReqUrl()
-        message = json.dumps({"phone": str(phone)})
+        message = json.dumps({
+            "phone"         : str(phone),
+            "loginType"     : int(centralLogin.THIRD_LOGIN_TAPTAP),
+            "gameId"        : str(gameconfig.gameId()),
+            "userGameId"    : str(self.accountName)
+        })
         self.setTempPhone(phone)
         LOG_INFO("IBindPhone reqBindPhone url", url, message)
         KBEngine.urlopenv2(url, self._reqBindPhoneResponse, method='POST',
                 postData=message.encode('utf-8'),
-                headers={"Content-Type": "application/json"},
+                headers={"Content-Type": "application/json", "satoken": self.accountEntity.webToken},
                 timeoutSec=5)
 
     def _reqBindPhoneResponse(self, httpCode, jsonData, headers, success, *args):
@@ -199,11 +204,16 @@ class IBindPhone(object):
             return
 
         url = gameconfig.tapTapBindPhoneVerifyUrl()
-        message = json.dumps({"phone": str(self.getTempPhone()), "code": str(code)})
+        message = json.dumps({
+            "phone"         : str(self.getTempPhone()),
+            "code"          : str(code),
+            "loginType"     : int(centralLogin.THIRD_LOGIN_TAPTAP),
+            "gameId"        : str(gameconfig.gameId()),
+        })
         LOG_INFO("IBindPhone reqVerifyCode url", url, message)
         KBEngine.urlopenv2(url, self._reqVerifyCodeResponse, method='POST',
                 postData=message.encode('utf-8'),
-                headers={"Content-Type": "application/json"},
+                headers={"Content-Type": "application/json", "satoken": self.accountEntity.webToken},
                 timeoutSec=5)
 
     def _reqVerifyCodeResponse(self, httpCode, jsonData, headers, success, *args):
@@ -253,6 +263,8 @@ class IBindPhone(object):
 
         opUUID = KBEngine.genUUID64()
         LogTrackingMgr.LogTrackingMgr.Welfare_PcDrainage(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
             self.accountName,
             self.gbID,
             self.accountEntity.devicePlatId,
@@ -265,6 +277,6 @@ class IBindPhone(object):
             LOG_ERR('IBindPhone reqClaimPcLoginReward: no reward')
             return
 
-        awardCtx = self._getAvatarAwardCtx(rewardId, None)
-        detail = gameclass.AwardDetail(claimTimestamp=claimTimestamp)
+        awardCtx = self.getAvatarAwardCtx(rewardId, None)
+        detail = gameclass.AwardDetailCls(claimTimestamp=claimTimestamp)
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_PCDRAINAGE, rewardId, 1, opUUID, detail, awardCtx)

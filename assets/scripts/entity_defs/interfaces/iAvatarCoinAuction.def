@@ -15,6 +15,18 @@
             <Persistent>    true                    </Persistent>
         </saleItemMoney>
 
+        <pendingAuctionEntries>
+            <Type>          PENDING_AUCTION_ENTRIES     </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+        </pendingAuctionEntries>
+        
+        <withDrawMoney>
+            <Type>          MONEY                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </withDrawMoney>
+
         <collectionAuctionIdList>
             <Type>      ARRAY <of>  AUCTION_ITEM_UUID </of>    </Type>
             <Flags>     BASE                                   </Flags>
@@ -29,6 +41,11 @@
             <Type>      ARRAY <of>  ITEMID </of>    </Type>
             <Flags>     BASE                                   </Flags>
         </collectionAuctionItemCategoryList>
+
+        <auctionPaymentTimerId>
+            <Type>      TIMER_ID    </Type>
+            <Flags>     BASE        </Flags>
+        </auctionPaymentTimerId>
     </Properties>
 
     <BaseMethods>
@@ -92,13 +109,15 @@
         <buyItemInCoinAuctionByAuctionItemUUID>
             <Exposed/>
             <Arg> AUCTION_ITEM_UUID </Arg>
-            <Arg> UINT32 </Arg>
+            <Arg> UINT32            </Arg>
         </buyItemInCoinAuctionByAuctionItemUUID>
 
         <doBuyItemInCoinAuctionByAuctionItemUUID>
             <Arg> AUCTION_ITEM_UUID </Arg>
-            <Arg> MONEY </Arg>
-            <Arg> PYTHON </Arg>
+            <Arg> MONEY             </Arg>
+            <Arg> LONGTIME          </Arg>
+            <Arg> UINT8             </Arg>
+            <Arg> PYTHON            </Arg>
         </doBuyItemInCoinAuctionByAuctionItemUUID>
 
         <onBuyItemInCoinAuctionByAuctionItemUUID>

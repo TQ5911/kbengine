@@ -38,5 +38,13 @@ def processSpaceGeometryTasks(curSpaceID):
         return
 
     taskArgs = gameglobal.spaceGeometryTaskData.tasks.pop(0)
-    KBEngine.addSpaceGeometryMapping(*taskArgs)
+    taskArgs = list(taskArgs)
+    if KBEngine.hasRes(taskArgs[2]):
+        KBEngine.addSpaceGeometryMapping(*taskArgs)
+    else:
+        # 这里用个同心村的，保证服务器能起来，然后报个错
+        LOG_ERR('addSpaceGeometryMapping res not exists', taskArgs)
+        taskArgs[2] = 'spaces/tongXinCun'
+        KBEngine.addSpaceGeometryMapping(*taskArgs)
+
     gameglobal.spaceGeometryTaskData.curSpaceID = taskArgs[0]

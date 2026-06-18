@@ -47,7 +47,7 @@ class IBase(KBEngine.Entity):
     def isPersistent(self):
         return False
 
-    def entireDestroy(self, deleteFromDB, writeToDB):
+    def doEntireDestroy(self, deleteFromDB, writeToDB):
         pass
 
     def renewalBase(self, attr):
@@ -72,7 +72,7 @@ class IBase(KBEngine.Entity):
             self.createCellEntity(cellMailbox)
         except Exception as e:
             LOG_ERR('createCellNearHere: fail to create cellEntity', cellMailbox, e)
-            self.entireDestroy(False, False)
+            self.doEntireDestroy(False, False)
         return
 
     def hasArchive(self):

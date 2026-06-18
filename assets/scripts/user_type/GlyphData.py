@@ -41,38 +41,49 @@ class GlyphData(userType.UserSingleType):
         self.inscriptionEffects = {}
         LOG_INFO("GlyphData-->cleanInscriptionEffects, end~ ", self.inscriptionEffects)
 
-    def calculateAllInscriptionEffects(self, owner, glyphAffixes):
-        LOG_INFO("GlyphData-->calculateAllInscriptionEffects, begin~ ", self.inscriptionEffects)
-        self.doCalculateInscriptionEffects(owner, glyphAffixes)
-        LOG_INFO("GlyphData-->calculateAllInscriptionEffects, end~", self.inscriptionEffects)
+    def calculateAllInscriptionEffects(self, owner, changedInfo, uniqueId, groupId, glyphAffixes):
+        LOG_INFO("GlyphData-->calculateAllInscriptionEffects, begin~ ", uniqueId, groupId, changedInfo, self.inscriptionEffects)
+        self.doCalculateInscriptionEffects(owner, changedInfo, uniqueId, groupId, glyphAffixes)
+        LOG_INFO("GlyphData-->calculateAllInscriptionEffects, end~", uniqueId, groupId, changedInfo, self.inscriptionEffects)
 
-    def doCalculateInscriptionEffects(self, owner, glyphAffixes):
+    def doCalculateInscriptionEffects(self, owner, changedInfo, uniqueId, groupId, glyphAffixes):
+        info = changedInfo.get(uniqueId, None)
+        if not info:
+            info = [groupId, 0, 0, 0, 0]
+            changedInfo[uniqueId] = info
         if not glyphAffixes:
             return
-        
-        for glyphAffix in glyphAffixes:
+
+        for idx in range(len(glyphAffixes)):
+            glyphAffix = glyphAffixes[idx]
             LOG_DBG("GlyphData-->doCalculateInscriptionEffects 1 ", glyphAffix)
+            isEffected = False
+
             for effectSkillID, effectQuality, effectType, effectValue in glyphAffix.iterGlyphEffect():
                 dataKey = utils.getInscriptionKey(effectSkillID, effectType)
                 effectData = self.inscriptionEffects.get(dataKey)
                 if not effectData or effectQuality > effectData[0]:
+                    isEffected = True
                     # 第一次记录或者遇到高品质
                     self.inscriptionEffects[dataKey] = [effectQuality] + effectValue
-                
-                # CREATION_ADD_PHASE_WITH_FREQUENCY 比 CREATION_ADD_PHASE_WITH_LAST_TIME优先级高
-                if effectType == gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY:
-                    # 有CREATION_ADD_PHASE_WITH_FREQUENCY，移除CREATION_ADD_PHASE_WITH_LAST_TIME
-                    newDataKey = utils.getInscriptionKey(effectSkillID, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
-                    self.inscriptionEffects.pop(newDataKey, None)
 
-                elif effectType == gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME:
-                    # 有CREATION_ADD_PHASE_WITH_FREQUENCY，移除CREATION_ADD_PHASE_WITH_LAST_TIME
-                    newDataKey = utils.getInscriptionKey(effectSkillID, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
-                    if newDataKey in self.inscriptionEffects:
-                        self.inscriptionEffects.pop(dataKey, None)
+                    # CREATION_ADD_PHASE_WITH_FREQUENCY 比 CREATION_ADD_PHASE_WITH_LAST_TIME优先级高
+                    if effectType == gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY:
+                        # 有CREATION_ADD_PHASE_WITH_FREQUENCY，移除CREATION_ADD_PHASE_WITH_LAST_TIME
+                        newDataKey = utils.getInscriptionKey(effectSkillID, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                        self.inscriptionEffects.pop(newDataKey, None)
 
-                LOG_DBG("GlyphData-->doCalculateInscriptionEffects, end:", self.inscriptionEffects)
+                    elif effectType == gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME:
+                        # 有CREATION_ADD_PHASE_WITH_FREQUENCY，移除CREATION_ADD_PHASE_WITH_LAST_TIME
+                        newDataKey = utils.getInscriptionKey(effectSkillID, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+                        if newDataKey in self.inscriptionEffects:
+                            self.inscriptionEffects.pop(dataKey, None)
 
+            glyphAffix.setEffected(isEffected)
+            info[idx + 1] = int(glyphAffix.getEffected())
+
+            LOG_DBG("GlyphData-->doCalculateInscriptionEffects, end:", self.inscriptionEffects, isEffected, info)
+            
     # TODO: 这里可以优化一些网络IO合并，比如把addskillLv和changeSkill进行有向连接计算，降低消耗
     def applyInscriptionEffects(self, owner):
         LOG_INFO("GlyphData-->applyInscriptionEffects, clean begin~", self.inscriptionRecords)

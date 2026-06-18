@@ -45,7 +45,7 @@ datas = _tools.RODict({
     }),
     "summonSkillId": _tools.RODict({
         "ID": "summonSkillId",
-        "valueCN": 90010010,
+        "valueCN": (90010010,),
     }),
     "usePlayerForSummon": _tools.RODict({
         "ID": "usePlayerForSummon",

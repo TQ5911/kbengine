@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 import KBEngine
-import random
 import gameconst
 from KBEDebug import *
-import aureola_aureola
+import aureola_aureola as A_AD
 import time
 
 import gametimer
 import actionContext
 import userType
-import sMath
 import utils
 
 class AureoleFromOtherVal(userType.UserSingleType):
@@ -28,47 +26,44 @@ class AureolesFromOhters(userType.UserDictType):
     def _lateReload(self):
         super(AureolesFromOhters, self)._lateReload()
 
-        for v in self.values():
-            v.reloadScript()
-
-        return
+        for _v in self.values():
+            _v.reloadScript()
 
 class ClientAureoleVal(userType.UserSingleType):
     def __init__(self, aid, level):
-        self.aureoleId = aid
         self.level = int(level)
+        self.aureoleId = aid
 
     def getClientData(self):
-        return {'aureoleId':self.aureoleId, 'level': self.level}
+        return {'aureoleId':self.aureoleId, 'level': self.level,}
 
 
 class ClientAureoles(userType.UserDictType):
     def _lateReload(self):
         super(ClientAureoles, self)._lateReload()
 
-        for v in self.values():
-            v.reloadScript()
+        for _v in self.values():
+            _v.reloadScript()
 
-        return
 
 class ServerAureoles(userType.UserDictType):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, **keywordArgs):
+        super().__init__(*args, **keywordArgs)
         # k,v: aureolesId, aureolesCrtlId
-        self._idToCtrlIdMap = {}
         self._ctrlIdToIdMap = {}
-        self._wholeAreaAureoleList = []
+        self._idToCtrlIdMap = {}
+        self._wholeAreaAuraList = []
         self._pendingTrapAureoId = None
 
     def getClientData(self, aureoleIds=None):
         aureoleIds = aureoleIds or self.keys()
         clientAureoles = ClientAureoles()
-        for aureoleId in aureoleIds:
-            if aureoleId not in self:
+        for _auraId in aureoleIds:
+            if _auraId not in self:
                 continue
 
-            sVal = self[aureoleId]
-            clientAureoles[aureoleId] = ClientAureoleVal(aureoleId, sVal.level)
+            sVal = self[_auraId]
+            clientAureoles[_auraId] = ClientAureoleVal(_auraId, sVal.level)
         return clientAureoles
 
     def addCtrlInPending(self, ctrlId):
@@ -84,14 +79,14 @@ class ServerAureoles(userType.UserDictType):
             LOG_ERR('addAureole owner could not support Avatar')
             return
 
-        aureole = Aureole(aureoleId, level)
-        self[aureoleId] = aureole
+        _aura = Aureole(aureoleId, level)
+        self[aureoleId] = _aura
 
-        aureole.initAureole(owner)
-        if owner.isWholeAreaAureole(aureoleId):
-            owner.spaceMgr.addWholeAureoleEntId(owner.id)
-            if aureoleId not in self._wholeAreaAureoleList:
-                self._wholeAreaAureoleList.append(aureoleId)
+        _aura.initAureole(owner)
+        if owner.isWholeAreaAura(aureoleId):
+            owner.spaceMgr.addWholeAuraEntId(owner.id)
+            if aureoleId not in self._wholeAreaAuraList:
+                self._wholeAreaAuraList.append(aureoleId)
         owner.allClients.onAddAureole(ClientAureoleVal(aureoleId, level).getClientData())
 
     def removeAureola(self, owner, aureoleId):
@@ -99,104 +94,104 @@ class ServerAureoles(userType.UserDictType):
         disabledAureoleIds = self.doDisableAura(owner, aureoleId)
 
         for aureoleId in disabledAureoleIds:
-            if owner.isWholeAreaAureole(aureoleId):
+            if owner.isWholeAreaAura(aureoleId):
                 owner.spaceMgr.removeWholeAureoleEntId(owner.id)
-                if aureoleId in self._wholeAreaAureoleList:
-                    self._wholeAreaAureoleList.remove(aureoleId)
+                if aureoleId in self._wholeAreaAuraList:
+                    self._wholeAreaAuraList.remove(aureoleId)
 
-            aVal = self.pop(aureoleId)
+            _aVal = self.pop(aureoleId)
             self._idToCtrlIdMap.pop(aureoleId, 0)
-            self._ctrlIdToIdMap.pop(aVal.aureoleTrapId, 0)
+            self._ctrlIdToIdMap.pop(_aVal.aureoleTrapId, 0)
             owner.allClients.onRemoveAureole(aureoleId)
 
     def doDisableAura(self, owner, aureoleId):
-        aureoleIds = (aureoleId,) if aureoleId else self.keys()
-        disabledAureoleIds = []
-        for aureoleId in aureoleIds:
-            _aureole = self.get(aureoleId)
-            if not _aureole:
+        _aureoleIds = (aureoleId,) if aureoleId else self.keys()
+        _disabledAureoleIds = []
+        for aureoleId in _aureoleIds:
+            _aura = self.get(aureoleId)
+            if not _aura:
                 continue
 
-            _aureole.doDisableAureole(owner)
-            disabledAureoleIds.append(aureoleId)
+            _aura.doDisableAureole(owner)
+            _disabledAureoleIds.append(aureoleId)
 
-        return disabledAureoleIds
+        return _disabledAureoleIds
 
     def _onLoop(self,owner, tid):
-        for aureoleId in list(self.keys()):
-            _aureole = self.get(aureoleId)
-            if not _aureole:
+        for _auraId in list(self.keys()):
+            _aura = self.get(_auraId)
+            if not _aura:
                 continue
-            if not _aureole.areaAction or _aureole.loopTimeId!=tid:
+            if not _aura.areaAction or _aura.loopTimeId!=tid:
                 continue
-            owner.doCombatActions(_aureole.areaAction, owner, owner, owner.id, lambda r:actionContext.AureoleCtx(owner.id, aureoleId, _aureole.level, r))
+            owner.doCombatActions(
+                _aura.areaAction, 
+                owner, 
+                owner, 
+                owner.id, 
+                lambda r:actionContext.AureoleCtx(owner.id, _auraId, _aura.level, r))
 
     def _lateReload(self):
         super(ServerAureoles, self)._lateReload()
 
-        for v in self.values():
-            v.reloadScript()
-
-        return
+        for _v in self.values():
+            _v.reloadScript()
 
     def getByCtrlId(self, ctrlId, default=None):
-        id_ = self._ctrlIdToIdMap.get(ctrlId, None)
-        return self.get(id_, default)
+        _id = self._ctrlIdToIdMap.get(ctrlId, None)
+        return self.get(_id, default)
 
 class Aureole(userType.UserSingleType):
     def __init__(self, aureoleId, level, tStartTime=0):
-        self.aureoleId = aureoleId
         self.level = int(level)
+        self.aureoleId = aureoleId
         self.tStartTime = int(tStartTime or time.time())
         self.aureoleTargetIds = set()
-        self.aureoleTrapId = 0
         self.loopTimeId = 0
-
-    @property
-    def name(self):
-        return aureola_aureola.datas[self.aureoleId].get('name', '')
+        self.aureoleTrapId = 0
 
     @property
     def radius(self):
-        return float(aureola_aureola.datas[self.aureoleId].get('radium') or 0)
+        return float(A_AD.datas[self.aureoleId].get('radium') or 0)
+
+    @property
+    def name(self):
+        return A_AD.datas[self.aureoleId].get('name', '')
 
     @property
     def effectTarget(self):
-        return aureola_aureola.datas[self.aureoleId].get('effect', '')
+        return A_AD.datas[self.aureoleId].get('effect', '')
 
     @property
     def maxTargetNum(self):
-        return int(aureola_aureola.datas[self.aureoleId].get('maxEffectObjectNum') or 0)
+        return int(A_AD.datas[self.aureoleId].get('maxEffectObjectNum') or 0)
 
     @property
     def duration(self):
-        return float(aureola_aureola.datas[self.aureoleId].get('endByTime') or 0)
+        return float(A_AD.datas[self.aureoleId].get('endByTime') or 0)
 
     @property
     def areaAction(self):
-        return aureola_aureola.datas[self.aureoleId].get('areaAction', '')
+        return A_AD.datas[self.aureoleId].get('areaAction', '')
 
     @property
     def loopIntervalTime(self):
-        return int(aureola_aureola.datas[self.aureoleId].get('loopIntervalTime') or 0)
+        return int(A_AD.datas[self.aureoleId].get('loopIntervalTime') or 0)
 
     def initAureole(self, owner):
         LOG_DBG('init aureole', self.aureoleId)
         if self.areaAction:
-            loopIntervalTime = self.loopIntervalTime if self.loopIntervalTime else 1
-            self.loopTimeId = owner.pyAddTimer(0.1, loopIntervalTime, gametimer.AUREOLE_LOOP)
+            _loopIntervalTime = self.loopIntervalTime if self.loopIntervalTime else 1
+            self.loopTimeId = owner.pyAddTimer(0.1, _loopIntervalTime, gametimer.TIMER_AURA_LOOP)
 
-        if owner.isWholeAreaAureole(self.aureoleId):
+        if owner.isWholeAreaAura(self.aureoleId):
             self.addWholeAreaAureole(owner)
         else :
             owner.addTimerCB(0.1, 'addTAureoleTrap', (self.aureoleId,), gametimer.TIMER_TAG_ADD_AUREOLE_TRAP)
 
-        remainTime = self.getRemainTime()
-        if remainTime > 0:
-            owner.addTimerCB(remainTime, 'removeAureolaById', (self.aureoleId,), gametimer.TIMER_TAG_REMOVE_AUREOLE)
-
-    def getRemainTime(self):
-        return self.tStartTime+self.duration-time.time()
+        _remainTime = self.getRemainTime()
+        if _remainTime > 0:
+            owner.addTimerCB(_remainTime, 'removeAureolaById', (self.aureoleId,), gametimer.TIMER_TAG_REMOVE_AUREOLE)
 
     def addAureoleTrap(self, owner):
         owner.auraDic._pendingTrapAureoId = self.aureoleId
@@ -212,63 +207,60 @@ class Aureole(userType.UserSingleType):
         owner.auraDic._idToCtrlIdMap[self.aureoleId] = self.aureoleTrapId
         owner.auraDic._ctrlIdToIdMap[self.aureoleTrapId] = self.aureoleId
 
-        # if self.radius != -1 :
-        #     for e in owner.entitiesInRange(self.radius+0.1):
-        #         if e.IsCombatUnit and sMath.distance2D(owner.position, e.position) <= self.radius and utils.checkTargetTypeValid(self.effectTarget, owner, e):
-        #             owner.onEnterTrap(e, 0, 0, self.aureoleTrapId, gameconst.AURA_TRAP)
-        #
-        #     LOG_DBG('add aureole trap done', self)
+    def getRemainTime(self):
+        return self.tStartTime+self.duration-time.time()
 
     def addWholeAreaAureole(self, owner):
-        owner.auraDic._wholeAreaAureoleList.append(self.aureoleId)
+        owner.auraDic._wholeAreaAuraList.append(self.aureoleId)
 
-        for eid in list(owner.spaceMgr.spaceEntities.keys()):
-            e = KBEngine.entities.get(eid)
-            if e and not e.isDestroyed and e.IsCombatUnit and utils.checkTargetTypeValid(self.effectTarget, owner, e):
-                self.addAureoleTarget(owner,e.id)
+        for eid in list(owner.spaceMgr.spaceEntitiesDic.keys()):
+            _e = KBEngine.entities.get(eid)
+            if _e and not _e.isDestroyed and _e.IsCombatUnit and utils.checkTargetTypeValid(self.effectTarget, owner, _e):
+                self.addAureoleTarget(owner,_e.id)
         for eid in list(owner.spaceMgr.players.keys()):
-            e = KBEngine.entities.get(eid)
-            if e and not e.isDestroyed and e.IsCombatUnit and utils.checkTargetTypeValid(self.effectTarget, owner, e):
-                self.addAureoleTarget(owner,e.id)
-
-    def addAureoleTarget(self, owner, targetId):
-        if len(self.aureoleTargetIds)>=self.maxTargetNum:
-            return
-
-        target = KBEngine.entities.get(targetId)
-        if not target or target.isDestroyed:
-            return
-        if target.addAureoleEffect(owner.id, self.aureoleId, self.level):
-            self.aureoleTargetIds.add(targetId)
+            _e = KBEngine.entities.get(eid)
+            if _e and not _e.isDestroyed and _e.IsCombatUnit and utils.checkTargetTypeValid(self.effectTarget, owner, _e):
+                self.addAureoleTarget(owner,_e.id)
 
     def onLeaveAureoleRnage(self, owner, targetId):
         if targetId not in self.aureoleTargetIds:
             return
 
-        reachMax = len(self.aureoleTargetIds)>=self.maxTargetNum
-        target = KBEngine.entities.get(targetId)
-        if target:
-            if not target.isDestroyed:
-                target.removeAureoleEffect(self.aureoleId, owner.id)
+        _reachMax = len(self.aureoleTargetIds)>=self.maxTargetNum
+        _target = KBEngine.entities.get(targetId)
+        if _target:
+            if not _target.isDestroyed:
+                _target.removeAureoleEffect(self.aureoleId, owner.id)
 
         self.aureoleTargetIds.remove(targetId)
-        if reachMax and owner.id not in self.aureoleTargetIds:
+        if _reachMax and owner.id not in self.aureoleTargetIds:
             owner.onEnterTrap(owner, 0, 0, self.aureoleTrapId, gameconst.AURA_TRAP)
+
+    def addAureoleTarget(self, owner, targetId):
+        if len(self.aureoleTargetIds)>=self.maxTargetNum:
+            return
+
+        _target = KBEngine.entities.get(targetId)
+        if not _target or _target.isDestroyed:
+            return
+        if _target.addAureoleEffect(owner.id, self.aureoleId, self.level):
+            self.aureoleTargetIds.add(targetId)
 
     def doDisableAureole(self, owner):
         if self.loopTimeId > 0:
-            owner.pyDelTimer(self.loopTimeId, gametimer.AUREOLE_LOOP)
+            owner.pyDelTimer(self.loopTimeId, gametimer.TIMER_AURA_LOOP)
             self.loopTimeId = 0
 
         for targetId in self.aureoleTargetIds:
-            target = KBEngine.entities.get(targetId)
-            if not target or target.isDestroyed:
+            _target = KBEngine.entities.get(targetId)
+            if not _target or _target.isDestroyed:
                 continue
-            target.removeAureoleEffect(self.aureoleId, owner.id)
+            _target.removeAureoleEffect(self.aureoleId, owner.id)
         owner.cancelController(self.aureoleTrapId)
+
+    def loadSavedDict(self, data):
+        pass
 
     def getSavedDict(self):
         return {}
 
-    def loadSavedDict(self, data):
-        pass

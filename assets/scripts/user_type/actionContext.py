@@ -44,26 +44,26 @@ class ActionContext(userType.UserSingleType):
     actionType = ACTION_UNKNOWN
 
     def __init__(self, parentContext=None):
-        self.parentContext = parentContext
         self.actionStage = 0
+        self.parentContext = parentContext
         self.customDict = {}
-
-    def __str__(self):
-        return '%s %s' % (self.actionType, str(vars(self)))
 
     def getSrcEntity(self):
         return None
 
+    def __str__(self):
+        return '%s %s' % (self.actionType, str(vars(self)))
+
     def setCustomVar(self, name, val):
         self.customDict[name] = val
-
-    def getCustomVar(self, name):
-        return self.customDict.get(name)
 
     def _lateReload(self):
         super(ActionContext, self)._lateReload()
         if self.parentContext:
             self.parentContext.reloadScript()
+
+    def getCustomVar(self, name):
+        return self.customDict.get(name)
 
     def getCtxFromActionQueue(self, actionType):
         if self.actionType == actionType:
@@ -114,37 +114,52 @@ class UseSkillCtx(ActionContext):
         if self.skillResult:
             self.skillResult.sourceType = self.getDmgSourceType()
             self.skillResult.sourceId = self.getDmgSourceId()
+    
+    def isClientSkill(self, maxTimes=4):
+        if maxTimes == 0:
+            return False
+
+        if self.isClient:
+            return True
+
+        if self.parentContext and self.parentContext.actionType == ACTION_USE_SKILL:
+            return self.parentContext.isClientSkill(maxTimes - 1)
+
+        return False
 
     def getDmgSourceType(self):
         return gameconst.SourceType.SrcTpSkill
 
-    def getDmgSourceId(self):
-        return self.skillId
-
     def getCombatResult(self):
         return self.skillResult
 
-    def getSrcEntity(self):
-        return KBEngine.entities.get(self.casterEntId)
+    def getDmgSourceId(self):
+        return self.skillId
 
     def _lateReload(self):
         super(UseSkillCtx, self)._lateReload()
 
-        if self.skillObj:
-            self.skillObj.reloadScript()
-
         if self.skillResult:
             self.skillResult.reloadScript()
 
+        if self.skillObj:
+            self.skillObj.reloadScript()
+
+    def getSrcEntity(self):
+        return KBEngine.entities.get(self.casterEntId)
+
+
 class SkillCommonCtx(ActionContext):
     actionType = ACTION_SKILL_COMMON
-    def __init__(self, skillId, parentCtx=None):
+    def __init__(self, skillId, parentCtx=None, **kwargs):
         super(SkillCommonCtx, self).__init__(parentCtx)
         self.skillId = skillId                  #����id
-class CreationCtx(ActionContext):
+
+
+class CreationCombatCtx(ActionContext):
     actionType = ACTION_CREATION_LOOP
     def __init__(self, creationEntId, effectedEntIds, creationResult, parentCtx=None, loopTimes=0, context=None):
-        super(CreationCtx, self).__init__(parentCtx)
+        super(CreationCombatCtx, self).__init__(parentCtx)
         self.creationEntId = creationEntId      #����entity id
         self.effectedEntIds = effectedEntIds    #��������Ŀ��
         self.creationResult = creationResult
@@ -152,57 +167,62 @@ class CreationCtx(ActionContext):
         self.parentContext = context
 
         if self.creationResult:
-            self.creationResult.sourceType = self.getDmgSourceType()
             self.creationResult.sourceId = self.getDmgSourceId()
+            self.creationResult.sourceType = self.getDmgSourceType()
 
     def _lateReload(self):
-        super(CreationCtx, self)._lateReload()
+        super(CreationCombatCtx, self)._lateReload()
 
         if self.creationResult:
             self.creationResult.reloadScript()
+
+    def getDmgSourceType(self):
+        return gameconst.SourceType.SrcTpCreation
 
     @property
     def creationId(self):
         return self.getDmgSourceId()
 
-    def getDmgSourceType(self):
-        return gameconst.SourceType.SrcTpCreation
-
     def getDmgSourceId(self):
         e = KBEngine.entities.get(self.creationEntId)
         return e.creationId if e else 0
 
+    def getSrcEntity(self):
+        return KBEngine.entities.get(self.creationEntId)
+
     def getCombatResult(self):
         return self.creationResult
 
-    def getSrcEntity(self):
-        return KBEngine.entities.get(self.creationEntId)
+
 class BuffRefreshCtx(ActionContext):
     actionType = ACTION_BUFF_TICK
-    def __init__(self, srcEntId, ownerEntId, buffId, buffLevel, srcKey, buffResult, parentCtx=None):
+    def __init__(self, srcEntId, ownerEntId, buffId, buffLevel, srcKey, 
+                 buffResult, parentCtx=None, **kwargs):
         super(BuffRefreshCtx, self).__init__(parentCtx)
-        self.srcEntId = srcEntId
         self.ownerEntId = ownerEntId
+        self.srcEntId = srcEntId
         self.buffId = buffId
         self.srcKey = srcKey
-        self.buffLevel = buffLevel
         self.buffResult = buffResult
+        self.buffLevel = buffLevel
 
         if self.buffResult:
-            self.buffResult.sourceType = self.getDmgSourceType()
             self.buffResult.sourceId = self.getDmgSourceId()
+            self.buffResult.sourceType = self.getDmgSourceType()
 
     def _lateReload(self):
         super(BuffRefreshCtx, self)._lateReload()
 
-        if self.buffResult:
-            self.buffResult.reloadScript()
+        if not self.buffResult:
+            return
 
-    def getDmgSourceType(self):
-        return gameconst.SourceType.SrcTpBuff
+        self.buffResult.reloadScript()
 
     def getDmgSourceId(self):
         return self.buffId
+
+    def getDmgSourceType(self):
+        return gameconst.SourceType.SrcTpBuff
 
     def getCombatResult(self):
         return self.buffResult
@@ -210,117 +230,123 @@ class BuffRefreshCtx(ActionContext):
     def getSrcEntity(self):
         return KBEngine.entities.get(self.srcEntId)
 
+    def getBuffObject(self):
+        _owner = self.getOwnerEntity()
+        if not _owner:
+            return None
+
+        return _owner.getBuffByBuffId(self.buffId, self.srcKey)
+
     def getOwnerEntity(self):
         return KBEngine.entities.get(self.ownerEntId)
 
-    def getBuffObject(self):
-        owner = self.getOwnerEntity()
-        if not owner:
-            return None
 
-        return owner.getBuffByBuffId(self.buffId, self.srcKey)
-
-class BuffEndCtx(ActionContext):
+class BuffEndContext(ActionContext):
     actionType = ACTION_BUFF_END
     def __init__(self, srcEntId, ownerEntId, buffId, buffLevel, srcKey, removeType, buffResult, parentCtx=None):
-        super(BuffEndCtx, self).__init__(parentCtx)
-        self.srcEntId = srcEntId
+        super(BuffEndContext, self).__init__(parentCtx)
         self.ownerEntId = ownerEntId
+        self.srcEntId = srcEntId
         self.buffId = buffId
         self.srcKey = srcKey
         self.buffLevel = buffLevel
-        self.removeType = removeType
         self.buffResult = buffResult
+        self.removeType = removeType
 
         if self.buffResult:
-            self.buffResult.sourceType = self.getDmgSourceType()
             self.buffResult.sourceId = self.getDmgSourceId()
+            self.buffResult.sourceType = self.getDmgSourceType()
 
     def _lateReload(self):
-        super(BuffEndCtx, self)._lateReload()
+        super(BuffEndContext, self)._lateReload()
 
-        if self.buffResult:
-            self.buffResult.reloadScript()
+        if not self.buffResult:
+            return
+
+        self.buffResult.reloadScript()
 
     def getDmgSourceType(self):
         return gameconst.SourceType.SrcTpBuff
 
-    def getDmgSourceId(self):
-        return self.buffId
-
     def getCombatResult(self):
         return self.buffResult
 
-    def getSrcEntity(self):
-        return KBEngine.entities.get(self.srcEntId)
+    def getDmgSourceId(self):
+        return self.buffId
 
     def getOwnerEntity(self):
         return KBEngine.entities.get(self.ownerEntId)
 
     def getBuffObject(self):
-        owner = self.getOwnerEntity()
-        if not owner:
+        _owner = self.getOwnerEntity()
+        if not _owner:
             return None
 
-        return owner.getBuffByBuffId(self.buffId, self.srcKey)
+        return _owner.getBuffByBuffId(self.buffId, self.srcKey)
+
+    def getSrcEntity(self):
+        return KBEngine.entities.get(self.srcEntId)
+
 
 class BuffEffectCtx(ActionContext):
     actionType = ACTION_BUFF_EFFECT
-    def __init__(self, srcEntId, ownerEntId, buffId, buffLevel, srcKey, effectId, args, effectResult, parentCtx=None):
+    def __init__(self, srcEntId, ownerEntId, buffId, buffLevel, srcKey,\
+                 effectId, args, effectResult, parentCtx=None, **kwargs):
         super(BuffEffectCtx, self).__init__(parentCtx)
-        self.srcEntId = srcEntId
         self.ownerEntId = ownerEntId
+        self.srcEntId = srcEntId
         self.buffId = buffId
         self.srcKey = srcKey
         self.buffLevel = buffLevel
         self.effectId = effectId
-        self.args = gameclass.DummyObject(**args)
         self.effectResult = effectResult
+        self.args = gameclass.DummyObject(**args)
 
         if self.effectResult:
-            self.effectResult.sourceType = self.getDmgSourceType()
             self.effectResult.sourceId = self.getDmgSourceId()
+            self.effectResult.sourceType = self.getDmgSourceType()
 
     def _lateReload(self):
         super(BuffEffectCtx, self)._lateReload()
 
-        if self.effectResult:
-            self.effectResult.reloadScript()
-
         self.args.reloadScript()
 
-    def getDmgSourceType(self):
-        return gameconst.SourceType.SrcTpBuff
+        if self.effectResult:
+            self.effectResult.reloadScript()
 
     def getDmgSourceId(self):
         return self.buffId
 
+    def getDmgSourceType(self):
+        return gameconst.SourceType.SrcTpBuff
+
     def getCombatResult(self):
         return self.effectResult
-
-    def getSrcEntity(self):
-        return KBEngine.entities.get(self.srcEntId)
 
     def getOwnerEntity(self):
         return KBEngine.entities.get(self.ownerEntId)
 
+    def getSrcEntity(self):
+        return KBEngine.entities.get(self.srcEntId)
+
     def getBuffObject(self):
-        owner = self.getOwnerEntity()
-        if not owner:
+        _owner = self.getOwnerEntity()
+        if not _owner:
             return None
 
-        return owner.getBuffByBuffId(self.buffId, self.srcKey)
+        return _owner.getBuffByBuffId(self.buffId, self.srcKey)
 
 
 #�¼�������effect��������
 class EventEffectCtx(BuffEffectCtx):
     actionType = ACTION_EVENT_EFFECT
-    def __init__(self, srcEntId, ownerEntId, buffId, buffLv, srcKey, effectId, args, eventContext, effectResult, parentCtx=None):
-        super(EventEffectCtx, self).__init__(srcEntId, ownerEntId, buffId, buffLv, srcKey, effectId, args, effectResult, parentCtx)
-        self.eventContext = eventContext
+    def __init__(self, srcEntId, ownerEntId, buffId, buffLv, srcKey, effectId,\
+                 args, eventContext, effectResult, parentCtx=None, **kwargs):
 
-    def getSrcEntity(self):
-        return KBEngine.entities.get(self.srcEntId)
+        super(EventEffectCtx, self).__init__(
+            srcEntId, ownerEntId, buffId, 
+            buffLv, srcKey, effectId, args, effectResult, parentCtx,)
+        self.eventContext = eventContext
 
     def _lateReload(self):
         super(EventEffectCtx, self)._lateReload()
@@ -328,9 +354,13 @@ class EventEffectCtx(BuffEffectCtx):
         if self.eventContext:
             self.eventContext.reloadScript()
 
+    def getSrcEntity(self):
+        return KBEngine.entities.get(self.srcEntId)
+
+
 class ChangeSkillSlotCtx(ActionContext):
     actionType = ACTION_CHANGE_SKILL_SLOT
-    def __init__(self, skillId, parentCtx=None):
+    def __init__(self, skillId, parentCtx=None, **kwargs):
         super(ChangeSkillSlotCtx, self).__init__(parentCtx)
         self.skillId = skillId                  #����id
 
@@ -340,19 +370,19 @@ class AiActionCtx(ActionContext):
         super(AiActionCtx, self).__init__(parentCtx)
         self.creepbaseId = creepbaseId
 
-class PlunderRewardCtx(object):
-    def __init__(self, lingqiPointLv=0, lingStone=0, hunStone=0, completion=0):
-        self.lingqiPointLv = lingqiPointLv
-        self.lingStone = lingStone
-        self.hunStone = hunStone
-        self.completion = completion
+
 class UseItemCtx(object):
     actionType = ACTION_USE_ITEM
 
-    def __init__(self, targetId=0, argsList=None, withMailId=0, bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED,
+    def __init__(self, targetId=0, argsList=None, withMailId=0,\
+                 bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED,
                  itemObj=None):
         self.targetId = targetId
-        self.argsList = [] if argsList is None else argsList
+        if argsList is None:
+            self.argsList = []
+        else:
+            self.argsList = argsList
+
         self.pendingOpId = 0
         self.withMailId = withMailId
         self.bindType = bindType
@@ -360,41 +390,44 @@ class UseItemCtx(object):
 
     def _lateReload(self):
         super(UseItemCtx, self)._lateReload()
+        return
 
 
 class UseBoxTypeItemCtx(object):
     actionType = ACTION_USE_BOX_TYPE_ITEM
 
-    def __init__(self, targetId=0, argsList=None, withMailId=0, awardVal=None,
-                 bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED):
+    def __init__(self, targetId=0, argsList=(), withMailId=0, awardVal=None,\
+                 bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED, **kwargs):
         self.targetId = targetId
-        self.argsList = [] if argsList is None else argsList
+        if argsList:
+            self.argsList = argsList
+        else:
+            self.argsList = []
+
         self.pendingOpId = 0
         self.withMailId = withMailId
-        self.bindType = bindType
         self.awardVal = awardVal
+        self.bindType = bindType
 
     def _lateReload(self):
         super(UseBoxTypeItemCtx, self)._lateReload()
+        return
 
 
-class UseItemHealCtx(ActionContext):
+class UseItemHealContext(ActionContext):
     actionType = ACTION_USE_ITEM_HEAL
 
-    def __init__(self, itemId, srcEntId=0, itemResult=None, parentCtx=None):
-        super(UseItemHealCtx, self).__init__(parentCtx)
-        self.itemId = itemId
+    def __init__(self, itemId, srcEntId=0, itemResult=None, parentCtx=None, **kwargs):
+        super(UseItemHealContext, self).__init__(parentCtx)
         self.srcEntId = srcEntId
+        self.itemId = itemId
         self.itemResult = itemResult
         if self.itemResult:
-            self.itemResult.sourceType = self.getDmgSourceType()
             self.itemResult.sourceId = self.getDmgSourceId()
+            self.itemResult.sourceType = self.getDmgSourceType()
 
     def getDmgSourceType(self):
         return gameconst.SourceType.SrcTpItem
-
-    def getDmgSourceId(self):
-        return self.itemId
 
     def getSrcEntity(self):
         return KBEngine.entities.get(self.srcEntId)
@@ -402,69 +435,59 @@ class UseItemHealCtx(ActionContext):
     def getCombatResult(self):
         return self.itemResult
 
-class DeadActCtx(ActionContext):
-    actionType = ACTION_DEAD
-    def __init__(self, killerEntId, actResult, parentCtx=None):
-        super(DeadActCtx, self).__init__(parentCtx)
-        self.killerEntId = killerEntId
-
-        if self.actResult:
-            self.actResult.sourceType = self.getDmgSourceType()
-            self.actResult.sourceId = self.getDmgSourceId()
-
-    def getDmgSourceType(self):
-        return gameconst.SourceType.SrcTpDefault
-
     def getDmgSourceId(self):
-        return self.killerEntId
+        return self.itemId
 
-    def getCombatResult(self):
-        return self.actResult
 
 class FlowCtrlCtx(ActionContext):
     actionType = ACTION_FLOW_CONTROLLER_CALLED
 
-    __defaults__ = {'rawGameEntityId': 0,
-                    'number': 0, 'radius': 0}
+    __defaults__ = {
+        'rawGameEntityId': 0,
+        'number': 0, 
+        'radius': 0,
+    }
 
-    def __init__(self, parentContext=None, **customProps):
+    def __init__(self, parentContext=None, **kwargs):
         super(FlowCtrlCtx, self).__init__(parentContext)
-        if customProps:
-            self.customDict.update(customProps)
+        if kwargs:
+            self.customDict.update(kwargs)
 
-    def __getattr__(self, item):
+    def __getattr__(self, itemProp):
         try:
-            return self.customDict[item]
+            return self.customDict[itemProp]
         except KeyError:
-            if item in self.__defaults__:
-                return self.__defaults__[item]
-            raise AttributeError("'{}' object has no attribute '{}'".format(self.__class__.__name__, item))
+            if itemProp in self.__defaults__:
+                return self.__defaults__[itemProp]
+            raise AttributeError("'{}' object has no attribute '{}'".format(self.__class__.__name__, itemProp))
 
 
 class ClaimTaskCtx(object):
     actionType = ACTION_CLAIM_TASK
 
     def __init__(self, claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_NORMAL, callbackUUID=0, teamId=0, teamBaseInfoDic=None,
-                 seed=0, extra=None):
+                 seed=0, extra=None, **kwargs):
         super(ClaimTaskCtx, self).__init__()
+        if teamBaseInfoDic:
+            self.teamBaseInfoDic = teamBaseInfoDic
+        else:
+            self.teamBaseInfoDic = {}
         self.teamId = teamId
-        self.teamBaseInfoDic = teamBaseInfoDic if teamBaseInfoDic else {}
+
         self.claimSrc = claimSrc
         self.seed = seed
         self.callbackUUID = callbackUUID
         self.extra = {} if not extra else extra
 
+
 class CastCommonCtx(object):
     def __init__(self, castState, startTime, castTime, failedFunc='', failedArgs=None):
-        self.castState = castState
         self.startTime = startTime
+        self.castState = castState
         self.castTime = castTime
         self.failedFunc = failedFunc
-        self.failedArgs = failedArgs
         self.timer = 0
-
-    def setCastTimer(self, timer):
-        self.timer = timer
+        self.failedArgs = failedArgs
 
     def getCastTime(self, castType):
         if self.castTime > 0:
@@ -472,12 +495,19 @@ class CastCommonCtx(object):
         else:
             return CONST.datas["teleportCastTime"]["value"]
 
+    def setCastTimer(self, timer):
+        self.timer = timer
+
     def callFailedFunc(self, owner):
-        if self.failedFunc:
-            getattr(owner, self.failedFunc)(*self.failedArgs)
+        if not self.failedFunc:
+            return
+
+        getattr(owner, self.failedFunc)(*self.failedArgs)
+
+    def clearTimerId(self):
+        self.timer = 0
 
     def notifyClient(self, box, castType, extraProps=None):
-        extraProps = extraProps or {}
         if castType == gameconst.CastType.ride:
             pass
         elif castType == gameconst.CastType.teleportClientDelay:
@@ -485,31 +515,29 @@ class CastCommonCtx(object):
         else:
             box.client.onTeleportCasting(castType, self.getCastTime(castType), self.startTime + self.getCastTime(castType))
 
-    def clearTimerId(self):
-        self.timer = 0
 
 class TeleportInfoContext(object):
     def __init__(self, position, spaceNo, callback, args, startTime):
-        self.position = position
         self.spaceNo = spaceNo
+        self.position = position
         self.callback = callback
-        self.args = args
         self.startTime = startTime
+        self.args = args
+
+    def getTeleportInfoCache(self):
+        return self.position, self.spaceNo, self.callback, self.args
 
     @property
     def endTime(self):
         return self.startTime + 120
-
-    def getTeleportInfoCache(self):
-        return self.position, self.spaceNo, self.callback, self.args
 
     def __str__(self):
         return f'pos:{self.position}, spaceNo:{self.spaceNo}, cb:{self.callback}, args:{self.args}, now:{self.startTime}, end:{self.endTime}'
 
 class AddLingShouCtx(object):
     def __init__(self, reason, extra=None):
-        self.pet = None
         self.reason = reason
+        self.pet = None
         self.extra = {} if not extra else extra
 
     def setPet(self, pet):
@@ -530,19 +558,18 @@ class PassiveSkillCtx(ActionContext):
 
 class BaseAffixActionCtx(ActionContext):
     actionType = ACTION_UNKNOWN
-    def __init__(self, itemObj, affixVals, affixLv, lvGap=5, isLogin=False):
+    def __init__(self, itemObj, affixVals, affixLv, lvGap=5, isLogin=False, **kwargs):
         super(BaseAffixActionCtx, self).__init__()
-        self.affixItem = itemObj
         self.affixVals = affixVals
+        self.affixItem = itemObj
         self.affixLv = affixLv
-        self.affixLevelGap = lvGap
         self.isLogin = isLogin
+        self.affixLevelGap = lvGap
 
 class EquipActionCtx(BaseAffixActionCtx):
     actionType = ACTION_EQUIP
-    def __init__(self, equipItem, affixVals, affixLv, lvGap=5, isLogin=False):
+    def __init__(self, equipItem, affixVals, affixLv, lvGap=5, isLogin=False, **kwargs):
         super(EquipActionCtx, self).__init__(equipItem, affixVals, affixLv, lvGap, isLogin)
-        return
 
 class AchievementCtx(object):
     def __init__(self, addNum=0, **kwargs):
@@ -559,43 +586,46 @@ class DropEquipCtx(object):
 
 class AureoleCtx(ActionContext):
     actionType = ACTION_AUREOLE
-    def __init__(self, srcEntId, aureoleId, aureoleLevel, aureoleResult, parentCtx=None):
+    def __init__(self, srcEntId, aureoleId, aureoleLevel, aureoleResult, 
+                 parentCtx=None, **kwargs):
         super(AureoleCtx, self).__init__(parentCtx)
-        self.aureoleId = aureoleId
         self.aureoleResult = aureoleResult
+        self.aureoleId = aureoleId
         self.srcEntId = srcEntId
         self.aureoleLevel = aureoleLevel
 
         if self.aureoleResult:
-            self.aureoleResult.sourceType = self.getDmgSourceType()
             self.aureoleResult.sourceId = self.getDmgSourceId()
+            self.aureoleResult.sourceType = self.getDmgSourceType()
 
     def _lateReload(self):
         super(AureoleCtx, self)._lateReload()
 
-        if self.aureoleResult:
-            self.aureoleResult.reloadScript()
+        if not self.aureoleResult:
+            return
 
-    def getDmgSourceType(self):
-        return gameconst.SourceType.SrcTpAureole
+        self.aureoleResult.reloadScript()
 
     def getDmgSourceId(self):
         return self.aureoleId
 
-    def getCombatResult(self):
-        return self.aureoleResult
+    def getDmgSourceType(self):
+        return gameconst.SourceType.SrcTpAureole
 
     @property
     def effectedEntIds(self):
-        owner = KBEngine.entities.get(self.srcEntId)
-        if not owner:
+        _owner = KBEngine.entities.get(self.srcEntId)
+        if not _owner:
             return []
 
-        aureoleVal = owner.auraDic.get(self.aureoleId)
+        aureoleVal = _owner.auraDic.get(self.aureoleId)
         if aureoleVal:
             return aureoleVal.aureoleTargetIds
 
         return []
+
+    def getCombatResult(self):
+        return self.aureoleResult
 
 
 class CubeDurCtx(object):

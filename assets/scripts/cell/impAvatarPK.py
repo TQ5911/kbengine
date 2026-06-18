@@ -62,8 +62,13 @@ class ImpAvatarPK(object):
             self.showMsg(PKD.datas['PK_changeToHostilityMode_msgID']['value'], [])
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def switchPKModel(self, exposed, model):
         LOG_DBG('switchPKModel', model)
+        self._switchPKModel(model)
+        self.syncMethodCallToLocalServerCell('_switchPKModel', (model,))
+
+    def _switchPKModel(self, model):
         if utils.curTS() < self.tSwitchPKModel + PKD.datas['modeCd']['value']:
             self.base.onMessagePre(MMD.datas.modeCdmsg, [])
             return
@@ -226,6 +231,8 @@ class ImpAvatarPK(object):
         if _oldLevel != self.moralLevel:
             LogTrackingMgr.LogTrackingMgr.Moral_Change(
                 self.gbId,
+                self.clientDistinctIdCell, 
+                self.gbId,
                 self.moralValue,
                 delta,
                 srcType,
@@ -239,10 +246,10 @@ class ImpAvatarPK(object):
         LOG_DBG('reduceMoralValue', delta)
         lowerLimitOfMoralValues = PKD.datas['lowerLimitOfMoralValues']['value']
         if self.moralValue <= lowerLimitOfMoralValues:
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         if delta == 0 or delta < -1:
-            return gameconst.UseItem.TRUE
+            return gameconst.UseItemEnum.TRUE
 
         oldLeft = self.moralValue
         oldInRedName = self.inRedName()
@@ -257,6 +264,8 @@ class ImpAvatarPK(object):
         self.moralLevel = utils.getMoralLevel(self.moralValue)
         if _oldLevel != self.moralLevel:
             LogTrackingMgr.LogTrackingMgr.Moral_Change(
+                self.gbId,
+                self.clientDistinctIdCell, 
                 self.gbId,
                 self.moralValue,
                 -delta,
@@ -275,7 +284,7 @@ class ImpAvatarPK(object):
             if self.moralValue <= A_ACD.datas['evilMeterLimit']['value'] < oldLeft:
                 self.showMsg(A_ACD.datas['evilMeterLimitMsg']['value'], [])
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def getMoralEffectItemPercent(self):
         potion_eff_reduced = PKMVE.datas[self.moralLevel]['PotionEffReduced']

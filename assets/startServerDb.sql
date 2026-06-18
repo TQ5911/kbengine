@@ -316,3 +316,26 @@ SET @sql = IF(
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+CREATE TABLE IF NOT EXISTS `game_safe_box`
+        (
+        `id` int auto_increment primary key,
+        `gbId` bigint(20) NOT NULL,
+        `itemId` int(10) NOT NULL,
+        `itemCount` int(10) NOT NULL,
+        `itemPrice` decimal NOT NULL,
+        `claimed` int(10) NOT NULL,
+        `claimTime` int(10) NOT NULL,
+        `orderId` varchar(64) NOT NULL,
+        `orderTime` int(10) NOT NULL,
+        unique index (`orderId`),
+        INDEX `idx_unclaimed` (`gbId`, `claimed`, `orderTime` DESC, `id` DESC),
+        INDEX `idx_claimed` (`gbId`, `claimed`, `claimTime` DESC, `id` DESC)
+        );
+
+CREATE TABLE IF NOT EXISTS `game_safe_box_idempotent`
+        (
+        `id` int auto_increment primary key,
+        `orderId` varchar(64) NOT NULL,
+        unique index (`orderId`)
+        );

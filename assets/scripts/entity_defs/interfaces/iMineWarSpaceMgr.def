@@ -41,7 +41,8 @@
             <Arg>       UINT8          </Arg>
             <Arg>       UNICODE        </Arg>
             <Arg>       PY_DICT        </Arg>
-            <Arg>       BOOL        </Arg>
+            <Arg>       BOOL            </Arg>
+            <Arg>       PYTHON          </Arg>
         </onSyncGuildMineWarResult>
 
         <onSyncMineWarGuildInfo>

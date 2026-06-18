@@ -14,9 +14,13 @@ import teamMatch_matchConfig as TMMCD
 import teamMatch_activity as TMACTD
 import message_Message_def as MMD
 import raid_raidConst as RAID_CONST
-import message_Message as MM
 import message_chatMessage as MCM
 import activityControl_activityData as AC_ADD
+import auction_auctionConst as AUT_CONST
+import chatConfig_hornSet as CHS
+import dropAward
+import gameclass
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 class IChat(object):
     def setChatChannel(self, exposed, channel):
@@ -46,6 +50,47 @@ class IChat(object):
             return True
         else:
             return False
+
+    @gamedecorator.checkGameconfigEnable('chat')
+    def sendPaidChatMsg(self, exposed, hornId, msg):
+        LOG_DBG('sendPaidChatMsg', hornId, msg)
+        if self.isAllServerForbidChat():
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            return
+
+        channel = CHS.datas[hornId]['showChannel'][0]
+        now = utils.curTS()
+        if now < self.sendPaidMsgTime + CHS.datas[hornId]['cd']:
+            timeDelta = self.sendPaidMsgTime + CHS.datas[hornId]['cd']-now
+            self.onMessagePre(int(C_C_DD.datas['hornMsgCdTip']['value']), [str(timeDelta)])
+            return
+
+        #减道具
+        costItemId = CHS.datas[hornId]['cost']
+        deductWealthVal = dropAward.DeductWealthVal()
+        deductWealthVal.addWealthByItemId(costItemId, 1)
+
+        if not self.canDeductWealth(deductWealthVal):
+            LOG_WARN('sendPaidChatMsg: items not enough:', deductWealthVal)
+            return
+
+        detail = gameclass.AwardDetailCls()
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_COST_HORN
+        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+
+        self.sendPaidMsgTime = now
+        self.afterCheckPaidChatMsg(msg, channel)
+
+    def afterCheckPaidChatMsg(self, originalMsg, channel):
+        LOG_DBG("afterCheckPaidChatMsg", originalMsg)
+        if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
+            self.client.onRecvAvatarChannelMsg(channel, self._getChatChannelAvatarInfo(), originalMsg)
+            return
+
+        gameengine.broadcastBaseapp('broadcastToAllAvatar',
+                                    (gameconst.BASE, 'onRecvChannelMsg',
+                                     (channel, self._getChatChannelAvatarInfo(), originalMsg), ()))
 
     @gamedecorator.checkGameconfigEnable('chat')
     def sendWorldChatMsg(self, exposed, msg):
@@ -250,15 +295,6 @@ class IChat(object):
             gameengine.getRaidStub(raidUUID).broadRaidChatMsg(self, self.gbID, raidUUID, avatarInfo, originalMsg, extraProps)
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.RAID)
 
-    def useTrumpetItem(self, exposed, itemId, msg):
-        LOG_INFO('useTrumpetItem', itemId, msg)
-        if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
-            self.client.onRecvTrumpetMsg(self._getChatChannelAvatarInfo(), itemId, msg)
-        else:
-            gameengine.broadcastBaseapp('onBroadcastToAllClients',
-                                     ('onRecvTrumpetMsg', (self._getChatChannelAvatarInfo(), itemId, msg)))
-            # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.WORLD)
-
     def sendReleaseRedbagMsg(self, redbagId, redbagType, channel, money, desc):
         LOG_INFO("sendReleaseRedbagMsg:", redbagId, redbagType, channel, money, desc)
         _avatarInfo = self._getChatChannelAvatarInfo()
@@ -272,35 +308,11 @@ class IChat(object):
             # self.sendGuildChatMsg()
             self.guildBox.doSendGuildRedBagMsg(redbagId, redbagType, channel, money, desc, _avatarInfo)
 
-
-    def checkUseTrumpetBase(self, pendingCheckId,msg):
-        LOG_INFO("checkUseTrumpetBase ",pendingCheckId)
-        if self.isAllServerForbidChat():
-            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
-            return
-
-        self.cell.afterCheckTrumpetMsg(pendingCheckId, msg)
-
-    def queryPetLink(self, petGbId, gbId):
-        LOG_INFO('queryPetLink', petGbId)
-        # self.getPetDateDetailInfoInternal(gbId, petGbId, '_queryPetLink', ())
-
-    # def _queryPetLink(self, result, data):
-    #     if result == gameconst.GetPetDateDetailResult.SUCCESS:
-    #         self.client.onQueryPetLink(data)
-    #     else:
-    #         self.onMessagePre(MMD.datas.channel_noItem, [])
-
     def registerItemLink(self, exposed, itemIdList, uniqueIdList):
         LOG_INFO('registerItemLink', itemIdList, uniqueIdList)
 
         if len(itemIdList) != len(uniqueIdList):
             return
-
-        # for i in range(len(itemIdList)):
-        #     item = self.bagData.getItemByItemIdAndUniqueId(itemIdList[i], uniqueIdList[i])
-        #     if item and (item.isLingShouEggItem() or item.isDuoHunItem()):
-        #         gameengine.getGlobalBase('ItemLinkStub').uploadItemInfo(uniqueIdList[i], item.toItemSavedDict())
 
     def queryItemLink(self, exposed, uniqueId, itemId, gbId):
         LOG_INFO('queryItemLink', uniqueId, itemId, gbId)
@@ -308,8 +320,6 @@ class IChat(object):
             LOG_ERR('queryItemLink but invalid gbId', gbId)
             return
 
-        # if dataUtils.isLingShouEggItemByItemId(itemId) or dataUtils.isDuoHunItemByItemId(itemId):
-        #     gameengine.getGlobalBase('ItemLinkStub').downloadItemInfo(uniqueId, self)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'sendItemLinkInfo',
                                                                   (self, uniqueId, itemId),
                                                                   self, 'onFindLinkItemOwnerFailed', ())
@@ -501,8 +511,3 @@ class IChat(object):
         start = message.index('#')
         start = message.index('#', start+1)
         return message[start:-1]
-
-    def onRecvAvatarChannelMsgPre(self, channel, avatarInfo, msg):
-        LOG_INFO("onRecvAvatarChannelMsgPre::", channel, avatarInfo, msg)
-        self.client.onRecvAvatarChannelMsg(channel, avatarInfo, msg)
-

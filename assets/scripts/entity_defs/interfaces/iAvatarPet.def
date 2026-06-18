@@ -92,6 +92,7 @@
             <Arg>   PYTHON       </Arg>
             <Arg>   UINT8        </Arg>
             <Arg>   PYTHON       </Arg>
+            <Arg>   BOOL         </Arg>
         </onSetLingShouBattleList>
 
         <onUpdateLingShouBattleList>

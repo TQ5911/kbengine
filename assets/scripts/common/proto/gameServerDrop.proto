@@ -25,6 +25,8 @@ enum DropResult
     DropResult_REDEEM_TIME_NOT_EXPIRED = 15; // 赎回时间未到期
     DropResult_GET_BACK_EXPIRED = 16; //取回已过期
     DropResult_GET_BACK_TYPE_ERROR = 17; //错误的取回类型
+    DropResult_SET_PAY_PRICE_EXPIRE = 18; // 付款赎回已过期
+    DropResult_SET_PAY_PRICE_NOT_SAME = 19; // 付款赎回价格不一致
 }
 
 message Void {
@@ -33,6 +35,11 @@ message Void {
 message RegisterGameServerRequest
 {
     uint32 serverId = 1;
+}
+
+message NotifyRemoveEquipCacheData {
+    uint32 serverId = 1;
+    repeated uint64 uniqueIds = 2;
 }
 
 message NotifyCollectionCacheData {
@@ -52,16 +59,17 @@ message DropRequest {
     uint32 serverId = 1;
     uint64 uniqueId = 2;
     uint64 dropGbId = 3;
-    uint32 endTime = 4;
-    uint32 dropTime = 5;
+    int64 endTime = 4;
+    int64 dropTime = 5;
     bytes equipInfo = 6;
     bytes extraInfo = 7;
     uint32 collectionId = 8;
     uint32 price = 9;
-    uint32 collExpireTime = 10; // 采集物过期时间，如果规定时间内没有拾取，则判定为系统拾取
+    int64 collExpireTime = 10; // 采集物过期时间，如果规定时间内没有拾取，则判定为系统拾取
     uint64 ownerId = 11;
-    uint64 returnTime = 12;
+    int64 returnTime = 12;
     uint32 ownerServerId = 13;
+    bool isFirst = 14;
 }
 
 // 掉落响应
@@ -75,7 +83,7 @@ message TakeRequest {
     uint64 uniqueId = 1;
     uint32 serverId = 2;
     uint64 takerGbId = 3;
-    uint64 redeemWaitTime = 4;
+    int64 redeemWaitTime = 4;
 }
 
 message TakeResponse {
@@ -83,9 +91,10 @@ message TakeResponse {
     uint64 dropGbId = 2;
     DropResult result = 3;
     bytes equipInfo = 4;
-    uint32 endTime = 5;
+    int64 endTime = 5;
     uint32 price = 6;
-    uint64 redeemWaitTime = 7;
+    int64 redeemWaitTime = 7;
+    int64 returnTime = 8;
 }
 
 // 拾取者放弃拾取的掉落装备
@@ -117,15 +126,17 @@ message GetBackEquipResponse {
     uint64 gbId = 2;
     uint32 dropType = 3;
     bytes equipInfo = 4;
-    DropResult result = 5;
+    int64 returnTime = 5;
+    DropResult result = 6;
 }
 
 // 赎回请求
 message RedeemRequest {
-    uint64 uniqueId = 1;
-    uint64 redeemerGbId = 2;
-    uint32 price = 3;
-    uint64 uuid = 4;
+    uint32 serverId = 1;
+    uint64 uniqueId = 2;
+    uint64 redeemerGbId = 3;
+    uint32 price = 4;
+    uint64 uuid = 5;
 }
 
 // 赎回响应
@@ -135,11 +146,16 @@ message RedeemResponse {
     uint64 uuid = 3;
 }
 
+message DropNotifyArgs {
+    repeated int64 args = 1;
+}
+
 // 通知掉落状态改变
 message DropTypeChangeNotify {
-    repeated uint64 uniqueId = 1;
-    repeated int32 notifyType = 2;
-    uint64 gbId = 3;
+    repeated uint64 uniqueIds = 1;
+    repeated int32 notifyTypes = 2;
+    repeated DropNotifyArgs notifyArgs = 3;
+    uint64 gbId = 4;
 }
 
 message NotifyTakerRedeemRequest {
@@ -162,22 +178,6 @@ message GetTakeRewardResponse {
     uint64 uuid = 4;
 }
 
-// 获取别人放弃的拾取装备
-message FetchDropEquipRequest {
-    uint64 uniqueId = 1;
-    uint64 gbId = 2;
-    uint64 uuid = 3;
-}
-
-// 获取别人放弃的拾取装备响应
-message FetchDropEquipResponse {
-    uint64 uniqueId = 1;
-    uint32 giveUpTime = 2;
-    DropResult result = 3;
-    bytes equipInfo = 4;
-    uint64 uuid = 5;
-}
-
 message GetDropInfoRequest {
     uint64 gbId = 1;
     uint64 uuid = 2;
@@ -185,37 +185,41 @@ message GetDropInfoRequest {
 
 message DropInfo {
     uint64 uniqueId = 1;
-    uint64 takerGbId = 2;
-    uint32 dropType = 3;
-    uint32 endTime = 4;
-    uint32 collExpireTime = 5;
-    bytes extraInfo = 6;
-    bytes equipInfo = 7;
-    uint32 price = 8;
-    uint32 dropTime = 9;
+    uint32 dropType = 2;
+    int64 endTime = 3;
+    int64 collExpireTime = 4;
+    bytes extraInfo = 5;
+    bytes equipInfo = 6;
+    uint32 price = 7;
+    int64 dropTime = 8;
+    bool hasPrice = 9;
+    int64 returnTime = 10;
+    int64 redeemWaitTime = 11;
+    uint64 takerGbId = 12;
 }
 
 message TakerInfo {
     uint64 uniqueId = 1;
-    uint64 dropGbId = 2;
-    uint32 price = 3;
-    uint32 endTime = 4;
-    uint32 dropType = 5;
-    bytes equipInfo = 6;
-    uint64 redeemWaitTime = 7;
-    bool hasPrice = 8;
+    uint32 price = 2;
+    int64 endTime = 3;
+    uint32 dropType = 4;
+    bytes equipInfo = 5;
+    int64 redeemWaitTime = 6;
+    bool hasPrice = 7;
+    int64 returnTime = 8;
 }
 
 message ReturnInfo {
     uint64 uniqueId = 1;
-    uint64 returnTime = 4;
-    bytes equipInfo = 6;
+    int64 returnTime = 2;
+    uint32 dropType = 3;
+    bytes equipInfo = 4;
 }
 
 message RewardInfo {
     uint64 uniqueId = 1;
-    uint64 price = 4;
-    bytes equipInfo = 6;
+    uint64 price = 2;
+    bytes equipInfo = 3;
 }
 
 message GetDropInfoResponse {
@@ -226,26 +230,6 @@ message GetDropInfoResponse {
     repeated RewardInfo rewardInfos = 5;
 }
 
-// 移除掉落信息
-message RemoveDropInfoRequest {
-    uint64 uniqueId = 1;
-    uint64 gbId = 2;
-    uint64 uuid = 3;
-}
-
-// 移除掉落信息响应
-message RemoveDropInfoResponse {
-    uint64 uniqueId = 1;
-    DropResult result = 2;
-    uint64 uuid = 3;
-    uint32 collectionId = 4;
-}
-
-message RemoveDropInfoNotifyTaker {
-    uint64 uniqueId = 1;
-    uint64 gbId = 2;
-}
-
 message SendRepairDropMailRequest {
     uint64 uniqueId = 1;
 }
@@ -254,12 +238,12 @@ message SendRepairDropMailResponse {
     uint64 uniqueId = 1;
     uint64 gbId = 2;
     bytes equipInfo = 3;
-    uint32 endTime = 4;
+    int64 endTime = 4;
 }
 
 message UpdateCollEndTimeRequest {
     uint64 uniqueId = 1;
-    uint32 collEndTime = 2;
+    int64 collEndTime = 2;
 }
 
 message CheckDropExpireRequest {
@@ -298,7 +282,7 @@ message CheckRedeemExpireRequest {
 message CheckRedeemExpireResponse {
     uint64 uuid = 1;
     uint64 uniqueId = 2;
-    DropResult result = 4;
+    DropResult result = 3;
 }
 
 // 托管
@@ -310,7 +294,7 @@ message CustodyRequest {
     uint64 holderServerId = 5;
     uint32 ownerServerId = 6;
     uint64 ownerId = 7;
-    uint64 returnTime = 8;
+    int64 returnTime = 8;
 }
 
 // 托管响应
@@ -334,6 +318,7 @@ message SetDropEquipPayPriceRequest {
     uint64 gbId = 2;
     uint64 uniqueId = 3;
     uint32 price = 4;
+    double rewardRatio = 5;
 }
 
 message SetDropEquipPayPriceResponse {
@@ -358,6 +343,11 @@ message NotifyCustodyEquip {
     uint32 dropType = 5;
 }
 
+message NotifyRemoveEquip {
+    uint64 gbId = 1;
+    repeated uint64 uniqueIds = 2;
+}
+
 service DropServer {
     rpc registerGameServer(RegisterGameServerRequest) returns(Void);
     rpc drop(DropRequest) returns (Void);
@@ -366,9 +356,7 @@ service DropServer {
     rpc activeTick(Void) returns(Void);
     rpc giveUp(GiveUpRequest) returns(Void);
     rpc getTakeReward(GetTakeRewardRequest) returns(Void);
-    rpc fetchDropEquip(FetchDropEquipRequest) returns(Void);
     rpc getDropInfo(GetDropInfoRequest) returns(Void);
-    rpc removeDropInfo(RemoveDropInfoRequest) returns(Void);
     rpc sendRepairDropMail(SendRepairDropMailRequest) returns(Void);
     rpc updateCollEndTime(UpdateCollEndTimeRequest) returns(Void);
     rpc checkDropExpire(CheckDropExpireRequest) returns(Void);
@@ -389,10 +377,7 @@ service GameServer {
     rpc onGiveUp(GiveUpResponse) returns(Void);
     rpc onDropTypeChange(DropTypeChangeNotify) returns(Void);
     rpc onGetTakeReward(GetTakeRewardResponse) returns(Void);
-    rpc onFetchDropEquip(FetchDropEquipResponse) returns(Void);
     rpc onGetDropInfo(GetDropInfoResponse) returns(Void);
-    rpc onRemoveDropInfo(RemoveDropInfoResponse) returns(Void);
-    rpc onRemoveDropInfoNotifyTaker(RemoveDropInfoNotifyTaker) returns(Void);
     rpc onSendRepairDropMail(SendRepairDropMailResponse) returns(Void);
     rpc onCheckDropExpire(CheckDropExpireResponse) returns(Void);
     rpc onSetTakeEquipRedeemPrice(SetTakeEquipRedeemPriceResponse) returns(Void);
@@ -402,4 +387,5 @@ service GameServer {
     rpc onSetDropEquipPayPrice(SetDropEquipPayPriceResponse) returns(Void);
     rpc onNotifyCleanCollection(NotifyCleanCollections) returns(Void);
     rpc onNotifyCustodyEquip(NotifyCustodyEquip) returns(Void);
+    rpc onNotifyRemoveEquip(NotifyRemoveEquip) returns(Void);
 }

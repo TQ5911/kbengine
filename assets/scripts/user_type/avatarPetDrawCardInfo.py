@@ -10,17 +10,19 @@ import gzip
 from collections import deque
 
 class cardPoolInfo(userType.UserSingleType):
-    def __init__(self, pool=0, num=0, guaranteed=0, dailyNum=0):
+    def __init__(self, pool=0, num=0, guaranteed=0, dailyNum=0, coinLeftTimes=0):
         self.pool = pool
         self.num = num
         self.guaranteed = guaranteed
         self.dailyNum = dailyNum
+        self.coinLeftTimes = coinLeftTimes
 
     def initFromDict(self, dataDict):
         self.pool = dataDict['pool']
         self.num = dataDict['num']
         self.guaranteed = dataDict['guaranteed']
         self.dailyNum = dataDict['dailyNum']
+        self.coinLeftTimes = dataDict['coinLeftTimes']
 
     def toSavedDict(self):
         data = {
@@ -28,6 +30,7 @@ class cardPoolInfo(userType.UserSingleType):
             'num': self.num,
             'guaranteed': self.guaranteed,
             'dailyNum': self.dailyNum,
+            'coinLeftTimes': self.coinLeftTimes,
         }
         return data
 
@@ -37,8 +40,23 @@ class cardPoolInfo(userType.UserSingleType):
             'num': self.num,
             'guaranteed': self.guaranteed,
             'dailyNum': self.dailyNum,
+            'coinLeftTimes': self.coinLeftTimes,
         }
         return data
+
+    def getLeftTimes(self, prop):
+        return getattr(self, prop, -1)
+
+    def hasLeftTimes(self, prop, value):
+        if not hasattr(self, prop):
+            return True
+        return getattr(self, prop) >= value
+
+    def updateLeftTimes(self, prop, value):
+        if not hasattr(self, prop):
+            return
+        val = getattr(self, prop)
+        setattr(self, prop, val + value)
 
 class petDrawCardInfo(userType.UserSTSoleType):
     def __init__(self):
@@ -61,8 +79,8 @@ class petDrawCardInfo(userType.UserSTSoleType):
         }
         return data
 
-    def setdefault(self, pool):
-        return self.cardPoolInfoDict.setdefault(pool, cardPoolInfo(pool))
+    def setdefault(self, pool, coinLeftTimes):
+        return self.cardPoolInfoDict.setdefault(pool, cardPoolInfo(pool=pool, coinLeftTimes=coinLeftTimes))
 
 class petDrawCardInfoInstance(userType.UserSTSoleInfo):
     @property

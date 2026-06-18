@@ -24,11 +24,11 @@ import gameconfig
 import experience_config as E_CDD
 
 class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
-                            iTimer.ITimer, iCycleEvent.ICycleEvent):
+                            iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     def __init__(self):
         LOG_INFO('LeaderBoardAvatarStub init')
 
-        iCycleEvent.ICycleEvent.__init__(self)
+        iCycleEvent.ICycleEventMixin.__init__(self)
         self.leaderBoardList.leaderBoardType = self.leaderBoardType
         self.leaderBoardCache = {}
         _dur = R_RCD.datas['refreshCD']['value']
@@ -79,7 +79,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def onGetLeaderBoardCache(self, lbacVal):
         self.leaderBoardCache[lbacVal.key] = lbacVal

@@ -6,12 +6,12 @@
             <Persistent>    true        </Persistent>
         </bagData>
 
-        <dailyAwardDic>
+        <dailyAwardDict>
             <Type>    PYTHON            </Type>
             <Flags>   BASE              </Flags>
             <Default>       {}          </Default>
             <Persistent>    true        </Persistent>
-        </dailyAwardDic>
+        </dailyAwardDict>
 
         <dailyUseLimitDic>
             <Type>          PYTHON      </Type>
@@ -114,15 +114,13 @@
             <Type>          INT32         </Type>
             <Flags>         ALL_CLIENTS   </Flags>
             <Default>       0              </Default>
-            <Persistent>    true            </Persistent>
         </title>
 
-        <titleList>
-            <Type>          PY_LIST         </Type>
-            <Flags>         BASE            </Flags>
-            <Default>       []              </Default>
-            <Persistent>    true            </Persistent>
-        </titleList>
+        <titleMgr>
+            <Type>          TITLE_MGR_DATA_INFO     </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </titleMgr>
 
         <currencyRecordDic>
             <Type>    PY_DICT            </Type>
@@ -131,6 +129,11 @@
             <Persistent>    true        </Persistent>
         </currencyRecordDic>
         
+        <titleTimerId>
+            <Type>    TIMER_ID          </Type>
+            <Flags>   BASE              </Flags>
+            <Default> 0                 </Default>
+        </titleTimerId>
     </Properties>
 
     <BaseMethods>
@@ -151,6 +154,12 @@
             <Arg>       ITEMID      </Arg>
         </reqBindItem>
 
+        <onCrossServerReqBindItem>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       ITEMID      </Arg>
+        </onCrossServerReqBindItem>
+
         <reqBagSort><Exposed/>
             <Arg>       UINT8      </Arg>
         </reqBagSort>
@@ -159,10 +168,15 @@
             <Arg>       UINT8      </Arg>
         </unlockGrids>
 
-        <useItemDone>
+        <onCrossServerUnlockGrids>
+            <Arg>       UINT8      </Arg>
+        </onCrossServerUnlockGrids>
+
+        <afterUseItemDone>
             <Arg>      BOOL     </Arg>
             <Arg>      UINT64   </Arg>
-        </useItemDone>
+            <Arg>      BOOL     </Arg>
+        </afterUseItemDone>
 
         <baseUseItems>
             <Arg>        UINT32        </Arg>
@@ -300,12 +314,6 @@
             <Arg>       UINT32          </Arg>
         </sendItemLinkInfo>
 
-        <resetInvitationCardItem>
-            <Arg>       ITEM_ID         </Arg>
-            <Arg>       LONGTIME        </Arg>
-            <Arg>       UUID            </Arg>
-        </resetInvitationCardItem>
-
         <checkModifyNameBase>
             <Arg>       UINT32         </Arg>
             <Arg>       UINT32         </Arg>
@@ -359,6 +367,7 @@
         <reqRandomSynthesis><Exposed/>
             <Arg>      UINT8        </Arg>
             <Arg>      ARRAY <of> RANDOM_SYNTHESIS_ITEM_INFO </of>     </Arg>
+            <Arg>      UINT8        </Arg>
         </reqRandomSynthesis>
 
         <reqUpgradeSynthesis><Exposed/>
@@ -451,6 +460,48 @@
         <setTitle><Exposed/>
             <Arg>       UINT32         </Arg>
         </setTitle>
+
+        <onCrossServerExchangeCurrency>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT64      </Arg>
+            <Arg>       PY_TUPLE    </Arg>
+        </onCrossServerExchangeCurrency>
+
+        <onCrossServerBagSort>
+            <Arg>       UINT8      </Arg>
+        </onCrossServerBagSort>
+
+        <onCrossServerDeductUseTimes>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT32      </Arg>
+        </onCrossServerDeductUseTimes>
+
+        <onCrossServerDeductUseItem>
+            <Arg>       UINT8      </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       BONUS_SRC   </Arg>
+            <Arg>       PYTHON      </Arg>
+        </onCrossServerDeductUseItem>
+
+        <onCrossServerGetUseItemReward>
+            <Arg>       BONUS_SRC   </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+        </onCrossServerGetUseItemReward>
+
+        <onCrossServerUpdateItemCD>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT32      </Arg>
+        </onCrossServerUpdateItemCD>
+
+        <onCrossServerUseItemReturn>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT8      </Arg>
+        </onCrossServerUseItemReturn>
     </BaseMethods>
 
     <CellMethods>
@@ -511,18 +562,15 @@
             <Arg>   UINT32      </Arg>
         </onSetPendingCheckRewardAndMaxUseNum>
 
-        <onPendingCheckItem>
+        <onPendingCheckItemFinished>
             <Arg>   UINT16      </Arg>
             <Arg>   UINT8       </Arg>
-        </onPendingCheckItem>
+        </onPendingCheckItemFinished>
 
-        <onPendingUseItem>
+        <onPendingUseItemFinished>
             <Arg>   UINT16      </Arg>
             <Arg>   UINT8       </Arg>
-        </onPendingUseItem>
-
-        <onCellBagDailyUpdate>
-        </onCellBagDailyUpdate>
+        </onPendingUseItemFinished>
 
         <checkCollectionGatherFlag>
             <Arg>       ENTITY_ID       </Arg>
@@ -546,13 +594,10 @@
             <Arg>       UNIQUE_ID   </Arg>
             <Arg>       UINT8       </Arg>
         </bodyItemLock>
+
         <setTitleCell>
             <Arg>       UINT32         </Arg>
-            <Arg>       BOOL           </Arg>
         </setTitleCell>
-        <removeTitleCell>
-            <Arg>       UINT32         </Arg>
-        </removeTitleCell>
     </CellMethods>
 
     <ClientMethods>
@@ -637,6 +682,11 @@
             <Arg>       UINT32       </Arg>
         </onUpdateCollectionGatherPickTimes>
 
+        <syncIsFBTarget>
+            <Arg>       ENTITY_ID    </Arg>
+            <Arg>       BOOL         </Arg>
+        </syncIsFBTarget>
+
         <onRandomSynthesis>
             <Arg>       ARRAY    <of>   BAG_ITEM_BRIEF_VAL    </of>     </Arg>
         </onRandomSynthesis>
@@ -673,8 +723,13 @@
 
         <onCheckGatherCondFailed>
         </onCheckGatherCondFailed>
+
         <onGetAllTitle>
             <Arg>       ARRAY <of> TITLE_VAL_INFO </of>     </Arg>
         </onGetAllTitle>
+
+        <onAddTitles>
+            <Arg>       ARRAY <of> TITLE_VAL_INFO </of>     </Arg>
+        </onAddTitles>
     </ClientMethods>
 </root>

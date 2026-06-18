@@ -103,9 +103,9 @@ class IMineWarCell(object):
         """
         进入矿战场景回调（战斗期间）
         """
-        
-        LOG_INFO('iMineWarCell.onEnterMineWarSpace called for player:', self.id)
-        # self.base.onMessagePre(MBC.datas['mineBattle_teleportSafeZoneMsg']['value'], [])
+        if self.scoreTimer:
+            return
+
         takePartScore = MBC.datas['mineBattle_takePartScore']['value']
         self.scoreTimer = self.pyAddTimer(0, takePartScore[0], gametimer.MINE_WAR_PLAYER_GET_SCORE)
 

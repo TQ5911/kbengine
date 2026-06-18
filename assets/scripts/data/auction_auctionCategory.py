@@ -17,68 +17,104 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     2: _tools.RODict({
         "ID": 2,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     3: _tools.RODict({
         "ID": 3,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     301: _tools.RODict({
         "ID": 301,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     302: _tools.RODict({
         "ID": 302,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     303: _tools.RODict({
         "ID": 303,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     304: _tools.RODict({
         "ID": 304,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     4: _tools.RODict({
         "ID": 4,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     401: _tools.RODict({
         "ID": 401,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     402: _tools.RODict({
         "ID": 402,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     403: _tools.RODict({
         "ID": 403,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     5: _tools.RODict({
         "ID": 5,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     6: _tools.RODict({
         "ID": 6,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     7: _tools.RODict({
         "ID": 7,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     8: _tools.RODict({
         "ID": 8,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
     }),
     9: _tools.RODict({
         "ID": 9,
-        "linkToSpecificItem": ""
+        "linkToSpecificItem": "",
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "linkToSpecificItem": "",
+    }),
+    1001: _tools.RODict({
+        "ID": 1001,
+        "linkToSpecificItem": "",
+    }),
+    1002: _tools.RODict({
+        "ID": 1002,
+        "linkToSpecificItem": "",
+    }),
+    1003: _tools.RODict({
+        "ID": 1003,
+        "linkToSpecificItem": "",
+    }),
+    1004: _tools.RODict({
+        "ID": 1004,
+        "linkToSpecificItem": "",
+    }),
+    1005: _tools.RODict({
+        "ID": 1005,
+        "linkToSpecificItem": "",
+    }),
+    1006: _tools.RODict({
+        "ID": 1006,
+        "linkToSpecificItem": "",
+    }),
+    1007: _tools.RODict({
+        "ID": 1007,
+        "linkToSpecificItem": "",
+    }),
+    1008: _tools.RODict({
+        "ID": 1008,
+        "linkToSpecificItem": "",
     })
 })
 minKey = 1
-maxKey = 403
+maxKey = 1008

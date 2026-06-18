@@ -144,6 +144,7 @@ class DropUnit():
         awardCtx.args.addArg('avatarLv', contextVar.get('playerLevel', 0))
         awardCtx.args.addArg('avatarSex', contextVar.get('sex', 0))
         awardCtx.addContextVar('isMonthCardExpired', contextVar.get('isMonthCardExpired', False))
+        awardCtx.addContextVar('isBigMonthCardExpired', contextVar.get('isBigMonthCardExpired', False))
         awardCtx.addContextVar('avatarScoreRank', contextVar.get('avatarScoreRank', 0))
         awardCtx.addContextVar('isCrossServer', contextVar.get('isCrossServer', False))
 

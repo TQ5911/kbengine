@@ -11,17 +11,17 @@
             <Type>      UINT16     </Type>
             <Flags>     BASE        </Flags>
         </globalIdx>
-        <role2box>
+        <roleName2box>
             <Type>      PY_DICT     </Type>
             <Flags>     BASE        </Flags>
             <Default>   {}      </Default>
-        </role2box>
+        </roleName2box>
 
-        <role2gbId>
+        <roleName2gbId>
             <Type>      PY_DICT     </Type>
             <Flags>     BASE        </Flags>
             <Default>   {}      </Default>
-        </role2gbId>
+        </roleName2gbId>
 
         <gbId2box>
             <Type>      PY_DICT     </Type>
@@ -176,5 +176,12 @@
             <Arg>   PY_TUPLE       </Arg>
             <Arg>   PYTHON         </Arg>
         </onGetMemberJobAndGuildCache>
+
+        <recordOfflineCallback>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           PLAYER_GBID </Arg>
+            <Arg>           METHOD_NAME </Arg>
+            <Arg>           METHOD_ARGS </Arg>
+        </recordOfflineCallback>
     </BaseMethods>
 </root>

@@ -11,26 +11,33 @@ import utils
 import random
 import time
 import itemData_set as IDSD
+import gameglobal
 
 class StoreItem(userType.UserSingleType):
     def __init__(self, itemId=0, buyNum=0):
         self.itemId = itemId
         self.buyNum = buyNum
+        self.price = gameglobal.mallItemPriceCache[self.itemId] if self.itemId in gameglobal.mallItemPriceCache else -1
 
     def toStoreItemSavedDict(self):
         return {
             'itemId': self.itemId,
             'buyNum': self.buyNum,
+            'price': self.price
         }
 
     def fromStoreItemSavedDict(self, dic):
         self.itemId = dic['itemId']
         self.buyNum = dic['buyNum']
+        self.price = dic['price']
 
     def initFromDataDic(self, dataDic):
         self.itemId = dataDic['itemId']
         self.buyNum = dataDic['buyNum']
-
+        self.price = dataDic['price']
+    
+    def updatePrice(self):
+        self.price = gameglobal.mallItemPriceCache[self.itemId] if self.itemId in gameglobal.mallItemPriceCache else -1
 
 class StoreData(userType.UserSingleType):
 
@@ -110,9 +117,24 @@ class StoreData(userType.UserSingleType):
 
     def updateStoreDataDaily(self, owner):
         LOG_DBG('in updateStoreDataDaily')
+
+        for storeId in MSLD.datas.keys():
+            self.stores.setdefault(storeId, {})
+            storeData = MSLD.datas.get(storeId)
+            for mallItemId in storeData['goodsList']:
+                storeDic = self.getStoreDic(storeId)
+                storeItemData = self.getStoreItemData(mallItemId)
+                if storeItemData['limitNumber'] > 0 and storeItemData['groupId'] == 0:
+                    if mallItemId not in storeDic:
+                        storeDic[mallItemId] = StoreItem(mallItemId, buyNum=0)
+
         for storeId, storeDic in self.stores.items():
             for itemId, storeItem in storeDic.items():
+                storeItem.updatePrice()
                 storeItemData = self.getStoreItemData(itemId)
+                if not storeItemData:
+                    LOG_ERR('策划删了mall_coinPrice的ID:', itemId, '需要加回去或者清库')
+                    continue
                 if storeItemData['limitType'] == gameconst.StoreLimitType.DAILY:
                     storeItem.buyNum = 0
         self.sendStoreList(owner, list(self.stores.keys()))
@@ -142,7 +164,7 @@ class StoreData(userType.UserSingleType):
             storeDic = self.getStoreDic(storeId)
             clientStoreDic = {
                 'storeId': storeId,
-                'itemsList': list(storeDic.values()),
+                'itemsList': list(storeDic.values())
             }
             clientStoreList.append(clientStoreDic)
         LOG_DBG('     in sendStoreList, client:', clientStoreList)
@@ -165,7 +187,7 @@ class StoreData(userType.UserSingleType):
         storeDic = self.getLimitStoreDic(storeId)
         clientStoreDic = {
             'storeId': storeId,
-            'itemsList': list(storeDic.values()),
+            'itemsList': list(storeDic.values())
         }
         LOG_DBG('     in sendStoreLimitedItemList, client:', clientStoreDic, nextRefreshTime)
         owner.client.onGetStoreLimitedItemList(clientStoreDic, nextRefreshTime)
@@ -252,6 +274,12 @@ class StoreData(userType.UserSingleType):
 
         if storeItemData['startTime'] and storeItemData['deleteTime']:
             if not utils.inTimeTuplesRange(storeItemData['startTime'], storeItemData['deleteTime'], utils.curTS()):
+                LOG_WARN('   in canBuyItems, not on sale:', storeId, itemId)
+                # 尚未到上架时间
+                return False
+        
+        if storeItemData['serverDay']:
+            if utils.getSvrOpenDays() < storeItemData['serverDay']:
                 LOG_WARN('   in canBuyItems, not on sale:', storeId, itemId)
                 # 尚未到上架时间
                 return False

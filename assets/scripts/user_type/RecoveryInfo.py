@@ -9,6 +9,7 @@ import json
 import utils
 import gameconfig
 import math
+import welfare_resourceRecovery as W_RR
 
 
 class freeTicketRecoveryItem(userType.UserSingleType):
@@ -47,34 +48,38 @@ class freeTicketRecoveryItem(userType.UserSingleType):
         return dataDict
 
     def update(self, now, subType, nowDateTime, curNum):
-        N = 7
+        cfgData = W_RR.datas.get(subType + 1, {})
+        if not cfgData:
+            LOG_ERR("freeTicketRecoveryItem::update no cfg", subType + 1)
+            return
+        N = cfgData['time']
         LOG_INFO("freeTicketRecoveryItem::update", self.dateNumDeques[subType], now, subType, nowDateTime, curNum, N)
         if not self.dateNumDeques[subType]:
             LOG_DBG("freeTicketRecoveryItem::no data1")
             serverOpenTimestamp = gameconfig.serverOpenTime()
             serverOpenDateTime = utils.getIntDateTime(serverOpenTimestamp)
             diffDays = math.floor((now - serverOpenTimestamp) / 86400)
-            LOG_INFO("freeTicketRecoveryItem::no data2", utils.getSvrOpenDayFiveTS(), serverOpenTimestamp, serverOpenDateTime, nowDateTime, diffDays)
+            LOG_INFO("freeTicketRecoveryItem::update no data2", utils.getSvrOpenDayFiveTS(), serverOpenTimestamp, serverOpenDateTime, nowDateTime, diffDays)
             if diffDays <= N:
                 if serverOpenDateTime == nowDateTime:
                     self.dateNumDeques[subType].append([serverOpenDateTime, curNum])
-                    LOG_INFO("freeTicketRecoveryItem::no data3 1", (serverOpenDateTime, curNum))
+                    LOG_DBG("freeTicketRecoveryItem::update no data3 1", (serverOpenDateTime, curNum))
                 else:
                     self.dateNumDeques[subType].append([serverOpenDateTime, curNum])
                     self.dateNumDeques[subType].append([nowDateTime, curNum])
-                    LOG_INFO("freeTicketRecoveryItem::no data4 2", [serverOpenDateTime, curNum], [nowDateTime, curNum])
+                    LOG_DBG("freeTicketRecoveryItem::update no data4 2", [serverOpenDateTime, curNum], [nowDateTime, curNum])
             else:
                 offsetSeconds = 86400 * N
                 firstDataTimestamp = now - offsetSeconds
                 firstDateTime = utils.getIntDateTime(firstDataTimestamp)
                 self.dateNumDeques[subType].append([firstDateTime, curNum])
                 self.dateNumDeques[subType].append([nowDateTime, curNum])
-                LOG_INFO("freeTicketRecoveryItem::no data5 2", [firstDateTime, curNum], [nowDateTime, curNum])
+                LOG_DBG("freeTicketRecoveryItem::update no data5 2", [firstDateTime, curNum], [nowDateTime, curNum])
             return True
-        LOG_INFO("freeTicketRecoveryItem::update has data")
+        LOG_DBG("freeTicketRecoveryItem::update has data")
 
         lastData = self.dateNumDeques[subType][-1]
-        LOG_DBG("freeTicketRecoveryItem::update has data1", lastData, nowDateTime, curNum)
+        LOG_INFO("freeTicketRecoveryItem::update has data1", lastData, nowDateTime, curNum)
         if nowDateTime < lastData[0]:
             LOG_ERR("freeTicketRecoveryItem::update has data2")
             return False
@@ -94,12 +99,11 @@ class freeTicketRecoveryItem(userType.UserSingleType):
             else:
                 LOG_DBG("freeTicketRecoveryItem::_update has data6")
                 self.dateNumDeques[subType].append([nowDateTime, curNum])
-            self._update(subType, nowDateTime, curNum)
+            self._update(subType, nowDateTime, curNum, N)
             return True
 
-    def _update(self, subType, nowDateTime=0, curNum=2):
-        LOG_DBG("freeTicketRecoveryItem::_update", subType, self.dateNumDeques[subType], nowDateTime, curNum)
-        N = 7
+    def _update(self, subType, nowDateTime, curNum, N):
+        LOG_INFO("freeTicketRecoveryItem::_update", subType, self.dateNumDeques[subType], nowDateTime, curNum)
         if not self.dateNumDeques[subType]:
             LOG_ERR("freeTicketRecoveryItem::_update1")
             return

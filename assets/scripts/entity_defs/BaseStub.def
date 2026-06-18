@@ -103,6 +103,9 @@
             <Arg>           UINT16      </Arg>
             <Arg>           STRING      </Arg>
             <Arg>           UINT64      </Arg>
+            <Arg>           UINT32      </Arg>
+            <Arg>           STRING      </Arg>
+            <Arg>           UINT8      </Arg>
         </sendOfficialMessage>
 
         <stopOfficialMessage>

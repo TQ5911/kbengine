@@ -13,7 +13,7 @@ class SiegeWarSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iMultiStaticSpac
         self.defenseGuildUUID = 0
         iMultiStaticSpace.IMultiStaticSpace.__init__(self)
         iMultiStaticSpacePlayer.IMultiStaticSpacePlayer.__init__(self, gameconst.SIEGEWAR_MAX_ENTER_NUM)
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
 
     def doNext(self):
         LOG_DBG("SiegeWarSpaceStub doNext")
@@ -31,7 +31,7 @@ class SiegeWarSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iMultiStaticSpac
             if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
                 self._onDatetimeTimerTick()
             else:
-                self._onTimer(tid, userArg)
+                self._onTimerTrigger(tid, userArg)
 
     def defaultSapceVal(self):
         spaceVals = list(self.staticSpaces.values())

@@ -15,91 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    19000001000: _tools.RODict({
-        "ID": 19000001000,
-        "event": "Cnttask",
-        "parm": "",
-    }),
-    19000001001: _tools.RODict({
-        "ID": 19000001001,
-        "event": "",
-        "parm": "",
-    }),
-    19000001002: _tools.RODict({
-        "ID": 19000001002,
-        "event": "",
-        "parm": "",
-    }),
-    19000001003: _tools.RODict({
-        "ID": 19000001003,
-        "event": "",
-        "parm": "",
-    }),
-    19000001004: _tools.RODict({
-        "ID": 19000001004,
-        "event": "",
-        "parm": "",
-    }),
-    19000001005: _tools.RODict({
-        "ID": 19000001005,
-        "event": "",
-        "parm": "",
-    }),
-    19000001006: _tools.RODict({
-        "ID": 19000001006,
-        "event": "",
-        "parm": "",
-    }),
-    19000001007: _tools.RODict({
-        "ID": 19000001007,
-        "event": "",
-        "parm": "",
-    }),
-    19000001008: _tools.RODict({
-        "ID": 19000001008,
-        "event": "",
-        "parm": "",
-    }),
-    19000001009: _tools.RODict({
-        "ID": 19000001009,
-        "event": "",
-        "parm": "",
-    }),
-    19000001010: _tools.RODict({
-        "ID": 19000001010,
-        "event": "",
-        "parm": "",
-    }),
-    19000001011: _tools.RODict({
-        "ID": 19000001011,
-        "event": "",
-        "parm": "",
-    }),
-    19000002000: _tools.RODict({
-        "ID": 19000002000,
-        "event": "Cnttask",
-        "parm": "",
-    }),
-    19000002001: _tools.RODict({
-        "ID": 19000002001,
-        "event": "",
-        "parm": "",
-    }),
-    19000003000: _tools.RODict({
-        "ID": 19000003000,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19000004000: _tools.RODict({
-        "ID": 19000004000,
-        "event": "Fnstask",
-        "parm": "",
-    }),
-    19000005000: _tools.RODict({
-        "ID": 19000005000,
-        "event": "",
-        "parm": "",
-    }),
     19000129000: _tools.RODict({
         "ID": 19000129000,
         "event": "Cnttask",
@@ -214,6 +129,11 @@ datas = _tools.RODict({
         "ID": 19000007003,
         "event": "Openinterface",
         "parm": "UIEquipTrainingPanel,1",
+    }),
+    19000007004: _tools.RODict({
+        "ID": 19000007004,
+        "event": "OpenStore",
+        "parm": "8",
     }),
     19000008000: _tools.RODict({
         "ID": 19000008000,
@@ -414,6 +334,11 @@ datas = _tools.RODict({
         "ID": 19000400003,
         "event": "OpenNpcExchange",
         "parm": "5",
+    }),
+    19000400004: _tools.RODict({
+        "ID": 19000400004,
+        "event": "OpenStore",
+        "parm": "7",
     }),
     19400001000: _tools.RODict({
         "ID": 19400001000,
@@ -3155,6 +3080,81 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
+    19000309000: _tools.RODict({
+        "ID": 19000309000,
+        "event": "Cnttask",
+        "parm": "",
+    }),
+    19000309001: _tools.RODict({
+        "ID": 19000309001,
+        "event": "",
+        "parm": "",
+    }),
+    19500001000: _tools.RODict({
+        "ID": 19500001000,
+        "event": "",
+        "parm": "",
+    }),
+    19500001001: _tools.RODict({
+        "ID": 19500001001,
+        "event": "",
+        "parm": "",
+    }),
+    19500001002: _tools.RODict({
+        "ID": 19500001002,
+        "event": "",
+        "parm": "",
+    }),
+    19500001003: _tools.RODict({
+        "ID": 19500001003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19500002000: _tools.RODict({
+        "ID": 19500002000,
+        "event": "",
+        "parm": "",
+    }),
+    19500002001: _tools.RODict({
+        "ID": 19500002001,
+        "event": "Fnstask",
+        "parm": "",
+    }),
+    19500003000: _tools.RODict({
+        "ID": 19500003000,
+        "event": "",
+        "parm": "",
+    }),
+    19500003001: _tools.RODict({
+        "ID": 19500003001,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19500004000: _tools.RODict({
+        "ID": 19500004000,
+        "event": "",
+        "parm": "",
+    }),
+    19500004001: _tools.RODict({
+        "ID": 19500004001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19500050000: _tools.RODict({
+        "ID": 19500050000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19500051000: _tools.RODict({
+        "ID": 19500051000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19500052000: _tools.RODict({
+        "ID": 19500052000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
     19100001000: _tools.RODict({
         "ID": 19100001000,
         "event": "",
@@ -3172,6 +3172,16 @@ datas = _tools.RODict({
     }),
     19100001003: _tools.RODict({
         "ID": 19100001003,
+        "event": "",
+        "parm": "",
+    }),
+    19100001004: _tools.RODict({
+        "ID": 19100001004,
+        "event": "",
+        "parm": "",
+    }),
+    19100001005: _tools.RODict({
+        "ID": 19100001005,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3182,7 +3192,42 @@ datas = _tools.RODict({
     }),
     19100002001: _tools.RODict({
         "ID": 19100002001,
-        "event": "Fnstask",
+        "event": "",
+        "parm": "",
+    }),
+    19100002002: _tools.RODict({
+        "ID": 19100002002,
+        "event": "",
+        "parm": "",
+    }),
+    19100002003: _tools.RODict({
+        "ID": 19100002003,
+        "event": "",
+        "parm": "",
+    }),
+    19100002004: _tools.RODict({
+        "ID": 19100002004,
+        "event": "",
+        "parm": "",
+    }),
+    19100002005: _tools.RODict({
+        "ID": 19100002005,
+        "event": "",
+        "parm": "",
+    }),
+    19100002006: _tools.RODict({
+        "ID": 19100002006,
+        "event": "",
+        "parm": "",
+    }),
+    19100002007: _tools.RODict({
+        "ID": 19100002007,
+        "event": "",
+        "parm": "",
+    }),
+    19100002008: _tools.RODict({
+        "ID": 19100002008,
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100003000: _tools.RODict({
@@ -3192,32 +3237,27 @@ datas = _tools.RODict({
     }),
     19100003001: _tools.RODict({
         "ID": 19100003001,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19100049000: _tools.RODict({
-        "ID": 19100049000,
         "event": "",
         "parm": "",
     }),
-    19100049001: _tools.RODict({
-        "ID": 19100049001,
+    19100003002: _tools.RODict({
+        "ID": 19100003002,
+        "event": "",
+        "parm": "",
+    }),
+    19100003003: _tools.RODict({
+        "ID": 19100003003,
+        "event": "",
+        "parm": "",
+    }),
+    19100003004: _tools.RODict({
+        "ID": 19100003004,
+        "event": "",
+        "parm": "",
+    }),
+    19100003005: _tools.RODict({
+        "ID": 19100003005,
         "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100050000: _tools.RODict({
-        "ID": 19100050000,
-        "event": "SubmitItem",
-        "parm": "",
-    }),
-    19100051000: _tools.RODict({
-        "ID": 19100051000,
-        "event": "SubmitItem",
-        "parm": "",
-    }),
-    19100052000: _tools.RODict({
-        "ID": 19100052000,
-        "event": "SubmitItem",
         "parm": "",
     }),
     19100004000: _tools.RODict({
@@ -3247,6 +3287,21 @@ datas = _tools.RODict({
     }),
     19100004005: _tools.RODict({
         "ID": 19100004005,
+        "event": "",
+        "parm": "",
+    }),
+    19100004006: _tools.RODict({
+        "ID": 19100004006,
+        "event": "",
+        "parm": "",
+    }),
+    19100004007: _tools.RODict({
+        "ID": 19100004007,
+        "event": "",
+        "parm": "",
+    }),
+    19100004008: _tools.RODict({
+        "ID": 19100004008,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3292,6 +3347,16 @@ datas = _tools.RODict({
     }),
     19100005008: _tools.RODict({
         "ID": 19100005008,
+        "event": "",
+        "parm": "",
+    }),
+    19100005009: _tools.RODict({
+        "ID": 19100005009,
+        "event": "",
+        "parm": "",
+    }),
+    19100005010: _tools.RODict({
+        "ID": 19100005010,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3317,6 +3382,26 @@ datas = _tools.RODict({
     }),
     19100006004: _tools.RODict({
         "ID": 19100006004,
+        "event": "",
+        "parm": "",
+    }),
+    19100006005: _tools.RODict({
+        "ID": 19100006005,
+        "event": "",
+        "parm": "",
+    }),
+    19100006006: _tools.RODict({
+        "ID": 19100006006,
+        "event": "",
+        "parm": "",
+    }),
+    19100006007: _tools.RODict({
+        "ID": 19100006007,
+        "event": "",
+        "parm": "",
+    }),
+    19100006008: _tools.RODict({
+        "ID": 19100006008,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3337,96 +3422,6 @@ datas = _tools.RODict({
     }),
     19100007003: _tools.RODict({
         "ID": 19100007003,
-        "event": "",
-        "parm": "",
-    }),
-    19100007004: _tools.RODict({
-        "ID": 19100007004,
-        "event": "",
-        "parm": "",
-    }),
-    19100007005: _tools.RODict({
-        "ID": 19100007005,
-        "event": "",
-        "parm": "",
-    }),
-    19100007006: _tools.RODict({
-        "ID": 19100007006,
-        "event": "",
-        "parm": "",
-    }),
-    19100007007: _tools.RODict({
-        "ID": 19100007007,
-        "event": "",
-        "parm": "",
-    }),
-    19100007008: _tools.RODict({
-        "ID": 19100007008,
-        "event": "",
-        "parm": "",
-    }),
-    19100007009: _tools.RODict({
-        "ID": 19100007009,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100057000: _tools.RODict({
-        "ID": 19100057000,
-        "event": "",
-        "parm": "",
-    }),
-    19100057001: _tools.RODict({
-        "ID": 19100057001,
-        "event": "",
-        "parm": "",
-    }),
-    19100057002: _tools.RODict({
-        "ID": 19100057002,
-        "event": "",
-        "parm": "",
-    }),
-    19100057003: _tools.RODict({
-        "ID": 19100057003,
-        "event": "",
-        "parm": "",
-    }),
-    19100057004: _tools.RODict({
-        "ID": 19100057004,
-        "event": "",
-        "parm": "",
-    }),
-    19100057005: _tools.RODict({
-        "ID": 19100057005,
-        "event": "",
-        "parm": "",
-    }),
-    19100057006: _tools.RODict({
-        "ID": 19100057006,
-        "event": "",
-        "parm": "",
-    }),
-    19100057007: _tools.RODict({
-        "ID": 19100057007,
-        "event": "",
-        "parm": "",
-    }),
-    19100057008: _tools.RODict({
-        "ID": 19100057008,
-        "event": "",
-        "parm": "",
-    }),
-    19100057009: _tools.RODict({
-        "ID": 19100057009,
-        "event": "",
-        "parm": "",
-    }),
-    19100057010: _tools.RODict({
-        "ID": 19100057010,
-        "event": "",
-        "parm": "",
-    }),
-    19100057011: _tools.RODict({
-        "ID": 19100057011,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3442,36 +3437,36 @@ datas = _tools.RODict({
     }),
     19100008002: _tools.RODict({
         "ID": 19100008002,
+        "event": "Fnstask",
+        "parm": "",
+    }),
+    19800008000: _tools.RODict({
+        "ID": 19800008000,
         "event": "",
         "parm": "",
     }),
-    19100008003: _tools.RODict({
-        "ID": 19100008003,
+    19800008001: _tools.RODict({
+        "ID": 19800008001,
         "event": "",
         "parm": "",
     }),
-    19100008004: _tools.RODict({
-        "ID": 19100008004,
+    19800008002: _tools.RODict({
+        "ID": 19800008002,
         "event": "",
         "parm": "",
     }),
-    19100008005: _tools.RODict({
-        "ID": 19100008005,
+    19800008003: _tools.RODict({
+        "ID": 19800008003,
         "event": "",
         "parm": "",
     }),
-    19100008006: _tools.RODict({
-        "ID": 19100008006,
+    19800008004: _tools.RODict({
+        "ID": 19800008004,
         "event": "",
         "parm": "",
     }),
-    19100008007: _tools.RODict({
-        "ID": 19100008007,
-        "event": "",
-        "parm": "",
-    }),
-    19100008008: _tools.RODict({
-        "ID": 19100008008,
+    19800008005: _tools.RODict({
+        "ID": 19800008005,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3487,11 +3482,6 @@ datas = _tools.RODict({
     }),
     19100009002: _tools.RODict({
         "ID": 19100009002,
-        "event": "",
-        "parm": "",
-    }),
-    19100009003: _tools.RODict({
-        "ID": 19100009003,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3507,142 +3497,22 @@ datas = _tools.RODict({
     }),
     19100010002: _tools.RODict({
         "ID": 19100010002,
-        "event": "Fnstask",
-        "parm": "",
-    }),
-    19100014000: _tools.RODict({
-        "ID": 19100014000,
         "event": "",
         "parm": "",
     }),
-    19100014001: _tools.RODict({
-        "ID": 19100014001,
+    19100010003: _tools.RODict({
+        "ID": 19100010003,
         "event": "",
         "parm": "",
     }),
-    19100014002: _tools.RODict({
-        "ID": 19100014002,
+    19100010004: _tools.RODict({
+        "ID": 19100010004,
         "event": "",
         "parm": "",
     }),
-    19100014003: _tools.RODict({
-        "ID": 19100014003,
-        "event": "",
-        "parm": "",
-    }),
-    19100014004: _tools.RODict({
-        "ID": 19100014004,
-        "event": "",
-        "parm": "",
-    }),
-    19100014005: _tools.RODict({
-        "ID": 19100014005,
+    19100010005: _tools.RODict({
+        "ID": 19100010005,
         "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100015000: _tools.RODict({
-        "ID": 19100015000,
-        "event": "",
-        "parm": "",
-    }),
-    19100015001: _tools.RODict({
-        "ID": 19100015001,
-        "event": "",
-        "parm": "",
-    }),
-    19100015002: _tools.RODict({
-        "ID": 19100015002,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100016000: _tools.RODict({
-        "ID": 19100016000,
-        "event": "",
-        "parm": "",
-    }),
-    19100016001: _tools.RODict({
-        "ID": 19100016001,
-        "event": "",
-        "parm": "",
-    }),
-    19100016002: _tools.RODict({
-        "ID": 19100016002,
-        "event": "",
-        "parm": "",
-    }),
-    19100016003: _tools.RODict({
-        "ID": 19100016003,
-        "event": "",
-        "parm": "",
-    }),
-    19100016004: _tools.RODict({
-        "ID": 19100016004,
-        "event": "",
-        "parm": "",
-    }),
-    19100016005: _tools.RODict({
-        "ID": 19100016005,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100017000: _tools.RODict({
-        "ID": 19100017000,
-        "event": "",
-        "parm": "",
-    }),
-    19100017001: _tools.RODict({
-        "ID": 19100017001,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100018000: _tools.RODict({
-        "ID": 19100018000,
-        "event": "",
-        "parm": "",
-    }),
-    19100018001: _tools.RODict({
-        "ID": 19100018001,
-        "event": "",
-        "parm": "",
-    }),
-    19100018002: _tools.RODict({
-        "ID": 19100018002,
-        "event": "",
-        "parm": "",
-    }),
-    19100018003: _tools.RODict({
-        "ID": 19100018003,
-        "event": "",
-        "parm": "",
-    }),
-    19100018004: _tools.RODict({
-        "ID": 19100018004,
-        "event": "",
-        "parm": "",
-    }),
-    19100018005: _tools.RODict({
-        "ID": 19100018005,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100019000: _tools.RODict({
-        "ID": 19100019000,
-        "event": "SubmitItem",
-        "parm": "",
-    }),
-    19100020000: _tools.RODict({
-        "ID": 19100020000,
-        "event": "Fnstask",
-        "parm": "",
-    }),
-    19100021000: _tools.RODict({
-        "ID": 19100021000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100058000: _tools.RODict({
-        "ID": 19100058000,
-        "event": "SubmitItem",
         "parm": "",
     }),
     19100011000: _tools.RODict({
@@ -3677,41 +3547,171 @@ datas = _tools.RODict({
     }),
     19100012004: _tools.RODict({
         "ID": 19100012004,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100056000: _tools.RODict({
-        "ID": 19100056000,
         "event": "",
         "parm": "",
     }),
-    19100056001: _tools.RODict({
-        "ID": 19100056001,
-        "event": "",
-        "parm": "",
-    }),
-    19100056002: _tools.RODict({
-        "ID": 19100056002,
+    19100012005: _tools.RODict({
+        "ID": 19100012005,
         "event": "Fnstalk",
         "parm": "",
     }),
     19100013000: _tools.RODict({
         "ID": 19100013000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19100014000: _tools.RODict({
+        "ID": 19100014000,
+        "event": "Fnstask",
+        "parm": "",
+    }),
+    19100015000: _tools.RODict({
+        "ID": 19100015000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100016000: _tools.RODict({
+        "ID": 19100016000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19100017000: _tools.RODict({
+        "ID": 19100017000,
         "event": "",
         "parm": "",
     }),
-    19100013001: _tools.RODict({
-        "ID": 19100013001,
+    19100017001: _tools.RODict({
+        "ID": 19100017001,
         "event": "",
         "parm": "",
     }),
-    19100013002: _tools.RODict({
-        "ID": 19100013002,
+    19100017002: _tools.RODict({
+        "ID": 19100017002,
         "event": "",
         "parm": "",
     }),
-    19100013003: _tools.RODict({
-        "ID": 19100013003,
+    19100017003: _tools.RODict({
+        "ID": 19100017003,
+        "event": "",
+        "parm": "",
+    }),
+    19100017004: _tools.RODict({
+        "ID": 19100017004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100018000: _tools.RODict({
+        "ID": 19100018000,
+        "event": "",
+        "parm": "",
+    }),
+    19100018001: _tools.RODict({
+        "ID": 19100018001,
+        "event": "",
+        "parm": "",
+    }),
+    19100018002: _tools.RODict({
+        "ID": 19100018002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100019000: _tools.RODict({
+        "ID": 19100019000,
+        "event": "",
+        "parm": "",
+    }),
+    19100019001: _tools.RODict({
+        "ID": 19100019001,
+        "event": "",
+        "parm": "",
+    }),
+    19100019002: _tools.RODict({
+        "ID": 19100019002,
+        "event": "",
+        "parm": "",
+    }),
+    19100019003: _tools.RODict({
+        "ID": 19100019003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100020000: _tools.RODict({
+        "ID": 19100020000,
+        "event": "",
+        "parm": "",
+    }),
+    19100020001: _tools.RODict({
+        "ID": 19100020001,
+        "event": "",
+        "parm": "",
+    }),
+    19100020002: _tools.RODict({
+        "ID": 19100020002,
+        "event": "",
+        "parm": "",
+    }),
+    19100020003: _tools.RODict({
+        "ID": 19100020003,
+        "event": "",
+        "parm": "",
+    }),
+    19100020004: _tools.RODict({
+        "ID": 19100020004,
+        "event": "",
+        "parm": "",
+    }),
+    19100020005: _tools.RODict({
+        "ID": 19100020005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100021000: _tools.RODict({
+        "ID": 19100021000,
+        "event": "",
+        "parm": "",
+    }),
+    19100021001: _tools.RODict({
+        "ID": 19100021001,
+        "event": "",
+        "parm": "",
+    }),
+    19100021002: _tools.RODict({
+        "ID": 19100021002,
+        "event": "",
+        "parm": "",
+    }),
+    19100021003: _tools.RODict({
+        "ID": 19100021003,
+        "event": "",
+        "parm": "",
+    }),
+    19100021004: _tools.RODict({
+        "ID": 19100021004,
+        "event": "",
+        "parm": "",
+    }),
+    19100021005: _tools.RODict({
+        "ID": 19100021005,
+        "event": "",
+        "parm": "",
+    }),
+    19100021006: _tools.RODict({
+        "ID": 19100021006,
+        "event": "",
+        "parm": "",
+    }),
+    19100021007: _tools.RODict({
+        "ID": 19100021007,
+        "event": "",
+        "parm": "",
+    }),
+    19100021008: _tools.RODict({
+        "ID": 19100021008,
+        "event": "",
+        "parm": "",
+    }),
+    19100021009: _tools.RODict({
+        "ID": 19100021009,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3742,6 +3742,86 @@ datas = _tools.RODict({
     }),
     19100022005: _tools.RODict({
         "ID": 19100022005,
+        "event": "",
+        "parm": "",
+    }),
+    19100022006: _tools.RODict({
+        "ID": 19100022006,
+        "event": "",
+        "parm": "",
+    }),
+    19100022007: _tools.RODict({
+        "ID": 19100022007,
+        "event": "",
+        "parm": "",
+    }),
+    19100022008: _tools.RODict({
+        "ID": 19100022008,
+        "event": "",
+        "parm": "",
+    }),
+    19100022009: _tools.RODict({
+        "ID": 19100022009,
+        "event": "",
+        "parm": "",
+    }),
+    19100022010: _tools.RODict({
+        "ID": 19100022010,
+        "event": "",
+        "parm": "",
+    }),
+    19100022011: _tools.RODict({
+        "ID": 19100022011,
+        "event": "",
+        "parm": "",
+    }),
+    19100022012: _tools.RODict({
+        "ID": 19100022012,
+        "event": "",
+        "parm": "",
+    }),
+    19100022013: _tools.RODict({
+        "ID": 19100022013,
+        "event": "",
+        "parm": "",
+    }),
+    19100022014: _tools.RODict({
+        "ID": 19100022014,
+        "event": "",
+        "parm": "",
+    }),
+    19100022015: _tools.RODict({
+        "ID": 19100022015,
+        "event": "",
+        "parm": "",
+    }),
+    19100022016: _tools.RODict({
+        "ID": 19100022016,
+        "event": "",
+        "parm": "",
+    }),
+    19100022017: _tools.RODict({
+        "ID": 19100022017,
+        "event": "",
+        "parm": "",
+    }),
+    19100022018: _tools.RODict({
+        "ID": 19100022018,
+        "event": "",
+        "parm": "",
+    }),
+    19100022019: _tools.RODict({
+        "ID": 19100022019,
+        "event": "",
+        "parm": "",
+    }),
+    19100022020: _tools.RODict({
+        "ID": 19100022020,
+        "event": "",
+        "parm": "",
+    }),
+    19100022021: _tools.RODict({
+        "ID": 19100022021,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3762,586 +3842,436 @@ datas = _tools.RODict({
     }),
     19100023003: _tools.RODict({
         "ID": 19100023003,
-        "event": "",
-        "parm": "",
-    }),
-    19100023004: _tools.RODict({
-        "ID": 19100023004,
-        "event": "",
-        "parm": "",
-    }),
-    19100023005: _tools.RODict({
-        "ID": 19100023005,
-        "event": "",
-        "parm": "",
-    }),
-    19100023006: _tools.RODict({
-        "ID": 19100023006,
-        "event": "",
-        "parm": "",
-    }),
-    19100023007: _tools.RODict({
-        "ID": 19100023007,
-        "event": "",
-        "parm": "",
-    }),
-    19100023008: _tools.RODict({
-        "ID": 19100023008,
-        "event": "",
-        "parm": "",
-    }),
-    19100023009: _tools.RODict({
-        "ID": 19100023009,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100059000: _tools.RODict({
-        "ID": 19100059000,
+    19800023000: _tools.RODict({
+        "ID": 19800023000,
         "event": "",
         "parm": "",
     }),
-    19100059001: _tools.RODict({
-        "ID": 19100059001,
+    19800023001: _tools.RODict({
+        "ID": 19800023001,
         "event": "",
         "parm": "",
     }),
-    19100059002: _tools.RODict({
-        "ID": 19100059002,
+    19800023002: _tools.RODict({
+        "ID": 19800023002,
         "event": "",
         "parm": "",
     }),
-    19100059003: _tools.RODict({
-        "ID": 19100059003,
+    19800023003: _tools.RODict({
+        "ID": 19800023003,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19100024000: _tools.RODict({
+        "ID": 19100024000,
         "event": "",
         "parm": "",
     }),
-    19100059004: _tools.RODict({
-        "ID": 19100059004,
+    19100024001: _tools.RODict({
+        "ID": 19100024001,
         "event": "",
         "parm": "",
     }),
-    19100059005: _tools.RODict({
-        "ID": 19100059005,
+    19100024002: _tools.RODict({
+        "ID": 19100024002,
         "event": "",
         "parm": "",
     }),
-    19100059006: _tools.RODict({
-        "ID": 19100059006,
-        "event": "",
-        "parm": "",
-    }),
-    19100059007: _tools.RODict({
-        "ID": 19100059007,
-        "event": "",
-        "parm": "",
-    }),
-    19100059008: _tools.RODict({
-        "ID": 19100059008,
-        "event": "",
-        "parm": "",
-    }),
-    19100059009: _tools.RODict({
-        "ID": 19100059009,
-        "event": "",
-        "parm": "",
-    }),
-    19100059010: _tools.RODict({
-        "ID": 19100059010,
-        "event": "",
-        "parm": "",
-    }),
-    19100059011: _tools.RODict({
-        "ID": 19100059011,
-        "event": "",
-        "parm": "",
-    }),
-    19100059012: _tools.RODict({
-        "ID": 19100059012,
-        "event": "",
-        "parm": "",
-    }),
-    19100059013: _tools.RODict({
-        "ID": 19100059013,
-        "event": "",
-        "parm": "",
-    }),
-    19100059014: _tools.RODict({
-        "ID": 19100059014,
-        "event": "",
-        "parm": "",
-    }),
-    19100059015: _tools.RODict({
-        "ID": 19100059015,
-        "event": "",
-        "parm": "",
-    }),
-    19100059016: _tools.RODict({
-        "ID": 19100059016,
-        "event": "",
-        "parm": "",
-    }),
-    19100059017: _tools.RODict({
-        "ID": 19100059017,
-        "event": "",
-        "parm": "",
-    }),
-    19100059018: _tools.RODict({
-        "ID": 19100059018,
-        "event": "",
-        "parm": "",
-    }),
-    19100059019: _tools.RODict({
-        "ID": 19100059019,
-        "event": "",
-        "parm": "",
-    }),
-    19100059020: _tools.RODict({
-        "ID": 19100059020,
-        "event": "",
-        "parm": "",
-    }),
-    19100059021: _tools.RODict({
-        "ID": 19100059021,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100061000: _tools.RODict({
-        "ID": 19100061000,
-        "event": "",
-        "parm": "",
-    }),
-    19100061001: _tools.RODict({
-        "ID": 19100061001,
-        "event": "",
-        "parm": "",
-    }),
-    19100061002: _tools.RODict({
-        "ID": 19100061002,
-        "event": "",
-        "parm": "",
-    }),
-    19100061003: _tools.RODict({
-        "ID": 19100061003,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100067000: _tools.RODict({
-        "ID": 19100067000,
-        "event": "",
-        "parm": "",
-    }),
-    19100067001: _tools.RODict({
-        "ID": 19100067001,
-        "event": "",
-        "parm": "",
-    }),
-    19100067002: _tools.RODict({
-        "ID": 19100067002,
-        "event": "",
-        "parm": "",
-    }),
-    19100067003: _tools.RODict({
-        "ID": 19100067003,
+    19100024003: _tools.RODict({
+        "ID": 19100024003,
         "event": "SubmitItem",
         "parm": "",
     }),
-    19100060000: _tools.RODict({
-        "ID": 19100060000,
+    19100025000: _tools.RODict({
+        "ID": 19100025000,
         "event": "",
         "parm": "",
     }),
-    19100060001: _tools.RODict({
-        "ID": 19100060001,
+    19100025001: _tools.RODict({
+        "ID": 19100025001,
         "event": "",
         "parm": "",
     }),
-    19100060002: _tools.RODict({
-        "ID": 19100060002,
+    19100025002: _tools.RODict({
+        "ID": 19100025002,
         "event": "",
         "parm": "",
     }),
-    19100060003: _tools.RODict({
-        "ID": 19100060003,
+    19100025003: _tools.RODict({
+        "ID": 19100025003,
         "event": "",
         "parm": "",
     }),
-    19100060004: _tools.RODict({
-        "ID": 19100060004,
+    19100025004: _tools.RODict({
+        "ID": 19100025004,
         "event": "",
         "parm": "",
     }),
-    19100060005: _tools.RODict({
-        "ID": 19100060005,
+    19100025005: _tools.RODict({
+        "ID": 19100025005,
         "event": "",
         "parm": "",
     }),
-    19100060006: _tools.RODict({
-        "ID": 19100060006,
+    19100025006: _tools.RODict({
+        "ID": 19100025006,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100037000: _tools.RODict({
-        "ID": 19100037000,
+    19100026000: _tools.RODict({
+        "ID": 19100026000,
         "event": "",
         "parm": "",
     }),
-    19100037001: _tools.RODict({
-        "ID": 19100037001,
+    19100026001: _tools.RODict({
+        "ID": 19100026001,
         "event": "",
         "parm": "",
     }),
-    19100037002: _tools.RODict({
-        "ID": 19100037002,
+    19100026002: _tools.RODict({
+        "ID": 19100026002,
         "event": "",
         "parm": "",
     }),
-    19100037003: _tools.RODict({
-        "ID": 19100037003,
+    19100026003: _tools.RODict({
+        "ID": 19100026003,
         "event": "",
         "parm": "",
     }),
-    19100037004: _tools.RODict({
-        "ID": 19100037004,
+    19100026004: _tools.RODict({
+        "ID": 19100026004,
         "event": "",
         "parm": "",
     }),
-    19100037005: _tools.RODict({
-        "ID": 19100037005,
+    19100026005: _tools.RODict({
+        "ID": 19100026005,
         "event": "",
         "parm": "",
     }),
-    19100037006: _tools.RODict({
-        "ID": 19100037006,
+    19100026006: _tools.RODict({
+        "ID": 19100026006,
         "event": "",
         "parm": "",
     }),
-    19100037007: _tools.RODict({
-        "ID": 19100037007,
+    19100026007: _tools.RODict({
+        "ID": 19100026007,
         "event": "",
         "parm": "",
     }),
-    19100037008: _tools.RODict({
-        "ID": 19100037008,
+    19100026008: _tools.RODict({
+        "ID": 19100026008,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100038000: _tools.RODict({
-        "ID": 19100038000,
+    19100027000: _tools.RODict({
+        "ID": 19100027000,
         "event": "",
         "parm": "",
     }),
-    19100038001: _tools.RODict({
-        "ID": 19100038001,
+    19100027001: _tools.RODict({
+        "ID": 19100027001,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100039000: _tools.RODict({
-        "ID": 19100039000,
+    19800027000: _tools.RODict({
+        "ID": 19800027000,
         "event": "",
         "parm": "",
     }),
-    19100039001: _tools.RODict({
-        "ID": 19100039001,
+    19800027001: _tools.RODict({
+        "ID": 19800027001,
         "event": "",
         "parm": "",
     }),
-    19100039002: _tools.RODict({
-        "ID": 19100039002,
+    19800027002: _tools.RODict({
+        "ID": 19800027002,
         "event": "",
         "parm": "",
     }),
-    19100039003: _tools.RODict({
-        "ID": 19100039003,
+    19800027003: _tools.RODict({
+        "ID": 19800027003,
         "event": "",
         "parm": "",
     }),
-    19100039004: _tools.RODict({
-        "ID": 19100039004,
+    19800027004: _tools.RODict({
+        "ID": 19800027004,
         "event": "",
         "parm": "",
     }),
-    19100039005: _tools.RODict({
-        "ID": 19100039005,
+    19800027005: _tools.RODict({
+        "ID": 19800027005,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100054000: _tools.RODict({
-        "ID": 19100054000,
+    19100028000: _tools.RODict({
+        "ID": 19100028000,
         "event": "",
         "parm": "",
     }),
-    19100054001: _tools.RODict({
-        "ID": 19100054001,
+    19100028001: _tools.RODict({
+        "ID": 19100028001,
         "event": "",
         "parm": "",
     }),
-    19100054002: _tools.RODict({
-        "ID": 19100054002,
+    19100028002: _tools.RODict({
+        "ID": 19100028002,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100062000: _tools.RODict({
-        "ID": 19100062000,
+    19100029000: _tools.RODict({
+        "ID": 19100029000,
         "event": "",
         "parm": "",
     }),
-    19100062001: _tools.RODict({
-        "ID": 19100062001,
+    19100029001: _tools.RODict({
+        "ID": 19100029001,
         "event": "",
         "parm": "",
     }),
-    19100062002: _tools.RODict({
-        "ID": 19100062002,
+    19100029002: _tools.RODict({
+        "ID": 19100029002,
         "event": "",
         "parm": "",
     }),
-    19100062003: _tools.RODict({
-        "ID": 19100062003,
+    19100029003: _tools.RODict({
+        "ID": 19100029003,
         "event": "",
         "parm": "",
     }),
-    19100062004: _tools.RODict({
-        "ID": 19100062004,
+    19100029004: _tools.RODict({
+        "ID": 19100029004,
         "event": "",
         "parm": "",
     }),
-    19100062005: _tools.RODict({
-        "ID": 19100062005,
+    19100029005: _tools.RODict({
+        "ID": 19100029005,
         "event": "",
         "parm": "",
     }),
-    19100062006: _tools.RODict({
-        "ID": 19100062006,
+    19100029006: _tools.RODict({
+        "ID": 19100029006,
         "event": "",
         "parm": "",
     }),
-    19100062007: _tools.RODict({
-        "ID": 19100062007,
+    19100029007: _tools.RODict({
+        "ID": 19100029007,
         "event": "",
         "parm": "",
     }),
-    19100062008: _tools.RODict({
-        "ID": 19100062008,
+    19100029008: _tools.RODict({
+        "ID": 19100029008,
         "event": "",
         "parm": "",
     }),
-    19100062009: _tools.RODict({
-        "ID": 19100062009,
+    19100029009: _tools.RODict({
+        "ID": 19100029009,
         "event": "",
         "parm": "",
     }),
-    19100062010: _tools.RODict({
-        "ID": 19100062010,
+    19100029010: _tools.RODict({
+        "ID": 19100029010,
         "event": "",
         "parm": "",
     }),
-    19100062011: _tools.RODict({
-        "ID": 19100062011,
+    19100029011: _tools.RODict({
+        "ID": 19100029011,
         "event": "",
         "parm": "",
     }),
-    19100062012: _tools.RODict({
-        "ID": 19100062012,
-        "event": "",
-        "parm": "",
-    }),
-    19100062013: _tools.RODict({
-        "ID": 19100062013,
+    19100029012: _tools.RODict({
+        "ID": 19100029012,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100053000: _tools.RODict({
-        "ID": 19100053000,
+    19100030000: _tools.RODict({
+        "ID": 19100030000,
         "event": "",
         "parm": "",
     }),
-    19100053001: _tools.RODict({
-        "ID": 19100053001,
+    19100030001: _tools.RODict({
+        "ID": 19100030001,
         "event": "",
         "parm": "",
     }),
-    19100053002: _tools.RODict({
-        "ID": 19100053002,
+    19100030002: _tools.RODict({
+        "ID": 19100030002,
         "event": "",
         "parm": "",
     }),
-    19100053003: _tools.RODict({
-        "ID": 19100053003,
+    19100030003: _tools.RODict({
+        "ID": 19100030003,
         "event": "",
         "parm": "",
     }),
-    19100053004: _tools.RODict({
-        "ID": 19100053004,
+    19100030004: _tools.RODict({
+        "ID": 19100030004,
         "event": "",
         "parm": "",
     }),
-    19100053005: _tools.RODict({
-        "ID": 19100053005,
+    19100030005: _tools.RODict({
+        "ID": 19100030005,
         "event": "",
         "parm": "",
     }),
-    19100053006: _tools.RODict({
-        "ID": 19100053006,
+    19100030006: _tools.RODict({
+        "ID": 19100030006,
         "event": "",
         "parm": "",
     }),
-    19100053007: _tools.RODict({
-        "ID": 19100053007,
+    19100030007: _tools.RODict({
+        "ID": 19100030007,
         "event": "",
         "parm": "",
     }),
-    19100053008: _tools.RODict({
-        "ID": 19100053008,
+    19100030008: _tools.RODict({
+        "ID": 19100030008,
         "event": "",
         "parm": "",
     }),
-    19100053009: _tools.RODict({
-        "ID": 19100053009,
-        "event": "",
-        "parm": "",
-    }),
-    19100053010: _tools.RODict({
-        "ID": 19100053010,
+    19100030009: _tools.RODict({
+        "ID": 19100030009,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100053011: _tools.RODict({
-        "ID": 19100053011,
+    19100030010: _tools.RODict({
+        "ID": 19100030010,
         "event": "",
         "parm": "",
     }),
-    19100053012: _tools.RODict({
-        "ID": 19100053012,
+    19100030011: _tools.RODict({
+        "ID": 19100030011,
         "event": "",
         "parm": "",
     }),
-    19100053013: _tools.RODict({
-        "ID": 19100053013,
+    19100030012: _tools.RODict({
+        "ID": 19100030012,
         "event": "",
         "parm": "",
     }),
-    19100053014: _tools.RODict({
-        "ID": 19100053014,
+    19100030013: _tools.RODict({
+        "ID": 19100030013,
         "event": "",
         "parm": "",
     }),
-    19100053015: _tools.RODict({
-        "ID": 19100053015,
+    19100030014: _tools.RODict({
+        "ID": 19100030014,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100101000: _tools.RODict({
-        "ID": 19100101000,
+    19100031000: _tools.RODict({
+        "ID": 19100031000,
         "event": "",
         "parm": "",
     }),
-    19100101001: _tools.RODict({
-        "ID": 19100101001,
+    19100031001: _tools.RODict({
+        "ID": 19100031001,
         "event": "",
         "parm": "",
     }),
-    19100101002: _tools.RODict({
-        "ID": 19100101002,
+    19100031002: _tools.RODict({
+        "ID": 19100031002,
         "event": "",
         "parm": "",
     }),
-    19100101003: _tools.RODict({
-        "ID": 19100101003,
+    19100031003: _tools.RODict({
+        "ID": 19100031003,
         "event": "",
         "parm": "",
     }),
-    19100101004: _tools.RODict({
-        "ID": 19100101004,
+    19100031004: _tools.RODict({
+        "ID": 19100031004,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100134000: _tools.RODict({
-        "ID": 19100134000,
+    19100032000: _tools.RODict({
+        "ID": 19100032000,
         "event": "",
         "parm": "",
     }),
-    19100134001: _tools.RODict({
-        "ID": 19100134001,
+    19100032001: _tools.RODict({
+        "ID": 19100032001,
         "event": "",
         "parm": "",
     }),
-    19100134002: _tools.RODict({
-        "ID": 19100134002,
+    19100032002: _tools.RODict({
+        "ID": 19100032002,
         "event": "",
         "parm": "",
     }),
-    19100134003: _tools.RODict({
-        "ID": 19100134003,
+    19100032003: _tools.RODict({
+        "ID": 19100032003,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100064000: _tools.RODict({
-        "ID": 19100064000,
+    19100033000: _tools.RODict({
+        "ID": 19100033000,
         "event": "",
         "parm": "",
     }),
-    19100064001: _tools.RODict({
-        "ID": 19100064001,
+    19100033001: _tools.RODict({
+        "ID": 19100033001,
         "event": "",
         "parm": "",
     }),
-    19100064002: _tools.RODict({
-        "ID": 19100064002,
+    19100033002: _tools.RODict({
+        "ID": 19100033002,
         "event": "",
         "parm": "",
     }),
-    19100064003: _tools.RODict({
-        "ID": 19100064003,
+    19100033003: _tools.RODict({
+        "ID": 19100033003,
         "event": "",
         "parm": "",
     }),
-    19100064004: _tools.RODict({
-        "ID": 19100064004,
+    19100033004: _tools.RODict({
+        "ID": 19100033004,
         "event": "",
         "parm": "",
     }),
-    19100064005: _tools.RODict({
-        "ID": 19100064005,
+    19100033005: _tools.RODict({
+        "ID": 19100033005,
         "event": "",
         "parm": "",
     }),
-    19100064006: _tools.RODict({
-        "ID": 19100064006,
+    19100033006: _tools.RODict({
+        "ID": 19100033006,
         "event": "",
         "parm": "",
     }),
-    19100064007: _tools.RODict({
-        "ID": 19100064007,
+    19100033007: _tools.RODict({
+        "ID": 19100033007,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100065000: _tools.RODict({
-        "ID": 19100065000,
+    19100034000: _tools.RODict({
+        "ID": 19100034000,
         "event": "",
         "parm": "",
     }),
-    19100065001: _tools.RODict({
-        "ID": 19100065001,
+    19100034001: _tools.RODict({
+        "ID": 19100034001,
         "event": "",
         "parm": "",
     }),
-    19100065002: _tools.RODict({
-        "ID": 19100065002,
+    19100034002: _tools.RODict({
+        "ID": 19100034002,
         "event": "",
         "parm": "",
     }),
-    19100065003: _tools.RODict({
-        "ID": 19100065003,
+    19100034003: _tools.RODict({
+        "ID": 19100034003,
         "event": "",
         "parm": "",
     }),
-    19100065004: _tools.RODict({
-        "ID": 19100065004,
+    19100034004: _tools.RODict({
+        "ID": 19100034004,
         "event": "",
         "parm": "",
     }),
-    19100065005: _tools.RODict({
-        "ID": 19100065005,
+    19100034005: _tools.RODict({
+        "ID": 19100034005,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -4378,6 +4308,1276 @@ datas = _tools.RODict({
     19100135006: _tools.RODict({
         "ID": 19100135006,
         "event": "",
+        "parm": "",
+    }),
+    19100135007: _tools.RODict({
+        "ID": 19100135007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100036000: _tools.RODict({
+        "ID": 19100036000,
+        "event": "",
+        "parm": "",
+    }),
+    19100036001: _tools.RODict({
+        "ID": 19100036001,
+        "event": "",
+        "parm": "",
+    }),
+    19100036002: _tools.RODict({
+        "ID": 19100036002,
+        "event": "",
+        "parm": "",
+    }),
+    19100036003: _tools.RODict({
+        "ID": 19100036003,
+        "event": "",
+        "parm": "",
+    }),
+    19100036004: _tools.RODict({
+        "ID": 19100036004,
+        "event": "",
+        "parm": "",
+    }),
+    19100036005: _tools.RODict({
+        "ID": 19100036005,
+        "event": "",
+        "parm": "",
+    }),
+    19100036006: _tools.RODict({
+        "ID": 19100036006,
+        "event": "",
+        "parm": "",
+    }),
+    19100036007: _tools.RODict({
+        "ID": 19100036007,
+        "event": "",
+        "parm": "",
+    }),
+    19100036008: _tools.RODict({
+        "ID": 19100036008,
+        "event": "",
+        "parm": "",
+    }),
+    19100036009: _tools.RODict({
+        "ID": 19100036009,
+        "event": "",
+        "parm": "",
+    }),
+    19100036010: _tools.RODict({
+        "ID": 19100036010,
+        "event": "",
+        "parm": "",
+    }),
+    19100036011: _tools.RODict({
+        "ID": 19100036011,
+        "event": "",
+        "parm": "",
+    }),
+    19100036012: _tools.RODict({
+        "ID": 19100036012,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100036013: _tools.RODict({
+        "ID": 19100036013,
+        "event": "",
+        "parm": "",
+    }),
+    19100036014: _tools.RODict({
+        "ID": 19100036014,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100037000: _tools.RODict({
+        "ID": 19100037000,
+        "event": "",
+        "parm": "",
+    }),
+    19100037001: _tools.RODict({
+        "ID": 19100037001,
+        "event": "",
+        "parm": "",
+    }),
+    19100037002: _tools.RODict({
+        "ID": 19100037002,
+        "event": "",
+        "parm": "",
+    }),
+    19100037003: _tools.RODict({
+        "ID": 19100037003,
+        "event": "",
+        "parm": "",
+    }),
+    19100037004: _tools.RODict({
+        "ID": 19100037004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100038000: _tools.RODict({
+        "ID": 19100038000,
+        "event": "",
+        "parm": "",
+    }),
+    19100038001: _tools.RODict({
+        "ID": 19100038001,
+        "event": "",
+        "parm": "",
+    }),
+    19100038002: _tools.RODict({
+        "ID": 19100038002,
+        "event": "",
+        "parm": "",
+    }),
+    19100038003: _tools.RODict({
+        "ID": 19100038003,
+        "event": "",
+        "parm": "",
+    }),
+    19100038004: _tools.RODict({
+        "ID": 19100038004,
+        "event": "",
+        "parm": "",
+    }),
+    19100038005: _tools.RODict({
+        "ID": 19100038005,
+        "event": "",
+        "parm": "",
+    }),
+    19100038006: _tools.RODict({
+        "ID": 19100038006,
+        "event": "",
+        "parm": "",
+    }),
+    19100038007: _tools.RODict({
+        "ID": 19100038007,
+        "event": "",
+        "parm": "",
+    }),
+    19100038008: _tools.RODict({
+        "ID": 19100038008,
+        "event": "",
+        "parm": "",
+    }),
+    19100038009: _tools.RODict({
+        "ID": 19100038009,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19600001000: _tools.RODict({
+        "ID": 19600001000,
+        "event": "",
+        "parm": "",
+    }),
+    19600001001: _tools.RODict({
+        "ID": 19600001001,
+        "event": "",
+        "parm": "",
+    }),
+    19600001002: _tools.RODict({
+        "ID": 19600001002,
+        "event": "",
+        "parm": "",
+    }),
+    19600001003: _tools.RODict({
+        "ID": 19600001003,
+        "event": "",
+        "parm": "",
+    }),
+    19600001004: _tools.RODict({
+        "ID": 19600001004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100039000: _tools.RODict({
+        "ID": 19100039000,
+        "event": "",
+        "parm": "",
+    }),
+    19100039001: _tools.RODict({
+        "ID": 19100039001,
+        "event": "",
+        "parm": "",
+    }),
+    19100039002: _tools.RODict({
+        "ID": 19100039002,
+        "event": "",
+        "parm": "",
+    }),
+    19100039003: _tools.RODict({
+        "ID": 19100039003,
+        "event": "",
+        "parm": "",
+    }),
+    19100039004: _tools.RODict({
+        "ID": 19100039004,
+        "event": "",
+        "parm": "",
+    }),
+    19100039005: _tools.RODict({
+        "ID": 19100039005,
+        "event": "",
+        "parm": "",
+    }),
+    19100039006: _tools.RODict({
+        "ID": 19100039006,
+        "event": "",
+        "parm": "",
+    }),
+    19100039007: _tools.RODict({
+        "ID": 19100039007,
+        "event": "",
+        "parm": "",
+    }),
+    19100039008: _tools.RODict({
+        "ID": 19100039008,
+        "event": "",
+        "parm": "",
+    }),
+    19100039009: _tools.RODict({
+        "ID": 19100039009,
+        "event": "",
+        "parm": "",
+    }),
+    19100039010: _tools.RODict({
+        "ID": 19100039010,
+        "event": "",
+        "parm": "",
+    }),
+    19100039011: _tools.RODict({
+        "ID": 19100039011,
+        "event": "",
+        "parm": "",
+    }),
+    19100039012: _tools.RODict({
+        "ID": 19100039012,
+        "event": "",
+        "parm": "",
+    }),
+    19100039013: _tools.RODict({
+        "ID": 19100039013,
+        "event": "",
+        "parm": "",
+    }),
+    19100039014: _tools.RODict({
+        "ID": 19100039014,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100040000: _tools.RODict({
+        "ID": 19100040000,
+        "event": "",
+        "parm": "",
+    }),
+    19100040001: _tools.RODict({
+        "ID": 19100040001,
+        "event": "",
+        "parm": "",
+    }),
+    19100040002: _tools.RODict({
+        "ID": 19100040002,
+        "event": "",
+        "parm": "",
+    }),
+    19100040003: _tools.RODict({
+        "ID": 19100040003,
+        "event": "",
+        "parm": "",
+    }),
+    19100040004: _tools.RODict({
+        "ID": 19100040004,
+        "event": "",
+        "parm": "",
+    }),
+    19100040005: _tools.RODict({
+        "ID": 19100040005,
+        "event": "",
+        "parm": "",
+    }),
+    19100040006: _tools.RODict({
+        "ID": 19100040006,
+        "event": "",
+        "parm": "",
+    }),
+    19100040007: _tools.RODict({
+        "ID": 19100040007,
+        "event": "",
+        "parm": "",
+    }),
+    19100040008: _tools.RODict({
+        "ID": 19100040008,
+        "event": "",
+        "parm": "",
+    }),
+    19100040009: _tools.RODict({
+        "ID": 19100040009,
+        "event": "",
+        "parm": "",
+    }),
+    19100040010: _tools.RODict({
+        "ID": 19100040010,
+        "event": "",
+        "parm": "",
+    }),
+    19100040011: _tools.RODict({
+        "ID": 19100040011,
+        "event": "",
+        "parm": "",
+    }),
+    19100040012: _tools.RODict({
+        "ID": 19100040012,
+        "event": "",
+        "parm": "",
+    }),
+    19100040013: _tools.RODict({
+        "ID": 19100040013,
+        "event": "",
+        "parm": "",
+    }),
+    19100040014: _tools.RODict({
+        "ID": 19100040014,
+        "event": "",
+        "parm": "",
+    }),
+    19100040015: _tools.RODict({
+        "ID": 19100040015,
+        "event": "",
+        "parm": "",
+    }),
+    19100040016: _tools.RODict({
+        "ID": 19100040016,
+        "event": "",
+        "parm": "",
+    }),
+    19100040017: _tools.RODict({
+        "ID": 19100040017,
+        "event": "",
+        "parm": "",
+    }),
+    19100040018: _tools.RODict({
+        "ID": 19100040018,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700001000: _tools.RODict({
+        "ID": 19700001000,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19700002000: _tools.RODict({
+        "ID": 19700002000,
+        "event": "",
+        "parm": "",
+    }),
+    19700002001: _tools.RODict({
+        "ID": 19700002001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700003000: _tools.RODict({
+        "ID": 19700003000,
+        "event": "",
+        "parm": "",
+    }),
+    19700003001: _tools.RODict({
+        "ID": 19700003001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700004000: _tools.RODict({
+        "ID": 19700004000,
+        "event": "",
+        "parm": "",
+    }),
+    19700004001: _tools.RODict({
+        "ID": 19700004001,
+        "event": "",
+        "parm": "",
+    }),
+    19700004002: _tools.RODict({
+        "ID": 19700004002,
+        "event": "",
+        "parm": "",
+    }),
+    19700004003: _tools.RODict({
+        "ID": 19700004003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700005000: _tools.RODict({
+        "ID": 19700005000,
+        "event": "",
+        "parm": "",
+    }),
+    19700005001: _tools.RODict({
+        "ID": 19700005001,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19700006000: _tools.RODict({
+        "ID": 19700006000,
+        "event": "",
+        "parm": "",
+    }),
+    19700006001: _tools.RODict({
+        "ID": 19700006001,
+        "event": "",
+        "parm": "",
+    }),
+    19700006002: _tools.RODict({
+        "ID": 19700006002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700008000: _tools.RODict({
+        "ID": 19700008000,
+        "event": "",
+        "parm": "",
+    }),
+    19700008001: _tools.RODict({
+        "ID": 19700008001,
+        "event": "",
+        "parm": "",
+    }),
+    19700008002: _tools.RODict({
+        "ID": 19700008002,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19700009000: _tools.RODict({
+        "ID": 19700009000,
+        "event": "",
+        "parm": "",
+    }),
+    19700009001: _tools.RODict({
+        "ID": 19700009001,
+        "event": "",
+        "parm": "",
+    }),
+    19700009002: _tools.RODict({
+        "ID": 19700009002,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19700010000: _tools.RODict({
+        "ID": 19700010000,
+        "event": "",
+        "parm": "",
+    }),
+    19700010001: _tools.RODict({
+        "ID": 19700010001,
+        "event": "",
+        "parm": "",
+    }),
+    19700010002: _tools.RODict({
+        "ID": 19700010002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700011000: _tools.RODict({
+        "ID": 19700011000,
+        "event": "",
+        "parm": "",
+    }),
+    19700011001: _tools.RODict({
+        "ID": 19700011001,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19700012000: _tools.RODict({
+        "ID": 19700012000,
+        "event": "",
+        "parm": "",
+    }),
+    19700012001: _tools.RODict({
+        "ID": 19700012001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700016000: _tools.RODict({
+        "ID": 19700016000,
+        "event": "Gettask",
+        "parm": "",
+    }),
+    19700017000: _tools.RODict({
+        "ID": 19700017000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700018000: _tools.RODict({
+        "ID": 19700018000,
+        "event": "",
+        "parm": "",
+    }),
+    19700018001: _tools.RODict({
+        "ID": 19700018001,
+        "event": "",
+        "parm": "",
+    }),
+    19700018002: _tools.RODict({
+        "ID": 19700018002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100041000: _tools.RODict({
+        "ID": 19100041000,
+        "event": "",
+        "parm": "",
+    }),
+    19100041001: _tools.RODict({
+        "ID": 19100041001,
+        "event": "",
+        "parm": "",
+    }),
+    19100041002: _tools.RODict({
+        "ID": 19100041002,
+        "event": "",
+        "parm": "",
+    }),
+    19100041003: _tools.RODict({
+        "ID": 19100041003,
+        "event": "",
+        "parm": "",
+    }),
+    19100041004: _tools.RODict({
+        "ID": 19100041004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100042000: _tools.RODict({
+        "ID": 19100042000,
+        "event": "",
+        "parm": "",
+    }),
+    19100042001: _tools.RODict({
+        "ID": 19100042001,
+        "event": "",
+        "parm": "",
+    }),
+    19100042002: _tools.RODict({
+        "ID": 19100042002,
+        "event": "",
+        "parm": "",
+    }),
+    19100042003: _tools.RODict({
+        "ID": 19100042003,
+        "event": "",
+        "parm": "",
+    }),
+    19100042004: _tools.RODict({
+        "ID": 19100042004,
+        "event": "",
+        "parm": "",
+    }),
+    19100042006: _tools.RODict({
+        "ID": 19100042006,
+        "event": "",
+        "parm": "",
+    }),
+    19100042007: _tools.RODict({
+        "ID": 19100042007,
+        "event": "",
+        "parm": "",
+    }),
+    19100042008: _tools.RODict({
+        "ID": 19100042008,
+        "event": "",
+        "parm": "",
+    }),
+    19100042009: _tools.RODict({
+        "ID": 19100042009,
+        "event": "",
+        "parm": "",
+    }),
+    19100042010: _tools.RODict({
+        "ID": 19100042010,
+        "event": "",
+        "parm": "",
+    }),
+    19100042011: _tools.RODict({
+        "ID": 19100042011,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100043000: _tools.RODict({
+        "ID": 19100043000,
+        "event": "",
+        "parm": "",
+    }),
+    19100043001: _tools.RODict({
+        "ID": 19100043001,
+        "event": "",
+        "parm": "",
+    }),
+    19100043002: _tools.RODict({
+        "ID": 19100043002,
+        "event": "",
+        "parm": "",
+    }),
+    19100043003: _tools.RODict({
+        "ID": 19100043003,
+        "event": "",
+        "parm": "",
+    }),
+    19100043004: _tools.RODict({
+        "ID": 19100043004,
+        "event": "",
+        "parm": "",
+    }),
+    19100043005: _tools.RODict({
+        "ID": 19100043005,
+        "event": "",
+        "parm": "",
+    }),
+    19100043006: _tools.RODict({
+        "ID": 19100043006,
+        "event": "",
+        "parm": "",
+    }),
+    19100043007: _tools.RODict({
+        "ID": 19100043007,
+        "event": "",
+        "parm": "",
+    }),
+    19100043008: _tools.RODict({
+        "ID": 19100043008,
+        "event": "",
+        "parm": "",
+    }),
+    19100043009: _tools.RODict({
+        "ID": 19100043009,
+        "event": "",
+        "parm": "",
+    }),
+    19100043010: _tools.RODict({
+        "ID": 19100043010,
+        "event": "",
+        "parm": "",
+    }),
+    19100043011: _tools.RODict({
+        "ID": 19100043011,
+        "event": "",
+        "parm": "",
+    }),
+    19100043012: _tools.RODict({
+        "ID": 19100043012,
+        "event": "",
+        "parm": "",
+    }),
+    19100043013: _tools.RODict({
+        "ID": 19100043013,
+        "event": "",
+        "parm": "",
+    }),
+    19100043014: _tools.RODict({
+        "ID": 19100043014,
+        "event": "",
+        "parm": "",
+    }),
+    19100043015: _tools.RODict({
+        "ID": 19100043015,
+        "event": "",
+        "parm": "",
+    }),
+    19100043016: _tools.RODict({
+        "ID": 19100043016,
+        "event": "",
+        "parm": "",
+    }),
+    19100043017: _tools.RODict({
+        "ID": 19100043017,
+        "event": "",
+        "parm": "",
+    }),
+    19100043018: _tools.RODict({
+        "ID": 19100043018,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100044000: _tools.RODict({
+        "ID": 19100044000,
+        "event": "",
+        "parm": "",
+    }),
+    19100044001: _tools.RODict({
+        "ID": 19100044001,
+        "event": "",
+        "parm": "",
+    }),
+    19100044002: _tools.RODict({
+        "ID": 19100044002,
+        "event": "",
+        "parm": "",
+    }),
+    19100044003: _tools.RODict({
+        "ID": 19100044003,
+        "event": "",
+        "parm": "",
+    }),
+    19100044004: _tools.RODict({
+        "ID": 19100044004,
+        "event": "",
+        "parm": "",
+    }),
+    19100044005: _tools.RODict({
+        "ID": 19100044005,
+        "event": "",
+        "parm": "",
+    }),
+    19100044006: _tools.RODict({
+        "ID": 19100044006,
+        "event": "",
+        "parm": "",
+    }),
+    19100044007: _tools.RODict({
+        "ID": 19100044007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100045000: _tools.RODict({
+        "ID": 19100045000,
+        "event": "",
+        "parm": "",
+    }),
+    19100045001: _tools.RODict({
+        "ID": 19100045001,
+        "event": "",
+        "parm": "",
+    }),
+    19100045002: _tools.RODict({
+        "ID": 19100045002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100046000: _tools.RODict({
+        "ID": 19100046000,
+        "event": "",
+        "parm": "",
+    }),
+    19100046001: _tools.RODict({
+        "ID": 19100046001,
+        "event": "",
+        "parm": "",
+    }),
+    19100046002: _tools.RODict({
+        "ID": 19100046002,
+        "event": "",
+        "parm": "",
+    }),
+    19100046003: _tools.RODict({
+        "ID": 19100046003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100047000: _tools.RODict({
+        "ID": 19100047000,
+        "event": "",
+        "parm": "",
+    }),
+    19100047001: _tools.RODict({
+        "ID": 19100047001,
+        "event": "",
+        "parm": "",
+    }),
+    19100047002: _tools.RODict({
+        "ID": 19100047002,
+        "event": "",
+        "parm": "",
+    }),
+    19100047003: _tools.RODict({
+        "ID": 19100047003,
+        "event": "",
+        "parm": "",
+    }),
+    19100047004: _tools.RODict({
+        "ID": 19100047004,
+        "event": "",
+        "parm": "",
+    }),
+    19100047005: _tools.RODict({
+        "ID": 19100047005,
+        "event": "",
+        "parm": "",
+    }),
+    19100047006: _tools.RODict({
+        "ID": 19100047006,
+        "event": "",
+        "parm": "",
+    }),
+    19100047007: _tools.RODict({
+        "ID": 19100047007,
+        "event": "",
+        "parm": "",
+    }),
+    19100047008: _tools.RODict({
+        "ID": 19100047008,
+        "event": "",
+        "parm": "",
+    }),
+    19100047009: _tools.RODict({
+        "ID": 19100047009,
+        "event": "",
+        "parm": "",
+    }),
+    19100047010: _tools.RODict({
+        "ID": 19100047010,
+        "event": "",
+        "parm": "",
+    }),
+    19100047011: _tools.RODict({
+        "ID": 19100047011,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100048000: _tools.RODict({
+        "ID": 19100048000,
+        "event": "",
+        "parm": "",
+    }),
+    19100048001: _tools.RODict({
+        "ID": 19100048001,
+        "event": "",
+        "parm": "",
+    }),
+    19100048002: _tools.RODict({
+        "ID": 19100048002,
+        "event": "",
+        "parm": "",
+    }),
+    19100048003: _tools.RODict({
+        "ID": 19100048003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700013000: _tools.RODict({
+        "ID": 19700013000,
+        "event": "",
+        "parm": "",
+    }),
+    19700013001: _tools.RODict({
+        "ID": 19700013001,
+        "event": "",
+        "parm": "",
+    }),
+    19700013002: _tools.RODict({
+        "ID": 19700013002,
+        "event": "",
+        "parm": "",
+    }),
+    19700013003: _tools.RODict({
+        "ID": 19700013003,
+        "event": "",
+        "parm": "",
+    }),
+    19700013004: _tools.RODict({
+        "ID": 19700013004,
+        "event": "",
+        "parm": "",
+    }),
+    19700013005: _tools.RODict({
+        "ID": 19700013005,
+        "event": "",
+        "parm": "",
+    }),
+    19700013006: _tools.RODict({
+        "ID": 19700013006,
+        "event": "",
+        "parm": "",
+    }),
+    19700013007: _tools.RODict({
+        "ID": 19700013007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100049000: _tools.RODict({
+        "ID": 19100049000,
+        "event": "",
+        "parm": "",
+    }),
+    19100049001: _tools.RODict({
+        "ID": 19100049001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100050000: _tools.RODict({
+        "ID": 19100050000,
+        "event": "",
+        "parm": "",
+    }),
+    19100050001: _tools.RODict({
+        "ID": 19100050001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19800050000: _tools.RODict({
+        "ID": 19800050000,
+        "event": "",
+        "parm": "",
+    }),
+    19800050001: _tools.RODict({
+        "ID": 19800050001,
+        "event": "",
+        "parm": "",
+    }),
+    19800050002: _tools.RODict({
+        "ID": 19800050002,
+        "event": "",
+        "parm": "",
+    }),
+    19800050003: _tools.RODict({
+        "ID": 19800050003,
+        "event": "",
+        "parm": "",
+    }),
+    19800050004: _tools.RODict({
+        "ID": 19800050004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100051000: _tools.RODict({
+        "ID": 19100051000,
+        "event": "",
+        "parm": "",
+    }),
+    19100051001: _tools.RODict({
+        "ID": 19100051001,
+        "event": "",
+        "parm": "",
+    }),
+    19100051002: _tools.RODict({
+        "ID": 19100051002,
+        "event": "",
+        "parm": "",
+    }),
+    19100051003: _tools.RODict({
+        "ID": 19100051003,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19100052000: _tools.RODict({
+        "ID": 19100052000,
+        "event": "",
+        "parm": "",
+    }),
+    19100052001: _tools.RODict({
+        "ID": 19100052001,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19100053000: _tools.RODict({
+        "ID": 19100053000,
+        "event": "",
+        "parm": "",
+    }),
+    19100053001: _tools.RODict({
+        "ID": 19100053001,
+        "event": "",
+        "parm": "",
+    }),
+    19100053002: _tools.RODict({
+        "ID": 19100053002,
+        "event": "",
+        "parm": "",
+    }),
+    19100053003: _tools.RODict({
+        "ID": 19100053003,
+        "event": "",
+        "parm": "",
+    }),
+    19100053004: _tools.RODict({
+        "ID": 19100053004,
+        "event": "",
+        "parm": "",
+    }),
+    19100053005: _tools.RODict({
+        "ID": 19100053005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100054000: _tools.RODict({
+        "ID": 19100054000,
+        "event": "",
+        "parm": "",
+    }),
+    19100054001: _tools.RODict({
+        "ID": 19100054001,
+        "event": "",
+        "parm": "",
+    }),
+    19100054002: _tools.RODict({
+        "ID": 19100054002,
+        "event": "",
+        "parm": "",
+    }),
+    19100054003: _tools.RODict({
+        "ID": 19100054003,
+        "event": "",
+        "parm": "",
+    }),
+    19100054004: _tools.RODict({
+        "ID": 19100054004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100055000: _tools.RODict({
+        "ID": 19100055000,
+        "event": "",
+        "parm": "",
+    }),
+    19100055001: _tools.RODict({
+        "ID": 19100055001,
+        "event": "",
+        "parm": "",
+    }),
+    19100055002: _tools.RODict({
+        "ID": 19100055002,
+        "event": "",
+        "parm": "",
+    }),
+    19100055003: _tools.RODict({
+        "ID": 19100055003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100056000: _tools.RODict({
+        "ID": 19100056000,
+        "event": "",
+        "parm": "",
+    }),
+    19100056001: _tools.RODict({
+        "ID": 19100056001,
+        "event": "",
+        "parm": "",
+    }),
+    19100056002: _tools.RODict({
+        "ID": 19100056002,
+        "event": "",
+        "parm": "",
+    }),
+    19100056003: _tools.RODict({
+        "ID": 19100056003,
+        "event": "",
+        "parm": "",
+    }),
+    19100056008: _tools.RODict({
+        "ID": 19100056008,
+        "event": "",
+        "parm": "",
+    }),
+    19100056011: _tools.RODict({
+        "ID": 19100056011,
+        "event": "",
+        "parm": "",
+    }),
+    19100056014: _tools.RODict({
+        "ID": 19100056014,
+        "event": "",
+        "parm": "",
+    }),
+    19100056015: _tools.RODict({
+        "ID": 19100056015,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1910057000: _tools.RODict({
+        "ID": 1910057000,
+        "event": "",
+        "parm": "",
+    }),
+    1910057001: _tools.RODict({
+        "ID": 1910057001,
+        "event": "",
+        "parm": "",
+    }),
+    1910057002: _tools.RODict({
+        "ID": 1910057002,
+        "event": "",
+        "parm": "",
+    }),
+    1910057003: _tools.RODict({
+        "ID": 1910057003,
+        "event": "",
+        "parm": "",
+    }),
+    1910057004: _tools.RODict({
+        "ID": 1910057004,
+        "event": "",
+        "parm": "",
+    }),
+    1910057005: _tools.RODict({
+        "ID": 1910057005,
+        "event": "",
+        "parm": "",
+    }),
+    1910057006: _tools.RODict({
+        "ID": 1910057006,
+        "event": "",
+        "parm": "",
+    }),
+    1910057007: _tools.RODict({
+        "ID": 1910057007,
+        "event": "",
+        "parm": "",
+    }),
+    1910057008: _tools.RODict({
+        "ID": 1910057008,
+        "event": "",
+        "parm": "",
+    }),
+    1910057009: _tools.RODict({
+        "ID": 1910057009,
+        "event": "",
+        "parm": "",
+    }),
+    1910057010: _tools.RODict({
+        "ID": 1910057010,
+        "event": "",
+        "parm": "",
+    }),
+    1910057011: _tools.RODict({
+        "ID": 1910057011,
+        "event": "",
+        "parm": "",
+    }),
+    1910057012: _tools.RODict({
+        "ID": 1910057012,
+        "event": "",
+        "parm": "",
+    }),
+    1910057013: _tools.RODict({
+        "ID": 1910057013,
+        "event": "",
+        "parm": "",
+    }),
+    1910057014: _tools.RODict({
+        "ID": 1910057014,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100058000: _tools.RODict({
+        "ID": 19100058000,
+        "event": "",
+        "parm": "",
+    }),
+    19100058001: _tools.RODict({
+        "ID": 19100058001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100059000: _tools.RODict({
+        "ID": 19100059000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100060000: _tools.RODict({
+        "ID": 19100060000,
+        "event": "",
+        "parm": "",
+    }),
+    19100060001: _tools.RODict({
+        "ID": 19100060001,
+        "event": "",
+        "parm": "",
+    }),
+    19100060002: _tools.RODict({
+        "ID": 19100060002,
+        "event": "",
+        "parm": "",
+    }),
+    19100060003: _tools.RODict({
+        "ID": 19100060003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100061000: _tools.RODict({
+        "ID": 19100061000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100062000: _tools.RODict({
+        "ID": 19100062000,
+        "event": "",
+        "parm": "",
+    }),
+    19100062001: _tools.RODict({
+        "ID": 19100062001,
+        "event": "",
+        "parm": "",
+    }),
+    19100062002: _tools.RODict({
+        "ID": 19100062002,
+        "event": "",
+        "parm": "",
+    }),
+    19100062003: _tools.RODict({
+        "ID": 19100062003,
+        "event": "",
+        "parm": "",
+    }),
+    19100062004: _tools.RODict({
+        "ID": 19100062004,
+        "event": "",
+        "parm": "",
+    }),
+    19100062005: _tools.RODict({
+        "ID": 19100062005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100063000: _tools.RODict({
+        "ID": 19100063000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100064000: _tools.RODict({
+        "ID": 19100064000,
+        "event": "",
+        "parm": "",
+    }),
+    19100064001: _tools.RODict({
+        "ID": 19100064001,
+        "event": "",
+        "parm": "",
+    }),
+    19100064002: _tools.RODict({
+        "ID": 19100064002,
+        "event": "",
+        "parm": "",
+    }),
+    19100064003: _tools.RODict({
+        "ID": 19100064003,
+        "event": "",
+        "parm": "",
+    }),
+    19100064004: _tools.RODict({
+        "ID": 19100064004,
+        "event": "",
+        "parm": "",
+    }),
+    19100064005: _tools.RODict({
+        "ID": 19100064005,
+        "event": "",
+        "parm": "",
+    }),
+    19100064006: _tools.RODict({
+        "ID": 19100064006,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100065000: _tools.RODict({
+        "ID": 19100065000,
+        "event": "",
+        "parm": "",
+    }),
+    19100065001: _tools.RODict({
+        "ID": 19100065001,
+        "event": "",
+        "parm": "",
+    }),
+    19100065002: _tools.RODict({
+        "ID": 19100065002,
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100066000: _tools.RODict({
@@ -4452,341 +5652,91 @@ datas = _tools.RODict({
     }),
     19100066014: _tools.RODict({
         "ID": 19100066014,
+        "event": "",
+        "parm": "",
+    }),
+    19100066015: _tools.RODict({
+        "ID": 19100066015,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100026000: _tools.RODict({
-        "ID": 19100026000,
+    19100067000: _tools.RODict({
+        "ID": 19100067000,
         "event": "",
         "parm": "",
     }),
-    19100026001: _tools.RODict({
-        "ID": 19100026001,
+    19100067001: _tools.RODict({
+        "ID": 19100067001,
         "event": "",
         "parm": "",
     }),
-    19100026002: _tools.RODict({
-        "ID": 19100026002,
+    19100067002: _tools.RODict({
+        "ID": 19100067002,
         "event": "",
         "parm": "",
     }),
-    19100026003: _tools.RODict({
-        "ID": 19100026003,
+    19100067003: _tools.RODict({
+        "ID": 19100067003,
         "event": "",
         "parm": "",
     }),
-    19100026004: _tools.RODict({
-        "ID": 19100026004,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100027000: _tools.RODict({
-        "ID": 19100027000,
+    19100067004: _tools.RODict({
+        "ID": 19100067004,
         "event": "",
         "parm": "",
     }),
-    19100027001: _tools.RODict({
-        "ID": 19100027001,
+    19100067005: _tools.RODict({
+        "ID": 19100067005,
         "event": "",
         "parm": "",
     }),
-    19100027002: _tools.RODict({
-        "ID": 19100027002,
+    19100067006: _tools.RODict({
+        "ID": 19100067006,
         "event": "",
         "parm": "",
     }),
-    19100027003: _tools.RODict({
-        "ID": 19100027003,
+    19100067007: _tools.RODict({
+        "ID": 19100067007,
         "event": "",
         "parm": "",
     }),
-    19100027004: _tools.RODict({
-        "ID": 19100027004,
+    19100067008: _tools.RODict({
+        "ID": 19100067008,
         "event": "",
         "parm": "",
     }),
-    19100027005: _tools.RODict({
-        "ID": 19100027005,
+    19100067009: _tools.RODict({
+        "ID": 19100067009,
         "event": "",
         "parm": "",
     }),
-    19100027006: _tools.RODict({
-        "ID": 19100027006,
+    19100067010: _tools.RODict({
+        "ID": 19100067010,
         "event": "",
         "parm": "",
     }),
-    19100027007: _tools.RODict({
-        "ID": 19100027007,
+    19100067011: _tools.RODict({
+        "ID": 19100067011,
         "event": "",
         "parm": "",
     }),
-    19100027008: _tools.RODict({
-        "ID": 19100027008,
+    19100067012: _tools.RODict({
+        "ID": 19100067012,
         "event": "",
         "parm": "",
     }),
-    19100027009: _tools.RODict({
-        "ID": 19100027009,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100036000: _tools.RODict({
-        "ID": 19100036000,
+    19100067013: _tools.RODict({
+        "ID": 19100067013,
         "event": "",
         "parm": "",
     }),
-    19100036001: _tools.RODict({
-        "ID": 19100036001,
+    19100067014: _tools.RODict({
+        "ID": 19100067014,
         "event": "",
         "parm": "",
     }),
-    19100036002: _tools.RODict({
-        "ID": 19100036002,
-        "event": "",
-        "parm": "",
-    }),
-    19100036003: _tools.RODict({
-        "ID": 19100036003,
-        "event": "",
-        "parm": "",
-    }),
-    19100036004: _tools.RODict({
-        "ID": 19100036004,
-        "event": "",
-        "parm": "",
-    }),
-    19100036005: _tools.RODict({
-        "ID": 19100036005,
-        "event": "",
-        "parm": "",
-    }),
-    19100036006: _tools.RODict({
-        "ID": 19100036006,
-        "event": "",
-        "parm": "",
-    }),
-    19100036007: _tools.RODict({
-        "ID": 19100036007,
-        "event": "",
-        "parm": "",
-    }),
-    19100036008: _tools.RODict({
-        "ID": 19100036008,
-        "event": "",
-        "parm": "",
-    }),
-    19100036009: _tools.RODict({
-        "ID": 19100036009,
-        "event": "",
-        "parm": "",
-    }),
-    19100036010: _tools.RODict({
-        "ID": 19100036010,
-        "event": "",
-        "parm": "",
-    }),
-    19100036011: _tools.RODict({
-        "ID": 19100036011,
-        "event": "",
-        "parm": "",
-    }),
-    19100036012: _tools.RODict({
-        "ID": 19100036012,
-        "event": "",
-        "parm": "",
-    }),
-    19100036013: _tools.RODict({
-        "ID": 19100036013,
-        "event": "",
-        "parm": "",
-    }),
-    19100036014: _tools.RODict({
-        "ID": 19100036014,
-        "event": "",
-        "parm": "",
-    }),
-    19100036015: _tools.RODict({
-        "ID": 19100036015,
-        "event": "",
-        "parm": "",
-    }),
-    19100036016: _tools.RODict({
-        "ID": 19100036016,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100063000: _tools.RODict({
-        "ID": 19100063000,
-        "event": "",
-        "parm": "",
-    }),
-    19100063001: _tools.RODict({
-        "ID": 19100063001,
-        "event": "",
-        "parm": "",
-    }),
-    19100063002: _tools.RODict({
-        "ID": 19100063002,
-        "event": "",
-        "parm": "",
-    }),
-    19100063003: _tools.RODict({
-        "ID": 19100063003,
-        "event": "",
-        "parm": "",
-    }),
-    19100063004: _tools.RODict({
-        "ID": 19100063004,
-        "event": "",
-        "parm": "",
-    }),
-    19100063005: _tools.RODict({
-        "ID": 19100063005,
-        "event": "",
-        "parm": "",
-    }),
-    19100063006: _tools.RODict({
-        "ID": 19100063006,
-        "event": "",
-        "parm": "",
-    }),
-    19100063007: _tools.RODict({
-        "ID": 19100063007,
-        "event": "",
-        "parm": "",
-    }),
-    19100063008: _tools.RODict({
-        "ID": 19100063008,
-        "event": "",
-        "parm": "",
-    }),
-    19100063009: _tools.RODict({
-        "ID": 19100063009,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100063010: _tools.RODict({
-        "ID": 19100063010,
-        "event": "",
-        "parm": "",
-    }),
-    19100063011: _tools.RODict({
-        "ID": 19100063011,
-        "event": "",
-        "parm": "",
-    }),
-    19100063012: _tools.RODict({
-        "ID": 19100063012,
-        "event": "",
-        "parm": "",
-    }),
-    19100063013: _tools.RODict({
-        "ID": 19100063013,
-        "event": "",
-        "parm": "",
-    }),
-    19100063014: _tools.RODict({
-        "ID": 19100063014,
-        "event": "",
-        "parm": "",
-    }),
-    19100063015: _tools.RODict({
-        "ID": 19100063015,
-        "event": "",
-        "parm": "",
-    }),
-    19100063016: _tools.RODict({
-        "ID": 19100063016,
-        "event": "",
-        "parm": "",
-    }),
-    19100063017: _tools.RODict({
-        "ID": 19100063017,
-        "event": "",
-        "parm": "",
-    }),
-    19100063018: _tools.RODict({
-        "ID": 19100063018,
-        "event": "",
-        "parm": "",
-    }),
-    19100071000: _tools.RODict({
-        "ID": 19100071000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100072000: _tools.RODict({
-        "ID": 19100072000,
-        "event": "",
-        "parm": "",
-    }),
-    19100072001: _tools.RODict({
-        "ID": 19100072001,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100073000: _tools.RODict({
-        "ID": 19100073000,
-        "event": "",
-        "parm": "",
-    }),
-    19100073001: _tools.RODict({
-        "ID": 19100073001,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100074000: _tools.RODict({
-        "ID": 19100074000,
-        "event": "",
-        "parm": "",
-    }),
-    19100074001: _tools.RODict({
-        "ID": 19100074001,
-        "event": "",
-        "parm": "",
-    }),
-    19100074002: _tools.RODict({
-        "ID": 19100074002,
-        "event": "",
-        "parm": "",
-    }),
-    19100074003: _tools.RODict({
-        "ID": 19100074003,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100070000: _tools.RODict({
-        "ID": 19100070000,
-        "event": "",
-        "parm": "",
-    }),
-    19100070001: _tools.RODict({
-        "ID": 19100070001,
-        "event": "",
-        "parm": "",
-    }),
-    19100070002: _tools.RODict({
-        "ID": 19100070002,
-        "event": "",
-        "parm": "",
-    }),
-    19100070003: _tools.RODict({
-        "ID": 19100070003,
-        "event": "",
-        "parm": "",
-    }),
-    19100070004: _tools.RODict({
-        "ID": 19100070004,
-        "event": "",
-        "parm": "",
-    }),
-    19100070005: _tools.RODict({
-        "ID": 19100070005,
-        "event": "",
-        "parm": "",
-    }),
-    19100070006: _tools.RODict({
-        "ID": 19100070006,
+    19100067015: _tools.RODict({
+        "ID": 19100067015,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -4805,11 +5755,6 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    19100068003: _tools.RODict({
-        "ID": 19100068003,
-        "event": "",
-        "parm": "",
-    }),
     19100068004: _tools.RODict({
         "ID": 19100068004,
         "event": "",
@@ -4822,11 +5767,6 @@ datas = _tools.RODict({
     }),
     19100068006: _tools.RODict({
         "ID": 19100068006,
-        "event": "",
-        "parm": "",
-    }),
-    19100068007: _tools.RODict({
-        "ID": 19100068007,
         "event": "",
         "parm": "",
     }),
@@ -4847,96 +5787,1381 @@ datas = _tools.RODict({
     }),
     19100068011: _tools.RODict({
         "ID": 19100068011,
+        "event": "",
+        "parm": "",
+    }),
+    19100068012: _tools.RODict({
+        "ID": 19100068012,
+        "event": "",
+        "parm": "",
+    }),
+    19100068013: _tools.RODict({
+        "ID": 19100068013,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100069000: _tools.RODict({
+        "ID": 19100069000,
+        "event": "",
+        "parm": "",
+    }),
+    19100069001: _tools.RODict({
+        "ID": 19100069001,
+        "event": "",
+        "parm": "",
+    }),
+    19100069002: _tools.RODict({
+        "ID": 19100069002,
+        "event": "",
+        "parm": "",
+    }),
+    19100069003: _tools.RODict({
+        "ID": 19100069003,
+        "event": "",
+        "parm": "",
+    }),
+    19100069004: _tools.RODict({
+        "ID": 19100069004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100070000: _tools.RODict({
+        "ID": 19100070000,
+        "event": "",
+        "parm": "",
+    }),
+    19100070001: _tools.RODict({
+        "ID": 19100070001,
+        "event": "",
+        "parm": "",
+    }),
+    19100070002: _tools.RODict({
+        "ID": 19100070002,
+        "event": "",
+        "parm": "",
+    }),
+    19100070003: _tools.RODict({
+        "ID": 19100070003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100071000: _tools.RODict({
+        "ID": 19100071000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100072000: _tools.RODict({
+        "ID": 19100072000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100073000: _tools.RODict({
+        "ID": 19100073000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100074000: _tools.RODict({
+        "ID": 19100074000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100075000: _tools.RODict({
+        "ID": 19100075000,
         "event": "Fnstalk",
         "parm": "",
     }),
     19100076000: _tools.RODict({
         "ID": 19100076000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100077000: _tools.RODict({
+        "ID": 19100077000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100078000: _tools.RODict({
+        "ID": 19100078000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100079000: _tools.RODict({
+        "ID": 19100079000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100080000: _tools.RODict({
+        "ID": 19100080000,
         "event": "",
         "parm": "",
     }),
-    19100076001: _tools.RODict({
-        "ID": 19100076001,
+    19100080002: _tools.RODict({
+        "ID": 19100080002,
         "event": "",
         "parm": "",
     }),
-    19100076002: _tools.RODict({
-        "ID": 19100076002,
+    19100080003: _tools.RODict({
+        "ID": 19100080003,
         "event": "",
         "parm": "",
     }),
-    19100076003: _tools.RODict({
-        "ID": 19100076003,
+    19100080004: _tools.RODict({
+        "ID": 19100080004,
         "event": "",
         "parm": "",
     }),
-    19100076004: _tools.RODict({
-        "ID": 19100076004,
+    19100080005: _tools.RODict({
+        "ID": 19100080005,
         "event": "",
         "parm": "",
     }),
-    19100076005: _tools.RODict({
-        "ID": 19100076005,
+    19100080006: _tools.RODict({
+        "ID": 19100080006,
         "event": "",
         "parm": "",
     }),
-    19100076006: _tools.RODict({
-        "ID": 19100076006,
+    19100080007: _tools.RODict({
+        "ID": 19100080007,
         "event": "",
         "parm": "",
     }),
-    19100076007: _tools.RODict({
-        "ID": 19100076007,
+    19100080008: _tools.RODict({
+        "ID": 19100080008,
         "event": "",
         "parm": "",
     }),
-    19100076008: _tools.RODict({
-        "ID": 19100076008,
+    19100080009: _tools.RODict({
+        "ID": 19100080009,
         "event": "",
         "parm": "",
     }),
-    19100076009: _tools.RODict({
-        "ID": 19100076009,
+    19100080010: _tools.RODict({
+        "ID": 19100080010,
         "event": "",
         "parm": "",
     }),
-    19100076010: _tools.RODict({
-        "ID": 19100076010,
+    19100080011: _tools.RODict({
+        "ID": 19100080011,
         "event": "",
         "parm": "",
     }),
-    19100076011: _tools.RODict({
-        "ID": 19100076011,
+    19100080012: _tools.RODict({
+        "ID": 19100080012,
         "event": "",
         "parm": "",
     }),
-    19100076012: _tools.RODict({
-        "ID": 19100076012,
+    19100080013: _tools.RODict({
+        "ID": 19100080013,
         "event": "",
         "parm": "",
     }),
-    19100076013: _tools.RODict({
-        "ID": 19100076013,
+    19100080014: _tools.RODict({
+        "ID": 19100080014,
         "event": "",
         "parm": "",
     }),
-    19100076014: _tools.RODict({
-        "ID": 19100076014,
+    19100080015: _tools.RODict({
+        "ID": 19100080015,
         "event": "",
         "parm": "",
     }),
-    19100076015: _tools.RODict({
-        "ID": 19100076015,
+    19100080016: _tools.RODict({
+        "ID": 19100080016,
         "event": "",
         "parm": "",
     }),
-    19100076016: _tools.RODict({
-        "ID": 19100076016,
+    19100080017: _tools.RODict({
+        "ID": 19100080017,
         "event": "",
         "parm": "",
     }),
-    19100076017: _tools.RODict({
-        "ID": 19100076017,
+    19100080018: _tools.RODict({
+        "ID": 19100080018,
+        "event": "",
+        "parm": "",
+    }),
+    19100080019: _tools.RODict({
+        "ID": 19100080019,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100081000: _tools.RODict({
+        "ID": 19100081000,
+        "event": "",
+        "parm": "",
+    }),
+    19100081001: _tools.RODict({
+        "ID": 19100081001,
+        "event": "",
+        "parm": "",
+    }),
+    19100081002: _tools.RODict({
+        "ID": 19100081002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100082000: _tools.RODict({
+        "ID": 19100082000,
+        "event": "",
+        "parm": "",
+    }),
+    19100082001: _tools.RODict({
+        "ID": 19100082001,
+        "event": "",
+        "parm": "",
+    }),
+    19100082002: _tools.RODict({
+        "ID": 19100082002,
+        "event": "",
+        "parm": "",
+    }),
+    19100082003: _tools.RODict({
+        "ID": 19100082003,
+        "event": "",
+        "parm": "",
+    }),
+    19100082004: _tools.RODict({
+        "ID": 19100082004,
+        "event": "",
+        "parm": "",
+    }),
+    19100082005: _tools.RODict({
+        "ID": 19100082005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100083000: _tools.RODict({
+        "ID": 19100083000,
+        "event": "",
+        "parm": "",
+    }),
+    19100083001: _tools.RODict({
+        "ID": 19100083001,
+        "event": "",
+        "parm": "",
+    }),
+    19100083002: _tools.RODict({
+        "ID": 19100083002,
+        "event": "",
+        "parm": "",
+    }),
+    19100083003: _tools.RODict({
+        "ID": 19100083003,
+        "event": "",
+        "parm": "",
+    }),
+    19100083004: _tools.RODict({
+        "ID": 19100083004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100084000: _tools.RODict({
+        "ID": 19100084000,
+        "event": "",
+        "parm": "",
+    }),
+    19100084001: _tools.RODict({
+        "ID": 19100084001,
+        "event": "",
+        "parm": "",
+    }),
+    19100084002: _tools.RODict({
+        "ID": 19100084002,
+        "event": "",
+        "parm": "",
+    }),
+    19100084003: _tools.RODict({
+        "ID": 19100084003,
+        "event": "",
+        "parm": "",
+    }),
+    19100084004: _tools.RODict({
+        "ID": 19100084004,
+        "event": "",
+        "parm": "",
+    }),
+    19100084005: _tools.RODict({
+        "ID": 19100084005,
+        "event": "",
+        "parm": "",
+    }),
+    19100084006: _tools.RODict({
+        "ID": 19100084006,
+        "event": "",
+        "parm": "",
+    }),
+    19100084007: _tools.RODict({
+        "ID": 19100084007,
+        "event": "",
+        "parm": "",
+    }),
+    19100084008: _tools.RODict({
+        "ID": 19100084008,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100085000: _tools.RODict({
+        "ID": 19100085000,
+        "event": "",
+        "parm": "",
+    }),
+    19100085001: _tools.RODict({
+        "ID": 19100085001,
+        "event": "",
+        "parm": "",
+    }),
+    19100085002: _tools.RODict({
+        "ID": 19100085002,
+        "event": "",
+        "parm": "",
+    }),
+    19100085003: _tools.RODict({
+        "ID": 19100085003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100086000: _tools.RODict({
+        "ID": 19100086000,
+        "event": "",
+        "parm": "",
+    }),
+    19100086001: _tools.RODict({
+        "ID": 19100086001,
+        "event": "",
+        "parm": "",
+    }),
+    19100086002: _tools.RODict({
+        "ID": 19100086002,
+        "event": "",
+        "parm": "",
+    }),
+    19100086003: _tools.RODict({
+        "ID": 19100086003,
+        "event": "",
+        "parm": "",
+    }),
+    19100086004: _tools.RODict({
+        "ID": 19100086004,
+        "event": "",
+        "parm": "",
+    }),
+    19100086005: _tools.RODict({
+        "ID": 19100086005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100087000: _tools.RODict({
+        "ID": 19100087000,
+        "event": "",
+        "parm": "",
+    }),
+    19100087001: _tools.RODict({
+        "ID": 19100087001,
+        "event": "",
+        "parm": "",
+    }),
+    19100087002: _tools.RODict({
+        "ID": 19100087002,
+        "event": "",
+        "parm": "",
+    }),
+    19100087003: _tools.RODict({
+        "ID": 19100087003,
+        "event": "",
+        "parm": "",
+    }),
+    19100087004: _tools.RODict({
+        "ID": 19100087004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100088000: _tools.RODict({
+        "ID": 19100088000,
+        "event": "",
+        "parm": "",
+    }),
+    19100088001: _tools.RODict({
+        "ID": 19100088001,
+        "event": "",
+        "parm": "",
+    }),
+    19100088002: _tools.RODict({
+        "ID": 19100088002,
+        "event": "",
+        "parm": "",
+    }),
+    19100088003: _tools.RODict({
+        "ID": 19100088003,
+        "event": "",
+        "parm": "",
+    }),
+    19100088004: _tools.RODict({
+        "ID": 19100088004,
+        "event": "",
+        "parm": "",
+    }),
+    19100088005: _tools.RODict({
+        "ID": 19100088005,
+        "event": "",
+        "parm": "",
+    }),
+    19100088006: _tools.RODict({
+        "ID": 19100088006,
+        "event": "",
+        "parm": "",
+    }),
+    19100088007: _tools.RODict({
+        "ID": 19100088007,
+        "event": "",
+        "parm": "",
+    }),
+    19100088008: _tools.RODict({
+        "ID": 19100088008,
+        "event": "",
+        "parm": "",
+    }),
+    19100088009: _tools.RODict({
+        "ID": 19100088009,
+        "event": "",
+        "parm": "",
+    }),
+    19100088010: _tools.RODict({
+        "ID": 19100088010,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100089000: _tools.RODict({
+        "ID": 19100089000,
+        "event": "",
+        "parm": "",
+    }),
+    19100089001: _tools.RODict({
+        "ID": 19100089001,
+        "event": "",
+        "parm": "",
+    }),
+    19100089002: _tools.RODict({
+        "ID": 19100089002,
+        "event": "",
+        "parm": "",
+    }),
+    19100089003: _tools.RODict({
+        "ID": 19100089003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100090000: _tools.RODict({
+        "ID": 19100090000,
+        "event": "",
+        "parm": "",
+    }),
+    19100090001: _tools.RODict({
+        "ID": 19100090001,
+        "event": "",
+        "parm": "",
+    }),
+    19100090002: _tools.RODict({
+        "ID": 19100090002,
+        "event": "",
+        "parm": "",
+    }),
+    19100090003: _tools.RODict({
+        "ID": 19100090003,
+        "event": "",
+        "parm": "",
+    }),
+    19100090004: _tools.RODict({
+        "ID": 19100090004,
+        "event": "",
+        "parm": "",
+    }),
+    19100090005: _tools.RODict({
+        "ID": 19100090005,
+        "event": "",
+        "parm": "",
+    }),
+    19100090006: _tools.RODict({
+        "ID": 19100090006,
+        "event": "",
+        "parm": "",
+    }),
+    19100090007: _tools.RODict({
+        "ID": 19100090007,
+        "event": "",
+        "parm": "",
+    }),
+    19100090008: _tools.RODict({
+        "ID": 19100090008,
+        "event": "",
+        "parm": "",
+    }),
+    19100090009: _tools.RODict({
+        "ID": 19100090009,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100091000: _tools.RODict({
+        "ID": 19100091000,
+        "event": "",
+        "parm": "",
+    }),
+    19100091001: _tools.RODict({
+        "ID": 19100091001,
+        "event": "",
+        "parm": "",
+    }),
+    19100091002: _tools.RODict({
+        "ID": 19100091002,
+        "event": "",
+        "parm": "",
+    }),
+    19100091003: _tools.RODict({
+        "ID": 19100091003,
+        "event": "",
+        "parm": "",
+    }),
+    19100091004: _tools.RODict({
+        "ID": 19100091004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100092000: _tools.RODict({
+        "ID": 19100092000,
+        "event": "",
+        "parm": "",
+    }),
+    19100092001: _tools.RODict({
+        "ID": 19100092001,
+        "event": "",
+        "parm": "",
+    }),
+    19100092002: _tools.RODict({
+        "ID": 19100092002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100093000: _tools.RODict({
+        "ID": 19100093000,
+        "event": "",
+        "parm": "",
+    }),
+    19100093001: _tools.RODict({
+        "ID": 19100093001,
+        "event": "",
+        "parm": "",
+    }),
+    19100093002: _tools.RODict({
+        "ID": 19100093002,
+        "event": "",
+        "parm": "",
+    }),
+    19100093003: _tools.RODict({
+        "ID": 19100093003,
+        "event": "",
+        "parm": "",
+    }),
+    19100093004: _tools.RODict({
+        "ID": 19100093004,
+        "event": "",
+        "parm": "",
+    }),
+    19100093005: _tools.RODict({
+        "ID": 19100093005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100094000: _tools.RODict({
+        "ID": 19100094000,
+        "event": "",
+        "parm": "",
+    }),
+    19100094001: _tools.RODict({
+        "ID": 19100094001,
+        "event": "",
+        "parm": "",
+    }),
+    19100094002: _tools.RODict({
+        "ID": 19100094002,
+        "event": "",
+        "parm": "",
+    }),
+    19100094003: _tools.RODict({
+        "ID": 19100094003,
+        "event": "",
+        "parm": "",
+    }),
+    19100094004: _tools.RODict({
+        "ID": 19100094004,
+        "event": "",
+        "parm": "",
+    }),
+    19100094005: _tools.RODict({
+        "ID": 19100094005,
+        "event": "",
+        "parm": "",
+    }),
+    19100094006: _tools.RODict({
+        "ID": 19100094006,
+        "event": "",
+        "parm": "",
+    }),
+    19100094007: _tools.RODict({
+        "ID": 19100094007,
+        "event": "",
+        "parm": "",
+    }),
+    19100094008: _tools.RODict({
+        "ID": 19100094008,
+        "event": "",
+        "parm": "",
+    }),
+    19100094009: _tools.RODict({
+        "ID": 19100094009,
+        "event": "",
+        "parm": "",
+    }),
+    19100094010: _tools.RODict({
+        "ID": 19100094010,
+        "event": "",
+        "parm": "",
+    }),
+    19100094011: _tools.RODict({
+        "ID": 19100094011,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100095000: _tools.RODict({
+        "ID": 19100095000,
+        "event": "",
+        "parm": "",
+    }),
+    19100095001: _tools.RODict({
+        "ID": 19100095001,
+        "event": "",
+        "parm": "",
+    }),
+    19100095003: _tools.RODict({
+        "ID": 19100095003,
+        "event": "",
+        "parm": "",
+    }),
+    19100095004: _tools.RODict({
+        "ID": 19100095004,
+        "event": "",
+        "parm": "",
+    }),
+    19100095005: _tools.RODict({
+        "ID": 19100095005,
+        "event": "",
+        "parm": "",
+    }),
+    19100095006: _tools.RODict({
+        "ID": 19100095006,
+        "event": "",
+        "parm": "",
+    }),
+    19100095007: _tools.RODict({
+        "ID": 19100095007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100096000: _tools.RODict({
+        "ID": 19100096000,
+        "event": "",
+        "parm": "",
+    }),
+    19100096001: _tools.RODict({
+        "ID": 19100096001,
+        "event": "",
+        "parm": "",
+    }),
+    19100096002: _tools.RODict({
+        "ID": 19100096002,
+        "event": "",
+        "parm": "",
+    }),
+    19100096003: _tools.RODict({
+        "ID": 19100096003,
+        "event": "Fnstask",
+        "parm": "",
+    }),
+    19100097000: _tools.RODict({
+        "ID": 19100097000,
+        "event": "",
+        "parm": "",
+    }),
+    19100097001: _tools.RODict({
+        "ID": 19100097001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100098000: _tools.RODict({
+        "ID": 19100098000,
+        "event": "",
+        "parm": "",
+    }),
+    19100098001: _tools.RODict({
+        "ID": 19100098001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100099000: _tools.RODict({
+        "ID": 19100099000,
+        "event": "",
+        "parm": "",
+    }),
+    19100099001: _tools.RODict({
+        "ID": 19100099001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19800099000: _tools.RODict({
+        "ID": 19800099000,
+        "event": "",
+        "parm": "",
+    }),
+    19800099001: _tools.RODict({
+        "ID": 19800099001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100100000: _tools.RODict({
+        "ID": 19100100000,
+        "event": "",
+        "parm": "",
+    }),
+    19100100001: _tools.RODict({
+        "ID": 19100100001,
+        "event": "",
+        "parm": "",
+    }),
+    19100100002: _tools.RODict({
+        "ID": 19100100002,
+        "event": "",
+        "parm": "",
+    }),
+    19100100003: _tools.RODict({
+        "ID": 19100100003,
+        "event": "",
+        "parm": "",
+    }),
+    19100100004: _tools.RODict({
+        "ID": 19100100004,
+        "event": "",
+        "parm": "",
+    }),
+    19100100005: _tools.RODict({
+        "ID": 19100100005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100101000: _tools.RODict({
+        "ID": 19100101000,
+        "event": "",
+        "parm": "",
+    }),
+    19100101001: _tools.RODict({
+        "ID": 19100101001,
+        "event": "",
+        "parm": "",
+    }),
+    19100101002: _tools.RODict({
+        "ID": 19100101002,
+        "event": "",
+        "parm": "",
+    }),
+    19100101003: _tools.RODict({
+        "ID": 19100101003,
+        "event": "",
+        "parm": "",
+    }),
+    19100101004: _tools.RODict({
+        "ID": 19100101004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100102000: _tools.RODict({
+        "ID": 19100102000,
+        "event": "",
+        "parm": "",
+    }),
+    19100102001: _tools.RODict({
+        "ID": 19100102001,
+        "event": "",
+        "parm": "",
+    }),
+    19100102002: _tools.RODict({
+        "ID": 19100102002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100103000: _tools.RODict({
+        "ID": 19100103000,
+        "event": "",
+        "parm": "",
+    }),
+    19100103001: _tools.RODict({
+        "ID": 19100103001,
+        "event": "",
+        "parm": "",
+    }),
+    19100103002: _tools.RODict({
+        "ID": 19100103002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100104000: _tools.RODict({
+        "ID": 19100104000,
+        "event": "",
+        "parm": "",
+    }),
+    19100104001: _tools.RODict({
+        "ID": 19100104001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100105000: _tools.RODict({
+        "ID": 19100105000,
+        "event": "",
+        "parm": "",
+    }),
+    19100105001: _tools.RODict({
+        "ID": 19100105001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100106000: _tools.RODict({
+        "ID": 19100106000,
+        "event": "",
+        "parm": "",
+    }),
+    19100106001: _tools.RODict({
+        "ID": 19100106001,
+        "event": "",
+        "parm": "",
+    }),
+    19100106002: _tools.RODict({
+        "ID": 19100106002,
+        "event": "",
+        "parm": "",
+    }),
+    19100106003: _tools.RODict({
+        "ID": 19100106003,
+        "event": "",
+        "parm": "",
+    }),
+    19100106004: _tools.RODict({
+        "ID": 19100106004,
+        "event": "",
+        "parm": "",
+    }),
+    19100106005: _tools.RODict({
+        "ID": 19100106005,
+        "event": "",
+        "parm": "",
+    }),
+    19100106006: _tools.RODict({
+        "ID": 19100106006,
+        "event": "",
+        "parm": "",
+    }),
+    19100106007: _tools.RODict({
+        "ID": 19100106007,
+        "event": "",
+        "parm": "",
+    }),
+    19100106008: _tools.RODict({
+        "ID": 19100106008,
+        "event": "",
+        "parm": "",
+    }),
+    19100106009: _tools.RODict({
+        "ID": 19100106009,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100107000: _tools.RODict({
+        "ID": 19100107000,
+        "event": "",
+        "parm": "",
+    }),
+    19100107001: _tools.RODict({
+        "ID": 19100107001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100108000: _tools.RODict({
+        "ID": 19100108000,
+        "event": "",
+        "parm": "",
+    }),
+    19100108001: _tools.RODict({
+        "ID": 19100108001,
+        "event": "",
+        "parm": "",
+    }),
+    19100108002: _tools.RODict({
+        "ID": 19100108002,
+        "event": "",
+        "parm": "",
+    }),
+    19100108003: _tools.RODict({
+        "ID": 19100108003,
+        "event": "",
+        "parm": "",
+    }),
+    19100108004: _tools.RODict({
+        "ID": 19100108004,
+        "event": "",
+        "parm": "",
+    }),
+    19100108005: _tools.RODict({
+        "ID": 19100108005,
+        "event": "",
+        "parm": "",
+    }),
+    19100108006: _tools.RODict({
+        "ID": 19100108006,
+        "event": "",
+        "parm": "",
+    }),
+    19100108007: _tools.RODict({
+        "ID": 19100108007,
+        "event": "",
+        "parm": "",
+    }),
+    19100108008: _tools.RODict({
+        "ID": 19100108008,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700014000: _tools.RODict({
+        "ID": 19700014000,
+        "event": "",
+        "parm": "",
+    }),
+    19700014001: _tools.RODict({
+        "ID": 19700014001,
+        "event": "",
+        "parm": "",
+    }),
+    19700014002: _tools.RODict({
+        "ID": 19700014002,
+        "event": "",
+        "parm": "",
+    }),
+    19700014003: _tools.RODict({
+        "ID": 19700014003,
+        "event": "",
+        "parm": "",
+    }),
+    19700014004: _tools.RODict({
+        "ID": 19700014004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100109000: _tools.RODict({
+        "ID": 19100109000,
+        "event": "",
+        "parm": "",
+    }),
+    19100109001: _tools.RODict({
+        "ID": 19100109001,
+        "event": "",
+        "parm": "",
+    }),
+    19100109002: _tools.RODict({
+        "ID": 19100109002,
+        "event": "",
+        "parm": "",
+    }),
+    19100109003: _tools.RODict({
+        "ID": 19100109003,
+        "event": "",
+        "parm": "",
+    }),
+    19100109004: _tools.RODict({
+        "ID": 19100109004,
+        "event": "",
+        "parm": "",
+    }),
+    19100109005: _tools.RODict({
+        "ID": 19100109005,
+        "event": "",
+        "parm": "",
+    }),
+    19100109006: _tools.RODict({
+        "ID": 19100109006,
+        "event": "",
+        "parm": "",
+    }),
+    19100109007: _tools.RODict({
+        "ID": 19100109007,
+        "event": "",
+        "parm": "",
+    }),
+    19100109008: _tools.RODict({
+        "ID": 19100109008,
+        "event": "",
+        "parm": "",
+    }),
+    19100109009: _tools.RODict({
+        "ID": 19100109009,
+        "event": "",
+        "parm": "",
+    }),
+    19100109010: _tools.RODict({
+        "ID": 19100109010,
+        "event": "",
+        "parm": "",
+    }),
+    19100109011: _tools.RODict({
+        "ID": 19100109011,
+        "event": "",
+        "parm": "",
+    }),
+    19100109012: _tools.RODict({
+        "ID": 19100109012,
+        "event": "",
+        "parm": "",
+    }),
+    19100109013: _tools.RODict({
+        "ID": 19100109013,
+        "event": "",
+        "parm": "",
+    }),
+    19100109014: _tools.RODict({
+        "ID": 19100109014,
+        "event": "",
+        "parm": "",
+    }),
+    19100109015: _tools.RODict({
+        "ID": 19100109015,
+        "event": "",
+        "parm": "",
+    }),
+    19100109016: _tools.RODict({
+        "ID": 19100109016,
+        "event": "",
+        "parm": "",
+    }),
+    19100109017: _tools.RODict({
+        "ID": 19100109017,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100110000: _tools.RODict({
+        "ID": 19100110000,
+        "event": "",
+        "parm": "",
+    }),
+    19100110001: _tools.RODict({
+        "ID": 19100110001,
+        "event": "",
+        "parm": "",
+    }),
+    19100110002: _tools.RODict({
+        "ID": 19100110002,
+        "event": "",
+        "parm": "",
+    }),
+    19100110003: _tools.RODict({
+        "ID": 19100110003,
+        "event": "",
+        "parm": "",
+    }),
+    19100110004: _tools.RODict({
+        "ID": 19100110004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100111000: _tools.RODict({
+        "ID": 19100111000,
+        "event": "",
+        "parm": "",
+    }),
+    19100111001: _tools.RODict({
+        "ID": 19100111001,
+        "event": "",
+        "parm": "",
+    }),
+    19100111002: _tools.RODict({
+        "ID": 19100111002,
+        "event": "",
+        "parm": "",
+    }),
+    19100111003: _tools.RODict({
+        "ID": 19100111003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100112000: _tools.RODict({
+        "ID": 19100112000,
+        "event": "",
+        "parm": "",
+    }),
+    19100112001: _tools.RODict({
+        "ID": 19100112001,
+        "event": "",
+        "parm": "",
+    }),
+    19100112002: _tools.RODict({
+        "ID": 19100112002,
+        "event": "",
+        "parm": "",
+    }),
+    19100112003: _tools.RODict({
+        "ID": 19100112003,
+        "event": "",
+        "parm": "",
+    }),
+    19100112004: _tools.RODict({
+        "ID": 19100112004,
+        "event": "",
+        "parm": "",
+    }),
+    19100112005: _tools.RODict({
+        "ID": 19100112005,
+        "event": "",
+        "parm": "",
+    }),
+    19100112006: _tools.RODict({
+        "ID": 19100112006,
+        "event": "",
+        "parm": "",
+    }),
+    19100112007: _tools.RODict({
+        "ID": 19100112007,
+        "event": "",
+        "parm": "",
+    }),
+    19100112008: _tools.RODict({
+        "ID": 19100112008,
+        "event": "",
+        "parm": "",
+    }),
+    19100112009: _tools.RODict({
+        "ID": 19100112009,
+        "event": "",
+        "parm": "",
+    }),
+    19100112010: _tools.RODict({
+        "ID": 19100112010,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100113000: _tools.RODict({
+        "ID": 19100113000,
+        "event": "",
+        "parm": "",
+    }),
+    19100113001: _tools.RODict({
+        "ID": 19100113001,
+        "event": "",
+        "parm": "",
+    }),
+    19100113002: _tools.RODict({
+        "ID": 19100113002,
+        "event": "",
+        "parm": "",
+    }),
+    19100113003: _tools.RODict({
+        "ID": 19100113003,
+        "event": "",
+        "parm": "",
+    }),
+    19100113004: _tools.RODict({
+        "ID": 19100113004,
+        "event": "",
+        "parm": "",
+    }),
+    19100113005: _tools.RODict({
+        "ID": 19100113005,
+        "event": "",
+        "parm": "",
+    }),
+    19100113006: _tools.RODict({
+        "ID": 19100113006,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100114000: _tools.RODict({
+        "ID": 19100114000,
+        "event": "",
+        "parm": "",
+    }),
+    19100114001: _tools.RODict({
+        "ID": 19100114001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100115000: _tools.RODict({
+        "ID": 19100115000,
+        "event": "",
+        "parm": "",
+    }),
+    19100115001: _tools.RODict({
+        "ID": 19100115001,
+        "event": "",
+        "parm": "",
+    }),
+    19100115002: _tools.RODict({
+        "ID": 19100115002,
+        "event": "",
+        "parm": "",
+    }),
+    19100115003: _tools.RODict({
+        "ID": 19100115003,
+        "event": "",
+        "parm": "",
+    }),
+    19100115004: _tools.RODict({
+        "ID": 19100115004,
+        "event": "",
+        "parm": "",
+    }),
+    19100115005: _tools.RODict({
+        "ID": 19100115005,
+        "event": "",
+        "parm": "",
+    }),
+    19100115006: _tools.RODict({
+        "ID": 19100115006,
+        "event": "",
+        "parm": "",
+    }),
+    19100115007: _tools.RODict({
+        "ID": 19100115007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100116000: _tools.RODict({
+        "ID": 19100116000,
+        "event": "",
+        "parm": "",
+    }),
+    19100116001: _tools.RODict({
+        "ID": 19100116001,
+        "event": "",
+        "parm": "",
+    }),
+    19100116002: _tools.RODict({
+        "ID": 19100116002,
+        "event": "",
+        "parm": "",
+    }),
+    19100116003: _tools.RODict({
+        "ID": 19100116003,
+        "event": "",
+        "parm": "",
+    }),
+    19100116004: _tools.RODict({
+        "ID": 19100116004,
+        "event": "",
+        "parm": "",
+    }),
+    19100116005: _tools.RODict({
+        "ID": 19100116005,
+        "event": "",
+        "parm": "",
+    }),
+    19100116006: _tools.RODict({
+        "ID": 19100116006,
+        "event": "",
+        "parm": "",
+    }),
+    19100116007: _tools.RODict({
+        "ID": 19100116007,
+        "event": "",
+        "parm": "",
+    }),
+    19100116008: _tools.RODict({
+        "ID": 19100116008,
+        "event": "",
+        "parm": "",
+    }),
+    19100116009: _tools.RODict({
+        "ID": 19100116009,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100117000: _tools.RODict({
+        "ID": 19100117000,
+        "event": "",
+        "parm": "",
+    }),
+    19100117001: _tools.RODict({
+        "ID": 19100117001,
+        "event": "",
+        "parm": "",
+    }),
+    19100117002: _tools.RODict({
+        "ID": 19100117002,
+        "event": "",
+        "parm": "",
+    }),
+    19100117003: _tools.RODict({
+        "ID": 19100117003,
+        "event": "",
+        "parm": "",
+    }),
+    19100117004: _tools.RODict({
+        "ID": 19100117004,
+        "event": "",
+        "parm": "",
+    }),
+    19100117005: _tools.RODict({
+        "ID": 19100117005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100118000: _tools.RODict({
+        "ID": 19100118000,
+        "event": "",
+        "parm": "",
+    }),
+    19100118001: _tools.RODict({
+        "ID": 19100118001,
+        "event": "",
+        "parm": "",
+    }),
+    19100118002: _tools.RODict({
+        "ID": 19100118002,
+        "event": "",
+        "parm": "",
+    }),
+    19100118003: _tools.RODict({
+        "ID": 19100118003,
+        "event": "",
+        "parm": "",
+    }),
+    19100118004: _tools.RODict({
+        "ID": 19100118004,
+        "event": "",
+        "parm": "",
+    }),
+    19100118005: _tools.RODict({
+        "ID": 19100118005,
+        "event": "",
+        "parm": "",
+    }),
+    19100118006: _tools.RODict({
+        "ID": 19100118006,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100119000: _tools.RODict({
+        "ID": 19100119000,
+        "event": "",
+        "parm": "",
+    }),
+    19100119001: _tools.RODict({
+        "ID": 19100119001,
+        "event": "",
+        "parm": "",
+    }),
+    19100119002: _tools.RODict({
+        "ID": 19100119002,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -4967,16 +7192,6 @@ datas = _tools.RODict({
     }),
     19100120005: _tools.RODict({
         "ID": 19100120005,
-        "event": "",
-        "parm": "",
-    }),
-    19100120006: _tools.RODict({
-        "ID": 19100120006,
-        "event": "",
-        "parm": "",
-    }),
-    19100120007: _tools.RODict({
-        "ID": 19100120007,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -4992,6 +7207,56 @@ datas = _tools.RODict({
     }),
     19100121002: _tools.RODict({
         "ID": 19100121002,
+        "event": "",
+        "parm": "",
+    }),
+    19100121003: _tools.RODict({
+        "ID": 19100121003,
+        "event": "",
+        "parm": "",
+    }),
+    19100121004: _tools.RODict({
+        "ID": 19100121004,
+        "event": "",
+        "parm": "",
+    }),
+    19100121005: _tools.RODict({
+        "ID": 19100121005,
+        "event": "",
+        "parm": "",
+    }),
+    19100121006: _tools.RODict({
+        "ID": 19100121006,
+        "event": "",
+        "parm": "",
+    }),
+    19100121007: _tools.RODict({
+        "ID": 19100121007,
+        "event": "",
+        "parm": "",
+    }),
+    19100121008: _tools.RODict({
+        "ID": 19100121008,
+        "event": "",
+        "parm": "",
+    }),
+    19100121009: _tools.RODict({
+        "ID": 19100121009,
+        "event": "",
+        "parm": "",
+    }),
+    19100121010: _tools.RODict({
+        "ID": 19100121010,
+        "event": "",
+        "parm": "",
+    }),
+    19100121011: _tools.RODict({
+        "ID": 19100121011,
+        "event": "",
+        "parm": "",
+    }),
+    19100121012: _tools.RODict({
+        "ID": 19100121012,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -5007,121 +7272,51 @@ datas = _tools.RODict({
     }),
     19100122002: _tools.RODict({
         "ID": 19100122002,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100077000: _tools.RODict({
-        "ID": 19100077000,
         "event": "",
         "parm": "",
     }),
-    19100077001: _tools.RODict({
-        "ID": 19100077001,
+    19100122003: _tools.RODict({
+        "ID": 19100122003,
         "event": "",
         "parm": "",
     }),
-    19100077002: _tools.RODict({
-        "ID": 19100077002,
+    19100122004: _tools.RODict({
+        "ID": 19100122004,
         "event": "",
         "parm": "",
     }),
-    19100077003: _tools.RODict({
-        "ID": 19100077003,
+    19100122005: _tools.RODict({
+        "ID": 19100122005,
         "event": "",
         "parm": "",
     }),
-    19100077004: _tools.RODict({
-        "ID": 19100077004,
+    19100122006: _tools.RODict({
+        "ID": 19100122006,
         "event": "",
         "parm": "",
     }),
-    19100077005: _tools.RODict({
-        "ID": 19100077005,
+    19100122007: _tools.RODict({
+        "ID": 19100122007,
         "event": "",
         "parm": "",
     }),
-    19100077006: _tools.RODict({
-        "ID": 19100077006,
+    19100122008: _tools.RODict({
+        "ID": 19100122008,
         "event": "",
         "parm": "",
     }),
-    19100077007: _tools.RODict({
-        "ID": 19100077007,
+    19100122009: _tools.RODict({
+        "ID": 19100122009,
         "event": "",
         "parm": "",
     }),
-    19100077008: _tools.RODict({
-        "ID": 19100077008,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100099000: _tools.RODict({
-        "ID": 19100099000,
+    19100122010: _tools.RODict({
+        "ID": 19100122010,
         "event": "",
         "parm": "",
     }),
-    19100099001: _tools.RODict({
-        "ID": 19100099001,
-        "event": "",
-        "parm": "",
-    }),
-    19100099002: _tools.RODict({
-        "ID": 19100099002,
-        "event": "",
-        "parm": "",
-    }),
-    19100099003: _tools.RODict({
-        "ID": 19100099003,
-        "event": "",
-        "parm": "",
-    }),
-    19100099004: _tools.RODict({
-        "ID": 19100099004,
-        "event": "",
-        "parm": "",
-    }),
-    19100099005: _tools.RODict({
-        "ID": 19100099005,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100075000: _tools.RODict({
-        "ID": 19100075000,
-        "event": "",
-        "parm": "",
-    }),
-    19100075001: _tools.RODict({
-        "ID": 19100075001,
-        "event": "",
-        "parm": "",
-    }),
-    19100075002: _tools.RODict({
-        "ID": 19100075002,
-        "event": "",
-        "parm": "",
-    }),
-    19100075003: _tools.RODict({
-        "ID": 19100075003,
-        "event": "",
-        "parm": "",
-    }),
-    19100075004: _tools.RODict({
-        "ID": 19100075004,
-        "event": "",
-        "parm": "",
-    }),
-    19100075005: _tools.RODict({
-        "ID": 19100075005,
-        "event": "",
-        "parm": "",
-    }),
-    19100075006: _tools.RODict({
-        "ID": 19100075006,
-        "event": "",
-        "parm": "",
-    }),
-    19100075007: _tools.RODict({
-        "ID": 19100075007,
+    19100122011: _tools.RODict({
+        "ID": 19100122011,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -5142,6 +7337,51 @@ datas = _tools.RODict({
     }),
     19100123003: _tools.RODict({
         "ID": 19100123003,
+        "event": "",
+        "parm": "",
+    }),
+    19100123004: _tools.RODict({
+        "ID": 19100123004,
+        "event": "",
+        "parm": "",
+    }),
+    19100123005: _tools.RODict({
+        "ID": 19100123005,
+        "event": "",
+        "parm": "",
+    }),
+    19100123006: _tools.RODict({
+        "ID": 19100123006,
+        "event": "Fnstask",
+        "parm": "",
+    }),
+    19100123007: _tools.RODict({
+        "ID": 19100123007,
+        "event": "",
+        "parm": "",
+    }),
+    19100123008: _tools.RODict({
+        "ID": 19100123008,
+        "event": "",
+        "parm": "",
+    }),
+    19100123009: _tools.RODict({
+        "ID": 19100123009,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19800123000: _tools.RODict({
+        "ID": 19800123000,
+        "event": "",
+        "parm": "",
+    }),
+    19800123001: _tools.RODict({
+        "ID": 19800123001,
+        "event": "",
+        "parm": "",
+    }),
+    19800123002: _tools.RODict({
+        "ID": 19800123002,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -5222,96 +7462,181 @@ datas = _tools.RODict({
     }),
     19100124015: _tools.RODict({
         "ID": 19100124015,
+        "event": "",
+        "parm": "",
+    }),
+    19100124016: _tools.RODict({
+        "ID": 19100124016,
         "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100078000: _tools.RODict({
-        "ID": 19100078000,
-        "event": "",
-        "parm": "",
-    }),
-    19100078001: _tools.RODict({
-        "ID": 19100078001,
-        "event": "",
-        "parm": "",
-    }),
-    19100078002: _tools.RODict({
-        "ID": 19100078002,
-        "event": "",
-        "parm": "",
-    }),
-    19100078003: _tools.RODict({
-        "ID": 19100078003,
-        "event": "",
-        "parm": "",
-    }),
-    19100078004: _tools.RODict({
-        "ID": 19100078004,
-        "event": "",
-        "parm": "",
-    }),
-    19100078005: _tools.RODict({
-        "ID": 19100078005,
-        "event": "",
-        "parm": "",
-    }),
-    19100078006: _tools.RODict({
-        "ID": 19100078006,
-        "event": "",
-        "parm": "",
-    }),
-    19100078007: _tools.RODict({
-        "ID": 19100078007,
-        "event": "",
-        "parm": "",
-    }),
-    19100078008: _tools.RODict({
-        "ID": 19100078008,
-        "event": "",
-        "parm": "",
-    }),
-    19100078009: _tools.RODict({
-        "ID": 19100078009,
-        "event": "",
-        "parm": "",
-    }),
-    19100078010: _tools.RODict({
-        "ID": 19100078010,
-        "event": "",
-        "parm": "",
-    }),
-    19100078011: _tools.RODict({
-        "ID": 19100078011,
-        "event": "",
-        "parm": "",
-    }),
-    19100078012: _tools.RODict({
-        "ID": 19100078012,
-        "event": "",
-        "parm": "",
-    }),
-    19100078013: _tools.RODict({
-        "ID": 19100078013,
-        "event": "",
-        "parm": "",
-    }),
-    19100078014: _tools.RODict({
-        "ID": 19100078014,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100069000: _tools.RODict({
-        "ID": 19100069000,
-        "event": "",
-        "parm": "",
-    }),
-    19100069001: _tools.RODict({
-        "ID": 19100069001,
-        "event": "",
         "parm": "",
     }),
     19100125000: _tools.RODict({
         "ID": 19100125000,
+        "event": "",
+        "parm": "",
+    }),
+    19100125001: _tools.RODict({
+        "ID": 19100125001,
+        "event": "",
+        "parm": "",
+    }),
+    19100125002: _tools.RODict({
+        "ID": 19100125002,
+        "event": "",
+        "parm": "",
+    }),
+    19100125003: _tools.RODict({
+        "ID": 19100125003,
+        "event": "",
+        "parm": "",
+    }),
+    19100125004: _tools.RODict({
+        "ID": 19100125004,
+        "event": "",
+        "parm": "",
+    }),
+    19100125005: _tools.RODict({
+        "ID": 19100125005,
+        "event": "",
+        "parm": "",
+    }),
+    19100125006: _tools.RODict({
+        "ID": 19100125006,
+        "event": "",
+        "parm": "",
+    }),
+    19100125007: _tools.RODict({
+        "ID": 19100125007,
+        "event": "",
+        "parm": "",
+    }),
+    19100125008: _tools.RODict({
+        "ID": 19100125008,
+        "event": "",
+        "parm": "",
+    }),
+    19100125009: _tools.RODict({
+        "ID": 19100125009,
+        "event": "",
+        "parm": "",
+    }),
+    19100125010: _tools.RODict({
+        "ID": 19100125010,
+        "event": "",
+        "parm": "",
+    }),
+    19100125011: _tools.RODict({
+        "ID": 19100125011,
+        "event": "",
+        "parm": "",
+    }),
+    19100125012: _tools.RODict({
+        "ID": 19100125012,
+        "event": "",
+        "parm": "",
+    }),
+    19100125013: _tools.RODict({
+        "ID": 19100125013,
+        "event": "",
+        "parm": "",
+    }),
+    19100125014: _tools.RODict({
+        "ID": 19100125014,
+        "event": "",
+        "parm": "",
+    }),
+    19100125015: _tools.RODict({
+        "ID": 19100125015,
+        "event": "",
+        "parm": "",
+    }),
+    19100125016: _tools.RODict({
+        "ID": 19100125016,
+        "event": "",
+        "parm": "",
+    }),
+    19100125017: _tools.RODict({
+        "ID": 19100125017,
+        "event": "",
+        "parm": "",
+    }),
+    19100125018: _tools.RODict({
+        "ID": 19100125018,
+        "event": "",
+        "parm": "",
+    }),
+    19100125019: _tools.RODict({
+        "ID": 19100125019,
+        "event": "",
+        "parm": "",
+    }),
+    19100125020: _tools.RODict({
+        "ID": 19100125020,
+        "event": "",
+        "parm": "",
+    }),
+    19100125021: _tools.RODict({
+        "ID": 19100125021,
+        "event": "",
+        "parm": "",
+    }),
+    19100125022: _tools.RODict({
+        "ID": 19100125022,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700023000: _tools.RODict({
+        "ID": 19700023000,
+        "event": "",
+        "parm": "",
+    }),
+    19700023001: _tools.RODict({
+        "ID": 19700023001,
+        "event": "",
+        "parm": "",
+    }),
+    19700023002: _tools.RODict({
+        "ID": 19700023002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700019000: _tools.RODict({
+        "ID": 19700019000,
+        "event": "",
+        "parm": "",
+    }),
+    19700019001: _tools.RODict({
+        "ID": 19700019001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700020000: _tools.RODict({
+        "ID": 19700020000,
+        "event": "",
+        "parm": "",
+    }),
+    19700020001: _tools.RODict({
+        "ID": 19700020001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700021000: _tools.RODict({
+        "ID": 19700021000,
+        "event": "",
+        "parm": "",
+    }),
+    19700021001: _tools.RODict({
+        "ID": 19700021001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19700022000: _tools.RODict({
+        "ID": 19700022000,
+        "event": "",
+        "parm": "",
+    }),
+    19700022001: _tools.RODict({
+        "ID": 19700022001,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -5332,1916 +7657,321 @@ datas = _tools.RODict({
     }),
     19100126003: _tools.RODict({
         "ID": 19100126003,
-        "event": "Fnstalk",
+        "event": "",
         "parm": "",
     }),
-    19100069006: _tools.RODict({
-        "ID": 19100069006,
+    19100126004: _tools.RODict({
+        "ID": 19100126004,
+        "event": "",
+        "parm": "",
+    }),
+    19100126005: _tools.RODict({
+        "ID": 19100126005,
+        "event": "",
+        "parm": "",
+    }),
+    19100126006: _tools.RODict({
+        "ID": 19100126006,
+        "event": "",
+        "parm": "",
+    }),
+    19100126007: _tools.RODict({
+        "ID": 19100126007,
         "event": "Fnstalk",
         "parm": "",
     }),
     19100127000: _tools.RODict({
         "ID": 19100127000,
-        "event": "",
-        "parm": "",
-    }),
-    19100127001: _tools.RODict({
-        "ID": 19100127001,
-        "event": "",
-        "parm": "",
-    }),
-    19100127002: _tools.RODict({
-        "ID": 19100127002,
-        "event": "",
-        "parm": "",
-    }),
-    19100127003: _tools.RODict({
-        "ID": 19100127003,
-        "event": "",
-        "parm": "",
-    }),
-    19100127004: _tools.RODict({
-        "ID": 19100127004,
-        "event": "",
-        "parm": "",
-    }),
-    19100127005: _tools.RODict({
-        "ID": 19100127005,
-        "event": "",
-        "parm": "",
-    }),
-    19100128000: _tools.RODict({
-        "ID": 19100128000,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100129000: _tools.RODict({
-        "ID": 19100129000,
+    19800024000: _tools.RODict({
+        "ID": 19800024000,
         "event": "",
         "parm": "",
     }),
-    19100129001: _tools.RODict({
-        "ID": 19100129001,
+    19800024001: _tools.RODict({
+        "ID": 19800024001,
         "event": "",
         "parm": "",
     }),
-    19100129002: _tools.RODict({
-        "ID": 19100129002,
+    19800024002: _tools.RODict({
+        "ID": 19800024002,
         "event": "",
         "parm": "",
     }),
-    19100129003: _tools.RODict({
-        "ID": 19100129003,
+    19800024003: _tools.RODict({
+        "ID": 19800024003,
         "event": "",
         "parm": "",
     }),
-    19100129004: _tools.RODict({
-        "ID": 19100129004,
+    19800024004: _tools.RODict({
+        "ID": 19800024004,
         "event": "",
         "parm": "",
     }),
-    19100129005: _tools.RODict({
-        "ID": 19100129005,
-        "event": "",
-        "parm": "",
-    }),
-    19100129006: _tools.RODict({
-        "ID": 19100129006,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100130000: _tools.RODict({
-        "ID": 19100130000,
-        "event": "",
-        "parm": "",
-    }),
-    19100130001: _tools.RODict({
-        "ID": 19100130001,
-        "event": "",
-        "parm": "",
-    }),
-    19100130002: _tools.RODict({
-        "ID": 19100130002,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100133000: _tools.RODict({
-        "ID": 19100133000,
-        "event": "",
-        "parm": "",
-    }),
-    19100133001: _tools.RODict({
-        "ID": 19100133001,
-        "event": "",
-        "parm": "",
-    }),
-    19100133002: _tools.RODict({
-        "ID": 19100133002,
-        "event": "",
-        "parm": "",
-    }),
-    19100133003: _tools.RODict({
-        "ID": 19100133003,
-        "event": "",
-        "parm": "",
-    }),
-    19100133004: _tools.RODict({
-        "ID": 19100133004,
-        "event": "",
-        "parm": "",
-    }),
-    19100133005: _tools.RODict({
-        "ID": 19100133005,
-        "event": "",
-        "parm": "",
-    }),
-    19100133006: _tools.RODict({
-        "ID": 19100133006,
-        "event": "",
-        "parm": "",
-    }),
-    19100133007: _tools.RODict({
-        "ID": 19100133007,
-        "event": "",
-        "parm": "",
-    }),
-    19100133008: _tools.RODict({
-        "ID": 19100133008,
-        "event": "",
-        "parm": "",
-    }),
-    19100133009: _tools.RODict({
-        "ID": 19100133009,
-        "event": "",
-        "parm": "",
-    }),
-    19100133010: _tools.RODict({
-        "ID": 19100133010,
-        "event": "",
-        "parm": "",
-    }),
-    19100133011: _tools.RODict({
-        "ID": 19100133011,
-        "event": "",
-        "parm": "",
-    }),
-    19100133012: _tools.RODict({
-        "ID": 19100133012,
-        "event": "",
-        "parm": "",
-    }),
-    19100133013: _tools.RODict({
-        "ID": 19100133013,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100131000: _tools.RODict({
-        "ID": 19100131000,
-        "event": "",
-        "parm": "",
-    }),
-    19100131001: _tools.RODict({
-        "ID": 19100131001,
-        "event": "",
-        "parm": "",
-    }),
-    19100131002: _tools.RODict({
-        "ID": 19100131002,
-        "event": "",
-        "parm": "",
-    }),
-    19100131003: _tools.RODict({
-        "ID": 19100131003,
-        "event": "",
-        "parm": "",
-    }),
-    19100131004: _tools.RODict({
-        "ID": 19100131004,
-        "event": "",
-        "parm": "",
-    }),
-    19100131005: _tools.RODict({
-        "ID": 19100131005,
-        "event": "",
-        "parm": "",
-    }),
-    19100131006: _tools.RODict({
-        "ID": 19100131006,
-        "event": "",
-        "parm": "",
-    }),
-    19100131007: _tools.RODict({
-        "ID": 19100131007,
-        "event": "",
-        "parm": "",
-    }),
-    19100131008: _tools.RODict({
-        "ID": 19100131008,
-        "event": "",
-        "parm": "",
-    }),
-    19100131009: _tools.RODict({
-        "ID": 19100131009,
-        "event": "",
-        "parm": "",
-    }),
-    19100131010: _tools.RODict({
-        "ID": 19100131010,
-        "event": "",
-        "parm": "",
-    }),
-    19100131011: _tools.RODict({
-        "ID": 19100131011,
-        "event": "",
-        "parm": "",
-    }),
-    19100131012: _tools.RODict({
-        "ID": 19100131012,
-        "event": "",
-        "parm": "",
-    }),
-    19100131013: _tools.RODict({
-        "ID": 19100131013,
-        "event": "",
-        "parm": "",
-    }),
-    19100131014: _tools.RODict({
-        "ID": 19100131014,
-        "event": "",
-        "parm": "",
-    }),
-    19100131015: _tools.RODict({
-        "ID": 19100131015,
-        "event": "",
-        "parm": "",
-    }),
-    19100131016: _tools.RODict({
-        "ID": 19100131016,
-        "event": "",
-        "parm": "",
-    }),
-    19100131017: _tools.RODict({
-        "ID": 19100131017,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100132000: _tools.RODict({
-        "ID": 19100132000,
-        "event": "",
-        "parm": "",
-    }),
-    19100132001: _tools.RODict({
-        "ID": 19100132001,
-        "event": "",
-        "parm": "",
-    }),
-    19100132002: _tools.RODict({
-        "ID": 19100132002,
-        "event": "",
-        "parm": "",
-    }),
-    19100132003: _tools.RODict({
-        "ID": 19100132003,
-        "event": "",
-        "parm": "",
-    }),
-    19100132004: _tools.RODict({
-        "ID": 19100132004,
-        "event": "",
-        "parm": "",
-    }),
-    19100132005: _tools.RODict({
-        "ID": 19100132005,
-        "event": "",
-        "parm": "",
-    }),
-    19100132006: _tools.RODict({
-        "ID": 19100132006,
-        "event": "",
-        "parm": "",
-    }),
-    19100132007: _tools.RODict({
-        "ID": 19100132007,
-        "event": "",
-        "parm": "",
-    }),
-    19100132008: _tools.RODict({
-        "ID": 19100132008,
-        "event": "",
-        "parm": "",
-    }),
-    19100132009: _tools.RODict({
-        "ID": 19100132009,
-        "event": "",
-        "parm": "",
-    }),
-    19100132010: _tools.RODict({
-        "ID": 19100132010,
-        "event": "",
-        "parm": "",
-    }),
-    19100132011: _tools.RODict({
-        "ID": 19100132011,
-        "event": "",
-        "parm": "",
-    }),
-    19100132012: _tools.RODict({
-        "ID": 19100132012,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100079001: _tools.RODict({
-        "ID": 19100079001,
-        "event": "",
-        "parm": "",
-    }),
-    19100079002: _tools.RODict({
-        "ID": 19100079002,
-        "event": "",
-        "parm": "",
-    }),
-    19100079003: _tools.RODict({
-        "ID": 19100079003,
-        "event": "",
-        "parm": "",
-    }),
-    19100079004: _tools.RODict({
-        "ID": 19100079004,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100080000: _tools.RODict({
-        "ID": 19100080000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100081000: _tools.RODict({
-        "ID": 19100081000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100082000: _tools.RODict({
-        "ID": 19100082000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100083000: _tools.RODict({
-        "ID": 19100083000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100084000: _tools.RODict({
-        "ID": 19100084000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100085000: _tools.RODict({
-        "ID": 19100085000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100086000: _tools.RODict({
-        "ID": 19100086000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100087000: _tools.RODict({
-        "ID": 19100087000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100088000: _tools.RODict({
-        "ID": 19100088000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100090000: _tools.RODict({
-        "ID": 19100090000,
-        "event": "",
-        "parm": "",
-    }),
-    19100090001: _tools.RODict({
-        "ID": 19100090001,
-        "event": "",
-        "parm": "",
-    }),
-    19100090002: _tools.RODict({
-        "ID": 19100090002,
-        "event": "",
-        "parm": "",
-    }),
-    19100090003: _tools.RODict({
-        "ID": 19100090003,
-        "event": "",
-        "parm": "",
-    }),
-    19100090004: _tools.RODict({
-        "ID": 19100090004,
-        "event": "",
-        "parm": "",
-    }),
-    19100090005: _tools.RODict({
-        "ID": 19100090005,
-        "event": "",
-        "parm": "",
-    }),
-    19100090006: _tools.RODict({
-        "ID": 19100090006,
-        "event": "",
-        "parm": "",
-    }),
-    19100090007: _tools.RODict({
-        "ID": 19100090007,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100091000: _tools.RODict({
-        "ID": 19100091000,
-        "event": "",
-        "parm": "",
-    }),
-    19100091001: _tools.RODict({
-        "ID": 19100091001,
-        "event": "",
-        "parm": "",
-    }),
-    19100091002: _tools.RODict({
-        "ID": 19100091002,
-        "event": "",
-        "parm": "",
-    }),
-    19100091003: _tools.RODict({
-        "ID": 19100091003,
-        "event": "",
-        "parm": "",
-    }),
-    19100091004: _tools.RODict({
-        "ID": 19100091004,
-        "event": "",
-        "parm": "",
-    }),
-    19100091005: _tools.RODict({
-        "ID": 19100091005,
-        "event": "",
-        "parm": "",
-    }),
-    19100091006: _tools.RODict({
-        "ID": 19100091006,
-        "event": "",
-        "parm": "",
-    }),
-    19100091007: _tools.RODict({
-        "ID": 19100091007,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100112000: _tools.RODict({
-        "ID": 19100112000,
-        "event": "",
-        "parm": "",
-    }),
-    19100112001: _tools.RODict({
-        "ID": 19100112001,
-        "event": "",
-        "parm": "",
-    }),
-    19100112002: _tools.RODict({
-        "ID": 19100112002,
-        "event": "",
-        "parm": "",
-    }),
-    19100112003: _tools.RODict({
-        "ID": 19100112003,
-        "event": "",
-        "parm": "",
-    }),
-    19100112004: _tools.RODict({
-        "ID": 19100112004,
-        "event": "",
-        "parm": "",
-    }),
-    19100112005: _tools.RODict({
-        "ID": 19100112005,
-        "event": "",
-        "parm": "",
-    }),
-    19100112006: _tools.RODict({
-        "ID": 19100112006,
-        "event": "",
-        "parm": "",
-    }),
-    19100112007: _tools.RODict({
-        "ID": 19100112007,
-        "event": "",
-        "parm": "",
-    }),
-    19100112008: _tools.RODict({
-        "ID": 19100112008,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100092000: _tools.RODict({
-        "ID": 19100092000,
-        "event": "",
-        "parm": "",
-    }),
-    19100092001: _tools.RODict({
-        "ID": 19100092001,
-        "event": "",
-        "parm": "",
-    }),
-    19100092002: _tools.RODict({
-        "ID": 19100092002,
-        "event": "",
-        "parm": "",
-    }),
-    19100092003: _tools.RODict({
-        "ID": 19100092003,
-        "event": "",
-        "parm": "",
-    }),
-    19100092004: _tools.RODict({
-        "ID": 19100092004,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100041000: _tools.RODict({
-        "ID": 19100041000,
-        "event": "",
-        "parm": "",
-    }),
-    19100041001: _tools.RODict({
-        "ID": 19100041001,
-        "event": "",
-        "parm": "",
-    }),
-    19100041002: _tools.RODict({
-        "ID": 19100041002,
-        "event": "",
-        "parm": "",
-    }),
-    19100041003: _tools.RODict({
-        "ID": 19100041003,
-        "event": "",
-        "parm": "",
-    }),
-    19100041004: _tools.RODict({
-        "ID": 19100041004,
-        "event": "",
-        "parm": "",
-    }),
-    19100041005: _tools.RODict({
-        "ID": 19100041005,
-        "event": "",
-        "parm": "",
-    }),
-    19100041006: _tools.RODict({
-        "ID": 19100041006,
-        "event": "",
-        "parm": "",
-    }),
-    19100041007: _tools.RODict({
-        "ID": 19100041007,
-        "event": "",
-        "parm": "",
-    }),
-    19100041008: _tools.RODict({
-        "ID": 19100041008,
-        "event": "",
-        "parm": "",
-    }),
-    19100041009: _tools.RODict({
-        "ID": 19100041009,
-        "event": "",
-        "parm": "",
-    }),
-    19100041010: _tools.RODict({
-        "ID": 19100041010,
-        "event": "",
-        "parm": "",
-    }),
-    19100041011: _tools.RODict({
-        "ID": 19100041011,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100042000: _tools.RODict({
-        "ID": 19100042000,
-        "event": "",
-        "parm": "",
-    }),
-    19100042001: _tools.RODict({
-        "ID": 19100042001,
-        "event": "",
-        "parm": "",
-    }),
-    19100042002: _tools.RODict({
-        "ID": 19100042002,
-        "event": "",
-        "parm": "",
-    }),
-    19100042003: _tools.RODict({
-        "ID": 19100042003,
-        "event": "",
-        "parm": "",
-    }),
-    19100042004: _tools.RODict({
-        "ID": 19100042004,
-        "event": "",
-        "parm": "",
-    }),
-    19100042005: _tools.RODict({
-        "ID": 19100042005,
-        "event": "",
-        "parm": "",
-    }),
-    19100042006: _tools.RODict({
-        "ID": 19100042006,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100055000: _tools.RODict({
-        "ID": 19100055000,
-        "event": "",
-        "parm": "",
-    }),
-    19100055001: _tools.RODict({
-        "ID": 19100055001,
-        "event": "",
-        "parm": "",
-    }),
-    19100055002: _tools.RODict({
-        "ID": 19100055002,
-        "event": "",
-        "parm": "",
-    }),
-    19100055003: _tools.RODict({
-        "ID": 19100055003,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100043000: _tools.RODict({
-        "ID": 19100043000,
-        "event": "",
-        "parm": "",
-    }),
-    19100043001: _tools.RODict({
-        "ID": 19100043001,
-        "event": "",
-        "parm": "",
-    }),
-    19100043002: _tools.RODict({
-        "ID": 19100043002,
-        "event": "",
-        "parm": "",
-    }),
-    19100043003: _tools.RODict({
-        "ID": 19100043003,
-        "event": "",
-        "parm": "",
-    }),
-    19100043004: _tools.RODict({
-        "ID": 19100043004,
-        "event": "",
-        "parm": "",
-    }),
-    19100043005: _tools.RODict({
-        "ID": 19100043005,
-        "event": "",
-        "parm": "",
-    }),
-    19100043006: _tools.RODict({
-        "ID": 19100043006,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100093000: _tools.RODict({
-        "ID": 19100093000,
-        "event": "",
-        "parm": "",
-    }),
-    19100093001: _tools.RODict({
-        "ID": 19100093001,
-        "event": "",
-        "parm": "",
-    }),
-    19100093002: _tools.RODict({
-        "ID": 19100093002,
-        "event": "",
-        "parm": "",
-    }),
-    19100093003: _tools.RODict({
-        "ID": 19100093003,
-        "event": "",
-        "parm": "",
-    }),
-    19100093004: _tools.RODict({
-        "ID": 19100093004,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100094000: _tools.RODict({
-        "ID": 19100094000,
-        "event": "",
-        "parm": "",
-    }),
-    19100094001: _tools.RODict({
-        "ID": 19100094001,
-        "event": "",
-        "parm": "",
-    }),
-    19100094002: _tools.RODict({
-        "ID": 19100094002,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100097000: _tools.RODict({
-        "ID": 19100097000,
-        "event": "",
-        "parm": "",
-    }),
-    19100097001: _tools.RODict({
-        "ID": 19100097001,
-        "event": "",
-        "parm": "",
-    }),
-    19100097002: _tools.RODict({
-        "ID": 19100097002,
-        "event": "",
-        "parm": "",
-    }),
-    19100097003: _tools.RODict({
-        "ID": 19100097003,
-        "event": "",
-        "parm": "",
-    }),
-    19100097004: _tools.RODict({
-        "ID": 19100097004,
-        "event": "",
-        "parm": "",
-    }),
-    19100097005: _tools.RODict({
-        "ID": 19100097005,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100095000: _tools.RODict({
-        "ID": 19100095000,
-        "event": "",
-        "parm": "",
-    }),
-    19100095001: _tools.RODict({
-        "ID": 19100095001,
-        "event": "",
-        "parm": "",
-    }),
-    19100095002: _tools.RODict({
-        "ID": 19100095002,
-        "event": "",
-        "parm": "",
-    }),
-    19100095003: _tools.RODict({
-        "ID": 19100095003,
-        "event": "",
-        "parm": "",
-    }),
-    19100095004: _tools.RODict({
-        "ID": 19100095004,
-        "event": "",
-        "parm": "",
-    }),
-    19100095005: _tools.RODict({
-        "ID": 19100095005,
-        "event": "",
-        "parm": "",
-    }),
-    19100095006: _tools.RODict({
-        "ID": 19100095006,
-        "event": "",
-        "parm": "",
-    }),
-    19100095007: _tools.RODict({
-        "ID": 19100095007,
-        "event": "",
-        "parm": "",
-    }),
-    19100095008: _tools.RODict({
-        "ID": 19100095008,
-        "event": "",
-        "parm": "",
-    }),
-    19100095009: _tools.RODict({
-        "ID": 19100095009,
-        "event": "",
-        "parm": "",
-    }),
-    19100095010: _tools.RODict({
-        "ID": 19100095010,
-        "event": "",
-        "parm": "",
-    }),
-    19100095011: _tools.RODict({
-        "ID": 19100095011,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100096000: _tools.RODict({
-        "ID": 19100096000,
-        "event": "",
-        "parm": "",
-    }),
-    19100096001: _tools.RODict({
-        "ID": 19100096001,
-        "event": "",
-        "parm": "",
-    }),
-    19100096002: _tools.RODict({
-        "ID": 19100096002,
-        "event": "",
-        "parm": "",
-    }),
-    19100096003: _tools.RODict({
-        "ID": 19100096003,
-        "event": "",
-        "parm": "",
-    }),
-    19100096004: _tools.RODict({
-        "ID": 19100096004,
-        "event": "",
-        "parm": "",
-    }),
-    19100096005: _tools.RODict({
-        "ID": 19100096005,
-        "event": "",
-        "parm": "",
-    }),
-    19100096006: _tools.RODict({
-        "ID": 19100096006,
-        "event": "",
-        "parm": "",
-    }),
-    19100096007: _tools.RODict({
-        "ID": 19100096007,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100113000: _tools.RODict({
-        "ID": 19100113000,
-        "event": "",
-        "parm": "",
-    }),
-    19100113001: _tools.RODict({
-        "ID": 19100113001,
-        "event": "",
-        "parm": "",
-    }),
-    19100113002: _tools.RODict({
-        "ID": 19100113002,
-        "event": "",
-        "parm": "",
-    }),
-    19100113003: _tools.RODict({
-        "ID": 19100113003,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100098000: _tools.RODict({
-        "ID": 19100098000,
-        "event": "",
-        "parm": "",
-    }),
-    19100098001: _tools.RODict({
-        "ID": 19100098001,
-        "event": "",
-        "parm": "",
-    }),
-    19100098002: _tools.RODict({
-        "ID": 19100098002,
-        "event": "",
-        "parm": "",
-    }),
-    19100098003: _tools.RODict({
-        "ID": 19100098003,
-        "event": "",
-        "parm": "",
-    }),
-    19100098004: _tools.RODict({
-        "ID": 19100098004,
-        "event": "",
-        "parm": "",
-    }),
-    19100098005: _tools.RODict({
-        "ID": 19100098005,
-        "event": "",
-        "parm": "",
-    }),
-    19100098006: _tools.RODict({
-        "ID": 19100098006,
-        "event": "",
-        "parm": "",
-    }),
-    19100098007: _tools.RODict({
-        "ID": 19100098007,
-        "event": "",
-        "parm": "",
-    }),
-    19100098008: _tools.RODict({
-        "ID": 19100098008,
-        "event": "",
-        "parm": "",
-    }),
-    19100098009: _tools.RODict({
-        "ID": 19100098009,
-        "event": "",
-        "parm": "",
-    }),
-    19100098010: _tools.RODict({
-        "ID": 19100098010,
-        "event": "",
-        "parm": "",
-    }),
-    19100098011: _tools.RODict({
-        "ID": 19100098011,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100109000: _tools.RODict({
-        "ID": 19100109000,
-        "event": "",
-        "parm": "",
-    }),
-    19100109001: _tools.RODict({
-        "ID": 19100109001,
-        "event": "",
-        "parm": "",
-    }),
-    19100109002: _tools.RODict({
-        "ID": 19100109002,
-        "event": "",
-        "parm": "",
-    }),
-    19100109003: _tools.RODict({
-        "ID": 19100109003,
-        "event": "",
-        "parm": "",
-    }),
-    19100109004: _tools.RODict({
-        "ID": 19100109004,
-        "event": "",
-        "parm": "",
-    }),
-    19100109005: _tools.RODict({
-        "ID": 19100109005,
-        "event": "",
-        "parm": "",
-    }),
-    19100109006: _tools.RODict({
-        "ID": 19100109006,
-        "event": "",
-        "parm": "",
-    }),
-    19100109007: _tools.RODict({
-        "ID": 19100109007,
-        "event": "",
-        "parm": "",
-    }),
-    19100109008: _tools.RODict({
-        "ID": 19100109008,
-        "event": "",
-        "parm": "",
-    }),
-    19100109009: _tools.RODict({
-        "ID": 19100109009,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100111000: _tools.RODict({
-        "ID": 19100111000,
-        "event": "",
-        "parm": "",
-    }),
-    19100111001: _tools.RODict({
-        "ID": 19100111001,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100102000: _tools.RODict({
-        "ID": 19100102000,
-        "event": "",
-        "parm": "",
-    }),
-    19100102001: _tools.RODict({
-        "ID": 19100102001,
-        "event": "",
-        "parm": "",
-    }),
-    19100102002: _tools.RODict({
-        "ID": 19100102002,
-        "event": "",
-        "parm": "",
-    }),
-    19100102003: _tools.RODict({
-        "ID": 19100102003,
-        "event": "",
-        "parm": "",
-    }),
-    19100102004: _tools.RODict({
-        "ID": 19100102004,
-        "event": "",
-        "parm": "",
-    }),
-    19100102005: _tools.RODict({
-        "ID": 19100102005,
-        "event": "",
-        "parm": "",
-    }),
-    19100102006: _tools.RODict({
-        "ID": 19100102006,
-        "event": "",
-        "parm": "",
-    }),
-    19100102007: _tools.RODict({
-        "ID": 19100102007,
-        "event": "",
-        "parm": "",
-    }),
-    19100102008: _tools.RODict({
-        "ID": 19100102008,
-        "event": "",
-        "parm": "",
-    }),
-    19100102009: _tools.RODict({
-        "ID": 19100102009,
-        "event": "",
-        "parm": "",
-    }),
-    19100102010: _tools.RODict({
-        "ID": 19100102010,
-        "event": "",
-        "parm": "",
-    }),
-    19100102011: _tools.RODict({
-        "ID": 19100102011,
-        "event": "",
-        "parm": "",
-    }),
-    19100102012: _tools.RODict({
-        "ID": 19100102012,
-        "event": "",
-        "parm": "",
-    }),
-    19100102013: _tools.RODict({
-        "ID": 19100102013,
-        "event": "",
-        "parm": "",
-    }),
-    19100102014: _tools.RODict({
-        "ID": 19100102014,
-        "event": "",
-        "parm": "",
-    }),
-    19100102015: _tools.RODict({
-        "ID": 19100102015,
-        "event": "",
-        "parm": "",
-    }),
-    19100102016: _tools.RODict({
-        "ID": 19100102016,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100103000: _tools.RODict({
-        "ID": 19100103000,
-        "event": "",
-        "parm": "",
-    }),
-    19100103001: _tools.RODict({
-        "ID": 19100103001,
-        "event": "",
-        "parm": "",
-    }),
-    19100103002: _tools.RODict({
-        "ID": 19100103002,
-        "event": "",
-        "parm": "",
-    }),
-    19100103003: _tools.RODict({
-        "ID": 19100103003,
-        "event": "",
-        "parm": "",
-    }),
-    19100103004: _tools.RODict({
-        "ID": 19100103004,
-        "event": "",
-        "parm": "",
-    }),
-    19100103005: _tools.RODict({
-        "ID": 19100103005,
-        "event": "",
-        "parm": "",
-    }),
-    19100103006: _tools.RODict({
-        "ID": 19100103006,
-        "event": "",
-        "parm": "",
-    }),
-    19100103007: _tools.RODict({
-        "ID": 19100103007,
-        "event": "",
-        "parm": "",
-    }),
-    19100103008: _tools.RODict({
-        "ID": 19100103008,
-        "event": "",
-        "parm": "",
-    }),
-    19100103009: _tools.RODict({
-        "ID": 19100103009,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100104000: _tools.RODict({
-        "ID": 19100104000,
-        "event": "",
-        "parm": "",
-    }),
-    19100104001: _tools.RODict({
-        "ID": 19100104001,
-        "event": "",
-        "parm": "",
-    }),
-    19100104002: _tools.RODict({
-        "ID": 19100104002,
-        "event": "",
-        "parm": "",
-    }),
-    19100104003: _tools.RODict({
-        "ID": 19100104003,
-        "event": "",
-        "parm": "",
-    }),
-    19100104004: _tools.RODict({
-        "ID": 19100104004,
-        "event": "",
-        "parm": "",
-    }),
-    19100104005: _tools.RODict({
-        "ID": 19100104005,
-        "event": "",
-        "parm": "",
-    }),
-    19100104006: _tools.RODict({
-        "ID": 19100104006,
-        "event": "",
-        "parm": "",
-    }),
-    19100104007: _tools.RODict({
-        "ID": 19100104007,
-        "event": "",
-        "parm": "",
-    }),
-    19100104008: _tools.RODict({
-        "ID": 19100104008,
-        "event": "",
-        "parm": "",
-    }),
-    19100104009: _tools.RODict({
-        "ID": 19100104009,
-        "event": "",
-        "parm": "",
-    }),
-    19100104010: _tools.RODict({
-        "ID": 19100104010,
-        "event": "",
-        "parm": "",
-    }),
-    19100104011: _tools.RODict({
-        "ID": 19100104011,
-        "event": "",
-        "parm": "",
-    }),
-    19100104012: _tools.RODict({
-        "ID": 19100104012,
-        "event": "",
-        "parm": "",
-    }),
-    19100104013: _tools.RODict({
-        "ID": 19100104013,
-        "event": "",
-        "parm": "",
-    }),
-    19100104014: _tools.RODict({
-        "ID": 19100104014,
-        "event": "",
-        "parm": "",
-    }),
-    19100104015: _tools.RODict({
-        "ID": 19100104015,
-        "event": "",
-        "parm": "",
-    }),
-    19100104016: _tools.RODict({
-        "ID": 19100104016,
-        "event": "",
-        "parm": "",
-    }),
-    19100104017: _tools.RODict({
-        "ID": 19100104017,
-        "event": "",
-        "parm": "",
-    }),
-    19100104018: _tools.RODict({
-        "ID": 19100104018,
-        "event": "",
-        "parm": "",
-    }),
-    19100104019: _tools.RODict({
-        "ID": 19100104019,
-        "event": "",
-        "parm": "",
-    }),
-    19100104020: _tools.RODict({
-        "ID": 19100104020,
-        "event": "",
-        "parm": "",
-    }),
-    19100104021: _tools.RODict({
-        "ID": 19100104021,
-        "event": "",
-        "parm": "",
-    }),
-    19100104022: _tools.RODict({
-        "ID": 19100104022,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100105000: _tools.RODict({
-        "ID": 19100105000,
-        "event": "",
-        "parm": "",
-    }),
-    19100105001: _tools.RODict({
-        "ID": 19100105001,
-        "event": "",
-        "parm": "",
-    }),
-    19100105002: _tools.RODict({
-        "ID": 19100105002,
-        "event": "",
-        "parm": "",
-    }),
-    19100105003: _tools.RODict({
-        "ID": 19100105003,
-        "event": "",
-        "parm": "",
-    }),
-    19100105004: _tools.RODict({
-        "ID": 19100105004,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100106000: _tools.RODict({
-        "ID": 19100106000,
-        "event": "",
-        "parm": "",
-    }),
-    19100106001: _tools.RODict({
-        "ID": 19100106001,
-        "event": "",
-        "parm": "",
-    }),
-    19100106002: _tools.RODict({
-        "ID": 19100106002,
-        "event": "",
-        "parm": "",
-    }),
-    19100106003: _tools.RODict({
-        "ID": 19100106003,
-        "event": "",
-        "parm": "",
-    }),
-    19100106004: _tools.RODict({
-        "ID": 19100106004,
-        "event": "Fnstask",
-        "parm": "",
-    }),
-    19100106005: _tools.RODict({
-        "ID": 19100106005,
-        "event": "",
-        "parm": "",
-    }),
-    19100106006: _tools.RODict({
-        "ID": 19100106006,
-        "event": "",
-        "parm": "",
-    }),
-    19100106007: _tools.RODict({
-        "ID": 19100106007,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100107000: _tools.RODict({
-        "ID": 19100107000,
-        "event": "",
-        "parm": "",
-    }),
-    19100107001: _tools.RODict({
-        "ID": 19100107001,
-        "event": "",
-        "parm": "",
-    }),
-    19100107002: _tools.RODict({
-        "ID": 19100107002,
-        "event": "",
-        "parm": "",
-    }),
-    19100107003: _tools.RODict({
-        "ID": 19100107003,
-        "event": "",
-        "parm": "",
-    }),
-    19100107004: _tools.RODict({
-        "ID": 19100107004,
-        "event": "",
-        "parm": "",
-    }),
-    19100107005: _tools.RODict({
-        "ID": 19100107005,
-        "event": "",
-        "parm": "",
-    }),
-    19100107006: _tools.RODict({
-        "ID": 19100107006,
-        "event": "",
-        "parm": "",
-    }),
-    19100107007: _tools.RODict({
-        "ID": 19100107007,
-        "event": "",
-        "parm": "",
-    }),
-    19100107008: _tools.RODict({
-        "ID": 19100107008,
-        "event": "",
-        "parm": "",
-    }),
-    19100107009: _tools.RODict({
-        "ID": 19100107009,
-        "event": "",
-        "parm": "",
-    }),
-    19100107010: _tools.RODict({
-        "ID": 19100107010,
-        "event": "",
-        "parm": "",
-    }),
-    19100107011: _tools.RODict({
-        "ID": 19100107011,
-        "event": "",
-        "parm": "",
-    }),
-    19100107012: _tools.RODict({
-        "ID": 19100107012,
-        "event": "",
-        "parm": "",
-    }),
-    19100107013: _tools.RODict({
-        "ID": 19100107013,
-        "event": "",
-        "parm": "",
-    }),
-    19100107014: _tools.RODict({
-        "ID": 19100107014,
-        "event": "",
-        "parm": "",
-    }),
-    19100107015: _tools.RODict({
-        "ID": 19100107015,
-        "event": "",
-        "parm": "",
-    }),
-    19100107016: _tools.RODict({
-        "ID": 19100107016,
-        "event": "",
-        "parm": "",
-    }),
-    19100107017: _tools.RODict({
-        "ID": 19100107017,
-        "event": "",
-        "parm": "",
-    }),
-    19100107018: _tools.RODict({
-        "ID": 19100107018,
-        "event": "",
-        "parm": "",
-    }),
-    19100107019: _tools.RODict({
-        "ID": 19100107019,
-        "event": "",
-        "parm": "",
-    }),
-    19100107020: _tools.RODict({
-        "ID": 19100107020,
-        "event": "",
-        "parm": "",
-    }),
-    19100107021: _tools.RODict({
-        "ID": 19100107021,
-        "event": "",
-        "parm": "",
-    }),
-    19100107022: _tools.RODict({
-        "ID": 19100107022,
-        "event": "",
-        "parm": "",
-    }),
-    19100107023: _tools.RODict({
-        "ID": 19100107023,
-        "event": "",
-        "parm": "",
-    }),
-    19100107024: _tools.RODict({
-        "ID": 19100107024,
-        "event": "",
-        "parm": "",
-    }),
-    19100107025: _tools.RODict({
-        "ID": 19100107025,
-        "event": "",
-        "parm": "",
-    }),
-    19100107026: _tools.RODict({
-        "ID": 19100107026,
-        "event": "",
-        "parm": "",
-    }),
-    19100107027: _tools.RODict({
-        "ID": 19100107027,
-        "event": "",
-        "parm": "",
-    }),
-    19100107028: _tools.RODict({
-        "ID": 19100107028,
-        "event": "",
-        "parm": "",
-    }),
-    19100107029: _tools.RODict({
-        "ID": 19100107029,
-        "event": "",
-        "parm": "",
-    }),
-    19100107030: _tools.RODict({
-        "ID": 19100107030,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100108000: _tools.RODict({
-        "ID": 19100108000,
-        "event": "",
-        "parm": "",
-    }),
-    19100108001: _tools.RODict({
-        "ID": 19100108001,
-        "event": "",
-        "parm": "",
-    }),
-    19100108002: _tools.RODict({
-        "ID": 19100108002,
-        "event": "",
-        "parm": "",
-    }),
-    19100108003: _tools.RODict({
-        "ID": 19100108003,
-        "event": "",
-        "parm": "",
-    }),
-    19100108004: _tools.RODict({
-        "ID": 19100108004,
-        "event": "",
-        "parm": "",
-    }),
-    19100108005: _tools.RODict({
-        "ID": 19100108005,
-        "event": "",
-        "parm": "",
-    }),
-    19100108006: _tools.RODict({
-        "ID": 19100108006,
-        "event": "",
-        "parm": "",
-    }),
-    19100108007: _tools.RODict({
-        "ID": 19100108007,
-        "event": "",
-        "parm": "",
-    }),
-    19100108008: _tools.RODict({
-        "ID": 19100108008,
-        "event": "",
-        "parm": "",
-    }),
-    19100108009: _tools.RODict({
-        "ID": 19100108009,
-        "event": "",
-        "parm": "",
-    }),
-    19100108010: _tools.RODict({
-        "ID": 19100108010,
-        "event": "",
-        "parm": "",
-    }),
-    19100108011: _tools.RODict({
-        "ID": 19100108011,
-        "event": "",
-        "parm": "",
-    }),
-    19100108012: _tools.RODict({
-        "ID": 19100108012,
-        "event": "",
-        "parm": "",
-    }),
-    19100108013: _tools.RODict({
-        "ID": 19100108013,
-        "event": "",
-        "parm": "",
-    }),
-    19100108014: _tools.RODict({
-        "ID": 19100108014,
-        "event": "",
-        "parm": "",
-    }),
-    19100108015: _tools.RODict({
-        "ID": 19100108015,
-        "event": "",
-        "parm": "",
-    }),
-    19100108016: _tools.RODict({
-        "ID": 19100108016,
-        "event": "",
-        "parm": "",
-    }),
-    19100108017: _tools.RODict({
-        "ID": 19100108017,
-        "event": "",
-        "parm": "",
-    }),
-    19100108018: _tools.RODict({
-        "ID": 19100108018,
-        "event": "",
-        "parm": "",
-    }),
-    19100108019: _tools.RODict({
-        "ID": 19100108019,
-        "event": "",
-        "parm": "",
-    }),
-    19100108020: _tools.RODict({
-        "ID": 19100108020,
-        "event": "",
-        "parm": "",
-    }),
-    19100108021: _tools.RODict({
-        "ID": 19100108021,
-        "event": "",
-        "parm": "",
-    }),
-    19100108022: _tools.RODict({
-        "ID": 19100108022,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100045000: _tools.RODict({
-        "ID": 19100045000,
-        "event": "",
-        "parm": "",
-    }),
-    19100045001: _tools.RODict({
-        "ID": 19100045001,
-        "event": "",
-        "parm": "",
-    }),
-    19100045002: _tools.RODict({
-        "ID": 19100045002,
-        "event": "",
-        "parm": "",
-    }),
-    19100045003: _tools.RODict({
-        "ID": 19100045003,
-        "event": "",
-        "parm": "",
-    }),
-    19100045004: _tools.RODict({
-        "ID": 19100045004,
-        "event": "",
-        "parm": "",
-    }),
-    19100045005: _tools.RODict({
-        "ID": 19100045005,
-        "event": "",
-        "parm": "",
-    }),
-    19100045006: _tools.RODict({
-        "ID": 19100045006,
-        "event": "",
-        "parm": "",
-    }),
-    19100045007: _tools.RODict({
-        "ID": 19100045007,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100046000: _tools.RODict({
-        "ID": 19100046000,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100024000: _tools.RODict({
-        "ID": 19100024000,
-        "event": "",
-        "parm": "",
-    }),
-    19100024001: _tools.RODict({
-        "ID": 19100024001,
-        "event": "",
-        "parm": "",
-    }),
-    19100024002: _tools.RODict({
-        "ID": 19100024002,
-        "event": "",
-        "parm": "",
-    }),
-    19100024003: _tools.RODict({
-        "ID": 19100024003,
-        "event": "",
-        "parm": "",
-    }),
-    19100024004: _tools.RODict({
-        "ID": 19100024004,
-        "event": "",
-        "parm": "",
-    }),
-    19100024005: _tools.RODict({
-        "ID": 19100024005,
+    19800024005: _tools.RODict({
+        "ID": 19800024005,
         "event": "Gettask",
         "parm": "",
     }),
-    19100031000: _tools.RODict({
-        "ID": 19100031000,
+    19800031000: _tools.RODict({
+        "ID": 19800031000,
         "event": "",
         "parm": "",
     }),
-    19100031001: _tools.RODict({
-        "ID": 19100031001,
+    19800031001: _tools.RODict({
+        "ID": 19800031001,
         "event": "",
         "parm": "",
     }),
-    19100031002: _tools.RODict({
-        "ID": 19100031002,
+    19800031002: _tools.RODict({
+        "ID": 19800031002,
         "event": "",
         "parm": "",
     }),
-    19100031003: _tools.RODict({
-        "ID": 19100031003,
+    19800031003: _tools.RODict({
+        "ID": 19800031003,
         "event": "",
         "parm": "",
     }),
-    19100031004: _tools.RODict({
-        "ID": 19100031004,
+    19800031004: _tools.RODict({
+        "ID": 19800031004,
         "event": "",
         "parm": "",
     }),
-    19100031005: _tools.RODict({
-        "ID": 19100031005,
+    19800031005: _tools.RODict({
+        "ID": 19800031005,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100032000: _tools.RODict({
-        "ID": 19100032000,
+    19800032000: _tools.RODict({
+        "ID": 19800032000,
         "event": "",
         "parm": "",
     }),
-    19100032001: _tools.RODict({
-        "ID": 19100032001,
+    19800032001: _tools.RODict({
+        "ID": 19800032001,
         "event": "",
         "parm": "",
     }),
-    19100032002: _tools.RODict({
-        "ID": 19100032002,
+    19800032002: _tools.RODict({
+        "ID": 19800032002,
         "event": "",
         "parm": "",
     }),
-    19100032003: _tools.RODict({
-        "ID": 19100032003,
+    19800032003: _tools.RODict({
+        "ID": 19800032003,
         "event": "",
         "parm": "",
     }),
-    19100032004: _tools.RODict({
-        "ID": 19100032004,
+    19800032004: _tools.RODict({
+        "ID": 19800032004,
         "event": "",
         "parm": "",
     }),
-    19100032005: _tools.RODict({
-        "ID": 19100032005,
+    19800032005: _tools.RODict({
+        "ID": 19800032005,
         "event": "",
         "parm": "",
     }),
-    19100032006: _tools.RODict({
-        "ID": 19100032006,
+    19800032006: _tools.RODict({
+        "ID": 19800032006,
         "event": "",
         "parm": "",
     }),
-    19100032007: _tools.RODict({
-        "ID": 19100032007,
+    19800032007: _tools.RODict({
+        "ID": 19800032007,
         "event": "",
         "parm": "",
     }),
-    19100032008: _tools.RODict({
-        "ID": 19100032008,
+    19800032008: _tools.RODict({
+        "ID": 19800032008,
         "event": "",
         "parm": "",
     }),
-    19100032009: _tools.RODict({
-        "ID": 19100032009,
+    19800032009: _tools.RODict({
+        "ID": 19800032009,
         "event": "",
         "parm": "",
     }),
-    19100032010: _tools.RODict({
-        "ID": 19100032010,
+    19800032010: _tools.RODict({
+        "ID": 19800032010,
         "event": "",
         "parm": "",
     }),
-    19100032011: _tools.RODict({
-        "ID": 19100032011,
+    19800032011: _tools.RODict({
+        "ID": 19800032011,
         "event": "",
         "parm": "",
     }),
-    19100032012: _tools.RODict({
-        "ID": 19100032012,
+    19800032012: _tools.RODict({
+        "ID": 19800032012,
         "event": "",
         "parm": "",
     }),
-    19100032013: _tools.RODict({
-        "ID": 19100032013,
+    19800032013: _tools.RODict({
+        "ID": 19800032013,
         "event": "",
         "parm": "",
     }),
-    19100032014: _tools.RODict({
-        "ID": 19100032014,
+    19800032014: _tools.RODict({
+        "ID": 19800032014,
         "event": "",
         "parm": "",
     }),
-    19100032015: _tools.RODict({
-        "ID": 19100032015,
+    19800032015: _tools.RODict({
+        "ID": 19800032015,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100032016: _tools.RODict({
-        "ID": 19100032016,
+    19800032016: _tools.RODict({
+        "ID": 19800032016,
         "event": "",
         "parm": "",
     }),
-    19100032017: _tools.RODict({
-        "ID": 19100032017,
+    19800032017: _tools.RODict({
+        "ID": 19800032017,
         "event": "",
         "parm": "",
     }),
-    19100032018: _tools.RODict({
-        "ID": 19100032018,
+    19800032018: _tools.RODict({
+        "ID": 19800032018,
         "event": "",
         "parm": "",
     }),
-    19100032019: _tools.RODict({
-        "ID": 19100032019,
+    19800032019: _tools.RODict({
+        "ID": 19800032019,
         "event": "",
         "parm": "",
     }),
-    19100032020: _tools.RODict({
-        "ID": 19100032020,
+    19800032020: _tools.RODict({
+        "ID": 19800032020,
         "event": "",
         "parm": "",
     }),
-    19100032021: _tools.RODict({
-        "ID": 19100032021,
+    19800032021: _tools.RODict({
+        "ID": 19800032021,
         "event": "",
         "parm": "",
     }),
-    19100032022: _tools.RODict({
-        "ID": 19100032022,
+    19800032022: _tools.RODict({
+        "ID": 19800032022,
         "event": "",
         "parm": "",
     }),
-    19100032023: _tools.RODict({
-        "ID": 19100032023,
+    19800032023: _tools.RODict({
+        "ID": 19800032023,
         "event": "",
         "parm": "",
     }),
-    19100032024: _tools.RODict({
-        "ID": 19100032024,
+    19800032024: _tools.RODict({
+        "ID": 19800032024,
         "event": "",
         "parm": "",
     }),
-    19100032025: _tools.RODict({
-        "ID": 19100032025,
+    19800032025: _tools.RODict({
+        "ID": 19800032025,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100032026: _tools.RODict({
-        "ID": 19100032026,
+    19800032026: _tools.RODict({
+        "ID": 19800032026,
         "event": "",
         "parm": "",
     }),
-    19100032027: _tools.RODict({
-        "ID": 19100032027,
+    19800032027: _tools.RODict({
+        "ID": 19800032027,
         "event": "",
         "parm": "",
     }),
-    19100032028: _tools.RODict({
-        "ID": 19100032028,
+    19800032028: _tools.RODict({
+        "ID": 19800032028,
         "event": "",
         "parm": "",
     }),
-    19100032029: _tools.RODict({
-        "ID": 19100032029,
+    19800032029: _tools.RODict({
+        "ID": 19800032029,
         "event": "",
         "parm": "",
     }),
-    19100032030: _tools.RODict({
-        "ID": 19100032030,
+    19800032030: _tools.RODict({
+        "ID": 19800032030,
         "event": "",
         "parm": "",
     }),
-    19100032031: _tools.RODict({
-        "ID": 19100032031,
+    19800032031: _tools.RODict({
+        "ID": 19800032031,
         "event": "",
         "parm": "",
     }),
-    19100032032: _tools.RODict({
-        "ID": 19100032032,
+    19800032032: _tools.RODict({
+        "ID": 19800032032,
         "event": "",
         "parm": "",
     }),
-    19100032033: _tools.RODict({
-        "ID": 19100032033,
+    19800032033: _tools.RODict({
+        "ID": 19800032033,
         "event": "",
         "parm": "",
     }),
-    19100032034: _tools.RODict({
-        "ID": 19100032034,
+    19800032034: _tools.RODict({
+        "ID": 19800032034,
         "event": "",
         "parm": "",
     }),
-    19100032035: _tools.RODict({
-        "ID": 19100032035,
+    19800032035: _tools.RODict({
+        "ID": 19800032035,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100032036: _tools.RODict({
-        "ID": 19100032036,
+    19800032036: _tools.RODict({
+        "ID": 19800032036,
         "event": "",
         "parm": "",
     }),
-    19100032037: _tools.RODict({
-        "ID": 19100032037,
+    19800032037: _tools.RODict({
+        "ID": 19800032037,
         "event": "",
         "parm": "",
     }),
-    19100032038: _tools.RODict({
-        "ID": 19100032038,
+    19800032038: _tools.RODict({
+        "ID": 19800032038,
         "event": "",
         "parm": "",
     }),
-    19100032039: _tools.RODict({
-        "ID": 19100032039,
+    19800032039: _tools.RODict({
+        "ID": 19800032039,
         "event": "",
         "parm": "",
     }),
-    19100032040: _tools.RODict({
-        "ID": 19100032040,
+    19800032040: _tools.RODict({
+        "ID": 19800032040,
         "event": "",
         "parm": "",
     }),
-    19100032041: _tools.RODict({
-        "ID": 19100032041,
+    19800032041: _tools.RODict({
+        "ID": 19800032041,
         "event": "",
         "parm": "",
     }),
-    19100032042: _tools.RODict({
-        "ID": 19100032042,
+    19800032042: _tools.RODict({
+        "ID": 19800032042,
         "event": "",
         "parm": "",
     }),
-    19100032043: _tools.RODict({
-        "ID": 19100032043,
+    19800032043: _tools.RODict({
+        "ID": 19800032043,
         "event": "",
         "parm": "",
     }),
-    19100032044: _tools.RODict({
-        "ID": 19100032044,
+    19800032044: _tools.RODict({
+        "ID": 19800032044,
         "event": "",
         "parm": "",
     }),
-    19100032045: _tools.RODict({
-        "ID": 19100032045,
+    19800032045: _tools.RODict({
+        "ID": 19800032045,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -7270,458 +8000,248 @@ datas = _tools.RODict({
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100028000: _tools.RODict({
-        "ID": 19100028000,
+    19800028000: _tools.RODict({
+        "ID": 19800028000,
         "event": "",
         "parm": "",
     }),
-    19100028001: _tools.RODict({
-        "ID": 19100028001,
+    19800028001: _tools.RODict({
+        "ID": 19800028001,
         "event": "",
         "parm": "",
     }),
-    19100028002: _tools.RODict({
-        "ID": 19100028002,
+    19800028002: _tools.RODict({
+        "ID": 19800028002,
         "event": "",
         "parm": "",
     }),
-    19100028003: _tools.RODict({
-        "ID": 19100028003,
+    19800028003: _tools.RODict({
+        "ID": 19800028003,
         "event": "",
         "parm": "",
     }),
-    19100028004: _tools.RODict({
-        "ID": 19100028004,
+    19800028004: _tools.RODict({
+        "ID": 19800028004,
         "event": "Gettask",
         "parm": "",
     }),
-    19100029000: _tools.RODict({
-        "ID": 19100029000,
+    19800029000: _tools.RODict({
+        "ID": 19800029000,
         "event": "",
         "parm": "",
     }),
-    19100029001: _tools.RODict({
-        "ID": 19100029001,
+    19800029001: _tools.RODict({
+        "ID": 19800029001,
         "event": "",
         "parm": "",
     }),
-    19100029002: _tools.RODict({
-        "ID": 19100029002,
+    19800029002: _tools.RODict({
+        "ID": 19800029002,
         "event": "",
         "parm": "",
     }),
-    19100029003: _tools.RODict({
-        "ID": 19100029003,
+    19800029003: _tools.RODict({
+        "ID": 19800029003,
         "event": "",
         "parm": "",
     }),
-    19100029004: _tools.RODict({
-        "ID": 19100029004,
+    19800029004: _tools.RODict({
+        "ID": 19800029004,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100033000: _tools.RODict({
-        "ID": 19100033000,
+    19800033000: _tools.RODict({
+        "ID": 19800033000,
         "event": "",
         "parm": "",
     }),
-    19100033001: _tools.RODict({
-        "ID": 19100033001,
+    19800033001: _tools.RODict({
+        "ID": 19800033001,
         "event": "",
         "parm": "",
     }),
-    19100033002: _tools.RODict({
-        "ID": 19100033002,
+    19800033002: _tools.RODict({
+        "ID": 19800033002,
         "event": "",
         "parm": "",
     }),
-    19100033003: _tools.RODict({
-        "ID": 19100033003,
+    19800033003: _tools.RODict({
+        "ID": 19800033003,
         "event": "Gettask",
         "parm": "",
     }),
-    19100034000: _tools.RODict({
-        "ID": 19100034000,
+    19800034000: _tools.RODict({
+        "ID": 19800034000,
         "event": "",
         "parm": "",
     }),
-    19100034001: _tools.RODict({
-        "ID": 19100034001,
+    19800034001: _tools.RODict({
+        "ID": 19800034001,
         "event": "",
         "parm": "",
     }),
-    19100034002: _tools.RODict({
-        "ID": 19100034002,
+    19800034002: _tools.RODict({
+        "ID": 19800034002,
         "event": "",
         "parm": "",
     }),
-    19100034003: _tools.RODict({
-        "ID": 19100034003,
+    19800034003: _tools.RODict({
+        "ID": 19800034003,
         "event": "",
         "parm": "",
     }),
-    19100034004: _tools.RODict({
-        "ID": 19100034004,
+    19800034004: _tools.RODict({
+        "ID": 19800034004,
         "event": "",
         "parm": "",
     }),
-    19100034005: _tools.RODict({
-        "ID": 19100034005,
+    19800034005: _tools.RODict({
+        "ID": 19800034005,
         "event": "",
         "parm": "",
     }),
-    19100034006: _tools.RODict({
-        "ID": 19100034006,
+    19800034006: _tools.RODict({
+        "ID": 19800034006,
         "event": "",
         "parm": "",
     }),
-    19100034007: _tools.RODict({
-        "ID": 19100034007,
+    19800034007: _tools.RODict({
+        "ID": 19800034007,
         "event": "",
         "parm": "",
     }),
-    19100034008: _tools.RODict({
-        "ID": 19100034008,
+    19800034008: _tools.RODict({
+        "ID": 19800034008,
         "event": "",
         "parm": "",
     }),
-    19100034009: _tools.RODict({
-        "ID": 19100034009,
+    19800034009: _tools.RODict({
+        "ID": 19800034009,
         "event": "",
         "parm": "",
     }),
-    19100034010: _tools.RODict({
-        "ID": 19100034010,
+    19800034010: _tools.RODict({
+        "ID": 19800034010,
         "event": "",
         "parm": "",
     }),
-    19100034011: _tools.RODict({
-        "ID": 19100034011,
+    19800034011: _tools.RODict({
+        "ID": 19800034011,
         "event": "",
         "parm": "",
     }),
-    19100034012: _tools.RODict({
-        "ID": 19100034012,
+    19800034012: _tools.RODict({
+        "ID": 19800034012,
         "event": "",
         "parm": "",
     }),
-    19100034013: _tools.RODict({
-        "ID": 19100034013,
+    19800034013: _tools.RODict({
+        "ID": 19800034013,
         "event": "",
         "parm": "",
     }),
-    19100034014: _tools.RODict({
-        "ID": 19100034014,
+    19800034014: _tools.RODict({
+        "ID": 19800034014,
         "event": "",
         "parm": "",
     }),
-    19100034015: _tools.RODict({
-        "ID": 19100034015,
+    19800034015: _tools.RODict({
+        "ID": 19800034015,
         "event": "",
         "parm": "",
     }),
-    19100034016: _tools.RODict({
-        "ID": 19100034016,
+    19800034016: _tools.RODict({
+        "ID": 19800034016,
         "event": "",
         "parm": "",
     }),
-    19100034017: _tools.RODict({
-        "ID": 19100034017,
+    19800034017: _tools.RODict({
+        "ID": 19800034017,
         "event": "",
         "parm": "",
     }),
-    19100034018: _tools.RODict({
-        "ID": 19100034018,
+    19800034018: _tools.RODict({
+        "ID": 19800034018,
         "event": "",
         "parm": "",
     }),
-    19100034019: _tools.RODict({
-        "ID": 19100034019,
+    19800034019: _tools.RODict({
+        "ID": 19800034019,
         "event": "",
         "parm": "",
     }),
-    19100034020: _tools.RODict({
-        "ID": 19100034020,
+    19800034020: _tools.RODict({
+        "ID": 19800034020,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100035000: _tools.RODict({
-        "ID": 19100035000,
+    19800035000: _tools.RODict({
+        "ID": 19800035000,
         "event": "",
         "parm": "",
     }),
-    19100035001: _tools.RODict({
-        "ID": 19100035001,
+    19800035001: _tools.RODict({
+        "ID": 19800035001,
         "event": "",
         "parm": "",
     }),
-    19100035002: _tools.RODict({
-        "ID": 19100035002,
+    19800035002: _tools.RODict({
+        "ID": 19800035002,
         "event": "",
         "parm": "",
     }),
-    19100035003: _tools.RODict({
-        "ID": 19100035003,
+    19800035003: _tools.RODict({
+        "ID": 19800035003,
         "event": "",
         "parm": "",
     }),
-    19100035004: _tools.RODict({
-        "ID": 19100035004,
+    19800035004: _tools.RODict({
+        "ID": 19800035004,
         "event": "Fnstalk",
         "parm": "",
     }),
-    19100030000: _tools.RODict({
-        "ID": 19100030000,
+    19800030000: _tools.RODict({
+        "ID": 19800030000,
         "event": "",
         "parm": "",
     }),
-    19100030001: _tools.RODict({
-        "ID": 19100030001,
+    19800030001: _tools.RODict({
+        "ID": 19800030001,
         "event": "",
         "parm": "",
     }),
-    19100030002: _tools.RODict({
-        "ID": 19100030002,
+    19800030002: _tools.RODict({
+        "ID": 19800030002,
         "event": "",
         "parm": "",
     }),
-    19100030003: _tools.RODict({
-        "ID": 19100030003,
+    19800030003: _tools.RODict({
+        "ID": 19800030003,
         "event": "",
         "parm": "",
     }),
-    19100030004: _tools.RODict({
-        "ID": 19100030004,
+    19800030004: _tools.RODict({
+        "ID": 19800030004,
         "event": "",
         "parm": "",
     }),
-    19100030005: _tools.RODict({
-        "ID": 19100030005,
+    19800030005: _tools.RODict({
+        "ID": 19800030005,
         "event": "",
         "parm": "",
     }),
-    19100030006: _tools.RODict({
-        "ID": 19100030006,
+    19800030006: _tools.RODict({
+        "ID": 19800030006,
         "event": "",
         "parm": "",
     }),
-    19100030007: _tools.RODict({
-        "ID": 19100030007,
+    19800030007: _tools.RODict({
+        "ID": 19800030007,
         "event": "",
         "parm": "",
     }),
-    19100030008: _tools.RODict({
-        "ID": 19100030008,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100110000: _tools.RODict({
-        "ID": 19100110000,
-        "event": "",
-        "parm": "",
-    }),
-    19100110001: _tools.RODict({
-        "ID": 19100110001,
-        "event": "",
-        "parm": "",
-    }),
-    19100110002: _tools.RODict({
-        "ID": 19100110002,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19100117000: _tools.RODict({
-        "ID": 19100117000,
-        "event": "",
-        "parm": "",
-    }),
-    19100117001: _tools.RODict({
-        "ID": 19100117001,
-        "event": "",
-        "parm": "",
-    }),
-    19100117002: _tools.RODict({
-        "ID": 19100117002,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19100118000: _tools.RODict({
-        "ID": 19100118000,
-        "event": "",
-        "parm": "",
-    }),
-    19100118001: _tools.RODict({
-        "ID": 19100118001,
-        "event": "",
-        "parm": "",
-    }),
-    19100118002: _tools.RODict({
-        "ID": 19100118002,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100119000: _tools.RODict({
-        "ID": 19100119000,
-        "event": "",
-        "parm": "",
-    }),
-    19100119001: _tools.RODict({
-        "ID": 19100119001,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19100114000: _tools.RODict({
-        "ID": 19100114000,
-        "event": "",
-        "parm": "",
-    }),
-    19100114001: _tools.RODict({
-        "ID": 19100114001,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100115000: _tools.RODict({
-        "ID": 19100115000,
-        "event": "",
-        "parm": "",
-    }),
-    19100115001: _tools.RODict({
-        "ID": 19100115001,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19100116000: _tools.RODict({
-        "ID": 19100116000,
-        "event": "",
-        "parm": "",
-    }),
-    19100116001: _tools.RODict({
-        "ID": 19100116001,
-        "event": "",
-        "parm": "",
-    }),
-    19100116002: _tools.RODict({
-        "ID": 19100116002,
-        "event": "Fnstalk",
-        "parm": "",
-    }),
-    19100047000: _tools.RODict({
-        "ID": 19100047000,
-        "event": "",
-        "parm": "",
-    }),
-    19100047001: _tools.RODict({
-        "ID": 19100047001,
-        "event": "",
-        "parm": "",
-    }),
-    19100047002: _tools.RODict({
-        "ID": 19100047002,
-        "event": "",
-        "parm": "",
-    }),
-    19100047003: _tools.RODict({
-        "ID": 19100047003,
-        "event": "",
-        "parm": "",
-    }),
-    19100047004: _tools.RODict({
-        "ID": 19100047004,
-        "event": "",
-        "parm": "",
-    }),
-    19100047005: _tools.RODict({
-        "ID": 19100047005,
-        "event": "",
-        "parm": "",
-    }),
-    19100047006: _tools.RODict({
-        "ID": 19100047006,
-        "event": "",
-        "parm": "",
-    }),
-    19100047007: _tools.RODict({
-        "ID": 19100047007,
-        "event": "",
-        "parm": "",
-    }),
-    19100047008: _tools.RODict({
-        "ID": 19100047008,
-        "event": "",
-        "parm": "",
-    }),
-    19100047009: _tools.RODict({
-        "ID": 19100047009,
-        "event": "Gettask",
-        "parm": "",
-    }),
-    19100048000: _tools.RODict({
-        "ID": 19100048000,
-        "event": "",
-        "parm": "",
-    }),
-    19100048001: _tools.RODict({
-        "ID": 19100048001,
-        "event": "",
-        "parm": "",
-    }),
-    19100048002: _tools.RODict({
-        "ID": 19100048002,
-        "event": "",
-        "parm": "",
-    }),
-    19100048003: _tools.RODict({
-        "ID": 19100048003,
-        "event": "",
-        "parm": "",
-    }),
-    19100048004: _tools.RODict({
-        "ID": 19100048004,
-        "event": "",
-        "parm": "",
-    }),
-    19100048005: _tools.RODict({
-        "ID": 19100048005,
-        "event": "",
-        "parm": "",
-    }),
-    19100048006: _tools.RODict({
-        "ID": 19100048006,
-        "event": "",
-        "parm": "",
-    }),
-    19100048007: _tools.RODict({
-        "ID": 19100048007,
-        "event": "",
-        "parm": "",
-    }),
-    19100048008: _tools.RODict({
-        "ID": 19100048008,
-        "event": "",
-        "parm": "",
-    }),
-    19100048009: _tools.RODict({
-        "ID": 19100048009,
-        "event": "",
-        "parm": "",
-    }),
-    19100048010: _tools.RODict({
-        "ID": 19100048010,
-        "event": "",
-        "parm": "",
-    }),
-    19100048011: _tools.RODict({
-        "ID": 19100048011,
-        "event": "",
-        "parm": "",
-    }),
-    19100048012: _tools.RODict({
-        "ID": 19100048012,
-        "event": "",
-        "parm": "",
-    }),
-    19100048013: _tools.RODict({
-        "ID": 19100048013,
+    19800030008: _tools.RODict({
+        "ID": 19800030008,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -10236,37 +10756,10 @@ datas = _tools.RODict({
         "parm": "",
     })
 })
-minKey = 1940001000
-maxKey = 19400010001
+minKey = 1910057000
+maxKey = 19800123002
 
 dialogIdMap = _tools.RODict({ 
-    19000001: (
-        19000001000,
-        19000001001,
-        19000001002,
-        19000001003,
-        19000001004,
-        19000001005,
-        19000001006,
-        19000001007,
-        19000001008,
-        19000001009,
-        19000001010,
-        19000001011,
-    ),
-    19000002: (
-        19000002000,
-        19000002001,
-    ),
-    19000003: (
-        19000003000,
-    ),
-    19000004: (
-        19000004000,
-    ),
-    19000005: (
-        19000005000,
-    ),
     19000129: (
         19000129000,
         19000129001,
@@ -10301,6 +10794,7 @@ dialogIdMap = _tools.RODict({
         19000007001,
         19000007002,
         19000007003,
+        19000007004,
     ),
     19000008: (
         19000008000,
@@ -10368,6 +10862,7 @@ dialogIdMap = _tools.RODict({
         19000400001,
         19000400002,
         19000400003,
+        19000400004,
     ),
     19400001: (
         19400001000,
@@ -11460,32 +11955,63 @@ dialogIdMap = _tools.RODict({
         19000308000,
         19000308001,
     ),
+    19000309: (
+        19000309000,
+        19000309001,
+    ),
+    19500001: (
+        19500001000,
+        19500001001,
+        19500001002,
+        19500001003,
+    ),
+    19500002: (
+        19500002000,
+        19500002001,
+    ),
+    19500003: (
+        19500003000,
+        19500003001,
+    ),
+    19500004: (
+        19500004000,
+        19500004001,
+    ),
+    19500050: (
+        19500050000,
+    ),
+    19500051: (
+        19500051000,
+    ),
+    19500052: (
+        19500052000,
+    ),
     19100001: (
         19100001000,
         19100001001,
         19100001002,
         19100001003,
+        19100001004,
+        19100001005,
     ),
     19100002: (
         19100002000,
         19100002001,
+        19100002002,
+        19100002003,
+        19100002004,
+        19100002005,
+        19100002006,
+        19100002007,
+        19100002008,
     ),
     19100003: (
         19100003000,
         19100003001,
-    ),
-    19100049: (
-        19100049000,
-        19100049001,
-    ),
-    19100050: (
-        19100050000,
-    ),
-    19100051: (
-        19100051000,
-    ),
-    19100052: (
-        19100052000,
+        19100003002,
+        19100003003,
+        19100003004,
+        19100003005,
     ),
     19100004: (
         19100004000,
@@ -11494,6 +12020,9 @@ dialogIdMap = _tools.RODict({
         19100004003,
         19100004004,
         19100004005,
+        19100004006,
+        19100004007,
+        19100004008,
     ),
     19100005: (
         19100005000,
@@ -11505,6 +12034,8 @@ dialogIdMap = _tools.RODict({
         19100005006,
         19100005007,
         19100005008,
+        19100005009,
+        19100005010,
     ),
     19100006: (
         19100006000,
@@ -11512,99 +12043,42 @@ dialogIdMap = _tools.RODict({
         19100006002,
         19100006003,
         19100006004,
+        19100006005,
+        19100006006,
+        19100006007,
+        19100006008,
     ),
     19100007: (
-        19100007008,
-        19100007009,
         19100007000,
         19100007001,
         19100007002,
         19100007003,
-        19100007004,
-        19100007005,
-        19100007006,
-        19100007007,
-    ),
-    19100057: (
-        19100057000,
-        19100057001,
-        19100057002,
-        19100057003,
-        19100057004,
-        19100057005,
-        19100057006,
-        19100057007,
-        19100057008,
-        19100057009,
-        19100057010,
-        19100057011,
     ),
     19100008: (
         19100008000,
         19100008001,
         19100008002,
-        19100008003,
-        19100008004,
-        19100008005,
-        19100008006,
-        19100008007,
-        19100008008,
+    ),
+    19800008: (
+        19800008000,
+        19800008001,
+        19800008002,
+        19800008003,
+        19800008004,
+        19800008005,
     ),
     19100009: (
         19100009000,
         19100009001,
         19100009002,
-        19100009003,
     ),
     19100010: (
         19100010000,
         19100010001,
         19100010002,
-    ),
-    19100014: (
-        19100014000,
-        19100014001,
-        19100014002,
-        19100014003,
-        19100014004,
-        19100014005,
-    ),
-    19100015: (
-        19100015000,
-        19100015001,
-        19100015002,
-    ),
-    19100016: (
-        19100016000,
-        19100016001,
-        19100016002,
-        19100016003,
-        19100016004,
-        19100016005,
-    ),
-    19100017: (
-        19100017000,
-        19100017001,
-    ),
-    19100018: (
-        19100018000,
-        19100018001,
-        19100018002,
-        19100018003,
-        19100018004,
-        19100018005,
-    ),
-    19100019: (
-        19100019000,
-    ),
-    19100020: (
-        19100020000,
-    ),
-    19100021: (
-        19100021000,
-    ),
-    19100058: (
-        19100058000,
+        19100010003,
+        19100010004,
+        19100010005,
     ),
     19100011: (
         19100011000,
@@ -11616,175 +12090,199 @@ dialogIdMap = _tools.RODict({
         19100012002,
         19100012003,
         19100012004,
-    ),
-    19100056: (
-        19100056000,
-        19100056001,
-        19100056002,
+        19100012005,
     ),
     19100013: (
         19100013000,
-        19100013001,
-        19100013002,
-        19100013003,
+    ),
+    19100014: (
+        19100014000,
+    ),
+    19100015: (
+        19100015000,
+    ),
+    19100016: (
+        19100016000,
+    ),
+    19100017: (
+        19100017000,
+        19100017001,
+        19100017002,
+        19100017003,
+        19100017004,
+    ),
+    19100018: (
+        19100018000,
+        19100018001,
+        19100018002,
+    ),
+    19100019: (
+        19100019000,
+        19100019001,
+        19100019002,
+        19100019003,
+    ),
+    19100020: (
+        19100020000,
+        19100020001,
+        19100020002,
+        19100020003,
+        19100020004,
+        19100020005,
+    ),
+    19100021: (
+        19100021000,
+        19100021001,
+        19100021002,
+        19100021003,
+        19100021004,
+        19100021005,
+        19100021006,
+        19100021007,
+        19100021008,
+        19100021009,
     ),
     19100022: (
+        19100022016,
+        19100022017,
+        19100022018,
+        19100022019,
+        19100022020,
+        19100022021,
         19100022000,
         19100022001,
         19100022002,
         19100022003,
         19100022004,
         19100022005,
+        19100022006,
+        19100022007,
+        19100022008,
+        19100022009,
+        19100022010,
+        19100022011,
+        19100022012,
+        19100022013,
+        19100022014,
+        19100022015,
     ),
     19100023: (
-        19100023008,
-        19100023009,
         19100023000,
         19100023001,
         19100023002,
         19100023003,
-        19100023004,
-        19100023005,
-        19100023006,
-        19100023007,
     ),
-    19100059: (
-        19100059008,
-        19100059009,
-        19100059010,
-        19100059011,
-        19100059012,
-        19100059013,
-        19100059014,
-        19100059015,
-        19100059016,
-        19100059017,
-        19100059018,
-        19100059019,
-        19100059020,
-        19100059021,
-        19100059000,
-        19100059001,
-        19100059002,
-        19100059003,
-        19100059004,
-        19100059005,
-        19100059006,
-        19100059007,
+    19800023: (
+        19800023000,
+        19800023001,
+        19800023002,
+        19800023003,
     ),
-    19100061: (
-        19100061000,
-        19100061001,
-        19100061002,
-        19100061003,
+    19100024: (
+        19100024000,
+        19100024001,
+        19100024002,
+        19100024003,
     ),
-    19100067: (
-        19100067000,
-        19100067001,
-        19100067002,
-        19100067003,
+    19100025: (
+        19100025000,
+        19100025001,
+        19100025002,
+        19100025003,
+        19100025004,
+        19100025005,
+        19100025006,
     ),
-    19100060: (
-        19100060000,
-        19100060001,
-        19100060002,
-        19100060003,
-        19100060004,
-        19100060005,
-        19100060006,
+    19100026: (
+        19100026000,
+        19100026001,
+        19100026002,
+        19100026003,
+        19100026004,
+        19100026005,
+        19100026006,
+        19100026007,
+        19100026008,
     ),
-    19100037: (
-        19100037000,
-        19100037001,
-        19100037002,
-        19100037003,
-        19100037004,
-        19100037005,
-        19100037006,
-        19100037007,
-        19100037008,
+    19100027: (
+        19100027000,
+        19100027001,
     ),
-    19100038: (
-        19100038000,
-        19100038001,
+    19800027: (
+        19800027000,
+        19800027001,
+        19800027002,
+        19800027003,
+        19800027004,
+        19800027005,
     ),
-    19100039: (
-        19100039000,
-        19100039001,
-        19100039002,
-        19100039003,
-        19100039004,
-        19100039005,
+    19100028: (
+        19100028000,
+        19100028001,
+        19100028002,
     ),
-    19100054: (
-        19100054000,
-        19100054001,
-        19100054002,
+    19100029: (
+        19100029000,
+        19100029001,
+        19100029002,
+        19100029003,
+        19100029004,
+        19100029005,
+        19100029006,
+        19100029007,
+        19100029008,
+        19100029009,
+        19100029010,
+        19100029011,
+        19100029012,
     ),
-    19100062: (
-        19100062000,
-        19100062001,
-        19100062002,
-        19100062003,
-        19100062004,
-        19100062005,
-        19100062006,
-        19100062007,
-        19100062008,
-        19100062009,
-        19100062010,
-        19100062011,
-        19100062012,
-        19100062013,
+    19100030: (
+        19100030000,
+        19100030001,
+        19100030002,
+        19100030003,
+        19100030004,
+        19100030005,
+        19100030006,
+        19100030007,
+        19100030008,
+        19100030009,
+        19100030010,
+        19100030011,
+        19100030012,
+        19100030013,
+        19100030014,
     ),
-    19100053: (
-        19100053000,
-        19100053001,
-        19100053002,
-        19100053003,
-        19100053004,
-        19100053005,
-        19100053006,
-        19100053007,
-        19100053008,
-        19100053009,
-        19100053010,
-        19100053011,
-        19100053012,
-        19100053013,
-        19100053014,
-        19100053015,
+    19100031: (
+        19100031000,
+        19100031001,
+        19100031002,
+        19100031003,
+        19100031004,
     ),
-    19100101: (
-        19100101000,
-        19100101001,
-        19100101002,
-        19100101003,
-        19100101004,
+    19100032: (
+        19100032000,
+        19100032001,
+        19100032002,
+        19100032003,
     ),
-    19100134: (
-        19100134000,
-        19100134001,
-        19100134002,
-        19100134003,
+    19100033: (
+        19100033000,
+        19100033001,
+        19100033002,
+        19100033003,
+        19100033004,
+        19100033005,
+        19100033006,
+        19100033007,
     ),
-    19100064: (
-        19100064000,
-        19100064001,
-        19100064002,
-        19100064003,
-        19100064004,
-        19100064005,
-        19100064006,
-        19100064007,
-    ),
-    19100065: (
-        19100065000,
-        19100065001,
-        19100065002,
-        19100065003,
-        19100065004,
-        19100065005,
+    19100034: (
+        19100034000,
+        19100034001,
+        19100034002,
+        19100034003,
+        19100034004,
+        19100034005,
     ),
     19100135: (
         19100135000,
@@ -11794,42 +12292,7 @@ dialogIdMap = _tools.RODict({
         19100135004,
         19100135005,
         19100135006,
-    ),
-    19100066: (
-        19100066000,
-        19100066001,
-        19100066002,
-        19100066003,
-        19100066004,
-        19100066005,
-        19100066006,
-        19100066007,
-        19100066008,
-        19100066009,
-        19100066010,
-        19100066011,
-        19100066012,
-        19100066013,
-        19100066014,
-    ),
-    19100026: (
-        19100026000,
-        19100026001,
-        19100026002,
-        19100026003,
-        19100026004,
-    ),
-    19100027: (
-        19100027008,
-        19100027009,
-        19100027000,
-        19100027001,
-        19100027002,
-        19100027003,
-        19100027004,
-        19100027005,
-        19100027006,
-        19100027007,
+        19100135007,
     ),
     19100036: (
         19100036000,
@@ -11847,89 +12310,765 @@ dialogIdMap = _tools.RODict({
         19100036012,
         19100036013,
         19100036014,
-        19100036015,
-        19100036016,
+    ),
+    19100037: (
+        19100037000,
+        19100037001,
+        19100037002,
+        19100037003,
+        19100037004,
+    ),
+    19100038: (
+        19100038000,
+        19100038001,
+        19100038002,
+        19100038003,
+        19100038004,
+        19100038005,
+        19100038006,
+        19100038007,
+        19100038008,
+        19100038009,
+    ),
+    19600001: (
+        19600001000,
+        19600001001,
+        19600001002,
+        19600001003,
+        19600001004,
+    ),
+    19100039: (
+        19100039008,
+        19100039009,
+        19100039010,
+        19100039011,
+        19100039012,
+        19100039013,
+        19100039014,
+        19100039000,
+        19100039001,
+        19100039002,
+        19100039003,
+        19100039004,
+        19100039005,
+        19100039006,
+        19100039007,
+    ),
+    19100040: (
+        19100040000,
+        19100040001,
+        19100040002,
+        19100040003,
+        19100040004,
+        19100040005,
+        19100040006,
+        19100040007,
+        19100040008,
+        19100040009,
+        19100040010,
+        19100040011,
+        19100040012,
+        19100040013,
+        19100040014,
+        19100040015,
+        19100040016,
+        19100040017,
+        19100040018,
+    ),
+    19700001: (
+        19700001000,
+    ),
+    19700002: (
+        19700002000,
+        19700002001,
+    ),
+    19700003: (
+        19700003000,
+        19700003001,
+    ),
+    19700004: (
+        19700004000,
+        19700004001,
+        19700004002,
+        19700004003,
+    ),
+    19700005: (
+        19700005000,
+        19700005001,
+    ),
+    19700006: (
+        19700006000,
+        19700006001,
+        19700006002,
+    ),
+    19700008: (
+        19700008000,
+        19700008001,
+        19700008002,
+    ),
+    19700009: (
+        19700009000,
+        19700009001,
+        19700009002,
+    ),
+    19700010: (
+        19700010000,
+        19700010001,
+        19700010002,
+    ),
+    19700011: (
+        19700011000,
+        19700011001,
+    ),
+    19700012: (
+        19700012000,
+        19700012001,
+    ),
+    19700016: (
+        19700016000,
+    ),
+    19700017: (
+        19700017000,
+    ),
+    19700018: (
+        19700018000,
+        19700018001,
+        19700018002,
+    ),
+    19100041: (
+        19100041000,
+        19100041001,
+        19100041002,
+        19100041003,
+        19100041004,
+    ),
+    19100042: (
+        19100042000,
+        19100042001,
+        19100042002,
+        19100042003,
+        19100042004,
+        19100042006,
+        19100042007,
+        19100042008,
+        19100042009,
+        19100042010,
+        19100042011,
+    ),
+    19100043: (
+        19100043008,
+        19100043009,
+        19100043010,
+        19100043011,
+        19100043012,
+        19100043013,
+        19100043014,
+        19100043015,
+        19100043016,
+        19100043017,
+        19100043018,
+        19100043000,
+        19100043001,
+        19100043002,
+        19100043003,
+        19100043004,
+        19100043005,
+        19100043006,
+        19100043007,
+    ),
+    19100044: (
+        19100044000,
+        19100044001,
+        19100044002,
+        19100044003,
+        19100044004,
+        19100044005,
+        19100044006,
+        19100044007,
+    ),
+    19100045: (
+        19100045000,
+        19100045001,
+        19100045002,
+    ),
+    19100046: (
+        19100046000,
+        19100046001,
+        19100046002,
+        19100046003,
+    ),
+    19100047: (
+        19100047008,
+        19100047009,
+        19100047010,
+        19100047011,
+        19100047000,
+        19100047001,
+        19100047002,
+        19100047003,
+        19100047004,
+        19100047005,
+        19100047006,
+        19100047007,
+    ),
+    19100048: (
+        19100048000,
+        19100048001,
+        19100048002,
+        19100048003,
+    ),
+    19700013: (
+        19700013000,
+        19700013001,
+        19700013002,
+        19700013003,
+        19700013004,
+        19700013005,
+        19700013006,
+        19700013007,
+    ),
+    19100049: (
+        19100049000,
+        19100049001,
+    ),
+    19100050: (
+        19100050000,
+        19100050001,
+    ),
+    19800050: (
+        19800050000,
+        19800050001,
+        19800050002,
+        19800050003,
+        19800050004,
+    ),
+    19100051: (
+        19100051000,
+        19100051001,
+        19100051002,
+        19100051003,
+    ),
+    19100052: (
+        19100052000,
+        19100052001,
+    ),
+    19100053: (
+        19100053000,
+        19100053001,
+        19100053002,
+        19100053003,
+        19100053004,
+        19100053005,
+    ),
+    19100054: (
+        19100054000,
+        19100054001,
+        19100054002,
+        19100054003,
+        19100054004,
+    ),
+    19100055: (
+        19100055000,
+        19100055001,
+        19100055002,
+        19100055003,
+    ),
+    19100056: (
+        19100056000,
+        19100056001,
+        19100056002,
+        19100056003,
+        19100056008,
+        19100056011,
+        19100056014,
+        19100056015,
+    ),
+    1910057: (
+        1910057000,
+        1910057001,
+        1910057002,
+        1910057003,
+        1910057004,
+        1910057005,
+        1910057006,
+        1910057007,
+        1910057008,
+        1910057009,
+        1910057010,
+        1910057011,
+        1910057012,
+        1910057013,
+        1910057014,
+    ),
+    19100058: (
+        19100058000,
+        19100058001,
+    ),
+    19100059: (
+        19100059000,
+    ),
+    19100060: (
+        19100060000,
+        19100060001,
+        19100060002,
+        19100060003,
+    ),
+    19100061: (
+        19100061000,
+    ),
+    19100062: (
+        19100062000,
+        19100062001,
+        19100062002,
+        19100062003,
+        19100062004,
+        19100062005,
     ),
     19100063: (
         19100063000,
-        19100063001,
-        19100063002,
-        19100063003,
-        19100063004,
-        19100063005,
-        19100063006,
-        19100063007,
-        19100063008,
-        19100063009,
-        19100063010,
-        19100063011,
-        19100063012,
-        19100063013,
-        19100063014,
-        19100063015,
-        19100063016,
-        19100063017,
-        19100063018,
     ),
-    19100071: (
-        19100071000,
+    19100064: (
+        19100064000,
+        19100064001,
+        19100064002,
+        19100064003,
+        19100064004,
+        19100064005,
+        19100064006,
     ),
-    19100072: (
-        19100072000,
-        19100072001,
+    19100065: (
+        19100065000,
+        19100065001,
+        19100065002,
     ),
-    19100073: (
-        19100073000,
-        19100073001,
+    19100066: (
+        19100066000,
+        19100066001,
+        19100066002,
+        19100066003,
+        19100066004,
+        19100066005,
+        19100066006,
+        19100066007,
+        19100066008,
+        19100066009,
+        19100066010,
+        19100066011,
+        19100066012,
+        19100066013,
+        19100066014,
+        19100066015,
     ),
-    19100074: (
-        19100074000,
-        19100074001,
-        19100074002,
-        19100074003,
+    19100067: (
+        19100067008,
+        19100067009,
+        19100067010,
+        19100067011,
+        19100067012,
+        19100067013,
+        19100067014,
+        19100067015,
+        19100067000,
+        19100067001,
+        19100067002,
+        19100067003,
+        19100067004,
+        19100067005,
+        19100067006,
+        19100067007,
+    ),
+    19100068: (
+        19100068000,
+        19100068001,
+        19100068002,
+        19100068004,
+        19100068005,
+        19100068006,
+        19100068008,
+        19100068009,
+        19100068010,
+        19100068011,
+        19100068012,
+        19100068013,
+    ),
+    19100069: (
+        19100069000,
+        19100069001,
+        19100069002,
+        19100069003,
+        19100069004,
     ),
     19100070: (
         19100070000,
         19100070001,
         19100070002,
         19100070003,
-        19100070004,
-        19100070005,
-        19100070006,
     ),
-    19100068: (
-        19100068000,
-        19100068001,
-        19100068002,
-        19100068003,
-        19100068004,
-        19100068005,
-        19100068006,
-        19100068007,
-        19100068008,
-        19100068009,
-        19100068010,
-        19100068011,
+    19100071: (
+        19100071000,
+    ),
+    19100072: (
+        19100072000,
+    ),
+    19100073: (
+        19100073000,
+    ),
+    19100074: (
+        19100074000,
+    ),
+    19100075: (
+        19100075000,
     ),
     19100076: (
         19100076000,
-        19100076001,
-        19100076002,
-        19100076003,
-        19100076004,
-        19100076005,
-        19100076006,
-        19100076007,
-        19100076008,
-        19100076009,
-        19100076010,
-        19100076011,
-        19100076012,
-        19100076013,
-        19100076014,
-        19100076015,
-        19100076016,
-        19100076017,
+    ),
+    19100077: (
+        19100077000,
+    ),
+    19100078: (
+        19100078000,
+    ),
+    19100079: (
+        19100079000,
+    ),
+    19100080: (
+        19100080000,
+        19100080002,
+        19100080003,
+        19100080004,
+        19100080005,
+        19100080006,
+        19100080007,
+        19100080008,
+        19100080009,
+        19100080010,
+        19100080011,
+        19100080012,
+        19100080013,
+        19100080014,
+        19100080015,
+        19100080016,
+        19100080017,
+        19100080018,
+        19100080019,
+    ),
+    19100081: (
+        19100081000,
+        19100081001,
+        19100081002,
+    ),
+    19100082: (
+        19100082000,
+        19100082001,
+        19100082002,
+        19100082003,
+        19100082004,
+        19100082005,
+    ),
+    19100083: (
+        19100083000,
+        19100083001,
+        19100083002,
+        19100083003,
+        19100083004,
+    ),
+    19100084: (
+        19100084000,
+        19100084001,
+        19100084002,
+        19100084003,
+        19100084004,
+        19100084005,
+        19100084006,
+        19100084007,
+        19100084008,
+    ),
+    19100085: (
+        19100085000,
+        19100085001,
+        19100085002,
+        19100085003,
+    ),
+    19100086: (
+        19100086000,
+        19100086001,
+        19100086002,
+        19100086003,
+        19100086004,
+        19100086005,
+    ),
+    19100087: (
+        19100087000,
+        19100087001,
+        19100087002,
+        19100087003,
+        19100087004,
+    ),
+    19100088: (
+        19100088000,
+        19100088001,
+        19100088002,
+        19100088003,
+        19100088004,
+        19100088005,
+        19100088006,
+        19100088007,
+        19100088008,
+        19100088009,
+        19100088010,
+    ),
+    19100089: (
+        19100089000,
+        19100089001,
+        19100089002,
+        19100089003,
+    ),
+    19100090: (
+        19100090000,
+        19100090001,
+        19100090002,
+        19100090003,
+        19100090004,
+        19100090005,
+        19100090006,
+        19100090007,
+        19100090008,
+        19100090009,
+    ),
+    19100091: (
+        19100091000,
+        19100091001,
+        19100091002,
+        19100091003,
+        19100091004,
+    ),
+    19100092: (
+        19100092000,
+        19100092001,
+        19100092002,
+    ),
+    19100093: (
+        19100093000,
+        19100093001,
+        19100093002,
+        19100093003,
+        19100093004,
+        19100093005,
+    ),
+    19100094: (
+        19100094000,
+        19100094001,
+        19100094002,
+        19100094003,
+        19100094004,
+        19100094005,
+        19100094006,
+        19100094007,
+        19100094008,
+        19100094009,
+        19100094010,
+        19100094011,
+    ),
+    19100095: (
+        19100095000,
+        19100095001,
+        19100095003,
+        19100095004,
+        19100095005,
+        19100095006,
+        19100095007,
+    ),
+    19100096: (
+        19100096000,
+        19100096001,
+        19100096002,
+        19100096003,
+    ),
+    19100097: (
+        19100097000,
+        19100097001,
+    ),
+    19100098: (
+        19100098000,
+        19100098001,
+    ),
+    19100099: (
+        19100099000,
+        19100099001,
+    ),
+    19800099: (
+        19800099000,
+        19800099001,
+    ),
+    19100100: (
+        19100100000,
+        19100100001,
+        19100100002,
+        19100100003,
+        19100100004,
+        19100100005,
+    ),
+    19100101: (
+        19100101000,
+        19100101001,
+        19100101002,
+        19100101003,
+        19100101004,
+    ),
+    19100102: (
+        19100102000,
+        19100102001,
+        19100102002,
+    ),
+    19100103: (
+        19100103000,
+        19100103001,
+        19100103002,
+    ),
+    19100104: (
+        19100104000,
+        19100104001,
+    ),
+    19100105: (
+        19100105000,
+        19100105001,
+    ),
+    19100106: (
+        19100106000,
+        19100106001,
+        19100106002,
+        19100106003,
+        19100106004,
+        19100106005,
+        19100106006,
+        19100106007,
+        19100106008,
+        19100106009,
+    ),
+    19100107: (
+        19100107000,
+        19100107001,
+    ),
+    19100108: (
+        19100108000,
+        19100108001,
+        19100108002,
+        19100108003,
+        19100108004,
+        19100108005,
+        19100108006,
+        19100108007,
+        19100108008,
+    ),
+    19700014: (
+        19700014000,
+        19700014001,
+        19700014002,
+        19700014003,
+        19700014004,
+    ),
+    19100109: (
+        19100109000,
+        19100109001,
+        19100109002,
+        19100109003,
+        19100109004,
+        19100109005,
+        19100109006,
+        19100109007,
+        19100109008,
+        19100109009,
+        19100109010,
+        19100109011,
+        19100109012,
+        19100109013,
+        19100109014,
+        19100109015,
+        19100109016,
+        19100109017,
+    ),
+    19100110: (
+        19100110000,
+        19100110001,
+        19100110002,
+        19100110003,
+        19100110004,
+    ),
+    19100111: (
+        19100111000,
+        19100111001,
+        19100111002,
+        19100111003,
+    ),
+    19100112: (
+        19100112000,
+        19100112001,
+        19100112002,
+        19100112003,
+        19100112004,
+        19100112005,
+        19100112006,
+        19100112007,
+        19100112008,
+        19100112009,
+        19100112010,
+    ),
+    19100113: (
+        19100113000,
+        19100113001,
+        19100113002,
+        19100113003,
+        19100113004,
+        19100113005,
+        19100113006,
+    ),
+    19100114: (
+        19100114000,
+        19100114001,
+    ),
+    19100115: (
+        19100115000,
+        19100115001,
+        19100115002,
+        19100115003,
+        19100115004,
+        19100115005,
+        19100115006,
+        19100115007,
+    ),
+    19100116: (
+        19100116000,
+        19100116001,
+        19100116002,
+        19100116003,
+        19100116004,
+        19100116005,
+        19100116006,
+        19100116007,
+        19100116008,
+        19100116009,
+    ),
+    19100117: (
+        19100117000,
+        19100117001,
+        19100117002,
+        19100117003,
+        19100117004,
+        19100117005,
+    ),
+    19100118: (
+        19100118000,
+        19100118001,
+        19100118002,
+        19100118003,
+        19100118004,
+        19100118005,
+        19100118006,
+    ),
+    19100119: (
+        19100119000,
+        19100119001,
+        19100119002,
     ),
     19100120: (
         19100120000,
@@ -11938,53 +13077,52 @@ dialogIdMap = _tools.RODict({
         19100120003,
         19100120004,
         19100120005,
-        19100120006,
-        19100120007,
     ),
     19100121: (
         19100121000,
         19100121001,
         19100121002,
+        19100121003,
+        19100121004,
+        19100121005,
+        19100121006,
+        19100121007,
+        19100121008,
+        19100121009,
+        19100121010,
+        19100121011,
+        19100121012,
     ),
     19100122: (
         19100122000,
         19100122001,
         19100122002,
-    ),
-    19100077: (
-        19100077000,
-        19100077001,
-        19100077002,
-        19100077003,
-        19100077004,
-        19100077005,
-        19100077006,
-        19100077007,
-        19100077008,
-    ),
-    19100099: (
-        19100099000,
-        19100099001,
-        19100099002,
-        19100099003,
-        19100099004,
-        19100099005,
-    ),
-    19100075: (
-        19100075000,
-        19100075001,
-        19100075002,
-        19100075003,
-        19100075004,
-        19100075005,
-        19100075006,
-        19100075007,
+        19100122003,
+        19100122004,
+        19100122005,
+        19100122006,
+        19100122007,
+        19100122008,
+        19100122009,
+        19100122010,
+        19100122011,
     ),
     19100123: (
+        19100123008,
+        19100123009,
         19100123000,
         19100123001,
         19100123002,
         19100123003,
+        19100123004,
+        19100123005,
+        19100123006,
+        19100123007,
+    ),
+    19800123: (
+        19800123000,
+        19800123001,
+        19800123002,
     ),
     19100124: (
         19100124000,
@@ -12003,510 +13141,130 @@ dialogIdMap = _tools.RODict({
         19100124013,
         19100124014,
         19100124015,
-    ),
-    19100078: (
-        19100078000,
-        19100078001,
-        19100078002,
-        19100078003,
-        19100078004,
-        19100078005,
-        19100078006,
-        19100078007,
-        19100078008,
-        19100078009,
-        19100078010,
-        19100078011,
-        19100078012,
-        19100078013,
-        19100078014,
-    ),
-    19100069: (
-        19100069000,
-        19100069001,
-        19100069006,
+        19100124016,
     ),
     19100125: (
         19100125000,
+        19100125001,
+        19100125002,
+        19100125003,
+        19100125004,
+        19100125005,
+        19100125006,
+        19100125007,
+        19100125008,
+        19100125009,
+        19100125010,
+        19100125011,
+        19100125012,
+        19100125013,
+        19100125014,
+        19100125015,
+        19100125016,
+        19100125017,
+        19100125018,
+        19100125019,
+        19100125020,
+        19100125021,
+        19100125022,
+    ),
+    19700023: (
+        19700023000,
+        19700023001,
+        19700023002,
+    ),
+    19700019: (
+        19700019000,
+        19700019001,
+    ),
+    19700020: (
+        19700020000,
+        19700020001,
+    ),
+    19700021: (
+        19700021000,
+        19700021001,
+    ),
+    19700022: (
+        19700022000,
+        19700022001,
     ),
     19100126: (
         19100126000,
         19100126001,
         19100126002,
         19100126003,
+        19100126004,
+        19100126005,
+        19100126006,
+        19100126007,
     ),
     19100127: (
         19100127000,
-        19100127001,
-        19100127002,
-        19100127003,
-        19100127004,
-        19100127005,
     ),
-    19100128: (
-        19100128000,
+    19800024: (
+        19800024000,
+        19800024001,
+        19800024002,
+        19800024003,
+        19800024004,
+        19800024005,
     ),
-    19100129: (
-        19100129000,
-        19100129001,
-        19100129002,
-        19100129003,
-        19100129004,
-        19100129005,
-        19100129006,
+    19800031: (
+        19800031000,
+        19800031001,
+        19800031002,
+        19800031003,
+        19800031004,
+        19800031005,
     ),
-    19100130: (
-        19100130000,
-        19100130001,
-        19100130002,
-    ),
-    19100133: (
-        19100133000,
-        19100133001,
-        19100133002,
-        19100133003,
-        19100133004,
-        19100133005,
-        19100133006,
-        19100133007,
-        19100133008,
-        19100133009,
-        19100133010,
-        19100133011,
-        19100133012,
-        19100133013,
-    ),
-    19100131: (
-        19100131008,
-        19100131009,
-        19100131010,
-        19100131011,
-        19100131012,
-        19100131013,
-        19100131014,
-        19100131015,
-        19100131016,
-        19100131017,
-        19100131000,
-        19100131001,
-        19100131002,
-        19100131003,
-        19100131004,
-        19100131005,
-        19100131006,
-        19100131007,
-    ),
-    19100132: (
-        19100132000,
-        19100132001,
-        19100132002,
-        19100132003,
-        19100132004,
-        19100132005,
-        19100132006,
-        19100132007,
-        19100132008,
-        19100132009,
-        19100132010,
-        19100132011,
-        19100132012,
-    ),
-    19100079: (
-        19100079001,
-        19100079002,
-        19100079003,
-        19100079004,
-    ),
-    19100080: (
-        19100080000,
-    ),
-    19100081: (
-        19100081000,
-    ),
-    19100082: (
-        19100082000,
-    ),
-    19100083: (
-        19100083000,
-    ),
-    19100084: (
-        19100084000,
-    ),
-    19100085: (
-        19100085000,
-    ),
-    19100086: (
-        19100086000,
-    ),
-    19100087: (
-        19100087000,
-    ),
-    19100088: (
-        19100088000,
-    ),
-    19100090: (
-        19100090000,
-        19100090001,
-        19100090002,
-        19100090003,
-        19100090004,
-        19100090005,
-        19100090006,
-        19100090007,
-    ),
-    19100091: (
-        19100091000,
-        19100091001,
-        19100091002,
-        19100091003,
-        19100091004,
-        19100091005,
-        19100091006,
-        19100091007,
-    ),
-    19100112: (
-        19100112000,
-        19100112001,
-        19100112002,
-        19100112003,
-        19100112004,
-        19100112005,
-        19100112006,
-        19100112007,
-        19100112008,
-    ),
-    19100092: (
-        19100092000,
-        19100092001,
-        19100092002,
-        19100092003,
-        19100092004,
-    ),
-    19100041: (
-        19100041000,
-        19100041001,
-        19100041002,
-        19100041003,
-        19100041004,
-        19100041005,
-        19100041006,
-        19100041007,
-        19100041008,
-        19100041009,
-        19100041010,
-        19100041011,
-    ),
-    19100042: (
-        19100042000,
-        19100042001,
-        19100042002,
-        19100042003,
-        19100042004,
-        19100042005,
-        19100042006,
-    ),
-    19100055: (
-        19100055000,
-        19100055001,
-        19100055002,
-        19100055003,
-    ),
-    19100043: (
-        19100043000,
-        19100043001,
-        19100043002,
-        19100043003,
-        19100043004,
-        19100043005,
-        19100043006,
-    ),
-    19100093: (
-        19100093000,
-        19100093001,
-        19100093002,
-        19100093003,
-        19100093004,
-    ),
-    19100094: (
-        19100094000,
-        19100094001,
-        19100094002,
-    ),
-    19100097: (
-        19100097000,
-        19100097001,
-        19100097002,
-        19100097003,
-        19100097004,
-        19100097005,
-    ),
-    19100095: (
-        19100095008,
-        19100095009,
-        19100095010,
-        19100095011,
-        19100095000,
-        19100095001,
-        19100095002,
-        19100095003,
-        19100095004,
-        19100095005,
-        19100095006,
-        19100095007,
-    ),
-    19100096: (
-        19100096000,
-        19100096001,
-        19100096002,
-        19100096003,
-        19100096004,
-        19100096005,
-        19100096006,
-        19100096007,
-    ),
-    19100113: (
-        19100113000,
-        19100113001,
-        19100113002,
-        19100113003,
-    ),
-    19100098: (
-        19100098000,
-        19100098001,
-        19100098002,
-        19100098003,
-        19100098004,
-        19100098005,
-        19100098006,
-        19100098007,
-        19100098008,
-        19100098009,
-        19100098010,
-        19100098011,
-    ),
-    19100109: (
-        19100109000,
-        19100109001,
-        19100109002,
-        19100109003,
-        19100109004,
-        19100109005,
-        19100109006,
-        19100109007,
-        19100109008,
-        19100109009,
-    ),
-    19100111: (
-        19100111000,
-        19100111001,
-    ),
-    19100102: (
-        19100102016,
-        19100102000,
-        19100102001,
-        19100102002,
-        19100102003,
-        19100102004,
-        19100102005,
-        19100102006,
-        19100102007,
-        19100102008,
-        19100102009,
-        19100102010,
-        19100102011,
-        19100102012,
-        19100102013,
-        19100102014,
-        19100102015,
-    ),
-    19100103: (
-        19100103008,
-        19100103009,
-        19100103000,
-        19100103001,
-        19100103002,
-        19100103003,
-        19100103004,
-        19100103005,
-        19100103006,
-        19100103007,
-    ),
-    19100104: (
-        19100104000,
-        19100104001,
-        19100104002,
-        19100104003,
-        19100104004,
-        19100104005,
-        19100104006,
-        19100104007,
-        19100104008,
-        19100104009,
-        19100104010,
-        19100104011,
-        19100104012,
-        19100104013,
-        19100104014,
-        19100104015,
-        19100104016,
-        19100104017,
-        19100104018,
-        19100104019,
-        19100104020,
-        19100104021,
-        19100104022,
-    ),
-    19100105: (
-        19100105000,
-        19100105001,
-        19100105002,
-        19100105003,
-        19100105004,
-    ),
-    19100106: (
-        19100106000,
-        19100106001,
-        19100106002,
-        19100106003,
-        19100106004,
-        19100106005,
-        19100106006,
-        19100106007,
-    ),
-    19100107: (
-        19100107008,
-        19100107009,
-        19100107010,
-        19100107011,
-        19100107012,
-        19100107013,
-        19100107014,
-        19100107015,
-        19100107016,
-        19100107017,
-        19100107018,
-        19100107019,
-        19100107020,
-        19100107021,
-        19100107022,
-        19100107023,
-        19100107024,
-        19100107025,
-        19100107026,
-        19100107027,
-        19100107028,
-        19100107029,
-        19100107030,
-        19100107000,
-        19100107001,
-        19100107002,
-        19100107003,
-        19100107004,
-        19100107005,
-        19100107006,
-        19100107007,
-    ),
-    19100108: (
-        19100108000,
-        19100108001,
-        19100108002,
-        19100108003,
-        19100108004,
-        19100108005,
-        19100108006,
-        19100108007,
-        19100108008,
-        19100108009,
-        19100108010,
-        19100108011,
-        19100108012,
-        19100108013,
-        19100108014,
-        19100108015,
-        19100108016,
-        19100108017,
-        19100108018,
-        19100108019,
-        19100108020,
-        19100108021,
-        19100108022,
-    ),
-    19100045: (
-        19100045000,
-        19100045001,
-        19100045002,
-        19100045003,
-        19100045004,
-        19100045005,
-        19100045006,
-        19100045007,
-    ),
-    19100046: (
-        19100046000,
-    ),
-    19100024: (
-        19100024000,
-        19100024001,
-        19100024002,
-        19100024003,
-        19100024004,
-        19100024005,
-    ),
-    19100031: (
-        19100031000,
-        19100031001,
-        19100031002,
-        19100031003,
-        19100031004,
-        19100031005,
-    ),
-    19100032: (
-        19100032000,
-        19100032001,
-        19100032002,
-        19100032003,
-        19100032004,
-        19100032005,
-        19100032006,
-        19100032007,
-        19100032008,
-        19100032009,
-        19100032010,
-        19100032011,
-        19100032012,
-        19100032013,
-        19100032014,
-        19100032015,
-        19100032016,
-        19100032017,
-        19100032018,
-        19100032019,
-        19100032020,
-        19100032021,
-        19100032022,
-        19100032023,
-        19100032024,
-        19100032025,
-        19100032026,
-        19100032027,
-        19100032028,
-        19100032029,
-        19100032030,
-        19100032031,
-        19100032032,
-        19100032033,
-        19100032034,
-        19100032035,
-        19100032036,
-        19100032037,
-        19100032038,
-        19100032039,
-        19100032040,
-        19100032041,
-        19100032042,
-        19100032043,
-        19100032044,
-        19100032045,
+    19800032: (
+        19800032000,
+        19800032001,
+        19800032002,
+        19800032003,
+        19800032004,
+        19800032005,
+        19800032006,
+        19800032007,
+        19800032008,
+        19800032009,
+        19800032010,
+        19800032011,
+        19800032012,
+        19800032013,
+        19800032014,
+        19800032015,
+        19800032016,
+        19800032017,
+        19800032018,
+        19800032019,
+        19800032020,
+        19800032021,
+        19800032022,
+        19800032023,
+        19800032024,
+        19800032025,
+        19800032026,
+        19800032027,
+        19800032028,
+        19800032029,
+        19800032030,
+        19800032031,
+        19800032032,
+        19800032033,
+        19800032034,
+        19800032035,
+        19800032036,
+        19800032037,
+        19800032038,
+        19800032039,
+        19800032040,
+        19800032041,
+        19800032042,
+        19800032043,
+        19800032044,
+        19800032045,
     ),
     19200061: (
         19200061000,
@@ -12517,126 +13275,66 @@ dialogIdMap = _tools.RODict({
     19200062: (
         19200062000,
     ),
-    19100028: (
-        19100028000,
-        19100028001,
-        19100028002,
-        19100028003,
-        19100028004,
+    19800028: (
+        19800028000,
+        19800028001,
+        19800028002,
+        19800028003,
+        19800028004,
     ),
-    19100029: (
-        19100029000,
-        19100029001,
-        19100029002,
-        19100029003,
-        19100029004,
+    19800029: (
+        19800029000,
+        19800029001,
+        19800029002,
+        19800029003,
+        19800029004,
     ),
-    19100033: (
-        19100033000,
-        19100033001,
-        19100033002,
-        19100033003,
+    19800033: (
+        19800033000,
+        19800033001,
+        19800033002,
+        19800033003,
     ),
-    19100034: (
-        19100034000,
-        19100034001,
-        19100034002,
-        19100034003,
-        19100034004,
-        19100034005,
-        19100034006,
-        19100034007,
-        19100034008,
-        19100034009,
-        19100034010,
-        19100034011,
-        19100034012,
-        19100034013,
-        19100034014,
-        19100034015,
-        19100034016,
-        19100034017,
-        19100034018,
-        19100034019,
-        19100034020,
+    19800034: (
+        19800034000,
+        19800034001,
+        19800034002,
+        19800034003,
+        19800034004,
+        19800034005,
+        19800034006,
+        19800034007,
+        19800034008,
+        19800034009,
+        19800034010,
+        19800034011,
+        19800034012,
+        19800034013,
+        19800034014,
+        19800034015,
+        19800034016,
+        19800034017,
+        19800034018,
+        19800034019,
+        19800034020,
     ),
-    19100035: (
-        19100035000,
-        19100035001,
-        19100035002,
-        19100035003,
-        19100035004,
+    19800035: (
+        19800035000,
+        19800035001,
+        19800035002,
+        19800035003,
+        19800035004,
     ),
-    19100030: (
-        19100030000,
-        19100030001,
-        19100030002,
-        19100030003,
-        19100030004,
-        19100030005,
-        19100030006,
-        19100030007,
-        19100030008,
-    ),
-    19100110: (
-        19100110000,
-        19100110001,
-        19100110002,
-    ),
-    19100117: (
-        19100117000,
-        19100117001,
-        19100117002,
-    ),
-    19100118: (
-        19100118000,
-        19100118001,
-        19100118002,
-    ),
-    19100119: (
-        19100119000,
-        19100119001,
-    ),
-    19100114: (
-        19100114000,
-        19100114001,
-    ),
-    19100115: (
-        19100115000,
-        19100115001,
-    ),
-    19100116: (
-        19100116000,
-        19100116001,
-        19100116002,
-    ),
-    19100047: (
-        19100047008,
-        19100047009,
-        19100047000,
-        19100047001,
-        19100047002,
-        19100047003,
-        19100047004,
-        19100047005,
-        19100047006,
-        19100047007,
-    ),
-    19100048: (
-        19100048000,
-        19100048001,
-        19100048002,
-        19100048003,
-        19100048004,
-        19100048005,
-        19100048006,
-        19100048007,
-        19100048008,
-        19100048009,
-        19100048010,
-        19100048011,
-        19100048012,
-        19100048013,
+    19800030: (
+        19800030000,
+        19800030001,
+        19800030002,
+        19800030003,
+        19800030004,
+        19800030005,
+        19800030006,
+        19800030007,
+        19800030008,
     ),
     19200001: (
         19200001000,

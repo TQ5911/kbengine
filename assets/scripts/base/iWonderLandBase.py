@@ -29,10 +29,13 @@ class IWonderLandBase(object):
 
     def _wonderLandRefreshDaily(self, *args):
         tType = args[0] if len(args) >= 1 else 0
+        LOG_INFO("IWonderLandBase::_wonderLandRefreshDaily", tType)
         if tType == gameconst.CycleEventTriggerType.TIMED:
-            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.WONDER_LAND, self.wonderLandTicket, gameconst.FreeTicketUpdateType.RESET)
-        self.wonderLandTicket = WL_CD.datas['dailyWonderLandNum']['value']
+            return
+        if tType == gameconst.CycleEventTriggerType.UPDATE:
+            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.WONDER_LAND, self.wonderLandTicket, gameconst.FreeTicketUpdateType.UPDATE)
 
+        self.wonderLandTicket = WL_CD.datas['dailyWonderLandNum']['value']
         self.wonderLandAddTimes = WL_CD.datas['wonderLandNumCoinDailyLimit']['value']
 
     def sumWonderLandTicket(self):
@@ -103,6 +106,8 @@ class IWonderLandBase(object):
 
         LogTrackingMgr.LogTrackingMgr.WonderLand_Ticket(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             src,
             delta,
             self.wonderLandTicket,
@@ -143,7 +148,7 @@ class IWonderLandBase(object):
             self.wonderLandAddTimes -= num
 
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         self.deductWealth(_src, _award, opUUID, _detail)
 
         if isAddDuration:
@@ -154,7 +159,7 @@ class IWonderLandBase(object):
     def addWonderLandDurFailed(self, opUUID, addType, itemId, itemNum, num):
         _award = dropAward.AwardVal()
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
-        _detail = gameclass.AwardDetail(reason='add wonderland duration failed')
+        _detail = gameclass.AwardDetailCls(reason='add wonderland duration failed')
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             _award.addWealthByItemId(itemId, num * itemNum)
@@ -187,7 +192,7 @@ class IWonderLandBase(object):
 
         _src = AAC_AACDD.datas.BONUS_SRC_SUMMON_BOOSS
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail(reason='summon wonderland boss')
+        _detail = gameclass.AwardDetailCls(reason='summon wonderland boss')
 
         self.deductWealth(_src, _deductAward, _opUUID, _detail)
 
@@ -197,7 +202,7 @@ class IWonderLandBase(object):
     def summonWonderLandBossBaseFailed(self, opUUID, itemId):
         _award = dropAward.AwardVal()
         _src = AAC_AACDD.datas.BONUS_SRC_SUMMON_BOOSS
-        _detail = gameclass.AwardDetail(reason='summon wonderland boss failed')
+        _detail = gameclass.AwardDetailCls(reason='summon wonderland boss failed')
 
         _award.addWealthByItemId(itemId, 1)
 

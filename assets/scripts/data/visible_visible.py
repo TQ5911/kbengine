@@ -155,7 +155,7 @@ datas = _tools.RODict({
         "function": "Meridian",
         "type": "UIPracticePanel",
         "level": 0,
-        "task": 86010014,
+        "task": 86030033,
         "day": 0,
         "switch": 0
     }),
@@ -227,7 +227,7 @@ datas = _tools.RODict({
         "function": "UISkillSystemPanel",
         "type": "skillUpgrade",
         "level": 0,
-        "task": 86050075,
+        "task": 86030027,
         "day": 0,
         "switch": 1
     }),
@@ -235,7 +235,7 @@ datas = _tools.RODict({
         "function": "UIRewardTaskPanel",
         "type": "rewardTask",
         "level": 0,
-        "task": 86010013,
+        "task": 86030029,
         "day": 0,
         "switch": 0
     }),
@@ -251,7 +251,7 @@ datas = _tools.RODict({
         "function": "UIAppearancePanel",
         "type": "appearance",
         "level": 0,
-        "task": 86010027,
+        "task": 86030030,
         "day": 0,
         "switch": 1
     }),
@@ -259,7 +259,7 @@ datas = _tools.RODict({
         "function": "UIDrawPetPanel",
         "type": "drawPet",
         "level": 0,
-        "task": 86010038,
+        "task": 86030011,
         "day": 0,
         "switch": 0
     }),
@@ -267,7 +267,7 @@ datas = _tools.RODict({
         "function": "UIPetPanel",
         "type": "pet",
         "level": 0,
-        "task": 86010038,
+        "task": 86030009,
         "day": 0,
         "switch": 1
     }),
@@ -275,7 +275,7 @@ datas = _tools.RODict({
         "function": "UIEquipTrainingPanel",
         "type": "equip",
         "level": 0,
-        "task": 86010096,
+        "task": 86030038,
         "day": 0,
         "switch": 0
     }),
@@ -283,15 +283,15 @@ datas = _tools.RODict({
         "function": "UIEquipMakePanel",
         "type": "equip_make",
         "level": 0,
-        "task": 86050003,
+        "task": 86030028,
         "day": 0,
         "switch": 0
     }),
-    "UIEquipUnbundlePanel": _tools.RODict({
-        "function": "UIEquipUnbundlePanel",
+    "UIEquipWashPanel": _tools.RODict({
+        "function": "UIEquipWashPanel",
         "type": "equip_unbundle",
-        "level": 999,
-        "task": 86050003,
+        "level": 0,
+        "task": 86030028,
         "day": 0,
         "switch": 0
     }),
@@ -301,7 +301,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060104,
         "day": 0,
-        "switch": 2
+        "switch": 0
     }),
     "Team": _tools.RODict({
         "function": "Team",
@@ -341,7 +341,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 0
     }),
     "GrowthGuide": _tools.RODict({
         "function": "GrowthGuide",
@@ -365,7 +365,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "Line": _tools.RODict({
         "function": "Line",
@@ -373,7 +373,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "UIMailPanel": _tools.RODict({
         "function": "UIMailPanel",
@@ -405,7 +405,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "UIPortableSetPanel": _tools.RODict({
         "function": "UIPortableSetPanel",
@@ -429,7 +429,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "DeathDrop": _tools.RODict({
         "function": "DeathDrop",
@@ -437,7 +437,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "AutoCombat": _tools.RODict({
         "function": "AutoCombat",
@@ -445,7 +445,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060146,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "AutoCollect": _tools.RODict({
         "function": "AutoCollect",
@@ -453,7 +453,7 @@ datas = _tools.RODict({
         "level": 4,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "UIRedPacketPanel": _tools.RODict({
         "function": "UIRedPacketPanel",
@@ -483,15 +483,15 @@ datas = _tools.RODict({
         "function": "UIPracticePanel",
         "type": "UIPracticePanel",
         "level": 0,
-        "task": 86010014,
+        "task": 86030033,
         "day": 0,
-        "switch": 1
+        "switch": 0
     }),
     "UIEquipIntensifyPage": _tools.RODict({
         "function": "UIEquipIntensifyPage",
         "type": "equip_strengthen",
         "level": 0,
-        "task": 86010096,
+        "task": 86030038,
         "day": 0,
         "switch": 0
     }),
@@ -531,7 +531,7 @@ datas = _tools.RODict({
         "function": "UISquarePanel",
         "type": "square",
         "level": 0,
-        "task": 86010070,
+        "task": 86030040,
         "day": 0,
         "switch": 0
     }),
@@ -539,7 +539,7 @@ datas = _tools.RODict({
         "function": "UICollectionPanel",
         "type": "collection",
         "level": 0,
-        "task": 0,
+        "task": 86010005,
         "day": 0,
         "switch": 0
     }),
@@ -547,7 +547,7 @@ datas = _tools.RODict({
         "function": "UISynthesisSystemPanel",
         "type": "synthesis",
         "level": 0,
-        "task": 0,
+        "task": 86030021,
         "day": 0,
         "switch": 0
     }),
@@ -555,7 +555,7 @@ datas = _tools.RODict({
         "function": "UIPropMakePanel",
         "type": "workshop",
         "level": 0,
-        "task": 0,
+        "task": 86030018,
         "day": 0,
         "switch": 0
     }),
@@ -563,7 +563,7 @@ datas = _tools.RODict({
         "function": "GuildBossChallenge",
         "type": "guildBossChallenge",
         "level": 0,
-        "task": 0,
+        "task": 86030031,
         "day": 0,
         "switch": 0
     }),
@@ -579,7 +579,7 @@ datas = _tools.RODict({
         "function": "UIEquipClassPage",
         "type": "equip_class",
         "level": 0,
-        "task": 86010020,
+        "task": 86030037,
         "day": 0,
         "switch": 0
     }),
@@ -587,7 +587,7 @@ datas = _tools.RODict({
         "function": "UIWonderLandPanel",
         "type": "wonderLand",
         "level": 0,
-        "task": 86010081,
+        "task": 86030039,
         "day": 0,
         "switch": 0
     }),
@@ -595,7 +595,7 @@ datas = _tools.RODict({
         "function": "UIEquipEnchantingPage",
         "type": "equip_spirit",
         "level": 0,
-        "task": 86010131,
+        "task": 86010079,
         "day": 0,
         "switch": 0
     }),
@@ -611,7 +611,7 @@ datas = _tools.RODict({
         "function": "UIEquipRunePage",
         "type": "equip_weaponGlyph",
         "level": 0,
-        "task": 86010072,
+        "task": 86010422,
         "day": 0,
         "switch": 0
     }),
@@ -619,7 +619,7 @@ datas = _tools.RODict({
         "function": "UIEquipBlessPage",
         "type": "equip_bless",
         "level": 0,
-        "task": 86010149,
+        "task": 86010309,
         "day": 0,
         "switch": 0
     }),
@@ -627,7 +627,7 @@ datas = _tools.RODict({
         "function": "MineBattle",
         "type": "mineBattle",
         "level": 30,
-        "task": 86010083,
+        "task": 86030013,
         "day": 0,
         "switch": 0
     }),
@@ -635,7 +635,7 @@ datas = _tools.RODict({
         "function": "UIMineBattleManagePanel",
         "type": "mineBattle",
         "level": 30,
-        "task": 86010083,
+        "task": 86030013,
         "day": 0,
         "switch": 0
     }),
@@ -669,7 +669,7 @@ datas = _tools.RODict({
         "level": 50,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 0
     }),
     "GeneralAttack": _tools.RODict({
         "function": "GeneralAttack",
@@ -746,7 +746,7 @@ datas = _tools.RODict({
     "MageSkill05": _tools.RODict({
         "function": "MageSkill05",
         "type": "skillMage",
-        "level": 9,
+        "level": 10,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -754,7 +754,7 @@ datas = _tools.RODict({
     "MageSkill06": _tools.RODict({
         "function": "MageSkill06",
         "type": "skillMage",
-        "level": 12,
+        "level": 15,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -762,7 +762,7 @@ datas = _tools.RODict({
     "MageSkill07": _tools.RODict({
         "function": "MageSkill07",
         "type": "skillMage",
-        "level": 15,
+        "level": 20,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -770,7 +770,7 @@ datas = _tools.RODict({
     "MageSkill08": _tools.RODict({
         "function": "MageSkill08",
         "type": "skillMage",
-        "level": 20,
+        "level": 24,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -778,7 +778,7 @@ datas = _tools.RODict({
     "MageSkill09": _tools.RODict({
         "function": "MageSkill09",
         "type": "skillMage",
-        "level": 26,
+        "level": 28,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -850,7 +850,7 @@ datas = _tools.RODict({
     "TaoistSkill05": _tools.RODict({
         "function": "TaoistSkill05",
         "type": "skillTaoist",
-        "level": 9,
+        "level": 10,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -858,7 +858,7 @@ datas = _tools.RODict({
     "TaoistSkill06": _tools.RODict({
         "function": "TaoistSkill06",
         "type": "skillTaoist",
-        "level": 12,
+        "level": 15,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -866,7 +866,7 @@ datas = _tools.RODict({
     "TaoistSkill07": _tools.RODict({
         "function": "TaoistSkill07",
         "type": "skillTaoist",
-        "level": 15,
+        "level": 20,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -874,7 +874,7 @@ datas = _tools.RODict({
     "TaoistSkill08": _tools.RODict({
         "function": "TaoistSkill08",
         "type": "skillTaoist",
-        "level": 20,
+        "level": 24,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -882,7 +882,7 @@ datas = _tools.RODict({
     "TaoistSkill09": _tools.RODict({
         "function": "TaoistSkill09",
         "type": "skillTaoist",
-        "level": 26,
+        "level": 28,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -954,7 +954,7 @@ datas = _tools.RODict({
     "WarriorSkill05": _tools.RODict({
         "function": "WarriorSkill05",
         "type": "skillWarrior",
-        "level": 9,
+        "level": 10,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -962,7 +962,7 @@ datas = _tools.RODict({
     "WarriorSkill06": _tools.RODict({
         "function": "WarriorSkill06",
         "type": "skillWarrior",
-        "level": 12,
+        "level": 15,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -970,7 +970,7 @@ datas = _tools.RODict({
     "WarriorSkill07": _tools.RODict({
         "function": "WarriorSkill07",
         "type": "skillWarrior",
-        "level": 15,
+        "level": 20,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -978,7 +978,7 @@ datas = _tools.RODict({
     "WarriorSkill08": _tools.RODict({
         "function": "WarriorSkill08",
         "type": "skillWarrior",
-        "level": 20,
+        "level": 24,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -986,7 +986,7 @@ datas = _tools.RODict({
     "WarriorSkill09": _tools.RODict({
         "function": "WarriorSkill09",
         "type": "skillWarrior",
-        "level": 26,
+        "level": 28,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -1067,7 +1067,7 @@ datas = _tools.RODict({
         "function": "shikuzoulangopentask",
         "type": "mapTask",
         "level": 40,
-        "task": 86010057,
+        "task": 86010466,
         "day": 0,
         "switch": 0
     }),
@@ -1075,7 +1075,7 @@ datas = _tools.RODict({
         "function": "xinyuanchenjiaoopentask",
         "type": "mapTask",
         "level": 23,
-        "task": 86010024,
+        "task": 86010050,
         "day": 0,
         "switch": 0
     }),
@@ -1083,7 +1083,7 @@ datas = _tools.RODict({
         "function": "zuke1Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010195,
+        "task": 86010151,
         "day": 0,
         "switch": 0
     }),
@@ -1091,7 +1091,7 @@ datas = _tools.RODict({
         "function": "zuke2Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010195,
+        "task": 86010161,
         "day": 0,
         "switch": 0
     }),
@@ -1099,7 +1099,7 @@ datas = _tools.RODict({
         "function": "zuke3Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010195,
+        "task": 86010398,
         "day": 0,
         "switch": 0
     }),
@@ -1107,7 +1107,7 @@ datas = _tools.RODict({
         "function": "zuke4Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010195,
+        "task": 86010398,
         "day": 0,
         "switch": 0
     }),
@@ -1115,7 +1115,7 @@ datas = _tools.RODict({
         "function": "zuke5Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010195,
+        "task": 86010398,
         "day": 0,
         "switch": 0
     }),
@@ -1123,7 +1123,7 @@ datas = _tools.RODict({
         "function": "zuke6Fopentask",
         "type": "mapTask",
         "level": 40,
-        "task": 86010195,
+        "task": 86010398,
         "day": 0,
         "switch": 0
     }),
@@ -1131,7 +1131,7 @@ datas = _tools.RODict({
         "function": "yueguang1Fopentask",
         "type": "mapTask",
         "level": 10,
-        "task": 86010029,
+        "task": 86010013,
         "day": 0,
         "switch": 0
     }),
@@ -1139,7 +1139,7 @@ datas = _tools.RODict({
         "function": "yueguang2Fopentask",
         "type": "mapTask",
         "level": 16,
-        "task": 86010029,
+        "task": 86010032,
         "day": 0,
         "switch": 0
     }),
@@ -1147,7 +1147,7 @@ datas = _tools.RODict({
         "function": "yueguang3Fopentask",
         "type": "mapTask",
         "level": 22,
-        "task": 86010029,
+        "task": 86010428,
         "day": 0,
         "switch": 0
     }),
@@ -1155,7 +1155,7 @@ datas = _tools.RODict({
         "function": "yueguang4Fopentask",
         "type": "mapTask",
         "level": 28,
-        "task": 86010029,
+        "task": 86010183,
         "day": 0,
         "switch": 0
     }),
@@ -1163,7 +1163,7 @@ datas = _tools.RODict({
         "function": "yueguang5Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010029,
+        "task": 86010338,
         "day": 0,
         "switch": 0
     }),
@@ -1171,7 +1171,7 @@ datas = _tools.RODict({
         "function": "wudu1Fopentask",
         "type": "mapTask",
         "level": 50,
-        "task": 86010057,
+        "task": 86010466,
         "day": 0,
         "switch": 0
     }),
@@ -1179,7 +1179,7 @@ datas = _tools.RODict({
         "function": "wudu2Fopentask",
         "type": "mapTask",
         "level": 52,
-        "task": 86010057,
+        "task": 86010466,
         "day": 0,
         "switch": 0
     }),
@@ -1187,7 +1187,7 @@ datas = _tools.RODict({
         "function": "wudu4Fopentask",
         "type": "mapTask",
         "level": 56,
-        "task": 86010057,
+        "task": 86010466,
         "day": 0,
         "switch": 0
     }),
@@ -1197,7 +1197,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "UIRedeemCodePanel": _tools.RODict({
         "function": "UIRedeemCodePanel",
@@ -1213,7 +1213,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "HotGift": _tools.RODict({
         "function": "HotGift",
@@ -1269,7 +1269,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "MountBtn": _tools.RODict({
         "function": "MountBtn",
@@ -1293,7 +1293,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 1
     }),
     "UIMainLockPanel": _tools.RODict({
         "function": "UIMainLockPanel",
@@ -1317,7 +1317,7 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 1,
-        "switch": 1
+        "switch": 0
     }),
     "UIActivityNotice": _tools.RODict({
         "function": "UIActivityNotice",
@@ -1339,6 +1339,38 @@ datas = _tools.RODict({
         "function": "UIEquipSoul",
         "type": "equip_soul",
         "level": 0,
+        "task": 86010291,
+        "day": 0,
+        "switch": 0
+    }),
+    "Rental": _tools.RODict({
+        "function": "Rental",
+        "type": "lease",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "Report": _tools.RODict({
+        "function": "Report",
+        "type": "report",
+        "level": 30,
+        "task": 0,
+        "day": 0,
+        "switch": 2
+    }),
+    "WorldTrumpet": _tools.RODict({
+        "function": "WorldTrumpet",
+        "type": "chat",
+        "level": 9,
+        "task": 86060115,
+        "day": 0,
+        "switch": 0
+    }),
+    "UIRoleAppearancePanel": _tools.RODict({
+        "function": "UIRoleAppearancePanel",
+        "type": "appearance",
+        "level": 30,
         "task": 0,
         "day": 0,
         "switch": 0
@@ -1378,7 +1410,7 @@ UIDrawPetPanel = 28
 UIPetPanel = 29
 UIEquipTrainingPanel = 30
 UIEquipMakePanel = 31
-UIEquipUnbundlePanel = 32
+UIEquipWashPanel = 32
 UITaskInfoPanel = 33
 Team = 34
 UIWarehousePanel = 35
@@ -1510,6 +1542,10 @@ worldLevel = 160
 UIActivityNotice = 161
 UIWorldBoss = 162
 UIEquipSoul = 163
+Rental = 164
+Report = 165
+WorldTrumpet = 166
+UIRoleAppearancePanel = 167
 
 
 
@@ -1546,7 +1582,7 @@ funcDic = _tools.RODict({
     "UIPetPanel" : 29,
     "UIEquipTrainingPanel" : 30,
     "UIEquipMakePanel" : 31,
-    "UIEquipUnbundlePanel" : 32,
+    "UIEquipWashPanel" : 32,
     "UITaskInfoPanel" : 33,
     "Team" : 34,
     "UIWarehousePanel" : 35,
@@ -1678,6 +1714,10 @@ funcDic = _tools.RODict({
     "UIActivityNotice" : 161,
     "UIWorldBoss" : 162,
     "UIEquipSoul" : 163,
+    "Rental" : 164,
+    "Report" : 165,
+    "WorldTrumpet" : 166,
+    "UIRoleAppearancePanel" : 167,
 })
 reverseFuncDic = _tools.RODict({
     0 : "UIBagPanel",
@@ -1712,7 +1752,7 @@ reverseFuncDic = _tools.RODict({
     29 : "UIPetPanel",
     30 : "UIEquipTrainingPanel",
     31 : "UIEquipMakePanel",
-    32 : "UIEquipUnbundlePanel",
+    32 : "UIEquipWashPanel",
     33 : "UITaskInfoPanel",
     34 : "Team",
     35 : "UIWarehousePanel",
@@ -1844,20 +1884,18 @@ reverseFuncDic = _tools.RODict({
     161 : "UIActivityNotice",
     162 : "UIWorldBoss",
     163 : "UIEquipSoul",
+    164 : "Rental",
+    165 : "Report",
+    166 : "WorldTrumpet",
+    167 : "UIRoleAppearancePanel",
 })
 levelDic = _tools.RODict({
     15 : _tools.ROList([
         19,
-        91,
-        104,
-        117,
+        90,
+        103,
+        116,
         158,
-    ]),
-    999 : _tools.ROList([
-        32,
-        54,
-        77,
-        78,
     ]),
     4 : _tools.ROList([
         52,
@@ -1865,9 +1903,12 @@ levelDic = _tools.RODict({
     9 : _tools.ROList([
         53,
         55,
-        89,
-        102,
-        115,
+        166,
+    ]),
+    999 : _tools.ROList([
+        54,
+        77,
+        78,
     ]),
     30 : _tools.ROList([
         74,
@@ -1880,6 +1921,8 @@ levelDic = _tools.RODict({
         141,
         161,
         162,
+        165,
+        167,
     ]),
     50 : _tools.ROList([
         79,
@@ -1890,21 +1933,28 @@ levelDic = _tools.RODict({
         101,
         114,
     ]),
-    12 : _tools.ROList([
-        90,
-        103,
-        116,
+    10 : _tools.ROList([
+        89,
+        102,
+        115,
+        137,
     ]),
     20 : _tools.ROList([
+        91,
+        104,
+        117,
+        160,
+    ]),
+    24 : _tools.ROList([
         92,
         105,
         118,
-        160,
     ]),
-    26 : _tools.ROList([
+    28 : _tools.ROList([
         93,
         106,
         119,
+        140,
     ]),
     32 : _tools.ROList([
         94,
@@ -1929,17 +1979,11 @@ levelDic = _tools.RODict({
     23 : _tools.ROList([
         130,
     ]),
-    10 : _tools.ROList([
-        137,
-    ]),
     16 : _tools.ROList([
         138,
     ]),
     22 : _tools.ROList([
         139,
-    ]),
-    28 : _tools.ROList([
-        140,
     ]),
     52 : _tools.ROList([
         143,
@@ -1989,8 +2033,9 @@ taskDic = _tools.RODict({
         152,
         153,
         157,
+        166,
     ]),
-    86010014 : _tools.ROList([
+    86030033 : _tools.ROList([
         15,
         56,
     ]),
@@ -2000,27 +2045,31 @@ taskDic = _tools.RODict({
         22,
         23,
     ]),
-    86050075 : _tools.ROList([
+    86030027 : _tools.ROList([
         24,
     ]),
-    86010013 : _tools.ROList([
+    86030029 : _tools.ROList([
         25,
+    ]),
+    86010013 : _tools.ROList([
         26,
+        137,
         151,
     ]),
-    86010027 : _tools.ROList([
+    86030030 : _tools.ROList([
         27,
-        155,
     ]),
-    86010038 : _tools.ROList([
+    86030011 : _tools.ROList([
         28,
+    ]),
+    86030009 : _tools.ROList([
         29,
     ]),
-    86010096 : _tools.ROList([
+    86030038 : _tools.ROList([
         30,
         57,
     ]),
-    86050003 : _tools.ROList([
+    86030028 : _tools.ROList([
         31,
         32,
     ]),
@@ -2038,31 +2087,43 @@ taskDic = _tools.RODict({
     86010068 : _tools.ROList([
         61,
     ]),
-    86010070 : _tools.ROList([
+    86030040 : _tools.ROList([
         62,
+    ]),
+    86010005 : _tools.ROList([
+        63,
+    ]),
+    86030021 : _tools.ROList([
+        64,
+    ]),
+    86030018 : _tools.ROList([
+        65,
+    ]),
+    86030031 : _tools.ROList([
+        66,
     ]),
     86010069 : _tools.ROList([
         67,
     ]),
-    86010020 : _tools.ROList([
+    86030037 : _tools.ROList([
         68,
     ]),
-    86010081 : _tools.ROList([
+    86030039 : _tools.ROList([
         69,
     ]),
-    86010131 : _tools.ROList([
+    86010079 : _tools.ROList([
         70,
     ]),
     86010077 : _tools.ROList([
         71,
     ]),
-    86010072 : _tools.ROList([
+    86010422 : _tools.ROList([
         72,
     ]),
-    86010149 : _tools.ROList([
+    86010309 : _tools.ROList([
         73,
     ]),
-    86010083 : _tools.ROList([
+    86030013 : _tools.ROList([
         74,
         75,
     ]),
@@ -2091,7 +2152,6 @@ taskDic = _tools.RODict({
     ]),
     86010024 : _tools.ROList([
         124,
-        130,
     ]),
     86010058 : _tools.ROList([
         126,
@@ -2100,29 +2160,47 @@ taskDic = _tools.RODict({
         127,
         128,
     ]),
-    86010057 : _tools.ROList([
+    86010466 : _tools.ROList([
         129,
         142,
         143,
         144,
     ]),
-    86010195 : _tools.ROList([
+    86010050 : _tools.ROList([
+        130,
+    ]),
+    86010151 : _tools.ROList([
         131,
+    ]),
+    86010161 : _tools.ROList([
         132,
+    ]),
+    86010398 : _tools.ROList([
         133,
         134,
         135,
         136,
     ]),
-    86010029 : _tools.ROList([
-        137,
+    86010032 : _tools.ROList([
         138,
+    ]),
+    86010428 : _tools.ROList([
         139,
+    ]),
+    86010183 : _tools.ROList([
         140,
+    ]),
+    86010338 : _tools.ROList([
         141,
+    ]),
+    86010027 : _tools.ROList([
+        155,
     ]),
     86010037 : _tools.ROList([
         156,
+    ]),
+    86010291 : _tools.ROList([
+        163,
     ]),
 })
 dayDic = _tools.RODict({
@@ -2130,6 +2208,6 @@ dayDic = _tools.RODict({
         160,
     ]),
 })
-maxBit = 163
+maxBit = 167
 
 typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip'}

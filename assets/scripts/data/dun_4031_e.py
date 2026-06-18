@@ -4,7 +4,8 @@ datas ={
     "transition": {
       "finished": [
         1046,
-        1047
+        1047,
+        1059
       ]
     }
   },
@@ -60,6 +61,7 @@ datas ={
   "1057": {
     "type": "createMonster",
     "entityID": [
+      40310010,
       40310011,
       40310012,
       40310013,
@@ -248,27 +250,7 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1070
-      ]
-    }
-  },
-  "1070": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      -1
-    ],
-    "compare": 1,
-    "restNum": 0,
-    "usePrototypeID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1059
-      ]
-    }
+    "transition": {}
   },
   "1071": {
     "type": "createCollection",

@@ -22,6 +22,7 @@ import pickle
 import randomName_robotName as RND
 import formula_generalFormula as FGFD
 import fightProp_fightTargetType as FPFTTD
+import fightProp_define
 
 import gamePlay_gamePlay as GPGP
 import gamePlay_enterScene as GPES
@@ -44,8 +45,10 @@ import creep_coefficient as C_CD
 import branchData_set as BDS
 import cube_config
 import wonderLand_config
+import abyss_config
 import soul_soul
 import affix_affix
+import character_charData
 
 import KBEngine
 from KBEDebug import *
@@ -73,6 +76,10 @@ import gameconst
 import experience_config as EC
 import experience_global_EXP_Multiplier as EGM
 import visible_visible as V_VD
+import mall_coinPrice as MCP
+import mall_mallConst as MMC
+import branchData_branchData as B_BD
+import traceback
 
 tempTime = time.time
 ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
@@ -258,13 +265,13 @@ def bgetIdxs(val):
 
 def isJoinCombat(entity, src):
     if (src.IsCombatUnit or src.IsCreation) and entity.IsAICombatUnit and entity.bornState not in \
-            gameconst.BornStateType.joinCombatTup:
+            gameconst.BornStateEnum.joinCombatTup:
         return False
 
     if entity.IsAICombatUnit\
             and entity.aiController\
             and entity.aiController.stateMachine.speialAICombatTup\
-            and entity.bornState in gameconst.BornStateType.speialAIInvalidCombatTup\
+            and entity.bornState in gameconst.BornStateEnum.speialAIInvalidCombatTup\
             and bhas(entity.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
         return False
 
@@ -493,6 +500,11 @@ def getCurDayTS(now=None, offsetSec=0):
     ts = now - _tNow.tm_hour * gameconst.ONE_HOUR_COST_SECONDES - _tNow.tm_min * 60 - _tNow.tm_sec + offsetSec
     return ts
 
+def getNextDayTS(now=None, offsetSec=0):
+    now = curTS() if now is None else now
+    _tNow = time.localtime(now)
+    ts = now + gameconst.ONE_DAY_COST_SECONDS - _tNow.tm_hour * gameconst.ONE_HOUR_COST_SECONDES - _tNow.tm_min * 60 - _tNow.tm_sec + offsetSec
+    return ts
 
 def getCurHourTS(now=None, offsetSec=0):
     now = curTS() if now is None else now
@@ -797,9 +809,6 @@ def getRealAvatarEntity(entity, height=2):
 
         if entity.IsAvatar:
             return entity, False
-
-        if entity.IsAvatarMirror and (entity.isNoOnwerMirror() or entity.isBot()):
-            return entity, True
 
         if not hasattr(entity, 'hostId'):
             return None, True
@@ -1155,7 +1164,7 @@ def checkAvatarName(name):
     return True
 
 
-def getPlayerMaxLevel():
+def getMaxPlayerLevel():
     return CCT.datas['maxLevel']['value']
 
 
@@ -1210,11 +1219,9 @@ def checkBoxOffline(box):
     if isinstance(box, KBEngine.Proxy):
         if box.isDestroyed:
             gameengine.panicStack('use of destroyed box')
-        else:
-            return box.isDestroyed
+        return box.isDestroyed
 
     return box is None
-
 
 
 def getCommonTimeStr(now):
@@ -1572,7 +1579,7 @@ def isEnemyInPK(src, target):
 
 
 def getEntityRealEntity(entity):
-    if entity and (entity.IsAvatarMirror or entity.IsCreation or entity.IsSummon):
+    if entity and (entity.IsCreation or entity.IsSummon):
         if entity.hostId:
             entity = entity.getHost() or entity
 
@@ -1659,7 +1666,7 @@ def isMineWarEnemy(src, target):
                 if not target.mineWarCanAttack:
                     return False, True
                 if src.IsAvatar:
-                    if src.guildUUID == 0 and target.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE:
+                    if src.guildUUID == 0 and target.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_CORE:
                         return False, True
                     return src.mineWarCamp != target.mineWarCamp, True
             if src.IsAvatar and target.IsAvatar and src.mineWarCanAttack and target.mineWarCanAttack:
@@ -1676,8 +1683,8 @@ def isPVP(src, tgt):
     _srcHost = getHostEntity(src)
     _targetHost = getHostEntity(tgt)
     if _srcHost and _targetHost:
-        if _srcHost.IsAvatar or (_srcHost.IsAvatarMirror and not _srcHost.guildLeader):
-            if _targetHost.IsAvatar or (_targetHost.IsAvatarMirror and not _targetHost.guildLeader):
+        if _srcHost.IsAvatar:
+            if _targetHost.IsAvatar:
                 return True
 
     return False
@@ -1778,12 +1785,6 @@ def getRaceTypeEnum(entity):
 
     elif entity.IsSummon:
         return gameconst.RaceTypeEnum.summon
-
-    elif entity.IsAvatarMirror:
-        if entity.isBot():
-            return gameconst.RaceTypeEnum.bot
-        else:
-            return gameconst.RaceTypeEnum.avatar
 
     else:
         return gameconst.RaceTypeEnum.none
@@ -2100,7 +2101,7 @@ def getMoralLevel(moralValue):
 def getWorldLevelRatio(playerLevel, worldLevelDelta, src):
     worldLevelRatio = 1.0
     if getSvrOpenDays() < EC.datas["activateWorldLevel"]["value"] or src not in EC.datas["bonus_EXP_Sources"]["value"] \
-        or worldLevelDelta <= 0 or playerLevel < V_VD.datas["worldLevel"]["level"]:
+        or worldLevelDelta <= 0 or playerLevel < V_VD.datas["worldLevel"]["level"] or gameconfig.isCrossServer():
         worldLevelRatio = 1.0
     else:
         for i in range(1, EGM.maxKey+1):
@@ -2564,7 +2565,11 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
 
         if className == 'Monster':
             _monsterId = int(_mPrm['EntityID'])
-            if formula.inWorldLineScene(spaceNo):
+            if not _monsterId:
+                LOG_ERR('策划记得把这个monsterId配置上', gameEntityId)
+                continue
+
+            if formula.fetchMapId(spaceNo) in B_BD.datas:
                 lineNo = formula.parseLineNo(spaceNo)
                 nameSuffixID = -1
                 if _monsterId in CBD.datas:
@@ -3240,6 +3245,25 @@ def getWonderLandAddTimesTypeByitemId(itemId):
     
     return gameconst.CUBE_ADD_TIMES_TYPE_NULL
 
+def getAbyssCoinCostByTimes(times):
+    costCfg = abyss_config.datas['abyssNumCoinCost'].get('value', ())
+    totalCnt = abyss_config.datas['abyssNumCoinDailyLimit']['value']
+    for costInfo in costCfg:
+        if totalCnt - times + 1 == costInfo[0]:
+            return costInfo[1], costInfo[2]
+    return 0, 0
+
+def getAbyssAddTimesTypeByitemId(itemId):
+    if itemId == abyss_config.datas['abyssNumItem']['value']:
+        return gameconst.CUBE_ADD_TIMES_TYPE_ITEM
+    costCfg = abyss_config.datas['abyssNumCoinCost'].get('value', ())
+    for costInfo in costCfg:
+        if itemId != costInfo[1]:
+            continue
+        return gameconst.CUBE_ADD_TIMES_TYPE_COIN
+    
+    return gameconst.CUBE_ADD_TIMES_TYPE_NULL
+
 def debugSoulData(data):
     LOG_DBG("debugSoulData:")
     for v in data:
@@ -3247,6 +3271,13 @@ def debugSoulData(data):
         LOG_INFO("类型:", affix_affix.datas[v[0]]["prop"])
         LOG_INFO("品质:", v[1])
         LOG_INFO("数值:", v[2])
+
+def isValidProp(propId, schoolId):
+    propName = affix_affix.datas[propId]['prop']
+    propType = fightProp_define.datas[propName]['propType']
+    excludePropType = character_charData.datas[schoolId]['excludePropType']
+    #LOG_INFO("isValidprop: propId:", propId, "schoolId:", schoolId, "propType:", propType, "excludePropType:", excludePropType)
+    return excludePropType != propType
 
 def rollEquipSoulProps(itemId, schoolId):
     soulSoulData = soul_soul.datas[itemId]
@@ -3265,33 +3296,47 @@ def rollEquipSoulProps(itemId, schoolId):
     normalPropWeight = []
     rarePropIds = []
     rarePropWeight = []
-    for propData in soulSoulData['baseProp']:
-        normalPropIds.append(propData[0])
-        normalPropWeight.append(propData[1])
-    for propData in soulSoulData['rareProp']:
-        rarePropIds.append(propData[0])
-        rarePropWeight.append(propData[1])
+    
+    if soulSoulData['baseProp']:
+        for propData in soulSoulData['baseProp']:
+            if isValidProp(propData[0], schoolId):
+                normalPropIds.append(propData[0])
+                normalPropWeight.append(propData[1])
+    if soulSoulData['rareProp']:
+        for propData in soulSoulData['rareProp']:
+            if isValidProp(propData[0], schoolId):
+                if numRes < 3 and affix_affix.datas[propData[0]]['prop'] == 'adjAtkBless':
+                    continue
+                rarePropIds.append(propData[0])
+                rarePropWeight.append(propData[1])
         
     propRes = []
+    rarePropSet = set()
     for _ in range(numRes):
         res = random.choices(normalPropIds + rarePropIds, weights=normalPropWeight + rarePropWeight, k=1)[0]
         propRes.append(res)
         if res in rarePropIds:
             rarePropWeight[rarePropIds.index(res)] = 0
+            rarePropSet.add(res)
     #LOG_INFO("rollEquipSoulProps: prop: %s" % propRes)
 
     #随品质 and 具体数值
     qualityRes = []
     valueRes = []
     qualityWeightData = soul_soul.datas[itemId]['qualityWeight']
+    luckyWeightData = soul_soul.datas[itemId]['LuckyWeight']
     for propId in propRes:
         qualityIds = []
         qualityWeight = []
-        for qualityData in qualityWeightData:
-            qualityId = qualityData[0]
+        weightData = luckyWeightData if affix_affix.datas[propId]['prop'] == 'adjAtkBless' else qualityWeightData
+        for qualityData in weightData:
+            qualityId = qualityData[0] - 1
             qualityValue = affix_affix.datas[propId]['qualityValue'][qualityId]
             # 属性区间是0到0则不参与随机(幸运词条只有紫和金)
             if qualityValue[0] == 0 and qualityValue[1] == 0:
+                continue
+
+            if qualityId >= numRes and propId in rarePropSet:
                 continue
             qualityIds.append(qualityId)
             qualityWeight.append(qualityData[1])
@@ -3301,13 +3346,10 @@ def rollEquipSoulProps(itemId, schoolId):
         # 随机具体数值
         qualityValue = affix_affix.datas[propId]['qualityValue'][res]
         valueRes.append(random.randint(qualityValue[0], qualityValue[1]))
-    #LOG_INFO("rollEquipSoulProps: quality: %s" % qualityRes)
-    #LOG_INFO("rollEquipSoulProps: value: %s" % valueRes)
 
     finalRes = []
     for i in range(len(propRes)):
         finalRes.append([propRes[i], qualityRes[i], valueRes[i]])
-    #debugSoulData(finalRes)
     return finalRes
 
 def rollItemProps(itemId, itemSubType, schoolId):
@@ -3319,3 +3361,59 @@ def getIntDateTime(now, offsetSeconds=gameconst.GENERAL_CYCLE_TIME):
     now -= offsetSeconds
     dateTimeStr = utils.getCommonTimeStrFromTimeStamp(now)
     return int(dateTimeStr[0:8])
+
+def updateMallItemPriceCache(stub, itemId, avgPrice):
+    now = curTS()
+    if not checkDiffDay(gameglobal.mallItemLastUpdateTime.get(itemId, 0), now, 0):
+        return
+    
+    servOpenDay = getSvrOpenDays()
+    gameglobal.mallItemLastUpdateTime[itemId] = now
+    stub.mallItemLastUpdateTime[itemId] = now
+    mallIdList = MCP.itemId2ID.get(itemId, [])
+    for mallId in mallIdList:
+        data = MCP.datas[mallId]
+        if data['type'] == gameconst.MallItemType.DYNAMIC_PRICE:
+            price = data['costItem'][0][1]
+            lastPrice = data['costItem'][0][1]
+            if servOpenDay > data['serverDay']:
+                if mallId in gameglobal.mallItemPriceCache:
+                    lastPrice = gameglobal.mallItemPriceCache[mallId]
+                price = avgPrice * MMC.datas['dynGoodsWeight']['value']
+                upLimit = lastPrice * (1 + MMC.datas['dynGoodsUpLimit']['value'])
+                downLimit = lastPrice * (1 - MMC.datas['dynGoodsDownLimit']['value'])
+                if price > upLimit:
+                    price = upLimit
+                elif price < downLimit:
+                    price = downLimit
+                price = math.ceil(price)
+            
+            if price < MMC.datas['dynGoodsDefaultPrice']['value']:
+                price = MMC.datas['dynGoodsDefaultPrice']['value']
+            LOG_INFO("updateMallItemPriceCache id:", mallId, "price:", lastPrice, "->", price)
+            gameglobal.mallItemPriceCache[mallId] = price
+            stub.mallItemPriceDict[mallId] = price
+
+def isPremiumMonthCard(tp):
+    return tp in (gameconst.PremiumType.BIG_MONTH_CARD, gameconst.PremiumType.SMALL_MONTH_CARD)
+
+def checkGmSoulProp(rollProps):
+    LOG_INFO("checkGmSoulProp", rollProps)
+    for prop in rollProps:
+        max_v = affix_affix.datas[prop[0]]['qualityValue'][-1][-1]
+        if prop[2] > max_v:
+            LOG_ERR("checkGmSoulProp fail! ", max_v, prop)
+            return False
+    return True
+
+def debugFullStack():
+    import inspect
+    # skip=1 跳过当前print_full_stack函数自身栈帧，context读取源码行
+    frame_list = inspect.stack(context=100)[1:]
+    LOG_INFO("====================【完整调用栈 START】====================\n")
+
+    for idx, frame_info in enumerate(frame_list):
+        frame, fname, line_no, func_name, source_lines, _ = frame_info
+        LOG_INFO(f"Frame {idx}: File {fname}, line {line_no}, func={func_name}|")
+
+    LOG_INFO("====================【完整调用栈 END】====================\n")

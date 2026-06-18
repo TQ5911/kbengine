@@ -1784,7 +1784,157 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": 1
+    }),
+    178: _tools.RODict({
+        "ID": 178,
+        "name": "BONUS_SRC_LEASE_ADD_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    179: _tools.RODict({
+        "ID": 179,
+        "name": "BONUS_SRC_LEASE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    180: _tools.RODict({
+        "ID": 180,
+        "name": "BONUS_SRC_LEASE_CANCEL",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    181: _tools.RODict({
+        "ID": 181,
+        "name": "BONUS_SRC_LEASE_RETURN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    182: _tools.RODict({
+        "ID": 182,
+        "name": "BONUS_SRC_LEASE_INCOME",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    183: _tools.RODict({
+        "ID": 183,
+        "name": "BONUS_SRC_DROP_PAY_PRICE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    184: _tools.RODict({
+        "ID": 184,
+        "name": "BONUS_SRC_DROP_GIVE_UP_RETURN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    185: _tools.RODict({
+        "ID": 185,
+        "name": "BONUS_SRC_EQUIP_WASH",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    186: _tools.RODict({
+        "ID": 186,
+        "name": "BONUS_SRC_EXPLORATION_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    187: _tools.RODict({
+        "ID": 187,
+        "name": "BONUS_SRC_DUNGEON_FINISHED",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    188: _tools.RODict({
+        "ID": 188,
+        "name": "BONUS_SRC_INNER_DEMON_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    189: _tools.RODict({
+        "ID": 189,
+        "name": "BONUS_SRC_AUCTION_SNATCH_FAIL",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    190: _tools.RODict({
+        "ID": 190,
+        "name": "BONUS_SRC_DROP_PAY_PRICE_RETURN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    191: _tools.RODict({
+        "ID": 191,
+        "name": "BONUS_SRC_COST_HORN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    192: _tools.RODict({
+        "ID": 192,
+        "name": "BONUS_SRC_PET_GACHA",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001997,
+        "rewardMessage": ('<color=&color211>精灵召唤</color>', '获得精灵：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     })
 })
 minKey = 1
-maxKey = 177
+maxKey = 192

@@ -12,30 +12,31 @@ import dataUtils
 import utils
 import gameconfig
 
-import message_Message_def as MMD
-import raid_raidConst as RAID_CONST
+import message_Message_def as M_M_DD
+import raid_raidConst as R_RCD
 import visible_visible as UVVD
 import teamMatch_matchConfig as TMMCD
 import activityControl_activityData as AC_ADD
 import teamMatch_activity as TMACTD
+import teamMatch_matchConfig as TM_MCD
 
 import raid
 import dungeonSrc
 import formula
 
 
-def raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=False, exclude=()):
+def raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=False, exclude=()):
     def _raidPermission(fn):
         @functools.wraps(fn)
-        def __wrapper(self, *args, **kwargs):
-            selfPermission = self.raidPermission
-            if not gameconst.RaidPermission.haveRaidPermission(selfPermission, needPermission,
+        def _wrapper(self, *args, **kwargs):
+            _selfPermission = self.raidPermissionVal
+            if not gameconst.RaidPermissionEnum.haveRaidPermission(_selfPermission, needPermission,
                                                            onlyMode=onlyMode, exluce=exclude):
-                LOG_WARN('wrapper::raidPermission::{}, permission denied'.format(fn.__name__),
-                            selfPermission, needPermission)
+                LOG_WARN('wrapper::raidPermissionVal::{}, permission denied'.format(fn.__name__),
+                            _selfPermission, needPermission)
                 return
             return fn(self, *args, **kwargs)
-        return __wrapper
+        return _wrapper
     return _raidPermission
 
 
@@ -43,7 +44,7 @@ def lockRaid(timeout=3):
     assert timeout > 0
     def _lockRaid(fn):
         @functools.wraps(fn)
-        def __wrapper(self, *args, **kwargs):
+        def _wrapper(self, *args, **kwargs):
             _m_lockedSucc = self._lockRaidProcess(timeout=timeout)
             if not _m_lockedSucc:
                 LOG_ERR("lockRaid::", fn.__name__, args, kwargs)
@@ -52,16 +53,16 @@ def lockRaid(timeout=3):
             if not _r:
                 LOG_WARN(f"lockRaid::{fn.__name__}:: auto fail unlocked")
                 self._unlockRaidProcess()
-        return __wrapper
+        return _wrapper
     return _lockRaid
 
 
 def unlockRaid(fn):
     @functools.wraps(fn)
-    def __wrapper(self, *args, **kwargs):
+    def _wrapper(self, *args, **kwargs):
         self._unlockRaidProcess()
         return fn(self, *args, **kwargs)
-    return __wrapper
+    return _wrapper
 
 
 class ImpRaid(object):
@@ -72,8 +73,9 @@ class ImpRaid(object):
     def _lockRaidProcess(self, timeout):
         if self.isRaidLocked():
             return False
-        self.raidProcessLock = utils.curTS() + timeout
-        return True
+        else:
+            self.raidProcessLock = utils.curTS() + timeout
+            return True
 
     def _unlockRaidProcess(self):
         self.raidProcessLock = 0
@@ -81,7 +83,8 @@ class ImpRaid(object):
     def isRaidLocked(self):
         if utils.curTS() > self.raidProcessLock:
             return False
-        return True
+        else:
+            return True
 
     # --------------------------------------------------------------
 
@@ -98,7 +101,7 @@ class ImpRaid(object):
     def clearCreateRaidWithTeamCheckRecord(self):
         self.createRaidWithTeamCheckRecord.clear()
 
-    def isInRaid(self):
+    def inRaid(self):
         return self.raidInfo.raidUUID > 0
 
     def isInRaidLeaderTeam(self):
@@ -110,23 +113,26 @@ class ImpRaid(object):
     def isRaidDeputy(self):
         return self.raidInfo.raidDeputyGBID and self.gbId == self.raidInfo.raidDeputyGBID
 
+    def isInSameRaidTeam(self, target):
+        return self.raidId\
+            and self.raidId == target.raidId\
+            and self.raidInfo.raidTeamIDX == target.raidInfo.raidTeamIDX
+
     def isRaidCaptain(self):
         return self.gbId == self.raidInfo.raidCaptainGBID
-
-    def isInSameRaidTeam(self, target):
-        return self.raidId and self.raidId == target.raidId and self.raidInfo.raidTeamIDX == target.raidInfo.raidTeamIDX
 
     def getRaidLeaderGBID(self):
         return self.raidInfo.raidLeaderGBID
 
     def forceRefreshRaidCache(self):
         LOG_WARN('forceRefreshRaidCache:: ~')
-        if not self.isInRaid():
+        if not self.inRaid():
             LOG_ERR('forceRefreshRaidCache::, failed, {}'.format(gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID))
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         extraProps = {}
         raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).refreshRaidCache(raidUUID, [self.gbId], extraProps)
+        gameengine.getRaidStub(raidUUID)\
+            .refreshRaidCache(raidUUID, [self.gbId], extraProps)
 
     def onRefreshPlayerRaidCacheVal(self, newRaidCacheVal: raid.PlayerRaidCacheVal):
         LOG_INFO('onRefreshPlayerRaidCacheVal::', newRaidCacheVal)
@@ -148,7 +154,7 @@ class ImpRaid(object):
 
         self.raidUUID = newRaidCacheVal.raidUUID
         # 【【程序自主】团队中团员职务暴露给所有客户端】
-        self.raidAuth = self.raidPermission
+        self.raidAuth = self.raidPermissionVal
         '''
         if oldRaidUUID != self.raidUUID:
             self.checkEliteInvRaidUUID(oldRaidUUID, self.raidUUID)
@@ -156,56 +162,58 @@ class ImpRaid(object):
 
     def onRefreshPlayerRaidMemberCacheVal(self, raidUUID, teamIDX, playerGBID, propsDic, needDel):
         LOG_DBG('onRefreshPlayerRaidMemberCacheVal::', raidUUID, teamIDX, playerGBID, needDel)
-        raidTeamMemberVal, err = self._onRefreshPlayerRaidMemberCacheVal(raidUUID, teamIDX, playerGBID, propsDic, needDel)
+        _, err = self._onRefreshPlayerRaidMemberCacheVal(raidUUID, teamIDX, playerGBID, propsDic, needDel)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_WARN('onRefreshPlayerRaidMemberCacheVal:: failed, {}'.format(err))
-            return
 
     def _onRefreshPlayerRaidMemberCacheVal(self, raidUUID, teamIDX, playerGBID, newRaidTeamMemberCacheValDic, needDel):
-        errno = gameconst.RaidErrno
+        _errno = gameconst.RaidErrno
         if raidUUID != self.raidInfo.raidUUID:
-            return None, errno.ENUM_RAID_RAID_ID_NOT_MATCH.initkvbody(source='_onRefreshPlayerRaidMemberCacheVal',
-                                                                 orgRaidUUID=self.raidInfo.raidUUID,
-                                                                 crtRaidUUID=raidUUID)
+            return None, _errno.ENUM_RAID_RAID_ID_NOT_MATCH.initkvbody(
+                source='_onRefreshPlayerRaidMemberCacheVal',
+                orgRaidUUID=self.raidInfo.raidUUID,
+                crtRaidUUID=raidUUID)
 
-        raidTeamVal = self.raidInfo.raidTeamDic.get(teamIDX, None)
-        if not raidTeamVal:
-            return None, errno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='_onRefreshPlayerRaidMemberCacheVal',
+        _raidTeamVal = self.raidInfo.raidTeamDic.get(teamIDX, None)
+        if not _raidTeamVal:
+            return None, _errno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='_onRefreshPlayerRaidMemberCacheVal',
                                                                   raidUUID=raidUUID,
                                                                   teamIDX=teamIDX)
 
-        raidTeamMemberVal = raidTeamVal.teamPlayerDict.get(playerGBID, None)
+        raidTeamMemberVal = _raidTeamVal.teamPlayerDict.get(playerGBID, None)
         if not raidTeamMemberVal:
-            return None, errno.ENUM_RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='_onRefreshPlayerRaidMemberCacheVal',
+            return None, _errno.ENUM_RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='_onRefreshPlayerRaidMemberCacheVal',
                                                                      raidUUID=raidUUID,
                                                                      teamIDX=teamIDX,
                                                                      playerGBID=playerGBID)
 
         if needDel:
-            raidTeamVal.teamPlayerDict.pop(playerGBID, None)
+            _raidTeamVal.teamPlayerDict.pop(playerGBID, None)
         else:
             raidTeamMemberVal.updateAttr(newRaidTeamMemberCacheValDic)
 
-        return raidTeamMemberVal, errno.ENUM_RAID_OK
+        return raidTeamMemberVal, _errno.ENUM_RAID_OK
 
     def __init__(self):
-        if not hasattr(self, 'raidInfo'):
-            # 团队在Avatar身上的缓存, cell私有
-            self.raidInfo = raid.PlayerRaidCacheVal()
         if not hasattr(self, 'raidId'):
             # 团队ID, 固化ID, ALL_CLIENTS
             # NOTE: DO NOT USE 'raidId' directly, try use property 'raidUUID'
             self.raidId = 0
+
+        if not hasattr(self, 'raidInfo'):
+            # 团队在Avatar身上的缓存, cell私有
+            self.raidInfo = raid.PlayerRaidCacheVal()
+
         if not hasattr(self, 'raidAuth'):
             # 团队权限, ALL_CLIENTS
-            self.raidAuth = self.raidPermission
+            self.raidAuth = self.raidPermissionVal
 
     @property
-    def raidBeInvitedRecord(self) -> dict:
+    def raidBeInvitedRecordDic(self) -> dict:
         """受到团队(团长/队长)邀请记录"""
-        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.raidBeInvitedRecord):
-            self.setTempMiscProp(gameconst.EntityPropsEnum.raidBeInvitedRecord, {})
-        return self.getTempMiscProp(gameconst.EntityPropsEnum.raidBeInvitedRecord)
+        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.raidBeInvitedRecordDic):
+            self.setTempMiscProp(gameconst.EntityPropsEnum.raidBeInvitedRecordDic, {})
+        return self.getTempMiscProp(gameconst.EntityPropsEnum.raidBeInvitedRecordDic)
 
     @property
     def raidJoinRecord(self) -> dict:
@@ -215,33 +223,35 @@ class ImpRaid(object):
         return self.getTempMiscProp(gameconst.EntityPropsEnum.raidJoinRecord)
 
     @property
+    def raidUUID(self):
+        return self.raidId
+
+    @property
     def raidAvatarPropsCache(self) -> dict:
         """玩家属性缓存, 用于raidTick刷新raidStub缓存"""
         if not self.hasTempMiscProp(gameconst.EntityPropsEnum.raidAvatarPropsCache):
             self.setTempMiscProp(gameconst.EntityPropsEnum.raidAvatarPropsCache, {})
         return self.getTempMiscProp(gameconst.EntityPropsEnum.raidAvatarPropsCache)
 
-    @property
-    def raidUUID(self):
-        return self.raidId
-
     @raidUUID.setter
     def raidUUID(self, newRaidUUID):
         self._autoCtrlRaidTimer(self.raidId, newRaidUUID)
-        oldRaidId = self.raidId
-        if oldRaidId != newRaidUUID:
+        _oldRaidId = self.raidId
+        if _oldRaidId != newRaidUUID:
             self.raidId = newRaidUUID
             self.resetAllTargetTypeCache()
-            #
 
-        if not oldRaidId and newRaidUUID:
+        if not _oldRaidId and newRaidUUID:
             self._unlockRaidProcess()
-            self._onEnterNewRaid()
+            self._onJoinNewRaid()
+
         self.base.onRaidChanged(self.raidId)
 
-    def _onEnterNewRaid(self):
-        if self.isCanLeaveTeam():
-            gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, True)
+    def _onJoinNewRaid(self):
+        if self._isCanLeaveTeamInAvatar():
+            gameengine.getTeamStub(self.teamId).leaveTeam(
+                self.spaceNo, self.base, self.teamId, self.gbId, True)
+
         self.stopTeamMatch()
 
     @property
@@ -253,87 +263,92 @@ class ImpRaid(object):
         self.setTempMiscProp(gameconst.EntityPropsEnum.raidTickTimerId, newTimerId)
 
     @property
-    def raidPermission(self):
+    def raidPermissionVal(self):
         """获取团队权限"""
-        if not self.isInRaid():
-            return gameconst.RaidPermission.UNKNOWN
+        if not self.inRaid():
+            return gameconst.RaidPermissionEnum.UNKNOWN
 
         if self.isRaidLeader():
-            return gameconst.RaidPermission.LEADER
+            return gameconst.RaidPermissionEnum.LEADER
 
         elif self.isRaidDeputy():
-            return gameconst.RaidPermission.DEPUTY
+            return gameconst.RaidPermissionEnum.DEPUTY
         '''
         #
         elif self.isRaidCaptain():
-            return gameconst.RaidPermission.CAPTAIN
+            return gameconst.RaidPermissionEnum.CAPTAIN
         '''
-        return gameconst.RaidPermission.MEMBER
+        return gameconst.RaidPermissionEnum.MEMBER
 
     def raidTick(self):
         """刷新团队成员在raidStub上的一些缓存"""
-        if not self.isInRaid():
+        if not self.inRaid():
             LOG_ERR('raidTick:: not in raid')
             self.stopRaidTimer()
             return
 
         modified = False
-        lastRecord = self.raidAvatarPropsCache
+        _lastRecord = self.raidAvatarPropsCache
 
-        if 'level' not in lastRecord or lastRecord['level'] != self.level:
-            lastRecord['level'] = self.level
+        if 'level' not in _lastRecord or _lastRecord['level'] != self.level:
+            _lastRecord['level'] = self.level
             modified = True
         pos = tuple(self.position)
-        if 'spaceNo' not in lastRecord or lastRecord['spaceNo'] != self.spaceNo or 'position' not in lastRecord or lastRecord['position'] != pos:
-            lastRecord['spaceNo'] = self.spaceNo
-            lastRecord['position'] = pos
+        if 'spaceNo' not in _lastRecord or _lastRecord['spaceNo'] != self.spaceNo or 'position' not in _lastRecord or _lastRecord['position'] != pos:
+            _lastRecord['spaceNo'] = self.spaceNo
+            _lastRecord['position'] = pos
             modified = True
-        if 'hp' not in lastRecord or lastRecord['hp'] != self.hp or 'fullHp' not in lastRecord or lastRecord['fullHp'] != self.fullHp:
-            lastRecord['hp'] = self.hp
-            lastRecord['fullHp'] = self.fullHp
+        if 'hp' not in _lastRecord or _lastRecord['hp'] != self.hp or 'fullHp' not in _lastRecord or _lastRecord['fullHp'] != self.fullHp:
+            _lastRecord['hp'] = self.hp
+            _lastRecord['fullHp'] = self.fullHp
             modified = True
-        if 'playerName' not in lastRecord or lastRecord['playerName'] != self.name:
-            lastRecord['playerName'] = self.name
+        if 'playerName' not in _lastRecord or _lastRecord['playerName'] != self.name:
+            _lastRecord['playerName'] = self.name
             modified = True
 
-        oldScore = lastRecord.get('score', 0)
+        oldScore = _lastRecord.get('score', 0)
         newScore = self.getTotalScore()
 
-        if 'score' not in lastRecord or oldScore != newScore:
+        if 'score' not in _lastRecord or oldScore != newScore:
             LOG_DBG("in raidTick, score updated:", oldScore, newScore)
-            lastRecord['score'] = newScore
+            _lastRecord['score'] = newScore
             modified = True
 
         if modified:
             excludedPlayerIDs = (self.gbId,)
-            if 'spaceNo' in lastRecord and 'position' in lastRecord:
+            if 'spaceNo' in _lastRecord and 'position' in _lastRecord:
                 for teamIDX, memberGBID, memberVal in self.raidInfo.iterGetRaidMember():
                     if memberGBID == self.gbId or not memberVal.playerBox:
                         continue
                     # 当只有spaceNo和position两个一起更新时，做一下筛选，视野范围内的就不需要通知了
-                    if 'spaceNo' in lastRecord and 'position' in lastRecord and len(lastRecord) == 2:
+                    if 'spaceNo' in _lastRecord and 'position' in _lastRecord and len(_lastRecord) == 2:
                         if self.checkInView(memberVal.playerBox.id):
                             excludedPlayerIDs += (memberGBID,)
-            lastRecord['excludedGbIDs'] = excludedPlayerIDs
-            gameengine.getRaidStub(self.raidId).updateRaidMemberCacheVal(self.raidId, self.base, self.gbId, lastRecord)
+            _lastRecord['excludedGbIDs'] = excludedPlayerIDs
+            gameengine.getRaidStub(self.raidId).updateRaidMemberCacheVal(self.raidId, self.base, self.gbId, _lastRecord)
 
     def clearRaidCacheBoxOnOffline(self):
-        if self.raidUUID > 0:
-            LOG_INFO('clearRaidCacheBoxOnOffline set all playerBox to None')
-            for teamIDX, memberGBID, memberVal in self.raidInfo.iterGetRaidMember():
-                memberVal.playerBox = None
+        if self.raidUUID <= 0:
+            return
+
+        LOG_INFO('clearRaidCacheBoxOnOffline set all playerBox to None')
+        for _, _, memberVal in self.raidInfo.iterGetRaidMember():
+            memberVal.playerBox = None
+
+    def stopRaidTimer(self):
+        if not self.raidTickTimerId:
+            return
+
+        LOG_INFO('stopRaidTimer::~')
+        self.pyDelTimer(self.raidTickTimerId, gametimer.RAID_TICK)
+        self.raidTickTimerId = 0
 
     def startRaidTimer(self):
         LOG_INFO('startRaidTimer~')
         self.stopRaidTimer()
-        self.raidTickTimerId = self.pyAddTimer(1, 1, gametimer.RAID_TICK)
+        _dur = 1
+        self.raidTickTimerId = self.pyAddTimer(_dur, _dur, gametimer.RAID_TICK)
         self._clearRaidJoinRecords()
-
-    def stopRaidTimer(self):
-        if self.raidTickTimerId:
-            LOG_INFO('stopRaidTimer::~')
-            self.pyDelTimer(self.raidTickTimerId, gametimer.RAID_TICK)
-            self.raidTickTimerId = 0
 
     def _autoCtrlRaidTimer(self, crtRaidUUID, newRaidUUID):
         LOG_INFO('_autoCtrlRaidTimer::~ ', crtRaidUUID, newRaidUUID)
@@ -348,21 +363,23 @@ class ImpRaid(object):
             self.stopRaidTimer()
 
     def _getAvatarPropsForRaid(self):
-        return raid.RaidTeamMemberVal(
-            playerGbId=self.gbId, playerBox=self.base, playerName=self.name,
-            level=self.level, school=self.school, sex=self.sex, picFrameId=self.appearance.outfitData.picFrameId,
-            bOnline=True, spaceNo=self.spaceNo, position=self.position,
-            hp=self.hp, fullHp=self.fullHp, score=self.getTotalScore(), openId="openId", siegeWarCamp=self.siegeWarCamp)
+        return raid.RaidAndTeamMemberVal(
+            playerGbId=self.gbId, playerBox=self.base, playerName=self.name,\
+            level=self.level, school=self.school, sex=self.sex,\
+            picFrameId=self.appearance.outfitData.picFrameId,\
+            bOnline=True, spaceNo=self.spaceNo, position=self.position,\
+            hp=self.hp, fullHp=self.fullHp, score=self.getTotalScore(),\
+            openId="openId", siegeWarCamp=self.siegeWarCamp)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.MEMBER)
     def getRaidAllMembersAttrs(self, exposed, memberList):
         # LOG_INFO('getRaidAllMembersAttrs~')
 
         def _check():
-            if not self.isInRaid():
+            if not self.inRaid():
                 return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
             return None, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -371,19 +388,20 @@ class ImpRaid(object):
             LOG_ERR('getRaidAllMembersAttrs:: check failed, {}'.format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).getRaidAllMembersAttrs(
-            self.base, self.gbId, raidUUID, memberList, extraProps)
+        gameengine.getRaidStub(_raidUUID).getRaidAllMembersAttrs(
+            self.base, self.gbId, _raidUUID, memberList, extraProps)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.DEPUTY)
+    @gamedecorator.crossServer
     def getRaidApplyJoinDic(self, exposed):
         LOG_INFO('getRaidApplyJoinDic::~')
 
         def _check():
-            if not self.isInRaid():
+            if not self.inRaid():
                 return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
             if not self.isRaidLeader() and not self.isRaidDeputy():
                 return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER_OR_DEPUTY
@@ -394,23 +412,24 @@ class ImpRaid(object):
             LOG_ERR('getRaidApplyJoinRaidDic:: failed, {}'.format(err))
             return
 
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).getRaidApplyJoinDic(self.base, self.gbId, raidUUID)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).getRaidApplyJoinDic(self.base, self.gbId, _raidUUID)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.DEPUTY)
+    @gamedecorator.crossServer
     def clearRaidApplyJoinDic(self, exposed):
         LOG_INFO('clearRaidApplyJoinDic::~')
         _, err = self._clearRaidApplyJoinDicCheck()
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('clearRaidApplyJoinDic::, check failed, {}'.format(err))
             return
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(self.raidUUID).clearRaidApplyJoinDic(self.base, self.gbId, raidUUID)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(self._raidUUID).clearRaidApplyJoinDic(self.base, self.gbId, _raidUUID)
 
     def _clearRaidApplyJoinDicCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader() and not self.isRaidDeputy():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER_OR_DEPUTY
@@ -418,12 +437,12 @@ class ImpRaid(object):
 
     def onJoinListPlayerClearRaidApplyJoinDic(self, raidUUID, joinType, teamUUID):
         LOG_INFO('onJoinListPlayerClearRaidApplyJoinDic::', raidUUID, joinType, teamUUID)
-        raidJoinRecord = self.raidJoinRecord
-        if raidUUID not in raidJoinRecord:
+        _raidJoinRecord = self.raidJoinRecord
+        if raidUUID not in _raidJoinRecord:
             LOG_WARN('onJoinListPlayerClearRaidApplyJoinDic:: raid cache missing', raidUUID)
             return
 
-        cacheJoinType = raidJoinRecord[raidUUID]
+        cacheJoinType = _raidJoinRecord[raidUUID]
         if cacheJoinType != joinType:
             LOG_WARN('onJoinListPlayerClearRaidApplyJoinDic:: cache joinType not match', raidUUID, cacheJoinType, joinType)
             return
@@ -432,52 +451,69 @@ class ImpRaid(object):
             LOG_WARN('onJoinListPlayerClearRaidApplyJoinDic:: teamUUID not match', raidUUID, self.teamInfo.teamId, teamUUID)
             return
 
-        raidJoinRecord.pop(raidUUID)
+        _raidJoinRecord.pop(raidUUID)
 
     def _clearRaidJoinRecords(self, withJoinTypes=()):
-        raidStubDic = {}
+        _raidStubDic = {}
         for raidId, joinType in self.raidJoinRecord.items():
             if withJoinTypes and joinType not in withJoinTypes:
                 continue
-            raidStubDic.setdefault(raidId, [])
-            raidStubDic[raidId].append((raidId, joinType))
+            _raidStubDic.setdefault(raidId, [])
+            _raidStubDic[raidId].append((raidId, joinType))
 
-        for raidId, raidIdList in raidStubDic.items():
-            raidStub = gameengine.getRaidStub(raidId)
-            raidStub.clearRaidJoinRecords(self.base, self.gbId, raidIdList)
+        for raidId, raidIdList in _raidStubDic.items():
+            _raidStub = gameengine.getRaidStub(raidId)
+            _raidStub.clearRaidJoinRecords(self.base, self.gbId, raidIdList)
 
     def onClearRaidJoinRecords(self, clearRaidList):
         LOG_INFO('onClearRaidJoinRecords::', clearRaidList)
         raidJoinRecord = self.raidJoinRecord
         for raidUUID, joinType in clearRaidList:
-            if joinType == raidJoinRecord.get(raidUUID):
-                raidJoinRecord.pop(raidUUID, None)
+            if joinType != raidJoinRecord.get(raidUUID):
+                continue
+
+            raidJoinRecord.pop(raidUUID, None)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @lockRaid(timeout=3)
+    @gamedecorator.crossServer
     def createRaidWithTeam(self, exposed, capacity):
         """API: 创建一个团队(小队)"""
         LOG_INFO('createRaidWithTeam::~', capacity)
-        _, err = self._createRaidWithTeamCheck(capacity)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            if err == gameconst.RaidErrno.ENUM_RAID_TEAM_MEMBER_OFFLINE:
+        _, _err = self._createRaidWithTeamCheck(capacity)
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
+            if _err == gameconst.RaidErrno.ENUM_RAID_TEAM_MEMBER_OFFLINE:
                 LOG_WARN("createRaidWithTeam:: some player offline")
-                gameengine.getTeamStub(self.teamId).onReplyInviteRaidWithTeamFail(
-                    self.base, self.gbId, 0, self.gbId, self.teamId, err.errno, {})
-            elif err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
+                gameengine.getTeamStub(self.teamId).onReplyInviteRaidAndTeamFail(
+                    self.base, self.gbId, 0, self.gbId, self.teamId, _err.errno, {})
+
+            elif _err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
                 LOG_WARN("createRaidWithTeam:: player check level failed", self.level)
-                self.showMsg(RAID_CONST.datas["raidPartyInivte_underLevel_msg"]["value"], [])
+                self.showMsg(R_RCD.datas["raidPartyInivte_underLevel_msg"]["value"], [])
+
             else:
-                LOG_ERR('createRaidWithTeam:: check failed, {}'.format(err))
+                LOG_ERR('createRaidWithTeam:: check failed, {}'.format(_err))
+
             return
 
         extraProps = {'target':1}
         self.createRaidWithTeamCheckRecord = {i: (None, None) for i in self.teamInfo.teamPlayerDict}
         # timeout值要小于limitcall的值
-        self.toCallbackAfter(1).clearCreateRaidWithTeamCheckRecord()
-        self.checkTeamMembers(gameconst.CheckMemberReason.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE, False, gameconst.CELL, (capacity, extraProps))
-        self._onCheckedMemberCreateRaidWithTeam(self.gbId, gameconst.RaidErrno.ENUM_RAID_OK, capacity, extraProps)
+        self.asyncCallbackAfter(1).clearCreateRaidWithTeamCheckRecord()
+        self.checkTeamMembers(
+            gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE, 
+            False, 
+            gameconst.CELL, 
+            (capacity, extraProps)
+        )
+
+        self._onCheckedMemberCreateRaidWithTeam(
+            self.gbId, 
+            gameconst.RaidErrno.ENUM_RAID_OK, 
+            capacity, 
+            extraProps)
+
         return True
 
     def _createRaidWithTeamCheck(self, capacity):
@@ -489,7 +525,7 @@ class ImpRaid(object):
         if not self.isCaptain():
             return None, errno.ENUM_RAID_NOT_TEAM_CAPTAIN.initkvbody(source='_createRaidWithTeamCheck')
 
-        if self.isInRaid():
+        if self.inRaid():
             return None, errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(source='_createRaidWithTeamCheck')
 
         if not dataUtils.isRaidCapacityValidate(capacity):
@@ -509,7 +545,7 @@ class ImpRaid(object):
         LOG_INFO('_checkCreateRaidWithTeamMemberConditions::', capacity, extra)
 
         def _check():
-            if self.isInRaid():
+            if self.inRaid():
                 return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(
                     source='_checkCreateRaidWithTeamMemberConditions')
             if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
@@ -518,29 +554,29 @@ class ImpRaid(object):
                     source='_checkCreateRaidWithTeamMemberConditions', level=self.level)
             return None, gameconst.RaidErrno.ENUM_RAID_OK
 
-        _, err = _check()
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_WARN('_createRaidWithTeamCheck:: member check failed, {}'.format(err))
-            return True, (err, capacity, extra), ()
+        _, _err = _check()
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
+            LOG_WARN('_createRaidWithTeamCheck:: member check failed, {}'.format(_err))
+            return True, (_err, capacity, extra), ()
 
-        return False, (err, capacity, extra), ()
+        return False, (_err, capacity, extra), ()
 
-    def _onCheckedMemberCreateRaidWithTeam(self, memberGBID, err, capacity, extra):
-        LOG_INFO('_onCheckedMemberCreateRaidWithTeam::', memberGBID, capacity, extra, err)
-        record = self.createRaidWithTeamCheckRecord
+    def _onCheckedMemberCreateRaidWithTeam(self, memberGBID, err, capacity, extraDic):
+        LOG_INFO('_onCheckedMemberCreateRaidWithTeam::', memberGBID, capacity, extraDic, err)
+        _record = self.createRaidWithTeamCheckRecord
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             err.initkvbody(memberGBID=memberGBID)
             LOG_WARN('_onCheckedMemberCreateRaidWithTeam:: member check failed, {}'.format(err))
-            record[memberGBID] = (False, err)
+            _record[memberGBID] = (False, err)
         else:
-            record[memberGBID] = (True, err)
+            _record[memberGBID] = (True, err)
 
         checkResult = True
         if self.teamInfo.offlineMembers():
             checkResult = False
 
         if checkResult:
-            for gbId, (result, _err) in record.items():
+            for _, (result, _err) in _record.items():
                 if result is None:
                     LOG_DBG('_onCheckedMemberCreateRaidWithTeam:: skill checking')
                     return
@@ -553,27 +589,28 @@ class ImpRaid(object):
         self.clearCreateRaidWithTeamCheckRecord()
 
         if not checkResult:
-            LOG_WARN('_onCheckedMemberCreateRaidWithTeam:: check failed', record)
+            LOG_WARN('_onCheckedMemberCreateRaidWithTeam:: check failed', _record)
             if err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
-                self.showMsg(MMD.datas.raid_teamInvitationCheck_sectionTeam, [])
+                self.showMsg(M_M_DD.datas.raid_teamInvitationCheck_sectionTeam, [])
             elif err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
-                self.showMsg(RAID_CONST.datas["raidPartyInivte_underLevel_msg"]["value"], [])
+                self.showMsg(R_RCD.datas["raidPartyInivte_underLevel_msg"]["value"], [])
             self._unlockRaidProcess()
             return
 
-        self.doCreateRaidWithTeam(capacity, extra)
+        self.doCreateRaidWithTeam(capacity, extraDic)
 
     def doCreateRaidWithTeam(self, capacity, extraProps):
         LOG_INFO('doCreateRaidWithTeam::', capacity, extraProps)
-        needCreatedRaidUUID = KBEngine.genUUID64()
+        _needCreatedRaidUUID = KBEngine.genUUID64()
         gameengine.getTeamStub(self.teamId).createRaidWithTeam(
-            self.base, self.gbId, self.teamId, needCreatedRaidUUID, capacity, extraProps)
+            self.base, self.gbId, self.teamId, _needCreatedRaidUUID, capacity, extraProps)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
     @lockRaid(timeout=3)
     @gamedecorator.limitcall(3)
+    @gamedecorator.crossServer
     def createRaidLonely(self, exposed, capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         """API: 创建一个团队(单人)"""
         LOG_INFO('createRaidLonely::~', capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
@@ -624,7 +661,7 @@ class ImpRaid(object):
         if not dataUtils.isRaidCapacityValidate(capacity):
             return None, errno.ENUM_RAID_UNKNOWN_CAPACITY
 
-        if self.isInRaid():
+        if self.inRaid():
             return None, errno.ENUM_RAID_ALREADY_IN_RAID
 
         if self.isInTeam(self.gbId):
@@ -634,7 +671,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER, onlyMode=True)
+    @gamedecorator.crossServer
     def disbandRaid(self, exposed):
         """API: 解散一个团队"""
         LOG_INFO('disbandRaid::~')
@@ -642,13 +680,17 @@ class ImpRaid(object):
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('disbandRaid:: check failed, {}'.format(err))
             return
+        
+        #主动离开team会清空怪物上的首刀归属者标记
+        for e in self.entitiesInView(True):
+            if e.IsMonster:
+                e.clearFirstBlood(self.id)
 
-        extra = {}
         gameengine.getRaidStub(self.raidInfo.raidUUID).disbandRaid(
-            self.base, self.gbId, self.raidInfo.raidUUID, extra)
+            self.base, self.gbId, self.raidInfo.raidUUID, {})
 
     def _disbandRaidCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID.initkvbody(source='_disbandRaidCheck')
 
         if not self.isRaidLeader():
@@ -658,6 +700,7 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
+    @gamedecorator.crossServer
     def applyJoinRaidLonely(self, exposed, raidUUID, password, applySource):
         """API: 申请加入一个团队"""
         LOG_INFO('applyJoinRaidLonely::', raidUUID, password, applySource)
@@ -685,7 +728,7 @@ class ImpRaid(object):
         if not raidUUID:
             return None, _errno.ENUM_RAID_PARAM_ERR.initkvbody(raidUUID=raidUUID)
 
-        if self.isInRaid():
+        if self.inRaid():
             self.client and self.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.RAID_APPLY_IS_IN_RAID, 0, 0, 0, '', applySource)
             return None, _errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
 
@@ -710,10 +753,11 @@ class ImpRaid(object):
         """成功申请团队后, 申请者获得回调"""
         LOG_INFO('onApplyJoinRaidLonelySucc::', playerGBID, raidUUID, extraProps)
         self.raidJoinRecord[raidUUID] = gameconst.RaidJoinTypeEnum.SINGLE
-        self.showMsg(RAID_CONST.datas["raid_applySent_msg"]["value"], [])
+        self.showMsg(R_RCD.datas["raid_applySent_msg"]["value"], [])
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
+    @gamedecorator.crossServer
     def applyJoinRaidWithTeam(self, exposed, raidUUID):
         """API: 申请加入一个团队(小队加入)"""
         LOG_INFO('applyJoinRaidWithTeam::', raidUUID)
@@ -722,12 +766,11 @@ class ImpRaid(object):
             LOG_WARN('applyJoinRaidWithTeam:: check failed, {}'.format(
                 err.initkvbody(source=self._applyJoinRaidWithTeamCheck.__name__)))
             if err == gameconst.RaidErrno.ENUM_RAID_ALREADY_APPLY_JOIN:
-                self.showMsg(RAID_CONST.datas["raid_applySent_msg"]["value"], [])
+                self.showMsg(R_RCD.datas["raid_applySent_msg"]["value"], [])
             return
 
-        extraProps = {}
         gameengine.getTeamStub(self.teamId).applyJoinRaidWithTeam(
-            self.base, self.gbId, self.teamId, raidUUID, extraProps)
+            self.base, self.gbId, self.teamId, raidUUID, {})
 
     def _applyJoinRaidWithTeamCheck(self, raidUUID):
         _errno = gameconst.RaidErrno
@@ -738,7 +781,7 @@ class ImpRaid(object):
         if not raidUUID:
             return None, _errno.ENUM_RAID_PARAM_ERR.initkvbody(raidUUID=raidUUID)
 
-        if self.isInRaid():
+        if self.inRaid():
             return None, _errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
 
         if raidUUID in self.raidJoinRecord and self.raidJoinRecord[raidUUID] == gameconst.RaidJoinTypeEnum.TEAM:
@@ -756,18 +799,22 @@ class ImpRaid(object):
                                              teamUUID, raidUUID, extraProps):
         """组队成功申请团队后, 团长获得回调"""
         LOG_INFO('onLeaderProcessApplyJoinRaidWithTeam::',
-                 joinCaptainBox, joinedCaptainGBID, joinedPlayersProps, teamUUID, raidUUID, extraProps)
-        self.client and self.client.beNotifiedApplyJoinRaid(raidUUID, joinedCaptainGBID, joinedPlayersProps)
+                 joinCaptainBox, joinedCaptainGBID, 
+                 joinedPlayersProps, teamUUID, extraProps, raidUUID)
+
+        if self.client:
+            self.client.beNotifiedApplyJoinRaid(raidUUID, joinedCaptainGBID, joinedPlayersProps)
 
     def onApplyJoinRaidWithTeamSucc(self, joinedCaptainGBID, teamUUID, raidUUID, extraProps):
         """组队成功申请团队后, 申请者获得回调"""
         LOG_INFO('onApplyJoinRaidWithTeamSucc::', joinedCaptainGBID, teamUUID, raidUUID, extraProps)
         self.raidJoinRecord[raidUUID] = gameconst.RaidJoinTypeEnum.TEAM
-        self.showMsg(RAID_CONST.datas["raid_applySent_msg"]["value"], [])
+        self.showMsg(R_RCD.datas["raid_applySent_msg"]["value"], [])
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.DEPUTY)
+    @gamedecorator.crossServer
     def replyJoinRaid(self, exposed, playerGBID, beAgreed):
         """API: 确认某个申请的玩家/小队加入团队"""
         LOG_INFO('replyJoinRaid::', playerGBID, beAgreed)
@@ -777,10 +824,9 @@ class ImpRaid(object):
             LOG_WARN('replyJoinRaid:: check failed, {}'.format(err))
             return
 
-        raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(raidUUID).replyJoinRaid(
-            self.base, self.gbId, playerGBID, raidUUID, beAgreed, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).replyJoinRaid(
+            self.base, self.gbId, playerGBID, _raidUUID, beAgreed, {})
 
     def _replyJoinRaidCheck(self, playerGBID):
         if not playerGBID:
@@ -789,7 +835,7 @@ class ImpRaid(object):
         if playerGBID == self.gbId:
             return None, gameconst.RaidErrno.ENUM_UNKNOWN.initkvbody(reason='self-replied')
 
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
 
         if not self.isRaidLeader() and not self.isRaidDeputy():
@@ -801,7 +847,9 @@ class ImpRaid(object):
     def onJoinPlayerReplyJoinRaidLonely(self, srcPlayerGbId, raidUUID, playerGBID, playerJoinProps, extraProps, applySource):
         """玩家申请(单人请求)通过后接受回调"""
         LOG_INFO('onJoinPlayerReplyJoinRaidLonely::', srcPlayerGbId, raidUUID, playerGBID, playerJoinProps, extraProps)
-        _, err = self._onJoinPlayerReplyJoinRaidLonelyCheck(srcPlayerGbId, raidUUID, extraProps.get('raidTarget', 0))
+        inviteType = extraProps.get('inviteType', gameconst.InviteType.DEFAULT)
+        needMsg = inviteType != gameconst.InviteType.GUILD
+        _, err = self._onJoinPlayerReplyJoinRaidLonelyCheck(srcPlayerGbId, raidUUID, extraProps.get('raidTarget', 0), needMsg)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             err = err.initkvbody(source=self._applyJoinRaidLonelyCheck.__name__)
             LOG_ERR('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
@@ -820,23 +868,24 @@ class ImpRaid(object):
         self.raidJoinRecord.pop(raidUUID)
 
         if err == gameconst.RaidErrno.ENUM_RAID_OK:
-            self.cancelAllTeamAndRaidJoinRequest()
+            self.cancelAllTeamRaidJoinRequest()
             return True
         return False
 
-    def _onJoinPlayerReplyJoinRaidLonelyCheck(self, srcPlayerGbId, raidUUID, raidTarget):
-        LOG_INFO('_onJoinPlayerReplyJoinRaidLonelyCheck::', srcPlayerGbId, raidUUID, raidTarget)
+    def _onJoinPlayerReplyJoinRaidLonelyCheck(self, srcPlayerGbId, raidUUID, raidTarget, needMsg):
+        LOG_INFO('_onJoinPlayerReplyJoinRaidLonelyCheck::', srcPlayerGbId, raidUUID, raidTarget, needMsg)
         _errno = gameconst.RaidErrno
-        if self.isInRaid():
+        if self.inRaid():
             return None, _errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
         if self.isInTeam(self.gbId):
             return None, _errno.ENUM_RAID_ALREADY_IN_TEAM.initkvbody(raidUUID=raidUUID)
         if raidTarget > gameconst.PARE_ACTIVITY_ID:
             if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False) \
                 or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False):
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                    (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
-                return None, gameconst.RaidErrno.ENUM_RAID_UI_DENIED.initkvbody(level=self.level)
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                        (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                    return None, gameconst.RaidErrno.ENUM_RAID_UI_DENIED.initkvbody(level=self.level)
         return None, _errno.ENUM_RAID_OK
 
     def onJoinPlayerHandleReplyJoinRaidReject(self, raidUUID):
@@ -849,7 +898,7 @@ class ImpRaid(object):
         LOG_INFO('onJoinPlayerHandleReplyJoinRaidAccept::', raidUUID)
         self.raidJoinRecord.pop(raidUUID, None)
         if self.isCaptain():
-            self.cancelAllTeamAndRaidJoinRequest()
+            self.cancelAllTeamRaidJoinRequest()
 
     @lockRaid(timeout=1)
     def onJoinPlayerReplyJoinRaidWithTeam(self, srcPlayerGbId, raidUUID, playerJoinProps, extraProps):
@@ -860,19 +909,20 @@ class ImpRaid(object):
             err = err.initkvbody(source=self._onJoinPlayerReplyJoinRaidWithTeam.__name__)
             LOG_WARN('onJoinPlayerReplyJoinRaidWithTeam:: failed, {}'.format(err))
             # when playerProps `bool(playerProps) is False`, stub check will be quickly failed before timeout
-            playerProps = {}
+            _playerProps = {}
         else:
-            playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            _playerProps = self._getAvatarPropsForRaid().toSavedDict()
             
         extraProps.update({'memberCheckErrno': err})
         gameengine.getRaidStub(raidUUID).onReplyJoinRaidWithTeam(
-            srcPlayerGbId, raidUUID, playerJoinProps['joinTeamUUID'], self.gbId, playerProps, extraProps)
+            srcPlayerGbId, raidUUID, playerJoinProps['joinTeamUUID'], 
+            self.gbId, _playerProps, extraProps)
 
         return False if err != gameconst.RaidErrno.ENUM_RAID_OK else True
 
     def _onJoinPlayerReplyJoinRaidWithTeam(self, raidUUID, teamUUID):
         _errno = gameconst.RaidErrno
-        if self.isInRaid():
+        if self.inRaid():
             # 如果已经在团队中, 如果是小队队长, 则无法加入, 如果是普通成员, 则只要在当前团队中, 小队仍然可以加入
             if self.raidInfo.raidUUID != raidUUID or self.isCaptain():
                 return None, _errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
@@ -883,10 +933,9 @@ class ImpRaid(object):
         return None, _errno.ENUM_RAID_OK
 
     def _cancelAllRaidJoinRequest(self):
-        extraProps = {}
-        for raidUUID, raidJoinType in self.raidJoinRecord.items():
-            gameengine.getRaidStub(raidUUID).cancelRaidJoinRequest(
-                self.base, self.gbId, raidUUID, raidJoinType, extraProps)
+        for _raidUUID, raidJoinType in self.raidJoinRecord.items():
+            gameengine.getRaidStub(_raidUUID).cancelRaidJoinRequest(
+                self.base, self.gbId, _raidUUID, raidJoinType, {})
 
     def onCancelRaidJoinRequestSucc(self, raidUUID, raidJoinType, extra):
         LOG_INFO("onCancelRaidJoinRequestSucc::", raidUUID, raidJoinType, extra)
@@ -894,22 +943,37 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN)
-    def tryApplyInviteRaid(self, exposed, playerGBID, playerName):
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN)
+    @gamedecorator.crossServer
+    def tryApplyInviteRaid(self, exposed, gbId, playerName):
         """API: 尝试邀请玩家加入团队, 用于AOI外情况无法获取玩家组队信息"""
-        LOG_INFO('tryApplyInviteRaid::~', playerGBID, playerName)
+        LOG_INFO('tryApplyInviteRaid::~', gbId, playerName)
+
+        self.base.doInviteCheck(gbId, gameconst.InviteType.DEFAULT, gameconst.TeamType.RAID, True)
+        
+    def doTryApplyInviteRaid(self, playerGBID, playerName, inviteType):
+        LOG_INFO('doTryApplyInviteRaid::~', playerGBID, playerName, inviteType)
         _, err = self._tryApplyInviteRaidLonelyCommonCheck(playerGBID)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_WARN('tryApplyInviteRaid:: common check failed, {}'.format(err))
+            # GUILD 批量邀请不打印错误日志，不影响其他成员
+            if inviteType != gameconst.InviteType.GUILD:
+                LOG_WARN('doTryApplyInviteRaid:: common check failed, {}'.format(err))
             return
 
         extraProps = {
             'siegeWarCamp': self.siegeWarCamp,
             'srcPlayerGbId': self.gbId,
+            'inviteType': inviteType,
         }
-        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
-            (playerGBID, ), 'tryBeInvitedInRaid', (self.base, extraProps),
-            self, "tryApplyInviteRaidOffline", (playerName, ))
+        needMsg = inviteType != gameconst.InviteType.GUILD
+        if needMsg:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                (playerGBID, ), 'tryBeInvitedInRaid', (self.base, extraProps),
+                self, "tryApplyInviteRaidOffline", (playerName, ))
+        else:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                (playerGBID, ), 'tryBeInvitedInRaid', (self.base, extraProps),
+                None, "", ())
 
     def _tryApplyInviteRaidLonelyCommonCheck(self, playerGBID):
         if not playerGBID:
@@ -923,41 +987,44 @@ class ImpRaid(object):
     def tryBeInvitedInRaid(self, invitedPlayerBox, extraProps):
         LOG_INFO("tryBeInvitedInRaid::")
         srcPlayerGbId = extraProps['srcPlayerGbId']
+        inviteType = extraProps['inviteType']
+        needMsg = inviteType != gameconst.InviteType.GUILD
         _, err = self._tryBeInvitedInRaidCheck(srcPlayerGbId)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_WARN("tryBeInvitedInRaid:: failed, {}".format(err))
             if err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
-                invitedPlayerBox.onMessagePre(RAID_CONST.datas["raidInviteFail_alreadyInRaid_msg"]["value"], [])
+                if needMsg:
+                    invitedPlayerBox.onMessagePre(R_RCD.datas["raidInviteFail_alreadyInRaid_msg"]["value"], [])
             return
         if gameconfig.isCrossServer():
             if self.siegeWarCamp != 0 and extraProps['siegeWarCamp'] != 0 and self.siegeWarCamp != extraProps['siegeWarCamp']:
-                invitedPlayerBox.onMessagePre(MMD.datas.teamMatch_differentFactions, [])
+                if needMsg:
+                    invitedPlayerBox.onMessagePre(M_M_DD.datas.teamMatch_differentFactions, [])
                 return
 
         invitedPlayerBox.client.onTryBeInvitedInRaid(self.gbId, self.teamId, self.name,
-                                                     self.isCaptain())
+                                                     self.isCaptain(), inviteType)
 
     def _tryBeInvitedInRaidCheck(self, srcPlayerGbId):
-        if self.isInRaid():
+        if self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
     def tryApplyInviteRaidOffline(self, playerGBID, playerName):
         LOG_WARN("tryApplyInviteRaidOffline::", playerGBID, playerName)
-        self.showMsg(MMD.datas.raid_applicantOffline, [playerName])
+        self.showMsg(M_M_DD.datas.raid_applicantOffline, [playerName])
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN)
-    def applyInviteRaidLonely(self, exposed, playerGBID, playerName):
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN)
+    @gamedecorator.crossServer
+    def applyInviteRaidLonely(self, exposed, playerGBID, playerName, inviteType):
         """API: 邀请单人加入团队"""
-        LOG_INFO('applyInviteRaidLonely::~', playerGBID, playerName)
+        LOG_INFO('applyInviteRaidLonely::~', playerGBID, playerName, inviteType)
 
-        err = self.applyInviteRaidLonelyWithLonely(playerGBID, playerName)
+        err = self.applyInviteRaidLonelyWithLonely(playerGBID, playerName, inviteType)
         if err == gameconst.RaidErrno.ENUM_RAID_OK:
             return
-        else:
-            LOG_WARN('applyInviteRaidLonelyWithLonely:: common check failed, {}'.format(err))
 
         _, err = self._applyInviteRaidLonelyCommonCheck(playerGBID)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
@@ -965,18 +1032,18 @@ class ImpRaid(object):
             return
 
         if self.isRaidLeader():
-            self.raidLeaderApplyInvitedRaidLonely(playerGBID, playerName)
+            self.raidLeaderApplyInvitedRaidLonely(playerGBID, playerName, inviteType)
         elif self.isRaidDeputy():
-            self.raidDeputyApplyInvitedRaidLonely(playerGBID, playerName)
+            self.raidDeputyApplyInvitedRaidLonely(playerGBID, playerName, inviteType)
         else:
-            self.raidTeamMemberApplyInviteRaidLonely(playerGBID, playerName)
+            self.raidTeamMemberApplyInviteRaidLonely(playerGBID, playerName, inviteType)
         '''
         #
         elif self.isRaidCaptain():
             self.raidTeamCaptainApplyInviteRaidLonely(playerGBID, playerName)
         '''
-    def applyInviteRaidLonelyWithLonely(self, playerGBID, playerName):
-        if self.isInRaid():
+    def applyInviteRaidLonelyWithLonely(self, playerGBID, playerName, inviteType):
+        if self.inRaid():
             return gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID
         if self.isInTeam():
             return gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_TEAM
@@ -984,9 +1051,15 @@ class ImpRaid(object):
             return gameconst.RaidErrno.ENUM_UNKNOWN
 
         extraProps = {}
-        extraProps['inviteSource'] = gameconst.RaidPermission.LEADER
-        gameengine.getGlobalBase('PlayerStub').doOnOthersCell((playerGBID,), 'invitedPlayerOnApplyInvitedRaid', (
-                0, 0, self.gbId, self.name, self.name, 0, 0, extraProps), self, 'tryApplyInviteRaidOffline', (playerName, ))
+        extraProps['inviteSource'] = gameconst.RaidPermissionEnum.LEADER
+        extraProps['inviteType'] = inviteType
+        needMsg = inviteType != gameconst.InviteType.GUILD
+        if needMsg:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell((playerGBID,), 'invitedPlayerOnApplyInvitedRaid', (
+                    0, 0, self.gbId, self.name, self.name, 0, 0, extraProps), self, 'tryApplyInviteRaidOffline', (playerName, ))
+        else:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell((playerGBID,), 'invitedPlayerOnApplyInvitedRaid', (
+                    0, 0, self.gbId, self.name, self.name, 0, 0, extraProps), None, '', ())
         return gameconst.RaidErrno.ENUM_RAID_OK
     
     def _applyInviteRaidLonelyCommonCheck(self, playerGBID):
@@ -994,115 +1067,136 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(playerGBID=playerGBID)
         if playerGBID == self.gbId:
             return None, gameconst.RaidErrno.ENUM_UNKNOWN.initkvbody(reason='self-invite')
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
-    def raidLeaderApplyInvitedRaidLonely(self, playerGBID, playerName):
+    def raidLeaderApplyInvitedRaidLonely(self, playerGBID, playerName, inviteType):
         """团长邀请单人加入团队"""
-        LOG_INFO('raidLeaderApplyInvitedRaidLonely::', playerGBID, playerName)
+        LOG_INFO('raidLeaderApplyInvitedRaidLonely::', playerGBID, playerName, inviteType)
         raidUUID = self.raidUUID
-        extraProps = {'inviteSource': gameconst.RaidPermission.LEADER}
+        extraProps = {'inviteSource': gameconst.RaidPermissionEnum.LEADER}
+        extraProps['inviteType'] = inviteType
         gameengine.getRaidStub(raidUUID).raidLeaderApplyInvitedRaid(
             self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
 
-    def raidDeputyApplyInvitedRaidLonely(self, playerGBID, playerName):
+    def raidDeputyApplyInvitedRaidLonely(self, playerGBID, playerName, inviteType):
         """副团长邀请单人加入团队"""
-        LOG_INFO('raidDeputyApplyInvitedRaidLonely::', playerGBID, playerName)
+        LOG_INFO('raidDeputyApplyInvitedRaidLonely::', playerGBID, playerName, inviteType)
         raidUUID = self.raidUUID
-        extraProps = {'inviteSource': gameconst.RaidPermission.DEPUTY}
+        extraProps = {'inviteSource': gameconst.RaidPermissionEnum.DEPUTY}
+        extraProps['inviteType'] = inviteType
         gameengine.getRaidStub(raidUUID).raidDeputyApplyInvitedRaid(
             self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
     #
     def raidTeamCaptainApplyInviteRaidLonely(self, playerGBID, playerName):
         """队长邀请单人加入团队"""
         LOG_INFO('raidTeamCaptainApplyInviteRaidLonely::', playerGBID, playerName)
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         raidTeamIDX = self.raidInfo.raidTeamIDX
         extraProps = {'raidTeamIDX': raidTeamIDX,
-                      'inviteSource': gameconst.RaidPermission.CAPTAIN}
-        gameengine.getRaidStub(raidUUID).raidCaptainApplyInvitedRaid(
-            self.base, self.gbId, raidUUID, raidTeamIDX, playerGBID, playerName, extraProps)
+                      'inviteSource': gameconst.RaidPermissionEnum.CAPTAIN}
+        gameengine.getRaidStub(_raidUUID).raidCaptainApplyInvitedRaid(
+            self.base, self.gbId, _raidUUID, raidTeamIDX, playerGBID, playerName, extraProps)
 
-    def raidTeamMemberApplyInviteRaidLonely(self, playerGBID, playerName):
+    def raidTeamMemberApplyInviteRaidLonely(self, playerGBID, playerName, inviteType):
         """团队成员提议邀请单人加入团队"""
-        LOG_INFO('raidTeamMemberApplyInviteRaidLonely::', playerGBID, playerName)
-        raidUUID = self.raidUUID
-        extraProps = {'inviteSource': gameconst.RaidPermission.MEMBER}
-        gameengine.getRaidStub(raidUUID).raidMemberApplyInvitedRaid(
-            self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
+        LOG_INFO('raidTeamMemberApplyInviteRaidLonely::', playerGBID, playerName, inviteType)
+        _raidUUID = self.raidUUID
+        extraProps = {'inviteSource': gameconst.RaidPermissionEnum.MEMBER}
+        extraProps['inviteType'] = inviteType
+        gameengine.getRaidStub(_raidUUID).raidMemberApplyInvitedRaid(
+            self.base, self.gbId, _raidUUID, playerGBID, playerName, extraProps)
 
     def invitedPlayerOnApplyInvitedRaid(self, raidUUID, raidTarget, srcPlayerGbId,
                                         srcPlayerName, leaderName, raidScore, raidLevel, extraProps):
         """邀请单人/组队加入团队流程成功后回调"""
         LOG_INFO('invitedPlayerOnApplyInvitedRaid::',
-                 raidUUID, raidTarget, srcPlayerGbId, extraProps, srcPlayerName, leaderName, raidScore, raidLevel)
-        raidTeamIDX = extraProps.get('raidTeamIDX', 0)
-        teamUUID = extraProps.get('teamUUID', 0)
-        inviteSource = extraProps.get('inviteSource', gameconst.RaidPermission.UNKNOWN)
-        recordId, err = self._invitedPlayerOnApplyInvitedRaid(raidUUID, teamUUID, raidTarget, srcPlayerGbId, srcPlayerName, 
-                                                              leaderName, raidTeamIDX, inviteSource, raidScore, raidLevel)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            err = err.initkvbody(raidUUID=raidUUID, srcPlayerGbId=srcPlayerGbId)
-            if err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: func is locked, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                  (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                 raidUUID, raidTarget, srcPlayerGbId, extraProps, 
+                 srcPlayerName, leaderName, raidScore, raidLevel)
+
+        _raidTeamIDX = extraProps.get('raidTeamIDX', 0)
+        _teamUUID = extraProps.get('teamUUID', 0)
+        inviteSource = extraProps.get('inviteSource', gameconst.RaidPermissionEnum.UNKNOWN)
+        inviteType = extraProps.get('inviteType', gameconst.InviteType.DEFAULT)
+        needMsg = inviteType != gameconst.InviteType.GUILD
+        recordId, _err = self._invitedPlayerOnApplyInvitedRaid(
+            raidUUID, _teamUUID, raidTarget, srcPlayerGbId, srcPlayerName, 
+            leaderName, _raidTeamIDX, inviteSource, raidScore, raidLevel, inviteType)
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
+            _err = _err.initkvbody(raidUUID=raidUUID, srcPlayerGbId=srcPlayerGbId)
+            if _err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: func is locked, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
                 
-            elif err == gameconst.RaidErrno.ENUM_RAID_NOT_TEAM_CAPTAIN:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: not team captain, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                    [srcPlayerGbId, ], 'onMessagePre',
-                    (RAID_CONST.datas["raidInviteFail_alreadyInRaid_msg"]["value"], []),
-                    None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_NOT_TEAM_CAPTAIN:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: not team captain, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                        [srcPlayerGbId, ], 'onMessagePre',
+                        (R_RCD.datas["raidInviteFail_alreadyInRaid_msg"]["value"], []),
+                        None, '', ())
 
-            elif err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player already in raid, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                    [srcPlayerGbId, ], 'onMessagePre',
-                    (RAID_CONST.datas["raidInviteFail_alreadyInRaid_msg"]["value"], []),
-                    None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player already in raid, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                        [srcPlayerGbId, ], 'onMessagePre',
+                        (R_RCD.datas["raidInviteFail_alreadyInRaid_msg"]["value"], []),
+                        None, '', ())
 
-            elif err == gameconst.RaidErrno.ENUM_RAID_INVITED_SAME_PLAYER_INCD:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player which be invited in CD, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                    [srcPlayerGbId, ], 'onMessagePre',
-                    (RAID_CONST.datas["raid_inviteFail_cooldown_msg"]["value"], []),
-                    None, '', ())
-            elif err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: ui is denied, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                    [srcPlayerGbId, ], 'onMessagePre',
-                    (RAID_CONST.datas["raid_inviteFail_cooldown_msg"]["value"], []),
-                    None, '', ())
-            elif err == gameconst.RaidErrno.ENUM_RAID_LEVEL_IS_ILLEGAL:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player level too low, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                    (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
-            elif err == gameconst.RaidErrno.ENUM_RAID_SOCRE_IS_ILLEGAL:
-                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player score too low, errno={}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                    (int(TMMCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_INVITED_SAME_PLAYER_INCD:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player which be invited in CD, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                        [srcPlayerGbId, ], 'onMessagePre',
+                        (R_RCD.datas["raid_inviteFail_cooldown_msg"]["value"], []),
+                        None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_UI_DENIED:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: ui is denied, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                        [srcPlayerGbId, ], 'onMessagePre',
+                        (R_RCD.datas["raid_inviteFail_cooldown_msg"]["value"], []),
+                        None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_LEVEL_IS_ILLEGAL:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player level too low, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                        (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_SOCRE_IS_ILLEGAL:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player score too low, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                        (int(TMMCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
+            elif _err == gameconst.RaidErrno.ENUM_RAID_IN_CROSS_STATE:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player is in cross state, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                        (int(TM_MCD.datas['teamInviteMapMsg']['value']), []), None, '', ())
+
             else:
-                LOG_ERR('invitedPlayerOnApplyInvitedRaid:: failed, {}'.format(err))
+                LOG_ERR('invitedPlayerOnApplyInvitedRaid:: failed, {}'.format(_err))
 
             return
-
-        # 【【任务】发送团队邀请后弹出tip反馈】
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [srcPlayerGbId, ], 'onMessagePre',
-            (RAID_CONST.datas["raid_inviteSuccess_msg"]["value"], []), None, '', ())
+        if needMsg:
+            # 【【任务】发送团队邀请后弹出tip反馈】
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                [srcPlayerGbId, ], 'onMessagePre',
+                (R_RCD.datas["raid_inviteSuccess_msg"]["value"], []), None, '', ())
 
         LOG_INFO('invitedPlayerOnApplyInvitedRaid:: set record', raidUUID, recordId)
 
     def _invitedPlayerOnApplyInvitedRaid(self, raidUUID, teamUUID, raidTarget, srcPlayerGbId, srcPlayerName, 
-                                         leaderName, raidTeamIDX, inviteSource, raidScore, raidLevel):
+                                         leaderName, raidTeamIDX, inviteSource, raidScore, raidLevel, inviteType):
         if raidTarget > gameconst.PARE_ACTIVITY_ID:
             if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False) \
                 or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False):
                 return None, gameconst.RaidErrno.ENUM_RAID_UI_DENIED.initkvbody(level=self.level)
 
-        if self.isInRaid():
+        if self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID
         
         if self.isInTeam(self.gbId):
@@ -1114,34 +1208,45 @@ class ImpRaid(object):
         if self.getTotalScore() < raidScore:
             return None, gameconst.RaidErrno.ENUM_RAID_SOCRE_IS_ILLEGAL
         
+        # 我在跨服，告诉对方，不能邀请
+        if self.isCrossServer:
+            return None, gameconst.RaidErrno.ENUM_RAID_IN_CROSS_STATE
+        
         if teamUUID:
             # 传入teamID代表邀请的是组队, 回调者应该是小队队长
             if self.teamInfo.teamId != teamUUID:
-                return None, gameconst.RaidErrno.ENUM_RAID_TEAM_ID_CHANGED.initkvbody(srcTeamUUID=teamUUID,
-                                                                                 crtTeamUUID=self.teamInfo.teamId)
+                return None, gameconst.RaidErrno.ENUM_RAID_TEAM_ID_CHANGED.initkvbody(
+                    srcTeamUUID=teamUUID,
+                    crtTeamUUID=self.teamInfo.teamId,
+                )
+
             if not self.isCaptain():
                 return None, gameconst.RaidErrno.ENUM_RAID_NOT_TEAM_CAPTAIN.initkvbody(teamUUID=teamUUID,
                                                                                   playerGBID=self.gbId)
 
         now = utils.curTS()
         recordId = KBEngine.genUUID64()
-        inviteType = gameconst.RaidJoinTypeEnum.TEAM if teamUUID else gameconst.RaidJoinTypeEnum.SINGLE
-        raidBeInvitedRecord = self.raidBeInvitedRecord
-        thisRaidBeInvitedRecord = raidBeInvitedRecord.setdefault(raidUUID, {})
-        for _recordId, _recordVal in thisRaidBeInvitedRecord.items():
-            if _recordVal['inviteT'] + RAID_CONST.datas["raidInviteCooldown"]["value"] > now:
+        if teamUUID:
+            inviteType = gameconst.RaidJoinTypeEnum.TEAM 
+        else:
+            inviteType = gameconst.RaidJoinTypeEnum.SINGLE
+
+        raidBeInvitedRecordDic = self.raidBeInvitedRecordDic
+        thisRaidBeInvitedRecord = raidBeInvitedRecordDic.setdefault(raidUUID, {})
+        for _, _recordVal in thisRaidBeInvitedRecord.items():
+            if _recordVal['inviteT'] + R_RCD.datas["raidInviteCooldown"]["value"] > now:
                 return None, gameconst.RaidErrno.ENUM_RAID_INVITED_SAME_PLAYER_INCD
 
-        raidBeInvitedRecord[raidUUID][recordId] = {'srcPlayerGbId': srcPlayerGbId,
+        raidBeInvitedRecordDic[raidUUID][recordId] = {'srcPlayerGbId': srcPlayerGbId,
                                                    'raidTeamIDX': raidTeamIDX,
                                                    'teamUUID': teamUUID,
                                                    'inviteType': inviteType,
                                                    'inviteT': now}
 
-        if inviteSource == gameconst.RaidPermission.LEADER:
-            self.client.onBeInvitedRaidByLeader(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGbId, srcPlayerName, leaderName)
-        elif inviteSource == gameconst.RaidPermission.MEMBER:
-            self.client.onBeInvitedRaidByMember(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGbId, srcPlayerName, leaderName)
+        if inviteSource == gameconst.RaidPermissionEnum.LEADER:
+            self.client.onBeInvitedRaidByLeader(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGbId, srcPlayerName, leaderName, inviteType)
+        elif inviteSource == gameconst.RaidPermissionEnum.MEMBER:
+            self.client.onBeInvitedRaidByMember(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGbId, srcPlayerName, leaderName, inviteType)
         else:
             LOG_WARN('_invitedPlayerOnApplyInvitedRaid:: invite source unknown', raidUUID, teamUUID, raidTarget, inviteSource)
 
@@ -1149,45 +1254,49 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
-    def replyInviteRaidLonely(self, exposed, raidUUID, recordID, srcPlayerGbId, beInvited):
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
+    def replyInviteRaidLonely(self, exposed, raidUUID, recordID, srcPlayerGbId, beInvited, inviteType):
         """API: 某个玩家点击确认接受团队邀请"""
-        LOG_INFO('replyInviteRaidLonely::', raidUUID, recordID, srcPlayerGbId, beInvited)
-        record, err = self._replyInviteRaidLonelyCheck(raidUUID, recordID, srcPlayerGbId, beInvited)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            if err == gameconst.RaidErrno.ENUM_RAID_AVATAR_REJECTED_ACT:
-                LOG_INFO('replyInviteRaidLonely:: reject, {}'.format(err))
-                gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
-                    [srcPlayerGbId, ], 'onMessage',
-                    (RAID_CONST.datas['raidInvDeniedMsg']['value'], [self.name]),
-                    None, '', ())
+        LOG_INFO('replyInviteRaidLonely::', raidUUID, recordID, srcPlayerGbId, beInvited, inviteType)
+        record, _err = self._replyInviteRaidLonelyCheck(raidUUID, recordID, srcPlayerGbId, beInvited)
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
+            if _err == gameconst.RaidErrno.ENUM_RAID_AVATAR_REJECTED_ACT:
+                LOG_INFO('replyInviteRaidLonely:: reject, {}'.format(_err))
+                needMsg = inviteType != gameconst.InviteType.GUILD
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                        [srcPlayerGbId, ], 'onMessage',
+                        (R_RCD.datas['raidInvDeniedMsg']['value'], [self.name]),
+                        None, '', ())
             else:
-                LOG_WARN('replyInviteRaidLonely:: check failed, {}'.format(err))
+                LOG_WARN('replyInviteRaidLonely:: check failed, {}'.format(_err))
             # reply failed, pop current be invited record
-            self.raidBeInvitedRecord.get(raidUUID, {}).pop(recordID, None)
+            self.raidBeInvitedRecordDic.get(raidUUID, {}).pop(recordID, None)
             return
 
         # if reply succeed, pop all raidUUID be invited records
-        self.raidBeInvitedRecord.clear()
-        playerProps = self._getAvatarPropsForRaid().toSavedDict()
+        self.raidBeInvitedRecordDic.clear()
+        _playerProps = self._getAvatarPropsForRaid().toSavedDict()
         extraProps = {}
+        extraProps['inviteType'] = inviteType
         if raidUUID > 0:
-            playerProps['joinType'] = gameconst.TeamJoinType.RECRUIT
+            _playerProps['joinType'] = gameconst.TeamJoinType.RECRUIT
             gameengine.getRaidStub(raidUUID).replyInviteRaidLonely(
-                self.base, self.gbId, playerProps, record['srcPlayerGbId'],
+                self.base, self.gbId, _playerProps, record['srcPlayerGbId'],
                 record['raidTeamIDX'], raidUUID, extraProps)
         else:
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell([srcPlayerGbId], 'onReplyInviteRaidLonelyWithLonely', (
-                self.base, self.gbId, playerProps, ), None, '', ())
+                self.base, self.gbId, _playerProps, extraProps), None, '', ())
 
     def _replyInviteRaidLonelyCheck(self, raidUUID, recordID, srcPlayerGbId, beInvited):
         if not beInvited:
             return None, gameconst.RaidErrno.ENUM_RAID_AVATAR_REJECTED_ACT.initkvbody(raidUUID=raidUUID)
 
-        if self.isInRaid():
+        if self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID
 
-        recordDic = self.raidBeInvitedRecord.get(raidUUID, {})
+        recordDic = self.raidBeInvitedRecordDic.get(raidUUID, {})
         if not recordDic or recordID not in recordDic:
             return None, gameconst.RaidErrno.ENUM_RAID_APPLY_BE_INVITED_RECORD_NOT_FOUND
 
@@ -1203,9 +1312,9 @@ class ImpRaid(object):
 
         return record, gameconst.RaidErrno.ENUM_RAID_OK
 
-    def onReplyInviteRaidLonelyWithLonely(self, invitedPlayerBox, invitedPlayerGbId, invitedPlayerProps):
+    def onReplyInviteRaidLonelyWithLonely(self, invitedPlayerBox, invitedPlayerGbId, invitedPlayerProps, extraProps):
         LOG_INFO('onReplyInviteRaidLonelyWithLonely::', invitedPlayerProps)
-
+        inviteType = extraProps.get('inviteType', gameconst.InviteType.DEFAULT)
         _, err = self._createRaidLonelyCheck(dataUtils.getRaidConstDataValue('raidMemberLimit'))
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_WARN('onReplyInviteRaidLonelyWithLonely:: check failed, {}'.format(
@@ -1213,7 +1322,7 @@ class ImpRaid(object):
             if err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
                 gameengine.getRaidStub(self.raidInfo.raidUUID).replyInviteRaidLonely(
                     invitedPlayerBox, invitedPlayerGbId, invitedPlayerProps, self.gbId,
-                    0, self.raidInfo.raidUUID, {})
+                    0, self.raidInfo.raidUUID, extraProps)
             return
 
         raidUUID = KBEngine.genUUID64()
@@ -1223,41 +1332,43 @@ class ImpRaid(object):
             self.base, self.gbId, raidUUID, dataUtils.getRaidConstDataValue('raidMemberLimit'), [leaderProps], {})
         gameengine.getRaidStub(raidUUID).replyInviteRaidLonely(
                 invitedPlayerBox, invitedPlayerGbId, invitedPlayerProps, self.gbId,
-                0, raidUUID, {})
+                0, raidUUID, extraProps)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER, exclude=())
-    def applyInviteRaidWithTeam(self, exposed, playerGBID, teamUUID, playerName):
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.MEMBER, exclude=())
+    @gamedecorator.crossServer
+    def applyInviteRaidWithTeam(self, exposed, gbId, teamUUID, playerName):
         """API: 邀请小队加入团队"""
-        LOG_INFO('applyInviteRaidWithTeam::', playerGBID, teamUUID, playerName)
-        _, err = self._applyInviteRaidWithTeamCheck(playerGBID, teamUUID)
+        LOG_INFO('applyInviteRaidWithTeam::', gbId, teamUUID, playerName)
+        _, err = self._applyInviteRaidWithTeamCheck(gbId, teamUUID)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             if err == gameconst.RaidErrno.ENUM_RAID_INVITE_SELF_TEAM:
-                self.showMsg(RAID_CONST.datas["raidInviteFail_memberInviteTeam_msg"]["value"], [])
+                self.showMsg(R_RCD.datas["raidInviteFail_memberInviteTeam_msg"]["value"], [])
             elif err == gameconst.RaidErrno.ENUM_RAID_TEAM_MEMBER_DUOHUN:
-                self.showMsg(RAID_CONST.datas["beifenglingwufazudui1"]["value"], [])
+                self.showMsg(R_RCD.datas["beifenglingwufazudui1"]["value"], [])
             LOG_WARN('applyInviteRaidWithTeam:: check failed, {}'.format(err))
             return
 
         if self.isRaidLeader():
-            self.raidLeaderApplyInviteRaidWithTeam(playerGBID, teamUUID, playerName)
+            self.raidLeaderApplyInviteRaidWithTeam(gbId, teamUUID, playerName)
         elif self.isRaidDeputy():
-            self.raidDeputyApplyInviteRaidWithTeam(playerGBID, teamUUID, playerName)
+            self.raidDeputyApplyInviteRaidWithTeam(gbId, teamUUID, playerName)
         else:
-            self.raidTeamMemberApplyInviteRaidWithTeam(playerGBID, teamUUID, playerName)
+            self.raidTeamMemberApplyInviteRaidWithTeam(gbId, teamUUID, playerName)
 
-    def _applyInviteRaidWithTeamCheck(self, playerGBID, teamUUID):
-        if not (playerGBID and teamUUID):
-            return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(playerGBID=playerGBID, teamUUID=teamUUID)
+    def _applyInviteRaidWithTeamCheck(self, gbId, teamUUID):
+        if not (gbId and teamUUID):
+            return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(
+                playerGBID=gbId, teamUUID=teamUUID)
 
-        if playerGBID == self.gbId:
+        if gbId == self.gbId:
             return None, gameconst.RaidErrno.ENUM_UNKNOWN.initkvbody(reason='self-invite')
 
         if not teamUUID or teamUUID == self.teamInfo.teamId:
             return None, gameconst.RaidErrno.ENUM_RAID_INVITE_SELF_TEAM
 
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
 
         return None, gameconst.RaidErrno.ENUM_RAID_OK
@@ -1267,7 +1378,7 @@ class ImpRaid(object):
         LOG_INFO('raidLeaderApplyInviteRaidWithTeam::', playerGBID, teamUUID, playerName)
         raidUUID = self.raidUUID
         extraProps = {'teamUUID': teamUUID,
-                      'inviteSource': gameconst.RaidPermission.LEADER}
+                      'inviteSource': gameconst.RaidPermissionEnum.LEADER}
         gameengine.getRaidStub(raidUUID).raidLeaderApplyInvitedRaid(
             self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
 
@@ -1276,22 +1387,23 @@ class ImpRaid(object):
         LOG_INFO('raidDeputyApplyInviteRaidWithTeam::', playerGBID, teamUUID, playerName)
         raidUUID = self.raidUUID
         extraProps = {'teamUUID': teamUUID,
-                      'inviteSource': gameconst.RaidPermission.DEPUTY}
+                      'inviteSource': gameconst.RaidPermissionEnum.DEPUTY}
         gameengine.getRaidStub(raidUUID).raidDeputyApplyInvitedRaid(
             self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
 
-    def raidTeamMemberApplyInviteRaidWithTeam(self, playerGBID, teamUUID, playerName):
+    def raidTeamMemberApplyInviteRaidWithTeam(self, gbId, teamUUID, playerName):
         """团队成员提议邀请队伍加入团队"""
-        LOG_INFO('raidTeamMemberApplyInviteRaidWithTeam::', playerGBID, teamUUID, playerName)
+        LOG_INFO('raidTeamMemberApplyInviteRaidWithTeam::', gbId, teamUUID, playerName)
         raidUUID = self.raidUUID
         extraProps = {'teamUUID': teamUUID,
-                      'inviteSource': gameconst.RaidPermission.MEMBER}
+                      'inviteSource': gameconst.RaidPermissionEnum.MEMBER}
         gameengine.getRaidStub(raidUUID).raidMemberApplyInvitedRaid(
-            self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
+            self.base, self.gbId, raidUUID, gbId, playerName, extraProps)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def replyInviteRaidWithTeam(self, exposed, raidUUID, recordID, srcPlayerGbId, beInvited):
         """API: 某个小队(队长)点击确认接受团队邀请"""
         LOG_INFO('replyInviteRaidWithTeam::', raidUUID, recordID, srcPlayerGbId, beInvited)
@@ -1301,23 +1413,23 @@ class ImpRaid(object):
                 LOG_INFO('replyInviteRaidWithTeam:: reject, {}'.format(err))
                 gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
                     [srcPlayerGbId, ], 'onMessage',
-                    (RAID_CONST.datas['raidInvDeniedMsg']['value'], [self.name]),
+                    (R_RCD.datas['raidInvDeniedMsg']['value'], [self.name],),
                     None, '', ())
             elif err == gameconst.RaidErrno.ENUM_RAID_TEAM_MEMBER_OFFLINE:
-                gameengine.getTeamStub(self.teamId).onReplyInviteRaidWithTeamFail(
+                gameengine.getTeamStub(self.teamId).onReplyInviteRaidAndTeamFail(
                     self.base, self.gbId, 0, srcPlayerGbId, self.teamId, err.errno, {})
             elif err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
                 gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                     [srcPlayerGbId, ], 'onMessagePre',
-                    (MMD.datas.raid_teamInvitationCheck_sectionTeam, []))
+                    (M_M_DD.datas.raid_teamInvitationCheck_sectionTeam, []))
 
             LOG_WARN('replyInviteRaidWithTeam:: check failed, {}'.format(err))
             # reply failed, pop current be invited record
-            self.raidBeInvitedRecord.get(raidUUID, {}).pop(recordID, None)
+            self.raidBeInvitedRecordDic.get(raidUUID, {}).pop(recordID, None)
             return
 
         # if reply succeed, pop all raidUUID be invited records
-        self.raidBeInvitedRecord.pop(raidUUID)
+        self.raidBeInvitedRecordDic.pop(raidUUID)
         teamUUID = record['teamUUID']
         teamMemberNum = len(self.teamInfo.teamPlayerDict)
         playerProps = self._getAvatarPropsForRaid().toSavedDict()
@@ -1333,10 +1445,10 @@ class ImpRaid(object):
         if not raidUUID:
             return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(raidUUID=raidUUID)
 
-        if self.isInRaid():
+        if self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID
 
-        recordDic = self.raidBeInvitedRecord.get(raidUUID, {})
+        recordDic = self.raidBeInvitedRecordDic.get(raidUUID, {})
         if not recordDic or recordID not in recordDic:
             return None, gameconst.RaidErrno.ENUM_RAID_APPLY_BE_INVITED_RECORD_NOT_FOUND
 
@@ -1372,27 +1484,27 @@ class ImpRaid(object):
     def tryReplyInviteRaidFollowTeamCaptain(self, raidUUID, recordID, teamUUID, teamMemberNum, srcPlayerGbId):
         """队长确认后需要所有小队队员再次检查一次条件后在RaidStub处汇总"""
         LOG_INFO('tryReplyInviteRaidFollowTeamCaptain', raidUUID, recordID, teamUUID, teamMemberNum)
-        _, err = self._tryReplyInviteRaidFollowTeamCaptain(raidUUID, teamUUID)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_WARN('tryReplyInviteRaidFollowTeamCaptain:: failed && to be ignored, {}'.format(err))
-            playerProps = {}
-            if err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
+        _, _err = self._tryReplyInviteRaidFollowTeamCaptain(raidUUID, teamUUID)
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
+            LOG_WARN('tryReplyInviteRaidFollowTeamCaptain:: failed && to be ignored, {}'.format(_err))
+            _playerProps = {}
+            if _err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID:
                 gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                     [srcPlayerGbId, ], 'onMessagePre',
-                    (MMD.datas.raid_teamInvitationCheck_sectionTeam, []),
+                    (M_M_DD.datas.raid_teamInvitationCheck_sectionTeam, []),
                     None, "", ())
 
-            if err == gameconst.RaidErrno.ENUM_RAID_ALREADY_BE_TEAM_CAPTAIN:
+            if _err == gameconst.RaidErrno.ENUM_RAID_ALREADY_BE_TEAM_CAPTAIN:
                 return
 
         else:
-            playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            _playerProps = self._getAvatarPropsForRaid().toSavedDict()
         # always callback to raidStub
-        self._doReplyInviteRaidWithTeam(raidUUID, recordID, teamUUID, playerProps,
+        self._doReplyInviteRaidWithTeam(raidUUID, recordID, teamUUID, _playerProps,
                                         teamMemberNum, srcPlayerGbId, isCaptain=False)
 
     def _tryReplyInviteRaidFollowTeamCaptain(self, raidUUID, teamUUID):
-        if self.isInRaid():
+        if self.inRaid():
             # 如果已经在团队中, 如果是小队队长, 则无法加入, 如果是普通成员, 则只要在当前团队中, 小队仍然可以加入
             if self.raidInfo.raidUUID != raidUUID:
                 return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
@@ -1404,7 +1516,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.MEMBER)
+    @gamedecorator.crossServer
     def leaveRaid(self, exposed):
         """API: 任意成员离开团队"""
         LOG_INFO('leaveRaid::~')
@@ -1414,12 +1527,12 @@ class ImpRaid(object):
             return
         # 在副本里的时候，客户端直接进行退队操作，那就先从副本里出来
         if self.isInRaidDungeon():
-            src = dungeonSrc.KickoutFromDungeon(kickReason=gameconst.DungeonSrcKickReason.FORCE)
+            src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
             self.selfLeaveRaidDungeon(src)
         else:
-            raidUUID = self.raidUUID
+            _raidUUID = self.raidUUID
             extraProps = {}
-            gameengine.getRaidStub(raidUUID).leaveRaid(self.base, self.gbId, raidUUID, extraProps)
+            gameengine.getRaidStub(_raidUUID).leaveRaid(self.base, self.gbId, _raidUUID, extraProps)
         
         #主动离开team会清空怪物上的首刀归属者标记
         for e in self.entitiesInView(True):
@@ -1427,7 +1540,7 @@ class ImpRaid(object):
                 e.clearFirstBlood(self.id)
 
     def _leaveRaidCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1450,7 +1563,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.DEPUTY)
+    @gamedecorator.crossServer
     def kickOutRaidMember(self, exposed, raidTeamIDX, playerGBID):
         """API: 团长/队长踢出玩家"""
         LOG_INFO('kickOutRaidMember::', raidTeamIDX, playerGBID)
@@ -1458,7 +1572,7 @@ class ImpRaid(object):
         def _commonCheck():
             if not (raidTeamIDX and playerGBID):
                 return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(raidTeamIDX=raidTeamIDX, playerGBID=playerGBID)
-            if not self.isInRaid():
+            if not self.inRaid():
                 return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
             if playerGBID == self.gbId:
                 return None, gameconst.RaidErrno.ENUM_RAID_KICKOUT_SELF
@@ -1469,34 +1583,28 @@ class ImpRaid(object):
             LOG_WARN('kickOutRaidMember:: common-check failed, {}'.format(err))
             return
 
-        extraProps = {}
         if self.isRaidLeader():
-            self._raidLeaderKickOutRaidMember(raidTeamIDX, playerGBID, extraProps)
+            self._raidLeaderKickOutRaidMember(raidTeamIDX, playerGBID, {})
         elif self.isRaidDeputy():
-            self._raidDeputyKickOutRaidMember(raidTeamIDX, playerGBID, extraProps)
-        '''
-        #
-        elif self.isRaidCaptain():
-            self._raidTeamCaptainKickOutRaidMember(raidTeamIDX, playerGBID, extraProps)
-        '''
+            self._raidDeputyKickOutRaidMember(raidTeamIDX, playerGBID, {})
 
     def _raidLeaderKickOutRaidMember(self, raidTeamIDX, playerGBID, extraProps):
         LOG_INFO('_raidLeaderKickOutRaidMember::', raidTeamIDX, playerGBID)
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).raidLeaderKickOutRaidMember(
-            self.base, self.gbId, raidUUID, raidTeamIDX, playerGBID, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).raidLeaderKickOutRaidMember(
+            self.base, self.gbId, _raidUUID, raidTeamIDX, playerGBID, extraProps)
 
     def _raidDeputyKickOutRaidMember(self, raidTeamIDX, playerGBID, extraProps):
         LOG_INFO('_raidDeputyKickOutRaidMember::', raidTeamIDX, playerGBID)
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).raidDeputyKickOutRaidMember(
-            self.base, self.gbId, raidUUID, raidTeamIDX, playerGBID, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).raidDeputyKickOutRaidMember(
+            self.base, self.gbId, _raidUUID, raidTeamIDX, playerGBID, extraProps)
     #
     def _raidTeamCaptainKickOutRaidMember(self, raidTeamIDX, playerGBID, extraProps):
         LOG_INFO('_raidTeamCaptainKickOutRaidMember::', raidTeamIDX, playerGBID)
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).raidTeamCaptainKickOutRaidMember(
-            self.base, self.gbId, raidUUID, raidTeamIDX, playerGBID, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).raidTeamCaptainKickOutRaidMember(
+            self.base, self.gbId, _raidUUID, raidTeamIDX, playerGBID, extraProps)
 
     def onRaidLeaderKickOutRaidMember(self, raidUUID, koPlayerRaidTeamIDX, koPlayerGBID, extra):
         LOG_INFO('onRaidLeaderKickOutRaidMember::', raidUUID, koPlayerRaidTeamIDX, koPlayerGBID, extra)
@@ -1533,7 +1641,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER, onlyMode=True)
+    @gamedecorator.crossServer
     def transferRaidLeader(self, exposed, toPlayerGBID):
         """API: 团长变更"""
         LOG_INFO('transferRaidLeader::', toPlayerGBID)
@@ -1543,14 +1652,14 @@ class ImpRaid(object):
             return
 
         extraProps = {}
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).transferRaidLeader(
-            self.base, self.gbId, raidUUID, toPlayerGBID, extraProps, True)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).transferRaidLeader(
+            self.base, self.gbId, _raidUUID, toPlayerGBID, extraProps, True)
 
     def _transferRaidLeaderCheck(self, toPlayerGBID):
         if not toPlayerGBID:
             return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(toPlayerGBID=toPlayerGBID)
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
@@ -1560,7 +1669,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER, onlyMode=True)
+    @gamedecorator.crossServer
     def transferRaidDeputy(self, exposed, toPlayerGBID):
         """API: 副团长变更"""
         LOG_INFO('transferRaidDeputy::', toPlayerGBID)
@@ -1575,7 +1685,7 @@ class ImpRaid(object):
             self.base, self.gbId, raidUUID, toPlayerGBID, extraProps, True, True)
 
     def _transferRaidDeputyCheck(self, toPlayerGBID):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
@@ -1587,7 +1697,8 @@ class ImpRaid(object):
     
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.CAPTAIN, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.CAPTAIN, onlyMode=True)
+    @gamedecorator.crossServer
     def transferRaidTeamCaptain(self, exposed, toPlayerGBID):
         """API: 小队队长(除团长所在小队)更换相应队长"""
         LOG_INFO('transferRaidTeamCaptain::', toPlayerGBID)
@@ -1596,15 +1707,14 @@ class ImpRaid(object):
             LOG_WARN('transferRaidTeamCaptain:: check failed, {}'.format(err))
             return
 
-        extraProps = {}
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).transferRaidTeamCaptain(
-            self.base, self.gbId, raidUUID, toPlayerGBID, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).transferRaidTeamCaptain(
+            self.base, self.gbId, _raidUUID, toPlayerGBID, {})
     #
     def _transferRaidTeamCaptainCheck(self, toPlayerGBID):
         if not toPlayerGBID:
             return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(toPlayerGBID=toPlayerGBID)
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if self.isInRaidLeaderTeam():
             return None, gameconst.RaidErrno.ENUM_RAID_LEADER_TEAM_CANT_TRANS_CAPTAIN
@@ -1639,7 +1749,7 @@ class ImpRaid(object):
         self.raidInfo.raidLeaderGBID = toPlayerGBID
         self.raidInfo.raidLeaderTeamIDX = toPlayerTeamIdx
         # 【【程序自主】团队中团员职务暴露给所有客户端】
-        self.raidAuth = self.raidPermission
+        self.raidAuth = self.raidPermissionVal
 
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1663,7 +1773,7 @@ class ImpRaid(object):
         self.raidInfo.raidDeputyGBID = toPlayerGBID
         self.raidInfo.raidDeputyTeamIDX = toPlayerTeamIdx
         # 【【程序自主】团队中团员职务暴露给所有客户端】
-        self.raidAuth = self.raidPermission
+        self.raidAuth = self.raidPermissionVal
 
         return None, gameconst.RaidErrno.ENUM_RAID_OK
     #
@@ -1705,13 +1815,13 @@ class ImpRaid(object):
             # 相同小队刷新raidInfo上小队队长缓存
             self.raidInfo.raidCaptainGBID = toPlayerGBID
         # 【【程序自主】团队中团员职务暴露给所有客户端】
-        self.raidAuth = self.raidPermission
+        self.raidAuth = self.raidPermissionVal
 
         return None, gameconst.RaidErrno.ENUM_RAID_OK
     #
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
     def awardRaidTeamCaptain(self, expsoed, awardRaidTeamIDX, toPlayerGBID):
         """API: 团长任命队长"""
         LOG_INFO('awardRaidTeamCaptain::', awardRaidTeamIDX, toPlayerGBID)
@@ -1720,15 +1830,14 @@ class ImpRaid(object):
             LOG_WARN('awardRaidTeamCaptain:: check failed, {}'.format(err))
             return
 
-        extraProps = {}
-        raidUUID = self.raidUUID
-        gameengine.getRaidStub(raidUUID).awardRaidTeamCaptain(
-            self.base, self.gbId, raidUUID, awardRaidTeamIDX, toPlayerGBID, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).awardRaidTeamCaptain(
+            self.base, self.gbId, _raidUUID, awardRaidTeamIDX, toPlayerGBID, {})
     #
     def _awardRaidTeamCaptainCheck(self, awardRaidTeamID, toPlayerGBID):
         if not (awardRaidTeamID and toPlayerGBID):
             return None, gameconst.RaidErrno.ENUM_RAID_PARAM_ERR.initkvbody(awardRaidTeamID=awardRaidTeamID, toPlayerGBID=toPlayerGBID)
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if awardRaidTeamID not in self.raidInfo.raidTeamDic:
             return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND
@@ -1765,13 +1874,14 @@ class ImpRaid(object):
             # 相同小队刷新raidInfo上小队队长缓存
             self.raidInfo.raidCaptainGBID = toPlayerGBID
         # 【【程序自主】团队中团员职务暴露给所有客户端】
-        self.raidAuth = self.raidPermission
+        self.raidAuth = self.raidPermissionVal
 
         return None, gameconst.RaidErrno.ENUM_RAID_OK
     
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.DEPUTY)
+    @gamedecorator.crossServer
     def moveRaidTeamMember(self, exposed, fromPlayerTeamIdx, fromPlayerGBID, toPlayerTeamIdx, toPlayerGBID):
         """API: 团长移动队员"""
         LOG_INFO('moveRaidTeamMember::', fromPlayerTeamIdx, fromPlayerGBID, toPlayerTeamIdx, toPlayerGBID)
@@ -1797,7 +1907,7 @@ class ImpRaid(object):
                                                                        fromPlayerGBID=fromPlayerGBID,
                                                                        toPlayerTeamIdx=toPlayerTeamIdx)
 
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
 
         if not self.isRaidLeader() and not self.isRaidDeputy():
@@ -1829,11 +1939,12 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def setRaidTarget(self, exposed, minLevel, minScore, recuitInfo, password, isAutoExpedition):
         LOG_INFO("setRaidTarget, ", minLevel, minScore, recuitInfo, password, isAutoExpedition)
         """API: 团长设置全团目标"""
-        if not self.isInRaid():
+        if not self.inRaid():
             LOG_ERR("setRaidTarget, not in team")
             return
         if not self.isRaidLeader():
@@ -1863,7 +1974,7 @@ class ImpRaid(object):
         LOG_INFO('onSetRaidTargetAllMemberNotify::', srcPlayerGbId, raidUUID, newTargetId, minLevel, minScore, recruitInfo, password, isAutoExpedition)
 
         def _check():
-            if not self.isInRaid():
+            if not self.inRaid():
                 return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
 
             if self.raidInfo.raidUUID != raidUUID:
@@ -1885,13 +1996,14 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.DEPUTY)
+    @gamedecorator.crossServer
     def startRaidStandbyChecker(self, exposed):
         """API: 团长发起全团检查"""
         LOG_INFO('startRaidStandbyChecker::~')
 
         # def _check():
-        #     if not self.isInRaid():
+        #     if not self.inRaid():
         #         return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         #     if not self.isRaidLeader() and not self.isRaidDeputy():
         #         return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER_OR_DEPUTY
@@ -1910,13 +2022,14 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.MEMBER)
+    @gamedecorator.crossServer
     def replyRaidStandbyChecker(self, exposed, raidUUID, beAgreed):
         """API: 团队成员回应团长检查"""
         LOG_INFO('replyRaidStandbyChecker::', raidUUID, beAgreed)
 
         # def _check():
-        #     if not self.isInRaid():
+        #     if not self.inRaid():
         #         return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         #     if raidUUID != self.raidInfo.raidUUID:
         #         return None, gameconst.RaidErrno.ENUM_RAID_RAID_ID_NOT_MATCH
@@ -1937,20 +2050,19 @@ class ImpRaid(object):
     @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
     def switchRaidMicsMode(self, exposed, mode):
         """API: 开启团队麦功能"""
         LOG_INFO("switchRaidMicsMode~")
-        _, err = self._switchRaidMicsModeCheck(mode)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_ERR("switchRaidMicsMode::failed, errno={}".format(err))
+        _, _err = self._switchRaidMicsModeCheck(mode)
+        if _err != gameconst.RaidErrno.ENUM_RAID_OK:
+            LOG_ERR("switchRaidMicsMode::failed, errno={}".format(_err))
             return
 
         self.base.switchRaidMicsModeBase(self.raidUUID, mode)
 
-
     def _switchRaidMicsModeCheck(self, mode):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
 
         if mode not in gameconst.RaidMicsModeEnum.COLL_ALL:
@@ -1960,7 +2072,7 @@ class ImpRaid(object):
     @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.MEMBER)
     def turnOnRaidMics(self, exposed):
         """API: 团队成员打开麦克风"""
         LOG_INFO("turnOnRaidMics::~")
@@ -1972,7 +2084,7 @@ class ImpRaid(object):
         self.base.turnOnRaidMicsBase(self.raidUUID)
 
     def _turnOnRaidMicsCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1981,14 +2093,13 @@ class ImpRaid(object):
         _, err = self._turnOffRaidMicsCheck()
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             return
-        raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(raidUUID).turnOffRaidMics(self.base, self.gbId, raidUUID, self.gbId, extraProps)
+        _raidUUID = self.raidUUID
+        gameengine.getRaidStub(_raidUUID).turnOffRaidMics(self.base, self.gbId, _raidUUID, self.gbId, {})
 
     @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.MEMBER)
     def turnOffRaidMics(self, exposed):
         """API: 团队成员关闭麦克风"""
         LOG_INFO("turnOffRaidMics::~")
@@ -1997,19 +2108,20 @@ class ImpRaid(object):
             LOG_ERR("turnOffRaidMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).turnOffRaidMics(
-            self.base, self.gbId, raidUUID, self.gbId, extraProps)
+        gameengine.getRaidStub(_raidUUID).turnOffRaidMics(
+            self.base, self.gbId, _raidUUID, self.gbId, extraProps)
 
     def _turnOffRaidMicsCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def turnOnRaidMemberMics(self, exposed, playerGBID):
         """API: 打开特定成员麦克风"""
         LOG_INFO("turnOnRaidMemberMics::~")
@@ -2018,19 +2130,20 @@ class ImpRaid(object):
             LOG_ERR("turnOnRaidMemberMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).turnOnRaidMics(
-            self.base, self.gbId, raidUUID, playerGBID, extraProps)
+        gameengine.getRaidStub(_raidUUID).turnOnRaidMics(
+            self.base, self.gbId, _raidUUID, playerGBID, extraProps)
 
     def _turnOnRaidMemberMicsCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def turnOffRaidMemberMics(self, exposed, playerGBID):
         """API: 关闭特定成员麦克风"""
         LOG_INFO("turnOffRaidMemberMics::~", playerGBID)
@@ -2039,19 +2152,20 @@ class ImpRaid(object):
             LOG_ERR("turnOffRaidMemberMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).turnOffRaidMics(
-            self.base, self.gbId, raidUUID, playerGBID, extraProps)
+        gameengine.getRaidStub(_raidUUID).turnOffRaidMics(
+            self.base, self.gbId, _raidUUID, playerGBID, extraProps)
 
     def _turnOffRaidMemberMicsCheck(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.ENUM_RAID_OK
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def blockRaidMemberMics(self, exposed, teamIDX, playerGBID):
         """API: 团长禁言团员"""
         LOG_INFO("blockRaidMemberMics::~")
@@ -2060,13 +2174,13 @@ class ImpRaid(object):
             LOG_ERR("blockRaidMemberMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).blockRaidMemberMics(
-            self.base, self.gbId, raidUUID, teamIDX, playerGBID, extraProps)
+        gameengine.getRaidStub(_raidUUID).blockRaidMemberMics(
+            self.base, self.gbId, _raidUUID, teamIDX, playerGBID, extraProps)
 
     def _blockRaidMemberMicsCheck(self, teamIDX, playerGBID):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
@@ -2074,7 +2188,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def unblockRaidMemberMics(self, exposed, teamIDX, playerGBID):
         """API: 团长解除团员禁言"""
         LOG_INFO("unblockRaidMemberMics::~")
@@ -2083,13 +2198,13 @@ class ImpRaid(object):
             LOG_ERR("unblockRaidMemberMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).unblockRaidMemberMics(
-            self.base, self.gbId, raidUUID, teamIDX, playerGBID, extraProps)
+        gameengine.getRaidStub(_raidUUID).unblockRaidMemberMics(
+            self.base, self.gbId, _raidUUID, teamIDX, playerGBID, extraProps)
 
     def _unblockRaidMemberMicsCheck(self, teamIDX, playerGBID):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
@@ -2098,7 +2213,8 @@ class ImpRaid(object):
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(1)
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def blockAllRaidMemberMics(self, exposed):
         """API: 团长全员禁麦"""
         LOG_INFO("blockAllRaidMemberMics::~")
@@ -2107,13 +2223,13 @@ class ImpRaid(object):
             LOG_ERR("blockAllRaidMemberMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).blockAllRaidMemberMics(
-            self.base, self.gbId, raidUUID, extraProps)
+        gameengine.getRaidStub(_raidUUID).blockAllRaidMemberMics(
+            self.base, self.gbId, _raidUUID, extraProps)
 
     def _blockAllRaidMemberMics(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
@@ -2122,7 +2238,8 @@ class ImpRaid(object):
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(1)
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
+    @gamedecorator.crossServer
     def unblockAllRaidMemberMics(self, exposed):
         """API: 团长全员禁麦"""
         LOG_INFO("unblockAllRaidMemberMics::~")
@@ -2131,13 +2248,13 @@ class ImpRaid(object):
             LOG_ERR("unblockAllRaidMemberMics::failed, errno={}".format(err))
             return
 
-        raidUUID = self.raidUUID
+        _raidUUID = self.raidUUID
         extraProps = {}
-        gameengine.getRaidStub(raidUUID).unblockAllRaidMemberMics(
-            self.base, self.gbId, raidUUID, extraProps)
+        gameengine.getRaidStub(_raidUUID).unblockAllRaidMemberMics(
+            self.base, self.gbId, _raidUUID, extraProps)
 
     def _unblockAllRaidMemberMics(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
@@ -2160,26 +2277,26 @@ class ImpRaid(object):
         LOG_INFO('in raidReqEnterDongfuDungeon:', enterType, self.raidUUID)
         if not self.raidUUID:
             LOG_WARN('   in raidReqEnterDongfuDungeon, no raidUUID')
-            self.showMsg(MMD.datas.dfzz_enterWithRaid, [])
+            self.showMsg(M_M_DD.datas.dfzz_enterWithRaid, [])
             return
 
         if create and not self.raidInfo.isRaidLeader(self.gbId):
-            self.showMsg(MMD.datas.dfzz_open_notRaidLeader, [])
+            self.showMsg(M_M_DD.datas.dfzz_open_notRaidLeader, [])
             LOG_WARN('   in raidReqEnterDongfuDungeon, no permition')
             return
 
-        raidPlayers = self.raidInfo.getAllPlayerGBIDList()
-        self.base.baseEnterDongfuDungeon(enterType, self.raidUUID, raidPlayers, create)
+        _raidPlayers = self.raidInfo.getAllPlayerGBIDList()
+        self.base.baseEnterDongfuDungeon(enterType, self.raidUUID, _raidPlayers, create)
 
     def raidCloseDongfuDungeon(self, confirmClose):
         LOG_INFO('in raidCloseDongfuDungeon:', self.raidUUID, confirmClose)
         if not self.raidUUID:
             LOG_WARN('   in raidCloseDongfuDungeon')
-            self.showMsg(MMD.datas.dfzz_enterWithRaid, [])
+            self.showMsg(M_M_DD.datas.dfzz_enterWithRaid, [])
             return
 
         if not self.raidInfo.isRaidLeader(self.gbId):
-            self.showMsg(MMD.datas.dfzz_open_notRaidLeader, [])
+            self.showMsg(M_M_DD.datas.dfzz_open_notRaidLeader, [])
             LOG_WARN('   in raidCloseDongfuDungeon, no permition')
             return
         self.base.baseCloseDongfuWarDungeon(self.raidUUID, confirmClose)
@@ -2189,7 +2306,8 @@ class ImpRaid(object):
     # --------------------------------------------------------------------
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def reqRaidPlayerAutoMatch(self, exposed, target):
         LOG_INFO('in reqRaidPlayerAutoMatch')
         if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
@@ -2204,7 +2322,7 @@ class ImpRaid(object):
             LOG_WARN('reqRaidPlayerAutoMatch, already in a team:', self.teamId)
             return
 
-        if self.isInRaid():
+        if self.inRaid():
             LOG_WARN('reqRaidPlayerAutoMatch, already in a raid:', self.raidUUID)
             return
 
@@ -2255,6 +2373,7 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqRaidPlayerStopAutoMatch(self, exposed):
         LOG_INFO('reqRaidPlayerStopAutoMatch::~')
         self.stopRaidMatch()
@@ -2268,7 +2387,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER, onlyMode=True)
+    @gamedecorator.crossServer
     def reqRaidAutoMatch(self, exposed):
         LOG_INFO('in reqRaidAutoMatch')
         if 0 == self.raidUUID:
@@ -2282,7 +2402,8 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER, onlyMode=True)
+    @gamedecorator.crossServer
     def reqRaidStopAutoMatch(self, exposed):
         LOG_INFO('in reqRaidStopAutoMatch')
         if 0 == self.raidUUID:
@@ -2314,6 +2435,7 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqGetRaidList(self, exposed, lastTime, raidTarget):
         teamTargetInfo = TMACTD.datas.get(raidTarget)
         if teamTargetInfo is None:
@@ -2374,14 +2496,15 @@ class ImpRaid(object):
         if self.raidUUID > 0 and self.isRaidLeader():
             gameengine.getRaidStub(self.raidUUID).raidPrepareStopAutoMatch(self.raidUUID)
 
-        if self.isInRaid():
-            raidUUID = self.raidUUID
+        if self.inRaid():
+            _raidUUID = self.raidUUID
             extraProps = {}
-            gameengine.getRaidStub(raidUUID).leaveRaid(self.base, self.gbId, raidUUID, extraProps)
+            gameengine.getRaidStub(_raidUUID).leaveRaid(self.base, self.gbId, _raidUUID, extraProps)
 
     # 标记 begin
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqAddRaidMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """ API: 加入raid标记 """
         LOG_INFO('reqAddRaidMarkMember: ', type, index, name, gbId, entId, pos)
@@ -2395,6 +2518,7 @@ class ImpRaid(object):
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqDelRaidMarkMember(self, exposed, type, index):
         """ API: 移除raid标记 """
         LOG_INFO('reqDelRaidMarkMember: ', self.raidUUID, type, index)
@@ -2408,6 +2532,7 @@ class ImpRaid(object):
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(2)
+    @gamedecorator.crossServer
     def reqChangeRaidOnlyLeader(self, exposed, state):
         """ API: 变更仅leader修改标记的状态 """
         LOG_INFO('reqChangeRaidOnlyLeader: ', state)
@@ -2422,7 +2547,8 @@ class ImpRaid(object):
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(2)
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
+    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
     def reqJoinRaid(self, exposed, raidUUID, password):
         LOG_INFO('reqJoinRaid::', raidUUID, password)
         _, err = self._onJoinRaidCheck(raidUUID)
@@ -2434,7 +2560,7 @@ class ImpRaid(object):
 
     def _onJoinRaidCheck(self):
         _errno = gameconst.RaidErrno
-        if self.isInRaid():
+        if self.inRaid():
             return _errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(source='_onJoinRaidCheck')
         if self.isInTeam(self.gbId):
             return _errno.ENUM_RAID_ALREADY_IN_TEAM.initkvbody(source='_onJoinRaidCheck')
@@ -2458,9 +2584,41 @@ class ImpRaid(object):
             self.raidmateEntIdInAoiSet.discard(entId)
 
     def getAllRaidMemberGbIdSet(self):
-        if not self.isInRaid():
+        if not self.inRaid():
             return set()
         _set = set()
         for teamIDX, memberGBID, memberVal in self.raidInfo.iterGetRaidMember():
             _set.add(memberGBID)
         return _set
+
+    @utils.isMyself
+    @gamedecorator.crossServer
+    def tryApplyInviteGuild(self, exposed, inviteType, teamType):
+        LOG_INFO('impRaid::tryApplyInviteGuild,', exposed, inviteType, teamType)
+        if inviteType not in gameconst.InviteType.VALID_TYPES:
+            LOG_ERR("impRaid::tryApplyInviteGuild, wrong invite type ", inviteType)
+            return
+        if teamType not in gameconst.TeamType.VALID_TYPES:
+            LOG_ERR("impRaid::tryApplyInviteGuild, wrong team type ", teamType)
+            return
+        if teamType == gameconst.TeamType.TEAM:
+            ret = gamedecorator.doCheckGameConfig(self, 'raid', False)
+            if not ret:
+                LOG_ERR("impRaid::tryApplyInviteGuild, raid is not open ", teamType)
+                return  
+        elif teamType == gameconst.TeamType.RAID:
+            ret = gamedecorator.doCheckGameConfig(self, 'team', False)
+            if not ret:
+                LOG_ERR("impRaid::tryApplyInviteGuild, team is not open ", teamType)
+                return
+        else:
+            return
+        
+        if inviteType == gameconst.InviteType.GUILD:
+            if not self.guildUUID:
+                LOG_WARN("impRaid::tryApplyInviteGuild not in guild 1")
+                return
+            if not self.guildBoxCell:
+                LOG_WARN("impRaid::tryApplyInviteGuild not in guild 2")
+                return
+            self.guildBoxCell.tryApplyInviteGuild(self.gbId, inviteType, teamType)

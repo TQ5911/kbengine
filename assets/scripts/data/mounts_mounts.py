@@ -39,7 +39,7 @@ datas = _tools.RODict({
         "name": "锋刃战狼",
         "quality": 3,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjPVPDmgAnti', 0.02]]),
+        "prop": _tools.ROList([['adjPVPDmgAnti', 0.015]]),
         "isOpen": 1
     }),
     4: _tools.RODict({
@@ -75,16 +75,16 @@ datas = _tools.RODict({
         "name": "星瀚狮虎",
         "quality": 3,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjPVPDmg', 0.02]]),
+        "prop": _tools.ROList([['adjPVPDmg', 0.015]]),
         "isOpen": 1
     }),
     8: _tools.RODict({
         "ID": 8,
         "mountsID": 88000008,
         "name": "独角兽",
-        "quality": 3,
+        "quality": 2,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjFinalDmg', 0.01]]),
+        "prop": _tools.ROList([['adjFinalDmg', 0.005]]),
         "isOpen": 1
     }),
     9: _tools.RODict({
@@ -95,7 +95,25 @@ datas = _tools.RODict({
         "speedEnhance": 64000008,
         "prop": _tools.ROList([['adjMaxMagicArmor', 5]]),
         "isOpen": 1
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "mountsID": 88000010,
+        "name": "冰鹿",
+        "quality": 3,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjFinalDmgAnti', 0.0075]]),
+        "isOpen": 1
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "mountsID": 88000011,
+        "name": "水墨鹿",
+        "quality": 4,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjFinalDmg', 0.01]]),
+        "isOpen": 1
     })
 })
 minKey = 1
-maxKey = 9
+maxKey = 11

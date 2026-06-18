@@ -63,7 +63,7 @@ def isRaidCapacityValidate(capacity):
     return capacity and value and capacity >= 1 and capacity <= value
 
 def isEquipItemByItemId(itemId):
-    return itemId in GBGBD.datas or itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID
+    return itemId in GBGBD.datas or itemId == gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID
 
 def isReUseItem(itemId):
     itemData = getCommItemData(itemId)
@@ -112,7 +112,7 @@ def getCommItemData(itemId):
     if itemData:
         return itemData
     if isEquipItemByItemId(itemId):
-        return ITEMDATA.datas.get(gameconst.ItemId.COMMON_EQUIPMENT_ID, {})
+        return ITEMDATA.datas.get(gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID, {})
 
 
 def getItemSpecialDetailData(itemId):
@@ -283,7 +283,7 @@ def filterChildTaskIds(childTaskIds, level, excludedChildTaskIds=None):
         minLevel = getTaskFieldVal(childTaskData, 'ClaimCondLevelMin')
         maxLevel = getTaskFieldVal(childTaskData, 'ClaimCondLevelMax')
         if 0 == maxLevel:
-            maxLevel = utils.getPlayerMaxLevel()
+            maxLevel = utils.getMaxPlayerLevel()
         if minLevel <= level <= maxLevel:
             realChildTaskIds.append(childTaskId)
 
@@ -323,7 +323,7 @@ def getCoinBillStr(intVal, fraVal, needSign):
 def getMailId(srcType, ctxMailId):
     abandonWhenBagFull = AAC_AAC.datas.get(srcType).get('abandonWhenBagFull')
     if not abandonWhenBagFull and not ctxMailId:
-        return gameconst.MailConstID.REWARD_MAIL_ID, abandonWhenBagFull
+        return gameconst.MailConstEnum.REWARD_MAIL_ID, abandonWhenBagFull
     return ctxMailId, abandonWhenBagFull
     
 def getOutfitConfigData(outfitType, outfitId):
@@ -378,9 +378,9 @@ def isLingShouEquipmentItem(itemId):
 def getCommItemBagType(itemId):
     itemData = getCommItemData(itemId)
     if itemData['type'] == gameconst.ItemType.Normal:
-        return gameconst.BagType.BAG_TYPE_NORMAL
+        return gameconst.BagTypeEnum.BAG_TYPE_NORMAL
     elif itemData['type'] == gameconst.ItemType.LingShou:
-        return gameconst.BagType.BAG_TYPE_LINGSHOU_PEN
+        return gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN
     return
 
 def getPetEquipDefaultStatus():
@@ -686,8 +686,8 @@ def calcFightPropScore(school, propName, val):
 
 def calcAvatarBlessScore(playerBox):
     val = playerBox.getProp('adjAtkBless')
-    val = min(int(val), FASD.maxKey)
-    return FASD.atkBlessScoreDic.get(val, 0)
+    ret = min(int(val), FASD.maxKey)
+    return FASD.atkBlessScoreDic.get(ret, 0)
 
 def getAuctionPublicityKey(equipType, equipQuality):
     return equipType * 100 + equipQuality
@@ -792,3 +792,18 @@ def checkAutoDisassembly(srcType):
 def getItemTypeID(itemId):
     itemData = ITEMDATA.datas.get(itemId)
     return itemData['type'] * 1000 + itemData['subType']
+
+
+@functools.lru_cache(1024)
+def getTitleEndTime(titleId):
+    titleCfg = ITEMDATA.datas.get(titleId)
+    if not titleCfg:
+        return 0
+
+    expireTimeStr = titleCfg.get('itemTimeOut')
+    expireTime = 0
+    if expireTimeStr:
+        expireTime = int(utils.parseTimeStr(expireTimeStr))
+
+    return expireTime
+

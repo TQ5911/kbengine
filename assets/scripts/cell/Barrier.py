@@ -100,7 +100,7 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         # KBEngine.addLayerOneTilesById(self.spaceID, x, y, name)
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
         else:

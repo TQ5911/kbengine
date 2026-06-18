@@ -34,16 +34,16 @@ class IMount(object):
         itemData = dataUtils.getCommItemData(itemId)
         if not itemData:
             LOG_ERR('itemData invalid:', itemId)
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         mountId = itemData['indexID']
         if mountId not in MOUNTS.datas:
             LOG_ERR('mountId invalid:', mountId)
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         pid = self.setPendingUseId(opUUID, ctx)
         self.base.doAddMount(pid, mountId, durationDays)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def setCurMountCell(self, mountId):
         self.enableOutfit(gameconst.OutfitType.mount, mountId)

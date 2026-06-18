@@ -4,13 +4,13 @@
 
     <Properties>
         <leaseIncomeBindGold>
-            <Type>          UINT64                  </Type>
+            <Type>          INT64                  </Type>
             <Flags>         BASE         </Flags>
             <Persistent>    true                    </Persistent>
         </leaseIncomeBindGold>
 
         <leaseIncomeGold>
-            <Type>          UINT64                  </Type>
+            <Type>          INT64                  </Type>
             <Flags>         BASE         </Flags>
             <Persistent>    true                    </Persistent>
         </leaseIncomeGold>
@@ -20,19 +20,28 @@
             <Flags>         BASE                    </Flags>
             <Persistent>    true                    </Persistent>
         </leaseCoolDownList>
+
+
+        <leasePendingReturnItems>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </leasePendingReturnItems>
+
+        <leasePendingRemoveItems>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </leasePendingRemoveItems>
+
+        <leasePendingIncome>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </leasePendingIncome>
     </Properties>
 
     <BaseMethods>
-        <!-- 添加租赁凭证 -->
-        <reqAddLeaseTag> <Exposed/>
-            <Arg>   UINT64   </Arg>
-        </reqAddLeaseTag>
-
-        <!-- 取消租赁凭证 -->
-        <reqCancelLeaseTag> <Exposed/>
-            <Arg>   UINT64   </Arg>
-        </reqCancelLeaseTag>
-
         <!-- API: 上架 -->
         <reqSaleItemInLease>
             <Exposed/>
@@ -74,7 +83,8 @@
         <reqLeaseShopSummary>
             <Exposed/>
             <Arg>   UINT32       </Arg>
-            <Arg>   UINT32       </Arg>
+            <Arg>   SCHOOL       </Arg>
+            <Arg>   UINT8        </Arg>
         </reqLeaseShopSummary>
 
         <!-- API: 租赁商店物品列表 -->
@@ -89,35 +99,37 @@
         <onReplyAddItemPrepare>
             <Arg>   UINT64   </Arg>
             <Arg>   INT32       </Arg>
-            <Arg>   UNICODE     </Arg>
+            <Arg>   UUID     </Arg>
         </onReplyAddItemPrepare>
 
         <!-- 内部: 正式上架回调 -->
         <onReplyAddItemCommit>
             <Arg>   UINT64   </Arg>
             <Arg>   INT32       </Arg>
-            <Arg>   UNICODE     </Arg>
+            <Arg>   UUID     </Arg>
         </onReplyAddItemCommit>
 
         <!-- 内部: 预租借回调 -->
         <onReplyLeaseItemPrepare>
             <Arg>   UINT64   </Arg>
-            <Arg>   UINT32      </Arg>
+            <Arg>   INT64      </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
         </onReplyLeaseItemPrepare>
 
         <!-- 内部: 正式成交回调 -->
         <onReplyLeaseItemCommit>
-            <Arg>   UINT64   </Arg>
-            <Arg>   UINT64   </Arg>
+            <Arg>   UUID   </Arg>
+            <Arg>   UUID   </Arg>
+            <Arg>   INT32       </Arg>
             <Arg>   INT32       </Arg>
             <Arg>   INT32       </Arg>
             <Arg>   PLAYER_GBID   </Arg>
-            <Arg>   INT32       </Arg>
-            <Arg>   INT32       </Arg>
-            <Arg>   INT32       </Arg>
-            <Arg>   INT32       </Arg>
+            <Arg>   PLAYER_GBID   </Arg>
+            <Arg>   INT64       </Arg>
+            <Arg>   INT64       </Arg>
+            <Arg>   INT64       </Arg>
+            <Arg>   UNICODE       </Arg>
         </onReplyLeaseItemCommit>
 
         <!-- 内部: 下架回调 -->
@@ -137,25 +149,15 @@
             <Arg>   INT32       </Arg>
         </onGiveLeaseItem>
 
-        <!-- 内部: 从承租方移除装备 -->
-        <doRemoveLeasedItem>
-            <Arg>   UINT64   </Arg>
-        </doRemoveLeasedItem>
-
-        <!-- 内部: 归还装备给出租方 -->
-        <onReturnLeaseItemToOwner>
-            <Arg>   UINT64   </Arg>
-            <Arg>   UNICODE     </Arg>
-        </onReturnLeaseItemToOwner>
-
         <!-- 内部: 增加出租收入 -->
         <onAddLeaseIncome>
             <Arg>   UINT64   </Arg>
             <Arg>   ITEMID      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
+            <Arg>   INT64      </Arg>
+            <Arg>   INT64      </Arg>
             <Arg>   UINT64   </Arg>
             <Arg>   UINT32      </Arg>
+            <Arg>   UNICODE     </Arg>
         </onAddLeaseIncome>
 
         <!-- 内部: 我的出租列表回调 -->
@@ -165,14 +167,23 @@
 
         <!-- 内部: 商店统计回调 -->
         <onLeaseShopSummaryResp>
+            <Arg>   UINT32      </Arg>
             <Arg>   PYTHON      </Arg>
         </onLeaseShopSummaryResp>
 
         <!-- 内部: 商店物品列表回调 -->
         <onLeaseShopItemsResp>
             <Arg>   ITEMID      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT32      </Arg>
             <Arg>   PYTHON      </Arg>
         </onLeaseShopItemsResp>
+
+        <!-- 内部: cell 租赁到期卸下装备回调 -->
+        <cellLeaseExpireRemoveEquipCB>
+            <Arg>   UNIQUE_ID       </Arg>
+            <Arg>   BOOL            </Arg>
+        </cellLeaseExpireRemoveEquipCB>
 
     </BaseMethods>
 
@@ -181,16 +192,16 @@
 
     <ClientMethods>
         <onLeaseShopSummary>
+            <Arg>   UINT32      </Arg>
             <Arg>   ARRAY <of>  LEASE_SHOP_SUMMARY </of>   </Arg>
         </onLeaseShopSummary>
 
-        <onLeaseShopItems>
+        <!-- <onLeaseShopItems>
             <Arg>   ARRAY <of>  LEASE_MARKET_ITEM </of>    </Arg>
-        </onLeaseShopItems>
+        </onLeaseShopItems> -->
 
         <onLeaseItemSucc>
             <Arg>   UINT64   </Arg>
-            <Arg>   UINT32      </Arg>
         </onLeaseItemSucc>
 
         <onSaleItemInLeaseSucc>
@@ -210,10 +221,6 @@
             <Arg>   UINT64      </Arg>
         </onTakeLeaseIncomeSucc>
 
-        <onLeaseRecords>
-            <Arg>   ARRAY <of>  LEASE_RECORD </of>          </Arg>
-        </onLeaseRecords>
-
         <onAddLeaseTagSucc>
             <Arg>   UINT64   </Arg>
         </onAddLeaseTagSucc>
@@ -222,13 +229,17 @@
             <Arg>   UINT64   </Arg>
         </onCancelLeaseTagSucc>
 
-        <onMyLeaseSaleInfo>
+        <!-- <onMyLeaseSaleInfo>
+            <Arg>   INT64      </Arg>
+            <Arg>   INT64      </Arg>
             <Arg>   ARRAY <of>  LEASE_MY_SALE_ITEM </of>    </Arg>
-        </onMyLeaseSaleInfo>
+        </onMyLeaseSaleInfo> -->
 
         <onUpdateLeaseIncome>
-            <Arg>   UINT64      </Arg>
-            <Arg>   UINT64      </Arg>
+            <Arg>   INT64      </Arg>
+            <Arg>   INT64      </Arg>
+            <Arg>   INT64      </Arg>
+            <Arg>   INT64      </Arg>
         </onUpdateLeaseIncome>
 
     </ClientMethods>

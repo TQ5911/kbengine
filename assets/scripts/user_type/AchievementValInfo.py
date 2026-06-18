@@ -71,9 +71,23 @@ def _checkAchievePetEquipNum(avatar, achieveData, achieveVal, ctx):
     return achieveVal.step >= _num
 
 def _checkAchieveHookReward(avatar, achieveData, achieveVal, ctx):
-    _mapId = achieveData['targetParam'][1]
     _num = achieveData['targetParam'][0]
-    if getattr(ctx, 'mapId', 0) == _mapId:
+    if len(achieveData['targetParam']) > 1:
+        _mapId = achieveData['targetParam'][1]
+        if getattr(ctx, 'mapId', 0) == _mapId:
+            achieveVal.step += 1
+    else:
+        achieveVal.step += 1
+
+    return achieveVal.step >= _num
+
+def _checkAchieveMakeEquipment(avatar, achieveData, achieveVal, ctx):
+    _num = achieveData['targetParam'][0]
+    if len(achieveData['targetParam']) > 1:
+        _quality = achieveData['targetParam'][1]
+        if getattr(ctx, 'quality', 0) >= _quality:
+            achieveVal.step += 1
+    else:
         achieveVal.step += 1
 
     return achieveVal.step >= _num
@@ -185,7 +199,7 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.UNLOCK_MOUNT: (_checkAchieveAddStep, False),
     gameconst.AchieveType.JOIN_GUILD: (_checkAchieveAddStep, False),
     gameconst.AchieveType.ADD_FRIEND: (_checkAchieveAddStep, False),
-    gameconst.AchieveType.MAKE_EQUIPMENT: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.MAKE_EQUIPMENT: (_checkAchieveMakeEquipment, False),
     gameconst.AchieveType.ENHANCE_EQUIPMENT: (_checkAchieveAddStep, False),
     gameconst.AchieveType.EQUIPMENT_WITH_SPIRIT: (_checkAchieveAddStep, False),
     gameconst.AchieveType.LEVEL_UP_SKILL: (_checkSkillUpgrade, False),
@@ -270,6 +284,8 @@ class AchievementValVal(userType.UserSingleType):
 
         if _isLog:
             LogTrackingMgr.LogTrackingMgr.Achievement_Update(
+                avatar.gbID,
+                avatar.accountEntity.clientDistinctId,
                 avatar.accountEntity.accountName,
                 avatar.gbID,
                 gameconfig.gameId(),

@@ -95,6 +95,14 @@ datas = _tools.RODict({
         "tmxRes": "zuKeDiBao_07",
         "weatherType": 0,
     }),
+    "field_zukedibao_08": _tools.RODict({
+        "sceneRes": "field_zukedibao_08",
+        "sceneName": "祖珂地堡四层",
+        "defaultMapID": 1026,
+        "returnPos": None,
+        "tmxRes": "zuKeDiBao_08",
+        "weatherType": 0,
+    }),
     "field_yueguanghaigang_01": _tools.RODict({
         "sceneRes": "field_yueguanghaigang_01",
         "sceneName": "月光海港一层",
@@ -121,7 +129,7 @@ datas = _tools.RODict({
     }),
     "field_yueguanghaigang_06": _tools.RODict({
         "sceneRes": "field_yueguanghaigang_06",
-        "sceneName": "月光海港六层",
+        "sceneName": "月光海港四层",
         "defaultMapID": 1035,
         "returnPos": None,
         "tmxRes": "yueGuangHaiGang_06",
@@ -129,7 +137,7 @@ datas = _tools.RODict({
     }),
     "field_yueguanghaigang_07": _tools.RODict({
         "sceneRes": "field_yueguanghaigang_07",
-        "sceneName": "月光海港七层",
+        "sceneName": "月光海港五层",
         "defaultMapID": 1036,
         "returnPos": None,
         "tmxRes": "yueGuangHaiGang_07",
@@ -221,6 +229,14 @@ datas = _tools.RODict({
         "defaultMapID": 2202,
         "returnPos": None,
         "tmxRes": "shouLing_00",
+        "weatherType": 0,
+    }),
+    "field_shouling_01": _tools.RODict({
+        "sceneRes": "field_shouling_01",
+        "sceneName": "首领讨伐1",
+        "defaultMapID": 2204,
+        "returnPos": None,
+        "tmxRes": "shouLing_01",
         "weatherType": 0,
     }),
     "field_shouling_02": _tools.RODict({
@@ -359,6 +375,14 @@ datas = _tools.RODict({
         "tmxRes": "hunDunHuiLang_10",
         "weatherType": 0,
     }),
+    "field_hundunhuilang_11": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_11",
+        "sceneName": "混沌回廊心魔试炼",
+        "defaultMapID": 3116,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_11",
+        "weatherType": 0,
+    }),
     "field_xinyuanchengzhan": _tools.RODict({
         "sceneRes": "field_xinyuanchengzhan",
         "sceneName": "城战",
@@ -397,6 +421,30 @@ datas = _tools.RODict({
         "defaultMapID": 5100,
         "returnPos": None,
         "tmxRes": "shiLianFeng_01",
+        "weatherType": 0,
+    }),
+    "field_heiyandigong_03": _tools.RODict({
+        "sceneRes": "field_heiyandigong_03",
+        "sceneName": "黑炎地宫三层",
+        "defaultMapID": 5203,
+        "returnPos": None,
+        "tmxRes": "heiYanDiGong_03",
+        "weatherType": 0,
+    }),
+    "field_leitai": _tools.RODict({
+        "sceneRes": "field_leitai",
+        "sceneName": "演武场",
+        "defaultMapID": 7000,
+        "returnPos": None,
+        "tmxRes": "leiTai",
+        "weatherType": 0,
+    }),
+    "field_dengdaichangjing_01": _tools.RODict({
+        "sceneRes": "field_dengdaichangjing_01",
+        "sceneName": "等待之境",
+        "defaultMapID": 9000,
+        "returnPos": None,
+        "tmxRes": "xinYuanCheng",
         "weatherType": 0,
     })
 })

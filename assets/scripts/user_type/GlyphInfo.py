@@ -36,7 +36,7 @@ class GlyphInfo(userType.UserSingleType):
     def toClientData(self):
         return {
             'glyphPos' : self.glyphPos,
-            'glyphAffixes' : [glyphAffix.toAfxClientDic() for glyphAffix in self.glyphAffixes]
+            'glyphAffixes' : [glyphAffix.toAfxClientDic() for glyphAffix in self.glyphAffixes],
         }
     
     def updateGlyphAffixes(self, affixes):

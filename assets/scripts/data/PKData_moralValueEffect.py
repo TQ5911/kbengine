@@ -17,8 +17,8 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "lowerLimit": 5000,
-        "upperLimit": 10000,
+        "lowerLimit": 3000,
+        "upperLimit": 5000,
         "PVPDmgReduced": 0.0,
         "DmgFromOtherPVPIncreased": 0.0,
         "ExpGainReduced": 0.0,
@@ -28,7 +28,7 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "lowerLimit": -499,
-        "upperLimit": 4999,
+        "upperLimit": 2999,
         "PVPDmgReduced": 0.0,
         "DmgFromOtherPVPIncreased": 0.0,
         "ExpGainReduced": 0.0,
@@ -37,7 +37,7 @@ datas = _tools.RODict({
     }),
     3: _tools.RODict({
         "ID": 3,
-        "lowerLimit": -3499,
+        "lowerLimit": -1999,
         "upperLimit": -500,
         "PVPDmgReduced": 0.1,
         "DmgFromOtherPVPIncreased": 0.1,
@@ -47,8 +47,8 @@ datas = _tools.RODict({
     }),
     4: _tools.RODict({
         "ID": 4,
-        "lowerLimit": -9999,
-        "upperLimit": -3500,
+        "lowerLimit": -3999,
+        "upperLimit": -2000,
         "PVPDmgReduced": 0.3,
         "DmgFromOtherPVPIncreased": 0.3,
         "ExpGainReduced": 0.3,
@@ -57,8 +57,8 @@ datas = _tools.RODict({
     }),
     5: _tools.RODict({
         "ID": 5,
-        "lowerLimit": -50000,
-        "upperLimit": -10000,
+        "lowerLimit": -5000,
+        "upperLimit": -4000,
         "PVPDmgReduced": 0.5,
         "DmgFromOtherPVPIncreased": 0.5,
         "ExpGainReduced": 0.5,

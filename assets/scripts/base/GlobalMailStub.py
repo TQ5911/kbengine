@@ -42,7 +42,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.trySendDelayMails()
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
 
@@ -75,8 +75,9 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self.delayMailTimerId = self.addTimerCB(minLeftTime, 'trySendDelayMails', (),
                                                    gametimer.TIMER_TAG_CHECK_SEND_DELAY_MAILS, 'delayMailTimerId')
 
-    def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, 
-                       minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType):
+    def sendGlobalMail(self, mailId, extraAttach:dropAward.MailAttachVal, despArgs, title, cont, 
+                       minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType,
+                       mailTag=0):
         LOG_INFO('in sendGlobalMail:', mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, srcType)
         
         if dueTime < 0 or maxRoleTime < 0 or maxRoleLevel < 0 :
@@ -123,7 +124,8 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             minRoleLevel, 
             maxRoleLevel,
             channel,
-            srcType
+            srcType,
+            mailTag
         )
 
         if globalMail.isExpired():
@@ -210,19 +212,19 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self.mailList.pop(pos)
 
         # 2.检查是否接近上限，报个警
-        if len(self.mailList) / gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT >= gameconst.MailConstID.MAX_GLOBAL_MAIL_OVER_RATE / 100:
+        if len(self.mailList) / gameconst.MailConstEnum.MAX_GLOBAL_MAIL_SAVE_COUNT >= gameconst.MailConstEnum.MAX_GLOBAL_MAIL_OVER_RATE / 100:
             gameengine.panicStack('checkGlobalMailNum, global mail save is closed to up limit ', \
                                         len(self.mailList), \
-                                        gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT, \
-                                        gameconst.MailConstID.MAX_GLOBAL_MAIL_OVER_RATE
+                                        gameconst.MailConstEnum.MAX_GLOBAL_MAIL_SAVE_COUNT, \
+                                        gameconst.MailConstEnum.MAX_GLOBAL_MAIL_OVER_RATE
                                     )
         # 3.正常范围内，正常同步全服
-        if len(self.mailList) <= gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT:
+        if len(self.mailList) <= gameconst.MailConstEnum.MAX_GLOBAL_MAIL_SAVE_COUNT:
             expiredMailPosList and self.syncGlobalMailsList()
             return
         
         # 4.处理超过上限，先删除最老的邮件
-        self.mailList = self.mailList[-1*gameconst.MailConstID.MAX_GLOBAL_MAIL_SAVE_COUNT:]
+        self.mailList = self.mailList[-1*gameconst.MailConstEnum.MAX_GLOBAL_MAIL_SAVE_COUNT:]
         # 5.同步全服
         self.syncGlobalMailsList()
         return
@@ -238,7 +240,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                      'createTime':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mail.createTime))}
                      for mail in list(self.mailList)[:-(mailNum+1):-1]]
         LOG_INFO('gmGetGlobalMailList:', str(mailList))
-        box.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, channelAvatarInfo, str(mailList))
+        box.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, channelAvatarInfo, {"msg": str(mailList), "code": 0, "voiceUrl": '', "msgType": 0})
 
     def gmDeleteOneGlobalMail(self, mailGBID):
         return

@@ -247,6 +247,12 @@ def _10010531(self, target, context):
 def _10010531_end(self, target, context):
     self.removeBuffBySkill(target, context, 64004501)
 
+def _10010532(self, target, context):
+    self.addBuffBySkill(target, context, 64004503, 1)
+
+def _10010532_end(self, target, context):
+    self.removeBuffBySkill(target, context, 64004503)
+
 datas = _tools.RODict({ 
     10000000: _tools.RODict({
         "ID": 10000000,
@@ -652,7 +658,22 @@ datas = _tools.RODict({
         "effect": "TeamExCorpse",
         "maxEffectObjectNum": 15,
         "endByTime": -1,
+    }),
+    10010532: _tools.RODict({
+        "ID": 10010532,
+        "name": "召唤物骑士光环",
+        "level": 1,
+        "radium": 10.0,
+        "isAttackSkill": 0,
+        "classTag": 3,
+        "action": _10010532,
+        "endActionToEffectObject": _10010532_end,
+        "areaAction": None,
+        "loopIntervalTime": 1.0,
+        "effect": "TeamExCorpse",
+        "maxEffectObjectNum": 15,
+        "endByTime": -1,
     })
 })
 minKey = 10000000
-maxKey = 10010531
+maxKey = 10010532

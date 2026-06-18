@@ -79,8 +79,8 @@ class IShowMapEntityType(object):
         self.showMapEntitySet.add(entity.creepbaseId)
         self.notifyPlayerShowMapEntity(None)
 
-    def removeEntityById(self, entId):
-        LOG_INFO('IShowMapEntityType::removeEntityById', entId)
+    def removeEntById(self, entId):
+        LOG_INFO('IShowMapEntityType::removeEntById', entId)
         entity = KBEngine.entities.get(entId, None)
         if not entity or not entity.IsMonster:
             return

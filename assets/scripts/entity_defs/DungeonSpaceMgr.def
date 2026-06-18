@@ -24,11 +24,11 @@
             <Default>   0                  </Default>
         </dungeonStageStartT>
 
-        <dungeonPlayerReliveRecordDic>
+        <dunPlayerReliveRecordDic>
             <Type> PY_DICT </Type>
             <Flags> CELL_PRIVATE </Flags>
             <Default> {} </Default>
-        </dungeonPlayerReliveRecordDic>
+        </dunPlayerReliveRecordDic>
 
         <dungeonCompleteDelayNotifyTimer>
             <Type> UINT64 </Type>
@@ -97,6 +97,10 @@
             <Arg>   LONGTIME    </Arg>
         </onDungeonStarted>
 
+        <onDungeonStartChallenge>
+            <Arg>   LONGTIME    </Arg>
+        </onDungeonStartChallenge>
+
         <onSingleDungeonCompleted>
             <Arg>            SPACE_NO        </Arg>
             <Arg>            PLAYER_GBID     </Arg>
@@ -139,6 +143,14 @@
             <Arg>            INT8            </Arg>
         </onGuildBossDungeonCompleted>
 
+        <doEnterSingleDungeon>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   UUID                    </Arg>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PYTHON                  </Arg>
+        </doEnterSingleDungeon>
+
         <doEnterTeamDungeon>
             <Arg>   MAILBOX                 </Arg>
             <Arg>   PLAYER_GBID             </Arg>
@@ -147,14 +159,14 @@
             <Arg>   PYTHON                  </Arg>
         </doEnterTeamDungeon>
 
-        <enterRaidDungeonDirectly>
+        <enterRaidDunDirectly>
             <Arg>   MAILBOX                 </Arg>
             <Arg>   PLAYER_GBID             </Arg>
             <Arg>   UUID                    </Arg>
             <Arg>   MAILBOX                 </Arg>
             <Arg>   DUNGEON_SRC             </Arg>
             <Arg>   PYTHON                  </Arg>
-        </enterRaidDungeonDirectly>
+        </enterRaidDunDirectly>
 
         <cancelCompleteDelayNotifyTimer>
             <Arg>   MAILBOX                 </Arg>

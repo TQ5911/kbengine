@@ -154,6 +154,13 @@ namespace KBEngine
 					UInt32 aiChatToPlayer_arg2 = stream.readUint32();
 					aiChatToPlayer(aiChatToPlayer_arg1, aiChatToPlayer_arg2);
 					break;
+				case 735:
+					Vector3 drawCube_arg1 = stream.readVector3();
+					Vector3 drawCube_arg2 = stream.readVector3();
+					float drawCube_arg3 = stream.readFloat();
+					float drawCube_arg4 = stream.readFloat();
+					drawCube(drawCube_arg1, drawCube_arg2, drawCube_arg3, drawCube_arg4);
+					break;
 				case 300:
 					UInt32 notifyCastingSkill_arg1 = stream.readUint32();
 					double notifyCastingSkill_arg2 = stream.readDouble();
@@ -326,6 +333,10 @@ namespace KBEngine
 					UInt32 showPopoverMsgWithArg_arg1 = stream.readUint32();
 					List<string> showPopoverMsgWithArg_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					showPopoverMsgWithArg(showPopoverMsgWithArg_arg1, showPopoverMsgWithArg_arg2);
+					break;
+				case 164:
+					List<UInt16> updateForbidSkillTags_arg1 = ((DATATYPE_AnonymousArray_10005)method.args[0]).createFromStreamEx(stream);
+					updateForbidSkillTags(updateForbidSkillTags_arg1);
 					break;
 				default:
 					break;

@@ -26,9 +26,13 @@ message OrderRequest
 {
   int32 serverId = 1;
   string outTradeNo = 2;
-  int64 gbId = 3;
-  int32 itemId = 4;
-  int32 itemCount = 5;
+  int64 createTime = 3;
+  int64 gbId = 4;
+  int32 itemId = 5;
+  int32 itemCount = 6;
+  double price = 7;
+  bool addToSafe = 8;
+  string roleName = 9;
 }
 
 message OrderResponse

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import time
 from enum import Enum
 from KBEDebug import *
 import KBEngine
@@ -10,1476 +11,2011 @@ import utils
 class LogTrackingMgr:
     # 充值完成事件
     @staticmethod
-    def Server_Recharge_Complete(accountId, roleId, itemType, itemId, price, orderId, **kwargs):
+    def Server_Recharge_Complete(GBID, distinctId, account_id, role_id, item_type, item_id, price, order_id, **kwargs):
         args = {}
         args["trackName"] = "Server_Recharge_Complete"
-        args["accountId"] = str(accountId)
-        args["roleId"] = str(roleId)
-        args["itemType"] = str(itemType)
-        args["itemId"] = str(itemId)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Recharge_Complete"
+        args["account_id"] = str(account_id)
+        args["role_id"] = str(role_id)
+        args["item_type"] = str(item_type)
+        args["item_id"] = str(item_id)
         args["price"] = price
-        args["orderId"] = str(orderId)
+        args["order_id"] = str(order_id)
         LogTrackingMgr.LOG(args, kwargs)
 
     # PCU事件
     @staticmethod
-    def Server_Pcu(pcu, **kwargs):
+    def Server_Pcu(GBID, distinctId, pcu, **kwargs):
         args = {}
         args["trackName"] = "Server_Pcu"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Pcu"
         args["pcu"] = pcu
         LogTrackingMgr.LOG(args, kwargs)
 
     # 用户登出事件
     @staticmethod
-    def Server_Logout(accountId, deviceModel, ipAddress, operatingSystem, channelSource, packageSource, **kwargs):
+    def Server_Logout(GBID, distinctId, account_id, device_model, ip_address, operating_system, channel_source, package_source, **kwargs):
         args = {}
         args["trackName"] = "Server_Logout"
-        args["accountId"] = str(accountId)
-        args["deviceModel"] = str(deviceModel)
-        args["ipAddress"] = str(ipAddress)
-        args["operatingSystem"] = str(operatingSystem)
-        args["channelSource"] = str(channelSource)
-        args["packageSource"] = str(packageSource)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Logout"
+        args["account_id"] = str(account_id)
+        args["device_model"] = str(device_model)
+        args["ip_address"] = str(ip_address)
+        args["operating_system"] = str(operating_system)
+        args["channel_source"] = str(channel_source)
+        args["package_source"] = str(package_source)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 用户登录事件
     @staticmethod
-    def Server_Login(accountId, deviceModel, ipAddress, operatingSystem, accountType, channelSource, packageSource, device, lastLoginTime, loginTime, appVersion, userInfoId, patch, **kwargs):
+    def Server_Login(GBID, distinctId, account_id, device_model, ip_address, operating_system, account_type, channel_source, package_source, device, last_login_time, login_time, app_version, user_info_id, patch, **kwargs):
         args = {}
         args["trackName"] = "Server_Login"
-        args["accountId"] = str(accountId)
-        args["deviceModel"] = str(deviceModel)
-        args["ipAddress"] = str(ipAddress)
-        args["operatingSystem"] = str(operatingSystem)
-        args["accountType"] = str(accountType)
-        args["channelSource"] = str(channelSource)
-        args["packageSource"] = str(packageSource)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Login"
+        args["account_id"] = str(account_id)
+        args["device_model"] = str(device_model)
+        args["ip_address"] = str(ip_address)
+        args["operating_system"] = str(operating_system)
+        args["account_type"] = str(account_type)
+        args["channel_source"] = str(channel_source)
+        args["package_source"] = str(package_source)
         args["device"] = str(device)
-        args["lastLoginTime"] = lastLoginTime
-        args["loginTime"] = loginTime
-        args["appVersion"] = str(appVersion)
-        args["userInfoId"] = str(userInfoId)
+        args["last_login_time"] = last_login_time
+        args["login_time"] = login_time
+        args["app_version"] = str(app_version)
+        args["user_info_id"] = str(user_info_id)
         args["patch"] = str(patch)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 角色登录事件
     @staticmethod
-    def Server_Role_Login(accountId, gbId, school, name, level, gameId, userInfoId, createTimestamp, accountType, channelSource, packageSource, logType, score, experience, money, coin, mapId, **kwargs):
+    def Server_Role_Login(GBID, distinctId, account_id, gb_id, ob_id, school, name, level, game_id, user_info_id, create_timestamp, account_type, channel_source, package_source, log_type, score, experience, money, coin, map_id, **kwargs):
         args = {}
         args["trackName"] = "Server_Role_Login"
-        args["accountId"] = str(accountId)
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Role_Login"
+        args["account_id"] = str(account_id)
+        args["gb_id"] = gb_id
+        args["ob_id"] = ob_id
         args["school"] = school
         args["name"] = str(name)
         args["level"] = level
-        args["gameId"] = str(gameId)
-        args["userInfoId"] = str(userInfoId)
-        args["createTimestamp"] = createTimestamp
-        args["accountType"] = str(accountType)
-        args["channelSource"] = str(channelSource)
-        args["packageSource"] = str(packageSource)
-        args["logType"] = logType
+        args["game_id"] = str(game_id)
+        args["user_info_id"] = str(user_info_id)
+        args["create_timestamp"] = create_timestamp
+        args["account_type"] = str(account_type)
+        args["channel_source"] = str(channel_source)
+        args["package_source"] = str(package_source)
+        args["log_type"] = log_type
         args["score"] = score
         args["experience"] = experience
         args["money"] = money
         args["coin"] = coin
-        args["mapId"] = mapId
+        args["map_id"] = map_id
         LogTrackingMgr.LOG(args, kwargs)
 
     # 角色登出事件
     @staticmethod
-    def Server_Role_Logout(accountId, gbId, school, name, level, packageSource, score, experience, money, coin, mapId, reason, **kwargs):
+    def Server_Role_Logout(GBID, distinctId, account_id, gb_id, school, name, level, package_source, score, experience, money, coin, map_id, reason, **kwargs):
         args = {}
         args["trackName"] = "Server_Role_Logout"
-        args["accountId"] = str(accountId)
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Role_Logout"
+        args["account_id"] = str(account_id)
+        args["gb_id"] = gb_id
         args["school"] = school
         args["name"] = str(name)
         args["level"] = level
-        args["packageSource"] = str(packageSource)
+        args["package_source"] = str(package_source)
         args["score"] = score
         args["experience"] = experience
         args["money"] = money
         args["coin"] = coin
-        args["mapId"] = mapId
+        args["map_id"] = map_id
         args["reason"] = reason
         LogTrackingMgr.LOG(args, kwargs)
 
     # 创建角色事件
     @staticmethod
-    def Server_Create_Role(accountId, gbId, school, name, gameId, userInfoId, createTimestamp, packageSource, faceId, faceColorId, hairId, hairColorId, creationOrder, sex, **kwargs):
+    def Server_Create_Role(GBID, distinctId, account_id, gb_id, school, name, game_id, user_info_id, create_timestamp, package_source, face_id, face_color_id, hair_id, hair_color_id, creation_order, sex, **kwargs):
         args = {}
         args["trackName"] = "Server_Create_Role"
-        args["accountId"] = str(accountId)
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Server_Create_Role"
+        args["account_id"] = str(account_id)
+        args["gb_id"] = gb_id
         args["school"] = school
         args["name"] = str(name)
-        args["gameId"] = str(gameId)
-        args["userInfoId"] = str(userInfoId)
-        args["createTimestamp"] = createTimestamp
-        args["packageSource"] = str(packageSource)
-        args["faceId"] = faceId
-        args["faceColorId"] = faceColorId
-        args["hairId"] = hairId
-        args["hairColorId"] = hairColorId
-        args["creationOrder"] = creationOrder
+        args["game_id"] = str(game_id)
+        args["user_info_id"] = str(user_info_id)
+        args["create_timestamp"] = create_timestamp
+        args["package_source"] = str(package_source)
+        args["face_id"] = face_id
+        args["face_color_id"] = face_color_id
+        args["hair_id"] = hair_id
+        args["hair_color_id"] = hair_color_id
+        args["creation_order"] = creation_order
         args["sex"] = sex
         LogTrackingMgr.LOG(args, kwargs)
 
     # 善恶值变化事件
     @staticmethod
-    def Moral_Change(gbId, moral, delta, srcType, **kwargs):
+    def Moral_Change(GBID, distinctId, gb_id, moral, delta, src_type, **kwargs):
         args = {}
         args["trackName"] = "Moral_Change"
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Moral_Change"
+        args["gb_id"] = gb_id
         args["moral"] = moral
         args["delta"] = delta
-        args["srcType"] = srcType
+        args["src_type"] = src_type
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会排行榜
     @staticmethod
-    def LeaderBoard_Guild(type, rank, guildUUID, guildName, guildLevel, guildScore, **kwargs):
+    def LeaderBoard_Guild(GBID, distinctId, type, rank, guild_uuid, guild_name, guild_level, guild_score, **kwargs):
         args = {}
         args["trackName"] = "LeaderBoard_Guild"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "LeaderBoard_Guild"
         args["type"] = type
         args["rank"] = rank
-        args["guildUUID"] = guildUUID
-        args["guildName"] = str(guildName)
-        args["guildLevel"] = guildLevel
-        args["guildScore"] = guildScore
+        args["guild_uuid"] = guild_uuid
+        args["guild_name"] = str(guild_name)
+        args["guild_level"] = guild_level
+        args["guild_score"] = guild_score
         LogTrackingMgr.LOG(args, kwargs)
 
     # 玩家等级排行榜
     @staticmethod
-    def LeaderBoard_Level(type, rank, gbId, name, level, school, guildUUID, guildName, **kwargs):
+    def LeaderBoard_Level(GBID, distinctId, type, rank, gb_id, name, level, school, guild_uuid, guild_name, **kwargs):
         args = {}
         args["trackName"] = "LeaderBoard_Level"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "LeaderBoard_Level"
         args["type"] = type
         args["rank"] = rank
-        args["gbId"] = gbId
+        args["gb_id"] = gb_id
         args["name"] = str(name)
         args["level"] = level
         args["school"] = school
-        args["guildUUID"] = guildUUID
-        args["guildName"] = str(guildName)
+        args["guild_uuid"] = guild_uuid
+        args["guild_name"] = str(guild_name)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 玩家其他排行榜
     @staticmethod
-    def LeaderBoard_Avatar(type, rank, gbId, name, level, score, school, guildUUID, guildName, **kwargs):
+    def LeaderBoard_Avatar(GBID, distinctId, type, rank, gb_id, name, level, score, school, guild_uuid, guild_name, **kwargs):
         args = {}
         args["trackName"] = "LeaderBoard_Avatar"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "LeaderBoard_Avatar"
         args["type"] = type
         args["rank"] = rank
-        args["gbId"] = gbId
+        args["gb_id"] = gb_id
         args["name"] = str(name)
         args["level"] = level
         args["score"] = score
         args["school"] = school
-        args["guildUUID"] = guildUUID
-        args["guildName"] = str(guildName)
+        args["guild_uuid"] = guild_uuid
+        args["guild_name"] = str(guild_name)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 玩家成就排行榜
     @staticmethod
-    def LeaderBoard_Achievement(type, rank, gbId, name, level, point, school, guildUUID, guildName, **kwargs):
+    def LeaderBoard_Achievement(GBID, distinctId, type, rank, gb_id, name, level, point, school, guild_uuid, guild_name, **kwargs):
         args = {}
         args["trackName"] = "LeaderBoard_Achievement"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "LeaderBoard_Achievement"
         args["type"] = type
         args["rank"] = rank
-        args["gbId"] = gbId
+        args["gb_id"] = gb_id
         args["name"] = str(name)
         args["level"] = level
         args["point"] = point
         args["school"] = school
-        args["guildUUID"] = guildUUID
-        args["guildName"] = str(guildName)
+        args["guild_uuid"] = guild_uuid
+        args["guild_name"] = str(guild_name)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 合成道具事件
     @staticmethod
-    def Synthesis_Item(gbId, costItemID, costItemNum, costCurrencyID, costCurrencyNum, getID, getNum, getQuality, desc, opUUID, **kwargs):
+    def item_composite(GBID, distinctId, gb_id, item_composite_type, if_auto, get_item_info, desc, op_uuid, **kwargs):
         args = {}
-        args["trackName"] = "Synthesis_Item"
-        args["gbId"] = gbId
-        args["costItemID"] = str(costItemID)
-        args["costItemNum"] = costItemNum
-        args["costCurrencyID"] = str(costCurrencyID)
-        args["costCurrencyNum"] = costCurrencyNum
-        args["getID"] = str(getID)
-        args["getNum"] = getNum
-        args["getQuality"] = getQuality
+        args["trackName"] = "item_composite"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "item_composite"
+        args["gb_id"] = gb_id
+        args["item_composite_type"] = str(item_composite_type)
+        args["if_auto"] = if_auto
+        args["get_item_info"] = str(get_item_info)
         args["desc"] = str(desc)
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战开启事件
     @staticmethod
-    def MineBattle_Start(activityStartTime, coreBelongGuildID, **kwargs):
+    def MineBattle_Start(GBID, distinctId, activity_start_time, core_belong_guild_id, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_Start"
-        args["activityStartTime"] = str(activityStartTime)
-        args["coreBelongGuildID"] = str(coreBelongGuildID)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MineBattle_Start"
+        args["activity_start_time"] = str(activity_start_time)
+        args["core_belong_guild_id"] = str(core_belong_guild_id)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战结束事件
     @staticmethod
-    def MineBattle_End(activityEndTime, mapId, coreBelongGuildID, coreBelongTime, **kwargs):
+    def MineBattle_End(GBID, distinctId, activity_end_time, map_id, core_belong_guild_id, core_belong_time, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_End"
-        args["activityEndTime"] = str(activityEndTime)
-        args["mapId"] = str(mapId)
-        args["coreBelongGuildID"] = str(coreBelongGuildID)
-        args["coreBelongTime"] = str(coreBelongTime)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MineBattle_End"
+        args["activity_end_time"] = str(activity_end_time)
+        args["map_id"] = str(map_id)
+        args["core_belong_guild_id"] = str(core_belong_guild_id)
+        args["core_belong_time"] = str(core_belong_time)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战结束后奖励事件
     @staticmethod
-    def MineBattle_End_Reward(activityEndTime, mapId, activityRank, opUUID, **kwargs):
+    def MineBattle_End_Reward(GBID, distinctId, activity_end_time, map_id, activity_rank, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_End_Reward"
-        args["activityEndTime"] = str(activityEndTime)
-        args["mapId"] = str(mapId)
-        args["activityRank"] = str(activityRank)
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MineBattle_End_Reward"
+        args["activity_end_time"] = str(activity_end_time)
+        args["map_id"] = str(map_id)
+        args["activity_rank"] = str(activity_rank)
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战分红事件
     @staticmethod
-    def MineBattle_Shared(gbId, miningAreaBelongGuildID, miningAreaOutput, dividendedPlayerID, dividendedCurrencyNum, opUUID, **kwargs):
+    def MineBattle_Shared(GBID, distinctId, gb_id, mining_area_belong_guild_id, mining_area_output, dividended_player_id, dividended_currency_num, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_Shared"
-        args["gbId"] = gbId
-        args["miningAreaBelongGuildID"] = str(miningAreaBelongGuildID)
-        args["miningAreaOutput"] = str(miningAreaOutput)
-        args["dividendedPlayerID"] = str(dividendedPlayerID)
-        args["dividendedCurrencyNum"] = dividendedCurrencyNum
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MineBattle_Shared"
+        args["gb_id"] = gb_id
+        args["mining_area_belong_guild_id"] = str(mining_area_belong_guild_id)
+        args["mining_area_output"] = str(mining_area_output)
+        args["dividended_player_id"] = str(dividended_player_id)
+        args["dividended_currency_num"] = dividended_currency_num
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战击杀旗帜事件
     @staticmethod
-    def MineBattle_KillFlag(mapId, killerGuildID, gbId, flagDeathTimes, **kwargs):
+    def MineBattle_KillFlag(GBID, distinctId, map_id, killer_guild_id, gb_id, flag_death_times, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_KillFlag"
-        args["mapId"] = str(mapId)
-        args["killerGuildID"] = str(killerGuildID)
-        args["gbId"] = gbId
-        args["flagDeathTimes"] = str(flagDeathTimes)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MineBattle_KillFlag"
+        args["map_id"] = str(map_id)
+        args["killer_guild_id"] = str(killer_guild_id)
+        args["gb_id"] = gb_id
+        args["flag_death_times"] = str(flag_death_times)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战击杀水晶事件
     @staticmethod
-    def MineBattle_KillCore(mapId, killerGuildID, gbId, **kwargs):
+    def MineBattle_KillCore(GBID, distinctId, map_id, killer_guild_id, gb_id, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_KillCore"
-        args["mapId"] = str(mapId)
-        args["killerGuildID"] = str(killerGuildID)
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MineBattle_KillCore"
+        args["map_id"] = str(map_id)
+        args["killer_guild_id"] = str(killer_guild_id)
+        args["gb_id"] = gb_id
         LogTrackingMgr.LOG(args, kwargs)
 
     # 好友操作事件
     @staticmethod
-    def Friend_Opr(gbId, otherGbId, friendNum, opr, otherSchool, otherScore, **kwargs):
+    def Friend_Opr(GBID, distinctId, gb_id, other_gb_id, friend_num, opr, other_school, other_score, **kwargs):
         args = {}
         args["trackName"] = "Friend_Opr"
-        args["gbId"] = gbId
-        args["otherGbId"] = otherGbId
-        args["friendNum"] = friendNum
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Friend_Opr"
+        args["gb_id"] = gb_id
+        args["other_gb_id"] = other_gb_id
+        args["friend_num"] = friend_num
         args["opr"] = opr
-        args["otherSchool"] = otherSchool
-        args["otherScore"] = otherScore
+        args["other_school"] = other_school
+        args["other_score"] = other_score
         LogTrackingMgr.LOG(args, kwargs)
 
     # 技能升级事件
     @staticmethod
-    def Skill_Upgrade(gbId, ID, costItemID, costItemNum, costCurrencyID, costCurrencyNum, level, opUUID, **kwargs):
+    def Skill_Upgrade(GBID, distinctId, gb_id, id, cost_item_id, cost_item_num, cost_currency_id, cost_currency_num, level, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Skill_Upgrade"
-        args["gbId"] = gbId
-        args["ID"] = str(ID)
-        args["costItemID"] = costItemID
-        args["costItemNum"] = costItemNum
-        args["costCurrencyID"] = str(costCurrencyID)
-        args["costCurrencyNum"] = costCurrencyNum
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Skill_Upgrade"
+        args["gb_id"] = gb_id
+        args["id"] = str(id)
+        args["cost_item_id"] = cost_item_id
+        args["cost_item_num"] = cost_item_num
+        args["cost_currency_id"] = str(cost_currency_id)
+        args["cost_currency_num"] = cost_currency_num
         args["level"] = level
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 发红包事件
     @staticmethod
-    def Release_RedBag(gbId, sendType, sendChannel, sendNumber, sendCostItemID, sendCostItemNum, opUUID, **kwargs):
+    def Release_RedBag(GBID, distinctId, gb_id, send_type, send_channel, send_number, send_cost_item_id, send_cost_item_num, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Release_RedBag"
-        args["gbId"] = gbId
-        args["sendType"] = sendType
-        args["sendChannel"] = sendChannel
-        args["sendNumber"] = sendNumber
-        args["sendCostItemID"] = str(sendCostItemID)
-        args["sendCostItemNum"] = sendCostItemNum
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Release_RedBag"
+        args["gb_id"] = gb_id
+        args["send_type"] = send_type
+        args["send_channel"] = send_channel
+        args["send_number"] = send_number
+        args["send_cost_item_id"] = str(send_cost_item_id)
+        args["send_cost_item_num"] = send_cost_item_num
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 领红包事件
     @staticmethod
-    def Fetch_RedBag(gbId, getType, getChannel, getItemID, getItemNum, claimedRemainNumber, claimedRemainItemID, claimedRemainItemNum, opUUID, **kwargs):
+    def Fetch_RedBag(GBID, distinctId, gb_id, get_type, get_channel, get_item_id, get_item_num, claimed_remain_number, claimed_remain_item_id, claimed_remain_item_num, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Fetch_RedBag"
-        args["gbId"] = gbId
-        args["getType"] = getType
-        args["getChannel"] = getChannel
-        args["getItemID"] = str(getItemID)
-        args["getItemNum"] = getItemNum
-        args["claimedRemainNumber"] = claimedRemainNumber
-        args["claimedRemainItemID"] = str(claimedRemainItemID)
-        args["claimedRemainItemNum"] = claimedRemainItemNum
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Fetch_RedBag"
+        args["gb_id"] = gb_id
+        args["get_type"] = get_type
+        args["get_channel"] = get_channel
+        args["get_item_id"] = str(get_item_id)
+        args["get_item_num"] = get_item_num
+        args["claimed_remain_number"] = claimed_remain_number
+        args["claimed_remain_item_id"] = str(claimed_remain_item_id)
+        args["claimed_remain_item_num"] = claimed_remain_item_num
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 退还红包事件
     @staticmethod
-    def Return_RedBag(gbId, opUUID, **kwargs):
+    def Return_RedBag(GBID, distinctId, gb_id, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Return_RedBag"
-        args["gbId"] = gbId
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Return_RedBag"
+        args["gb_id"] = gb_id
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会信息事件
     @staticmethod
-    def Guild_Info(guildUUID, level, guildExp, fundNum, goldNum, tokenNum, src, opUUID, desc, **kwargs):
+    def Guild_Info(GBID, distinctId, guild_uuid, level, guild_exp, fund_num, gold_num, token_num, src, op_uuid, desc, **kwargs):
         args = {}
         args["trackName"] = "Guild_Info"
-        args["guildUUID"] = guildUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Info"
+        args["guild_uuid"] = guild_uuid
         args["level"] = level
-        args["guildExp"] = guildExp
-        args["fundNum"] = fundNum
-        args["goldNum"] = goldNum
-        args["tokenNum"] = tokenNum
+        args["guild_exp"] = guild_exp
+        args["fund_num"] = fund_num
+        args["gold_num"] = gold_num
+        args["token_num"] = token_num
         args["src"] = src
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         args["desc"] = str(desc)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会操作相关
     @staticmethod
-    def Guild_Opr(guildUUID, gbId, guildMemberNum, guildLevel, operation, **kwargs):
+    def Guild_Opr(GBID, distinctId, guild_uuid, gb_id, guild_member_num, guild_level, operation, **kwargs):
         args = {}
         args["trackName"] = "Guild_Opr"
-        args["guildUUID"] = guildUUID
-        args["gbId"] = gbId
-        args["guildMemberNum"] = guildMemberNum
-        args["guildLevel"] = guildLevel
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Opr"
+        args["guild_uuid"] = guild_uuid
+        args["gb_id"] = gb_id
+        args["guild_member_num"] = guild_member_num
+        args["guild_level"] = guild_level
         args["operation"] = operation
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会练功场重置
     @staticmethod
-    def Guild_Train_Reset(gbId, opUUID, **kwargs):
+    def Guild_Train_Reset(GBID, distinctId, gb_id, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Guild_Train_Reset"
-        args["gbId"] = gbId
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Train_Reset"
+        args["gb_id"] = gb_id
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会练功场事件
     @staticmethod
-    def Guild_Train(gbId, trainId, trainLevel, trainProp, opUUID, **kwargs):
+    def Guild_Train(GBID, distinctId, gb_id, train_id, train_level, train_prop, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Guild_Train"
-        args["gbId"] = gbId
-        args["trainId"] = trainId
-        args["trainLevel"] = trainLevel
-        args["trainProp"] = str(trainProp)
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Train"
+        args["gb_id"] = gb_id
+        args["train_id"] = train_id
+        args["train_level"] = train_level
+        args["train_prop"] = str(train_prop)
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会任务事件
     @staticmethod
-    def Guild_Task(gbId, taskId, taskProgress, taskState, opUUID, **kwargs):
+    def Guild_Task(GBID, distinctId, gb_id, task_id, task_progress, task_state, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Guild_Task"
-        args["gbId"] = gbId
-        args["taskId"] = taskId
-        args["taskProgress"] = taskProgress
-        args["taskState"] = taskState
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Task"
+        args["gb_id"] = gb_id
+        args["task_id"] = task_id
+        args["task_progress"] = task_progress
+        args["task_state"] = task_state
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会商店事件
     @staticmethod
-    def Guild_Shop(shopSellItemId, shopSellTimes, **kwargs):
+    def Guild_Shop(GBID, distinctId, shop_sell_item_id, shop_sell_times, **kwargs):
         args = {}
         args["trackName"] = "Guild_Shop"
-        args["shopSellItemId"] = str(shopSellItemId)
-        args["shopSellTimes"] = shopSellTimes
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Shop"
+        args["shop_sell_item_id"] = str(shop_sell_item_id)
+        args["shop_sell_times"] = shop_sell_times
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会聚义楼协助
     @staticmethod
-    def Guild_Assist(guild_buildingID, srcGbId, guildUUID, guild_buildingLevel, exp, opUUID, src, **kwargs):
+    def Guild_Assist(GBID, distinctId, guild_building_id, src_gb_id, guild_uuid, guild_building_level, exp, op_uuid, src, **kwargs):
         args = {}
         args["trackName"] = "Guild_Assist"
-        args["guild_buildingID"] = guild_buildingID
-        args["srcGbId"] = srcGbId
-        args["guildUUID"] = guildUUID
-        args["guild_buildingLevel"] = guild_buildingLevel
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Assist"
+        args["guild_building_id"] = guild_building_id
+        args["src_gb_id"] = src_gb_id
+        args["guild_uuid"] = guild_uuid
+        args["guild_building_level"] = guild_building_level
         args["exp"] = exp
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         args["src"] = src
         LogTrackingMgr.LOG(args, kwargs)
 
     # 好友聊天事件
     @staticmethod
-    def Friend_Msg(gbId, friendGbId, msg, isOnline, isFriend, **kwargs):
+    def Friend_Msg(GBID, distinctId, gb_id, friend_gb_id, msg, is_online, is_friend, **kwargs):
         args = {}
         args["trackName"] = "Friend_Msg"
-        args["gbId"] = gbId
-        args["friendGbId"] = friendGbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Friend_Msg"
+        args["gb_id"] = gb_id
+        args["friend_gb_id"] = friend_gb_id
         args["msg"] = str(msg)
-        args["isOnline"] = isOnline
-        args["isFriend"] = isFriend
+        args["is_online"] = is_online
+        args["is_friend"] = is_friend
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会军需处协助
     @staticmethod
-    def Guild_QiXieAssist(guild_warEquipmentID, srcGbId, guildUUID, guild_warEquipmentLevel, exp, opUUID, **kwargs):
+    def Guild_QiXieAssist(GBID, distinctId, guild_war_equipment_id, src_gb_id, guild_uuid, guild_war_equipment_level, exp, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Guild_QiXieAssist"
-        args["guild_warEquipmentID"] = guild_warEquipmentID
-        args["srcGbId"] = srcGbId
-        args["guildUUID"] = guildUUID
-        args["guild_warEquipmentLevel"] = guild_warEquipmentLevel
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_QiXieAssist"
+        args["guild_war_equipment_id"] = guild_war_equipment_id
+        args["src_gb_id"] = src_gb_id
+        args["guild_uuid"] = guild_uuid
+        args["guild_war_equipment_level"] = guild_war_equipment_level
         args["exp"] = exp
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 魔方事件
     @staticmethod
-    def Cube_Info(gbId, gameId, floor, mapId, cubeEvent, leftTime, **kwargs):
+    def Cube_Info(GBID, distinctId, gb_id, game_id, floor, map_id, cube_event, left_time, **kwargs):
         args = {}
         args["trackName"] = "Cube_Info"
-        args["gbId"] = gbId
-        args["gameId"] = str(gameId)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Cube_Info"
+        args["gb_id"] = gb_id
+        args["game_id"] = str(game_id)
         args["floor"] = floor
-        args["mapId"] = mapId
-        args["cubeEvent"] = cubeEvent
-        args["leftTime"] = leftTime
+        args["map_id"] = map_id
+        args["cube_event"] = cube_event
+        args["left_time"] = left_time
         LogTrackingMgr.LOG(args, kwargs)
 
     # 仙境事件
     @staticmethod
-    def Wonderland_Info(gbId, gameId, floor, wonderLandEvent, leftTime, **kwargs):
+    def Wonderland_Info(GBID, distinctId, gb_id, game_id, floor, wonder_land_event, left_time, **kwargs):
         args = {}
         args["trackName"] = "Wonderland_Info"
-        args["gbId"] = gbId
-        args["gameId"] = str(gameId)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Wonderland_Info"
+        args["gb_id"] = gb_id
+        args["game_id"] = str(game_id)
         args["floor"] = floor
-        args["wonderLandEvent"] = wonderLandEvent
-        args["leftTime"] = leftTime
+        args["wonder_land_event"] = wonder_land_event
+        args["left_time"] = left_time
         LogTrackingMgr.LOG(args, kwargs)
 
     # 成就事件
     @staticmethod
-    def Achievement_Update(accountId, gbId, gameId, achieveId, version, state, progress, sumPoint, **kwargs):
+    def Achievement_Update(GBID, distinctId, account_id, gb_id, game_id, achieve_id, version, state, progress, sum_point, **kwargs):
         args = {}
         args["trackName"] = "Achievement_Update"
-        args["accountId"] = str(accountId)
-        args["gbId"] = gbId
-        args["gameId"] = str(gameId)
-        args["achieveId"] = str(achieveId)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Achievement_Update"
+        args["account_id"] = str(account_id)
+        args["gb_id"] = gb_id
+        args["game_id"] = str(game_id)
+        args["achieve_id"] = str(achieve_id)
         args["version"] = str(version)
         args["state"] = state
         args["progress"] = progress
-        args["sumPoint"] = sumPoint
+        args["sum_point"] = sum_point
         LogTrackingMgr.LOG(args, kwargs)
 
     # 道具事件
     @staticmethod
-    def Get_Item(accountId, gbId, gameId, itemId, uniqueId, bagType, bindType, delta, newNum, src, opUUID, desc, **kwargs):
+    def item_flow(GBID, distinctId, account_id, gb_id, game_id, item_id, unique_id, bag_type, bind_type, before_num, change_num, after_num, change_reason, op_uuid, desc, **kwargs):
         args = {}
-        args["trackName"] = "Get_Item"
-        args["accountId"] = str(accountId)
-        args["gbId"] = gbId
-        args["gameId"] = str(gameId)
-        args["itemId"] = itemId
-        args["uniqueId"] = uniqueId
-        args["bagType"] = bagType
-        args["bindType"] = bindType
-        args["delta"] = delta
-        args["newNum"] = newNum
-        args["src"] = src
-        args["opUUID"] = opUUID
+        args["trackName"] = "item_flow"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "item_flow"
+        args["account_id"] = str(account_id)
+        args["gb_id"] = gb_id
+        args["game_id"] = str(game_id)
+        args["item_id"] = item_id
+        args["unique_id"] = unique_id
+        args["bag_type"] = bag_type
+        args["bind_type"] = bind_type
+        args["before_num"] = before_num
+        args["change_num"] = change_num
+        args["after_num"] = after_num
+        args["change_reason"] = change_reason
+        args["op_uuid"] = op_uuid
         args["desc"] = str(desc)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 通用死亡事件
     @staticmethod
-    def Common_Death(gbId, mapId, killerGbId, killerType, deadPosition, **kwargs):
+    def Common_Death(GBID, distinctId, gb_id, map_id, killer_gb_id, killer_type, dead_position, **kwargs):
         args = {}
         args["trackName"] = "Common_Death"
-        args["gbId"] = gbId
-        args["mapId"] = mapId
-        args["killerGbId"] = killerGbId
-        args["killerType"] = str(killerType)
-        args["deadPosition"] = str(deadPosition)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Common_Death"
+        args["gb_id"] = gb_id
+        args["map_id"] = map_id
+        args["killer_gb_id"] = killer_gb_id
+        args["killer_type"] = str(killer_type)
+        args["dead_position"] = str(dead_position)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备制造
     @staticmethod
-    def Equip_Make(opUUID, gbId, uniqueId, equipId, count, grade, quality, bindValue, makeType, baseAttrs, upgradeAttrs, enhanceAttrs, score, **kwargs):
+    def equip_make(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, count, equip_grade, equip_quality, bind_value, make_type, base_attrs, upgrade_attrs, enhance_attrs, equip_power, equip_attrs, **kwargs):
         args = {}
-        args["trackName"] = "Equip_Make"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
+        args["trackName"] = "equip_make"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "equip_make"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_name"] = str(equip_name)
+        args["equip_type"] = equip_type
         args["count"] = count
-        args["grade"] = grade
-        args["quality"] = quality
-        args["bindValue"] = bindValue
-        args["makeType"] = makeType
-        args["baseAttrs"] = str(baseAttrs)
-        args["upgradeAttrs"] = str(upgradeAttrs)
-        args["enhanceAttrs"] = str(enhanceAttrs)
-        args["score"] = score
+        args["equip_grade"] = equip_grade
+        args["equip_quality"] = equip_quality
+        args["bind_value"] = bind_value
+        args["make_type"] = make_type
+        args["base_attrs"] = str(base_attrs)
+        args["upgrade_attrs"] = str(upgrade_attrs)
+        args["enhance_attrs"] = str(enhance_attrs)
+        args["equip_power"] = equip_power
+        args["equip_attrs"] = str(equip_attrs)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备强化
     @staticmethod
-    def Equip_Enhancement(opUUID, gbId, uniqueId, equipId, equipBelongTo, baseAttrsBefore, enhanceAttrsBefore, upgradeAttrsBefore, baseAttrsAfter, enhanceAttrsAfter, upgradeAttrsAfter, addBindValueBefore, addBindValueAfter, consumedItemBindValue, levelBefore, levelAfter, result, score, bindValueBefore, bindValueAfter, **kwargs):
+    def equip_enhancement(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, base_attrs_before, enhance_attrs_before, upgrade_attrs_before, base_attrs_after, enhance_attrs_after, upgrade_attrs_after, add_bind_value_before, add_bind_value_after, consumed_item_bind_value, enhance_level_before, enhance_level_after, enhance_result, equip_power, bind_value_before, bind_value_after, equip_attrs, equip_attrs_after, **kwargs):
         args = {}
-        args["trackName"] = "Equip_Enhancement"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
-        args["equipBelongTo"] = equipBelongTo
-        args["baseAttrsBefore"] = str(baseAttrsBefore)
-        args["enhanceAttrsBefore"] = str(enhanceAttrsBefore)
-        args["upgradeAttrsBefore"] = str(upgradeAttrsBefore)
-        args["baseAttrsAfter"] = str(baseAttrsAfter)
-        args["enhanceAttrsAfter"] = str(enhanceAttrsAfter)
-        args["upgradeAttrsAfter"] = str(upgradeAttrsAfter)
-        args["addBindValueBefore"] = addBindValueBefore
-        args["addBindValueAfter"] = addBindValueAfter
-        args["consumedItemBindValue"] = consumedItemBindValue
-        args["levelBefore"] = levelBefore
-        args["levelAfter"] = levelAfter
-        args["result"] = result
-        args["score"] = score
-        args["bindValueBefore"] = bindValueBefore
-        args["bindValueAfter"] = bindValueAfter
+        args["trackName"] = "equip_enhancement"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "equip_enhancement"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_name"] = equip_name
+        args["equip_type"] = equip_type
+        args["equip_grade"] = equip_grade
+        args["equip_quality"] = equip_quality
+        args["equip_belong_to"] = equip_belong_to
+        args["base_attrs_before"] = str(base_attrs_before)
+        args["enhance_attrs_before"] = str(enhance_attrs_before)
+        args["upgrade_attrs_before"] = str(upgrade_attrs_before)
+        args["base_attrs_after"] = str(base_attrs_after)
+        args["enhance_attrs_after"] = str(enhance_attrs_after)
+        args["upgrade_attrs_after"] = str(upgrade_attrs_after)
+        args["add_bind_value_before"] = add_bind_value_before
+        args["add_bind_value_after"] = add_bind_value_after
+        args["consumed_item_bind_value"] = consumed_item_bind_value
+        args["enhance_level_before"] = enhance_level_before
+        args["enhance_level_after"] = enhance_level_after
+        args["enhance_result"] = enhance_result
+        args["equip_power"] = equip_power
+        args["bind_value_before"] = bind_value_before
+        args["bind_value_after"] = bind_value_after
+        args["equip_attrs"] = str(equip_attrs)
+        args["equip_attrs_after"] = str(equip_attrs_after)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备附灵
     @staticmethod
-    def Equip_Spirit(opUUID, gbId, uniqueId, equipId, equipBelongTo, spiritDataBefore, spiritDataAfter, addBindValueBefore, addBindValueAfter, consumedItemBindValue, score, refId, bindValueBefore, bindValueAfter, **kwargs):
+    def equip_spirit(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, equip_attrs, equip_attrs_after, add_bind_value_before, add_bind_value_after, consumed_item_bind_value, equip_power, spirit_ref_id, bind_value_before, bind_value_after, **kwargs):
         args = {}
-        args["trackName"] = "Equip_Spirit"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
-        args["equipBelongTo"] = equipBelongTo
-        args["spiritDataBefore"] = str(spiritDataBefore)
-        args["spiritDataAfter"] = str(spiritDataAfter)
-        args["addBindValueBefore"] = addBindValueBefore
-        args["addBindValueAfter"] = addBindValueAfter
-        args["consumedItemBindValue"] = consumedItemBindValue
-        args["score"] = score
-        args["refId"] = refId
-        args["bindValueBefore"] = bindValueBefore
-        args["bindValueAfter"] = bindValueAfter
+        args["trackName"] = "equip_spirit"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "equip_spirit"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_name"] = str(equip_name)
+        args["equip_type"] = equip_type
+        args["equip_grade"] = equip_grade
+        args["equip_quality"] = equip_quality
+        args["equip_belong_to"] = equip_belong_to
+        args["equip_attrs"] = str(equip_attrs)
+        args["equip_attrs_after"] = str(equip_attrs_after)
+        args["add_bind_value_before"] = add_bind_value_before
+        args["add_bind_value_after"] = add_bind_value_after
+        args["consumed_item_bind_value"] = consumed_item_bind_value
+        args["equip_power"] = equip_power
+        args["spirit_ref_id"] = spirit_ref_id
+        args["bind_value_before"] = bind_value_before
+        args["bind_value_after"] = bind_value_after
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备升阶
     @staticmethod
-    def Equip_Upgrade(opUUID, gbId, uniqueId, equipId, equipBelongTo, baseAttrsBefore, enhanceAttrsBefore, upgradeAttrsBefore, baseAttrsAfter, enhanceAttrsAfter, upgradeAttrsAfter, gradeBefore, gradeAfter, bindValueBefore, bindValueAfter, score, **kwargs):
+    def equip_upgrade(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, base_attrs_before, enhance_attrs_before, upgrade_attrs_before, base_attrs_after, enhance_attrs_after, upgrade_attrs_after, equip_grade_before, equip_grade_after, bind_value_before, bind_value_after, equip_power, equip_attrs, equip_attrs_after, **kwargs):
         args = {}
-        args["trackName"] = "Equip_Upgrade"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
-        args["equipBelongTo"] = equipBelongTo
-        args["baseAttrsBefore"] = str(baseAttrsBefore)
-        args["enhanceAttrsBefore"] = str(enhanceAttrsBefore)
-        args["upgradeAttrsBefore"] = str(upgradeAttrsBefore)
-        args["baseAttrsAfter"] = str(baseAttrsAfter)
-        args["enhanceAttrsAfter"] = str(enhanceAttrsAfter)
-        args["upgradeAttrsAfter"] = str(upgradeAttrsAfter)
-        args["gradeBefore"] = gradeBefore
-        args["gradeAfter"] = gradeAfter
-        args["bindValueBefore"] = bindValueBefore
-        args["bindValueAfter"] = bindValueAfter
-        args["score"] = score
+        args["trackName"] = "equip_upgrade"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "equip_upgrade"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_name"] = str(equip_name)
+        args["equip_type"] = equip_type
+        args["equip_grade"] = equip_grade
+        args["equip_quality"] = equip_quality
+        args["equip_belong_to"] = equip_belong_to
+        args["base_attrs_before"] = str(base_attrs_before)
+        args["enhance_attrs_before"] = str(enhance_attrs_before)
+        args["upgrade_attrs_before"] = str(upgrade_attrs_before)
+        args["base_attrs_after"] = str(base_attrs_after)
+        args["enhance_attrs_after"] = str(enhance_attrs_after)
+        args["upgrade_attrs_after"] = str(upgrade_attrs_after)
+        args["equip_grade_before"] = equip_grade_before
+        args["equip_grade_after"] = equip_grade_after
+        args["bind_value_before"] = bind_value_before
+        args["bind_value_after"] = bind_value_after
+        args["equip_power"] = equip_power
+        args["equip_attrs"] = str(equip_attrs)
+        args["equip_attrs_after"] = str(equip_attrs_after)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备铭文
     @staticmethod
-    def Equip_Glyph(opUUID, gbId, uniqueId, equipId, equipBelongTo, glyphDataBefore, glyphDataAfter, addBindValueBefore, addBindValueAfter, consumedItemBindValue, score, refId, glyphPos, bindValueBefore, bindValueAfter, **kwargs):
+    def equip_glyph(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, equip_attrs, equip_attrs_after, add_bind_value_before, add_bind_value_after, consumed_item_bind_value, equip_power, glyph_ref_id, glyph_pos, bind_value_before, bind_value_after, **kwargs):
         args = {}
-        args["trackName"] = "Equip_Glyph"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
-        args["equipBelongTo"] = equipBelongTo
-        args["glyphDataBefore"] = str(glyphDataBefore)
-        args["glyphDataAfter"] = str(glyphDataAfter)
-        args["addBindValueBefore"] = addBindValueBefore
-        args["addBindValueAfter"] = addBindValueAfter
-        args["consumedItemBindValue"] = consumedItemBindValue
-        args["score"] = score
-        args["refId"] = refId
-        args["glyphPos"] = glyphPos
-        args["bindValueBefore"] = bindValueBefore
-        args["bindValueAfter"] = bindValueAfter
+        args["trackName"] = "equip_glyph"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "equip_glyph"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_name"] = str(equip_name)
+        args["equip_type"] = equip_type
+        args["equip_grade"] = equip_grade
+        args["equip_quality"] = equip_quality
+        args["equip_belong_to"] = equip_belong_to
+        args["equip_attrs"] = str(equip_attrs)
+        args["equip_attrs_after"] = str(equip_attrs_after)
+        args["add_bind_value_before"] = add_bind_value_before
+        args["add_bind_value_after"] = add_bind_value_after
+        args["consumed_item_bind_value"] = consumed_item_bind_value
+        args["equip_power"] = equip_power
+        args["glyph_ref_id"] = glyph_ref_id
+        args["glyph_pos"] = glyph_pos
+        args["bind_value_before"] = bind_value_before
+        args["bind_value_after"] = bind_value_after
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备祝福
     @staticmethod
-    def Equip_Bless(opUUID, gbId, uniqueId, equipId, equipBelongTo, blessDataBefore, blessDataAfter, addBindValueBefore, addBindValueAfter, consumedItemBindValue, blessLvRateBefore, blessLvRateAfter, maxBlessLvBefore, maxBlessLvAfter, score, bindValueBefore, bindValueAfter, **kwargs):
+    def equip_bless(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, equip_attrs, equip_attrs_After, add_bind_value_before, add_bind_value_after, consumed_item_bind_value, bless_lv_rate_before, bless_lv_rate_after, bless_max_lv_before, bless_max_lv_after, equip_power, bind_data_before, bind_data_after, **kwargs):
         args = {}
-        args["trackName"] = "Equip_Bless"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
-        args["equipBelongTo"] = equipBelongTo
-        args["blessDataBefore"] = str(blessDataBefore)
-        args["blessDataAfter"] = str(blessDataAfter)
-        args["addBindValueBefore"] = addBindValueBefore
-        args["addBindValueAfter"] = addBindValueAfter
-        args["consumedItemBindValue"] = consumedItemBindValue
-        args["blessLvRateBefore"] = blessLvRateBefore
-        args["blessLvRateAfter"] = blessLvRateAfter
-        args["maxBlessLvBefore"] = maxBlessLvBefore
-        args["maxBlessLvAfter"] = maxBlessLvAfter
-        args["score"] = score
-        args["bindValueBefore"] = bindValueBefore
-        args["bindValueAfter"] = bindValueAfter
+        args["trackName"] = "equip_bless"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "equip_bless"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_name"] = str(equip_name)
+        args["equip_type"] = equip_type
+        args["equip_grade"] = equip_grade
+        args["equip_quality"] = equip_quality
+        args["equip_belong_to"] = equip_belong_to
+        args["equip_attrs"] = str(equip_attrs)
+        args["equip_attrs_After"] = str(equip_attrs_After)
+        args["add_bind_value_before"] = add_bind_value_before
+        args["add_bind_value_after"] = add_bind_value_after
+        args["consumed_item_bind_value"] = consumed_item_bind_value
+        args["bless_lv_rate_before"] = bless_lv_rate_before
+        args["bless_lv_rate_after"] = bless_lv_rate_after
+        args["bless_max_lv_before"] = bless_max_lv_before
+        args["bless_max_lv_after"] = bless_max_lv_after
+        args["equip_power"] = equip_power
+        args["bind_data_before"] = bind_data_before
+        args["bind_data_after"] = bind_data_after
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备绑定值洗涤
     @staticmethod
-    def Equip_BindValue_Washing(opUUID, gbId, uniqueId, equipId, equipBelongTo, bindValueWashingBefore, bindValueWashingAfter, addBindValueStatusBefore, addBindValueStatusAfter, washCount, **kwargs):
+    def Equip_BindValue_Washing(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_belong_to, bind_value_washing_before, bind_value_washing_after, add_bind_value_status_before, add_bind_value_status_after, wash_count, **kwargs):
         args = {}
         args["trackName"] = "Equip_BindValue_Washing"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["equipId"] = equipId
-        args["equipBelongTo"] = equipBelongTo
-        args["bindValueWashingBefore"] = bindValueWashingBefore
-        args["bindValueWashingAfter"] = bindValueWashingAfter
-        args["addBindValueStatusBefore"] = addBindValueStatusBefore
-        args["addBindValueStatusAfter"] = addBindValueStatusAfter
-        args["washCount"] = washCount
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Equip_BindValue_Washing"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["equip_id"] = equip_id
+        args["equip_belong_to"] = equip_belong_to
+        args["bind_value_washing_before"] = bind_value_washing_before
+        args["bind_value_washing_after"] = bind_value_washing_after
+        args["add_bind_value_status_before"] = add_bind_value_status_before
+        args["add_bind_value_status_after"] = add_bind_value_status_after
+        args["wash_count"] = wash_count
         LogTrackingMgr.LOG(args, kwargs)
 
     # 道具工坊
     @staticmethod
-    def Work_Shop(opUUID, gbId, itemId, batchCount, normalItems, luckyItems, **kwargs):
+    def workshop(GBID, distinctId, op_uuid, gb_id, workshop_target_items, batch_count, workshop_normal_items, workshop_lucky_items, **kwargs):
         args = {}
-        args["trackName"] = "Work_Shop"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["itemId"] = itemId
-        args["batchCount"] = batchCount
-        args["normalItems"] = str(normalItems)
-        args["luckyItems"] = str(luckyItems)
+        args["trackName"] = "workshop"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "workshop"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["workshop_target_items"] = str(workshop_target_items)
+        args["batch_count"] = batch_count
+        args["workshop_normal_items"] = str(workshop_normal_items)
+        args["workshop_lucky_items"] = str(workshop_lucky_items)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 等级有礼事件
     @staticmethod
-    def Level_Reward(gbId, level, welfareId, levelLimit, school, opUUID, **kwargs):
+    def Level_Reward(GBID, distinctId, gb_id, level, welfare_id, level_limit, school, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Level_Reward"
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Level_Reward"
+        args["gb_id"] = gb_id
         args["level"] = level
-        args["welfareId"] = welfareId
-        args["levelLimit"] = levelLimit
+        args["welfare_id"] = welfare_id
+        args["level_limit"] = level_limit
         args["school"] = school
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 七日签到事件
     @staticmethod
-    def Welfare_SignInSevenDay(gbId, welfareId, level, loginDay, dayId, opUUID, **kwargs):
+    def Welfare_SignInSevenDay(GBID, distinctId, gb_id, welfare_id, level, login_day, day_id, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Welfare_SignInSevenDay"
-        args["gbId"] = gbId
-        args["welfareId"] = welfareId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Welfare_SignInSevenDay"
+        args["gb_id"] = gb_id
+        args["welfare_id"] = welfare_id
         args["level"] = level
-        args["loginDay"] = loginDay
-        args["dayId"] = dayId
-        args["opUUID"] = opUUID
+        args["login_day"] = login_day
+        args["day_id"] = day_id
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 十日签到事件
     @staticmethod
-    def Welfare_SignInTenDay(gbId, welfareId, level, loginDay, dayId, opUUID, **kwargs):
+    def Welfare_SignInTenDay(GBID, distinctId, gb_id, welfare_id, level, login_day, day_id, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Welfare_SignInTenDay"
-        args["gbId"] = gbId
-        args["welfareId"] = welfareId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Welfare_SignInTenDay"
+        args["gb_id"] = gb_id
+        args["welfare_id"] = welfare_id
         args["level"] = level
-        args["loginDay"] = loginDay
-        args["dayId"] = dayId
-        args["opUUID"] = opUUID
+        args["login_day"] = login_day
+        args["day_id"] = day_id
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 月卡事件
     @staticmethod
-    def MonthCard_Invoke(gbId, level, invokeTime, expireTime, opUUID, **kwargs):
+    def MonthCard_Invoke(GBID, distinctId, gb_id, level, invoke_time, expire_time, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "MonthCard_Invoke"
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MonthCard_Invoke"
+        args["gb_id"] = gb_id
         args["level"] = level
-        args["invokeTime"] = invokeTime
-        args["expireTime"] = expireTime
-        args["opUUID"] = opUUID
+        args["invoke_time"] = invoke_time
+        args["expire_time"] = expire_time
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 月卡挂机事件
     @staticmethod
-    def MonthCard_Afk(gbId, timeLeft, timeCity, opUUID, **kwargs):
+    def MonthCard_Afk(GBID, distinctId, gb_id, time_left, time_city, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "MonthCard_Afk"
-        args["gbId"] = gbId
-        args["timeLeft"] = timeLeft
-        args["timeCity"] = timeCity
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MonthCard_Afk"
+        args["gb_id"] = gb_id
+        args["time_left"] = time_left
+        args["time_city"] = time_city
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 月卡离线挂机事件
     @staticmethod
-    def MonthCard_Offline(gbId, timeLeft, timeOffline, **kwargs):
+    def MonthCard_Offline(GBID, distinctId, gb_id, time_left, time_offline, **kwargs):
         args = {}
         args["trackName"] = "MonthCard_Offline"
-        args["gbId"] = gbId
-        args["timeLeft"] = timeLeft
-        args["timeOffline"] = timeOffline
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MonthCard_Offline"
+        args["gb_id"] = gb_id
+        args["time_left"] = time_left
+        args["time_offline"] = time_offline
         LogTrackingMgr.LOG(args, kwargs)
 
     # 月卡离线奖励领取
     @staticmethod
-    def MonthCard_OfflineReward(gbId, AFK_rewardType, opUUID, **kwargs):
+    def MonthCard_OfflineReward(GBID, distinctId, gb_id, afk_reward_type, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "MonthCard_OfflineReward"
-        args["gbId"] = gbId
-        args["AFK_rewardType"] = AFK_rewardType
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "MonthCard_OfflineReward"
+        args["gb_id"] = gb_id
+        args["afk_reward_type"] = afk_reward_type
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 礼包购买
     @staticmethod
-    def Gift_Buy(gbId, buyPackage_Id, opUUID, **kwargs):
+    def Gift_Buy(GBID, distinctId, gb_id, buy_package__id, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Gift_Buy"
-        args["gbId"] = gbId
-        args["buyPackage_Id"] = buyPackage_Id
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Gift_Buy"
+        args["gb_id"] = gb_id
+        args["buy_package__id"] = buy_package__id
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 升级
     @staticmethod
-    def Level_LevelUp(gbId, preLevel, currLevel, upgradeExp, totalExp, expSrc, opUUID, **kwargs):
+    def Level_LevelUp(GBID, distinctId, gb_id, pre_level, curr_level, upgrade_exp, total_exp, exp_src, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Level_LevelUp"
-        args["gbId"] = gbId
-        args["preLevel"] = preLevel
-        args["currLevel"] = currLevel
-        args["upgradeExp"] = upgradeExp
-        args["totalExp"] = totalExp
-        args["expSrc"] = expSrc
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Level_LevelUp"
+        args["gb_id"] = gb_id
+        args["pre_level"] = pre_level
+        args["curr_level"] = curr_level
+        args["upgrade_exp"] = upgrade_exp
+        args["total_exp"] = total_exp
+        args["exp_src"] = exp_src
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # GM指令
     @staticmethod
-    def GM_GM(src, command, gmArgs, **kwargs):
+    def GM_GM(GBID, distinctId, src, command, gm_args, **kwargs):
         args = {}
         args["trackName"] = "GM_GM"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "GM_GM"
         args["src"] = str(src)
         args["command"] = str(command)
-        args["gmArgs"] = str(gmArgs)
+        args["gm_args"] = str(gm_args)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 货币兑换
     @staticmethod
-    def Currency_Exchange(gbId, exchangeID, opUUID, dailyLimit, dailyUsedBefore, dailyUsedAfter, **kwargs):
+    def Currency_Exchange(GBID, distinctId, gb_id, exchange_id, op_uuid, daily_limit, daily_used_before, daily_used_after, **kwargs):
         args = {}
         args["trackName"] = "Currency_Exchange"
-        args["gbId"] = gbId
-        args["exchangeID"] = exchangeID
-        args["opUUID"] = opUUID
-        args["dailyLimit"] = dailyLimit
-        args["dailyUsedBefore"] = dailyUsedBefore
-        args["dailyUsedAfter"] = dailyUsedAfter
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Currency_Exchange"
+        args["gb_id"] = gb_id
+        args["exchange_id"] = exchange_id
+        args["op_uuid"] = op_uuid
+        args["daily_limit"] = daily_limit
+        args["daily_used_before"] = daily_used_before
+        args["daily_used_after"] = daily_used_after
         LogTrackingMgr.LOG(args, kwargs)
 
     # 商店购买
     @staticmethod
-    def Store_Buy(gbId, mallID, mallType, productID, realItemID, itemNum, limitType, limitNum, buyNum, costInfo, opUUID, **kwargs):
+    def Store_Buy(GBID, distinctId, gb_id, mall_id, mall_type, product_id, real_item_id, item_num, limit_type, limit_num, buy_num, cost_info, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Store_Buy"
-        args["gbId"] = gbId
-        args["mallID"] = mallID
-        args["mallType"] = mallType
-        args["productID"] = productID
-        args["realItemID"] = realItemID
-        args["itemNum"] = itemNum
-        args["limitType"] = limitType
-        args["limitNum"] = limitNum
-        args["buyNum"] = buyNum
-        args["costInfo"] = str(costInfo)
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Store_Buy"
+        args["gb_id"] = gb_id
+        args["mall_id"] = mall_id
+        args["mall_type"] = mall_type
+        args["product_id"] = product_id
+        args["real_item_id"] = real_item_id
+        args["item_num"] = item_num
+        args["limit_type"] = limit_type
+        args["limit_num"] = limit_num
+        args["buy_num"] = buy_num
+        args["cost_info"] = str(cost_info)
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 收集事件
     @staticmethod
-    def Collectible_Detail(gbId, collectId, status, propChange, opUUID, **kwargs):
+    def Collectible_Detail(GBID, distinctId, gb_id, collect_id, status, prop_change, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Collectible_Detail"
-        args["gbId"] = gbId
-        args["collectId"] = collectId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Collectible_Detail"
+        args["gb_id"] = gb_id
+        args["collect_id"] = collect_id
         args["status"] = status
-        args["propChange"] = str(propChange)
-        args["opUUID"] = opUUID
+        args["prop_change"] = str(prop_change)
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 抽卡事件
     @staticmethod
-    def DrawCard_Detail(gbId, poolId, poolGroupId, rollCost, realRollNum, itemList, befPityNum, aftPityNum, pityPullNum, befGuaranteed, aftGuaranteed, guaranteedType, opUUID, **kwargs):
+    def DrawCard_Detail(GBID, distinctId, gb_id, pool_id, pool_group_id, roll_cost, real_roll_num, item_list, bef_pity_num, aft_pity_num, pity_pull_num, bef_guaranteed, aft_guaranteed, guaranteed_type, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "DrawCard_Detail"
-        args["gbId"] = gbId
-        args["poolId"] = poolId
-        args["poolGroupId"] = poolGroupId
-        args["rollCost"] = rollCost
-        args["realRollNum"] = realRollNum
-        args["itemList"] = itemList
-        args["befPityNum"] = befPityNum
-        args["aftPityNum"] = aftPityNum
-        args["pityPullNum"] = pityPullNum
-        args["befGuaranteed"] = befGuaranteed
-        args["aftGuaranteed"] = aftGuaranteed
-        args["guaranteedType"] = guaranteedType
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "DrawCard_Detail"
+        args["gb_id"] = gb_id
+        args["pool_id"] = pool_id
+        args["pool_group_id"] = pool_group_id
+        args["roll_cost"] = roll_cost
+        args["real_roll_num"] = real_roll_num
+        args["item_list"] = item_list
+        args["bef_pity_num"] = bef_pity_num
+        args["aft_pity_num"] = aft_pity_num
+        args["pity_pull_num"] = pity_pull_num
+        args["bef_guaranteed"] = bef_guaranteed
+        args["aft_guaranteed"] = aft_guaranteed
+        args["guaranteed_type"] = guaranteed_type
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 抽卡保底
     @staticmethod
-    def DrawCard_GuaranteedReward(gbId, poolId, poolGroupId, pityReward, guaranteed, guaranteedType, opUUID, **kwargs):
+    def DrawCard_GuaranteedReward(GBID, distinctId, gb_id, pool_id, pool_group_id, pity_reward, guaranteed, guaranteed_type, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "DrawCard_GuaranteedReward"
-        args["gbId"] = gbId
-        args["poolId"] = poolId
-        args["poolGroupId"] = poolGroupId
-        args["pityReward"] = pityReward
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "DrawCard_GuaranteedReward"
+        args["gb_id"] = gb_id
+        args["pool_id"] = pool_id
+        args["pool_group_id"] = pool_group_id
+        args["pity_reward"] = pity_reward
         args["guaranteed"] = guaranteed
-        args["guaranteedType"] = guaranteedType
-        args["opUUID"] = opUUID
+        args["guaranteed_type"] = guaranteed_type
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 采集事件
     @staticmethod
-    def Gather_Collection(gbId, collectionId, collectionType, startTime, endTime, opUUID, **kwargs):
+    def Gather_Collection(GBID, distinctId, gb_id, collection_id, collection_type, start_time, end_time, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Gather_Collection"
-        args["gbId"] = gbId
-        args["collectionId"] = collectionId
-        args["collectionType"] = collectionType
-        args["startTime"] = startTime
-        args["endTime"] = endTime
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Gather_Collection"
+        args["gb_id"] = gb_id
+        args["collection_id"] = collection_id
+        args["collection_type"] = collection_type
+        args["start_time"] = start_time
+        args["end_time"] = end_time
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会副本开启
     @staticmethod
-    def Guild_BossChallenge_Open(opUUID, guildUUID, job, openType, consumeType, consumeCount, openDungeonId, openTime, openedMoneyCount, openedFundCount, **kwargs):
+    def Guild_BossChallenge_Open(GBID, distinctId, op_uuid, guild_uuid, job, open_type, consume_type, consume_count, open_dungeon_id, open_time, opened_money_count, opened_fund_count, **kwargs):
         args = {}
         args["trackName"] = "Guild_BossChallenge_Open"
-        args["opUUID"] = opUUID
-        args["guildUUID"] = guildUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_BossChallenge_Open"
+        args["op_uuid"] = op_uuid
+        args["guild_uuid"] = guild_uuid
         args["job"] = job
-        args["openType"] = openType
-        args["consumeType"] = consumeType
-        args["consumeCount"] = consumeCount
-        args["openDungeonId"] = openDungeonId
-        args["openTime"] = openTime
-        args["openedMoneyCount"] = openedMoneyCount
-        args["openedFundCount"] = openedFundCount
+        args["open_type"] = open_type
+        args["consume_type"] = consume_type
+        args["consume_count"] = consume_count
+        args["open_dungeon_id"] = open_dungeon_id
+        args["open_time"] = open_time
+        args["opened_money_count"] = opened_money_count
+        args["opened_fund_count"] = opened_fund_count
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会副本取消开启
     @staticmethod
-    def Guild_BossChallenge_Cancel(opUUID, guildUUID, cancelType, consumeType, consumeCount, openDungeonId, openTime, openedMoneyCount, openedFundCount, **kwargs):
+    def Guild_BossChallenge_Cancel(GBID, distinctId, op_uuid, guild_uuid, cancel_type, consume_type, consume_count, open_dungeon_id, open_time, opened_money_count, opened_fund_count, **kwargs):
         args = {}
         args["trackName"] = "Guild_BossChallenge_Cancel"
-        args["opUUID"] = opUUID
-        args["guildUUID"] = guildUUID
-        args["cancelType"] = cancelType
-        args["consumeType"] = consumeType
-        args["consumeCount"] = consumeCount
-        args["openDungeonId"] = openDungeonId
-        args["openTime"] = openTime
-        args["openedMoneyCount"] = openedMoneyCount
-        args["openedFundCount"] = openedFundCount
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_BossChallenge_Cancel"
+        args["op_uuid"] = op_uuid
+        args["guild_uuid"] = guild_uuid
+        args["cancel_type"] = cancel_type
+        args["consume_type"] = consume_type
+        args["consume_count"] = consume_count
+        args["open_dungeon_id"] = open_dungeon_id
+        args["open_time"] = open_time
+        args["opened_money_count"] = opened_money_count
+        args["opened_fund_count"] = opened_fund_count
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会副本恢复回退
     @staticmethod
-    def Guild_BossChallenge_Recover(opUUID, guildUUID, cancelType, consumeType, consumeCount, openDungeonId, openTime, openedMoneyCount, openedFundCount, **kwargs):
+    def Guild_BossChallenge_Recover(GBID, distinctId, op_uuid, guild_uuid, cancel_type, consume_type, consume_count, open_dungeon_id, open_time, opened_money_count, opened_fund_count, **kwargs):
         args = {}
         args["trackName"] = "Guild_BossChallenge_Recover"
-        args["opUUID"] = opUUID
-        args["guildUUID"] = guildUUID
-        args["cancelType"] = cancelType
-        args["consumeType"] = consumeType
-        args["consumeCount"] = consumeCount
-        args["openDungeonId"] = openDungeonId
-        args["openTime"] = openTime
-        args["openedMoneyCount"] = openedMoneyCount
-        args["openedFundCount"] = openedFundCount
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_BossChallenge_Recover"
+        args["op_uuid"] = op_uuid
+        args["guild_uuid"] = guild_uuid
+        args["cancel_type"] = cancel_type
+        args["consume_type"] = consume_type
+        args["consume_count"] = consume_count
+        args["open_dungeon_id"] = open_dungeon_id
+        args["open_time"] = open_time
+        args["opened_money_count"] = opened_money_count
+        args["opened_fund_count"] = opened_fund_count
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会副本创建
     @staticmethod
-    def Guild_BossChallenge_CreateDungeon(opUUID, **kwargs):
+    def Guild_BossChallenge_CreateDungeon(GBID, distinctId, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Guild_BossChallenge_CreateDungeon"
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_BossChallenge_CreateDungeon"
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会副本倒计时开启
     @staticmethod
-    def Guild_BossChallenge_CDOpen(opUUID, **kwargs):
+    def Guild_BossChallenge_CDOpen(GBID, distinctId, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Guild_BossChallenge_CDOpen"
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_BossChallenge_CDOpen"
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会副本副本结算
     @staticmethod
-    def Guild_BossChallenge_Settlement(opUUID, gbId, isClear, dmgScore, dmgRank, isFirstClear, firstPassRewards, rankRewards, **kwargs):
+    def Guild_BossChallenge_Settlement(GBID, distinctId, op_uuid, gb_id, is_clear, dmg_score, dmg_rank, is_first_clear, first_pass_rewards, rank_rewards, **kwargs):
         args = {}
         args["trackName"] = "Guild_BossChallenge_Settlement"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["isClear"] = isClear
-        args["dmgScore"] = dmgScore
-        args["dmgRank"] = dmgRank
-        args["isFirstClear"] = isFirstClear
-        args["firstPassRewards"] = str(firstPassRewards)
-        args["rankRewards"] = str(rankRewards)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_BossChallenge_Settlement"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["is_clear"] = is_clear
+        args["dmg_score"] = dmg_score
+        args["dmg_rank"] = dmg_rank
+        args["is_first_clear"] = is_first_clear
+        args["first_pass_rewards"] = str(first_pass_rewards)
+        args["rank_rewards"] = str(rank_rewards)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 扩容（背包或者仓库）
     @staticmethod
-    def Capacity_Expansion(opUUID, gbId, type, capacityBefore, expansionCount, capacityAfter, playerLevel, consumeItems, **kwargs):
+    def Capacity_Expansion(GBID, distinctId, op_uuid, gb_id, type, capacity_before, expansion_count, capacity_after, player_level, consume_items, **kwargs):
         args = {}
         args["trackName"] = "Capacity_Expansion"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Capacity_Expansion"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
         args["type"] = type
-        args["capacityBefore"] = capacityBefore
-        args["expansionCount"] = expansionCount
-        args["capacityAfter"] = capacityAfter
-        args["playerLevel"] = playerLevel
-        args["consumeItems"] = str(consumeItems)
+        args["capacity_before"] = capacity_before
+        args["expansion_count"] = expansion_count
+        args["capacity_after"] = capacity_after
+        args["player_level"] = player_level
+        args["consume_items"] = str(consume_items)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 道具或者装备分解
     @staticmethod
-    def Item_Disassembly(opUUID, gbId, type, disassembleItems, rewardItems, disassembleSettings, **kwargs):
+    def Item_Disassembly(GBID, distinctId, op_uuid, gb_id, type, disassemble_items, reward_items, disassemble_settings, **kwargs):
         args = {}
         args["trackName"] = "Item_Disassembly"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Item_Disassembly"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
         args["type"] = type
-        args["disassembleItems"] = str(disassembleItems)
-        args["rewardItems"] = str(rewardItems)
-        args["disassembleSettings"] = disassembleSettings
+        args["disassemble_items"] = str(disassemble_items)
+        args["reward_items"] = str(reward_items)
+        args["disassemble_settings"] = disassemble_settings
         LogTrackingMgr.LOG(args, kwargs)
 
     # 传送
     @staticmethod
-    def Teleport(gbId, level, fromMapId, toMapId, ways, isSuccess, failReason, **kwargs):
+    def Teleport(GBID, distinctId, gb_id, level, from_map_id, to_map_id, ways, is_success, fail_reason, **kwargs):
         args = {}
         args["trackName"] = "Teleport"
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Teleport"
+        args["gb_id"] = gb_id
         args["level"] = level
-        args["fromMapId"] = fromMapId
-        args["toMapId"] = toMapId
+        args["from_map_id"] = from_map_id
+        args["to_map_id"] = to_map_id
         args["ways"] = str(ways)
-        args["isSuccess"] = isSuccess
-        args["failReason"] = str(failReason)
+        args["is_success"] = is_success
+        args["fail_reason"] = str(fail_reason)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 怪物死亡
     @staticmethod
-    def Kill_Monster(monsterId, mapId, gid, suffix, **kwargs):
+    def Kill_Monster(GBID, distinctId, monster_id, map_id, gid, suffix, **kwargs):
         args = {}
         args["trackName"] = "Kill_Monster"
-        args["monsterId"] = monsterId
-        args["mapId"] = mapId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Kill_Monster"
+        args["monster_id"] = monster_id
+        args["map_id"] = map_id
         args["gid"] = gid
         args["suffix"] = suffix
         LogTrackingMgr.LOG(args, kwargs)
 
     # 任务状态变更
     @staticmethod
-    def Task_State_Change(gbId, taskId, taskState, taskType, taskMap, playerLevel, **kwargs):
+    def Task_State_Change(GBID, distinctId, gb_id, task_id, task_state, task_type, task_map, player_level, **kwargs):
         args = {}
         args["trackName"] = "Task_State_Change"
-        args["gbId"] = gbId
-        args["taskId"] = taskId
-        args["taskState"] = taskState
-        args["taskType"] = taskType
-        args["taskMap"] = taskMap
-        args["playerLevel"] = playerLevel
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Task_State_Change"
+        args["gb_id"] = gb_id
+        args["task_id"] = task_id
+        args["task_state"] = task_state
+        args["task_type"] = task_type
+        args["task_map"] = task_map
+        args["player_level"] = player_level
         LogTrackingMgr.LOG(args, kwargs)
 
     # pc引流奖励
     @staticmethod
-    def Welfare_PcDrainage(accountId, gbId, deviceModel, claimTimestamp, opUUID, **kwargs):
+    def Welfare_PcDrainage(GBID, distinctId, account_id, gb_id, device_model, claim_timestamp, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Welfare_PcDrainage"
-        args["accountId"] = str(accountId)
-        args["gbId"] = gbId
-        args["deviceModel"] = str(deviceModel)
-        args["claimTimestamp"] = claimTimestamp
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Welfare_PcDrainage"
+        args["account_id"] = str(account_id)
+        args["gb_id"] = gb_id
+        args["device_model"] = str(device_model)
+        args["claim_timestamp"] = claim_timestamp
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 副本门票消耗
     @staticmethod
-    def Dungeon_Ticket_Consume(uniqueId, dungeonType, dungeonId, ticketType, enterType, playerCount, gbId, score, playerLevel, **kwargs):
+    def Dungeon_Ticket_Consume(GBID, distinctId, unique_id, dungeon_type, dungeon_id, ticket_type, enter_type, player_count, gb_id, score, player_level, **kwargs):
         args = {}
         args["trackName"] = "Dungeon_Ticket_Consume"
-        args["uniqueId"] = uniqueId
-        args["dungeonType"] = dungeonType
-        args["dungeonId"] = dungeonId
-        args["ticketType"] = ticketType
-        args["enterType"] = enterType
-        args["playerCount"] = playerCount
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Dungeon_Ticket_Consume"
+        args["unique_id"] = unique_id
+        args["dungeon_type"] = dungeon_type
+        args["dungeon_id"] = dungeon_id
+        args["ticket_type"] = ticket_type
+        args["enter_type"] = enter_type
+        args["player_count"] = player_count
+        args["gb_id"] = gb_id
         args["score"] = score
-        args["playerLevel"] = playerLevel
+        args["player_level"] = player_level
         LogTrackingMgr.LOG(args, kwargs)
 
     # Boss出生
     @staticmethod
-    def Dungeon_Boss_Born(uniqueId, dungeonType, dungeonId, spaceUUID, spaceNo, monsterId, bornTime, dungeonStartTime, **kwargs):
+    def Dungeon_Boss_Born(GBID, distinctId, unique_id, dungeon_type, dungeon_id, space_uuid, space_no, monster_id, born_time, dungeon_start_time, **kwargs):
         args = {}
         args["trackName"] = "Dungeon_Boss_Born"
-        args["uniqueId"] = uniqueId
-        args["dungeonType"] = dungeonType
-        args["dungeonId"] = dungeonId
-        args["spaceUUID"] = spaceUUID
-        args["spaceNo"] = spaceNo
-        args["monsterId"] = monsterId
-        args["bornTime"] = bornTime
-        args["dungeonStartTime"] = dungeonStartTime
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Dungeon_Boss_Born"
+        args["unique_id"] = unique_id
+        args["dungeon_type"] = dungeon_type
+        args["dungeon_id"] = dungeon_id
+        args["space_uuid"] = space_uuid
+        args["space_no"] = space_no
+        args["monster_id"] = monster_id
+        args["born_time"] = born_time
+        args["dungeon_start_time"] = dungeon_start_time
         LogTrackingMgr.LOG(args, kwargs)
 
     # Boss死亡
     @staticmethod
-    def Dungeon_Boss_Dead(uniqueId, dungeonType, dungeonId, spaceUUID, spaceNo, monsterId, bornTime, deadTime, dungeonStartTime, **kwargs):
+    def Dungeon_Boss_Dead(GBID, distinctId, unique_id, dungeon_type, dungeon_id, space_uuid, space_no, monster_id, born_time, dead_time, dungeon_start_time, **kwargs):
         args = {}
         args["trackName"] = "Dungeon_Boss_Dead"
-        args["uniqueId"] = uniqueId
-        args["dungeonType"] = dungeonType
-        args["dungeonId"] = dungeonId
-        args["spaceUUID"] = spaceUUID
-        args["spaceNo"] = spaceNo
-        args["monsterId"] = monsterId
-        args["bornTime"] = bornTime
-        args["deadTime"] = deadTime
-        args["dungeonStartTime"] = dungeonStartTime
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Dungeon_Boss_Dead"
+        args["unique_id"] = unique_id
+        args["dungeon_type"] = dungeon_type
+        args["dungeon_id"] = dungeon_id
+        args["space_uuid"] = space_uuid
+        args["space_no"] = space_no
+        args["monster_id"] = monster_id
+        args["born_time"] = born_time
+        args["dead_time"] = dead_time
+        args["dungeon_start_time"] = dungeon_start_time
         LogTrackingMgr.LOG(args, kwargs)
 
     # 副本结算
     @staticmethod
-    def Dungeon_Settlement(uniqueId, dungeonType, dungeonId, spaceUUID, spaceNo, gbId, isClear, isFirstClear, finishTime, isWin, reasonType, finishedPlayerCount, deadCount, firstRewards, clearRewards, goldRewards, autoBattleTimes, playerScore, playerLevel, fightScore, **kwargs):
+    def Dungeon_Settlement(GBID, distinctId, unique_id, dungeon_type, dungeon_id, space_uuid, space_no, gb_id, is_clear, is_first_clear, finish_time, is_win, reason_type, finished_player_count, dead_count, first_rewards, clear_rewards, gold_rewards, auto_battle_times, player_score, player_level, fight_score, **kwargs):
         args = {}
         args["trackName"] = "Dungeon_Settlement"
-        args["uniqueId"] = uniqueId
-        args["dungeonType"] = dungeonType
-        args["dungeonId"] = dungeonId
-        args["spaceUUID"] = spaceUUID
-        args["spaceNo"] = spaceNo
-        args["gbId"] = gbId
-        args["isClear"] = isClear
-        args["isFirstClear"] = isFirstClear
-        args["finishTime"] = finishTime
-        args["isWin"] = isWin
-        args["reasonType"] = reasonType
-        args["finishedPlayerCount"] = finishedPlayerCount
-        args["deadCount"] = deadCount
-        args["firstRewards"] = str(firstRewards)
-        args["clearRewards"] = str(clearRewards)
-        args["goldRewards"] = str(goldRewards)
-        args["autoBattleTimes"] = autoBattleTimes
-        args["playerScore"] = playerScore
-        args["playerLevel"] = playerLevel
-        args["fightScore"] = fightScore
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Dungeon_Settlement"
+        args["unique_id"] = unique_id
+        args["dungeon_type"] = dungeon_type
+        args["dungeon_id"] = dungeon_id
+        args["space_uuid"] = space_uuid
+        args["space_no"] = space_no
+        args["gb_id"] = gb_id
+        args["is_clear"] = is_clear
+        args["is_first_clear"] = is_first_clear
+        args["finish_time"] = finish_time
+        args["is_win"] = is_win
+        args["reason_type"] = reason_type
+        args["finished_player_count"] = finished_player_count
+        args["dead_count"] = dead_count
+        args["first_rewards"] = str(first_rewards)
+        args["clear_rewards"] = str(clear_rewards)
+        args["gold_rewards"] = str(gold_rewards)
+        args["auto_battle_times"] = auto_battle_times
+        args["player_score"] = player_score
+        args["player_level"] = player_level
+        args["fight_score"] = fight_score
         LogTrackingMgr.LOG(args, kwargs)
 
     # 更新经验
     @staticmethod
-    def Update_Exp(gbId, deltaVal, modifyVal, opUUID, src, spaceNo, level, **kwargs):
+    def Update_Exp(GBID, distinctId, gb_id, delta_val, modify_val, op_uuid, src, space_no, level, **kwargs):
         args = {}
         args["trackName"] = "Update_Exp"
-        args["gbId"] = gbId
-        args["deltaVal"] = deltaVal
-        args["modifyVal"] = modifyVal
-        args["opUUID"] = opUUID
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Update_Exp"
+        args["gb_id"] = gb_id
+        args["delta_val"] = delta_val
+        args["modify_val"] = modify_val
+        args["op_uuid"] = op_uuid
         args["src"] = src
-        args["spaceNo"] = spaceNo
+        args["space_no"] = space_no
         args["level"] = level
         LogTrackingMgr.LOG(args, kwargs)
 
     # 死亡掉装
     @staticmethod
-    def Drop_Equip(gbId, uniqueId, itemId, quality, grade, mapId, pos, operation, **kwargs):
+    def Drop_Equip(GBID, distinctId, gb_id, unique_id, item_id, quality, grade, map_id, pos, operation, **kwargs):
         args = {}
         args["trackName"] = "Drop_Equip"
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["itemId"] = itemId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Drop_Equip"
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["item_id"] = item_id
         args["quality"] = quality
         args["grade"] = grade
-        args["mapId"] = mapId
+        args["map_id"] = map_id
         args["pos"] = pos
         args["operation"] = operation
         LogTrackingMgr.LOG(args, kwargs)
 
     # 帮会关系
     @staticmethod
-    def Guild_Relation(guildUUID1, guildUUID2, operation, endTime, **kwargs):
+    def Guild_Relation(GBID, distinctId, guild_uuid1, guild_uuid2, operation, end_time, **kwargs):
         args = {}
         args["trackName"] = "Guild_Relation"
-        args["guildUUID1"] = guildUUID1
-        args["guildUUID2"] = guildUUID2
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Guild_Relation"
+        args["guild_uuid1"] = guild_uuid1
+        args["guild_uuid2"] = guild_uuid2
         args["operation"] = operation
-        args["endTime"] = endTime
+        args["end_time"] = end_time
         LogTrackingMgr.LOG(args, kwargs)
 
     # 物品移动
     @staticmethod
-    def Item_Movement(opUUID, gbId, uniqueId, itemId, itemCount, itemBindType, moveType, **kwargs):
+    def Item_Movement(GBID, distinctId, op_uuid, gb_id, unique_id, item_id, item_count, item_bind_type, move_type, **kwargs):
         args = {}
         args["trackName"] = "Item_Movement"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["uniqueId"] = uniqueId
-        args["itemId"] = itemId
-        args["itemCount"] = itemCount
-        args["itemBindType"] = itemBindType
-        args["moveType"] = moveType
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Item_Movement"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["unique_id"] = unique_id
+        args["item_id"] = item_id
+        args["item_count"] = item_count
+        args["item_bind_type"] = item_bind_type
+        args["move_type"] = move_type
         LogTrackingMgr.LOG(args, kwargs)
 
     # 经脉升级
     @staticmethod
-    def Meridian_UpGrade(opUUID, gbId, meridianId, pointId, newLevel, **kwargs):
+    def Meridian_UpGrade(GBID, distinctId, op_uuid, gb_id, meridian_id, point_id, new_level, **kwargs):
         args = {}
         args["trackName"] = "Meridian_UpGrade"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["meridianId"] = meridianId
-        args["pointId"] = pointId
-        args["newLevel"] = newLevel
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Meridian_UpGrade"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["meridian_id"] = meridian_id
+        args["point_id"] = point_id
+        args["new_level"] = new_level
         LogTrackingMgr.LOG(args, kwargs)
 
     # 经脉强化
     @staticmethod
-    def Meridian_Enhance(opUUID, gbId, meridianId, **kwargs):
+    def Meridian_Enhance(GBID, distinctId, op_uuid, gb_id, meridian_id, **kwargs):
         args = {}
         args["trackName"] = "Meridian_Enhance"
-        args["opUUID"] = opUUID
-        args["gbId"] = gbId
-        args["meridianId"] = meridianId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Meridian_Enhance"
+        args["op_uuid"] = op_uuid
+        args["gb_id"] = gb_id
+        args["meridian_id"] = meridian_id
         LogTrackingMgr.LOG(args, kwargs)
 
     # 精灵获取
     @staticmethod
-    def Pet_Get(gbId, opUUID, petId, petQuality, petSrc, **kwargs):
+    def pet_get(GBID, distinctId, gb_id, op_uuid, pet_id, pet_quality, **kwargs):
         args = {}
-        args["trackName"] = "Pet_Get"
-        args["gbId"] = gbId
-        args["opUUID"] = opUUID
-        args["petId"] = petId
-        args["petQuality"] = petQuality
-        args["petSrc"] = petSrc
+        args["trackName"] = "pet_get"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "pet_get"
+        args["gb_id"] = gb_id
+        args["op_uuid"] = op_uuid
+        args["pet_id"] = pet_id
+        args["pet_quality"] = pet_quality
         LogTrackingMgr.LOG(args, kwargs)
 
     # 精灵升级
     @staticmethod
-    def Pet_LevelUp(gbId, opUUID, petId, petQuality, oldLevel, newLevel, equip, addScore, **kwargs):
+    def pet_levelup(GBID, distinctId, gb_id, op_uuid, pet_id, pet_quality, level_before, new_level, equip, add_power, **kwargs):
         args = {}
-        args["trackName"] = "Pet_LevelUp"
-        args["gbId"] = gbId
-        args["opUUID"] = opUUID
-        args["petId"] = petId
-        args["petQuality"] = petQuality
-        args["oldLevel"] = oldLevel
-        args["newLevel"] = newLevel
+        args["trackName"] = "pet_levelup"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "pet_levelup"
+        args["gb_id"] = gb_id
+        args["op_uuid"] = op_uuid
+        args["pet_id"] = pet_id
+        args["pet_quality"] = pet_quality
+        args["level_before"] = level_before
+        args["new_level"] = new_level
         args["equip"] = str(equip)
-        args["addScore"] = addScore
+        args["add_power"] = add_power
         LogTrackingMgr.LOG(args, kwargs)
 
     # 精灵编组
     @staticmethod
-    def Pet_MakeTeam(gbId, playerLevel, battleId, battleType, petId, petQuality, petLevel, joinBattleCount, battleCount, **kwargs):
+    def pet_make_team(GBID, distinctId, gb_id, player_level, pet_team_id, op_type, pet_id, pet_quality, pet_level, pet_equip, join_team_count, team_pet_count, pet_team_info, **kwargs):
         args = {}
-        args["trackName"] = "Pet_MakeTeam"
-        args["gbId"] = gbId
-        args["playerLevel"] = playerLevel
-        args["battleId"] = battleId
-        args["battleType"] = battleType
-        args["petId"] = petId
-        args["petQuality"] = petQuality
-        args["petLevel"] = petLevel
-        args["joinBattleCount"] = joinBattleCount
-        args["battleCount"] = battleCount
+        args["trackName"] = "pet_make_team"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "pet_make_team"
+        args["gb_id"] = gb_id
+        args["player_level"] = player_level
+        args["pet_team_id"] = pet_team_id
+        args["op_type"] = op_type
+        args["pet_id"] = pet_id
+        args["pet_quality"] = pet_quality
+        args["pet_level"] = pet_level
+        args["pet_equip"] = str(pet_equip)
+        args["join_team_count"] = join_team_count
+        args["team_pet_count"] = team_pet_count
+        args["pet_team_info"] = str(pet_team_info)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 精灵切换编组
     @staticmethod
-    def Pet_ChangeTeam(gbId, mapId, battleId, battleData, **kwargs):
+    def pet_change_team(GBID, distinctId, gb_id, scene, pet_team_id, pet_team_info, **kwargs):
         args = {}
-        args["trackName"] = "Pet_ChangeTeam"
-        args["gbId"] = gbId
-        args["mapId"] = mapId
-        args["battleId"] = battleId
-        args["battleData"] = str(battleData)
+        args["trackName"] = "pet_change_team"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "pet_change_team"
+        args["gb_id"] = gb_id
+        args["scene"] = scene
+        args["pet_team_id"] = pet_team_id
+        args["pet_team_info"] = str(pet_team_info)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 精灵跟随
     @staticmethod
-    def Pet_Follow(gbId, mapId, petId, petQuality, petLevel, petEquipData, petFollowType, **kwargs):
+    def pet_follow_change(GBID, distinctId, gb_id, scene, pet_id, pet_quality, pet_level, pet_equip, op_type, **kwargs):
         args = {}
-        args["trackName"] = "Pet_Follow"
-        args["gbId"] = gbId
-        args["mapId"] = mapId
-        args["petId"] = petId
-        args["petQuality"] = petQuality
-        args["petLevel"] = petLevel
-        args["petEquipData"] = str(petEquipData)
-        args["petFollowType"] = petFollowType
+        args["trackName"] = "pet_follow_change"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "pet_follow_change"
+        args["gb_id"] = gb_id
+        args["scene"] = scene
+        args["pet_id"] = pet_id
+        args["pet_quality"] = pet_quality
+        args["pet_level"] = pet_level
+        args["pet_equip"] = str(pet_equip)
+        args["op_type"] = op_type
         LogTrackingMgr.LOG(args, kwargs)
 
     # 邮件发送
     @staticmethod
-    def Mail_Send(toGBID, mailID, mailType, mailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
+    def Mail_Send(GBID, distinctId, to_gbid, mail_id, mail_type, mail_gbid, src_type, src_sub_type, op_uuid, idip_source, attach_str, **kwargs):
         args = {}
         args["trackName"] = "Mail_Send"
-        args["toGBID"] = toGBID
-        args["mailID"] = mailID
-        args["mailType"] = mailType
-        args["mailGBID"] = mailGBID
-        args["srcType"] = srcType
-        args["srcSubType"] = srcSubType
-        args["opUUID"] = opUUID
-        args["idipSource"] = idipSource
-        args["attachStr"] = str(attachStr)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Mail_Send"
+        args["to_gbid"] = to_gbid
+        args["mail_id"] = mail_id
+        args["mail_type"] = mail_type
+        args["mail_gbid"] = mail_gbid
+        args["src_type"] = src_type
+        args["src_sub_type"] = src_sub_type
+        args["op_uuid"] = op_uuid
+        args["idip_source"] = idip_source
+        args["attach_str"] = str(attach_str)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 邮件查看
     @staticmethod
-    def Mail_Read(toGBID, fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
+    def Mail_Read(GBID, distinctId, to_gbid, from_gbid, mail_id, mail_gbid, global_mail_gbid, src_type, src_sub_type, op_uuid, idip_source, attach_str, **kwargs):
         args = {}
         args["trackName"] = "Mail_Read"
-        args["toGBID"] = toGBID
-        args["fromGBID"] = fromGBID
-        args["mailID"] = mailID
-        args["mailGBID"] = mailGBID
-        args["globalMailGBID"] = globalMailGBID
-        args["srcType"] = srcType
-        args["srcSubType"] = srcSubType
-        args["opUUID"] = opUUID
-        args["idipSource"] = idipSource
-        args["attachStr"] = str(attachStr)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Mail_Read"
+        args["to_gbid"] = to_gbid
+        args["from_gbid"] = from_gbid
+        args["mail_id"] = mail_id
+        args["mail_gbid"] = mail_gbid
+        args["global_mail_gbid"] = global_mail_gbid
+        args["src_type"] = src_type
+        args["src_sub_type"] = src_sub_type
+        args["op_uuid"] = op_uuid
+        args["idip_source"] = idip_source
+        args["attach_str"] = str(attach_str)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 邮件领取
     @staticmethod
-    def Mail_Get(toGBID, fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, **kwargs):
+    def Mail_Get(GBID, distinctId, to_gbid, from_gbid, mail_id, mail_gbid, global_mail_gbid, src_type, src_sub_type, op_uuid, idip_source, attach_str, **kwargs):
         args = {}
         args["trackName"] = "Mail_Get"
-        args["toGBID"] = toGBID
-        args["fromGBID"] = fromGBID
-        args["mailID"] = mailID
-        args["mailGBID"] = mailGBID
-        args["globalMailGBID"] = globalMailGBID
-        args["srcType"] = srcType
-        args["srcSubType"] = srcSubType
-        args["opUUID"] = opUUID
-        args["idipSource"] = idipSource
-        args["attachStr"] = str(attachStr)
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Mail_Get"
+        args["to_gbid"] = to_gbid
+        args["from_gbid"] = from_gbid
+        args["mail_id"] = mail_id
+        args["mail_gbid"] = mail_gbid
+        args["global_mail_gbid"] = global_mail_gbid
+        args["src_type"] = src_type
+        args["src_sub_type"] = src_sub_type
+        args["op_uuid"] = op_uuid
+        args["idip_source"] = idip_source
+        args["attach_str"] = str(attach_str)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 邮件删除
     @staticmethod
-    def Mail_Delete(toGBID, fromGBID, mailID, mailGBID, globalMailGBID, srcType, srcSubType, opUUID, idipSource, attachStr, deleteSrcType, **kwargs):
+    def Mail_Delete(GBID, distinctId, to_gbid, from_gbid, mail_id, mail_gbid, global_mail_gbid, src_type, src_sub_type, op_uuid, idip_source, attach_str, delete_src_type, **kwargs):
         args = {}
         args["trackName"] = "Mail_Delete"
-        args["toGBID"] = toGBID
-        args["fromGBID"] = fromGBID
-        args["mailID"] = mailID
-        args["mailGBID"] = mailGBID
-        args["globalMailGBID"] = globalMailGBID
-        args["srcType"] = srcType
-        args["srcSubType"] = srcSubType
-        args["opUUID"] = opUUID
-        args["idipSource"] = idipSource
-        args["attachStr"] = str(attachStr)
-        args["deleteSrcType"] = deleteSrcType
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Mail_Delete"
+        args["to_gbid"] = to_gbid
+        args["from_gbid"] = from_gbid
+        args["mail_id"] = mail_id
+        args["mail_gbid"] = mail_gbid
+        args["global_mail_gbid"] = global_mail_gbid
+        args["src_type"] = src_type
+        args["src_sub_type"] = src_sub_type
+        args["op_uuid"] = op_uuid
+        args["idip_source"] = idip_source
+        args["attach_str"] = str(attach_str)
+        args["delete_src_type"] = delete_src_type
         LogTrackingMgr.LOG(args, kwargs)
 
     # 交易行出售
     @staticmethod
-    def Auction_ItemSale(playerGBID, opUUID, auctionUUID, itemId, itemNum, eachPrice, totalPrice, isPublicity, **kwargs):
+    def auction_item_sale(GBID, distinctId, player_gbid, op_uuid, auction_uuid, auction_item_id, auction_item_type, auction_item_num, auction_item_price, auction_item_price_total, is_publicity, **kwargs):
         args = {}
-        args["trackName"] = "Auction_ItemSale"
-        args["playerGBID"] = playerGBID
-        args["opUUID"] = opUUID
-        args["auctionUUID"] = auctionUUID
-        args["itemId"] = itemId
-        args["itemNum"] = itemNum
-        args["eachPrice"] = eachPrice
-        args["totalPrice"] = totalPrice
-        args["isPublicity"] = isPublicity
+        args["trackName"] = "auction_item_sale"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "auction_item_sale"
+        args["player_gbid"] = player_gbid
+        args["op_uuid"] = op_uuid
+        args["auction_uuid"] = auction_uuid
+        args["auction_item_id"] = auction_item_id
+        args["auction_item_type"] = auction_item_type
+        args["auction_item_num"] = auction_item_num
+        args["auction_item_price"] = auction_item_price
+        args["auction_item_price_total"] = auction_item_price_total
+        args["is_publicity"] = is_publicity
         LogTrackingMgr.LOG(args, kwargs)
 
     # 交易行购买
     @staticmethod
-    def Auction_ItemBuy(playerGBID, opUUID, auctionUUID, itemId, auctionBuyItemNum, price, **kwargs):
+    def Auction_ItemBuy(GBID, distinctId, player_gbid, op_uuid, auction_uuid, item_id, auction_buy_item_num, price, **kwargs):
         args = {}
         args["trackName"] = "Auction_ItemBuy"
-        args["playerGBID"] = playerGBID
-        args["opUUID"] = opUUID
-        args["auctionUUID"] = auctionUUID
-        args["itemId"] = itemId
-        args["auctionBuyItemNum"] = auctionBuyItemNum
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Auction_ItemBuy"
+        args["player_gbid"] = player_gbid
+        args["op_uuid"] = op_uuid
+        args["auction_uuid"] = auction_uuid
+        args["item_id"] = item_id
+        args["auction_buy_item_num"] = auction_buy_item_num
         args["price"] = price
         LogTrackingMgr.LOG(args, kwargs)
 
     # 交易行下架
     @staticmethod
-    def Auction_ItemCancel(playerGBID, auctionUUID, itemId, itemNum, eachPrice, totalPrice, createTime, addTime, expireTime, status, **kwargs):
+    def auction_item_cancel(GBID, distinctId, player_gbid, auction_uuid, auction_item_id, auction_item_type, auction_item_num, auction_item_price, auction_item_price_total, is_publicity, create_time, add_time, expire_time, auction_type, **kwargs):
         args = {}
-        args["trackName"] = "Auction_ItemCancel"
-        args["playerGBID"] = playerGBID
-        args["auctionUUID"] = auctionUUID
-        args["itemId"] = itemId
-        args["itemNum"] = itemNum
-        args["eachPrice"] = eachPrice
-        args["totalPrice"] = totalPrice
-        args["createTime"] = createTime
-        args["addTime"] = addTime
-        args["expireTime"] = expireTime
-        args["status"] = status
+        args["trackName"] = "auction_item_cancel"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "auction_item_cancel"
+        args["player_gbid"] = player_gbid
+        args["auction_uuid"] = auction_uuid
+        args["auction_item_id"] = auction_item_id
+        args["auction_item_type"] = auction_item_type
+        args["auction_item_num"] = auction_item_num
+        args["auction_item_price"] = auction_item_price
+        args["auction_item_price_total"] = auction_item_price_total
+        args["is_publicity"] = is_publicity
+        args["create_time"] = create_time
+        args["add_time"] = add_time
+        args["expire_time"] = expire_time
+        args["auction_type"] = auction_type
         LogTrackingMgr.LOG(args, kwargs)
 
     # 交易行成交
     @staticmethod
-    def Auction_ItemDeal(playerGBID, fromPlayerGBID, opUUID, auctionUUID, itemId, itemNum, totalPrice, realAddPrice, totalPriceTax, **kwargs):
+    def auction_item_deal(GBID, distinctId, player_gbid, op_uuid, auction_uuid, auction_item_id, auction_item_type, is_publicity, deal_item_num, deal_total_price, real_add_price, tax, from_role_id, from_role_name, from_gid, **kwargs):
         args = {}
-        args["trackName"] = "Auction_ItemDeal"
-        args["playerGBID"] = playerGBID
-        args["fromPlayerGBID"] = fromPlayerGBID
-        args["opUUID"] = opUUID
-        args["auctionUUID"] = auctionUUID
-        args["itemId"] = itemId
-        args["itemNum"] = itemNum
-        args["totalPrice"] = totalPrice
-        args["realAddPrice"] = realAddPrice
-        args["totalPriceTax"] = totalPriceTax
+        args["trackName"] = "auction_item_deal"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "auction_item_deal"
+        args["player_gbid"] = player_gbid
+        args["op_uuid"] = op_uuid
+        args["auction_uuid"] = auction_uuid
+        args["auction_item_id"] = auction_item_id
+        args["auction_item_type"] = auction_item_type
+        args["is_publicity"] = is_publicity
+        args["deal_item_num"] = deal_item_num
+        args["deal_total_price"] = deal_total_price
+        args["real_add_price"] = real_add_price
+        args["tax"] = tax
+        args["from_role_id"] = from_role_id
+        args["from_role_name"] = str(from_role_name)
+        args["from_gid"] = str(from_gid)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 交易行收藏
     @staticmethod
-    def Auction_ItemCollect(playerGBID, collectDataType, collectOpType, collectId, **kwargs):
+    def Auction_ItemCollect(GBID, distinctId, player_gbid, collect_data_type, collect_op_type, collect_id, **kwargs):
         args = {}
         args["trackName"] = "Auction_ItemCollect"
-        args["playerGBID"] = playerGBID
-        args["collectDataType"] = collectDataType
-        args["collectOpType"] = collectOpType
-        args["collectId"] = collectId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Auction_ItemCollect"
+        args["player_gbid"] = player_gbid
+        args["collect_data_type"] = collect_data_type
+        args["collect_op_type"] = collect_op_type
+        args["collect_id"] = collect_id
         LogTrackingMgr.LOG(args, kwargs)
 
     # 混沌回廊ticket事件
     @staticmethod
-    def Cube_Ticket(gbId, src, delta, free, paid, opUUID, **kwargs):
+    def Cube_Ticket(GBID, distinctId, gb_id, src, delta, free, paid, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "Cube_Ticket"
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Cube_Ticket"
+        args["gb_id"] = gb_id
         args["src"] = src
         args["delta"] = delta
         args["free"] = free
         args["paid"] = paid
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 秘境峰ticket事件
     @staticmethod
-    def WonderLand_Ticket(gbId, src, delta, num, paid, opUUID, **kwargs):
+    def WonderLand_Ticket(GBID, distinctId, gb_id, src, delta, num, paid, op_uuid, **kwargs):
         args = {}
         args["trackName"] = "WonderLand_Ticket"
-        args["gbId"] = gbId
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "WonderLand_Ticket"
+        args["gb_id"] = gb_id
         args["src"] = src
         args["delta"] = delta
         args["num"] = num
         args["paid"] = paid
-        args["opUUID"] = opUUID
+        args["op_uuid"] = op_uuid
         LogTrackingMgr.LOG(args, kwargs)
 
     # 速度统计
     @staticmethod
-    def Speed_Stat(gbId, entityId, playerName, spaceNo, position, datas, **kwargs):
+    def Speed_Stat(GBID, distinctId, gb_id, entity_id, player_name, space_no, position, datas, **kwargs):
         args = {}
         args["trackName"] = "Speed_Stat"
-        args["gbId"] = gbId
-        args["entityId"] = entityId
-        args["playerName"] = str(playerName)
-        args["spaceNo"] = spaceNo
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Speed_Stat"
+        args["gb_id"] = gb_id
+        args["entity_id"] = entity_id
+        args["player_name"] = str(player_name)
+        args["space_no"] = space_no
         args["position"] = str(position)
         args["datas"] = str(datas)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 非法速度统计
     @staticmethod
-    def Illegal_Speed_Stat(gbId, entityId, playerName, spaceNo, position, speed, overRate, speedCheckWindowSize, speedCheckCountPerWindow, speedCheckContinuousUnit, **kwargs):
+    def Illegal_Speed_Stat(GBID, distinctId, gb_id, entity_id, player_name, space_no, position, speed, over_rate, speed_check_window_size, speed_check_count_per_window, speed_check_continuous_unit, **kwargs):
         args = {}
         args["trackName"] = "Illegal_Speed_Stat"
-        args["gbId"] = gbId
-        args["entityId"] = entityId
-        args["playerName"] = str(playerName)
-        args["spaceNo"] = spaceNo
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Illegal_Speed_Stat"
+        args["gb_id"] = gb_id
+        args["entity_id"] = entity_id
+        args["player_name"] = str(player_name)
+        args["space_no"] = space_no
         args["position"] = str(position)
         args["speed"] = speed
-        args["overRate"] = overRate
-        args["speedCheckWindowSize"] = speedCheckWindowSize
-        args["speedCheckCountPerWindow"] = speedCheckCountPerWindow
-        args["speedCheckContinuousUnit"] = speedCheckContinuousUnit
+        args["over_rate"] = over_rate
+        args["speed_check_window_size"] = speed_check_window_size
+        args["speed_check_count_per_window"] = speed_check_count_per_window
+        args["speed_check_continuous_unit"] = speed_check_continuous_unit
         LogTrackingMgr.LOG(args, kwargs)
 
+    # 月卡过期时间设置
+    @staticmethod
+    def MonthCard_Expire_Time_Set(GBID, distinctId, expire_time, **kwargs):
+        args = {}
+        args["trackName"] = "MonthCard_Expire_Time_Set"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "user_set"
+        args["#event_name"] = "MonthCard_Expire_Time_Set"
+        args["expire_time"] = expire_time
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 付费奖励发放
+    @staticmethod
+    def item_issuance(GBID, distinctId, order_id, player_gbid, role_name, server_id, goods_id, stash_status, **kwargs):
+        args = {}
+        args["trackName"] = "item_issuance"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "user_set"
+        args["#event_name"] = "item_issuance"
+        args["order_id"] = str(order_id)
+        args["player_gbid"] = player_gbid
+        args["role_name"] = str(role_name)
+        args["server_id"] = server_id
+        args["goods_id"] = goods_id
+        args["stash_status"] = stash_status
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 进保管箱
+    @staticmethod
+    def deposit_stash(GBID, distinctId, order_id, player_gbid, goods_id, deposit_time, **kwargs):
+        args = {}
+        args["trackName"] = "deposit_stash"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "user_set"
+        args["#event_name"] = "deposit_stash"
+        args["order_id"] = str(order_id)
+        args["player_gbid"] = player_gbid
+        args["goods_id"] = goods_id
+        args["deposit_time"] = deposit_time
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 领取保管箱
+    @staticmethod
+    def withdraw_stash(GBID, distinctId, order_id, player_gbid, goods_id, withdraw_time, **kwargs):
+        args = {}
+        args["trackName"] = "withdraw_stash"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "user_set"
+        args["#event_name"] = "withdraw_stash"
+        args["order_id"] = str(order_id)
+        args["player_gbid"] = player_gbid
+        args["goods_id"] = goods_id
+        args["withdraw_time"] = withdraw_time
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 删除保管箱记录
+    @staticmethod
+    def delete_stash(GBID, distinctId, order_id, player_gbid, goods_id, record_deleted, record_deleted_time, **kwargs):
+        args = {}
+        args["trackName"] = "delete_stash"
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "user_set"
+        args["#event_name"] = "delete_stash"
+        args["order_id"] = str(order_id)
+        args["player_gbid"] = player_gbid
+        args["goods_id"] = goods_id
+        args["record_deleted"] = record_deleted
+        args["record_deleted_time"] = record_deleted_time
+        LogTrackingMgr.LOG(args, kwargs)
+
+    def ms_timestamp_to_datetime(ms_ts):
+        """
+        毫秒时间戳转 20xx-xx-xx HH:mm:ss.xxx 格式字符串
+        """
+        sec = ms_ts // 1000
+        ms = ms_ts % 1000
+        t = time.localtime(sec)
+        return f"{t.tm_year}-{t.tm_mon:02d}-{t.tm_mday:02d} {t.tm_hour:02d}:{t.tm_min:02d}:{t.tm_sec:02d}.{ms:03d}"
+    
     @staticmethod
     def LOG(args, kwargs):
+        res = {
+            "properties": {}
+        }
+        for k, v in args.items():
+            if k.startswith("#"):
+                res[k] = v
+            else:
+                res["properties"][k] = v
         logData = {
             'server': gameconfig.serverId(),
             'log_id': "LogTracking",
-            'sentTimestamp': utils.getTimestamp64(),
+            'sent_timestamp': utils.getTimestamp64(),
             'gameId': gameconfig.gameId(),
+            '#time': LogTrackingMgr.ms_timestamp_to_datetime(utils.getTimestamp64()),
+            '#ip': utils.getPythonAddr(),
         }
-        logData.update(args)
+        logData.update(res)
         # 固定的不能改
         fixedHeaders = list(logData.keys())
         for k, v in kwargs.items():

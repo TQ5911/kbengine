@@ -48,12 +48,6 @@
             <Flags>         CELL_PRIVATE    </Flags>
         </teamInfo>
 
-        <teamFriends>
-            <Type>          PY_LIST         </Type>
-            <Flags>         CELL_PRIVATE    </Flags>
-            <Default>       []              </Default>
-        </teamFriends>
-
         <autoMatchStartTime>
             <Type>          LONGTIME        </Type>
             <Flags>         CELL_PRIVATE    </Flags>
@@ -75,13 +69,13 @@
     </Properties>
 
     <BaseMethods>
-        <beCheckedBaseByTeam>
+        <checkedBaseByTeam>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           UINT8           </Arg>
             <Arg>           BOOL            </Arg>
             <Arg>           UINT8           </Arg>
             <Arg>           PYTHON          </Arg>
-        </beCheckedBaseByTeam>
+        </checkedBaseByTeam>
         <notifyCaptainTeamMemOffline>
             <Arg>       TEAMID          </Arg>
             <Arg>       PLAYER_GBID     </Arg>
@@ -153,12 +147,13 @@
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           BOOL            </Arg>
+            <Arg>           UINT8           </Arg>
         </replyInviteTeam>
 
         <onReplyInviteTeam>
-            <Arg>           TEAMID          </Arg>
             <Arg>           BOOL            </Arg>
             <Arg>           PY_DICT         </Arg>
+            <Arg>           UINT8           </Arg>
         </onReplyInviteTeam>
 
         <applyBecomeCaptain> <Exposed/>
@@ -217,13 +212,14 @@
             <Arg>           SCORE           </Arg>
             <Arg>           LEVEL           </Arg>
             <Arg>           BOOL            </Arg>
+            <Arg>           UINT8           </Arg>
         </procInviteTeamMsg>
 
-        <procBecomeCaptainMsg>
+        <processBecomeCaptainMsg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           UNICODE         </Arg>
-        </procBecomeCaptainMsg>
+        </processBecomeCaptainMsg>
 
         <onTeamDisband>
             <Arg>           BOOL            </Arg>
@@ -252,10 +248,10 @@
             <Arg>           BOOL            </Arg>
         </replyFollowTeamCaptain>
 
-        <onAddTeamMemberCell>
+        <onAddTeamMemberToCell>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           ENTITYCALL      </Arg>
-        </onAddTeamMemberCell>
+        </onAddTeamMemberToCell>
 
         <onAddTeamCell>
             <Arg>           TEAM_INFO       </Arg>
@@ -282,22 +278,18 @@
         <clearApplyJoinDic><Exposed/>
         </clearApplyJoinDic>
 
-        <beCheckedCellByTeam>
+        <checkedCellByTeam>
             <Arg>           UINT8           </Arg>
             <Arg>           BOOL            </Arg>
             <Arg>           UINT8           </Arg>
             <Arg>           PYTHON          </Arg>
-        </beCheckedCellByTeam>
+        </checkedCellByTeam>
 
         <onCheckResultFromMember>
             <Arg>           UINT8           </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           PYTHON          </Arg>
         </onCheckResultFromMember>
-
-        <addTeamFriends>
-            <Arg>   ARRAY       <of>    PLAYER_GBID          </of>    </Arg>
-        </addTeamFriends>
 
         <onGetAvatarInterInfo>
             <Arg>           ENTITYCALL      </Arg>
@@ -318,12 +310,12 @@
         </onPlayerMatchedTeam>
         <reqPlayerStopAutoMatch><Exposed/>
         </reqPlayerStopAutoMatch>
-        <onCellPlayerStartAutoMatch>
+        <cellPlayerStartAutoMatch>
             <Arg>           LONGTIME         </Arg>
             <Arg>           TEAMTARGET       </Arg>
-        </onCellPlayerStartAutoMatch>
-        <onPlayerMatchedSucc>
-        </onPlayerMatchedSucc>
+        </cellPlayerStartAutoMatch>
+        <onPlayerMatchedSuccess>
+        </onPlayerMatchedSuccess>
         <onPlayerAutoMatchTimeout>
         </onPlayerAutoMatchTimeout>
         <reqSetTeamTarget><Exposed/>
@@ -346,11 +338,6 @@
             <Arg>      METHOD_ARGS   </Arg>
         </checkInTeam>
 
-        <AddTeamCaptainFrdNtf>
-            <Arg>           TEAMID            </Arg>
-            <Arg>           PLAYER_GBID       </Arg>
-        </AddTeamCaptainFrdNtf>
-
         <onNameChangeNotifyTeam>
         </onNameChangeNotifyTeam>
 
@@ -370,14 +357,6 @@
         <clientSetAutoAskTeam><Exposed/>
             <Arg>        INT32        </Arg>
         </clientSetAutoAskTeam>
-
-        <setAutoAskTeam>
-            <Arg>        INT32              </Arg>
-        </setAutoAskTeam>
-
-        <removeAutoAskTeam>
-            <Arg>        INT32              </Arg>
-        </removeAutoAskTeam>
 
         <resetTryAddTeamCD>
         </resetTryAddTeamCD>
@@ -440,9 +419,6 @@
             <Exposed/>
         </unblockAllTeamMemberMics>
 
-        <addFullHpByNpc>
-        </addFullHpByNpc>
-
         <turnOffTeamMicsByForbidVoiceChat>
         </turnOffTeamMicsByForbidVoiceChat>
 
@@ -466,6 +442,12 @@
             <Arg> TEAMID  </Arg>
             <Arg> STRING  </Arg>
         </reqJoinTeam>
+
+        <doApplyInviteTeam>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           UINT8           </Arg>
+        </doApplyInviteTeam>
     </CellMethods>
 
     <ClientMethods>
@@ -478,7 +460,7 @@
             <Arg>           SCORE           </Arg>
         </onApplyJoinTeamMsg>
 
-        <onApplyInviteTeamMsg>
+        <onApplyInviteTeam>
             <Arg>           TEAMID          </Arg>
             <Arg>           TEAMTARGET      </Arg>
             <Arg>           PLAYER_GBID     </Arg>
@@ -486,7 +468,8 @@
             <Arg>           UNICODE         </Arg>
             <Arg>           LEVEL           </Arg>
             <Arg>           SCHOOL          </Arg>
-        </onApplyInviteTeamMsg>
+            <Arg>           UINT8           </Arg>
+        </onApplyInviteTeam>
 
         <onAddTeamMember>
             <Arg>           CLIENT_TEAM_MEMBER_VAL     </Arg>
@@ -551,6 +534,11 @@
             <Arg>           POSITION_ARG    </Arg>
         </onUpdateTeamMemberPos>
 
+        <onUpdateTeamMemberPlayerName>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   UNICODE     </Arg>
+        </onUpdateTeamMemberPlayerName>
+
         <onTeamAutoMatch>
             <Arg>           LONGTIME           </Arg>
         </onTeamAutoMatch>
@@ -585,10 +573,51 @@
             <Arg>           TEAMTARGET       </Arg>
         </onGetAllTeamList>
 
-        <onUnblockTeamMemberMisc>
+        <onSwitchTeamMicsMode>
+            <Arg>   TEAMID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+        </onSwitchTeamMicsMode>
+
+        <onSyncAllTeamMemberMicsStatus>
+            <Arg>   TEAMID    </Arg>
+            <!-- on -->
+            <Arg>   AVATARGBID_LIST     </Arg>
+            <!-- off -->
+            <Arg>   AVATARGBID_LIST     </Arg>
+            <!-- block -->
+            <Arg>   AVATARGBID_LIST     </Arg>
+        </onSyncAllTeamMemberMicsStatus>
+
+        <onTurnOnTeamMemberMics>
+            <Arg>   PLAYER_GBID     </Arg>
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-        </onUnblockTeamMemberMisc>
+        </onTurnOnTeamMemberMics>
+
+        <onTurnOffTeamMemberMics>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <!-- 是否因队长禁言被闭麦 -->
+            <Arg>   BOOL        </Arg>
+        </onTurnOffTeamMemberMics>
+
+        <onUnblockTeamMemberMics>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+        </onUnblockTeamMemberMics>
+
+        <onBlockAllTeamMemberMics>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   TEAMID      </Arg>
+        </onBlockAllTeamMemberMics>
+
+        <onUnblockAllTeamMemberMics>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   TEAMID      </Arg>
+        </onUnblockAllTeamMemberMics>
 
         <onDelTeamMember>
             <Arg>           PLAYER_GBID     </Arg>

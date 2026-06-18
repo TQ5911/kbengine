@@ -105,26 +105,8 @@ datas = _tools.RODict({
         "type": (21, 10),
         "effect_value": _tools.ROList([(0.5, 0.5), (1, 1)]),
     }),
-    103401: _tools.RODict({
-        "ID": 103401,
-        "name": "灵剑引道【御极】",
-        "tag": 3,
-        "rarity": 4,
-        "skill_id": 90010020,
-        "type": (24,),
-        "effect_value": _tools.ROList([(90010200,)]),
-    }),
     104201: _tools.RODict({
         "ID": 104201,
-        "name": "符咒召唤【初窥】",
-        "tag": 4,
-        "rarity": 2,
-        "skill_id": 90010010,
-        "type": (11,),
-        "effect_value": _tools.ROList([(2, 2)]),
-    }),
-    104202: _tools.RODict({
-        "ID": 104202,
         "name": "变身【初窥】",
         "tag": 4,
         "rarity": 2,
@@ -132,23 +114,32 @@ datas = _tools.RODict({
         "type": (11,),
         "effect_value": _tools.ROList([(2, 2)]),
     }),
+    104202: _tools.RODict({
+        "ID": 104202,
+        "name": "符咒召唤【精通】",
+        "tag": 4,
+        "rarity": 2,
+        "skill_id": 90010010,
+        "type": (11, 16),
+        "effect_value": _tools.ROList([(2, 2), (3, 3)]),
+    }),
     104301: _tools.RODict({
         "ID": 104301,
-        "name": "符咒召唤【彻悟】",
-        "tag": 4,
-        "rarity": 3,
-        "skill_id": 90010010,
-        "type": (13,),
-        "effect_value": _tools.ROList([(64001304,)]),
-    }),
-    104302: _tools.RODict({
-        "ID": 104302,
         "name": "变身【彻悟】",
         "tag": 4,
         "rarity": 3,
         "skill_id": 90010012,
         "type": (13,),
         "effect_value": _tools.ROList([(64001305,)]),
+    }),
+    104401: _tools.RODict({
+        "ID": 104401,
+        "name": "符咒召唤【御极】",
+        "tag": 4,
+        "rarity": 4,
+        "skill_id": 90010010,
+        "type": (13,),
+        "effect_value": _tools.ROList([(64001304,)]),
     }),
     105201: _tools.RODict({
         "ID": 105201,
@@ -309,8 +300,8 @@ datas = _tools.RODict({
         "tag": 9,
         "rarity": 4,
         "skill_id": 90010035,
-        "type": (13,),
-        "effect_value": _tools.ROList([(64001307,)]),
+        "type": (24,),
+        "effect_value": _tools.ROList([(90010350,)]),
     }),
     110201: _tools.RODict({
         "ID": 110201,
@@ -339,11 +330,11 @@ datas = _tools.RODict({
         "type": (22, 13),
         "effect_value": _tools.ROList([(0.1, 0.1), (64001310,)]),
     }),
-    110401: _tools.RODict({
-        "ID": 110401,
-        "name": "灵剑旋舞【御极】",
+    110302: _tools.RODict({
+        "ID": 110302,
+        "name": "灵剑旋舞【彻悟】",
         "tag": 10,
-        "rarity": 4,
+        "rarity": 3,
         "skill_id": 90010055,
         "type": (24,),
         "effect_value": _tools.ROList([(90010550,)]),
@@ -407,6 +398,15 @@ datas = _tools.RODict({
         "name": "燕飞剑影【彻悟】",
         "tag": 12,
         "rarity": 3,
+        "skill_id": 90010060,
+        "type": (13,),
+        "effect_value": _tools.ROList([(64001318,)]),
+    }),
+    112401: _tools.RODict({
+        "ID": 112401,
+        "name": "燕飞剑影【御极】",
+        "tag": 12,
+        "rarity": 4,
         "skill_id": 90010060,
         "type": (24,),
         "effect_value": _tools.ROList([(90010600,)]),
@@ -528,8 +528,8 @@ datas = _tools.RODict({
         "type": (13,),
         "effect_value": _tools.ROList([(64000609,)]),
     }),
-    203402: _tools.RODict({
-        "ID": 203402,
+    203401: _tools.RODict({
+        "ID": 203401,
         "name": "闪电链【御极】",
         "tag": 3,
         "rarity": 4,
@@ -555,8 +555,8 @@ datas = _tools.RODict({
         "type": (4, 11),
         "effect_value": _tools.ROList([(5, 5), (3, 3)]),
     }),
-    204303: _tools.RODict({
-        "ID": 204303,
+    204302: _tools.RODict({
+        "ID": 204302,
         "name": "潮汐涌动【彻悟】",
         "tag": 4,
         "rarity": 3,
@@ -753,8 +753,8 @@ datas = _tools.RODict({
         "type": (16, 10),
         "effect_value": _tools.ROList([(4, 4), (1, 1)]),
     }),
-    210302: _tools.RODict({
-        "ID": 210302,
+    210303: _tools.RODict({
+        "ID": 210303,
         "name": "雷链束缚【彻悟】",
         "tag": 10,
         "rarity": 3,
@@ -762,8 +762,8 @@ datas = _tools.RODict({
         "type": (22, 13),
         "effect_value": _tools.ROList([(0.1, 0.1), (64000611,)]),
     }),
-    210303: _tools.RODict({
-        "ID": 210303,
+    210304: _tools.RODict({
+        "ID": 210304,
         "name": "雷链束缚【彻悟】",
         "tag": 10,
         "rarity": 3,
@@ -834,8 +834,8 @@ datas = _tools.RODict({
         "type": (1, 22),
         "effect_value": _tools.ROList([(0.08, 0.08), (0.2, 0.2)]),
     }),
-    212401: _tools.RODict({
-        "ID": 212401,
+    212402: _tools.RODict({
+        "ID": 212402,
         "name": "炽热火墙【御极】",
         "tag": 12,
         "rarity": 4,
@@ -987,8 +987,8 @@ datas = _tools.RODict({
         "type": (16, 1),
         "effect_value": _tools.ROList([(2, 2), (0.05, 0.05)]),
     }),
-    304304: _tools.RODict({
-        "ID": 304304,
+    304303: _tools.RODict({
+        "ID": 304303,
         "name": "鸣龙心法【彻悟】",
         "tag": 4,
         "rarity": 3,
@@ -996,8 +996,8 @@ datas = _tools.RODict({
         "type": (22, 14),
         "effect_value": _tools.ROList([(0.15, 0.15), (64000717, 2)]),
     }),
-    304401: _tools.RODict({
-        "ID": 304401,
+    304402: _tools.RODict({
+        "ID": 304402,
         "name": "鸣龙心法【御极】",
         "tag": 4,
         "rarity": 4,
@@ -1185,8 +1185,8 @@ datas = _tools.RODict({
         "type": (1, 16),
         "effect_value": _tools.ROList([(0.05, 0.05), (3, 3)]),
     }),
-    310304: _tools.RODict({
-        "ID": 310304,
+    310305: _tools.RODict({
+        "ID": 310305,
         "name": "力劈山川【彻悟】",
         "tag": 10,
         "rarity": 3,
@@ -1194,8 +1194,8 @@ datas = _tools.RODict({
         "type": (22, 17),
         "effect_value": _tools.ROList([(0.1, 0.1), (0.1, 0.1)]),
     }),
-    310305: _tools.RODict({
-        "ID": 310305,
+    310306: _tools.RODict({
+        "ID": 310306,
         "name": "力劈山川【彻悟】",
         "tag": 10,
         "rarity": 3,
@@ -1266,8 +1266,8 @@ datas = _tools.RODict({
         "type": (16, 6),
         "effect_value": _tools.ROList([(4, 4), (0.2, 0.2)]),
     }),
-    312402: _tools.RODict({
-        "ID": 312402,
+    312403: _tools.RODict({
+        "ID": 312403,
         "name": "血饮狂刃【御极】",
         "tag": 12,
         "rarity": 4,

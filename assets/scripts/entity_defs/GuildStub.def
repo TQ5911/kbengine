@@ -92,9 +92,9 @@
 
         <syncGuildMineWarToSpaceMgr>
             <Arg>       GUILD_UUID              </Arg>
-            <Arg>       MAILBOX                  </Arg>
+            <Arg>       MAILBOX                 </Arg>
             <Arg>       BOOL                    </Arg>
+            <Arg>       PYTHON                  </Arg>
         </syncGuildMineWarToSpaceMgr>
-
     </BaseMethods>
 </root>

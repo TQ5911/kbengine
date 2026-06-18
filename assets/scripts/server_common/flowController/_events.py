@@ -13,6 +13,7 @@ import gametimer
 import random
 import utils
 import math
+import formula
 
 import ep_ctrl
 
@@ -62,6 +63,7 @@ __all__ = [
 
     'getCommonReleaseKey',
     'DungeonRebornPosReleaseEvent',
+    'DungeonInnerDemonReleaseEvent',
 ]
 
 
@@ -360,6 +362,92 @@ class WaitingTaskInProgressEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReload
     def getTaskKey(task_id):
         return 'task_inprogress_{}'.format(task_id)
 
+class DungeonInnerDemonReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+
+    __selfParams__ = ('innerDemonGIDs',)
+    __ref_params__ = ('dungeonNo', 'spaceNo')
+
+    def __init__(self, eventId, controller, innerDemonGIDs, eventHandler=None, **kwargs):
+        super(DungeonInnerDemonReleaseEvent, self).__init__(eventId, controller, eventHandler, **kwargs)
+        self.putArgument('innerDemonGIDs', innerDemonGIDs)
+
+    def handleProcessActivated(self, srcE, srcIdx, idx, obj, **refParams):
+        dungeonNo = refParams['dungeonNo']     # dungeonNo get from ref
+        spaceNo = refParams['spaceNo']
+        innerDemonGIDs = self.fetchArgument('innerDemonGIDs')
+        overwriteProps = self.fetchArgument('overwriteProps', {})
+        ifSetBoss = self.fetchArgument('ifSetBoss', False)
+        initState = self.fetchArgument('initState', 0)
+        spaceMgr = self.controller.owner
+        dunAllDatas = utils.getDunModuleData(dungeonNo)
+        
+        LOG_WARN("DungeonInnerDemonReleaseEvent", overwriteProps, innerDemonGIDs, dungeonNo, spaceNo, spaceMgr.dungeonPlayMode)
+        if len(innerDemonGIDs) != 1:
+            LOG_ERR('DungeonInnerDemonReleaseEvent:: no entityId', spaceMgr.spaceNo, dungeonNo, self.id, innerDemonGIDs)
+            return
+        if not dunAllDatas:
+            LOG_ERR('DungeonInnerDemonReleaseEvent:: no dunAllDatas', spaceMgr.spaceNo, dungeonNo, self.id, innerDemonGIDs)
+            return
+        flagId = innerDemonGIDs[0]
+        dunData = dunAllDatas.get(str(flagId), {})
+        if not dunData:
+            LOG_ERR('handleReleaseInnerDemon:: no dunData', flagId)
+            return
+        
+        position = (dunData['PosX'], dunData['PosY'], dunData['PosZ'])
+        direction = (0.0, 0.0, dunData['Dir'] * math.pi / 180)
+
+        for pid in spaceMgr.players:
+            _ent = KBEngine.entities.get(pid)
+            if not _ent:
+                continue
+
+            cloneProps = _ent.cloneAvatarProps(gameconst.AVATAR_REPLICA_TYPE_INNER_DEMON)
+            if True:
+                dunDataProps = dunData.get('Props', {})
+                mProps = {
+                    'spaceNo': spaceNo,
+                    'replicaId': dunData['EntityID'],
+                    'spaceMgrId': spaceMgr.id,
+                    'spaceMgrBox': spaceMgr,
+                    'position': position,
+                    'direction': direction,
+                    'aiName': 0,
+                    'pathId': dunDataProps.get('PathID', 0) or 0,
+                    'dungeonFlagId': flagId,
+                    'gameEntityId': next(utils.genGameEntityId(flagId, 1), 0),
+                    'gameEntityIdentifyID': 0,
+                    'isBoss': ifSetBoss,
+                    'bornState': gameconst.BornStateEnum.flowConvTup[initState] if initState else gameconst.BornStateEnum.none,
+                    'isBossHasSetFlag': True,
+                    'belongActId': dunData.get('ActivityID', 0),
+                    'instanceId': dunData.get('ID'),
+                }
+                mProps.update(cloneProps)
+                #mProps['name'] = mProps.get('avatarName', "") + dunData['DisplayName']
+                mProps['name'] = dunData['DisplayName']
+
+                mProps['tmpProps'] = {}
+                mProps['tmpProps']['overwriteProps'] = overwriteProps
+                for k, v in mProps.items():
+                    LOG_DBG("DungeonInnerDemonReleaseEvent genAvatarReplica mProps", k, v)
+                spaceMgr.getCurrentSpace().createCellLocally('AvatarReplica', position, direction, mProps)
+            else:
+                stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
+                stub.spawnDungeonEntityByGameEntityId(spaceNo, innerDemonGIDs, 1, _ent.level,
+                                                     {'overwriteProps': overwriteProps, 'ifSetBoss': ifSetBoss,
+                                                      'initState': initState, 'eventId': self.id, 'cloneProps': cloneProps})
+
+        super(DungeonInnerDemonReleaseEvent, self).handleProcessActivated(
+            srcE, srcIdx, idx, obj, **refParams)
+        spaceMgr.flowCtrrlDungeonEntityReleaseCompleteByEventId(innerDemonGIDs, self.id)
+
+    def fetchWaitingKey(self, ctx):
+        return self.getInnerDemonReleaseKey(self.id, self.fetchArgument('innerDemonGIDs', []))
+
+    @staticmethod
+    def getInnerDemonReleaseKey(eventId, innerDemonGIDs):
+        return getCommonReleaseKey(eventId, innerDemonGIDs)
 
 class DungeonMonsterReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
 
@@ -501,7 +589,7 @@ class DungeonCollectionBeCollectedEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHo
             _isCollected = False
             for _collGID in _collGIDs:
                 _collGID = "cbid{}".format(_collGID) if usePrototypeID else _collGID
-                _collNum = _spaceMgr.collBeCollectedDict.get(_collGID, 0)
+                _collNum = _spaceMgr.collBeCollectedDic.get(_collGID, 0)
                 if _collNum > 0:
                     _isCollected = True
                     break
@@ -1242,8 +1330,8 @@ class DungeonValueCheckHoldEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReload
             waitingArgs=_w_args,
             waitingKwargs=_w_kwargs)
         m_varIds = self.fetchArgument('varIds', [])
-        for m_varId in m_varIds:
-            self._controller.waitingForDungeonSpaceVarChangeCheck(self, ctx, m_varId)
+        for mVarId in m_varIds:
+            self._controller.waitingForDungeonSpaceVarChangeCheck(self, ctx, mVarId)
 
 
     def cancelWait(self, ctx):
@@ -1251,12 +1339,12 @@ class DungeonValueCheckHoldEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReload
 
         ctrl = self.controller
 
-        for m_varId in m_varIds:
+        for mVarId in m_varIds:
             _popList = []
             _eventList = ctrl.waitingsDict\
                 .get(ctrl.GLOBAL_EVENT_KEY, {})\
                 .get(ctrl.DUNGEON_SPACE_VAR_CHECK_KEY, {})\
-                .get(m_varId)
+                .get(mVarId)
 
             if not _eventList:
                 continue
@@ -1342,7 +1430,7 @@ class AnyPlayerCinemaPlayEndedEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRel
             if self.eventCtrlId > 0:
                 spaceMgr.cancelTimerCB(
                     self.eventCtrlId, gametimer.TIMER_TAG_EP_CINEMA_END_TIMEOUT)
-            self.eventCtrlId = spaceMgr.toCallbackAfter(
+            self.eventCtrlId = spaceMgr.asyncCallbackAfter(
                 delay, gametimer.TIMER_TAG_EP_CINEMA_END_TIMEOUT
             )._onAnyPlayerCinemaPlayEndedTimeout(cinemaPlayID, self.id)
 

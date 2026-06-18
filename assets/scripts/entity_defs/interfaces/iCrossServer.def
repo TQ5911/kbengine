@@ -121,6 +121,16 @@
             <Arg>           METHOD_ARGS             </Arg>
         </beSyncMethodCallFromCrossServerBase>
 
+        <syncMethodCallToCrossServerBase>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToCrossServerBase>
+
+        <beSyncMethodCallFromLocalServerBase>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromLocalServerBase>
+
         <syncMethodCallToLocalServerCell>
             <Arg>           METHOD_NAME             </Arg>
             <Arg>           METHOD_ARGS             </Arg>
@@ -181,6 +191,11 @@
             <Arg>           SERVER_ID               </Arg>
             <Arg>           UINT8                   </Arg>
         </beforeReqCrossServer>
+
+        <beSyncMethodCallFromCrossServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromCrossServerCell>
     </CellMethods>
 
     <ClientMethods>

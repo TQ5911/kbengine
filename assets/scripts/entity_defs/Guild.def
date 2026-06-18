@@ -107,6 +107,12 @@
             <Persistent>    true            </Persistent>
         </desc>
 
+        <publicDesc>
+            <Type>          UNICODE         </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </publicDesc>
+
         <guildName>
             <Type>          UNICODE         </Type>
             <Flags>         BASE            </Flags>
@@ -320,7 +326,7 @@
 
         <doSendGuildChatMsg>
             <Arg>       CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>       UNICODE                     </Arg>
+            <Arg>       CHAT_MSG_DATA                     </Arg>
         </doSendGuildChatMsg>
 
         <doDealGuildApply>
@@ -335,6 +341,12 @@
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       UNICODE                 </Arg>
         </doModifyGuildDesc>
+
+        <doModifyGuildPublicDesc>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       UNICODE                 </Arg>
+        </doModifyGuildPublicDesc>
 
         <doModifyMemberJob>
             <Arg>       PLAYER_GBID             </Arg>
@@ -716,16 +728,20 @@
         <getGuildMineWarForRegister>
             <Arg>       MAILBOX                  </Arg>
             <Arg>       BOOL                    </Arg>
+            <Arg>       PYTHON                  </Arg>
         </getGuildMineWarForRegister>
+
         <reqShareBonusFromMineWar>
             <Arg>       LINE_NO                   </Arg>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
             <Arg>       MAILBOX                 </Arg>
         </reqShareBonusFromMineWar>
+
         <playerGetGuildInfo>
             <Arg>       MAILBOX                 </Arg>
         </playerGetGuildInfo>
+
         <openGuildChallenge>
             <Arg>       PLAYER_GBID      </Arg>
             <Arg>       MAILBOX          </Arg>
@@ -835,5 +851,11 @@
             <Arg>       ARRAY   <of>    GUILD_AND_RELATION          </of>   </Arg>
             <Arg>       ENTITYCALL          </Arg>
         </onGetGuildRelationAll>
+
+        <tryApplyInviteGuild>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       UINT8            </Arg>
+            <Arg>       UINT8            </Arg>
+        </tryApplyInviteGuild>
     </BaseMethods>
 </root>

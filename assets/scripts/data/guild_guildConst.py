@@ -750,5 +750,49 @@ datas = _tools.RODict({
     "guild_relieveUnionMail": _tools.RODict({
         "key": "guild_relieveUnionMail",
         "value": 37001024,
+    }),
+    "guild_descName": _tools.RODict({
+        "key": "guild_descName",
+        "value": "帮会宗旨",
+    }),
+    "guild_publicDescName": _tools.RODict({
+        "key": "guild_publicDescName",
+        "value": "帮会宣言",
+    }),
+    "guild_modifyDescTip": _tools.RODict({
+        "key": "guild_modifyDescTip",
+        "value": "点击输入{0}",
+    }),
+    "guild_conversionRate": _tools.RODict({
+        "key": "guild_conversionRate",
+        "value": 80,
+    }),
+    "guild_conversionGoldLimit": _tools.RODict({
+        "key": "guild_conversionGoldLimit",
+        "value": 1000,
+    }),
+    "guild_gameplayPoints": _tools.RODict({
+        "key": "guild_gameplayPoints",
+        "value": ([1, 3], [2, 1]),
+    }),
+    "guild_dividendTime": _tools.RODict({
+        "key": "guild_dividendTime",
+        "value": 5,
+    }),
+    "guild_commissionOpen": _tools.RODict({
+        "key": "guild_commissionOpen",
+        "value": 3,
+    }),
+    "guild_commissionCloseMsg": _tools.RODict({
+        "key": "guild_commissionCloseMsg",
+        "value": 54003276,
+    }),
+    "guild_lackSufficientTermMsg": _tools.RODict({
+        "key": "guild_lackSufficientTermMsg",
+        "value": 54003277,
+    }),
+    "guild_dividendConversionGoldMail": _tools.RODict({
+        "key": "guild_dividendConversionGoldMail",
+        "value": 37002018,
     })
 })

@@ -66,7 +66,7 @@ datas ={
         1025,
         1205,
         1210,
-        1228,
+        1276,
         1208
       ]
     }
@@ -333,7 +333,6 @@ datas ={
       40024025,
       40024026,
       40024027,
-      40024028,
       40024029,
       40024030,
       40024031,
@@ -933,7 +932,11 @@ datas ={
     "posY": 81.0,
     "posZ": 347.0,
     "angle": 259,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1275
+      ]
+    }
   },
   "1150": {
     "type": "createBreakAwayStuckPos",
@@ -1411,31 +1414,6 @@ datas ={
     ],
     "transition": {}
   },
-  "1228": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      40020156
-    ],
-    "compare": 5,
-    "restNum": 0,
-    "usePrototypeID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1229
-      ]
-    }
-  },
-  "1229": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010016,
-    "transition": {
-      "finished": [
-        1143
-      ]
-    }
-  },
   "1230": {
     "type": "popupdialog",
     "entityID": [
@@ -1505,7 +1483,7 @@ datas ={
     "num": 1,
     "lv": "8",
     "initState": 0,
-    "hp": 10000,
+    "hp": 6000,
     "minAtk": 0,
     "maxAtk": 0,
     "ifSetBoss": 0,
@@ -1513,20 +1491,13 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1244,
         1250,
         1218,
         1224,
-        1256,
         1257,
         1263
       ]
     }
-  },
-  "1244": {
-    "type": "taskUndertake",
-    "taskID": 86060090,
-    "transition": {}
   },
   "1246": {
     "type": "dungeonTaskForceComplete",
@@ -1587,11 +1558,6 @@ datas ={
       40024035
     ],
     "dialogID": 19900510,
-    "transition": {}
-  },
-  "1256": {
-    "type": "taskUndertake",
-    "taskID": 86060087,
     "transition": {}
   },
   "1257": {
@@ -1808,5 +1774,21 @@ datas ={
       40020162
     ],
     "transition": {}
+  },
+  "1275": {
+    "type": "taskUndertake",
+    "taskID": 86030008,
+    "transition": {}
+  },
+  "1276": {
+    "type": "taskFinished",
+    "taskID": 86060089,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1143
+      ]
+    }
   }
 }

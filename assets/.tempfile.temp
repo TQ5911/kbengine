@@ -8,7 +8,7 @@
     -->
 
     <trace_packet>
-        <debug_type> 0 </debug_type>
+        <debug_type> 4 </debug_type>
     </trace_packet>
 
     <game>
@@ -22,13 +22,14 @@
             <subType1> 2 </subType1>
             <subType2> 1 </subType2>
         </branchLineCnt>
-
+        <maxCellAvatarCount> 500 </maxCellAvatarCount>
         <serverOpenTime> 1764709200 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
         <giftCodeUrl> https://test.api.hzyunxingu.cn/user/api/v1/redeem-code/use </giftCodeUrl>
-        <tapTapBindPhoneReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/taptap/send-code </tapTapBindPhoneReqUrl>
-        <tapTapBindPhoneVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/taptap/verify-code </tapTapBindPhoneVerifyUrl>
+        <tapTapBindPhoneReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/third/send-code </tapTapBindPhoneReqUrl>
+        <tapTapBindPhoneVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/third/bind-phone/verify-code </tapTapBindPhoneVerifyUrl>
+        <reportUrl> https://test.api.hzyunxingu.cn/user/api/v1/role-report/submit </reportUrl>
 
         <appVersion> 0.0.0.0 </appVersion>
         <patchVersion> 0.0.0.0 </patchVersion>
@@ -58,19 +59,25 @@
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
         
         <crossServerInfo>
-            <item crossServerId='20228'></item>
+            <item crossServerId='10003'></item>
         </crossServerInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <orderServerHost> 192.168.10.13:2011</orderServerHost>
 
-        <redisServer> 192.168.10.12 </redisServer>
+        <redisServer> r-bp1g8xi5b70yls95di.redis.rds.aliyuncs.com </redisServer>
         <redisPort> 6379 </redisPort>
+        <redisPassword> FYWm61ZbnK </redisPassword>
+        <redisUsername> fengyan </redisUsername>
 
         <elasticServer> 192.168.10.13 </elasticServer>
         <elasticPort> 9200 </elasticPort>
 
         <leaseServerHost> 192.168.10.13:2015 </leaseServerHost>
+
+        <!-- 等待场景服配置 -->
+        <isWaitMapServer> false </isWaitMapServer>
+        <waitMapMaxOnline> 200 </waitMapMaxOnline>
 
         <gmVerifyByGroup> 0 </gmVerifyByGroup>
         <debugLevel> 1 </debugLevel>
@@ -98,6 +105,7 @@
     </game>
 
     <yidun>
+        <enable> 0 </enable>
         <checkUrl> http://ir-open.dun.163.com/v6/risk/check </checkUrl>
         <business_Windows> 0579d8235c3d82f2aa82c65a83af98d5 </business_Windows>
         <business_Android> ab9004cbf846e2a65e09b8ac45cd9042 </business_Android>

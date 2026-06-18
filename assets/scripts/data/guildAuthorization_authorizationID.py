@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     0: _tools.RODict({
         "ID": 0,
-        "authorization": "appointPresident",
+        "authorization": "guildChannelCD",
     }),
     1: _tools.RODict({
         "ID": 1,
@@ -110,7 +110,27 @@ datas = _tools.RODict({
     23: _tools.RODict({
         "ID": 23,
         "authorization": "guildChallenge",
+    }),
+    24: _tools.RODict({
+        "ID": 24,
+        "authorization": "teamInvitation",
+    }),
+    25: _tools.RODict({
+        "ID": 25,
+        "authorization": "guildChatRoomCreate",
+    }),
+    26: _tools.RODict({
+        "ID": 26,
+        "authorization": "guildChatMicMode",
+    }),
+    27: _tools.RODict({
+        "ID": 27,
+        "authorization": "guildChatMuteMode",
+    }),
+    28: _tools.RODict({
+        "ID": 28,
+        "authorization": "guildChatInvitation",
     })
 })
 minKey = 0
-maxKey = 23
+maxKey = 28

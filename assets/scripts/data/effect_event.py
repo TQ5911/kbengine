@@ -620,7 +620,7 @@ def _13090320(self, target, context):
 
 def _13090321(self, target, context):
     # 只对玩家角色生效
-    if not getattr(self, "IsAvatar", False):
+    if not getattr(self, "IsAvatar", False) and not getattr(self, "IsAvatarReplica", False) :
         return
     # 防止重复触发
     if hasattr(context, "has_added_ultra_power"):
@@ -892,18 +892,25 @@ def _13090361(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090362(self, target, context):
+
+    # 如果身上存在 BuffTag 48 的控制，则不生效
+    if self.hasBuffTag(48):
+        return
+
     self.removeStates([
         gameconst.StateEnum.Frozen,
         gameconst.StateEnum.Stunned,
         gameconst.StateEnum.Silenced,
         gameconst.StateEnum.Snare,
         gameconst.StateEnum.Down,
+    ])
 
-                      ])
-    removeBuffTag = [14,15,16,17,56]
+    removeBuffTag = [14, 15, 16, 17, 56]
+
     for selectTag in removeBuffTag:
         if self.hasBuffTag(selectTag):
             self.removeBuffByTag(selectTag)
+
     self.addBuffBySkill(self, context, 64002130, 1, 1.0, 2)
 
 def _13090363(self, target, context):
@@ -1071,22 +1078,13 @@ def _13090369(self, target, context):
     return True
 
 def _13090370(self, target, context):
+    #lockInfo = self.getTempMiscProp(gameconst.EntityPropsEnum.lockMinHp)
+    #if lockInfo:
+    #    return
+    #self.lockMinHp(self, context, 1, 3)
 
-    if context.actionStage == 0:
-
-        lockInfo = self.getTempMiscProp(gameconst.EntityPropsEnum.lockMinHp)
-        if lockInfo:
-            return
-        self.lockMinHp(self, context, 0.01, -1)
-
-        # 添加Buff
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
-
-        return self.callAfterDelay(target, context, 3)
-
-    elif context.actionStage == 1:
-
-        self.removeLockMinHp(self, context)
+    # 添加Buff
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090371(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -2202,7 +2200,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090336,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 120.0
     }),
     13090337: _tools.RODict({
         "ID": 13090337,
@@ -2470,11 +2468,11 @@ datas = _tools.RODict({
     }),
     13090370: _tools.RODict({
         "ID": 13090370,
-        "Event": "onHPModify",
+        "Event": "onImmuneDie",
         "EventSourceType": 1,
         "Action": _13090370,
         "Target": "self",
-        "EventCD": 60.0
+        "EventCD": 120.0
     }),
     13090371: _tools.RODict({
         "ID": 13090371,

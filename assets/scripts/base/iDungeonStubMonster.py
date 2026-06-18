@@ -17,58 +17,53 @@ import dungeon
 
 import creep_base as CB
 import gamePlay_gamePlay as DDL
-import gamePlay_set as GP_S
+import gamePlay_set as GP_SD
 # import dungeon_dungeonMonster as DDMD
 import NPC_NPC as NPC_DATA
 
-import formula_generalFormula as F_GF
+import formula_generalFormula as F_GFD
 
 
-def avgLevel(averageLevel):
-    return F_GF.datas[GP_S.datas["arverageLevelFormularID"]["value"]]['serverFormula']({'arverageLevel': averageLevel})
+def calcAvgLevel(averageLevel):
+    _fomulaId = GP_SD.datas["arverageLevelFormularID"]["value"]
+    return F_GFD.datas[_fomulaId]['serverFormula']({'arverageLevel': averageLevel})
 
 
 class IDungeonStubMonster(object):
-    DEFAULT_MAX_ENT_LOAD_NUM = 5
     DEFAULT_DIRECTION = (0, 0, 0)
+    DEFAULT_MAX_ENT_LOAD_NUM = 5
 
-    EACH_TICK_TOTAL_CREATE_ENTITY_COUNT = 20
     EACH_TICK_SAPCE_CREATE_ENTITY_COUNT = 5
-
-    def genNextGameEntityIdentifyID(self):
-        self.crtGameEntityIdentifyID += 1
-        if self.crtGameEntityIdentifyID > gameconst.UINT32_MAX:
-            self.crtGameEntityIdentifyID = 0
-        return self.crtGameEntityIdentifyID
+    EACH_TICK_TOTAL_CREATE_ENTITY_COUNT = 20
 
     def onTimerCreateEntity(self):
         _currentTotalCreateEntityCount = 0
-        for spaceNo, sVal in self.spaces.items():
+        for _spaceNo, _sVal in self.spaces.items():
             try:
                 if _currentTotalCreateEntityCount > self.EACH_TICK_TOTAL_CREATE_ENTITY_COUNT:
                     break
 
-                if not sVal.isNeedCreateEntity():
+                if not _sVal.isNeedCreateEntity():
                     continue
 
                 _currentSpaceCreateEntityCount = 0
-                if not sVal.isCreatingEntity():
-                    sVal.makeNextEntityGeneratorValInCreatingQueue()
+                if not _sVal.isCreatingEntity():
+                    _sVal.makeNextEntityGeneratorValInCreatingQueue()
 
-                for genVal in sVal.dungeonEntityCreatingQueue.values():
-                    for entVal in genVal.entityList:
+                for _genVal in _sVal.dungeonEntityCreatingQueue.values():
+                    for _entVal in _genVal.entityList:
                         if _currentSpaceCreateEntityCount > self.EACH_TICK_SAPCE_CREATE_ENTITY_COUNT:
                             break
 
                         if _currentTotalCreateEntityCount > self.EACH_TICK_TOTAL_CREATE_ENTITY_COUNT:
                             break
 
-                        if entVal.loadStatus != gameconst.DungeonEntityLoadStatus.UNLOAD:
+                        if _entVal.loadStatus != gameconst.DungeonEntityLoadEnum.UNLOAD:
                             continue
 
-                        ret = self._createDungeonEntityInQueue(sVal, genVal, entVal)
+                        ret = self._createDungeonEntityInQueue(_sVal, _entVal)
                         if not ret:
-                            gameengine.panicStack("onTimeCreateEntity:: createEntityErr, ", spaceNo, entVal, genVal.__dict__)
+                            gameengine.panicStack("onTimeCreateEntity:: createEntityErr, ", _spaceNo, _entVal, _genVal.__dict__)
                             continue
 
                         _currentSpaceCreateEntityCount += 1
@@ -80,17 +75,23 @@ class IDungeonStubMonster(object):
                     break
 
             except Exception as e:
-                sVal.clearEntityGeneratorQueue()
+                _sVal.clearEntityGeneratorQueue()
                 raise e
 
-    def _createDungeonEntityInQueue(self, spaceVal, genVal, entVal):
+    def genNextGameEntityIdentifyID(self):
+        self.crtGameEntityID += 1
+        if self.crtGameEntityID > gameconst.UINT32_MAX:
+            self.crtGameEntityID = 0
+        return self.crtGameEntityID
+
+    def _createDungeonEntityInQueue(self, spaceVal, entVal):
         if entVal.entType and entVal.entProps:
             # only init with cell
-            pos = entVal.entProps.pop('position')
-            direction = entVal.entProps.pop('direction')
-            self.createCellEntity(spaceVal.spaceNo, entVal.entType, pos, direction, entVal.entProps)
+            _pos = entVal.entProps.pop('position')
+            _direction = entVal.entProps.pop('direction')
+            self.createCellEntity(spaceVal.spaceNo, entVal.entType, _pos, _direction, entVal.entProps)
 
-            entVal.loadStatus = gameconst.DungeonEntityLoadStatus.LOADING
+            entVal.loadStatus = gameconst.DungeonEntityLoadEnum.LOADING
             return True
 
         return False
@@ -104,10 +105,10 @@ class IDungeonStubMonster(object):
             LOG_ERR('spawnDungeonEntityByGameEntityId:: spaceNo not founed', spaceNo)
             return
 
-        sVal = self.spaces[spaceNo]
-        dunAllDatas = utils.getDunModuleData(self.dungeonNo)
+        _sVal = self.spaces[spaceNo]
+        _dunAllDatas = utils.getDunModuleData(self.dungeonNo)
 
-        gens = []
+        _gens = []
 
         checkCreateUniqueness = extra.get('checkCreateUniqueness', False)
         fromEventId = extra.get('eventId', -1)
@@ -115,69 +116,90 @@ class IDungeonStubMonster(object):
         oldnum = num
         for i, flagId in enumerate(flagIds):
             if checkCreateUniqueness:
-                if sVal.isFlagIdInEntityGenerator(flagId):
+                if _sVal.isFlagIdInEntityGenerator(flagId):
                     LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity skip with uniqueness checker", spaceNo, flagId, num, level, extra)
                     continue
 
             sFlagId = str(flagId)
-            if sFlagId not in dunAllDatas:
+            if sFlagId not in _dunAllDatas:
                 LOG_ERR("spawnDungeonEntityByGameEntityId::create Entity flagId missing in dungeon module data",
                           spaceNo, flagId, num, level, extra)
                 continue
 
-            dunData = dunAllDatas[sFlagId]
+            dunData = _dunAllDatas[sFlagId]
             # 初始不加载
             initLoad = dunData.get('Props', {}).get('InitLoad', None)
             if initLoad is not None and initLoad == 0:
                 continue
             
             className = dunData['ClassName']
-            extraVal = {'overwriteProps': extra.get('overwriteProps', {}),
-                        'tmpProps': extra.get('tmpProps', {})}
+            extraVal = {
+                'tmpProps': extra.get('tmpProps', {}),
+                'overwriteProps': extra.get('overwriteProps', {}),
+            }
             #num 小于等于0时读地图编辑器的数量
             if oldnum <= 0 and dunData.get('Props', {}).get('RefreshNum', 0) > 0:
                 num = int(dunData['Props']['RefreshNum'])
             else:
                 num = oldnum
             if className == 'Monster':
-                extraVal.update({'creepAI': 0, 'creepNum': num, 'creepLevel': level})
-                if 'ifSetBoss' in extra:
-                    extraVal['ifSetBoss'] = extra['ifSetBoss']
+                extraVal.update({
+                    'creepNum': num, 
+                    'creepAI': 0, 
+                    'creepLevel': level,
+                })
+
                 if 'initState' in extra:
                     extraVal['initState'] = extra['initState']
+                if 'ifSetBoss' in extra:
+                    extraVal['ifSetBoss'] = extra['ifSetBoss']
                 if 'EntityIDList' in extra:
                     extraVal['EntityID'] = extra['EntityIDList'][i]
-                _gen = self._getMonsterDefArgs(dunAllDatas, spaceNo, flagId, sVal, extraVal)
-                gens.append(_gen)
+                _gen = self._getMonsterDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, extraVal)
+                _gens.append(_gen)
+
+            elif className == 'AvatarReplica':
+                extraVal.update({
+                        'creepAI': 0, 
+                        'creepNum': num, 
+                        'creepLevel': level,
+                        'ifSetBoss': extra.get('ifSetBoss', False),
+                        'initState': extra.get('initState', 0),
+                        'cloneProps': extra.get('cloneProps', {}),
+                    })
+                _gen = self._getAvatarReplicaDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, extraVal)
+                _gens.append(_gen)
 
             elif className == 'Npc':
                 if not dunData.get('Props', {}).get('IsOpen', 1):
-                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity but not open", spaceNo, className, flagId, num, level, extra)
+                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity but not open", 
+                             spaceNo, className, flagId, num, level, extra)
                     continue
-                _gen = self._getNPCDefArgs(dunAllDatas, spaceNo, flagId, sVal, num,
+                _gen = self._getNPCDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, num,
                                            npcLevel=level, ifSetBoss=extra.get('ifSetBoss', False), extraVal=extraVal)
-                gens.append(_gen)
+                _gens.append(_gen)
 
             elif className == 'Collection':
                 if not dunData.get('Props', {}).get('IsOpen', 1):
-                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity but not open", spaceNo, className, flagId, num, level, extra)
+                    LOG_WARN("spawnDungeonEntityByGameEntityId::create Entity but not open", 
+                             spaceNo, className, flagId, num, extra, level)
                     continue
-                extraVal.update({'CollectionType': extra.get('CollectionType', gameconst.CollectionType.NORMAL)})
-                _gen = self._getCollDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, extraVal=extraVal)
-                gens.append(_gen)
+                extraVal.update({'CollectionType': extra.get('CollectionType', gameconst.CollectionType.NORMAL),})
+                _gen = self._getCollDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, num, extraVal=extraVal)
+                _gens.append(_gen)
 
             elif className in ('Barrier', 'AirWall'):
-                _gen = self._getAirWallDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, extraVal=extraVal)
-                gens.append(_gen)
+                _gen = self._getAirWallDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, num, extraVal=extraVal)
+                _gens.append(_gen)
 
             elif className == 'Teleporter':
-                targetEntityGID, trapRange = extra.get('targetEntityGID', -1), extra.get('trapRange', 0)
-                _gen = self._getTelDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, targetEntityGID, trapRange, extraVal=extraVal)
-                gens.append(_gen)
+                _targetEntityGID, _trapRange = extra.get('targetEntityGID', -1), extra.get('trapRange', 0)
+                _gen = self._getTelDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, num, _targetEntityGID, _trapRange, extraVal=extraVal)
+                _gens.append(_gen)
 
             elif className == 'RebornPos':
-                _gen = self._getRebornPosDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, extraVal=extraVal)
-                gens.append(_gen)
+                _gen = self._getRebornPosDefArgs(_dunAllDatas, spaceNo, flagId, _sVal, num, extraVal=extraVal)
+                _gens.append(_gen)
                 
             else:
                 LOG_ERR('spawnDungeonEntityByGameEntityId:: entityType not support',
@@ -187,13 +209,13 @@ class IDungeonStubMonster(object):
             if not specialClassName:
                 specialClassName = className
 
-        if gens:
+        if _gens:
             genVal = dungeon.DungeonEntityGeneratorVal(
                 genUUID=KBEngine.genUUID64(),
-                entityList=[dungeon.DungeonEntityDefine(entType, entProps) for entType, entProps in itertools.chain(*gens)],
+                entityList=[dungeon.DungeonEntityDefine(_entType, _entProps) for _entType, _entProps in itertools.chain(*_gens)],
                 withBase=False,
                 extra={'flagIds': flagIds, 'className': specialClassName, 'fromEventId': fromEventId})
-            sVal.addEntityGeneratorVal(genVal)
+            _sVal.addEntityGeneratorVal(genVal)
     # =========================================
 
     def _buildDefArgsGen(self, props, flagId, className, dataProps, num):
@@ -201,89 +223,130 @@ class IDungeonStubMonster(object):
 
         def _pkg(k, v, idx):
             if k == 'tmpProps':
-                v = {_k: _v for _k, _v in v.items()}
-                v['createIndex'] = idx
+                _ret = {_k: _v for _k, _v in v.items()}
+                _ret['createIndex'] = idx
             elif k == 'gameEntityId':
-                v = next(gameEntityGen)
+                _ret = next(gameEntityGen)
             elif k == 'gameEntityIdentifyID':
-                v = self.genNextGameEntityIdentifyID()
-            return v
+                _ret = self.genNextGameEntityIdentifyID()
+            else:
+                return v
+
+            return _ret
 
         if num > 1:
-            radius = int(dataProps.get('Radius', 0))
-            tmpProps = {'createCount': num, 'createRadius': radius}
+            _radius = int(dataProps.get('Radius', 0))
+            _tmpProps = {'createCount': num, 'createRadius': _radius}
             props.setdefault('tmpProps', {})
-            props['tmpProps'].update(tmpProps)
+            props['tmpProps'].update(_tmpProps)
 
-        dungeonEntDefs = ((className, {k: _pkg(k, v, i) for k, v in props.items()}) for i in range(1, num+1))
+        _dungeonEntDefs = ((className, {_k: _pkg(_k, _v, _i) for _k, _v in props.items()}) for _i in range(1, num+1))
 
-        return dungeonEntDefs
+        return _dungeonEntDefs
 
     def _getEntityLevel(self, levelFormula, spaceVal):
         if not levelFormula:
             return 1
-        elif not isinstance(levelFormula, str):
-            if isinstance(levelFormula, (int, float)) and levelFormula:
+
+        if not isinstance(levelFormula, str):
+            if isinstance(levelFormula, (int, float)):
                 return int(levelFormula)
-            return avgLevel(spaceVal.spaceLevel)
-        elif levelFormula.isdigit():
+            return calcAvgLevel(spaceVal.spaceLevel)
+
+        if levelFormula.isdigit():
             return int(levelFormula)
-        else:
-            return utils.getValByFormula(levelFormula, {'arverageLevel': spaceVal.spaceLevel,'teamMaxLevel':spaceVal.extraProps.get('maxLevel',1)})
+
+        return utils.getValByFormula(levelFormula, {'arverageLevel': spaceVal.spaceLevel,'teamMaxLevel':spaceVal.extraProps.get('maxLevel',1)})
+
+    def _getAvatarReplicaDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, replicaVal):
+        _dunData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunData.get('Props', {})
+        initState = replicaVal.get('initState', 0)
+        cloneProps = replicaVal.get('cloneProps', {})
+        mProps = {
+            'spaceNo': spaceNo,
+            'replicaId': _dunData['EntityID'],
+            'spaceMgrId': spaceVal.spaceMgr.id,
+            'spaceMgrBox': spaceVal.spaceMgr,
+            'position': (
+                _dunData['PosX'],
+                _dunData['PosY'],
+                _dunData['PosZ']),
+            'direction':  (0.0, 0.0, _dunData['Dir'] * math.pi / 180),
+            'aiName': replicaVal['creepAI'],
+            'pathId': dunDataProps.get('PathID', 0) or 0,
+            'dungeonFlagId': flagId,
+            'gameEntityId': 0,
+            'gameEntityIdentifyID': 0,
+            'isBoss': replicaVal.get('ifSetBoss', False),
+            'bornState': gameconst.BornStateEnum.flowConvTup[initState] if initState else gameconst.BornStateEnum.none,
+            'isBossHasSetFlag': True,
+            'belongActId': _dunData.get('ActivityID', 0),
+            'instanceId': _dunData.get('ID'),
+        }
+        mProps.update(cloneProps)
+        mProps['name'] = mProps.get('avatarName', "") + _dunData['DisplayName']
+
+        mProps.setdefault('tmpProps', {})
+        mProps['tmpProps'].update(replicaVal.get('tmpProps', {}))
+        mProps['tmpProps']['overwriteProps'] = {}
+        mProps['tmpProps']['overwriteProps'].update(replicaVal.get('overwriteProps', {}))
+        return self._buildDefArgsGen(mProps, flagId, 'AvatarReplica', dunDataProps, replicaVal.get('creepNum', 1))
 
     def _getMonsterDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, monsterVal):
-        dunData = dunAllDatas[str(flagId)]
-        dunDataProps = dunData.get('Props', {})
-        initState = monsterVal.get('initState', 0)
+        _dunData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunData.get('Props', {})
+        _initState = monsterVal.get('initState', 0)
 
-        mProps = {'spaceNo': spaceNo,
-                  'monsterId': monsterVal['EntityID'] if 'EntityID' in monsterVal else dunData['EntityID'],
+        _mProps = {'spaceNo': spaceNo,
+                  'monsterId': monsterVal['EntityID'] if 'EntityID' in monsterVal else _dunData['EntityID'],
                   'spaceMgrId': spaceVal.spaceMgr.id,
                   'spaceMgrBox': spaceVal.spaceMgr,
-                  'position': (dunData['PosX'],
-                               dunData['PosY'],
-                               dunData['PosZ']),
-                  'direction':  (0.0, 0.0, dunData['Dir'] * math.pi / 180),
-                  'name': dunData['DisplayName'],
+                  'position': (_dunData['PosX'],
+                               _dunData['PosY'],
+                               _dunData['PosZ']),
+                  'direction':  (0.0, 0.0, _dunData['Dir'] * math.pi / 180),
+                  'name': _dunData['DisplayName'],
                   'aiName': monsterVal['creepAI'],
                   'pathId': dunDataProps.get('PathID', 0) or 0,
                   'dungeonFlagId': flagId,
                   'gameEntityId': 0,
                   'gameEntityIdentifyID': 0,
                   'isBoss': monsterVal.get('ifSetBoss', False),
-                  'bornState': gameconst.BornStateType.flowConvTup[initState] if initState else gameconst.BornStateType.none,
+                  'bornState': gameconst.BornStateEnum.flowConvTup[_initState] if _initState else gameconst.BornStateEnum.none,
                   'isBossHasSetFlag': True,
-                  'belongActId': dunData.get('ActivityID', 0),
-                  'instanceId': dunData.get('ID'),
+                  'belongActId': _dunData.get('ActivityID', 0),
+                  'instanceId': _dunData.get('ID'),
                   }
 
-        mProps.setdefault('tmpProps', {})
-        mProps['tmpProps'].update(monsterVal.get('tmpProps', {}))
-        mProps['tmpProps']['overwriteProps'] = {}
-        mProps['tmpProps']['overwriteProps'].update(monsterVal.get('overwriteProps', {}))
+        _mProps.setdefault('tmpProps', {})
+        _mProps['tmpProps'].update(monsterVal.get('tmpProps', {}))
+        _mProps['tmpProps']['overwriteProps'] = {}
+        _mProps['tmpProps']['overwriteProps'].update(monsterVal.get('overwriteProps', {}))
 
         levelFormula = monsterVal.get('creepLevel', '')
-        mProps.update({'level': self._getEntityLevel(levelFormula, spaceVal)})
+        _mProps.update({'level': self._getEntityLevel(levelFormula, spaceVal)})
         mCount = monsterVal['creepNum']
-        return self._buildDefArgsGen(mProps, flagId, 'Monster', dunDataProps, mCount)
+        return self._buildDefArgsGen(_mProps, flagId, 'Monster', dunDataProps, mCount)
 
-    def _getNPCDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, npcNum, npcLevel=0, ifSetBoss=False, extraVal=None):
+    def _getNPCDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, npcNum,\
+                       npcLevel=0, ifSetBoss=False, extraVal=None):
         extraVal = extraVal or {}
-        dunNPCData = dunAllDatas[str(flagId)]
-        dunDataProps = dunNPCData.get('Props', {})
+        _dunNPCData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunNPCData.get('Props', {})
 
-        npcId = dunNPCData['EntityID']
-        className = 'Npc'
+        npcId = _dunNPCData['EntityID']
+        _className = 'Npc'
 
-        props = {'spaceNo': spaceNo,
+        _props = {'spaceNo': spaceNo,
                  'npcId': npcId,
                  'spaceMgrId': spaceVal.spaceMgr.id,
                  'spaceMgrBox': spaceVal.spaceMgr,
-                 'position': (dunNPCData['PosX'],
-                              dunNPCData['PosY'],
-                              dunNPCData['PosZ']),
-                 'direction': (0.0, 0.0, dunNPCData['Dir'] * math.pi / 180),
-                 'name': dunNPCData['DisplayName'],
+                 'position': (_dunNPCData['PosX'],
+                              _dunNPCData['PosY'],
+                              _dunNPCData['PosZ']),
+                 'direction': (0.0, 0.0, _dunNPCData['Dir'] * math.pi / 180),
+                 'name': _dunNPCData['DisplayName'],
                  'dungeonFlagId': flagId,
                  'gameEntityId': 0,
                  'gameEntityIdentifyID': 0,
@@ -291,142 +354,143 @@ class IDungeonStubMonster(object):
                  'isBossHasSetFlag': True,
                  }
 
-        props.update({'level': self._getEntityLevel(npcLevel, spaceVal)})
+        _props.update({'level': self._getEntityLevel(npcLevel, spaceVal)})
 
-        overwriteProps = extraVal.get('overwriteProps', {})
-        isCNpc = overwriteProps.pop('isCNpc', False)
+        _overwriteProps = extraVal.get('overwriteProps', {})
+        isCNpc = _overwriteProps.pop('isCNpc', False)
         if isCNpc:
-            className = 'CNpc'
-        props.update(overwriteProps)
+            _className = 'CNpc'
+        _props.update(_overwriteProps)
 
-        props.setdefault('tmpProps', {})
+        _props.setdefault('tmpProps', {})
         if extraVal and 'tmpProps' in extraVal:
-            props['tmpProps'].update(extraVal.get('tmpProps', {}))
+            _props['tmpProps'].update(extraVal.get('tmpProps', {}))
 
-        npcAI = NPC_DATA.datas[npcId]['AI']
-        if npcAI:
-            className = 'CNpc'
-            props.update({'aiName': npcAI})
+        _npcAI = NPC_DATA.datas[npcId]['AI']
+        if _npcAI:
+            _className = 'CNpc'
+            _props.update({'aiName': _npcAI})
         else:
-            creepId = NPC_DATA.datas[npcId]['creepID']
-            if creepId and creepId in CB.datas and CB.datas[creepId]['AI']:
-                className = 'CNpc'
+            _creepId = NPC_DATA.datas[npcId]['creepID']
+            if _creepId and _creepId in CB.datas and CB.datas[_creepId]['AI']:
+                _className = 'CNpc'
 
-        return self._buildDefArgsGen(props, flagId, className, dunDataProps, npcNum)
+        return self._buildDefArgsGen(_props, flagId, _className, dunDataProps, npcNum)
 
     def _getCollDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, extraVal=None):
-        dunCollData = dunAllDatas[str(flagId)]
-        dunDataProps = dunCollData.get('Props', {})
+        _dunCollData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunCollData.get('Props', {})
 
-        collId = dunCollData['EntityID']
-        className = 'Collection'
+        collId = _dunCollData['EntityID']
+        _className = 'Collection'
 
-        props = {'spaceNo': spaceNo,
+        _props = {'spaceNo': spaceNo,
                  'collectionId': collId,
                  'spaceMgrId': spaceVal.spaceMgr.id,
                  'spaceMgrBox': spaceVal.spaceMgr,
-                 'position': (dunCollData['PosX'],
-                              dunCollData['PosY'],
-                              dunCollData['PosZ']),
-                 'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
-                 'name': dunCollData['DisplayName'],
+                 'position': (_dunCollData['PosX'],
+                              _dunCollData['PosY'],
+                              _dunCollData['PosZ']),
+                 'direction': (0.0, 0.0, _dunCollData['Dir'] * math.pi / 180),
+                 'name': _dunCollData['DisplayName'],
                  'dungeonFlagId': flagId,
                  'gameEntityId': 0,
                  'gameEntityIdentifyID': 0}
 
         if extraVal and 'CollectionType' in extraVal:
-            props['type'] = extraVal['CollectionType']
+            _props['type'] = extraVal['CollectionType']
 
-        props.setdefault('tmpProps', {})
+        _props.setdefault('tmpProps', {})
         if extraVal and 'tmpProps' in extraVal:
-            props['tmpProps'].update(extraVal.get('tmpProps', {}))
+            _props['tmpProps'].update(extraVal.get('tmpProps', {}))
 
-        return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
+        return self._buildDefArgsGen(_props, flagId, _className, dunDataProps, collNum)
 
     def _getAirWallDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, extraVal=None):
-        dunCollData = dunAllDatas[str(flagId)]
-        dunDataProps = dunCollData.get('Props', {})
+        _dunCollData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunCollData.get('Props', {})
 
-        barrierId = dunCollData['ID']
+        barrierId = _dunCollData['ID']
         className = 'Barrier'
 
-        props = {'spaceNo': spaceNo,
+        _props = {'spaceNo': spaceNo,
                  'barrierId': barrierId,
                  'spaceMgrId': spaceVal.spaceMgr.id,
                  'spaceMgrBox': spaceVal.spaceMgr,
-                 'position': (dunCollData['PosX'],
-                              dunCollData['PosY'],
-                              dunCollData['PosZ']),
-                 'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
-                 'name': dunCollData['DisplayName'],
+                 'position': (_dunCollData['PosX'],
+                              _dunCollData['PosY'],
+                              _dunCollData['PosZ']),
+                 'direction': (0.0, 0.0, _dunCollData['Dir'] * math.pi / 180),
+                 'name': _dunCollData['DisplayName'],
                  'dungeonFlagId': flagId,
                  'gameEntityId': 0,
                  'gameEntityIdentifyID': 0}
 
-        props.setdefault('tmpProps', {})
+        _props.setdefault('tmpProps', {})
         if extraVal and 'tmpProps' in extraVal:
-            props['tmpProps'].update(extraVal.get('tmpProps', {}))
+            _props['tmpProps'].update(extraVal.get('tmpProps', {}))
 
-        return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
+        return self._buildDefArgsGen(_props, flagId, className, dunDataProps, collNum)
 
-    def _getTelDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, targetEntityGID, trapRange, extraVal=None):
-        dunCollData = dunAllDatas[str(flagId)]
-        dunDataProps = dunCollData.get('Props', {})
+    def _getTelDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum,\
+                       targetEntityGID, trapRange, extraVal=None):
+        _dunCollData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunCollData.get('Props', {})
 
-        telId = dunCollData['EntityID']
+        telId = _dunCollData['EntityID']
         className = 'Teleporter'
 
-        props = {'spaceNo': spaceNo,
+        _props = {'spaceNo': spaceNo,
                  'teleporterId': telId,
                  'spaceMgrId': spaceVal.spaceMgr.id,
                  'spaceMgrBox': spaceVal.spaceMgr,
-                 'position': (dunCollData['PosX'],
-                              dunCollData['PosY'],
-                              dunCollData['PosZ']),
-                 'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
-                 'name': dunCollData['DisplayName'],
+                 'position': (_dunCollData['PosX'],
+                              _dunCollData['PosY'],
+                              _dunCollData['PosZ']),
+                 'direction': (0.0, 0.0, _dunCollData['Dir'] * math.pi / 180),
+                 'name': _dunCollData['DisplayName'],
                  'dungeonFlagId': flagId,
                  'gameEntityId': 0,
                  'gameEntityIdentifyID': 0,
                  'dunTelTargetEntityId': targetEntityGID,
                  'dunTelTrapRange': trapRange}
 
-        props.setdefault('tmpProps', {})
+        _props.setdefault('tmpProps', {})
         if extraVal and 'tmpProps' in extraVal:
-            props['tmpProps'].update(extraVal.get('tmpProps', {}))
+            _props['tmpProps'].update(extraVal.get('tmpProps', {}))
 
-        return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
+        return self._buildDefArgsGen(_props, flagId, className, dunDataProps, collNum)
     
     def _getRebornPosDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, extraVal=None):
-        dunCollData = dunAllDatas[str(flagId)]
-        dunDataProps = dunCollData.get('Props', {})
+        _dunCollData = dunAllDatas[str(flagId)]
+        dunDataProps = _dunCollData.get('Props', {})
 
-        rebornPosId = dunCollData['EntityID']
+        rebornPosId = _dunCollData['EntityID']
         className = 'RebornPos'
 
-        props = {'spaceNo': spaceNo,
+        _props = {'spaceNo': spaceNo,
                  'rebornPosId': rebornPosId,
                  'spaceMgrId': spaceVal.spaceMgr.id,
                  'spaceMgrBox': spaceVal.spaceMgr,
-                 'position': (dunCollData['PosX'],
-                              dunCollData['PosY'],
-                              dunCollData['PosZ']),
-                 'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
-                 'name': dunCollData['DisplayName'],
+                 'position': (_dunCollData['PosX'],
+                              _dunCollData['PosY'],
+                              _dunCollData['PosZ']),
+                 'direction': (0.0, 0.0, _dunCollData['Dir'] * math.pi / 180),
+                 'name': _dunCollData['DisplayName'],
                  'dungeonFlagId': flagId,
                  'gameEntityId': 0,
                  'gameEntityIdentifyID': 0}
 
-        props.setdefault('tmpProps', {})
+        _props.setdefault('tmpProps', {})
         if extraVal and 'tmpProps' in extraVal:
-            props['tmpProps'].update(extraVal.get('tmpProps', {}))
+            _props['tmpProps'].update(extraVal.get('tmpProps', {}))
 
-        return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
-
+        return self._buildDefArgsGen(_props, flagId, className, dunDataProps, collNum)
 
     # =========================================
 
-    def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+    def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId,\
+                                  teamUUID, extra):
         if spaceNo not in self.spaces:
             LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
             return
@@ -437,37 +501,37 @@ class IDungeonStubMonster(object):
         if spaceNo not in self.spaces:
             LOG_ERR('_checkEntitiesCellLoaded::cannot find space:', spaceNo)
             return
-        sVal = self.spaces[spaceNo]
+        _sVal = self.spaces[spaceNo]
 
         genUUID = extra.get('genUUID')
         genUUID = KBEngine.genUUID64() if genUUID is None else genUUID
-        sVal.loadDungeonEntitiesCheckTimerDic.pop(genUUID, None)
+        _sVal.loadDungeonEntitiesCheckTimerDic.pop(genUUID, None)
 
         if currentCount > 30:
-            gameengine.panicStack("_checkEntitiesCellLoaded:: loaded failed", spaceNo, sVal.homeEnts)
+            gameengine.panicStack("_checkEntitiesCellLoaded:: loaded failed", spaceNo, _sVal.homeEnts)
             return
 
-        LOG_DBG('_checkEntitiesCellLoaded::', spaceNo, sVal.homeEnts)
-        if all(sVal.homeEnts):
+        LOG_DBG('_checkEntitiesCellLoaded::', spaceNo, _sVal.homeEnts)
+        if all(_sVal.homeEnts):
             # todo  配置AI
             # LOG_INFO('_checkEntitiesCellLoaded::config monster ai')
             self._onDungeonEntitiesLoaded(spaceNo, extra)
         else:
             _timerId = self.addTimerCB(1, '_checkEntitiesCellLoaded', (spaceNo, extra, currentCount+1),
                                       gametimer.TIMER_TAG_CHECK_ENTITIES_CELL_LOADED)
-            sVal.loadDungeonEntitiesCheckTimerDic.update({genUUID: _timerId})
+            _sVal.loadDungeonEntitiesCheckTimerDic.update({genUUID: _timerId})
 
     def cancelSpaceEntitiesLoadingProcess(self, spaceNo):
         LOG_DBG("cancelSpaceEntitiesLoadingProcess::", spaceNo)
         if spaceNo not in self.spaces:
             LOG_WARN('cancelSpaceEntitiesLoadingProcess::cannot find space:', spaceNo)
             return
-        sVal = self.spaces[spaceNo]
+        _sVal = self.spaces[spaceNo]
 
-        sVal.clearEntityGeneratorQueue()
+        _sVal.clearEntityGeneratorQueue()
 
-        for _timerDic, _tag in ((sVal.loadingDungeonEntitiesTimerDic, gametimer.TIMER_TAG_LOAD_DUNGEON_ENTITIES_CALL_BACK),
-                                (sVal.loadDungeonEntitiesCheckTimerDic, gametimer.TIMER_TAG_CHECK_ENTITIES_CELL_LOADED)):
+        for _timerDic, _tag in ((_sVal.loadingDungeonEntitiesTimerDic, gametimer.TIMER_TAG_LOAD_DUNGEON_ENTITIES_CALL_BACK),
+                                (_sVal.loadDungeonEntitiesCheckTimerDic, gametimer.TIMER_TAG_CHECK_ENTITIES_CELL_LOADED)):
             for timerId in _timerDic.values():
                 self.cancelTimerCB(timerId, _tag)
 
@@ -478,32 +542,32 @@ class IDungeonStubMonster(object):
         if spaceNo not in self.spaces:
             LOG_ERR('_onDungeonEntitiesLoaded::cannot find space:', spaceNo)
             return
-        flagIds = extra.get('flagIds')
+        _flagIds = extra.get('flagIds')
         className = extra.get('className')
         fromEventId= extra.get('fromEventId')
-        if not (className and flagIds):
+        if not (className and _flagIds):
             return
 
-        self._onDungeonReleaseAvtionBeTriggered(flagIds, className, fromEventId, spaceNo)
+        self._onDungeonReleaseAvtionBeTriggered(_flagIds, className, fromEventId, spaceNo)
 
     def _onDungeonReleaseAvtionBeTriggered(self, flagIds, className, fromEventId, spaceNo):
-        sVal = self.spaces[spaceNo]
+        _sVal = self.spaces[spaceNo]
         if fromEventId and fromEventId > 0:
-            sVal.spaceMgr.cell.flowCtrrlDungeonEntityReleaseCompleteByEventId(flagIds, fromEventId)
+            _sVal.spaceMgr.cell.flowCtrrlDungeonEntityReleaseCompleteByEventId(flagIds, fromEventId)
             return
 
         if className == 'Monster':
-            sVal.spaceMgr.cell.flowCtrlDungeonMonsterReleaseComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDungeonMonsterReleaseComplete(flagIds)
         elif className in ('Npc', 'CNpc'):
-            sVal.spaceMgr.cell.flowCtrlDungeonNPCReleaseComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDungeonNPCReleaseComplete(flagIds)
         elif className == 'Collection':
-            sVal.spaceMgr.cell.flowCtrlDungeonCollectionReleaseComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDungeonCollectionReleaseComplete(flagIds)
         elif className in ('Barrier', 'AirWall'):
-            sVal.spaceMgr.cell.flowCtrlDungeonAirWallReleaseComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDungeonAirWallReleaseComplete(flagIds)
         elif className == 'Teleporter':
-            sVal.spaceMgr.cell.flowCtrlDungeonTeleporterCreatedComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDungeonTeleporterCreatedComplete(flagIds)
         elif className == 'RebornPos':
-            sVal.spaceMgr.cell.flowCtrlDungeonRebornPosCreatedComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDungeonRebornPosCreatedComplete(flagIds)
 
     # =========================================
     # KILL COUNT METHODS
@@ -516,10 +580,7 @@ class IDungeonStubMonster(object):
             LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
             return
 
-        sVal = self.spaces[spaceNo]
-
-        # if flagId not in sVal.dungeonTimeLineDic:
-        #     return
+        _sVal = self.spaces[spaceNo]
 
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         if not (flagId or creepbaseId):
@@ -536,21 +597,21 @@ class IDungeonStubMonster(object):
         _needAddCreepBaseKillNumFlag = True
 
         if flagId:
-            if not sVal.getTimeLine(flagId):
-                sVal.addTimeLine(flagId)
-            sVal.addKill(flagId)
+            if not _sVal.getTimeLine(flagId):
+                _sVal.addTimeLine(flagId)
+            _sVal.addKill(flagId)
             _needAddCreepBaseKillNumFlag = False
-            sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreased(
-                flagId, sVal.getTimeLine(flagId).kills, sVal.killSum)
+            _sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreased(
+                flagId, _sVal.getTimeLine(flagId).kills, _sVal.killSum)
 
         # 【【任务】副本编辑器新节点-指定怪物原型死亡数量】
         if creepbaseId:
-            sVal.addKillByCreepBaseId(creepbaseId, _needAddCreepBaseKillNumFlag)
-            sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(
-                creepbaseId, sVal.getCreepBaseKilledNum(creepbaseId), sVal.killSum)
+            _sVal.addKillByCreepBaseId(creepbaseId, _needAddCreepBaseKillNumFlag)
+            _sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(
+                creepbaseId, _sVal.getCreepBaseKilledNum(creepbaseId), _sVal.killSum)
 
         LOG_DBG('----- NOW KILL {} MONSTERS in space {}'
-                  '-----'.format(sVal.killSum, spaceNo))
+                  '-----'.format(_sVal.killSum, spaceNo))
 
     def flowCheckDungeonKillCount(self, spaceNo, monsterGID, symbol, number, usePrototypeID, eid, ctx, checkOnce):
         LOG_DBG("flowCheckDungeonKillCount::", spaceNo, monsterGID, symbol, number, usePrototypeID, eid, ctx, checkOnce)
@@ -563,19 +624,19 @@ class IDungeonStubMonster(object):
             LOG_ERR('flowCheckDungeonKillCount:: monsterGID must set number', monsterGID)
             return
 
-        sVal = self.spaces[spaceNo]
+        _sVal = self.spaces[spaceNo]
 
         if usePrototypeID:
-            currentKillNum = sVal.getCreepBaseKilledNum(monsterGID)
+            curKillNum = _sVal.getCreepBaseKilledNum(monsterGID)
         else:
-            _val = sVal.getTimeLine(monsterGID)
-            currentKillNum = _val.kills if _val else 0
+            _val = _sVal.getTimeLine(monsterGID)
+            curKillNum = _val.kills if _val else 0
 
-        if not (sVal.spaceMgr and sVal.spaceMgr.cell):
+        if not (_sVal.spaceMgr and _sVal.spaceMgr.cell):
             LOG_WARN("flowCheckDungeonKillCount:: spaceMgr not found", spaceNo)
             return
 
-        sVal.spaceMgr.cell.flowCtrlOnCheckDungeonEntityKillNumber(monsterGID, symbol, number, currentKillNum, usePrototypeID, eid, ctx, checkOnce)
+        _sVal.spaceMgr.cell.flowCtrlOnCheckDungeonEntityKillNumber(monsterGID, symbol, number, curKillNum, usePrototypeID, eid, ctx, checkOnce)
 
     def flowCheckDungeonAllKillCount(self, spaceNo, symbol, number, eid, ctx, checkOnce):
         LOG_DBG("flowCheckDungeonAllKillCount::", spaceNo, symbol, number, eid, ctx, checkOnce)
@@ -583,14 +644,14 @@ class IDungeonStubMonster(object):
             LOG_ERR('flowCheckDungeonAllKillCount:: cannot find space', spaceNo)
             return
 
-        sVal = self.spaces[spaceNo]
-        currentKillNum = sVal.killSum
+        _sVal = self.spaces[spaceNo]
+        curKillNum = _sVal.killSum
 
-        if not (sVal.spaceMgr and sVal.spaceMgr.cell):
+        if not (_sVal.spaceMgr and _sVal.spaceMgr.cell):
             LOG_WARN("flowCheckDungeonAllKillCount:: spaceMgr not found", spaceNo)
             return
 
-        sVal.spaceMgr.cell.flowCtrlOnCheckDungeonAllEntityKillNumber(symbol, number, currentKillNum, eid, ctx, checkOnce)
+        _sVal.spaceMgr.cell.flowCtrlOnCheckDungeonAllEntityKillNumber(symbol, number, curKillNum, eid, ctx, checkOnce)
 
 
     # =========================================

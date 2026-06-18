@@ -18,34 +18,37 @@ import gameconfig
 
 import cube_room
 import wonderLand_floor
+import abyss_floor
 
 import gamePlay_gamePlay as GGD
 import taskdata as TDD
-
-def isBase():
-    return KBEngine.component == 'baseapp'
 
 
 def isCell():
     return KBEngine.component == 'cellapp'
 
 
-def setGlobalData(key, val):
-    KBEngine.globalData[key] = val
+def isBase():
+    return KBEngine.component == 'baseapp'
+
+
+def setGlobalData(key, value):
+    KBEngine.globalData[key] = value
     import game
-    game.onGlobalData(key, val)
+    game.onGlobalData(key, value)
 
 
 def getGlobalBase(key, reportErr=True):
-    box = KBEngine.globalData.get(key)
+    _box = KBEngine.globalData.get(key)
 
-    if box:
-        ent = KBEngine.entities.get(box.id)
+    if _box:
+        ent = KBEngine.entities.get(_box.id)
         if ent:
             return ent
-        return box
+        return _box
     else:
-        reportErr and panicStack('Warning:Impossible for global stub in baseApp:', key)
+        if reportErr:
+            panicStack('Warning:Impossible for global stub in baseApp:', key)
         return utils.Swallower()
 
 
@@ -57,6 +60,10 @@ def getCubeStubBySpaceNo(spaceNo):
 def getCubeStub(floor):
     return getGlobalBase('CubeStub%d' % floor)
 
+def getAbyssStubBySpaceNo(spaceNo):
+    _mapId = formula.fetchMapId(spaceNo)
+    _floor = abyss_floor.id2floor[_mapId]
+    return getGlobalBase('AbyssStub%d' % _floor)
 
 def getWonderLandStubBySpaceNo(spaceNo):
     _mapId = formula.fetchMapId(spaceNo)
@@ -68,19 +75,18 @@ def getWonderLandStub(mapId):
     _floor = wonderLand_floor.id2floor[mapId]
     return getGlobalBase('WonderLandStub%d' % _floor)
 
+def getAbyssStub(mapId):
+    _floor = abyss_floor.id2floor[mapId]
+    return getGlobalBase('AbyssStub%d' % _floor)
 
-def getSiegeWarStubBySpaceNo(spaceNo):
-    _mapId = formula.fetchMapId(spaceNo)
-    return getGlobalBase('SiegeWarSpaceStub')
 
-
-def setBaseAppData(key, val):
+def setBaseAppData(key, value):
     if isBase():
-        KBEngine.baseAppData[key] = val
+        KBEngine.baseAppData[key] = value
         import game
-        game.onBaseAppData(key, val)
+        game.onBaseAppData(key, value)
     elif isCell():
-        gameglobal.staticCell.base.setBaseAppData(key, val)
+        gameglobal.staticCell.base.setBaseAppData(key, value)
 
 
 def getBaseAppData(key):
@@ -90,53 +96,61 @@ def getBaseAppData(key):
         LOG_ERR('cannot get baseapp data on cell')
 
 
-def setCellAppData(key, val):
+def setCellAppData(key, value):
     if isBase():
-        KBEngine.globalData[key] = val
+        KBEngine.globalData[key] = value
     elif isCell():
-        KBEngine.cellAppData[key] = val
+        KBEngine.cellAppData[key] = value
         import game
-        game.onCellAppData(key, val)
+        game.onCellAppData(key, value)
 
 
-def getCellAppData(key, default=None):
+def getCellAppData(key, defaultVal=None):
     if isCell():
-        return KBEngine.cellAppData.get(key, default)
+        return KBEngine.cellAppData.get(key, defaultVal)
     else:
-        return default
+        return defaultVal
 
 
 def delGlobalAppData(key):
     if isBase():
-        if key in KBEngine.globalData:
-            del KBEngine.globalData[key]
-    elif isCell():
-        if key in KBEngine.globalData:
-            del KBEngine.globalData[key]
+        if key not in KBEngine.globalData:
+            return
 
-
-def delBaseAppData(key):
-    if isBase():
-        if key in KBEngine.baseAppData:
-            del KBEngine.baseAppData[key]
+        del KBEngine.globalData[key]
     elif isCell():
-        KBEngine.delBaseAppData(key)
+        if key not in KBEngine.globalData:
+            return
+
+        del KBEngine.globalData[key]
 
 
 def delCellAppData(key):
     if isBase():
         KBEngine.delCellAppData(key)
     elif isCell():
-        if key in KBEngine.cellAppData:
-            del KBEngine.cellAppData[key]
+        if key not in KBEngine.cellAppData:
+            return
+
+        del KBEngine.cellAppData[key]
 
 
-def howManyBaseApps():
-    return len(getAllBaseApps())
+def delBaseAppData(key):
+    if isBase():
+        if key not in KBEngine.baseAppData:
+            return
+
+        del KBEngine.baseAppData[key]
+    elif isCell():
+        KBEngine.delBaseAppData(key)
 
 
 def getAllBaseApps():
     return list(gameglobal.baseAppCache.values())
+
+
+def howManyBaseApps():
+    return len(getAllBaseApps())
 
 
 def getAllBaseAppName():
@@ -153,21 +167,21 @@ def getFirstBaseApp():
     return _retApp
 
 def isFirstBaseApp():
-    localBase = gameglobal.localBaseApp
+    _localBase = gameglobal.localBaseApp
     minEntId = 0
-    for baseapp in gameglobal.baseAppCache.values():
-        if not minEntId or baseapp.id < minEntId:
-            minEntId = baseapp.id
+    for _baseapp in gameglobal.baseAppCache.values():
+        if not minEntId or _baseapp.id < minEntId:
+            minEntId = _baseapp.id
 
-    return localBase.id == minEntId
+    return _localBase.id == minEntId
 
 
 def isFirstCellApp():
-    comps = KBEngine.getComponents()
-    cellappGroupOrders = sorted([cellInfo['groupOrder'] for cellInfo in comps['cellapps']])
-    if len(cellappGroupOrders) == 0:
+    _comps = KBEngine.getComponents()
+    _cellappGroupOrders = sorted([cellInfo['groupOrder'] for cellInfo in _comps['cellapps']])
+    if len(_cellappGroupOrders) == 0:
         return True
-    return cellappGroupOrders[0] == 2
+    return _cellappGroupOrders[0] == 2
 
 
 # 查询所有开着的spaceno，包括静态场景和副本场景
@@ -176,47 +190,47 @@ def chooseAllSpace():
 
 
 def panicStack(*args):
-    msg = ' '.join([str(args) for args in args])
+    _msg = ' '.join([str(args) for args in args])
     if sys.exc_info()[0]:
-        LOG_ERR('{}\n{}'.format(msg, traceback.format_exc()))
+        LOG_ERR('{}\n{}'.format(_msg, traceback.format_exc()))
     else:
-        LOG_ERR('{}\n{}'.format(msg, ' '.join(traceback.format_stack())))
+        LOG_ERR('{}\n{}'.format(_msg, ' '.join(traceback.format_stack())))
 
 
 RpcChannel.REPORT_ERR_FUNC = panicStack
 
 
 def chooseGoodBaseApp():
-    bases = []
+    _bases = []
 
     for key in KBEngine.globalData.keys():
         if isinstance(key, str) and key.startswith(gameconst.GLOBALDATA_KEY_BASEAPP):
-            bases.append(KBEngine.globalData[key])
+            _bases.append(KBEngine.globalData[key])
 
-    return bases
-
-
-def hasSpaceBase(spaceNo):
-    return KBEngine.globalData.has_key(gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(spaceNo))
+    return _bases
 
 
 def getSpaceBase(spaceNo):
     return KBEngine.globalData[gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(spaceNo)]
 
 
+def hasSpaceBase(spaceNo):
+    return KBEngine.globalData.has_key(gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(spaceNo))
+
+
 def getSpaceEntity(spaceNo):
-    id_ = getSpaceBase(spaceNo).id
-    return KBEngine.entities[id_]
+    _id = getSpaceBase(spaceNo).id
+    return KBEngine.entities[_id]
 
 def getDungeonStubByDungeonNo(dungeonNo, dungeonEnterType):
     return getGlobalBase(formula.fetchDungeonStubGlobalName(dungeonNo, dungeonEnterType))
 
 def getDungeonEnterTypeBySpaceNo(spaceNo):
-    dungeonNo = spaceNo // gameconst.SPACE_NO_HOME_INTERVAL
-    dunEnterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.SINGLE)
+    _dungeonNo = spaceNo // gameconst.SPACE_NO_HOME_INTERVAL
+    dunEnterType = GGD.datas[_dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.SINGLE)
 
     if dunEnterType==gameconst.DungeonEnterTypeEnum.BOTH:
-        sStart, sEnd = gameconst.SpaceType.getSingleDungeonSpaceRange(dungeonNo)
+        sStart, sEnd = gameconst.SpaceType.getSingleDungeonSpaceRange(_dungeonNo)
         if sStart <= spaceNo < sEnd:
             return gameconst.DungeonEnterTypeEnum.SINGLE
         else:
@@ -228,13 +242,6 @@ def getDungeonEnterTypeBySpaceNo(spaceNo):
 def getDungeonStubBySpaceNo(spaceNo):
     et = getDungeonEnterTypeBySpaceNo(spaceNo)
     return getDungeonStubByDungeonNo(formula.fetchMapId(spaceNo), et)
-
-def _fromTelnetException(trace):
-    for msg in trace.strip().split('\n'):
-        if msg.startswith('  File') and not msg.startswith('  File "<string>"'):
-            return False
-
-    return True
 
 
 def exceptHook(ty, val, tb):
@@ -251,18 +258,17 @@ def exceptHook(ty, val, tb):
             else:
                 outputMethod = LOG_ERR
                 outputList.append('~~~~~~~ SCRIPT Exception ~~~~~~')
-            tbNext = tb
-            while tbNext.tb_next:
-                tbNext = tbNext.tb_next
-            if tbNext.tb_frame.f_locals:
+            _tbNext = tb
+            while _tbNext.tb_next:
+                _tbNext = _tbNext.tb_next
+            if _tbNext.tb_frame.f_locals:
                 varDict = {}
-                for k, v in tbNext.tb_frame.f_locals.items():
-                    # if v.__class__.__name__ == 'roDict' or v.__class__.__name__ == 'roTuple':
-                    sv = str(v)
-                    if len(sv) > 200:
-                        varDict[k] = sv[:200] + '...(more)'
+                for k, _v in _tbNext.tb_frame.f_locals.items():
+                    _sv = str(_v)
+                    if len(_sv) > 200:
+                        varDict[k] = _sv[:200] + '...(more)'
                     else:
-                        varDict[k] = sv
+                        varDict[k] = _sv
                 varMsg = str(varDict)
                 if len(varMsg) > 1500:
                     varMsg = varMsg[:1500] + '...(more)'
@@ -320,14 +326,14 @@ def callAllApps(func, args):
 
 
 def _realCallApp(func, args):
-    fields = func.split('.')
-    assert (len(fields) <= 2)
+    _fields = func.split('.')
+    assert (len(_fields) <= 2)
 
-    if len(fields) == 1:
+    if len(_fields) == 1:
         globals()[func](*args)
     else:
-        mod = __import__(fields[0])
-        getattr(mod, fields[1])(*args)
+        mod = __import__(_fields[0])
+        getattr(mod, _fields[1])(*args)
 
 
 def onAppCall(val):
@@ -337,11 +343,10 @@ def onAppCall(val):
 
 
 def broadcastBaseapp(funcName, args, exludes=()):
-    for baseapp in getAllBaseApps():
-        if exludes and baseapp.id in exludes:
+    for _baseapp in getAllBaseApps():
+        if exludes and _baseapp.id in exludes:
             continue
-        # getattr(baseapp, funcName)(*args)
-        baseapp.callMethod(funcName, args)
+        _baseapp.callMethod(funcName, args)
 
 
 def makeLineStubKey(lineType):
@@ -349,34 +354,34 @@ def makeLineStubKey(lineType):
 
 
 def getEntityMethodUID(*args):
-    entType, methodName = '', ''
+    _entType, methodName = '', ''
     if len(args) == 1:
-        entType = args[0]
+        _entType = args[0]
     elif len(args) == 2:
-        entType, methodName = args
+        _entType, methodName = args
     else:
         return -1
 
-    return KBEngine.getMethodUidMap(entType).get(methodName, 0)
+    return KBEngine.getMethodUidMap(_entType).get(methodName, 0)
 
 
 def getEntityMethodByUID(*args):
-    entType, uid = '', 0
+    _entType, uid = '', 0
     if len(args) == 1:
-        entType = args[0]
+        _entType = args[0]
     elif len(args) == 2:
-        entType, uid = args
+        _entType, uid = args
     else:
         return 'unknow'
 
-    return KBEngine.getAllUidMethodMap(entType).get(uid, '')
+    return KBEngine.getAllUidMethodMap(_entType).get(uid, '')
 
 
-def modifyGlobalExposedFunc(isAdd, funcName, msgId):
+def modifyGlobalExposedFunc(isAdd, func, msgId):
     if isAdd:
-        gameglobal.globalBlockExposedFuncName[funcName] = msgId
+        gameglobal.globalBlockExposedFuncName[func] = msgId
     else:
-        gameglobal.globalBlockExposedFuncName.pop(funcName, None)
+        gameglobal.globalBlockExposedFuncName.pop(func, None)
 
 
 def getLoginStub(idx):
@@ -586,8 +591,13 @@ def quertForbiddenTaskIds():
 def checkForbiddenTaskId(taskId):
     return taskId in gameglobal.forbiddenTaskIds
 
-
 def resetMineGlobalData(mineGlobalData):
     gameglobal.mineGlobalData = mineGlobalData.clone()
 
+def setMineCanAttackBits(bitFlag, isSet):
+    # bit Flag = 1 << bit
+    if isSet:
+        gameglobal.mineCanAttackBits |= bitFlag
+    else:
+        gameglobal.mineCanAttackBits &= ~bitFlag
 

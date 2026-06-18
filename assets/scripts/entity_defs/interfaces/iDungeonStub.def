@@ -47,9 +47,9 @@
             <Arg>       SPACE_NO     </Arg>
         </onDungeonSpaceReady>
 
-        <onDungeonSpaceMgrReady>
+        <onDunSpaceMgrReady>
             <Arg>       SPACE_NO     </Arg>
-        </onDungeonSpaceMgrReady>
+        </onDunSpaceMgrReady>
 
         <applyCreateDungeon>
             <Arg>       MAILBOX     </Arg>
@@ -112,6 +112,11 @@
             <Arg>       SPACE_NO        </Arg>
             <Arg>       LONGTIME        </Arg>
         </onDungeonStarted>
+
+        <onDungeonStartChallenge>
+            <Arg>       SPACE_NO        </Arg>
+            <Arg>       LONGTIME        </Arg>
+        </onDungeonStartChallenge>
 
         <sendBigWorldDungeonProps>
             <Arg>   MAILBOX     </Arg>

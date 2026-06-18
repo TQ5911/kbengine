@@ -23,6 +23,8 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
         iCollectionBossForMgr.ICollectionBossForMgr.__init__(self)
         gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
         self.addTimerCB(1, 'summonRandomBoss', (), gametimer.TIMER_TAG_SUMMON_RANDOM_BOSS)
+
+        self.pyAddTimer(1, 60, gametimer.STATISTIC_FIGHTING_COUNT)
         self.fightingPlayersCnt = 0
 
     def onTimer(self, tid, userArg):
@@ -30,8 +32,10 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
             self._onTimerCallback(tid)
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.STATISTIC_FIGHTING_COUNT:
+            self._statisticFightingCount()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def initStaticSpace(self):
         super().initStaticSpace()
@@ -52,11 +56,11 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
 
         super(WonderLandSpaceMgr, self).addEntity(entId, tags)
 
-    def removeEntityById(self, entId):
+    def removeEntById(self, entId):
         if entId == self.randomBossId:
             self.onRandomBossDie()
 
-        super(WonderLandSpaceMgr, self).removeEntityById(entId)
+        super(WonderLandSpaceMgr, self).removeEntById(entId)
 
     def onPlayerRelogin(self, box, playerGbId):
         super().onPlayerRelogin(box, playerGbId)

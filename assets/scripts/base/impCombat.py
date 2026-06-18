@@ -13,7 +13,7 @@ import gametimer
 
 import skill_skill as SSD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import skill_unlock as SUD
+import skill_unlock as S_UD
 import fightProp_define as FPDD
 import skillRelevant_summonUnlock as SRSU
 import skillRelevant_skillConst as SRSC
@@ -51,6 +51,7 @@ class AvatarBuildsMixin(object):
         _skillId = dataUtils.getSkillIdByMorphState(newSkillId, self.morphState)
         self._levelUpSkill(_skillId, oldSkillId, levelDelta)
         self.updateSkillScore()
+        self.syncMethodCallToLocalServerBase('onCrossServerLevelUpSkill', (_skillId, oldSkillId, levelDelta))
 
     def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
         LOG_INFO("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
@@ -58,6 +59,12 @@ class AvatarBuildsMixin(object):
             LOG_INFO('skill can not levelUp', newSkillId, oldSkillId)
             return False
         return True
+
+    #本服也会重走升级技能接口而不是直接写结果
+    def onCrossServerLevelUpSkill(self, _skillId, oldSkillId, levelDelta):
+        LOG_INFO('onCrossServerLevelUpSkill', _skillId, oldSkillId, levelDelta)
+        self._levelUpSkill(_skillId, oldSkillId, levelDelta)
+        self.updateSkillScore()
 
     def onChangeSkillLv(self, skillId, toLv):
         self.cell.onChangeSkillLv(skillId, toLv)
@@ -73,11 +80,11 @@ class AvatarBuildsMixin(object):
 
     def unlockSkill(self, isNotify, lv=0, mid=0):
         unlockedSkills = []
-        school = gameglobal.roleCache[self.id]['school']
-        if school in SUD.datas:
-            activeSkills = SUD.datas[gameglobal.roleCache[self.id]['school']].get('data')
-            for skillIds in activeSkills:
-                for skillId in skillIds:
+        _school = gameglobal.roleCache[self.id]['school']
+        if _school in S_UD.datas:
+            activeSkills = S_UD.datas[gameglobal.roleCache[self.id]['school']].get('data')
+            for _skillIds in activeSkills:
+                for skillId in _skillIds:
                     if not skillId:
                         continue
                     skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
@@ -177,6 +184,11 @@ class AvatarBuildsMixin(object):
     def updateSkills(self, exposed, skillSlotInfos):
         LOG_INFO("updateSkills ", skillSlotInfos)
         self._updateSkills(skillSlotInfos, True, True)
+        self.syncMethodCallToLocalServerBase('onCrossServerUpdateSkills', (skillSlotInfos,))
+
+    def onCrossServerUpdateSkills(self, skillSlotInfos):
+        LOG_INFO('onCrossServerUpdateSkills', skillSlotInfos)
+        self._updateSkills(skillSlotInfos, True, True)
 
     def _updateSkills(self, skillSlotInfos, bNotifyClient=False, isMessage=False):
         skillCheckList = []
@@ -200,29 +212,29 @@ class AvatarBuildsMixin(object):
         updateResult = {}
         if bCanUpdate:
             for skillSlotInfo in skillSlotInfos:
-                toSkillId, skillId, toSlotId = skillSlotInfo
+                _, skillId, toSlotId = skillSlotInfo
                 if toSlotId < 0:
                     toSlotId = None
 
                 fromSlotId = self.buildDic.getSlotId(skillId)
                 currentSkillId = self.getSkillIdBySlotId(toSlotId)
 
-                buildVal = self.buildDic
+                _buildVal = self.buildDic
                 if currentSkillId:
-                    buildVal.changeSkillSlot(self, currentSkillId, toSlotId, fromSlotId)
+                    _buildVal.changeSkillSlot(self, currentSkillId, toSlotId, fromSlotId)
                     if len(skillSlotInfos) == 1:
-                        currentSkillLevel = buildVal.skillLevels[currentSkillId]
-                        skillLevel = buildVal.skillLevels[skillId]
+                        currentSkillLevel = _buildVal.skillLevels[currentSkillId]
+                        skillLevel = _buildVal.skillLevels[skillId]
                         skillLevelList = [(skillId, currentSkillLevel)]
                         skillLevelList.append((currentSkillId, skillLevel))
-                        buildVal.updateSkillLevel(self, skillLevelList)
+                        _buildVal.updateSkillLevel(self, skillLevelList)
 
-                buildVal.changeSkillSlot(self, skillId, fromSlotId, toSlotId)
+                _buildVal.changeSkillSlot(self, skillId, fromSlotId, toSlotId)
 
                 if fromSlotId is not None:
-                    updateResult[fromSlotId] = buildVal.activeSkills[fromSlotId]
+                    updateResult[fromSlotId] = _buildVal.activeSkills[fromSlotId]
                 if toSlotId is not None:
-                    updateResult[toSlotId] = buildVal.activeSkills[toSlotId]
+                    updateResult[toSlotId] = _buildVal.activeSkills[toSlotId]
 
             if updateResult and bNotifyClient:
                 self.client.dragSkillChangeBuildSkills(json.dumps(updateResult).encode('ascii'))
@@ -240,7 +252,7 @@ class ImpCombat(AvatarBuildsMixin):
             _src = AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY # TODO: DEAD_PENALTY
             _coin = min(coinChange, self.coin)
             _deductVal = dropAward.DeductWealthVal(coin=_coin) # TODO: DEAD_PENALTY
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             self.deductWealth(_src, _deductVal, opUUID, _detail)
             _showList = _deductVal.toBriefList()
 
@@ -249,14 +261,19 @@ class ImpCombat(AvatarBuildsMixin):
             if _toClientData:
                 self.client.onDeathPenaltyExpChange(_toClientData)
 
-            _showList.append({'itemId': gameconst.ItemId.EXP, 'itemNum': expChange, 'bindType': gameconst.ItemBindType.BIND})
+            _showList.append({'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': expChange, 'bindType': gameconst.ItemBindType.BIND})
 
         self.client.onDeathPenaltyReward(killerGbId, killerName, _showList, killerData)
 
     def refreshFreeRecoverDeathPenaltyTimes(self, *args):
         self.freeRecoverDeathPenaltyTimes = GP_SD.datas['freeExpRecCount']['value']
 
+    @gamedecorator.crossServer
     def recoverDeathPenaltyExp(self, exposed, expireTime, itemId):
+        self._recoverDeathPenaltyExp(expireTime, itemId)
+        self.syncMethodCallToLocalServerBase('_recoverDeathPenaltyExp', (expireTime, itemId))
+
+    def _recoverDeathPenaltyExp(self, expireTime, itemId):
         LOG_INFO('recoverDeathPenaltyExp:', expireTime, itemId)
         if expireTime < utils.curTS():
             LOG_ERR('recoverDeathPenaltyExp expireTime invalid:', expireTime, self.gbID)
@@ -277,11 +294,11 @@ class ImpCombat(AvatarBuildsMixin):
             self.freeRecoverDeathPenaltyTimes -= 1
             _ratio = GP_SD.datas['freeExpRecPct']['value']
         else:
-            if itemId == gameconst.ItemId.COIN:
+            if itemId == gameconst.ItemIdEnum.COIN:
                 _formulaId = GP_SD.datas['normalExpRecCost']['value']
                 _num = F_GFD.datas[_formulaId]['serverFormula'](_exp)
                 _ratio = GP_SD.datas['normalExpRecPct']['value']
-            elif itemId == gameconst.ItemId.BIND_MONEY:
+            elif itemId == gameconst.ItemIdEnum.BIND_MONEY:
                 _formulaId = GP_SD.datas['advancedExpRecCost']['value']
                 _num = F_GFD.datas[_formulaId]['serverFormula'](_exp)
                 _ratio = GP_SD.datas['advancedExpRecPct']['value']
@@ -296,17 +313,22 @@ class ImpCombat(AvatarBuildsMixin):
                 LOG_ERR('recoverDeathPenaltyExp canDeductWealth failed:', self.gbID)
                 return
 
-            self.deductWealth(_src, _deductVal, _opUUID, gameclass.AwardDetail())
+            self.deductWealth(_src, _deductVal, _opUUID, gameclass.AwardDetailCls())
 
         self.deathPenaltyData.removeDeathPenaltyVal(expireTime)
 
         _src = AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY
         _awardVal = dropAward.AwardVal(exp=int(_exp * _ratio))
-        self.addWealth(_src, _awardVal, _opUUID, gameclass.AwardDetail())
+        self.addWealth(_src, _awardVal, _opUUID, gameclass.AwardDetailCls())
 
         self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
 
+    @gamedecorator.crossServer
     def removeDeathPenaltyExp(self, exposed, expireTime):
+        self._removeDeathPenaltyExp(expireTime)
+        self.syncMethodCallToLocalServerBase('_removeDeathPenaltyExp', (expireTime,))
+
+    def _removeDeathPenaltyExp(self, expireTime):
         LOG_INFO('removeDeathPenaltyExp:', expireTime)
         if self.deathPenaltyData.removeDeathPenaltyVal(expireTime):
             self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
@@ -341,7 +363,7 @@ class ImpCombat(AvatarBuildsMixin):
         pass
 
     def addAwardFightProps(self, fightProps, srcType, awardId, opUUID, detail):
-        syncPropList = []
+        _syncPropList = []
         for propName, val in fightProps:
             fpData = FPDD.datas.get(propName)
             if not fpData:
@@ -353,46 +375,20 @@ class ImpCombat(AvatarBuildsMixin):
                 continue
 
             self.awardFightPropDic[propName] = self.awardFightPropDic.get(propName, 0) + val
-            syncPropList.append((propName, val))
+            _syncPropList.append((propName, val))
 
-        self.cell.addAwardFightPropsCell(syncPropList)
-        # gamelog.makeAddAwardFightPropsLog(self, srcType, awardId, opUUID, str(detail), ','.join(logStrs))
+        self.cell.addAwardFightPropsCell(_syncPropList)
 
     def sendServerLevel(self, serverLevel=0):
         serverLevel = serverLevel or utils.getServerLevel()
-
-    def playerExpFlowLog(self, expChange, oldLevel, newLevel, iTime, srcType, srcSubType=0, detail=None, idipSource=0):
-        roleInfo = gameglobal.roleCache.get(self.id)
-        logDataDic = {
-            'vGameAppid': utils.getGameAppId(self.accountEntity.channelId),
-            'PlatID': self.accountEntity.devicePlatId,
-            'iZoneAreaID': gameconfig.serverId(),
-            'vOpenID': self.accountEntity.accountName,
-            'vRoleID': str(self.gbID),
-            'vRoleName': roleInfo['name'],
-            'iLevel': roleInfo['level'],
-            'iVipLevel': 0,
-            'iRoleCE': roleInfo.get('battlePoint', 0),
-            'ExpChange': expChange,
-            'BeforeLevel': oldLevel,
-            'AfterLevel': newLevel,
-            'iTime': utils.curTS() - self.lastLevelupTime if oldLevel != newLevel else 0,
-            'Reason': srcType,
-            'SubReason': srcSubType,
-            'Detail': str(detail),
-            'IDIPSource': idipSource,
-        }
-        gamelog.makePlayerExpFlowLog(logDataDic)
 
     def checkUnlockBuildAndSkillByLevel(self, isNotify, newLv):
         self.unlockSkill(isNotify, newLv, 0)
         self.sendCliSkillBuildInfo()
 
-
     def checkUnlockBuildAndSkillByTask(self, isNotify, messionId):
         self.unlockSkill(isNotify, 0, messionId)
         self.sendCliSkillBuildInfo()
-
     
     def onKillOtherAvatar(self, gbId, spaceNo, name, school, level, sex):
         if gbId == self.gbID:
@@ -531,7 +527,7 @@ class ImpCombat(AvatarBuildsMixin):
                 continue
 
             if self.useItemWithActionInternal(
-                    gameconst.BagType.BAG_TYPE_NORMAL,
+                    gameconst.BagTypeEnum.BAG_TYPE_NORMAL,
                     potion.itemId,
                     self.id):
                 break
@@ -545,7 +541,7 @@ class ImpCombat(AvatarBuildsMixin):
                 continue
 
             if self.useItemWithActionInternal(
-                    gameconst.BagType.BAG_TYPE_NORMAL,
+                    gameconst.BagTypeEnum.BAG_TYPE_NORMAL,
                     potion.itemId,
                     self.id):
                 break
@@ -565,9 +561,11 @@ class ImpCombat(AvatarBuildsMixin):
             return
 
         school = gameglobal.roleCache[self.id]['school']
-        summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
+        summonSkillIds = SRSC.datas['summonSkillId'].get('valueCN', (0,))
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
-        skillLevel = self.buildDic.getSkillLevel(summonSkillId)
+        skillLevel = 0
+        for summonSkillId in summonSkillIds:
+            skillLevel = max(skillLevel, self.buildDic.getSkillLevel(summonSkillId))
         LOG_INFO('base setSummonSlotIdx', slotIdx, self.summonSlotIdxBase, school, skillLevel)
         if school != summonSchool:
             LOG_ERR('base setSummonSlotIdx school error', school, summonSchool)
@@ -582,10 +580,11 @@ class ImpCombat(AvatarBuildsMixin):
         self.cell.setSummonSlotIdx(slotIdx)
 
     def updateSkillLevelSetSummonSlotIdx(self, skillId, skillLevel):
+        LOG_DBG("updateSkillLevelSetSummonSlotIdx", skillId, skillLevel)
         school = gameglobal.roleCache[self.id]['school']
-        summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
+        summonSkillIds = SRSC.datas['summonSkillId'].get('valueCN', (0,))
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
-        if school != summonSchool or skillId != summonSkillId:
+        if school != summonSchool or skillId not in summonSkillIds:
             return
 
         if self.summonSlotIdxBase == 0:
@@ -611,9 +610,9 @@ class ImpCombat(AvatarBuildsMixin):
 
     def removeSkillSetSummonSlotIdx(self, removedSkills):
         school = gameglobal.roleCache[self.id]['school']
-        summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
+        summonSkillIds = SRSC.datas['summonSkillId'].get('valueCN', (0,))
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
-        if school != summonSchool or summonSkillId not in removedSkills:
+        if school != summonSchool or set(removedSkills).isdisjoint(set(summonSkillIds)):
             return
 
         LOG_INFO('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
@@ -622,12 +621,12 @@ class ImpCombat(AvatarBuildsMixin):
 
     def removeSkillChangeMorphState(self, removedSkills):
         school = gameglobal.roleCache[self.id]['school']
-        summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
+        summonSkillIds = SRSC.datas['summonSkillId'].get('valueCN', (0,))
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
-        if school != summonSchool or summonSkillId not in removedSkills:
+        if school != summonSchool or set(removedSkills).isdisjoint(set(summonSkillIds)):
             return
         if self.morphState == gameconst.MORPH_BUILD_STATE:
             return
 
-        LOG_INFO('base removeSkillChangeMorphState ', summonSkillId, removedSkills, self.morphState)
+        LOG_INFO('base removeSkillChangeMorphState ', summonSkillIds, removedSkills, self.morphState)
         self.cell.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)

@@ -18,21 +18,21 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "quality": 2,
-        "reforgeCount": 20,
+        "reforgeCount": 999,
         "totalAffixNum": 0,
         "rarityLevel": 1
     }),
     2: _tools.RODict({
         "ID": 2,
         "quality": 3,
-        "reforgeCount": 20,
+        "reforgeCount": 999,
         "totalAffixNum": 0,
         "rarityLevel": 1
     }),
     3: _tools.RODict({
         "ID": 3,
         "quality": 4,
-        "reforgeCount": 20,
+        "reforgeCount": 999,
         "totalAffixNum": 0,
         "rarityLevel": 1
     })

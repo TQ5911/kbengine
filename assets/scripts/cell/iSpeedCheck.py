@@ -21,12 +21,13 @@ class ISpeedCheck(object):
         LOG_DBG("ISpeedCheck::__init__")
 
     def resetOverSpeedCheckTimer(self, lastSpeed = 0, isInit = False):
+        if not gameconfig.overSpeedCheckSwitch():
+            return
         if self.overSpeedCheckTimer > 0:
             self.pyDelTimer(self.overSpeedCheckTimer, gametimer.SPEED_STAT_CHECK)
             self.overSpeedCheckTimer = 0
         speedCheckTimeUnit = CONST.datas['speedCheckTimeUnit']['value']
         self.overSpeedCheckTimer = self.pyAddTimer(0, speedCheckTimeUnit, gametimer.SPEED_STAT_CHECK)
-        self.moveFlag = True
         if lastSpeed > 0:
             self.lastSpeed = lastSpeed
         else:
@@ -80,14 +81,14 @@ class ISpeedCheck(object):
             # 流逝总的时间, 帧率*帧数
             elapsedTime = 0.1 * moveCount
         self.firstMoveDistance = 0.0
-        if round(firstMoveDistance, 1) > round(0.1 * self.lastSpeed, 1):
-            # 超速了，拽回到上次的位置
-            self.position = Math.Vector3(self.lastPosition.x, self.lastPosition.y, self.lastPosition.z)
-            self.speedCheckContinuousUnit += 1
-            LOG_DBG('ISpeedCheck::calculateOverSpeed first frame drag back, ', moveDistance, self.lastSpeed, self.lastPosition, firstMoveDistance)
-            LogTrackingMgr.LogTrackingMgr.Illegal_Speed_Stat(self.gbId, self.id, self.name, self.spaceNo, self.position, self.lastSpeed, -1, self.speedCheckWindowSize, self.speedCheckCountPerWindow, self.speedCheckContinuousUnit)
+        # if round(firstMoveDistance, 1) > round(0.1 * self.lastSpeed, 1):
+        #     # 超速了，拽回到上次的位置
+        #     self.position = Math.Vector3(self.lastPosition.x, self.lastPosition.y, self.lastPosition.z)
+        #     self.speedCheckContinuousUnit += 1
+        #     LOG_DBG('ISpeedCheck::calculateOverSpeed first frame drag back, ', moveDistance, self.lastSpeed, self.lastPosition, firstMoveDistance)
+        #     LogTrackingMgr.LogTrackingMgr.Illegal_Speed_Stat(self.gbId, self.clientDistinctIdCell, self.gbId, self.id, self.name, self.spaceNo, self.position, self.lastSpeed, -1, self.speedCheckWindowSize, self.speedCheckCountPerWindow, self.speedCheckContinuousUnit)
             
-            return
+        #     return
         # 重置引擎层移动距离统计
         self.moveFlag = True
         # 如果大于N帧
@@ -153,7 +154,7 @@ class ISpeedCheck(object):
 
         # 超速记录日志
         if overRate > 0:
-            LogTrackingMgr.LogTrackingMgr.Illegal_Speed_Stat(self.gbId, self.id, self.name, self.spaceNo, self.position, self.lastSpeed, overRate, self.speedCheckWindowSize, self.speedCheckCountPerWindow, self.speedCheckContinuousUnit)
+            LogTrackingMgr.LogTrackingMgr.Illegal_Speed_Stat(self.gbId, self.clientDistinctIdCell, self.gbId, self.id, self.name, self.spaceNo, self.position, self.lastSpeed, overRate, self.speedCheckWindowSize, self.speedCheckCountPerWindow, self.speedCheckContinuousUnit)
         
         # 连续N个窗口单元了，清理
         if self.speedCheckContinuousUnit >= CONST.datas['speedCheckContinuousUnit']['value']:
@@ -189,6 +190,8 @@ class ISpeedCheck(object):
                 self.lastPosition = lastPosition
             
     def speedChanged(self, newSpeed, oldSpeed):
+        if not gameconfig.overSpeedCheckSwitch():
+            return
         LOG_DBG('ISpeedCheck::speedChanged, 1 ', newSpeed, oldSpeed, self.position)
         realSpeed = newSpeed
         if oldSpeed >= newSpeed:

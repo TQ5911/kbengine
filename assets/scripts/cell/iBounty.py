@@ -15,6 +15,7 @@ import gamePlay_gamePlay as GPGPD
 import gameglobal
 import gameengine
 import const_const as CONST
+import actionContext
 
 class IBounty(object):
     def __init__(self):
@@ -147,3 +148,4 @@ class IBounty(object):
         gameengine.getGlobalBase('BountyStub').complateBounty(self.base, hunter.base, self.cellPreyInfo.uuid)
         LOG_INFO("IBounty::checkPreyBeKilledByHunter cellHunterInfo", hunter.cellHunterInfo)
         LOG_INFO("IBounty::checkPreyBeKilledByHunter end")
+        killer.base.triggerAchievementWithCtx(gameconst.AchieveType.BOUNTY, actionContext.AchievementCtx(bountyType=gameconst.AchieveBountyType.FINISH_BOUNTY))

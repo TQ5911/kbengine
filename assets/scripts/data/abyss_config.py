@@ -19,6 +19,10 @@ datas = _tools.RODict({
         "ID": "abyssDailyNum",
         "value": 1,
     }),
+    "abyssNumCoin": _tools.RODict({
+        "ID": "abyssNumCoin",
+        "value": 100,
+    }),
     "abyssNumCoinCost": _tools.RODict({
         "ID": "abyssNumCoinCost",
         "value": ((1, 30000021, 100), (2, 30000001, 100)),
@@ -29,7 +33,7 @@ datas = _tools.RODict({
     }),
     "abyssNumItem": _tools.RODict({
         "ID": "abyssNumItem",
-        "value": 30000222,
+        "value": 30000314,
     }),
     "abyssActID": _tools.RODict({
         "ID": "abyssActID",

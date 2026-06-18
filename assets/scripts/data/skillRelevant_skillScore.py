@@ -17,104 +17,59 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "score": 0,
-        "score2": 0
+        "score": 30,
+        "score2": 60
     }),
     2: _tools.RODict({
         "ID": 2,
-        "score": 20,
-        "score2": 100
+        "score": 70,
+        "score2": 140
     }),
     3: _tools.RODict({
         "ID": 3,
-        "score": 50,
-        "score2": 200
+        "score": 120,
+        "score2": 240
     }),
     4: _tools.RODict({
         "ID": 4,
-        "score": 90,
-        "score2": 300
+        "score": 180,
+        "score2": 360
     }),
     5: _tools.RODict({
         "ID": 5,
-        "score": 140,
-        "score2": 400
+        "score": 250,
+        "score2": 500
     }),
     6: _tools.RODict({
         "ID": 6,
-        "score": 200,
-        "score2": 500
+        "score": 330,
+        "score2": 660
     }),
     7: _tools.RODict({
         "ID": 7,
-        "score": 270,
-        "score2": 600
+        "score": 420,
+        "score2": 840
     }),
     8: _tools.RODict({
         "ID": 8,
-        "score": 350,
-        "score2": 700
+        "score": 520,
+        "score2": 1040
     }),
     9: _tools.RODict({
         "ID": 9,
-        "score": 440,
-        "score2": 800
+        "score": 630,
+        "score2": 1260
     }),
     10: _tools.RODict({
         "ID": 10,
-        "score": 540,
-        "score2": 900
+        "score": 750,
+        "score2": 1500
     }),
     11: _tools.RODict({
         "ID": 11,
-        "score": 650,
-        "score2": 1000
-    }),
-    12: _tools.RODict({
-        "ID": 12,
-        "score": 770,
-        "score2": 1100
-    }),
-    13: _tools.RODict({
-        "ID": 13,
-        "score": 900,
-        "score2": 1200
-    }),
-    14: _tools.RODict({
-        "ID": 14,
-        "score": 1040,
-        "score2": 1300
-    }),
-    15: _tools.RODict({
-        "ID": 15,
-        "score": 1190,
-        "score2": 1400
-    }),
-    16: _tools.RODict({
-        "ID": 16,
-        "score": 1350,
-        "score2": 1500
-    }),
-    17: _tools.RODict({
-        "ID": 17,
-        "score": 1520,
-        "score2": 1600
-    }),
-    18: _tools.RODict({
-        "ID": 18,
-        "score": 1700,
-        "score2": 1700
-    }),
-    19: _tools.RODict({
-        "ID": 19,
-        "score": 1890,
-        "score2": 1800
-    }),
-    20: _tools.RODict({
-        "ID": 20,
-        "score": 2090,
-        "score2": 1900
+        "score": 880,
+        "score2": 1760
     })
 })
 minKey = 1
-maxKey = 20
+maxKey = 11

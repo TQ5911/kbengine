@@ -42,9 +42,7 @@
         <Interface>         iCube                       </Interface>
         <Interface>         iStore                      </Interface>
         <Interface>         iGuild                      </Interface>
-        <Interface>         iPay                        </Interface>
         <Interface>         iCrossServer                </Interface>
-        <Interface>         iHolidayPay                 </Interface>
         <Interface>         iDrawCard                   </Interface>
         <Interface>         iCollectible                </Interface>
         <Interface>         iGuildTrain                 </Interface>
@@ -55,6 +53,7 @@
         <Interface>         iAchievement                </Interface>
         <Interface>         iEnemy                      </Interface>
         <Interface>         iWonderLand                 </Interface>
+        <Interface>         iAbyss                      </Interface>
         <Interface>         iActivity                   </Interface>
         <Interface>         iSiegeWar                   </Interface>
         <Interface>         iDuel                       </Interface>
@@ -77,6 +76,8 @@
         <Interface>         iSpeedCheck                 </Interface>
         <Interface>         iResourceRecovery           </Interface>
         <Interface>         iReport                     </Interface>
+        <Interface>         iSafeBox                    </Interface>
+        <Interface>         iMallStore                  </Interface>
     </Interfaces>
 
     <Properties>
@@ -101,6 +102,11 @@
             <Type>     UNICODE                      </Type>
             <Flags>    CELL_PRIVATE                 </Flags>
         </accountNameCell>
+
+        <clientDistinctIdCell>
+            <Type>     STRING                       </Type>
+            <Flags>    CELL_PRIVATE                 </Flags>
+        </clientDistinctIdCell>
 
         <accountType>
             <Type>          UINT8       </Type>
@@ -378,10 +384,10 @@
             <Persistent>    true        </Persistent>
         </idipIncomeDict>
 
-        <streamDic>
+        <streamProxyDic>
             <Type>          PY_DICT             </Type>
             <Flags>         BASE                </Flags>
-        </streamDic>
+        </streamProxyDic>
 
         <baseSpaceNo>
             <Type>          SPACE_NO             </Type>
@@ -432,6 +438,12 @@
             <Flags>         BASE                    </Flags>
             <Default>       0                       </Default>
         </serverId>
+
+        <fromServerId>
+            <Type>          UINT16                  </Type>
+            <Flags>    ALL_CLIENTS                  </Flags>
+            <WitnessName>   true                    </WitnessName>
+        </fromServerId>
 
         <enterViewList>
             <Type>          PYTHON                  </Type>
@@ -573,13 +585,32 @@
             <Persistent>    true                        </Persistent>
         </banLogin>
 
+        <autoBanLoginFlag>
+            <Type>          INT8                </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>    true                </Persistent>
+            <Default>       -1                  </Default>
+        </autoBanLoginFlag>
+
+        <mapMode>
+            <Type>          UINT8               </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Persistent>    true                </Persistent>
+            <Default>       0                   </Default>
+        </mapMode>
+
+        <banMail>
+            <Type>          PY_DICT               </Type>
+            <Flags>         BASE                  </Flags>
+            <Persistent>    true                  </Persistent>
+        </banMail>
     </Properties>
 
     <BaseMethods>
-        <entireDestroy>
+        <doEntireDestroy>
             <Arg>        BOOL            </Arg>
             <Arg>        BOOL            </Arg>
-        </entireDestroy>
+        </doEntireDestroy>
 
         <updateRoleCache>
             <Arg>        PYTHON            </Arg>
@@ -600,11 +631,6 @@
         <runGmCommand> <Exposed/>
             <Arg>       UNICODE      </Arg>
         </runGmCommand>
-
-        <runGmCommandDelay>
-            <Arg>       UNICODE      </Arg>
-            <Arg>       UINT8      </Arg>
-        </runGmCommandDelay>
 
         <callMethod>
             <Arg>         METHOD_NAME        </Arg>
@@ -724,6 +750,15 @@
             <Arg>       ARRAY    <of>    UINT16        </of>   </Arg>
         </delCliConfigData>
 
+        <onCrossServerSetCliConfigData>
+            <Arg>       ARRAY    <of>    UINT16        </of>   </Arg>
+            <Arg>       ARRAY    <of>    UINT64        </of>   </Arg>
+        </onCrossServerSetCliConfigData>
+
+        <onCrossServerDelCliConfigData>
+            <Arg>       ARRAY    <of>    UINT16        </of>   </Arg>
+        </onCrossServerDelCliConfigData>
+
         <addBlazeId> <Exposed/>
             <Arg>        OBJECT_ID                   </Arg>
         </addBlazeId>
@@ -737,8 +772,14 @@
         </onGameConfigChangedBase>
 
         <gmBanAvatar>
-            <Arg>        LONGTIME                       </Arg>
+            <Arg>        LONGTIME              </Arg>
+            <Arg>        INT32                 </Arg>
         </gmBanAvatar>
+
+        <gmBanMail>
+            <Arg>        LONGTIME              </Arg>
+            <Arg>        INT32                 </Arg>
+        </gmBanMail>
 
         <onGetCellAppearance>
             <Arg>        APPEARANCE_INFO                </Arg>
@@ -763,6 +804,11 @@
             <Arg>       PY_DICT         </Arg>
             <Arg>       ENTITYCALL      </Arg>
         </onGetFullPlayerInfo>
+
+        <onIllegalEvent> <Exposed/>
+            <Arg>        UINT8      </Arg>
+            <Arg>   STRING  </Arg>
+        </onIllegalEvent>
     </BaseMethods>
 
     <CellMethods>
@@ -841,10 +887,6 @@
         <selfBreakAwayStuck>
         </selfBreakAwayStuck>
 
-        <setClientBotAI>
-            <Arg>       UINT16       </Arg>
-        </setClientBotAI>
-
         <modifyNameFailedRestore>
             <Arg>        UNICODE        </Arg>
         </modifyNameFailedRestore>
@@ -902,6 +944,17 @@
         <getShowMapEntityInfo> <Exposed/>
             <Arg>       MAP_ID            </Arg>
         </getShowMapEntityInfo>
+
+        <switchMapModeTransmitFail>
+            <Arg>       UINT8            </Arg>
+        </switchMapModeTransmitFail>
+
+        <switchMapMode><Exposed/>
+            <Arg>        UINT32     </Arg>
+            <Arg>        UINT32     </Arg>
+            <Arg>        UINT8      </Arg>
+        </switchMapMode>
+
     </CellMethods>
 
     <ClientMethods>
@@ -944,6 +997,8 @@
             <Arg>        UINT8        </Arg>
             <Arg>        ARRAY   <of>    STRING     </of>        </Arg>
             <Arg>        UINT64        </Arg>
+            <Arg>        STRING      </Arg>
+            <Arg>        UINT8      </Arg>
         </onOfficialMessage>
 
         <stopOfficialMessage>
@@ -972,6 +1027,11 @@
             <Arg>   UINT32      </Arg>
         </changeDungeonRemainTime>
 
+        <changeDungeonChallengeRemainTime>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UINT32      </Arg>
+        </changeDungeonChallengeRemainTime>
+        
         <onAppearanceUpdated>
             <Arg>        UINT8        </Arg>
             <Arg>        UINT8        </Arg>
@@ -1030,5 +1090,10 @@
             <Arg>           SPACE_NO         </Arg>
             <Arg>           ARRAY       <of>        OBJECT_ID       </of>   </Arg>
         </onShowMapEntityInfo>
+
+        <onRefreshLastDungeonFinishedTime>
+            <Arg>       UINT8       </Arg>
+            <Arg>      LONGTIME     </Arg>
+        </onRefreshLastDungeonFinishedTime>
     </ClientMethods>
 </root>

@@ -362,7 +362,7 @@
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   RAID_ID     </Arg>
             <Arg>   CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>   UNICODE     </Arg>
+            <Arg>   CHAT_MSG_DATA     </Arg>
             <Arg>   PYTHON      </Arg>
         </broadRaidChatMsg>
 
@@ -491,13 +491,13 @@
             <Arg>   PY_LIST     </Arg>
         </broadRaidMemMessage_localCross>
 
-        <askAllMemberFollow>
+        <askAllMemberFollowRaidStub>
             <Arg>       MAILBOX         </Arg>
             <Arg>       RAID_ID         </Arg>
             <Arg>       PLAYER_GBID     </Arg>
             <Arg>       SPACE_NO        </Arg>
             <Arg>       POSITION_ARG    </Arg>
-        </askAllMemberFollow>
+        </askAllMemberFollowRaidStub>
 
         <raidPrepareAutoMatch>
             <Arg>           RAID_ID       </Arg>
@@ -568,7 +568,30 @@
         
         <setInDungeon>
             <Arg>       RAID_ID          </Arg>
+            <Arg>       BOOL             </Arg>
         </setInDungeon>
 
+        <refreshLastDungeonFinishedTime>
+            <Arg>       TEAMID          </Arg>
+            <Arg>       LONGTIME        </Arg>  
+        </refreshLastDungeonFinishedTime>
+
+        <modifyPlayerName>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   UNICODE     </Arg>
+        </modifyPlayerName>
+
+        <broadcastToAllMembers>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PY_LIST     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   METHOD_NAME </Arg>
+            <Arg>   METHOD_ARGS </Arg>
+        </broadcastToAllMembers>
     </BaseMethods>
 </root>

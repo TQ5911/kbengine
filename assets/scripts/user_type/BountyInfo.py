@@ -108,6 +108,7 @@ class bountyItem(userType.UserSingleType):
     def initFromDict(self, dataDict):
         self.uuid = dataDict['uuid']
         self.timestamp = dataDict['timestamp']
+        self.expiredTimestamp = dataDict['expiredTimestamp']
         self.leftTime = dataDict['leftTime']
         self.acceptedLeftTime = dataDict['acceptedLeftTime']
         self.bountyType = dataDict['bountyType']
@@ -133,6 +134,7 @@ class bountyItem(userType.UserSingleType):
         return {
             'uuid': self.uuid,
             'timestamp': self.timestamp,
+            'expiredTimestamp': self.expiredTimestamp,
             'leftTime': self.leftTime,
             'acceptedLeftTime': self.acceptedLeftTime,
             'bountyType' : self.bountyType,

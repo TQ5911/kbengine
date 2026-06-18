@@ -25,7 +25,7 @@ datas ={
     "type": "dunStart",
     "transition": {
       "finished": [
-        1023,
+        1003,
         1015
       ]
     }
@@ -33,7 +33,7 @@ datas ={
   "1015": {
     "type": "createRebornPos",
     "entityID": [
-      40040003
+      40048002
     ],
     "num": 0,
     "transition": {}
@@ -41,7 +41,7 @@ datas ={
   "1016": {
     "type": "monsterHp",
     "monsterID": [
-      40040004
+      40040019
     ],
     "compare": 2,
     "hpPercent": 30.0,
@@ -83,7 +83,7 @@ datas ={
       40040004,
       40040005,
       40040006,
-      4004007,
+      40040007,
       40040008,
       40040009
     ],
@@ -114,15 +114,15 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1021
+        1021,
+        1035
       ]
     }
   },
   "1021": {
     "type": "createNPC",
     "entityID": [
-      40044001,
-      40044002
+      40044001
     ],
     "num": 0,
     "lv": "16",
@@ -133,32 +133,9 @@ datas ={
       ]
     }
   },
-  "1023": {
-    "type": "createMonster",
-    "entityID": [
-      40040019,
-      40040001,
-      40040002,
-      40040003
-    ],
-    "num": 0,
-    "lv": "16",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1016
-      ]
-    }
-  },
   "1024": {
     "type": "taskFinished",
-    "taskID": 0,
+    "taskID": 86060157,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -171,34 +148,21 @@ datas ={
   "1025": {
     "type": "removeNPC",
     "entityID": [
-      40044001,
-      40044002
+      40044001
     ],
     "transition": {}
   },
   "1026": {
     "type": "createNPC",
     "entityID": [
-      40044004,
-      40044005
+      40044004
     ],
     "num": 0,
     "lv": "16",
     "ifSetBoss": 0,
     "transition": {
       "finished": [
-        1027
-      ]
-    }
-  },
-  "1027": {
-    "type": "taskFinished",
-    "taskID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1028
+        1036
       ]
     }
   },
@@ -213,8 +177,7 @@ datas ={
       40040015,
       40040016,
       40040017,
-      40040018,
-      40040019
+      40040018
     ],
     "num": 0,
     "lv": "16",
@@ -291,6 +254,27 @@ datas ={
     "transition": {
       "finished": [
         1031
+      ]
+    }
+  },
+  "1035": {
+    "type": "createCollection",
+    "entityID": [
+      40048003
+    ],
+    "num": 0,
+    "randomCollectionNum": 0,
+    "checkHaveInFixed": 0,
+    "transition": {}
+  },
+  "1036": {
+    "type": "taskFinished",
+    "taskID": 86060158,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1028
       ]
     }
   }

@@ -93,6 +93,8 @@ class IWelfareSignIn(object):
         if welfareType == "SevenSign":
             LogTrackingMgr.LogTrackingMgr.Welfare_SignInSevenDay(
                 self.gbID,
+                self.accountEntity.clientDistinctId, 
+                self.gbID,
                 WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0),
                 self.getAvatarLevel(),
                 welfareSignInInfo.welfareSignInDay,
@@ -101,6 +103,8 @@ class IWelfareSignIn(object):
             )
         elif welfareType == "TenSign":
             LogTrackingMgr.LogTrackingMgr.Welfare_SignInTenDay(
+                self.gbID,
+                self.accountEntity.clientDistinctId, 
                 self.gbID,
                 WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0),
                 self.getAvatarLevel(),
@@ -142,14 +146,16 @@ class IWelfareSignIn(object):
         self.welfareLevelInfos[welfareType] |= mask
 
         rewardId = WLRD.datas[rid]['rewardID']
-        awardCtx = self._getAvatarAwardCtx(rewardId, None)
-        detail = gameclass.AwardDetail()
+        awardCtx = self.getAvatarAwardCtx(rewardId, None)
+        detail = gameclass.AwardDetailCls()
         opUUID = KBEngine.genUUID64()
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_LEVEL, rewardId, 1, opUUID, detail, awardCtx)
 
         self.sendLevelWelfareInfo(welfareType)
 
         LogTrackingMgr.LogTrackingMgr.Level_Reward(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             self.getAvatarLevel(),
             rid,
@@ -173,8 +179,8 @@ class IWelfareSignIn(object):
             LOG_ERR('call addSignInAward: no reward')
             return False
 
-        awardCtx = self._getAvatarAwardCtx(rewardId, None)
-        detail = gameclass.AwardDetail(signInDayNo=signInDayNo)
+        awardCtx = self.getAvatarAwardCtx(rewardId, None)
+        detail = gameclass.AwardDetailCls(signInDayNo=signInDayNo)
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN if welfareType == "SevenSign" else AAC_AACDD.datas.BONUS_SRC_WELFARE_TEN_SIGN_IN
         self.addAwards(srcType, rewardId, 1, opUUID, detail, awardCtx)

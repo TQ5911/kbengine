@@ -113,7 +113,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
     def __init__(self):
         LOG_INFO('CrossDataStub __init__')
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self.initCentralServers('crossDataServerInfo', 'crossDataServerId')
 
         _interval = 5
@@ -131,7 +131,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         elif userArg == gametimer.CROSS_DATA_CLEAR_CACHE:
             self.clearCache()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def doNext(self):
         LOG_DBG('CrossDataStub doNext')

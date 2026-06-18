@@ -30,7 +30,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         iMultiStaticSpace.IMultiStaticSpace.__init__(self)
         iMultiStaticSpacePlayer.IMultiStaticSpacePlayer.__init__(self, gameconst.WONDERLAND_MAX_ENTER_NUM)
         iLinePlayersStub.IBranchLineStub.__init__(self)
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         interval = 60 * BDS.datas["Branch_mergeInterval"]["value"]
         waitTime = 60 * BDS.datas["Branch_mergeWaitingTime"]["value"]
 
@@ -68,7 +68,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             if mapId in B_BD.datas:
                 self._doLineMerge(mapId)
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def defaultSapceVal(self):
         spaceVals = list(self.staticSpaces.values())
@@ -92,6 +92,10 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         _lineNo = 0
         if _mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=_mapId)
+        if _lineNo == -1:
+            LOG_ERR('WonderLandStub::doEnterWonderLand: lineNo is -1')
+            return
+
         _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
         _spaceVal = self.staticSpaces.get(_spaceNo)
         if not _spaceVal:
@@ -116,6 +120,8 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
 
             if _playerVal.curSpaceNo != spaceNo:
                 LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))
+        else:
+            self.switchStaticSpace(gbId, spaceNo)
 
     def onLeaveWonderLand(self, gbId):
         _playerVal = self.allPlayers.get(gbId)

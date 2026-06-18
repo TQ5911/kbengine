@@ -1,10 +1,10 @@
 <root>
     <Properties>
-        <mineWarMonsterType>
+        <mineWarMonsterFlag>
             <Type>              UINT8   </Type>
             <Flags>             CELL_PRIVATE    </Flags>
             <Default>           0       </Default>
-        </mineWarMonsterType>
+        </mineWarMonsterFlag>
         <mineWarCanAttack>
             <Type>              UINT8    </Type>
             <Flags>             CELL_PRIVATE    </Flags>

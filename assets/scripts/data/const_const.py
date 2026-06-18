@@ -277,7 +277,7 @@ datas = _tools.RODict({
     }),
     "selectRange": _tools.RODict({
         "ID": "selectRange",
-        "value": 80,
+        "value": 40,
     }),
     "selectRangeInRaid": _tools.RODict({
         "ID": "selectRangeInRaid",
@@ -1362,5 +1362,49 @@ datas = _tools.RODict({
     "highFrameNotice": _tools.RODict({
         "ID": "highFrameNotice",
         "value": 54001339,
+    }),
+    "settlementPopup": _tools.RODict({
+        "ID": "settlementPopup",
+        "value": 60.0,
+    }),
+    "earlyAccess": _tools.RODict({
+        "ID": "earlyAccess",
+        "value": 54000269,
+    }),
+    "targetSurroundArea": _tools.RODict({
+        "ID": "targetSurroundArea",
+        "value": 20,
+    }),
+    "autoRefreshTxt": _tools.RODict({
+        "ID": "autoRefreshTxt",
+        "value": "自动刷新({0}s)",
+    }),
+    "autoRefreshTxt2": _tools.RODict({
+        "ID": "autoRefreshTxt2",
+        "value": "自动刷新",
+    }),
+    "filterCreepType1": _tools.RODict({
+        "ID": "filterCreepType1",
+        "value": (1, 8),
+    }),
+    "filterCreepType2": _tools.RODict({
+        "ID": "filterCreepType2",
+        "value": (2, 9),
+    }),
+    "userhelperUrl": _tools.RODict({
+        "ID": "userhelperUrl",
+        "value": "http://192.168.10.148:3001/#/help",
+    }),
+    "openUserServiceError": _tools.RODict({
+        "ID": "openUserServiceError",
+        "value": 54482014,
+    }),
+    "userServiceIsLogin": _tools.RODict({
+        "ID": "userServiceIsLogin",
+        "value": 54482021,
+    }),
+    "bagFullGeneralMessage": _tools.RODict({
+        "ID": "bagFullGeneralMessage",
+        "value": 54000663,
     })
 })

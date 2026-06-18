@@ -66,6 +66,20 @@ class CubeQuotaVal(userType.UserSingleType):
         self.quotaDurState = gameconst.QuotaDurStatus.ENTER
         avatar.client.onWonderLandLeftTime(self.calcLeftTime() + utils.curTS())
 
+    def setAbyssEnterTime(self, avatar, enterTime):
+        """abyss"""
+        if self.quotaDurState == gameconst.QuotaDurStatus.ENTER:
+            LOG_ERR('setCubeEnterTime error, quotaDurState is enter')
+
+        self.enterTime = enterTime
+        self.quotaDurState = gameconst.QuotaDurStatus.ENTER
+        avatar.client.onAbyssLeftTime(self.calcLeftTime() + utils.curTS())
+    
+    #跨服同步归墟剩余时间
+    def onCrossServerSyncAbyssData(self, leftTime, enterTime):
+        self.leftTime = leftTime
+        self.enterTime = enterTime
+
     def addWonderLandLeftTime(self, avatar, delta):
         """wonderLand"""
         self.leftTime += delta
@@ -76,6 +90,8 @@ class CubeQuotaVal(userType.UserSingleType):
         _mapId = formula.fetchMapId(avatar.spaceNo)
         _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
         LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
+            avatar.gbId,
+            avatar.clientDistinctIdCell,
             avatar.gbId,
             gameconfig.gameId(),
             _floor,
@@ -94,12 +110,35 @@ class CubeQuotaVal(userType.UserSingleType):
         _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
         LogTrackingMgr.LogTrackingMgr.Cube_Info(
             avatar.gbId,
+            avatar.clientDistinctIdCell,
+            avatar.gbId,
             gameconfig.gameId(),
             _floor,
             _mapId,
             gameconst.CUBE_EVENT_ADD_TIME,
             self.calcLeftTime(),
         )
+
+    def addAbyssLeftTime(self, avatar, delta):
+        LOG_INFO('addAbyssLeftTime: delta: {}'.format(delta))
+        """abyss"""
+        self.leftTime += delta
+        self.refreshEnterTime()
+
+        avatar.client.onAbyssLeftTime(self.calcLeftTime() + utils.curTS())
+
+        _mapId = formula.fetchMapId(avatar.spaceNo)
+        _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
+        # TODO abyss
+        # LogTrackingMgr.LogTrackingMgr.Abyss_Info(
+            # avatar.gbId,
+            # avatar.clientDistinctIdCell,
+        #     avatar.gbId,
+        #     gameconfig.gameId(),
+        #     _floor,
+        #     gameconst.ABYSS_EVENT_ADDTIME,
+        #     self.calcLeftTime(),
+        # )
 
     def changeProtect(self):
         LOG_DBG('changeProtect from ', self.quotaDurState)

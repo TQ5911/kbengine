@@ -18,6 +18,7 @@
         <reqRandomSummonPet> <Exposed/>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
         </reqRandomSummonPet>
 
         <reqGetGuaranteedPetEgg> <Exposed/>

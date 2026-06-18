@@ -101,13 +101,13 @@ def _34000017(lv):
 def _34000018(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*150
+        a = i*80
         sum = a
     return sum
 def _34000019(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*20
+        a = i*15
         sum = a
     return sum
 def _34000020(lv):
@@ -123,17 +123,17 @@ def _34000021(lv):
         sum = a
     return sum
 def _34010001(e):
-    return int(e.level*70+330)
+    return int(e.level*100+300)
 def _34010002(e):
-    return int(e.level*70+330)
+    return int(e.level*100+300)
 def _34010003(e):
-    return int(e.level*70+330)
+    return int(e.level*100+300)
 def _34010004(e):
-    return int(e.level*6+28)
+    return int(e.level*10+30)
 def _34010005(e):
-    return int(e.level*6+28)
+    return int(e.level*10+30)
 def _34010006(e):
-    return int(e.level*6+28)
+    return int(e.level*10+30)
 def _34010007(e):
     return 7
 def _34010008(e):

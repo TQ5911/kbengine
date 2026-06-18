@@ -31,6 +31,10 @@ datas = _tools.RODict({
         "ID": "rewardNumItem",
         "value": 30000309,
     }),
+    "rewardNumCoinCost": _tools.RODict({
+        "ID": "rewardNumCoinCost",
+        "value": ((1, 30000021, 100), (1, 30000001, 100)),
+    }),
     "raidBossChallengeActID": _tools.RODict({
         "ID": "raidBossChallengeActID",
         "value": 32000001,

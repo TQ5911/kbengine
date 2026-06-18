@@ -25,10 +25,10 @@
     </Properties>
 
     <BaseMethods>
-        <entireDestroy>
+        <doEntireDestroy>
             <Arg>           BOOL            </Arg>          
             <Arg>           BOOL            </Arg>          
-        </entireDestroy>
+        </doEntireDestroy>
         
         <renewalBase>
             <Arg>           PYTHON          </Arg>

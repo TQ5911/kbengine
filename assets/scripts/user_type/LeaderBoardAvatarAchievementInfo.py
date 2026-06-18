@@ -54,6 +54,8 @@ class LeaderBoardAvatarAchievementVal(userType.UserSingleType):
     # 必须实现
     def leaderBoardLog(self, leaderType, rank):
         LogTrackingMgr.LogTrackingMgr.LeaderBoard_Achievement(
+            self.gbId,
+            '',
             leaderType,
             rank,
             self.gbId,

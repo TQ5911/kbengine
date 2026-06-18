@@ -78,5 +78,37 @@ datas = _tools.RODict({
     "pickupPermissionTime": _tools.RODict({
         "ID": "pickupPermissionTime",
         "value": 60,
+    }),
+    "pickupPermissionRange": _tools.RODict({
+        "ID": "pickupPermissionRange",
+        "value": 5,
+    }),
+    "pickupPermissionValidTime": _tools.RODict({
+        "ID": "pickupPermissionValidTime",
+        "value": 300,
+    }),
+    "pickupPermissionId": _tools.RODict({
+        "ID": "pickupPermissionId",
+        "value": 16006166,
+    }),
+    "dropThrowRange": _tools.RODict({
+        "ID": "dropThrowRange",
+        "value": (1, 2.5),
+    }),
+    "dropGravityAcc": _tools.RODict({
+        "ID": "dropGravityAcc",
+        "value": 16.0,
+    }),
+    "dropBounceCount": _tools.RODict({
+        "ID": "dropBounceCount",
+        "value": 2,
+    }),
+    "dropEnergyDecreaseRatio": _tools.RODict({
+        "ID": "dropEnergyDecreaseRatio",
+        "value": 0.2,
+    }),
+    "dropDelay": _tools.RODict({
+        "ID": "dropDelay",
+        "value": 1.0,
     })
 })

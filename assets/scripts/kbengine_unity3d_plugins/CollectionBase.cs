@@ -28,7 +28,13 @@ namespace KBEngine
 		public virtual void onDropEquipIdChanged(UInt64 oldValue) {}
 		public UInt32 dropEquipItemId = 0;
 		public virtual void onDropEquipItemIdChanged(UInt32 oldValue) {}
+		public UInt32 fBItemId = 0;
+		public virtual void onFBItemIdChanged(UInt32 oldValue) {}
+		public UInt32 fBProtectTime = 0;
+		public virtual void onFBProtectTimeChanged(UInt32 oldValue) {}
 		
+		public Int32 fromMonsterId = 0;
+		public virtual void onFromMonsterIdChanged(Int32 oldValue) {}
 		
 		public UInt32 gatherCnt = 0;
 		public virtual void onGatherCntChanged(UInt32 oldValue) {}
@@ -37,9 +43,7 @@ namespace KBEngine
 		
 		
 
-		public virtual void onAfterCollect() {} 
-		public virtual void onCancelCollect() {} 
-		public virtual void onEnterCollect() {} 
+		public virtual void syncIsFBTarget(Byte arg1) {} 
 
 		public CollectionBase()
 		{
@@ -131,15 +135,6 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
-				case 165:
-					onAfterCollect();
-					break;
-				case 164:
-					onCancelCollect();
-					break;
-				case 163:
-					onEnterCollect();
-					break;
 				case 166:
 					Int32 popDialog_arg1 = stream.readInt32();
 					popDialog(popDialog_arg1);
@@ -152,6 +147,10 @@ namespace KBEngine
 					UInt32 showPopoverMsgWithArg_arg1 = stream.readUint32();
 					List<string> showPopoverMsgWithArg_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					showPopoverMsgWithArg(showPopoverMsgWithArg_arg1, showPopoverMsgWithArg_arg2);
+					break;
+				case 1151:
+					Byte syncIsFBTarget_arg1 = stream.readUint8();
+					syncIsFBTarget(syncIsFBTarget_arg1);
 					break;
 				default:
 					break;
@@ -293,6 +292,38 @@ namespace KBEngine
 						}
 
 						break;
+					case 589:
+						UInt32 oldval_fBItemId = fBItemId;
+						fBItemId = stream.readUint32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFBItemIdChanged(oldval_fBItemId);
+						}
+						else
+						{
+							if(inWorld)
+								onFBItemIdChanged(oldval_fBItemId);
+						}
+
+						break;
+					case 601:
+						UInt32 oldval_fBProtectTime = fBProtectTime;
+						fBProtectTime = stream.readUint32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFBProtectTimeChanged(oldval_fBProtectTime);
+						}
+						else
+						{
+							if(inWorld)
+								onFBProtectTimeChanged(oldval_fBProtectTime);
+						}
+
+						break;
 					case 573:
 						Int32 oldval_force = force;
 						force = stream.readInt32();
@@ -306,6 +337,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onForceChanged(oldval_force);
+						}
+
+						break;
+					case 592:
+						Int32 oldval_fromMonsterId = fromMonsterId;
+						fromMonsterId = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFromMonsterIdChanged(oldval_fromMonsterId);
+						}
+						else
+						{
+							if(inWorld)
+								onFromMonsterIdChanged(oldval_fromMonsterId);
 						}
 
 						break;
@@ -546,6 +593,48 @@ namespace KBEngine
 				}
 			}
 
+			UInt32 oldval_fBItemId = fBItemId;
+			Property prop_fBItemId = pdatas[11];
+			if(prop_fBItemId.isBase())
+			{
+				if(inited && !inWorld)
+					onFBItemIdChanged(oldval_fBItemId);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fBItemId.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFBItemIdChanged(oldval_fBItemId);
+					}
+				}
+			}
+
+			UInt32 oldval_fBProtectTime = fBProtectTime;
+			Property prop_fBProtectTime = pdatas[7];
+			if(prop_fBProtectTime.isBase())
+			{
+				if(inited && !inWorld)
+					onFBProtectTimeChanged(oldval_fBProtectTime);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fBProtectTime.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFBProtectTimeChanged(oldval_fBProtectTime);
+					}
+				}
+			}
+
 			Int32 oldval_force = force;
 			Property prop_force = pdatas[12];
 			if(prop_force.isBase())
@@ -563,6 +652,27 @@ namespace KBEngine
 					else
 					{
 						onForceChanged(oldval_force);
+					}
+				}
+			}
+
+			Int32 oldval_fromMonsterId = fromMonsterId;
+			Property prop_fromMonsterId = pdatas[17];
+			if(prop_fromMonsterId.isBase())
+			{
+				if(inited && !inWorld)
+					onFromMonsterIdChanged(oldval_fromMonsterId);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fromMonsterId.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFromMonsterIdChanged(oldval_fromMonsterId);
 					}
 				}
 			}

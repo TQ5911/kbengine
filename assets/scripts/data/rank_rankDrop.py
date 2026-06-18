@@ -19,49 +19,55 @@ datas = _tools.RODict({
         "id": 1,
         "rankID": 2,
         "rankRange": _tools.ROList([1, 100]),
-        "bindWeightRank": 0,
+        "bindWeightRank": 1000,
         "isMonthCard": 1,
-        "isCrossServer": 1
+        "isCrossServer": 1,
+        "bigBindWeightRank": 1000
     }),
     2: _tools.RODict({
         "id": 2,
         "rankID": 2,
         "rankRange": _tools.ROList([101, 200]),
-        "bindWeightRank": 0,
+        "bindWeightRank": 1000,
         "isMonthCard": 1,
-        "isCrossServer": 1
+        "isCrossServer": 1,
+        "bigBindWeightRank": 1000
     }),
     3: _tools.RODict({
         "id": 3,
         "rankID": 2,
         "rankRange": _tools.ROList([201, 500]),
-        "bindWeightRank": 0,
+        "bindWeightRank": 1000,
         "isMonthCard": 1,
-        "isCrossServer": 1
+        "isCrossServer": 1,
+        "bigBindWeightRank": 1000
     }),
     4: _tools.RODict({
         "id": 4,
         "rankID": 2,
         "rankRange": _tools.ROList([501, 1000]),
-        "bindWeightRank": 0,
+        "bindWeightRank": 1000,
         "isMonthCard": 1,
-        "isCrossServer": 1
+        "isCrossServer": 1,
+        "bigBindWeightRank": 1000
     }),
     5: _tools.RODict({
         "id": 5,
         "rankID": 2,
         "rankRange": _tools.ROList([1001, 2000]),
-        "bindWeightRank": 0,
+        "bindWeightRank": 1000,
         "isMonthCard": 1,
-        "isCrossServer": 0
+        "isCrossServer": 0,
+        "bigBindWeightRank": 1000
     }),
     6: _tools.RODict({
         "id": 6,
         "rankID": 2,
         "rankRange": _tools.ROList([2001, 3000]),
-        "bindWeightRank": 0,
+        "bindWeightRank": 1000,
         "isMonthCard": 1,
-        "isCrossServer": 0
+        "isCrossServer": 0,
+        "bigBindWeightRank": 1000
     })
 })
 minKey = 1

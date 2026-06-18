@@ -61,6 +61,46 @@ def getAllPlayers(su):
         return
     gameengine.callBaseApps("utils.getAllAvatarByGm", (su, gameglobal.localBaseApp))
 
+def _do_remoteCall(su, player, method, args):
+    if not hasattr(player, method):
+        return su.onCommandResult(0, f'method {method} not found in player', {})
+    func = getattr(player, method)
+    if not callable(func):
+        return su.onCommandResult(0, f'{method} is not callable', {})
+    try:
+        args = ast.literal_eval(args) if args else []
+        args = [player.id] + list(args)
+        result = func(*args)
+        return su.onCommandResult(0, 'ok', {"result": result})
+    except Exception as e:
+        error_msg = f'Error calling method {method} on player {player.id}: {str(e)}'
+        LOG_ERR(error_msg)
+        return su.onCommandResult(0, error_msg, {})
+
+@gm_cmd('$remoteCall', (Player("gbId or Id"), Str("component"), Str("method"), Str("args")), RARG(0), BASE, '指定用户执行方法', ALLSIDE, GOD_GROUPS, minArgs=3)
+def remoteCall(su, player, component, method, args=''):
+    if KBEngine.publish():
+        su.onCommandResult(0, 'can not run in publish server', {})
+        return
+    if not player:
+        return su.onCommandResult(0, 'player not found', {})
+    if component not in ['cell', 'base']:
+        return su.onCommandResult(0, 'invalid component', {})
+    if component == 'cell':
+        forwardGMCommand(su, '$_remoteCall-cell', player.id, method, args)
+    else:
+        return _do_remoteCall(su, player, method, args)
+    
+@gm_cmd('$_remoteCall-cell', (Player("gbId or Id"), Str("method"), Str("args")), RARG(0), CELL, '指定用户执行方法-cell', ALLSIDE, GOD_GROUPS)
+def remoteCall_cell(su, player, method, args):
+    if KBEngine.publish():
+        su.onCommandResult(0, 'can not run in publish server', {})
+        return
+    if not player:
+        return su.onCommandResult(0, 'player not found', {})
+    return _do_remoteCall(su, player, method, args)
+
+
 @gm_cmd('$getAvatarAoiMonster', (Player("gbId or Id"), Int("int range")), RARG(0), CELL, '获取玩家AOI附近怪物', ALLSIDE, GOD_GROUPS, minArgs=1)
 def getAvatarAoiMonster(su, player, range=30):
     monsterdata = []
@@ -69,6 +109,8 @@ def getAvatarAoiMonster(su, player, range=30):
     for ent in player.entitiesInRange(range, 'Summon'):
         monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
     for ent in player.entitiesInRange(range, 'Creation'):
+        monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
+    for ent in player.entitiesInRange(range, 'AvatarReplica'):
         monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
     return su.onCommandResult(0, 'ok' , {"data": monsterdata})
 
@@ -315,7 +357,7 @@ def gmGetEquipment(su, player, school, quality, grade, enhanceLv):
 def enhanceRole(su, player, enhanceLevel=0):
     # from test.roleStrengthConfig import data as roleStrengthData
     # 等级设置
-    maxRoleLevel = utils.getPlayerMaxLevel()
+    maxRoleLevel = utils.getMaxPlayerLevel()
     forwardGMCommand(su,"$setlv", player.id, maxRoleLevel)
     # 装备获取
     maxQuality = 4
@@ -361,8 +403,8 @@ def modifyAttrByLevel(su, player, level):
     
     opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$setlv', level=level)
-    player.levelUp(min(utils.getPlayerMaxLevel(), level), opUUID, src, detail)
+    detail = gameclass.AwardDetailCls(gm_cmd='$setlv', level=level)
+    player.levelUp(min(utils.getMaxPlayerLevel(), level), opUUID, src, detail)
 
     attrList = []
     for attrName, attrVal in roleAttrData.items():
@@ -507,6 +549,13 @@ def delEntBuff(su, ent,buffid):
         return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 buffMgrDic 方法', {})
     ent.removeBuff(buffid)
     return su.onCommandResult(0, 'ok,获取实体buff信息成功', {})
+
+@gm_cmd('$delAllEntBuff', (Entity('entid'),), RARG(0), gameconst.CELL, '删除实体所有buff', ALLSIDE, GOD_GROUPS)
+def delAllEntBuff(su, ent):
+    if not hasattr(ent, 'buffMgrDic'):
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 buffMgrDic 方法', {})
+    ent.removeAllBuff()
+    return su.onCommandResult(0, 'ok,已删除实体上所有buff', {})
     
 @gm_cmd('$getEntScoreinfo', (Str('entlist'),), RALL, gameconst.CELL, '获取实体战力信息', ALLSIDE, GOD_GROUPS)
 def getEntScoreinfo(su, entlist):
@@ -606,7 +655,7 @@ def getEntBodyEquipmentInfo(su, ent):
 @gm_cmd('$unlockAllFunc', (Player("gbId or Id"), Int("int onlyTask")), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS, minArgs=1)
 def unlockAllFunc(su, player, onlyTask=0):
     maxLv = 0
-    roleMaxLv = utils.getPlayerMaxLevel()
+    roleMaxLv = utils.getMaxPlayerLevel()
     needCompleteTasks = set()
     for _, data in V_VD.datas.items():
         lvLimit = data.get('level', 0)
@@ -645,9 +694,9 @@ def unlockAllFunc(su, player, onlyTask=0):
 
 
 # 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
-@gm_cmd('$statDropByDropId', (Int("int rewardId"), Int("int count"), Int("int Level"), Int("int school"), Int("int sex"), Int("int isMonthCardExpired"), Int("int avatarScoreRank"), Int("int isCrossServer")), RSTUB('PlayerStub'), BASE, 
+@gm_cmd('$statDropByDropId', (Int("int rewardId"), Int("int count"), Int("int Level"), Int("int school"), Int("int sex"), Int("int isMonthCardExpired"), Int("int isBigMonthCardExpired"), Int("int avatarScoreRank"), Int("int isCrossServer")), RSTUB('PlayerStub'), BASE, 
     '根据掉落id统计掉落', ALLSIDE, GOD_GROUPS, minArgs=2)
-def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, isMonthCardExpired=0, avatarScoreRank=0, isCrossServer=0):
+def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, isMonthCardExpired=0, isBigMonthCardExpired=0, avatarScoreRank=0, isCrossServer=0):
     from test import dropTest
     dropUnit = dropTest.DropUnit(su, count)
     contextVar = {
@@ -655,12 +704,13 @@ def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, 
         'school': school,
         'sex': sex,
         'isMonthCardExpired': isMonthCardExpired,
+        'isBigMonthCardExpired': isBigMonthCardExpired,
         'avatarScoreRank': avatarScoreRank,
         'isCrossServer': isCrossServer
     }
     ret, data, process_info = dropUnit.batchGenAward(rewardId, contextVar)
     if ret:
-        su.onCommandResult(0, 'ok', {'data': {f"{rewardId}_{count}_{level}_{school}_{sex}_{isMonthCardExpired}_{avatarScoreRank}_{isCrossServer}": data}})
+        su.onCommandResult(0, 'ok', {'data': {f"{rewardId}_{count}_{level}_{school}_{sex}_{isMonthCardExpired}_{isBigMonthCardExpired}_{avatarScoreRank}_{isCrossServer}": data}})
     else:
         su.onCommandResult(0, 'wait', {'msg': data, 'process_info': process_info})
 
@@ -1029,16 +1079,73 @@ def _is_fixed_array(obj):
     return "FixedArray" in type(obj).__name__
 
 
+def _is_entity_call(obj):
+    class_name = type(obj).__name__
+    return class_name == 'EntityCall' or class_name.endswith('EntityCall')
+
+
+def _format_entity_call(value):
+    parts = []
+    for attr in ('id', 'className', 'component', 'serverId', 'dstServerId', 'stubNameOrBox', 'compoentType'):
+        if not hasattr(value, attr):
+            continue
+        try:
+            attr_val = getattr(value, attr)
+        except Exception:
+            continue
+        if attr_val is None:
+            continue
+        if attr in ('client', 'cell') and attr_val is True:
+            parts.append(f"{attr}=True")
+        elif attr_val is not False:
+            parts.append(f"{attr}={attr_val}")
+    detail = ", ".join(parts)
+    type_name = type(value).__name__
+    return f"{type_name}({detail}) [可展开]" if detail else f"{type_name} [可展开]"
+
+
+def _get_entity_call_attributes_classified(entity_call, process_name):
+    classified = {"公共": {}, "私有": {}, "函数/方法": {}, "特殊属性": {}}
+    for attr_name in ('id', 'className', 'component', 'serverId', 'dstServerId', 'stubNameOrBox', 'compoentType'):
+        if hasattr(entity_call, attr_name):
+            try:
+                classified["公共"][attr_name] = _get_simple_value(getattr(entity_call, attr_name))
+            except Exception:
+                classified["公共"][attr_name] = "<error>"
+
+    ent = None
+    try:
+        ent_id = getattr(entity_call, 'id', None)
+        if ent_id:
+            ent = KBEngine.entities.get(ent_id)
+    except Exception:
+        pass
+
+    if ent:
+        classified["公共"]["__resolvedEntity__"] = f"{ent.className}(id={ent.id})"
+        resolved = _get_entity_attributes_classified(ent, process_name)
+        for category, attrs in resolved.items():
+            for key, val in attrs.items():
+                classified[category][key] = val
+    else:
+        classified["公共"]["__note__"] = "本进程无对应实体（可能为远程 EntityCall）"
+    return classified
+
+
 def _get_entity_attributes_classified(target_obj, process_name):
     """获取对象的分类属性"""
     classified = {"公共": {}, "私有": {}, "函数/方法": {}, "特殊属性": {}}
     
     try:
+        # KBEngine EntityCall（如 guildBox）
+        if _is_entity_call(target_obj):
+            return _get_entity_call_attributes_classified(target_obj, process_name)
+
         # KBEngine 持久化数组（如 GlobalMailStub.mailList）
         if _is_fixed_array(target_obj):
             for i in range(len(target_obj)):
                 try:
-                    classified["公共"][str(i)] = _get_simple_value(target_obj[i])
+                    classified["公共"][str(i)] = _get_detail_value(target_obj[i])
                 except Exception:
                     classified["公共"][str(i)] = "<error>"
             return classified
@@ -1058,7 +1165,7 @@ def _get_entity_attributes_classified(target_obj, process_name):
             if items_iter:
                 for key, value in items_iter:
                     try:
-                        classified["公共"][str(key)] = _get_simple_value(value)
+                        classified["公共"][str(key)] = _get_detail_value(value)
                     except:
                         classified["公共"][str(key)] = "<error>"
             return classified
@@ -1067,7 +1174,7 @@ def _get_entity_attributes_classified(target_obj, process_name):
             # 列表类型展开索引值对
             for i, value in enumerate(target_obj):
                 try:
-                    classified["公共"][str(i)] = _get_simple_value(value)
+                    classified["公共"][str(i)] = _get_detail_value(value)
                 except:
                     classified["公共"][str(i)] = "<error>"
             return classified
@@ -1077,7 +1184,7 @@ def _get_entity_attributes_classified(target_obj, process_name):
                 values_list = list(target_obj)
                 for i, value in enumerate(values_list):
                     try:
-                        classified["公共"][str(i)] = _get_simple_value(value)
+                        classified["公共"][str(i)] = _get_detail_value(value)
                     except:
                         classified["公共"][str(i)] = "<error>"
             except:
@@ -1111,6 +1218,28 @@ def _get_entity_attributes_classified(target_obj, process_name):
     
     return classified
 
+# 多解一层，方便使用的时候搜索
+def _get_detail_value(value):
+    value_str = _get_simple_value(value)
+    # 检查是否是可展开的复杂对象
+    sub_info = {}
+    if (hasattr(value, '__dict__') and 
+        not isinstance(value, (str, int, float, bool, list, tuple, dict)) and
+        hasattr(value, '__class__')):
+        for attr_name in dir(value):
+            if attr_name.startswith('_'):
+                continue
+            if attr_name.startswith('__') and attr_name.endswith('__'):
+                continue
+            try:
+                attr_value = getattr(value, attr_name)
+                if callable(attr_value):
+                    continue
+                sub_info[attr_name] = _get_simple_value(attr_value)
+            except:
+                continue
+    value_str += f"...{str(sub_info)}" if sub_info else ""
+    return value_str
 
 def _get_simple_value(value):
     """获取属性值的简化字符串表示"""
@@ -1123,6 +1252,8 @@ def _get_simple_value(value):
             return str(value)
         elif isinstance(value, str):
             return f'"{value[:50]}..."' if len(value) > 50 else f'"{value}"'
+        elif _is_entity_call(value):
+            return _format_entity_call(value)
         elif _is_fixed_array(value):
             return f"FixedArray[{len(value)}] [可展开]"
         elif isinstance(value, (list, tuple)):
@@ -1277,7 +1408,7 @@ def leaveBossChallengeDungeon(su, player, openID):
 def modifyGuildFund(su, player, addCount):
     opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$modifyGuildFund', addCount=addCount)
+    detail = gameclass.AwardDetailCls(gm_cmd='$modifyGuildFund', addCount=addCount)
     if addCount < 1:
         return False, '执行失败，资金不能小于1'
     elif player.guildBox is None:
@@ -1289,7 +1420,7 @@ def modifyGuildFund(su, player, addCount):
 def modifyGuildMoney(su, player, addCount):
     opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$modifyGuildMoney', addCount=addCount)
+    detail = gameclass.AwardDetailCls(gm_cmd='$modifyGuildMoney', addCount=addCount)
     if addCount < 1:
         return False, '执行失败，金币不能小于1'
     elif player.guildBox is None:
@@ -1491,5 +1622,48 @@ def remodelingPet(su, player, gridId):
         return False, '执行失败'
     player.remodelingPet(player.id, gridId)
     return True, 'command success'
+
+
+def _sortCellSummary(cellSummary):
+    sorted_summary = {}
+    for mapId in sorted(cellSummary.keys(), key=int):
+        lines = cellSummary[mapId]
+        sorted_summary[mapId] = {lineNo: lines[lineNo] for lineNo in sorted(lines.keys(), key=int)}
+    return sorted_summary
+
+
+@gm_cmd('$getLineCellDist', (), RALL, CELL, '获取所有场景分线在各Cell上的分布', ALLSIDE, GOD_GROUPS)
+def getLineCellDist(su):
+    import formula
+
+    componentNo = KBEngine.getComponentGroupOrder()
+    process_name = f'cellapp{componentNo:02d}'
+    cellSummary = {}
+    avatarCountBySpace = {}
+
+    for avatar in utils.getEntityList('Avatar'):
+        avatarCountBySpace[avatar.spaceNo] = avatarCountBySpace.get(avatar.spaceNo, 0) + 1
+
+    for spaceEnt in utils.getEntityList('Space'):
+        if not formula.inLineScene(spaceEnt.spaceNo):
+            continue
+        mapId = formula.fetchMapId(spaceEnt.spaceNo)
+        lineNo = formula.parseLineNo(spaceEnt.spaceNo)
+        avatarNum = avatarCountBySpace.get(spaceEnt.spaceNo, 0)
+        cellSummary.setdefault(str(mapId), {})[str(lineNo)] = avatarNum
+
+    cellSummary = _sortCellSummary(cellSummary)
+
+    result_data = {
+        'process_info': {
+            'process_name': process_name,
+            'component_order': componentNo,
+        },
+        'cellSummary': cellSummary,
+        'lineCount': sum(len(lines) for lines in cellSummary.values()),
+    }
+
+    LOG_INFO('$getLineCellDist %s: %s', process_name, json.dumps(result_data, ensure_ascii=False))
+    return su.onCommandResult(0, f'{process_name}分线分布统计完成', result_data)
 
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

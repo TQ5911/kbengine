@@ -17,8 +17,8 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "functionID": 1,
-        "isControl": 1,
-        "isOpen": 0,
+        "isControl": 0,
+        "isOpen": 1,
     }),
     2: _tools.RODict({
         "functionID": 2,
@@ -47,7 +47,7 @@ datas = _tools.RODict({
     }),
     7: _tools.RODict({
         "functionID": 7,
-        "isControl": 1,
+        "isControl": 0,
         "isOpen": 1,
     }),
     8: _tools.RODict({
@@ -137,27 +137,27 @@ datas = _tools.RODict({
     }),
     25: _tools.RODict({
         "functionID": 25,
-        "isControl": 1,
+        "isControl": 0,
         "isOpen": 1,
     }),
     26: _tools.RODict({
         "functionID": 26,
-        "isControl": 1,
+        "isControl": 0,
         "isOpen": 1,
     }),
     27: _tools.RODict({
         "functionID": 27,
-        "isControl": 1,
+        "isControl": 0,
         "isOpen": 1,
     }),
     28: _tools.RODict({
         "functionID": 28,
-        "isControl": 1,
+        "isControl": 0,
         "isOpen": 1,
     }),
     29: _tools.RODict({
         "functionID": 29,
-        "isControl": 1,
+        "isControl": 0,
         "isOpen": 1,
     })
 })

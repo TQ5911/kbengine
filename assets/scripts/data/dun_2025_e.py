@@ -59,7 +59,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1011
+        1011,
+        1005
       ]
     }
   },
@@ -88,12 +89,8 @@ datas ={
     "entityID": [
       20250001
     ],
-    "dialogID": 19013003,
-    "transition": {
-      "finished": [
-        1005
-      ]
-    }
+    "dialogID": 19025004,
+    "transition": {}
   },
   "1007": {
     "type": "playerRestNum",
@@ -145,7 +142,7 @@ datas ={
     "entityID": [
       20250001
     ],
-    "dialogID": 19013001,
+    "dialogID": 19025001,
     "transition": {}
   },
   "1022": {
@@ -153,7 +150,7 @@ datas ={
     "entityID": [
       20250001
     ],
-    "dialogID": 19013002,
+    "dialogID": 19025002,
     "transition": {}
   },
   "1028": {
@@ -207,7 +204,7 @@ datas ={
     "entityID": [
       20250001
     ],
-    "dialogID": 19013002,
+    "dialogID": 19025003,
     "transition": {}
   },
   "1031": {

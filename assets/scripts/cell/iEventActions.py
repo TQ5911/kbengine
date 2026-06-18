@@ -16,6 +16,7 @@ import gameengine
 import dataUtils
 import gametimer
 import gamemove
+import dungeonSrc
 
 import creation_creation as C_C_DD
 import creep_base as CBD
@@ -23,6 +24,8 @@ import skill_skill as SSD
 import const_const as CONST
 import character_charData as CHD
 import antiAddictCategory_antiAddictCategory_def as AA_AA_DD
+import cube_config
+import dungeonPlayMode
 
 class IEventActions(object):
     def doCombatActions(self, actionFunc, actionOwner, targetEnt, dmgSrcEntId, buildCtxFunc):
@@ -60,23 +63,23 @@ class IEventActions(object):
         if len(args) <= 0:
             return
 
-        _aureoleId = int(args[0])
+        _auraId = int(args[0])
         _level = 1
         if len(args) >= 2:
             _level = args[1]
 
-        if self.hasAureola(_aureoleId):
-            self.removeAureolaById(_aureoleId)
+        if self.hasAureola(_auraId):
+            self.removeAureolaById(_auraId)
 
-        self.auraDic.addAureole(self, _aureoleId, _level)
+        self.auraDic.addAureole(self, _auraId, _level)
 
     def removeAureola(self, targetEnt, context, *args):
         if len(args) <= 0:
             LOG_ERR('removeAureola args invalid')
             return
 
-        _aureoleId = int(args[0])
-        self.removeAureolaById(_aureoleId)
+        _auraId = int(args[0])
+        self.removeAureolaById(_auraId)
 
     #普通攻击
     def attack(self, targetEnt, context, *args, **checkArgs):
@@ -301,7 +304,7 @@ class IEventActions(object):
                     srckeys = (ent.getBuffSrcKey(_buffId),)
             if srckeys is None:
                 srckeys = (self.getBuffSrcKey(_buffId),)
-            targetEnt and targetEnt.removeBuff(_buffId, srckeys, removeType=gameconst.RemoveType.RTEnumEndByAction)
+            targetEnt and targetEnt.removeBuff(_buffId, srckeys, removeType=gameconst.RemoveTypeEnum.RTEnumEndByAction)
 
         return True
 
@@ -623,7 +626,7 @@ class IEventActions(object):
         if len(args) >= 1:
             _skillId = args[0]
 
-        if not (self.IsAvatar or self.IsAvatarMirror or self.IsCreation):
+        if not (self.IsAvatar or self.IsCreation or self.IsAvatarReplica):
             return self.level
 
         if _skillId > 0:
@@ -639,16 +642,16 @@ class IEventActions(object):
         return 0
 
     def getAureoleLevel(self, targetEnt, context, *args):
-        _aureoleId = 0
+        _auraId = 0
         if len(args) >= 1:
-            _aureoleId = args[0]
+            _auraId = args[0]
 
-        if not _aureoleId:
+        if not _auraId:
             return 0
 
-        _aureole = self.auraDic.get(_aureoleId, None)
-        if _aureole:
-            return _aureole.level
+        _aura = self.auraDic.get(_auraId, None)
+        if _aura:
+            return _aura.level
         return 0
 
     def createCreationByFixedPos(self, targetEnt, context, *args):
@@ -743,18 +746,18 @@ class IEventActions(object):
                 _creation.setAllSkillLv(skillLv)
         return True
 
-    def createCreation(self, targetEnt, context, *args):
+    def createCreation(self, targetEnt, context, *args, absPos=None):
         ttl, cnt, dirOffset, posOffset, _creationDirOffset = 0, 0, None, None,None
         creationLv, skillLv = 1, 0
         posOffsetNoTarget = 0
-        dir = None
+        _dir = None
 
         _argsCnt = len(args)
         if _argsCnt == 1:
             creationId, = args
         elif _argsCnt == 2:
             creationId, creationLv = args
-        elif _argsCnt ==3:
+        elif _argsCnt == 3:
             creationId, creationLv, skillLv = args
         elif _argsCnt == 4:
             creationId, creationLv, skillLv, ttl = args
@@ -769,10 +772,11 @@ class IEventActions(object):
         elif _argsCnt == 9:
             creationId, creationLv, skillLv, ttl, cnt, dirOffset, posOffset, posOffsetNoTarget, _creationDirOffset = args
         elif _argsCnt == 10:
-            creationId, creationLv, skillLv, ttl, cnt, dirOffset, posOffset, posOffsetNoTarget, _creationDirOffset, dir = args
+            creationId, creationLv, skillLv, ttl, cnt, dirOffset, posOffset, posOffsetNoTarget, _creationDirOffset, _dir = args
         else:
             raise Exception('create Creation args error: %s' % args)
-
+        # dirOffset 当有多个创生物时候，为了生成环状 多创生物, 这个是环的偏移角度,会影响创生物位置
+        # _creationDirOffset 这个是创生物自己方向的偏移角
         creationLv, skillLv = int(creationLv), int(skillLv)
         _sameCreations = []
         for cid in self.creationList:
@@ -802,10 +806,10 @@ class IEventActions(object):
 
         self.inheritCombatProps(creationId, _combatProps)
 
-        fixedPos = _fixedDir = None
+        fixedPos = None
         createCount, createRadius = 1, 0
         rawGameEntityId = 0
-        _fixedDir = dir or _fixedDir
+        _fixedDir = _dir
         if context.actionType == actionContext.ACTION_USE_SKILL:
             skill = self._getSkillByActionContext(context)
             fixedPos, _fixedDir = skill.getSkillPosAndDir(self, targetEnt, context.skillArgs)
@@ -814,7 +818,9 @@ class IEventActions(object):
                 if (skill.getEffectTargetType(skill.skillId) == 'Enemy' or skill.getEffectTargetType(skill.skillId) == 'PlayerEnemy' ) and targetEnt:
                     fixedPos = targetEnt.position
 
-            _fixedDir = _fixedDir or sMath.getDirFromYaw(self.direction[2])
+            if not _fixedDir:
+                _fixedDir = sMath.getDirFromYaw(self.direction[2])
+
             skillDir = _fixedDir
             if dirOffset:
                 _fixedDir = sMath.clockwiseRotate(_fixedDir, dirOffset*math.pi/180)
@@ -846,8 +852,15 @@ class IEventActions(object):
             position = sMath.posByOffset(position, _fixedDir * posOffset)
 
         creationDir = direction
-        if _creationDirOffset is not None and skillDir:
+        if _dir is not None:
+            creationDir = (0.0, 0.0, _dir * math.pi / 180)
+
+        elif _creationDirOffset is not None and skillDir:
             creationDir = (0.0, 0.0, sMath.getYawFromDirection(sMath.clockwiseRotate(skillDir, _creationDirOffset*math.pi/180)))
+
+        if absPos is not None:
+            # abs有最高优先级, 如果传了这个参，就用它来做绝对位置
+            position = absPos
 
         # 【【任务】回收创生物-服务端】
         if rawGameEntityId:
@@ -1196,7 +1209,7 @@ class IEventActions(object):
         if targetEnt.hasCreepTag(gameconst.CREEP_TAG_ANTI_TAUNT):
             return
 
-        maxHateEntId, maxHate = targetEnt.aiController.hateDict.getMaximumHatredTarget()
+        maxHateEntId, maxHate = targetEnt.aiController.hateDict.getMaxHatredTarget()
         maxHateVal = maxHate.currentHate if maxHate else 0
         myHate = targetEnt.aiController.hateDict.getHate(self.id)
         myHateVal = myHate.currentHate if myHate else 0
@@ -1243,6 +1256,7 @@ class IEventActions(object):
         targetEnt.baseStateRate = newVal
 
     def lockMinHp(self, targetEnt, context, *args):
+        LOG_DBG('lockMinHp ', args)
         _hpPct, totalTimes = args
         _minHp = min(self.hp, int(self.fullHp * _hpPct))
         lockMinHpInfo = gameclass.LockMinHpInfo(context.getDmgSourceType(), context.getDmgSourceId(), _hpPct,
@@ -1250,6 +1264,7 @@ class IEventActions(object):
         self.setTempMiscProp(gameconst.EntityPropsEnum.lockMinHp, lockMinHpInfo)
 
     def removeLockMinHp(self, targetEnt, context, *args):
+        LOG_DBG('removeLockMinHp ', args)
         self.popTempMiscProp(gameconst.EntityPropsEnum.lockMinHp)
 
     def startStandStillBuffTriggerLoop(self, targetEnt, context, buffId, maxOverlayLevel, stillPreOverlaySec, movePreOverlaySec):
@@ -1298,7 +1313,7 @@ class IEventActions(object):
     def addExpAction(self, expVal):
         _opUUID = KBEngine.genUUID64()
         _src = AA_AA_DD.datas.BONUS_SRC_EXP_ACTION
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         self._addExp(expVal, _opUUID, _src, _detail)
 
     def interactArenaKing(self):
@@ -1320,3 +1335,19 @@ class IEventActions(object):
             )
         )
 
+    def challengeInnerDemon(self):
+        if not formula.inCubeScene(self.spaceNo):
+            LOG_WARN('challengeInnerDemon fail: not cube space', self.spaceNo)
+            return
+        if not formula._isInnerDemonSpace(self.spaceNo):
+            LOG_WARN('challengeInnerDemon fail: not inner demon space', self.spaceNo)
+            return
+
+        src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+        dungeonNo = cube_config.datas['cube_innerDemon']['value']
+        dunPlayMode = dungeonPlayMode.ChallengeInnerDemonPlayMode(ownerGbId=self.gbId)
+        extra = {'hasCheck': True, 'dungeonPlayMode': dunPlayMode, 'hasCast': False}
+        LOG_DBG('challengeInnerDemon', src, extra)
+        self.applyLeaveTeam(self.id)
+        self.leaveRaid(self.id)
+        self._enterSingleDungeon(dungeonNo, src, extra)

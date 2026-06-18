@@ -37,6 +37,7 @@
             <Arg>   LEVEL                       </Arg>
             <Arg>   CHANNEL                     </Arg>
             <Arg>   UINT16                      </Arg>
+            <Arg>   UINT16                      </Arg>
         </sendGlobalMail>
 
         <gmGetGlobalMailList>

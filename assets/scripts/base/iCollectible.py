@@ -108,6 +108,8 @@ class ICollectible(object):
             self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
             LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
                 self.gbID,
+                self.accountEntity.clientDistinctId, 
+                self.gbID,
                 collectID,
                 gameconst.CollectibleDetailStatus.COLLECTING,
                 "",
@@ -189,7 +191,7 @@ class ICollectible(object):
             LOG_WARN('     in _completeCollect, canDeductWealth fail')
             return False
         srcType = AAC_AACDD.datas.BONUS_SRC_COLLECTIBLE
-        detail = gameclass.AwardDetail(costItemId=itemID, costItemNum=itemCount)
+        detail = gameclass.AwardDetailCls(costItemId=itemID, costItemNum=itemCount)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
         return True
 

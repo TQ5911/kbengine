@@ -19,8 +19,8 @@ datas = _tools.RODict({
         "ID": 1,
         "appearanceId": _tools.ROList([100003002]),
         "costItem": ((30000242, 1999),),
-        "startTime": 202605011000,
-        "deleteTime": 202606010000,
+        "startTime": 0,
+        "deleteTime": 0,
         "isOpen": 1,
     }),
     2: _tools.RODict({
@@ -28,7 +28,7 @@ datas = _tools.RODict({
         "appearanceId": _tools.ROList([100001001]),
         "costItem": ((30000242, 999),),
         "startTime": 202605011000,
-        "deleteTime": 202606010000,
+        "deleteTime": 202706010000,
         "isOpen": 1,
     })
 })

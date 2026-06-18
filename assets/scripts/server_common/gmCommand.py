@@ -985,18 +985,22 @@ class GmCommand(object):
         LOG_WARN('do command error:', data)
         for _i in data['need']:
             _arg = self.args[_i]
+            _msg = _arg.checkValue(_args[_i], data['args'][_i])
             if isinstance(_arg, Player):
                 if data['args'][_i] == False:
-                    data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
+                    data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, _msg, None)
+                    return
                 elif data['args'][_i] == True:
-                    data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_OFFLINE, '', None)
+                    data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_OFFLINE, _msg, None)
+                    return
                 else:
-                    data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
+                    data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, _msg, None)
+                    return
 
             elif isinstance(_arg, PlayerAccount) and not data['args'][_i]:
-                data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, '', None)
+                data['su'].onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_NOT_EXISTS, _msg, None)
+                return
 
-            _msg = _arg.checkValue(_args[_i], data['args'][_i])
             if _msg:
                 error_msgs.append(_msg)
         data['su'].feedbackCommandFail('错误，%s' % ('，'.join(error_msgs)))
@@ -1536,10 +1540,11 @@ def _doCommand(superUser, command, side, args=None, reason=""):
         gmBCastRealDoCommand(cmd.component, superUser, command, real_args)
     else:
         cmd.fetchArgMailBoxes(superUser, command, real_args, _cmd_args, reason)
-    
-    
+
     srcStr = superUser.__getstate__() if hasattr(superUser, '__getstate__') else str(superUser)
     LogTrackingMgr.LogTrackingMgr.GM_GM(
+        'GM',
+        '',
         srcStr,
         _cmd_name,
         ' '.join(_cmd_args)

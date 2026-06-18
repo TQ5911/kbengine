@@ -17,17 +17,17 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "summonId": 11002005,
+        "summonIdInscription": ((0, 11002005), (64001304, 11002008)),
         "UnlockLevel": 1,
     }),
     2: _tools.RODict({
         "ID": 2,
-        "summonId": 11002006,
+        "summonIdInscription": ((0, 11002006), (64001304, 11002009)),
         "UnlockLevel": 5,
     }),
     3: _tools.RODict({
         "ID": 3,
-        "summonId": 11002007,
+        "summonIdInscription": ((0, 11002007), (64001304, 11002010)),
         "UnlockLevel": 8,
     })
 })

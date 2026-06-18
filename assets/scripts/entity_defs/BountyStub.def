@@ -135,6 +135,7 @@
         <onNoticeBecomePreyHunterFailed>
             <Arg>           ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
             <Arg>           UUID         </Arg>
+            <Arg>           UINT8         </Arg>
         </onNoticeBecomePreyHunterFailed>
 
         <onNoticeHasAcceptedFailed>

@@ -21,6 +21,8 @@ import itemFactory
 import dataUtils
 import awardContext
 import LogTrackingMgr
+import actionContext
+import gametimer
 
 import message_Message_def as MMD
 import auction_auctionConst as AUT_CONST
@@ -33,7 +35,7 @@ import gearBase_typeTab as GBTTD
 import agent_agentFunction as A_AFD
 import auction_publicityCategory as A_PC
 import itemData_itemData as ITEMDATA
-import actionContext
+import auction_publicityAddTime as A_PA
 
 def lockCoinAuction(timeout=3):
     def _lockCoinAuction(fn):
@@ -66,9 +68,12 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     """玩家交易行base类"""
 
     def __init__(self):
-        if self.coinAuctionInfo.auctionType == gameconst.AuctionType.UNKNOWN:
-            self.coinAuctionInfo = auction.AuctionPlayerCache(gameconst.AuctionType.COIN_AUCTION, )
+        if self.coinAuctionInfo.auctionType == gameconst.AuctionTypeEnum.UNKNOWN:
+            self.coinAuctionInfo = auction.AuctionPlayerCache(gameconst.AuctionTypeEnum.COIN_AUCTION, )
+        self.auctionPaymentTimerId = self.pyAddTimer(0, 5, gametimer.PROCESS_AUCTION_PENDING)
 
+    def calculateAuctionPendingEntries(self):
+        self._settlePendingEntries()
     # ---------------------------------------------------------------
     # Cache Lock
 
@@ -84,11 +89,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     @property
     def coinItemId(self):
-        return gameconst.ItemId.COIN
+        return gameconst.ItemIdEnum.COIN
 
     @property
     def moneyItemId(self):
-        return gameconst.ItemId.MONEY
+        return gameconst.ItemIdEnum.MONEY
 
     @property
     def stub(self):
@@ -151,7 +156,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     def _loadPlayerCoinAuctionData(self):
         LOG_INFO('_loadPlayerCoinAuctionData::')
         self._loadPlayerAuctionData(self.coinAuctionInfo)
-        redisUtils.PlayerCoinAuctionRecord.clearExpiredMessageRecords(self.gbID)
 
     def onLoadPlayerCoinAuctionData(self, auctionItemUUIDList, extra):
         LOG_INFO("onLoadPlayerCoinAuctionData::", auctionItemUUIDList, extra)
@@ -192,7 +196,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if len(searchResults) > 0:
             gbIds = []
             for auctionItem in searchResults:
-                gbIds.append(auctionItem.fromPlayerGBID)
+                if auctionItem.fromPlayerGBID not in gbIds:
+                    gbIds.append(auctionItem.fromPlayerGBID)
             func = functools.partial(self.client.onSearchCoinAuctionItemsByItemId, itemIds, limit, offset, self.transServerAuctionItemToClientAuctionItemList(searchResults), totalNum, isPublicity)
             redisUtils.RedisUtils.getUsersInfo(gbIds, functools.partial(self.asyncGetNames, searchResults, func))
         else:
@@ -243,6 +248,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     @lockCoinAuction(timeout=2)
     def saleItemInCoinAuction(self, exposed, itemId, uniqueId, totalPrice, number, bagType):
         LOG_INFO("saleItemInCoinAuction::", itemId, uniqueId, totalPrice, number, bagType)
+        # 上架交易行需要月卡权限
+        if self.isMonthCardExpired():
+            LOG_WARN("saleItemInCoinAuction:: failed, no month card")
+            return
+        
         (m_itemObj, m_gridDict), m_errno = self._saleItemInCoinAuctionCheck(
             itemId, uniqueId, totalPrice, number, bagType)
         if m_errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
@@ -255,31 +265,68 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
             return
         
-        isPublicity = 0
+        isPublicity = False
+        itemQuality = -1
+        addPublicityTime = 0
         # 装备
         if m_itemObj.isEquipmentItem():
             lowestQulity = A_PC.equipQualityDataDic.get(m_itemObj.getEquipType(), -1)
             if lowestQulity > 0 and m_itemObj.getEquipQuality() >= lowestQulity:
-                isPublicity = 1
+                isPublicity = True
+                itemQuality = m_itemObj.getEquipQuality()
         # 道具
         else:
-            if A_PC.itemDataDic.get(m_itemObj.itemId, False):
-                isPublicity = 1
-            else:
-                dataKey = '{0}_{1}'.format(m_itemObj.itemType, m_itemObj.itemSubType)
-                lowestQulity = A_PC.itemQualityDataDic.get(dataKey, -1)
-                if lowestQulity > 0 and m_itemObj.quality >= lowestQulity:
-                    isPublicity = 1
+            # 魂魄
+            if m_itemObj.isSoul():
+                auctionSoulScoreRules = AUT_CONST.datas["auctionSoulScoreRule"]["value"]
+                for rollProp in m_itemObj.rollProps:
+                    propQuality = rollProp[1] + 1
+                    for auctionSoulScoreRule in auctionSoulScoreRules:
+                        cfgQuality, addTime = auctionSoulScoreRule
+                        if propQuality == cfgQuality:
+                            addPublicityTime += addTime
+                            break
+            else:    
+                if A_PC.itemDataDic.get(m_itemObj.itemId, False):
+                    isPublicity = True
+                    itemQuality = m_itemObj.quality
+                else:
+                    dataKey = '{0}_{1}'.format(m_itemObj.itemType, m_itemObj.itemSubType)
+                    lowestQulity = A_PC.itemQualityDataDic.get(dataKey, -1)
+                    if lowestQulity > 0 and m_itemObj.quality >= lowestQulity:
+                        isPublicity = True
+                        itemQuality = m_itemObj.quality
+
+        if isPublicity:
+            # 品质限制的公示时间
+            publicityTimeCfg = AUT_CONST.datas["auctionPublicityTime"]["value"]
+            if publicityTimeCfg:
+                for data in publicityTimeCfg:
+                    quality, addTime = data
+                    if itemQuality == quality:
+                        addPublicityTime = addTime
+                        break
+            # 装备大类和幸运值相关的额外公示时间
+            if m_itemObj.isEquipmentItem():
+                dataKey = '{0}_{1}'.format(m_itemObj.getEquipType(), m_itemObj.getBlessVal())
+                k = A_PA.equipTypeLevelToAddPublicityAddTime.get(dataKey, None)
+                if not (k is None):
+                    addPublicityTime += A_PA.datas.get(k, {}).get('addTime', 0)
+        if addPublicityTime > 0:
+            addPublicityTime = addPublicityTime * gameconst.ONE_MINUTE_COST_SECONDS + int(AUT_CONST.datas["auctionLuckyBuyTime"]["value"])
 
         m_opUUID = KBEngine.genUUID64()
-        _tlogProps = dict(role_name=self.getRoleCacheAttr('name', ''))
+        
+        logProps = {}
+        logProps['role_name']=self.getRoleCacheAttr('name', '')
+        logProps['role_account']=self.accountName
         m_extra = {
             'opUUID': m_opUUID,
             'serverId': gameconfig.serverId(),
-            'tlogProps': _tlogProps,
-            'isPublicity': isPublicity,
+            'tlogProps': logProps,
         }
-        self.stub.saleItem(self.gbID, json.dumps(m_itemObj.toItemSavedDict(number)), totalPrice, number, bagType, m_extra)
+
+        self.stub.saleItem(self.gbID, json.dumps(m_itemObj.toItemSavedDict(number)), totalPrice, number, bagType, m_extra, addPublicityTime)
 
         return True
 
@@ -369,10 +416,10 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             deductWealthVal.addWealthByItemId(self.coinItemId, auctionServiceFee)
 
             m_bagData = self.getBagByType(m_bagType)
-            m_bagData.deductItemsByGrid(self, m_gridDict, m_opUUID, m_src, m_desc)
+            m_bagData.deductItemsByGridId(self, m_gridDict, m_opUUID, m_src, m_desc)
             self.deductWealth(m_src, deductWealthVal, m_opUUID, m_desc)
-            
-        self.stub.doSaleItem(auctionItem.auctionItemUUID, self.gbID, extra, result)
+        addPublicityTime = 0
+        self.stub.doSaleItem(auctionItem.auctionItemUUID, self.gbID, extra, result, addPublicityTime)
 
     @unlockCoinAuction
     def onSaleItemInCoinAuction(self, auctionItemData, extra):
@@ -434,8 +481,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return None, gameconst.AuctionErrno.ERR_AUCTION_IDIP_GM_BAN
         return None, gameconst.AuctionErrno.ERR_AUCTION_OK
 
-    def doBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItemUUID, price, extra):
-        LOG_INFO("doBuyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, price, extra)
+    def doBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItemUUID, price, publicityEndTime, buyType, extra):
+        LOG_INFO("doBuyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, price, publicityEndTime, buyType, extra)
         code = extra.get("code", gameconst.AuctionErrno.ERR_AUCTION_OK)
         errno = gameconst.AuctionErrno._errno(code)
         if errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
@@ -453,7 +500,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         m_deductWealthVal, m_errno = self._doBuyItemInCoinAuction(price)
         if m_errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
             LOG_ERR("doBuyItemInCoinAuctionByAuctionItemUUID::failed, errno={}".format(m_errno))
-            self.stub.doBuyItem(auctionItemUUID, self.gbID, m_errno.errno, price, extra)
+            self.stub.doBuyItem(auctionItemUUID, self.gbID, m_errno.errno, price, publicityEndTime, buyType, extra)
             return
 
         _itemId, _number = extra['auctionBuyItemId'], extra['auctionBuyItemNum']
@@ -464,8 +511,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
         _tlogProps = dict(role_name=self.getRoleCacheAttr('name', ''))
         extra.update({'opUUID': m_opUUID, 'tlogProps': _tlogProps})
-        extra["buyerCoinNum"] = self.coin
-        self.stub.doBuyItem(auctionItemUUID, self.gbID, m_errno.errno, price, extra)
+        self.stub.doBuyItem(auctionItemUUID, self.gbID, m_errno.errno, price, publicityEndTime, buyType, extra)
 
     def _doBuyItemInCoinAuction(self, price):
         m_deductWealthVal = dropAward.DeductWealthVal()
@@ -540,13 +586,62 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # ---------------------------------------------------------------
     # buy auction item
 
+    def _addPendingAuctionEntry(self, auctionItemUUID, amount, dealTime):
+        self.pendingAuctionEntries.addPendingAuctionEntry(auctionItemUUID=auctionItemUUID, amount=amount, dealTime=dealTime)
+        self.withDrawMoney = self.withDrawMoney + amount
+
+    def _settlePendingEntries(self):
+        settled = []
+        expiredAuctionUUIds=[]
+        remainPendingAuctionEntries=[]
+        now = utils.curTS()
+        expiredTime = 30 * gameconst.ONE_DAY_COST_SECONDS
+        delay = int(AUT_CONST.datas["auctionPaymentDelayTime"]["value"]) * gameconst.ONE_MINUTE_COST_SECONDS
+        for entry in self.pendingAuctionEntries.pendingAuctionEntries:
+            # 如果未结算，看看是否到结算时间了
+            if not entry.isSettled:
+                if entry.dealTime + delay < now:
+                    entry.isSettled = True
+                    settled.append(entry)
+            # 已结算看看是否到期了
+            if entry.dealTime + expiredTime < now:
+                if not entry.isSettled:
+                    entry.isSettled = True
+                    settled.append(entry)
+                expiredAuctionUUIds.append(entry.auctionItemUUID)
+            else:
+                remainPendingAuctionEntries.append(entry)
+
+        self.pendingAuctionEntries.pendingAuctionEntries = remainPendingAuctionEntries
+        
+        for entry in settled:
+            amount = entry.amount
+            self.withDrawMoney -= amount
+            self.saleItemMoney += amount
+            redisUtils.PlayerCoinAuctionRecord.updateRecordStatus(self.gbID, entry.auctionItemUUID, 1, functools.partial(self.onUpdateRecordStatus, expiredAuctionUUIds))
+
+        if len(settled) > 0:
+            self.withDrawMoney = self.withDrawMoney
+            self.saleItemMoney = self.saleItemMoney
+        else:
+            for expiredAuctionUUId in expiredAuctionUUIds:
+                redisUtils.PlayerCoinAuctionRecord.deleteRecord(self.gbID, expiredAuctionUUId)
+
+    def onUpdateRecordStatus(self, expiredAuctionUUIds, cid, error, result):
+        if error:
+            LOG_WARN('onUpdateRecordStatus ', error, result)
+            return
+        
+        for expiredAuctionUUId in expiredAuctionUUIds:
+            redisUtils.PlayerCoinAuctionRecord.deleteRecord(self.gbID, expiredAuctionUUId)
+
     def onPlayerGlobalAuctionItemBeSaled(self, auctionItem, number, totalPrice, cacheSyncT, totalPriceInDeductTax,
                                          extra=None):
         """玩家商品被其他玩家购买后回调"""
 
         LOG_INFO("onPlayerGlobalAuctionItemBeSaled::", auctionItem, number, totalPrice, cacheSyncT,
                   totalPriceInDeductTax, extra)
-        self.saleItemMoney += totalPriceInDeductTax
+        self._addPendingAuctionEntry(auctionItem.auctionItemUUID, totalPriceInDeductTax, cacheSyncT)
         self.onMessagePre(int(AUT_CONST.datas["auctionSoldMsg"]["value"]),
                           [str(auctionItem.itemId), str(number)])
         self.client.onPlayerCoinAuctionItemBeSaled(auctionItem.auctionItemUUID, number, totalPrice)
@@ -559,7 +654,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
                   totalPriceInDeductTax, extra)
         if extra is None:
             extra = {}
-        self.saleItemMoney += totalPriceInDeductTax
+        self._addPendingAuctionEntry(auctionItem.auctionItemUUID, totalPriceInDeductTax, cacheSyncT)
         self.client.onPlayerCoinAuctionItemBeSaled(auctionItem.auctionItemUUID, number, totalPrice)
 
     # ---------------------------------------------------------------
@@ -952,7 +1047,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
         tlogProps = dict(role_name=self.getRoleCacheAttr('name', ''))
         extra.update({'opUUID': m_opUUID, 'tlogProps': tlogProps})
-        extra["buyerCoinNum"] = self.coin
         self.stub.doBuyItemByItemId(self.gbID, errno.errno, itemId, number, price, remainNum, auctionItemUUIDs,
                                     totalPrice, extra)
 
@@ -1020,12 +1114,13 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     def _getPlayerBuyAuctionItemRecords(self, number):
         redisUtils.PlayerBuyAuctionItemRecord.getMessageRecord(self, self.gbID, number=number)
 
+    @gamedecorator.limitcall(0.2)
     @gamedecorator.checkGameconfigEnable('business')
     @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     def getAuctionSaleItemMoney(self, exposed):
         LOG_INFO("getAuctionSaleItemMoney::")
         if self.saleItemMoney <= 0:
-            LOG_ERR('getAuctionSaleItemMoney:: saleItemMoney <= 0')
+            LOG_WARN('getAuctionSaleItemMoney:: saleItemMoney <= 0 ', self.saleItemMoney)
             return
 
         m_src = AAC_AACDD.datas.BONUS_SRC_AUCTION_WITHDRAW_SETTLED_CURRENCY
@@ -1059,7 +1154,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return
         self.collectionAuctionItemCategoryList.append(itemId)
         if not isInit:
-            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.RECOMMEND_CATEGORY, gameconst.AuctionCollectOpType.ADD, itemId)
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, self.accountEntity.clientDistinctId, self.gbID, gameconst.AuctionCollectDataType.RECOMMEND_CATEGORY, gameconst.AuctionCollectOpType.ADD, itemId)
 
         LOG_INFO("addCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
 
@@ -1069,7 +1164,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionItemCategoryList.remove(itemId)
-        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.RECOMMEND_CATEGORY, gameconst.AuctionCollectOpType.REMOVE, itemId)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, self.accountEntity.clientDistinctId, self.gbID, gameconst.AuctionCollectDataType.RECOMMEND_CATEGORY, gameconst.AuctionCollectOpType.REMOVE, itemId)
         LOG_INFO("removeCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
 
     def addCollectionAuctionIdList(self, key, itemId, isInit = False):
@@ -1081,7 +1176,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return
         self.collectionAuctionIdList.append(itemId)
         if not isInit:
-            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_CATEGORY, gameconst.AuctionCollectOpType.ADD, itemId)
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, self.accountEntity.clientDistinctId, self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_CATEGORY, gameconst.AuctionCollectOpType.ADD, itemId)
         LOG_INFO("addCollectionAuctionIdList", self.collectionAuctionIdList)
 
     def removeCollectionAuctionIdList(self, key, itemId):
@@ -1090,7 +1185,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionIdList.remove(itemId)
-        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_CATEGORY, gameconst.AuctionCollectOpType.REMOVE, itemId)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, self.accountEntity.clientDistinctId, self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_CATEGORY, gameconst.AuctionCollectOpType.REMOVE, itemId)
         LOG_INFO("removeCollectionAuctionIdList", self.collectionAuctionIdList)
 
     def addCollectionAuctionIdCategoryList(self, key, itemId, isInit = False):
@@ -1102,7 +1197,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return
         self.collectionAuctionIdCategoryList.append(itemId)
         if not isInit:
-            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_ITEM, gameconst.AuctionCollectOpType.ADD, itemId)
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, self.accountEntity.clientDistinctId, self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_ITEM, gameconst.AuctionCollectOpType.ADD, itemId)
         LOG_INFO("addCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
 
     def removeCollectionAuctionIdCategoryList(self, key, itemId):
@@ -1111,7 +1206,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionIdCategoryList.remove(itemId)
-        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_ITEM, gameconst.AuctionCollectOpType.REMOVE, itemId)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, self.accountEntity.clientDistinctId, self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_ITEM, gameconst.AuctionCollectOpType.REMOVE, itemId)
         LOG_INFO("removeCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
 
     def tipPlayerAuctionItemCollection(self, newAuctionItemCache):
@@ -1141,7 +1236,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if len(auctionItems) > 0:
             gbIds = []
             for auctionItem in auctionItems:
-                gbIds.append(auctionItem.fromPlayerGBID)
+                if auctionItem.fromPlayerGBID not in gbIds:
+                    gbIds.append(auctionItem.fromPlayerGBID)
             func = functools.partial(self.client.onGetAuctionItemsByAuctionIdsResp, categoryId, self.transServerAuctionItemToClientAuctionItemList(auctionItems))
             redisUtils.RedisUtils.getUsersInfo(gbIds, functools.partial(self.asyncGetNames, auctionItems, func))
         else:

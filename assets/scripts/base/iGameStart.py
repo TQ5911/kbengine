@@ -20,6 +20,7 @@ import redisUtils
 
 import gamePlay_gamePlay as DDL
 import wonderLand_floor as WL_FD
+import abyss_floor as AB_FD
 import cube_floor as C_FD
 import guildChallenge_basicInfo as GC_BI
 
@@ -201,6 +202,12 @@ class IGameStart(object):
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
+            for _floorNo in AB_FD.datas.keys():
+                if not gameengine.getGlobalBase('AbyssStub%d' % _floorNo, reportErr=False):
+                    LOG_INFO('start waiting: waiting for abyss stub', _floorNo)
+                    self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
+                    return
+
             for _floorNo in C_FD.datas.keys():
                 if not gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False):
                     LOG_INFO('start waiting: waiting for CubeStub stub', _floorNo)
@@ -273,6 +280,9 @@ class IGameStart(object):
 
                 for _floorNo in WL_FD.datas.keys():
                     gameengine.getGlobalBase('WonderLandStub%d' % _floorNo).doNext()
+                    
+                for _floorNo in AB_FD.datas.keys():
+                    gameengine.getGlobalBase('AbyssStub%d' % _floorNo).doNext()
 
                 for _floorNo in C_FD.datas.keys():
                     gameengine.getGlobalBase('CubeStub%d' % _floorNo).doNext()
@@ -405,9 +415,9 @@ class IGameStart(object):
 
             readyNum = self.lineEntityReadyNum.get(mapId, 0)
             if readyNum < needNum:
-                return gameclass.BoolResult(False, mapId)
+                return gameclass.ResultBool(False, mapId)
 
-        return gameclass.BoolResult(True, 0)
+        return gameclass.ResultBool(True, 0)
 
     def onWorldRefreshEntityReady(self, groupId, isReady):
         self.worldRefreshEntityReady[groupId] = isReady
@@ -417,9 +427,9 @@ class IGameStart(object):
         for groupId, groupCfg in WMR_ERG.datas.items():
             isReady = self.worldRefreshEntityReady.get(groupId, False)
             if not isReady:
-                return gameclass.BoolResult(False, groupId)
+                return gameclass.ResultBool(False, groupId)
         '''
-        return gameclass.BoolResult(True, 0)
+        return gameclass.ResultBool(True, 0)
 
     def addInitProcedure(self, name):
         LOG_INFO('start init', name)
@@ -498,6 +508,9 @@ class IGameStart(object):
         # 每层单独一个stub,一个space
         for _floorNo in WL_FD.datas.keys():
             random.choice(baseApps).createUnarchiveStub('WonderLandStub', {'floor': _floorNo}, 'WonderLandStub%d' % _floorNo)
+
+        for _floorNo in AB_FD.datas.keys():
+            random.choice(baseApps).createUnarchiveStub('AbyssStub', {'floor': _floorNo}, 'AbyssStub%d' % _floorNo)
 
         # 每层单独一个stub,一个space
         for _floorNo in C_FD.datas.keys():

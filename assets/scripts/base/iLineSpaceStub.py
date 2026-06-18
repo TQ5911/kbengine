@@ -3,25 +3,13 @@
 import KBEngine
 from KBEDebug import *
 import gameengine
-import iGlobal
-import iBaseNoCell
-import iTimer
-import iCycleEvent
 import gametimer
-import gameconfig
-import asyncore
-import gmCommand
-import gameglobal
 import gameconst
 import formula
-import random
 import utils
 import StaticSpaceVal
 
 import branchData_branchData as B_BD
-
-import lineSpace
-import iMapRefresher
 
 
 class ILineSpaceStub(object):
@@ -40,7 +28,6 @@ class ILineSpaceStub(object):
             self.addTimerCB(ln*0.2, '_createLineSpaceRemote', (ln,spaceWeight), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
 
     def newLineSpaceVal(self, lineType, lineNo):
-        # return lineSpace.LineSpaceVal(lineType, lineNo, lineSpace.LineSpaceVal.LINE_CREATING)
         return StaticSpaceVal.StaticSpaceVal(lineType, lineNo)
 
     def getLineSpaceVal(self, lineNo):

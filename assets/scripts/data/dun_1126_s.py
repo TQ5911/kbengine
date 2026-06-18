@@ -10,11 +10,12 @@ datas ={
           "CustomID": "",
           "Dir": 0.0,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 11326001,
           "ID": 11260001,
           "PosX": 337.81,
-          "PosY": -100.2244,
-          "PosZ": 271.54,
+          "PosY": -101.9789,
+          "PosZ": 278.63,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -43,6 +44,7 @@ datas ={
           "CustomID": "11248010",
           "Dir": 170.0,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 17112601,
           "ID": 11268004,
           "PosX": 246.8106,
@@ -59,6 +61,33 @@ datas ={
             "TelZ": 500.983
           }
         }
+      },
+      "AirWall": {
+        "11268005": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 10,
+          "ID": 11268005,
+          "PosX": 337.81,
+          "PosY": -101.77,
+          "PosZ": 277.63,
+          "Props": {
+            "AreaType": 1,
+            "Height": 5.0,
+            "MPosX": 317.0,
+            "MPosY": -101.77,
+            "MPosZ": 257.0,
+            "Radius": 18.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        }
       }
     },
     "TimerEntities": {},
@@ -71,6 +100,7 @@ datas ={
         "CustomID": "",
         "Dir": 173.1123,
         "DisplayName": "",
+        "EliteCustomID": "",
         "EntityID": 0,
         "ID": 11268001,
         "PosX": 250.5275,
@@ -91,6 +121,7 @@ datas ={
         "CustomID": "",
         "Dir": 173.4857,
         "DisplayName": "\u795e\u884c\u70b9\u00b7\u9547\u95e8\u524d",
+        "EliteCustomID": "",
         "EntityID": 0,
         "ID": 11268002,
         "PosX": 250.4654,
@@ -111,6 +142,7 @@ datas ={
         "CustomID": "",
         "Dir": 212.9841,
         "DisplayName": "\u795e\u884c\u70b9\u00b7\u77f3\u5ba4",
+        "EliteCustomID": "",
         "EntityID": 0,
         "ID": 11268003,
         "PosX": 453.44,

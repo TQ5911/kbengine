@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "50217E9879B2E309AD138C799DCBE78A";
+        public string serverEntitydefMD5 = "A14B71B0AF29FECE542C551DE24BE3AD";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -1635,28 +1635,36 @@ namespace KBEngine
             }
 
             Entity playerEntity = player();
-
-            if (playerEntity == null || playerEntity.inWorld == false || playerEntity.ServerSetPosition || !KBEngineApp.app.helloDone)
+            if (playerEntity == null 
+                || playerEntity.inWorld == false 
+                || !KBEngineApp.app.helloDone)
             {
                 return;
             }
-
-            if (!isForce && (playerEntity.isControlled || playerEntity.isShifting))
+            if (MyUtils.IsClassType(playerEntity.classType, ClassType.Avatar))
             {
-                return;
-            }
-
-            Avatar playerAvatar = playerEntity as Avatar;
-            if (playerAvatar == null || playerAvatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || playerAvatar.IsObPlayer())
-            {
-                return;
-            }
-
-            if (playerAvatar.hasView && playerAvatar.view is ViewAvatar viewAvatar)
-            {
-                if (!viewAvatar.IsClientControlledTransform())
+                Avatar avatar = (Avatar)playerEntity;
+                if (avatar.IsObPlayer()
+                    || avatar.isControlled
+                    || avatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL))
                 {
                     return;
+                }
+            }
+
+            if (!isForce)
+            {
+                if (playerEntity.ServerSetPosition || playerEntity.isShifting)
+                {
+                    return;
+                }
+
+                if (playerEntity.hasView && playerEntity.view is ViewControl viewAvatar)
+                {
+                    if (!viewAvatar.IsClientControlledTransform())
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -1675,7 +1683,6 @@ namespace KBEngine
             if (posHasChanged || dirHasChanged || isOnGroundChanged)
             {
                 //GLog.LogError($"KBEngine::updatePlayerToServer: {playerEntity._entityLastLocalPos}=>{position} dir={Vector3.Distance(playerEntity._entityLastLocalPos, position)} {span.TotalSeconds}");
-                //GLog.LogError($"KBEngine::updatePlayerToServer: {playerEntity._entityLastLocalDir}=>{direction} dir={direction - playerEntity._entityLastLocalDir} {span.TotalSeconds}");
 
                 playerEntity._entityLastLocalPos = position;
                 playerEntity._entityLastLocalDir = direction;
@@ -1930,14 +1937,28 @@ namespace KBEngine
             _entityServerPos.y = y;
             _entityServerPos.z = z;
 
-            Avatar entity = player() as Avatar;
-            if (entity != null && (entity.isControlled || entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || entity.IsObPlayer()))
+            Entity entity = player();
+            if (entity == null)
             {
-                entity.position.Set(_entityServerPos.x, _entityServerPos.y, _entityServerPos.z);
-                Event.fireOut(EventOutTypes.updatePosition, entity);
-                entity.onSetPosition();
-                entity.onUpdateVolatileData();
+                return;
             }
+            if (MyUtils.IsClassType(entity.classType, ClassType.Avatar))
+            {
+                Avatar avatar = (Avatar)entity;
+                if (!avatar.isControlled && !avatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) && !avatar.IsObPlayer())
+                {
+                    return;
+                }
+            }
+            else if (MyUtils.IsClassType(entity.classType, ClassType.Avataring))
+            {
+                return;
+            }
+
+            entity.position.Set(_entityServerPos.x, _entityServerPos.y, _entityServerPos.z);
+            Event.fireOut(EventOutTypes.updatePosition, entity);
+            entity.onSetPosition();
+            entity.onUpdateVolatileData();
         }
 
         public void Client_onUpdateBasePosXZ(float x, float z)
@@ -1945,15 +1966,29 @@ namespace KBEngine
             _entityServerPos.x = x;
             _entityServerPos.z = z;
 
-            Avatar entity = player() as Avatar;
-            if (entity != null && (entity.isControlled || entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL)  || entity.IsObPlayer()))
+            Entity entity = player();
+            if (entity == null)
             {
-                entity.position.x = _entityServerPos.x;
-                entity.position.z = _entityServerPos.z;
-                Event.fireOut(EventOutTypes.updatePosition, entity);
-                entity.onSetPosition();
-                entity.onUpdateVolatileData();
+                return;
             }
+            if (MyUtils.IsClassType(entity.classType, ClassType.Avatar))
+            {
+                Avatar avatar = (Avatar)entity;
+                if (!avatar.isControlled && !avatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) && !avatar.IsObPlayer())
+                {
+                    return;
+                }
+            }
+            else if (MyUtils.IsClassType(entity.classType, ClassType.Avataring))
+            {
+                return;
+            }
+
+            entity.position.x = _entityServerPos.x;
+            entity.position.z = _entityServerPos.z;
+            Event.fireOut(EventOutTypes.updatePosition, entity);
+            entity.onSetPosition();
+            entity.onUpdateVolatileData();
         }
 
         /*

@@ -36,6 +36,6 @@ class ILineStubBase(iLineSpaceStub.ILineSpaceStub, iLinePlayersStub.ILinePlayers
         iLineSpaceStub.ILineSpaceStub.handleCellappDeath(self, groupOrder)
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)

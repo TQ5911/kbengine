@@ -23,28 +23,28 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
     def doNext(self):
         super(TeamDungeonStub, self).doNext()
-        self.pyAddTimer(30, 30, gametimer.DUNGEON_CHECK_DESTROY)
-        self.pyAddTimer(1, 0.1, gametimer.DUNGEON_ENTITY_GENERATOR)
+        self.pyAddTimer(30, 30, gametimer.TIMER_DUNGEON_CHECK_DESTROY)
+        self.pyAddTimer(1, 0.1, gametimer.TIMER_DUNGEON_ENTITY_GENERATOR)
         return
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
-        if userArg == gametimer.DUNGEON_CHECK_DESTROY:
-            self._checkDestroyDungeonSpace()
-        elif userArg == gametimer.DUNGEON_ENTITY_GENERATOR:
+        self._onTimerTrigger(tid, userArg)
+        if userArg == gametimer.TIMER_DUNGEON_CHECK_DESTROY:
+            self._checkDungeonSpaceDestroy()
+        elif userArg == gametimer.TIMER_DUNGEON_ENTITY_GENERATOR:
             self.onTimerCreateEntity()
         else:
             super(TeamDungeonStub, self).onTimer(tid, userArg)
 
-    def _checkDestroyDungeonSpace(self):
+    def _checkDungeonSpaceDestroy(self):
         now = utils.curTS()
-        # LOG_DBG('_checkDestroyDungeonSpace:: {}'.format(now))
+        # LOG_DBG('_checkDungeonSpaceDestroy:: {}'.format(now))
         # teamStub.destroyTeamDungeonDelay args list
         needDestroyList = []
         realDestroyList = []
         for spaceNo, sVal in self.spaces.items():
             if sVal.nDestoryCnt>3:
-                LOG_ERR('_checkDestroyDungeonSpace: cannot destory space', spaceNo)
+                LOG_ERR('_checkDungeonSpaceDestroy: cannot destory space', spaceNo)
                 continue
 
             if sVal.markCreate:
@@ -86,7 +86,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
                 self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
-                sVal.spaceBox.entireDestroy(False, False)
+                sVal.spaceBox.doEntireDestroy(False, False)
                 self.spaces.pop(spaceNo)
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
@@ -123,7 +123,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             # 【大量机器人新号登录后立刻下线后副本报错】
             self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
-            sVal.spaceBox.entireDestroy(False, False)
+            sVal.spaceBox.doEntireDestroy(False, False)
             self.spaces.pop(spaceNo)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
@@ -132,8 +132,17 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             LOG_ERR('leaveDungeonSpaceSucc::cannot get space', spaceNo)
             return
         sVal = self.spaces[spaceNo]
+
+        leaveTeam = False
+        src = extra.get('src', None)
+        # 来自客户端的主动退出
+        if src and src.srcId==gameconst.DungeonSrcEnum.FROM_CLIENT:
+            # 副本还在进行中退出的，直接退出队伍
+            if sVal.completedReasonType == gameconst.DunegonCompleteReasonType.DEFAULT:
+                leaveTeam = True
+
         _teamStub = gameengine.getTeamStub(sVal.teamUUID)
-        _teamStub.leaveTeamDungeon(playerBox, playerGbId, sVal.teamUUID, self.dungeonNo)
+        _teamStub.leaveTeamDungeon(playerBox, playerGbId, sVal.teamUUID, self.dungeonNo, leaveTeam)
 
     def onAvatarOffline(self, spaceNo, playerGbId):
         LOG_INFO('onAvatarOffline::', spaceNo, playerGbId)
@@ -196,6 +205,9 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             sVal.spaceMgr.cell.finishGuildDungeonTask()
 
         if delay:
+            lastDungeonFinishedTime = utils.curTS() + delay
+            _teamStub = gameengine.getTeamStub(sVal.teamUUID)
+            _teamStub.refreshLastDungeonFinishedTime(sVal.teamUUID, lastDungeonFinishedTime)
             sVal.completeDungeonTimer = self.addTimerCB(
                 delay, '_onTeamDungeonCompletedCallback',
                 (spaceNo, sVal.spaceUUID, 'dungeon complete', win), gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
@@ -267,9 +279,6 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
     def _getDungeonSpaceWeight(self, enterNum=5) -> int:
         return utils.calcSpaceWeight(enterNum, False, gameconst.EntNumPerPlayerInAOI.teamDungeon)
-
-    def _needSpaceMgr(self, spaceNo):
-        return True
 
     def getDungeonSpaceRange(self):
         enterType = DDI.datas[self.dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.SINGLE)

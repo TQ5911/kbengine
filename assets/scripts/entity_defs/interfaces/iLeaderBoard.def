@@ -13,6 +13,13 @@
             <Persistent>    true                     </Persistent>
         </avatarScoreRank>
 
+        <avatarScoreRankCell>
+            <Type>          LEADER_BOARD_IDX         </Type>
+            <Flags>         CELL_PRIVATE             </Flags>
+            <Default>       0                        </Default>
+            <Persistent>    true                     </Persistent>
+        </avatarScoreRankCell>
+
         <avatarRankData>
             <Type>          PY_DICT                  </Type>
             <Flags>         BASE                     </Flags>
@@ -40,10 +47,16 @@
             <Arg>       UINT8                               </Arg>
             <Arg>       LEADER_BOARD_IDX                    </Arg>
         </onLeaderBoardRank>
+
+        <onLocalServerScoreRankSync>
+            <Arg>       UINT32                              </Arg>
+        </onLocalServerScoreRankSync>
     </BaseMethods>
 
     <CellMethods>
-
+        <syncAvatarScoreRank>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+        </syncAvatarScoreRank>
     </CellMethods>
 
     <ClientMethods>

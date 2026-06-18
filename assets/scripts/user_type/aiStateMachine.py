@@ -98,7 +98,7 @@ class StateWaitAnim(StateImpCls):
     def tick(self, aiController):
         if aiController.inHate():
             aiController.transformPlayAnimation()
-            aiController.setBornState(gameconst.BornStateType.bornAnim)
+            aiController.setBornState(gameconst.BornStateEnum.bornAnim)
             aiController.tickOnce()
 
 @withName('playAnim')
@@ -110,7 +110,7 @@ class StatePlayAnim(StateImpCls):
     def tick(self, aiController):
         if aiController.isAnimationEnd():
             aiController.trasformAngrySpawn()
-            aiController.setBornState(gameconst.BornStateType.afterBornMove)
+            aiController.setBornState(gameconst.BornStateEnum.afterBornMove)
             aiController.tickOnce()
         elif not aiController.isInTickCallBack():
             aiController.setTickCallBack(aiController.getLeftAnimationTime())
@@ -125,7 +125,7 @@ class StatePlayAnimAndAngry(StateImpCls):
     def tick(self, aiController):
         if aiController.isAnimationEnd():
             aiController.combat()
-            aiController.setBornState(gameconst.BornStateType.afterBornMove)
+            aiController.setBornState(gameconst.BornStateEnum.afterBornMove)
             aiController.tickOnce()
         elif not aiController.isInTickCallBack():
             aiController.setTickCallBack(aiController.getLeftAnimationTime())
@@ -180,7 +180,7 @@ class StateStandWaitResetAnim(StateImpCls):
         elif aiController.finishWaitResetAnimTime():
             aiController.addContinueBuff()
             aiController.transformResetAnim()
-            aiController.setBornState(gameconst.BornStateType.resetAnim)
+            aiController.setBornState(gameconst.BornStateEnum.resetAnim)
             aiController.tickOnce()
         elif not aiController.isInTickCallBack():
             aiController.setTickCallBack(aiController.getLeftFinishWaitResetAnimTime())
@@ -195,7 +195,7 @@ class StateResetAnim(StateImpCls):
     def tick(self, aiController):
         if aiController.isFinishResetAnim():
             aiController.restart()
-            aiController.setBornState(gameconst.BornStateType.reMove)
+            aiController.setBornState(gameconst.BornStateEnum.reMove)
         elif not aiController.isInTickCallBack():
             aiController.setTickCallBack(aiController.getLeftFinishResetAnimTime())
 
@@ -292,7 +292,7 @@ class StateTelBackAfterResetAnim(StateImpCls):
         if aiController.isFinishResetAnim():
             aiController.clearHateAndTelBack()
             aiController.restart()
-            aiController.setBornState(gameconst.BornStateType.reMove)
+            aiController.setBornState(gameconst.BornStateEnum.reMove)
         elif not aiController.isInTickCallBack():
             aiController.setTickCallBack(aiController.getLeftFinishResetAnimTime())
 
@@ -305,7 +305,7 @@ class StateStandAndResetAnim(StateImpCls):
     def tick(self, aiController):
         aiController.addHomeBuff()
         aiController.transformBack()
-        aiController.setBornState(gameconst.BornStateType.resetAnim)
+        aiController.setBornState(gameconst.BornStateEnum.resetAnim)
         aiController.tickOnce()
 
 @withName('restart')
@@ -1152,7 +1152,7 @@ class Machine3050(MachineWithChangeTime):
 
     def doLoseWitnessTask(self, aiController):
         aiController.backEgg()
-        aiController.setBornState(gameconst.BornStateType.reMove)
+        aiController.setBornState(gameconst.BornStateEnum.reMove)
 
 
 class Machine3051(MachineWithChangeTime):
@@ -1175,7 +1175,7 @@ class Machine3051(MachineWithChangeTime):
 
     def doLoseWitnessTask(self, aiController):
         aiController.backWait()
-        aiController.setBornState(gameconst.BornStateType.reMove)
+        aiController.setBornState(gameconst.BornStateEnum.reMove)
 
 
 class Machine3052(MachineWithChangeTime):
@@ -1199,7 +1199,7 @@ class Machine3052(MachineWithChangeTime):
         aiController.addHomeBuff()
         aiController.clearHateAndTelBack()
         aiController.backWait()
-        aiController.setBornState(gameconst.BornStateType.reMove)
+        aiController.setBornState(gameconst.BornStateEnum.reMove)
 
 class Machine3053(MachineImpCls):
     '''spec

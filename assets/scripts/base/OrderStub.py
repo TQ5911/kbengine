@@ -14,6 +14,7 @@ import auction
 import itemFactory
 import redisUtils
 import iRouter
+
 import proto.orderService_pb2 as OrderService
 from rpc import RpcChannel, TcpClient
 from proto.orderService_pb2 import (
@@ -21,8 +22,10 @@ from proto.orderService_pb2 import (
 
 import gameglobal
 import gameconst
+import gamesql
 import json
 import LogTrackingMgr
+import itemData_itemData as ITEM_DATA
 
 class OrderStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
@@ -31,6 +34,8 @@ class OrderStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         iTimer.ITimer.__init__(self)
 
         self.orderService = None
+        self.ORDER_LOCK_TTL = 30
+        self.ORDER_LOCK_PREFIX = 'order:lock:'
 
     def doNext(self):
         self._fullPrepare()
@@ -38,10 +43,10 @@ class OrderStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def _fullPrepare(self):
         self.pyAddTimer(1, 1, gametimer.ORDER_STUB_ASYNC_TICK)
         gameglobal.localBaseApp.initAysncore()
-        self.pyAddTimer(gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gametimer.ORDER_STUB_ACTIVE_TICK)
+        self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gametimer.ORDER_STUB_ACTIVE_TICK)
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.ORDER_STUB_ASYNC_TICK:
             self._connectOrderService()
         elif userArg == gametimer.ORDER_STUB_ACTIVE_TICK:
@@ -71,6 +76,75 @@ class OrderStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return False
 
         return self.orderService and self.orderService.channel.dispatcher
+
+    def _releaseOrderLock(self, outTradeNo):
+        gameglobal.localBaseApp.getRedisClient().deleteTable(self.ORDER_LOCK_PREFIX + outTradeNo)
+
+    def _processNotifyOrder(self, outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId):
+        cfgData = ITEM_DATA.datas.get(itemId)
+        if not cfgData:
+            LOG_ERR('_processNotifyOrder:: config not found', itemId, outTradeNo)
+            self._sendOrderAck(outTradeNo, gameconst.OrderError.ITEM_CFG_MISSING)
+            self._releaseOrderLock(outTradeNo)
+            return
+
+        playerStub = gameengine.getGlobalBase('PlayerStub')
+
+        playerStub.doOnOthersBase(
+                [gbId], "processPurchaseOrder",
+                (outTradeNo, createTime, itemId, itemCount, itemPrice, addToSafe),
+                playerStub, 'recordOfflineCallback',
+                (gbId, 'processPurchaseOrder',
+                (outTradeNo, createTime, itemId, itemCount, itemPrice, addToSafe)))
+        LogTrackingMgr.LogTrackingMgr.item_issuance(gbId,
+			                                        '',
+                                                    outTradeNo,
+                                                    gbId,
+                                                    roleName,
+                                                    serverId,
+                                                    itemId,
+                                                    addToSafe)
+
+        self._sendOrderAck(outTradeNo, gameconst.OrderError.SUCCESS)
+        self._releaseOrderLock(outTradeNo)
+
+    def _sendOrderAck(self, outTradeNo, result):
+        if not (self.orderService and self.orderService.channel.dispatcher):
+            LOG_WARN('_sendOrderAck:: order service not connected', outTradeNo)
+            return
+        resp = OrderResponse()
+        resp.outTradeNo = outTradeNo
+        resp.result = result
+        self.orderService.serviceStub.finishOrder(None, resp, None)
+
+    def _onLockAcquired(self, outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId):
+        gamesql.checkOrderExists(
+            outTradeNo,
+            lambda ret, num, insertId, err, otn=outTradeNo, ct=createTime, pid=gbId, iid=itemId, ic=itemCount, ip=itemPrice, ad=addToSafe, rn=roleName, si=serverId:
+                self._onNotifyOrderIdempotency(ret, num, insertId, err, otn, ct, pid, iid, ic, ip, ad, rn, si))
+
+    def _onNotifyOrderIdempotency(self, ret, num, insertId, err, outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId):
+        if err:
+            LOG_ERR('notifyOrder:: idempotency check failed', outTradeNo, err)
+            self._sendOrderAck(outTradeNo, gameconst.OrderError.MYSQL_ERROR)
+            self._releaseOrderLock(outTradeNo)
+            return
+        if ret:
+            LOG_INFO('notifyOrder:: order already processed', outTradeNo)
+            self._sendOrderAck(outTradeNo, gameconst.OrderError.SUCCESS)
+            self._releaseOrderLock(outTradeNo)
+            return
+        # 记录幂等信息
+        gamesql.recordOrderId(outTradeNo, lambda ret, num, insertId, err, otn=outTradeNo, ct=createTime, pid=gbId, iid=itemId, ic=itemCount, ip=itemPrice, ad=addToSafe, rn=roleName, si=serverId:
+                self._onRecordOrderId(ret, num, insertId, err, otn, ct, pid, iid, ic, ip, ad, rn, si))
+
+    def _onRecordOrderId(self, ret, num, insertId, err, outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId):
+        if err:
+            LOG_ERR('_onRecordOrderId:: record id add failed', err, outTradeNo)
+            self._sendOrderAck(outTradeNo, gameconst.OrderError.MYSQL_ERROR)
+            self._releaseOrderLock(outTradeNo)
+            return
+        self._processNotifyOrder(outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId)
 
 class OrderStubService(GameServer):
     # orderStub: callback obj
@@ -104,13 +178,30 @@ class OrderStubService(GameServer):
     def notifyOrder(self, rpc_controller, request, done):
         serverId = request.serverId
         outTradeNo = request.outTradeNo
+        createTime = request.createTime
         gbId = request.gbId
         itemId = request.itemId
         itemCount = request.itemCount
-        LOG_INFO("notifyOrder:", serverId, outTradeNo, gbId, itemId, itemCount)
+        itemPrice = request.price
+        addToSafe = request.addToSafe
+        roleName = request.roleName
+        LOG_INFO("notifyOrder:", serverId, outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName)
 
-        resp = OrderResponse()
-        resp.outTradeNo = outTradeNo
-        resp.result = OrderService.SUCCESS
+        gameglobal.localBaseApp.getRedisClient().setnxex(
+            self.orderStub.ORDER_LOCK_PREFIX + outTradeNo, 1,
+            self.orderStub.ORDER_LOCK_TTL,
+            lambda cid, err, result, otn=outTradeNo, ct=createTime, pid=gbId, iid=itemId, ic=itemCount, ip=itemPrice, ad=addToSafe, rn=roleName, si=serverId:
+                self._onLockResult(cid, err, result, otn, ct, pid, iid, ic, ip, ad, rn, si))
 
-        self.serviceStub.finishOrder(None, resp, None)
+    def _onLockResult(self, cid, err, result, outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId):
+        if err:
+            LOG_ERR('notifyOrder:: lock error', outTradeNo, err)
+            self.orderStub._sendOrderAck(outTradeNo, gameconst.OrderError.REDIS_ERROR)
+            return
+
+        if result != 'OK':
+            LOG_INFO('notifyOrder:: already in flight', outTradeNo)
+            self.orderStub._sendOrderAck(outTradeNo, gameconst.OrderError.IN_PROCESSING)
+            return
+
+        self.orderStub._onLockAcquired(outTradeNo, createTime, gbId, itemId, itemCount, itemPrice, addToSafe, roleName, serverId)

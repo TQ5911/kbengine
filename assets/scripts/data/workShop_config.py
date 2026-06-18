@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "workShop_typeName": _tools.RODict({
         "ID": "workShop_typeName",
-        "value": _tools.ROList(['强化石', '装备制造', '经脉养成']),
+        "value": _tools.ROList(['强化石', '装备制造', '经脉养成', '精灵召唤券']),
     }),
     "workShop_autoConfirm1": _tools.RODict({
         "ID": "workShop_autoConfirm1",
@@ -50,5 +50,9 @@ datas = _tools.RODict({
     "workShop_materialLack2": _tools.RODict({
         "ID": "workShop_materialLack2",
         "value": 54003268,
+    }),
+    "workShop_monthlyLimit": _tools.RODict({
+        "ID": "workShop_monthlyLimit",
+        "value": 54000292,
     })
 })

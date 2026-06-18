@@ -25,11 +25,15 @@ datas = _tools.RODict({
     }),
     "rewardNumCoinDailyLimit": _tools.RODict({
         "ID": "rewardNumCoinDailyLimit",
-        "value": 2,
+        "value": 1,
     }),
     "rewardNumItem": _tools.RODict({
         "ID": "rewardNumItem",
         "value": 30000219,
+    }),
+    "rewardNumCoinCost": _tools.RODict({
+        "ID": "rewardNumCoinCost",
+        "value": ((1, 30000021, 50), (2, 30000001, 50)),
     }),
     "teamDunChallengeActID": _tools.RODict({
         "ID": "teamDunChallengeActID",
@@ -182,5 +186,21 @@ datas = _tools.RODict({
     "startRaidBtnText": _tools.RODict({
         "ID": "startRaidBtnText",
         "value": "开始挑战",
+    }),
+    "raid_rejoinCd": _tools.RODict({
+        "ID": "raid_rejoinCd",
+        "value": 54000633,
+    }),
+    "raid_rejoinCdTime": _tools.RODict({
+        "ID": "raid_rejoinCdTime",
+        "value": 5,
+    }),
+    "raid_mailSuccess": _tools.RODict({
+        "ID": "raid_mailSuccess",
+        "value": 37000022,
+    }),
+    "raid_mailFailure": _tools.RODict({
+        "ID": "raid_mailFailure",
+        "value": 37000023,
     })
 })

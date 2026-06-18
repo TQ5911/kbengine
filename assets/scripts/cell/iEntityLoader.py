@@ -11,6 +11,7 @@ import gameconfig
 import BalancedObjectGenerator
 import creep_base as CBD
 import branchData_set as BDS
+import branchData_branchData as B_BD
 
 
 
@@ -23,7 +24,8 @@ class IEntityLoader(object):
         return _type == gameconst.SpaceType.SpaceLine\
             or _type == gameconst.SpaceType.SpaceCube\
             or _type == gameconst.SpaceType.SpaceWonderLand\
-            or _type == gameconst.SpaceType.SpaceSiegeWar
+            or _type == gameconst.SpaceType.SpaceSiegeWar\
+            or _type == gameconst.SpaceType.SpaceAbyss
 
     def loadLineEntities(self, spaceNo, entityIDs, readyEntitiesList, isRefresh=False):
         if not entityIDs:
@@ -171,6 +173,8 @@ class IEntityLoader(object):
         elif formula.inSiegeWarScene(self.spaceNo):
             gameengine.getGlobalBase('SiegeWarSpaceStub').onLoadEntitiesEnd(self.spaceNo)
 
+        elif formula.inAbyssScene(self.spaceNo):
+            gameengine.getAbyssStubBySpaceNo(self.spaceNo).onLoadEntitiesEnd(self.spaceNo)
         else:
             LOG_INFO('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
 
@@ -272,7 +276,7 @@ class IEntityLoader(object):
                 LOG_WARN('loadTimerEntities::className error, ', className)
                 continue
             
-            if formula.inWorldLineScene(spaceNo):
+            if _mapId in B_BD.datas:
                 lineNo = formula.parseLineNo(spaceNo)
                 nameSuffixID = -1
                 if entityID in CBD.datas:

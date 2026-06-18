@@ -18,7 +18,7 @@ def getAvatarBaseAttrVarValue(owner, varId):
 
 
 def getVarValueFromAvatarDic(owner, varId):
-    return owner.avatarVarDic.get(varId, dataUtils.getVariableDefaultVal(varId))
+    return owner.avatarVarDict.get(varId, dataUtils.getVariableDefaultVal(varId))
 
 
 AvatarDataVarFunDic = {

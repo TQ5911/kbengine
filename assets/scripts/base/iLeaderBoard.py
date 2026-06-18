@@ -10,6 +10,7 @@ import LeaderBoardAvatarCacheInfo
 import LeaderBoardAvatarScoreInfo
 import LeaderBoardAvatarLevelRushRankInfo
 import LeaderBoardAvatarAchievementInfo
+from KBEDebug import *
 
 import rank_Rank as R_RD
 import rank_rankConfig as R_RCD
@@ -124,6 +125,11 @@ class ILeaderBoard(object):
         _lbacVal = self.toLeaderBoardAvatarLevelRushRank()
         gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK).onGetLeaderBoardCache(_lbacVal)
 
+    def onLocalServerScoreRankSync(self, rank):
+        LOG_INFO("onLocalServerScoreRankSync", rank)
+        self.avatarScoreRank = rank
+        self.cell.syncAvatarScoreRank(rank)
+
     def onLeaderBoardRank(self, leaderBoardType, rank):
         self.achievementInfo.triggerAchieveByType(
             self,
@@ -131,6 +137,8 @@ class ILeaderBoard(object):
             actionContext.AchievementCtx(lbType=leaderBoardType, rank=rank))
 
         if leaderBoardType == gameconst.LeaderBoardType.AVATAR_SCORE:
+            self.syncMethodCallToCrossServerBase("onLocalServerScoreRankSync", (rank,))
             self.avatarScoreRank = rank
+            self.cell.syncAvatarScoreRank(rank)
         
         self.avatarRankData[leaderBoardType] = rank

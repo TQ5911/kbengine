@@ -9,6 +9,7 @@ datas ={
         "CustomID": "",
         "Dir": 41.51179,
         "DisplayName": "",
+        "EliteCustomID": "",
         "EntityID": 0,
         "ID": 31170001,
         "PosX": 132.5677,
@@ -38,6 +39,7 @@ datas ={
           "CustomID": "",
           "Dir": 219.3688,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 11011029,
           "ID": 31170002,
           "PosX": 173.5494,
@@ -60,68 +62,6 @@ datas ={
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
-        },
-        "31170003": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 222.1502,
-          "DisplayName": "",
-          "EntityID": 11011006,
-          "ID": 31170003,
-          "PosX": 172.85,
-          "PosY": 524.8254,
-          "PosZ": 53.94,
-          "Props": {
-            "ChestGroupID": "",
-            "GroupID": "",
-            "Level": 30,
-            "LightPillar": "",
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "MonsterGroupID": "",
-            "PathID": "",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 10.0,
-            "RefreshTimedID": 0,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "ShowMonsterGroupID": ""
-          }
-        },
-        "31170004": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 222.1502,
-          "DisplayName": "",
-          "EntityID": 11011006,
-          "ID": 31170004,
-          "PosX": 213.4315,
-          "PosY": 527.7394,
-          "PosZ": 15.31841,
-          "Props": {
-            "ChestGroupID": "",
-            "GroupID": "",
-            "Level": 30,
-            "LightPillar": "",
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "MonsterGroupID": "",
-            "PathID": "",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 10.0,
-            "RefreshTimedID": 0,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "ShowMonsterGroupID": ""
-          }
         }
       },
       "Collection": {
@@ -133,6 +73,7 @@ datas ={
           "CustomID": "",
           "Dir": 220.1423,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 16002004,
           "ID": 31178001,
           "PosX": 167.7699,
@@ -142,6 +83,7 @@ datas ={
             "ChestGroupID": "",
             "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 0.0,
@@ -160,6 +102,7 @@ datas ={
           "CustomID": "",
           "Dir": 0.0,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 0,
           "ID": 31178004,
           "PosX": 167.79,
@@ -182,6 +125,7 @@ datas ={
           "CustomID": "",
           "Dir": 163.7201,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 17310002,
           "ID": 31178005,
           "PosX": 125.256,
@@ -198,57 +142,6 @@ datas ={
             "TelZ": 25.71411
           }
         }
-      },
-      "AirWall": {
-        "31178006": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "AirWall",
-          "ClassNameType": 5,
-          "CustomID": "",
-          "Dir": 0.0,
-          "DisplayName": "",
-          "EntityID": 9,
-          "ID": 31178006,
-          "PosX": 167.6096,
-          "PosY": 524.8254,
-          "PosZ": 57.91521,
-          "Props": {
-            "AreaType": 1,
-            "Height": 10.0,
-            "MPosX": 135.0,
-            "MPosY": 524.83,
-            "MPosZ": 25.0,
-            "Radius": 30.0,
-            "Remark": "",
-            "ShowInSceneMap": 1
-          }
-        },
-        "31178007": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "AirWall",
-          "ClassNameType": 5,
-          "CustomID": "",
-          "Dir": 310.5688,
-          "DisplayName": "",
-          "EntityID": 7,
-          "ID": 31178007,
-          "PosX": 211.85,
-          "PosY": 527.7394,
-          "PosZ": 18.84,
-          "Props": {
-            "AreaType": 0,
-            "Height": 10.0,
-            "Length": 30.0,
-            "MPosX": 192.0,
-            "MPosY": 527.74,
-            "MPosZ": -2.0,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "Width": 20.0
-          }
-        }
       }
     },
     "TimerEntities": {},
@@ -262,6 +155,7 @@ datas ={
           "CustomID": "31218002",
           "Dir": 129.019,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 17311701,
           "ID": 31178002,
           "PosX": 127.4835,
@@ -273,9 +167,9 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 0,
             "TelDir": 312.6052,
-            "TelX": 207.850677,
+            "TelX": 207.851166,
             "TelY": 527.7394,
-            "TelZ": 22.7591019
+            "TelZ": 22.7589722
           }
         },
         "31178003": {
@@ -286,6 +180,7 @@ datas ={
           "CustomID": "31218002",
           "Dir": 312.6052,
           "DisplayName": "",
+          "EliteCustomID": "",
           "EntityID": 17311701,
           "ID": 31178003,
           "PosX": 207.8485,

@@ -20,7 +20,7 @@ message Void {
 message LeaseAddItemPrepareReq {
     uint64 playerGBID = 1;
     string itemData = 2;        // 装备 JSON 序列化
-    uint32 pricePerDay = 3;     // 每日单价
+    int64 pricePerDay = 3;     // 每日单价
     uint32 leaseDays = 4;       // 租赁天数（自身装备）
     uint32 itemId = 5;
     uint64 uniqueId = 6;
@@ -68,7 +68,7 @@ message LeaseItemPrepareReq {
 message LeaseItemPrepareResp {
     uint64 uniqueId = 1;
     uint64 playerGBID = 2;
-    uint32 totalPrice = 3;
+    int64 totalPrice = 3;
     int32 result = 4;
     uint64 opUUID = 5;         // 透传追踪 ID
 }
@@ -76,6 +76,7 @@ message LeaseItemPrepareResp {
 message LeaseItemCommitReq {
     uint64 uniqueId = 1;
     uint64 opUUID = 2;         // 透传追踪 ID
+    uint64 playerGBID = 3;     // 承租人 GBID（回包时用于定位玩家）
 }
 
 message LeaseItemCommitResp {
@@ -85,11 +86,13 @@ message LeaseItemCommitResp {
     uint64 opUUID = 4;         // 透传追踪 ID
     uint32 leaseStartTime = 5;  // 租赁开始时间（Unix 时间戳）
     uint32 leaseEndTime = 6;    // 租赁结束时间（Unix 时间戳）
-    uint32 leaseCost = 7;       // 租赁花费
-    uint32 leaseGold = 8;       // 出租方获得租金
-    uint32 leaseBindGold = 9;   // 出租方获得绑定金
-    uint32 leaseTax = 10;       // 税金（从租金中扣除，进入平台账户）
-    uint64 OwnerGbId = 11;        // 出租方 gbId
+    int64 leaseCost = 7;       // 租赁花费
+    int64 leaseGold = 8;       // 出租方获得租金
+    int64 leaseBindGold = 9;   // 出租方获得绑定金
+    int64 leaseTax = 10;       // 税金（从租金中扣除，进入平台账户）
+    uint64 lessorGBID = 11;        // 出租方 gbId
+    string itemData = 12;
+    uint64 ownerGBID = 13;         // 装备原主人 gbId（链条顶端最终归还方）
 }
 
 message LeaseItemRollbackReq {
@@ -116,18 +119,19 @@ message LeaseCancelItemResp {
 message LeaseShopSummaryItem {
     uint32 itemId = 1;
     uint32 onSaleCount = 2;
-    uint32 minPrice = 3;
+    int64 minPrice = 3;
 }
 
 message LeaseShopSummaryReq {
-    uint32 equipType = 1;
-    uint32 equipSubType = 2;
+    uint32 categoryId = 1;
+    repeated uint32 itemIds = 2;
     uint64 playerGBID = 3;
 }
 
 message LeaseShopSummaryResp {
     uint64 playerGBID = 1;
     repeated LeaseShopSummaryItem items = 2;
+    uint32 categoryId = 3;
 }
 
 // ==================== 商店物品列表相关（按 itemId 拉取明细） ====================
@@ -136,9 +140,11 @@ message LeaseShopItem {
     uint64 uniqueId = 1;
     uint32 itemId = 2;
     uint64 lessorGbId = 3;
-    uint32 pricePerDay = 4;
-    uint32 leftTime = 5;
+    int64 pricePerDay = 4;
+    uint32 leaseDay = 5;
     string itemData = 6;
+    uint32 lessorServerId = 7;
+    uint32 returnEndTime = 8;
 }
 
 message LeaseShopItemsReq {
@@ -152,6 +158,8 @@ message LeaseShopItemsResp {
     uint32 itemId = 1;
     repeated LeaseShopItem items = 2;
     uint64 playerGBID = 3;
+    uint32 page = 4;
+    uint32 pageSize = 5;
 }
 
 // ==================== 我的出租列表相关（按 playerGbId 聚合） ====================
@@ -159,9 +167,10 @@ message LeaseShopItemsResp {
 message LeaseMySaleItem {
     uint64 uniqueId = 1;
     uint32 itemId = 2;
-    uint32 pricePerDay = 3;
-    uint32 leftTime = 4;
+    int64 pricePerDay = 3;
+    uint32 leaseDay = 4;
     string itemData = 5;
+    uint32 returnEndTime = 6;
 }
 
 message LeaseMySaleListReq {
@@ -179,10 +188,11 @@ message LeaseAddIncomeReq {
     uint64 uniqueId = 1;
     uint32 itemId = 2;
     uint64 playerGBID = 3;
-    uint64 bindGold = 4;
-    uint64 gold = 5;
+    int64 bindGold = 4;
+    int64 gold = 5;
     uint32 returnEndTime = 6;
     uint64 opUUID = 7;         // 透传追踪 ID
+    string itemData = 8;       // 装备 JSON 序列化
 }
 
 message LeaseGiveItemReq {
@@ -193,21 +203,8 @@ message LeaseGiveItemReq {
     uint32 returnEndTime = 5;
     uint64 returnOwnerGbId = 6;
     uint64 opUUID = 7;         // 透传追踪 ID
-    uint64 bindGold = 8;
-    uint64 gold = 9;
-}
-
-message LeaseRemoveItemReq {
-    int32 serverId = 1;
-    uint64 playerGBID = 2;
-    uint64 uniqueId = 3;
-}
-
-message LeaseReturnItemReq {
-    int32 serverId = 1;
-    uint64 playerGBID = 2;
-    string itemData = 3;
-    uint64 uniqueId = 4;
+    int64 bindGold = 8;
+    int64 gold = 9;
 }
 
 // ==================== Service 定义 ====================
@@ -239,7 +236,5 @@ service GameServer {
     rpc replyShopItems(LeaseShopItemsResp) returns (Void);
     rpc replyMySaleList(LeaseMySaleListResp) returns (Void);
     rpc giveItemToPlayer(LeaseGiveItemReq) returns (Void);
-    rpc removeItemFromPlayer(LeaseRemoveItemReq) returns (Void);
-    rpc returnItemToOwner(LeaseReturnItemReq) returns (Void);
     rpc addIncomeToOwner(LeaseAddIncomeReq) returns (Void);
 }

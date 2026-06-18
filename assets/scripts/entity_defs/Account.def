@@ -119,10 +119,10 @@
             <Default>       0                   </Default>
         </delayDestroyTimer>
 
-        <streamDic>
+        <streamProxyDic>
             <Type>          PY_DICT             </Type>
             <Flags>         BASE                </Flags>
-        </streamDic>
+        </streamProxyDic>
 
         <avatarClientEnableCBs>
             <Type>          PY_LIST             </Type>
@@ -216,6 +216,16 @@
             <Flags>    BASE                         </Flags>
             <Default>  0                            </Default>
         </waitingShutdown>
+
+        <webToken>
+            <Type>     STRING                       </Type>
+            <Flags>    BASE                         </Flags>
+        </webToken>
+
+        <clientDistinctId>
+            <Type>     STRING                       </Type>
+            <Flags>    BASE                         </Flags>
+        </clientDistinctId>
     </Properties>
 
     <ClientMethods>

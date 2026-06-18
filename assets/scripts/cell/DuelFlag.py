@@ -80,7 +80,7 @@ class DuelFlag(iCell.ICell, iTimer.ITimer):
             self._onCheckTick()
 
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def setFinishReason(self, reason):
         self.finishReason = reason

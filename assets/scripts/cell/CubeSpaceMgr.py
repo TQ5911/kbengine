@@ -40,12 +40,12 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
     def initStaticSpace(self):
         super().initStaticSpace()
 
-    def removeEntityById(self, entId):
-        super().removeEntityById(entId)
+    def removeEntById(self, entId):
+        super().removeEntById(entId)
 
     def onPlayerRelogin(self, box, playerGbId):
         super().onPlayerRelogin(box, playerGbId)
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
 
         box.client.onArenaKing(self.cubeArena.arenaKing)
@@ -92,21 +92,21 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
     def onPlayerOffline(self, playerId, playerGbId):
         super(CubeSpaceMgr, self).onPlayerOffline(playerId, playerGbId)
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
 
         self.cubeArena.onPlayerLeaveArena(playerId, self)
 
     def onPlayerLeave(self, gbId, playerId, box):
         super(CubeSpaceMgr, self).onPlayerLeave(gbId, playerId, box)
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
 
         self.cubeArena.onPlayerLeaveArena(playerId, self)
 
     def onPlayerEnter(self, playerEntId):
         super(CubeSpaceMgr, self).onPlayerEnter(playerEntId)
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
 
         _player = KBEngine.entities.get(playerEntId)
@@ -119,12 +119,8 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         _player.addBuff(_buffId, 1, _player.id)
         _player.client.onArenaKing(self.cubeArena.arenaKing)
 
-    def _isArenaSpace(self):
-        _mapId = formula.fetchMapId(self.spaceNo)
-        return cube_room.datas[_mapId]['sign'] == gameconst.CUBE_SIGN_ARENA
-
     def doInteractArenaKing(self, player):
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return False
 
         return self.cubeArena.setArenaKing(player, self)
@@ -151,13 +147,13 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         self.cubeArena.doAddStage(curStage, self)
 
     def onPlayerKillAnother(self, deathPlayer, killerPlayer):
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
 
         self.cubeArena.onArenaPlayerKillAnother(deathPlayer, killerPlayer, self)
         
     def doSendArenaKingPos(self, box):
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             LOG_WARN('doSendArenaKingPos', self.spaceNo)
             return
 
@@ -170,7 +166,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
     def onPlayerRelive(self, box, playerGbId):
         super(CubeSpaceMgr, self).onPlayerRelive(box, playerGbId)
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
 
         _boxCell = KBEngine.entities.get(box.id)
@@ -180,7 +176,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         _boxCell.addBuff(self.cubeArena.getChallengerBuff(self.spaceNo), 1, _boxCell.id)
 
     def onChangeSafeArea(self, player, beSafe):
-        if not self._isArenaSpace():
+        if not formula._isArenaSpace(self.spaceNo):
             return
         
         self.cubeArena.onArenaChangeSafeArea(player, beSafe, self)

@@ -5,7 +5,7 @@ import iBase
 
 class IBaseNoCell(iBase.IBase):
 
-    def entireDestroy(self, deleteFromDB, writeToDB):
+    def doEntireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
 

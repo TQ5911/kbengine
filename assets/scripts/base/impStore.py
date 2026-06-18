@@ -10,13 +10,26 @@ import awardContext
 import gameclass
 import Store
 import mall_storeList as MSLD
+import utils
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import LogTrackingMgr
+import gametimer
 
 class ImpStore(object):
 
     def onStoreDailyUpdate(self, *args):
+        fiveTs = utils.getCurDayTS(utils.curTS() - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME)
+        dt = utils.curTS() - fiveTs
+        LOG_INFO('onStoreDailyUpdate', 'dt', dt)
+        #交易行均价每日5点刷新，商店动态定价依赖均价，所以延迟到5.03刷新商品
+        if dt < 3 * 60:
+            self.addTimerCB(3 * 60 - dt, 'doStoreDailyUpdate', (), gametimer.TIMER_TAG_STORE_DAILY_UPDATE)
+        else:
+            self.doStoreDailyUpdate()
+
+    def doStoreDailyUpdate(self, *args):
+        LOG_INFO('doStoreDailyUpdate')
         self.storeData.updateStoreDataDaily(self)
 
     def onStoreWeeklyUpdate(self, *args):
@@ -71,10 +84,26 @@ class ImpStore(object):
         costItem = storeItemData.get('costItem')
         exType = storeItemData.get('exType')
         propItem = storeItemData.get('propItem')
+        
+        #限量物品才可能有动态价格
+        storeDic = self.storeData.getStoreDic(storeId)
+        if storeItemData['limitNumber'] > 0 and storeItemData['groupId'] == 0:
+            if itemId not in storeDic:
+                storeDic[itemId] = Store.StoreItem(itemId, buyNum=0)
+            price = storeDic[itemId].price
+            if price > 0:
+                if len(costItem) != 1:
+                    LOG_ERR('buyStoreItems: costItem length != 1:', costItem)
+                    return
+                costItem = list(costItem)
+                costItem[0] = list(costItem[0])
+                costItem[0][1] = price
+
         deductWealthVal = dropAward.DeductWealthVal()
-        for val in costItem:
-            costItemId, num = val
-            deductWealthVal.addWealthByItemId(costItemId, num*itemNum)
+        if costItem:
+            for val in costItem:
+                costItemId, num = val
+                deductWealthVal.addWealthByItemId(costItemId, num*itemNum)
         
         if propItem:
             if exType == gameconst.ItemExType.NORMAL:
@@ -92,13 +121,13 @@ class ImpStore(object):
             LOG_WARN('buyStoreItems: items not enough:', deductWealthVal)
             return
 
-        awardCtx = awardContext.CommonContext(mailId=gameconst.MailConstID.REWARD_MAIL_ID)
+        awardCtx = self.getAvatarAwardCtx(0, None, gameconst.MailConstEnum.REWARD_MAIL_ID)
         realItemId = storeItemData['itemId']
         #1是非绑定
         bindType = gameconst.ItemBindType.NORMAL if storeItemData['isBound'] == 1 else gameconst.ItemBindType.BIND
         wealthVal = dropAward.AwardVal().addWealthByItemId(realItemId, itemNum, bindType)
 
-        detail = gameclass.AwardDetail(storeId=storeId, goodsId=itemId, goodsNum=itemNum)
+        detail = gameclass.AwardDetailCls(storeId=storeId, goodsId=itemId, goodsNum=itemNum)
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BUY_STORE_ITEMS
         
@@ -108,8 +137,6 @@ class ImpStore(object):
             tp = storeCfgData["type"]
             if tp == gameconst.STORE_TYPE.EXCHANGE_STORE1 or tp == gameconst.STORE_TYPE.EXCHANGE_STORE2:
                 srcType = AAC_AACDD.datas.BONUS_SRC_EXCHANGE_STORE_ITEMS
-
-        storeDic = self.storeData.getStoreDic(storeId)
 
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
         buyNum = 0
@@ -133,6 +160,8 @@ class ImpStore(object):
         self.client.onBuyStoreItems(storeId, itemId, itemNum, bindType, buyNum)
 
         LogTrackingMgr.LogTrackingMgr.Store_Buy(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             storeId,
             tp,

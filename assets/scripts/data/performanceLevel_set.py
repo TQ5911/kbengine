@@ -53,7 +53,7 @@ datas = _tools.RODict({
     }),
     "showCompleteModelNum": _tools.RODict({
         "ID": "showCompleteModelNum",
-        "value": 30,
+        "value": 80,
     }),
     "showNameNum": _tools.RODict({
         "ID": "showNameNum",

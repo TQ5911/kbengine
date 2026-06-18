@@ -17,6 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
+        "name": "深海禁地",
         "dunID": 2101,
         "firstReward": 40038001,
         "clearReward": 40038201,
@@ -24,29 +25,39 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
+        "name": "亡者之村",
+        "dunID": 2104,
+        "firstReward": 40038003,
+        "clearReward": 40038203,
+        "goldReward": 40038403,
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "name": "深渊魔坛",
         "dunID": 2102,
         "firstReward": 40038002,
         "clearReward": 40038202,
         "goldReward": 40038402,
     }),
-    3: _tools.RODict({
-        "ID": 3,
-        "dunID": 2104,
+    4: _tools.RODict({
+        "ID": 4,
+        "name": "万毒虫窟",
+        "dunID": 2103,
         "firstReward": 40038003,
         "clearReward": 40038203,
         "goldReward": 40038403,
     })
 })
 minKey = 1
-maxKey = 3
+maxKey = 4
 
-fistPassRewardDic = {2101: 40038001, 2102: 40038002, 2104: 40038003}
-
-
-clearPassRewardDic = {2101: 40038201, 2102: 40038202, 2104: 40038203}
+fistPassRewardDic = {2101: 40038001, 2104: 40038003, 2102: 40038002, 2103: 40038003}
 
 
-goldPassRewardDic = {2101: 40038401, 2102: 40038402, 2104: 40038403}
+clearPassRewardDic = {2101: 40038201, 2104: 40038203, 2102: 40038202, 2103: 40038203}
 
 
-dungeonIdxDic = {2101: 1, 2102: 2, 2104: 3}
+goldPassRewardDic = {2101: 40038401, 2104: 40038403, 2102: 40038402, 2103: 40038403}
+
+
+dungeonIdxDic = {2101: 1, 2104: 2, 2102: 3, 2103: 4}

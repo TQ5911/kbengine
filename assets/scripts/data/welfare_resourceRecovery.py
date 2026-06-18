@@ -20,22 +20,36 @@ datas = _tools.RODict({
         "type": 1,
         "subType": 1,
         "time": 30,
-        "cost": ((7, 0, 0), (30, 30000021, 100)),
+        "cost": ((7, 0, 0), (30, 30000021, 50)),
     }),
     2: _tools.RODict({
         "ID": 2,
         "type": 1,
         "subType": 2,
         "time": 30,
-        "cost": ((10, 0, 0), (30, 30000021, 100)),
+        "cost": ((7, 0, 0), (30, 30000021, 50)),
     }),
     3: _tools.RODict({
         "ID": 3,
         "type": 1,
         "subType": 3,
         "time": 7,
-        "cost": ((1, 0, 0), (7, 30000021, 100)),
+        "cost": ((1, 0, 0), (7, 30000021, 50)),
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "type": 1,
+        "subType": 4,
+        "time": 30,
+        "cost": ((7, 0, 0), (30, 30000021, 50)),
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "type": 1,
+        "subType": 5,
+        "time": 30,
+        "cost": ((7, 0, 0), (30, 30000021, 50)),
     })
 })
 minKey = 1
-maxKey = 3
+maxKey = 5

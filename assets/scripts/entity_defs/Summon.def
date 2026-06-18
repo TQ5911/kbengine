@@ -49,44 +49,11 @@
             <Flags> CELL_PRIVATE                    </Flags>
         </dieWithHost>
 
-        <moveController>
-            <Type>  UINT32                      </Type>
-            <Flags> CELL_PRIVATE            </Flags>
-        </moveController>
-
-        <hateTrapId>
-            <Type>  UINT32                      </Type>
-            <Flags> CELL_PRIVATE            </Flags>
-        </hateTrapId>
-
-        <bornPosition>
-            <Type>  POSITION3D              </Type>
-            <Flags> CELL_PRIVATE            </Flags>
-        </bornPosition>
-
-        <route>
-            <Type>      PYTHON        </Type>
-            <Flags>     CELL_PRIVATE    </Flags>
-            <Default>    []            </Default>
-        </route>
-
-        <thinkTimer>
-            <Type>      TIMER_ID        </Type>
-            <Flags>     CELL_PRIVATE    </Flags>
-        </thinkTimer>
-
         <inheritPropRatio>
             <Type>      FLOAT              </Type>
             <Flags>     CELL_PRIVATE    </Flags>
             <Default>       0.0          </Default>
         </inheritPropRatio>
-
-        <siegeWarCamp>
-            <Type>          INT32           </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       0               </Default>
-            <WitnessName>   true            </WitnessName>
-        </siegeWarCamp>
 
         <mineWarCamp>
             <Type>          UINT8           </Type>

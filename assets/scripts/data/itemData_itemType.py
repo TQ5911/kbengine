@@ -229,7 +229,7 @@ datas = _tools.RODict({
         "subType": 27,
         "sort": 6,
         "antiStudio": 1,
-        "auctionCategory": 7,
+        "auctionCategory": 10,
     }),
     1000: _tools.RODict({
         "ID": 1000,
@@ -431,7 +431,8 @@ ItemTypeSortDic = _tools.RODict({
 AuctionCategoryDic = _tools.RODict({ 
         5:[(0, 11)],
         6:[(0, 7), (0, 8), (0, 9), (0, 10), (0, 18)],
-        7:[(0, 6), (0, 12), (0, 13), (0, 21), (0, 27)],
+        7:[(0, 6), (0, 12), (0, 13), (0, 21)],
         8:[(0, 20)],
         9:[(1, 1)],
+        10:[(0, 27)],
 })

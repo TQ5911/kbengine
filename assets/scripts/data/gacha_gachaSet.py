@@ -107,6 +107,10 @@ datas = _tools.RODict({
         "ID": "100rollGapTime",
         "value": 3,
     }),
+    "100rollQualityGapTime": _tools.RODict({
+        "ID": "100rollQualityGapTime",
+        "value": 1.5,
+    }),
     "poolEndMsg": _tools.RODict({
         "ID": "poolEndMsg",
         "value": 54000959,
@@ -158,5 +162,25 @@ datas = _tools.RODict({
     "rerollFailTips": _tools.RODict({
         "ID": "rerollFailTips",
         "value": 54000969,
+    }),
+    "highQualityStandard": _tools.RODict({
+        "ID": "highQualityStandard",
+        "value": 2,
+    }),
+    "highQualityPetScale": _tools.RODict({
+        "ID": "highQualityPetScale",
+        "value": 2.2,
+    }),
+    "highQualityPetOffset": _tools.RODict({
+        "ID": "highQualityPetOffset",
+        "value": -1.5,
+    }),
+    "rerollItemTips": _tools.RODict({
+        "ID": "rerollItemTips",
+        "value": 166,
+    }),
+    "dailyCoinRollTime": _tools.RODict({
+        "ID": "dailyCoinRollTime",
+        "value": 1,
     })
 })

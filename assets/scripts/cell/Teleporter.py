@@ -43,7 +43,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             self.teleporterId, (self.id, self.gameEntityId))
 
         if self.ttl:
-            self.pyAddTimer(self.ttl, 0, gametimer.TIMER_CELL_TTL_DESTROY)
+            self.pyAddTimer(self.ttl, 0, gametimer.TIMER_ON_CELL_TTL_DESTROY)
 
     # self.addTimerCB(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
 
@@ -51,12 +51,12 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         gameglobal.teleporterGIDToEntIdMap.get(self.spaceNo, {}).pop(self.teleporterId, None)
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
-        elif userData == gametimer.TIMER_CELL_TTL_DESTROY:
+        elif userData == gametimer.TIMER_ON_CELL_TTL_DESTROY:
             if not self.isDestroyed:
-                self._ttlDestroy()
+                self._onTtlDestroy()
         else:
             super(Teleporter, self).onTimer(tid, userData)
 
@@ -132,6 +132,6 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             LOG_INFO('Teleporter._checkBadEnt: not in same space')
             return True
 
-    def _ttlDestroy(self):
+    def _onTtlDestroy(self):
         self.safeDestroy()
 

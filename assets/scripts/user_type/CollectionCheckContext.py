@@ -1,6 +1,7 @@
 class CollectionCheckType(object):
     WONDER_LAND = 1
     SIEGE_WAR = 2
+    INNER_DEMON = 3
 
 class CollectionCheckWonderLand(object):
     CHECK_TYPE = CollectionCheckType.WONDER_LAND
@@ -26,3 +27,14 @@ class CollectionCheckSiegeWar(object):
 
     def checkBase(self, avatarBase):
         return True
+
+class CollectionCheckInnerDemon(object):
+    CHECK_TYPE = CollectionCheckType.INNER_DEMON
+    def __init__(self, collectionId):
+        self.collectionId = collectionId
+
+    def checkCell(self, avatarCell):
+        return avatarCell.cubeQuota.calcLeftTime() > 0
+
+    def checkBase(self, avatarBase):
+        return avatarBase.checkInnerDemonRewardCnt()

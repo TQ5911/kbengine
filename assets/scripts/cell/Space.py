@@ -29,7 +29,7 @@ import iGroupEntityLoader
 
 class SpaceEntityGenerateMixin(object):
 
-    def removeEntityById(self, gameEntityId):
+    def removeEntById(self, gameEntityId):
         gameEntityId = int(gameEntityId)
 
         for _, _en in KBEngine.entities.items():
@@ -117,7 +117,7 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
         return
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 

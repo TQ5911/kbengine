@@ -408,10 +408,6 @@
             <Arg>          SLOTID       </Arg>
         </setSummonSlotIdx>
 
-        <changeMorphPreAddSkill>
-            <Arg>          MORPH_STATE  </Arg>
-        </changeMorphPreAddSkill>
-
         <levelUpSkill> <Exposed/>
             <Arg>        SKILLID        </Arg>
             <Arg>        INT8           </Arg>
@@ -420,6 +416,12 @@
         <setShowCompleteNum> <Exposed/>
             <Arg>        UINT8          </Arg>
         </setShowCompleteNum>
+
+        <onCrossServerModifyExp>
+            <Arg>        INT64         </Arg>
+            <Arg>        INT64         </Arg>
+            <Arg>        UINT32        </Arg>
+        </onCrossServerModifyExp>
     </CellMethods>
 
     <BaseMethods>
@@ -470,17 +472,6 @@
             <Arg>        SKILLID        </Arg>
             <Arg>        LEVEL          </Arg>
         </buildAddActiveSkill>
-
-        <playerExpFlowLog>
-            <Arg>   EXP         </Arg>
-            <Arg>   LEVEL       </Arg>
-            <Arg>   LEVEL       </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   PYTHON      </Arg>
-            <Arg>   UINT32      </Arg>
-        </playerExpFlowLog>
 
         <playerDeadTlog>
             <Arg>        PY_DICT        </Arg>

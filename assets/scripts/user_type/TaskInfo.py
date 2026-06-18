@@ -481,7 +481,7 @@ class TaskInfo(userType.UserSingleType):
         for _taskId, _task in self.tasks.items():
             if _task.isInEndStat():
                 continue
-            targetList = _task.getTgtsByType(gameconst.TaskTargetType.TASK_TARGET_REACH_AREA)
+            targetList = _task.getTgtsByType(gameconst.TaskTargetEnum.TASK_TARGET_REACH_AREA)
             for target in targetList:
                 self.addReachAreaTargetTask(_taskId, target)
                 owner.cell.onAreaTargetTaskAdd(_taskId, target)
@@ -491,7 +491,7 @@ class TaskInfo(userType.UserSingleType):
             return
         LOG_INFO('checkRewardTaskCacheOnLogin:', self.rewardTaskCacheDic)
         for _taskId in self.rewardTaskCacheDic.keys():
-            owner.cell.startClaimTask(_taskId, '', (),
+            owner.cell.doStartClaimTask(_taskId, '', (),
                                       actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_REWARD_TASK))
 
     def removeRewardTaskCache(self, taskId):
@@ -590,7 +590,7 @@ class TaskInfo(userType.UserSingleType):
         else:
             rewardDic = _validItems
         src = AAC_AACDD.datas.BONUS_SRC_CLAIM_TASK
-        detail = gameclass.AwardDetail(taskId=[taskData['TaskId']])
+        detail = gameclass.AwardDetailCls(taskId=[taskData['TaskId']])
         LOG_INFO('in giveClaimTaskItems, rewardDic:', rewardDic)
         wealthVal = dropAward.AwardVal()
         # itemList = []
@@ -601,7 +601,6 @@ class TaskInfo(userType.UserSingleType):
             owner.addWealth(src, wealthVal, opUUID, detail)
         else:
             return False
-        # itemList and owner.addTaskItems(itemList, src, opUUID, detail)
         return
 
     @staticmethod
@@ -687,7 +686,7 @@ class TaskInfo(userType.UserSingleType):
 
             _opUUID = KBEngine.genUUID64()
             _srcType = AAC_AACDD.datas.BONUS_SRC_CLAIM_TASK
-            _detail = gameclass.AwardDetail(taskId=taskId)
+            _detail = gameclass.AwardDetailCls(taskId=taskId)
             owner.deductWealth(_srcType, _deductWealthVal, _opUUID, _detail)
         return True
 
@@ -1119,7 +1118,7 @@ class TaskInfo(userType.UserSingleType):
                 continue
             if not task.isStat(gameconst.TaskStatEnum.TASK_STAT_RUNNING):
                 continue
-            tgtList = task.getTgtsByType(gameconst.TaskTargetType.TASK_TARGET_ITEMS)
+            tgtList = task.getTgtsByType(gameconst.TaskTargetEnum.TASK_TARGET_ITEMS)
             for _tgt in tgtList:
                 LOG_DBG('     in doAddTgtItemByRelateAction, _taskIds:', _tgt.srcIdList, _tgt.srcRatio)
                 _itemCount = owner.getItemNum(_tgt.tgtId)
@@ -1137,7 +1136,7 @@ class TaskInfo(userType.UserSingleType):
         if not wealthVal.isEmpty():
             _srcType = AAC_AACDD.datas.BONUS_SRC_ADD_TASK_ITEMS
             _opUUID = KBEngine.genUUID64()
-            _detail = gameclass.AwardDetail(taskId=[_taskIds[0] if _taskIds else 0])
+            _detail = gameclass.AwardDetailCls(taskId=[_taskIds[0] if _taskIds else 0])
             _awardCtx = awardContext.CommonContext(0)
             if not owner.canAddWealthVal(_srcType, wealthVal, _awardCtx):
                 owner.onMessagePre(dataUtils.getTaskMsgId('taskSubmitAlert_BagCheck'), [])
@@ -1196,7 +1195,7 @@ class TaskInfo(userType.UserSingleType):
         _fmlId = dataUtils.getTaskFieldVal(taskData, 'FinCondVarCheckFormID')
         if not _fmlId:
             return
-        tgts = _task.getTgtsByType(gameconst.TaskTargetType.TASK_TARGET_VAR)
+        tgts = _task.getTgtsByType(gameconst.TaskTargetEnum.TASK_TARGET_VAR)
         for tgt in tgts:
             if tgt.checkVarCond(owner, _fmlId, dataUtils.getTaskFieldVal(taskData, 'FinCondVarCheckParam')):
                 self.checkTaskFinished(owner, _task)
@@ -1222,8 +1221,18 @@ class TaskInfo(userType.UserSingleType):
     def onTaskFinished(self, owner, task):
         LOG_INFO('in TaskInfo::onTaskFinished, taskId:', task.taskId)
         taskData = dataUtils.getTaskCfg(task.taskId)
+        # 判断下是否进副本的
+        finRewardInstance = dataUtils.getTaskFieldVal(taskData, 'FinRewardInstance')
+        abanRewardInstance = dataUtils.getTaskFieldVal(taskData, 'AbanRewardInstance')
+        if finRewardInstance or abanRewardInstance:
+            owner.cell.submitTaskCheck(task.taskId)
+            return
+        self.doTaskFinished(owner, task)
+
+    def doTaskFinished(self, owner, task):
         task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_FINISHED)
         self.addSendUpdatedTaskList([task, ])
+        taskData = dataUtils.getTaskCfg(task.taskId)
         if dataUtils.getTaskFieldVal(taskData, 'DeliMetdNoLimit'):
             # 先校验一次base的提交条件，如果不满足，就不用去cell校验条件了
             if self.checkSubmitBaseCond(owner, task.taskId):
@@ -1310,26 +1319,33 @@ class TaskInfo(userType.UserSingleType):
 
         _opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_COMPLETE_TASK
-        _detail = gameclass.AwardDetail(taskId=taskId)
+        _detail = gameclass.AwardDetailCls(taskId=taskId)
         owner.deductWealth(srcType, deductWealthVal, _opUUID, _detail)
         _task.deductTaskTgtItemsSucc()
         self.checkTaskFinished(owner, _task)
         self.addSendUpdatedTaskList([_task, ])
         return True
 
-    def doSubmitTask(self, owner, taskId, popRewardUUID=0, check=True):
+    def setTaskRunning(self, owner, taskId):
+        _task = self.getTaskObj(taskId)
+        if not _task:
+            LOG_WARN('in setTaskRunning, no _task')
+            return
+        _task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_RUNNING)
+
+    def doTaskSubmit(self, owner, taskId, popRewardUUID=0, check=True):
         # do reward and submit _task
         _task = self.getTaskObj(taskId)
         if not _task:
-            LOG_WARN('in doSubmitTask, no _task')
+            LOG_WARN('in doTaskSubmit, no _task')
             return
 
         if check and not _task.isStat(gameconst.TaskStatEnum.TASK_STAT_FINISHED):
-            LOG_WARN('in doSubmitTask, _task not in target finish state:', _task.stat)
+            LOG_WARN('in doTaskSubmit, _task not in target finish state:', _task.stat)
             return
 
         if _task.isStat(gameconst.TaskStatEnum.TASK_STAT_SUBMITTED):
-            LOG_WARN('in doSubmitTask, already submit :', _task.stat)
+            LOG_WARN('in doTaskSubmit, already submit :', _task.stat)
             return
 
         _task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_SUBMITTED)
@@ -1384,6 +1400,12 @@ class TaskInfo(userType.UserSingleType):
                 owner,
                 gameconst.AchieveType.HOOK_TASK_REWARD,
                 actionContext.AchievementCtx(mapId=_data['mapID']))
+            owner.triggerMapExplore(_data['mapID'], gameconst.AchieveType.HOOK_TASK_REWARD, 1)
+        elif task.taskType == gameconst.TaskType.TASK_TYPE_MAP_EXPLORE:
+            taskData = dataUtils.getTaskCfg(task.taskId)
+            if task.parentTaskId == 0:
+                if 'ClaimNpcMapId' in taskData:
+                    owner.triggerMapExplore(taskData['ClaimNpcMapId'], gameconst.AchieveType.AREA_TASK, 1)
 
         if 0 != task.parentTaskId:
             LOG_INFO("_afterTaskSubmitted 1 ", task)
@@ -1397,7 +1419,7 @@ class TaskInfo(userType.UserSingleType):
         if _roundVal > 0:
             if task.alreadyCount % _roundVal != 0:
                 LOG_INFO('in autoClaimRoundTask, auto claim new task:', task.taskId, _roundVal, task.alreadyCount)
-                owner.cell.startClaimTask(
+                owner.cell.doStartClaimTask(
                     task.taskId, 
                     '', 
                     (),
@@ -1421,8 +1443,8 @@ class TaskInfo(userType.UserSingleType):
     def _rewardItemsOnTaskEnd(self, owner, taskId, rewardId, opUUID, srcType, popRewardUUID=0):
         if rewardId > 0:
             LOG_INFO('in _rewardItemsOnTaskEnd:', taskId, rewardId, popRewardUUID)
-            awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID)
-            awardCtx = owner._getAvatarAwardCtx(rewardId, awardCtx)
+            awardCtx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
+            awardCtx = owner.getAvatarAwardCtx(rewardId, awardCtx)
 
             taskVal = self.getTaskObj(taskId)
             if taskVal:
@@ -1434,7 +1456,9 @@ class TaskInfo(userType.UserSingleType):
             if not wealthVal.isEmpty():
                 directly = True
                 taskData = dataUtils.getTaskCfg(taskId)
-                detail = gameclass.AwardDetail(taskId=[taskId], popRewardUUID=popRewardUUID)
+                if taskVal.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
+                    directly = False
+                detail = gameclass.AwardDetailCls(taskId=[taskId], popRewardUUID=popRewardUUID)
                 owner.addWealth(srcType, wealthVal, opUUID, detail=detail, awardCtx=awardCtx, directly=directly)
 
     def doSubmitReward(self, owner, taskId, opUUID, srcType, popRewardUUID=0):
@@ -1532,7 +1556,7 @@ class TaskInfo(userType.UserSingleType):
             if _newTaskId <= 0:
                 continue
             self.rewardTaskCacheDic[_newTaskId] = utils.curTS()
-            owner.cell.startClaimTask(_newTaskId, '', (),
+            owner.cell.doStartClaimTask(_newTaskId, '', (),
                                       actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_REWARD_TASK))
 
     def onChildtaskSubmitted(self, owner, task):
@@ -1841,13 +1865,13 @@ class TaskInfo(userType.UserSingleType):
             if not targetList:
                 continue
 
-            if targetType == gameconst.TaskTargetType.TASK_TARGET_ITEMS:
+            if targetType == gameconst.TaskTargetEnum.TASK_TARGET_ITEMS:
                 updated = task.updateTgtItemsCount(owner)
                 if updated:
                     LOG_INFO('TaskInfo::onTaskStepUpdate items:', taskId, args)
                     self.addSendUpdatedTaskList([task, ])
                     bUpdate = True
-            elif targetType == gameconst.TaskTargetType.TASK_TARGET_COLLECT:
+            elif targetType == gameconst.TaskTargetEnum.TASK_TARGET_COLLECT:
                 _, gameEntityId, _ = args
                 if not task.addCollectNum(targetType, args):
                     continue
@@ -1857,7 +1881,7 @@ class TaskInfo(userType.UserSingleType):
                 if tgtArrived:
                     LOG_INFO('TaskInfo::onTaskStepUpdate:', args)
                     self.checkTaskFinished(owner, task)
-            elif targetType == gameconst.TaskTargetType.TASK_TARGET_COUNTER:
+            elif targetType == gameconst.TaskTargetEnum.TASK_TARGET_COUNTER:
                 if not task.addCounterNum(targetType, args):
                     continue
                 tgtArrived = task.onTaskStepUpdate(targetType, args)

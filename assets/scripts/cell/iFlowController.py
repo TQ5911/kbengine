@@ -2,8 +2,8 @@
 from KBEDebug import *
 import KBEngine
 
-import gameconst
 import utils
+import gameconst
 
 import flowController
 
@@ -41,65 +41,64 @@ class IFlowController(object):
 
     def flowCtrlOnTaskComplete(self, taskId):
         """任务完成时向controller汇报, 玩家实体调用"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onTaskComplete(taskId)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onTaskComplete(taskId)
 
     def flowCtrlOnTaskFailed(self, taskId):
         """任务完成时向controller汇报, 玩家实体调用"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onTaskFailed(taskId)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onTaskFailed(taskId)
 
     def flowCtrlOnTaskInProgress(self, taskId):
         """任务进行时向controller汇报, 玩家实体调用"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onTaskInProgress(taskId)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onTaskInProgress(taskId)
+
+    def flowCtrlDungeonNPCReleaseComplete(self, npcGIDs):
+        if self.flowController:
+            self.flowController.onDungeonNPCReleaseComplete(npcGIDs)
 
     def flowCtrlDungeonMonsterReleaseComplete(self, monsterGIDs):
         """释放怪物完成后向controller汇报, spaceMgr调用"""
         if self.flowController:
             self.flowController.onDungeonMonsterReleaseComplete(monsterGIDs)
 
-    def flowCtrlDungeonNPCReleaseComplete(self, npcGIDs):
+    def flowCtrlDungeonCollectionBeCollected(self, collGID, collectionId):
         if self.flowController:
-            self.flowController.onDungeonNPCReleaseComplete(npcGIDs)
+            self.flowController.onDunCollectionBeCollected(collGID)
+            self.flowController.onDungeonCollectionBeCollectedUsePrototypeID(collectionId)
 
     def flowCtrlDungeonCollectionReleaseComplete(self, collGIDs):
         if self.flowController:
             self.flowController.onDungeonCollectionReleaseComplete(collGIDs)
 
-    def flowCtrlDungeonCollectionBeCollected(self, collGID, collectionId):
+    def flowCtrlDungeonTeleporterCreatedComplete(self, teleporterGIDs):
         if self.flowController:
-            self.flowController.onDungeonCollectionBeCollected(collGID)
-            self.flowController.onDungeonCollectionBeCollectedUsePrototypeID(collectionId)
+            self.flowController.onDungeonTeleporterCreatedComplete(teleporterGIDs)
 
     def flowCtrlDungeonAirWallReleaseComplete(self, airWallGIDs):
         if self.flowController:
             self.flowController.onDungeonAirWallReleaseComplete(airWallGIDs)
 
-    def flowCtrlDungeonTeleporterCreatedComplete(self, teleporterGIDs):
-        if self.flowController:
-            self.flowController.onDungeonTeleporterCreatedComplete(teleporterGIDs)
-
     def flowCtrlMonsterHpMonitorTrigger(self, monsterGID, oldHp, newHp, fullHp):
         """怪物血量发生变化时向controller汇报, 怪物实体调用"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onMonsterHpBeModified(monsterGID, oldHp, newHp, fullHp)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onMonsterHpBeModified(monsterGID, oldHp, newHp, fullHp)
 
     def triggeredFlowControllerRestNumIncreased(self):
-        # LOG_INFO("triggeredFlowControllerRestNumIncreased::")
         return self._triggeredFlowControllerRestNumChanged(increased=True)
 
-    def triggeredFlowControllerRestNumDecreased(self):
-        LOG_DBG("triggeredFlowControllerRestNumDecreased::")
+    def triggeredFlowControllerRestNumDec(self):
+        LOG_DBG("triggeredFlowControllerRestNumDec::")
         return self._triggeredFlowControllerRestNumChanged(decreased=True)
 
     def _triggeredFlowControllerRestNumChanged(self, decreased=False, increased=False):
-        spaceMgr = self.spaceMgr
-        if not (spaceMgr and spaceMgr.flowController):
+        _spaceMgr = self.spaceMgr
+        if not (_spaceMgr and _spaceMgr.flowController):
             return
         if not self:
             return
@@ -112,139 +111,146 @@ class IFlowController(object):
         if hasattr(self, 'gameEntityId') and self.gameEntityId:
             gid = utils.parseGidFromGameEntityId(self.gameEntityId)
             if increased:
-                spaceMgr.flowController.onMonsterRestNumberIncreased(gid, gameconst.FLOW_REST_MONSTER_TAG_GID, spaceMgr)
-                spaceMgr.flowController.onMonsterRestNumberIncreased(-1, gameconst.FLOW_REST_MONSTER_TAG_ALL, spaceMgr)
+                _spaceMgr.flowController.onMonsterRestNumberIncreased(
+                    gid, gameconst.FLOW_REST_MONSTER_TAG_GID, _spaceMgr)
+                _spaceMgr.flowController.onMonsterRestNumberIncreased(
+                    -1, gameconst.FLOW_REST_MONSTER_TAG_ALL, _spaceMgr)
 
             if decreased:
-                spaceMgr.flowController.onMonsterRestNumberDecreased(gid, gameconst.FLOW_REST_MONSTER_TAG_GID, spaceMgr)
-                spaceMgr.flowController.onMonsterRestNumberDecreased(-1, gameconst.FLOW_REST_MONSTER_TAG_ALL, spaceMgr)
+                _spaceMgr.flowController.onMonsterRestNumberDecreased(
+                    gid, gameconst.FLOW_REST_MONSTER_TAG_GID, _spaceMgr)
+                _spaceMgr.flowController.onMonsterRestNumberDecreased(
+                    -1, gameconst.FLOW_REST_MONSTER_TAG_ALL, _spaceMgr)
 
         if hasattr(self, 'creepbaseId') and self.creepbaseId:
             if increased:
-                spaceMgr.flowController.onMonsterRestNumberIncreased(self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, spaceMgr)
+                _spaceMgr.flowController.onMonsterRestNumberIncreased(
+                    self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, _spaceMgr)
 
             if decreased:
-                spaceMgr.flowController.onMonsterRestNumberDecreased(self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, spaceMgr)
+                _spaceMgr.flowController.onMonsterRestNumberDecreased(
+                    self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, _spaceMgr)
+
+    def flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(self, monsterId, newNumber, newTotalNumber):
+        """怪物击杀储量增加时向Controller汇报, spaceMgr 调用(使用原型ID判断)"""
+        if self.flowController:
+            _monsterGID = 'cbid{}'.format(monsterId)
+            self.flowController.onDunMonsterKillNumIncreased(_monsterGID, newNumber, newTotalNumber)
 
     def flowCtrlDungeonMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
         """怪物击杀储量增加时向Controller汇报, spaceMgr调用"""
         if self.flowController:
-            self.flowController.onDungeonMonsterKillNumIncreased(monsterGID, newNumber, newTotalNumber)
+            self.flowController.onDunMonsterKillNumIncreased(monsterGID, newNumber, newTotalNumber)
 
-    def flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(self, monsterId, newNumber, newTotalNumber):
-        """怪物击杀储量增加时向Controller汇报, spaceMgr调用(使用原型ID判断)"""
-        if self.flowController:
-            monsterGID = 'cbid{}'.format(monsterId)
-            self.flowController.onDungeonMonsterKillNumIncreased(monsterGID, newNumber, newTotalNumber)
-
-    def flowCtrlOnCheckDungeonEntityKillNumber(self, monsterGID, symbol, number, currentKillNum, usePrototypeID, eid, ctx, checkOnce):
+    def flowCtrlOnCheckDungeonEntityKillNumber(self, monsterGID, symbol, number, curKillNum, usePrototypeID, eid, ctx, checkOnce):
         """副本内Entity击杀数量立刻检查回调"""
         if not self.flowController:
             return
 
-        checkResult = gameconst.DungeonFlowCompSym.compare(symbol, currentKillNum, number)
-        if not checkResult:
+        _checkResult = gameconst.DungeonFlowCompSym.compare(symbol, curKillNum, number)
+        if not _checkResult:
             if checkOnce:
                 self.flowController.cancelWaitingTriggerEvents(ctx, (eid, ))
             return
 
-        self.flowController.onCheckDungeonEntityKillNumberTriggered(monsterGID, symbol, number, currentKillNum, usePrototypeID, (eid, ))
+        self.flowController.onCheckDunEntityKillNumberTriggered(
+            monsterGID, symbol, number, curKillNum, usePrototypeID, (eid, ))
 
-    def flowCtrlOnCheckDungeonAllEntityKillNumber(self, symbol, number, currentKillNum, eid, ctx, checkOnce):
+    def flowCtrlOnCheckDungeonAllEntityKillNumber(self, symbol, number, curKillNum, eid, ctx, checkOnce):
         """副本内所有Entity击杀数量立刻检查回调"""
         if not self.flowController:
             return
 
-        checkResult = gameconst.DungeonFlowCompSym.compare(symbol, currentKillNum, number)
-        if not checkResult:
+        _checkResult = gameconst.DungeonFlowCompSym.compare(symbol, curKillNum, number)
+        if not _checkResult:
             if checkOnce:
                 self.flowController.cancelWaitingTriggerEvents(ctx, (eid, ))
             return
 
-        self.flowController.onCheckDungeonEntityKillNumberTriggered(-1, symbol, number, currentKillNum, False, (eid, ))
+        self.flowController.onCheckDunEntityKillNumberTriggered(-1, symbol, number, curKillNum, False, (eid, ))
 
     def flowCtrlDungeonAlivePlayerIncreased(self, newNumber):
         if self.flowController:
             self.flowController.onDungeonAlivePlayerCountIncreased(newNumber)
 
-    def flowCtrlDungeonPlayerRestNumChanged(self, newNumber):
-        if self.flowController:
-            self.flowController.onDungeonPlayerRestNumberChanged(newNumber)
-
     def flowCtrlDungeonAlivePlayerDecreased(self, newNumber):
         if self.flowController:
             self.flowController.onDungeonAlivePlayerDecreased(newNumber)
 
+    def flowCtrlDungeonPlayerRestNumChanged(self, newNumber):
+        if self.flowController:
+            self.flowController.onDungeonPlayerRestNumberChanged(newNumber)
+
     def flowCtrlMonsterInBattle(self, monsterGID):
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onMonsterInBattle(monsterGID)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onMonsterInBattle(monsterGID)
 
     def flowCtrlMonsterLeaveBattle(self, monsterGID):
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onMonsterLeaveBattle(monsterGID)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onMonsterLeaveBattle(monsterGID)
 
     def flowCtrlDunAnyPlayerHpMonitorTrigger(self, oldHp, newHp, fullHp):
         """任一副本内玩家血量变化汇报接口"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onDunAnyPlayerHpBeModified(oldHp, newHp, fullHp)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onDunAnyPlayerHpBeModified(oldHp, newHp, fullHp)
 
     def flowCtrlOnEntityMoveToFixPos(self, moveUUID, succ):
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onEntityMoveToFixPos(moveUUID, succ)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onEntityMoveToFixPos(moveUUID, succ)
 
     def flowCtrlDunEntityimmuneDeathTrigger(self, entityGID):
         """Entity进入濒死状态触发"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onDungeonEntityimmuneDeathBeTriggered(entityGID)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onDungeonEntityimmuneDeathBeTriggered(entityGID)
 
     def flowCtrlDungeonValueCheckChangedTrigger(self, varId):
         """副本变量被修改"""
         if self.flowController:
-            self.flowController.onDungeonValueCheckChanged(varId)
+            self.flowController.onDunValueCheckChanged(varId)
 
     def flowCtrlEntityRouteFinished(self, entityGID, pathID):
         """实体完成route寻路"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onEntityRouteFinished(entityGID, pathID)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onEntityRouteFinished(entityGID, pathID)
             # global triggerred
-            spaceMgr.flowController.onEntityRouteFinished(-1, pathID)
-            spaceMgr.flowController.onEntityRouteFinished(entityGID, -1)
-            spaceMgr.flowController.onEntityRouteFinished(-1, -1)
+            _spaceMgr.flowController.onEntityRouteFinished(-1, pathID)
+            _spaceMgr.flowController.onEntityRouteFinished(entityGID, -1)
+            _spaceMgr.flowController.onEntityRouteFinished(-1, -1)
 
     def flowCtrlEntityRoutingMissingEscort(self, entityGID, pathID):
         """实体route过程中玩家距离过远"""
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onEntityRoutingMissingEscort(entityGID, pathID)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onEntityRoutingMissingEscort(entityGID, pathID)
             # global triggerred
-            spaceMgr.flowController.onEntityRoutingMissingEscort(-1, pathID)
-            spaceMgr.flowController.onEntityRoutingMissingEscort(entityGID, -1)
-            spaceMgr.flowController.onEntityRoutingMissingEscort(-1, -1)
+            _spaceMgr.flowController.onEntityRoutingMissingEscort(-1, pathID)
+            _spaceMgr.flowController.onEntityRoutingMissingEscort(entityGID, -1)
+            _spaceMgr.flowController.onEntityRoutingMissingEscort(-1, -1)
 
     def _onAnyPlayerCinemaPlayEndedTimeout(self, cinemaPlayID, eid):
         LOG_INFO("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
         if self.flowController:
-            e = self.flowController.getEventByEventId(eid)
-            if e and isinstance(e, flowController.AnyPlayerCinemaPlayEndedEvent):
-                e.eventCtrlId = 0
+            _e = self.flowController.getEventByEventId(eid)
+            if _e and isinstance(_e, flowController.AnyPlayerCinemaPlayEndedEvent):
+                _e.eventCtrlId = 0
             self.flowController.onPlayerCinemaPlayEnded(cinemaPlayID, eids=(eid, ))
 
     def flowCtrlPlayerCinemaPlayEnded(self, cinemaPlayID):
-        spaceMgr = self.spaceMgr
-        if spaceMgr and spaceMgr.flowController:
-            spaceMgr.flowController.onPlayerCinemaPlayEnded(cinemaPlayID)
-            spaceMgr.flowController.onPlayerCinemaPlayEnded(-1)
+        _spaceMgr = self.spaceMgr
+        if _spaceMgr and _spaceMgr.flowController:
+            _spaceMgr.flowController.onPlayerCinemaPlayEnded(cinemaPlayID)
+            _spaceMgr.flowController.onPlayerCinemaPlayEnded(-1)
 
     def flowCtrrlDungeonEntityReleaseCompleteByEventId(self, flagIds, fromEventId):
         """通用释放Entity事件处理（根据eventId）"""
         if self.flowController:
-            self.flowController.onDungeonEntityReleaseCompleteByEventId(flagIds, fromEventId)
+            self.flowController.onDunEntityReleaseCompleteByEventId(flagIds, fromEventId)
 
     def flowCtrlDungeonRebornPosCreatedComplete(self, rebornPosGIDs):
         if self.flowController:

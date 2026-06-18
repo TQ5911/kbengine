@@ -145,6 +145,10 @@
             <Arg>       UNICODE                 </Arg>
         </modifyGuildDesc>
 
+        <modifyGuildPublicDesc> <Exposed/>
+            <Arg>       UNICODE                 </Arg>
+        </modifyGuildPublicDesc>
+
         <getGuildDetailInfo> <Exposed/>
             <Arg>       GUILD_UUID              </Arg>
         </getGuildDetailInfo>
@@ -484,6 +488,10 @@
         <onGuildDescChanged>
             <Arg>       UNICODE                 </Arg>
         </onGuildDescChanged>
+
+        <onGuildPublicDescChanged>
+            <Arg>       UNICODE                 </Arg>
+        </onGuildPublicDescChanged>
 
         <onGuildLevelChanged>
             <Arg>       LEVEL                   </Arg>

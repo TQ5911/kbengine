@@ -16,7 +16,7 @@ import crontab
 
 class datas(object, metaclass=_tools.VarNameDefinedMeta):
     BONUS_SRC_UNKNOWN = 0
-    appointPresident = 0
+    guildChannelCD = 0
     appointVicePresident = 1
     appointMinister = 2
     dismissVicePresident = 3
@@ -40,4 +40,9 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     guildUnion = 21
     guildEnmity = 22
     guildChallenge = 23
+    teamInvitation = 24
+    guildChatRoomCreate = 25
+    guildChatMicMode = 26
+    guildChatMuteMode = 27
+    guildChatInvitation = 28
 

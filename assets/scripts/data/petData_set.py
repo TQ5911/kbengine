@@ -226,6 +226,30 @@ datas = _tools.RODict({
     "petGearWarningMsg": _tools.RODict({
         "ID": "petGearWarningMsg",
         "value": 54000968,
+    }),
+    "petGearRule": _tools.RODict({
+        "ID": "petGearRule",
+        "value": ((1, 1, 0), (2, 2, 0), (3, 3, 0), (4, 3, 1)),
+    }),
+    "petGearHelpInfo": _tools.RODict({
+        "ID": "petGearHelpInfo",
+        "value": 69,
+    }),
+    "petGearRuleTip1": _tools.RODict({
+        "ID": "petGearRuleTip1",
+        "value": 54000970,
+    }),
+    "petGearRuleTip2": _tools.RODict({
+        "ID": "petGearRuleTip2",
+        "value": 54000971,
+    }),
+    "petGearLowRoleLevel": _tools.RODict({
+        "ID": "petGearLowRoleLevel",
+        "value": 54000972,
+    }),
+    "petGearRuleTip3": _tools.RODict({
+        "ID": "petGearRuleTip3",
+        "value": ((2, 54000970), (3, 54000970), (4, 54000971)),
     })
 })
 

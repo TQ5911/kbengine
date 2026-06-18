@@ -42,6 +42,7 @@ namespace KBEngine
 		
 		public virtual void onNpcIdChanged(Int32 oldValue) {}
 		
+		public Int32 siegeWarCamp = 0;
 		
 		
 		
@@ -142,6 +143,13 @@ namespace KBEngine
 					UInt32 aiChatToPlayer_arg1 = stream.readUint32();
 					UInt32 aiChatToPlayer_arg2 = stream.readUint32();
 					aiChatToPlayer(aiChatToPlayer_arg1, aiChatToPlayer_arg2);
+					break;
+				case 737:
+					Vector3 drawCube_arg1 = stream.readVector3();
+					Vector3 drawCube_arg2 = stream.readVector3();
+					float drawCube_arg3 = stream.readFloat();
+					float drawCube_arg4 = stream.readFloat();
+					drawCube(drawCube_arg1, drawCube_arg2, drawCube_arg3, drawCube_arg4);
 					break;
 				case 261:
 					UInt32 notifyCastingSkill_arg1 = stream.readUint32();
@@ -311,6 +319,10 @@ namespace KBEngine
 					UInt32 showPopoverMsgWithArg_arg1 = stream.readUint32();
 					List<string> showPopoverMsgWithArg_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					showPopoverMsgWithArg(showPopoverMsgWithArg_arg1, showPopoverMsgWithArg_arg2);
+					break;
+				case 1153:
+					List<UInt16> updateForbidSkillTags_arg1 = ((DATATYPE_AnonymousArray_10005)method.args[0]).createFromStreamEx(stream);
+					updateForbidSkillTags(updateForbidSkillTags_arg1);
 					break;
 				default:
 					break;
@@ -721,6 +733,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onSelectedTargetIdChanged(oldval_selectedTargetId);
+						}
+
+						break;
+					case 553:
+						Int32 oldval_siegeWarCamp = siegeWarCamp;
+						siegeWarCamp = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onSiegeWarCampChanged(oldval_siegeWarCamp);
+						}
+						else
+						{
+							if(inWorld)
+								onSiegeWarCampChanged(oldval_siegeWarCamp);
 						}
 
 						break;
@@ -1282,6 +1310,27 @@ namespace KBEngine
 					else
 					{
 						onSelectedTargetIdChanged(oldval_selectedTargetId);
+					}
+				}
+			}
+
+			Int32 oldval_siegeWarCamp = siegeWarCamp;
+			Property prop_siegeWarCamp = pdatas[9];
+			if(prop_siegeWarCamp.isBase())
+			{
+				if(inited && !inWorld)
+					onSiegeWarCampChanged(oldval_siegeWarCamp);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_siegeWarCamp.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onSiegeWarCampChanged(oldval_siegeWarCamp);
 					}
 				}
 			}

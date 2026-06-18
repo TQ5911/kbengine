@@ -46,7 +46,7 @@ class IAuctionMixin(object):
             return _r_False, gameconst.AuctionErrno.ERR_AUCTION_PLAYER_BAG_TYPE_UNKNOWN.initkvbody(
                 itemId=itemId, bagType=bagType)
 
-        m_gridId, m_itemObj = m_bagData.getItemByItemIdAndUniqueId(itemId, uniqueId, True)
+        m_gridId, m_itemObj = m_bagData.fetchItemByItemIdAndUniqueId(itemId, uniqueId, True)
         curTime = utils.curTS()
         def __itemCommonCheck(_w_itemObj):
             """对于每个物品的check"""
@@ -64,6 +64,10 @@ class IAuctionMixin(object):
 
             if _w_itemObj.isEquipmentItem() and (not _w_itemObj.isGood(self.gbID) or _w_itemObj.hasBindValue()):
                 return gameconst.AuctionErrno.ERR_AUCTION_EQUIP_IN_DROP_REPAIR
+            
+            # 没有词条的魂魄不允许上交易行
+            if _w_itemObj.isSoul() and len(_w_itemObj.rollProps) == 0:
+                return gameconst.AuctionErrno.ERR_AUCTION_SOUL_WITH_EMPTY_ROLL_PROPS
             
             if not dataUtils.checkAuctionAllowListing(_w_itemObj.itemId):
                 return gameconst.AuctionErrno.ERR_AUCTION_ITEM_IS_FORBIDDEN
@@ -84,31 +88,31 @@ class IAuctionMixin(object):
         # OTHER_CASES: 需要扣除多个格子的物品
         _m_currentNum = m_itemObj.itemNum
         m_gridDict = {m_gridId: _m_currentNum}
-        for i_gridId, i_itemObj in m_bagData.iterGetItemByItemId(itemId):
+        for iGridId, iItemObj in m_bagData.iterGetItemByItemId(itemId):
             if _m_currentNum >= number:
                 break
 
-            if i_itemObj is m_itemObj:
+            if iItemObj is m_itemObj:
                 continue
 
-            _i_errno = __itemCommonCheck(i_itemObj)
+            _i_errno = __itemCommonCheck(iItemObj)
             if _i_errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
                 LOG_INFO("_saleItemInAuctionCheck:: skipped {}".format(_i_errno),
-                          i_gridId, i_itemObj.itemId)
+                          iGridId, iItemObj.itemId)
                 continue
 
-            if not m_itemObj.canMerge(i_itemObj):
+            if not m_itemObj.canMerge(iItemObj):
                 LOG_INFO("_saleItemInAuctionCheck:: skipped, cannot be merged",
-                          m_gridId, m_itemObj.itemId, i_gridId, i_itemObj.itemId)
+                          m_gridId, m_itemObj.itemId, iGridId, iItemObj.itemId)
                 continue
 
             _i_lastNum = number - _m_currentNum
-            if i_itemObj.itemNum >= _i_lastNum:
-                m_gridDict[i_gridId] = _i_lastNum
+            if iItemObj.itemNum >= _i_lastNum:
+                m_gridDict[iGridId] = _i_lastNum
                 _m_currentNum += _i_lastNum
             else:
-                m_gridDict[i_gridId] = i_itemObj.itemNum
-                _m_currentNum += i_itemObj.itemNum
+                m_gridDict[iGridId] = iItemObj.itemNum
+                _m_currentNum += iItemObj.itemNum
 
         if _m_currentNum < number:
             return _r_False, gameconst.AuctionErrno.ERR_AUCTION_DEDUCT_ITEM_ERROR

@@ -35,6 +35,7 @@ LINK_EVENTS = {
     'killMonsterNum',
     'changeAllPlayerCameraLookPos',
     'createRebornPos',
+    'createInnerDemon',
 }
 
 
@@ -149,6 +150,19 @@ class DungeonFlowConstructor(object):
         initState = int(eventDataDic.get('initState', 0))
         return self.controller.buildReleaseDungeonMonsterEvent(
             eventId, entityIdList, entityNumber, entityLvl, _overwriteProps, ifSetBoss, initState)
+
+    def construct_createInnerDemon(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        _overwriteProps = {}
+        _overwriteProps['hpMult'] = eventDataDic.get('hpMult', 3)
+        _overwriteProps['time'] = eventDataDic.get('time', 3)
+        ifSetBoss = bool(eventDataDic.get('ifSetBoss', False))
+        initState = int(eventDataDic.get('initState', 0))
+        return self.controller.buildReleaseDungeonInnerDemonEvent(eventId, entityIdList, _overwriteProps, ifSetBoss, initState)
+
+    def construct_notifyInnerDemonData(self, eventId, eventDataDic):
+        entityIdList = eventDataDic['entityID']
+        return self.controller.buildNotifyInnerDemonDataEvent(eventId, entityIdList, self.dungeonNo, self.spaceNo)
 
     def construct_monsterChangeInitState(self, eventId, eventDataDic):
         entityIdList = eventDataDic['entityID']

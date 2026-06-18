@@ -31,7 +31,7 @@ datas ={
   },
   "1065": {
     "type": "taskFinished",
-    "taskID": 86010201,
+    "taskID": 86010197,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -41,7 +41,7 @@ datas ={
     }
   },
   "1066": {
-    "type": "createCollection",
+    "type": "createMonster",
     "entityID": [
       40290001,
       40290002,
@@ -54,8 +54,14 @@ datas ={
       40290009
     ],
     "num": 0,
-    "randomCollectionNum": 0,
-    "checkHaveInFixed": 0,
+    "lv": "1",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
     "transition": {
       "finished": [
         1067
@@ -79,13 +85,19 @@ datas ={
     }
   },
   "1068": {
-    "type": "createCollection",
+    "type": "createMonster",
     "entityID": [
       40290010
     ],
     "num": 0,
-    "randomCollectionNum": 0,
-    "checkHaveInFixed": 0,
+    "lv": "1",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
     "transition": {}
   },
   "1069": {

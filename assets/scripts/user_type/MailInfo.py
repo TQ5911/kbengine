@@ -21,7 +21,7 @@ mailInstance = MailInst()
 
 class MailAttachInst(object):
     def createObjFromDict(self, dataDict):
-        mailAttach = dropAward.MailWealthVal()
+        mailAttach = dropAward.MailAttachVal()
         mailAttach.fromMailWealthDict(dataDict)
         return  mailAttach
 
@@ -29,7 +29,7 @@ class MailAttachInst(object):
         return obj.toMailWealthDict()
 
     def isSameType(self, obj):
-        return isinstance(obj, dropAward.MailWealthVal)
+        return isinstance(obj, dropAward.MailAttachVal)
 
 mailAttachInstance = MailAttachInst()
 

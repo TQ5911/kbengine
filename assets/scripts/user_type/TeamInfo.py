@@ -77,7 +77,7 @@ applyJoinInfoInstance = ApplyJoinInfo()
 
 class TeamInfoCache(object):
     def createObjFromDict(self, dataDict):
-        teamObj = team.PlayerTeamCacheVal()
+        teamObj = team.TeamCacheValInPlayer()
         teamObj.initFromDict(dataDict)
         return teamObj
 
@@ -85,6 +85,6 @@ class TeamInfoCache(object):
         return obj.toSavedDict()
 
     def isSameType(self, obj):
-        return type(obj) is team.PlayerTeamCacheVal
+        return type(obj) is team.TeamCacheValInPlayer
 
 teamCacheInstance = TeamInfoCache()

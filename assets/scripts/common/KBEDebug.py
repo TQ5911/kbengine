@@ -130,7 +130,7 @@ def EXCEPT_ERROR_MSG(*args, **kwargs):
                 import traceback
                 traceback.print_stack()
         import iFeiShu
-        #iFeiShu.instance().reportErrorMsg(errMsg)
+        iFeiShu.instance().reportErrorMsg(errMsg)
 
 
 def ERROR_MSG(*args, **kwargs):
@@ -142,7 +142,7 @@ def ERROR_MSG(*args, **kwargs):
                 traceback.print_stack()
         errMsg = printMsg(args, True)
         import iFeiShu
-        #iFeiShu.instance().reportErrorMsg(errMsg)
+        iFeiShu.instance().reportErrorMsg(errMsg)
 
 
 def LOG_ERR(*args, **kwargs):
@@ -154,7 +154,7 @@ def LOG_ERR(*args, **kwargs):
                 traceback.print_stack()
         errMsg = printMsg(args, True)
         import iFeiShu
-        #iFeiShu.instance().reportErrorMsg(errMsg)
+        iFeiShu.instance().reportErrorMsg(errMsg)
 
 
 def FUNCTION_DEBUG():

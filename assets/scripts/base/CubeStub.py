@@ -41,7 +41,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         iMultiStaticSpace.IMultiStaticSpace.__init__(self)
         iMultiStaticSpacePlayer.IMultiStaticSpacePlayer.__init__(self, gameconst.CUBE_MAX_ENTER_NUM)
         iLinePlayersStub.IBranchLineStub.__init__(self)
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self.cubeNo = self.cubeNo # type: int
         self.cubeRooms = {}
         self.randomRooms = []
@@ -151,7 +151,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 if _mapId in B_BD.datas:
                     self._doLineMerge(_mapId)
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def _initAllRoom(self):
         for _floors in cube_room.floorTypeMapDic[self.cubeNo].values():
@@ -198,6 +198,9 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=mapId)
         LOG_INFO('CubeStub::doEnterCube: {} {} {}'.format(mapId, gbId, _lineNo))
+        if _lineNo == -1:
+            LOG_ERR('CubeStub::doEnterCube: lineNo is -1')
+            return
         _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
         self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
 
@@ -208,8 +211,8 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def _getAvailableReadyRoom(self):
         _mapId = cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.READY][0]
         _enterSpaceNo = None
-        # 100 是随便取的值，正常肯定达不到
-        for _lineNo in range(100):
+        lineCnt = gameconst.getBranchLineCnt(_mapId) if _mapId in B_BD.datas else 1
+        for _lineNo in range(lineCnt):
             _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
             if not self.isSpaceReady(_spaceNo):
                 break
@@ -234,11 +237,12 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             LOG_ERR('onAvatarOffline: player not found: {}'.format(gbId))
             return
 
-        _oldCanEnter = self.canSpaceEnter(_playerVal.curSpaceNo)
+        curMapId = formula.fetchMapId(_playerVal.curSpaceNo)
+        _oldCanEnter = self.canMapEnter(curMapId)
         self.removePlayer(gbId)
 
-        if _oldCanEnter != self.canSpaceEnter(_playerVal.curSpaceNo):
-            self._addRandomInfos(formula.fetchMapId(_playerVal.curSpaceNo))
+        if _oldCanEnter != self.canMapEnter(curMapId):
+            self._addRandomInfos(curMapId)
 
     def logonEnterCube(self, box, gbId, extra):
         _enterSpaceNo = self._getAvailableReadyRoom()
@@ -246,6 +250,24 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         _spaceVal = self.staticSpaces[_enterSpaceNo]
         box.onLogonEnterCubeGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _enterSpaceNo)
+
+    def canSpaceEnter(self, spaceNo):
+        _mapId = formula.fetchMapId(spaceNo)
+        if _mapId in B_BD.datas:
+            _linePlayers = self.allLines.get(spaceNo)
+            if not _linePlayers:
+                return True
+            _curNum = len(_linePlayers) + len(_linePlayers.pendingEnterPlayers)
+            return _curNum < B_BD.datas[_mapId]['N1']
+        return super().canSpaceEnter(spaceNo)
+
+    def canMapEnter(self, mapId):
+        lineCnt = gameconst.getBranchLineCnt(mapId) if mapId in B_BD.datas else 1
+        for _lineNo in range(lineCnt):
+            _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
+            if self.canSpaceEnter(_spaceNo):
+                return True
+        return False
 
     def enterRandomRoom(self, box, gbId, extra, curSpaceNo, filterTypes):
         mapId = self._getRandomMapId(curSpaceNo, filterTypes)
@@ -256,11 +278,14 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _lineNo = 0
         if mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=mapId)
+        if _lineNo == -1:
+            LOG_ERR('CubeStub::enterRandomRoom: lineNo is -1')
+            return
 
         _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
 
         self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
-        if not self.canSpaceEnter(_spaceNo):
+        if not self.canMapEnter(mapId):
             self._removeRandomInfos(formula.fetchMapId(_spaceNo))
 
     def _doAvatarEnterCubeRoom(self, spaceNo, box, gbId, extra):
@@ -285,7 +310,8 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
 
         _oldSpaceNo = _playerVal.curSpaceNo
-        _oldCanEnter = self.canSpaceEnter(_oldSpaceNo)
+        _oldMapId = formula.fetchMapId(_oldSpaceNo)
+        _oldCanEnter = self.canMapEnter(_oldMapId)
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
             _playerVal.playerStatus = linePlayers.LinePlayerVal.IN_LINE
@@ -296,18 +322,18 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         else:
             self.switchStaticSpace(gbId, spaceNo)
 
-        if _oldCanEnter != self.canSpaceEnter(_oldSpaceNo):
-            self._addRandomInfos(formula.fetchMapId(_oldSpaceNo))
+        if _oldCanEnter != self.canMapEnter(_oldMapId):
+            self._addRandomInfos(_oldMapId)
 
     def onLeaveCube(self, gbId, fromSpaceNo, curSpaceNo):
-        LOG_INFO('onLeaveCube: {} {}'.format(gbId, curSpaceNo))
+        LOG_INFO('onLeaveCube: {} {} {}'.format(gbId, fromSpaceNo, curSpaceNo))
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
             LOG_ERR('onLeaveCube: player not found: {}'.format(gbId))
             return
 
         if _playerVal.curSpaceNo != fromSpaceNo:
-            LOG_ERR('onLeaveCube: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, fromSpaceNo))
+            LOG_WARN('onLeaveCube: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, fromSpaceNo))
 
         if curSpaceNo not in self.staticSpaces:
             self.removePlayer(gbId)
@@ -329,9 +355,6 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         super(CubeStub, self).onLoadEntitiesEnd(spaceNo)
         if not self.loadWaitSet and not self.curChapManMapId:
             pass
-            # self._createAndDestroyChapMan()
-            # _delay = cube_config.datas['cube_chapmanRefreshInterval']['value'] * 60
-            # self.addTimerCB(_delay, '_doCreateChapMan', (), gametimer.TIMER_TAG_CREATE_CHAP_MAN)
 
     def _doCreateChapMan(self):
         self._createAndDestroyChapMan()

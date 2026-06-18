@@ -50,7 +50,7 @@ datas = _tools.RODict({
     }),
     17100201: _tools.RODict({
         "ID": 17100201,
-        "name": "新元城",
+        "name": "月光海港一层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -61,7 +61,7 @@ datas = _tools.RODict({
     }),
     17100202: _tools.RODict({
         "ID": 17100202,
-        "name": "月光海港",
+        "name": "新元城",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -270,7 +270,7 @@ datas = _tools.RODict({
     }),
     17102302: _tools.RODict({
         "ID": 17102302,
-        "name": "祖珂地堡五层",
+        "name": "祖珂地堡五层·矿战",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -281,7 +281,7 @@ datas = _tools.RODict({
     }),
     17102401: _tools.RODict({
         "ID": 17102401,
-        "name": "祖珂地堡五层",
+        "name": "祖珂地堡五层·矿战",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -314,7 +314,7 @@ datas = _tools.RODict({
     }),
     17102502: _tools.RODict({
         "ID": 17102502,
-        "name": "祖珂地堡六层",
+        "name": "祖珂地堡五层·精英",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -336,7 +336,7 @@ datas = _tools.RODict({
     }),
     17103001: _tools.RODict({
         "ID": 17103001,
-        "name": "同心谷",
+        "name": "新元城",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -413,7 +413,7 @@ datas = _tools.RODict({
     }),
     17103302: _tools.RODict({
         "ID": 17103302,
-        "name": "月光海港五层",
+        "name": "月光海港五层·精英",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -534,7 +534,7 @@ datas = _tools.RODict({
     }),
     17112302: _tools.RODict({
         "ID": 17112302,
-        "name": "五毒石窟五层",
+        "name": "五毒石窟五层·矿战",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -545,7 +545,7 @@ datas = _tools.RODict({
     }),
     17112401: _tools.RODict({
         "ID": 17112401,
-        "name": "五毒石窟五层",
+        "name": "五毒石窟五层·矿战",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -578,7 +578,7 @@ datas = _tools.RODict({
     }),
     17112502: _tools.RODict({
         "ID": 17112502,
-        "name": "五毒石窟六层",
+        "name": "五毒石窟五层·精英",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,

@@ -23,7 +23,7 @@ class CoreAreaFlag(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity, iFubenSp
         self.addTimerCB(0.1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
         else:

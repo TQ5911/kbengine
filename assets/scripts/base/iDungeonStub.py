@@ -37,11 +37,11 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
 
-    def _checkDestroyDungeonSpace(self):
+    def _checkDungeonSpaceDestroy(self):
         raise Exception('not implemented')
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
@@ -70,9 +70,6 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('cannot createDungeonSpaceRemote', len(self.spaces))
 
     def _getDungeonSpaceVal(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        raise Exception('not implemented')
-
-    def _needSpaceMgr(self, spaceNo):
         raise Exception('not implemented')
 
     def _getDungeonSpaceWeight(self, enterNum=0) -> int:
@@ -115,10 +112,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('zt: onDungeonSpaceReady cannot find space:', spaceNo)
             return
 
-        if self._needSpaceMgr(spaceNo):
-            self._createDungeonSpaceMgr(spaceNo)
-        else:
-            self._onCreateDungeonReady(spaceNo)
+        self._createDungeonSpaceMgr(spaceNo)
 
     def _createDungeonSpaceMgr(self, spaceNo):
         spaceVal = self.spaces[spaceNo]
@@ -158,9 +152,12 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         LOG_INFO('create DungeonSpaceMgr', props)
         mgr = KBEngine.createEntityLocally('DungeonSpaceMgr', props)
+        if not mgr:
+            # 这里先加个日志跟踪下吧，测试上机器人的过程中，出现过单人副本spaceMgr为空的情况
+            LOG_ERR('create DungeonSpaceMgr failed', spaceNo, props)
         spaceVal.spaceMgr = mgr
 
-    def onDungeonSpaceMgrReady(self, spaceNo):
+    def onDunSpaceMgrReady(self, spaceNo):
         self._onCreateDungeonReady(spaceNo)
 
     def _onCreateDungeonReady(self, spaceNo):
@@ -277,6 +274,9 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onDungeonStarted(self, spaceNo, tCreate):
         """call when dungeon started"""
+
+    def onDungeonStartChallenge(self, spaceNo, endTime):
+        """call when dungeon challenge started"""
 
     def getSpaceCell(self, spaceNo):
         return self.spaces[spaceNo].spaceBox.cell

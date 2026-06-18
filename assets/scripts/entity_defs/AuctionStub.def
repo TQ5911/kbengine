@@ -11,6 +11,23 @@
             <Type>      UINT16     </Type>
             <Flags>     BASE        </Flags>
         </globalIdx>
+
+        <mallItemPriceDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </mallItemPriceDict>
+
+        <mallItemLastUpdateTime>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </mallItemLastUpdateTime>
+
+        <auctionSnatchRecords>
+            <Type>          PY_DICT  </Type>
+            <Flags>         BASE     </Flags>
+        </auctionSnatchRecords>
     </Properties>
 
     <BaseMethods>

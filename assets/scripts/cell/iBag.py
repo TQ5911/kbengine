@@ -9,20 +9,17 @@ import gameengine
 import gamedecorator
 from collections.abc import Iterable
 
-import itemData_itemData as IDID
-import message_Message_def as MMD
+import itemData_itemData as ID_IDD
+import message_Message_def as M_M_DD
 import conflict_conflict_def as C_C_DD
 import NPC_pickConst as NPCST
-import const_const as CONST
+import const_const as C_CD
 import NPC_Pick as NPD
-import itemData_set as IDS
-import login_set as LGS
-import bagData_set as BDSD
-import creep_base as CBD
+import login_set as L_SD
+import bagData_set as BD_SD
 import gamePlay_gamePlay as GPGPD
 import gamePlay_singleSceneData as GPSSDD
 import gamePlay_set as GPSD
-import taskClass_taskTarget as TCCTD
 import PKData_PKData as PKD
 import gearBase_gearBase as GBGBD
 import LogTrackingMgr
@@ -32,7 +29,8 @@ import dataUtils
 import formula
 import gametimer
 import random
-
+import awardContext
+import gameconfig
 
 
 class IBag(object):
@@ -41,13 +39,14 @@ class IBag(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def reqUseItems(self, exposed, bagType, gridId, itemId, targetId, useNum, argsList):
-        LOG_INFO('ckz: reqUseItems', bagType, gridId, itemId, targetId, useNum, argsList)
+        LOG_INFO('ckz: reqUseItems', bagType, gridId, itemId, targetId, argsList, useNum)
         if useNum <= 0:
             return
+
         if not targetId:
             targetId = self.id
 
-        if itemId not in IDID.datas:
+        if itemId not in ID_IDD.datas:
             LOG_ERR('ckz: item id %d is invalid' % itemId)
             return
 
@@ -55,7 +54,7 @@ class IBag(object):
             LOG_WARN('   in reqUseItems, checkConflictState failed')
             return
 
-        itemData = IDID.datas[itemId]
+        itemData = ID_IDD.datas[itemId]
         # 检查职业限定
         checkClass = itemData['class']
         if isinstance(checkClass, Iterable):
@@ -75,175 +74,154 @@ class IBag(object):
             LOG_WARN('   in reqUseItems, item can not batch use')
             return
 
-        if useNum > BDSD.datas['itemBatchUseUpLimit']['value']:
+        if useNum > BD_SD.datas['itemBatchUseUpLimit']['value']:
             LOG_WARN('in reqUseItems, use items num reach uplimit:', useNum)
-            useNum = BDSD.datas['itemBatchUseUpLimit']['value']
+            useNum = BD_SD.datas['itemBatchUseUpLimit']['value']
 
-        useItemCtx = actionContext.UseItemCtx(targetId, argsList)
+        _useItemCtx = actionContext.UseItemCtx(targetId, argsList)
         if itemData['subType'] in (gameconst.ItemSubType.Normal,):
-            useItemCtx = actionContext.UseBoxTypeItemCtx(targetId, argsList)
+            _useItemCtx = actionContext.UseBoxTypeItemCtx(targetId, argsList)
 
-        if not self.isSwitchOpen(itemId):
-            return
+        #检查跨服是否可以使用
+        if gameconfig.isCrossServer():
+            if not itemData['ifCrossServer']:
+                LOG_ERR('in reqUseItems, item can not use in cross server')
+                return
+            _useItemCtx.isCrossServerUseItem = True
 
         checkFunc = itemData['conditionCheckAction']
         if checkFunc:
             # 物品check函数只能返回三个值,其他值会报错：
-            # gameconst.UseItem.FALSE：   检查失败，使用过程将中断
-            # gameconst.UseItem.TRUE：    检查成功，将去base进程锁定背包扣除数量，再在cell进程执行物品action
-            # gameconst.UseItem.PENDING： 不能立即得出结果，即要异步检查，这个时候需要先调用setPendingCheckId再返回PENDING
+            # gameconst.UseItemEnum.FALSE：   检查失败，使用过程将中断
+            # gameconst.UseItemEnum.TRUE：    检查成功，将去base进程锁定背包扣除数量，再在cell进程执行物品action
+            # gameconst.UseItemEnum.PENDING： 不能立即得出结果，即要异步检查，这个时候需要先调用setPendingCheckId再返回PENDING
             #                            调用setPendingCheckId会获得一个pendingId，等检查得出结果时，再调用cell部分的onPendingCheckItem
             #                            函数告知检查的结果，此时只能是TRUE/FALSE
-            checkResult = checkFunc(self, gridId, itemId, useNum, useItemCtx)
-            if checkResult == gameconst.UseItem.FALSE:
+            _checkResult = checkFunc(self, gridId, itemId, useNum, _useItemCtx)
+            if _checkResult == gameconst.UseItemEnum.FALSE:
                 return
-            elif checkResult == gameconst.UseItem.TRUE:
-                self.base.baseUseItems(gridId, itemId, useNum, useItemCtx, False)
-            elif checkResult == gameconst.UseItem.PENDING:
+            elif _checkResult == gameconst.UseItemEnum.TRUE:
+                self.base.baseUseItems(gridId, itemId, useNum, _useItemCtx, False)
+            elif _checkResult == gameconst.UseItemEnum.PENDING:
                 LOG_INFO('pending check', bagType, gridId, itemId, targetId)
-                if not useItemCtx.pendingOpId:
+                if not _useItemCtx.pendingOpId:
                     LOG_ERR('pending check error', bagType, gridId, itemId)
                     return
             else:
                 LOG_ERR('check function error', bagType, gridId, itemId)
-        #            checkFunc(self, useItemCtx)
         else:
-            self.base.baseUseItems(gridId, itemId, useNum, useItemCtx, False)
+            self.base.baseUseItems(gridId, itemId, useNum, _useItemCtx, False)
 
-    def isSwitchOpen(self, itemId):
-        # if itemId == int(IDS.datas.get("changeNameCard").get('value')) and not gameconfig.enableModifyName():
-        #     return False
-        return True
-
-    def setPendingCheckId(self, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
-        if pendingIdDict:
-            pid = max(pendingIdDict.keys()) + 1
+    def cachePendingCheckId(self, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
+        if _pendingIdDict:
+            pid = max(_pendingIdDict.keys()) + 1
         else:
             pid = 1
-            self.setTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, pendingIdDict)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, _pendingIdDict)
 
         useItemCtx.pendingOpId = pid
         tid = self.addTimerCB(10, '_pendingCheckExpired', (pid,), gametimer.TIMER_TAG_PENDING_CHECK_EXPIRED)
-        pendingIdDict[pid] = [gridId, itemId, useNum, useItemCtx, isBaseAct, tid]
+        _pendingIdDict[pid] = [gridId, itemId, useNum, useItemCtx, isBaseAct, tid]
 
         return pid
 
     def _pendingCheckExpired(self, pid):
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
-        gridId, itemId, useNum, useItemCtx, isBaseAct, tid = pendingIdDict.pop(pid, (None, 0))
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
+        gridId, itemId, useNum, useItemCtx, isBaseAct, tid = _pendingIdDict.pop(pid, (None, 0))
         LOG_ERR('pending check expired', gridId, itemId, useNum, isBaseAct, tid, useItemCtx)
-        if not pendingIdDict:
+        if not _pendingIdDict:
             self.popTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem)
 
     def onSetPendingCheckRewardAndMaxUseNum(self, pendingId, awardList, maxUseNum):
         LOG_INFO("onSetPendingCheckRewardAndMaxUseNum ", pendingId, awardList, maxUseNum)
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
-        if pendingId not in pendingIdDict:
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
+        if pendingId not in _pendingIdDict:
             LOG_ERR('invalid pending set id', pendingId)
             return
-        pendingIdDict[pendingId][2] = maxUseNum
-        pendingIdDict[pendingId][3].awardList = awardList
+        _pendingIdDict[pendingId][2] = maxUseNum
+        _pendingIdDict[pendingId][3].awardList = awardList
         LOG_INFO('self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {}) ',
                   self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {}))
 
-    def onPendingCheckItem(self, pendingId, checkResult):
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
-        if pendingId not in pendingIdDict:
+    def onPendingCheckItemFinished(self, pendingId, checkResult):
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
+        if pendingId not in _pendingIdDict:
             LOG_ERR('invalid pending check id', pendingId, checkResult)
             return
 
-        gridId, itemId, useNum, useItemCtx, isBaseAct, tid = pendingIdDict.pop(pendingId)
+        _gridId, _itemId, useNum, useItemCtx, isBaseAct, tid = _pendingIdDict.pop(pendingId)
         useItemCtx.pendingOpId = 0
         self.cancelTimerCB(tid, gametimer.TIMER_TAG_PENDING_CHECK_EXPIRED)
-        if checkResult == gameconst.UseItem.FALSE:
-            return
-        elif checkResult == gameconst.UseItem.TRUE:
-            self.base.baseUseItems(gridId, itemId, useNum, useItemCtx, isBaseAct)
+        if checkResult == gameconst.UseItemEnum.TRUE:
+            self.base.baseUseItems(_gridId, _itemId, useNum, useItemCtx, isBaseAct)
 
     def checkUseTreasureBoxCond(self, costDic, rewardId, gridId, itemId, useNum, useItemCtx):
         LOG_INFO('in checkUseTreasureBoxCond:', costDic, rewardId)
-        self.setPendingCheckId(gridId, itemId, useNum, useItemCtx, True)
-        self.base.checkBaseUseTreasureBoxCond(costDic, rewardId, gridId, itemId, useNum, useItemCtx.pendingOpId)
-        return gameconst.UseItem.PENDING
-
-    def checkRefreshTaskByItemCond(self, gridId, itemId, taskId, useItemCtx):
-        self.setPendingCheckId(gridId, itemId, 1, useItemCtx, True)
-        self.base.checkRefrshTaskByItemBaseCond(useItemCtx.pendingOpId, taskId)
-        return gameconst.UseItem.PENDING
-
-    def bagCapacityCheck(self, gridId, itemId, useNum, ctx, rewardId, level):
-        if level == -1:
-            level = self.level
-
-        self.setPendingCheckId(gridId, itemId, useNum, ctx)
-        self.base.openRewardCheckBase(gameconst.BagType.BAG_TYPE_NORMAL, useNum, ctx, rewardId)
-        return gameconst.UseItem.PENDING
-
-    def checkUseAuditValueItemCond(self, gridId, itemId, useNum, ctx):
-        self.setPendingCheckId(gridId, itemId, useNum, ctx, True)
-        self.base.useAuditValueItemCheckBase(ctx.pendingOpId, gridId, itemId)
-        return gameconst.UseItem.PENDING
+        self.cachePendingCheckId(gridId, itemId, useNum, useItemCtx, True)
+        self.base.checkBaseUseTreasureBoxCond(
+            costDic, rewardId, gridId, itemId, useNum, useItemCtx.pendingOpId)
+        return gameconst.UseItemEnum.PENDING
 
     def doAction(self, gridId, itemId, useNum, opUUID, useItemCtx):
         LOG_INFO('doAction', opUUID, itemId, useItemCtx.targetId)
-        itemData = IDID.datas[itemId]
+        itemData = ID_IDD.datas[itemId]
         action = itemData['action']
 
         # 物品action函数只能返回三个值,其他值会报错：
-        # gameconst.UseItem.FALSE：   使用失败，消耗的物品将被反还
-        # gameconst.UseItem.TRUE：    使用成功，将去base做后续处理
-        # gameconst.UseItem.PENDING： 不能立即得出结果，有多个使用过程，这个时候需要先调用setPendingUseId再返回PENDING
+        # gameconst.UseItemEnum.FALSE：   使用失败，消耗的物品将被反还
+        # gameconst.UseItemEnum.TRUE：    使用成功，将去base做后续处理
+        # gameconst.UseItemEnum.PENDING： 不能立即得出结果，有多个使用过程，这个时候需要先调用setPendingUseId再返回PENDING
         #                            调用setPendingUseId会获得一个pendingId，物品最终使用成功或失败都必须调用cell部分的onPendingUseItem
         #                            函数告知使用的结果，此时只能是TRUE/FALSE，确保物品的action的每个return的之前都调用过onPendingUseItem
         #                            否则15s后还没得到结果会报错
         result = action(self, gridId, itemId, useNum, opUUID, useItemCtx)
-        if result == gameconst.UseItem.FALSE:
-            self.base.useItemDone(False, opUUID)
-        elif result == gameconst.UseItem.TRUE:
-            self.base.useItemDone(True, opUUID)
-        elif result == gameconst.UseItem.PENDING:
+        if result == gameconst.UseItemEnum.FALSE:
+            self.base.afterUseItemDone(False, opUUID, True)
+        elif result == gameconst.UseItemEnum.TRUE:
+            self.base.afterUseItemDone(True, opUUID, True)
+        elif result == gameconst.UseItemEnum.PENDING:
             pass
         else:
             LOG_ERR('doAction error', opUUID, itemId)
-            self.base.useItemDone(True, opUUID)
+            self.base.afterUseItemDone(True, opUUID, True)
 
     def setPendingUseId(self, opUUID, useItemCtx):
         LOG_INFO("setPendingUseId 1", opUUID, useItemCtx)
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
-        if pendingIdDict:
-            pid = max(pendingIdDict.keys()) + 1
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
+        if _pendingIdDict:
+            pid = max(_pendingIdDict.keys()) + 1
         else:
             pid = 1
-            self.setTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, pendingIdDict)
+            self.setTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, _pendingIdDict)
 
         useItemCtx.pendingOpId = pid
         tid = self.addTimerCB(15, '_pendingUseExpired', (pid,), gametimer.TIMER_TAG_PENDING_USE_EXPIRED)
-        pendingIdDict[pid] = (useItemCtx, opUUID, tid)
+        _pendingIdDict[pid] = (useItemCtx, opUUID, tid)
         LOG_INFO("setPendingUseId 2", opUUID, pid)
         return pid
 
     def _pendingUseExpired(self, pid):
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
-        useItemCtx, opUUID, tid = pendingIdDict.pop(pid, (None, 0))
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
+        useItemCtx, opUUID, tid = _pendingIdDict.pop(pid, (None, 0))
         LOG_ERR('_pendingUseExpired', useItemCtx, tid)
 
-        if not pendingIdDict:
+        if not _pendingIdDict:
             self.popTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem)
 
-    def onPendingUseItem(self, pendingId, useResult):
-        LOG_INFO("onPendingUseItem", pendingId, type(pendingId), useResult)
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
-        if pendingId not in pendingIdDict:
+    def onPendingUseItemFinished(self, pendingId, useResult):
+        LOG_INFO("onPendingUseItemFinished", pendingId, type(pendingId), useResult)
+        _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
+        if pendingId not in _pendingIdDict:
             LOG_ERR('invalid pending check id', pendingId)
             return
 
-        useItemCtx, opUUID, tid = pendingIdDict.pop(pendingId)
+        useItemCtx, opUUID, tid = _pendingIdDict.pop(pendingId)
         self.cancelTimerCB(tid, gametimer.TIMER_TAG_PENDING_USE_EXPIRED)
-        if useResult == gameconst.UseItem.FALSE:
-            self.base.useItemDone(False, opUUID)
-        elif useResult == gameconst.UseItem.TRUE:
-            self.base.useItemDone(True, opUUID)
+        if useResult == gameconst.UseItemEnum.FALSE:
+            self.base.afterUseItemDone(False, opUUID, False)
+        elif useResult == gameconst.UseItemEnum.TRUE:
+            self.base.afterUseItemDone(True, opUUID, False)
 
     def addSettlementExp(self, awardResults, entityID, expValue):
         awardResult = awardResults.get(entityID)
@@ -274,7 +252,7 @@ class IBag(object):
             teammateNum = len(self.teammateEntIdInAoiSet)
             if teammateNum >= 1:
                 # 组队加成系数列表
-                teamNumBonus = CONST.datas['killMonsterTeamExpBonus'].get("value")
+                teamNumBonus = C_CD.datas['killMonsterTeamExpBonus'].get("value")
                 # 组队加成系数
                 teamNumRatio = teamNumBonus[teammateNum]
                 # 组队均分经验
@@ -296,7 +274,7 @@ class IBag(object):
                 self.addSettlementExp(awardResults, self.id, killerExp)
                 LOG_DBG("iBag-> processKillMonsterExp 4 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         # 团战
-        elif self.isInRaid():
+        elif self.inRaid():
             # 根据等级调整经验
             killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
             self.addSettlementExp(awardResults, self.id, killerExp)
@@ -346,8 +324,8 @@ class IBag(object):
 
     def processKillMonsterAward(self, awardResults, dropRewardId, rewardNum, shareReward, displayMode, dropCtx):
         LOG_DBG("iBag->processKillMonsterAward ", awardResults, dropRewardId, rewardNum, shareReward, displayMode, dropCtx)
+        #首刀归属类奖励全部都会爆到地上，不进包，要做金币经验之类的，可以同时配(1,3)两种，3负责爆地上，1负责进包
         if shareReward == gameconst.DropShareRewardType.FIRST_BLOOD:
-            self.addSettlementAward(awardResults, dropCtx.FBtargetId, dropRewardId, rewardNum, displayMode)
             return
         # 组队
         if self.isInTeam(self.gbId):
@@ -371,7 +349,7 @@ class IBag(object):
             else:
                 self.addSettlementAward(awardResults, self.id, dropRewardId, rewardNum, displayMode)
         # 团战
-        elif self.isInRaid():
+        elif self.inRaid():
             raidmateNum = len(self.raidmateEntIdInAoiSet)
             if raidmateNum >= 1:
                 if shareReward == gameconst.DropShareRewardType.SELF:
@@ -405,7 +383,7 @@ class IBag(object):
 
     def sendTeamMessage(self,messageId,messageArgs):
         if self.isInTeam(self.gbId):
-            gameengine.getTeamStub(self.teamId).sendTeamMemberMessage(self.teamId,messageId,messageArgs)
+            gameengine.getTeamStub(self.teamId).sendTeamMemberMsg(self.teamId,messageId,messageArgs)
 
 ################################## 采集 相关 ######################################
     @gamedecorator.crossServer
@@ -428,7 +406,7 @@ class IBag(object):
             return False
 
         if sMath.distance2D(self.position, target.position) > pickData['pickDistance'] + 1:
-            self.showMsg(MMD.datas.targetIsOutOfRange, [])
+            self.showMsg(M_M_DD.datas.targetIsOutOfRange, [])
             return False
 
         if pickData['precheckAction'] is not None:
@@ -485,8 +463,8 @@ class IBag(object):
     def _prepareApplyGather(self, targetId):
         LOG_INFO('_prepareApplyGather', targetId)
         gatherTime = utils.getTimestamp64()
-        target = KBEngine.entities.get(targetId, None)
-        if not (target and target.IsCollection):
+        _target = KBEngine.entities.get(targetId, None)
+        if not (_target and _target.IsCollection):
             return False
 
         if not self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.clientPick)):
@@ -502,40 +480,38 @@ class IBag(object):
                 LOG_WARN('_prepareApplyGather, continuous collection, in picking ', targetId, gatherTarget['targetId'])
                 return True
             LOG_INFO('_prepareApplyGather, continuous collection', targetId)
-        elif not target.canGather:
-            self.showMsg(MMD.datas.collectionWarning, [])
-            LOG_WARN('_prepareApplyGather, target can not gather', targetId, target.collectionId)
+        elif not _target.canGather:
+            self.showMsg(M_M_DD.datas.collectionWarning, [])
+            LOG_WARN('_prepareApplyGather, _target can not gather', targetId, _target.collectionId)
             return False
 
-        pickData = NPD.datas.get(target.collectionId, None)
+        pickData = NPD.datas.get(_target.collectionId, None)
         if not pickData:
             return False
 
         self.setState(gameconst.StateEnum.clientPick)
 
         gatherTargetInfo = {'targetId': targetId, 'gatherTime': gatherTime, 'isUnstoppble': pickData['isUnstoppble'],
-                            'collection': target, 'collectionId': target.collectionId,
-                            'collectionType': target.type, 'startTime': utils.curTS()}
+                            'collection': _target, 'collectionId': _target.collectionId,
+                            'collectionType': _target.type, 'startTime': utils.curTS()}
 
-        pickTime = self._calPickTime(target)
+        pickTime = self._calPickTime(_target)
 
         timer = None
         if pickData['pickType'] in gameconst.CollectionPickType.CountdownTypes:
             timer = self.addTimerCB(pickTime, '_finishApplyGather', (targetId,),
                                    gametimer.TIMER_TAG_FINISH_APPLY_GATHER)
         gatherTargetInfo['timer'] = timer
-        self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.ApplyGather)
+        self.suspendAutoCombat(gameconst.SuspendAutoCombatReasonEnum.ApplyGather)
         self.setTempMiscProp(gameconst.EntityPropsEnum.gatherTarget, gatherTargetInfo)
         applyAction = pickData['applyAction']
         if applyAction and callable(applyAction):
             applyAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
 
         if pickData['isUnique']:
-            target.canGather = False
+            _target.canGather = False
 
         self.allClients.onApplyGather(targetId, pickTime*1000)
-        targetClient = self.clientEntity(targetId)
-        targetClient and targetClient.onEnterCollect()
         return True
 
     @gamedecorator.crossServer
@@ -553,12 +529,11 @@ class IBag(object):
         if not target:
             LOG_WARN('applyFinishGather, no target:', targetId)
             return
-        pickData = NPD.datas.get(target.collectionId)
-        if not pickData or pickData['pickType'] not in gameconst.CollectionPickType.ClientJudgeTypes:
+        _pickData = NPD.datas.get(target.collectionId)
+        if not _pickData or _pickData['pickType'] not in gameconst.CollectionPickType.ClientJudgeTypes:
             gameengine.panicStack('applyFinishGather, not client judge pickType:', targetId, target.collectionId)
             return
         self._finishApplyGather(targetId)
-        return
 
     def _finishApplyGather(self, targetId):
         if not self._checkFinishApplyGather(targetId):
@@ -625,8 +600,6 @@ class IBag(object):
         self.base.baseDoApplyGather(collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal, self._calPickTime(target), opUUID, target.awardContext)
 
         target.addGatherAvatar(self.id, self.gbId, collectionId)
-        targetClient = self.clientEntity(targetId)
-        targetClient and targetClient.onAfterCollect()
 
         if target.dropEquipId:
             self.takeEquip(target.dropEquipId)
@@ -634,6 +607,8 @@ class IBag(object):
         gatherTarget = self.getTempMiscProp(gameconst.EntityPropsEnum.gatherTarget, None)
         if gatherTarget:
             LogTrackingMgr.LogTrackingMgr.Gather_Collection(
+                self.gbId,
+                self.clientDistinctIdCell,
                 self.gbId,
                 gatherTarget['collectionId'],
                 gatherTarget['collectionType'],
@@ -664,13 +639,11 @@ class IBag(object):
                     self.cancelTimerCB(gatherTarget['timer'], gametimer.TIMER_TAG_FINISH_APPLY_GATHER)
                 self.allClients.onCancelGather(removeReason)
             targetId = gatherTarget['targetId']
-            targetClient = self.clientEntity(targetId)
-            targetClient and targetClient.onCancelCollect()
             target = KBEngine.entities.get(targetId)
             if target and pickData['isUnique']:
                 target.canGather = True
 
-        self.recoverAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReason.ApplyGather)
+        self.resumeAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReasonEnum.ApplyGather)
         if pickData:
             unApplyAction = pickData['unApplyAction']
             if unApplyAction and callable(unApplyAction):
@@ -678,16 +651,16 @@ class IBag(object):
         return
 
     def giveGatherAwardCell(self, collectionId):
-        pickData = NPD.datas[collectionId]
-        triggerPos = pickData['triggerPos']
+        _pickData = NPD.datas[collectionId]
+        triggerPos = _pickData['triggerPos']
         if triggerPos:
             if self.checkConflictState(C_C_DD.datas.teleport):
                 self.telToPos(triggerPos)
             # self.base.teleportByNo(self.spaceNo, triggerPos, self.direction, '', ())
             else:
-                self.showMsg(NPCST.datas.get("pickFailedAlert_TransportFail", {}).get('value'), [pickData['castDesc']])
+                self.showMsg(NPCST.datas.get("pickFailedAlert_TransportFail", {}).get('value'), [_pickData['castDesc']])
 
-        triggerAction = pickData['triggerAction']
+        triggerAction = _pickData['triggerAction']
         if triggerAction and callable(triggerAction):
             triggerAction(self, collectionId)
 
@@ -698,7 +671,21 @@ class IBag(object):
             return
         collection.checkAvatarGatherFlag(self.base, self.gbId)
         collection.checkAvatarGatherPickTimes(self.base, self.gbId)
+
+        if hasattr(collection, 'firstBloodTargetGbIds'):
+            isTarget = self.gbId in collection.firstBloodTargetGbIds
+            self.addTimerCB(0.5, '_doSyncIsFBTarget', (eid, isTarget, 0), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
         LOG_INFO("checkCollectionGatherFlag ", eid)
+
+    def _doSyncIsFBTarget(self, eid, isTarget, times):
+        targetClient = self.clientEntity(eid)
+        LOG_INFO("_doSyncIsFBTarget", eid, isTarget, targetClient, isinstance(targetClient, (utils.Swallower,)))
+        if targetClient and not isinstance(targetClient, (utils.Swallower,)):
+            targetClient.syncIsFBTarget(isTarget)
+        elif times < 5:
+            self.addTimerCB(0.5, '_doSyncIsFBTarget', (eid, isTarget, times + 1), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
+        else:
+            LOG_ERR("_doSyncIsFBTarget repeat times >= 5", eid, isTarget, targetClient, times)
 
     ################################## 采集 end #########################################
 
@@ -708,148 +695,132 @@ class IBag(object):
     ################################## item use check ###################################
     def checkHealHpOrMpItemCond(self, itemId):
         if self.hp == self.fullHp and self.mp == self.fullMp:
-            self.showMsg(MMD.datas.useMedicine_HPMPIsFull, [str(itemId)])
-            return gameconst.UseItem.FALSE
+            self.showMsg(M_M_DD.datas.useMedicine_HPMPIsFull, [str(itemId)])
+            return gameconst.UseItemEnum.FALSE
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def checkHealSalveItemCond(self, itemId):
         if self.hp == self.fullHp:
-            self.showMsg(MMD.datas.useMedicine_HPIsFull, [str(itemId)])
-            return gameconst.UseItem.FALSE
+            self.showMsg(M_M_DD.datas.useMedicine_HPIsFull, [str(itemId)])
+            return gameconst.UseItemEnum.FALSE
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def useHealSalveItem(self, itemId, addNum, addPct, *args):
         _delta = 0
         if addNum > 0:
-            ret = self.healByNum(self, actionContext.UseItemHealCtx(itemId, self.id), addNum, *args)
+            ret = self.healByNum(self, actionContext.UseItemHealContext(itemId, self.id), addNum, *args)
             if ret is not None:
                 _delta += ret.healVal
 
         if addPct > 0:
-            ret = self.healByPct(self, actionContext.UseItemHealCtx(itemId, self.id), addPct, *args)
+            ret = self.healByPct(self, actionContext.UseItemHealContext(itemId, self.id), addPct, *args)
             if ret is not None:
                 _delta += ret.healVal
 
         if _delta > 0:
             self.client.onHealItemResult(_delta, True)
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def checkUseAddMpItemCond(self, itemId):
         if self.mp == self.fullMp:
-            self.showMsg(MMD.datas.useMedicine_MPIsFull, [str(itemId)])
-            return gameconst.UseItem.FALSE
+            self.showMsg(M_M_DD.datas.useMedicine_MPIsFull, [str(itemId)])
+            return gameconst.UseItemEnum.FALSE
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def useAddMpItem(self, itemId, addNum, addPct, *args):
-        _oldMp = self.mp
-        _delta = 0
         if addNum > 0:
-            self.addMp(self, actionContext.UseItemHealCtx(itemId, self.id), addNum, *args)
+            self.addMp(self, actionContext.UseItemHealContext(itemId, self.id), addNum, *args)
 
         if addPct > 0:
-            self.addMpByPct(self, actionContext.UseItemHealCtx(itemId, self.id), addPct, *args)
+            self.addMpByPct(self, actionContext.UseItemHealContext(itemId, self.id), addPct, *args)
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def useAddBuffByItem(self, itemId, *args):
-        self.addBuffBySkill(self, actionContext.UseItemHealCtx(itemId, self.id), *args)
-        return gameconst.UseItem.TRUE
+        self.addBuffBySkill(self, actionContext.UseItemHealContext(itemId, self.id), *args)
+        return gameconst.UseItemEnum.TRUE
 
     def useAddTargetBuffByItem(self, context, itemId, *args):
-        target = KBEngine.entities.get(context.targetId)
-        if not target:
-            return gameconst.UseItem.FALSE
-        self.addBuffBySkill(target, actionContext.UseItemHealCtx(itemId, self.id), *args)
-        return gameconst.UseItem.TRUE
+        _target = KBEngine.entities.get(context.targetId)
+        if not _target:
+            return gameconst.UseItemEnum.FALSE
+        self.addBuffBySkill(_target, actionContext.UseItemHealContext(itemId, self.id), *args)
+        return gameconst.UseItemEnum.TRUE
 
     def checkUseTelToNearestTeleportor(self, itemId, *args):
         if formula.inWorldLineScene(self.spaceNo):
-            return gameconst.UseItem.TRUE
-        self.showMsg(CONST.datas["teleportStoneInvalidMsg"]['value'], [])
-        return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.TRUE
+        self.showMsg(C_CD.datas["teleportStoneInvalidMsg"]['value'], [])
+        return gameconst.UseItemEnum.FALSE
 
     def onUseTelToNearestTeleportor(self, result, pendingUseId, toCell, spaceNo, dstPos, dstDir):
         # LOG_ERR("DEBUG::onUseTelToNearestTeleportor::", toCell, spaceNo, dstPos, dstDir)
         if result:
-            self.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+            self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
         else:
-            self.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+            self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
 
     ################################## item skill check ###################################
 
     # --------------------------------- 改帮会名--------------------------------
-    def checkModifyGuildName(self, gridId, itemId, useNum, ctx):
-        if not (ctx.argsList and isinstance(ctx.argsList[0], str)):
-            return gameconst.UseItem.FALSE
+    def checkModifyGuildName(self, gridId, itemId, useNum, context):
+        if not (context.argsList and isinstance(context.argsList[0], str)):
+            return gameconst.UseItemEnum.FALSE
 
-        newName = ctx.argsList[0]
+        newName = context.argsList[0]
         if not self.guildUUID:
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         if not utils.checkGuildNameLength(newName):
-            self.showMsg(LGS.datas['avatarNameLengthOverLimit_msg']["value"], [])
-            return gameconst.UseItem.FALSE
+            self.showMsg(L_SD.datas['avatarNameLengthOverLimit_msg']["value"], [])
+            return gameconst.UseItemEnum.FALSE
 
         if not utils.checkGuildName(newName):
-            self.showMsg(CONST.datas['forbiddenContent']['value'], [])
-            return gameconst.UseItem.FALSE
+            self.showMsg(C_CD.datas['forbiddenContent']['value'], [])
+            return gameconst.UseItemEnum.FALSE
 
-        pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx)
+        pendingCheckId = self.cachePendingCheckId(gridId, itemId, useNum, context)
         self.base.checkModifyGuildNameBase(newName, pendingCheckId)
-        return gameconst.UseItem.PENDING
-
-    def modifyGuildName(self, opUUID, ctx):
-        if not len(ctx.argsList):
-            return gameconst.UseItem.FALSE
-
-        newName = ctx.argsList[0]
-
-        if not self.guildUUID:
-            return gameconst.UseItem.FALSE
-
-        pendingUseId = self.setPendingUseId(opUUID, ctx)
-        gameengine.getGlobalBase('GuildStub').doModifyGuildName(self.gbId, self.base, self.guildUUID, newName,
-                                                                pendingUseId)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     # -------------------------------- 改名 ----------------------------------
     def checkModifyName(self, gridId, itemId, useNum, ctx):
         LOG_INFO('checkModifyName:', ctx.argsList)
         if not (ctx.argsList and isinstance(ctx.argsList[0], str)):
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         name = ctx.argsList[0]
 
         name = name.strip()
         if not utils.checkAvatarNameLength(name):
-            self.showMsg(LGS.datas['avatarNameLengthOverLimit_msg']["value"], [])
-            return gameconst.UseItem.FALSE
+            self.showMsg(L_SD.datas['avatarNameLengthOverLimit_msg']["value"], [])
+            return gameconst.UseItemEnum.FALSE
 
         if not utils.checkAvatarName(name):
-            self.showMsg(MMD.datas.forbiddenContent, [])
-            return gameconst.UseItem.FALSE
+            self.showMsg(M_M_DD.datas.forbiddenContent, [])
+            return gameconst.UseItemEnum.FALSE
 
         if name.isdigit():
-            self.showMsg(MMD.datas.forbiddenContent, [])
-            return gameconst.UseItem.FALSE
+            self.showMsg(M_M_DD.datas.forbiddenContent, [])
+            return gameconst.UseItemEnum.FALSE
 
-        pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx)
+        pendingCheckId = self.cachePendingCheckId(gridId, itemId, useNum, ctx)
         self.base.checkModifyNameBase(pendingCheckId, gridId, itemId, name)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def checkGetRewardByBPLotteryBoxItem(self, actId, gridId, itemId, useNum, ctx):
-        pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx, True)
+        pendingCheckId = self.cachePendingCheckId(gridId, itemId, useNum, ctx, True)
         self.base.onCheckGetRewardByBPLotteryBoxItem(pendingCheckId, actId)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def checkGetRewardByNBPLotteryBoxItem(self, actId, gridId, itemId, useNum, ctx):
-        pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx, True)
+        pendingCheckId = self.cachePendingCheckId(gridId, itemId, useNum, ctx, True)
         self.base.onCheckGetRewardByNBPLotteryBoxItem(pendingCheckId, actId)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     # --------------------------------- 自动吃药  begin ------------------------
     @gamedecorator.crossServer
@@ -871,21 +842,17 @@ class IBag(object):
                 self.healHpRatio = ratio
             else:
                 self.healMpRatio = ratio
-        # self.syncMethodCallToLocalServerCell("setHealHpRatio", (ratio, ))
 
     # --------------------------------- 自动吃药  end   ------------------------
 
     # 只能用于道具action
-    def getReward(self, rewardId, level, gridId, itemId, useNum, opUUID, ctx):
+    def getReward(self, rewardId, level, gridId, itemId, useNum, opUUID, context):
         if level == -1:
             level = self.level
-        ctx.withMailId = gameconst.MailConstID.REWARD_MAIL_ID
-        self.setPendingUseId(opUUID, ctx)
-        self.base.getRewardByIdBase(rewardId, level, gridId, itemId, useNum, opUUID, ctx)
-        return gameconst.UseItem.PENDING
-
-    def onCellBagDailyUpdate(self):
-        pass
+        context.withMailId = gameconst.MailConstEnum.REWARD_MAIL_ID
+        self.setPendingUseId(opUUID, context)
+        self.base.getRewardByIdBase(rewardId, level, gridId, itemId, useNum, opUUID, context)
+        return gameconst.UseItemEnum.PENDING
 
     def checkPickedCollections(self):
         expired = []
@@ -931,21 +898,21 @@ class IBag(object):
             msgId = GPSD.datas.get("msgId_cantUseReturnScroll").get('value')
             self.base.onMessagePre(msgId, [])
             LOG_INFO("DEBUG::checkUseTelToMainCity::", itemId, GPGPD.datas[mapId]['canUseReturnScroll'], self.getMoralEffectTransItem())
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         canUseReturnScroll = self.getMoralEffectTransItem()
         if not canUseReturnScroll:
             msgId = PKD.datas.get("PK_cantUseTransItem_msgID").get('value')
             self.base.onMessagePre(msgId, [])
             LOG_INFO("DEBUG::checkUseTelToMainCity::", itemId, GPGPD.datas[mapId]['canUseReturnScroll'], self.getMoralEffectTransItem())
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         returnMapID = GPGPD.datas[mapId]['returnMapID']
         if not returnMapID or not self.onCheckMapUnlocked(returnMapID):
             LOG_INFO("DEBUG::checkUseTelToMainCity::", itemId, GPGPD.datas[mapId]['returnMapID'])
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
-        return gameconst.UseItem.TRUE
+        return gameconst.UseItemEnum.TRUE
 
     def useTelToMainCity(self, opUUID, context, castTime=-1, *args):
         LOG_INFO("DEBUG::useTelToMainCity::", context, castTime, args)
@@ -953,13 +920,13 @@ class IBag(object):
         returnMapID = GPGPD.datas[mapId]['returnMapID']
         if not returnMapID:
             LOG_ERR('useTelToMainCity not found returnMapId', mapId)
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         sceneRes = GPGPD.datas[returnMapID]['sceneRes']
         returnPosList = GPSSDD.datas[sceneRes]['returnPos']
         if not returnPosList:
             LOG_ERR('useTelToMainCity not config returnPos', mapId, returnMapID)
-            return gameconst.UseItem.FALSE
+            return gameconst.UseItemEnum.FALSE
 
         returnPos = random.choice(returnPosList)
 
@@ -979,38 +946,43 @@ class IBag(object):
                              failedArgs=fCallbackArgs,
                              extraProps=_extra)
 
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def onUseTelToMainCity(self, result, pendingUseId, toCell, spaceNo, dstPos, dstDir):
         LOG_INFO("DEBUG::onUseTelToMainCity::", toCell, spaceNo, dstPos, dstDir)
         if result:
-            self.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+            self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
         else:
-            self.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+            self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
 
     def checkModifyName(self, gridId, itemId, useNum, ctx):
         LOG_INFO('checkModifyName:', ctx.argsList)
-        pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx)
+        pendingCheckId = self.cachePendingCheckId(gridId, itemId, useNum, ctx)
         self.base.checkRenameBase(pendingCheckId, ctx.argsList[0])
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def modifyNameAction(self, opUUID, ctx):
         _newName = ctx.argsList[0]
         pendingUseId = self.setPendingUseId(opUUID, ctx)
         self.base.modifyNameBase(pendingUseId, _newName)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def onPendingUseRenameItemResult(self, success, pendingUseId, newName):
         _oldName = self.name
         self.name = newName
         if success:
-            self.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+            self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
         else:
-            self.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+            self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
 
         self.base.delOldName(_oldName)
         self.pyWriteToDB()
         gameengine.getGlobalBase('PlayerStub').updateName(_oldName, newName, self, self.gbId)
+
+        if self.isInTeam():
+            gameengine.getTeamStub(self.teamId).modifyPlayerName(self.base, self.teamId, self.gbId, newName, _oldName)
+        elif self.inRaid():
+            gameengine.getRaidStub(self.raidUUID).modifyPlayerName(self.base, self.raidUUID, self.gbId, newName, _oldName)
 
     def bodyItemLock(self, equipIn, equipPos, itemId, uniqueId, lockStatus):
         LOG_INFO('in bodyItemLock::', equipIn, equipPos, itemId, uniqueId, lockStatus)
@@ -1042,17 +1014,26 @@ class IBag(object):
     def bagExpansion(self, gridNum, gridId, itemId, useNum, opUUID, context):
         pendingUseId = self.setPendingUseId(opUUID, context)
         self.base.bagExpansion(pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
     def warehouseExpansion(self, gridNum, gridId, itemId, useNum, opUUID, context):
         pendingUseId = self.setPendingUseId(opUUID, context)
         self.base.warehouseExpansion(pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
 
-    def setTitleCell(self, titleId, replace):
-        if replace or self.title == 0:
-            self.title = titleId
+    def setTitleCell(self, titleId):
+        self.title = titleId
 
-    def removeTitleCell(self, titleId):
-        if self.title == titleId:
-            self.title = 0
+    def getAvatarAwardCtxCell(self, awardId, awardCtx, mailId=0):
+        awardCtx = awardCtx or awardContext.CommonContext(mailId)
+        awardCtx.args.addArg('avatarLv', self.level)
+        awardCtx.addContextVar('school', self.school)
+        awardCtx.addContextVar('awardId', awardId)
+        awardCtx.args.addArg('avatarSex', self.sex)
+        awardCtx.addContextVar('avatarGbId', self.gbId)
+        awardCtx.addContextVar('avatarId', self.id)
+        awardCtx.addContextVar('isMonthCardExpired', self.isMonthCardExpiredCell())
+        awardCtx.addContextVar('isBigMonthCardExpired', self.isBigMonthCardExpiredCell())
+        awardCtx.addContextVar('avatarScoreRank', self.avatarScoreRankCell)
+        awardCtx.addContextVar('isCrossServer', self.isCrossServer)
+        return awardCtx

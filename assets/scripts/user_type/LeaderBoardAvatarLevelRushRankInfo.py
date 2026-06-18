@@ -54,6 +54,8 @@ class LeaderBoardAvatarLevelRushRankVal(userType.UserSingleType):
     # 必须实现
     def leaderBoardLog(self, leaderType, rank):
         LogTrackingMgr.LogTrackingMgr.LeaderBoard_Level(
+            self.gbId,
+            '',
             leaderType,
             rank,
             self.gbId,

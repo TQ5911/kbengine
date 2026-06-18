@@ -22,9 +22,9 @@ import dataUtils
 import gamedecorator
 import LogTrackingMgr
 
-import character_charData as CHD
+import character_charData as C_CDD
 import const_const as CONST
-import message_Message_def as MMD
+import message_Message_def as M_M_DD
 import taskClass_taskTarget as TCCTD
 import message_Message as M_MD
 import buff_buff as B_BD
@@ -36,10 +36,8 @@ import fightProp_define as FDD
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import performanceLevel_set as PLSD
-import skillRelevant_summonUnlock as SRSU
-import skillRelevant_skillConst as SRSC
+import skillRelevant_skillConst as SR_SCD
 import PKData_PKData as PKD
-import skill_skill as SSD
 import creep_base as CBD
 import guild_guildConst as G_GCD
 import experience_config as EXPC
@@ -58,19 +56,19 @@ class AvatarBuildsMixin(object):
 
         usingSkills = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, default={})
         for skillSlotInfo in skillSlotInfos:
-            toSkillId, skillId, toSlotId = skillSlotInfo
+            toSkillId, skillId, _ = skillSlotInfo
             if toSkillId:
-                currentSkill = self.skillDic.doGetSkill(toSkillId, False)
-                if currentSkill and not currentSkill.canRemoveFromBuild():
-                    self.showMsg(MMD.datas.skillChangeFail_coolDown, [])
+                _currentSkill = self.skillDic.doGetSkill(toSkillId, False)
+                if _currentSkill and not _currentSkill.canRemoveFromBuild():
+                    self.showMsg(M_M_DD.datas.skillChangeFail_coolDown, [])
                     return
                 if toSkillId in usingSkills.keys():
-                    self.showMsg(SRSC.datas['skillInCastCannotChange_msg']['valueCN'], [])
+                    self.showMsg(SR_SCD.datas['skillInCastCannotChange_msg']['valueCN'], [])
                     return
 
             skill = self.skillDic.doGetSkill(skillId, False)
             if skill and skill.inCDTime():
-                self.showMsg(MMD.datas.skillChangeFail_coolDown, [])
+                self.showMsg(M_M_DD.datas.skillChangeFail_coolDown, [])
                 return
 
         self.base.onCheckUpdateSkillRet(True, skillSlotInfos, bNotifyClient, isMessage)
@@ -86,11 +84,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     REGEN_INTERVAL = int(CONST.datas.get("hpRecoveryInterval", {}).get("value", 5))
 
     def __init__(self):
-        # self.relationTypeList = [[] for i in range(gameconst.RelationType.RELATION_TYPE_OTHERS + 1)]
-        hpPercent = self.hp / self.fullHp if self.fullHp else 1
-        mpPercent = self.mp / self.fullMp if self.fullMp else 1
-        self.setTempMiscProp(gameconst.EntityPropsEnum.hpPercent, hpPercent)
-        self.setTempMiscProp(gameconst.EntityPropsEnum.mpPercent, mpPercent)
+        _hpPercent = self.hp / self.fullHp if self.fullHp else 1
+        _mpPercent = self.mp / self.fullMp if self.fullMp else 1
+        self.setTempMiscProp(gameconst.EntityPropsEnum.hpPercent, _hpPercent)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.mpPercent, _mpPercent)
 
         SkillManager.SkillManager.__init__(self)
         AvatarBuildsMixin.__init__(self)
@@ -104,8 +101,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.initAwardFightProps()
         self.initGuildTrainProps()
 
-        self.hp = math.ceil(self.fullHp * hpPercent)
-        self.mp = math.ceil(self.fullMp * mpPercent)
+        self.hp = math.ceil(self.fullHp * _hpPercent)
+        self.mp = math.ceil(self.fullMp * _mpPercent)
 
         if self.showCompleteNum == 0:
             self.showCompleteNum = utils.fetchShowCompleteModelNum()
@@ -114,38 +111,38 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self.flyValue = CONST.datas['flyEpMax']['value']
 
-    def initCombatProps(self, hpPercent, mpPercent):
+    def initEntityCombatProps(self, hpPercent, mpPercent):
         if not self.school:
             return
 
-        super(ImpCombat, self).initCombatProps(hpPercent, mpPercent)
+        super(ImpCombat, self).initEntityCombatProps(hpPercent, mpPercent)
 
     def doInitBaseProperties(self):
         if not self.school:
             return
 
-        self.baseFullHp = CHD.datas[self.school].get('baseFullHp', 0)
-        self.baseFullMp = CHD.datas[self.school].get('baseFullMp', 0)
-        self.baseSpeed = float(CHD.datas[self.school].get('baseSpeed', 0))
-        self.baseMinPhysicalAtk = CHD.datas[self.school].get('baseMinPhysicalAtk', 0)
-        self.baseMaxPhysicalAtk = CHD.datas[self.school].get('baseMaxPhysicalAtk', 0)
-        self.baseMinMagicAtk = CHD.datas[self.school].get('baseMinMagicAtk', 0)
-        self.baseMaxMagicAtk = CHD.datas[self.school].get('baseMaxMagicAtk', 0)
-        self.baseHit = CHD.datas[self.school].get('baseHit', 0)
-        self.baseDodge = CHD.datas[self.school].get('baseDodge', 0)
-        self.baseMinPhysicalArmor = CHD.datas[self.school].get('baseMinPhysicalArmor', 0)
-        self.baseMaxPhysicalArmor = CHD.datas[self.school].get('baseMaxPhysicalArmor', 0)
-        self.baseMinMagicArmor = CHD.datas[self.school].get('baseMinMagicArmor', 0)
-        self.baseMaxMagicArmor = CHD.datas[self.school].get('baseMaxMagicArmor', 0)
-        self.baseDrugsQuantity = CHD.datas[self.school].get('baseDrugsQuantity', 0)
-        self.baseRealDmg = CHD.datas[self.school].get('baseRealDmg', 0)
-        self.baseRealDmgDef = CHD.datas[self.school].get('baseRealDmgDef', 0)
-        self.baseStunAnti = CHD.datas[self.school].get('baseStunAnti', 0)
-        self.baseSilentAnti = CHD.datas[self.school].get('baseSilentAnti', 0)
-        self.baseKnockAnti = CHD.datas[self.school].get('baseKnockAnti', 0)
-        self.basePushAnti = CHD.datas[self.school].get('basePushAnti', 0)
-        self.baseFrozenAnti = CHD.datas[self.school].get('baseFrozenAnti', 0)
-        self.baseSlowAnti = CHD.datas[self.school].get('baseSlowAnti', 0)
+        self.baseFullHp = C_CDD.datas[self.school].get('baseFullHp', 0)
+        self.baseFullMp = C_CDD.datas[self.school].get('baseFullMp', 0)
+        self.baseSpeed = float(C_CDD.datas[self.school].get('baseSpeed', 0))
+        self.baseMinPhysicalAtk = C_CDD.datas[self.school].get('baseMinPhysicalAtk', 0)
+        self.baseMaxPhysicalAtk = C_CDD.datas[self.school].get('baseMaxPhysicalAtk', 0)
+        self.baseMinMagicAtk = C_CDD.datas[self.school].get('baseMinMagicAtk', 0)
+        self.baseMaxMagicAtk = C_CDD.datas[self.school].get('baseMaxMagicAtk', 0)
+        self.baseHit = C_CDD.datas[self.school].get('baseHit', 0)
+        self.baseDodge = C_CDD.datas[self.school].get('baseDodge', 0)
+        self.baseMinPhysicalArmor = C_CDD.datas[self.school].get('baseMinPhysicalArmor', 0)
+        self.baseMaxPhysicalArmor = C_CDD.datas[self.school].get('baseMaxPhysicalArmor', 0)
+        self.baseMinMagicArmor = C_CDD.datas[self.school].get('baseMinMagicArmor', 0)
+        self.baseMaxMagicArmor = C_CDD.datas[self.school].get('baseMaxMagicArmor', 0)
+        self.baseDrugsQuantity = C_CDD.datas[self.school].get('baseDrugsQuantity', 0)
+        self.baseRealDmg = C_CDD.datas[self.school].get('baseRealDmg', 0)
+        self.baseRealDmgDef = C_CDD.datas[self.school].get('baseRealDmgDef', 0)
+        self.baseStunAnti = C_CDD.datas[self.school].get('baseStunAnti', 0)
+        self.baseSilentAnti = C_CDD.datas[self.school].get('baseSilentAnti', 0)
+        self.baseKnockAnti = C_CDD.datas[self.school].get('baseKnockAnti', 0)
+        self.basePushAnti = C_CDD.datas[self.school].get('basePushAnti', 0)
+        self.baseFrozenAnti = C_CDD.datas[self.school].get('baseFrozenAnti', 0)
+        self.baseSlowAnti = C_CDD.datas[self.school].get('baseSlowAnti', 0)
 
 
     def restoreBuffs(self):
@@ -153,7 +150,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         tsLastOffline = self.popTempMiscProp(gameconst.EntityPropsEnum.offlineTimeForRestoreBuff)
         self.buffMgrDic.update(self.savedBuffDic)
         self.savedBuffDic.clear()
-        self.savedBuffDic.buffTagSet = set()
+        self.savedBuffDic.buffTagsSet = set()
         self.buffMgrDic.checkValidOnLogin(self, tsLastOffline)
 
         for buffId in list(self.buffMgrDic.keys()):
@@ -161,10 +158,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if not buffMap:
                 continue
             for buffSrcKey in list(buffMap.keys()):
-                buffVal = buffMap.get(buffSrcKey)
-                if buffVal:
-                    buffVal.initBuff(self)
-                    buffVal.onRestored(self)
+                _buffVal = buffMap.get(buffSrcKey)
+                if _buffVal:
+                    _buffVal.initBuff(self)
+                    _buffVal.onRestored(self)
 
     def saveBuffs(self):
         for buffId in list(self.buffMgrDic.keys()):
@@ -172,9 +169,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if not buffMap:
                 continue
             for buffSrcKey in list(buffMap.keys()):
-                buffVal = buffMap.get(buffSrcKey)
-                if buffVal.getOfflineKeep(buffVal.buffId):
-                    self.savedBuffDic.setdefault(buffId, {})[buffSrcKey] = buffVal
+                _buffVal = buffMap.get(buffSrcKey)
+                if _buffVal.getOfflineKeep(_buffVal.buffId):
+                    self.savedBuffDic.setdefault(buffId, {})[buffSrcKey] = _buffVal
 
     def sendLeftFreeReliveTimes(self):
         pass
@@ -203,7 +200,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return self.skillDic.doGetSkill(skillId, True)
 
     def unlockDodgeSkill(self, oldLevel, newLevel):
-        dodgeSkillId = CHD.datas[self.school].get('dodgeSkillID', 0)
+        dodgeSkillId = C_CDD.datas[self.school].get('dodgeSkillID', 0)
         if dodgeSkillId:
             SkillManager.SkillManager.addSkillInEntity(self, dodgeSkillId, 1, 0)
 
@@ -213,7 +210,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return equipExtraLv
 
     def getFatalDmgFromTable(self):
-        return CHD.datas[self.school].get('baseMortal', 0) / 100.0
+        return C_CDD.datas[self.school].get('baseMortal', 0) / 100.0
 
     # ------------------- dead and relive start -------------------
 
@@ -346,6 +343,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         LogTrackingMgr.LogTrackingMgr.Common_Death(
             self.gbId,
+            self.clientDistinctIdCell, 
+            self.gbId,
             _mapId,
             _killerGbId,
             killer.__class__.__name__ if killer else '',
@@ -358,50 +357,52 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
             if formula.inWonderLandScene(self.spaceNo):
                 self.base.triggerAchievement(gameconst.AchieveType.WONDERLAND_KILL)
-        # self.showMsg(PKD.datas['killPlayer']['value'], [deadAvatar.name, str(deadAvatar.gbId)])
-        pass
 
     # ------------------- dead and relive end -------------------
 
     def checkConflictState(self, eventId, bMsg=True, remConflctState=False, isInit=False):
         if not eventId:
-            return gameclass.BoolResult(True, -1)
+            return gameclass.ResultBool(True, -1)
 
-        remState = []
+        _remState = []
         eventName = self._fetchConflictEventName(eventId)
         cfgData = self.fetchConflictEventCfgData(eventId)
         for state in self.stateList:
-            stateEventId = C_SD.datas[state].get('event')
-            if isInit and stateEventId == eventId:
+            _stateEventId = C_SD.datas[state].get('event')
+            if isInit and _stateEventId == eventId:
                 continue
 
             val = cfgData.get(str(state))
             if val == 1:
                 continue
             elif val == 0:
-                bMsg and self.client and self.showMsg(MMD.datas.CUSTOM_STRING41, [self._fetchConflictStatusName(state),
-                                                                                  eventName])
-                return gameclass.BoolResult(False, state)
+                if bMsg and self.client:
+                    self.showMsg(
+                        M_M_DD.datas.CUSTOM_STRING41, 
+                        [self._fetchConflictStatusName(state), eventName])
+
+                return gameclass.ResultBool(False, state)
             elif val == 2 and remConflctState:
-                remState.append(state)
+                _remState.append(state)
             elif val == 3:
                 LOG_DBG('Avatar.checkConflictState', eventId, state)
-                return gameclass.BoolResult(False, state)
+                return gameclass.ResultBool(False, state)
             elif M_MD.datas.get(val, None):
                 bMsg and self.client and self.showMsg(val, [])
                 LOG_WARN(
                     "checkConflictState has conflict eventId=[{}] state=[{}] val=[{}]".format(eventId, state, val))
-                return gameclass.BoolResult(False, state)
+                return gameclass.ResultBool(False, state)
 
         # todo remove conflict state, new state continue go on
 
-        if len(remState) > 0:
-            self.removeStates(remState)
+        if len(_remState) > 0:
+            self.removeStates(_remState)
 
-        return gameclass.BoolResult(True, -1)
+        return gameclass.ResultBool(True, -1)
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
+    @gamedecorator.crossServer
     def clientSetState(self, exposed, state):
         LOG_DBG('clientSetState 1', state)
         if state < 0:
@@ -431,6 +432,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
+    @gamedecorator.crossServer
     def clientRemoveState(self, exposed, state):
         LOG_DBG('clientRemoveState 1', state)
         if not self.hasState(state):
@@ -442,7 +444,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         LOG_DBG('clientRemoveState 2', state)
         self.removeState(state)
 
-        if state == gameconst.StateEnum.Moving and self.autoCombat == gameconst.AutoCombatState.Suspending:
+        if state == gameconst.StateEnum.Moving and self.autoCombat == gameconst.AutoCombatStatus.Suspending:
             self.addTimerCB(0.1, 'recoverAndTickOnce', (), gametimer.TIMER_TAG_REMOVE_MOVE_AND_AUTO_COMBAT)
         
         self.checkIdleStatus(True)
@@ -457,16 +459,16 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         if taskId:
-            self.base.checkTaskSetInteractState(state, interactId, taskId)
+            gameengine.panicStack('clientSetInteractState not support taskId', taskId)
             return
         else:
             self._setInteractState(state, interactId, taskId)
 
+    def _setInteractState(self, state, _, __):
+        self.setState(state)
+
     def onCheckTaskSetInteractStateSucc(self, state, interactId, taskId):
         self._setInteractState(state, interactId, taskId)
-
-    def _setInteractState(self, state, interactId, taskId):
-        self.setState(state)
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
@@ -481,6 +483,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
+    @gamedecorator.crossServer
     def clientSetIsOnGround(self, exposed, isOnGround):
         # LOG_DBG('clientSetIsOnGround', isOnGround)
         self.isClientOnGround = isOnGround
@@ -522,12 +525,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.cancelDeadLaterCallback()
 
     def _trapInViews(self):
-        aoi = DDL.datas[formula.fetchMapId(self.spaceNo)]['AOI']
-        if not aoi:
-            aoi = gameconst.DEFAULT_AOI
-        for c in self.entitiesInRange(aoi):
-            if c.IsAICombatUnit and sMath.distance2D(self.position, c.position) <= c.getAlertDistance():
-                c.onEnterTrap(self, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
+        _aoi = DDL.datas[formula.fetchMapId(self.spaceNo)]['AOI']
+        if not _aoi:
+            _aoi = gameconst.DEFAULT_AOI
+        for _c in self.entitiesInRange(_aoi):
+            if _c.IsAICombatUnit and sMath.distance2D(self.position, _c.position) <= _c.getAlertDistance():
+                _c.onEnterTrap(self, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
     def cancelDeadLaterCallback(self):
         onDeadLaterTimer = self.popTempMiscProp(gameconst.EntityPropsEnum.deadLaterCallbackInfo, None)
@@ -615,7 +618,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def addExpByKill(self, baseExp, level, opUUID, src, detail, isNeedAddition=False):
         LOG_DBG("impCombat->addExpByKill ", baseExp, level, opUUID, src, detail, isNeedAddition)
         if src == AAC_AACDD.datas.BONUS_SRC_GATHER_DROP or src == AAC_AACDD.datas.BONUS_SRC_GATHER:
-            self.client and self.client.onAddGatherRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
+            self.client and self.client.onAddGatherRewardRecord([{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
 
         self._addExp(int(baseExp), opUUID, src, detail, isNeedAddition=isNeedAddition)
 
@@ -629,7 +632,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if isNeedAddition:
             expRatio = utils.getExpDecayRate(self.moralLevel, self.level, self.worldLevel - self.level, src)
             totalExpVal = int(expVal * ( 1 + self.getProp('expGrow'))* expRatio)
-            itemId = gameconst.ItemId.EXP
+            itemId = gameconst.ItemIdEnum.EXP
             itemData = dataUtils.getCommItemData(itemId)
             extraDesp = dataUtils.getAddItemExtraDesp(src)
 
@@ -643,19 +646,21 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         if src not in (AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,):
             if formula.inCubeScene(self.spaceNo):
-                self.addCubeRoomRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
+                self.addCubeRoomRewardRecord([{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
 
             elif formula.inWonderLandScene(self.spaceNo):
-                self.addWonderLandRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
+                self.addWonderLandRewardRecord([{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
 
         if totalExpVal > 0:
             self._modifyExp(totalExpVal, opUUID, src, detail)
 
         # LogTrackingMgr.LogTrackingMgr.Get_Item(
+            # self.gbId,
+            # self.clientDistinctIdCell, 
         #     self.accountNameCell,
         #     self.gbId,
         #     gameconfig.gameId(),
-        #     gameconst.ItemId.EXP,
+        #     gameconst.ItemIdEnum.EXP,
         #     0,
         #     0,
         #     gameconst.ItemBindType.NORMAL,
@@ -669,6 +674,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src):
         LogTrackingMgr.LogTrackingMgr.Update_Exp(
             self.gbId,
+            self.clientDistinctIdCell, 
+            self.gbId,
             deltaVal,
             modifyVal,
             opUUID,
@@ -678,6 +685,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         )
 
     def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0):
+        self.syncMethodCallToLocalServerCell("onCrossServerModifyExp", (expVal, opUUID, src))
         # oldLevel = self.level
         expVal = int(expVal)
         befExpVal = self.exp
@@ -703,10 +711,11 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         realExpVal = expVal - exceedExp
         if realExpVal > 0:
             self.client.onPlayerGetExp(src, expVal, realExpVal, chaseExp)
-            # self.base.playerExpFlowLog(realExpVal, oldLevel, level, utils.curTS(), src, srcSubType, detail, idipSource)
 
         if level > self.level:
             LogTrackingMgr.LogTrackingMgr.Level_LevelUp(
+                self.gbId,
+                self.clientDistinctIdCell, 
                 self.gbId,
                 self.level,
                 level,
@@ -720,12 +729,23 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.makeUpdateExpLog(expVal, expVal, opUUID, src)
         self._updateExpRateToBase()
 
+    def onCrossServerModifyExp(self, expVal, opUUID, src):
+        if src not in gameconst.CrossServerExpWhitelist:
+            gameengine.panicStack("onCrossServerModifyExp: src not in gameconst.CrossServerExpWhitelist", src)
+            return
+        
+        if src in gameconst.CrossServerExpIgnorelist:
+            return
+
+        _detail = gameclass.AwardDetailCls()
+        self._modifyExp(expVal, opUUID, src, _detail)
+
     def _updateExpRateToBase(self):
         levelExp = EPED.datas[self.level]['expPlayer']
         self.base.onUpdateExpRate(self.exp, self.exp / levelExp)
 
     def levelUp(self, level, opUUID, src, detail):
-        level = min(level, utils.getPlayerMaxLevel())
+        level = min(level, utils.getMaxPlayerLevel())
         if level <= self.level:
             LOG_INFO('levelUp: level <= self.level', level)
             return
@@ -737,8 +757,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.setProp('level', level, gameconst.SourceType.SrcTpLevelUp)
         self.updateSelfLevelScore()
         self.base.updateRoleCache({'name': self.name, 'level': self.level})
-        newFullHp = self.fullHp
-        self.modifyHP(newFullHp - oldFullHp, self.id, gameconst.SourceType.SrcTpDefault, 0)
+        _newFullHp = self.fullHp
+        self.modifyHP(_newFullHp - oldFullHp, self.id, gameconst.SourceType.SrcTpDefault, 0)
 
         newFullMp = self.fullMp
         self.modifyMP(newFullMp - oldFullMp)
@@ -793,23 +813,46 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if not self.hasBuff(buffCfg[1]):
                 self.addBuff(buffCfg[1], 1, self.id)
 
-    def getBuffMirrorData(self):
-        buffMirrorData = {'buffs': []}
-        buffList = buffMirrorData['buffs']
+    def toReplicaBuffData(self):
+        buffData = {'buffs': []}
+        buffList = buffData['buffs']
         for buffId, buffMap in self.buffMgrDic.items():
             for buffSrcKey, buffVal in buffMap.items():
+                '''
                 data = {
                     'tStartTime': buffVal.tStartTime,
                     'attNum': buffVal.attNum,
                     'skillNum': buffVal.skillNum,
                     'beatNum': buffVal.beatNum
                 }
+                '''
                 buffInfo = {
                     'buffId': buffId,
+                    #'buffSrcKey': buffSrcKey,
+                    'level': buffVal.level,
+                    #'releaseId': 0,
+                    #'data': data
+                }
+                buffList.append(buffInfo)
+        return buffData
+
+    def getBuffMirrorData(self):
+        buffMirrorData = {'buffs': []}
+        buffList = buffMirrorData['buffs']
+        for buffId, buffMap in self.buffMgrDic.items():
+            for buffSrcKey, buffVal in buffMap.items():
+                _data = {
+                    'attNum': buffVal.attNum,
+                    'tStartTime': buffVal.tStartTime,
+                    'skillNum': buffVal.skillNum,
+                    'beatNum': buffVal.beatNum
+                }
+                buffInfo = {
                     'buffSrcKey': buffSrcKey,
+                    'buffId': buffId,
                     'level': buffVal.level,
                     'releaseId': 0,
-                    'data': data
+                    'data': _data
                 }
                 buffList.append(buffInfo)
         return buffMirrorData
@@ -819,18 +862,18 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if gbId != self.gbId:
             LOG_ERR('getMirrorData gbId error', gbId, self.gbId)
             return
-        buffMirrorDate = self.getBuffMirrorData()
+        _buffMirrorDate = self.getBuffMirrorData()
         mirrorDataDic = {
-            'gbId': gbId,
             'name': self.name,
+            'gbId': gbId,
             'accountName': '',
             'dbid': self.dbId,
             'level': self.level,
             'school': self.school,
-            'fullHp': self.fullHp,
             'fullMp': self.fullMp,
+            'fullHp': self.fullHp,
             'skillDic': self.skillDic.toDict(),
-            'buffMgrDic': buffMirrorDate
+            'buffMgrDic': _buffMirrorDate
         }
         LOG_INFO('mirrorDataDic', mirrorDataDic)
         if hasattr(box, callbackFun):
@@ -854,14 +897,14 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if realSkillVal.hasSkillTag(gameconst.SkillTag.Casting):
             return False
 
-        target = KBEngine.entities.get(targetID)
-        if targetID and not target:
+        _target = KBEngine.entities.get(targetID)
+        if targetID and not _target:
             self.client.onUseSkill(False, skillID, targetID, [], [], [])
             return False
 
-        if realSkillVal.getTarget(realSkillVal.skillId) != "None" and target and (
-                not target.IsCombatUnit or target.isDie()):
-            self.showMsg(MMD.datas.SkillTargetWrong, [])
+        if realSkillVal.getTarget(realSkillVal.skillId) != "None" and _target and (
+                not _target.IsCombatUnit or _target.isDie()):
+            self.showMsg(M_M_DD.datas.SkillTargetWrong, [])
             self.client.onUseSkill(False, skillID, targetID, [], [], [])
             LOG_DBG('dead target', skillID, targetID)
             return False
@@ -869,8 +912,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return True
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def useTargetSkill(self, exposed, skillID, targetID, arr, compensateTime):
-        characterData = CHD.datas[self.school]
+        characterData = C_CDD.datas[self.school]
         # 翻滚开关
         if characterData['dodgeSkillID'] == skillID:
             if not gameconfig.visibleConfigEnabled('skill'):
@@ -947,22 +991,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if not curUseSkill:
             self.popTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill)
 
-    def resetUsingSkills(self, reason):
-        usingSkills = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, default={})
-        if self.getTempMiscProp(gameconst.EntityPropsEnum.isResetingSkill, False):
-            return
-        self.setTempMiscProp(gameconst.EntityPropsEnum.isResetingSkill, True)
-
-        for sid in list(usingSkills.keys()):
-            if sid in usingSkills:
-                skillVal, targetId = usingSkills[sid]
-                skillVal.resetSkill(self, reason)
-
-        for skillVal in self.skillDic.values():
-            skillVal.resetSkill(self, reason)
-
-        self.setTempMiscProp(gameconst.EntityPropsEnum.isResetingSkill, False)
-
     def resetStatisticsData(self):
         self.statisticsDmg = 0
         self.statisticsHeal = 0
@@ -990,21 +1018,21 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def removeAllClones(self):
         for cid in list(self.cloneList):
-            c = KBEngine.entities.get(cid)
-            if c:
-                c.safeDestroy()
+            _c = KBEngine.entities.get(cid)
+            if _c:
+                _c.safeDestroy()
         self.cloneList.clear()
 
     def getBuffSrcKey(self, buffId, srcId=None):
-        bd = B_BD.datas.get(buffId, {})
-        if bd.get('isCover', 1):
+        _bd = B_BD.datas.get(buffId, {})
+        if _bd.get('isCover', 1):
             return 0
         return srcId if srcId is not None else self.gbId
 
     @gamedecorator.checkGameconfigEnable('changeTarget')
     @gamedecorator.crossServer
     @utils.isMyself
-    def setSelectedTarget(self, exposed, targetId):
+    def setSelectedTarget(self, _, targetId):
         if targetId not in KBEngine.entities:
             self.selectedTargetId = 0
             return
@@ -1055,7 +1083,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         elif utils.isEnemy(self, target):
             # target不能是玩家，host也不能是玩家
-            if target.IsAvatarMirror or target.IsSummon or target.IsCreation:
+            if target.IsSummon or target.IsCreation:
                 tHost = target.getHost()
                 if not tHost or not tHost.IsAvatar:
                     # self.addTeamStatisticPlayerVal(valType, deltaVal)
@@ -1106,27 +1134,28 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.statisticsDead += 1
 
     def _notifySkillDuration(self, eid):
-        e = KBEngine.entities.get(eid)
-        if not e or not e.IsCombatUnit or self.isDestroyed or e.isDestroyed or not e.isReal():
+        _e = KBEngine.entities.get(eid)
+        if not _e or not _e.IsCombatUnit or self.isDestroyed or _e.isDestroyed or not _e.isReal():
             return
 
-        clientEnt = self.clientEntity(e.id)
-        castingSkillVal = e.getCastingSkillInfo()
-        if castingSkillVal and e.hasState(gameconst.StateEnum.Casting):
-            leftTime = time.time() + castingSkillVal.getCastingtimeMax(
+        clientEnt = self.clientEntity(_e.id)
+        castingSkillVal = _e.getCastingSkillInfo()
+        if castingSkillVal and _e.hasState(gameconst.StateEnum.Casting):
+            _leftTime = time.time() + castingSkillVal.getCastingtimeMax(
                 castingSkillVal.skillId) - castingSkillVal.castingStartTime
-            if castingSkillVal.castingStartTime and leftTime > 0.5:
+            if castingSkillVal.castingStartTime and _leftTime > 0.5:
                 clientEnt and clientEnt.notifyCastingSkill(castingSkillVal.skillId, castingSkillVal.castingStartTime)
 
-        channelingSkillVal = e.getChannelingSkillInfo()
-        if channelingSkillVal and e.hasState(gameconst.StateEnum.Channeling):
+        channelingSkillVal = _e.getChannelingSkillInfo()
+        if channelingSkillVal and _e.hasState(gameconst.StateEnum.Channeling):
             tChannelingStart = channelingSkillVal.getTempData(gameconst.SkillTempDataKey.T_CHANNELING_START, 0)
-            leftTime = time.time() + channelingSkillVal.getChannelTime(
+            _leftTime = time.time() + channelingSkillVal.getChannelTime(
                 channelingSkillVal.skillId) - 1 - tChannelingStart
-            if tChannelingStart and leftTime > 0.5:
+            if tChannelingStart and _leftTime > 0.5:
                 clientEnt and clientEnt.notifyCastingSkill(channelingSkillVal.skillId, tChannelingStart)
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def setShowCompleteNum(self, exposed, showCompleteNum):
         LOG_INFO("setShowCompleteNum", exposed, showCompleteNum)
 
@@ -1136,17 +1165,18 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         showCompleteNum = min(showCompleteNum, utils.fetchShowCompleteModelNum())
         curTime = utils.curTS()
-        tongpingDelayCD = int(PLSD.datas["tongpingDelayCD"].get("value"))
-        if curTime - self.lastSetCompleteNumTime >= tongpingDelayCD:
+        _tongpingDelayCD = int(PLSD.datas["tongpingDelayCD"].get("value"))
+        if curTime - self.lastSetCompleteNumTime >= _tongpingDelayCD:
             if showCompleteNum != self.showCompleteNum:
                 self.showCompleteNum = showCompleteNum
                 self.lastSetCompleteNumTime = curTime
                 self.isNeedResortView = True
         else:
-            delayTime = (tongpingDelayCD + 1) - (curTime - self.lastSetCompleteNumTime)
-            self.showCompleteNumTimer = self.addTimerCB(delayTime, "setShowCompleteNum",
-                                                       (exposed, showCompleteNum),
-                                                       gametimer.TIMER_TAG_SET_COMPLETE_NUM, 'showCompleteNumTimer')
+            _delayTime = (_tongpingDelayCD + 1) - (curTime - self.lastSetCompleteNumTime)
+            self.showCompleteNumTimer = self.addTimerCB(
+                _delayTime, "setShowCompleteNum",
+                (exposed, showCompleteNum),
+                gametimer.TIMER_TAG_SET_COMPLETE_NUM, 'showCompleteNumTimer')
 
         self.syncMethodCallToLocalServerCell("setShowCompleteNum", (showCompleteNum,))
 
@@ -1155,13 +1185,13 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             skill.clearCD(self)
 
     def addAwardFightPropsCell(self, syncPropList):
-        addScore = 0
+        _addScore = 0
         for propName, val in syncPropList:
             self.addProp(propName, val, gameconst.SourceType.SrcTpawardFightProp)
-            addScore += dataUtils.calcFightPropScore(self.school, propName, val)
+            _addScore += dataUtils.calcFightPropScore(self.school, propName, val)
 
-        if addScore:
-            newScore = self.scoresInfo.rewardFightProp + addScore
+        if _addScore:
+            newScore = self.scoresInfo.rewardFightProp + _addScore
             self.onUpdateRewardFightProp(newScore)
 
     def initAwardFightProps(self):
@@ -1185,12 +1215,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         pass
 
     def getDunTimeFreezeFlag(self):
-        spaceMgr = self.spaceMgr
-        if not spaceMgr:
+        _spaceMgr = self.spaceMgr
+        if not _spaceMgr:
             return False
 
         if formula.inDungeonScene(self.spaceNo):
-            return bool(self.spaceMgr.dungeonTimeFreezeFlag)
+            return bool(_spaceMgr.dungeonTimeFreezeFlag)
         else:
             return False
 
@@ -1198,13 +1228,14 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         _f = self.getDunTimeFreezeFlag()
         LOG_DBG("sendDunTimeFreezeFlag::", _f)
 
+    @gamedecorator.crossServer
     def getBuffIdInfo(self, exposed, entityId):
         if not self._isMyself(exposed):
             return
 
-        target = KBEngine.entities.get(entityId)
-        if target and target.buffMgrDic:
-            self.client.onGetBuffIdInfo(entityId, target.buffMgrDic.getClientBuffIds())
+        _target = KBEngine.entities.get(entityId)
+        if _target and _target.buffMgrDic:
+            self.client.onGetBuffIdInfo(entityId, _target.buffMgrDic.getClientBuffIds())
 
     def modifyHP(self, *args, **kwargs):
         ret = super().modifyHP(*args, **kwargs)
@@ -1247,6 +1278,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
+    @gamedecorator.crossServer
     def jump(self, exposed, jumpType, spaceNo):
         LOG_DBG('jump', jumpType, self._getTeleportInfoCache(), spaceNo, self.spaceNo)
         if spaceNo != self.spaceNo:
@@ -1299,9 +1331,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.setPersistentMiscProp(gameconst.EntityPropsEnum.firstFly, True)
 
     def checkAttachmentEntityRelationType(self, target):
-        for summonId in list(self.petList):
-            summon = KBEngine.entities.get(summonId)
-            summon and summon.onEnterTrap(target, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
+        for _summonId in list(self.petList):
+            _summon = KBEngine.entities.get(_summonId)
+            if _summon:
+                _summon.onEnterTrap(target, 0, 0, 0, gameconst.AGGRO_TRIGGER_TRAP)
 
     @property
     def expAddRatioSum(self):
@@ -1311,8 +1344,14 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return ratioSum
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def setSkillAutoCombat(self, exposed, skillId, status):
         LOG_INFO('setSkillAutoCombat', skillId, status)
+        self.skillDic.setSkillSwitch(self, skillId, status)
+        self.syncMethodCallToLocalServerCell('onCrossServerSetSkillAutoCombat', (skillId, status))
+
+    def onCrossServerSetSkillAutoCombat(self, skillId, status):
+        LOG_INFO('onCrossServerSetSkillAutoCombat', skillId, status)
         self.skillDic.setSkillSwitch(self, skillId, status)
 
     def addPropByPassiveSkill(self, propInfoList):
@@ -1345,7 +1384,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if addVal <= 0:
             return
 
-        _ultSkillId = CHD.datas[self.school]['ult']
+        _ultSkillId = C_CDD.datas[self.school]['ult']
         # 处理下大招被铭文给替换的情况
         newSkillId, _ = self.glyphEquipData.getInscriptionSrcSkillId(_ultSkillId)
         if not self.hasSkill(newSkillId):
@@ -1364,32 +1403,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                     LOG_DBG("in addUltraSkillPower, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, datas)
         self.ultraSkillPower = min(ultimatePowerMax, self.ultraSkillPower + addVal)
 
-    def isUltraSkillPowerMax(self):
-        ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
-        return self.ultraSkillPower == ultimatePowerMax
-
-    def changeMorphPreAddSkill(self, morphState):
-        for oldSkillId, _skillVal in list(self.skillDic.items()):
-            _modId = SSD.skillToModDic.get(oldSkillId)
-            if not _modId:
-                continue
-
-            _newSkillId = SSD.modDic[_modId][morphState]
-            if _newSkillId == oldSkillId:
-                continue
-
-            _newSkillVal = self.skillDic.doGetSkill(_newSkillId, False)
-            if not _newSkillVal:
-                _newSkillVal = self.addSkillInEntity(
-                    _newSkillId,
-                    _skillVal.skillLv,
-                    _skillVal.tNextCast)
-
-                if _newSkillVal:
-                    _newSkillVal.onChangedFromSkill(_skillVal)
-
-        self.base.changeMorphStateBase(morphState)
-
     def setSummonSlotIdx(self, slotIdx):
         LOG_INFO('cell setSummonSlotIdx set', slotIdx, self.summonSlotIdx)
         if slotIdx and self.hasState(gameconst.StateEnum.Fighting):
@@ -1403,17 +1416,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             summon and summon.killSelf(gameconst.SourceType.SrcTpDefault)
         #LOG_INFO('cell setSummonSlotIdx get', self.getSummonId())
 
-    def getSummonId(self):
-        slotIdx = SRSU.minKey
-        if self.summonSlotIdx <= 0 or self.summonSlotIdx > SRSU.maxKey:
-            LOG_WARN('getSummonId error', self.summonSlotIdx)
-            self.summonSlotIdx = 0
-            self.base.setSummonSlotIdxAck(self.summonSlotIdx)
-        else:
-            slotIdx = self.summonSlotIdx
-        return SRSU.datas[slotIdx].get('summonId', 0)
-
     @gamedecorator.checkGameconfigEnable('skillUpgrade')
+    @gamedecorator.crossServer
     def levelUpSkill(self, exposed, skillId, levelDelta):
         LOG_INFO('levelUpSkill 1', skillId, levelDelta)
         newSkillId, oldSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)
@@ -1445,9 +1449,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if status not in gameconst.SkillCDStatus.VALID:
             LOG_ERR('changeSkillCDStatus, invalid status, ', skillId, status)
             return False
-        skill = self.skillDic.doGetSkill(skillId)
+        # 这里可能打完怪触发任务结束把技能移除了
+        skill = self.skillDic.doGetSkill(skillId, False)
         if not skill:
-            LOG_ERR('changeSkillCDStatus, no skill, ', skillId, status)
+            LOG_WARN('changeSkillCDStatus, no skill, ', skillId, status)
             return False
         
         if not utils.hasSkillTagById(skillId, gameconst.SkillTag.changeCDStatusSkill):
@@ -1468,16 +1473,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             # 刷新时间置零，通知客户端禁用技能
             pass
         return True
-    
-    def getSourceSkillId(self, context):
-        #LOG_DBG('getSourceSkillId, 1', context)
-        if context:
-            context = context.getTopCtxFromActionQueue(actionContext.ACTION_USE_SKILL)
-            if context:
-                LOG_DBG('getSourceSkillId, 2', context.skillId)
-                return context.skillId
-        return 0
-    
+
     def enterFlyingState(self):
         LOG_DBG('enterFlyingState, 1')
         self.flyValue -= CONST.datas['flyEpCostRate']['value']

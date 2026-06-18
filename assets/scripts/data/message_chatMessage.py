@@ -201,6 +201,12 @@ datas = _tools.RODict({
         "Message": "<color=#beab67><link player name={0} gbid={1}></color>在<color=#54e7f2>{2}</color>击败了<color=#98cf48>{3}</color> <color=#d35a66><link player name={4} gbid={5}></color>",
         "channelID": (3,)
     }),
+    58000035: _tools.RODict({
+        "ID": 58000035,
+        "name": "auctionChannel_jumpToBuy",
+        "Message": "<link auctionItem id={0} auctionid={1}>已上架交易行，手快有手慢无<link business itemId={2}><color=#54e7f2>前往查看</color></link>",
+        "channelID": (10,)
+    }),
     58000060: _tools.RODict({
         "ID": 58000060,
         "name": "teamChannel_createTeamMsg",
@@ -252,7 +258,7 @@ datas = _tools.RODict({
     58000203: _tools.RODict({
         "ID": 58000203,
         "name": "mineBattle_chatChannelMsg3",
-        "Message": "<color=#54e7f2>{0}</color>矿区的荣誉旗帜正在遭受攻击，请前往保护！<link mineBattleTeleport mapId={1}>立即前往</link>",
+        "Message": "<color=#54e7f2>{0}</color>矿区的荣誉旗帜正在遭受攻击，请前往保护！<link mineBattleTeleport mapId={1}><color=#54e7f2>立即前往</color></link>",
         "channelID": (3,)
     }),
     58000204: _tools.RODict({
@@ -306,13 +312,13 @@ datas = _tools.RODict({
     58000212: _tools.RODict({
         "ID": 58000212,
         "name": "boss_born5001",
-        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>深海之王</color>现身于<color=#54e7f2>月光海港五层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>深海之王</color>现身于<color=#54e7f2>月光海港五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
     }),
     58000213: _tools.RODict({
         "ID": 58000213,
         "name": "boss_born5002",
-        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>祖珂教主</color>现身于<color=#54e7f2>祖珂地堡六层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>祖珂教主</color>现身于<color=#54e7f2>祖珂地堡五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
     }),
     58000214: _tools.RODict({
@@ -324,19 +330,19 @@ datas = _tools.RODict({
     58000215: _tools.RODict({
         "ID": 58000215,
         "name": "boss_born5004",
-        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>世界花</color>现身于<color=#54e7f2>五毒石窟六层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>世界花</color>现身于<color=#54e7f2>五毒石窟五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
     }),
     58000216: _tools.RODict({
         "ID": 58000216,
         "name": "boss_born5003",
-        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>空域王</color>现身于<color=#54e7f2>流沙故城五层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>空域王</color>现身于<color=#54e7f2>流沙故城五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
     }),
     58000217: _tools.RODict({
         "ID": 58000217,
         "name": "boss_born5005",
-        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>杜格教主</color>现身于<color=#54e7f2>杜格教廷五层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>杜格教主</color>现身于<color=#54e7f2>杜格教廷五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
     })
 })

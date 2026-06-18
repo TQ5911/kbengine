@@ -63,10 +63,10 @@
 			<Flags>	CELL_PRIVATE 			</Flags>
 		</trapEntities>
 
-		<curAreaLoopNum>
+		<currentAreaLoopNum>
 			<Type>	UINT32						</Type>
 			<Flags>	CELL_PRIVATE 			</Flags>
-		</curAreaLoopNum>
+		</currentAreaLoopNum>
 
 		<curEnterLoopNum>
 			<Type>	UINT32						</Type>
@@ -78,10 +78,10 @@
 			<Flags>	CELL_PRIVATE 			</Flags>
 		</loopTimeId>
 
-		<destroyTimeId>
+		<creationDestroyTimeId>
 			<Type>	INT32						</Type>
 			<Flags>	CELL_PRIVATE 			</Flags>
-		</destroyTimeId>
+		</creationDestroyTimeId>
 
 		<moveController>
 			<Type>	UINT32						</Type>
@@ -98,11 +98,6 @@
 			<Type>			DOUBLE				</Type>
 			<Flags>			ALL_CLIENTS 		</Flags>
 		</scopeAddRatio>
-
-		<fBProtectTime>
-			<Type>			LONGTIME			</Type>
-			<Flags>			ALL_CLIENTS 		</Flags>
-		</fBProtectTime>
 
 	</Properties>
 

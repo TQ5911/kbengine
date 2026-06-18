@@ -22,11 +22,11 @@
             <Flags>         BASE            </Flags>
         </baseBodyEquipDressDataDic>
 
-        <equipDropData>
+        <equipDropInfo>
             <Type>          EQUIP_DROP_MGR_DATA_INFO    </Type>
             <Flags>         BASE                        </Flags>
             <Persistent>    true                        </Persistent>
-        </equipDropData>
+        </equipDropInfo>
 
         <pickDropEquipLockTime>
             <Type>          LONGTIME            </Type>
@@ -70,6 +70,16 @@
             <Arg>       METHOD_ARGS </Arg>
         </baseEquipDeductItemsWithBindTypes>
 
+        <baseEquipWashDeductItems>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       BONUS_SRC   </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       ENTITYCALL  </Arg>
+            <Arg>       METHOD_NAME </Arg>
+            <Arg>       METHOD_ARGS </Arg>
+        </baseEquipWashDeductItems>
+
         <dressEquipment><Exposed/>
             <Arg>       UINT32      </Arg>
             <Arg>       UINT8       </Arg>
@@ -111,6 +121,13 @@
             <Arg>       UUID       </Arg>
             <Arg>       UINT32     </Arg>
         </bagEquipBindWashing>
+
+        <bagEquipWash>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT64      </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT32      </Arg>
+        </bagEquipWash>
 
         <undressEquipment><Exposed/>
             <Arg>       UINT32      </Arg>
@@ -156,7 +173,7 @@
             <Arg>      UINT16       </Arg>
             <Arg>      UUID         </Arg>
             <Arg>      GRIDID       </Arg>
-            <Arg>      PYTHON       </Arg>
+            <Arg>      GRIDID       </Arg>
         </bagEquipSoulSocketDeductItemsCB>
 
         <bagEquipGlyphWashing>
@@ -216,6 +233,12 @@
             <Arg>      ARRAY <of> UUID </of>  </Arg>
         </reqMultiEquipDisassemble>
 
+        <onCrossServerReqMultiEquipDisassemble>
+            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
+            <Arg>      ARRAY <of> UUID </of>  </Arg>
+            <Arg>      PY_LIST  </Arg>
+        </onCrossServerReqMultiEquipDisassemble>
+
         <gmBaseDressEquips>
             <Arg>      PY_LIST  </Arg>
             <Arg>      UINT8    </Arg>
@@ -251,12 +274,15 @@
             <Arg>       BLOB                </Arg>
             <Arg>       OBJECT_ID           </Arg>
             <Arg>       LONGTIME            </Arg>
+            <Arg>       BOOL                </Arg>
         </onDropEquipBase>
 
         <onGetBackDropEquip>
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       BLOB                </Arg>
             <Arg>       UINT32              </Arg>
+            <Arg>       UINT32              </Arg>
+            <Arg>       LONGTIME            </Arg>
         </onGetBackDropEquip>
 
         <onTakeDropEquipSuccess>
@@ -265,6 +291,7 @@
             <Arg>       BLOB                </Arg>
             <Arg>       LONGTIME            </Arg>
             <Arg>       UINT32              </Arg>
+            <Arg>       LONGTIME            </Arg>
             <Arg>       LONGTIME            </Arg>
         </onTakeDropEquipSuccess>
 
@@ -284,6 +311,7 @@
         <onDropTypeChangeToAvatar>
             <Arg>      ARRAY <of> UNIQUE_ID </of>  </Arg>
             <Arg>      ARRAY <of> INT32     </of>  </Arg>
+            <Arg>      ARRAY <of> ARRAY <of> INT64 </of> </of>  </Arg>
         </onDropTypeChangeToAvatar>
 
         <onGetDropTakeReward>
@@ -311,17 +339,6 @@
             <Arg>       UINT8               </Arg>
             <Arg>       PLAYER_GBID         </Arg>
         </onGiveUpDropEquip>
-
-        <onRemoveDropEquip>
-            <Arg>      UNIQUE_ID           </Arg>
-            <Arg>      UINT8               </Arg>
-            <Arg>      UINT8               </Arg>
-            <Arg>      OBJECT_ID           </Arg>
-        </onRemoveDropEquip>
-
-        <onOtherRemoveDropEquip>
-            <Arg>      UNIQUE_ID           </Arg>
-        </onOtherRemoveDropEquip>
 
         <onTakeDropEquipFailed>
             <Arg>      UNIQUE_ID           </Arg>
@@ -368,6 +385,7 @@
         <onSetTakeEquipRedeemPriceBase>
             <Arg>      UNIQUE_ID   </Arg>
             <Arg>      INT32       </Arg>
+            <Arg>      UINT32      </Arg>
         </onSetTakeEquipRedeemPriceBase>
 
         <onReturnEquipNotify>
@@ -375,12 +393,7 @@
             <Arg>       BLOB                </Arg>
         </onReturnEquipNotify>
 
-        <onRemoveEquipNotify>
-            <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       UNIQUE_ID           </Arg>
-        </onRemoveEquipNotify>
-
-        <getBackEquip>
+        <getBackEquip> <Exposed/>
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       UINT32              </Arg>
         </getBackEquip>
@@ -392,6 +405,7 @@
 
         <onSetDropEquipPayPriceBase>
             <Arg>      UNIQUE_ID   </Arg>
+            <Arg>      INT64       </Arg>
             <Arg>      INT32       </Arg>
         </onSetDropEquipPayPriceBase>
 
@@ -401,6 +415,10 @@
             <Arg>      INT32       </Arg>
             <Arg>      INT64       </Arg>
         </onNotifyCustodyEquip>
+
+        <onNotifyRemoveEquip>
+            <Arg>      ARRAY <of> UNIQUE_ID </of>  </Arg>   
+        </onNotifyRemoveEquip>
     </BaseMethods>
 
     <CellMethods>
@@ -416,6 +434,10 @@
         <cellUndressEquipment>
             <Arg>   UINT32          </Arg>
         </cellUndressEquipment>
+
+        <cellLeaseExpireRemoveEquip>
+            <Arg>   UNIQUE_ID       </Arg>
+        </cellLeaseExpireRemoveEquip>
 
         <unlockBodyEquips>
         </unlockBodyEquips>
@@ -445,8 +467,8 @@
             <Arg>   UINT16      </Arg>
             <Arg>   UUID        </Arg>
             <Arg>   UINT32      </Arg>
-            <Arg>   UINT64      </Arg>
             <Arg>   PYTHON      </Arg>
+            <Arg>   ITEM_ID     </Arg>
         </cellEquipSoulSocket>
 
         <reqEquipSoulSocket> <Exposed/>
@@ -475,6 +497,23 @@
             <Arg>   UINT64      </Arg>
             <Arg>   UINT8       </Arg>
         </cellEquipGlyphWashing>
+
+        <reqEquipWash> <Exposed/>
+            <Arg>      UINT8       </Arg>
+            <Arg>      UINT32      </Arg>
+            <Arg>      UINT64      </Arg>
+            <Arg>      UINT8       </Arg>
+            <Arg>      UINT16      </Arg>
+        </reqEquipWash>
+
+        <cellEquipWash>
+            <Arg>   OP_STAT     </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT64      </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT32      </Arg>
+        </cellEquipWash>
 
         <reqEquipBless> <Exposed/>
             <Arg>      UINT8                        </Arg>
@@ -601,6 +640,7 @@
         <onRemoveEquipNotifyCell>
             <Arg>   UNIQUE_ID   </Arg>
         </onRemoveEquipNotifyCell>
+        
     </CellMethods>
 
     <ClientMethods>
@@ -645,7 +685,7 @@
             <Arg>      UINT8                        </Arg>
             <Arg>      UINT16                       </Arg>
             <Arg>      UINT32                       </Arg>
-            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT16                        </Arg>
             <Arg>      UINT8                        </Arg>
         </onEquipBlessSucc>
 
@@ -674,9 +714,9 @@
             <Arg>      UNIQUE_ID                    </Arg>
         </onRemoveEquipDrop>
 
-        <onInitEquipDropData>
+        <onInitEquipDropInfo>
             <Arg>      EQUIP_DROP_MGR_DATA_INFO     </Arg>
-        </onInitEquipDropData>
+        </onInitEquipDropInfo>
 
         <onEquipDropStateChange>
             <Arg>      UNIQUE_ID                    </Arg>
@@ -717,13 +757,22 @@
             <Arg>      GRIDID               </Arg>
         </onEquipBindValueWashingFailed>
 
+        <onEquipWashReply>
+            <Arg>      UINT8                </Arg>
+            <Arg>      UNICODE              </Arg>
+            <Arg>      GRIDID               </Arg>
+            <Arg>      UNIQUE_ID            </Arg>
+            <Arg>      UINT8                </Arg>
+            <Arg>      UINT16               </Arg>
+        </onEquipWashReply>
+
         <onEquipUpgradeSucc>
             <Arg>      UINT8                </Arg>
             <Arg>      GRIDID               </Arg>
             <Arg>      UINT8                </Arg>
             <Arg>      UINT32               </Arg>
             <Arg>      UINT8                </Arg>
-            <Arg>      UINT8                </Arg>
+            <Arg>      UINT16                </Arg>
             <Arg>      UINT8                </Arg>
         </onEquipUpgradeSucc>
 
@@ -772,7 +821,26 @@
             <Arg>      UINT32           </Arg>
             <Arg>      UINT8            </Arg>
             <Arg>      UINT8            </Arg>
+            <Arg>      ITEMID           </Arg>
         </onEquipSoulSocketSucc>
+
+        <onSetEquipTakeInfo>
+            <Arg>   UNIQUE_ID           </Arg>
+            <Arg>   PLAYER_GBID         </Arg>
+            <Arg>   INT64               </Arg>
+        </onSetEquipTakeInfo>
+        <onSetEquipReturnTime>
+            <Arg>   UNIQUE_ID           </Arg>
+            <Arg>   INT64               </Arg>
+        </onSetEquipReturnTime>
+        <onSetEquipPrice>
+            <Arg>   UNIQUE_ID           </Arg>
+            <Arg>   INT64               </Arg>
+        </onSetEquipPrice>
+
+        <onEquipGlyphStatusChange>
+            <Arg>      ARRAY <of>  CLI_GLYPH_STATUS_CHANGE_INFO </of>  </Arg>
+        </onEquipGlyphStatusChange>
     </ClientMethods>
 </root>
 

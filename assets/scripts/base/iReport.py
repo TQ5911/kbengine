@@ -60,7 +60,7 @@ class reportInfo(object):
 
     def __eq__(self, otherReport):
         return self.beReportRoleId == otherReport.beReportRoleId and self.beReportRoleName == otherReport.beReportRoleName and\
-              self.reportType == otherReport.reportType and self.chatRef == otherReport.chatRef and self.desc == otherReport.desc 
+              list(self.reportType) == list(otherReport.reportType) and self.chatRef == otherReport.chatRef and self.desc == otherReport.desc 
 
     def __str__(self):
         return f'reportInfo(beReportRoleId={self.beReportRoleId}, beReportRoleName={self.beReportRoleName}, reportType={self.reportType}, chatRef={self.chatRef}, desc={self.desc})'
@@ -114,6 +114,7 @@ class IReport(object):
             return True
 
         self.setTempMiscProp(gameconst.EntityPropsEnum.reportTimestamp, now + 3)
+        return False
 
     @gamedecorator.limitcall(1)
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('report', {}).get('type', 'report'))
@@ -161,7 +162,7 @@ class IReport(object):
 
     def _reqReportResponse(self, httpCode, jsonData, headers, success, *args):
         LOG_INFO("IReport::_reqReportResponse", httpCode, jsonData, headers, success)
-        self.popTempMiscProp(gameconst.EntityPropsEnum.reportTimestamp, 0)
+        #self.popTempMiscProp(gameconst.EntityPropsEnum.reportTimestamp, 0)
         if not (httpCode == 200 and success):
             self.onMessagePre(MMD.datas.reportFail_serverError, [])
             self.onReportResponseFailed()

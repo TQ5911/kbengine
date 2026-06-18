@@ -134,5 +134,77 @@ datas = _tools.RODict({
     "limitedTime": _tools.RODict({
         "ID": "limitedTime",
         "value": "限时上架至{0}",
+    }),
+    "webTopUp": _tools.RODict({
+        "ID": "webTopUp",
+        "value": 54000270,
+    }),
+    "monthCardFailedMail": _tools.RODict({
+        "ID": "monthCardFailedMail",
+        "value": 37000031,
+    }),
+    "monthCardDailyMail": _tools.RODict({
+        "ID": "monthCardDailyMail",
+        "value": 37000032,
+    }),
+    "miniMonthlyPassPerks": _tools.RODict({
+        "ID": "miniMonthlyPassPerks",
+        "value": ('可使用交易行上架商品', '装备掉落可交易概率加成', '精灵召唤月卡特权'),
+    }),
+    "premiumMonthlyPassPerks": _tools.RODict({
+        "ID": "premiumMonthlyPassPerks",
+        "value": ('资源商城月卡特权', '装备掉落可交易概率加成', '离线挂机增加8小时，且可获得道具奖励'),
+    }),
+    "monthCardRenew": _tools.RODict({
+        "ID": "monthCardRenew",
+        "value": "续购",
+    }),
+    "monthCardActive": _tools.RODict({
+        "ID": "monthCardActive",
+        "value": "激活",
+    }),
+    "rechargeSuccess": _tools.RODict({
+        "ID": "rechargeSuccess",
+        "value": 54002400,
+    }),
+    "cancelPayment": _tools.RODict({
+        "ID": "cancelPayment",
+        "value": 54002401,
+    }),
+    "paymentTimeout": _tools.RODict({
+        "ID": "paymentTimeout",
+        "value": 54002402,
+    }),
+    "paySendLimit": _tools.RODict({
+        "ID": "paySendLimit",
+        "value": 54002403,
+    }),
+    "iOSNotOpenYet": _tools.RODict({
+        "ID": "iOSNotOpenYet",
+        "value": 54002404,
+    }),
+    "monthlyExclusive": _tools.RODict({
+        "ID": "monthlyExclusive",
+        "value": 54002405,
+    }),
+    "itemOffShelf": _tools.RODict({
+        "ID": "itemOffShelf",
+        "value": 54002406,
+    }),
+    "buyLimitReached": _tools.RODict({
+        "ID": "buyLimitReached",
+        "value": 54002407,
+    }),
+    "createOrderError": _tools.RODict({
+        "ID": "createOrderError",
+        "value": 54002408,
+    }),
+    "paymentFailed": _tools.RODict({
+        "ID": "paymentFailed",
+        "value": 54002409,
+    }),
+    "paymentFailedKefu": _tools.RODict({
+        "ID": "paymentFailedKefu",
+        "value": 54002410,
     })
 })

@@ -40,7 +40,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         super().doNext()
 
     def onTimer(self, timer, userData):
-        self._onTimer(timer, userData)
+        self._onTimerTrigger(timer, userData)
         if userData == gametimer.SIEGE_WAR_STUB_GET_STATE:
             # 如果城战状态为空，则请求跨服
             if not self.stateSynced:
@@ -88,7 +88,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                         declaration = ownerName + ': ' + self.cityDefenseDeclaration
                     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
                         mailId, attach, [ownerName, declaration], title, content, 0, timestamp, 0, 1,
-                        utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_SIGNUP)
+                        utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_SIGNUP)
 
                     content = content.replace('{0}', ownerName)
                     content = content.replace('{1}', declaration)
@@ -190,7 +190,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             content = MAMAD.datas[mailId]['content']
             gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
                 mailId, attach, [], title, content, 0, utils.curTS(), 0, 1,
-                utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_FAILED)
+                utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_FAILED)
             return
 
         #todo 广播邮件
@@ -203,7 +203,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         content = MAMAD.datas[mailId]['content']
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
             mailId, attach, [firstBiddingServerName, firstBiddingGuildName, firstBiddingAvatarName, str(firstBiddingPrice)], 
-            title, content, 0, utils.curTS(), 0, 1, utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS)
+            title, content, 0, utils.curTS(), 0, 1, utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS)
 
         #玉玺
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -262,7 +262,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         LOG_DBG('[lj]on siege war declare war official mail id:', mailId, 'args:', args, content)
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
             mailId, attach, args, title, content, 0, utils.curTS(), 0, 1,
-            utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_NOTICE_BATTLE)
+            utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_NOTICE_BATTLE)
 
         for i in range(len(args)):
             content = content.replace('{' + str(i) + '}', args[i])
@@ -323,7 +323,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             isWinner = result['isWinner']
 
             if isMvp:
-                _addVal = dropAward.MailWealthVal()
+                _addVal = dropAward.MailAttachVal()
                 _addVal.addWealthByItemId(CBC.datas['cityBattle_MvpReward']['value'], 1)
                 mailAssistor.sendMailToPlayers([gbId], CBC.datas['cityBattle_mailMvp']['value'], extraAttach=_addVal, srcType=AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_REWARD_MVP)
 
@@ -333,7 +333,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                     break
                 lv += 1
             if lv >= 0:
-                _addVal = dropAward.MailWealthVal()
+                _addVal = dropAward.MailAttachVal()
                 if isWinner:
                     _addVal.addWealthByItemId(rewardLevels[lv][1], 1)
                 else:
@@ -450,7 +450,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     #给玩家发奖励
     def onCitySendReward(self, rewardId, targetGbId):
         LOG_DBG('[lj]on city send reward', rewardId, targetGbId)
-        _addVal = dropAward.MailWealthVal()
+        _addVal = dropAward.MailAttachVal()
         _addVal.addWealthByRewardId(rewardId)
         mailAssistor.sendMailToPlayers([targetGbId], CBC.datas['cityBattle_mailReward']['value'], extraAttach=_addVal, srcType=AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_REWARD_LEADER)
 
@@ -495,7 +495,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 content = MAMAD.datas[mailId]['content']
                 gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
                     mailId, None, [str(dataList[-1]), str(dataList[6]), str(dataList[1])], title, content, 0, utils.curTS(), 0, 1,
-                    utils.getPlayerMaxLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BROATCAST_LEADER)
+                    utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BROATCAST_LEADER)
             lastCityOwnerGuildName = self.cityOwnerGuildName
             self.cityOwnerUUID = dataList[0]
             self.cityOwnerName = dataList[1]

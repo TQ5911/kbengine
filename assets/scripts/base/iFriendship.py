@@ -18,6 +18,7 @@ import LogTrackingMgr
 import relationConfig_relationConfig as RC_RCD
 import agent_agentFunction as A_AFD
 import agent_agentConfig as A_ACD
+import teamMatch_matchConfig as TM_MCD
 
 
 class IFriendship(object):
@@ -59,15 +60,15 @@ class IFriendship(object):
         _ed = utils.curTS() - gameconst.ONE_DAY_COST_SECONDS * RC_RCD.datas['relationApplicationExpiryDate']['value']
         redisUtils.FriendUtils.getFriendInitInfo(self.gbID, _ed, self._onGetFriendInitList)
 
-    def _onGetFriendInitList(self, cid, err, initList):
-        LOG_DBG("IFriendship::_onGetFriendInitLis", err, initList)
+    def _onGetFriendInitList(self, err, ctx, step):
+        LOG_DBG("IFriendship::_onGetFriendInitLis", err, ctx)
         if err:
-            LOG_ERR("IFriendship::_onGetFriendInitLis error={}".format(err))
+            LOG_ERR("IFriendship::_onGetFriendInitLis error={}, step={}".format(err, step))
             return
 
-        reqList = initList[0]
-        blockList = initList[1]
-        recentList = initList[2]
+        reqList = ctx.friendReqList
+        blockList = ctx.blockList
+        recentList = ctx.recentList
 
         _needUpdateList = self.friendship.initRecv(reqList)
         self.friendship.initBlack(blockList, self)
@@ -83,9 +84,9 @@ class IFriendship(object):
     def _onGetRecvUsersInfo(self, fcValList, recentList):
         LOG_DBG("IFriendship::_onGetRecvUsersInfo", fcValList)
         self.friendship.updateRecvInInit(fcValList)
-        self._loadMsgs(None, [], [], recentList)
+        self._loadMsgs([], recentList, None, [])
 
-    def _loadMsgs(self, err, ret, gbIds, recentList):
+    def _loadMsgs(self, gbIds, recentList, err, ret):
         LOG_DBG('IFriendship::_loadMsgs', err, ret, gbIds, recentList)
         if err:
             LOG_ERR("IFriendship::_loadMsgs error={}".format(err))
@@ -102,7 +103,7 @@ class IFriendship(object):
             redisUtils.FriendUtils.getMsgsList(
                 _gbIds,
                 self.gbID,
-                lambda cid, err, ret: self._loadMsgs(err, ret, _gbIds, recentList)
+                functools.partial(self._loadMsgs, _gbIds, recentList)
             )
             return
 
@@ -203,6 +204,7 @@ class IFriendship(object):
 
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
+    @gamedecorator.limitcall(5, keyFunc=lambda x: '{}'.format(*x))
     def sendFriendRequest(self, exposed, gbId):
         LOG_INFO("IFriends::sendFriendRequest gbId={}".format(gbId))
         if self.friendship.isRecvReq(gbId):
@@ -254,6 +256,8 @@ class IFriendship(object):
 
         LogTrackingMgr.LogTrackingMgr.Friend_Opr(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             fcVal.gbId,
             len(self.friendship.friendsDict),
             gameconst.FRIEND_OPR_SEND_REQ,
@@ -271,8 +275,8 @@ class IFriendship(object):
             'level': rcVal['level'],
         }
 
-    def _sendFriendRequestAfterAddRedis(self, gbId, now, cid, err, ret):
-        LOG_INFO("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
+    def _sendFriendRequestAfterAddRedis(self, gbId, now, err, ret, step):
+        LOG_INFO("IFriends::_sendFriendRequestAfterAddRedis ret={}, step".format(ret, step))
         if err:
             LOG_ERR("IFriends::_sendFriendRequestAfterAddRedis error={}".format(err))
             return
@@ -290,6 +294,8 @@ class IFriendship(object):
         elif ret != 0:
             LOG_WARN("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
             return
+
+        self.onMessagePre(RC_RCD.datas['relationFriendApplySentMsg']['value'], [])
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [gbId],
@@ -453,6 +459,8 @@ class IFriendship(object):
         self.friendship.updateFriend(fcVal, self)
         if src == gameconst.ADD_FRIEND_ACCEPT:
             LogTrackingMgr.LogTrackingMgr.Friend_Opr(
+                self.gbID,
+                self.accountEntity.clientDistinctId, 
                 self.gbID,
                 fcVal.gbId,
                 len(self.friendship.friendsDict),
@@ -683,6 +691,8 @@ class IFriendship(object):
 
         LogTrackingMgr.LogTrackingMgr.Friend_Opr(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             fVal.gbId,
             len(self.friendship.friendsDict),
             gameconst.FRIEND_OPR_DELETE,
@@ -750,6 +760,8 @@ class IFriendship(object):
 
         LogTrackingMgr.LogTrackingMgr.Friend_Opr(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             fcVal.gbId,
             len(self.friendship.friendsDict),
             gameconst.FRIEND_OPR_BLACKLIST,
@@ -813,12 +825,12 @@ class IFriendship(object):
             gbId,
             msg,
             _newTS,
-            lambda cid, err, ret: self._onSendFriendMsg(cid, err, ret, gbId, _newTS, msg)
+            functools.partial(self._onSendFriendMsg, gbId, _newTS, msg),
         )
 
-    def _onSendFriendMsg(self, cid, err, ret, gbId, ts, msg):
+    def _onSendFriendMsg(self, gbId, ts, msg, err, ret, step):
         if err:
-            LOG_ERR("IFriends::_onSendFriendMsg error={}".format(err))
+            LOG_ERR("IFriends::_onSendFriendMsg error={} step={}".format(err, step))
             return
 
         if ret == -1:
@@ -849,6 +861,8 @@ class IFriendship(object):
             _fVal.box.onRecvMsg(self.gbID, ts, msg)
 
         LogTrackingMgr.LogTrackingMgr.Friend_Msg(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             gbId,
             msg,
@@ -954,6 +968,7 @@ class IFriendship(object):
 
         redisUtils.RedisUtils.onModifyAttr(self.gbID, dataDict)
 
+    @gamedecorator.crossServer
     def getAvatarInterInfo(self, exposed, gbId):
         LOG_DBG('ckz: getAvatarInterInfo ', gbId)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase\
@@ -1337,3 +1352,40 @@ class IFriendship(object):
         self.mainChnUIStatus = mainChnUIStatus
     # ------------------------ 角色授权结束 ---------------------------------------
 
+    def doInviteCheck(self, targetGbId, inviteType, teamType, needTransfer):
+        LOG_DBG('doInviteCheck ', targetGbId, inviteType, teamType, needTransfer)
+        if self.friendship.isBlock(targetGbId):
+            if not needTransfer:
+                needMsg = inviteType != gameconst.InviteType.GUILD
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                                [targetGbId, ], 'onMessagePre', (TM_MCD.datas['inviteDeniedMsg']['value'], [self.getRoleCacheAttr('name')]),
+                                None, '', ())
+                
+            LOG_WARN('doInviteCheck, blocked ', targetGbId)   
+            return
+        if needTransfer:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                                                                [targetGbId],
+                                                                'doInviteCheck',
+                                                                (self.gbID, inviteType, teamType, False),
+                                                                None,
+                                                                '',
+                                                                ())
+        else:
+            if teamType == gameconst.TeamType.TEAM:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                                                                [targetGbId],
+                                                                'doApplyInviteTeam',
+                                                                (self.gbID, self.getRoleCacheAttr('name'), inviteType),
+                                                                None,
+                                                                '',
+                                                                ())
+            elif teamType == gameconst.TeamType.RAID:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                                                                [targetGbId],
+                                                                'doTryApplyInviteRaid',
+                                                                (self.gbID, self.getRoleCacheAttr('name'), inviteType),
+                                                                None,
+                                                                '',
+                                                                ())

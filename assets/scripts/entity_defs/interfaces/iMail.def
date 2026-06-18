@@ -22,7 +22,7 @@
     </Properties>
 
     <BaseMethods>
-        <onNewMailInsertSucc>
+        <onInsertNewMailSucc>
             <Arg>         MAILID        </Arg>
             <Arg>         MAIL_GBID     </Arg>
             <Arg>         UNICODE       </Arg>
@@ -34,7 +34,7 @@
             <Arg>         UNICODE       </Arg>
             <Arg>         UINT32        </Arg>
             <Arg>         BOOL          </Arg>
-        </onNewMailInsertSucc>
+        </onInsertNewMailSucc>
         <sendOneGlobalMail>
             <Arg>         GLOBAL_MAIL_VAL        </Arg>
         </sendOneGlobalMail>

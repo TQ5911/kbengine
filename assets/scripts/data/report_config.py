@@ -82,5 +82,9 @@ datas = _tools.RODict({
     "reportFail_empty": _tools.RODict({
         "ID": "reportFail_empty",
         "value": 54001828,
+    }),
+    "reportDoubleCheck": _tools.RODict({
+        "ID": "reportDoubleCheck",
+        "value": 54001829,
     })
 })

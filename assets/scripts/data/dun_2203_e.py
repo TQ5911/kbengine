@@ -22,13 +22,13 @@ datas ={
   },
   "1005": {
     "type": "dunEnd",
-    "exitTime": 65.0,
+    "exitTime": 30.0,
     "isDungeonDone": 1,
     "transition": {}
   },
   "1008": {
     "type": "dunFailed",
-    "exitTime": 20.0,
+    "exitTime": 30.0,
     "transition": {}
   },
   "1013": {
@@ -49,7 +49,7 @@ datas ={
       22030001
     ],
     "num": 1,
-    "lv": "45",
+    "lv": "55",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -154,7 +154,7 @@ datas ={
       22030002
     ],
     "num": 1,
-    "lv": "45",
+    "lv": "55",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -216,7 +216,7 @@ datas ={
       22030003
     ],
     "num": 1,
-    "lv": "45",
+    "lv": "55",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

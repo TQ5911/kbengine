@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "guildChannelCD": _tools.RODict({
         "ID": "guildChannelCD",
-        "value": 5,
+        "value": 60,
     }),
     "zhaomuChannelCD": _tools.RODict({
         "ID": "zhaomuChannelCD",
@@ -465,7 +465,7 @@ datas = _tools.RODict({
     }),
     "teamFullAutoStart": _tools.RODict({
         "ID": "teamFullAutoStart",
-        "value": "满员自动开始挑战",
+        "value": "满员自动开始挑战（同队伍仅首次挑战生效）",
     }),
     "copySettlementInterval": _tools.RODict({
         "ID": "copySettlementInterval",
@@ -478,5 +478,37 @@ datas = _tools.RODict({
     "errorPassword": _tools.RODict({
         "ID": "errorPassword",
         "value": "<color=red>密码错误</color>",
+    }),
+    "teamMatch_guildInvitation": _tools.RODict({
+        "ID": "teamMatch_guildInvitation",
+        "value": 54000630,
+    }),
+    "teamMatch_allInvitationSend": _tools.RODict({
+        "ID": "teamMatch_allInvitationSend",
+        "value": 54000631,
+    }),
+    "teamMatch_invitationCd": _tools.RODict({
+        "ID": "teamMatch_invitationCd",
+        "value": 54000632,
+    }),
+    "teamMatch_guildListEmpty": _tools.RODict({
+        "ID": "teamMatch_guildListEmpty",
+        "value": 54000635,
+    }),
+    "teamMatch_guildInvitationCd": _tools.RODict({
+        "ID": "teamMatch_guildInvitationCd",
+        "value": 60,
+    }),
+    "teamMatch_oneInvitationCd": _tools.RODict({
+        "ID": "teamMatch_oneInvitationCd",
+        "value": 10,
+    }),
+    "teamInviteMapMsg": _tools.RODict({
+        "ID": "teamInviteMapMsg",
+        "value": 54000634,
+    }),
+    "teammateChangeNameMsg": _tools.RODict({
+        "ID": "teammateChangeNameMsg",
+        "value": 54000636,
     })
 })

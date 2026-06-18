@@ -174,7 +174,7 @@ datas = _tools.RODict({
         "floor": 1,
         "type": 1,
         "weight": 5,
-        "sign": 0,
+        "sign": 2,
     }),
     3201: _tools.RODict({
         "ID": 3201,
@@ -323,6 +323,13 @@ datas = _tools.RODict({
         "weight": 10,
         "sign": 0,
     }),
+    3224: _tools.RODict({
+        "ID": 3224,
+        "floor": 2,
+        "type": 1,
+        "weight": 5,
+        "sign": 2,
+    }),
     3301: _tools.RODict({
         "ID": 3301,
         "floor": 3,
@@ -469,15 +476,22 @@ datas = _tools.RODict({
         "type": 1,
         "weight": 10,
         "sign": 0,
+    }),
+    3324: _tools.RODict({
+        "ID": 3324,
+        "floor": 3,
+        "type": 1,
+        "weight": 5,
+        "sign": 2,
     })
 })
 minKey = 3100
-maxKey = 3323
+maxKey = 3324
 
 floor2Rooms = _tools.RODict({
     1: _tools.ROList([3101, 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109, 3110, 3111, 3112, 3113, 3114, 3115, 3116, 3117, 3122, 3123, 3124]),
-    2: _tools.ROList([3201, 3202, 3203, 3204, 3205, 3206, 3207, 3208, 3209, 3210, 3211, 3212, 3213, 3214, 3215, 3216, 3217, 3222, 3223]),
-    3: _tools.ROList([3301, 3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311, 3312, 3313, 3314, 3315, 3316, 3317, 3322, 3323]),
+    2: _tools.ROList([3201, 3202, 3203, 3204, 3205, 3206, 3207, 3208, 3209, 3210, 3211, 3212, 3213, 3214, 3215, 3216, 3217, 3222, 3223, 3224]),
+    3: _tools.ROList([3301, 3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311, 3312, 3313, 3314, 3315, 3316, 3317, 3322, 3323, 3324]),
 })
 floor2Cow = _tools.RODict({
     1: 3121,
@@ -485,9 +499,30 @@ floor2Cow = _tools.RODict({
     3: 3321,
 })
 floor2SignMapIds = _tools.RODict({
-    1: _tools.ROList([3116]),
-    2: _tools.ROList([3216]),
-    3: _tools.ROList([3316]),
+    1 : _tools.RODict({
+        1 : _tools.ROList([
+            3116,
+        ]),
+        2 : _tools.ROList([
+            3124,
+        ]),
+    }),
+    2 : _tools.RODict({
+        1 : _tools.ROList([
+            3216,
+        ]),
+        2 : _tools.ROList([
+            3224,
+        ]),
+    }),
+    3 : _tools.RODict({
+        1 : _tools.ROList([
+            3316,
+        ]),
+        2 : _tools.ROList([
+            3324,
+        ]),
+    }),
 })
 floorTypeMapDic = _tools.RODict({
     1 : _tools.RODict({
@@ -544,6 +579,7 @@ floorTypeMapDic = _tools.RODict({
             3217,
             3222,
             3223,
+            3224,
         ]),
         4 : _tools.ROList([
             3220,
@@ -573,6 +609,7 @@ floorTypeMapDic = _tools.RODict({
             3317,
             3322,
             3323,
+            3324,
         ]),
         4 : _tools.ROList([
             3320,

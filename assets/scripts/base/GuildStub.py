@@ -136,7 +136,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def doCreateGuild(self, createData, gbId, box, ctx):
         gameglobal.localBaseApp.getRedisClient().sadd(
@@ -173,6 +173,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _props = {
             'guildName': createData['guildName'],
             'desc': createData['desc'],
+            'publicDesc': createData['publicDesc'],
             'dspFlag': createData['dspFlag'],
             'guildUUID': _guildUUID,
             'joinCond': createData['joinCond'],
@@ -304,13 +305,13 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         args = cPickle.loads(args)
         getattr(_gcVal.guildBox, func)(uuid, senderServerId, *args)
 
-    def syncGuildMineWarToSpaceMgr(self, guildUUID, box, onRegister):
+    def syncGuildMineWarToSpaceMgr(self, guildUUID, box, onRegister, extra):
         _gcVal = self.guildDic.get(guildUUID)
         if not _gcVal:
-            box.onSyncGuildMineWarResult(guildUUID, '', 0, 0, '', {}, onRegister)
+            box.onSyncGuildMineWarResult(guildUUID, '', 0, 0, '', {}, onRegister, extra)
             return
 
-        _gcVal.guildBox.getGuildMineWarForRegister(box, onRegister)
+        _gcVal.guildBox.getGuildMineWarForRegister(box, onRegister, extra)
 
     def onGuildUnionChangeToLog(self, changeType, guildUUID1, guildUUID2, relationType, endTime):
         if guildUUID1 not in self.guildDic:
@@ -329,9 +330,10 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 _opr = gameconst.GUILD_HOSTILE_CEASE
 
         LogTrackingMgr.LogTrackingMgr.Guild_Relation(
+            'GuildStub',
+            '', 
             guildUUID1,
             guildUUID2,
             _opr,
             endTime
         )
-

@@ -12,6 +12,9 @@ import gametimer
 import petData_unlock as PDUD
 import petData_petGear as PDPGD
 import itemData_itemData_set as IDIDS
+import experience_exp as EXPD
+import gearBase_gearConst as GB_GCD
+import qualityData_qualityData as QD_QDD
 
 import dataUtils
 import LogTrackingMgr
@@ -129,7 +132,7 @@ class LingShou(userType.UserSingleType):
         })
         return clientData
 
-    def canReplaceEquip(self, slotId, itemId):
+    def canReplaceEquip(self, owner, slotId, itemId):
         if slotId < 0:
             return False
 
@@ -137,8 +140,35 @@ class LingShou(userType.UserSingleType):
             return False
 
         if itemId in self.equipList:
+            owner.onMessagePre(PDSD.datas['petGearWarningMsg']['value'], [])
             return False
 
+        hasPetGearRule = False
+        petGearRules = PDSD.datas['petGearRule']['value']
+        for petGearRule in petGearRules:
+            quality = petGearRule[0]
+            sameCount = petGearRule[2]
+            if self.quality == quality:
+                hasPetGearRule = True
+                # 判断不同类型个数
+                totalCount = 1
+                tmpTypeList = [PDPGD.datas[itemId]['type']]
+                for idx, itemId in enumerate(self.equipList):
+                    if idx == slotId:
+                        continue
+                    if itemId > 0:
+                        totalCount += 1
+                        tmpTypeList.append(PDPGD.datas[itemId]['type'])
+                # 检查是否超过N个相同的
+                if totalCount - len(set(tmpTypeList)) > sameCount:
+                    if quality == gameconst.ItemQuality.ORANGE:
+                        owner.onMessagePre(PDSD.datas['petGearRuleTip1']['value'], [])
+                    elif quality == gameconst.ItemQuality.RED:
+                        owner.onMessagePre(PDSD.datas['petGearRuleTip2']['value'], [])
+                    return False
+                break
+        if not hasPetGearRule:
+            return False
         return True
 
     def modifyPetEquip(self, owner, slotId, itemId):
@@ -160,7 +190,11 @@ class LingShou(userType.UserSingleType):
         self.exp = exp
         self.updateLingShouBaseScore()
         owner.updatePetScore()
-        owner.cell.updateLevelProps(self.petId, oldLevel, self.level)       
+        owner.cell.updateLevelProps(self.petId, oldLevel, self.level)
+    
+    @staticmethod
+    def getPetInfo(petId, quality, level, equipList):
+        return {'pet_id':petId, 'pet_quality':quality, 'pet_level':level, 'pet_equip':equipList}   
 
 class LingShouBattleListVal(userType.UserSingleType):
     def __init__(self, battleName, petIdList):
@@ -183,6 +217,14 @@ class LingShouBattleListVal(userType.UserSingleType):
                 return self.petIdList[i]
         return 0
 
+    def getQualityData(self):
+        qualityData = {}
+        for petId in self.petIdList:
+            if petId > 0:
+                quality = PDPD.datas[petId]['petRank']
+                qualityData[quality] = qualityData.get(quality, 0) + 1
+        return qualityData
+    
     def setBattleName(self, name):
         self.battleName = name
 
@@ -285,7 +327,7 @@ class LingShouInfo(userType.UserSingleType):
         pet.updateLingShouScore(owner)
         owner.onMessagePre(PDSD.datas['petUnlockTips']['value'], [str(IDIDS.petIndexDatas[pet.petId])])
 
-        LogTrackingMgr.LogTrackingMgr.Pet_Get(owner.gbID, addContext.extra['opUUID'], pet.petId, pet.quality, addContext.reason)
+        LogTrackingMgr.LogTrackingMgr.pet_get(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, addContext.extra['opUUID'], pet.petId, pet.quality)
 
     def addLingShou(self, owner, addContext):
         pet = LingShou()
@@ -311,6 +353,9 @@ class LingShouInfo(userType.UserSingleType):
 
     def getLingShouByPetId(self, petId):
         return self.pets.get(petId, None)
+    
+    def getAllPets(self):
+        return self.pets
 
     def isInBattleList(self, owner, petId):
         if petId in self.battleList[owner.battleIndex].petIdList:
@@ -329,6 +374,40 @@ class LingShouInfo(userType.UserSingleType):
 
     def updateBattleList(self, owner, battleIndex, slotId, petId):
         LOG_INFO("updateBattleList", battleIndex, slotId, petId)
+        if petId > 0:
+            petQuality = PDPD.datas[petId]['petRank']
+            # 检查等级穿戴限制
+            qualityData = QD_QDD.datas.get(petQuality, None)
+            if not qualityData:
+                LOG_WARN('   in updateBattleList, missing quality data cfg ', petQuality)
+                return False
+            
+            equipLimits = qualityData['petLimit']
+            if not equipLimits:
+                LOG_WARN('   in updateBattleList, missing quality limit data cfg ', petQuality)
+                return False
+
+            lastIdx = -1
+            playerLevel = owner.getRoleCacheAttr('level')
+            for idx, equipLimit in enumerate(equipLimits):
+                # 特殊的标识，标识不开放
+                if equipLimit == 999:
+                    break
+                if playerLevel < equipLimit:
+                    break
+                lastIdx = idx + 1
+            
+            if lastIdx <= -1:
+                owner.onMessagePre(PDSD.datas['petGearLowRoleLevel']['value'], [])
+                LOG_WARN('   in updateBattleList, missing pet no cfg ', petQuality)
+                return False
+        
+            # 检查等级穿戴限制
+            qualityData = self.battleList[battleIndex].getQualityData()
+            if qualityData.get(petQuality, 0) >= lastIdx:
+                owner.onMessagePre(PDSD.datas['petGearLowRoleLevel']['value'], [])
+                return False
+        
         oldPetId = self.battleList[battleIndex].getPetIdBySlot(slotId)
         self.battleList[battleIndex].setPetIdBySlot(petId, slotId)
         battleType = gameconst.PetMakeTeamType.LEAVE
@@ -344,17 +423,22 @@ class LingShouInfo(userType.UserSingleType):
         if petData:
             petLevel = petData.level
             petQuality = petData.quality
+            petEquipList = petData.equipList
             joinBattleCount = 0
             for v in self.battleList:
                 if v.checkPet(petId):
                     joinBattleCount += 1
             battleCount = self.battleList[battleIndex].getPetCount()
-
-            LogTrackingMgr.LogTrackingMgr.Pet_MakeTeam(owner.gbID, owner.getAvatarLevel(), battleIndex, battleType, \
-                                                        petId, petQuality, petLevel, joinBattleCount, battleCount)
+            petTeamInfo = []
+            pets = self.getAllPets()
+            for _, pet in pets.items():
+                petTeamInfo.append(LingShou.getPetInfo(pet.petId, pet.quality, pet.level, pet.equipList))
+            LogTrackingMgr.LogTrackingMgr.pet_make_team(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, owner.getAvatarLevel(), battleIndex, battleType, \
+                                                        petId, petQuality, petLevel, petEquipList, joinBattleCount, battleCount, petTeamInfo)
         
         owner.client.onUpdateLingShouBattleList(battleIndex, petId, slotId)
-
+        return True
+    
     def modifyBattleListName(self, battleIndex, name):
         self.battleList[battleIndex].setBattleName(name)
 

@@ -54,5 +54,9 @@ datas = _tools.RODict({
     "CDK_anomaly": _tools.RODict({
         "ID": "CDK_anomaly",
         "value": 54000354,
+    }),
+    "CDK_access": _tools.RODict({
+        "ID": "CDK_access",
+        "value": 54000356,
     })
 })

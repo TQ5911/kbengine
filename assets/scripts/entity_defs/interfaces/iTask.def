@@ -33,10 +33,6 @@
             <Arg>       PYTHON     </Arg>
         </onCheckSingleTaskCellCondSucc>
 
-        <onTaskAvatarDie>
-            <Arg>           SPACE_NO         </Arg>
-        </onTaskAvatarDie>
-
         <startTaskFailed>
             <Arg>       TASK_ID     </Arg>
             <Arg>       UINT8       </Arg>
@@ -126,6 +122,11 @@
             <Arg>      TASK_ID         </Arg>
             <Arg>      BOOL            </Arg>
         </onCheckSameMap>
+
+        <submitTaskCheckCB>
+            <Arg>      TASK_ID         </Arg>
+            <Arg>      UINT8           </Arg>
+        </submitTaskCheckCB>
     </BaseMethods>
 
     <CellMethods>
@@ -140,18 +141,18 @@
             <Arg>       TASK_ID         </Arg>
             <Arg>       DIALOG_ID       </Arg>
         </reqUpdateTaskByTalkToNpc>
-        <startClaimTask>
+        <doStartClaimTask>
             <Arg>       TASK_ID         </Arg>
             <Arg>       METHOD_NAME     </Arg>
             <Arg>       METHOD_ARGS     </Arg>
             <Arg>       PYTHON          </Arg>
-        </startClaimTask>
-        <claimTaskFailed>
+        </doStartClaimTask>
+        <onClaimTaskFailed>
             <Arg>       TASK_ID         </Arg>
             <Arg>       PYTHON          </Arg>
             <Arg>       INT32          </Arg>
             <Arg>       PYTHON          </Arg>
-        </claimTaskFailed>
+        </onClaimTaskFailed>
         <claimTaskSuccCallback>
             <Arg>       TASK_ID         </Arg>
             <Arg>       UUID            </Arg>
@@ -241,6 +242,10 @@
         <checkSameMap>
             <Arg>      TASK_ID         </Arg>
         </checkSameMap>
+
+        <submitTaskCheck>
+            <Arg>      TASK_ID         </Arg>
+        </submitTaskCheck>
     </CellMethods>
 
     <ClientMethods>
@@ -266,5 +271,10 @@
         </onStartPlayCinema>
         <onNoNeedPlayFx>
         </onNoNeedPlayFx>
+
+        <onSubmitCheckResult>
+            <Arg>      TASK_ID         </Arg>
+            <Arg>      UINT8           </Arg>
+        </onSubmitCheckResult>
     </ClientMethods>
 </root>

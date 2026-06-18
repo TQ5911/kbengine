@@ -3,7 +3,6 @@ import sys
 
 __all__ = [
     'ROUTE_NODE_MOVE',
-    'SPACE_ROUTE_MOVE_DONE',
     'CHONGFENG_MOVE_OVER',
     'FLOW_CONTROLLER_FORCE_MOVE',
     'ROUND_TRIP_MOVE',

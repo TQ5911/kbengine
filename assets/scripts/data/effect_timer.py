@@ -480,6 +480,9 @@ def _13080090(self, target, context):
 def _13080091(self, target, context):
     self.addExpAction(int(1.08*467.2793*math.pow(1.063, min( self.level,50)-40)))
 
+def _13080092(self, target, context):
+    self.lockMinHpTime(self, context, context.args.ActionParam[0], context.args.ActionParam[1])
+
 datas = _tools.RODict({ 
     13080000: _tools.RODict({
         "ID": 13080000,
@@ -812,7 +815,11 @@ datas = _tools.RODict({
     13080091: _tools.RODict({
         "ID": 13080091,
         "Action": _13080091
+    }),
+    13080092: _tools.RODict({
+        "ID": 13080092,
+        "Action": _13080092
     })
 })
 minKey = 13080000
-maxKey = 13080091
+maxKey = 13080092

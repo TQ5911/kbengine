@@ -5,7 +5,7 @@ import gameconst
 from KBEDebug import *
 
 
-class BoolResult(userType.UserSingleType):
+class ResultBool(userType.UserSingleType):
     def __init__(self, boolVal, extra=-1):
         self.boolVal = boolVal
         self.extra = extra
@@ -17,7 +17,7 @@ class BoolResult(userType.UserSingleType):
         return '%s, %s' % (self.boolVal, self.extra)
 
 
-class TaskCondResultCls(BoolResult):
+class TaskCondResultCls(ResultBool):
     def __init__(self, boolVal, msgId=0, msgArgs=(), playerName=''):
         super(TaskCondResultCls, self).__init__(boolVal)
         self.msgId = msgId
@@ -30,7 +30,7 @@ class DummyObject(userType.UserSingleType):
         _self.__dict__.update(kwargs)
 
 
-class AwardDetail(userType.UserSingleType):
+class AwardDetailCls(userType.UserSingleType):
     def __init__(self, **args):
         self.__dict__.update(args)
 
@@ -38,7 +38,7 @@ class AwardDetail(userType.UserSingleType):
         try:
             return '::'.join(['{}'] * len(self.__dict__)).format(*self.__dict__.values())
         except Exception as e:
-            LOG_ERR('AwardDetail to json err:', e, vars(self))
+            LOG_ERR('AwardDetailCls to json err:', e, vars(self))
             return ''
 
     def __getstate__(self):

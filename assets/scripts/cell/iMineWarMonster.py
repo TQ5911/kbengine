@@ -3,6 +3,7 @@
 import KBEngine
 from KBEDebug import *
 import formula
+import gameglobal
 import utils
 import gameconst
 import gameengine
@@ -16,15 +17,22 @@ class IMineWarMonster(object):
 
         self.junxuPropId = None
         if formula.inMineWarScene(self.spaceNo):
-            if self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_NONE:
+            if not self.mineWarMonsterFlag:
                 customId, gid = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
                 if customId in gameconst.mineWarMonsterEnumDict:
-                    self.mineWarMonsterType = gameconst.mineWarMonsterEnumDict[customId]
+                    self.mineWarMonsterFlag = gameconst.mineWarMonsterEnumDict[customId]
+                else:
+                    self.mineWarMonsterFlag = gameconst.MineWarMonsterFlag.MINE_MONSTER
                 
             self.initGuildProp()
         
-        if self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_NONE:
+        if self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_MONSTER:
             self.setMineCanAttack(True)
+        elif self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_FLAG:
+            if gameglobal.mineCanAttackBits & self.mineWarMonsterFlag:
+                self.setMineCanAttack(True)
+            else:
+                self.setMineCanAttack(False)
 
     # 根据帮会信息初始化旗帜属性
     def initGuildProp(self):
@@ -34,26 +42,26 @@ class IMineWarMonster(object):
         self.setMineCanAttack(False)
         
         self.recoverTimer = 0
-        if self.spaceMgr and self.mineWarMonsterType in gameconst.mineWarMonsterEnumDict.values():
-            self.spaceMgr.addMineWarMonsterOnInit(self.mineWarMonsterType, self)
+        if self.spaceMgr and self.mineWarMonsterFlag in gameconst.mineWarMonsterEnumDict.values():
+            self.spaceMgr.addMineWarMonsterOnInit(self.mineWarMonsterFlag, self)
             # self.hp = self.fullHp = 10000
-            LOG_INFO('IMineWarMonster::initGuildProp', self.gameEntityId, self.mineWarMonsterType, self.mineWarGuildId)
+            LOG_INFO('IMineWarMonster::initGuildProp', self.gameEntityId, self.mineWarMonsterFlag, self.mineWarGuildId)
             
             # 初始化状态
             if self.isMineWarFlag():
                 self.onMineWarStateChange(self.spaceMgr.mineWarGuildId, self.spaceMgr.mineWarState, self.spaceMgr.mineWarState)
 
     def isMineWarCore(self):
-        return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE
+        return self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_CORE
     
     def isMineWarFlag(self):
-        return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_FLAG
+        return self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_FLAG
     
     def isMineWarFlagBroken(self):
-        return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_BROKEN_FLAG
+        return self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_BROKEN_FLAG
     
     def isMineWarHub(self):
-        return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_HUB
+        return self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_HUB
     
     def onMineWarStateChange(self, guild, oldState, newState):
         LOG_INFO('Monster::onMineWarStateChange', self.gameEntityId, oldState, newState, guild)
@@ -96,15 +104,15 @@ class IMineWarMonster(object):
             else:
                 self.setMineCanAttack(False)
     
-    def onGuildChange(self, guildId, guildName):
+    def onGuildChange(self, guildId, guildName, src):
         LOG_INFO('Monster::onGuildChange', self.gameEntityId, guildId, guildName)
         self.mineWarGuildId = guildId
-        if self.isMineWarHub() and self.spaceMgr.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+        if self.isMineWarHub() and src != gameconst.MINE_REQ_GUILD_CORE_KILL:
+            # 击杀时候不改变修复状态，这里修复状态其实就是是否可攻击
             self.setMineCanAttack(True)
 
     def setMineCanAttack(self, canAttack):
         self.mineWarCanAttack = canAttack
-        #
         if self.isMineWarHub():
             self.force = gameconst.ForceTypeEnum.Monster if self.mineWarCanAttack else gameconst.ForceTypeEnum.Friend
         
@@ -130,7 +138,7 @@ class IMineWarMonster(object):
         percentNow = int(self.hp / self.fullHp * 100)
         percentOld = int((self.hp - hpVal) / self.fullHp * 100)
         # 核心处理
-        if self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE:
+        if self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_CORE:
             notifyAll = False
             syncPercent = 10
             if percentOld >= syncPercent and percentNow < syncPercent:
@@ -144,7 +152,7 @@ class IMineWarMonster(object):
             self.spaceMgr.onMineWarCoreBeAttack(hpVal, releaseRoleId, notifyAll)
                 
         # 旗帜处理
-        if self.mineWarGuildId > 0 and self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_FLAG:
+        if self.mineWarGuildId > 0 and self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_FLAG:
             # 旗帜被攻击，通知
             self.spaceMgr.onMineWarFlagBeAttacked()
     
@@ -158,12 +166,12 @@ class IMineWarMonster(object):
             return
         killer = utils.getEntityRealEntity(killer)
 
-        if not self.spaceMgr or not self.mineWarMonsterType:
+        if not self.spaceMgr or self.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_MONSTER:
             LOG_INFO("notifyMineWarOnDead: self.spaceMgr is None", self.spaceNo, self.gameEntityId)
             return
         
         # 从空间管理器移除怪物记录
-        self.spaceMgr.removeMineWarMonsterWhenDie(self.mineWarMonsterType)
+        self.spaceMgr.removeMineWarMonsterWhenDie(self.mineWarMonsterFlag)
 
         # 旗帜被毁，生成被毁旗帜实体
         if self.isMineWarFlag():

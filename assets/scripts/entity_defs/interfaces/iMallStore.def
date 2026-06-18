@@ -1,0 +1,55 @@
+<root>
+    <Properties>
+        <giftStorePurchaseNumDic>
+            <Type>          PY_DICT                         </Type>
+            <Flags>         BASE                            </Flags>
+            <Persistent>    true                            </Persistent>
+            <Default>       {}                              </Default>
+        </giftStorePurchaseNumDic>
+
+        <mountsStorePurchaseNumDic>
+            <Type>          PY_DICT                         </Type>
+            <Flags>         BASE                            </Flags>
+            <Persistent>    true                            </Persistent>
+            <Default>       {}                              </Default>
+        </mountsStorePurchaseNumDic>
+    </Properties>
+
+    <BaseMethods>
+        <reqBuyGiftStore> <Exposed/>
+            <Arg>           UINT32          </Arg>   <!-- storeId -->
+        </reqBuyGiftStore>
+
+        <reqBuyMountStore> <Exposed/>
+            <Arg>           UINT32          </Arg>   <!-- storeId -->
+        </reqBuyMountStore>
+
+        <reqGiftStoreLimit> <Exposed/>
+        </reqGiftStoreLimit>
+
+        <reqMountStoreLimit> <Exposed/>
+        </reqMountStoreLimit>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onBuyMallGiftStoreResult>
+            <Arg>           UINT32          </Arg>   <!-- storeId -->
+            <Arg>           UINT8           </Arg>   <!-- result:0=ok,1=cfg,2=wealth,3=limit -->
+        </onBuyMallGiftStoreResult>
+        <onBuyMallMountStoreResult>
+            <Arg>           UINT32          </Arg>   <!-- storeId -->
+            <Arg>           UINT8           </Arg>   <!-- result:0=ok,1=cfg,2=wealth,3=limit -->
+        </onBuyMallMountStoreResult>
+        <onMallGiftStoreLimit>
+            <Arg>  ARRAY       <of>        UINT32      </of>   </Arg>
+            <Arg>  ARRAY       <of>        UINT16      </of>   </Arg>
+        </onMallGiftStoreLimit>
+        <onMallMountStoreLimit>
+            <Arg>  ARRAY       <of>        UINT32      </of>   </Arg>
+            <Arg>  ARRAY       <of>        UINT16      </of>   </Arg>
+        </onMallMountStoreLimit>
+    </ClientMethods>
+</root>

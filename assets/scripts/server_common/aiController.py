@@ -76,6 +76,10 @@ class EventTaskCtrl(object):
             self.doTaskAttack()
 
     def onDealTaskCompleted(self, success):
+        if not self.curForceTask:
+            # 这里可能调用两次情况，做个保护吧
+            return
+
         if success or not self.curForceTask.require:
             self.curForceTask = None
             if self.forceQueue:
@@ -332,6 +336,7 @@ class BehaveCtrl(object):
         self.clearHateAndResetSkill()
         ret = self.moveToPosition(self.owner.bornPosition, 0, gamemove.AI_GO_HOME_MOVE_OVER)
         self.stateMachine.transform(self, StateEnum.BACK)
+        self.owner.resetFirstBlood()
         return ret
 
     def clearHateAndTelBack(self):
@@ -557,11 +562,6 @@ class BehaveCtrl(object):
         self.owner.doAddGoHomeBuff()
 
     def combatStart(self):
-        _owner = self.owner
-        _host = _owner.followPlayer()
-
-        if _host and _host.hasState(gameconst.StateEnum.Fighting):
-            return True
         return False
 
     def combat(self):
@@ -577,13 +577,6 @@ class BehaveCtrl(object):
         for c in _owner.entitiesInRange(20):
             if c.IsCombatUnit and utils.isEnemy(_owner, c):
                 self.doIncreaseHate(c.id)
-                return
-
-        host = _owner.followPlayer()
-        if host and host.hasState(gameconst.StateEnum.Fighting):
-            hostTarget = KBEngine.entities.get(self.hostTargetId)
-            if hostTarget and not hostTarget.isDie():
-                self.doIncreaseHate(hostTarget.id)
                 return
 
     def PatrolRecoveryHp(self):
@@ -805,7 +798,7 @@ class AuxFunc(object):
 
             _direction = sMath.vector3WithoutY(target.position - owner.position)
             if _direction[0] == _direction[1] == _direction[2] == 0:
-                _direction = sMath.getDirFromYaw(owner._direction[2])
+                _direction = sMath.getDirFromYaw(owner.direction[2])
             if owner.id != target.id and self.stateMachine.turnable:
                 yaw = sMath.getYawFromDirection(_direction)
                 owner.direction = (0.0, 0.0, yaw)
@@ -833,6 +826,8 @@ class AuxFunc(object):
                 if not owner.actGetVar(invaildTag, None):
                     LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId)
                     owner.actDefineVar(invaildTag, utils.curTS())
+                if ret in gameconst.UseSkillCheck.RESET_USED_SKILLID_TYPE:
+                    self.skillId = 0
             else:
                 self.clearInvalidTargetTimes()
             
@@ -909,7 +904,7 @@ class AuxFunc(object):
 
         if self.skillId:
             skill = owner.skillDic.doGetSkill(self.skillId, False)
-            if not skill or skill.inCDTime():
+            if not skill or skill.inCDTime() or owner.checkForbidSkill(self.skillId):
                 self.skillId = 0
 
         if not self.skillId:
@@ -1111,21 +1106,18 @@ class AuxFunc(object):
             owner.doSetSelectedTargetId(owner.id)
 
         elif targetType == 'Friend':
-            if owner.IsAvatarMirror:
-                owner.doSetSelectedTargetId(owner.id)
-            else:
-                es = []
-                entityIdList = owner.getTargetIdsByTargetType(targetType)
-                for _eid in entityIdList:
-                    entity = KBEngine.entities.get(_eid)
-                    if entity:
-                        es.append(entity)
+            es = []
+            entityIdList = owner.getTargetIdsByTargetType(targetType)
+            for _eid in entityIdList:
+                entity = KBEngine.entities.get(_eid)
+                if entity:
+                    es.append(entity)
 
-                if es:
-                    entity = random.choice(es)
-                    owner.doSetSelectedTargetId(entity.id)
-                else:
-                    owner.doSetSelectedTargetId(0)
+            if es:
+                entity = random.choice(es)
+                owner.doSetSelectedTargetId(entity.id)
+            else:
+                owner.doSetSelectedTargetId(0)
 
         elif targetType == 'FriendExS':
             es = []
@@ -1282,7 +1274,7 @@ class HateCtrl(object):
         fromSync = kwargs.pop('fromSync', False)
 
         if isInList:
-            if _target.IsAvatarMirror or _target.IsSummon:
+            if _target.IsSummon:
                 if not _target.canAttackable(_owner):
                     self.incTargetHostHate(_target, damage)
                 else:
@@ -1294,7 +1286,7 @@ class HateCtrl(object):
             if isVisionTrigger and damage <= 0:
                 self.hateDict.addToHateListByVisionTrigger(targetId, _targetLevel, **kwargs)
             else:
-                if _target.IsAvatarMirror or _target.IsSummon:
+                if _target.IsSummon:
                     if not _target.canAttackable(_owner):
                         self.incTargetHostHate(_target, damage)
                     else:
@@ -1365,7 +1357,7 @@ class HateCtrl(object):
             self.luckyGroupLastTickTime = 0
             self.clearHateAndTelBackWithBroadcast()
             self.restart()
-            self.setBornState(gameconst.BornStateType.reMove)
+            self.setBornState(gameconst.BornStateEnum.reMove)
 
     def luckyGroupStand(self):
         self.stand(False)
@@ -1379,7 +1371,7 @@ class HateCtrl(object):
         self.luckyGroupLastTickTime = 0
         self.clearHateAndTelBackWithBroadcast(False)
         self.restart()
-        self.setBornState(gameconst.BornStateType.reMove)
+        self.setBornState(gameconst.BornStateEnum.reMove)
 
     def synMonsterHateInRange(self, iRange):
         owner = self.owner
@@ -1485,7 +1477,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             return False
 
         spaceMgr = _owner.spaceMgr
-        isSummonedEnt = _owner.IsAvatarMirror or _owner.IsSummon
+        isSummonedEnt = _owner.IsSummon
         if spaceMgr is not None and spaceMgr.isSpaceMarkCompleted() and (isSummonedEnt and not _owner.hostId):
             return False
 
@@ -1529,6 +1521,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             self.iTimerDict.pop(targetId, None)
         if (self.isActive and (_owner.isVisible(_target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
             isFirstHate = True if self.hateDict.length == 0 else False
+            _owner.setTempMiscProp(gameconst.EntityPropsEnum.enterEnemyId, targetId)
             if self.stateMachine.testEvent(Event.HATE):
                 self.doIncreaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
                 _owner.setState(gameconst.StateEnum.Fighting, False)
@@ -1707,7 +1700,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def distributeTaskToAvatarInRange(self, iRange, taskId):
         ents = self.owner.entitiesInRange(iRange, 'Avatar')
         for _ent in ents:
-            _ent.startClaimTask(taskId)
+            _ent.doStartClaimTask(taskId)
 
     def moveToFixedPositionInForce(self, position, userData):
         _owner = self.owner

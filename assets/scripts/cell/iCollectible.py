@@ -20,6 +20,8 @@ class ICollectible(object):
                 continue
             LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
                 self.gbId,
+                self.clientDistinctIdCell,
+                self.gbId,
                 propIndex,
                 gameconst.CollectibleDetailStatus.COLLECTED,
                 propChange,

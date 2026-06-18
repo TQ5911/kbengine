@@ -1,0 +1,53 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell        </Interface>
+        <Interface> iGlobal            </Interface>
+        <Interface> iTimerBase         </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaceFinder>
+            <Type>      PYTHON         </Type>
+            <Flags>     BASE            </Flags>
+        </spaceFinder>
+    </Properties>
+
+    <BaseMethods>
+        <enterWaitMap>
+            <Arg>    PLAYER_GBID               </Arg>
+            <Arg>       ENTITYCALL      </Arg>
+        </enterWaitMap>
+
+        <doEnterWaitMap>
+            <Arg>    PLAYER_GBID               </Arg>
+            <Arg>       SPACE_NO        </Arg>
+        </doEnterWaitMap>
+
+        <accountingLogin>
+            <Arg>       STRING      </Arg>
+            <Arg>       ENTITYCALL      </Arg>
+        </accountingLogin>
+
+        <onPlayerLogout>
+            <Arg>       STRING      </Arg>
+        </onPlayerLogout>
+
+        <onWaitMapSpaceReady>
+            <Arg>       SPACE_NO        </Arg>
+        </onWaitMapSpaceReady>
+
+        <onWaitMapSpaceGone>
+            <Arg>       SPACE_NO        </Arg>
+        </onWaitMapSpaceGone>
+
+        <onPlayerLeave>
+            <Arg>       SPACE_NO        </Arg>
+        </onPlayerLeave>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

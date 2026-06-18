@@ -38,5 +38,25 @@ datas = _tools.RODict({
     "sceneStoreCameraID": _tools.RODict({
         "key": "sceneStoreCameraID",
         "value": 8,
+    }),
+    "dynGoodsUpLimit": _tools.RODict({
+        "key": "dynGoodsUpLimit",
+        "value": 0.25,
+    }),
+    "dynGoodsDownLimit": _tools.RODict({
+        "key": "dynGoodsDownLimit",
+        "value": 0.15,
+    }),
+    "dynGoodsWeight": _tools.RODict({
+        "key": "dynGoodsWeight",
+        "value": 0.8,
+    }),
+    "dynGoodsDefaultPrice": _tools.RODict({
+        "key": "dynGoodsDefaultPrice",
+        "value": 1,
+    }),
+    "monthCardExtraTimes": _tools.RODict({
+        "key": "monthCardExtraTimes",
+        "value": ((10, 5), (20, 5), (30, 5), (40, 5)),
     })
 })

@@ -131,7 +131,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -143,7 +143,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -155,7 +155,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -167,7 +167,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -179,7 +179,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -191,7 +191,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -203,7 +203,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -215,7 +215,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -239,7 +239,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -251,7 +251,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -263,7 +263,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -275,7 +275,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -287,7 +287,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -299,7 +299,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -311,7 +311,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -323,7 +323,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -335,7 +335,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -347,7 +347,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -371,7 +371,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -383,7 +383,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -395,7 +395,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -407,7 +407,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -419,7 +419,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -431,7 +431,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -443,7 +443,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -455,7 +455,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -467,7 +467,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -479,7 +479,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -611,7 +611,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -623,7 +623,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -635,7 +635,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -647,7 +647,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -659,7 +659,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -671,7 +671,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -683,7 +683,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -695,7 +695,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -719,7 +719,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -731,7 +731,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -743,7 +743,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -755,7 +755,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -767,7 +767,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -779,7 +779,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -791,7 +791,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -803,7 +803,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -815,7 +815,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -827,7 +827,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -851,7 +851,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -863,7 +863,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -875,7 +875,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -887,7 +887,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -899,7 +899,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -911,7 +911,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -923,7 +923,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -935,7 +935,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -947,7 +947,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -959,7 +959,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1091,7 +1091,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1103,7 +1103,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1115,7 +1115,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1127,7 +1127,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1139,7 +1139,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1151,7 +1151,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1163,7 +1163,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1175,7 +1175,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -1199,7 +1199,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1211,7 +1211,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1223,7 +1223,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1235,7 +1235,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1247,7 +1247,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1259,7 +1259,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1271,7 +1271,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1283,7 +1283,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -1295,7 +1295,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1307,7 +1307,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1331,7 +1331,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1343,7 +1343,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1355,7 +1355,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1367,7 +1367,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1379,7 +1379,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1391,7 +1391,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1403,7 +1403,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1415,7 +1415,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -1427,7 +1427,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1439,7 +1439,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1571,7 +1571,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1583,7 +1583,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1595,7 +1595,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1607,7 +1607,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1619,7 +1619,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1631,7 +1631,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1643,7 +1643,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1655,7 +1655,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -1679,7 +1679,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1691,7 +1691,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1703,7 +1703,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1715,7 +1715,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1727,7 +1727,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1739,7 +1739,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1751,7 +1751,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1763,7 +1763,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -1775,7 +1775,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1787,7 +1787,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1811,7 +1811,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1823,7 +1823,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1835,7 +1835,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1847,7 +1847,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1859,7 +1859,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1871,7 +1871,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1883,7 +1883,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -1895,7 +1895,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -1907,7 +1907,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -1919,7 +1919,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2051,7 +2051,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2063,7 +2063,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2075,7 +2075,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2087,7 +2087,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2099,7 +2099,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2111,7 +2111,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2123,7 +2123,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2135,7 +2135,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -2159,7 +2159,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2171,7 +2171,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2183,7 +2183,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2195,7 +2195,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2207,7 +2207,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2219,7 +2219,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2231,7 +2231,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2243,7 +2243,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -2255,7 +2255,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2267,7 +2267,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2291,7 +2291,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2303,7 +2303,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2315,7 +2315,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2327,7 +2327,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2339,7 +2339,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2351,7 +2351,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2363,7 +2363,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2375,7 +2375,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -2387,7 +2387,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2399,7 +2399,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2531,7 +2531,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2543,7 +2543,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2555,7 +2555,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2567,7 +2567,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2579,7 +2579,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2591,7 +2591,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2603,7 +2603,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2615,7 +2615,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -2639,7 +2639,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2651,7 +2651,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2663,7 +2663,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2675,7 +2675,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2687,7 +2687,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2699,7 +2699,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2711,7 +2711,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2723,7 +2723,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -2735,7 +2735,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2747,7 +2747,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2771,7 +2771,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2783,7 +2783,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2795,7 +2795,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2807,7 +2807,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2819,7 +2819,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2831,7 +2831,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2843,7 +2843,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -2855,7 +2855,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -2867,7 +2867,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -2879,7 +2879,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3011,7 +3011,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3023,7 +3023,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3035,7 +3035,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3047,7 +3047,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3059,7 +3059,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3071,7 +3071,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3083,7 +3083,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3095,7 +3095,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -3119,7 +3119,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3131,7 +3131,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3143,7 +3143,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3155,7 +3155,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3167,7 +3167,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3179,7 +3179,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3191,7 +3191,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3203,7 +3203,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -3215,7 +3215,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3227,7 +3227,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3251,7 +3251,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3263,7 +3263,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3275,7 +3275,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3287,7 +3287,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3299,7 +3299,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3311,7 +3311,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3323,7 +3323,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3335,7 +3335,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -3347,7 +3347,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3359,7 +3359,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3491,7 +3491,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3503,7 +3503,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3515,7 +3515,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3527,7 +3527,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3539,7 +3539,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3551,7 +3551,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3563,7 +3563,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3575,7 +3575,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 2),),
-        "costCurrency": ((30000002, 40000),),
+        "costCurrency": ((30000002, 30000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -3599,7 +3599,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3611,7 +3611,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3623,7 +3623,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3635,7 +3635,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3647,7 +3647,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3659,7 +3659,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3671,7 +3671,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3683,7 +3683,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -3695,7 +3695,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3707,7 +3707,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 2),),
-        "costCurrency": ((30000002, 200000),),
+        "costCurrency": ((30000002, 150000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3731,7 +3731,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3743,7 +3743,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3755,7 +3755,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3767,7 +3767,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3779,7 +3779,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3791,7 +3791,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3803,7 +3803,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3815,7 +3815,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -3827,7 +3827,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3839,7 +3839,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 2),),
-        "costCurrency": ((30000002, 600000),),
+        "costCurrency": ((30000002, 450000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -3971,7 +3971,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3983,7 +3983,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -3995,7 +3995,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4007,7 +4007,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4019,7 +4019,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4031,7 +4031,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4043,7 +4043,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4055,7 +4055,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -4079,7 +4079,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4091,7 +4091,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4103,7 +4103,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4115,7 +4115,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4127,7 +4127,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4139,7 +4139,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4151,7 +4151,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4163,7 +4163,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -4175,7 +4175,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4187,7 +4187,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4211,7 +4211,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4223,7 +4223,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4235,7 +4235,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4247,7 +4247,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4259,7 +4259,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4271,7 +4271,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4283,7 +4283,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4295,7 +4295,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -4307,7 +4307,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4319,7 +4319,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4451,7 +4451,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4463,7 +4463,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4475,7 +4475,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4487,7 +4487,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4499,7 +4499,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4511,7 +4511,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4523,7 +4523,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4535,7 +4535,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -4559,7 +4559,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4571,7 +4571,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4583,7 +4583,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4595,7 +4595,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4607,7 +4607,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4619,7 +4619,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4631,7 +4631,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4643,7 +4643,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -4655,7 +4655,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4667,7 +4667,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4691,7 +4691,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4703,7 +4703,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4715,7 +4715,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4727,7 +4727,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4739,7 +4739,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4751,7 +4751,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4763,7 +4763,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4775,7 +4775,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -4787,7 +4787,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4799,7 +4799,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -4931,7 +4931,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4943,7 +4943,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4955,7 +4955,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4967,7 +4967,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4979,7 +4979,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -4991,7 +4991,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5003,7 +5003,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5015,7 +5015,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5039,7 +5039,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5051,7 +5051,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5063,7 +5063,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5075,7 +5075,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5087,7 +5087,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5099,7 +5099,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5111,7 +5111,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5123,7 +5123,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5135,7 +5135,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5147,7 +5147,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5171,7 +5171,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5183,7 +5183,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5195,7 +5195,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5207,7 +5207,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5219,7 +5219,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5231,7 +5231,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5243,7 +5243,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5255,7 +5255,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5267,7 +5267,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5279,7 +5279,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5411,7 +5411,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5423,7 +5423,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5435,7 +5435,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5447,7 +5447,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5459,7 +5459,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5471,7 +5471,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5483,7 +5483,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5495,7 +5495,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5519,7 +5519,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5531,7 +5531,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5543,7 +5543,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5555,7 +5555,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5567,7 +5567,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5579,7 +5579,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5591,7 +5591,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5603,7 +5603,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5615,7 +5615,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5627,7 +5627,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5651,7 +5651,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5663,7 +5663,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5675,7 +5675,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5687,7 +5687,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5699,7 +5699,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5711,7 +5711,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5723,7 +5723,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5735,7 +5735,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5747,7 +5747,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5759,7 +5759,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -5891,7 +5891,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5903,7 +5903,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5915,7 +5915,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5927,7 +5927,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5939,7 +5939,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5951,7 +5951,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5963,7 +5963,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -5975,7 +5975,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -5999,7 +5999,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6011,7 +6011,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6023,7 +6023,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6035,7 +6035,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6047,7 +6047,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6059,7 +6059,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6071,7 +6071,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6083,7 +6083,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -6095,7 +6095,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6107,7 +6107,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6131,7 +6131,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6143,7 +6143,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6155,7 +6155,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6167,7 +6167,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6179,7 +6179,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6191,7 +6191,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6203,7 +6203,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6215,7 +6215,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -6227,7 +6227,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6239,7 +6239,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6371,7 +6371,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6383,7 +6383,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6395,7 +6395,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6407,7 +6407,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6419,7 +6419,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6431,7 +6431,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6443,7 +6443,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6455,7 +6455,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -6479,7 +6479,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6491,7 +6491,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6503,7 +6503,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6515,7 +6515,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6527,7 +6527,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6539,7 +6539,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6551,7 +6551,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6563,7 +6563,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -6575,7 +6575,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6587,7 +6587,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6611,7 +6611,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6623,7 +6623,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6635,7 +6635,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6647,7 +6647,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6659,7 +6659,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6671,7 +6671,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6683,7 +6683,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6695,7 +6695,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -6707,7 +6707,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6719,7 +6719,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -6851,7 +6851,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6863,7 +6863,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6875,7 +6875,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6887,7 +6887,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6899,7 +6899,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6911,7 +6911,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6923,7 +6923,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6935,7 +6935,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -6959,7 +6959,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6971,7 +6971,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6983,7 +6983,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -6995,7 +6995,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7007,7 +7007,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7019,7 +7019,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7031,7 +7031,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7043,7 +7043,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -7055,7 +7055,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7067,7 +7067,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7091,7 +7091,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7103,7 +7103,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7115,7 +7115,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7127,7 +7127,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7139,7 +7139,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7151,7 +7151,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7163,7 +7163,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7175,7 +7175,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -7187,7 +7187,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7199,7 +7199,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7331,7 +7331,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7343,7 +7343,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7355,7 +7355,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7367,7 +7367,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7379,7 +7379,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7391,7 +7391,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7403,7 +7403,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7415,7 +7415,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -7439,7 +7439,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7451,7 +7451,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7463,7 +7463,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7475,7 +7475,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7487,7 +7487,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7499,7 +7499,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7511,7 +7511,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7523,7 +7523,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -7535,7 +7535,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7547,7 +7547,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7571,7 +7571,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7583,7 +7583,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7595,7 +7595,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7607,7 +7607,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7619,7 +7619,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7631,7 +7631,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7643,7 +7643,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7655,7 +7655,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -7667,7 +7667,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7679,7 +7679,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -7811,7 +7811,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7823,7 +7823,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7835,7 +7835,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7847,7 +7847,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7859,7 +7859,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7871,7 +7871,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7883,7 +7883,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7895,7 +7895,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -7919,7 +7919,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7931,7 +7931,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7943,7 +7943,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7955,7 +7955,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7967,7 +7967,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7979,7 +7979,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -7991,7 +7991,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8003,7 +8003,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8015,7 +8015,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8027,7 +8027,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8051,7 +8051,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8063,7 +8063,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8075,7 +8075,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8087,7 +8087,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8099,7 +8099,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8111,7 +8111,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8123,7 +8123,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8135,7 +8135,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8147,7 +8147,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8159,7 +8159,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8291,7 +8291,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8303,7 +8303,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8315,7 +8315,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8327,7 +8327,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8339,7 +8339,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8351,7 +8351,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8363,7 +8363,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8375,7 +8375,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8399,7 +8399,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8411,7 +8411,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8423,7 +8423,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8435,7 +8435,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8447,7 +8447,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8459,7 +8459,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8471,7 +8471,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8483,7 +8483,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8495,7 +8495,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8507,7 +8507,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8531,7 +8531,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8543,7 +8543,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8555,7 +8555,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8567,7 +8567,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8579,7 +8579,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8591,7 +8591,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8603,7 +8603,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8615,7 +8615,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8627,7 +8627,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8639,7 +8639,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8771,7 +8771,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8783,7 +8783,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8795,7 +8795,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8807,7 +8807,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8819,7 +8819,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8831,7 +8831,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8843,7 +8843,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8855,7 +8855,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8879,7 +8879,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8891,7 +8891,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8903,7 +8903,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8915,7 +8915,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8927,7 +8927,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8939,7 +8939,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8951,7 +8951,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -8963,7 +8963,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -8975,7 +8975,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -8987,7 +8987,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9011,7 +9011,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9023,7 +9023,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9035,7 +9035,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9047,7 +9047,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9059,7 +9059,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9071,7 +9071,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9083,7 +9083,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9095,7 +9095,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -9107,7 +9107,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9119,7 +9119,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9251,7 +9251,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9263,7 +9263,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9275,7 +9275,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9287,7 +9287,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9299,7 +9299,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9311,7 +9311,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9323,7 +9323,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9335,7 +9335,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -9359,7 +9359,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9371,7 +9371,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9383,7 +9383,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9395,7 +9395,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9407,7 +9407,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9419,7 +9419,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9431,7 +9431,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9443,7 +9443,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -9455,7 +9455,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9467,7 +9467,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9491,7 +9491,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9503,7 +9503,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9515,7 +9515,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9527,7 +9527,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9539,7 +9539,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9551,7 +9551,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9563,7 +9563,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9575,7 +9575,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -9587,7 +9587,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9599,7 +9599,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9731,7 +9731,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9743,7 +9743,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9755,7 +9755,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9767,7 +9767,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9779,7 +9779,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9791,7 +9791,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9803,7 +9803,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9815,7 +9815,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -9839,7 +9839,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9851,7 +9851,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9863,7 +9863,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9875,7 +9875,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9887,7 +9887,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9899,7 +9899,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9911,7 +9911,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9923,7 +9923,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -9935,7 +9935,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9947,7 +9947,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -9971,7 +9971,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9983,7 +9983,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -9995,7 +9995,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10007,7 +10007,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10019,7 +10019,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10031,7 +10031,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10043,7 +10043,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10055,7 +10055,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -10067,7 +10067,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10079,7 +10079,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10211,7 +10211,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10223,7 +10223,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10235,7 +10235,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10247,7 +10247,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10259,7 +10259,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10271,7 +10271,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10283,7 +10283,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10295,7 +10295,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -10319,7 +10319,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10331,7 +10331,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10343,7 +10343,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10355,7 +10355,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10367,7 +10367,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10379,7 +10379,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10391,7 +10391,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10403,7 +10403,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -10415,7 +10415,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10427,7 +10427,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10451,7 +10451,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10463,7 +10463,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10475,7 +10475,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10487,7 +10487,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10499,7 +10499,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10511,7 +10511,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10523,7 +10523,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10535,7 +10535,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -10547,7 +10547,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10559,7 +10559,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10691,7 +10691,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10703,7 +10703,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10715,7 +10715,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10727,7 +10727,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10739,7 +10739,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10751,7 +10751,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10763,7 +10763,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10775,7 +10775,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -10799,7 +10799,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10811,7 +10811,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10823,7 +10823,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10835,7 +10835,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10847,7 +10847,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10859,7 +10859,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10871,7 +10871,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10883,7 +10883,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -10895,7 +10895,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10907,7 +10907,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -10931,7 +10931,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10943,7 +10943,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10955,7 +10955,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10967,7 +10967,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10979,7 +10979,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -10991,7 +10991,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11003,7 +11003,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11015,7 +11015,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11027,7 +11027,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11039,7 +11039,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11171,7 +11171,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11183,7 +11183,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11195,7 +11195,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11207,7 +11207,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11219,7 +11219,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11231,7 +11231,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11243,7 +11243,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11255,7 +11255,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11279,7 +11279,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11291,7 +11291,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11303,7 +11303,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11315,7 +11315,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11327,7 +11327,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11339,7 +11339,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11351,7 +11351,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11363,7 +11363,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11375,7 +11375,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11387,7 +11387,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11411,7 +11411,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11423,7 +11423,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11435,7 +11435,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11447,7 +11447,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11459,7 +11459,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11471,7 +11471,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11483,7 +11483,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11495,7 +11495,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11507,7 +11507,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11519,7 +11519,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11651,7 +11651,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11663,7 +11663,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11675,7 +11675,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11687,7 +11687,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11699,7 +11699,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11711,7 +11711,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11723,7 +11723,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11735,7 +11735,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11759,7 +11759,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11771,7 +11771,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11783,7 +11783,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11795,7 +11795,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11807,7 +11807,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11819,7 +11819,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11831,7 +11831,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11843,7 +11843,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11855,7 +11855,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11867,7 +11867,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11891,7 +11891,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11903,7 +11903,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11915,7 +11915,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11927,7 +11927,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11939,7 +11939,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11951,7 +11951,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11963,7 +11963,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -11975,7 +11975,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -11987,7 +11987,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -11999,7 +11999,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12131,7 +12131,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12143,7 +12143,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12155,7 +12155,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12167,7 +12167,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12179,7 +12179,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12191,7 +12191,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12203,7 +12203,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12215,7 +12215,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -12239,7 +12239,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12251,7 +12251,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12263,7 +12263,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12275,7 +12275,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12287,7 +12287,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12299,7 +12299,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12311,7 +12311,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12323,7 +12323,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -12335,7 +12335,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12347,7 +12347,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12371,7 +12371,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12383,7 +12383,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12395,7 +12395,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12407,7 +12407,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12419,7 +12419,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12431,7 +12431,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12443,7 +12443,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12455,7 +12455,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -12467,7 +12467,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12479,7 +12479,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12611,7 +12611,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12623,7 +12623,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12635,7 +12635,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12647,7 +12647,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12659,7 +12659,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12671,7 +12671,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12683,7 +12683,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12695,7 +12695,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -12719,7 +12719,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12731,7 +12731,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12743,7 +12743,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12755,7 +12755,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12767,7 +12767,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12779,7 +12779,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12791,7 +12791,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12803,7 +12803,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -12815,7 +12815,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12827,7 +12827,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12851,7 +12851,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12863,7 +12863,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12875,7 +12875,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12887,7 +12887,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12899,7 +12899,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12911,7 +12911,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12923,7 +12923,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -12935,7 +12935,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -12947,7 +12947,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -12959,7 +12959,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13091,7 +13091,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13103,7 +13103,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13115,7 +13115,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13127,7 +13127,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13139,7 +13139,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13151,7 +13151,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13163,7 +13163,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13175,7 +13175,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -13199,7 +13199,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13211,7 +13211,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13223,7 +13223,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13235,7 +13235,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13247,7 +13247,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13259,7 +13259,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13271,7 +13271,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13283,7 +13283,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -13295,7 +13295,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13307,7 +13307,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13331,7 +13331,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13343,7 +13343,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13355,7 +13355,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13367,7 +13367,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13379,7 +13379,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13391,7 +13391,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13403,7 +13403,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13415,7 +13415,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -13427,7 +13427,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13439,7 +13439,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13571,7 +13571,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13583,7 +13583,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13595,7 +13595,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13607,7 +13607,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13619,7 +13619,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13631,7 +13631,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13643,7 +13643,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13655,7 +13655,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -13679,7 +13679,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13691,7 +13691,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13703,7 +13703,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13715,7 +13715,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13727,7 +13727,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13739,7 +13739,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13751,7 +13751,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13763,7 +13763,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -13775,7 +13775,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13787,7 +13787,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13811,7 +13811,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13823,7 +13823,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13835,7 +13835,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13847,7 +13847,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13859,7 +13859,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13871,7 +13871,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13883,7 +13883,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -13895,7 +13895,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -13907,7 +13907,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -13919,7 +13919,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14051,7 +14051,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14063,7 +14063,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14075,7 +14075,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14087,7 +14087,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14099,7 +14099,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14111,7 +14111,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14123,7 +14123,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14135,7 +14135,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -14159,7 +14159,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14171,7 +14171,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14183,7 +14183,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14195,7 +14195,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14207,7 +14207,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14219,7 +14219,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14231,7 +14231,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14243,7 +14243,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -14255,7 +14255,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14267,7 +14267,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14291,7 +14291,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14303,7 +14303,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14315,7 +14315,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14327,7 +14327,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14339,7 +14339,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14351,7 +14351,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14363,7 +14363,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14375,7 +14375,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -14387,7 +14387,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14399,7 +14399,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14531,7 +14531,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14543,7 +14543,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14555,7 +14555,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14567,7 +14567,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14579,7 +14579,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14591,7 +14591,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14603,7 +14603,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14615,7 +14615,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -14639,7 +14639,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14651,7 +14651,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14663,7 +14663,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14675,7 +14675,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14687,7 +14687,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14699,7 +14699,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14711,7 +14711,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14723,7 +14723,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -14735,7 +14735,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14747,7 +14747,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14771,7 +14771,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14783,7 +14783,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14795,7 +14795,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14807,7 +14807,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14819,7 +14819,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14831,7 +14831,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14843,7 +14843,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -14855,7 +14855,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -14867,7 +14867,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -14879,7 +14879,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -15011,7 +15011,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15023,7 +15023,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15035,7 +15035,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 50, 50]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15047,7 +15047,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 0, 70, 30]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15059,7 +15059,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 25, 55, 20]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15071,7 +15071,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 55, 15]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15083,7 +15083,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 58, 12]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15095,7 +15095,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-99, -1, 0, 1], [0, 30, 60, 10]]),
         "costItem": ((30000224, 1),),
-        "costCurrency": ((30000002, 20000),),
+        "costCurrency": ((30000002, 15000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -15119,7 +15119,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15131,7 +15131,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15143,7 +15143,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15155,7 +15155,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15167,7 +15167,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15179,7 +15179,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15191,7 +15191,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15203,7 +15203,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -15215,7 +15215,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -15227,7 +15227,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000225, 1),),
-        "costCurrency": ((30000002, 100000),),
+        "costCurrency": ((30000002, 75000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -15251,7 +15251,7 @@ datas = _tools.RODict({
         "level": 0,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 0, 100]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15263,7 +15263,7 @@ datas = _tools.RODict({
         "level": 1,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 20, 80]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15275,7 +15275,7 @@ datas = _tools.RODict({
         "level": 2,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 60, 40]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15287,7 +15287,7 @@ datas = _tools.RODict({
         "level": 3,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 0, 80, 20]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15299,7 +15299,7 @@ datas = _tools.RODict({
         "level": 4,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 65, 15]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15311,7 +15311,7 @@ datas = _tools.RODict({
         "level": 5,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15323,7 +15323,7 @@ datas = _tools.RODict({
         "level": 6,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0,)
     }),
@@ -15335,7 +15335,7 @@ datas = _tools.RODict({
         "level": 7,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 70, 10]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 1,
         "glyphPos": (0, 2)
     }),
@@ -15347,7 +15347,7 @@ datas = _tools.RODict({
         "level": 8,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 72, 8]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),
@@ -15359,7 +15359,7 @@ datas = _tools.RODict({
         "level": 9,
         "effect": _tools.ROList([[-2, -1, 0, 1], [0, 20, 74, 6]]),
         "costItem": ((30000226, 1),),
-        "costCurrency": ((30000002, 300000),),
+        "costCurrency": ((30000002, 225000),),
         "fuLingGroup": 2,
         "glyphPos": (0, 1, 2, 3)
     }),

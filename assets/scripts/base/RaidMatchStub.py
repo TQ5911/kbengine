@@ -18,16 +18,13 @@ import activityControl_activityData as AC_ADD
 
 
 class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-
-    MATCH_LIST_MAX_NUM = 15
-
     def __init__(self):
         super(RaidMatchStub, self).__init__()
         self.raidsDic = {}
         self.playersDic = {}
 
         self.matchRaidsPool = {}
-        self.matchPlayersPool = {}
+        self.playersMatchPool = {}
         return
 
     def doNext(self):
@@ -40,7 +37,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.playersDic = {}
 
         self.matchRaidsPool = {}
-        self.matchPlayersPool = {}
+        self.playersMatchPool = {}
 
         for tgtId, d in TMACTD.datas.items():
             if tgtId == 0:
@@ -48,7 +45,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             actData = AC_ADD.datas.get(int(d['pareActivity']))
             if actData and gameconst.ActivityControlType.RAID == int(actData['needTeam']):
                 self.matchRaidsPool[tgtId] = []
-                self.matchPlayersPool[tgtId] = []
+                self.playersMatchPool[tgtId] = []
 
         self.addTimerCB(1, '_doMatch', (), gametimer.TIMER_TAG_DO_RAID_MATCH)
         self.addTimerCB(10, '_checkTimeOutMatch', (), gametimer.TIMER_TAG_DO_RAID_MATCH_TIMEOUT)
@@ -64,7 +61,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
 
@@ -135,7 +132,7 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def _playerStartMatch(self, pmVal):
         self.playersDic[pmVal.playerGbId] = pmVal
-        self.matchPlayersPool[pmVal.target].append(pmVal.playerGbId)
+        self.playersMatchPool[pmVal.target].append(pmVal.playerGbId)
         return
 
     def playerMatchedSucc(self, playerGbId):
@@ -169,14 +166,14 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         pmVal = self.playersDic.pop(playerGbId, None)
         if not pmVal:
             return False
-        if playerGbId in self.matchPlayersPool[pmVal.target]:
-            self.matchPlayersPool[pmVal.target].remove(playerGbId)
+        if playerGbId in self.playersMatchPool[pmVal.target]:
+            self.playersMatchPool[pmVal.target].remove(playerGbId)
         return True
 
     def _doMatch(self):
         self.addTimerCB(3, '_doMatch', (), gametimer.TIMER_TAG_DO_MATCH)
         if len(self.raidsDic) > 0 or len(self.playersDic) > 0:
-            # LOG_DBG('in _doMatch, matchPlayersPool:', self.matchPlayersPool)
+            # LOG_DBG('in _doMatch, playersMatchPool:', self.playersMatchPool)
             # LOG_DBG('in _doMatch, matchRaidsPool:', self.matchRaidsPool)
             try:
                 matchedPlayers = []

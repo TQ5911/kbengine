@@ -37,7 +37,7 @@ def entityDefTypes():
     return __ENTITY_DEF_TYPES_ROOT
 
 
-def getStringContentForPath(root, path):
+def getStringContentFromPath(root, path):
     pathComps = path.split('/')
     element = root
     for comp in pathComps:

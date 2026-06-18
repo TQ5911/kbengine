@@ -27,7 +27,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
         # 排行缓存列表
         self.rankCacheList = []
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self.checkTimerId = self.addTimerCB(10, 'onRedBagCheck', (), gametimer.TIMER_TAG_RED_BAG_CHECK_EXPIRE, 'checkTimerId')
         self.version = 0
 
@@ -43,7 +43,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         super().doNext()
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
                 self._onDatetimeTimerTick()
         elif utils.isBelongTimerTag(userArg):
@@ -195,7 +195,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         redisUtils.RedBagUtils.createRedBagRank(redbagId, _RbVal.releaseTime,
                                                 functools.partial(self._onCreateRedBagRank, playerbox, _RbVal))
         #
-        LogTrackingMgr.LogTrackingMgr.Release_RedBag(playerGbId, redbagType, channel, num, gameconst.ItemId.MONEY, money, redbagId)
+        LogTrackingMgr.LogTrackingMgr.Release_RedBag('RedBagStub', '', playerGbId, redbagType, channel, num, gameconst.ItemIdEnum.MONEY, money, redbagId)
 
     def _onCreateRedBagRank(self, playerbox, _RbVal, error):
         LOG_INFO('_onCreateRedBagRank: redbagId={} error={}'.format(_RbVal.redbagId, error))
@@ -305,7 +305,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             self.writeToDB()
 
         #
-        LogTrackingMgr.LogTrackingMgr.Fetch_RedBag(playerGbId, _RbVal.redbagType, _RbVal.channel, gameconst.ItemId.MONEY, _money, _RbVal.leftNum, gameconst.ItemId.MONEY, _RbVal.leftMoney, redbagId)
+        LogTrackingMgr.LogTrackingMgr.Fetch_RedBag('RedBagStub', '', playerGbId, _RbVal.redbagType, _RbVal.channel, gameconst.ItemIdEnum.MONEY, _money, _RbVal.leftNum, gameconst.ItemIdEnum.MONEY, _RbVal.leftMoney, redbagId)
         
     def _onAddRedbagFetchInfo(self, playerbox, redbagId, _money, releaseTime):
         LOG_INFO('_onAddRedbagFetchInfo: redbagId={} _money={}'.format(redbagId, _money))
@@ -369,8 +369,8 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
         # 邮件返还
         _mailId = CC_CCD.datas['returnPacketMail']['value']
-        addWealthVal = dropAward.MailWealthVal()
-        addWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, leftMoney)
+        addWealthVal = dropAward.MailAttachVal()
+        addWealthVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, leftMoney)
         mailAssistor.sendMailToPlayers(
             [playerGbId],
             _mailId,
@@ -378,7 +378,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             extraAttach=addWealthVal,
             srcType = AAC_AACDD.datas.BONUS_SRC_REDPACKAGE_RETURN
         )
-        LogTrackingMgr.LogTrackingMgr.Return_RedBag(playerGbId, _RbVal.redbagId)
+        LogTrackingMgr.LogTrackingMgr.Return_RedBag('RedBagStub', '', playerGbId, _RbVal.redbagId)
 
     #
     def showData(self):

@@ -25,7 +25,7 @@ class ILinkStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         gameglobal.localBaseApp.fullPrepare(self.classname())
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         elif userArg == gametimer.DEL_OLD_LINK_CACHE:

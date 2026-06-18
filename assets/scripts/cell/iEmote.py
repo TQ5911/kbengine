@@ -69,7 +69,7 @@ class IEmote(object):
             self.playTimerId = self.addTimerCB(emoteCfg['time'] + 1, 'stopPlayEmote', (gameconst.StopPlayEmoteReason.TimeOut, ), gametimer.TIMER_TAG_STOP_PLAY_EMOTE, 'playTimerId')
         self.emoteId = emoteId
         self.setState(gameconst.StateEnum.posture)
-        self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.PlayEmote)
+        self.suspendAutoCombat(gameconst.SuspendAutoCombatReasonEnum.PlayEmote)
         self.allClients.onStartPlayEmote(emoteId)
 
     @gamedecorator.crossServer
@@ -89,4 +89,4 @@ class IEmote(object):
         self.emoteId = 0
         self.cannelPlayTimer()
         self.allClients.onStopPlayEmote()
-        self.recoverAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReason.PlayEmote)
+        self.resumeAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReasonEnum.PlayEmote)

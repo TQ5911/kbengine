@@ -833,322 +833,322 @@ datas = _tools.RODict({
     52012150: _tools.RODict({
         "propID": 52012150,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":55,"adjMaxMagicAtk":120})
+        "propList": _tools.RODict({"adjMinMagicAtk":40,"adjMaxMagicAtk":115})
     }),
     52012151: _tools.RODict({
         "propID": 52012151,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":61,"adjMaxMagicAtk":132})
+        "propList": _tools.RODict({"adjMinMagicAtk":44,"adjMaxMagicAtk":127})
     }),
     52012152: _tools.RODict({
         "propID": 52012152,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":66,"adjMaxMagicAtk":144})
+        "propList": _tools.RODict({"adjMinMagicAtk":48,"adjMaxMagicAtk":138})
     }),
     52012153: _tools.RODict({
         "propID": 52012153,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":72,"adjMaxMagicAtk":156})
+        "propList": _tools.RODict({"adjMinMagicAtk":52,"adjMaxMagicAtk":150})
     }),
     52012154: _tools.RODict({
         "propID": 52012154,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":77,"adjMaxMagicAtk":168,"adjHit":11,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":57,"adjMaxMagicAtk":165,"adjHit":10,"adjFinalDmg":0.03})
     }),
     52012155: _tools.RODict({
         "propID": 52012155,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":85,"adjMaxMagicAtk":185,"adjHit":12,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":63,"adjMaxMagicAtk":182,"adjHit":11,"adjFinalDmg":0.03})
     }),
     52012156: _tools.RODict({
         "propID": 52012156,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":92,"adjMaxMagicAtk":202,"adjHit":13,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":68,"adjMaxMagicAtk":198,"adjHit":12,"adjFinalDmg":0.03})
     }),
     52012157: _tools.RODict({
         "propID": 52012157,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":100,"adjMaxMagicAtk":218,"adjHit":14,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":74,"adjMaxMagicAtk":215,"adjHit":13,"adjFinalDmg":0.03})
     }),
     52012158: _tools.RODict({
         "propID": 52012158,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":108,"adjMaxMagicAtk":235,"adjHit":15,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":81,"adjMaxMagicAtk":237,"adjHit":15,"adjFinalDmg":0.06})
     }),
     52012159: _tools.RODict({
         "propID": 52012159,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":119,"adjMaxMagicAtk":259,"adjHit":17,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":89,"adjMaxMagicAtk":261,"adjHit":16,"adjFinalDmg":0.06})
     }),
     52012160: _tools.RODict({
         "propID": 52012160,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":130,"adjMaxMagicAtk":282,"adjHit":18,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":97,"adjMaxMagicAtk":284,"adjHit":17,"adjFinalDmg":0.06})
     }),
     52012161: _tools.RODict({
         "propID": 52012161,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":140,"adjMaxMagicAtk":306,"adjHit":20,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":105,"adjMaxMagicAtk":308,"adjHit":19,"adjFinalDmg":0.06})
     }),
     52012162: _tools.RODict({
         "propID": 52012162,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":161,"adjMaxMagicAtk":352,"adjHit":23,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":116,"adjMaxMagicAtk":339,"adjHit":22,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012163: _tools.RODict({
         "propID": 52012163,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":177,"adjMaxMagicAtk":387,"adjHit":25,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":128,"adjMaxMagicAtk":373,"adjHit":24,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012164: _tools.RODict({
         "propID": 52012164,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":195,"adjMaxMagicAtk":426,"adjHit":28,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":141,"adjMaxMagicAtk":410,"adjHit":26,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012165: _tools.RODict({
         "propID": 52012165,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":215,"adjMaxMagicAtk":469,"adjHit":31,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":155,"adjMaxMagicAtk":451,"adjHit":28,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012326: _tools.RODict({
         "propID": 52012326,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":55,"adjMaxMagicAtk":120})
+        "propList": _tools.RODict({"adjMinMagicAtk":40,"adjMaxMagicAtk":115})
     }),
     52012327: _tools.RODict({
         "propID": 52012327,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":61,"adjMaxMagicAtk":132})
+        "propList": _tools.RODict({"adjMinMagicAtk":44,"adjMaxMagicAtk":127})
     }),
     52012328: _tools.RODict({
         "propID": 52012328,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":66,"adjMaxMagicAtk":144})
+        "propList": _tools.RODict({"adjMinMagicAtk":48,"adjMaxMagicAtk":138})
     }),
     52012329: _tools.RODict({
         "propID": 52012329,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":72,"adjMaxMagicAtk":156})
+        "propList": _tools.RODict({"adjMinMagicAtk":52,"adjMaxMagicAtk":150})
     }),
     52012330: _tools.RODict({
         "propID": 52012330,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":77,"adjMaxMagicAtk":168,"adjHit":11,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":57,"adjMaxMagicAtk":165,"adjHit":10,"adjFinalDmg":0.03})
     }),
     52012331: _tools.RODict({
         "propID": 52012331,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":85,"adjMaxMagicAtk":185,"adjHit":12,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":63,"adjMaxMagicAtk":182,"adjHit":11,"adjFinalDmg":0.03})
     }),
     52012332: _tools.RODict({
         "propID": 52012332,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":92,"adjMaxMagicAtk":202,"adjHit":13,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":68,"adjMaxMagicAtk":198,"adjHit":12,"adjFinalDmg":0.03})
     }),
     52012333: _tools.RODict({
         "propID": 52012333,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":100,"adjMaxMagicAtk":218,"adjHit":14,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinMagicAtk":74,"adjMaxMagicAtk":215,"adjHit":13,"adjFinalDmg":0.03})
     }),
     52012334: _tools.RODict({
         "propID": 52012334,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":108,"adjMaxMagicAtk":235,"adjHit":15,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":81,"adjMaxMagicAtk":237,"adjHit":15,"adjFinalDmg":0.06})
     }),
     52012335: _tools.RODict({
         "propID": 52012335,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":119,"adjMaxMagicAtk":259,"adjHit":17,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":89,"adjMaxMagicAtk":261,"adjHit":16,"adjFinalDmg":0.06})
     }),
     52012336: _tools.RODict({
         "propID": 52012336,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":130,"adjMaxMagicAtk":282,"adjHit":18,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":97,"adjMaxMagicAtk":284,"adjHit":17,"adjFinalDmg":0.06})
     }),
     52012337: _tools.RODict({
         "propID": 52012337,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":140,"adjMaxMagicAtk":306,"adjHit":20,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":105,"adjMaxMagicAtk":308,"adjHit":19,"adjFinalDmg":0.06})
     }),
     52012338: _tools.RODict({
         "propID": 52012338,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":161,"adjMaxMagicAtk":352,"adjHit":23,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":116,"adjMaxMagicAtk":339,"adjHit":22,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012339: _tools.RODict({
         "propID": 52012339,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":177,"adjMaxMagicAtk":387,"adjHit":25,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":128,"adjMaxMagicAtk":373,"adjHit":24,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012340: _tools.RODict({
         "propID": 52012340,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":195,"adjMaxMagicAtk":426,"adjHit":28,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":141,"adjMaxMagicAtk":410,"adjHit":26,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012341: _tools.RODict({
         "propID": 52012341,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":215,"adjMaxMagicAtk":469,"adjHit":31,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinMagicAtk":155,"adjMaxMagicAtk":451,"adjHit":28,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012502: _tools.RODict({
         "propID": 52012502,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":55,"adjMaxPhysicalAtk":120})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":40,"adjMaxPhysicalAtk":115})
     }),
     52012503: _tools.RODict({
         "propID": 52012503,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":61,"adjMaxPhysicalAtk":132})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":44,"adjMaxPhysicalAtk":127})
     }),
     52012504: _tools.RODict({
         "propID": 52012504,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":66,"adjMaxPhysicalAtk":144})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":48,"adjMaxPhysicalAtk":138})
     }),
     52012505: _tools.RODict({
         "propID": 52012505,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":72,"adjMaxPhysicalAtk":156})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":52,"adjMaxPhysicalAtk":150})
     }),
     52012506: _tools.RODict({
         "propID": 52012506,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":77,"adjMaxPhysicalAtk":168,"adjHit":11,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":57,"adjMaxPhysicalAtk":165,"adjHit":10,"adjFinalDmg":0.03})
     }),
     52012507: _tools.RODict({
         "propID": 52012507,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":85,"adjMaxPhysicalAtk":185,"adjHit":12,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":63,"adjMaxPhysicalAtk":182,"adjHit":11,"adjFinalDmg":0.03})
     }),
     52012508: _tools.RODict({
         "propID": 52012508,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":92,"adjMaxPhysicalAtk":202,"adjHit":13,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":68,"adjMaxPhysicalAtk":198,"adjHit":12,"adjFinalDmg":0.03})
     }),
     52012509: _tools.RODict({
         "propID": 52012509,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":100,"adjMaxPhysicalAtk":218,"adjHit":14,"adjFinalDmg":0.03})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":74,"adjMaxPhysicalAtk":215,"adjHit":13,"adjFinalDmg":0.03})
     }),
     52012510: _tools.RODict({
         "propID": 52012510,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":108,"adjMaxPhysicalAtk":235,"adjHit":15,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":81,"adjMaxPhysicalAtk":237,"adjHit":15,"adjFinalDmg":0.06})
     }),
     52012511: _tools.RODict({
         "propID": 52012511,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":119,"adjMaxPhysicalAtk":259,"adjHit":17,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":89,"adjMaxPhysicalAtk":261,"adjHit":16,"adjFinalDmg":0.06})
     }),
     52012512: _tools.RODict({
         "propID": 52012512,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":130,"adjMaxPhysicalAtk":282,"adjHit":18,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":97,"adjMaxPhysicalAtk":284,"adjHit":17,"adjFinalDmg":0.06})
     }),
     52012513: _tools.RODict({
         "propID": 52012513,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":140,"adjMaxPhysicalAtk":306,"adjHit":20,"adjFinalDmg":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":105,"adjMaxPhysicalAtk":308,"adjHit":19,"adjFinalDmg":0.06})
     }),
     52012514: _tools.RODict({
         "propID": 52012514,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":161,"adjMaxPhysicalAtk":352,"adjHit":23,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":116,"adjMaxPhysicalAtk":339,"adjHit":22,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012515: _tools.RODict({
         "propID": 52012515,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":177,"adjMaxPhysicalAtk":387,"adjHit":25,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":128,"adjMaxPhysicalAtk":373,"adjHit":24,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012516: _tools.RODict({
         "propID": 52012516,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":195,"adjMaxPhysicalAtk":426,"adjHit":28,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":141,"adjMaxPhysicalAtk":410,"adjHit":26,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012517: _tools.RODict({
         "propID": 52012517,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":215,"adjMaxPhysicalAtk":469,"adjHit":31,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":155,"adjMaxPhysicalAtk":451,"adjHit":28,"adjFinalDmg":0.06,"adjFinalDmgAnti":0.06})
     }),
     52012678: _tools.RODict({
         "propID": 52012678,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":60,"adjMaxPhysicalArmor":90,"adjMinMagicArmor":60,"adjMaxMagicArmor":90})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":55,"adjMaxPhysicalArmor":85,"adjMinMagicArmor":55,"adjMaxMagicArmor":85})
     }),
     52012679: _tools.RODict({
         "propID": 52012679,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":66,"adjMaxPhysicalArmor":99,"adjMinMagicArmor":66,"adjMaxMagicArmor":99})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":61,"adjMaxPhysicalArmor":94,"adjMinMagicArmor":61,"adjMaxMagicArmor":94})
     }),
     52012680: _tools.RODict({
         "propID": 52012680,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":72,"adjMaxPhysicalArmor":108,"adjMinMagicArmor":72,"adjMaxMagicArmor":108})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":66,"adjMaxPhysicalArmor":102,"adjMinMagicArmor":66,"adjMaxMagicArmor":102})
     }),
     52012681: _tools.RODict({
         "propID": 52012681,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":78,"adjMaxPhysicalArmor":117,"adjMinMagicArmor":78,"adjMaxMagicArmor":117})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":72,"adjMaxPhysicalArmor":111,"adjMinMagicArmor":72,"adjMaxMagicArmor":111})
     }),
     52012682: _tools.RODict({
         "propID": 52012682,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":84,"adjMaxPhysicalArmor":126,"adjMinMagicArmor":84,"adjMaxMagicArmor":126,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":79,"adjMaxPhysicalArmor":122,"adjMinMagicArmor":79,"adjMaxMagicArmor":122,"adjMortal":0.08})
     }),
     52012683: _tools.RODict({
         "propID": 52012683,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":92,"adjMaxPhysicalArmor":139,"adjMinMagicArmor":92,"adjMaxMagicArmor":139,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":87,"adjMaxPhysicalArmor":134,"adjMinMagicArmor":87,"adjMaxMagicArmor":134,"adjMortal":0.08})
     }),
     52012684: _tools.RODict({
         "propID": 52012684,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":101,"adjMaxPhysicalArmor":151,"adjMinMagicArmor":101,"adjMaxMagicArmor":151,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":95,"adjMaxPhysicalArmor":146,"adjMinMagicArmor":95,"adjMaxMagicArmor":146,"adjMortal":0.08})
     }),
     52012685: _tools.RODict({
         "propID": 52012685,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":109,"adjMaxPhysicalArmor":164,"adjMinMagicArmor":109,"adjMaxMagicArmor":164,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":103,"adjMaxPhysicalArmor":159,"adjMinMagicArmor":103,"adjMaxMagicArmor":159,"adjMortal":0.08})
     }),
     52012686: _tools.RODict({
         "propID": 52012686,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":118,"adjMaxPhysicalArmor":176,"adjMinMagicArmor":118,"adjMaxMagicArmor":176,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":113,"adjMaxPhysicalArmor":175,"adjMinMagicArmor":113,"adjMaxMagicArmor":175,"adjMortal":0.16})
     }),
     52012687: _tools.RODict({
         "propID": 52012687,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":130,"adjMaxPhysicalArmor":194,"adjMinMagicArmor":130,"adjMaxMagicArmor":194,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":124,"adjMaxPhysicalArmor":193,"adjMinMagicArmor":124,"adjMaxMagicArmor":193,"adjMortal":0.16})
     }),
     52012688: _tools.RODict({
         "propID": 52012688,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":142,"adjMaxPhysicalArmor":211,"adjMinMagicArmor":142,"adjMaxMagicArmor":211,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":136,"adjMaxPhysicalArmor":210,"adjMinMagicArmor":136,"adjMaxMagicArmor":210,"adjMortal":0.16})
     }),
     52012689: _tools.RODict({
         "propID": 52012689,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":153,"adjMaxPhysicalArmor":229,"adjMinMagicArmor":153,"adjMaxMagicArmor":229,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":147,"adjMaxPhysicalArmor":228,"adjMinMagicArmor":147,"adjMaxMagicArmor":228,"adjMortal":0.16})
     }),
     52012690: _tools.RODict({
         "propID": 52012690,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":176,"adjMaxPhysicalArmor":263,"adjMinMagicArmor":176,"adjMaxMagicArmor":263,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":162,"adjMaxPhysicalArmor":251,"adjMinMagicArmor":162,"adjMaxMagicArmor":251,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012691: _tools.RODict({
         "propID": 52012691,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":194,"adjMaxPhysicalArmor":289,"adjMinMagicArmor":194,"adjMaxMagicArmor":289,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":178,"adjMaxPhysicalArmor":276,"adjMinMagicArmor":178,"adjMaxMagicArmor":276,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012692: _tools.RODict({
         "propID": 52012692,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":213,"adjMaxPhysicalArmor":318,"adjMinMagicArmor":213,"adjMaxMagicArmor":318,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":196,"adjMaxPhysicalArmor":304,"adjMinMagicArmor":196,"adjMaxMagicArmor":304,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012693: _tools.RODict({
         "propID": 52012693,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":234,"adjMaxPhysicalArmor":350,"adjMinMagicArmor":234,"adjMaxMagicArmor":350,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":216,"adjMaxPhysicalArmor":334,"adjMinMagicArmor":216,"adjMaxMagicArmor":334,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012854: _tools.RODict({
         "propID": 52012854,
@@ -1173,62 +1173,62 @@ datas = _tools.RODict({
     52012858: _tools.RODict({
         "propID": 52012858,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":28,"adjMaxMagicArmor":42,"adjAntiFatal":10,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinMagicArmor":29,"adjMaxMagicArmor":43,"adjAntiFatal":10,"adjMortal":0.08})
     }),
     52012859: _tools.RODict({
         "propID": 52012859,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":31,"adjMaxMagicArmor":46,"adjAntiFatal":11,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinMagicArmor":32,"adjMaxMagicArmor":47,"adjAntiFatal":11,"adjMortal":0.08})
     }),
     52012860: _tools.RODict({
         "propID": 52012860,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":34,"adjMaxMagicArmor":50,"adjAntiFatal":12,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinMagicArmor":35,"adjMaxMagicArmor":52,"adjAntiFatal":12,"adjMortal":0.08})
     }),
     52012861: _tools.RODict({
         "propID": 52012861,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":36,"adjMaxMagicArmor":55,"adjAntiFatal":13,"adjMortal":0.06})
+        "propList": _tools.RODict({"adjMinMagicArmor":38,"adjMaxMagicArmor":56,"adjAntiFatal":13,"adjMortal":0.08})
     }),
     52012862: _tools.RODict({
         "propID": 52012862,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":39,"adjMaxMagicArmor":59,"adjAntiFatal":14,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":42,"adjMaxMagicArmor":62,"adjAntiFatal":15,"adjMortal":0.16})
     }),
     52012863: _tools.RODict({
         "propID": 52012863,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":43,"adjMaxMagicArmor":65,"adjAntiFatal":15,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":46,"adjMaxMagicArmor":68,"adjAntiFatal":16,"adjMortal":0.16})
     }),
     52012864: _tools.RODict({
         "propID": 52012864,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":47,"adjMaxMagicArmor":71,"adjAntiFatal":17,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":50,"adjMaxMagicArmor":74,"adjAntiFatal":17,"adjMortal":0.16})
     }),
     52012865: _tools.RODict({
         "propID": 52012865,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":51,"adjMaxMagicArmor":77,"adjAntiFatal":18,"adjMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":55,"adjMaxMagicArmor":81,"adjAntiFatal":19,"adjMortal":0.16})
     }),
     52012866: _tools.RODict({
         "propID": 52012866,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":59,"adjMaxMagicArmor":89,"adjAntiFatal":21,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":61,"adjMaxMagicArmor":89,"adjAntiFatal":22,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012867: _tools.RODict({
         "propID": 52012867,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":65,"adjMaxMagicArmor":98,"adjAntiFatal":23,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":67,"adjMaxMagicArmor":98,"adjAntiFatal":24,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012868: _tools.RODict({
         "propID": 52012868,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":72,"adjMaxMagicArmor":108,"adjAntiFatal":25,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":74,"adjMaxMagicArmor":108,"adjAntiFatal":26,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52012869: _tools.RODict({
         "propID": 52012869,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicArmor":79,"adjMaxMagicArmor":119,"adjAntiFatal":28,"adjMortal":0.12,"adjAntiMortal":0.12})
+        "propList": _tools.RODict({"adjMinMagicArmor":81,"adjMaxMagicArmor":119,"adjAntiFatal":28,"adjMortal":0.16,"adjAntiMortal":0.16})
     }),
     52013030: _tools.RODict({
         "propID": 52013030,
@@ -1253,622 +1253,622 @@ datas = _tools.RODict({
     52013034: _tools.RODict({
         "propID": 52013034,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":28,"adjMaxPhysicalArmor":42,"adjDodge":10,"adjPVPDmg":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":29,"adjMaxPhysicalArmor":43,"adjDodge":10,"adjPVPDmg":0.04})
     }),
     52013035: _tools.RODict({
         "propID": 52013035,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":31,"adjMaxPhysicalArmor":46,"adjDodge":11,"adjPVPDmg":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":32,"adjMaxPhysicalArmor":47,"adjDodge":11,"adjPVPDmg":0.04})
     }),
     52013036: _tools.RODict({
         "propID": 52013036,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":34,"adjMaxPhysicalArmor":50,"adjDodge":12,"adjPVPDmg":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":35,"adjMaxPhysicalArmor":52,"adjDodge":12,"adjPVPDmg":0.04})
     }),
     52013037: _tools.RODict({
         "propID": 52013037,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":36,"adjMaxPhysicalArmor":55,"adjDodge":13,"adjPVPDmg":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":38,"adjMaxPhysicalArmor":56,"adjDodge":13,"adjPVPDmg":0.04})
     }),
     52013038: _tools.RODict({
         "propID": 52013038,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":39,"adjMaxPhysicalArmor":59,"adjDodge":14,"adjPVPDmg":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":42,"adjMaxPhysicalArmor":62,"adjDodge":15,"adjPVPDmg":0.08})
     }),
     52013039: _tools.RODict({
         "propID": 52013039,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":43,"adjMaxPhysicalArmor":65,"adjDodge":15,"adjPVPDmg":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":46,"adjMaxPhysicalArmor":68,"adjDodge":16,"adjPVPDmg":0.08})
     }),
     52013040: _tools.RODict({
         "propID": 52013040,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":47,"adjMaxPhysicalArmor":71,"adjDodge":17,"adjPVPDmg":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":50,"adjMaxPhysicalArmor":74,"adjDodge":17,"adjPVPDmg":0.08})
     }),
     52013041: _tools.RODict({
         "propID": 52013041,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":51,"adjMaxPhysicalArmor":77,"adjDodge":18,"adjPVPDmg":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":55,"adjMaxPhysicalArmor":81,"adjDodge":19,"adjPVPDmg":0.08})
     }),
     52013042: _tools.RODict({
         "propID": 52013042,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":59,"adjMaxPhysicalArmor":89,"adjDodge":21,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":61,"adjMaxPhysicalArmor":89,"adjDodge":22,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
     }),
     52013043: _tools.RODict({
         "propID": 52013043,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":65,"adjMaxPhysicalArmor":98,"adjDodge":23,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":67,"adjMaxPhysicalArmor":98,"adjDodge":24,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
     }),
     52013044: _tools.RODict({
         "propID": 52013044,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":72,"adjMaxPhysicalArmor":108,"adjDodge":25,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":74,"adjMaxPhysicalArmor":108,"adjDodge":26,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
     }),
     52013045: _tools.RODict({
         "propID": 52013045,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalArmor":79,"adjMaxPhysicalArmor":119,"adjDodge":28,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
+        "propList": _tools.RODict({"adjMinPhysicalArmor":81,"adjMaxPhysicalArmor":119,"adjDodge":28,"adjPVPDmg":0.08,"adjPVPDmgAnti":0.08})
     }),
     52013206: _tools.RODict({
         "propID": 52013206,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":19,"adjMaxPhysicalAtk":40})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":14,"adjMaxPhysicalAtk":43})
     }),
     52013207: _tools.RODict({
         "propID": 52013207,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":21,"adjMaxPhysicalAtk":44})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":15,"adjMaxPhysicalAtk":47})
     }),
     52013208: _tools.RODict({
         "propID": 52013208,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":23,"adjMaxPhysicalAtk":48})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":17,"adjMaxPhysicalAtk":52})
     }),
     52013209: _tools.RODict({
         "propID": 52013209,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":25,"adjMaxPhysicalAtk":52})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":18,"adjMaxPhysicalAtk":56})
     }),
     52013210: _tools.RODict({
         "propID": 52013210,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":27,"adjMaxPhysicalAtk":56,"adjFatal":10,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":20,"adjMaxPhysicalAtk":62,"adjFatal":10,"adjIgnoreArmor":0.02})
     }),
     52013211: _tools.RODict({
         "propID": 52013211,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":30,"adjMaxPhysicalAtk":62,"adjFatal":11,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":22,"adjMaxPhysicalAtk":68,"adjFatal":11,"adjIgnoreArmor":0.02})
     }),
     52013212: _tools.RODict({
         "propID": 52013212,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":32,"adjMaxPhysicalAtk":67,"adjFatal":12,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":24,"adjMaxPhysicalAtk":74,"adjFatal":12,"adjIgnoreArmor":0.02})
     }),
     52013213: _tools.RODict({
         "propID": 52013213,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":35,"adjMaxPhysicalAtk":73,"adjFatal":13,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":26,"adjMaxPhysicalAtk":81,"adjFatal":13,"adjIgnoreArmor":0.02})
     }),
     52013214: _tools.RODict({
         "propID": 52013214,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":38,"adjMaxPhysicalAtk":78,"adjFatal":14,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":29,"adjMaxPhysicalAtk":89,"adjFatal":15,"adjIgnoreArmor":0.04})
     }),
     52013215: _tools.RODict({
         "propID": 52013215,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":42,"adjMaxPhysicalAtk":86,"adjFatal":15,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":32,"adjMaxPhysicalAtk":98,"adjFatal":16,"adjIgnoreArmor":0.04})
     }),
     52013216: _tools.RODict({
         "propID": 52013216,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":46,"adjMaxPhysicalAtk":94,"adjFatal":17,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":35,"adjMaxPhysicalAtk":107,"adjFatal":17,"adjIgnoreArmor":0.04})
     }),
     52013217: _tools.RODict({
         "propID": 52013217,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":49,"adjMaxPhysicalAtk":101,"adjFatal":18,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":38,"adjMaxPhysicalAtk":116,"adjFatal":19,"adjIgnoreArmor":0.04})
     }),
     52013218: _tools.RODict({
         "propID": 52013218,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":56,"adjMaxPhysicalAtk":116,"adjFatal":21,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":42,"adjMaxPhysicalAtk":128,"adjFatal":22,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013219: _tools.RODict({
         "propID": 52013219,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":62,"adjMaxPhysicalAtk":128,"adjFatal":23,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":46,"adjMaxPhysicalAtk":141,"adjFatal":24,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013220: _tools.RODict({
         "propID": 52013220,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":68,"adjMaxPhysicalAtk":141,"adjFatal":25,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":51,"adjMaxPhysicalAtk":155,"adjFatal":26,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013221: _tools.RODict({
         "propID": 52013221,
         "type": 2,
-        "propList": _tools.RODict({"adjMinPhysicalAtk":75,"adjMaxPhysicalAtk":155,"adjFatal":28,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinPhysicalAtk":56,"adjMaxPhysicalAtk":171,"adjFatal":28,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013382: _tools.RODict({
         "propID": 52013382,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":19,"adjMaxMagicAtk":40})
+        "propList": _tools.RODict({"adjMinMagicAtk":14,"adjMaxMagicAtk":43})
     }),
     52013383: _tools.RODict({
         "propID": 52013383,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":21,"adjMaxMagicAtk":44})
+        "propList": _tools.RODict({"adjMinMagicAtk":15,"adjMaxMagicAtk":47})
     }),
     52013384: _tools.RODict({
         "propID": 52013384,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":23,"adjMaxMagicAtk":48})
+        "propList": _tools.RODict({"adjMinMagicAtk":17,"adjMaxMagicAtk":52})
     }),
     52013385: _tools.RODict({
         "propID": 52013385,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":25,"adjMaxMagicAtk":52})
+        "propList": _tools.RODict({"adjMinMagicAtk":18,"adjMaxMagicAtk":56})
     }),
     52013386: _tools.RODict({
         "propID": 52013386,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":27,"adjMaxMagicAtk":56,"adjFatal":10,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinMagicAtk":20,"adjMaxMagicAtk":62,"adjFatal":10,"adjIgnoreArmor":0.02})
     }),
     52013387: _tools.RODict({
         "propID": 52013387,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":30,"adjMaxMagicAtk":62,"adjFatal":11,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinMagicAtk":22,"adjMaxMagicAtk":68,"adjFatal":11,"adjIgnoreArmor":0.02})
     }),
     52013388: _tools.RODict({
         "propID": 52013388,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":32,"adjMaxMagicAtk":67,"adjFatal":12,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinMagicAtk":24,"adjMaxMagicAtk":74,"adjFatal":12,"adjIgnoreArmor":0.02})
     }),
     52013389: _tools.RODict({
         "propID": 52013389,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":35,"adjMaxMagicAtk":73,"adjFatal":13,"adjIgnoreArmor":0.02})
+        "propList": _tools.RODict({"adjMinMagicAtk":26,"adjMaxMagicAtk":81,"adjFatal":13,"adjIgnoreArmor":0.02})
     }),
     52013390: _tools.RODict({
         "propID": 52013390,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":38,"adjMaxMagicAtk":78,"adjFatal":14,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":29,"adjMaxMagicAtk":89,"adjFatal":15,"adjIgnoreArmor":0.04})
     }),
     52013391: _tools.RODict({
         "propID": 52013391,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":42,"adjMaxMagicAtk":86,"adjFatal":15,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":32,"adjMaxMagicAtk":98,"adjFatal":16,"adjIgnoreArmor":0.04})
     }),
     52013392: _tools.RODict({
         "propID": 52013392,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":46,"adjMaxMagicAtk":94,"adjFatal":17,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":35,"adjMaxMagicAtk":107,"adjFatal":17,"adjIgnoreArmor":0.04})
     }),
     52013393: _tools.RODict({
         "propID": 52013393,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":49,"adjMaxMagicAtk":101,"adjFatal":18,"adjIgnoreArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":38,"adjMaxMagicAtk":116,"adjFatal":19,"adjIgnoreArmor":0.04})
     }),
     52013394: _tools.RODict({
         "propID": 52013394,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":56,"adjMaxMagicAtk":116,"adjFatal":21,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":42,"adjMaxMagicAtk":128,"adjFatal":22,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013395: _tools.RODict({
         "propID": 52013395,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":62,"adjMaxMagicAtk":128,"adjFatal":23,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":46,"adjMaxMagicAtk":141,"adjFatal":24,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013396: _tools.RODict({
         "propID": 52013396,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":68,"adjMaxMagicAtk":141,"adjFatal":25,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":51,"adjMaxMagicAtk":155,"adjFatal":26,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013397: _tools.RODict({
         "propID": 52013397,
         "type": 2,
-        "propList": _tools.RODict({"adjMinMagicAtk":75,"adjMaxMagicAtk":155,"adjFatal":28,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
+        "propList": _tools.RODict({"adjMinMagicAtk":56,"adjMaxMagicAtk":171,"adjFatal":28,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013558: _tools.RODict({
         "propID": 52013558,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":175,"adjMinPhysicalAtk":10,"adjMaxPhysicalAtk":29})
+        "propList": _tools.RODict({"adjFullMp":160,"adjMinPhysicalAtk":13,"adjMaxPhysicalAtk":40})
     }),
     52013559: _tools.RODict({
         "propID": 52013559,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":193,"adjMinPhysicalAtk":11,"adjMaxPhysicalAtk":32})
+        "propList": _tools.RODict({"adjFullMp":176,"adjMinPhysicalAtk":14,"adjMaxPhysicalAtk":44})
     }),
     52013560: _tools.RODict({
         "propID": 52013560,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":210,"adjMinPhysicalAtk":12,"adjMaxPhysicalAtk":35})
+        "propList": _tools.RODict({"adjFullMp":192,"adjMinPhysicalAtk":16,"adjMaxPhysicalAtk":48})
     }),
     52013561: _tools.RODict({
         "propID": 52013561,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":228,"adjMinPhysicalAtk":13,"adjMaxPhysicalAtk":38})
+        "propList": _tools.RODict({"adjFullMp":208,"adjMinPhysicalAtk":17,"adjMaxPhysicalAtk":52})
     }),
     52013562: _tools.RODict({
         "propID": 52013562,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":245,"adjMinPhysicalAtk":14,"adjMaxPhysicalAtk":41,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":229,"adjMinPhysicalAtk":19,"adjMaxPhysicalAtk":57,"adjIgnoreArmor":0.02})
     }),
     52013563: _tools.RODict({
         "propID": 52013563,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":270,"adjMinPhysicalAtk":15,"adjMaxPhysicalAtk":45,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":252,"adjMinPhysicalAtk":21,"adjMaxPhysicalAtk":63,"adjIgnoreArmor":0.02})
     }),
     52013564: _tools.RODict({
         "propID": 52013564,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":294,"adjMinPhysicalAtk":17,"adjMaxPhysicalAtk":49,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":275,"adjMinPhysicalAtk":23,"adjMaxPhysicalAtk":68,"adjIgnoreArmor":0.02})
     }),
     52013565: _tools.RODict({
         "propID": 52013565,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":319,"adjMinPhysicalAtk":18,"adjMaxPhysicalAtk":53,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":298,"adjMinPhysicalAtk":25,"adjMaxPhysicalAtk":74,"adjIgnoreArmor":0.02})
     }),
     52013566: _tools.RODict({
         "propID": 52013566,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":343,"adjMinPhysicalAtk":20,"adjMaxPhysicalAtk":57,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":328,"adjMinPhysicalAtk":28,"adjMaxPhysicalAtk":81,"adjIgnoreArmor":0.04})
     }),
     52013567: _tools.RODict({
         "propID": 52013567,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":377,"adjMinPhysicalAtk":22,"adjMaxPhysicalAtk":63,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":361,"adjMinPhysicalAtk":31,"adjMaxPhysicalAtk":89,"adjIgnoreArmor":0.04})
     }),
     52013568: _tools.RODict({
         "propID": 52013568,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":412,"adjMinPhysicalAtk":24,"adjMaxPhysicalAtk":68,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":394,"adjMinPhysicalAtk":34,"adjMaxPhysicalAtk":97,"adjIgnoreArmor":0.04})
     }),
     52013569: _tools.RODict({
         "propID": 52013569,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":446,"adjMinPhysicalAtk":26,"adjMaxPhysicalAtk":74,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":426,"adjMinPhysicalAtk":36,"adjMaxPhysicalAtk":105,"adjIgnoreArmor":0.04})
     }),
     52013570: _tools.RODict({
         "propID": 52013570,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":513,"adjMinPhysicalAtk":30,"adjMaxPhysicalAtk":85,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":469,"adjMinPhysicalAtk":40,"adjMaxPhysicalAtk":116,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013571: _tools.RODict({
         "propID": 52013571,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":564,"adjMinPhysicalAtk":33,"adjMaxPhysicalAtk":94,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":516,"adjMinPhysicalAtk":44,"adjMaxPhysicalAtk":128,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013572: _tools.RODict({
         "propID": 52013572,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":620,"adjMinPhysicalAtk":36,"adjMaxPhysicalAtk":103,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":568,"adjMinPhysicalAtk":48,"adjMaxPhysicalAtk":141,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013573: _tools.RODict({
         "propID": 52013573,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":682,"adjMinPhysicalAtk":40,"adjMaxPhysicalAtk":113,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":625,"adjMinPhysicalAtk":53,"adjMaxPhysicalAtk":155,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013734: _tools.RODict({
         "propID": 52013734,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":175,"adjMinMagicAtk":10,"adjMaxMagicAtk":29})
+        "propList": _tools.RODict({"adjFullMp":160,"adjMinMagicAtk":13,"adjMaxMagicAtk":40})
     }),
     52013735: _tools.RODict({
         "propID": 52013735,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":193,"adjMinMagicAtk":11,"adjMaxMagicAtk":32})
+        "propList": _tools.RODict({"adjFullMp":176,"adjMinMagicAtk":14,"adjMaxMagicAtk":44})
     }),
     52013736: _tools.RODict({
         "propID": 52013736,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":210,"adjMinMagicAtk":12,"adjMaxMagicAtk":35})
+        "propList": _tools.RODict({"adjFullMp":192,"adjMinMagicAtk":16,"adjMaxMagicAtk":48})
     }),
     52013737: _tools.RODict({
         "propID": 52013737,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":228,"adjMinMagicAtk":13,"adjMaxMagicAtk":38})
+        "propList": _tools.RODict({"adjFullMp":208,"adjMinMagicAtk":17,"adjMaxMagicAtk":52})
     }),
     52013738: _tools.RODict({
         "propID": 52013738,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":245,"adjMinMagicAtk":14,"adjMaxMagicAtk":41,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":229,"adjMinMagicAtk":19,"adjMaxMagicAtk":57,"adjIgnoreArmor":0.02})
     }),
     52013739: _tools.RODict({
         "propID": 52013739,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":270,"adjMinMagicAtk":15,"adjMaxMagicAtk":45,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":252,"adjMinMagicAtk":21,"adjMaxMagicAtk":63,"adjIgnoreArmor":0.02})
     }),
     52013740: _tools.RODict({
         "propID": 52013740,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":294,"adjMinMagicAtk":17,"adjMaxMagicAtk":49,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":275,"adjMinMagicAtk":23,"adjMaxMagicAtk":68,"adjIgnoreArmor":0.02})
     }),
     52013741: _tools.RODict({
         "propID": 52013741,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":319,"adjMinMagicAtk":18,"adjMaxMagicAtk":53,"adjIgnoreArmor":0.015})
+        "propList": _tools.RODict({"adjFullMp":298,"adjMinMagicAtk":25,"adjMaxMagicAtk":74,"adjIgnoreArmor":0.02})
     }),
     52013742: _tools.RODict({
         "propID": 52013742,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":343,"adjMinMagicAtk":20,"adjMaxMagicAtk":57,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":328,"adjMinMagicAtk":28,"adjMaxMagicAtk":81,"adjIgnoreArmor":0.04})
     }),
     52013743: _tools.RODict({
         "propID": 52013743,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":377,"adjMinMagicAtk":22,"adjMaxMagicAtk":63,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":361,"adjMinMagicAtk":31,"adjMaxMagicAtk":89,"adjIgnoreArmor":0.04})
     }),
     52013744: _tools.RODict({
         "propID": 52013744,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":412,"adjMinMagicAtk":24,"adjMaxMagicAtk":68,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":394,"adjMinMagicAtk":34,"adjMaxMagicAtk":97,"adjIgnoreArmor":0.04})
     }),
     52013745: _tools.RODict({
         "propID": 52013745,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":446,"adjMinMagicAtk":26,"adjMaxMagicAtk":74,"adjIgnoreArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":426,"adjMinMagicAtk":36,"adjMaxMagicAtk":105,"adjIgnoreArmor":0.04})
     }),
     52013746: _tools.RODict({
         "propID": 52013746,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":513,"adjMinMagicAtk":30,"adjMaxMagicAtk":85,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":469,"adjMinMagicAtk":40,"adjMaxMagicAtk":116,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013747: _tools.RODict({
         "propID": 52013747,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":564,"adjMinMagicAtk":33,"adjMaxMagicAtk":94,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":516,"adjMinMagicAtk":44,"adjMaxMagicAtk":128,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013748: _tools.RODict({
         "propID": 52013748,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":620,"adjMinMagicAtk":36,"adjMaxMagicAtk":103,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":568,"adjMinMagicAtk":48,"adjMaxMagicAtk":141,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013749: _tools.RODict({
         "propID": 52013749,
         "type": 2,
-        "propList": _tools.RODict({"adjFullMp":682,"adjMinMagicAtk":40,"adjMaxMagicAtk":113,"adjIgnoreArmor":0.03,"adjDmgArmor":0.03})
+        "propList": _tools.RODict({"adjFullMp":625,"adjMinMagicAtk":53,"adjMaxMagicAtk":155,"adjIgnoreArmor":0.04,"adjDmgArmor":0.04})
     }),
     52013910: _tools.RODict({
         "propID": 52013910,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1200,"adjMinPhysicalAtk":13,"adjMaxPhysicalAtk":35})
+        "propList": _tools.RODict({"adjFullHp":1200,"adjMinPhysicalAtk":14,"adjMaxPhysicalAtk":38})
     }),
     52013911: _tools.RODict({
         "propID": 52013911,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1320,"adjMinPhysicalAtk":14,"adjMaxPhysicalAtk":39})
+        "propList": _tools.RODict({"adjFullHp":1320,"adjMinPhysicalAtk":15,"adjMaxPhysicalAtk":42})
     }),
     52013912: _tools.RODict({
         "propID": 52013912,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1440,"adjMinPhysicalAtk":16,"adjMaxPhysicalAtk":42})
+        "propList": _tools.RODict({"adjFullHp":1440,"adjMinPhysicalAtk":17,"adjMaxPhysicalAtk":46})
     }),
     52013913: _tools.RODict({
         "propID": 52013913,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1560,"adjMinPhysicalAtk":17,"adjMaxPhysicalAtk":46})
+        "propList": _tools.RODict({"adjFullHp":1560,"adjMinPhysicalAtk":18,"adjMaxPhysicalAtk":49})
     }),
     52013914: _tools.RODict({
         "propID": 52013914,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1680,"adjMinPhysicalAtk":18,"adjMaxPhysicalAtk":49,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":1716,"adjMinPhysicalAtk":20,"adjMaxPhysicalAtk":54,"adjMonsterDmg":0.04})
     }),
     52013915: _tools.RODict({
         "propID": 52013915,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1848,"adjMinPhysicalAtk":20,"adjMaxPhysicalAtk":54,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":1888,"adjMinPhysicalAtk":22,"adjMaxPhysicalAtk":59,"adjMonsterDmg":0.04})
     }),
     52013916: _tools.RODict({
         "propID": 52013916,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2016,"adjMinPhysicalAtk":22,"adjMaxPhysicalAtk":59,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":2059,"adjMinPhysicalAtk":24,"adjMaxPhysicalAtk":65,"adjMonsterDmg":0.04})
     }),
     52013917: _tools.RODict({
         "propID": 52013917,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2184,"adjMinPhysicalAtk":23,"adjMaxPhysicalAtk":64,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":2231,"adjMinPhysicalAtk":26,"adjMaxPhysicalAtk":70,"adjMonsterDmg":0.04})
     }),
     52013918: _tools.RODict({
         "propID": 52013918,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2352,"adjMinPhysicalAtk":25,"adjMaxPhysicalAtk":69,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":2454,"adjMinPhysicalAtk":29,"adjMaxPhysicalAtk":77,"adjMonsterDmg":0.08})
     }),
     52013919: _tools.RODict({
         "propID": 52013919,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2587,"adjMinPhysicalAtk":28,"adjMaxPhysicalAtk":76,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":2699,"adjMinPhysicalAtk":32,"adjMaxPhysicalAtk":85,"adjMonsterDmg":0.08})
     }),
     52013920: _tools.RODict({
         "propID": 52013920,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2822,"adjMinPhysicalAtk":30,"adjMaxPhysicalAtk":83,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":2945,"adjMinPhysicalAtk":35,"adjMaxPhysicalAtk":92,"adjMonsterDmg":0.08})
     }),
     52013921: _tools.RODict({
         "propID": 52013921,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3058,"adjMinPhysicalAtk":33,"adjMaxPhysicalAtk":90,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":3190,"adjMinPhysicalAtk":38,"adjMaxPhysicalAtk":100,"adjMonsterDmg":0.08})
     }),
     52013922: _tools.RODict({
         "propID": 52013922,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3517,"adjMinPhysicalAtk":38,"adjMaxPhysicalAtk":104,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":3509,"adjMinPhysicalAtk":42,"adjMaxPhysicalAtk":110,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52013923: _tools.RODict({
         "propID": 52013923,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3869,"adjMinPhysicalAtk":42,"adjMaxPhysicalAtk":114,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":3860,"adjMinPhysicalAtk":46,"adjMaxPhysicalAtk":121,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52013924: _tools.RODict({
         "propID": 52013924,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":4256,"adjMinPhysicalAtk":46,"adjMaxPhysicalAtk":125,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":4246,"adjMinPhysicalAtk":51,"adjMaxPhysicalAtk":133,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52013925: _tools.RODict({
         "propID": 52013925,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":4682,"adjMinPhysicalAtk":51,"adjMaxPhysicalAtk":138,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":4671,"adjMinPhysicalAtk":56,"adjMaxPhysicalAtk":146,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52014086: _tools.RODict({
         "propID": 52014086,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1200,"adjMinMagicAtk":13,"adjMaxMagicAtk":35})
+        "propList": _tools.RODict({"adjFullHp":1200,"adjMinMagicAtk":14,"adjMaxMagicAtk":38})
     }),
     52014087: _tools.RODict({
         "propID": 52014087,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1320,"adjMinMagicAtk":14,"adjMaxMagicAtk":39})
+        "propList": _tools.RODict({"adjFullHp":1320,"adjMinMagicAtk":15,"adjMaxMagicAtk":42})
     }),
     52014088: _tools.RODict({
         "propID": 52014088,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1440,"adjMinMagicAtk":16,"adjMaxMagicAtk":42})
+        "propList": _tools.RODict({"adjFullHp":1440,"adjMinMagicAtk":17,"adjMaxMagicAtk":46})
     }),
     52014089: _tools.RODict({
         "propID": 52014089,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1560,"adjMinMagicAtk":17,"adjMaxMagicAtk":46})
+        "propList": _tools.RODict({"adjFullHp":1560,"adjMinMagicAtk":18,"adjMaxMagicAtk":49})
     }),
     52014090: _tools.RODict({
         "propID": 52014090,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1680,"adjMinMagicAtk":18,"adjMaxMagicAtk":49,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":1716,"adjMinMagicAtk":20,"adjMaxMagicAtk":54,"adjMonsterDmg":0.04})
     }),
     52014091: _tools.RODict({
         "propID": 52014091,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1848,"adjMinMagicAtk":20,"adjMaxMagicAtk":54,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":1888,"adjMinMagicAtk":22,"adjMaxMagicAtk":59,"adjMonsterDmg":0.04})
     }),
     52014092: _tools.RODict({
         "propID": 52014092,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2016,"adjMinMagicAtk":22,"adjMaxMagicAtk":59,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":2059,"adjMinMagicAtk":24,"adjMaxMagicAtk":65,"adjMonsterDmg":0.04})
     }),
     52014093: _tools.RODict({
         "propID": 52014093,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2184,"adjMinMagicAtk":23,"adjMaxMagicAtk":64,"adjMonsterDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":2231,"adjMinMagicAtk":26,"adjMaxMagicAtk":70,"adjMonsterDmg":0.04})
     }),
     52014094: _tools.RODict({
         "propID": 52014094,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2352,"adjMinMagicAtk":25,"adjMaxMagicAtk":69,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":2454,"adjMinMagicAtk":29,"adjMaxMagicAtk":77,"adjMonsterDmg":0.08})
     }),
     52014095: _tools.RODict({
         "propID": 52014095,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2587,"adjMinMagicAtk":28,"adjMaxMagicAtk":76,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":2699,"adjMinMagicAtk":32,"adjMaxMagicAtk":85,"adjMonsterDmg":0.08})
     }),
     52014096: _tools.RODict({
         "propID": 52014096,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2822,"adjMinMagicAtk":30,"adjMaxMagicAtk":83,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":2945,"adjMinMagicAtk":35,"adjMaxMagicAtk":92,"adjMonsterDmg":0.08})
     }),
     52014097: _tools.RODict({
         "propID": 52014097,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3058,"adjMinMagicAtk":33,"adjMaxMagicAtk":90,"adjMonsterDmg":0.08})
+        "propList": _tools.RODict({"adjFullHp":3190,"adjMinMagicAtk":38,"adjMaxMagicAtk":100,"adjMonsterDmg":0.08})
     }),
     52014098: _tools.RODict({
         "propID": 52014098,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3517,"adjMinMagicAtk":38,"adjMaxMagicAtk":104,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":3509,"adjMinMagicAtk":42,"adjMaxMagicAtk":110,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52014099: _tools.RODict({
         "propID": 52014099,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3869,"adjMinMagicAtk":42,"adjMaxMagicAtk":114,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":3860,"adjMinMagicAtk":46,"adjMaxMagicAtk":121,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52014100: _tools.RODict({
         "propID": 52014100,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":4256,"adjMinMagicAtk":46,"adjMaxMagicAtk":125,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":4246,"adjMinMagicAtk":51,"adjMaxMagicAtk":133,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52014101: _tools.RODict({
         "propID": 52014101,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":4682,"adjMinMagicAtk":51,"adjMaxMagicAtk":138,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
+        "propList": _tools.RODict({"adjFullHp":4671,"adjMinMagicAtk":56,"adjMaxMagicAtk":146,"adjMonsterDmg":0.08,"adjMonsterDmgAnti":0.08})
     }),
     52014262: _tools.RODict({
         "propID": 52014262,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1000,"adjDrugsQuantity":3})
+        "propList": _tools.RODict({"adjFullHp":2000,"adjDrugsQuantity":4})
     }),
     52014263: _tools.RODict({
         "propID": 52014263,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1100,"adjDrugsQuantity":3})
+        "propList": _tools.RODict({"adjFullHp":2200,"adjDrugsQuantity":5})
     }),
     52014264: _tools.RODict({
         "propID": 52014264,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1200,"adjDrugsQuantity":3})
+        "propList": _tools.RODict({"adjFullHp":2400,"adjDrugsQuantity":6})
     }),
     52014265: _tools.RODict({
         "propID": 52014265,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1300,"adjDrugsQuantity":3})
+        "propList": _tools.RODict({"adjFullHp":2600,"adjDrugsQuantity":7})
     }),
     52014266: _tools.RODict({
         "propID": 52014266,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1400,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":2860,"adjDrugsQuantity":9,"adjFinalDmg":0.02})
     }),
     52014267: _tools.RODict({
         "propID": 52014267,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1540,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":3146,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
     }),
     52014268: _tools.RODict({
         "propID": 52014268,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1680,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":3432,"adjDrugsQuantity":11,"adjFinalDmg":0.02})
     }),
     52014269: _tools.RODict({
         "propID": 52014269,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1820,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":3718,"adjDrugsQuantity":13,"adjFinalDmg":0.02})
     }),
     52014270: _tools.RODict({
         "propID": 52014270,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1960,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":4090,"adjDrugsQuantity":16,"adjFinalDmg":0.04})
     }),
     52014271: _tools.RODict({
         "propID": 52014271,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2156,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":4499,"adjDrugsQuantity":18,"adjFinalDmg":0.04})
     }),
     52014272: _tools.RODict({
         "propID": 52014272,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2352,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":4908,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
     }),
     52014273: _tools.RODict({
         "propID": 52014273,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2548,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":5317,"adjDrugsQuantity":22,"adjFinalDmg":0.04})
     }),
     52014274: _tools.RODict({
         "propID": 52014274,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2930,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":5849,"adjDrugsQuantity":26,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     }),
     52014275: _tools.RODict({
         "propID": 52014275,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3223,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":6434,"adjDrugsQuantity":28,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     }),
     52014276: _tools.RODict({
         "propID": 52014276,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3545,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":7077,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     }),
     52014277: _tools.RODict({
         "propID": 52014277,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3900,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":7785,"adjDrugsQuantity":32,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     })
 })
 minKey = 51000001

@@ -65,6 +65,12 @@ class AchievementsVal(userType.UserSingleType):
             avatar.client.onUpdateAchieveDatas(_updateList)
 
     def triggerAchieveByType(self, avatar, targetType, ctx):
+        #玩家在跨服，本服却触发了成就直接跳过
+        if avatar.isCrossServerInLocalServer:
+            if (isinstance(ctx, dict) and not ctx.get('fromCrossServer')) or (not isinstance(ctx, dict) and not hasattr(ctx, 'fromCrossServer')):
+                LOG_WARN('triggerAchieveByType isCrossServerInLocalServer and skip', targetType, ctx)
+                return
+        avatar.syncMethodCallToLocalServerBase("onCrossServerTriggerAchieveByType", (targetType, ctx))
         LOG_DBG('triggerAchieveByType', targetType, ctx)
         _waitList = self.typeDic.get(targetType, [])
         _updateList = self._updateByWaitList(avatar, _waitList, ctx)
@@ -215,10 +221,10 @@ class AchievementsVal(userType.UserSingleType):
                 continue
 
             _rewardId = _achieveVal.configData()['reward']
-            _ctx = avatar._getAvatarAwardCtx(_rewardId, None)
+            _ctx = avatar.getAvatarAwardCtx(_rewardId, None)
             _awardVal = dropAward.getAwardOne(_rewardId, _ctx)
             _opUUID = KBEngine.genUUID64()
-            _detail = gameclass.AwardDetail(achievementId=[_achieveId], popRewardUUID=popRewardUUID)
+            _detail = gameclass.AwardDetailCls(achievementId=[_achieveId], popRewardUUID=popRewardUUID)
             avatar.addWealth(_src, _awardVal, _opUUID, _detail, directly=False)
 
             self.popAchieveVal(_achieveId)
@@ -232,6 +238,8 @@ class AchievementsVal(userType.UserSingleType):
             self.sumPoint += _achieveVal.configData()['achPoint']
 
             LogTrackingMgr.LogTrackingMgr.Achievement_Update(
+                avatar.gbID,
+                avatar.accountEntity.clientDistinctId,
                 avatar.accountEntity.accountName,
                 avatar.gbID,
                 gameconfig.gameId(),
@@ -242,7 +250,7 @@ class AchievementsVal(userType.UserSingleType):
                 self.sumPoint
             )
 
-        avatar._showPopReward(_src, popRewardUUID, gameclass.AwardDetail(achievementId=_takeIds))
+        avatar._showPopReward(_src, popRewardUUID, gameclass.AwardDetailCls(achievementId=_takeIds))
         avatar.client.onTakeAchievementRewards(_takeIds, self.sumPoint)
 
     def sendInitDataToClient(self, avatar):

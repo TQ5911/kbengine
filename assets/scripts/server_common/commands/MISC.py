@@ -248,19 +248,34 @@ def gm_createMonster(superUser, playerEnt, monsterId, level, monsterNum=1, radiu
 
     return True, f'成功在玩家周围{radius}米的圆上创建了{monsterNum}个怪物'
 
+@gm_cmd('$createAvatarReplica', (Player("gbId or Id"), Int('arType'), ), RARG(0), CELL, '创建Avatar副本', ALLSIDE, GOD_GROUPS, minArgs=1)
+def gm_createAvatarReplica(superUser, playerEnt, arType=1):
+    props = playerEnt.cloneAvatarProps(arType)
+    props.update({
+        'spaceNo': playerEnt.spaceNo,
+        "direction": playerEnt.direction,
+        "position": playerEnt.position,
+
+        'tmpProps': {'overwriteProps': {'hpMult': 3}},
+        'spaceMgrId': playerEnt.spaceMgrId,
+        'replicaId': 11011099,
+        #'gameEntityId': next(utils.genGameEntityId(31250003, 1), 0)
+    })
+    KBEngine.createEntity('AvatarReplica', playerEnt.spaceID, playerEnt.position, playerEnt.direction, props)
+    return True, 'command success'
 
 @gm_cmd('$addcoin', (Player("gbId or Id", raw=True), Float("num"),), RARG(0), BASE, '增加货币', ALLSIDE, GOD_GROUPS)
 def gm_addCoin(superUser, playerEnt, num):
     _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$addcoin', num=num)
+    detail = gameclass.AwardDetailCls(gm_cmd='$addcoin', num=num)
 
     if gmCommand.isRawPlayer(playerEnt):
         gbId, name, accountName, dbId = playerEnt
         if num > 0:
             gamesql.recordAvatarOfflineCallback(gbId, 'addCoin', (num, _opUUID, src, detail))
         elif num < 0:
-            gamesql.recordAvatarOfflineCallback(gbId, 'gmDeleteItems', (gameconst.ItemId.COIN, abs(num), detail))
+            gamesql.recordAvatarOfflineCallback(gbId, 'gmDeleteItems', (gameconst.ItemIdEnum.COIN, abs(num), detail))
     else:
         if num > 0:
             playerEnt.addCoin(num, _opUUID, src, detail)
@@ -278,7 +293,7 @@ def gm_deductcoinCompletely(superUser, playerEnt, num):
     _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
     num = abs(num)
-    detail = gameclass.AwardDetail(gm_cmd='$addcoin', num=num)
+    detail = gameclass.AwardDetailCls(gm_cmd='$addcoin', num=num)
 
     if gmCommand.isRawPlayer(playerEnt):
         gbId, name, accountName, dbId = playerEnt
@@ -287,10 +302,10 @@ def gm_deductcoinCompletely(superUser, playerEnt, num):
             if ret:
                 superUser.onCommandResult(ret, '', {'coin': hasCoin})
                 return
-            gamesql.recordAvatarOfflineCallback(gbId, 'gmDeleteItems', (gameconst.ItemId.COIN, num, detail))
+            gamesql.recordAvatarOfflineCallback(gbId, 'gmDeleteItems', (gameconst.ItemIdEnum.COIN, num, detail))
             superUser.onCommandResult(0, '', {})
 
-        gamesql.checkOfflineDeductWealth(gbId, gameconst.ItemId.COIN, num, _onCheckDeduct)
+        gamesql.checkOfflineDeductWealth(gbId, gameconst.ItemIdEnum.COIN, num, _onCheckDeduct)
     else:
         if playerEnt.deductCoin(num, _opUUID, src, detail, bMsg=False):
             superUser.onCommandResult(0, '', {})
@@ -368,7 +383,7 @@ def gm_removeEntityById(superUser, gameEntityId):
     if not _spaceBase:
         return False, '未知空间'
 
-    _spaceBase.cell.removeEntityById(gameEntityId)
+    _spaceBase.cell.removeEntById(gameEntityId)
 
     return True
 
@@ -790,6 +805,7 @@ def gm_getDropid(superUser, playerEnt, dropId, num):
         awardCtx.addContextVar('avatarId', playerEnt.id)
         awardCtx.addContextVar('school', playerEnt.getRoleCacheAttr('school', 0))
         awardCtx.addContextVar('isMonthCardExpired', playerEnt.getRoleCacheAttr('monthCardExpired', True))
+        awardCtx.addContextVar('isBigMonthCardExpired', playerEnt.getRoleCacheAttr('bigMonthCardExpired', True))
         awardCtx.addContextVar('avatarScoreRank', playerEnt.avatarScoreRank)
         awardCtx.addContextVar('isCrossServer', playerEnt.isCrossServer)
         _opUUID = KBEngine.genUUID64()
@@ -945,16 +961,16 @@ def gm_sendMailByAvatarId(superUser, toId, mailId, dueTime, attachStr, despArgsS
     return True, 'command success'
 
 @gm_cmd('$sendglobalmail', (Int('mail id'), Str('attachStr'), Str('despArgs str'), Str('title'), Str('cont'), Int('minRoleTime'), Int('maxRoleTime'),
-                            Int('dueTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
+                            Int('dueTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel'), Int("mailTag")),
         RONE, gameconst.BASE, '发一封全服邮件', ALLSIDE, GOD_GROUPS)
-def gm_gmSendGlobalMail(superUser, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel):
+def gm_gmSendGlobalMail(superUser, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, mailTag):
     # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
     _attach = mailAssistor.parseAttachStr(attachStr)
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = base64.b64decode(title.encode('ascii'), b'_-').decode('utf-8')
     cont = base64.b64decode(cont.encode('ascii'), b'_-').decode('utf-8')
     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, _attach, despArgs, title, cont, minRoleTime, maxRoleTime, 
-                                                              dueTime, minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM)
+                                                              dueTime, minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM, mailTag)
     return True, 'command success'
 
 @gm_cmd('$getGlobalMailList', (Player("gbId or Id"), Int("int mailNum")), RSU, gameconst.BASE, '查看最近mailNum封全服邮件列表', INSIDE, GOD_GROUPS)
@@ -986,32 +1002,15 @@ def gm_officialMessage(superUser, type, content, repeatCnt):
     gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onOfficialMessage', (type, content, repeatCnt)))
     return True, 'command success'
 
-
-@gm_cmd('$officialMessageRegularTime', (
-        Int("int type"), Str("str content"), Int("int single pepeat count"), Str("str startTime"), Int("int interval"),
-        Int("int totalExecuteCount")),
-        RONE, gameconst.BASE, '定时公告', ALLSIDE, GOD_GROUPS)
-def gm_officialMessageRegularTime(superUser, type, content, singleRepeatCnt, startTime, interval, totalExecuteCount):
-    _startTimeArgs = startTime.split(':')
-    _startTimeHour = int(_startTimeArgs[0])
-    _startTimeMinute = int(_startTimeArgs[1])
-    _startTimeTuple = [[[_startTimeMinute], [_startTimeHour], [], [], [], []]]
-    nextStart, _ = utils.nextByCronTupleList(_startTimeTuple)
-
-    gameglobal.localBaseApp.sendOfficialMessage(nextStart, type, content, singleRepeatCnt, interval * 60,
-                                                totalExecuteCount)
-    return True, 'command success'
-
-
 @gm_cmd('$onEventTips', (Player("gbId or Id"),), RARG(0), BASE, 'eventTips', ALLSIDE, GOD_GROUPS)
 def gm_gmOnEventTips(superUser, playerEnt):
     itemId = 30040001
     wealthVal = dropAward.AwardVal()
     wealthVal.addWealthByItemId(itemId, 1)
-    awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID, eventTipId=10000002)
+    awardCtx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID, eventTipId=10000002)
     _opUUID = KBEngine.genUUID64()
     srcType = 302
-    detail = gameclass.AwardDetail(rankPos=1)
+    detail = gameclass.AwardDetailCls(rankPos=1)
     playerEnt.addWealth(srcType, wealthVal, _opUUID, detail, awardCtx)
 
 
@@ -1069,7 +1068,7 @@ def gm_gmClaimTask(superUser, playerEnt, taskId, check):
         return False, '执行失败， 任务id错误'
     import actionContext
     if check:
-        playerEnt.cell.startClaimTask(taskId, '', (), actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM))
+        playerEnt.cell.doStartClaimTask(taskId, '', (), actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM))
     else:
         playerEnt.baseTaskClaim(taskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM), needCheck=False)
     return True, 'command success'
@@ -1524,6 +1523,33 @@ def gm_modifyServertime(superUser, modifyTime):
     forwardGMCommand(superUser, '$modifyServertime-base', modifyTime)
     return True, '$modifyServertime执行成功'
 
+@gm_cmd('$advanceServertime', (Int('days'), Int('hours'), Int('minutes')), RONE, BASE, '推进服务器时间(天/时/分)', ALLSIDE, GOD_GROUPS)
+def gm_advanceServertime(superUser, days, hours, minutes):
+    if KBEngine.publish():
+        return False, 'modify on dev only'
+    deltaSeconds = days * 86400 + hours * 3600 + minutes * 60
+    if deltaSeconds <= 0:
+        return False, '推进时间必须大于0'
+    forwardGMCommand(superUser, '$advanceServertime-cell', deltaSeconds)
+    forwardGMCommand(superUser, '$advanceServertime-base', deltaSeconds)
+    return True, '$advanceServertime执行成功，推进%d天%d时%d分' % (days, hours, minutes)
+
+@gm_cmd('$advanceServertime-cell', (Int('deltaSeconds'),), RALL, CELL, '推进服务器时间', ALLSIDE, GOD_GROUPS)
+def gm_advanceServertimeCell(superUser, deltaSeconds):
+    LOG_DBG('advanceServertimeCell', deltaSeconds)
+    import time
+    _currentTempTime = utils.tempTime
+    utils.tempTime = lambda: _currentTempTime() + deltaSeconds
+    time.time = utils.tempTime
+
+@gm_cmd('$advanceServertime-base', (Int('deltaSeconds'),), RALL, BASE, '推进服务器时间', ALLSIDE, GOD_GROUPS)
+def gm_advanceServertimeBase(superUser, deltaSeconds):
+    LOG_DBG('advanceServertimeBase', deltaSeconds)
+    import time
+    _currentTempTime = utils.tempTime
+    utils.tempTime = lambda: _currentTempTime() + deltaSeconds
+    time.time = utils.tempTime
+
 @gm_cmd('$modifyAllServertimeInCrossGroup', (Str('modifyTime'),), RONE, BASE, '修改跨服组服务器时间', ALLSIDE, GOD_GROUPS)
 def gm_modifyAllServertimeInCrossGroup(superUser, modifyTime):
     if KBEngine.publish():
@@ -1929,46 +1955,6 @@ def gm_queryWPWhiteList(superUser):
 
     redisUtils.SetUtils.loadAllFromRedis(gameconst.RedisKey.WP_WHITE_LSIT_KEY, _onLoadAll)
 
-
-@gm_cmd('$setChatForbidden', (Player("gbId or Id", raw=True), Int("int seconds"),), RARG(0), BASE, '设置聊天禁止', ALLSIDE,
-        GOD_GROUPS)
-def gm_setChatForbidden(superUser, playerEnt, seconds):
-    # 离线玩家处理
-    _args = (gameconst.IDIPBanType.CHAT, utils.curTS() + seconds)
-    if gmCommand.isRawPlayer(playerEnt):
-        gbId, name, accountName, dbId = playerEnt
-        LOG_INFO(f"gm offline setChatForbidden, gbID:{gbId}")
-        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPBanState', _args)
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
-    # 在线玩家处理
-    else:
-        LOG_INFO(f"gm online setChatForbidden, gbID:{playerEnt.gbID}")
-        if not playerEnt.IDIPBanState(*_args):
-            superUser.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-            return False, '执行失败'
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-    return True, 'command success'
-
-
-@gm_cmd('$removeChatForbidden', (Player("gbId or Id", raw=True),), RARG(0), BASE, '移除聊天禁止', ALLSIDE, GOD_GROUPS)
-def gm_removeChatForbidden(superUser, playerEnt):
-    # 离线玩家处理
-    _args = (gameconst.IDIPBanType.CHAT,)
-    if gmCommand.isRawPlayer(playerEnt):
-        gbId, name, accountName, dbId = playerEnt
-        LOG_INFO(f"gm offline removeChatForbidden, gbID:{gbId}")
-        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPRemoveBanState', _args)
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
-    # 在线玩家处理
-    else:
-        LOG_INFO(f"gm online removeChatForbidden, gbID:{playerEnt.gbID}")
-        if not playerEnt.IDIPRemoveBanState(*_args):
-            superUser.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-            return False, '执行失败'
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-    return True, 'command success'
-
-
 @gm_cmd('$queryChatForbidden', (Player("gbId or Id", raw=True),), RARG(0), BASE, '查询聊天禁止', ALLSIDE, GOD_GROUPS)
 def gm_queryChatForbidden(superUser, playerEnt):
     # 离线玩家处理
@@ -2032,9 +2018,9 @@ def gm_setPlayerlv(superUser, playerEnt, lv):
         return False, '等级不能降低'
     _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$setlv', level=lv)
+    detail = gameclass.AwardDetailCls(gm_cmd='$setlv', level=lv)
     import utils
-    playerEnt.levelUp(min(utils.getPlayerMaxLevel(), lv), _opUUID, src, detail)
+    playerEnt.levelUp(min(utils.getMaxPlayerLevel(), lv), _opUUID, src, detail)
     return True, 'command success'
 
 @gm_cmd('$clearCD', (Player("gbId or Id"),), RARG(0), CELL, '清除技能CD', ALLSIDE, GOD_GROUPS)
@@ -2075,6 +2061,16 @@ def gm_switchServer(superUser, playerEnt, serverId):
 def gm_enterMap(superUser, playerEnt, mapId):
     enterPos, direction = formula.getSpaceBornPosAndDir(mapId)
     playerEnt.applyEnterLineInternal(mapId, 0, enterPos, direction, {'isForceEnter': True})
+    return True, 'command success'
+
+@gm_cmd('$EnterAbyss', (Player("gbId or Id"), Int("int floor")), RARG(0), BASE, '进入归墟', ALLSIDE, GOD_GROUPS)
+def gm_EnterAbyss(superUser, playerEnt, floor):
+    playerEnt.checkAndEnterAbyss(floor)
+    return True, 'command success'
+
+@gm_cmd('$LeaveAbyss', (Player("gbId or Id"),), RARG(0), BASE, '离开归墟', ALLSIDE, GOD_GROUPS)
+def gm_LeaveAbyss(superUser, playerEnt):
+    playerEnt.cell.gmLeaveAbyss()
     return True, 'command success'
 
 @gm_cmd('$EnterWonderLand', (Player("gbId or Id"), Int("int mapId")), RARG(0), BASE, '进入秘境峰', ALLSIDE, GOD_GROUPS)
@@ -2207,7 +2203,7 @@ def gm_finishAchievement(superUser,playerEnt, AchievementID):
 def gm_addguildexp(superUser, playerEnt,exp):
     _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$SetGuildLevel', exp=exp)
+    detail = gameclass.AwardDetailCls(gm_cmd='$SetGuildLevel', exp=exp)
     if exp < 1:
         return False, '执行失败，经验不能小于1'
     elif playerEnt.guildBox is None:
@@ -2222,7 +2218,7 @@ def gm_modifybuildingexp(superUser, playerEnt,building,exp):
         return False, '执行失败，帮会建筑不存在'
     _opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM
-    detail = gameclass.AwardDetail(gm_cmd='$modifyBuildingExp', building=building,exp=exp)
+    detail = gameclass.AwardDetailCls(gm_cmd='$modifyBuildingExp', building=building,exp=exp)
     if exp < 1:
         return False, '执行失败，经验不能小于1'
     elif playerEnt.guildBox is None:
@@ -2322,7 +2318,7 @@ def gm_sendrewardIDglobalmail(superUser, mailId, rewardID, despArgsStr, title, c
     import itemData_set as IDSD
     COIN_ID = IDSD.datas['itemID_coin']['value']
     MONEY_ID = IDSD.datas['itemID_money']['value']
-    _attach = dropAward.MailWealthVal()
+    _attach = dropAward.MailAttachVal()
 
     dropCtx = awardContext.DropAwardCtx(1234, 20, {'lv': 20}, eventTipId=5678,
                                     monsterId=5678,

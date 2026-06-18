@@ -5,7 +5,7 @@ datas ={
       22010001
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -43,7 +43,7 @@ datas ={
   },
   "1008": {
     "type": "dunFailed",
-    "exitTime": 20.0,
+    "exitTime": 30.0,
     "transition": {}
   },
   "1009": {
@@ -75,7 +75,7 @@ datas ={
   },
   "1005": {
     "type": "dunEnd",
-    "exitTime": 65.0,
+    "exitTime": 30.0,
     "isDungeonDone": 1,
     "transition": {}
   },

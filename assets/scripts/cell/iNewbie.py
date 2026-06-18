@@ -17,7 +17,7 @@ class INewbie(object):
     def destroyFromNewbieDungeon(self, dungeonNo):
         lockNo = self.getNewbieStepDungeonNo()
         LOG_INFO('destroyFromNewbieDungeon', self.gbId, lockNo, dungeonNo, self.getNewbieStepCell())
-        if lockNo and lockNo == dungeonNo:
+        if lockNo:
             self.offline(self.id, gameconst.OFFLINE_REASON_NEWBIE_KICKOUT)
             return
 

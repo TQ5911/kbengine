@@ -130,12 +130,12 @@ class MonthCycleEvent(IBaseCycleEvent):
             self.tUpdateTime = utils.getNextMonthTS(offsetSec=self.cycleTime)
 
 
-class ICycleEvent(object):
+class ICycleEventMixin(object):
     """ 服务器循环时间类, 如需要继承改类需要注意一下问题:
 
     1. 需要实现 onTimer方法, e.g.
 
-        class A(ICycleEvent):
+        class A(ICycleEventMixin):
             def onTimer(self, tid, userArg):
                 if userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
                     self.onCycleEventTick()

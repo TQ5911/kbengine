@@ -246,6 +246,33 @@
         </Properties>
     </APPEARANCE_INFO>
 
+    <WAITMAP_CHARACTER> FIXED_DICT
+        <implementedBy>     waitMapCharacter.instance     </implementedBy>
+        <Properties>
+            <gbId>
+                <Type>           PLAYER_GBID             </Type>
+            </gbId>
+            <name>
+                <Type>           UNICODE                 </Type>
+            </name>
+            <level>
+                <Type>           UINT16                  </Type>
+            </level>
+            <sex>
+                <Type>           SEX                     </Type>
+            </sex>
+            <school>
+                <Type>           SCHOOL                  </Type>
+            </school>
+            <guildName>
+                <Type>           UNICODE                 </Type>
+            </guildName>
+            <appearance>
+                <Type>           APPEARANCE_INFO         </Type>
+            </appearance>
+        </Properties>
+    </WAITMAP_CHARACTER>
+
     <CHARACTER_VAL> FIXED_DICT
         <implementedBy>     characterInfo.characterValInstance </implementedBy>
         <Properties>
@@ -431,6 +458,28 @@
         </Properties>
     </ATTR_VAL>
 
+    <SPIRIT_BIND_VAL> FIXED_DICT
+        <Properties>
+            <pos>
+                <Type> UINT8 </Type>
+            </pos>
+            <bindType>
+                <Type> UINT8 </Type>
+            </bindType>
+        </Properties>
+    </SPIRIT_BIND_VAL>
+
+    <GLYPH_BIND_VAL> FIXED_DICT
+        <Properties>
+            <pos>
+                <Type> UINT8 </Type>
+            </pos>
+            <bindType>
+                <Type> UINT8 </Type>
+            </bindType>
+        </Properties>
+    </GLYPH_BIND_VAL>
+
     <CLI_GLYPH_INFO> FIXED_DICT
         <Properties>
             <glyphPos>
@@ -479,6 +528,12 @@
             <blessAffixes>
                 <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
             </blessAffixes>
+            <soulAffixes>
+                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
+            </soulAffixes>
+            <soulItemId>
+                <Type>  ITEMID   </Type>
+            </soulItemId>
             <glyphInfos>
                 <Type>  ARRAY <of>  CLI_GLYPH_INFO </of>   </Type>
             </glyphInfos>
@@ -503,9 +558,21 @@
             <bindValue>
                 <Type>  UINT16  </Type>
             </bindValue>
-            <isAddBindValue>
-                <Type>  BOOL  </Type>
-            </isAddBindValue>
+            <bindEnhanceCost>
+                <Type>  UINT16  </Type>
+            </bindEnhanceCost>
+            <bindBlessCost>
+                <Type>  UINT16  </Type>
+            </bindBlessCost>
+            <spiritBindTypes>
+                <Type>  ARRAY <of> SPIRIT_BIND_VAL </of>   </Type>
+            </spiritBindTypes>
+            <glyphBindTypes>
+                <Type>  ARRAY <of> GLYPH_BIND_VAL </of>   </Type>
+            </glyphBindTypes>
+            <soulBindType>
+                <Type>  UINT8  </Type>
+            </soulBindType>
             <grade>
                 <Type> UINT8 </Type>
             </grade>
@@ -515,6 +582,12 @@
             <returnTime>
                 <Type>  LONGTIME   </Type>
             </returnTime>
+            <ownerId>
+                <Type>  PLAYER_GBID </Type>
+            </ownerId>
+            <whyInMyBag>
+                <Type>  UINT8   </Type>
+            </whyInMyBag>
         </Properties>
     </CLI_EQUIP_ITEM_VAL>
 
@@ -1199,6 +1272,23 @@
         </Properties>
     </CHAT_CHANNEL_AVATAR_INFO>
 
+    <CHAT_MSG_DATA> FIXED_DICT
+        <Properties>
+            <msg>
+                <Type>  UNICODE </Type>
+            </msg>
+            <code>
+                <Type>  INT32  </Type>
+            </code>
+            <voiceUrl>
+                <Type>  STRING </Type>
+            </voiceUrl>
+            <msgType>
+                <Type>  UINT8 </Type>
+            </msgType>
+        </Properties>
+    </CHAT_MSG_DATA>
+
     <!--Team dungeon founders struc-->
     <TEAM_DUNGEON_FOUNDER_VAL> FIXED_DICT
         <Properties>
@@ -1378,6 +1468,9 @@
             <siegeWarCamp>
                 <Type> UINT8 </Type>
             </siegeWarCamp>
+            <lastDungeonFinishedTime>
+                <Type>  LONGTIME    </Type>
+            </lastDungeonFinishedTime>
         </Properties>
     </CLIENT_TEAM_INFO>
 
@@ -1518,6 +1611,9 @@
             <isInDungeon>
                 <Type>  BOOL  </Type>
             </isInDungeon>
+            <lastDungeonFinishedTime>
+                <Type>  LONGTIME    </Type>
+            </lastDungeonFinishedTime>
         </Properties>
     </TEAM_INFO>
 
@@ -1832,6 +1928,9 @@
             <siegeWarCamp>
                 <Type> UINT8 </Type>
             </siegeWarCamp>
+            <lastDungeonFinishedTime>
+                <Type>  LONGTIME    </Type>
+            </lastDungeonFinishedTime>
         </Properties>
     </RAID_CLIENT_VAL>
 
@@ -2541,6 +2640,9 @@
             <desc>
                 <Type>  UNICODE         </Type>
             </desc>
+            <publicDesc>
+                <Type>  UNICODE         </Type>
+            </publicDesc>
             <dspFlag>
                 <Type>  UINT8           </Type>
             </dspFlag>
@@ -2952,6 +3054,20 @@
         </Properties>
     </WONDER_LAND_SWITCH>
 
+    <ABYSS_SWITCH> FIXED_DICT
+        <Properties>
+            <coinSwitch>
+                <Type>  BOOL        </Type>
+            </coinSwitch>
+            <itemSwitch>
+                <Type>  BOOL        </Type>
+            </itemSwitch>
+            <times>
+                <Type>  UINT8       </Type>
+            </times>
+        </Properties>
+    </ABYSS_SWITCH>
+
     <STORE_ITEM_VAL> FIXED_DICT
         <implementedBy>     StoreInfo.storeItemInstance    </implementedBy>
         <Properties>
@@ -2961,6 +3077,9 @@
             <buyNum>
                 <Type>    INT32       </Type>
             </buyNum>
+            <price>
+                <Type>  INT32   </Type>
+            </price>
         </Properties>
     </STORE_ITEM_VAL>
 
@@ -3474,6 +3593,9 @@
             <desc>
                 <Type>  UNICODE                         </Type>
             </desc>
+            <publicDesc>
+                <Type>  UNICODE                         </Type>
+            </publicDesc>
             <guildUUID>
                 <Type>  GUILD_UUID                      </Type>
             </guildUUID>
@@ -3515,30 +3637,6 @@
             </cityBattleToken>
         </Properties>
     </GUILD_CLIENT_DATA>
-
-    <HOLIDAYPAY_VAL> FIXED_DICT
-        <Properties>
-            <holidayID>
-                <Type> UINT32 </Type>
-            </holidayID>
-            <creditID>
-                <Type> BUY_CREDIT_ID </Type>
-            </creditID>
-            <gainTimes>
-                <Type> UINT8 </Type>
-            </gainTimes>
-        </Properties>
-    </HOLIDAYPAY_VAL>
-    <HOLIDAYPAY_LIST> ARRAY <of> HOLIDAYPAY_VAL </of> </HOLIDAYPAY_LIST>
-
-    <HOLIDAYPAY_INFO> FIXED_DICT
-        <implementedBy> holidayPayInfo.inst </implementedBy>
-        <Properties>
-            <holidayPayList>
-                <Type> HOLIDAYPAY_LIST </Type>
-            </holidayPayList>
-        </Properties>
-    </HOLIDAYPAY_INFO>
 
     <CLI_BUY_CREDIT_NUM_DATA> FIXED_DICT
         <Properties>
@@ -3591,6 +3689,9 @@
             <dailyNum>
                 <Type>      UINT32          </Type>
             </dailyNum>
+            <coinLeftTimes>
+                <Type>      UINT32          </Type>
+            </coinLeftTimes>
         </Properties>
     </CLI_DRAW_CARD_INFO>
 
@@ -3608,6 +3709,9 @@
             <dailyNum>
                 <Type>      UINT32          </Type>
             </dailyNum>
+            <coinLeftTimes>
+                <Type>      UINT32          </Type>
+            </coinLeftTimes>
         </Properties>
     </CARD_POOL_INFO>
 
@@ -3935,7 +4039,10 @@
             </status>
             <itemData>
                 <Type>  ITEM_VAL     </Type>
-            </itemData>   
+            </itemData>
+            <addPublicityTime>
+                <Type>  UINT32  </Type>
+            </addPublicityTime>  
         </Properties>
     </AUCTION_ITEM_CLIENT>
 
@@ -3995,6 +4102,9 @@
             <tCreate>
                 <Type>  LONGTIME    </Type>
             </tCreate>
+            <addPublicityTime>
+                <Type>  UINT32    </Type>
+            </addPublicityTime>
         </Properties>
     </AUCTION_ITEM>
 
@@ -4090,6 +4200,45 @@
         </Properties>
     </ACHIEVEMENTS_DATA_INFO>
 
+    <MAP_EXPLORE_DATA_INFO> FIXED_DICT
+        <implementedBy>     MapExploreInfo.MapExploreInstance    </implementedBy>
+        <Properties>
+            <mapId>
+                <Type>  SPACE_NO   </Type>
+            </mapId>
+            <personalBox>
+                <Type>  ARRAY <of>  INT32   </of>   </Type>
+            </personalBox>
+            <viewPoint>
+                <Type>  ARRAY <of>  INT32   </of>   </Type>
+            </viewPoint>
+            <hookTask>
+                <Type>  ARRAY <of>  INT32   </of>   </Type>
+            </hookTask>
+            <areaTask>
+                <Type>  ARRAY <of>  INT32   </of>   </Type>
+            </areaTask>
+            <rewardData>
+                <Type>  ARRAY <of>  INT32   </of>   </Type>
+            </rewardData>
+            <rewardSlot>
+                <Type>  INT32                       </Type>
+            </rewardSlot>
+        </Properties>
+    </MAP_EXPLORE_DATA_INFO>
+
+    <MAP_EXPLORE_DICT> FIXED_DICT
+        <implementedBy>     MapExploreInfo.MapExploreDictInstance    </implementedBy>
+        <Properties>
+            <mapIds>
+                <Type>  ARRAY <of>  SPACE_NO                </of>   </Type>
+            </mapIds>
+            <dataList>
+                <Type>  ARRAY <of>  MAP_EXPLORE_DATA_INFO   </of>   </Type>
+            </dataList>
+        </Properties>
+    </MAP_EXPLORE_DICT>
+
     <EQUIP_DROP_DATA_INFO> FIXED_DICT
         <implementedBy>     EquipDropInfo.EquipDropInstance    </implementedBy>
         <Properties>
@@ -4123,6 +4272,15 @@
             <redeemWaitTime>
                 <Type>  LONGTIME            </Type>
             </redeemWaitTime>
+            <hasPrice>
+                <Type>  BOOL              </Type>
+            </hasPrice>
+            <returnTime>
+                <Type>  LONGTIME            </Type>
+            </returnTime>
+            <takerGbId>
+                <Type>  PLAYER_GBID </Type>
+            </takerGbId>
         </Properties>
     </EQUIP_DROP_DATA_INFO>
 
@@ -4150,6 +4308,9 @@
             <hasPrice>
                 <Type>  BOOL              </Type>
             </hasPrice>
+            <returnTime>
+                <Type>  LONGTIME            </Type>
+            </returnTime>
         </Properties>
     </EQUIP_DROP_TAKER_DATA_INFO>
 
@@ -4175,9 +4336,6 @@
                 <Type>  ARRAY <of>  EQUIP_DROP_TAKER_DATA_INFO  </of>   </Type>
                 <Persistent> false </Persistent>
             </takerList>
-            <takerWaitList>
-                <Type>  ARRAY <of>  EQUIP_DROP_TAKER_DATA_INFO  </of>   </Type>
-            </takerWaitList>
             <lockTime>
                 <Type>  LONGTIME            </Type>
                 <Persistent> false </Persistent>
@@ -5308,6 +5466,9 @@
             <endTime>
                 <Type>  INT64               </Type>
             </endTime>
+            <innerDemonTime>
+                <Type>  UINT32              </Type>
+            </innerDemonTime>
             <dungeonNo>
                 <Type>  UINT32              </Type>
             </dungeonNo>
@@ -5502,15 +5663,15 @@
             <score>
                 <Type>  UINT64            </Type>
             </score>
-            <addBindValueStatus>
-                <Type>  UINT8             </Type>
-            </addBindValueStatus>
             <bindType>
                 <Type>  UINT8             </Type>
             </bindType>
             <maxEnhanceLv>
                 <Type>  UINT16            </Type>
             </maxEnhanceLv>
+            <bindEnhanceCost>
+                <Type>  UINT16            </Type>
+            </bindEnhanceCost>
         </Properties>
     </CLI_MULTI_ENHANCE_EQUIP_RESULT>
 
@@ -5565,6 +5726,9 @@
             <timestamp>
                 <Type>  LONGTIME  </Type>
             </timestamp>
+            <expiredTimestamp>
+                <Type>  LONGTIME  </Type>
+            </expiredTimestamp>
             <leftTime>
                 <Type>  LONGTIME  </Type>
             </leftTime>
@@ -5701,12 +5865,14 @@
     </HUNTER_RANK_INFO>
 
     <TITLE_VAL_INFO> FIXED_DICT
+        <implementedBy>     TitleValInfo.TitleValInstance    </implementedBy>
         <Properties>
             <titleId>
                 <Type>  TITLE_ID   </Type>
             </titleId>
             <expireTime>
                 <Type>  LONGTIME   </Type>
+                <Persistent> false </Persistent>
             </expireTime>
         </Properties>
     </TITLE_VAL_INFO>
@@ -5757,6 +5923,17 @@
         </Properties>
     </FREE_TICKET_RECOVERY_CLIENT_VAL>
 
+    <FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL> FIXED_DICT
+        <Properties>
+            <subType>
+                <Type>      UINT16           </Type>
+            </subType>
+            <num>
+                <Type>      UINT16           </Type>
+            </num>
+        </Properties>
+    </FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL>
+
     <!-- 租赁系统自定义类型 begin -->
 
     <LEASE_SHOP_SUMMARY> FIXED_DICT
@@ -5764,21 +5941,6 @@
             <itemId>
                 <Type>  ITEMID  </Type>
             </itemId>
-            <quality>
-                <Type>  UINT8   </Type>
-            </quality>
-            <equipType>
-                <Type>  UINT8   </Type>
-            </equipType>
-            <equipSubType>
-                <Type>  UINT8   </Type>
-            </equipSubType>
-            <school>
-                <Type>  UINT8   </Type>
-            </school>
-            <itemName>
-                <Type>  UNICODE </Type>
-            </itemName>
             <onSaleCount>
                 <Type>  UINT32  </Type>
             </onSaleCount>
@@ -5788,120 +5950,130 @@
         </Properties>
     </LEASE_SHOP_SUMMARY>
 
-    <LEASE_MARKET_ITEM> FIXED_DICT
-        <Properties>
-            <uniqueId>
-                <Type>  UNIQUE_ID   </Type>
-            </uniqueId>
-            <itemId>
-                <Type>  ITEMID      </Type>
-            </itemId>
-            <leaseOwnerGbId>
-                <Type>  PLAYER_GBID </Type>
-            </leaseOwnerGbId>
-            <pricePerDay>
-                <Type>  UINT32      </Type>
-            </pricePerDay>
-            <returnEndTime>
-                <Type>  UINT32      </Type>
-            </returnEndTime>
-            <quality>
-                <Type>  UINT8       </Type>
-            </quality>
-            <equipType>
-                <Type>  UINT8       </Type>
-            </equipType>
-            <equipSubType>
-                <Type>  UINT8       </Type>
-            </equipSubType>
-            <school>
-                <Type>  UINT8       </Type>
-            </school>
-            <score>
-                <Type>  UINT32      </Type>
-            </score>
-            <itemName>
-                <Type>  UNICODE     </Type>
-            </itemName>
-            <isDropEquip>
-                <Type>  UINT8       </Type>
-            </isDropEquip>
-            <leaseOwnerServerId>
-                <Type>  UINT32      </Type>
-            </leaseOwnerServerId>
-        </Properties>
-    </LEASE_MARKET_ITEM>
-
-    <LEASE_MY_SALE_ITEM> FIXED_DICT
-        <Properties>
-            <uniqueId>
-                <Type>  UNIQUE_ID   </Type>
-            </uniqueId>
-            <itemId>
-                <Type>  ITEMID      </Type>
-            </itemId>
-            <leaseOwnerGbId>
-                <Type>  PLAYER_GBID </Type>
-            </leaseOwnerGbId>
-            <pricePerDay>
-                <Type>  UINT32      </Type>
-            </pricePerDay>
-            <returnEndTime>
-                <Type>  UINT32      </Type>
-            </returnEndTime>
-            <quality>
-                <Type>  UINT8       </Type>
-            </quality>
-            <equipType>
-                <Type>  UINT8       </Type>
-            </equipType>
-            <equipSubType>
-                <Type>  UINT8       </Type>
-            </equipSubType>
-            <school>
-                <Type>  UINT8       </Type>
-            </school>
-            <score>
-                <Type>  UINT32      </Type>
-            </score>
-            <itemName>
-                <Type>  UNICODE     </Type>
-            </itemName>
-            <isDropEquip>
-                <Type>  UINT8       </Type>
-            </isDropEquip>
-            <leaseOwnerServerId>
-                <Type>  UINT32      </Type>
-            </leaseOwnerServerId>
-            <incomeBindGold>
-                <Type>  UINT64  </Type>
-            </incomeBindGold>
-            <incomeGold>
-                <Type>  UINT64  </Type>
-            </incomeGold>
-        </Properties>
-    </LEASE_MY_SALE_ITEM>
-
-    <LEASE_RECORD> FIXED_DICT
-        <Properties>
-            <timestamp>
-                <Type>  UINT32  </Type>
-            </timestamp>
-            <itemId>
-                <Type>  ITEMID  </Type>
-            </itemId>
-            <bindGold>
-                <Type>  UINT64  </Type>
-            </bindGold>
-            <gold>
-                <Type>  UINT64  </Type>
-            </gold>
-            <cost>
-                <Type>  UINT64  </Type>
-            </cost>
-        </Properties>
-    </LEASE_RECORD>
-
     <!-- 租赁系统自定义类型 end -->
 
+
+    <TITLE_MGR_DATA_INFO> FIXED_DICT
+        <implementedBy>     TitleMgrInfo.TitleMgrInstance    </implementedBy>
+        <Properties>
+            <titleValList>
+                <Type>  ARRAY <of>  TITLE_VAL_INFO </of>   </Type>
+            </titleValList>
+            <curTitleId>
+                <Type>  TITLE_ID                            </Type>
+            </curTitleId>
+        </Properties>
+    </TITLE_MGR_DATA_INFO>
+
+    <CLI_SAFE_BOX_ITEM_VAL> FIXED_DICT
+        <Properties>
+            <boxId>    
+                <Type>  UINT64  </Type>
+            </boxId>
+            <itemId>    
+                <Type>  UINT32  </Type>
+            </itemId>
+            <itemCount>    
+                <Type>  UINT16  </Type>
+            </itemCount>
+            <itemPrice>    
+                <Type>  DOUBLE  </Type>
+            </itemPrice>
+            <orderTime>    
+                <Type>  INT64  </Type>
+            </orderTime>
+            <claimed>    
+                <Type>  UINT8  </Type>
+            </claimed>
+            <claimTime>    
+                <Type>  INT64  </Type>
+            </claimTime>
+            <orderId>    
+                <Type>  STRING  </Type>
+            </orderId>
+        </Properties>
+    </CLI_SAFE_BOX_ITEM_VAL>
+
+    <PENDING_AUCTION_ENTRY> FIXED_DICT
+        <implementedBy>     PendingAuctionEntry.PendingAuctionEntryInstance    </implementedBy>
+        <Properties>
+            <auctionItemUUID>
+                <Type>  AUCTION_ITEM_UUID   </Type>
+            </auctionItemUUID>
+            <amount>
+                <Type>  MONEY               </Type>
+            </amount>
+            <dealTime>
+                <Type>  UINT64              </Type>
+            </dealTime>
+            <isSettled>
+                <Type>  BOOL                </Type>
+            </isSettled>
+        </Properties>
+    </PENDING_AUCTION_ENTRY>
+    
+    <PENDING_AUCTION_ENTRIES> FIXED_DICT
+        <implementedBy>     PendingAuctionEntries.PendingAuctionEntriesInstance    </implementedBy>
+        <Properties>
+            <pendingAuctionEntries>
+                <Type>  ARRAY <of> PENDING_AUCTION_ENTRY </of>   </Type>
+            </pendingAuctionEntries>
+        </Properties>
+    </PENDING_AUCTION_ENTRIES>
+
+    <AUCTION_SNATCH_RECORD> FIXED_DICT
+        <implementedBy>     AuctionSnatchRecord.AuctionSnatchRecordInstance    </implementedBy>
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID   </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE       </Type>
+            </name>
+            <opUUID>
+                <Type>  OP_UUID       </Type>
+            </opUUID>
+        </Properties>
+    </AUCTION_SNATCH_RECORD>
+    
+    <AUCTION_SNATCH_RECORDS> FIXED_DICT
+        <implementedBy>     AuctionSnatchRecords.AuctionSnatchRecordsInstance    </implementedBy>
+        <Properties>
+            <auctionUUID>
+                <Type>  AUCTION_ITEM_UUID                        </Type>
+            </auctionUUID>
+            <itemId>
+                <Type>  ITEM_ID                                  </Type>
+            </itemId>
+            <price>
+                <Type>  UINT64                                   </Type>
+            </price>
+            <number>
+                <Type>  UINT32                                   </Type>
+            </number>
+            <publicityEndTime>
+                <Type>  LONGTIME                                 </Type>
+            </publicityEndTime>
+            <records>
+                <Type>  ARRAY <of> AUCTION_SNATCH_RECORD </of>   </Type>
+            </records>
+            <status>
+                <Type>  UINT8                                    </Type>
+            </status>
+        </Properties>
+    </AUCTION_SNATCH_RECORDS>
+
+    <CLI_GLYPH_STATUS_CHANGE_INFO> FIXED_DICT
+        <Properties>
+            <uniqueId>    
+                <Type>  UINT64                  </Type>
+            </uniqueId>
+            <groupId>    
+                <Type>  UINT8                   </Type>
+            </groupId>
+            <status>    
+                <Type>  ARRAY <of> UINT8 </of>  </Type>
+            </status>
+        </Properties>
+    </CLI_GLYPH_STATUS_CHANGE_INFO>
 </root>

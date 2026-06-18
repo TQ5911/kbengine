@@ -14,6 +14,7 @@ import gameconst
 import iTimer
 import gametimer
 import gameglobal
+import gameconfig
 import gamelog
 import json
 import gzip
@@ -22,21 +23,22 @@ import collections
 
 
 class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-
-    def __init__(self):
+    def __init__(self, *args):
         super(PlayerStub, self).__init__()
         self.avatarCounter = globalDataSum.GloalDataSum(gameconst.GLOBALDATA_KEY_TOTAL_ONLINE_NUM,
                                                         gameglobal.localBaseApp.registerBaseappDataCallback,
                                                         globalDataSum.DATA_BASEAPP, cd=10)
         self.PlayerInfoCache = collections.OrderedDict()
-        return
 
     def doNext(self):
-        gameglobal.localBaseApp.fullPrepare(self.classname())
+        if gameconfig.isWaitMapServer():
+            gameglobal.localBaseApp.waitMapFullPrepare(self.classname())
+        else:
+            gameglobal.localBaseApp.fullPrepare(self.classname())
         return
 
     def onTimer(self, timerID, userData):
-        self._onTimer(timerID, userData)
+        self._onTimerTrigger(timerID, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(timerID)
         return
@@ -49,10 +51,10 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 self.avatarCounter.decSum(self)
 
     def updateName(self, oldName, newName, box, gbId):
-        self.role2box.pop(oldName, None)
-        self.role2gbId.pop(oldName, None)
-        self.role2box[newName] = box
-        self.role2gbId[newName] = gbId
+        self.roleName2box.pop(oldName, None)
+        self.roleName2gbId.pop(oldName, None)
+        self.roleName2box[newName] = box
+        self.roleName2gbId[newName] = gbId
         gameengine.getGlobalBase('BountyStub').updateBountyAvatarInfo(gbId, {gameconst.UpdateBountyAvatarKey.NAME : newName})
 
     def record(self, account, roleName, gbid, dbId, box, callbackFunc='', callbackArgs=(), extraData=None):
@@ -60,8 +62,8 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('PlayerStub.record: player exists:', account, box.id, gbid, callbackArgs, self.gbId2box[gbid].id)
 
         if roleName:
-            self.role2box[roleName] = box
-            self.role2gbId[roleName] = gbid
+            self.roleName2box[roleName] = box
+            self.roleName2gbId[roleName] = gbid
         self.gbId2box[gbid] = box
         self.account2box[account] = box
         self.dbId2box[dbId] = box
@@ -72,21 +74,21 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if callbackFunc:
             getattr(box, callbackFunc)(*callbackArgs)
 
-    def erase(self, account, entId, roleName, gbid, dbId, reason):
+    def erase(self, accountName, entId, roleName, gbid, dbId, reason):
         try:
-            box = self.gbId2box.get(gbid)
-            if box.id != entId:
-                LOG_ERR('PlayerStub.erase: player mismatch:', box.id, account, entId, gbid, reason)
+            _box = self.gbId2box.get(gbid)
+            if _box.id != entId:
+                LOG_ERR('PlayerStub.erase: player mismatch:', _box.id, accountName, entId, gbid, reason)
                 return
             if roleName:
                 # tutorial avatar的roleName为空
-                self.role2box.pop(roleName, None)
-                self.role2gbId.pop(roleName, None)
+                self.roleName2box.pop(roleName, None)
+                self.roleName2gbId.pop(roleName, None)
             self.gbId2box.pop(gbid)
-            self.account2box.pop(account, None)
+            self.account2box.pop(accountName, None)
             self.dbId2box.pop(dbId, None)
-            if box and not isinstance(box, KBEngine.Proxy):
-                box.onPopRoleCacheCB(reason)
+            if _box and not isinstance(_box, KBEngine.Proxy):
+                _box.onPopRoleCacheCB(reason)
         except Exception as e:
             gameengine.panicStack('erase player error:', e)
 
@@ -97,7 +99,7 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return self.gbId2box.get(gbId, None)
 
     def getAvatarBoxByRoleName(self, roleName):
-        return self.role2box.get(roleName)
+        return self.roleName2box.get(roleName)
 
     def gmLookUpAvatar(self, channel, gbId, uid, index, raw):
         if gbId in self.gbId2box:
@@ -111,128 +113,124 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                                                                    ret, num, err, uid, index, raw, channel, gbId))
 
     def _onGmLookUpAvatarByGbIdOrRoleName(self, ret, num, err, uid, index, raw, channel, gbIdOrRoleName):
-        base = False
+        _base = False
         basicInfo = str(gbIdOrRoleName)
         if isinstance(err, str):
             LOG_ERR('__onGmLookUpAvatarByGbIdOrRoleName error', err)
-            self._onGmLookUpAvatar(base, channel, None, uid, index, raw)
+            self._onGmLookUpAvatar(_base, channel, None, uid, index, raw)
 
         elif not ret or len(ret) == 0:
             LOG_WARN('__onGmLookUpAvatarByGbIdOrRoleName error. DB has NoAvatar(%s)' % gbIdOrRoleName)
-            self._onGmLookUpAvatar(base, channel, None, uid, index, raw)
+            self._onGmLookUpAvatar(_base, channel, None, uid, index, raw)
 
         else:
-            base = True
+            _base = True
             gbId, roleName, urs, dbid = ret[0]
             basicInfo = (int(gbId), roleName.decode(), urs.decode(), int(dbid))
-            self._onGmLookUpAvatar(base, channel, basicInfo, uid, index, raw)
+            self._onGmLookUpAvatar(_base, channel, basicInfo, uid, index, raw)
 
-    def _onGmLookUpAvatar(self, base, channel, role, uid, index, raw):
-        channel.onGmLookUpAvatar(base, role, uid, index, raw)
-        return
+    def _onGmLookUpAvatar(self, base, channel, roleInfo, uid, index, raw):
+        channel.onGmLookUpAvatar(base, roleInfo, uid, index, raw)
 
     def doOnOthersBaseByAccountName(self, otherOpenIds, otherMethod, otherArgs, failCallbackBox, failCallbackMethod,
                                     failCallbackArgs):
-        failOpenIds = []
+        _failOpenIds = []
         for otherOpenId in otherOpenIds:
             if otherOpenId not in self.account2box:
-                failOpenIds.append(otherOpenId)
+                _failOpenIds.append(otherOpenId)
                 continue
 
             otherBox = self.account2box[otherOpenId]
             getattr(otherBox, otherMethod)(*otherArgs)
 
-        if failOpenIds and failCallbackBox:
-            failArgs = [failOpenIds]
+        if _failOpenIds and failCallbackBox:
+            _failArgs = [_failOpenIds]
             if failCallbackArgs:
-                failArgs.extend(failCallbackArgs)
+                _failArgs.extend(failCallbackArgs)
 
-            getattr(failCallbackBox, failCallbackMethod)(*failArgs)
+            getattr(failCallbackBox, failCallbackMethod)(*_failArgs)
 
     def doOnOthersBase(self, otherGbIds, otherMethod, otherArgs, failCallbackBox, failCallbackMethod, failCallbackArgs):
-        failGbIds = []
+        _failGbIds = []
         for otherGbId in otherGbIds:
             if otherGbId not in self.gbId2box:
-                failGbIds.append(otherGbId)
+                _failGbIds.append(otherGbId)
                 continue
 
             otherBox = self.gbId2box[otherGbId]
             getattr(otherBox, otherMethod)(*otherArgs)
 
-        if failGbIds and failCallbackBox:
-            failArgs = [failGbIds]
+        if _failGbIds and failCallbackBox:
+            _failArgs = [_failGbIds]
             if failCallbackArgs:
-                failArgs.extend(failCallbackArgs)
+                _failArgs.extend(failCallbackArgs)
 
-            getattr(failCallbackBox, failCallbackMethod)(*failArgs)
+            getattr(failCallbackBox, failCallbackMethod)(*_failArgs)
 
     def doOnOthersCell(self, otherGbIds, otherMethod, otherArgs, failCallbackBox, failCallbackMethod, failCallbackArgs):
         for otherGbId in otherGbIds:
-            failArgs = [otherGbId]
+            _failArgs = [otherGbId]
             if failCallbackArgs:
-                failArgs.extend(failCallbackArgs)
+                _failArgs.extend(failCallbackArgs)
 
             if otherGbId not in self.gbId2box:
                 if failCallbackBox:
-                    getattr(failCallbackBox, failCallbackMethod)(*failArgs)
+                    getattr(failCallbackBox, failCallbackMethod)(*_failArgs)
 
                 continue
 
-            otherBox = self.gbId2box[otherGbId]
-            getattr(otherBox.cell, otherMethod)(*otherArgs)
+            _otherBox = self.gbId2box[otherGbId]
+            getattr(_otherBox.cell, otherMethod)(*otherArgs)
 
     def doOnOthersClient(self, otherGbIds, otherMethod, otherArgs, failCallbackBox, failCallbackMethod,
                          failCallbackArgs):
-        for otherGbId in otherGbIds:
-            failArgs = [otherGbId]
+        for _otherGbId in otherGbIds:
+            _failArgs = [_otherGbId]
             if failCallbackArgs:
-                failArgs.extend(failCallbackArgs)
+                _failArgs.extend(failCallbackArgs)
 
-            if otherGbId not in self.gbId2box:
+            if _otherGbId not in self.gbId2box:
                 if failCallbackBox:
-                    getattr(failCallbackBox, failCallbackMethod)(*failArgs)
+                    getattr(failCallbackBox, failCallbackMethod)(*_failArgs)
 
                 continue
 
-            otherBox = self.gbId2box[otherGbId]
-            if otherBox.client:
-                getattr(otherBox.client, otherMethod)(*otherArgs)
+            _otherBox = self.gbId2box[_otherGbId]
+            if _otherBox.client:
+                getattr(_otherBox.client, otherMethod)(*otherArgs)
 
     def isOnLine(self, gbid, box, callbackFunc='', callbackArgs=()):
-        bOnline = False
+        _bOnline = False
         _box = self.getAvatarBox(gbid)
         if _box:
-            bOnline = True
+            _bOnline = True
 
         if callbackFunc:
-            getattr(box, callbackFunc)(bOnline, _box, *callbackArgs)
+            getattr(box, callbackFunc)(_bOnline, _box, *callbackArgs)
 
     def isAllAvatarsOnline(self, gbIds, box):
-        stateList = []
+        _stateList = []
         for gbId in gbIds:
-            stateList.append(1 if gbId in self.gbId2box else 0)
+            _stateList.append(1 if gbId in self.gbId2box else 0)
 
-        box.onGetAvatarOnlineInfo(gbIds, stateList)
+        box.onGetAvatarOnlineInfo(gbIds, _stateList)
 
     def sendSysMsgToAvatars(self, toGBIDS, msgId, args):
         LOG_DBG('sendSysMsgToAvatars args:', toGBIDS, msgId, args)
-        for toGBID in toGBIDS:
-            self.sendSysMsgToAvatar(toGBID, msgId, args)
+        for _toGBID in toGBIDS:
+            self.sendSysMsgToAvatar(_toGBID, msgId, args)
 
     def sendSysMsgToAvatar(self, toGBID, msgId, args):
         LOG_DBG('sendSysMsgToAvatar args:', toGBID, msgId, args)
-        box = self.gbId2box.get(toGBID, None)
-        if box is None:
+        _box = self.gbId2box.get(toGBID, None)
+        if _box is None:
             now = int(utils.getTimestamp64())
             redisUtils.FriendMessage.recordSysMessage(toGBID, now, msgId, args)
         else:
-            box.onMessagePre(msgId, args)
-
-    def recordAvatarMsg(self, rGbIds, sGbId, timestamp):
-        redisUtils.FriendMessage.recordRecent(sGbId, rGbIds[0], timestamp)
+            _box.onMessagePre(msgId, args)
 
     def gmAddFriendsGetGbIds(self, box, friendsNum, oprGbId):
-        sendList = []
+        _sendList = []
         for gbId in self.gbId2box:
             if gbId == oprGbId:
                 continue
@@ -240,10 +238,10 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if friendsNum <= 0:
                 break
 
-            sendList.append(gbId)
+            _sendList.append(gbId)
             friendsNum -= 1
 
-        box.onGetGmAddFriendsGbIds(sendList)
+        box.onGetGmAddFriendsGbIds(_sendList)
 
     def getFriendsBox(self, reqBox, gbIds):
         boxList = []

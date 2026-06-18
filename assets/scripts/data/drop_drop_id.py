@@ -303,6 +303,18 @@ datas = _tools.RODict({
         "dropType": 2,
         "dropCount": 1
     }),
+    50100405: _tools.RODict({
+        "dropID": 50100405,
+        "dropPackage": 54,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100406: _tools.RODict({
+        "dropID": 50100406,
+        "dropPackage": 54,
+        "dropType": 2,
+        "dropCount": 11
+    }),
     50100561: _tools.RODict({
         "dropID": 50100561,
         "dropPackage": 9197,
@@ -396,6 +408,12 @@ datas = _tools.RODict({
     50100638: _tools.RODict({
         "dropID": 50100638,
         "dropPackage": 9230,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100639: _tools.RODict({
+        "dropID": 50100639,
+        "dropPackage": 9231,
         "dropType": 2,
         "dropCount": 1
     }),
@@ -4136,7 +4154,61 @@ datas = _tools.RODict({
         "dropPackage": 50039006,
         "dropType": 4,
         "dropCount": 1
+    }),
+    50039201: _tools.RODict({
+        "dropID": 50039201,
+        "dropPackage": 50039201,
+        "dropType": 1,
+        "dropCount": 1
+    }),
+    50100501: _tools.RODict({
+        "dropID": 50100501,
+        "dropPackage": 50100501,
+        "dropType": 3,
+        "dropCount": 1
+    }),
+    50100502: _tools.RODict({
+        "dropID": 50100502,
+        "dropPackage": 50100502,
+        "dropType": 3,
+        "dropCount": 1
+    }),
+    50100503: _tools.RODict({
+        "dropID": 50100503,
+        "dropPackage": 50100503,
+        "dropType": 3,
+        "dropCount": 1
+    }),
+    50100504: _tools.RODict({
+        "dropID": 50100504,
+        "dropPackage": 50100504,
+        "dropType": 3,
+        "dropCount": 1
+    }),
+    50100505: _tools.RODict({
+        "dropID": 50100505,
+        "dropPackage": 50100505,
+        "dropType": 3,
+        "dropCount": 1
+    }),
+    50100506: _tools.RODict({
+        "dropID": 50100506,
+        "dropPackage": 50100506,
+        "dropType": 3,
+        "dropCount": 1
+    }),
+    50100507: _tools.RODict({
+        "dropID": 50100507,
+        "dropPackage": 50100507,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100508: _tools.RODict({
+        "dropID": 50100508,
+        "dropPackage": 50100508,
+        "dropType": 2,
+        "dropCount": 1
     })
 })
 minKey = 50030101
-maxKey = 50100638
+maxKey = 50100639

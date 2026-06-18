@@ -1,8 +1,8 @@
 # -*- encoding:utf-8 -*-
 
 from KBEDebug import *
-import formula
 import json
+import formula
 import math
 import userType
 import gameconst
@@ -16,32 +16,31 @@ MAX_JSON_STR_LENGTH = 1024
 
 
 class BaseTarget(userType.UserSingleType):
-    tgtType = gameconst.TaskTargetType.TARGET_UNKNOWN
+    tgtType = gameconst.TaskTargetEnum.TARGET_UNKNOWN
 
     def __init__(self):
         self.tgtId = 0
         self.stepCnt = 0
         self.dstCnt = 0
-        return
 
     def __getstate__(self):
-        return self.toTgtSavedDict()
+        return self.toTargetSavedDict()
 
     def __setstate__(self, state):
         self.__init__()
         self.fromSavedDict(state)
 
-    def genExtraStr(self):
+    def genTaskExtraStr(self):
         return ''
 
     @staticmethod
-    def loadsExtraJson(extraStr):
-        if not extraStr:
+    def loadsExtraJson(extraJsonStr):
+        if not extraJsonStr:
             return {}
         try:
-            return json.loads(extraStr)
+            return json.loads(extraJsonStr)
         except Exception as e:
-            gameengine.panicStack('in loadsExtraJson:', e, extraStr)
+            gameengine.panicStack('in loadsExtraJson:', e, extraJsonStr)
             return {}
 
     def fromExtraDic(self, extraStr):
@@ -50,50 +49,47 @@ class BaseTarget(userType.UserSingleType):
     def cliExtra(self):
         return ''
 
-    def setTargetCompleted(self):
+    def setTaskTargetCompleted(self):
         self.stepCnt = self.dstCnt
-
-    def toTgtSavedDict(self):
-        extraStr = self.genExtraStr()
-        if len(extraStr) >= MAX_JSON_STR_LENGTH:
-            gameengine.panicStack('toTgtSavedDict, json str reach max limit:', self.__dict__)
-        return {
-            'tgtType': self.tgtType,
-            'tgtId': self.tgtId,
-            'stepCnt': self.stepCnt,
-            'dstCnt': self.dstCnt,
-            'extraStr': extraStr,
-        }
 
     def toClientDict(self):
         return {
-            'tgtType': self.tgtType,
             'tgtId': self.tgtId,
-            'stepCnt': self.stepCnt,
+            'tgtType': self.tgtType,
             'dstCnt': self.dstCnt,
-            'cliExtra': self.cliExtra()
+            'stepCnt': self.stepCnt,
+            'cliExtra': self.cliExtra(),
+        }
+
+    def toTargetSavedDict(self):
+        extraStr = self.genTaskExtraStr()
+        if len(extraStr) >= MAX_JSON_STR_LENGTH:
+            gameengine.panicStack('toTargetSavedDict, json str reach max limit:', self.__dict__)
+        return {
+            'tgtId': self.tgtId,
+            'tgtType': self.tgtType,
+            'stepCnt': self.stepCnt,
+            'extraStr': extraStr,
+            'dstCnt': self.dstCnt,
         }
 
     def fromSavedDict(self, dataDic):
         try:
-            self.tgtType = dataDic['tgtType']
             self.tgtId = dataDic['tgtId']
-            self.stepCnt = dataDic['stepCnt']
+            self.tgtType = dataDic['tgtType']
             self.dstCnt = dataDic['dstCnt']
+            self.stepCnt = dataDic['stepCnt']
             extraDic = self.loadsExtraJson(dataDic['extraStr'])
             self.fromExtraDic(extraDic)
         except Exception as e:
             gameengine.panicStack('in BaseTarget.fromSavedDict:', e)
         return
 
-    def initFromTgtObj(self, tgt):
-        self.tgtType = tgt.tgtType
+    def initFromTgtObject(self, tgt):
         self.tgtId = tgt.tgtId
-        self.stepCnt = tgt.stepCnt
+        self.tgtType = tgt.tgtType
         self.dstCnt = tgt.dstCnt
-
-    def isTargetCompleted(self):
-        return self.stepCnt >= self.dstCnt
+        self.stepCnt = tgt.stepCnt
 
     @property
     def dungeonNo(self):
@@ -102,23 +98,25 @@ class BaseTarget(userType.UserSingleType):
         else:
             return 0
 
+    def isTaskTargetCompleted(self):
+        return self.stepCnt >= self.dstCnt
+
     def checkTargetCompleted(self, *args):
-        return self.isTargetCompleted()
+        return self.isTaskTargetCompleted()
 
 
 class TaskTargetMonsters(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_MONSTERS
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_MONSTERS
 
     def __init__(self):
         super(TaskTargetMonsters, self).__init__()
-        self.stepCnt = 0
-
         self.mapId = 0
+        self.stepCnt = 0
         self.targetUIDs = []
         self.killMode = 0
         self.killTotalCountTarget = 0
-        self.killedTotalCount = 0
         self.monsterIDsTarget = []
+        self.killedTotalCount = 0
 
     def initTarget(self, tgtId, dstCnt, mapId, killMode, killTotalCount, monsterIDs):
         self.tgtId = tgtId
@@ -128,11 +126,11 @@ class TaskTargetMonsters(BaseTarget):
         self.killTotalCountTarget = killTotalCount
         self.monsterIDsTarget = list(monsterIDs)
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetMonsters, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetMonsters, self).initFromTgtObject(tgt)
         self.mapId = tgt.mapId
 
-    def genExtraStr(self):
+    def genTaskExtraStr(self):
         datas = {
             'mapId': self.mapId,
             'killMode': self.killMode,
@@ -153,41 +151,52 @@ class TaskTargetMonsters(BaseTarget):
     def killOneMonster(self, spaceNo, monsterId, monsterGBId):
         mapId = formula.fetchMapId(spaceNo)
         LOG_INFO('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
-        opResult = False
+        _opResult = False
         completed = False
         if mapId != self.mapId:
-            return opResult, completed
+            return _opResult, completed
 
         if monsterGBId in self.targetUIDs:
-            return opResult, completed
+            return _opResult, completed
+
         if self.killMode == 0:
             if monsterId != self.tgtId:
-                return opResult, completed
+                return _opResult, completed
 
             if self.stepCnt < self.dstCnt:
                 self.stepCnt += 1
                 self.targetUIDs.append(monsterGBId)
-                opResult = True
+                _opResult = True
+
         elif self.killMode == 1:
             if monsterId not in self.monsterIDsTarget:
-                return opResult, completed
+                return _opResult, completed
 
             if self.killedTotalCount < self.killTotalCountTarget:
                 self.killedTotalCount += 1
                 if monsterId == self.tgtId:
                     self.stepCnt += 1
                 self.targetUIDs.append(monsterGBId)
-                opResult = True
+                _opResult = True
 
-        completed = self.isTargetCompleted()
-        LOG_INFO('in TargetMonsters::killOneMonster:end, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode, opResult, completed)
+        completed = self.isTaskTargetCompleted()
+        LOG_INFO('in TargetMonsters::killOneMonster:end, ', 
+                 spaceNo, 
+                 mapId, 
+                 self.tgtId, 
+                 self.dstCnt, 
+                 self.stepCnt, 
+                 self.killedTotalCount, 
+                 self.killMode, 
+                 _opResult, 
+                 completed)
 
-        return opResult, completed
+        return _opResult, completed
 
     def checkTargetCompleted(self, *args):
         return self.killOneMonster(*args)
 
-    def isTargetCompleted(self):
+    def isTaskTargetCompleted(self):
         completed = False
         if self.killMode == 0:
             completed = self.stepCnt == self.dstCnt
@@ -196,85 +205,87 @@ class TaskTargetMonsters(BaseTarget):
         return completed
 
 class TaskTargetItems(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_ITEMS
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_ITEMS
 
     def __init__(self):
         super(TaskTargetItems, self).__init__()
-        self.stepCnt = 0
-
         self.mapId = 0
+        self.stepCnt = 0
         self.srcIdList = 0
-        self.srcRatio = 0.0
         self.state = 0  # 0:物品尚未扣除, 1:物品已经扣除
+        self.srcRatio = 0.0
 
     def initTarget(self, tgtId, dstCnt, srcIdList, srcRatio, mapId, itemCurNum):
-        self.tgtId = tgtId
         self.dstCnt = dstCnt
+        self.tgtId = tgtId
         self.stepCnt = min(itemCurNum, dstCnt)
-        self.mapId = mapId
         self.srcIdList = [int(srcId) for srcId in srcIdList]
-        self.srcRatio = int(100 * srcRatio)
+        self.mapId = mapId
         self.state = 0
+        self.srcRatio = int(100 * srcRatio)
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetItems, self).initFromTgtObj(tgt)
-        self.mapId = tgt.mapId
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetItems, self).initFromTgtObject(tgt)
         self.srcIdList = tgt.srcIdList
-        self.srcRatio = tgt.srcRatio
+        self.mapId = tgt.mapId
         self.state = tgt.state
+        self.srcRatio = tgt.srcRatio
 
-    def genExtraStr(self):
+    def genTaskExtraStr(self):
         return json.dumps(
-            {'mapId': self.mapId, 'srcIdList': self.srcIdList, 'srcRatio': self.srcRatio, 'state': self.state})
+            {
+                'srcIdList': self.srcIdList, 
+                'mapId': self.mapId, 
+                'state': self.state,
+                'srcRatio': self.srcRatio, 
+            })
 
     def fromExtraDic(self, extraDic):
-        self.mapId = extraDic.get('mapId', 0)
         self.srcIdList = extraDic.get('srcIdList', [])
-        self.srcRatio = extraDic.get('srcRatio', 0)
+        self.mapId = extraDic.get('mapId', 0)
         self.state = extraDic.get('state', 0)
-        return
+        self.srcRatio = extraDic.get('srcRatio', 0)
 
     def gottenItems(self, itemId, num):
         LOG_INFO('in TargetItems::gottenItems:', self.tgtId, self.dstCnt, self.stepCnt)
-        opResult = False
-        completed = False
+        _opResult = False
+        _completed = False
         if itemId != self.tgtId:
-            return opResult, completed
+            return _opResult, _completed
 
         if self.stepCnt < self.dstCnt:
             self.stepCnt += num
-            opResult = True
+            _opResult = True
 
         if self.stepCnt >= self.dstCnt:
-            completed = True
-        return opResult, completed
+            _completed = True
+        return _opResult, _completed
 
     def deductItemsSucc(self):
         self.state = 1
 
-    def isTargetCompleted(self):
+    def isTaskTargetCompleted(self):
         return 1 == self.state
 
     def checkTargetCompleted(self, *args):
         if not self.gottenItems(*args):
             return False
-        return self.isTargetCompleted()
+        return self.isTaskTargetCompleted()
 
 
 class TaskTargetTalkToNPC(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_TALK_NPC
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_TALK_NPC
 
     def __init__(self):
         super(TaskTargetTalkToNPC, self).__init__()
-        self.stepCnt = 0
-
         self.npcIdList = []
         self.dialogIdList = []
+        self.stepCnt = 0
 
     def initTarget(self, npcIdList, dialogIdList, mapId):
         self.tgtId = npcIdList[0]
-        self.dstCnt = 1
         self.stepCnt = 0
+        self.dstCnt = 1
         self.mapId = mapId
 
         self.npcIdList = npcIdList
@@ -283,60 +294,60 @@ class TaskTargetTalkToNPC(BaseTarget):
     def doTgtTalkToNpc(self, npcId, dialogId):
         LOG_INFO('in TargetTalkToNPC::doTgtTalkToNpc:', npcId, dialogId, self.tgtId)
         dialogId = dialogId // 1000
-        if npcId not in self.npcIdList or dialogId not in self.dialogIdList:
+        if not (npcId in self.npcIdList and dialogId in self.dialogIdList):
             return False
-        if self.npcIdList.index(npcId) != self.dialogIdList.index(dialogId):
-            return False
-        self.stepCnt = self.dstCnt
-        return True
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetTalkToNPC, self).initFromTgtObj(tgt)
-        self.npcIdList = [npcId for npcId in tgt.npcIdList]
-        self.dialogIdList = [dialogId for dialogId in tgt.dialogIdList]
+        elif self.npcIdList.index(npcId) != self.dialogIdList.index(dialogId):
+            return False
+
+        else:
+            self.stepCnt = self.dstCnt
+            return True
+
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetTalkToNPC, self).initFromTgtObject(tgt)
+        self.npcIdList = [_npcId for _npcId in tgt.npcIdList]
+        self.dialogIdList = [_dialogId for _dialogId in tgt.dialogIdList]
         self.mapId = tgt.mapId
 
-    def genExtraStr(self):
+    def genTaskExtraStr(self):
         return json.dumps({
-            'npcIdList': self.npcIdList,
             'dialogIdList': self.dialogIdList,
+            'npcIdList': self.npcIdList,
             'mapId': self.mapId,
         })
 
     def fromExtraDic(self, extraDic):
-        self.npcIdList = extraDic.get('npcIdList', [])
         self.dialogIdList = extraDic.get('dialogIdList', [])
+        self.npcIdList = extraDic.get('npcIdList', [])
         self.mapId = extraDic.get('mapId', 0)
-        return
 
     def checkTargetCompleted(self, *args):
         return self.doTgtTalkToNpc(*args)
 
 
 class TaskTargetCollect(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_COLLECT
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_COLLECT
 
     def __init__(self):
         super(TaskTargetCollect, self).__init__()
         self.stepCnt = 0
         self.mapId = 0
-        return
 
     def initTarget(self, collectId, dstCnt, mapId):
-        self.tgtId = collectId
         self.dstCnt = dstCnt
-        self.stepCnt = 0
+        self.tgtId = collectId
         self.mapId = mapId
-        return
+        self.stepCnt = 0
 
-    def genExtraStr(self):
-        return json.dumps({'mapId': self.mapId})
+    def genTaskExtraStr(self):
+        return json.dumps({'mapId': self.mapId,})
 
     def fromExtraDic(self, extraDic):
         self.mapId = extraDic.get('mapId', 0)
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetCollect, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetCollect, self).initFromTgtObject(tgt)
         self.mapId = tgt.mapId
 
     def addCollectNum(self, collectId, gameEntityId, spaceNo=0):
@@ -353,37 +364,37 @@ class TaskTargetCollect(BaseTarget):
         return True
 
     def checkTargetCompleted(self, *args):
-        return self.isTargetCompleted()
+        return self.isTaskTargetCompleted()
 
 
 class TaskTargetReachArea(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_REACH_AREA
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_REACH_AREA
 
     def __init__(self):
         super(TaskTargetReachArea, self).__init__()
-        self.stepCnt = 0
         self.dstCnt = 0
+        self.stepCnt = 0
 
         self.mapId = 0
-        self.posX = 0.0
         self.posZ = 0.0
+        self.posX = 0.0
         self.width = 0.0
         self.length = 0.0
         self.triggerDis = 0.0
-        self.cosTheta = 1.0
         self.sinTheta = 0.0
+        self.cosTheta = 1.0
 
     def initTarget(self, dstAreaData, rdPoint):
-        self.dstCnt = 1
         self.mapId = dstAreaData['MapId']
+        self.dstCnt = 1
         self.posX = dstAreaData['X']
         self.posZ = dstAreaData['Z']
-        self.width = dstAreaData['Width']
         self.length = dstAreaData['Length']
+        self.width = dstAreaData['Width']
         self.triggerDis = dstAreaData.get('TriggerDis', 0)
         if self.triggerDis > 0 and rdPoint:
-            self.posX = rdPoint[0]
             self.posZ = rdPoint[2]
+            self.posX = rdPoint[0]
 
         _angle = dstAreaData.get('Angles', None)
         if _angle is not None:
@@ -391,56 +402,57 @@ class TaskTargetReachArea(BaseTarget):
             self.cosTheta = math.cos(_rad)
             self.sinTheta = math.sin(_rad)
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetReachArea, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetReachArea, self).initFromTgtObject(tgt)
         self.mapId = tgt.mapId
         if 0 == self.mapId:
-            gameengine.panicStack('TASK_TARGET_REACH_AREA, initFromTgtObj mapId is 0')
-        self.posX = tgt.posX
+            gameengine.panicStack('TASK_TARGET_REACH_AREA, initFromTgtObject mapId is 0')
         self.posZ = tgt.posZ
+        self.posX = tgt.posX
         self.width = tgt.width
         self.length = tgt.length
         self.triggerDis = tgt.triggerDis
-        self.cosTheta = tgt.cosTheta
         self.sinTheta = tgt.sinTheta
+        self.cosTheta = tgt.cosTheta
 
-    def genExtraStr(self):
+    def genTaskExtraStr(self):
         return json.dumps({
-            'mapId': self.mapId,
             'posX': self.posX,
+            'mapId': self.mapId,
             'posZ': self.posZ,
             'width': self.width,
             'length': self.length,
             'triggerDis': self.triggerDis,
-            'cosTheta': self.cosTheta,
             'sinTheta': self.sinTheta,
+            'cosTheta': self.cosTheta,
         })
 
     def fromExtraDic(self, extraDic):
-        self.mapId = extraDic.get('mapId', 0)
         self.posX = extraDic.get('posX', 0.0)
+        self.mapId = extraDic.get('mapId', 0)
         self.posZ = extraDic.get('posZ', 0.0)
-        self.width = extraDic.get('width', 0.0)
         self.length = extraDic.get('length', 0.0)
+        self.width = extraDic.get('width', 0.0)
         self.triggerDis = extraDic.get('triggerDis', 0.0)
-        self.cosTheta = extraDic.get('cosTheta', 1.0)
         self.sinTheta = extraDic.get('sinTheta', 0.0)
+        self.cosTheta = extraDic.get('cosTheta', 1.0)
 
-    def reachArea(self, posX, posZ, forceComplete=False):
-        if forceComplete:
+    def reachArea(self, posX, posZ, isForceComplete=False):
+        if isForceComplete:
             self.stepCnt = self.dstCnt
-            return self.isTargetCompleted()
+            return self.isTaskTargetCompleted()
 
-        if self.stepCnt != self.dstCnt:
-            if self.isInArea(posX, posZ):
-                self.stepCnt = self.dstCnt
-        return self.isTargetCompleted()
+        if self.stepCnt != self.dstCnt\
+                and self.isInArea(posX, posZ):
+            self.stepCnt = self.dstCnt
+
+        return self.isTaskTargetCompleted()
 
     def isInArea(self, posX, posZ):
         if self.triggerDis > 0:
-            widthDelta = abs(self.posX - posX)
-            lenthDelta = abs(self.posZ - posZ)
-            if math.pow(widthDelta, 2) + math.pow(lenthDelta, 2) <= math.pow(self.triggerDis + 1, 2):
+            _widthDelta = abs(self.posX - posX)
+            _lenthDelta = abs(self.posZ - posZ)
+            if math.pow(_widthDelta, 2) + math.pow(_lenthDelta, 2) <= math.pow(self.triggerDis + 1, 2):
                 return True
         else:
             transX = posX - self.posX
@@ -463,12 +475,12 @@ class TaskTargetReachArea(BaseTarget):
 
 
 class TaskTargetAvatarLevel(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_LEVEL
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_LEVEL
 
     def __init__(self):
         super(TaskTargetAvatarLevel, self).__init__()
-        self.stepCnt = 1
         self.dstCnt = 0
+        self.stepCnt = 1
 
     def initTarget(self, dstLv):
         LOG_DBG('in initTargetAvatarLevel:', dstLv)
@@ -481,14 +493,14 @@ class TaskTargetAvatarLevel(BaseTarget):
         LOG_INFO('in TargetAvatarLevel::avatarLevelUp:', self.dstCnt, newLv)
         if newLv >= self.stepCnt:
             self.stepCnt = newLv
-        return self.isTargetCompleted()
+        return self.isTaskTargetCompleted()
 
     def checkTargetCompleted(self, *args):
         return self.avatarLevelUp(*args)
 
 
 class TaskTargetCount(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_COUNT
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_COUNT
 
     COMPARE_TYPE_EQUAL = 0 # 数量一定要相等
     COMPARE_TYPE_GREATER = 1 # 计数要大于等于完成值
@@ -501,119 +513,125 @@ class TaskTargetCount(BaseTarget):
 
     def initTarget(self, tgtId, dstCnt, compType):
         LOG_DBG('in initTargetCount:', tgtId, dstCnt, compType)
-        self.tgtId = tgtId
         self.stepCnt = 0
+        self.tgtId = tgtId
         self.dstCnt = dstCnt
 
         self.compType = compType
         self.lastTime = 0
-        return
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetCount, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetCount, self).initFromTgtObject(tgt)
         self.compType = tgt.compType
         self.lastTime = tgt.lastTime
 
-    def genExtraStr(self):
-        return json.dumps({'compType': self.compType, 'lastTime': self.lastTime})
+    def genTaskExtraStr(self):
+        return json.dumps({
+            'compType': self.compType, 
+            'lastTime': self.lastTime,
+        })
 
     def fromExtraDic(self, extraDic):
-        self.compType = extraDic.get('compType', 0)
         self.lastTime = extraDic.get('lastTime', 0)
+        self.compType = extraDic.get('compType', 0)
 
     def addCnt(self, idx, timeStamp):
         if idx != self.tgtId and timeStamp < self.lastTime:
             return
-        self.lastTime = timeStamp
         self.stepCnt += 1
-        return self.isTargetCompleted()
+        self.lastTime = timeStamp
+        return self.isTaskTargetCompleted()
 
     def addMultiCnt(self, idx, cntList):
         for t in cntList:
             self.addCnt(idx, t)
-        return self.isTargetCompleted()
+        return self.isTaskTargetCompleted()
 
-    def isTargetCompleted(self):
+    def isTaskTargetCompleted(self):
         if self.compType == self.COMPARE_TYPE_EQUAL and self.stepCnt != self.dstCnt:
             return False
-        elif self.compType == self.COMPARE_TYPE_GREATER and self.stepCnt <= self.dstCnt:
+        if self.compType == self.COMPARE_TYPE_GREATER and self.stepCnt <= self.dstCnt:
             return False
-        elif self.compType == self.COMPARE_TYPE_LESS and self.stepCnt >= self.dstCnt:
+        if self.compType == self.COMPARE_TYPE_LESS and self.stepCnt >= self.dstCnt:
             return False
-        elif self.compType == self.COMPARE_TYPE_GREATER_EQUAL and self.stepCnt < self.dstCnt:
-            return False
-        elif self.compType == self.COMPARE_TYPE_LESS_EQUAL and self.stepCnt > self.dstCnt:
+        if self.compType == self.COMPARE_TYPE_GREATER_EQUAL and self.stepCnt < self.dstCnt:
+           return False
+        if self.compType == self.COMPARE_TYPE_LESS_EQUAL and self.stepCnt > self.dstCnt:
             return False
         return True
 
-    def setTargetCompleted(self):
+    def setTaskTargetCompleted(self):
         if self.compType == self.COMPARE_TYPE_EQUAL and self.stepCnt != self.dstCnt:
             self.stepCnt = self.dstCnt
+            return
         elif self.compType == self.COMPARE_TYPE_GREATER and self.stepCnt <= self.dstCnt:
             self.stepCnt = self.dstCnt + 1
+            return
         elif self.compType == self.COMPARE_TYPE_LESS and self.stepCnt >= self.dstCnt:
             self.stepCnt = self.dstCnt - 1
+            return
         elif self.compType == self.COMPARE_TYPE_GREATER_EQUAL and self.stepCnt < self.dstCnt:
             self.stepCnt = self.dstCnt + 1
+            return
         elif self.compType == self.COMPARE_TYPE_LESS_EQUAL and self.stepCnt > self.dstCnt:
             self.stepCnt = self.dstCnt - 1
-        return
+            return
 
     def checkTargetCompleted(self, *args):
         return self.addMultiCnt(*args)
 
 
 class TaskTargetManual(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_MONSTER_CARD
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_MONSTER_CARD
 
-    def __init__(self):
+    def __init__(self, *args):
         super(TaskTargetManual, self).__init__()
 
     def initTarget(self, tgtId, activated):
-        self.tgtId = tgtId
         self.dstCnt = 1
+        self.tgtId = tgtId
         self.stepCnt = self.dstCnt if activated else 0
-        return
 
     def activeCard(self, tgtId):
-        opResult = False
-        completed = False
+        _opResult = False
+        _completed = False
         if self.tgtId != tgtId:
-            return opResult, completed
-        opResult = True
+            return _opResult, _completed
+        _opResult = True
         self.stepCnt += 1
         if self.stepCnt >= self.dstCnt:
-            completed = True
-        return opResult, completed
+            _completed = True
+        return _opResult, _completed
 
     def checkTargetCompleted(self, *args):
         return self.activeCard(*args)
 
 
 class TaskTargetRelateTask(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_RELATE_TASK
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_RELATE_TASK
 
-    def __init__(self):
+    def __init__(self, *args):
         super(TaskTargetRelateTask, self).__init__()
 
     def initTarget(self, taskId, taskStat, taskCurStat):
-        self.tgtId = taskId
         self.dstCnt = 1
-        self.stepCnt = self.dstCnt if taskStat == taskCurStat else 0
+        self.tgtId = taskId
         self.taskStat = taskStat
+        self.stepCnt = self.dstCnt if taskStat == taskCurStat else 0
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetRelateTask, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetRelateTask, self).initFromTgtObject(tgt)
         self.taskStat = tgt.taskStat
 
     def relateTaskReachStat(self, relateTaskId, relateTaskStat):
-        if self.tgtId != relateTaskId or self.taskStat != relateTaskStat:
+        if not (self.tgtId == relateTaskId and self.taskStat == relateTaskStat):
             return False
-        self.stepCnt = self.dstCnt
-        return True
+        else:
+            self.stepCnt = self.dstCnt
+            return True
 
-    def genExtraStr(self):
-        return json.dumps({'taskStat': self.taskStat})
+    def genTaskExtraStr(self):
+        return json.dumps({'taskStat': self.taskStat,})
 
     def fromExtraDic(self, extraDic):
         self.taskStat = extraDic.get('taskStat', 0)
@@ -624,96 +642,95 @@ class TaskTargetRelateTask(BaseTarget):
 
 
 class TaskTargetSkillAction(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_ACTION
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_ACTION
 
-    def __init__(self):
+    def __init__(self, *args):
         super(TaskTargetSkillAction, self).__init__()
 
     def initTarget(self, actionId, mapId):
-        self.tgtId = int(actionId)
         self.stepCnt = 0
-        self.dstCnt = 1
+        self.tgtId = int(actionId)
         self.mapId = mapId
+        self.dstCnt = 1
 
-    def genExtraStr(self):
-        return json.dumps({'mapId': self.mapId})
+    def genTaskExtraStr(self):
+        return json.dumps({'mapId': self.mapId,})
 
     def fromExtraDic(self, extraDic):
         self.mapId = extraDic.get('mapId', 0)
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetSkillAction, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetSkillAction, self).initFromTgtObject(tgt)
         self.mapId = tgt.mapId
 
 
 class TaskTargetCinemaAction(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_CINEMA
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_CINEMA
 
-    def __init__(self):
+    def __init__(self, *args):
         super(TaskTargetCinemaAction, self).__init__()
 
     def initTarget(self, cinemaId):
-        self.tgtId = int(cinemaId)
         self.stepCnt = 0
+        self.tgtId = int(cinemaId)
         self.dstCnt = 1
 
 
 class TaskTargetVar(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_VAR
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_VAR
 
-    def __init__(self):
+    def __init__(self, *args):
         super(TaskTargetVar, self).__init__()
 
     def initTarget(self, varFrmId):
-        self.tgtId = int(varFrmId)
         self.stepCnt = 0
+        self.tgtId = int(varFrmId)
         self.dstCnt = 1
 
-    def checkVarCond(self, owner, fmlId, paramsStr):
-        if dataUtils.checkVariableCond(owner, fmlId, paramsStr):
+    def checkVarCond(self, owner, fomulaId, paramsStr):
+        if dataUtils.checkVariableCond(owner, fomulaId, paramsStr):
             self.stepCnt = self.dstCnt
-            return self.isTargetCompleted()
+            return self.isTaskTargetCompleted()
 
     def checkTargetCompleted(self, *args):
         return self.checkVarCond(*args)
 
 
 class TaskTargetCounter(BaseTarget):
-    tgtType = gameconst.TaskTargetType.TASK_TARGET_COUNTER
+    tgtType = gameconst.TaskTargetEnum.TASK_TARGET_COUNTER
 
-    def __init__(self):
+    def __init__(self, *args):
         super(TaskTargetCounter, self).__init__()
         self.param = ''
 
-    def initTarget(self, tgtId, dstCnt, param, curCnt):
-        self.tgtId = tgtId
-        self.stepCnt = curCnt
-        self.dstCnt = dstCnt
-        self.param = param
-
-    def genExtraStr(self):
+    def genTaskExtraStr(self):
         return json.dumps({'param': self.param})
+
+    def initTarget(self, tgtId, dstCnt, param, curCnt):
+        self.stepCnt = curCnt
+        self.tgtId = tgtId
+        self.param = param
+        self.dstCnt = dstCnt
 
     def fromExtraDic(self, extraDic):
         self.param = extraDic.get('param', '')
         return
 
-    def initFromTgtObj(self, tgt):
-        super(TaskTargetCounter, self).initFromTgtObj(tgt)
+    def initFromTgtObject(self, tgt):
+        super(TaskTargetCounter, self).initFromTgtObject(tgt)
         self.param = tgt.param
-        return
 
     def counter(self, tgtId, param):
         if tgtId != self.tgtId:
             return False
-        # if tgtId == TCTTD.couterTargetDic['TaskCounterTargetFengyin'] and int(self.param) != param[0]:
-        #     return False
-        # elif tgtId == TCTTD.couterTargetDic['TaskCounterTargetActivity'] and int(self.param) != param[0]:
-        #     return False
-        # elif tgtId == TCTTD.couterTargetDic['TaskCounterTargetXZKY']:
-        #     self.stepCnt = min(self.dstCnt, param[0])
-        if tgtId == TCTTD.couterTargetDic['TaskCounterTargetUseItem'] and int(self.param) == param[0]:
-            self.stepCnt = min(self.dstCnt, self.stepCnt + param[1])
+        ids = {
+            TCTTD.couterTargetDic['TaskCounterTargetUseItem'],
+            TCTTD.couterTargetDic['MakeEquipmentOnce'],
+            TCTTD.couterTargetDic['CompleteACertainInstance']
+        }
+        if tgtId in ids and int(self.param) == param[0]:
+            cnt = param[1] if len(param) > 1 else 1
+            self.stepCnt = min(self.dstCnt, self.stepCnt + cnt)
         else:
             if param is tuple:
                 self.stepCnt += param[0]
@@ -722,56 +739,56 @@ class TaskTargetCounter(BaseTarget):
         return True
 
     def checkTargetCompleted(self, *args):
-        return self.isTargetCompleted()
+        return self.isTaskTargetCompleted()
 
 class BaseTargetFactory(object):
-    TgtType2TgtClassMap = {}
+    TgtType2TgtClassDic = {}
 
     @classmethod
     def createTarget(cls, tgtType, *args):
-        tgtClass = cls.TgtType2TgtClassMap.get(tgtType)
-        if not tgtClass:
+        _tgtClass = cls.TgtType2TgtClassDic.get(tgtType)
+        if not _tgtClass:
             LOG_ERR('in createTarget, tgtType error:', tgtType, args)
             return
-        tgt = tgtClass()
+        tgt = _tgtClass()
         tgt.initTarget(*args)
         return tgt
 
     @classmethod
     def createTargetBySavedDic(cls, savedData):
-        tgtClass = cls.TgtType2TgtClassMap.get(savedData['tgtType'])
-        if not tgtClass:
+        _tgtClass = cls.TgtType2TgtClassDic.get(savedData['tgtType'])
+        if not _tgtClass:
             gameengine.panicStack('in createTargetBySavedDic, tgtType error:', savedData)
             return
-        tgt = tgtClass()
+        tgt = _tgtClass()
         tgt.fromSavedDict(savedData)
         return tgt
 
     @classmethod
     def createTargetByObj(cls, tgtObj):
-        tgtClass = cls.TgtType2TgtClassMap.get(tgtObj.tgtType)
+        tgtClass = cls.TgtType2TgtClassDic.get(tgtObj.tgtType)
         if not tgtClass:
             LOG_ERR('in createTargetByObj, tgtType error:', tgtObj.tgtType)
             return
         tgt = tgtClass()
-        tgt.initFromTgtObj(tgtObj)
+        tgt.initFromTgtObject(tgtObj)
         return tgt
 
 
 class TaskTgtFactory(BaseTargetFactory):
-    TgtType2TgtClassMap = {
-        gameconst.TaskTargetType.TASK_TARGET_MONSTERS: TaskTargetMonsters,
-        gameconst.TaskTargetType.TASK_TARGET_ITEMS: TaskTargetItems,
-        gameconst.TaskTargetType.TASK_TARGET_TALK_NPC: TaskTargetTalkToNPC,
-        gameconst.TaskTargetType.TASK_TARGET_REACH_AREA: TaskTargetReachArea,
+    TgtType2TgtClassDic = {
+        gameconst.TaskTargetEnum.TASK_TARGET_MONSTERS: TaskTargetMonsters,
+        gameconst.TaskTargetEnum.TASK_TARGET_ITEMS: TaskTargetItems,
+        gameconst.TaskTargetEnum.TASK_TARGET_TALK_NPC: TaskTargetTalkToNPC,
+        gameconst.TaskTargetEnum.TASK_TARGET_REACH_AREA: TaskTargetReachArea,
 
-        gameconst.TaskTargetType.TASK_TARGET_LEVEL: TaskTargetAvatarLevel,
-        gameconst.TaskTargetType.TASK_TARGET_COUNT: TaskTargetCount,
-        gameconst.TaskTargetType.TASK_TARGET_COLLECT: TaskTargetCollect,
-        gameconst.TaskTargetType.TASK_TARGET_MONSTER_CARD: TaskTargetManual,
-        gameconst.TaskTargetType.TASK_TARGET_RELATE_TASK: TaskTargetRelateTask,
-        gameconst.TaskTargetType.TASK_TARGET_ACTION: TaskTargetSkillAction,
-        gameconst.TaskTargetType.TASK_TARGET_CINEMA: TaskTargetCinemaAction,
-        gameconst.TaskTargetType.TASK_TARGET_VAR: TaskTargetVar,
-        gameconst.TaskTargetType.TASK_TARGET_COUNTER: TaskTargetCounter,
+        gameconst.TaskTargetEnum.TASK_TARGET_LEVEL: TaskTargetAvatarLevel,
+        gameconst.TaskTargetEnum.TASK_TARGET_COUNT: TaskTargetCount,
+        gameconst.TaskTargetEnum.TASK_TARGET_COLLECT: TaskTargetCollect,
+        gameconst.TaskTargetEnum.TASK_TARGET_MONSTER_CARD: TaskTargetManual,
+        gameconst.TaskTargetEnum.TASK_TARGET_RELATE_TASK: TaskTargetRelateTask,
+        gameconst.TaskTargetEnum.TASK_TARGET_ACTION: TaskTargetSkillAction,
+        gameconst.TaskTargetEnum.TASK_TARGET_CINEMA: TaskTargetCinemaAction,
+        gameconst.TaskTargetEnum.TASK_TARGET_VAR: TaskTargetVar,
+        gameconst.TaskTargetEnum.TASK_TARGET_COUNTER: TaskTargetCounter,
     }

@@ -1,0 +1,205 @@
+<root>
+    <Properties>
+        <abyssTicket>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </abyssTicket>
+
+        <paidAbyssTicket>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </paidAbyssTicket>
+
+        <abyssAddTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </abyssAddTimes>
+
+        <abyssTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </abyssTimerId>
+
+        <abyssQuota>
+            <Type>          CUBE_QUOTA_DATA_INFO        </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Persistent>    True                        </Persistent>
+        </abyssQuota>
+    </Properties>
+
+    <BaseMethods>
+        <checkAndEnterAbyss>
+            <Arg>          UINT8                        </Arg>
+        </checkAndEnterAbyss>
+
+        <doAddAbyssTicket>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          OP_UUID                      </Arg>
+        </doAddAbyssTicket>
+
+        <addAbyssTicket> <Exposed/>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+        </addAbyssTicket>
+
+        <addAbyssDurFailed>
+            <Arg>          OP_UUID                      </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
+            <Arg>          UINT8                        </Arg>
+        </addAbyssDurFailed>
+
+        <autoRenewAbyss>
+            <Arg>          ABYSS_SWITCH           </Arg>
+        </autoRenewAbyss>
+
+        <addAbyssDurationFailedRewindTimes>
+            <Arg>          OP_UUID                      </Arg>
+        </addAbyssDurationFailedRewindTimes>
+
+        <afterEnterAbyssDeductTimes>
+        </afterEnterAbyssDeductTimes>
+
+        <onLogonEnterAbyssGetSpaceBox>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+        </onLogonEnterAbyssGetSpaceBox>
+
+        <onEnterCrossAbyssSpaceRemotely>
+            <Arg>          SERVER_ID                    </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </onEnterCrossAbyssSpaceRemotely>
+
+        <leaveCrossServerAbyss> <Exposed/>
+        </leaveCrossServerAbyss>
+
+        <enterCrossServerAbyss> <Exposed/>
+            <Arg>           UINT8                       </Arg>
+        </enterCrossServerAbyss>
+
+        <doEnterCrossServerAbyss>
+            <Arg>           UINT8                       </Arg>
+        </doEnterCrossServerAbyss>
+
+        <syncAbyssDataContinue>
+        </syncAbyssDataContinue>
+
+        <onCrossServerSyncAbyssDataBase>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           UINT8                       </Arg>
+        </onCrossServerSyncAbyssDataBase>
+    </BaseMethods>
+
+    <CellMethods>
+        <enterAbyss>
+            <Arg>          UINT8                        </Arg>
+        </enterAbyss>
+
+        <gmLeaveAbyss>
+        </gmLeaveAbyss>
+
+        <beginEnterAbyss>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+            <Arg>          PY_DICT                      </Arg>
+        </beginEnterAbyss>
+
+        <doSwitchAbyssLine>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+            <Arg>          PY_DICT                      </Arg>
+        </doSwitchAbyssLine>
+
+        <directlyAddAbyssDuration>
+            <Arg>          STRING                       </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </directlyAddAbyssDuration>
+
+        <reqChangeAbyssSwitch> <Exposed/>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          ABYSS_SWITCH           </Arg>
+        </reqChangeAbyssSwitch>
+
+        <checkAddAbyssDurationCondition>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           ITEM_ID                     </Arg>
+            <Arg>           UINT32                      </Arg>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           OP_UUID                     </Arg>
+        </checkAddAbyssDurationCondition>
+
+        <doSendAbyssLoginData>
+        </doSendAbyssLoginData>
+
+        <addAbyssRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addAbyssRewardRecord>
+
+        <getAbyssLeftTime> <Exposed/>
+        </getAbyssLeftTime>
+
+        <crossServerAbyssLeave>
+        </crossServerAbyssLeave>
+
+        <checkAndEnterCrossServerAbyss>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           BOOL                        </Arg>
+        </checkAndEnterCrossServerAbyss>
+
+        <onCrossServerSyncAbyssData>
+            <Arg>          LONGTIME                     </Arg>
+            <Arg>          LONGTIME                     </Arg>
+        </onCrossServerSyncAbyssData>
+
+        <doSyncAbyssData>
+        </doSyncAbyssData>
+    </CellMethods>
+
+    <ClientMethods>
+        <onAbyssLeftTime>
+            <Arg>          LONGTIME                     </Arg>
+        </onAbyssLeftTime>
+
+        <onAbyssLeftTimeDuration>
+            <Arg>          LONGTIME                     </Arg>
+        </onAbyssLeftTimeDuration>
+
+        <onAbyssSwitch>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          ABYSS_SWITCH           </Arg>
+        </onAbyssSwitch>
+
+        <onAddAbyssRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onAddAbyssRewardRecord>
+
+        <onAbyssLoginData>
+            <Arg>          LONGTIME                     </Arg>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          ABYSS_SWITCH           </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onAbyssLoginData>
+
+        <onChangeAbyssRenewTimes>
+            <Arg>          UINT8                        </Arg>
+        </onChangeAbyssRenewTimes>
+    </ClientMethods>
+</root>

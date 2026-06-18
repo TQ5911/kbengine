@@ -52,11 +52,12 @@
             <Arg>           PYTHON          </Arg>
         </applyInviteTeam>
 
-        <replyInviteTeam>
+        <replyInviteTeamInStub>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           PY_DICT         </Arg>
-        </replyInviteTeam>
+            <Arg>           UINT8           </Arg>
+        </replyInviteTeamInStub>
 
         <leaveTeam>
             <Arg>           UINT32          </Arg>
@@ -73,12 +74,12 @@
             <Arg>           BOOL            </Arg>
         </kickTeamMember>
 
-        <transferCaptain>
+        <doTransferCaptain>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           PLAYER_GBID     </Arg>
-        </transferCaptain>
+        </doTransferCaptain>
 
         <doApplyBecomeCaptain>
             <Arg>           TEAMID          </Arg>
@@ -86,12 +87,12 @@
             <Arg>           UNICODE         </Arg>
         </doApplyBecomeCaptain>
 
-       <replyBecomeCaptain>
+       <replyBecomeCaptainInStub>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           PLAYER_GBID     </Arg>
-        </replyBecomeCaptain>
+        </replyBecomeCaptainInStub>
 
         <cancelTeamJoinRequest>
             <Arg>           ENTITYCALL      </Arg>
@@ -107,11 +108,11 @@
             <Arg>           BOOL            </Arg>
         </replyJoinTeam>
 
-        <getTeamInfoOnLogin>
+        <fetchTeamInfoOnLogin>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           TEAMID          </Arg>
-        </getTeamInfoOnLogin>
+        </fetchTeamInfoOnLogin>
 
         <notifyPlayerLogon>
             <Arg>           ENTITYCALL      </Arg>
@@ -128,11 +129,11 @@
             <Arg>           PYTHON          </Arg>
         </teamLogonEnterLine>
 
-        <disbandTeam>
+        <doDisbandTeam>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           TEAMID          </Arg>
-        </disbandTeam>
+        </doDisbandTeam>
 
         <onPlayerIsOffline>
             <Arg>           PLAYER_GBID     </Arg>
@@ -140,13 +141,13 @@
             <Arg>           UNICODE         </Arg>
         </onPlayerIsOffline>
 
-        <askAllMemberFollow>
+        <askAllMemberFollowTeamStub>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           SPACE_NO        </Arg>
             <Arg>           POSITION_ARG    </Arg>
-        </askAllMemberFollow>
+        </askAllMemberFollowTeamStub>
 
         <updateMemberAttr>
             <Arg>           ENTITYCALL      </Arg>
@@ -232,6 +233,7 @@
             <Arg>   PLAYER_GBID </Arg>
             <Arg>   TEAMID      </Arg>
             <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   BOOL        </Arg>
         </leaveTeamDungeon>
 
         <destroyTeamDungeonDelay>
@@ -274,24 +276,24 @@
             <Arg>           TEAMID       </Arg>
             <Arg>           PLAYER_GBID  </Arg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO      </Arg>
-            <Arg>           UNICODE      </Arg>
+            <Arg>           CHAT_MSG_DATA      </Arg>
         </sendChatMsgFromTeamMember>
 
-        <getTeamMemberInfo>
+        <fetchTeamMemberInfo>
             <Arg>           ENTITYCALL       </Arg>
             <Arg>           TEAMID       </Arg>
             <Arg>           METHOD_NAME     </Arg>
             <Arg>           METHOD_ARGS     </Arg>
-        </getTeamMemberInfo>
+        </fetchTeamMemberInfo>
 
         <teamPrepareAutoMatch>
             <Arg>           TEAMID       </Arg>
             <Arg>           GUILD_UUID   </Arg>
         </teamPrepareAutoMatch>
 
-        <teamPrepareStopAutoMatch>
+        <doTeamPrepareStopAutoMatch>
             <Arg>           TEAMID       </Arg>
-        </teamPrepareStopAutoMatch>
+        </doTeamPrepareStopAutoMatch>
 
         <newPlayerMatched>
             <Arg>           TEAMID       </Arg>
@@ -368,7 +370,7 @@
             <Arg>   PYTHON      </Arg>
         </raidApplyInvitedRaid>
 
-        <onReplyInviteRaidWithTeamFail>
+        <onReplyInviteRaidAndTeamFail>
             <Arg>   MAILBOX     </Arg>
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   RAID_ID     </Arg>
@@ -376,7 +378,7 @@
             <Arg>   TEAMID </Arg>
             <Arg>   ERRNO  </Arg>
             <Arg>   PYTHON  </Arg>
-        </onReplyInviteRaidWithTeamFail>
+        </onReplyInviteRaidAndTeamFail>
 
         <!--raid mixin ended-->
         <updateTeamSilentFlag>
@@ -384,11 +386,11 @@
             <Arg>   BOOL            </Arg>
         </updateTeamSilentFlag>
 
-        <sendTeamMemberMessage>
+        <sendTeamMemberMsg>
             <Arg>   TEAMID          </Arg>
             <Arg>   INT32           </Arg>
             <Arg>   PY_LIST           </Arg>
-        </sendTeamMemberMessage>
+        </sendTeamMemberMsg>
 
         <sendTeamMemberMessage_localCross>
             <Arg>   TEAMID          </Arg>
@@ -504,6 +506,30 @@
 
         <setInDungeon>
             <Arg>       TEAMID          </Arg>
+            <Arg>       BOOL             </Arg>
         </setInDungeon>
+
+        <refreshLastDungeonFinishedTime>
+            <Arg>       TEAMID          </Arg>
+            <Arg>       LONGTIME        </Arg>  
+        </refreshLastDungeonFinishedTime>
+
+        <modifyPlayerName>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   UNICODE     </Arg>
+        </modifyPlayerName>
+
+        <broadcastToAllMembers>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PY_LIST     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   METHOD_NAME </Arg>
+            <Arg>   METHOD_ARGS </Arg>
+        </broadcastToAllMembers>
     </BaseMethods>
 </root>

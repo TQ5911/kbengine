@@ -97,13 +97,10 @@ datas ={
       40250022,
       40250023,
       40250024,
-      402500025,
+      40250025,
       40250027,
       40250028,
-      40250029,
-      40250030,
-      40250031,
-      40250032
+      40250029
     ],
     "num": 0,
     "lv": "20",
@@ -184,7 +181,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1039
+        1040
       ]
     }
   },
@@ -197,5 +194,43 @@ datas ={
     "randomCollectionNum": 0,
     "checkHaveInFixed": 0,
     "transition": {}
+  },
+  "1040": {
+    "type": "createMonster",
+    "entityID": [
+      40250030,
+      40250031,
+      40250032
+    ],
+    "num": 0,
+    "lv": "20",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1041
+      ]
+    }
+  },
+  "1041": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1039
+      ]
+    }
   }
 }

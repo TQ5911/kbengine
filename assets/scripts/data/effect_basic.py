@@ -68,7 +68,13 @@ datas = _tools.RODict({
         "Func": "addDefensiveShield",
         "ParameterType": "Hash{{key=\"hpValue\",value=\"Int()\"},{key=\"reduceDmgRatio\",value=\"Float()\"}}",
         "Example": "[{\"EffectId\": 13010010, \"hpValue\": 10000, \"reduceDmg\": 0.5}]"
+    }),
+    13010011: _tools.RODict({
+        "ID": 13010011,
+        "Func": "cantUseSkillTag",
+        "ParameterType": "Hash{{key=\"tag\",value=\"tagid\"},{key=\"Value\",value=\"int()\"}}",
+        "Example": "[{\"EffectId\": 13010011, \"Tag\": \"SkillTagId\", \"Value\": 146}]"
     })
 })
 minKey = 13010001
-maxKey = 13010010
+maxKey = 13010011

@@ -162,5 +162,161 @@ datas = _tools.RODict({
     "positionColor_link": _tools.RODict({
         "ID": "positionColor_link",
         "value": 236,
+    }),
+    "sendTimeOut": _tools.RODict({
+        "ID": "sendTimeOut",
+        "value": 5,
+    }),
+    "hornFunctionText": _tools.RODict({
+        "ID": "hornFunctionText",
+        "value": "传音",
+    }),
+    "hornMsgWordsLimitTip": _tools.RODict({
+        "ID": "hornMsgWordsLimitTip",
+        "value": 54001820,
+    }),
+    "hornMsgCdTip": _tools.RODict({
+        "ID": "hornMsgCdTip",
+        "value": 54000953,
+    }),
+    "voiceChat_otherVolume": _tools.RODict({
+        "ID": "voiceChat_otherVolume",
+        "value": 0.2,
+    }),
+    "voiceChat_voiceVolumeDefault": _tools.RODict({
+        "ID": "voiceChat_voiceVolumeDefault",
+        "value": 1.0,
+    }),
+    "voiceChat_micVolumeDefault": _tools.RODict({
+        "ID": "voiceChat_micVolumeDefault",
+        "value": 0.5,
+    }),
+    "voiceChat_cancelSendText1": _tools.RODict({
+        "ID": "voiceChat_cancelSendText1",
+        "value": "手指滑动，取消发送",
+    }),
+    "voiceChat_cancelSendText2": _tools.RODict({
+        "ID": "voiceChat_cancelSendText2",
+        "value": "松开手指，取消发送",
+    }),
+    "voiceChat_cancelSendMsg": _tools.RODict({
+        "ID": "voiceChat_cancelSendMsg",
+        "value": 54001600,
+    }),
+    "voiceChat_minTime": _tools.RODict({
+        "ID": "voiceChat_minTime",
+        "value": 1,
+    }),
+    "voiceChat_maxTime": _tools.RODict({
+        "ID": "voiceChat_maxTime",
+        "value": 20,
+    }),
+    "voiceChat_tooShortMsg": _tools.RODict({
+        "ID": "voiceChat_tooShortMsg",
+        "value": 54001601,
+    }),
+    "voiceChat_toTextFail": _tools.RODict({
+        "ID": "voiceChat_toTextFail",
+        "value": "[语音内容无法识别]",
+    }),
+    "teamChat_switchOnMsg": _tools.RODict({
+        "ID": "teamChat_switchOnMsg",
+        "value": 54001602,
+    }),
+    "teamChat_switchOffMsg": _tools.RODict({
+        "ID": "teamChat_switchOffMsg",
+        "value": 54001603,
+    }),
+    "teamChat_switchUnavailable": _tools.RODict({
+        "ID": "teamChat_switchUnavailable",
+        "value": 54001604,
+    }),
+    "teamChat_micModeSwitch": _tools.RODict({
+        "ID": "teamChat_micModeSwitch",
+        "value": 54001605,
+    }),
+    "teamChat_teamMuteSwitch": _tools.RODict({
+        "ID": "teamChat_teamMuteSwitch",
+        "value": 54001606,
+    }),
+    "teamChat_personalMuteSwitch": _tools.RODict({
+        "ID": "teamChat_personalMuteSwitch",
+        "value": 54001607,
+    }),
+    "teamChat_voiceVolumeMuteMsg": _tools.RODict({
+        "ID": "teamChat_voiceVolumeMuteMsg",
+        "value": 54001608,
+    }),
+    "teamChat_voiceVolumeDefault": _tools.RODict({
+        "ID": "teamChat_voiceVolumeDefault",
+        "value": 0.2,
+    }),
+    "teamChat_micVolumeMuteMsg": _tools.RODict({
+        "ID": "teamChat_micVolumeMuteMsg",
+        "value": 54001609,
+    }),
+    "teamChat_micVolumeDefault": _tools.RODict({
+        "ID": "teamChat_micVolumeDefault",
+        "value": 0.3,
+    }),
+    "teamChat_voiceVolumeMuteTip": _tools.RODict({
+        "ID": "teamChat_voiceVolumeMuteTip",
+        "value": 54001610,
+    }),
+    "teamChat_micVolumeMuteTip": _tools.RODict({
+        "ID": "teamChat_micVolumeMuteTip",
+        "value": 54001611,
+    }),
+    "guildChat_switchOnMsg": _tools.RODict({
+        "ID": "guildChat_switchOnMsg",
+        "value": 54001612,
+    }),
+    "guildChat_switchOffMsg": _tools.RODict({
+        "ID": "guildChat_switchOffMsg",
+        "value": 54001613,
+    }),
+    "guildChat_micModeSwitch": _tools.RODict({
+        "ID": "guildChat_micModeSwitch",
+        "value": 54001614,
+    }),
+    "guildChat_allInvitationCd": _tools.RODict({
+        "ID": "guildChat_allInvitationCd",
+        "value": 60,
+    }),
+    "guildChat_oneInvitationCd": _tools.RODict({
+        "ID": "guildChat_oneInvitationCd",
+        "value": 10,
+    }),
+    "guildChat_allInvitationCheck": _tools.RODict({
+        "ID": "guildChat_allInvitationCheck",
+        "value": 54000630,
+    }),
+    "guildChat_allInvitationSend": _tools.RODict({
+        "ID": "guildChat_allInvitationSend",
+        "value": 54000631,
+    }),
+    "guildChat_invitationCd": _tools.RODict({
+        "ID": "guildChat_invitationCd",
+        "value": 54000632,
+    }),
+    "guildChat_invitationEmpty": _tools.RODict({
+        "ID": "guildChat_invitationEmpty",
+        "value": 54000635,
+    }),
+    "guildChat_joinMsg": _tools.RODict({
+        "ID": "guildChat_joinMsg",
+        "value": 54001615,
+    }),
+    "guildChat_noAuthorization": _tools.RODict({
+        "ID": "guildChat_noAuthorization",
+        "value": 54001616,
+    }),
+    "guildChat_autoOffMsg": _tools.RODict({
+        "ID": "guildChat_autoOffMsg",
+        "value": 54001617,
+    }),
+    "voiceChat_micSwitch": _tools.RODict({
+        "ID": "voiceChat_micSwitch",
+        "value": 54001618,
     })
 })

@@ -19,7 +19,7 @@ datas = _tools.RODict({
         "floor": 1,
         "ID": 5100,
         "needScore": 10000,
-        "needLv": 25,
+        "needLv": 23,
     }),
     2: _tools.RODict({
         "floor": 2,

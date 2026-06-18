@@ -5,7 +5,7 @@ from KBEDebug import *
 import KBEngine
 import utils
 import buyCredit_buyCreditConst as BCBCCD
-import buyCredit_buyCredit as BCBCD
+import buyCredit_premiumGoods as BCBPGD
 import time
 import gameconst
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -25,6 +25,7 @@ import LogTrackingMgr
 import gamedecorator
 import gameconfig
 import gameengine
+import login_set
 
 class IMonthCard(object):
     def __init__(self):
@@ -33,29 +34,35 @@ class IMonthCard(object):
         self.monthCardTimer = 0
         self.lastMonthcardLoginTime = self.tLoginBase
         if not self.isMonthCardExpired():
-            LOG_INFO("init month card timer", self.monthCardExpireTime)
+            LOG_INFO("init month card timer", self.monthCardExpireTime, self.bigMonthCardExpireTime)
             self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
 
-    def isMonthCardExpired(self):
+    def isMonthCardExpired(self, cardType=0):
         if not gameconfig.visibleConfigEnabled('monthCard'):
             return True
         return self.monthCardExpireTime < utils.curTS()
     
+    def isBigMonthCardExpired(self):
+        if not gameconfig.visibleConfigEnabled('monthCard'):
+            return True
+        return self.bigMonthCardExpireTime < utils.curTS()
+
     def addMonthCardByItem(self, monthCardId, opUUID, ctx):
         seconds = BCBCCD.datas['durationHours']['value'] * 3600
-        if not self.checkCanAddMonthCard():
-            self.cell.onPendingUseItem(ctx.pendingOpId, gameconst.UseItem.FALSE)
+        if not self.checkCanAddMonthCard(monthCardId):
+            self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.FALSE)
             self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
             return
         self.doAddMonthCard(seconds, monthCardId)
-        self.cell.onPendingUseItem(ctx.pendingOpId, gameconst.UseItem.TRUE)
+        self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.TRUE)
 
-    def checkCanAddMonthCard(self):
+    def checkCanAddMonthCard(self, monthCardId):
+        monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
         durationHoursLimit = BCBCCD.datas['durationHoursLimit']['value']
         maxTime = utils.curTS() + 3600 * durationHoursLimit
-        LOG_INFO("checkCanAddMonthCard", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(maxTime)),
-                 time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
-        if self.monthCardExpireTime > maxTime:
+        LOG_INFO("checkCanAddMonthCard", monthCardId, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(maxTime)),
+                 time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(monthCardExpireTime)))
+        if monthCardExpireTime > maxTime:
             return False
         if not gameconfig.visibleConfigEnabled('monthCard'):
             return False
@@ -63,74 +70,93 @@ class IMonthCard(object):
 
     #只要调用了这个，就会发一次月卡获得奖励
     def doAddMonthCard(self, seconds, monthCardId):
-        self.unlockBag(gameconst.BagType.BAG_TYPE_NORMAL, 'unlock by action: doAddMonthCard')
-        LOG_INFO("before add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
-        if self.isMonthCardExpired():
-            self.monthCardExpireTime = utils.curTS() + seconds
+        monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
+        self.unlockBag(gameconst.BagTypeEnum.BAG_TYPE_NORMAL, 'unlock by action: doAddMonthCard')
+        LOG_INFO("before add month card", monthCardId, monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(monthCardExpireTime)))
+        if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD:
+            self.monthCardExpireTime = max(self.monthCardExpireTime, utils.curTS()) + seconds
         else:
-            self.monthCardExpireTime += seconds
-        LOG_INFO("after add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
+            self.bigMonthCardExpireTime = max(self.bigMonthCardExpireTime, utils.curTS()) + seconds
+        LOG_INFO("after add month card", monthCardId, monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(monthCardExpireTime)))
 
         if not self.monthCardTimer:
-            LOG_INFO("add month card timer", self.monthCardExpireTime)
+            LOG_INFO("add month card timer", monthCardExpireTime)
             self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
 
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         _src = AAC_AACDD.datas.BONUS_SRC_BUYCREDIT_MONTHCARD
         _awardVal = dropAward.AwardVal()
-        for rewardId in BCBCD.datas[monthCardId]['reward']:
-            _ctx = self._getAvatarAwardCtx(rewardId, None)
-            _awardVal += dropAward.getAwardOne(
-                rewardId,
-                _ctx
-            )
-        awardCtx = self._getAvatarAwardCtx(0, None)
+        rewardId = BCBPGD.datas[monthCardId]['reward']
+        _ctx = self.getAvatarAwardCtx(rewardId, None)
+        _awardVal += dropAward.getAwardOne(
+            rewardId,
+            _ctx
+        )
+        awardCtx = self.getAvatarAwardCtx(0, None)
         opUUID = KBEngine.genUUID64()
         self.addWealth(_src, _awardVal, opUUID, _detail, awardCtx)
-        self.checkMonthCardAward()
         self.updateRedisVIPFlag()
+        self.cell.syncMonthCardInfo(self.monthCardExpireTime, self.bigMonthCardExpireTime)
 
         LogTrackingMgr.LogTrackingMgr.MonthCard_Invoke(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             self.getAvatarLevel(),
             utils.curTS(),
             self.monthCardExpireTime,
             opUUID
         )
+
+        LogTrackingMgr.LogTrackingMgr.MonthCard_Expire_Time_Set(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            self.monthCardExpireTime
+        )
         return opUUID
     
 
-    def tryGetMonthCardDailyReward(self, exposed):
-        self.checkMonthCardAward()
+    def tryGetMonthCardDailyReward(self, exposed, cardType):
+        self.checkMonthCardAward(cardType)
 
     #检查并发放月卡每日奖励
-    def checkMonthCardAward(self, *args):
-        LOG_INFO("start checkMonthCardAward")
-        if self.isMonthCardExpired():
-            return
+    def checkMonthCardAward(self, cardType):
+        LOG_INFO("start checkMonthCardAward", cardType)
+        tempLastTime = self.lastMonthCardDailyRewardTime
+        if cardType == gameconst.PremiumType.SMALL_MONTH_CARD:
+            if self.isMonthCardExpired():
+                return
+
+        if cardType == gameconst.PremiumType.BIG_MONTH_CARD:
+            tempLastTime = self.lastBigMonthCardDailyRewardTime
+            if self.isBigMonthCardExpired():
+                return
         
-        if not utils.checkDiffDay(self.lastMonthCardDailyRewardTime, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
-            LOG_INFO("checkMonthCardAward", "not diff day",
-                     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardDailyRewardTime)),
+        if not utils.checkDiffDay(tempLastTime, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
+            LOG_ERR("checkMonthCardAward", "not diff day",
+                     time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(tempLastTime)),
                      time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.curTS())))
             return
         
         LOG_INFO("checkMonthCardAward", "get daily reward",
-                  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardDailyRewardTime)),
+                  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(tempLastTime)),
                   time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.curTS())))
-        self.lastMonthCardDailyRewardTime = utils.curTS()
+        if cardType == gameconst.PremiumType.SMALL_MONTH_CARD:
+            self.lastMonthCardDailyRewardTime = utils.curTS()
+        elif cardType == gameconst.PremiumType.BIG_MONTH_CARD:
+            self.lastBigMonthCardDailyRewardTime = utils.curTS()
         
         #道具奖励
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         _src = AAC_AACDD.datas.BONUS_SRC_MONTHCARD_DAILY
         _awardVal = dropAward.AwardVal()
-        rewardId = BCBCCD.datas['dailyRewards']['value']
-        _ctx = self._getAvatarAwardCtx(rewardId, None)
+        rewardId = BCBPGD.datas[cardType]['dailyReward']
+        _ctx = self.getAvatarAwardCtx(rewardId, None)
         _awardVal += dropAward.getAwardOne(
             rewardId,
             _ctx
         )
-        awardCtx = self._getAvatarAwardCtx(0, None)
+        awardCtx = self.getAvatarAwardCtx(0, None)
         self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail, awardCtx)
 
         #挂机时长奖励
@@ -197,16 +223,18 @@ class IMonthCard(object):
         income = self._calcIdleIncome(minutes)
         
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         _src = AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME
         _awardVal = dropAward.AwardVal()
 
-        _awardVal.addWealthByItemId(gameconst.ItemId.EXP, income)
+        _awardVal.addWealthByItemId(gameconst.ItemIdEnum.EXP, income)
 
-        awardCtx = self._getAvatarAwardCtx(0, None)
+        awardCtx = self.getAvatarAwardCtx(0, None)
         self.addWealth(_src, _awardVal, _opUUID, _detail, awardCtx)
 
         LogTrackingMgr.LogTrackingMgr.MonthCard_Afk(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             self.remainHangupMinutes,
             minutes,
@@ -254,7 +282,8 @@ class IMonthCard(object):
         if self.getAvatarLevel() < CC.datas["offlineTriggerMin"]["value"]:
             return
 
-        endTime = min(self.monthCardExpireTime, utils.curTS())
+        monthCardExpireTime = max(self.monthCardExpireTime, self.bigMonthCardExpireTime)
+        endTime = min(monthCardExpireTime, utils.curTS())
         if endTime <= self.tsLastOfflineBase + BCBCCD.datas['offlineTimeLimit']['value'] * 60:
             return
         
@@ -318,6 +347,8 @@ class IMonthCard(object):
                  "lastMonthcardLoginTime", self.lastMonthcardLoginTime, "tsLastOfflineBase", self.tsLastOfflineBase)
         LogTrackingMgr.LogTrackingMgr.MonthCard_Offline(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             self.remainHangupMinutes,
             totalMinutes
         )
@@ -343,12 +374,14 @@ class IMonthCard(object):
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_HANG_UP_INCOME
         wealthVal = dropAward.AwardVal()
-        wealthVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
-        awardCtx = self._getAvatarAwardCtx(0, None)
-        _detail = gameclass.AwardDetail()
+        wealthVal.addWealthByItemId(gameconst.ItemIdEnum.EXP, exp)
+        awardCtx = self.getAvatarAwardCtx(0, None)
+        _detail = gameclass.AwardDetailCls()
         self.addWealth(srcType, wealthVal, opUUID, _detail, awardCtx)
         
         LogTrackingMgr.LogTrackingMgr.MonthCard_OfflineReward(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             1,
             opUUID
@@ -363,12 +396,14 @@ class IMonthCard(object):
         self.totalOfflineExp = 0
         self.totalOfflineMinute = 0
         LOG_INFO("_checkMonthCardOfflineExpMail", "totalOfflineExp", exp)
-        _addVal = dropAward.MailWealthVal()
-        _addVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
+        _addVal = dropAward.MailAttachVal()
+        _addVal.addWealthByItemId(gameconst.ItemIdEnum.EXP, exp)
         opUUID = KBEngine.genUUID64()
         mailAssistor.sendMailToPlayers([self.gbID], CC.datas['offlineMail']['value'], extraAttach=_addVal,
                                        srcType=AAC_AACDD.datas.BONUS_SRC_MONTHCARD_OFFLINE_BONUS, opUUID=opUUID)
         LogTrackingMgr.LogTrackingMgr.MonthCard_OfflineReward(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             2,
             opUUID
@@ -376,18 +411,63 @@ class IMonthCard(object):
 
     #更新redis的特权标识(排队优先)
     def updateRedisVIPFlag(self):
-        redisUtils.RedisUtils.checkAndSetSVIP(gameconst.PrivilegeRedisKey.SVIP + self.accountName, self._onUpdateRedisSVIPFlag)
-
         if self.isMonthCardExpired():
             return
         
-        redisUtils.SetUtils.setMaxNumber(gameconst.PrivilegeRedisKey.VIP + self.accountName, self.monthCardExpireTime, self._onUpdateRedisVIPFlag)
+        redisUtils.RedisUtils.getVIPexpireTime(self.accountName, self._onGetVIPexpireTime)
 
-    def _onUpdateRedisVIPFlag(self, cid, err, res):
-        LOG_INFO("_onUpdateRedisVIPFlag", "cid", cid, "err", err, "res", res)
+    def _onGetVIPexpireTime(self, cid, err, res):
+        LOG_INFO("_onGetVIPexpireTime", "cid", cid, "err", err, "res", res)
+        if err:
+            LOG_ERR("_onGetVIPexpireTime", "err", err)
+            return
+        expireTime = 0
+        if res:
+            expireTime = int(res.decode('utf-8'))
+        if expireTime < self.monthCardExpireTime:
+            redisUtils.RedisUtils.cmdSet(gameconst.PrivilegeRedisKey.VIP + self.accountName, self.monthCardExpireTime, self._onUpdateMonthCardExpireTime)
+    
+    def _onUpdateMonthCardExpireTime(self, ok, data):
+        LOG_INFO("_onUpdateMonthCardExpireTime", "ok", ok, "data", data)
+        if not ok:
+            LOG_ERR("_onUpdateMonthCardExpireTime", "ok", ok)
+            return
 
-    def _onUpdateRedisSVIPFlag(self, cid, err, res):
-        LOG_INFO("_onUpdateRedisSVIPFlag", "cid", cid, "err", err, "res", res)
-        if res and res == 1:
-            stubs = gameengine.getLoginStubsByAccountName(self.accountName)
-            gameclass.DuplicatedCallList(stubs).incSVIPOnlineNumBySetSVIP()
+    @gamedecorator.checkGameconfigEnable('monthCard')
+    def clientBuyPremiumGoods(self, exposed, premiumId):
+        LOG_INFO("clientBuyPremiumGoods", premiumId)
+        #目前特权商品只有月卡
+        if not utils.isPremiumMonthCard(premiumId):
+            LOG_WARN('clientBuyPremiumGoods', 'premiumId not premium month card', premiumId)
+            return
+
+        self.buyMonthCard(premiumId)
+
+    def buyMonthCard(self, premiumId):
+        cfgData = BCBPGD.datas.get(premiumId)
+        if not self.checkCanAddMonthCard(premiumId):
+            self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
+            return
+        costItem = cfgData.get('costItem')
+        deductWealthVal = dropAward.DeductWealthVal()
+        deductWealthVal.addWealthByItemId(costItem[0], costItem[1])
+
+        if not self.canDeductWealth(deductWealthVal):
+            LOG_WARN('buyMonthCard: items not enough:', deductWealthVal)
+            return
+
+        detail = gameclass.AwardDetailCls(buyCreditId=premiumId)
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_BUY_CURRENCY_GIFT
+        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+
+        seconds = BCBCCD.datas['durationHours']['value'] * 3600
+        opUUID = self.doAddMonthCard(seconds, premiumId)
+        LogTrackingMgr.LogTrackingMgr.Gift_Buy(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
+            premiumId,
+            opUUID
+        )
+        return True

@@ -8,6 +8,7 @@ datas ={
     "CustomID": "",
     "Dir": 0.0,
     "DisplayName": "",
+    "EliteCustomID": "",
     "EntityID": 0,
     "ID": 35180001,
     "Name": "\u51fa\u751f\u70b9",

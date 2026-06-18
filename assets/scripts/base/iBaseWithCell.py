@@ -85,7 +85,7 @@ class IBaseWithCell(iBase.IBase):
 
     def onCellAppDeath(self, addr, cid, groupOrder):
         self.onLoseCellReason = gameconst.OnLoseCellReason.CELLAPP_DEATH
-        gameglobal.localBaseApp.addCallQueue(lambda: self.onLoseCell(gameconst.OnLoseCellReason.CELLAPP_DEATH))
+        gameglobal.localBaseApp.addToCallQueue(lambda: self.onLoseCell(gameconst.OnLoseCellReason.CELLAPP_DEATH))
 
     def onLoseCell(self, reason=0):
         if self.isDestroyed:
@@ -102,15 +102,15 @@ class IBaseWithCell(iBase.IBase):
         return
 
     def onTimer(self, timer, userData):
-        self._onTimer(timer, userData)
+        self._onTimerTrigger(timer, userData)
         if userData == gametimer.TIMER_SEMI_DESTROY:
-            self.entireDestroy(False, False)
+            self.doEntireDestroy(False, False)
         elif userData == gametimer.TIMER_DELAY_DESTROY_TRUE:
             if hasattr(self, 'cell'):
-                self.entireDestroy(True, False)
+                self.doEntireDestroy(True, False)
         elif userData == gametimer.TIMER_DELAY_DESTROY_FALSE:
             if hasattr(self, 'cell'):
-                self.entireDestroy(False, False)
+                self.doEntireDestroy(False, False)
 
         return
 
@@ -127,11 +127,11 @@ class IBaseWithCell(iBase.IBase):
 
         return
 
-    def entireDestroy(self, deleteFromDB, writeToDB):
+    def doEntireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
 
-        LOG_DBG('base.entireDestroy', deleteFromDB, writeToDB, self.isDestroyed, self.cell)
+        LOG_DBG('base.doEntireDestroy', deleteFromDB, writeToDB, self.isDestroyed, self.cell)
 
         self._preEntireDestroy()
 

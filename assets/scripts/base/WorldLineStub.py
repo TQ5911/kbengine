@@ -26,7 +26,7 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
                     iLineStubBase.ILineStubBase):
     def __init__(self):
         iLineStubBase.ILineStubBase.__init__(self)
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self.allPlayers = linePlayers.AllLinePlayers(self.lineType)
         self.clearTimeOutIter = None
 

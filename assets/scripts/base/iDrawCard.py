@@ -51,6 +51,7 @@ class IDrawCard(object):
 	def onDrawCardDailyUpdate(self, *args):
 		for pool, info in self.drawCardInfo.cardPoolInfoDict.items():
 			info.dailyNum = 0
+			info.coinLeftTimes = GGS.datas['dailyCoinRollTime']['value']
 			self.updateDrawCardInfo(info)
 
 	def checkGachaPoolVaild(self, pool):
@@ -81,25 +82,35 @@ class IDrawCard(object):
 		return False
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
-	def reqRandomSummonPet(self, exposed, pool, summonNum):
-		LOG_INFO('call reqRandomSummonPet', pool, summonNum)
+	def reqRandomSummonPet(self, exposed, pool, summonNum, cType):
+		LOG_INFO('call reqRandomSummonPet', pool, summonNum, cType)
+		if cType not in gameconst.DrawCardCostType.VAILD_COST_TYPE:
+			LOG_WARN('call reqRandomSummonPet cType')
+			return
 		if not self.checkGachaPoolVaild(pool):
 			return
 		
 		poolData = GGP.datas[pool]
-		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
+		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool), GGS.datas['dailyCoinRollTime']['value'])
 			
 		if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
 			self.onMessagePre(GGS.datas['guaranteeMaxFull']['value'], [])
 			LOG_WARN('call reqRandomSummonPet: guaranteed limit', curPoolInfo.guaranteed, GGS.datas['maxStack']['value'])
 			return
 
-		rollCostKey = str(summonNum) + str('rollCost')
+		prop = gameconst.DRAW_CARD_COST_TYPE_2_PROP_TYPE[cType]
+		if not curPoolInfo.hasLeftTimes(prop, summonNum):
+			LOG_WARN('call reqRandomSummonPet prop, leftTime', prop, curPoolInfo.getLeftTimes(prop), summonNum)
+			return
+		
+		suffix = gameconst.DRAW_CARD_COST_TYPE_2_SUFFIX_TYPE[cType]
+		rollCostKey = str(summonNum) + str('rollCost') + str(suffix)
 		rollCost = poolData.get(rollCostKey, None)
 		rollRewardKey = str(summonNum) + str('rollReward')
 		rollReward = poolData.get(rollRewardKey, 0)
 		gatchaTypeReward = GGS.datas['gatchaTypeReward']['value']
 		realRollNum = 0
+		LOG_INFO('call reqRandomSummonPet cat', prop, rollCostKey, rollRewardKey)
 		
 		if not rollCost:
 			LOG_ERR('call reqRandomSummonPet rollCost not found in config')
@@ -125,15 +136,15 @@ class IDrawCard(object):
 			LOG_ERR('reqRandomSummonPet items not enough:', deductWealthVal)
 			return
 
-		detail = gameclass.AwardDetail(summonNum=summonNum)
+		detail = gameclass.AwardDetailCls(summonNum=summonNum)
 		opUUID = KBEngine.genUUID64()
 		self.deductWealth(AAC_AACDD.datas.BONUS_SRC_PETROLL_COST, deductWealthVal, opUUID, detail)
 
 		rewardId = rollReward
-		awardCtx = self._getAvatarAwardCtx(rewardId, None)
+		awardCtx = self.getAvatarAwardCtx(rewardId, None)
 		awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onRandomSummonPetResult')
-		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID })
-		detail = gameclass.AwardDetail(rewardId=rewardId)
+		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID , 'cType': cType})
+		detail = gameclass.AwardDetailCls(rewardId=rewardId)
 		self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)
 
 
@@ -149,32 +160,38 @@ class IDrawCard(object):
 		summonNum = poolData.get('summonNum', 1)
 		realRollNum = poolData.get('realRollNum', 1)
 		opUUID = poolData.get('opUUID', 0)
+		cType = poolData.get('cType', 0)
 		poolData = GGP.datas[pool]
-		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
-		
+		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool), GGS.datas['dailyCoinRollTime']['value'])
+		curPoolInfo.updateLeftTimes(gameconst.DRAW_CARD_COST_TYPE_2_PROP_TYPE[cType], -int(summonNum))
+
 		guaranteedType = gameconst.DrawCardGuaranteedType.NONE
 		befGuaranteed = curPoolInfo.guaranteed
 		befPityNum = curPoolInfo.num
 		curPoolInfo.dailyNum += summonNum
-		curPoolInfo.num += summonNum
-		# 重置
-		pityReset = poolData.get('pityReset', gameconst.ItemQuality.PURPLE)
-		for info in briefList:
-			itemId = info['itemId']
-			itemData = dataUtils.getCommItemData(itemId)
-			if not itemData or itemData['type'] != pityReset[0] or itemData['subType'] != pityReset[1] or itemData['quality'] < pityReset[2]:
-				continue
-			curPoolInfo.num = 0
-			guaranteedType = gameconst.DrawCardGuaranteedType.PITY_RESET
-			break
-		# 保底
-		pityPullCount = poolData.get('pityPullCount', 1000)
-		while curPoolInfo.num >= pityPullCount:
-			if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
+
+		pityPullCount = 0
+		ifPityWork = poolData.get('ifPityWork', 1)
+		if ifPityWork:
+			curPoolInfo.num += summonNum
+			# 重置
+			pityReset = poolData.get('pityReset', gameconst.ItemQuality.PURPLE)
+			for info in briefList:
+				itemId = info['itemId']
+				itemData = dataUtils.getCommItemData(itemId)
+				if not itemData or itemData['type'] != pityReset[0] or itemData['subType'] != pityReset[1] or itemData['quality'] < pityReset[2]:
+					continue
+				curPoolInfo.num = 0
+				guaranteedType = gameconst.DrawCardGuaranteedType.PITY_RESET
 				break
-			curPoolInfo.guaranteed += 1
-			curPoolInfo.num -= pityPullCount
-			guaranteedType = gameconst.DrawCardGuaranteedType.GUARANTEED_RESET
+			# 保底
+			pityPullCount = poolData.get('pityPullCount', 1000)
+			while curPoolInfo.num >= pityPullCount:
+				if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
+					break
+				curPoolInfo.guaranteed += 1
+				curPoolInfo.num -= pityPullCount
+				guaranteedType = gameconst.DrawCardGuaranteedType.GUARANTEED_RESET
 
 		aftGuaranteed = curPoolInfo.guaranteed
 		aftPityNum = curPoolInfo.num
@@ -197,7 +214,7 @@ class IDrawCard(object):
 			if quality not in qualityDict:
 				qualityDict[quality] = 0
 			qualityDict[quality] += itemNum
-		LOG_INFO('call onRandomSummonPetResult qualityDict', qualityDict)
+		LOG_INFO('call onRandomSummonPetResult qualityDict', qualityDict, curPoolInfo)
 
 		self.achievementInfo.triggerAchieveByType(
             self, 
@@ -211,6 +228,8 @@ class IDrawCard(object):
 		self.curDrawCardRecord = copy.deepcopy(curDrawCardRecord)
 		self.curDrawCardRecord.allBitSet()
 		LogTrackingMgr.LogTrackingMgr.DrawCard_Detail(
+			self.gbID,
+			self.accountEntity.clientDistinctId, 
 			self.gbID,
 			pool,
 			poolData.get('poolGroupId', pool),
@@ -233,7 +252,7 @@ class IDrawCard(object):
 			return
 
 		poolData = GGP.datas[pool]
-		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
+		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool), GGS.datas['dailyCoinRollTime']['value'])
 
 		if curPoolInfo.guaranteed <= 0:
 			LOG_ERR('call reqGetGuaranteedPetEgg guaranteed not enough', curPoolInfo.guaranteed)
@@ -246,11 +265,13 @@ class IDrawCard(object):
 		pityReward = poolData.get('pityReward', 0)
 		wealthVal = dropAward.AwardVal()
 		wealthVal.addWealthByItemId(pityReward, guaranteed)
-		detail = gameclass.AwardDetail(itemId=pityReward)
+		detail = gameclass.AwardDetailCls(itemId=pityReward)
 		opUUID = KBEngine.genUUID64()
 		self.addWealth(AAC_AACDD.datas.BONUS_SRC_PETROLL_SECURED, wealthVal, opUUID, detail, notify=True)
 		self.client.onGetGuaranteedPetEgg(pool, pityReward, guaranteed)
 		LogTrackingMgr.LogTrackingMgr.DrawCard_GuaranteedReward(
+			self.gbID,
+			self.accountEntity.clientDistinctId, 
 			self.gbID,
 			pool,
 			poolData.get('poolGroupId', pool),
@@ -278,7 +299,7 @@ class IDrawCard(object):
 		LOG_INFO('call triggerTimeLimitGuaranteedReward', self.gbID, poolsInfo)
 		for pool, _ in poolsInfo.items():
 			poolData = GGP.datas[pool]
-			curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
+			curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool), GGS.datas['dailyCoinRollTime']['value'])
 
 			guaranteed = curPoolInfo.guaranteed
 			num = curPoolInfo.num
@@ -291,11 +312,13 @@ class IDrawCard(object):
 				continue
 
 			pityReward = poolData.get('pityReward', 0)
-			mailWealth = dropAward.MailWealthVal()
+			mailWealth = dropAward.MailAttachVal()
 			mailWealth.addWealthByItemId(pityReward, guaranteed)
 			opUUID = KBEngine.genUUID64()
 			mailAssistor.sendMailToPlayers([self.gbID], GGS.datas['PoolEndMailID']['value'], extraAttach=mailWealth, despArgs=(), opUUID=opUUID, srcType=AAC_AACDD.datas.BONUS_SRC_DRAWCARD_GUARANTEED_BONUS)
 			LogTrackingMgr.LogTrackingMgr.DrawCard_GuaranteedReward(
+                self.gbID,
+                self.accountEntity.clientDistinctId, 
 				self.gbID,
 				pool,
 				poolData.get('poolGroupId', pool),
@@ -326,7 +349,7 @@ class IDrawCard(object):
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqOpenPetCards(self, exposed, idxs):
-		LOG_IFO('call reqOpenPetCards', idxs)
+		LOG_INFO('call reqOpenPetCards', idxs)
 		idxList = utils.bgetIdxs(idxs)
 		for idx in idxList:
 			self.reqOpenPetCard(self.id, idx)

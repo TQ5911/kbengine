@@ -12,11 +12,18 @@
             <Flags>                 BASE            </Flags>
             <Default>               {}              </Default>
         </groupRefreshInfo>
+
+        <pauseRefreshSpaceNoSet>
+            <Type>                  PYTHON          </Type>
+            <Flags>                 BASE            </Flags>
+        </pauseRefreshSpaceNoSet>
+
         <groupEntityReady>
             <Type>                  PYTHON          </Type>
             <Flags>                 BASE            </Flags>
             <Default>               {}              </Default>
         </groupEntityReady>
+
         <gameEntityIdSet>
             <Type>                  PYTHON          </Type>
             <Flags>                 BASE            </Flags>
@@ -54,5 +61,13 @@
             <Arg>       GAME_ENTITY_ID  </Arg>
             <Arg>       FLOAT    </Arg>
         </onGroupEntityRefresh>
+
+        <pauseTimeLimitedGroupEntityRefresh>
+            <Arg>       MAP_ID          </Arg>
+        </pauseTimeLimitedGroupEntityRefresh>
+
+        <resumeTimeLimitedGroupEntityRefresh>
+            <Arg>       MAP_ID          </Arg>
+        </resumeTimeLimitedGroupEntityRefresh>
     </BaseMethods>
 </root>

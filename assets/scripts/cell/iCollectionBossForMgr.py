@@ -32,8 +32,8 @@ class ICollectionBossForMgr(object):
                 self.notifyPlayerCurBossInfo()
                 break
 
-    def removeEntityById(self, entId):
-        super().removeEntityById(entId)
+    def removeEntById(self, entId):
+        super().removeEntById(entId)
         ent = KBEngine.entities.get(entId)
         if ent and ent.IsMonster:
             self.removeCollToBoss(ent.monsterId)

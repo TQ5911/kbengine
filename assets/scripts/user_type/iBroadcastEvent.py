@@ -153,6 +153,33 @@ class IBroadcastEvent(object):
                            gametimer.TIMER_TAG_DO_BROADCAST_TO_AVATAR)
         return
 
+    def broadcastToAllAvataring(self, baseOrCell, methodName, args, excludes=()):
+        sendList = list(gameglobal.avataringCache.keys())
+        LOG_DBG('in broadcastToAllAvataring:', baseOrCell, methodName, sendList)
+        if len(sendList) > 0:
+            self._doBroadcastToAvataring(sendList, baseOrCell, methodName, args)
+        return
+
+    def _doBroadcastToAvataring(self, sendList, baseOrCell, methodName, args):
+        if len(sendList) == 0:
+            return
+        sendNumOnce = self.BROADCAST_AVATARS_NUM_PER_TIME
+        for entId in sendList[:sendNumOnce]:
+            ent = KBEngine.entities.get(entId)
+            if not ent:
+                continue
+            if baseOrCell == gameconst.BASE:
+                getattr(ent, methodName)(*args)
+            elif baseOrCell == gameconst.CELL:
+                getattr(ent.cell, methodName)(*args)
+            else:
+                return
+        newSendList = sendList[sendNumOnce:]
+        if len(newSendList) > 0:
+            self.addTimerCB(0.1, '_doBroadcastToAvataring', (newSendList, baseOrCell, methodName, args),
+                           gametimer.TIMER_TAG_DO_BROADCAST_TO_AVATARING)
+        return
+
     def broadcastToAllAccountHotfix(self, ):
         LOG_DBG('in broadcastToAllAccountHotfix:')
         sendList = utils.getEntityList('Account')

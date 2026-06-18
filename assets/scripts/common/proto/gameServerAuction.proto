@@ -37,10 +37,11 @@ message AuctionItem
   uint32 bagType = 7;
   uint32 source = 8;
   uint32 status = 9;
-  uint32 locked = 10;
+  uint64 locked = 10;
   string extraInfo = 11;
   uint32 tCreate = 12;
   uint64 fromPlayerGBID = 13;
+  uint32 addPublicityTime = 14;
 }
 
 message AuctionClientInfo
@@ -64,6 +65,7 @@ message SaleItemReq
   uint32 number = 4;
   uint32 bagType = 5;
   string extra = 6;
+  uint32 addPublicityTime = 7;
 }
 
 message SaleItemResp
@@ -75,10 +77,10 @@ message SaleItemResp
 
 message DoSaleItemReq
 {
-  uint64 auctionItemUUID = 1;
-  uint64 playerGBID = 2;
-  string extra = 3;
-  bool result = 4;
+  bool result = 1;
+  uint64 auctionItemUUID = 2;
+  uint64 playerGBID = 3;
+  string extra = 4;
 }
 
 message DoSaleItemResp
@@ -101,8 +103,10 @@ message BuyItemResp
   uint64 playerGBID = 1;
   uint64 auctionItemUUID = 2;
   uint64 price = 3;
-  string extra = 4;
-  uint32 code = 5;
+  int64 publicityEndTime = 4;
+  uint32 buyType = 5;
+  string extra = 6;
+  uint32 code = 7;
 }
 
 message DoBuyItemReq
@@ -241,6 +245,13 @@ message OnItemBeSaledInfo
   string extra = 4;
 }
 
+message OnItemSalingInfo
+{
+  uint64 auctionItemUUID = 1;
+  uint32 itemId = 2;
+  uint64 gbId = 3;
+}
+
 message DoCommandReq
 {
   string command = 1;
@@ -370,6 +381,7 @@ service GameServer
   rpc replyGetPlayerAuctionItems(GetPlayerAuctionItemsResp) returns(Void);
   rpc replyLoadPlayerAuctionItem(LoadPlayerAuctionItemResp) returns(Void);
   rpc onItemBeSaled(OnItemBeSaledInfo) returns(Void);
+  rpc onItemSaling(OnItemSalingInfo) returns(Void);
   rpc replyDoCommand(DoCommandResp) returns(Void);
   rpc replyGetAuctionItemNumByCategoryId(GetItemNumByCategoryIdResp) returns(Void);
   rpc replyBuyItemByItemId(BuyItemByItemIdResp) returns(Void);

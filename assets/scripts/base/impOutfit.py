@@ -69,6 +69,8 @@ class ImpOutfit(object):
         LOG_INFO('reqPurchasedOutfitIds:', self.purchasedOutfitIds)
         self.client.onPurchasedOutfitIds(list(self.purchasedOutfitIds.keys()))
 
+    @gamedecorator.checkGameconfigEnable('pay')
+    @gamedecorator.limitcall(1)
     def reqBuyOutfit(self, exposed, mallId):
         LOG_INFO('reqBuyOutfit:', mallId)
         if self.purchasedOutfitIds.get(mallId, None):
@@ -108,7 +110,7 @@ class ImpOutfit(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BUY_ITEMS
-        detail = gameclass.AwardDetail()
+        detail = gameclass.AwardDetailCls()
         self.deductWealth(srcType, deductWealth, opUUID, detail)
 
         self.purchasedOutfitIds[mallId] = True

@@ -13,7 +13,7 @@ import formula
 
 class WorldBossStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
 
     def getBossCreateTime(self, spaceNo, spaceMgrBoxCell):
         _createTime = self.createBossTimeDic.get(spaceNo, 0)
@@ -26,7 +26,7 @@ class WorldBossStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def addCreateWorldBossTimer(self, spaceNo, createTime):
         LOG_DBG('addCreateWorldBossTimer', spaceNo, createTime)

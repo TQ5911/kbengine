@@ -29,14 +29,14 @@ class AntiAddictionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer)
         self.permitTimeLimitList = [[[], []], [[], []]]
         self.antiAddictionTimeVal = AntiAddictionTimeVal()
         self.switchTimeTypeTimerId = 0
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self.initAntiAddictionData(utils.curTS())
 
     def onTimer(self, tid, userArg):
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def doNext(self):
         super().doNext()

@@ -15,6 +15,7 @@ import gamePlay_gamePlay as GGD
 import character_charData as CCDD
 import wonderLand_floor as WL_FD
 import branchData_branchData as BD_BDD
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 
 # baseapp和cellapp上都有的数据key
@@ -127,7 +128,7 @@ OFFLINE_REASON_AUTH_NEED_RECONNECT = 22
 OFFLINE_REASON_AUTH_LOW_MORAL = 23 # 善恶值太低，并且是代理状态
 OFFLINE_REASON_ANIT_ADDICTION = 24
 
-CENTRAL_SERVER_HEARTBEAT_INTERVAL = 10
+CENTRAL_SERVICE_HEARTBEAT_INTERVAL = 10
 
 ENTITY_POS_POLICY_MAX_NUM = 1000
 
@@ -294,6 +295,7 @@ class SpaceType(metaclass=UniqueIntEnum):
     SpaceWonderLand = 7
     SpaceSiegeWar = 8
     SpaceGuild = 9
+    SpaceAbyss = 11
 
     @staticmethod
     def getClonedSpaceNoRange(mapId):
@@ -329,6 +331,7 @@ class MapIdDef(object):
     mapXinYuanCheng = CSTD.datas['defaultGamePlayID']['value']
     mapDuelGround = 7000
     mapSpecial = 999           #大地图预loading场景
+    mapWaitingServer = 9000
 
     mapWorldSet = {i for i in GGD.mapWorldSet}
 
@@ -352,8 +355,6 @@ INIT_CLIENT_SEND = (
         ('sendLingShouInfo', True),
         ('emitMiniPayload', True),
         ('_sendFriendInfoToClient', True),
-        ('sendPlayerPayInfo', True),
-        ('sendHolidayPayInfo', True),
         ('_sendGuildInfo', True),
         ('sendDrawCardInfo', True),
         ('sendGuildTrains', True),
@@ -374,6 +375,9 @@ INIT_CLIENT_SEND = (
         ('sendAvatarBountyInfo', True),
         ('getAnnouncement', True),
         ('sendMineWarState', True),
+        ('sendAllTitle', True),
+        ('sendAllMapExploreData', True),
+        ('sendAllRecoveryInfo', True),
 )
 
 class ItemType(object):
@@ -489,7 +493,7 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
 
     raidTickTimerId = 300
     raidCreateRaidTeamCheck = 301
-    raidBeInvitedRecord = 302
+    raidBeInvitedRecordDic = 302
     raidJoinRecord = 303
     raidAvatarPropsCache = 304
 
@@ -556,6 +560,11 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     reportTimestamp = 412
     clientIdleChangeSpeed = 413
 
+    abyssSwitch = 414
+    abyssRewardList = 415
+
+    enterEnemyId = 416
+
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
     ShiftingSkillTopSpeed = 5000.0
@@ -586,7 +595,7 @@ CARRIER_FIX_DIS = 2
 HOTFIX_PATH = KBEngine.matchPath("scripts/data/hotfix.lua")
 
 
-class ItemId(object):
+class ItemIdEnum(object):
     COIN = IDSD.datas['itemID_coin']['value'] # 铜币
     EXP = IDSD.datas['itemID_exp']['value']
     MONEY = IDSD.datas['itemID_money']['value'] # 金币
@@ -661,9 +670,12 @@ class StreamStringID(object):
     ACHIEVEMENT_DATA = 27
     PLAYER_INFO_DATA = 28
     BOUNTY_RANK_DATA = 29
+    LEASE_SHOP_ITEMS = 30
+    MY_LEASE_SALE_INFO = 31
+    LEASE_RECORDS = 32
 
 
-class UseItem(object):
+class UseItemEnum(object):
     TRUE = 1
     FALSE = 2
     PENDING = 3
@@ -675,7 +687,7 @@ class ReloginType(object):
     HALF_RELOGIN = 2  # 游戏内断线重连了
 
 
-class BagType(object):
+class BagTypeEnum(object):
     BAG_TYPE_NORMAL = 0
     BAG_TYPE_LINGSHOU_PEN = 1  # 宠物背包
     BAG_TYPE_WAREHOUSE = 2
@@ -727,7 +739,7 @@ class AvatarFlag(object):
     delete = 2
 
 
-class KickAvatar(object):
+class KickAvatarEnum(object):
     none = 0
     kicking = 1
     kicked = 2
@@ -829,6 +841,7 @@ class TeleportLockEnum(metaclass=UniqueIntEnum):
     FREE_TO_TELEPORT = 0
     ENTER_CUBE = 1
     ENTER_WONDERLAND = 2
+    ENTER_ABYSS = 3
     ENTER_LINE = 7
     SWITCH_LINE = 8
     ENTER_DUNGEON = 9
@@ -878,6 +891,7 @@ class TaskType(object):
     TASK_TYPE_HOOK_REWARD = 6  # 悬赏挂机任务
     TASK_TYPE_CRUSADE = 7 # 讨伐任务
     TASK_TYPE_SPIRIT = 8 # 附灵任务
+    TASK_TYPE_MAP_EXPLORE = 9 # 地图任务
 
 class TaskNotSuccReasonEnum(object):
     UNKNOWN = 0
@@ -921,7 +935,7 @@ class VarChangeSrcEnum(object):
     VAR_SRC_COMM_ACTION = 26
 
 
-class TaskOpTypeByTalkToPNC(object):
+class TaskTalkToPNCEnum(object):
     CLAIM_TASK = 1
     SUBMIT_TASK = 2
     FAIL_TASK = 3
@@ -933,7 +947,7 @@ class CommActionSrcType(object):
     DIALOG = 2
 
 
-class TaskTargetType(object):
+class TaskTargetEnum(object):
     # 任务目标
     TARGET_UNKNOWN = 0
     TASK_TARGET_MONSTERS = 1    #杀怪
@@ -999,9 +1013,11 @@ class CollectionType(object):
     SUMMON_OBJECT = 5 # 召唤物件
     DECAY_BOX = 7 # 衰减宝箱
     MINE_DROP = 8 # 矿战掉落采集物
+    INNER_DEMON = 9
+    FIRST_BLOOD = 10 #首刀掉落采集物
 
     VALID_RANGE_ACHIEVEMENT = (MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT)
-    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX, MINE_DROP)
+    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX, MINE_DROP, INNER_DEMON, FIRST_BLOOD)
     ADD_PICK_AVATAR_CNT = (PERSONAL_BOX, VIEWPOINT, MINE_DROP)
 
 class CollectionPickType(object):
@@ -1016,6 +1032,14 @@ class CollectionPickType(object):
 class IDIPBanType(object):
     CHAT = 1
 
+#web端封禁类型
+class WebBanType(object):
+    LOGIN = 1
+    CHAT = 2
+
+class AutoBanType(object):
+    MANUAL = 0
+    AUTO = 1
 
 class GMCommandErr(object):
     GM_RET_OK = 0
@@ -1159,8 +1183,6 @@ class LuaScriptID:
     SEND_FRINED_REQUEST = 4
     SEND_FRIEND_MSG = 5
     GET_FRIEND_MSG = 6
-    SET_MAX_NUMBER = 7
-    CHECK_AND_SET_SVIP = 8
 
 
 class AvatarPhotoType(object):
@@ -1178,6 +1200,7 @@ CREEP_TAG_DEATH_MSG = 2 # 死亡会喊话
 CREEP_TAG_WARNING_RANGE = 4 # 有预警范围
 CREEP_TAG_WONDERLAND_FIXED_BOSS = 5 # 天劫崖固定boss
 CREEP_TAG_WONDERLAND_SUMMON_BOSS = 6 # 天劫崖召唤boss
+CREEP_TAG_TIP_MSG = 7 # 怪物进战时对仇恨目标级队友发送tips
 CREEP_TAG_ANTI_TAUNT = 98 # 嘲讽反制
 CREEP_TAG_ANTI_MOVE = 99 # 推拉反制
 
@@ -1381,10 +1404,6 @@ class EndCasting(object):
     ECEnumTeleporting=11
     ECEnumclientPick=12
 
-class ImmuneDeathState(object):
-    IMMUNE_VALID = 1
-    IMMUNE_DURING = 2
-    IMMUNE_FINISHED = 3
 
 class UseSkillCheck(object):
     USC_ENUM_CHEKC_OK = 0
@@ -1402,11 +1421,13 @@ class UseSkillCheck(object):
     USC_ENUM_SHOOTER_SKILL_CANNOT_USE = 1<<11
     USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH = 1<<12
     USC_ENUM_TARGET_NOT_FOUND = 1<<13
+    USC_ENUM_FORBID = 1<<14
 
     #起手延迟结算时检查需要忽略的条件
     USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
     #连击技能（例如风入松放一次可以砍出4刀，每刀单独结算）分阶段结算时，每个阶段的检查
     USC_MUL_ATTACK_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_STATE_CONFLICT | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
+    RESET_USED_SKILLID_TYPE = (USC_ENUM_IN_CD, USC_ENUM_LACK_OF_MP, USC_ENUM_SHOOTER_SKILL_CANNOT_USE, USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH, USC_ENUM_FORBID)
 
 class ResetSkillReason(object):
     ReasonDefault = 0
@@ -1507,7 +1528,7 @@ class HitType(metaclass=UniqueIntEnum):
     def checkInClientIgnoreList(hitType):
         return hitType in HitType.clientIgnoreList
 
-class RemoveType(metaclass=UniqueIntEnum):
+class RemoveTypeEnum(metaclass=UniqueIntEnum):
     RTEnumDefault = 0
     RTEnumEndByTime = 1
     RTEnumEndByAtt = 2
@@ -1594,7 +1615,7 @@ class CastingSkillCDType(object):
     EnterCD = 1
     NotEnterCD = 2
 
-class BornStateType(object):
+class BornStateEnum(object):
     '''
     0:引擎默认值，未初始化后
     1:怪物隐身阶段
@@ -1669,7 +1690,7 @@ class RouteState(object):
     ROUTE_STATE_COMPLETE = 4
     ROUTE_STATE_STOP = 5
 
-class MailConstID(object):
+class MailConstEnum(object):
     REWARD_MAIL_ID = CSTD.datas['getRewardAndBagFull_mailID']['value']
     MAX_GLOBAL_MAIL_SAVE_COUNT = 100
     MAX_GLOBAL_MAIL_OVER_RATE = 90
@@ -1747,8 +1768,9 @@ STATISTICSTUB_CONFIG_NUM = 5
 class TeamMicsModeEnum(object):
     OFF = 0
     FREE = 1
+    LEADER = 2
 
-    COLL_ALL = (OFF, FREE)
+    COLL_ALL = (OFF, FREE, LEADER)
 
 class RaidMicsModeEnum(object):
 
@@ -1768,8 +1790,10 @@ class RaidJoinTypeEnum(object):
     TEAM = 2
 
 class TeamType(object):
+    DEFAULT = 0
     TEAM = 1
     RAID = 2
+    VALID_TYPES = (TEAM, RAID)
 
 TEAM_MARK_MAX_SLOT = 8
 class TeamMarkType(object):
@@ -1897,13 +1921,14 @@ class _RaidErrno(object):
     ENUM_RAID_SET_TARGET_ILLEGAL                 = _errno(50111)     # 设置目标不合法
     ENUM_RAID_IS_IN_DUNGEON                      = _errno(50112)     # 团队已进入副本
     ENUM_RAID_APPLY_LIST_IS_FULL                 = _errno(50113)     # 团队申请列表满了
+    ENUM_RAID_IN_CROSS_STATE                     = _errno(50114)     # 在跨服状态
     ENUM_RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
 
 
 RaidErrno = _RaidErrno()
 
 
-class RaidPermission(object):
+class RaidPermissionEnum(object):
     """Raid permission enum"""
 
     UNKNOWN = 0
@@ -1940,12 +1965,12 @@ class ControlledByReason(object):
 
     ReasonStatePrefix = '{}_'.format(ControlledState)
 
-class AutoCombatState(object):
+class AutoCombatStatus(object):
     Idle = 0
     Fighting = 1
     Suspending = 2
 
-class SuspendAutoCombatReason(object):
+class SuspendAutoCombatReasonEnum(object):
     Default = 0
     ClientBreak = 1
     ApplyGather = 2
@@ -1993,7 +2018,8 @@ class ChatChannelEnum(object):
     RAID = 7
     RECRUIT = 8
     SIEGE_WAR = 9
-    MAX = 10
+    AUCTION = 10
+    MAX = 11
 
     initExcludeChannel = ()
     avatarChannel = (WORLD, GUILD, TEAM, NEARBY)
@@ -2012,7 +2038,7 @@ class SilentSpeakState(object):
     ENUM_SET_ALL = 6
     ENUM_REMOVE_ALL = 9
 
-class DungeonEntityLoadStatus(object):
+class DungeonEntityLoadEnum(object):
     UNLOAD = 0
     LOADING = 1
     LOADED = 2
@@ -2022,8 +2048,9 @@ class DungeonPlayModeEnum(object):
     CRUSADE = 1
     CHIEF = 2
     GUILD_BOSS = 3
+    INNER_DEMON = 4
 
-    COLL_ALL = (CRUSADE, CHIEF, GUILD_BOSS)
+    COLL_ALL = (CRUSADE, CHIEF, GUILD_BOSS, INNER_DEMON)
     COLL_SYNC_SPACELEVEL = (CRUSADE, CHIEF, GUILD_BOSS)
 
 class DungeonTicketType(metaclass=UniqueIntEnum):
@@ -2215,7 +2242,7 @@ class _RaidDungeonErrno(object):
 
 RaidDungeonErrno = _RaidDungeonErrno()
 
-class TeamDungeonCheckConditionErrno(object):
+class TeamDunCheckCondErrno(object):
     UNKNOWN = 0
     SCORE_CHECK_FAIL = 2
     FIGHTING_FAIL = 3
@@ -2255,6 +2282,8 @@ class DungeonFlowEventType(object):
     EVdunFailed = 'dunFailed'     # 副本失败
     EVcreateMonster = 'createMonster'     # 创建怪物
     EVremoveMonster = 'removeMonster'     # 回收怪物
+    EVcreateInnerDemon = 'createInnerDemon'     # 创建心魔
+    EVnotifyInnerDemonData = 'notifyInnerDemonData'     # 通知挑战心魔成功的数据
     EVcreateNPC = 'createNPC'     # 创建NPC
     EVremoveNPC = 'removeNPC'     # 回收NPC
     EVcreateCollection = 'createCollection'       # 创建采集物
@@ -2361,6 +2390,11 @@ FLOW_REST_MONSTER_TAG_CBID = 2
 FLOW_REST_MONSTER_TAG_ALL = 3
 
 
+AVATAR_REPLICA_TYPE_INNER_DEMON = 1
+AVATAR_REPLICA_TYPE_2_TYPE_SUFFIX_NAME = {
+    AVATAR_REPLICA_TYPE_INNER_DEMON : '的心魔',
+}
+
 class DungeonFlowPlayerChooseEnum(object):
     UNKNOWN = 0
     MONSTER_CURRENT_TARGET = 1
@@ -2412,8 +2446,9 @@ worldLineMapCellIdxDict = {}
 def getWorldLineCellIdx(mapId):
     if len(worldLineMapCellIdxDict) == 0:
         idx = 0
-        for mapId in MapIdDef.mapWorldSet:
-            worldLineMapCellIdxDict[mapId] = idx
+        sortedMapIdList = sorted(MapIdDef.mapWorldSet)
+        for mpId in sortedMapIdList:
+            worldLineMapCellIdxDict[mpId] = idx
             idx += 1
         worldLineMapCellIdxDict[7000] = idx
     return worldLineMapCellIdxDict[mapId]
@@ -2443,7 +2478,7 @@ class RouteSuspendReason(object):
     NORMAL = 1
     ESCORT_NO_PLAYER_IN_DISTANCE = 2
 
-class CheckMemberReason(object):
+class CheckMemberReasonEnum(object):
     CHECK_MEMBER_FOR_TEAM_DUEL = 1
     CHECK_MEMBER_FOR_BATTLE_FIELD_REGISTRY = 2
     CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE = 3
@@ -2515,7 +2550,7 @@ className2EntityType = {
 }
 
 
-class DressEquipOpStat(object):
+class DressEquipOpEnum(object):
     EQUIP_OP_FAILED = 0
     EQUIP_OP_ONLY_DRESS = 1
     EQUIP_OP_REPLACED = 2
@@ -2778,7 +2813,7 @@ GUILD_EVENT_LOG_MAX_NUM = 100
 GUILD_MONEY_TO_GUILD_RATE = 1
 GUILD_IN_ACTIVE_TIME = 86400
 
-GUILD_ASSIST_DEDUCT_ITEM = ItemId.COIN
+GUILD_ASSIST_DEDUCT_ITEM = ItemIdEnum.COIN
 GUILD_ASSIST_DEDUCT_NUM = 1000
 GUILD_ASSIST_ADD_BUILD_EXP = 1
 GUILD_ASSIST_ADD_GUILD_EXP = 1
@@ -2887,13 +2922,14 @@ class CrossServerCBComponent(object):
 class CrossServerReasonNo(object):
     DEFAULT = 0
     ENTER_CROSS_SIEGE_WAR = 1
+    ENTER_CROSS_ABYSS = 2
 
 class CrossServerWaitingClientInitTuple(object):
     DEFAULT = 0
     BACKSELECTCHARACTER = 1
     OFFLINE = 2
 
-class RemoteServerEntityCallType(object):
+class RemoteSrvEntCallType(object):
     STUB_NAME = 1
     BOX = 2
 
@@ -2925,8 +2961,9 @@ DEATH_PENALTY_INVALID_REC_TIMES = 255
 CUBE_MAX_ENTER_NUM = 300 # 混沌回廊分线最大承载量
 CUBE_NEW_LINE_THRESHOLD = 200 # 超过这个值之后，混沌回廊的一层会创建新分线
 SIEGEWAR_MAX_ENTER_NUM = 500
+ABYSS_MAX_ENTER_NUM = 400
 CUBE_DAILY_TIMES = 1
-CUBE_COIN_ITEM_ID = ItemId.MONEY
+CUBE_COIN_ITEM_ID = ItemIdEnum.MONEY
 CUBE_ENTER_TIME_OUT_DUR = 60
 WORLDLINE_ENTER_TIME_OUT_DUR = 60
 CUBE_ADD_TIMES_TYPE_NULL = 0
@@ -2943,6 +2980,7 @@ CUBE_PRAY_BUFF = 1
 CUBE_PRAY_DEBUFF = 2
 
 CUBE_SIGN_ARENA = 1
+CUBE_SIGN_DEMON = 2
 
 CUBE_PRAY_FREE = 1
 CUBE_PRAY_ITEM = 2
@@ -2980,6 +3018,10 @@ class MailType(object):
     GLOBAL_MAIL_ACCOUNT = 4                 #发送给account的邮件
 
 TABLE_NAME_GAME_MAIL = 'game_player_mails'
+TABLE_NAME_GAME_SAFE_BOX = 'game_safe_box'
+TABLE_NAME_GAME_SAFE_BOX_IDEMPOTENT = 'game_safe_box_idempotent'
+SAFE_BOX_MAX_VISIBLE_CLAIMED = 10
+SAFE_BOX_PAGE_SIZE = 10
 
 
 class WriteToDBResult(object):
@@ -3015,7 +3057,7 @@ class BuyCreditType(object):
     FreePermanentPackage = 8
     holidayGift = 10
 
-class AuctionType(object):
+class AuctionTypeEnum(object):
     UNKNOWN = 0
     COIN_AUCTION = 1
 
@@ -3083,7 +3125,8 @@ class _AuctionErrno(object):
     ERR_AUCTION_ITEM_IN_BAG_LOCKED_STATUS       = _errno(20043)     # 交易行物品处于背包锁住状态
     ERR_AUCTION_ITEM_IS_FORBIDDEN               = _errno(20044)     # 交易行物品不允许上架
     ERR_AUCTION_SALE_ITEM_ID_ERROR              = _errno(20045)     # 交易物品ID错误
-
+    AUCTION_ITEM_IS_NOT_IN_SNATCH               = _errno(20046)     # 交易行物品正不在抢购期
+    ERR_AUCTION_SOUL_WITH_EMPTY_ROLL_PROPS      = _errno(20047)     # 没有词条魂魄不允许上交易行
     ERR_AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
 
 AuctionErrno = _AuctionErrno()
@@ -3151,6 +3194,7 @@ class DropType(object):
     TYPE_REWARD                      = 9 #// 领取奖励
 
 class DropNotifyType(object):
+    NOTIFY_SET_PRICE                        = -3 #// 设置价格
     NOTIFY_REMOVE_TAKE                      = -2 #// 移除拾取
     NOTIFY_REMOVE_DROP                      = -1 #// 移除掉落
     NOTIFY_REMOVE_ALL                       = 0  #// 移除所有
@@ -3185,9 +3229,9 @@ class DropTatgerType(object):
     OTHER = 4 # 其他
 
 class ItemReturnReason(object):
-    NOT_RETURN = 0 # 不退回
-    DROP_EXPIRE = 1 # 掉落过期
-    LEASE_EXPIRE = 2 # 租赁过期
+    NORMAL = 0 # 正常（自己的）
+    DROP = 1 # 爆装流转
+    LEASE = 2 # 租赁流转
 
 class LeaseRecordType(object):
     LEASE_OUT = 1 # 出租
@@ -3237,6 +3281,7 @@ class LogOnEnterType(object):
     NONE = 0
     CUBE = 1
     WONDER_LAND = 2
+    BACK_CUBE = 3
 
 
 class AchievementFlag(object):
@@ -3295,6 +3340,7 @@ class AchieveType(object):
     MERIDIAN = 45 # 经脉
     GUILD_CONTRIB = 46 # 帮会贡献
     GUILD_ACTIVITY = 47 # 帮会活动
+    AREA_TASK = 48 # 区域任务
 
 class AchieveGuildActivityType(object):
     BOSS = 1 #帮会副本boss
@@ -3343,7 +3389,7 @@ class GuildRelationType(object):
 MYSTIC_SUMMIT_FLOORS = [1, 2, 3]
 WONDERLAND_LINE_NO = 0
 WONDERLAND_MAX_ENTER_NUM = 300
-WONDERLAND_COIN_ITEM_ID = ItemId.MONEY
+WONDERLAND_COIN_ITEM_ID = ItemIdEnum.MONEY
 
 WONDER_LAND_DUR_RENEW = 1 # 试炼峰续期
 WONDER_LAND_DUR_TIMEOUT = 2 # 试炼峰超时
@@ -3366,6 +3412,22 @@ class WonderAddTicketReason(object):
 WONDER_LAND_EVENT_ENTER = 1
 WONDER_LAND_EVENT_EXIT = 2
 WONDER_LAND_EVENT_ADDTIME = 3
+
+ABYSS_ENTER_TYPE_TICKET = 1 # 购票进入
+ABYSS_ENTER_TYPE_LEFT_TIME = 2 # 还有剩余时间
+
+ABYSS_EVENT_ENTER = 1
+ABYSS_EVENT_EXIT = 2
+ABYSS_EVENT_ADDTIME = 3
+
+ABYSS_DUR_RENEW = 1 # 归墟续期
+ABYSS_DUR_TIMEOUT = 2 # 超时
+
+class AbyssAddTicketReason(object):
+    FROM_CLIENT = 1
+    CHECK_COND = 2
+    RENEW_USE_COIN = 3
+    RENEW_USE_ITEM = 4
 
 # 城战阶段
 class SiegeWarState(object):
@@ -3904,23 +3966,30 @@ class MineWarMonsterCustomId(object):
     MINE_BROKEN_FLAG = 'mineBrokenFlag' #矿战被毁旗帜
     MINE_HUB = 'mineHub'       #矿战枢纽
 
-class MineWarMonsterType(object):
-    MINE_NONE = 0
-    MINE_CORE = 1      #矿战核心
-    MINE_FLAG = 2      #矿战旗帜
-    MINE_BROKEN_FLAG = 3 #矿战被毁旗帜
-    MINE_HUB = 4       #矿战枢纽
+class MineWarMonsterFlag(object):
+    MINE_MONSTER =      1 << 0
+    MINE_CORE =         1 << 1      #矿战核心
+    MINE_FLAG =         1 << 2      #矿战旗帜
+    MINE_BROKEN_FLAG =  1 << 3 #矿战被毁旗帜
+    MINE_HUB =          1 << 4       #矿战枢纽
 
 class MINE_WAR_CAMP(object):
     CAMP_DEFEND = 1
     CAMP_ATTACK = 2
 
 mineWarMonsterEnumDict = {
-    MineWarMonsterCustomId.MINE_CORE: MineWarMonsterType.MINE_CORE,
-    MineWarMonsterCustomId.MINE_FLAG: MineWarMonsterType.MINE_FLAG,
-    MineWarMonsterCustomId.MINE_BROKEN_FLAG: MineWarMonsterType.MINE_BROKEN_FLAG,
-    MineWarMonsterCustomId.MINE_HUB: MineWarMonsterType.MINE_HUB,
+    MineWarMonsterCustomId.MINE_CORE: MineWarMonsterFlag.MINE_CORE,
+    MineWarMonsterCustomId.MINE_FLAG: MineWarMonsterFlag.MINE_FLAG,
+    MineWarMonsterCustomId.MINE_BROKEN_FLAG: MineWarMonsterFlag.MINE_BROKEN_FLAG,
+    MineWarMonsterCustomId.MINE_HUB: MineWarMonsterFlag.MINE_HUB,
 }
+
+
+MINE_REQ_GUILD_SRC_AFTER_REGISTER = 1
+MINE_REQ_GUILD_SRC_END = 2 # 狂战结束
+MINE_REQ_GUILD_CORE_KILL = 3 # 核心被摧毁
+MINE_REQ_GUILD_START = 4 # 矿战开始
+
 
 class GiftKeyType(object):
     NORMAL = 1              #不限次数兑换
@@ -4052,6 +4121,7 @@ GiftCodeResultMsg = {
     40003: 54000352,
     40004: 54000353,
     40005: 54000354,
+    40006: 54000356,
 }
 
 class ShieldType(metaclass=UniqueIntEnum):
@@ -4083,6 +4153,20 @@ class DrawCardGuaranteedType(object):
     PITY_RESET = 2
     GET_RESET = 3
     TIME_LIMIT_RESET = 4
+
+class DrawCardCostType(object):
+    DEFAULT = 0
+    COIN = 1
+    VAILD_COST_TYPE = (DEFAULT, COIN)
+
+DRAW_CARD_COST_TYPE_2_SUFFIX_TYPE = {
+    DrawCardCostType.DEFAULT    : "",
+    DrawCardCostType.COIN       : "Coin",
+}
+DRAW_CARD_COST_TYPE_2_PROP_TYPE = {
+    DrawCardCostType.DEFAULT    : "",
+    DrawCardCostType.COIN       : "coinLeftTimes",
+}
 
 class CapacityExpansionType(metaclass=UniqueIntEnum):
     # 背包金币
@@ -4225,6 +4309,68 @@ class EquipUpgradeType(object):
 
     VALID_UPGRADE_TYPE = (SINGLE, MULTIPLE)
 
+class EquipWashType(object):
+    # 强化洗涤
+    ENHANCE = 1
+    # 核心洗涤（升阶）
+    UPGRADE = 2
+    # 铭文洗涤
+    GLYPH = 3
+    # 祝福洗涤
+    BLESS = 4
+    # 魂魄洗涤
+    SOUL = 5
+    # 附灵洗涤
+    SPIRIT = 6
+
+    # 武器显示的洗涤条目
+    WEAPON_WASH_TYPES = (ENHANCE, UPGRADE, GLYPH, BLESS, SOUL)
+    # 非武器显示的洗涤条目
+    NON_WEAPON_WASH_TYPES = (ENHANCE, UPGRADE, SPIRIT, SOUL)
+    # A类洗涤：消耗非绑材料直接洗涤
+    DIRECT_WASH_TYPES = (ENHANCE, UPGRADE, BLESS)
+    # B类洗涤：需要跳转对应养成界面
+    INDIRECT_WASH_TYPES = (GLYPH, SPIRIT, SOUL)
+
+class EquipWashResult(object):
+    # 成功
+    OK = 0
+    # 功能未开启
+    DISABLED = 1
+    # 参数错误
+    ARG_ERR = 2
+    # 装备不存在
+    EQUIP_NOT_FOUND = 3
+    # 装备品质不足
+    QUALITY_NOT_ENOUGH = 4
+    # 装备非绑定状态
+    NOT_BIND = 5
+    # 材料不足
+    ITEM_NOT_ENOUGH = 6
+    # 洗涤类型错误
+    WASH_TYPE_ERR = 7
+    # 无需洗涤
+    NO_NEED_WASH = 8
+    # 洗涤次数错误
+    WASH_COUNT_ERR = 9
+    # 背包锁定
+    BAG_LOCKED = 10
+
+class EquipWashConfig(object):
+    # 装备洗涤功能总开关配置键
+    ENABLE_KEY = 'enableEquipWash'
+    # 可洗涤最低品质配置键
+    MIN_QUALITY_KEY = 'equipWashMinQuality'
+    # 默认可洗涤最低品质（蓝色=3，对应 ItemQuality.BLUE=2，注意项目里品质枚举从0开始）
+    DEFAULT_MIN_QUALITY = 2
+    # 每级强化洗涤消耗的非绑强化石数量（默认1个）
+    DEFAULT_ENHANCE_COST_NUM = 1
+    # 每级祝福洗涤消耗的非绑祝福石数量（默认1个）
+    DEFAULT_BLESS_COST_NUM = 1
+    # 每个核心洗涤消耗的非绑核心数量（默认1个）
+    DEFAULT_UPGRADE_COST_NUM = 1
+    # 最大洗涤次数限制
+    MAX_WASH_COUNT = 999
 
 SERVER_LOG_TYPE_LOGIN = 1
 SERVER_LOG_TYPE_DAILY = 2
@@ -4395,6 +4541,11 @@ BOUNTY_AVATAR_TYPE_2_CONVERSION_DICT = {
     BountyAvatarType.HUNTER : BOUNTY_AVATAR_KEY_2_BOUNTY_HUNTER_PROP,
 }
 ########################################
+
+class WaitMapLoginResult(object):
+    OK = 0
+    ACCOUNT_LIMIT = 1
+
 class UpdateHunterRankProp(object):
     HUNTER_ONLINE = "online"
     HUNTER_NAME = "hunterName"
@@ -4484,21 +4635,126 @@ class ResourceRecoveryType(object):
     FREE_TICKET = 1
 
 class FreeTicketSubType(object):
-    WONDER_LAND = 0
-    CUBE = 1
+    CUBE = 0
+    WONDER_LAND = 1
+    ABYSS = 2
+    CRUSADE = 3
+    CHIEF = 4
 
-    VALID_SUB_TYPE = (WONDER_LAND, CUBE,)
-    MAX_CNT = CUBE + 1
+    VALID_SUB_TYPE = (CUBE, WONDER_LAND, ABYSS, CRUSADE, CHIEF)
+    MAX_CNT = CHIEF + 1
+
+class FreeTicketOneClickRecoveryType(object):
+    ALL = 0
+    FREE = 1
+    PAID = 2
+
+    VALID_ONE_CLICK_TYPE = (FREE, PAID,)
 
 class FreeTicketUpdateType(object):
     LOGIN = 0
     OFFLINE = 1
-    RESET = 2
+    TIMED = 2
     UPDATE = 3
 
 class CycleEventTriggerType(object):
     NULL = 0
     LOGIN = 1
     TIMED = 2
+    UPDATE = 3
 
 RESOURCE_RECOVER_TIME_POINT_STR = '050000'
+
+class MallItemType(object):
+    NORMAL = 1
+    DYNAMIC_PRICE = 2
+
+class InviteType(object):
+    DEFAULT= 0
+    GUILD = 1
+    VALID_TYPES = (DEFAULT, GUILD)
+
+class PremiumType(object):
+    BIG_MONTH_CARD = 1
+    SMALL_MONTH_CARD = 2
+    VALID_TYPES = (BIG_MONTH_CARD, SMALL_MONTH_CARD)
+
+class MallStoreType(object):
+    GIFT = 1
+    MOUNT = 2
+
+class MallStoreResult(object):
+    SUCCESS = 0
+    WRONG_ARGS = 1
+    COUNT_LIMIT = 2
+    ITEM_IS_NOT_ENOUGH = 3
+    BAG_IS_FULL = 4
+
+class MallLimitType:
+    FOREVER = 1
+    Daily = 2
+    Weekly = 3
+    Monthly = 4
+    Monthly = 4
+
+class OrderError(object):
+    SUCCESS          = 0
+    SERVER_NOT_EXIST = -1000
+    PLAYER_NOT_EXIST = -1001
+    REDIS_ERROR      = -1002
+    MYSQL_ERROR      = -1003
+    IN_PROCESSING    = -1004
+    IN_DELIVERY      = -1005
+    SIGN_ERR         = -1006
+    ARGS_ERR         = -1007
+    SERVER_ERROR     = -1008
+    SERVER_MISSING   = -1009
+    ITEM_CFG_MISSING = -1010
+
+class SafeBoxClaimState(object):
+    INIT = 0
+    CLAIMED = 1
+
+class MapMode(object):
+    NORMAL = 0
+    ELITE = 1
+
+    VALID_MAP_MODE = (NORMAL, ELITE)
+
+class AuctionBuyType(object):
+    # 日常购买
+    NORMAL = 1
+    # 抢购
+    SNATCH = 2
+
+class AuctionSnatchStatus(object):
+    DEFAULT = 0
+    DONE = 1
+
+class IllegalEventType(object):
+    # 聊天
+    CHAT = 1
+
+AutoForbidData = {
+    'Polity': {'id': 101, 'name': '政治'},
+    'Porn': {'id': 102, 'name': '色情'},
+    'Terror': {'id': 103, 'name': '暴恐'},
+    'Illegal': {'id': 104, 'name': '违法'},
+    'Abuse': {'id': 105, 'name': '谩骂'},
+    'Finance': {'id': 106, 'name': '金融'},
+    'Ad': {'id': 107, 'name': '广告'},
+    'Spam': {'id': 108, 'name': '灌水'},
+    'Value': {'id': 109, 'name': '价值观'}
+}
+
+CrossServerExpWhitelist = {
+    AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
+    AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY,
+    AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER
+}
+
+#加经验同步单独处理的类型
+CrossServerExpIgnorelist = {
+    AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
+    AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY
+}

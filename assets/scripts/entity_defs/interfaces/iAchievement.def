@@ -5,6 +5,12 @@
             <Flags>         BASE                        </Flags>
             <Persistent>    true                        </Persistent>
         </achievementInfo>
+
+        <mapExploreInfo>
+            <Type>          MAP_EXPLORE_DICT            </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+        </mapExploreInfo>
     </Properties>
 
     <BaseMethods>
@@ -20,6 +26,16 @@
             <Arg>   ACHIEVE_TYPE                           </Arg>
             <Arg>   PYTHON                                 </Arg>
         </triggerAchievementWithCtx>
+
+        <onCrossServerTriggerAchieveByType>
+            <Arg>   ACHIEVE_TYPE                           </Arg>
+            <Arg>   PYTHON                                 </Arg>
+        </onCrossServerTriggerAchieveByType>
+
+        <getMapExploreReward> <Exposed/>
+            <Arg>   SPACE_NO         </Arg>
+            <Arg>   INT32            </Arg>
+        </getMapExploreReward>
     </BaseMethods>
 
     <CellMethods>
@@ -35,6 +51,10 @@
             <Arg>   ARRAY <of>  ACHIEVE_ID                  </of>   </Arg>
             <Arg>   ACHIEVE_POINT                           </Arg>
         </onTakeAchievementRewards>
+
+        <onUpdateMapExplore>
+            <Arg>   ARRAY <of>  MAP_EXPLORE_DATA_INFO                  </of>   </Arg>
+        </onUpdateMapExplore>
     </ClientMethods>
 </root>
 

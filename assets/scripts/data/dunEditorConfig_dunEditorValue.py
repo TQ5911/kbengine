@@ -625,6 +625,16 @@ datas = _tools.RODict({
         "defaultValue": "0",
         "listValue": ""
     }),
+    2408: _tools.RODict({
+        "ID": 2408,
+        "name": "血量(倍率)",
+        "value": "hpMult",
+        "valueType": 1,
+        "Type": "float",
+        "ifExport": 1,
+        "defaultValue": "1",
+        "listValue": ""
+    }),
     2501: _tools.RODict({
         "ID": 2501,
         "name": "当前变量ID",

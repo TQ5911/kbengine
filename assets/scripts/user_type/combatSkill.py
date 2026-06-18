@@ -112,6 +112,18 @@ class ServerSkills(userType.UserDictType):
         _skillDict['skillSwitches'] = self.skillSwitches
         return _skillDict
 
+    def toReplicaSkillDict(self):
+        _skillDict = {'skills': []}
+        for _skillId, sVal in self.items():
+            sDict = {
+                'skillId': _skillId,
+                'skillLv': sVal.skillLv,
+                #'tNextCast': float(sVal.tNextCast),
+                #'cdDelta': float(sVal.cdDelta),
+            }
+            _skillDict['skills'].append(sDict)
+        return _skillDict
+    
     def checkSkillSwitch(self, skillID, status):
         switchStatus = self.skillSwitches.get(skillID, None)
         if switchStatus is None:
@@ -829,7 +841,7 @@ class SkillBaseClass(userType.UserSingleType):
 
     def getOneHPLowest(self, casterEnt):
         ###取队伍或小队百分比最低
-        if not casterEnt.isInTeam() and not casterEnt.isInRaid():
+        if not casterEnt.isInTeam() and not casterEnt.inRaid():
             return casterEnt
 
         _targetsList = []
@@ -846,7 +858,7 @@ class SkillBaseClass(userType.UserSingleType):
                         casterEnt, player):
                     _targetsList.append(player)
 
-        elif casterEnt.isInRaid():
+        elif casterEnt.inRaid():
             raidTeamCacheVal = casterEnt.raidInfo.raidTeamDic.get(casterEnt.raidInfo.raidTeamIDX, None)
             if raidTeamCacheVal:
                 for _member in raidTeamCacheVal.teamPlayerDict.values():
@@ -1085,7 +1097,9 @@ class SkillBaseClass(userType.UserSingleType):
             _position = target.position if target else caster.position
 
         elif _scopeType == gameconst.SkillScopeEnum.SELF_TO_TARGET_RECTANGLE:
-            if target:
+            if target and target is not caster:
+                _direction = sMath.vector3WithoutY(target.position - caster.position) 
+            elif len(arr) < 3:
                 _direction = sMath.vector3WithoutY(target.position - caster.position) 
             else:
                 _direction = Math.Vector3(arr[0], arr[1], arr[2])
@@ -1476,6 +1490,11 @@ class SkillBaseClass(userType.UserSingleType):
 
     def _checkUseSkillOwner(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         LOG_DBG('_checkUseSkillOwner', self.skillId, targetId, ignoreReasons, checkInRange)
+        code = gameconst.UseSkillCheck.USC_ENUM_FORBID
+        if not code & ignoreReasons and owner.checkForbidSkill(self.getSkillId()):
+            owner.debugCombatMsg('_checkUseSkillOwner forbid skill: skillId:%s', self.getSkillId())
+            return code
+        
         code = gameconst.UseSkillCheck.USC_ENUM_IN_CD
         if not code & ignoreReasons and self.inCDTime():
             owner.debugCombatMsg('_checkUseSkillOwner cannot use inCDTime: skillId:%s, tNextCast:%s, now:%s', self.getSkillId(), self.tNextCast, time.time())
@@ -1670,6 +1689,7 @@ class SkillBaseClass(userType.UserSingleType):
         hitChooseAgain = S_SD.datas[self.skillId].get('HitChooseAgain')
         if hitChooseAgain:
             self.targetIds = []
+
         effectedEntIds = self.getEffectTargets(owner, targetId, _realSkillArgs, positionSkillArgs=_positionSkillArgs)
         actionCtx.effectedEntIds = effectedEntIds
 
@@ -1681,7 +1701,7 @@ class SkillBaseClass(userType.UserSingleType):
         try:
             _actResult = owner.doSkillAction(self.skillId, actionCtx, calcDelay, doRemoveState=doRemoveState)
         except Exception as e:
-            _actResult = gameclass.BoolResult(False)
+            _actResult = gameclass.ResultBool(False)
             gameengine.panicStack('applySkillEffect error:', owner.id, self.skillId, targetId, str(e))
 
         self.targetIds = []
@@ -2177,7 +2197,7 @@ class DodgeSkillVal(CommonSkillVal):
         
         return None
 
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, isSetState=True, enterCD=True, parentCtx=None):
+    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, isSetState=True, enterCD=True, parentCtx=None, isRecord=False):
         # owner.resetUsingSkills(gameconst.ResetSkillReason.ReasonDodgeSkill)
         _pos = self.getLastBlinkBeginPos(owner)
         if _pos:
@@ -2336,10 +2356,7 @@ class StagedSkill(CommonSkillVal):
         _dic = self.getTempData(gameconst.SkillTempDataKey.STAGE_CHILD, {})
         _retList = []
         for _skill in _dic.values():
-            if not _skill():
-                continue
-
-            _retList.append(_skill())
+            _retList.append(_skill)
 
         return _retList
 
@@ -2352,11 +2369,11 @@ class StagedSkill(CommonSkillVal):
                 return self, False
 
             childDic = self.getTempData(gameconst.SkillTempDataKey.STAGE_CHILD, {})
-            if _curStageSkillId in childDic and childDic[_curStageSkillId]():
-                return childDic[_curStageSkillId](), False
+            if _curStageSkillId in childDic:
+                return childDic[_curStageSkillId], False
 
             curStageSkill = StagedSkill(_curStageSkillId, self.skillLv, parentSkill=self)
-            childDic[_curStageSkillId] = weakref.ref(curStageSkill)
+            childDic[_curStageSkillId] = curStageSkill
 
             self.setTempData(owner, gameconst.SkillTempDataKey.STAGE_CHILD, childDic)
             return curStageSkill, False
@@ -2369,7 +2386,7 @@ class StagedSkill(CommonSkillVal):
             return _stageSkillIds[stageIndex - 1]
         return 0
 
-    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, isSetState=True, enterCD=True, parentCtx=None):
+    def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, isSetState=True, enterCD=True, parentCtx=None, isRecord=False):
         rootSkillVal = self.getRootSkillVal()
         owner.debugCombatMsg('StageSkill.beginUseSkill: skillId:%s, stageIndex:%s, targetId:%s, skillArgs:%s, isSetState:%s, rootSkillId:%s',
                              self.skillId, self.stageIndex, targetId, skillArgs,
@@ -2379,7 +2396,9 @@ class StagedSkill(CommonSkillVal):
         # 如果有下一段就不进入cd
         enterCD = (nextStageSkillId == 0)
         if self.stageIndex == 0:
-            self is rootSkillVal and self.gotoNextStage(owner)
+            if self is rootSkillVal:
+                self.gotoNextStage(owner)
+
             isSucc = self.doBeginUseSkill(
                 owner, 
                 targetId, 
@@ -2393,7 +2412,9 @@ class StagedSkill(CommonSkillVal):
             if curStageSkill is self:
                 raise Exception('ckz curStageSkill is self', self.skillId, self.stageIndex, owner.gbId)
 
-            self is rootSkillVal and self.gotoNextStage(owner)
+            if self is rootSkillVal:
+                self.gotoNextStage(owner)
+
             isSucc = curStageSkill.beginUseSkill(
                 owner, targetId, skillArgs,
                 compensateTime, isSetState, enterCD,

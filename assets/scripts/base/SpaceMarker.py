@@ -21,7 +21,7 @@ class SpaceMarker(iBaseWithCell.IBaseWithCell):
         if spaceBase:
             spaceBase.callWithCellInfo(self)
         else:
-            self.entireDestroy(False, False)
+            self.doEntireDestroy(False, False)
 
         return
 
@@ -52,7 +52,7 @@ class SpaceMarker(iBaseWithCell.IBaseWithCell):
     def onCreateCellFailure(self):
         LOG_INFO('SpaceMarker.onCreateCellFailure:', self.spaceno)
         gameglobal.localSpaceMarkers.pop(self.spaceno)
-        self.entireDestroy(deleteFromDB=False, writeToDB=False)
+        self.doEntireDestroy(deleteFromDB=False, writeToDB=False)
         return
 
     def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
@@ -60,11 +60,11 @@ class SpaceMarker(iBaseWithCell.IBaseWithCell):
         if self.isDestroyed:
             return
 
-        self.entireDestroy(deleteFromDB=False, writeToDB=False)
+        self.doEntireDestroy(deleteFromDB=False, writeToDB=False)
         return
 
     # TODO
-    def entireDestroy(self, deleteFromDB, writeToDB):
+    def doEntireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
 

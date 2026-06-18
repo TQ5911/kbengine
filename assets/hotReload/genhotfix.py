@@ -11,6 +11,7 @@ INDENT = ' '*4
 
 IMPORT_PT = re.compile(r'import\s+([a-zA-Z0-9_]+)')
 IMPORT_AS_PT = re.compile(r'import\s+.+\s+as\s+([a-zA-Z0-9_]+)')
+FROM_IMPORT_PT = re.compile(r'from\s+([a-zA-Z0-9_.]+)\s+import\s+')
 MULTI_IMPORT_PT = re.compile(
     r"(?:^|\n)\s*import\s+([ \t]*[A-Za-z_][A-Za-z0-9_]*"
     r"(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\s*(?:\n|$|;)",
@@ -30,9 +31,54 @@ def getImportInfo(methodInfo:MI.MethodInfo):
     funcGlobals = func.get_globals()
 
     importedMods = ['KBEngine']
-    for line in fileObject:
-        strLine = line.decode('utf-8', 'ignore')
+
+    rawText = fileObject.read().decode('utf-8', 'ignore')
+    fileObject.close()
+
+    def _splitImportStatements(text):
+        i = 0
+        n = len(text)
+        stmts = []
+        while i < n:
+            # 跳过空白
+            while i < n and text[i] in ' \t\r\n':
+                i += 1
+            if i >= n:
+                break
+            start = i
+            if text[i] == '#':
+                # 注释行到换行
+                while i < n and text[i] != '\n':
+                    i += 1
+                stmts.append(text[start:i])
+                continue
+            # 找到本语句的结束：换行、分号，且跳过括号/字符串
+            paren = 0
+            inStr = None
+            while i < n:
+                c = text[i]
+                if inStr:
+                    if c == '\\':
+                        i += 2; continue
+                    if c == inStr:
+                        inStr = None
+                elif c in ('"', "'"):
+                    inStr = c
+                elif c == '(':
+                    paren += 1
+                elif c == ')':
+                    paren -= 1
+                elif paren == 0 and c in (';', '\n'):
+                    i += 1
+                    break
+                i += 1
+            stmts.append(text[start:i])
+        return stmts
+
+    for strLine in _splitImportStatements(rawText):
         if strLine.strip().startswith('#'):
+            continue
+        if re.search(r'\bimport\s*\*', strLine):
             continue
 
         matchMultiImport = MULTI_IMPORT_PT.search(strLine)
@@ -55,6 +101,22 @@ def getImportInfo(methodInfo:MI.MethodInfo):
 
             continue
 
+        matchFrom = FROM_IMPORT_PT.search(strLine)
+        if matchFrom:
+            moduleName = matchFrom.group(1).split('.')[0].strip()
+            importLines.append(strLine.replace('\r\n', '\n'))
+            if moduleName not in importedMods:
+                importedMods.append(moduleName)
+
+            rest = strLine[matchFrom.end():]
+            for sym in re.findall(r'\b([a-zA-Z_][a-zA-Z0-9_]*)\b', rest):
+                if sym in ('import',) or sym == moduleName:
+                    continue
+                if sym in funcGlobals and sym not in importedMods:
+                    importedMods.append(sym)
+
+            continue
+
 
     #dealing @utils.isMySelf
     for decMod in methodInfo.decratorMods:
@@ -63,25 +125,80 @@ def getImportInfo(methodInfo:MI.MethodInfo):
 
     importLines.append('import {}\n'.format(methodInfo.inModuleName))
 
-    # find modules from default args
+    # 从类型注解和默认值里找需要 import 的模块
+    # 注意：Python 的 symtable.get_globals() 不会收集仅出现在类型注解里的名字
+    # （比如 def f(x: dropAward.MailWealthVal): pass 里的 dropAward），
+    # 所以这部分得自己遍历 AST 来补齐。
     try:
         method_ast = ast.parse(methodInfo.sourceCode)
         func_def_node = method_ast.body[0]
         if isinstance(func_def_node, ast.FunctionDef):
             import astor
+
+            # 递归地从类型注解里提取最外层模块名。
+            # 对应示例：
+            #   dropAward.MailWealthVal  -> ['dropAward']   （ast.Attribute，点号链）
+            #   List[dropAward.X]        -> ['dropAward']   （ast.Subscript，泛型）
+            #   int | dropAward.X        -> ['dropAward']   （ast.BinOp，PEP 604 的 |）
+            #   Union[X, dropAward.Y]    -> ['X','dropAward']（ast.Tuple，老式 Union/Tuple）
+            def _extractAnnModules(annNode):
+                mods = []
+                if isinstance(annNode, ast.Attribute):
+                    # 沿点号链向左回溯到最左边的 Name
+                    # 例如 dropAward.MailWealthVal -> dropAward
+                    #      a.b.c.d.X             -> a
+                    node = annNode.value
+                    while isinstance(node, ast.Attribute):
+                        node = node.value
+                    if isinstance(node, ast.Name):
+                        mods.append(node.id)
+                elif isinstance(annNode, ast.Subscript):
+                    # 泛型，例如 List[dropAward.X]：分别递归容器和内部类型
+                    mods.extend(_extractAnnModules(annNode.value))
+                    mods.extend(_extractAnnModules(annNode.slice))
+                elif isinstance(annNode, ast.BinOp):
+                    # PEP 604 的联合语法：int | dropAward.X
+                    mods.extend(_extractAnnModules(annNode.left))
+                    mods.extend(_extractAnnModules(annNode.right))
+                elif isinstance(annNode, ast.Tuple):
+                    # 老式 typing.Union/Tuple 等
+                    for elt in annNode.elts:
+                        mods.extend(_extractAnnModules(elt))
+                # 裸的 ast.Name（直接写个标识符）这里故意忽略：
+                # 没法判断它是内置类型、局部变量还是模块名，乱加 import 风险大。
+                return mods
+
+            # 把模块名追加成 `import xxx`，要求是合法标识符且未添加过
+            def _addMod(mod):
+                if mod and mod not in importedMods and re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', mod):
+                    importLines.append('import {}\n'.format(mod))
+                    importedMods.append(mod)
+
+            # 1) 处理返回值注解，例如 def f() -> dropAward.X
+            if func_def_node.returns:
+                for m in _extractAnnModules(func_def_node.returns):
+                    _addMod(m)
+
+            # 2) 处理参数注解，覆盖位置专用、位置参数、关键字专用参数
+            allArgs = (func_def_node.args.posonlyargs
+                       + func_def_node.args.args
+                       + func_def_node.args.kwonlyargs)
+            for arg in allArgs:
+                if arg.annotation:
+                    for m in _extractAnnModules(arg.annotation):
+                        _addMod(m)
+
+            # 3) 处理默认值，例如 def f(x=dropAward.MailWealthVal())
+            #    这部分原先就有，保留以兼容旧逻辑
             for default_arg in func_def_node.args.defaults:
                 arg_str = astor.to_source(default_arg).strip()
                 match = re.match(r'([a-zA-Z_][a-zA-Z0-9_]*)\.', arg_str)
                 if match:
-                    default_mod = match.group(1)
-                    if default_mod not in importedMods:
-                        importLines.append('import {}\n'.format(default_mod))
-                        importedMods.append(default_mod)
+                    _addMod(match.group(1))
     except Exception as e:
-        print("Warning: Could not parse default arguments for extra imports: {}".format(e))
+        print("Warning: Could not parse annotations/defaults for extra imports: {}".format(e))
 
 
-    fileObject.close()
     return importedMods, importLines
 
 def setupSysPath(component):
@@ -151,7 +268,7 @@ def generateCode(scriptPath, component, moduleName, clsName, methodName):
             continue
 
         if sb.is_imported():
-            assert var in importedMods
+            assert var in importedMods, "missing import for var={!r}, importedMods={}".format(var, importedMods)
 
         if sb.is_assigned():
             replaceGlobals[sb.get_name()] = '{}.{}'.format(info.inModuleName, sb.get_name())

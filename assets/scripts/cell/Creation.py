@@ -9,12 +9,12 @@ import iFubenSpace
 import iGameEntity
 import gameengine
 import random
-
+import gameconfig
 import gameconst
 import gametimer
 import gamemove
 import Math, math, sMath
-import creation_creation
+import creation_creation as CREATION
 import EventMgr
 import formula
 import utils
@@ -29,61 +29,59 @@ import skill_skill as SSD
 class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                iFubenSpace.IFubenSpace, iGameEntity.IGameEntity,iEntityRefresh.IEntityRefresh):
     IsCreation = True
-    # IsCombatUnit = True
 
     TRAP_BOUND_BOX = 1
-    TRAP_VIEW = 2
 
-    CREATION_AREA_CIRCLE = 1
-    CREATION_AREA_RECT = 2
+    CREATION_AREA_TYPE_CIRCLE = 1
+    CREATION_AREA_TYPE_RECT = 2
 
-    def __init__(self, ):
+    def __init__(self, **kwargs):
         iCell.ICell.__init__(self)
         EventMgr.EventMgr.__init__(self)
         SkillManager.SkillManager.__init__(self)
 
-        hostEnt = self.getHost()
-        if hostEnt and hostEnt.IsAvatar:
+        _hostEnt = self.getHost()
+        if _hostEnt and _hostEnt.IsAvatar:
             self.cellFlags = utils.bset(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
 
-        if not self.hostId or (hostEnt and not hostEnt.IsAvatar and not hostEnt.isBot()):
+        if not self.hostId or (_hostEnt and not _hostEnt.IsAvatar):
             self.isWitnessComplete = gameconst.WitnessTypeEnum.WITNESS_ENUM_IGNORE
-        self.name = creation_creation.datas[self.creationId].get('name', '无名创生物')
-        creationType = creation_creation.datas[self.creationId].get('type', '')
+        self.name = CREATION.datas[self.creationId].get('name', '无名创生物')
+        _creationType = CREATION.datas[self.creationId].get('type', '')
         self.speed = self.flySpeed
-        self.cancleLockTarget = False
+        self.bCancleLockTarget = False
 
         self.loopIntervalTime = self.getLoopIntervalTime()
         self.creationLiveTime = self.getCreationLiveTime()
 
         self.initPosition()
 
-        if creationType == 'Linar':
+        if _creationType == 'Linar':
             distance = self.speed * self.creationLiveTime
-            dstPosition = sMath.getForwardPos(self.position, self.direction[2], distance)
-            self.moveController = self.moveToPoint(dstPosition, self.speed, 0, None, 1, 1)
+            _dstPosition = sMath.getForwardPos(self.position, self.direction[2], distance)
+            self.moveController = self.moveToPoint(_dstPosition, self.speed, 0, None, 1, 1)
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Moving)):
                 self.setState(gameconst.StateEnum.Moving)
-        elif creationType == 'LockTarget':
+        elif _creationType == 'LockTarget':
             if not self.releaseTarget:
                 LOG_INFO('Creation has no releaseTarget', self.creationId)
                 return
             self.addTimerCB(0.5, '_moveToTarget', (), gametimer.TIMER_TAG_MOVE_TO_TARGET)
 
-        elif creationType == 'roundTrip':
+        elif _creationType == 'roundTrip':
             distance = self.speed * self.creationLiveTime/2.0
-            dstPosition = sMath.getForwardPos(self.position, self.direction[2], distance)
-            self.moveController = self.moveToPoint(dstPosition, self.speed, gamemove.ROUND_TRIP_MOVE, None, 1, 1)
+            _dstPosition = sMath.getForwardPos(self.position, self.direction[2], distance)
+            self.moveController = self.moveToPoint(_dstPosition, self.speed, gamemove.ROUND_TRIP_MOVE, None, 1, 1)
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Moving)):
                 self.setState(gameconst.StateEnum.Moving)
 
-        elif creationType == 'FollowTarget':
+        elif _creationType == 'FollowTarget':
             if not self.releaseTarget:
                 LOG_INFO('Creation has no releaseTarget', self.creationId)
                 return
             self.addTimerCB(0.5, '_moveToTarget', (), gametimer.TIMER_TAG_MOVE_TO_TARGET)
 
-        if self.enterAction and self.selectActionType!=self.CREATION_AREA_CIRCLE:
+        if self.enterAction() and self.selectActionType!=self.CREATION_AREA_TYPE_CIRCLE:
             LOG_ERR('enterAction is invalid for round area', self.creationId, self.selectActionType)
 
         dt = max(self.delayTime-0.1, 0.1)
@@ -95,7 +93,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             LOG_WARN('Creation.delayTime should be set to 0.2 or larger')
 
         if self.loopIntervalTime > 0:
-            self.loopTimeId = self.pyAddTimer(self.delayTime, self.loopIntervalTime, gametimer.CREATION_LOOP)
+            self.loopTimeId = self.pyAddTimer(self.delayTime, self.loopIntervalTime, gametimer.INTERVAL_CREATION_LOOP)
 
         if not self.ttl:
             self.ttl = float(self.creationLiveTime)
@@ -104,24 +102,24 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
         if formula.inWorldLineScene(self.spaceNo):
             self.spaceMgrId = self.getCurrentSpace().spaceMgrId
-        spaceMgr = self.spaceMgr
+        _spaceMgr = self.spaceMgr
 
         if formula.inDungeonScene(self.spaceNo):
             # 【【任务】回收创生物-服务端】
-            tags = [str(self.creationId), self.__class__.__name__]
+            _tags = [str(self.creationId), self.__class__.__name__]
             if self.fbEntityId:
-                tags.extend([str(self.fbEntityId), 'gid_{}'.format(self.fbEntityId)])
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, tuple(tags))
+                _tags.extend([str(self.fbEntityId), 'gid_{}'.format(self.fbEntityId)])
+            if _spaceMgr:
+                _spaceMgr.addEntity(self.id, tuple(_tags))
             else:
                 gameengine.panicStack("Creation:: creation in dungeon missing spaceMgr", self.creationId, self.spaceNo)
         else:
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, (str(self.creationId), self.__class__.__name__))
+            if _spaceMgr:
+                _spaceMgr.addEntity(self.id, (str(self.creationId), self.__class__.__name__))
 
-        if not self.hostId or not hostEnt:
+        if not self.hostId or not _hostEnt:
             self.hostType = gameconst.CreationHostType.EnumNoHost
-        elif hostEnt.IsAvatar:
+        elif _hostEnt.IsAvatar:
             self.hostType = gameconst.CreationHostType.EnumAvatar
             skillId = self.tmpProps.get('skillId', 0)
             if skillId > 0:
@@ -132,39 +130,37 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                         scopeParam = eval(scopeParam) if isinstance(scopeParam, (str, bytes)) else scopeParam
                         if type(scopeParam) not in (list, tuple):
                             scopeParam = (scopeParam,)
-                        ret, datas = hostEnt.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
+                        ret, datas = _hostEnt.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
                         if ret:
                             if len(datas) == 1:
                                 self.scopeAddRatio = datas[0]
 
-        elif hostEnt.IsMonster:
+        elif _hostEnt.IsMonster:
             self.hostType = gameconst.CreationHostType.EnumMonster
-        elif hostEnt.IsSummon:
+        elif _hostEnt.IsSummon:
             self.hostType = gameconst.CreationHostType.EnumSummon
-        elif hostEnt.IsCreation:
+        elif _hostEnt.IsCreation:
             self.hostType = gameconst.CreationHostType.EnumCreation
-        elif hostEnt.IsAvatarMirror:
-            self.hostType = gameconst.CreationHostType.EnumAvatarMirror
-        elif hostEnt.IsNpc:
+        elif _hostEnt.IsNpc:
             self.hostType = gameconst.CreationHostType.EnumNPC
         else:
             self.hostType = gameconst.CreationHostType.EnumOther
 
-        self.pyAddTimer(1, 1, gametimer.SUMMON_CHECK_OWNER_VALID)
+        self.pyAddTimer(1, 1, gametimer.INTERVAL_SUMMON_CHECK_OWNER_VALID)
 
-        if self.spaceMgr and hostEnt and (hostEnt.IsAvatar or hostEnt.IsSummon or hostEnt.IsAvatarMirror):
+        if self.spaceMgr and _hostEnt and (_hostEnt.IsAvatar or _hostEnt.IsSummon):
             _ents = self.spaceMgr.listEntitiesByTag('largeEnt')
             for e in _ents:
                 if e.IsCombatUnit:
                     utils.isEnemy(self, e)
 
     @property
-    def releaseTarget(self):
-        return KBEngine.entities.get(self.selectedTargetId)
+    def areaAction(self):
+        return CREATION.datas[self.creationId].get('areaAction', '')
 
     @property
-    def areaAction(self):
-        return creation_creation.datas[self.creationId].get('areaAction', '')
+    def releaseTarget(self):
+        return KBEngine.entities.get(self.selectedTargetId)
 
     def getLoopIntervalTime(self):
         defaultValue = self.getIntervalTime()
@@ -208,16 +204,16 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     @property
     def areaLoop(self):
         realCount = self.getAreaLoopCount()
-        cfgCount = int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
+        cfgCount = int(CREATION.datas[self.creationId].get('areaLoop') or 0)
         if realCount <= cfgCount:
             return realCount
         return cfgCount
 
     def getLastTime(self):
-        return creation_creation.datas[self.creationId].get('time')
+        return CREATION.datas[self.creationId].get('time')
     
     def getIntervalTime(self):
-        return creation_creation.datas[self.creationId].get('loopIntervalTime') or 0.1
+        return CREATION.datas[self.creationId].get('loopIntervalTime') or 0.1
     
     def getAreaLoop(self):
         return int(self.getCreationLiveTime() / self.getIntervalTime())
@@ -238,66 +234,63 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     @property
     def hurtNumber(self):
-        return int(creation_creation.datas[self.creationId].get('hurtNumber') or 0)
+        return int(CREATION.datas[self.creationId].get('hurtNumber') or 0)
 
-    @property
     def enterAction(self):
-        return creation_creation.datas[self.creationId].get('enterAction', '')
+        return CREATION.datas[self.creationId].get('enterAction', '')
 
     @property
     def enterLoop(self):
-        return int(creation_creation.datas[self.creationId].get('enterLoop') or 0)
+        return int(CREATION.datas[self.creationId].get('enterLoop') or 0)
 
-    @property
     def leaveAction(self):
-        return creation_creation.datas[self.creationId].get('leaveAction', '')
+        return CREATION.datas[self.creationId].get('leaveAction', '')
 
-    @property
     def timeIsUpAction(self):
-        return creation_creation.datas[self.creationId].get('timeIsUpAction', '')
+        return CREATION.datas[self.creationId].get('timeIsUpAction', '')
 
     @property
     def target(self):
-        return creation_creation.datas[self.creationId].get('target', '')
+        return CREATION.datas[self.creationId].get('target', '')
 
     @property
     def timeIsUpActionTarget(self):
-        return creation_creation.datas[self.creationId].get('timeIsUpActionTarget', '')
+        return CREATION.datas[self.creationId].get('timeIsUpActionTarget', '')
 
     @property
     def flySpeed(self):
-        return float(creation_creation.datas[self.creationId].get('flySpeed') or 0)
+        return float(CREATION.datas[self.creationId].get('flySpeed') or 0)
 
     @property
     def selectActionType(self):
-        return creation_creation.datas[self.creationId].get('selectType', 0)
+        return CREATION.datas[self.creationId].get('selectType', 0)
 
     @property
     def selectActionPar(self):
-        return creation_creation.datas[self.creationId].get('selectPar')
+        return CREATION.datas[self.creationId].get('selectPar')
 
     @property
     def delayTime(self):
-        return float(creation_creation.datas[self.creationId].get('delayTime') or 0.2)
+        return float(CREATION.datas[self.creationId].get('delayTime') or 0.2)
 
     @property
     def continueAction(self):
-        return creation_creation.datas[self.creationId].get('continueAction', '')
+        return CREATION.datas[self.creationId].get('continueAction', '')
 
     @property
     def continueTarget(self):
-        return creation_creation.datas[self.creationId].get('continueTarget', '')
+        return CREATION.datas[self.creationId].get('continueTarget', '')
 
     @property
     def targetNum(self):
-        return creation_creation.datas[self.creationId].get('targetNum', 0)
+        return CREATION.datas[self.creationId].get('targetNum', 0)
 
     @property
     def creationType(self):
-        return creation_creation.datas[self.creationId].get('type', 0)
+        return CREATION.datas[self.creationId].get('type', 0)
 
     def getNeedHost(self):
-        return creation_creation.datas[self.creationId].get('relyOnMaster')
+        return CREATION.datas[self.creationId].get('relyOnMaster')
 
     def baseMinPhysicalAtkRatio(self):
         return 1.0
@@ -354,57 +347,45 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     def _addTrap(self):
         selectAreaType = self.selectActionType
-        radii = 0
-        if selectAreaType==self.CREATION_AREA_CIRCLE:
-            radii = self.selectActionPar
-        elif selectAreaType==self.CREATION_AREA_RECT:
-            radii = math.sqrt(self.selectActionPar[0]**2+self.selectActionPar[1]**2)
+        _radii = 0
+        if selectAreaType==self.CREATION_AREA_TYPE_CIRCLE:
+            _radii = self.selectActionPar
+        elif selectAreaType==self.CREATION_AREA_TYPE_RECT:
+            _radii = math.sqrt(self.selectActionPar[0]**2+self.selectActionPar[1]**2)
 
         #加一个能包围创生作用区域的trap，然后在loopaction里判断trap里的哪些entity在作用区域内
         #但enterAction只能在圆形区域时用,矩形区域由于矩形是有旋转角度的，所以加的trap是矩形的包围正方形
         #无法做进入触发了
-        if radii:
-            self.viewRadius = radii
-            self.trapId = self.addProximity(radii, radii, self.TRAP_BOUND_BOX)
-
-        # for e in self.entitiesInRange(radii):
-        #     self.onEnterTrap(e, self.selectActionPar, self.selectActionPar, 0, 0)
+        if _radii:
+            self.viewRadius = _radii
+            self.trapId = self.addProximity(_radii, _radii, self.TRAP_BOUND_BOX)
 
     def inheritProps(self, combatProps):
-        for propName, propVal in combatProps.items():
-            self.setProp(propName, propVal, gameconst.SourceType.SrcTpInit)
+        for _propName, _propVal in combatProps.items():
+            self.setProp(_propName, _propVal, gameconst.SourceType.SrcTpInit)
 
     def _checkHostValid(self):
         if not self.hostId:
             return
 
-        hostEnt = self.getHost()
-        if not hostEnt or hostEnt.isDestroyed or not hostEnt.isReal():
+        _hostEnt = self.getHost()
+        if not _hostEnt or _hostEnt.isDestroyed or not _hostEnt.isReal():
             return False
 
         return True
-
-    def _moveToTarget(self):
-        if not self.releaseTarget:
-            return
-        if self.cancleLockTarget:
-            return
-
-        self.moveToPoint(self.releaseTarget.position, self.speed, 0, None, 1, 1)
-        self.addTimerCB(0.5, '_moveToTarget', (), gametimer.TIMER_TAG_MOVE_TO_TARGET)
 
     def _onLoop(self):
         if self.isDestroyed:
             return
 
-        if self.areaLoop > 0 and self.curAreaLoopNum >= self.areaLoop:
-            self.pyDelTimer(self.loopTimeId, gametimer.CREATION_LOOP)
+        if self.areaLoop > 0 and self.currentAreaLoopNum >= self.areaLoop:
+            self.pyDelTimer(self.loopTimeId, gametimer.INTERVAL_CREATION_LOOP)
             self.loopTimeId = 0
-            LOG_DBG('_onLoop', self.curAreaLoopNum, self.areaLoop, self.creationId)
+            LOG_DBG('_onLoop', self.currentAreaLoopNum, self.areaLoop, self.creationId)
             return
 
         if not self.isWitnessed:
-            self.pyDelTimer(self.loopTimeId, gametimer.CREATION_LOOP)
+            self.pyDelTimer(self.loopTimeId, gametimer.INTERVAL_CREATION_LOOP)
             self.loopTimeId = 0
             return
 
@@ -413,7 +394,16 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         #action里可能会destroy自己
         if self.isDestroyed:
             return
-        self.curAreaLoopNum += 1
+        self.currentAreaLoopNum += 1
+
+    def _moveToTarget(self):
+        if not self.releaseTarget:
+            return
+        if self.bCancleLockTarget:
+            return
+
+        self.moveToPoint(self.releaseTarget.position, self.speed, 0, None, 1, 1)
+        self.addTimerCB(0.5, '_moveToTarget', (), gametimer.TIMER_TAG_MOVE_TO_TARGET)
 
     def _getRandomDelayByIsForSkill(self):
         _mapId = formula.fetchMapId(self.spaceNo)
@@ -444,10 +434,11 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
         if self.loopIntervalTime > 0:
             _delay = self._getRandomDelayByIsForSkill()
-            self.loopTimeId = self.pyAddTimer(_delay, self.loopIntervalTime, gametimer.CREATION_LOOP)
+            self.loopTimeId = self.pyAddTimer(_delay, self.loopIntervalTime, gametimer.INTERVAL_CREATION_LOOP)
 
     def doLoopAction(self):
-        if not self._checkHostValid() and (self.casterType=='Avatar' or self.getNeedHost()):
+        if not self._checkHostValid()\
+                and (self.casterType=='Avatar' or self.getNeedHost()):
             return
 
         if not self.areaAction:
@@ -464,7 +455,12 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             self,
             self,
             self.hostId,
-            lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r, loopTimes=self.loopTimes, context = self.context))
+            lambda r:actionContext.CreationCombatCtx(
+                self.id, 
+                self.getTargetEntityIds(), 
+                r, 
+                loopTimes=self.loopTimes, 
+                context = self.context))
 
     def customId(self):
         _customId, _ = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
@@ -474,20 +470,20 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if self.isDestroyed:
             return
 
-        effectEntIds = self.getTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, set())
+        _effectEntIds = self.getTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, set())
         removeIds=[]
-        for entId in effectEntIds:
-            e = KBEngine.entities.get(entId)
-            if e:
-                if e.isDie():
+        for entId in _effectEntIds:
+            _e = KBEngine.entities.get(entId)
+            if _e:
+                if _e.isDie():
                     removeIds.append(entId)
-                elif not self.isVisible(e):
+                elif not self.isVisible(_e):
                     removeIds.append(entId)
-                elif not utils.checkTargetTypeValid(self.continueTarget, self, e):
+                elif not utils.checkTargetTypeValid(self.continueTarget, self, _e):
                     removeIds.append(entId)
 
         for entId in removeIds:
-            effectEntIds.discard(entId)
+            _effectEntIds.discard(entId)
             self.killChannelingSkill(gameconst.ChannelingBreak.BREAK_TP_TARGET_DIE)
             self.reChooseTarget()
 
@@ -495,26 +491,29 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             self.reChooseTarget()
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 
-        elif userData == gametimer.CREATION_LOOP:
+        elif userData == gametimer.INTERVAL_SUMMON_CHECK_OWNER_VALID:
+            if not self._checkHostValid()\
+                    and (self.casterType=='Avatar' or self.getNeedHost()):
+                self.destroySelf(False)
+
+        elif userData == gametimer.INTERVAL_CREATION_LOOP:
             if self.continueAction:
                 self.onLoopCheckTarget()
             else:
                 self._onLoop()
-        elif userData == gametimer.SUMMON_CHECK_OWNER_VALID:
-            if not self._checkHostValid() and (self.casterType=='Avatar' or self.getNeedHost()):
-                self.destroySelf(False)
+
         else:
             super(Creation, self).onTimer(tid, userData)
 
     def onMoveOver( self, controllerId, userData ):
         if userData==gamemove.ROUND_TRIP_MOVE:
             distance = self.speed * self.creationLiveTime/2.0
-            dstPosition = sMath.getForwardPos(self.position, self.direction[2]+math.pi, distance)
-            self.moveController = self.moveToPoint(dstPosition, self.speed, gamemove.ROUND_TRIP_MOVE, None, 1, 1)
+            _dstPosition = sMath.getForwardPos(self.position, self.direction[2]+math.pi, distance)
+            self.moveController = self.moveToPoint(_dstPosition, self.speed, gamemove.ROUND_TRIP_MOVE, None, 1, 1)
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Moving)):
                 self.setState(gameconst.StateEnum.Moving)
         else:
@@ -523,24 +522,28 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         self.moveController = 0
         self.removeState(gameconst.StateEnum.Moving)
 
-    def startTTL(self, ttl):
-        ttl = ttl or self.ttl
-        if ttl:
-            if self.destroyTimeId > 0:
-                self.pyDelTimer(self.destroyTimeId, gametimer.TIMER_CELL_TTL_DESTROY)
-                self.destroyTimeId = 0
-            self.destroyTimeId = self.pyAddTimer(ttl, 0, gametimer.TIMER_CELL_TTL_DESTROY)
-
-    def _ttlDestroy(self):
-        self.destroyTimeId = 0
+    def _onTtlDestroy(self):
+        self.creationDestroyTimeId = 0
         self.destroySelf()
 
+    def startTTL(self, ttl):
+        if not ttl:
+            ttl = self.ttl
+
+        if not ttl:
+            return
+
+        if self.creationDestroyTimeId > 0:
+            self.pyDelTimer(self.creationDestroyTimeId, gametimer.TIMER_ON_CELL_TTL_DESTROY)
+            self.creationDestroyTimeId = 0
+
+        self.creationDestroyTimeId = self.pyAddTimer(ttl, 0, gametimer.TIMER_ON_CELL_TTL_DESTROY)
+
     def destroySelf(self, bEnd = True, delay=0.3):
-
-
         if self.isDestroyed:
             return
-        self.delaySafeDestroy(delay=delay)
+
+        self.delaySafeDestroy(delay)
 
         if bEnd:
             self.doDestroyAction()
@@ -553,25 +556,16 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             self.onEntityRefresh()
 
         if self.loopTimeId > 0:
-            self.pyDelTimer(self.loopTimeId, gametimer.CREATION_LOOP)
+            self.pyDelTimer(self.loopTimeId, gametimer.INTERVAL_CREATION_LOOP)
             self.loopTimeId = 0
 
-        if self.destroyTimeId > 0:
-            self.pyDelTimer(self.destroyTimeId, gametimer.TIMER_CELL_TTL_DESTROY)
-            self.destroyTimeId = 0
+        if self.creationDestroyTimeId > 0:
+            self.pyDelTimer(self.creationDestroyTimeId, gametimer.TIMER_ON_CELL_TTL_DESTROY)
+            self.creationDestroyTimeId = 0
 
         if self.trapId > 0:
             self.cancelController(self.trapId)
             self.trapId = 0
-
-    def doDestroyAction(self):
-        if not self._checkHostValid() and (self.casterType=='Avatar' or self.getNeedHost()):
-            return
-
-        if not self.timeIsUpAction:
-            return
-
-        self.doCombatActions(self.timeIsUpAction, self, self, self.hostId, lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r, context = self.context))
 
     def onGetWitness(self):
         """
@@ -579,6 +573,22 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         绑定了一个观察者(客户端)
         """
         LOG_DBG("Creation::onGetWitness: %i." % self.id)
+
+    def doDestroyAction(self):
+        if not self._checkHostValid()\
+                and (self.casterType=='Avatar' or self.getNeedHost()):
+            return
+
+        if not self.timeIsUpAction():
+            return
+
+        self.doCombatActions(
+            self.timeIsUpAction(), 
+            self, 
+            self, 
+            self.hostId, 
+            lambda val:actionContext.CreationCombatCtx(
+                self.id, self.getTargetEntityIds(), val, context = self.context))
 
     def onLoseWitness(self):
         """
@@ -599,8 +609,8 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         self.doClearAllTargetTypeCache(True)
 
     def getTargetEntityIds(self):
-        if self.selectActionType==self.CREATION_AREA_CIRCLE:
-            entIds = []
+        if self.selectActionType==self.CREATION_AREA_TYPE_CIRCLE:
+            _entIds = []
             _radius = self.viewRadius if self.viewRadius else gameconst.DEFAULT_AOI
             for eid in self.getTargetIdsByTargetType(self.target):
                 e = KBEngine.entities.get(eid)
@@ -618,19 +628,22 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     continue
 
                 if utils.checkTargetTypeValid(self.target, self, e):
-                    entIds.append(eid)
+                    _entIds.append(eid)
 
-                if len(entIds) >= self.hurtNumber:
+                if len(_entIds) >= self.hurtNumber:
                     break
 
-            return entIds
+            return _entIds
 
-        elif self.selectActionType == self.CREATION_AREA_RECT:
-            entIds = []
-            height = self.selectActionPar[0]
+        elif self.selectActionType == self.CREATION_AREA_TYPE_RECT:
+            _entIds = []
+            _height = self.selectActionPar[0]
             width = self.selectActionPar[1]
-            faceDir = sMath.getDirFromYaw(self.direction[2])
+            _faceDir = sMath.getDirFromYaw(self.direction[2])
             rectCenter = self.position
+            if gameconfig.enableDrawCube():
+                self.allClients.drawCube(self.position, _faceDir, width, _height)
+
             for eid in self.trapEntities:
                 e = KBEngine.entities.get(eid)
                 if not e:
@@ -639,18 +652,19 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if e.isDestroyed:
                     continue
 
-                if utils.isInAttackLine(e.position, rectCenter, faceDir, height, width):
+                if utils.isInAttackLine(e.position, rectCenter, _faceDir, _height, width):
                     if utils.checkTargetTypeValid(self.target, self, e):
-                        entIds.append(eid)
-                        if len(entIds) >= self.hurtNumber:
+                        _entIds.append(eid)
+                        if len(_entIds) >= self.hurtNumber:
                             break
-            return entIds
+            return _entIds
 
     def doEnterAction(self, entity):
-        if not self._checkHostValid() and (self.casterType=='Avatar' or self.getNeedHost()):
+        if not self._checkHostValid()\
+                and (self.casterType=='Avatar' or self.getNeedHost()):
             return
 
-        if not self.enterAction and not self.continueAction:
+        if not self.enterAction() and not self.continueAction:
             return
 
         if self.continueAction:
@@ -661,7 +675,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             effectEntIds.add(entity.id)
             self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, effectEntIds)
             self.doCombatActions(self.continueAction, self, entity, self.hostId,
-                                 lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
+                                 lambda r: actionContext.CreationCombatCtx(self.id, [], r, context = self.context))
 
             return True
         else:
@@ -669,21 +683,20 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 return
 
             #enterAction应该不需要作用目标，只要施法目标，先传空列表
-            self.doCombatActions(self.enterAction, self, entity, self.hostId, lambda r:actionContext.CreationCtx(self.id, [], r, context = self.context))
+            self.doCombatActions(self.enterAction(), self, entity, self.hostId, lambda r:actionContext.CreationCombatCtx(self.id, [], r, context = self.context))
             return True
 
     def reChooseTarget(self):
-        effectEntIds = self.getTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, set())
-        if effectEntIds and list(effectEntIds)[0] in self.trapEntities:
-            effectEnt = KBEngine.entities.get(list(effectEntIds)[0])
-            if effectEnt and not effectEnt.isDestroyed:
-                if self.isVisible(effectEnt) and utils.checkTargetTypeValid(self.continueTarget, self, effectEnt):
-                    self.doCombatActions(self.continueAction, self, effectEnt, self.hostId,
-                                         lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
+        _effectEntIds = self.getTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, set())
+        if _effectEntIds and list(_effectEntIds)[0] in self.trapEntities:
+            _effectEnt = KBEngine.entities.get(list(_effectEntIds)[0])
+            if _effectEnt and not _effectEnt.isDestroyed:
+                if self.isVisible(_effectEnt) and utils.checkTargetTypeValid(self.continueTarget, self, _effectEnt):
+                    self.doCombatActions(self.continueAction, self, _effectEnt, self.hostId,
+                                         lambda r: actionContext.CreationCombatCtx(self.id, [], r, context = self.context))
                     return
 
-        if self.selectActionType==self.CREATION_AREA_CIRCLE:
-            entIds = []
+        if self.selectActionType==self.CREATION_AREA_TYPE_CIRCLE:
             for eid in self.trapEntities:
                 e = KBEngine.entities.get(eid)
                 if not e:
@@ -691,22 +704,19 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     continue
                 if e.isDestroyed:
                     continue
-                if eid in effectEntIds:
+                if eid in _effectEntIds:
                     continue
 
                 if self.isVisible(e) and utils.checkTargetTypeValid(self.continueTarget, self, e):
-                    effectEntIds.add(eid)
-                    self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, effectEntIds)
+                    _effectEntIds.add(eid)
+                    self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, _effectEntIds)
                     self.doCombatActions(self.continueAction, self, e, self.hostId,
-                                         lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
+                                         lambda r: actionContext.CreationCombatCtx(self.id, [], r, context = self.context))
                     break
 
-            return entIds
-
-        elif self.selectActionType==self.CREATION_AREA_RECT:
-            entIds = []
-            height = self.selectActionPar[0]
-            width = self.selectActionPar[1]
+        elif self.selectActionType==self.CREATION_AREA_TYPE_RECT:
+            _height = self.selectActionPar[0]
+            _width = self.selectActionPar[1]
             faceDir = sMath.getDirFromYaw(self.direction[2])
             rectCenter = self.position
             for eid in self.trapEntities:
@@ -716,28 +726,31 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     continue
                 if e.isDestroyed:
                     continue
-                if eid in effectEntIds:
+                if eid in _effectEntIds:
                     continue
 
-                if utils.isInAttackLine(e.position, rectCenter, faceDir, height, width):
+                if utils.isInAttackLine(e.position, rectCenter, faceDir, _height, _width):
                     if self.isVisible(e) and utils.checkTargetTypeValid(self.continueTarget, self, e):
-                        effectEntIds.add(eid)
-                        self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, effectEntIds)
+                        _effectEntIds.add(eid)
+                        self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, _effectEntIds)
                         self.doCombatActions(self.continueAction, self, e, self.hostId,
-                                             lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
+                                             lambda r: actionContext.CreationCombatCtx(self.id, [], r, context = self.context))
                         break
-            return entIds
-
-
 
     def doLeaveAction(self, entity):
-        if not self.leaveAction or not entity:
+        if not self.leaveAction() or not entity:
             return
 
         if not utils.checkTargetTypeValid(self.target, self, entity):
             return
         #leaveAction应该不需要作用目标，只要施法目标，作用目标先传空列表
-        self.doCombatActions(self.leaveAction, self, entity, self.hostId, lambda r:actionContext.CreationCtx(self.id, [], r, context = self.context))
+        self.doCombatActions(
+            self.leaveAction(), 
+            self, 
+            entity, 
+            self.hostId, 
+            lambda r:actionContext.CreationCombatCtx(
+                self.id, [], r, context = self.context))
 
 
     def checkArea(self, entity):
@@ -745,80 +758,83 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     #玩家创生在玩家消失后创生销毁,其他实体的创生在找不到主人时退化成用force做敌人关系判断
     def isCreationEnemy(self, target):
-        if not self._checkHostValid() and (self.casterType=='Avatar' or self.getNeedHost()):
+        if not self._checkHostValid()\
+                and (self.casterType=='Avatar' or self.getNeedHost()):
             return False
 
-        if utils.fetchForceRelation(self, target) == gameconst.ForceRelation.Enemy:
+        if gameconst.ForceRelation.Enemy == utils.fetchForceRelation(self, target):
             return True
 
         return False
 
 
     def addEnterTrapEntity(self, entity):
-        if not entity.id in self.trapEntities:
+        if entity.id not in self.trapEntities:
             self.trapEntities.append(entity.id)
         else:
             return
 
-        if self.useTargetTypeCacheFlag and entity.IsCombatUnit:
-            utils.isEnemy(self, entity)
-            utils.isFriend(self, entity)
-            if not self.checkTargetTypeTimerId:
-                self.checkTargetTypeTimerId = self.pyAddTimer(5, 5, gametimer.CHECK_TARGET_TYPE_TIMER)
+        if not (self.useTargetTypeCacheFlag and entity.IsCombatUnit):
+            return
 
-    def removeEnterTrapEntity(self, entity):
-        if entity.id in self.trapEntities:
-            self.trapEntities.remove(entity.id)
+        utils.isEnemy(self, entity)
+        utils.isFriend(self, entity)
+        if not self.checkTargetTypeTimerId:
+            self.checkTargetTypeTimerId = self.pyAddTimer(5, 5, gametimer.CHECK_TARGET_TYPE_TIMER)
 
-        if entity.IsCombatUnit:
-            self.removeTargetTypeCache(entity)
+    def removeEnterTrapEntity(self, ent):
+        if ent.id in self.trapEntities:
+            self.trapEntities.remove(ent.id)
+
+        if ent.IsCombatUnit:
+            self.removeTargetTypeCache(ent)
             allCacheSetLen = len(self.enemiesCacheSet) + len(self.notEnemiesCacheSet)
             if allCacheSetLen == 0 and self.checkTargetTypeTimerId > 0:
                 self.pyDelTimer(self.checkTargetTypeTimerId, gametimer.CHECK_TARGET_TYPE_TIMER)
                 self.checkTargetTypeTimerId = 0
 
-    def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
+    def onEnterTrap(self, ent, rangeXZ, rangeY, controllerId, userArg):
         if self.delayDestroyTimerID > 0:
             return
 
-        if not entity:
+        if not ent:
             return
 
-        if not entity.IsCombatUnit:
+        if not ent.IsCombatUnit:
             return
 
         #enter时不checkTargetType，关系可能会变
-        if self.checkArea(entity):
+        if self.checkArea(ent):
             if self.type == 'Linar' or self.type == 'LockTarget':
                 self.removeMoveController()
-                self.cancleLockTarget = True
+                self.bCancleLockTarget = True
 
-            self.addEnterTrapEntity(entity)
+            self.addEnterTrapEntity(ent)
 
-            if self.selectActionType == self.CREATION_AREA_CIRCLE:
+            if self.selectActionType == self.CREATION_AREA_TYPE_CIRCLE:
                 if not self.continueAction:
                     if self.enterLoop <= 0 or self.curEnterLoopNum < self.enterLoop:
-                        if self.doEnterAction(entity):
+                        if self.doEnterAction(ent):
                             self.curEnterLoopNum += 1
                 else:
                     effectEntIds = self.getTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, set())
                     if len(effectEntIds) < self.targetNum:
-                        self.doEnterAction(entity)
+                        self.doEnterAction(ent)
 
-    def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
+    def onLeaveTrap(self, ent, rangeXZ, rangeY, controllerId, userArg):
         if self.delayDestroyTimerID > 0:
             return
 
-        if not entity:
+        if not ent:
             return
 
-        if entity.id in self.trapEntities:
-            self.removeEnterTrapEntity(entity)
-            self.doLeaveAction(entity)
+        if ent.id in self.trapEntities:
+            self.removeEnterTrapEntity(ent)
+            self.doLeaveAction(ent)
             if self.continueAction:
                 effectEntIds = self.getTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, set())
-                if entity.id in effectEntIds:
-                    effectEntIds.discard(entity.id)
+                if ent.id in effectEntIds:
+                    effectEntIds.discard(ent.id)
                     self.setTempMiscProp(gameconst.EntityPropsEnum.creationEffectEntIds, effectEntIds)
                     self.reChooseTarget()
 
@@ -831,7 +847,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     def onMove(self, controllerId, userData):
         pass
 
-    def initCombatProps(self, hpPercent, mpPercent):
+    def initEntityCombatProps(self, hpPercent, mpPercent):
         pass
 
     def onMoveFailure(self, controllerId, userData):

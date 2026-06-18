@@ -77,7 +77,7 @@ class IEnemy(object):
 
         _opUUID = KBEngine.genUUID64()
         _src = AAC_AACDD.datas.BONUS_SRC_SCAN_ENEMY_POS
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         self.deductWealth(_src, _deductVal, _opUUID, _detail)
 
         _spaceNo = posInfo[0]

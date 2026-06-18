@@ -5,6 +5,8 @@
 					http://www.kbengine.org/cn/docs/programming/entitydef.html
 	-->
 	<Space/>
+	<WaitMapSpace/>
+	<WaitMapSpaceStub/>
 	<AdminStub/>
 	<PlayerStub/>
 	<BaseApp/>
@@ -29,6 +31,8 @@
 	<DropStub/>
 	<WonderLandStub/>
 	<WonderLandSpaceMgr/>
+	<AbyssStub/>
+	<AbyssSpaceMgr/>
 	<WorldLineSpaceMgr/>
 	<ActStub/>
 	<CrossSiegeWarStub/>
@@ -39,6 +43,14 @@
 	<WorldBossStub/>
 	<AntiAddictionStub/>
 	<OrderStub/>
+	<RaidMatchStub/>
+	<WorldRefreshEntityStub/>
+	<RedBagStub/>
+	<MineWarStub/>
+	<GuildBossDungeonStub/>
+	<StatisticStub/>
+	<BountyStub/>
+	<ResourceRecoveryStub/>
 
 	<DungeonSpaceMgr hasClient="False"></DungeonSpaceMgr>
 	<MonsterGrp hasClient="False"></MonsterGrp>
@@ -54,13 +66,8 @@
 	<Collection hasClient="true"></Collection>
 	<Creation hasClient="true"></Creation>
 	<DuelFlag hasClient="true"></DuelFlag>
-	<RaidMatchStub/>
-	<WorldRefreshEntityStub/>
+	<AvatarReplica hasClient="true"></AvatarReplica>
+	<Accounting hasClient="true"></Accounting>
+	<Avataring hasClient="true"></Avataring>
 	<RebornPos hasClient="true"></RebornPos>
-	<RedBagStub/>
-	<MineWarStub/>
-	<GuildBossDungeonStub/>
-	<StatisticStub/>
-	<BountyStub/>
-	<ResourceRecoveryStub/>
 </root>

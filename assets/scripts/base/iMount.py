@@ -15,6 +15,7 @@ import gametimer
 import gameclass
 import dataUtils
 import actionContext    
+import gamedecorator
 
 
 class IMount(object):
@@ -38,11 +39,11 @@ class IMount(object):
             if not outfit.expireTime:
                 hasUnlock = True
                 if not durationDays:
-                    self.cell.onPendingUseItem(pid, gameconst.UseItem.FALSE)
+                    self.cell.onPendingUseItemFinished(pid, gameconst.UseItemEnum.FALSE)
                 return
             else:
                 if durationDays:
-                    self.cell.onPendingUseItem(pid, gameconst.UseItem.FALSE)
+                    self.cell.onPendingUseItemFinished(pid, gameconst.UseItemEnum.FALSE)
                     return
 
         if durationDays <= 0:
@@ -53,7 +54,7 @@ class IMount(object):
 
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountActivated'])
 
-        self.cell.onPendingUseItem(pid, gameconst.UseItem.TRUE)
+        self.cell.onPendingUseItemFinished(pid, gameconst.UseItemEnum.TRUE)
         self.onMessagePre(MMD.datas.useMountsItemSuccess, [MOUNTS.datas[mountId]['name']])
 
         if not hasUnlock and not durationDays:
@@ -61,8 +62,20 @@ class IMount(object):
                 self, 
                 gameconst.AchieveType.UNLOCK_MOUNT, 
                 actionContext.AchievementCtx())
+        
+        #目前只有使用道具添加坐骑，所以这里直接同步
+        self.syncMethodCallToLocalServerBase('onCrossServerDoAddMount', (pid, mountId, durationDays))
 
+    def onCrossServerDoAddMount(self, pid, mountId, durationDays):
+        LOG_INFO('onCrossServerDoAddMount:', pid, mountId, durationDays)
+        self.doAddMount(pid, mountId, durationDays)
+
+    @gamedecorator.crossServer
     def setCurMount(self, exposed, mountId):
+        self._setCurMount(mountId)
+        self.syncMethodCallToLocalServerBase('onCrossServerSetCurMount', (mountId,))
+
+    def _setCurMount(self, mountId):
         LOG_INFO(' set cur mount:', mountId)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if outfit is None:
@@ -73,6 +86,10 @@ class IMount(object):
 
         self.cell.setCurMountCell(mountId)
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountRide'])
+
+    def onCrossServerSetCurMount(self, mountId):
+        LOG_INFO('onCrossServerSetCurMount:', mountId)
+        self._setCurMount(mountId)
 
     def _eventActionAddMount(self, eventActionSrc, mountId, durationDays, *args, **kwargs):
         LOG_INFO('_eventActionAddMount:', mountId, durationDays)

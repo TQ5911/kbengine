@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='OrderService',
   syntax='proto3',
   serialized_options=_b('H\003Z\n../service\220\001\001'),
-  serialized_pb=_b('\n\x12orderService.proto\x12\x0cOrderService\"\x06\n\x04Void\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\r\x12\x12\n\nserverName\x18\x03 \x01(\t\"e\n\x0cOrderRequest\x12\x10\n\x08serverId\x18\x01 \x01(\x05\x12\x12\n\noutTradeNo\x18\x02 \x01(\t\x12\x0c\n\x04gbId\x18\x03 \x01(\x03\x12\x0e\n\x06itemId\x18\x04 \x01(\x05\x12\x11\n\titemCount\x18\x05 \x01(\x05\"3\n\rOrderResponse\x12\x12\n\noutTradeNo\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\x05*0\n\x07\x45RRCODE\x12\x0b\n\x07SUCCESS\x10\x00\x12\x08\n\x04\x46\x41IL\x10\x01\x12\x0e\n\nPROCESSING\x10\x02\x32\xcb\x01\n\x0cOrderService\x12\x45\n\x0eregisterServer\x12\x1f.OrderService.ServerInfoMessage\x1a\x12.OrderService.Void\x12\x34\n\nactiveTick\x12\x12.OrderService.Void\x1a\x12.OrderService.Void\x12>\n\x0b\x66inishOrder\x12\x1b.OrderService.OrderResponse\x1a\x12.OrderService.Void2\x89\x01\n\nGameServer\x12<\n\x12\x61\x63tiveTickCallback\x12\x12.OrderService.Void\x1a\x12.OrderService.Void\x12=\n\x0bnotifyOrder\x12\x1a.OrderService.OrderRequest\x1a\x12.OrderService.VoidB\x11H\x03Z\n../service\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x12orderService.proto\x12\x0cOrderService\"\x06\n\x04Void\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\r\x12\x12\n\nserverName\x18\x03 \x01(\t\"\xad\x01\n\x0cOrderRequest\x12\x10\n\x08serverId\x18\x01 \x01(\x05\x12\x12\n\noutTradeNo\x18\x02 \x01(\t\x12\x12\n\ncreateTime\x18\x03 \x01(\x03\x12\x0c\n\x04gbId\x18\x04 \x01(\x03\x12\x0e\n\x06itemId\x18\x05 \x01(\x05\x12\x11\n\titemCount\x18\x06 \x01(\x05\x12\r\n\x05price\x18\x07 \x01(\x01\x12\x11\n\taddToSafe\x18\x08 \x01(\x08\x12\x10\n\x08roleName\x18\t \x01(\t\"3\n\rOrderResponse\x12\x12\n\noutTradeNo\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\x05*0\n\x07\x45RRCODE\x12\x0b\n\x07SUCCESS\x10\x00\x12\x08\n\x04\x46\x41IL\x10\x01\x12\x0e\n\nPROCESSING\x10\x02\x32\xcb\x01\n\x0cOrderService\x12\x45\n\x0eregisterServer\x12\x1f.OrderService.ServerInfoMessage\x1a\x12.OrderService.Void\x12\x34\n\nactiveTick\x12\x12.OrderService.Void\x1a\x12.OrderService.Void\x12>\n\x0b\x66inishOrder\x12\x1b.OrderService.OrderResponse\x1a\x12.OrderService.Void2\x89\x01\n\nGameServer\x12<\n\x12\x61\x63tiveTickCallback\x12\x12.OrderService.Void\x1a\x12.OrderService.Void\x12=\n\x0bnotifyOrder\x12\x1a.OrderService.OrderRequest\x1a\x12.OrderService.VoidB\x11H\x03Z\n../service\x90\x01\x01\x62\x06proto3')
 )
 
 _ERRCODE = _descriptor.EnumDescriptor(
@@ -46,8 +46,8 @@ _ERRCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=275,
-  serialized_end=323,
+  serialized_start=348,
+  serialized_end=396,
 )
 _sym_db.RegisterEnumDescriptor(_ERRCODE)
 
@@ -149,23 +149,51 @@ _ORDERREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='gbId', full_name='OrderService.OrderRequest.gbId', index=2,
+      name='createTime', full_name='OrderService.OrderRequest.createTime', index=2,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='itemId', full_name='OrderService.OrderRequest.itemId', index=3,
-      number=4, type=5, cpp_type=1, label=1,
+      name='gbId', full_name='OrderService.OrderRequest.gbId', index=3,
+      number=4, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='itemCount', full_name='OrderService.OrderRequest.itemCount', index=4,
+      name='itemId', full_name='OrderService.OrderRequest.itemId', index=4,
       number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='itemCount', full_name='OrderService.OrderRequest.itemCount', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='price', full_name='OrderService.OrderRequest.price', index=6,
+      number=7, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='addToSafe', full_name='OrderService.OrderRequest.addToSafe', index=7,
+      number=8, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='roleName', full_name='OrderService.OrderRequest.roleName', index=8,
+      number=9, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -181,8 +209,8 @@ _ORDERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=119,
-  serialized_end=220,
+  serialized_start=120,
+  serialized_end=293,
 )
 
 
@@ -219,8 +247,8 @@ _ORDERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=222,
-  serialized_end=273,
+  serialized_start=295,
+  serialized_end=346,
 )
 
 DESCRIPTOR.message_types_by_name['Void'] = _VOID
@@ -267,8 +295,8 @@ _ORDERSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=326,
-  serialized_end=529,
+  serialized_start=399,
+  serialized_end=602,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerServer',
@@ -309,8 +337,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=532,
-  serialized_end=669,
+  serialized_start=605,
+  serialized_end=742,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',

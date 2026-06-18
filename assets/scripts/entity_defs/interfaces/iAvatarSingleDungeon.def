@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
     <Properties>
+        <innerDemonRewardCnt>
+            <Type>          UINT8               </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    true                </Persistent>
+        </innerDemonRewardCnt>
 
     </Properties>
 
@@ -81,6 +87,8 @@
             <Arg>           PYTHON             </Arg>
         </useItemAndEnterSingleDungeon>
 
+        <updateInnerDemonRewardCnt>
+        </updateInnerDemonRewardCnt>
     </BaseMethods>
 
     <ClientMethods>

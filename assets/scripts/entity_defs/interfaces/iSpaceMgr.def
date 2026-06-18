@@ -10,11 +10,11 @@
     </Interfaces>
 
     <Properties>
-        <spaceEntities>
+        <spaceEntitiesDic>
             <Type>            PYTHON             </Type>
             <Flags>           CELL_PRIVATE       </Flags>
             <Default>         {}                 </Default>
-        </spaceEntities>
+        </spaceEntitiesDic>
 
         <tagEntities>
             <Type>            PYTHON              </Type>
@@ -71,11 +71,11 @@
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       {}                      </Default>
         </entsForControl>
-        <collBeCollectedDict>
+        <collBeCollectedDic>
             <Type>          PY_DICT                 </Type>
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       {}                      </Default>
-        </collBeCollectedDict>
+        </collBeCollectedDic>
 
         <spaceState>
             <Type>          UINT8                   </Type>

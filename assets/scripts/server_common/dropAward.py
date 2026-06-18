@@ -27,34 +27,34 @@ import rank_rankDrop as R_RD
 
 
 class WealthUnit(userType.UserSingleType):
+    def __getstate__(self):
+        return self.data
+
     def __str__(self):
         return str(vars(self))
 
-    def __getstate__(self):
-        return self.data
+    def __bool__(self):
+        return bool(self.data)
 
     def __setstate__(self, state):
         self.data = state
         return self
 
-    def __bool__(self):
-        return bool(self.data)
-
 
 class WealthNumeric(WealthUnit):
     def __init__(self, configName, itemId, data):
-        self.configName = configName
         self.itemId = itemId
+        self.configName = configName
         self.data = data
+
+    def __mul__(self, factor):
+        self.data = int(self.data * factor)
+        return self
 
     def __add__(self, other):
         self.data += other.data
         return self
     
-    def __mul__(self, factor):
-        self.data = int(self.data * factor)
-        return self
-
     def clear(self):
         self.data = 0
 
@@ -64,21 +64,11 @@ class WealthNumeric(WealthUnit):
 
 class WealthItem(WealthUnit):
     def __init__(self, data=None, itemObjs=None):
-        # data: {itemId:{bindType:num}}
         self.data = data or {}
-        itemObjs = itemObjs or []
+        if itemObjs is None:
+            itemObjs = []
+
         self.itemsObjs = list(filter(lambda it: it.itemNum > 0, itemObjs))
-
-    def __add__(self, other):
-        for itemId, AwardInfo in other.data.items():
-            self.data.setdefault(itemId, {})
-            for bindType, num in AwardInfo.items():
-                self.data[itemId].setdefault(bindType, 0)
-                self.data[itemId][bindType] += num
-
-        self.itemsObjs.extend(other.itemsObjs)
-
-        return self
 
     def __mul__(self, factor):
         delItemList = []
@@ -122,86 +112,97 @@ class WealthItem(WealthUnit):
             self.itemsObjs.remove(it)
         self.itemsObjs.extend(addItemsObjs)
 
-    def __getstate__(self):
-        return {'data': self.data, 'itemObjs': self.itemsObjs}
+    def __add__(self, other):
+        for _itemId, AwardInfo in other.data.items():
+            self.data.setdefault(_itemId, {})
+            for bindType, num in AwardInfo.items():
+                self.data[_itemId].setdefault(bindType, 0)
+                self.data[_itemId][bindType] += num
+
+        self.itemsObjs.extend(other.itemsObjs)
+
+        return self
 
     def __setstate__(self, state):
         self.data = state['data']
         self.itemsObjs = state['itemObjs']
 
-    def __bool__(self):
-        return bool(self.data or self.itemsObjs)
+    def __getstate__(self):
+        return {'data': self.data, 'itemObjs': self.itemsObjs}
 
     def _lateReload(self):
         super(WealthItem, self)._lateReload()
-        for it in self.itemsObjs:
-            it.reloadScript()
+        for _it in self.itemsObjs:
+            _it.reloadScript()
 
-    def addAwardItem(self, itemId, num, bindType):
+    def __bool__(self):
+        return bool(self.data or self.itemsObjs)
+
+    def addAwardItem(self, itemId, itemNum, bindType):
         if bindType < 0:
             bindType = dataUtils.getItemDefaultBindType()
 
         if bindType not in (gameconst.ItemBindType.BIND, gameconst.ItemBindType.NORMAL):
-            gameengine.panicStack('invalid bindType', itemId, num, bindType)
+            gameengine.panicStack('invalid bindType', itemId, itemNum, bindType)
             return
-        self.data.setdefault(itemId, {})
-        self.data[itemId].setdefault(bindType, 0)
-        self.data[itemId][bindType] += num
 
-    def addItemObjs(self, its):
-        self.itemsObjs.extend(its)
+        self.data.setdefault(itemId, {}).setdefault(bindType, 0)
+        self.data[itemId][bindType] += itemNum
 
     def toItemObjs(self):
         self.itemsObjs = self.getItemObjs()
         self.data = {}
 
-    def getItemObjs(self, remove=False):
-        itemList = []
-        for itemId, awardInfo in self.data.items():
-            for bindType, num in awardInfo.items():
+    def addItemObjs(self, its):
+        self.itemsObjs.extend(its)
+
+    def getItemObjs(self, remove=False, extra={}):
+        _itemList = []
+        for _itemId, awardInfo in self.data.items():
+            for _bindType, num in awardInfo.items():
                 if not num:
                     continue
-                itemList.extend(itemFactory.ItemFactory.createItemList(itemId, num, bindType))
+                _itemList.extend(itemFactory.ItemFactory.createItemList(_itemId, num, _bindType, extra=extra))
 
-        itemList.extend(self.itemsObjs)
+        _itemList.extend(self.itemsObjs)
         if remove:
             self.clear()
 
-        return itemList
+        return _itemList
 
     def popDropEquipObjs(self):
-        otherObjs = []
+        _otherObjs = []
         equipList = []
         for it in self.itemsObjs:
             if it.isEquipmentItem():
                 equipList.append(it)
             else:
-                otherObjs.append(it)
-        self.itemsObjs = otherObjs
+                _otherObjs.append(it)
+        self.itemsObjs = _otherObjs
         return equipList
 
     def popDropPetItemObjs(self):
-        otherObjs = []
+        _otherObjs = []
         petItemList = []
         for it in self.itemsObjs:
             if dataUtils.isLingShouItem(it.itemId):
                 petItemList.append(it)
             else:
-                otherObjs.append(it)
-        self.itemsObjs = otherObjs
+                _otherObjs.append(it)
+        self.itemsObjs = _otherObjs
         return petItemList
 
     def popExtractRewardItems(self):
-        extractRewardItemsDic = {}
-        for itemId in list(self.data.keys()):
-            itemData = dataUtils.getCommItemData(itemId)
-            if not itemData:
-                LOG_WARN('popExtractRewardItems, no itemData:', self.data)
+        _extractRewardItemsDic = {}
+        for _itemId in list(self.data.keys()):
+            _itemData = dataUtils.getCommItemData(_itemId)
+            if not _itemData:
+                LOG_WARN('popExtractRewardItems, no _itemData:', self.data)
                 continue
-            if itemData['type'] == gameconst.ItemType.Normal and itemData[
+            if _itemData['type'] == gameconst.ItemType.Normal and _itemData[
                 'subType'] == gameconst.ItemSubType.ExtractReward:
-                extractRewardItemsDic[itemId] = self.data.pop(itemId)
-        return extractRewardItemsDic
+                _extractRewardItemsDic[_itemId] = self.data.pop(_itemId)
+        return _extractRewardItemsDic
 
     def popRemainBagLimitItems(self, canAddNum):
         bagLimitItemsDic = {}
@@ -280,31 +281,28 @@ class WealthTitle(WealthUnit):
         # data: list of title id
         self.data = data or []
 
+    def __add__(self, other):
+        self.data.extend(other.data)
+        return self
+    
     def createFromTitleList(self, titleList):
         if not titleList:
             return
         for titleId in titleList:
             self.data.append(WealthTitleOne(titleId))
 
-    def __add__(self, other):
-        self.data.extend(other.data)
-        return self
-    
+    def clear(self):
+        self.data = []
+
     def __mul__(self, factor):
         # 没有策划特殊需求，暂时不处理
         return self
 
-    def clear(self):
-        self.data = []
 
 class WealthFightProp(WealthUnit):
     def __init__(self, data=None):
         self.data = data or []
 
-    def __add__(self, other):
-        self.data.extend(other.data)
-        return self
-    
     def __mul__(self, factor):
         # 没有策划特殊需求，暂时不处理
         return self
@@ -312,59 +310,64 @@ class WealthFightProp(WealthUnit):
     def clear(self):
         self.data = []
 
+    def __add__(self, other):
+        self.data.extend(other.data)
+        return self
+
+    
 class WealthResDic(WealthUnit):
     def __init__(self, data=None):
         self.data = data or {}
 
-    def __add__(self, other):
-        for itemId, num in other.data.items():
-            self.data[itemId] = self.data.get(itemId, 0)+num
-
-        return self
-
     def __bool__(self):
         return sum(self.data.values()) > 0
+
+    def __add__(self, other):
+        for _itemId, num in other.data.items():
+            self.data[_itemId] = self.data.get(_itemId, 0)+num
+
+        return self
 
     def clear(self):
         self.data = {}
 
 class WealthVal(userType.UserSingleType):
+    def __getstate__(self):
+        st = {}
+        for _k, _v in vars(self).items():
+            if _v:
+                st[_k] = _v.__getstate__()
+        return st
+
     def __str__(self):
         return str(vars(self))
 
-    def __getstate__(self):
-        st = {}
-        for k, v in vars(self).items():
-            if v:
-                st[k] = v.__getstate__()
-        return st
-
     def __setstate__(self, state):
         self.__init__()
-        for k, v in state.items():
-            self.__dict__[k].__setstate__(v)
+        for k, _v in state.items():
+            self.__dict__[k].__setstate__(_v)
 
     def __str__(self):
         s = {}
-        for k, v in vars(self).items():
-            if not isinstance(v, WealthUnit):
-                if v:
-                    s[k] = str(v)
-            elif v.data:
-                s[k] = str(v.__getstate__())
+        for k, _v in vars(self).items():
+            if not isinstance(_v, WealthUnit):
+                if _v:
+                    s[k] = str(_v)
+            elif _v.data:
+                s[k] = str(_v.__getstate__())
         return str(s)
-
-    def getNumericWealth(self):
-        pass
 
     def getAllWealth(self):
         pass
 
-    def addWealthByItemId(self, itemId, num, bindType):
+    def getNumericWealth(self):
         pass
 
     def isEmpty(self):
         return not any(self.getAllWealth())
+
+    def addWealthByItemId(self, itemId, num, bindType):
+        pass
 
     def scrubWealthItemObjs(self, *args, **kwargs):
         """API: 清洗itemObj中数据"""
@@ -373,22 +376,22 @@ class WealthVal(userType.UserSingleType):
 class AwardMixin(object):
     def getItemsDic(self):
         # 获得所有有效item的数量信息, 记录日志, 爬塔奖励展示 使用
-        itemsDic = {}
+        _itemsDic = {}
         for numericWealth in self.getNumericWealth():
             if numericWealth:
-                itemsDic[numericWealth.itemId] = numericWealth.data
-        for itemId, itemInfo in self.itemWealth.data.items():
+                _itemsDic[numericWealth.itemId] = numericWealth.data
+        for _itemId, itemInfo in self.itemWealth.data.items():
             for _, num in itemInfo.items():
-                itemsDic[itemId] = itemsDic.get(itemId, 0) + num
+                _itemsDic[_itemId] = _itemsDic.get(_itemId, 0) + num
         for it in self.itemWealth.itemsObjs:
-            itemsDic[it.itemId] = itemsDic.get(it.itemId, 0) + it.itemNum
+            _itemsDic[it.itemId] = _itemsDic.get(it.itemId, 0) + it.itemNum
 
         for itemId, itemInfo in self.petItemWealth.data.items():
             for _, num in itemInfo.items():
-                itemsDic[itemId] = itemsDic.get(itemId, 0) + num
+                _itemsDic[itemId] = _itemsDic.get(itemId, 0) + num
         for it in self.petItemWealth.itemsObjs:
-            itemsDic[it.itemId] = itemsDic.get(it.itemId, 0) + it.itemNum
-        return itemsDic
+            _itemsDic[it.itemId] = _itemsDic.get(it.itemId, 0) + it.itemNum
+        return _itemsDic
 
     def toBriefList(self):
         _retList = []
@@ -456,16 +459,16 @@ class AwardMixin(object):
 class BaseAwardVal(WealthVal, AwardMixin):
 
     def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, titleList=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0, appearanceCoin=0):
-        self.exp = WealthNumeric('exp', gameconst.ItemId.EXP, exp)
-        self.coin = WealthNumeric('coin', gameconst.ItemId.COIN, coin)
-        self.money = WealthNumeric('money', gameconst.ItemId.MONEY, money)
-        self.darkIron = WealthNumeric('darkIron', gameconst.ItemId.DARK_IRON, darkIron)
-        self.guildContrib = WealthNumeric('guildContrib', gameconst.ItemId.GUILD_CONTRIB, guildContrib)
-        self.guildMoney = WealthNumeric('guildMoney', gameconst.ItemId.GUILD_MONEY, guildMoney)
-        self.guildFund = WealthNumeric('guildFund', gameconst.ItemId.GUILD_FUND, guildFund)
-        self.guildExp = WealthNumeric('guildExp', gameconst.ItemId.GUILD_EXP, guildExp)
-        self.bindMoney = WealthNumeric('boundMoney', gameconst.ItemId.BIND_MONEY, bindMoney)
-        self.appearanceCoin = WealthNumeric('appearanceCoin', gameconst.ItemId.APPEARANCE_COIN, appearanceCoin)
+        self.exp = WealthNumeric('exp', gameconst.ItemIdEnum.EXP, exp)
+        self.coin = WealthNumeric('coin', gameconst.ItemIdEnum.COIN, coin)
+        self.money = WealthNumeric('money', gameconst.ItemIdEnum.MONEY, money)
+        self.darkIron = WealthNumeric('darkIron', gameconst.ItemIdEnum.DARK_IRON, darkIron)
+        self.guildContrib = WealthNumeric('guildContrib', gameconst.ItemIdEnum.GUILD_CONTRIB, guildContrib)
+        self.guildMoney = WealthNumeric('guildMoney', gameconst.ItemIdEnum.GUILD_MONEY, guildMoney)
+        self.guildFund = WealthNumeric('guildFund', gameconst.ItemIdEnum.GUILD_FUND, guildFund)
+        self.guildExp = WealthNumeric('guildExp', gameconst.ItemIdEnum.GUILD_EXP, guildExp)
+        self.bindMoney = WealthNumeric('boundMoney', gameconst.ItemIdEnum.BIND_MONEY, bindMoney)
+        self.appearanceCoin = WealthNumeric('appearanceCoin', gameconst.ItemIdEnum.APPEARANCE_COIN, appearanceCoin)
 
         self.petItemWealth = WealthItem()
         self.itemWealth = WealthItem()
@@ -528,8 +531,8 @@ class BaseAwardVal(WealthVal, AwardMixin):
 
     def __setstate__(self, state):
         self.__init__()
-        for k, v in state.items():
-            self.__dict__[k].__setstate__(v)
+        for _k, v in state.items():
+            self.__dict__[_k].__setstate__(v)
 
     def getNumericWealth(self):
         return (self.exp, self.coin, self.money, self.guildContrib, self.guildFund, self.guildExp, self.darkIron, self.guildMoney, self.bindMoney, self.appearanceCoin)
@@ -546,47 +549,47 @@ class BaseAwardVal(WealthVal, AwardMixin):
         return
 
     def getNoObjItemDic(self):
-        itemsDic = {}
+        _itemsDic = {}
         for numericWealth in self.getNumericWealth():
             if numericWealth:
-                itemsDic[numericWealth.itemId] = numericWealth.data
-        return itemsDic
+                _itemsDic[numericWealth.itemId] = numericWealth.data
+        return _itemsDic
 
     def getItemsTLogStr(self):
         # 记录日志使用
-        itemsStr = ''
+        _itemsStr = ''
         for itemId, itemNum in self.getItemsDic().items():
-            itemsStr += str(itemId) + ',' + str(itemNum) + ';'
-        return itemsStr.strip(';')
+            _itemsStr += str(itemId) + ',' + str(itemNum) + ';'
+        return _itemsStr.strip(';')
 
     def addWealthByItemId(self, itemId, num, bindType=dataUtils.getItemDefaultBindType(), **kwargs):
         if not num:
             return self
 
-        for awardItem in self.getNumericWealth():
-            if itemId == awardItem.itemId:
-                awardItem.data += num
+        for _awardItem in self.getNumericWealth():
+            if itemId == _awardItem.itemId:
+                _awardItem.data += num
                 return self
 
-        itemData = dataUtils.getCommItemData(itemId) or {}
-        if not itemData:
+        _itemData = dataUtils.getCommItemData(itemId) or {}
+        if not _itemData:
             gameengine.panicStack('BaseAwardVal::addWealthByItemId, not support itemId:', itemId)
             return self
 
-        type = itemData.get('type')
-        if type == gameconst.ItemType.Normal:
-            if itemData['subType'] in itemFactory.ItemFactory.NormalItemClassMap:
+        _type = _itemData.get('type')
+        if _type == gameconst.ItemType.Normal:
+            if _itemData['subType'] in itemFactory.ItemFactory.NormalItemClassMap:
                 itemObjs = itemFactory.ItemFactory.createItemList(itemId, num, bindType, **kwargs)
                 self.itemWealth.addItemObjs(itemObjs)
             else:
                 self.itemWealth.addAwardItem(itemId, num, bindType)
-        elif type == gameconst.ItemType.LingShou:
-            if itemData['subType'] in itemFactory.ItemFactory.LingShouItemClassMap:
+        elif _type == gameconst.ItemType.LingShou:
+            if _itemData['subType'] in itemFactory.ItemFactory.LingShouItemClassMap:
                 itemObjs = itemFactory.ItemFactory.createItemList(itemId, num, bindType, **kwargs)
                 self.petItemWealth.addItemObjs(itemObjs)
             else:
                 self.petItemWealth.addAwardItem(itemId, num, bindType)
-        elif type == gameconst.ItemType.Title:
+        elif _type == gameconst.ItemType.Title:
             self.titleWealth.data.append(WealthTitleOne(itemId))
 
         return self
@@ -615,12 +618,12 @@ class BaseAwardVal(WealthVal, AwardMixin):
         return self.petItemWealth.itemsObjs
 
     def scrubWealthItemObjs(self, createTime=-1):
-        for _obj in self.itemWealth.itemsObjs:
+        for _object in self.itemWealth.itemsObjs:
             if createTime > 0:
-                _obj.createTime = createTime
-        for _obj in self.petItemWealth.itemsObjs:
+                _object.createTime = createTime
+        for _object in self.petItemWealth.itemsObjs:
             if createTime > 0:
-                _obj.createTime = createTime
+                _object.createTime = createTime
 
     def setAwardItemBindType(self, awardContext, bindType):
         self.itemWealth.updateBindType(awardContext, bindType)
@@ -652,26 +655,26 @@ class AwardVal(BaseAwardVal):
         return self
 
     def toClientDisplayVal(self):
-        retList = []
-        retList.extend({'itemId': itemId, 'itemNum': num} for itemId, num in self.getNoObjItemDic().items())
-        retList.extend({'itemId': i.itemId, 'itemNum': i.itemNum, 'type': i.bindType} for i in self.itemWealth.getItemObjs())
-        retList.extend({'itemId': i.itemId, 'itemNum': i.itemNum, 'type': i.bindType} for i in self.petItemWealth.getItemObjs())
-        return retList
+        _retList = []
+        _retList.extend({'itemId': itemId, 'itemNum': num} for itemId, num in self.getNoObjItemDic().items())
+        _retList.extend({'itemId': i.itemId, 'itemNum': i.itemNum, 'type': i.bindType} for i in self.itemWealth.getItemObjs())
+        _retList.extend({'itemId': i.itemId, 'itemNum': i.itemNum, 'type': i.bindType} for i in self.petItemWealth.getItemObjs())
+        return _retList
 
 
 class DeductWealthVal(WealthVal, AwardMixin):
     def __init__(self, coin=0, money=0, itemsDic=None, petItemsDic=None, guildContrib=0, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0, appearanceCoin=0):
-        self.coin = WealthNumeric('coin', gameconst.ItemId.COIN, coin)
-        self.money = WealthNumeric('', gameconst.ItemId.MONEY, money)
-        self.darkIron = WealthNumeric('darkIron', gameconst.ItemId.DARK_IRON, darkIron)
-        self.guildContrib = WealthNumeric('guildContrib', gameconst.ItemId.GUILD_CONTRIB, guildContrib)
+        self.coin = WealthNumeric('coin', gameconst.ItemIdEnum.COIN, coin)
+        self.money = WealthNumeric('', gameconst.ItemIdEnum.MONEY, money)
+        self.darkIron = WealthNumeric('darkIron', gameconst.ItemIdEnum.DARK_IRON, darkIron)
+        self.guildContrib = WealthNumeric('guildContrib', gameconst.ItemIdEnum.GUILD_CONTRIB, guildContrib)
         self.itemWealth = WealthItem(itemsDic)
         self.petItemWealth = WealthItem(petItemsDic)
-        self.guildMoney = WealthNumeric('guildMoney', gameconst.ItemId.GUILD_MONEY, guildMoney)
-        self.guildFund = WealthNumeric('guildFund', gameconst.ItemId.GUILD_FUND, guildFund)
-        self.guildExp = WealthNumeric('guildExp', gameconst.ItemId.GUILD_EXP, guildExp)
-        self.bindMoney = WealthNumeric('bindMoney', gameconst.ItemId.BIND_MONEY, bindMoney)
-        self.appearanceCoin = WealthNumeric('appearanceCoin', gameconst.ItemId.APPEARANCE_COIN, appearanceCoin)
+        self.guildMoney = WealthNumeric('guildMoney', gameconst.ItemIdEnum.GUILD_MONEY, guildMoney)
+        self.guildFund = WealthNumeric('guildFund', gameconst.ItemIdEnum.GUILD_FUND, guildFund)
+        self.guildExp = WealthNumeric('guildExp', gameconst.ItemIdEnum.GUILD_EXP, guildExp)
+        self.bindMoney = WealthNumeric('bindMoney', gameconst.ItemIdEnum.BIND_MONEY, bindMoney)
+        self.appearanceCoin = WealthNumeric('appearanceCoin', gameconst.ItemIdEnum.APPEARANCE_COIN, appearanceCoin)
     def __getstate__(self):
         st = {}
         for k, v in vars(self).items():
@@ -682,8 +685,8 @@ class DeductWealthVal(WealthVal, AwardMixin):
 
     def __setstate__(self, state):
         self.__init__()
-        for k, v in state.items():
-            self.__dict__[k].__setstate__(v)
+        for _k, _v in state.items():
+            self.__dict__[_k].__setstate__(_v)
 
     def getNumericWealth(self):
         return (self.coin, self.money, self.guildContrib, self.darkIron, self.bindMoney, self.appearanceCoin)
@@ -696,8 +699,8 @@ class DeductWealthVal(WealthVal, AwardMixin):
 
             type itemDict: {itemID_1: [itemNum_1, bindType_1], ...}
         """
-        for itemId, (itemNum, bindType) in itemDict.items():
-            self.addWealthByItemId(itemId, itemNum, bindType)
+        for _itemId, (itemNum, bindType) in itemDict.items():
+            self.addWealthByItemId(_itemId, itemNum, bindType)
 
     def addWealthByItemId(self, itemId, num, bindType=dataUtils.getItemDefaultBindType()):
         for awardItem in self.getNumericWealth():
@@ -738,20 +741,20 @@ class DeductWealthVal(WealthVal, AwardMixin):
         return self
 
     def scrubWealthItemObjs(self, createTime=-1):
-        for _obj in self.itemWealth.itemsObjs:
+        for _object in self.itemWealth.itemsObjs:
             if createTime > 0:
-                _obj.createTime = createTime
-        for _obj in self.petItemWealth.itemsObjs:
+                _object.createTime = createTime
+        for _object in self.petItemWealth.itemsObjs:
             if createTime > 0:
-                _obj.createTime = createTime
+                _object.createTime = createTime
 
 
-class MailWealthVal(BaseAwardVal):
+class MailAttachVal(BaseAwardVal):
     def __init__(self, exp=0, coin=0, money=0, itemObjs=None, **kwargs):
         super().__init__(exp=exp, coin=coin,  money=money, itemObjs=itemObjs, **kwargs)
 
     def __repr__(self):
-        return "MailWealthVal(%s)" % self.toMailWealthDict()
+        return "MailAttachVal(%s)" % self.toMailWealthDict()
 
     def getAllWealth(self):
         return super().getAllWealth()
@@ -761,67 +764,64 @@ class MailWealthVal(BaseAwardVal):
         return self
 
     def toMailWealthDict(self):
-        resItemList = []
-        bagItemList = []
-        bagItemObjList = []
-        titleList = []
+        _resItemList = []
+        _bagItemList = []
+        _bagItemObjList = []
+        _titleList = []
 
         for awardItem in self.getNumericWealth():
             if awardItem.data>0:
-                resItemList.append({'itemId':awardItem.itemId, 'itemNum':awardItem.data})
+                _resItemList.append({'itemId':awardItem.itemId, 'itemNum':awardItem.data})
 
-        for itemId, awardInfo in self.itemWealth.data.items():
+        for _itemId, awardInfo in self.itemWealth.data.items():
             for bindType, itemNum in awardInfo.items():
                 if not itemNum:
                     continue
-                bagItemList.append({'itemId':itemId, 'itemNum':itemNum, 'bindType':bindType})
+                _bagItemList.append({'itemId':_itemId, 'itemNum':itemNum, 'bindType':bindType})
 
         for it in self.itemWealth.itemsObjs:
-            bagItemObjList.append(it.toItemSavedDict())
+            _bagItemObjList.append(it.toItemSavedDict())
 
         for itemId, awardInfo in self.petItemWealth.data.items():
             for bindType, itemNum in awardInfo.items():
                 if not itemNum:
                     continue
-                bagItemList.append({'itemId':itemId, 'itemNum':itemNum, 'bindType':bindType})
+                _bagItemList.append({'itemId':itemId, 'itemNum':itemNum, 'bindType':bindType})
 
         for it in self.petItemWealth.itemsObjs:
-            bagItemObjList.append(it.toItemSavedDict())
+            _bagItemObjList.append(it.toItemSavedDict())
 
         for titleWealthVal in self.titleWealth.data:
-            titleList.append({
+            _titleList.append({
                 'titleId': titleWealthVal.titleId,
                 'startTime': titleWealthVal.startTime,
             })
 
         return {
-            'resItemList' : resItemList,
-            'bagItemList' : bagItemList,
-            'bagItemObjList' : bagItemObjList,
-            'titleList': titleList,
+            'resItemList' : _resItemList,
+            'bagItemList' : _bagItemList,
+            'bagItemObjList' : _bagItemObjList,
+            'titleList': _titleList,
         }
 
     def fromMailWealthDict(self, dic):
         self.clear()
-        for resItemDic in dic['resItemList']:
-            self.addWealthByItemId(resItemDic['itemId'], resItemDic['itemNum'])
+        for _resItemDic in dic['resItemList']:
+            self.addWealthByItemId(_resItemDic['itemId'], _resItemDic['itemNum'])
 
-        for bagItemDic in dic['bagItemList']:
-            self.addWealthByItemId(bagItemDic['itemId'], bagItemDic['itemNum'], bagItemDic['bindType'])
+        for _bagItemDic in dic['bagItemList']:
+            self.addWealthByItemId(_bagItemDic['itemId'], _bagItemDic['itemNum'], _bagItemDic['bindType'])
         
-        itemObjList = []
+        _itemObjList = []
         for itemSavedDic in dic['bagItemObjList']:
             it = itemFactory.ItemFactory.createItemWithSavedDict(itemSavedDic)
-            itemObjList.append(it)
-        self.addWealthByObjList(itemObjList)
+            _itemObjList.append(it)
+        self.addWealthByObjList(_itemObjList)
 
-        for titleDic in dic.get('titleList', []):
-            self.titleWealth.data.append(WealthTitleOne(titleDic['titleId'], titleDic['startTime']))
+        for _titleDic in dic.get('titleList', []):
+            self.titleWealth.data.append(WealthTitleOne(_titleDic['titleId'], _titleDic['startTime']))
 
         return self
-
-    def addTitle(self, titleId, startTime):
-        self.titleWealth.data.append(WealthTitleOne(titleId, startTime))
 
     def addWealthByRewardId(self, rewardId):
         LOG_INFO('in addWealthByRewardId:', rewardId)
@@ -829,22 +829,25 @@ class MailWealthVal(BaseAwardVal):
         self.addWealthByAwardVal(wealthVal)
         return
 
+    def addTitle(self, titleId, startTime):
+        self.titleWealth.data.append(WealthTitleOne(titleId, startTime))
+
     def addWealthByAwardVal(self, wealthVal:AwardVal):
         LOG_INFO('in addWealthByAwardVal:', wealthVal)
         if wealthVal.isEmpty():
             return
-        for awardIt in wealthVal.getNumericWealth():
-            if awardIt.data <= 0:
+        for _awardIt in wealthVal.getNumericWealth():
+            if _awardIt.data <= 0:
                 continue
-            self.addWealthByItemId(awardIt.itemId, awardIt.data)
+            self.addWealthByItemId(_awardIt.itemId, _awardIt.data)
 
         self.addWealthByObjList(wealthVal.itemWealth.getItemObjs(remove=True))
         self.addWealthByObjList(wealthVal.petItemWealth.getItemObjs(remove=True))
-        for itemId, itemInfo in wealthVal.itemWealth.data.items():
-            for bindType, num in itemInfo.items():
+        for _itemId, itemInfo in wealthVal.itemWealth.data.items():
+            for _bindType, num in itemInfo.items():
                 if num <= 0:
                     continue
-                self.addWealthByItemId(itemId, num, bindType)
+                self.addWealthByItemId(_itemId, num, _bindType)
 
         return
     #删掉超过上限的附件道具
@@ -892,17 +895,17 @@ class MailWealthVal(BaseAwardVal):
         self.petItemWealth.itemsObjs = newPetItemObjs
         
     def mailWealthExceedUplimit(self):
-        totalNum = 0
+        _totalNum = 0
         for awardIt in self.getNumericWealth():
             if awardIt.data > 0:
-                totalNum += 1
+                _totalNum += 1
 
-        totalNum += len(self.itemWealth.data) + len(self.itemWealth.itemsObjs)
-        totalNum += len(self.petItemWealth.data) + len(self.petItemWealth.itemsObjs)
+        _totalNum += len(self.itemWealth.data) + len(self.itemWealth.itemsObjs)
+        _totalNum += len(self.petItemWealth.data) + len(self.petItemWealth.itemsObjs)
         maxNum = MACF.datas['mailItemsNumMax']['value']
-        ret = totalNum > maxNum
+        ret = _totalNum > maxNum
         if ret:
-            gameengine.panicStack('mailWealthExceedUplimit:', totalNum, maxNum)
+            gameengine.panicStack('mailWealthExceedUplimit:', _totalNum, maxNum)
         return ret
 
     def getAwardVal(self):
@@ -921,36 +924,36 @@ class MailWealthVal(BaseAwardVal):
             titleList=[titleVal.titleId for titleVal in self.titleWealth.data]
         )
 
-        for itemId, itemInfo in self.itemWealth.data.items():
-            for bindType, num in itemInfo.items():
+        for _itemId, itemInfo in self.itemWealth.data.items():
+            for _bindType, num in itemInfo.items():
                 if num <= 0:
                     continue
-                wealthVal.addWealthByItemId(itemId, num, bindType)
+                wealthVal.addWealthByItemId(_itemId, num, _bindType)
             
-        for itemId, itemInfo in self.petItemWealth.data.items():
-            for bindType, num in itemInfo.items():
+        for _itemId, itemInfo in self.petItemWealth.data.items():
+            for _bindType, num in itemInfo.items():
                 if num <= 0:
                     continue
-                wealthVal.addWealthByItemId(itemId, num, bindType)
+                wealthVal.addWealthByItemId(_itemId, num, _bindType)
 
         wealthVal.addWealthByObjList(self.petItemWealth.itemsObjs)
         return wealthVal
 
 def _getResourceFixReward(awardId, context):
-    resourceFixReward = RDDT.datas[awardId]['resourceFixReward']
+    _resourceFixReward = RDDT.datas[awardId]['resourceFixReward']
     ret = AwardVal()
-    for awardInfo in resourceFixReward:
-        itemId, itemNum = awardInfo
-        if callable(itemId):
-            itemId = itemId()
-        itemData = dataUtils.getCommItemData(itemId)
-        if itemData.get('type') != gameconst.ItemType.Resource:
+    for _awardInfo in _resourceFixReward:
+        _itemId, _itemNum = _awardInfo
+        if callable(_itemId):
+            _itemId = _itemId()
+        _itemData = dataUtils.getCommItemData(_itemId)
+        if _itemData.get('type') != gameconst.ItemType.Resource:
             continue
-        if callable(itemNum):
-            itemNum = int(itemNum(context.args))  # context.args: srcLv, playerLevel
+        if callable(_itemNum):
+            _itemNum = int(_itemNum(context.args))  # context.args: srcLv, playerLevel
         else:
-            itemNum = int(itemNum)
-        ret.addWealthByItemId(itemId, itemNum)
+            _itemNum = int(_itemNum)
+        ret.addWealthByItemId(_itemId, _itemNum)
     return ret
 
 def _getDefaultBindType(itemId):
@@ -970,7 +973,7 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
         'enhanceLv': context.enhanceLv or 0,
     }
 
-    if itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID:
+    if itemId == gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID:
         itemId = EquipmentItem.EquipItemIdGen.genEquipItemIdByDropData(**dropParamDic)
         LOG_INFO('_genEquipItemList, gen Equipitem ItemId:', itemId, dropParamDic)
 
@@ -1009,39 +1012,39 @@ def _addItemToAward(awardVal: AwardVal, itemId, itemNum, bindType, quality, cont
 
 
 def _getResourceExReward(awardId, context):
-    resourceExReward = RDDT.datas[awardId]['resourceExReward']
+    _resourceExReward = RDDT.datas[awardId]['resourceExReward']
     ret = AwardVal()
-    for awardInfo in resourceExReward:
-        itemId, num, prob = awardInfo
-        if callable(itemId):
-            itemId = itemId()
-        itemData = dataUtils.getCommItemData(itemId)
-        if itemData.get('type') != gameconst.ItemType.Resource:
+    for _awardInfo in _resourceExReward:
+        _itemId, _num, prob = _awardInfo
+        if callable(_itemId):
+            _itemId = _itemId()
+        _itemData = dataUtils.getCommItemData(_itemId)
+        if _itemData.get('type') != gameconst.ItemType.Resource:
             continue
-        if callable(num):
-            num = int(num(context.args))  # context.args: srcLv
+        if callable(_num):
+            _num = int(_num(context.args))  # context.args: srcLv
         else:
-            num = int(num)
+            _num = int(_num)
         if callable(prob):
             prob = prob(context.args)  # context.args: srcLv
-        for j in range(num):
+        for j in range(_num):
             if random.randint(1, prob) == 1:
-                ret.addWealthByItemId(itemId, 1)
+                ret.addWealthByItemId(_itemId, 1)
     return ret
 
 
 def _getFixedAward(fixAward, context, itemType):
 
-    awardVal = AwardVal()
-    for awardInfo in fixAward:
+    _awardVal = AwardVal()
+    for _awardInfo in fixAward:
         bindType = None
         quality = 0
-        if len(awardInfo) == 2:
-            itemId, itemNum = awardInfo
-        elif len(awardInfo) == 3:
-            itemId, itemNum, bindType = awardInfo
+        if len(_awardInfo) == 2:
+            itemId, itemNum = _awardInfo
+        elif len(_awardInfo) == 3:
+            itemId, itemNum, bindType = _awardInfo
         else:
-            itemId, itemNum, bindType, quality = awardInfo
+            itemId, itemNum, bindType, quality = _awardInfo
         if callable(itemId):
             itemId = itemId()
         itemData = dataUtils.getCommItemData(itemId)
@@ -1059,22 +1062,22 @@ def _getFixedAward(fixAward, context, itemType):
         else:
             itemNum = int(itemNum)
 
-        _addItemToAward(awardVal, itemId, itemNum, bindType, quality, context)
+        _addItemToAward(_awardVal, itemId, itemNum, bindType, quality, context)
 
-    return awardVal
+    return _awardVal
 
 
 def _getFixRewardBaseOnSexual(awardId, context):
-    fixRewardBaseOnSexual = RDDT.datas[awardId]['fixRewardBaseOnSexual']
+    _fixRewardBaseOnSexual = RDDT.datas[awardId]['fixRewardBaseOnSexual']
     awardVal = AwardVal()
-    if not fixRewardBaseOnSexual:
+    if not _fixRewardBaseOnSexual:
         return awardVal
-    for awardInfo in fixRewardBaseOnSexual[context.args.avatarSex]:
+    for _awardInfo in _fixRewardBaseOnSexual[context.args.avatarSex]:
         bindType = None
-        if len(awardInfo) == 2:
-            itemId, itemNum = awardInfo
-        elif len(awardInfo) == 3:
-            itemId, itemNum, bindType = awardInfo
+        if len(_awardInfo) == 2:
+            itemId, itemNum = _awardInfo
+        elif len(_awardInfo) == 3:
+            itemId, itemNum, bindType = _awardInfo
 
         if bindType is None:
             context.addContextVar('isNeedRegenBindType', True)
@@ -1092,40 +1095,40 @@ def _getNestedFixAward(awardId, context, isNeedDisturb=False):
     nestedFixAward = RDDT.datas[awardId]['nestFixReward']
     ret = AwardVal()
 
-    for awardInfo in nestedFixAward:
-        needSchools = ()
-        if len(awardInfo) == 2:
-            innerAwardId, num = awardInfo
+    for _awardInfo in nestedFixAward:
+        _needSchools = ()
+        if len(_awardInfo) == 2:
+            _innerAwardId, num = _awardInfo
         else:
-            innerAwardId, num, needSchools = awardInfo
+            _innerAwardId, num, _needSchools = _awardInfo
 
-        if needSchools and context.school not in needSchools:
+        if _needSchools and context.school not in _needSchools:
             continue
 
-        if callable(innerAwardId):
-            innerAwardId = innerAwardId()
+        if callable(_innerAwardId):
+            _innerAwardId = _innerAwardId()
 
         if callable(num):
             num = int(num(context.args))  # context.args: srcLv
         else:
             num = int(num)
 
-        ret += getAward(innerAwardId, num, context, isNeedDisturb)
+        ret += getAward(_innerAwardId, num, context, isNeedDisturb)
 
     return ret
 
 
 def _getExtraAward(exAward, context, itemType):
-    awardVal = AwardVal()
-    for awardInfo in exAward:
+    _awardVal = AwardVal()
+    for _awardInfo in exAward:
         bindType = None
         quality = None
-        if len(awardInfo) == 3:
-            itemId, num, prob = awardInfo
-        elif len(awardInfo) == 4:
-            itemId, num, prob, bindType = awardInfo
+        if len(_awardInfo) == 3:
+            itemId, num, prob = _awardInfo
+        elif len(_awardInfo) == 4:
+            itemId, num, prob, bindType = _awardInfo
         else:
-            itemId, num, prob, bindType, quality = awardInfo
+            itemId, num, prob, bindType, quality = _awardInfo
 
         if callable(itemId):
             itemId = itemId()
@@ -1147,8 +1150,8 @@ def _getExtraAward(exAward, context, itemType):
 
         for j in range(num):
             if random.randint(1, prob) == 1:
-                _addItemToAward(awardVal, itemId, 1, bindType, quality, context)
-    return awardVal
+                _addItemToAward(_awardVal, itemId, 1, bindType, quality, context)
+    return _awardVal
 
 
 def _getNestedExAward(awardId, context, isNeedDisturb=False):
@@ -1156,11 +1159,11 @@ def _getNestedExAward(awardId, context, isNeedDisturb=False):
 
     ret = AwardVal()
 
-    for awardInfo in nextedExtAward:
-        if len(awardInfo) == 3:
-            (innerAwardId, num, prob), needSchools = awardInfo, ()
+    for _awardInfo in nextedExtAward:
+        if len(_awardInfo) == 3:
+            (innerAwardId, num, prob), needSchools = _awardInfo, ()
         else:
-            innerAwardId, num, prob, needSchools = awardInfo
+            innerAwardId, num, prob, needSchools = _awardInfo
 
         if needSchools and context.school not in needSchools:
             continue
@@ -1181,25 +1184,25 @@ def _getNestedExAward(awardId, context, isNeedDisturb=False):
 def _getSinAward(singleAward, context, itemType):
     awardVal = AwardVal()
 
-    weighList = [oneRwData[2] for oneRwData in singleAward]
-    idx = utils.randomByWeight(weighList)
-    if idx is not None:
+    _weighList = [oneRwData[2] for oneRwData in singleAward]
+    _idx = utils.randomByWeight(_weighList)
+    if _idx is not None:
         bindType = None
         quality = None
-        if len(singleAward[idx]) == 5:
-            itemId, num, weight, bindType, quality = singleAward[idx]
-        if len(singleAward[idx]) == 4:
-            itemId, num, weight, bindType = singleAward[idx]
+        if len(singleAward[_idx]) == 5:
+            itemId, num, weight, bindType, quality = singleAward[_idx]
+        if len(singleAward[_idx]) == 4:
+            itemId, num, weight, bindType = singleAward[_idx]
         else:
-            itemId, num, weight = singleAward[idx]
+            itemId, num, weight = singleAward[_idx]
         if callable(itemId):
             itemId = itemId()
         if bindType is None:
             context.addContextVar('isNeedRegenBindType', True)
             bindType = _getDefaultBindType(itemId)
 
-        itemData = dataUtils.getCommItemData(itemId)
-        if itemData.get('type') == gameconst.ItemType.Normal or itemData.get('type') == gameconst.ItemType.LingShou:
+        _itemData = dataUtils.getCommItemData(itemId)
+        if _itemData.get('type') == gameconst.ItemType.Normal or _itemData.get('type') == gameconst.ItemType.LingShou:
             _addItemToAward(awardVal, itemId, num, bindType, quality, context)
     return awardVal
 
@@ -1207,7 +1210,9 @@ def _getBindWeightRank(extra):
     bindWeightRank = 0
     rank = extra['avatarScoreRank']
     isMonthCardExpired = extra['isMonthCardExpired']
+    isBigMonthCardExpired = extra['isBigMonthCardExpired']
     isCrossServer = extra['isCrossServer']
+    #只要有大or小月卡就吃月卡加成
     for _, v in R_RD.datas.items():
         l, r = v['rankRange'][0], v['rankRange'][1]
         if rank >= l and rank <= r:
@@ -1215,7 +1220,18 @@ def _getBindWeightRank(extra):
                 continue
             if v["isCrossServer"] == 0 and isCrossServer:
                 continue
-            bindWeightRank = v['bindWeightRank']
+            bindWeightRank += v['bindWeightRank']
+            break
+        
+    #大月卡专属加成
+    for _, v in R_RD.datas.items():
+        l, r = v['rankRange'][0], v['rankRange'][1]
+        if rank >= l and rank <= r:
+            if v["isMonthCard"] and isBigMonthCardExpired:
+                continue
+            if v["isCrossServer"] == 0 and isCrossServer:
+                continue
+            bindWeightRank += v['bigBindWeightRank']
             break
     return bindWeightRank
 
@@ -1413,86 +1429,80 @@ def _getDropAward(dropIDList, context):
 
 def getAwardOne(awardId, context, isNeedDisturb=False):
     awardId = dataUtils.getRealRewardId(awardId, context)
-    award = AwardVal()
-    awardData = RDDT.datas.get(awardId, {})
-    resourceFixReward = awardData.get('resourceFixReward')
-    resourceExReward = awardData.get('resourceExReward')
+    _award = AwardVal()
+    _awardData = RDDT.datas.get(awardId, {})
+    resourceFixReward = _awardData.get('resourceFixReward')
+    resourceExReward = _awardData.get('resourceExReward')
 
-    fixAward = awardData.get('fixReward')
-    fixRewardBaseOnSexual = awardData.get('fixRewardBaseOnSexual')
-    nestFixAward = awardData.get('nestFixReward')
-    exAward = awardData.get('exReward')
-    nextedExtAward = awardData.get('nestExReward')
-    singleAward = awardData.get('singleReward')
+    fixAward = _awardData.get('fixReward')
+    fixRewardBaseOnSexual = _awardData.get('fixRewardBaseOnSexual')
+    nestFixAward = _awardData.get('nestFixReward')
+    exAward = _awardData.get('exReward')
+    nextedExtAward = _awardData.get('nestExReward')
+    singleAward = _awardData.get('singleReward')
 
-    fixPetReward = awardData.get('fixPetReward')
-    singlePetReward = awardData.get('singlePetReward')
-    exPetReward = awardData.get('exPetReward')
+    fixPetReward = _awardData.get('fixPetReward')
+    singlePetReward = _awardData.get('singlePetReward')
+    exPetReward = _awardData.get('exPetReward')
 
-    dropID = awardData.get('dropID')
+    dropID = _awardData.get('dropID')
 
-    for awardItem in award.getNumericWealth():
-        awardNum = awardData.get(awardItem.configName)
+    for _awardItem in _award.getNumericWealth():
+        awardNum = _awardData.get(_awardItem.configName)
         if not awardNum:
             continue
 
         if callable(awardNum):
-            awardItem.data += int(awardNum(context.args))
+            _awardItem.data += int(awardNum(context.args))
         else:
-            awardItem.data += int(awardNum)
+            _awardItem.data += int(awardNum)
 
-    titleId = awardData.get('title')
-    titleId and award.titleWealth.data.append(WealthTitleOne(titleId, -1))
-    #
-    # petData = awardData.get('pet')
-    # petData and award.petWealth.data.append(petData)
+    titleId = _awardData.get('title')
+    titleId and _award.titleWealth.data.append(WealthTitleOne(titleId, -1))
 
-    fightProps = awardData.get('fightProp')
-    fightProps and award.fightProps.data.extend(fightProps)
-
-    # outfitWealthIds = awardData.get('outfitID')
-    # outfitWealthIds and award.outfitWealth.data.extend(list(outfitWealthIds))
+    fightProps = _awardData.get('fightProp')
+    fightProps and _award.fightProps.data.extend(fightProps)
 
     if resourceFixReward:
-        award += _getResourceFixReward(awardId, context)
+        _award += _getResourceFixReward(awardId, context)
 
     if resourceExReward:
-        award += _getResourceExReward(awardId, context)
+        _award += _getResourceExReward(awardId, context)
 
     if fixAward:
-        award += _getFixedAward(fixAward, context, gameconst.ItemType.Normal)
+        _award += _getFixedAward(fixAward, context, gameconst.ItemType.Normal)
 
     if fixRewardBaseOnSexual:
-        award += _getFixRewardBaseOnSexual(awardId, context)
+        _award += _getFixRewardBaseOnSexual(awardId, context)
 
     if nestFixAward:
-        award += _getNestedFixAward(awardId, context, isNeedDisturb)
+        _award += _getNestedFixAward(awardId, context, isNeedDisturb)
 
     if exAward:
-        award += _getExtraAward(exAward, context, gameconst.ItemType.Normal)
+        _award += _getExtraAward(exAward, context, gameconst.ItemType.Normal)
 
     if nextedExtAward:
-        award += _getNestedExAward(awardId, context, isNeedDisturb)
+        _award += _getNestedExAward(awardId, context, isNeedDisturb)
 
     if singleAward:
-        award += _getSinAward(singleAward, context, gameconst.ItemType.Normal)
+        _award += _getSinAward(singleAward, context, gameconst.ItemType.Normal)
 
     if fixPetReward:
-        award += _getFixedAward(fixPetReward, context, gameconst.ItemType.LingShou)
+        _award += _getFixedAward(fixPetReward, context, gameconst.ItemType.LingShou)
 
     if singlePetReward:
-        award += _getSinAward(singlePetReward, context, gameconst.ItemType.LingShou)
+        _award += _getSinAward(singlePetReward, context, gameconst.ItemType.LingShou)
 
     if exPetReward:
-        award += _getExtraAward(exPetReward, context, gameconst.ItemType.LingShou)
+        _award += _getExtraAward(exPetReward, context, gameconst.ItemType.LingShou)
 
     if dropID:
-        award += _getDropAward(dropID, context)
+        _award += _getDropAward(dropID, context)
         
     if context.args and hasattr(context.args, 'factor'):
-        award *= context.args.factor
+        _award *= context.args.factor
 
-    return award
+    return _award
 
 
 def getAward(awardId, num, context, isNeedDisturb=False):

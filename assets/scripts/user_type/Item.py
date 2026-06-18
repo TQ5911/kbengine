@@ -46,7 +46,10 @@ class Item(BaseItem.BaseItem):
         if kwargs.get('rollProps'):
             self.rollProps = kwargs['rollProps']
         else:
-            self.rollProps = utils.rollItemProps(self.itemId, self.itemSubType, 1001)
+            self.rollProps = []
+            if 'extra' in kwargs:
+                if 'school' in kwargs['extra']:
+                    self.rollProps = utils.rollItemProps(self.itemId, self.itemSubType, kwargs['extra']['school'])
 
         return True
 

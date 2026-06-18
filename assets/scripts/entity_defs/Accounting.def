@@ -1,0 +1,87 @@
+<root>
+    <Interfaces>
+        <Interface>   iClient     </Interface>
+        <Interface>   iTimerBase  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <accountName>
+            <Type>          UNICODE                        </Type>
+            <Flags>         BASE                           </Flags>
+            <Persistent>    true                           </Persistent>
+            <Index>         INDEX                          </Index>
+            <DatabaseLength> 255                           </DatabaseLength>
+        </accountName>
+
+        <accountType>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE        </Flags>
+            <Persistent>    true        </Persistent>
+        </accountType>
+
+        <methodPoolBase>
+            <Type>          METHOD_POOL_INFO    </Type>
+            <Flags>         BASE        </Flags>
+        </methodPoolBase>
+
+        <deviceUniqueIdentifier>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+        </deviceUniqueIdentifier>
+
+        <delayDestroyTimer>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </delayDestroyTimer>
+
+        <avataringID>
+            <Type>          OBJECT_ID       </Type>
+            <Flags>         BASE                    </Flags>
+        </avataringID>
+
+        <lastLoginResult>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE        </Flags>
+        </lastLoginResult>
+
+    </Properties>
+
+    <BaseMethods>
+        <accountingLoginResult>
+            <Arg>       UINT8            </Arg>
+        </accountingLoginResult>
+
+        <queryAvataringCharacter> <Exposed/>
+            <Arg>       ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+        </queryAvataringCharacter>
+
+        <createAvataring> <Exposed/>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       SCHOOL     </Arg>
+            <Arg>       SEX     </Arg>
+            <Arg>       UINT8     </Arg>
+            <Arg>       UINT8     </Arg>
+            <Arg>       OUTFIT_DATA     </Arg>
+            <Arg>       FACE_DATA     </Arg>
+        </createAvataring>
+
+        <accountOffline> <Exposed/>
+        </accountOffline>
+
+    </BaseMethods>
+
+    <ClientMethods>
+        <onKickAnotherAccount>
+        </onKickAnotherAccount>
+
+        <onLoginWaitMapResult>
+            <Arg>       UINT8        </Arg>
+        </onLoginWaitMapResult>
+
+        <onGetAvataringCharacter>
+            <Arg>       ARRAY   <of>    WAITMAP_CHARACTER   </of>   </Arg>
+        </onGetAvataringCharacter>
+    </ClientMethods>
+</root>

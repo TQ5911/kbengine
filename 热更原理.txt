@@ -184,3 +184,7 @@ cd Server/kbeLinux/kbengine/assets
 fengyan@ubuntumyh:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/hotReload$ python3 ./genhotfix.py baseapp iBag IBag reqBagSort
 fengyan@ubuntumyh:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/hotReload$ python3 ./genhotfix.py cellapp impCombat ImpCombat clientSetState
 fengyan@ubuntumyh:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/hotReload$ python3 ./genhotfix.py interface game _onCheckWhiteList
+
+
+
+在其他分支上,直接windows下分支对一个的 /assets/hotReload目录,右键掉出git bash,用 python 替换 python3，windows环境问题，不用纠结python还是python3

@@ -36,7 +36,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         # 矿战另外处理
         if not formula.inMineWarScene(self.spaceNo):
             self.addTimerCB(0.1, '_loadEntities', (), gametimer.TIMER_TAG_WORLD_LINE_LOAD_ENTITIES)
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
 
         #每分钟统计一次当前line活跃人数(5分钟内进入过战斗状态)
         self.pyAddTimer(1, 60, gametimer.STATISTIC_FIGHTING_COUNT)
@@ -108,7 +108,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         elif userArg == gametimer.TIMER_MINE_WAR_SPACE_TICK:
             self._onMineWarSpaceTick()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def setSceneStates(self, states):
         _state = 0
@@ -131,9 +131,9 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
 
     def onPlayerLeave(self, gbId, playerId, box):
         iSpaceMgr.ISpaceMgr.onPlayerLeave(self, gbId, playerId, box)
-        iMineWarSpaceMgr.IMineWarSpaceMgr.onPlayerLeave(self, gbId, playerId, box)
 
     def onPlayerRelogin(self, player, gbId):
+        self.onMineWarPlayerRelogin(player)
         super().onPlayerRelogin(player, gbId)
         if not formula.inWolrdBossScene(self.spaceNo):
             return

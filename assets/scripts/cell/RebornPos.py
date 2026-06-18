@@ -72,7 +72,7 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         return int(props['MPosX']), int(props['MPosZ'])
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
         else:

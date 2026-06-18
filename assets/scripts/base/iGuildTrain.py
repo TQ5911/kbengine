@@ -35,7 +35,7 @@ class IGuildTrain(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AAC_DD.datas.BONUS_SRC_GUILDTRAIN_RESET
-        detail = gameclass.AwardDetail(costId=currency, costNum=amount)
+        detail = gameclass.AwardDetailCls(costId=currency, costNum=amount)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
         self.resetGuildTrainAndGetBackMoney({}, AAC_AAC_DD.datas.BONUS_SRC_GUILDTRAIN_RESET, True)
@@ -74,6 +74,8 @@ class IGuildTrain(object):
 
         LogTrackingMgr.LogTrackingMgr.Guild_Train_Reset(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             opUUID,
         )
 
@@ -109,8 +111,8 @@ class IGuildTrain(object):
             self.onMessagePre(
                 M_MD.datas.guildTrain_notEnoughRes,
                 [
-                    ID_IDD.datas[gameconst.ItemId.COIN]['name'],
-                    ID_IDD.datas[gameconst.ItemId.GUILD_CONTRIB]['name']
+                    ID_IDD.datas[gameconst.ItemIdEnum.COIN]['name'],
+                    ID_IDD.datas[gameconst.ItemIdEnum.GUILD_CONTRIB]['name']
                 ]
             )
             return None
@@ -154,6 +156,8 @@ class IGuildTrain(object):
         }])
 
         LogTrackingMgr.LogTrackingMgr.Guild_Train(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             _trainId,
             _targetLevel,

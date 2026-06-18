@@ -8,17 +8,16 @@ import gameconst
 import gametimer
 import utils
 import gameengine
-from BountyInfo import bountyItem, hunterRankItem, hunterRankData
 import LogTrackingMgr
 import message_Message_def as MMD
 import const_const as CONST
-import json
-import gzip
-import math
 import userType
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import wonderLand_config as WLC
 import cube_config as CC
+import abyss_config as ABC
+import teamDunChallenge_config as TDC_CFG
+import raidBossChallenge_config as RBC_CFG
 from datetime import datetime
 
 
@@ -26,7 +25,7 @@ class ResourceRecoveryStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITim
     def __init__(self):
         LOG_INFO("ResourceRecoveryStub::__init__")
         super(ResourceRecoveryStub, self).__init__()
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self.checkFreeTicketNumConfigTimerId = 0
 
     def doNext(self):
@@ -46,7 +45,7 @@ class ResourceRecoveryStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITim
         self.checkFreeTicketNumConfigTimerId = self._datetimeCallback(nextTimestamp, 'checkFreeTicketNumConfigCallback', (False,), gametimer.TIMER_TAG_CHECK_FREE_TICKET_NUM_CONFIG_TIMER, 'checkFreeTicketNumConfigTimerId')
 
     def onTimer(self, timerID, userData):
-        self._onTimer(timerID, userData)
+        self._onTimerTrigger(timerID, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(timerID)
         elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
@@ -60,17 +59,32 @@ class ResourceRecoveryStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITim
 
         needUpdateSubType = set()
 
-        curNum = WLC.datas['dailyWonderLandNum']['value']
-        if self.recoveryData.ftRecoveryItem.update(now, gameconst.FreeTicketSubType.WONDER_LAND, dateTime, curNum):
-            needUpdateSubType.add(gameconst.FreeTicketSubType.WONDER_LAND)
-
         curNum = CC.datas['dailyCubeNum']['value']
         if self.recoveryData.ftRecoveryItem.update(now, gameconst.FreeTicketSubType.CUBE, dateTime, curNum):
             needUpdateSubType.add(gameconst.FreeTicketSubType.CUBE)
 
-        if beInit:
+        curNum = WLC.datas['dailyWonderLandNum']['value']
+        if self.recoveryData.ftRecoveryItem.update(now, gameconst.FreeTicketSubType.WONDER_LAND, dateTime, curNum):
             needUpdateSubType.add(gameconst.FreeTicketSubType.WONDER_LAND)
+
+        curNum = ABC.datas['abyssDailyNum']['value']
+        if self.recoveryData.ftRecoveryItem.update(now, gameconst.FreeTicketSubType.ABYSS, dateTime, curNum):
+            needUpdateSubType.add(gameconst.FreeTicketSubType.ABYSS)
+            
+        curNum = TDC_CFG.datas['dailyRewardNum']['value']
+        if self.recoveryData.ftRecoveryItem.update(now, gameconst.FreeTicketSubType.CRUSADE, dateTime, curNum):
+            needUpdateSubType.add(gameconst.FreeTicketSubType.CRUSADE)
+
+        curNum = RBC_CFG.datas['dailyRewardNum']['value']
+        if self.recoveryData.ftRecoveryItem.update(now, gameconst.FreeTicketSubType.CHIEF, dateTime, curNum):
+            needUpdateSubType.add(gameconst.FreeTicketSubType.CHIEF)
+
+        if beInit:
             needUpdateSubType.add(gameconst.FreeTicketSubType.CUBE)
+            needUpdateSubType.add(gameconst.FreeTicketSubType.WONDER_LAND)
+            needUpdateSubType.add(gameconst.FreeTicketSubType.ABYSS)
+            needUpdateSubType.add(gameconst.FreeTicketSubType.CRUSADE)
+            needUpdateSubType.add(gameconst.FreeTicketSubType.CHIEF)
         LOG_DBG('ResourceRecoveryStub::checkFreeTicketNumConfigCallback', needUpdateSubType)
 
         if not needUpdateSubType:

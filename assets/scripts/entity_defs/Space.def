@@ -104,9 +104,9 @@
         <onEntireConstruct>
         </onEntireConstruct>
 
-        <removeEntityById>
+        <removeEntById>
             <Arg>       STRING          </Arg>
-        </removeEntityById>
+        </removeEntById>
 
         <setHomeCompByteMap>
             <Arg>       MAILBOX         </Arg>

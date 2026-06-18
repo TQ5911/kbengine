@@ -35,7 +35,7 @@ def load_lua_script(lid):
     return f
 
 
-class RedisAsyncClient(object):
+class AsyncRedisClient(object):
     # 定义基本属性
     cid = 0
     host = ""
@@ -44,17 +44,18 @@ class RedisAsyncClient(object):
     # 定义构造方法
     # connectCallback===>PyObject * (*connectCallback)(PyObject *cid, PyObject *connected);
     # disconnectCallback===>PyObject * (*connectCallback)(PyObject *cid);
-    def __init__(self, host, port, passwd):
+    def __init__(self, host, port, passwd, username):
         self.host = host
         self.port = port
         self.passwd = passwd
+        self.username = username
         self.connected = False
-        LOG_INFO("RedisAsyncClient::__init__ host={} port={} cid={}".format(self.host, self.port, self.cid))
+        LOG_INFO("AsyncRedisClient::__init__ host={} port={} cid={}".format(self.host, self.port, self.cid))
 
     # 连接redis数据库
     def onConnect(self):
         self.cid = GameCommon.connectRedis(self.host, self.port, self.connectCallback, self.disconnectCallback)
-        LOG_INFO("RedisAsyncClient::onConnect")
+        LOG_INFO("AsyncRedisClient::onConnect")
         return
 
     # 是否已经连接上redis数据库
@@ -62,7 +63,9 @@ class RedisAsyncClient(object):
         return self.connected
 
     def auth(self):
-        if self.passwd:
+        if self.username:
+            GameCommon.executeRawRedis(self.cid, 'auth {} {}'.format(self.username, self.passwd), None)
+        elif self.passwd:
             GameCommon.executeRawRedis(self.cid, 'auth {}'.format(self.passwd), None)
 
     # TCP建链成功或失败之后会调用的函数
@@ -70,14 +73,14 @@ class RedisAsyncClient(object):
         if connected:
             self.cid = cid
             self.connected = True
-            LOG_INFO("RedisAsyncClient::connectCallback is suc... connected={} cid={} host={} port={}".format(connected,
+            LOG_INFO("AsyncRedisClient::connectCallback is suc... connected={} cid={} host={} port={}".format(connected,
                                                                                                               self.cid,
                                                                                                               self.host,
                                                                                                               self.port))
             self.auth()
         else:
             LOG_INFO(
-                "RedisAsyncClient::connectCallback is error... connected={} cid={} host={} port={}".format(connected,
+                "AsyncRedisClient::connectCallback is error... connected={} cid={} host={} port={}".format(connected,
                                                                                                            self.cid,
                                                                                                            self.host,
                                                                                                            self.port))
@@ -87,31 +90,35 @@ class RedisAsyncClient(object):
     def disconnectCallback(self, cid):
         self.cid = 0
         self.connected = False
-        LOG_INFO("RedisAsyncClient::disconnectCallback cid={}".format(cid))
+        LOG_INFO("AsyncRedisClient::disconnectCallback cid={}".format(cid))
         return
 
     # 断开redis数据库连接
     def disconnectRedis(self):
         GameCommon.disconnectRedis(self.cid)
         self.cid = 0
-        LOG_INFO("RedisAsyncClient::disconnectRedis host={} port={} cid={}".format(self.host, self.port, self.cid))
+        LOG_INFO("AsyncRedisClient::disconnectRedis host={} port={} cid={}".format(self.host, self.port, self.cid))
         return True
 
     # 执行execute
     # resultCallback===>PyObject * (*resultCallback)(PyObject *cid, PyObject *pyError, PyObject *result);
     def _executeRawRedis(self, cmd, resultCallback=None):
         if not self.isConnect():
-            LOG_ERR("RedisAsyncClient::__executeRawRedis is not connect")
+            LOG_ERR("AsyncRedisClient::__executeRawRedis is not connect")
+            if resultCallback:
+                resultCallback(self.cid, 'redis not connect', None)
             return False
 
         GameCommon.executeRawRedis(self.cid, cmd, resultCallback)
-        # LOG_DBG('RedisAsyncClient::executeRawRedis cid={} cmd={} resultCallback={}'.format(self.cid, cmd,
+        # LOG_DBG('AsyncRedisClient::executeRawRedis cid={} cmd={} resultCallback={}'.format(self.cid, cmd,
         #                                                                                      1))  # id(resultCallback) if resultCallback not None else None))
         return True
 
     def _executeBytesRedis(self, args, resultCallback=None):
         if not self.isConnect():
-            LOG_ERR("RedisAsyncClient::_executeBytesRedis is not connect")
+            LOG_ERR("AsyncRedisClient::_executeBytesRedis is not connect")
+            if resultCallback:
+                resultCallback(self.cid, 'redis not connect', None)
             return False
 
         args = tuple(args)
@@ -121,28 +128,28 @@ class RedisAsyncClient(object):
     # 获取tableName内元素的数量
     def getTableLen(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getTableLen tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getTableLen tableName={}".format(tableName))
             return False
         cmd = "ZCARD " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
-    def isTableExist(self, tableName, resultCallback=None):
+    def isTableExists(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::isTableExist tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::isTableExists tableName={}".format(tableName))
             return False
         cmd = "EXISTS " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def deleteTable(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::deleteTable tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::deleteTable tableName={}".format(tableName))
             return False
         cmd = "DEL " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def getTableType(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getTableType tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getTableType tableName={}".format(tableName))
             return False
         cmd = "TYPE " + tableName
         return self._executeRawRedis(cmd, resultCallback)
@@ -151,10 +158,10 @@ class RedisAsyncClient(object):
     # 在tableName对应的有序集合中添加元素
     def add(self, tableName, dictobj, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::add tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::add tableName={}".format(tableName))
             return False
         if type(dictobj) is not dict or not len(dictobj):
-            LOG_ERR("RedisAsyncClient::add type(dictobj) is {}, len={}".format(type(dictobj), len(dictobj)))
+            LOG_ERR("AsyncRedisClient::add type(dictobj) is {}, len={}".format(type(dictobj), len(dictobj)))
             return False
         cmd = "ZADD " + tableName
         for m, s in dictobj.items():
@@ -164,11 +171,11 @@ class RedisAsyncClient(object):
     # 在tableName对应的有序集合中删除元素
     def delete(self, tableName, memberList, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::delete tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::delete tableName={}".format(tableName))
             return False
         if type(memberList) is not list or not len(memberList):
             LOG_ERR(
-                "RedisAsyncClient::delete type(memberList) is {}, len={}".format(type(memberList), len(memberList)))
+                "AsyncRedisClient::delete type(memberList) is {}, len={}".format(type(memberList), len(memberList)))
             return False
         cmd = "ZREM " + tableName
         for i in range(len(memberList)):
@@ -178,7 +185,7 @@ class RedisAsyncClient(object):
     # 按照索引范围获取tableName的元素
     def getRange(self, tableName, start, end, desc=True, withscores=False, score_cast_func=int, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getRange tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getRange tableName={}".format(tableName))
             return False
         if desc:
             cmd = "ZREVRANGE " + tableName + " " + str(start) + " " + str(end)
@@ -191,7 +198,7 @@ class RedisAsyncClient(object):
 
     def zRemRangeByRank(self, tableName, start, end, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::zRemRangeByRank tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::zRemRangeByRank tableName={}".format(tableName))
             return False
 
         cmd = 'ZREMRANGEBYRANK {} {} {}'.format(tableName, start, end)
@@ -199,7 +206,7 @@ class RedisAsyncClient(object):
 
     def zRemRangeByScore(self, tableName, start, end, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::zRemRangeByRank tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::zRemRangeByRank tableName={}".format(tableName))
             return False
 
         cmd = 'ZREMRANGEBYSCORE {} {} {}'.format(tableName, start, end)
@@ -209,7 +216,7 @@ class RedisAsyncClient(object):
     def getRangeByScore(self, tableName, min, max, start=None, num=None, withscores=False, score_cast_func=int,
                         resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getRangeByScore tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getRangeByScore tableName={}".format(tableName))
             return False
         cmd = "ZRANGEBYSCORE " + tableName + " " + str(min) + " " + str(max)
         if start != None and num != None:
@@ -222,7 +229,7 @@ class RedisAsyncClient(object):
     # 获取value的排名，从小到大排序
     def getRank(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getRank tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getRank tableName={}".format(tableName))
             return False
         cmd = "ZRANK " + str(tableName) + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
@@ -230,29 +237,29 @@ class RedisAsyncClient(object):
     # 获取value的排名，从大到小排序
     def getRevRank(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getRevRank tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getRevRank tableName={}".format(tableName))
             return False
         cmd = "ZREVRANK " + str(tableName) + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
 
     def getScore(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getScore tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getScore tableName={}".format(tableName))
             return False
         cmd = "ZSCORE " + str(tableName) + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
 
     # 获取tableName中score在[min,max]之间的个数
-    def getCount(self, tableName, min, max, resultCallback=None):
+    def getCount(self, tableName, minVal, maxVal, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getCount tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getCount tableName={}".format(tableName))
             return False
-        cmd = "ZCOUNT " + tableName + " " + str(min) + " " + str(max)
+        cmd = "ZCOUNT " + tableName + " " + str(minVal) + " " + str(maxVal)
         return self._executeRawRedis(cmd, resultCallback)
 
     def zIncr(self, tableName, score, member, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::zIncrBy tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::zIncrBy tableName={}".format(tableName))
             return False
         cmd = f'ZINCRBY {tableName} {score} {member}'
         return self._executeRawRedis(cmd, resultCallback)
@@ -260,49 +267,49 @@ class RedisAsyncClient(object):
     # ---------------------------------------------------string-----------------------------------------------------
     def cmdSet(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::set tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::set tableName={}".format(tableName))
             return False
         cmd = "SET " + tableName + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
 
     def setex(self, tableName, value, time, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::setex tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::setex tableName={}".format(tableName))
             return False
         cmd = "SET " + tableName + " " + str(value) + " ex " + str(time)
         return self._executeRawRedis(cmd, resultCallback)
 
     def setnxex(self, tableName, value, time, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::setex tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::setex tableName={}".format(tableName))
             return False
         cmd = "SET " + tableName + " " + str(value) + " nx " + " ex " + str(time)
         return self._executeRawRedis(cmd, resultCallback)
 
     def get(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::get tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::get tableName={}".format(tableName))
             return False
         cmd = "GET " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def mget(self, tableNameList, resultCallback=None):
         if not tableNameList:
-            LOG_ERR("RedisAsyncClient::get tableName={}".format(tableNameList))
+            LOG_ERR("AsyncRedisClient::get tableName={}".format(tableNameList))
             return False
         cmd = "MGET " + " ".join(tableNameList)
         return self._executeRawRedis(cmd, resultCallback)
 
     def setnx(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::setex tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::setex tableName={}".format(tableName))
             return False
         cmd = "SETNX " + tableName + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
 
     def incr(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::incr tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::incr tableName={}".format(tableName))
             return False
         cmd = "INCR " + tableName
         return self._executeRawRedis(cmd, resultCallback)
@@ -310,10 +317,10 @@ class RedisAsyncClient(object):
     # ---------------------------------------------------set--------------------------------------------------------
     def sadd(self, tableName, valuelist, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::sadd tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::sadd tableName={}".format(tableName))
             return False
         if type(valuelist) is not list or not len(valuelist):
-            LOG_ERR("RedisAsyncClient::sadd type(valuelist) is {}, len={}".format(type(valuelist), len(valuelist)))
+            LOG_ERR("AsyncRedisClient::sadd type(valuelist) is {}, len={}".format(type(valuelist), len(valuelist)))
             return False
         cmd = "SADD " + tableName
         for i in range(len(valuelist)):
@@ -323,21 +330,21 @@ class RedisAsyncClient(object):
     # 获取tableName对应的集合的所有成员
     def smembers(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::smembers tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::smembers tableName={}".format(tableName))
             return False
         cmd = "SMEMBERS " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def sismember(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::sismember tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::sismember tableName={}".format(tableName))
             return False
         cmd = "SISMEMBER " + tableName + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
 
     def srem(self, tableName, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::srem tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::srem tableName={}".format(tableName))
             return False
         cmd = "SREM " + tableName + " " + str(value)
         return self._executeRawRedis(cmd, resultCallback)
@@ -345,7 +352,7 @@ class RedisAsyncClient(object):
     # 获取set内元素的数量
     def getSetLen(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::getTableLen tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::getTableLen tableName={}".format(tableName))
             return False
         cmd = "SCARD " + tableName
         return self._executeRawRedis(cmd, resultCallback)
@@ -353,7 +360,7 @@ class RedisAsyncClient(object):
     # ---------------------------------------------------hash-------------------------------------------------------
     def hset(self, tableName, key, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hset tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hset tableName={}".format(tableName))
             return False
 
         if isinstance(value, bytes):
@@ -365,7 +372,7 @@ class RedisAsyncClient(object):
 
     def hsetnx(self, tableName, key, value, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hset tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hset tableName={}".format(tableName))
             return False
 
         if isinstance(value, bytes) or isinstance(key, bytes):
@@ -383,24 +390,24 @@ class RedisAsyncClient(object):
 
     def hget(self, tableName, key, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hget tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hget tableName={}".format(tableName))
             return False
         cmd = "HGET " + tableName + " " + str(key)
         return self._executeRawRedis(cmd, resultCallback)
 
     def hgetall(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hgetall tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hgetall tableName={}".format(tableName))
             return False
         cmd = "HGETALL " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def hmset(self, tableName, dictobj, resultCallback=None, isBytes=False):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hmset tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hmset tableName={}".format(tableName))
             return False
         if type(dictobj) is not dict or not len(dictobj):
-            LOG_ERR("RedisAsyncClient::hmset type(dictobj) is {}, len={}".format(type(dictobj), len(dictobj)))
+            LOG_ERR("AsyncRedisClient::hmset type(dictobj) is {}, len={}".format(type(dictobj), len(dictobj)))
             return False
 
         if isBytes:
@@ -419,10 +426,10 @@ class RedisAsyncClient(object):
 
     def hmget(self, tableName, keysList, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hmget tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hmget tableName={}".format(tableName))
             return False
         if type(keysList) is not list or not len(keysList):
-            LOG_ERR("RedisAsyncClient::hmget type(keysList) is {}, len={}".format(type(keysList), len(keysList)))
+            LOG_ERR("AsyncRedisClient::hmget type(keysList) is {}, len={}".format(type(keysList), len(keysList)))
             return False
         cmd = "HMGET " + tableName
         for i in range(len(keysList)):
@@ -431,35 +438,35 @@ class RedisAsyncClient(object):
 
     def hlen(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hlen tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hlen tableName={}".format(tableName))
             return False
         cmd = "HLEN " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def hkeys(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hkeys tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hkeys tableName={}".format(tableName))
             return False
         cmd = "HKEYS " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def hvals(self, tableName, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hvals tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hvals tableName={}".format(tableName))
             return False
         cmd = "HVALS " + tableName
         return self._executeRawRedis(cmd, resultCallback)
 
     def hexists(self, tableName, key, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hexists tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hexists tableName={}".format(tableName))
             return False
         cmd = "HEXISTS " + tableName + " " + str(key)
         return self._executeRawRedis(cmd, resultCallback)
 
     def hdel(self, tableName, key, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hdel tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hdel tableName={}".format(tableName))
             return False
 
         if isinstance(key, bytes):
@@ -471,13 +478,13 @@ class RedisAsyncClient(object):
 
     def multiHdel(self, tableName, keys, separator=',', resultCallback=None):
         if not tableName:
-            LOG_ERR(f"RedisAsyncClient::multiHdel tableName={tableName}")
+            LOG_ERR(f"AsyncRedisClient::multiHdel tableName={tableName}")
             return False
 
         if isinstance(keys, str):
             keys = keys.split(separator)
         if len(keys) < 1:
-            LOG_ERR(f"RedisAsyncClient::multiHdel keys is emtpy, tableName={tableName}")
+            LOG_ERR(f"AsyncRedisClient::multiHdel keys is emtpy, tableName={tableName}")
             return False
 
         cmd = "HDEL " + tableName
@@ -487,7 +494,7 @@ class RedisAsyncClient(object):
 
     def hincrby(self, tableName, key, field, resultCallback=None):
         if not tableName:
-            LOG_ERR("RedisAsyncClient::hincrby tableName={}".format(tableName))
+            LOG_ERR("AsyncRedisClient::hincrby tableName={}".format(tableName))
             return False
 
         if isinstance(key, bytes):
@@ -500,7 +507,7 @@ class RedisAsyncClient(object):
     # ---------------------------------------------------hash-------------------------------------------------------
     def lpush(self, name, *args, resultCallback=None):
         if not name:
-            LOG_ERR("RedisAsyncClient::lpush name={}".format(name))
+            LOG_ERR("AsyncRedisClient::lpush name={}".format(name))
             return False
 
         isBytes = isinstance(args[0], bytes)
@@ -520,21 +527,21 @@ class RedisAsyncClient(object):
 
     def expireat(self, name, when, resultCallback=None):
         if not name:
-            LOG_ERR("RedisAsyncClient::expireat name={}".format(name))
+            LOG_ERR("AsyncRedisClient::expireat name={}".format(name))
             return False
         cmd = "EXPIREAT " + name + " " + str(when)
         return self._executeRawRedis(cmd, resultCallback)
 
     def ltrim(self, name, start, end, resultCallback=None):
         if not name:
-            LOG_ERR("RedisAsyncClient::ltrim name={}".format(name))
+            LOG_ERR("AsyncRedisClient::ltrim name={}".format(name))
             return False
         cmd = "LTRIM " + name + " " + str(start) + " " + str(end)
         return self._executeRawRedis(cmd, resultCallback)
 
     def lrange(self, name, start, end, resultCallback=None):
         if not name:
-            LOG_ERR("RedisAsyncClient::lrange name={}".format(name))
+            LOG_ERR("AsyncRedisClient::lrange name={}".format(name))
             return False
         cmd = "LRANGE " + name + " " + str(start) + " " + str(end)
         return self._executeRawRedis(cmd, resultCallback)
@@ -542,7 +549,7 @@ class RedisAsyncClient(object):
     # 右侧插入
     def rpush(self, name, *args, resultCallback=None):
         if not name:
-            LOG_ERR("RedisAsyncClient::rpush name={}".format(name))
+            LOG_ERR("AsyncRedisClient::rpush name={}".format(name))
             return False
 
         isBytes = isinstance(args[0], bytes)
@@ -563,7 +570,7 @@ class RedisAsyncClient(object):
     # 左侧取出
     def lpop(self, name, resultCallback=None):
         if not name:
-            LOG_ERR("RedisAsyncClient::lpop name={}".format(name))
+            LOG_ERR("AsyncRedisClient::lpop name={}".format(name))
             return False
         cmd = "LPOP " + name
         return self._executeRawRedis(cmd, resultCallback)
@@ -755,58 +762,13 @@ def _get_friend_msg_():
         return _ret
     '''
 
-@load_lua_script(gameconst.LuaScriptID.SET_MAX_NUMBER)
-def _set_max_number_():
-    return '''
-        local current = redis.call('GET', KEYS[1])
-        local new_val = tonumber(ARGV[1])
-        if current then
-            current = tonumber(current)
-            if new_val > current then
-                redis.call('SET', KEYS[1], new_val)
-                return 1
-            end
-        else
-            redis.call('SET', KEYS[1], new_val)
-            return 1
-        end
-        return 0
-    '''
-
-import login_set as LS
-SVIP_CNT = LS.datas['queuingWhiteList']['value']
-#一测临时需求，最早登录的5000人设置为svip
-@load_lua_script(gameconst.LuaScriptID.CHECK_AND_SET_SVIP)
-def _check_and_set_svip_():
-    return '''
-        local current = redis.call('GET', KEYS[1])
-        if current then
-            return 0
-        end
-
-        current = redis.call('GET', "g:svip_cnt")
-        if current then
-            current = tonumber(current)
-            if current < ''' + str(SVIP_CNT) + ''' then
-                redis.call('SET', "g:svip_cnt", current + 1)
-                redis.call('SET', KEYS[1], 1)
-                return 1
-            end
-        else
-            redis.call('SET', "g:svip_cnt", 1)
-            redis.call('SET', KEYS[1], 1)
-            return 1
-        end
-        return 0
-    '''
-
 # ----------------------------test------------------------------------
 def ResultCallback_test(cid, error, result):
     pass
 
 
 def main():
-    rac = RedisAsyncClient("172.0.0.1", 6379, '')
+    rac = AsyncRedisClient("172.0.0.1", 6379, '')
     rac.onConnect()
 
     # ----------------------------ZADD------------------------------------

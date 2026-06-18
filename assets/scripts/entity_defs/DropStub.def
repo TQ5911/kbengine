@@ -28,6 +28,7 @@
             <Arg>       UINT32              </Arg>
             <Arg>       SERVER_ID           </Arg>
             <Arg>       OBJECT_ID           </Arg>
+            <Arg>       BOOL                </Arg>
         </dropEquipItem>
 
         <takeDropEquip>
@@ -50,12 +51,6 @@
             <Arg>       ENTITYCALL          </Arg>
         </doGetTakeReward>
 
-        <doFetchOtherGiveUpEquip>
-            <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       UNIQUE_ID           </Arg>
-            <Arg>       ENTITYCALL          </Arg>
-        </doFetchOtherGiveUpEquip>
-
         <doGetDropInfo>
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       ENTITYCALL          </Arg>
@@ -66,13 +61,6 @@
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       ENTITYCALL          </Arg>
         </doRedeemEquipDrop>
-
-        <removeDropEquip>
-            <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       UNIQUE_ID           </Arg>
-            <Arg>       UINT8               </Arg>
-            <Arg>       ENTITYCALL          </Arg>
-        </removeDropEquip>
 
         <sendRepairDropMail>
             <Arg>       UNIQUE_ID           </Arg>
@@ -130,6 +118,7 @@
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       ENTITYCALL          </Arg>
             <Arg>       UINT32              </Arg>
+            <Arg>       DOUBLE              </Arg>
         </setDropEquipPayPrice>
    </BaseMethods>
 </root>

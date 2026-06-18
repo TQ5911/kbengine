@@ -1,0 +1,159 @@
+<root>
+    <Volatile>
+        <position/>
+        <!--<position> 0 </position> Don't update-->
+        <yaw/>
+        <!--<pitch> 20 </pitch>-->
+        <optimized> false </optimized>
+    </Volatile>
+
+    <Interfaces>
+        <Interface>   iClient     </Interface>
+        <Interface>   iTimerBase  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <methodPoolBase>
+            <Type>          METHOD_POOL_INFO    </Type>
+            <Flags>         BASE        </Flags>
+        </methodPoolBase>
+
+        <delayDestroyTimer>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </delayDestroyTimer>
+
+        <sendWorldMsgTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </sendWorldMsgTime>
+
+        <accountingID>
+            <Type>          OBJECT_ID            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </accountingID>
+
+        <gbID>
+            <Type>    PLAYER_GBID                        </Type>
+            <Flags>    BASE                       </Flags>
+        </gbID>
+
+        <gbId>
+            <Type>    PLAYER_GBID                        </Type>
+            <Flags>    ALL_CLIENTS                       </Flags>
+            <WitnessName>     true                       </WitnessName>
+        </gbId>
+
+        <spaceno>
+            <Type>          SPACE_NO                       </Type>
+            <Flags>         BASE                           </Flags>
+            <Default>       0                              </Default>
+        </spaceno>
+
+        <spaceNo>
+            <Type>          SPACE_NO                </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+            <Default>       0                              </Default>
+        </spaceNo>
+
+        <appearance>
+            <Type>          APPEARANCE_INFO     </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+        </appearance>
+
+        <name>
+            <Type>          UNICODE                 </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <WitnessName>   true                </WitnessName>
+        </name>
+
+        <school>
+            <Type>          SCHOOL                 </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <WitnessName>   true                </WitnessName>
+        </school>
+
+        <sex>
+            <Type>          SEX                 </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <WitnessName>   true                </WitnessName>
+        </sex>
+
+        <state>
+            <Type>          STATE64             </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <Default>       0                   </Default>
+        </state>
+
+        <state2>
+            <Type>          STATE64             </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <Default>       0                   </Default>
+        </state2>
+
+        <speed>
+            <Type>          FLOATATTR          </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       6.0                   </Default>
+        </speed>
+    </Properties>
+
+    <BaseMethods>
+        <sendWorldChatMsg> <Exposed/>
+            <Arg>       CHAT_MSG_DATA       </Arg>
+        </sendWorldChatMsg>
+
+        <onRecvChannelMsg>
+            <Arg>       CHAT_CHANNEL            </Arg>
+            <Arg>       CHAT_CHANNEL_AVATAR_INFO    </Arg>
+            <Arg>       CHAT_MSG_DATA       </Arg>
+        </onRecvChannelMsg>
+
+        <onEnterWaitMapSpace>
+            <Arg>       SPACE_NO        </Arg>
+        </onEnterWaitMapSpace>
+
+        <createCellNearHere>
+            <Arg>       MAILBOX     </Arg>
+        </createCellNearHere>
+
+        <onGetCellSpaceNo>
+            <Arg>       SPACE_NO        </Arg>
+        </onGetCellSpaceNo>
+
+        <onCellGetWitness>
+            <Arg>         UINT8                 </Arg>
+        </onCellGetWitness>
+
+        <kickAvataring>
+            <Arg>         UINT8                 </Arg>
+        </kickAvataring>
+    </BaseMethods>
+
+    <CellMethods>
+        <onBaseGetCell>
+        </onBaseGetCell>
+
+        <clientSetState> <Exposed/>
+            <Arg>       UINT8       </Arg>
+        </clientSetState>
+
+        <clientRemoveState> <Exposed/>
+            <Arg>       UINT8       </Arg>
+        </clientRemoveState>
+    </CellMethods>
+
+    <ClientMethods>
+        <onClientDataSyncFinished>
+        </onClientDataSyncFinished>
+
+        <onRecvAvatarChannelMsg>
+            <Arg>       CHAT_CHANNEL            </Arg>
+            <Arg>       CHAT_CHANNEL_AVATAR_INFO    </Arg>
+            <Arg>       CHAT_MSG_DATA       </Arg>
+        </onRecvAvatarChannelMsg>
+    </ClientMethods>
+</root>

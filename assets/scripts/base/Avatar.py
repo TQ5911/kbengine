@@ -64,8 +64,6 @@ import impStore
 import iEventBase
 import iGuild
 import iGuildTrain
-import iPay
-import iHolidayPay
 import iDrawCard
 import iCollectible
 import iBounty
@@ -110,22 +108,28 @@ import visible_visible as V_VD
 import iWorldLevelBase
 import iResourceRecovery
 import iReport
+import iAbyssBase
+import iSafeBox
+import iMallStore
+import uuid
 
 import cube_room
+from datetime import datetime
 
-class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
+class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMixin, impLine.ImpLine, iClient.IClient,
              impTask.ImpTask, iAvatarVariable.ImpAvatarVariable, impCombat.ImpCombat, impTeam.ImpTeam, IScore.IScore,
              iChat.IChat, iFubenSpace.IFubenSpace, impTeamDungeon.ImpTeamDungeon, iFlowController.IFlowController,
              impSingleDungeon.ImpSingleDungeon, impOutfit.ImpOutfit, iMount.IMount,
              impAvatarPet.ImpAvatarPet, impEquipment.ImpEquipment, iCrusade.ICrusade, impMail.ImpMail,
-             iCubeBase.ICubeBase, impStore.ImpStore, iFriendship.IFriendship, iEventBase.IEventBase, iPay.IPay,
-             iHolidayPay.IHolidayPay, iGuild.IGuild, iDrawCard.IDrawCard, iGuildTrain.IGuildTrain, iWarehouse.IWarehouse,
+             iCubeBase.ICubeBase, impStore.ImpStore, iFriendship.IFriendship, iEventBase.IEventBase,
+             iGuild.IGuild, iDrawCard.IDrawCard, iGuildTrain.IGuildTrain, iWarehouse.IWarehouse,
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement, iBounty.IBounty, iEmote.IEmote,
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
              iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarBase.IMineWarBase, iDungeonSettlement.IDungeonSettlement,
              iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iBindPhone.IBindPhone, iWorldLevelBase.IWorldLevelBase,
-             iLease.ILease, iResourceRecovery.IResourceRecovery, iReport.IReport):
+              iLease.ILease, iResourceRecovery.IResourceRecovery, iReport.IReport, iAbyssBase.IAbyssBase,
+               iSafeBox.ISafeBox, iMallStore.IMallStore, metaclass=ExposedWrapper.ExposedWrapperMetaClass):
     """
     角色实体
 
@@ -134,14 +138,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def __init__(self):
         KBEngine.Proxy.__init__(self)
-        iCycleEvent.ICycleEvent.__init__(self)
+        iCycleEvent.ICycleEventMixin.__init__(self)
         iBag.IBag.__init__(self)
         impMail.ImpMail.__init__(self)
         iFriendship.IFriendship.__init__(self)
         iGuild.IGuild.__init__(self)
         iDrawCard.IDrawCard.__init__(self)
-        iPay.IPay.__init__(self)
-        iHolidayPay.IHolidayPay.__init__(self)
         iWarehouse.IWarehouse.__init__(self)
         iLeaderBoard.ILeaderBoard.__init__(self)
         iCoinAuction.ICoinAuction.__init__(self)
@@ -161,11 +163,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         iEmote.IEmote.__init__(self)
         iResourceRecovery.IResourceRecovery.__init__(self)
         iReport.IReport.__init__(self)
+        iAchievement.IAchievement.__init__(self)
+        iSafeBox.ISafeBox.__init__(self)
+        iMallStore.IMallStore.__init__(self)
         LOG_INFO('Avatar::__init__ :%s' % self.id)
 
         self.initRoleCache()
         self._initVisible()
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self._initEquipDrop()
 
         self.shouldAutoBackup = False
@@ -175,8 +180,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.logInfo = {}
         self.lastYidunCheckTime = utils.curTS()
 
-        self.pyAddTimer(10, 10, gametimer.AVATAR_SYNC_SERVER_TIME)
+        self.pyAddTimer(10, 10, gametimer.TIMER_AVATAR_SYNC_SERVER_TIME)
         self.pyAddTimer(60, 60, gametimer.YIDUN_CHECK)
+        self.pyAddTimer(5, 5, gametimer.CHECK_EQUIPMENT_RETURN_EXPIRE)
         if not KBEngine.publish():
             self.pyAddTimer(1, 15, gametimer.AVATAR_PROPERTY_CHECK)
 
@@ -199,6 +205,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.setTempMiscProp(gameconst.EntityPropsEnum.cellExperience, self.getCellData('exp', 0))
         self.setTempMiscProp(gameconst.EntityPropsEnum.cellMapId, self.getCellData('spaceNo', 0))
 
+        self.onLeaseLoginInit()
+
     def initFirst(self):
         if self.freeRecoverDeathPenaltyTimes != gameconst.DEATH_PENALTY_INVALID_REC_TIMES:
             return
@@ -214,28 +222,13 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.destroySelf(gameconst.OFFLINE_REASON_CREATE_CELL_ERROR)
         return
 
-    def onCreateCellFailure(self):
-        LOG_ERR('Avatar.onCreateCellFailture')
-
-        self.entireDestroy(False, True)
-
-        return
-
     @property
     def group(self):
         return self.gmGroup
 
-    @property
-    def pyclient(self):
-        if self.client:
-            return self.client
-        return utils.Swallower()
-
-    @property
-    def pyallClients(self):
-        if self.client:
-            return self.allClients
-        return self.otherClients
+    def onCreateCellFailure(self):
+        LOG_ERR('Avatar.onCreateCellFailture')
+        self.doEntireDestroy(False, True)
 
     @property
     def characterName(self):
@@ -247,7 +240,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         该entity被正式激活为可使用， 此时entity已经建立了client对应实体， 可以在此创建它的
         cell部分。
         """
-        LOG_INFO("Avatar[%i-%s] entities enable. entityCall:%s" % (self.id, self.gbID, self.client), self.relogCnt)
+        LOG_INFO("onClientEnabled entityCall:{}".format(self.client), self.relogCnt)
         if self.isDestroying:
             return
 
@@ -257,15 +250,15 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.cancelTimerCB(self.destroyTimer, gametimer.TIMER_TAG_DESTROY_SELF)
             self.destroyTimer = 0
 
-        self.kickState = gameconst.KickAvatar.none
-        isCreating = self.getTempMiscProp(gameconst.EntityPropsEnum.isCreatingAvatar, False)
+        self.kickState = gameconst.KickAvatarEnum.none
+        _isCreating = self.getTempMiscProp(gameconst.EntityPropsEnum.isCreatingAvatar, False)
 
         self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
 
         if gameconfig.enableCentralLogin():
             self.getAccountByChn(chn).notifyLoginComplete()
 
-        if not self.cell and not isCreating:
+        if not self.cell and not _isCreating:
             self.createCell()
             self.setTempMiscProp(gameconst.EntityPropsEnum.isCreatingAvatar, True)
 
@@ -306,15 +299,16 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         # 创建cell后同步缓存
 
         self.taskOnLogin()
-        self.mailOnLogin()
         self.collectOnLogin()
         self.meridianOnLogin()
         self.welfareSignInOnLogin()
         self.drawCardOnLogin()
         self.bindPhoneOnLogin()
+        self.safeBoxOnLogin()
         self.bountyOnLogin()
         self.resourceRecoveryOnLogin()
         self.reportOnLogin()
+        self._startTitleTimer()
 
         self.setTempMiscProp(gameconst.EntityPropsEnum.gameLengthMarkTime, utils.curTS())
         self.startOutfitTimer()
@@ -353,8 +347,23 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         return self.gameLength
 
     # -------------------------------- game length end -----------------------------------
+    def backCubeRestoreOutsideRecord(self, cellData, mapId, spaceNo, logonEnterType):
+        outRecordDic = self.getCellData('miscProps', {}).get(gameconst.EntityPropsEnum.outsideRecords, None)
+        LOG_INFO('Avatar.backCubeRestoreOutsideRecord:', outRecordDic, mapId, spaceNo)
+        mapIds = cube_room.floorTypeMapDic[1].get(gameconst.CubeRoomType.READY, [cube_room.minKey])
+        lineType = mapIds[0]
+        spaceNo = formula.combineLineSpaceNo(lineType, 0)
+        for k in list(outRecordDic.keys()):
+            outRecord = outRecordDic[k]
+            if not formula.inCubeScene(outRecord.spaceNo):
+                continue
+            outRecordDic.pop(k, None)
+        return spaceNo, lineType
 
     def _restoreFromOutsideRecord(self, cellData, mapId, spaceNo, logonEnterType):
+        if logonEnterType == gameconst.LogOnEnterType.BACK_CUBE:
+            return self.backCubeRestoreOutsideRecord(cellData, mapId, spaceNo, logonEnterType)
+
         if logonEnterType != gameconst.LogOnEnterType.NONE:
             return spaceNo, mapId
 
@@ -396,22 +405,23 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             LOG_WARN('cell already created!', self.id, self.gbID)
             return False
 
-        _now = utils.curTS()
-        cellData = self.cellData
+        _cellData = self.cellData
 
         if self.isCrossServer:
-            cellData['cellCrossServerState'] = self.crossServerState
-            cellData['isInLocalServer'] = int(False)
+            _cellData['cellCrossServerState'] = self.crossServerState
+            _cellData['isInLocalServer'] = int(False)
 
-        cellData['gbId'] = self.gbID
-        cellData["dbId"] = self.databaseID
-        cellData['roleAccount'] = self.accountName
-        cellData['gmGroupCell'] = self.gmGroup
-        cellData['gmModeCell'] = self.gmMode
-        cellData['isBotCell'] = self.isBotBase
-        cellData['tLogin'] = self.tLoginBase
-        cellData['accountNameCell'] = self.accountEntity.accountName
-        tempMiscProps = cellData.setdefault('tempMiscProps', {})
+        _cellData['title'] = self.titleMgr.curTitleId
+        _cellData['gbId'] = self.gbID
+        _cellData["dbId"] = self.databaseID
+        _cellData['roleAccount'] = self.accountName
+        _cellData['gmGroupCell'] = self.gmGroup
+        _cellData['gmModeCell'] = self.gmMode
+        _cellData['isBotCell'] = self.isBotBase
+        _cellData['tLogin'] = self.tLoginBase
+        _cellData['accountNameCell'] = self.accountEntity.accountName
+        _cellData['clientDistinctIdCell'] = self.accountEntity.clientDistinctId
+        tempMiscProps = _cellData.setdefault('tempMiscProps', {})
         tempMiscProps[gameconst.EntityPropsEnum.offlineTimeForRestoreBuff] = self.tsLastOfflineBase
         tempMiscProps[gameconst.EntityPropsEnum.newbieStepCellCache] = self.newbieStep
 
@@ -425,8 +435,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         _lockDun = self.getNewbieLockDun()
         if _lockDun and not self.isCrossServer:
             if self._enterNewbieDungeon():
-                cellData['lastSpaceNo'] = spaceNo
-                self._doAfterCreateCell(cellData, spaceNo)
+                _cellData['lastSpaceNo'] = spaceNo
+                self._doAfterCreateCell(_cellData, spaceNo)
                 return
 
         lineType = formula.parseLineType(spaceNo)
@@ -434,38 +444,40 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             lineType = utils.getPlayerBornMapId()
 
         _logonEnterType = gameconst.LogOnEnterType.NONE
-        _cubeQuota = cellData.get('cubeQuota', 0)
-        _wonderLandQuota = cellData.get('wonderLandQuota', 0)
+        _cubeQuota = _cellData.get('cubeQuota', 0)
+        _wonderLandQuota = _cellData.get('wonderLandQuota', 0)
         if _cubeQuota.calcLeftTime() > 0\
-                and formula.inCubeScene(spaceNo)\
                 and gameconfig.visibleConfigEnabled('square'):
-            _logonEnterType = gameconst.LogOnEnterType.CUBE
+            if formula.inCubeScene(spaceNo):
+                _logonEnterType = gameconst.LogOnEnterType.CUBE
+            elif formula._isInnerDemonDungeonSpace(spaceNo):
+                _logonEnterType = gameconst.LogOnEnterType.BACK_CUBE
 
         elif _wonderLandQuota.calcLeftTime() > 0 \
                 and formula.inWonderLandScene(spaceNo)\
                 and gameconfig.visibleConfigEnabled('wonderLand'):
             _logonEnterType = gameconst.LogOnEnterType.WONDER_LAND
 
-        spaceNo, lineType = self._restoreFromOutsideRecord(cellData, lineType, spaceNo, _logonEnterType)
+        spaceNo, lineType = self._restoreFromOutsideRecord(_cellData, lineType, spaceNo, _logonEnterType)
         self.baseSpaceNo = spaceNo
-        cellData['lastSpaceNo'] = spaceNo
+        _cellData['lastSpaceNo'] = spaceNo
 
         teamId = self.getCellData('teamId', 0)
         extra = {'isLogin': 1}
-        if _logonEnterType == gameconst.LogOnEnterType.CUBE:
+        if _logonEnterType == gameconst.LogOnEnterType.CUBE or _logonEnterType == gameconst.LogOnEnterType.BACK_CUBE:
             gameengine.getCubeStub(1).logonEnterCube(self, self.gbID, extra)
 
         elif _logonEnterType == gameconst.LogOnEnterType.WONDER_LAND:
             gameengine.getWonderLandStubBySpaceNo(spaceNo).logonEnterWonderLand(self, self.gbID, spaceNo)
 
         elif teamId:
-            extra['position'] = cellData['position']
+            extra['position'] = _cellData['position']
             gameengine.getTeamStub(teamId).teamLogonEnterLine(lineType, self, self.gbID, teamId, extra)
         else:
-            extra['position'] = cellData['position']
+            extra['position'] = _cellData['position']
             gameengine.getLineStub(lineType).autoSwitchLine(self, self.gbID, 0, extra, 'onLogonGetLineNo', (lineType, extra))
 
-        self._doAfterCreateCell(cellData, spaceNo)
+        self._doAfterCreateCell(_cellData, spaceNo)
 
     def _doAfterCreateCell(self, cellData, spaceNo):
         self._updateCentraInfoOnLogon(cellData)
@@ -520,9 +532,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def onLogonGetMainCityLineNo(self, lineNo, lineSpaceBox, position, lineType, extra):
         LOG_INFO('createCell in main city', lineType, lineNo, lineSpaceBox.id)
-        cellData = self.cellData
-        cellData['spaceNo'] = formula.combineLineSpaceNo(lineType, lineNo)
-        cellData['position'] = position or cellData['position']
+        _cellData = self.cellData
+        _cellData['spaceNo'] = formula.combineLineSpaceNo(lineType, lineNo)
+        _cellData['position'] = position or _cellData['position']
         lineSpaceBox.createCellNearSelf(self)
 
     def destroySelf(self, reason=gameconst.OFFLINE_REASON_DESTORY, writeToDB=True):
@@ -557,7 +569,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         # 销毁base
         if not self.isDestroyed:
-            self.entireDestroy(False, writeToDB)
+            self.doEntireDestroy(False, writeToDB)
 
         return True
 
@@ -570,16 +582,18 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         引擎回调timer触发
         """
         # LOG_DBG("%s::onTimer: %i, tid:%i, arg:%i" % (self.getScriptName(), self.id, tid, userArg))
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
-        elif userArg == gametimer.AVATAR_SYNC_SERVER_TIME:
-            self.client and self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
+        elif userArg == gametimer.TIMER_AVATAR_SYNC_SERVER_TIME:
+            if self.client:
+                self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
+
         elif userArg == gametimer.AVATAR_PROPERTY_CHECK:
             checkUserType.checkProperty(self)
         elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
-        elif userArg == gametimer.CROSS_SERVER_HEARTBEAT_TIMER:
+        elif userArg == gametimer.TIMER_CROSS_SERVER_HEARTBEAT:
             self.crossServerHeartbeat()
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
@@ -599,13 +613,17 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._yidunCheck()
         elif userArg == gametimer.ENEMY_SCHEDULE:
             self.scheduleEnemyPosInfo()
+        elif userArg == gametimer.PROCESS_AUCTION_PENDING:
+            self.calculateAuctionPendingEntries()
+        elif userArg == gametimer.CHECK_EQUIPMENT_RETURN_EXPIRE:
+            self._checkEquipExpire()
         else:
             super(Avatar, self).onTimer(tid, userArg)
 
     def kickAvatar(self, chn):
         LOG_INFO('kickAvatar', self.hasChnClient(chn), self.baseSpaceNo, chn)
         if self.hasChnClient(chn):
-            self.kickState = gameconst.KickAvatar.kicking
+            self.kickState = gameconst.KickAvatarEnum.kicking
             self.canRelogin = True
             self.getClient(chn).onAnotherClientLogin()
             self.disconnect(chn)
@@ -620,9 +638,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         LOG_INFO('reloginAvatar', self.kickState)
         if not self.hasChnClient(_chn):
-            self.kickState = gameconst.KickAvatar.kicked
+            self.kickState = gameconst.KickAvatarEnum.kicked
 
-        if self.kickState == gameconst.KickAvatar.kicking:
+        if self.kickState == gameconst.KickAvatarEnum.kicking:
             self.addTimerCB(0.2, 'doRelogin', (accountEid, ), gametimer.TIMER_TAG_DO_RELOGIN)
             return False
 
@@ -639,8 +657,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         entity丢失了客户端实体
         """
         LOG_INFO("Avatar[%i].onClientDeath", self.id, self.gbID, self.cell, chn)
-        if self.kickState == gameconst.KickAvatar.kicking:
-            self.kickState = gameconst.KickAvatar.kicked
+        if self.kickState == gameconst.KickAvatarEnum.kicking:
+            self.kickState = gameconst.KickAvatarEnum.kicked
         if self.cell:
             self.cell.clientDeath()
 
@@ -858,45 +876,44 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.onPopRoleCacheCB(reason)
         return
 
-    def onPopRoleCacheCB(self, reason):
+    def onPopRoleCacheCB(self, offlineReason):
         # record到多个PlayerStub 会pop多次
         if self.isDestroyed:
             return
         self.cancelTimerCB(self.popRoleCacheTimer, gametimer.TIMER_TAG_ON_POP_ROLECACHECB)
-        if reason == gameconst.OFFLINE_REASON_CELLAPP_DEATH:
+        if offlineReason == gameconst.OFFLINE_REASON_CELLAPP_DEATH:
             writeToDB = False
         else:
             writeToDB = True
 
-        if reason in (gameconst.OFFLINE_REASON_CELLAPP_DEATH, gameconst.OFFLINE_REASON_LOSE_CELL):
+        if offlineReason in (gameconst.OFFLINE_REASON_CELLAPP_DEATH, gameconst.OFFLINE_REASON_LOSE_CELL):
             # 放到queue里销毁，否则同个进程可能有大量实体同时销毁，导致baseapp负载激增
-            gameglobal.localBaseApp.addCallQueue(lambda: self.destroySelf(reason=reason, writeToDB=writeToDB))
+            gameglobal.localBaseApp.addToCallQueue(lambda: self.destroySelf(reason=offlineReason, writeToDB=writeToDB))
         else:
-            self.destroySelf(reason=reason, writeToDB=writeToDB)
-
-    def entireDestroy(self, deleteFromDB, writeToDB):
-        if self.isDestroyed:
-            return
-        if hasattr(self, 'cell') and self.cell:
-            self.isDeleteFromDB = deleteFromDB
-            self.isWriteToDB = writeToDB
-            self.destroyCellEntity()
-        else:
-            if not self.canDestroy:
-                LOG_INFO('Avatar.entireDestroy, cannot destroy now')
-                self.addTimerCB(0.5, 'entireDestroy', (deleteFromDB, writeToDB), gametimer.TIMER_TAG_DESTROY_LATER)
-                return
-            
-            self._preEntireDestroy()
-            self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)
-            self._postEntireDestroy()
-        return
+            self.destroySelf(reason=offlineReason, writeToDB=writeToDB)
 
     def startOffline(self, spaceNo, reason):
         LOG_INFO('startOffline:', spaceNo, reason)
         self.isDestroying = True
         self.offlineReason = reason
         self.setBaseSpaceNo(spaceNo)
+
+    def doEntireDestroy(self, deleteFromDB, writeToDB):
+        if self.isDestroyed:
+            return
+        if hasattr(self, 'cell') and self.cell:
+            self.isWriteToDB = writeToDB
+            self.isDeleteFromDB = deleteFromDB
+            self.destroyCellEntity()
+        else:
+            if not self.canDestroy:
+                LOG_INFO('Avatar.doEntireDestroy, cannot destroy now')
+                self.addTimerCB(0.5, 'doEntireDestroy', (deleteFromDB, writeToDB), gametimer.TIMER_TAG_DESTROY_LATER)
+                return
+            
+            self._preEntireDestroy()
+            self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)
+            self._postEntireDestroy()
 
     def _preEntireDestroy(self):
         # 这里面不能有异常，会导致实体无法销毁
@@ -978,14 +995,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         except Exception as e:
             gameengine.panicStack('_preEntireDestroy error:', self.id, str(e))
 
-    def _postEntireDestroy(self):
-        gameglobal.roleGBIDToEntId.pop(self.gbID, None)
-
     def initRoleCache(self):
-        appearance = self.getCellData('appearance', None)
+        _appearance = self.getCellData('appearance', None)
         picFrameId = 0
-        if appearance:
-            picFrameId = appearance.outfitData.picFrameId
+        if _appearance:
+            picFrameId = _appearance.outfitData.picFrameId
         self.updateRoleCache({
             'name': self.getCellData('name', ''),
             'level': self.getCellData('level', 1),
@@ -999,25 +1013,35 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             'sex': self.getCellData('sex', 0),
         })
 
+    def _postEntireDestroy(self):
+        gameglobal.roleGBIDToEntId.pop(self.gbID, None)
+
     def updateRoleCache(self, roleInfo):
-        if self.id not in gameglobal.roleCache:
+        if self.id in gameglobal.roleCache:
+            gameglobal.roleCache[self.id].update(roleInfo)
+        else:
             roleInfo['gbId'] = self.gbID
             gameglobal.roleCache[self.id] = roleInfo
-        else:
-            gameglobal.roleCache[self.id].update(roleInfo)
-        return
 
     def eraseAvatarBase(self, name, reason):
         gameengine.getGlobalBase('PlayerStub').erase(self.accountName, self.id, name, self.gbID,
                    self.databaseID, reason)
 
     def recordAvatarBase(self):
-        gameengine.getGlobalBase('PlayerStub').record(self.accountName, gameglobal.roleCache[self.id]['name'],
-                    self.gbID, self.databaseID, self, 'onRecordAvatarFinished', (), {})
+        gameengine.getGlobalBase('PlayerStub').record(
+            self.accountName, 
+            self.getRoleCacheAttr('name'),
+            self.gbID, 
+            self.databaseID, 
+            self, 
+            'onRecordAvatarFinished', 
+            (), 
+            {},
+        )
 
     def onRecordAvatarFinished(self):
         LOG_DBG('onRecordAvatarFinished:', self.gbID)
-        gamesql.loadOfflineCallback(self, None)
+        gamesql.loadOfflineCallback(self, self._finishLoad)
         self._loadFriendReq()
         self._loadGuildInfo()
         try:
@@ -1025,6 +1049,24 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._initPlayerCollectionAuctionList()
         except Exception as e:
             gameengine.panicStack('_loadPlayerCoinAuctionData error:', e)
+
+    def _finishLoad(self):
+        """
+        读盘时序相关处理，需要比其他数据晚加载的数据放在这里处理
+        比如邮件，需要玩家封禁信息加载后，再判断是否可收邮件
+        """
+        self.removeTimeoutBanMail()
+        self.mailOnLogin()
+
+    def removeTimeoutBanMail(self):
+        """
+        删除过期banMail
+        """
+        now = utils.curTS()
+        for bantype, limitTime in list(self.banMail.items()):
+            end = limitTime[1]
+            if end <= now:
+                del self.banMail[bantype]
 
     def updateCellDataCache(self, cellDataDict):
         LOG_DBG('updateCellDataCache', cellDataDict)
@@ -1037,9 +1079,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         return self.getRoleCacheAttr('school')
 
     def getRoleCacheAttr(self, attrName, default=0):
-        roleInfo = gameglobal.roleCache.get(self.id, None)
-        if roleInfo:
-            return roleInfo.get(attrName, default)
+        _roleInfo = gameglobal.roleCache.get(self.id, None)
+        if _roleInfo:
+            return _roleInfo.get(attrName, default)
         return default
 
     def _dailySignIn(self):
@@ -1047,49 +1089,48 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.cell.dailySignIn()
 
     def postAvatarProp(self, postDataDict, blacklistPro, persistProList, serverId, playerName):
-        avatarDict = self.__dict__
-        for proKey, avatarPro in avatarDict.items():
-            if proKey in persistProList and proKey not in blacklistPro:
-                postDataDict[proKey] = avatarPro
+        _avatarDict = self.__dict__
+        for _proKey, avatarPro in _avatarDict.items():
+            if _proKey in persistProList and _proKey not in blacklistPro:
+                postDataDict[_proKey] = avatarPro
 
         gameengine.getGlobalBase('HomeStub').getPlayerHome(self.gbID, postDataDict, serverId, playerName)
 
     def reloadScript(self):
-        for pName, pVal in self.__dict__.items():
-            if pName.startswith('__'):
+        for _pName, _pVal in self.__dict__.items():
+            if _pName.startswith('__'):
                 continue
 
-            if hasattr(pVal, 'reloadScript'):
-                pVal.reloadScript()
+            if hasattr(_pVal, 'reloadScript'):
+                _pVal.reloadScript()
 
         self._reloadMiscProp(self.tempMiscPropsBase)
 
         if hasattr(self, 'cellData'):
-            for pName, pVal in self.cellData.items():
-                if hasattr(pVal, 'reloadScript'):
-                    pVal.reloadScript()
+            for _pVal in self.cellData.values():
+                if hasattr(_pVal, 'reloadScript'):
+                    _pVal.reloadScript()
 
             self._reloadMiscProp(self.cellData['miscProps'])
-        return
 
     def postReloadScript(self):
-        if hasattr(super(Avatar, self), 'postReloadScript'):
-            super(Avatar, self).postReloadScript()
+        if not hasattr(super(Avatar, self), 'postReloadScript'):
+            return
+
+        super(Avatar, self).postReloadScript()
 
     @gamedecorator.crossServer
     def runGmCommand(self, exposed, command):
-        if self.gmMode or not gameconfig.gmVerifyByGroup() or self.group:
+        if self.gmMode\
+                or not gameconfig.gmVerifyByGroup()\
+                or self.group:
             gmCommand.doCommandInside(self, command)
-
-    def runGmCommandDelay(self, command, delay):
-        if self.gmMode or not gameconfig.gmVerifyByGroup() or self.group:
-            self.addTimerCB(delay, 'runGmCommand', (command,), gametimer.TIMER_TAG_RUN_GM_COMMAND)
-
-    def feedbackCommandSucc(self, message):
-        LOG_INFO('gm command succ:', message)
 
     def feedbackCommandFail(self, message):
         LOG_INFO('gm command fail:', message)
+
+    def feedbackCommandSucc(self, message):
+        LOG_INFO('gm command succ:', message)
 
     def realDoGmCommandProxy(self, args):
         gmCommand.realDoCommand(*args)
@@ -1101,41 +1142,38 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             res = resultObj.__dict__ if resultObj else 'None'
         LOG_INFO('onCommandResult', result, retErrMsg, res)
 
-    def callMethod(self, methodName, methodArgs):
+    def callMethod(self, methodName, args):
         if not hasattr(self, methodName):
             return
 
-        getattr(self, methodName)(*methodArgs)
-        return
+        getattr(self, methodName)(*args)
 
     def createEntityHasBase(self, entType, props):
         KBEngine.createEntityLocally(entType, props)
 
     def gmCreateEntityHasBase(self, entType, props, entityNumber=1):
         entityNumber = min(entityNumber, 20)
-        for i in range(entityNumber):
+        for _ in range(entityNumber):
             KBEngine.createEntityLocally(entType, props)
 
     def gmCreateMonsterGrp(self, props):
-        en = KBEngine.createEntityLocally('MonsterGrp', props)
-        en.createMonstersFromGrp(props)
+        _ent = KBEngine.createEntityLocally('MonsterGrp', props)
+        _ent.createMonstersFromGrp(props)
 
     def sendServerOpenTime(self):
         self.client and self.client.onGetServerOpenTime(gameconfig.serverOpenTime())
 
     def teleportByNo(self, dstSpace, dstPos, dstDir, callback, callbackArgs):
-        smCell = gamebase.getSpaceMarkerCellByNo(dstSpace)
+        _smCell = gamebase.getSpaceMarkerCellByNo(dstSpace)
         LOG_INFO('zt: teleportByNo', dstSpace, dstPos, dstDir, callback, callbackArgs)
 
-        if smCell:
-            self.cell.teleportToCell(smCell, dstSpace, dstPos, dstDir, callback, callbackArgs)
+        if _smCell:
+            self.cell.teleportToCell(_smCell, dstSpace, dstPos, dstDir, callback, callbackArgs)
         elif formula.inStaticScene(dstSpace):
             # static space
             LOG_ERR('zt: cannot teleport: dstSpace=%d' % dstSpace)
         else:
-            LOG_ERR('smCell is none')
-
-        return
+            LOG_ERR('_smCell is none')
 
     def onLeaveDungeon(self, mySpaceNo, fromSpaceNo):
         LOG_DBG('in onLeaveDungeon::', mySpaceNo, fromSpaceNo)
@@ -1171,11 +1209,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         self.tempMiscPropsBase[propId] = value
 
-    def getTempMiscProp(self, propId, default=None):
-        return self.tempMiscPropsBase.get(propId, default)
-
     def popTempMiscProp(self, propId, default=None):
         return self.tempMiscPropsBase.pop(propId, default)
+
+    def getTempMiscProp(self, propId, default=None):
+        return self.tempMiscPropsBase.get(propId, default)
 
     def hasTempMiscProp(self, propId):
         return propId in self.tempMiscPropsBase
@@ -1194,21 +1232,21 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         self.miscPropsBase[propId] = value
 
-    def getPersistentMiscProp(self, propId, default=None):
-        return self.miscPropsBase.get(propId, default)
-
     def popPersistentMiscProp(self, propId, default=None):
         return self.miscPropsBase.pop(propId, default)
+
+    def getPersistentMiscProp(self, propId, default=None):
+        return self.miscPropsBase.get(propId, default)
 
     def hasPersistentMiscProp(self, propId):
         return propId in self.miscPropsBase
 
     def _reloadMiscProp(self, propDic):
-        for prop in propDic.values():
-            if hasattr(prop, 'reloadScript'):
-                prop.reloadScript()
-            elif hasattr(prop, '__iter__'):
-                for v in prop:
+        for _prop in propDic.values():
+            if hasattr(_prop, 'reloadScript'):
+                _prop.reloadScript()
+            elif hasattr(_prop, '__iter__'):
+                for v in _prop:
                     if hasattr(v, 'reloadScript'):
                         v.reloadScript()
 
@@ -1234,19 +1272,32 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.client.onMessage(msgId, args)
 
     # 用来存储只有客户端用到的数据
+
+    @gamedecorator.crossServer
     def setCliConfigData(self, exposed, keys, vals):
         for key, val in zip(keys, vals):
             self.cliConfigDic[key] = val
             self.addCollectionAuctionIdList(key, val)
             self.addCollectionAuctionIdCategoryList(key, val)
             self.addCollectionAuctionItemCategoryList(key, val)
+        self.syncMethodCallToLocalServerBase('onCrossServerSetCliConfigData', (keys, vals))
+    
+    def onCrossServerSetCliConfigData(self, keys, vals):
+        LOG_INFO('onCrossServerSetCliConfigData:', keys, vals)
+        self.setCliConfigData(self.id, keys, vals)
 
+    @gamedecorator.crossServer
     def delCliConfigData(self, exposed, keys):
         for key in keys:
             val = self.cliConfigDic.pop(key, 0)
             self.removeCollectionAuctionIdList(key, val)
             self.removeCollectionAuctionIdCategoryList(key, val)
             self.removeCollectionAuctionItemCategoryList(key, val)
+        self.syncMethodCallToLocalServerBase('onCrossServerDelCliConfigData', (keys,))
+    
+    def onCrossServerDelCliConfigData(self, keys):
+        LOG_INFO('onCrossServerDelCliConfigData:', keys)
+        self.delCliConfigData(self.id, keys)
 
     def sendCliConfigData(self):
         jsonStr = json.dumps(self.cliConfigDic).encode('ascii')
@@ -1262,24 +1313,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             return
         # TODO 登陆后日志
 
-    def getLogCommonParams(self, vGameAppid=True, PlatID=True, iZoneAreaID=True, vOpenID=True,
-                           vRoleID=True, vRoleName=True):
-        _data = {}
-        roleInfo = gameglobal.roleCache[self.id]
-        if vGameAppid:
-            _data["vGameAppid"] = utils.getGameAppId(self.accountEntity.channelId)
-        if PlatID:
-            _data["PlatID"] = self.accountEntity.devicePlatId
-        if iZoneAreaID:
-            _data["iZoneAreaID"] = gameconfig.serverId()
-        if vOpenID:
-            _data["vOpenID"] = self.accountEntity.accountName
-        if vRoleID:
-            _data["vRoleID"] = str(self.gbID)
-        if vRoleName:
-            _data["vRoleName"] = roleInfo['name']
-        return _data
-
     def isIDIPBan(self, banType):
         if banType not in self.idipBanDict:
             return False
@@ -1291,22 +1324,48 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.idipBanDataDict.pop(banType, None)
             return False
 
-    def showBanMsg(self, banType, msgId):
-        timeStr = time.strftime('%Y年%m月%d日%H时%M分%S秒', time.localtime(self.idipBanDict[banType]))
-        self.onMessagePre(msgId, [self.idipBanDataDict[banType]['promptContent'], timeStr])
-
     @gamedecorator.offlineCallback
-    def IDIPBanState(self, banType, endTime, data=None):
-        self.idipBanDict[banType] = endTime
-        return True
+    def IDIPBanState(self, banType, endTime, isAuto, data=None):
+        LOG_INFO('IDIPBanState:', banType, endTime, isAuto)
+        if isAuto:
+            isBan = False
+            lastIsAuto = False
+            if banType in self.idipBanDict:
+                if self.idipBanDict[banType] >= utils.curTS():
+                    isBan = True
+                    lastIsAuto = self.idipBanDataDict[banType]['isAuto']
+            LOG_INFO('IDIPBanState auto:', banType, isBan, lastIsAuto)
+            
+            #当前没被封直接封
+            if not isBan:
+                self.idipBanDict[banType] = endTime
+                self.idipBanDataDict[banType] = {'isAuto': isAuto}
+                LOG_INFO('IDIPBanState auto but not isBan', self.idipBanDict, self.idipBanDataDict)
+                return True
+
+            #当前封禁中，并且是自动ban，如果时间更久，则覆盖
+            if lastIsAuto:
+                if endTime > self.idipBanDict[banType]:
+                    self.idipBanDict[banType] = endTime
+                    self.idipBanDataDict[banType] = {'isAuto': isAuto}
+                    LOG_INFO('IDIPBanState auto but isBan and lastIsAuto', self.idipBanDict, self.idipBanDataDict)
+                    return True
+            
+            #当前封禁中，并且是手动ban，要报警
+            if not lastIsAuto:
+                LOG_ERR('IDIPBanState but autoBanLoginFlag is MANUAL', self.idipBanDict, self.idipBanDataDict)
+                return False
+        else:
+            LOG_INFO('IDIPBanState but autoBanLoginFlag is MANUAL')
+            self.idipBanDict[banType] = endTime
+            self.idipBanDataDict[banType] = {'isAuto': isAuto}
+            return True
 
     @gamedecorator.offlineCallback
     def IDIPRemoveBanState(self, banType):
         self.idipBanDict.pop(banType, None)
+        self.idipBanDataDict.pop(banType, None)
         return True
-
-    def getIDIPBanData(self, banType, default=None):
-        return self.idipBanDataDict.get(banType, None)
 
     def IDIPModifyName(self, newName):
         props = {"name": newName}
@@ -1316,17 +1375,17 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if err:
             LOG_ERR('check name duplicate err:', self.gbID, props['name'], err)
             if props.get("pendingCheckId"):
-                self.cell.onPendingCheckItem(props["pendingCheckId"], gameconst.UseItem.FALSE)
+                self.cell.onPendingCheckItemFinished(props["pendingCheckId"], gameconst.UseItemEnum.FALSE)
             return
 
         if result == 0:
             self.onMessagePre(MMD.datas.theNameAlreadyExists, [])
             if props.get("pendingCheckId"):
-                self.cell.onPendingCheckItem(props["pendingCheckId"], gameconst.UseItem.FALSE)
+                self.cell.onPendingCheckItemFinished(props["pendingCheckId"], gameconst.UseItemEnum.FALSE)
             return
 
         if props.get("pendingCheckId"):
-            self.cell.onPendingCheckItem(props["pendingCheckId"], gameconst.UseItem.TRUE)
+            self.cell.onPendingCheckItemFinished(props["pendingCheckId"], gameconst.UseItemEnum.TRUE)
         else:
             self.cell.IDIPModifyNameCell(props["name"])
 
@@ -1340,53 +1399,53 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             LOG_ERR('_afterModifyNameWriteToDB but write to db failed')
             self.cell.modifyNameFailedRestore(oldName)
             if isFromItem:
-                self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+                self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
             return
 
         self.accountEntity.delAvatarName(oldName)
         self.updateRoleCache({'name': name})
         if isFromItem:
-            self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+            self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
 
         # TODO 改名后的其他notify逻辑
         gameengine.getGlobalBase('PlayerStub').updateName(oldName, name, self, self.gbID)
 
     def onIDIPModifyAvatarInfo(self, modifyType, uniqueId, text):
         LOG_DBG('onIDIPModifyAvatarInfo:', modifyType, uniqueId, text)
-        modifyState = gameconst.IDIPBanType.TEXT_INFO_DICT[modifyType]
-        if modifyState == gameconst.IDIPBanType.avatarName:
+        _modifyState = gameconst.IDIPBanType.TEXT_INFO_DICT[modifyType]
+        if _modifyState == gameconst.IDIPBanType.avatarName:
             self.IDIPModifyName(text)
-
-    def registerCBStream(self, dataId, func, args):
-        self.streamDic[dataId].append((func, args))
 
     def streamStringProxy(self, data, desc, dataId):
         LOG_DBG('streamStringProxy:', self.gbID, dataId)
         if self.client:
-            if dataId in self.streamDic:
+            if dataId in self.streamProxyDic:
                 LOG_DBG('need delay for the stream:', dataId)
-                self.registerCBStream(dataId, 'streamStringProxy', (data, desc, dataId))
+                self.registerStreamCB(dataId, 'streamStringProxy', (data, desc, dataId,))
                 return
 
-            self.streamDic[dataId] = []
+            self.streamProxyDic[dataId] = []
             self.streamStringToClient(data, desc, dataId)
         return
+
+    def registerStreamCB(self, dataId, func, args):
+        self.streamProxyDic[dataId].append((func, args))
 
     def onStreamComplete(self, resId, success):
         if not success:
             LOG_ERR('onStreamComplete: send stream to client fail', resId, success)
 
-        if resId not in self.streamDic:
+        if resId not in self.streamProxyDic:
             return
 
-        for func, args in self.streamDic.pop(resId):
-            getattr(self, func)(*args)
+        for _func, _args in self.streamProxyDic.pop(resId):
+            getattr(self, _func)(*_args)
 
     def getCellData(self, key, defaultValue):
-        cellData = getattr(self, 'cellData', None)
-        if not cellData:
+        _cellData = getattr(self, 'cellData', None)
+        if not _cellData:
             return defaultValue
-        return cellData.get(key, defaultValue)
+        return _cellData.get(key, defaultValue)
 
     def _reqReportTargetInfo(self, gbid, fcVal):
         LOG_DBG('Avatar::_reqReportTargetInfo', gbid, fcVal)
@@ -1407,6 +1466,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.initNovicePetInfo()
         self.initNoviceHookRewardTask()
         self._initWonderLandFirst()
+        self._initAbyssFirst()
 
     def loginLogInfo(self):
         logData = {
@@ -1425,6 +1485,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def makeOfflineRoleLog(self, reason):
         LogTrackingMgr.LogTrackingMgr.Server_Role_Logout(
+            self.gbID,
+            self.accountEntity.clientDistinctId if self.accountEntity else '',
             self.accountEntity.accountName if self.accountEntity else '',
             self.gbID,
             self.getRoleCacheAttr('school'),
@@ -1464,15 +1526,15 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_authDailyReset')
         self.registerDailyEvent('_dailyUpdateVisible')
         self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
-        self.registerDailyEvent('checkMonthCardAward')
         self.registerDailyEvent('_dailyServerLoginLog')
         self.registerWeekEvent('dungeonSettlementWeeklyReset')
-        self.registerDailyEvent('_onBuyCreditDailyUpdate')
-        self.registerWeekEvent('_onBuyCreditWeeklyUpdate')
-        self.registerMonthEvent('_onBuyCreditMonthlyUpdate')
+        self.registerDailyEvent('_onMallPurchaseDailyUpdate')
+        self.registerWeekEvent('_onMallPurchaseWeeklyUpdate')
+        self.registerMonthEvent('_onMallPurchaseMonthlyUpdate')
         self.registerDailyEvent('_onWorldLevelDailyUpdate')
         self.registerMonthEvent('onWorkshopMonthlyUpdate')
         self.registerDailyEvent('onReportDailyUpdate')
+        self.registerDailyEvent('onInnerDemonRewardCntRefreshDaily')
 
     def reqDeleteAvatar(self, exposed):
         if gameconfig.enableOldLogout():
@@ -1731,9 +1793,28 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             if not val:
                 self.cell.stopAutoCombat()
 
-    def gmBanAvatar(self, endTime):
-        self.banLogin = endTime
+    def gmBanAvatar(self, endTime, isAuto):
+        if isAuto:
+            #当前封禁中并且是手动的，自动ban不能覆盖，且要报错
+            if self.banLogin >= utils.curTS() and self.autoBanLoginFlag == gameconst.AutoBanType.MANUAL:
+                LOG_ERR('gmBanAvatar but autoBanLoginFlag is MANUAL')
+                return
+            #自动ban时间更久，才覆盖
+            if endTime > self.banLogin:
+                LOG_INFO('gmBanAvatar but autoBanLoginFlag is AUTO, and endTime is more than banLogin', endTime, self.banLogin)
+                self.banLogin = endTime
+                self.autoBanLoginFlag = gameconst.AutoBanType.AUTO
+        else:
+            LOG_INFO('gmBanAvatar but banType is MANUAL', endTime)
+            self.banLogin = endTime
+            self.autoBanLoginFlag = gameconst.AutoBanType.MANUAL
+        
         self.cell.offline(gameconst.OFFLINE_REASON_GMKICK)
+
+    @gamedecorator.offlineCallback
+    def gmBanMail(self, endTime, banType):
+        self.banMail[banType] = (utils.curTS(), endTime)
+        LOG_INFO('gmbanMail', endTime, banType, self.banMail)
 
     def onGetCellAppearance(self, appearance):
         self.accountEntity.setCharAppearance(self.gbID, appearance)
@@ -1742,8 +1823,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if utils.curTS() - self.lastYidunCheckTime > int(gameconfig.getYidunData("checkTimeout")):
             self.onYiDunCheckToken(self, "", 0, "", "")
 
+    @gamedecorator.crossServer
     def onYiDunCheckToken(self, exposed, token, clientCode, gameVersion, assetVersion):
         LOG_INFO("onYiDunCheckToken")
+        if gameconfig.getYidunEnable() == 0:
+            LOG_WARN("onYiDunCheckToken but yidun is not enabled")
+            return
         if self.accountType in (centralLogin.ACCOUNT_UNKNOW, centralLogin.ACCOUNT_BOT,):
             LOG_WARN("onYiDunCheckToken but accountType is 0 (robot)")
             return
@@ -1794,6 +1879,13 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def _onYiDunCheckToken(self, httpCode, data, headers, success, *args):
         LOG_INFO("_onYiDunCheckToken", httpCode, data, headers, success)
+        if not data:
+            LOG_ERR("onYiDunCheckToken but data is empty")
+            return
+        data = json.loads(data)
+        if data.get('code', 0) != 200:
+            LOG_ERR("_onYiDunCheckToken fail!", httpCode, data)
+            return
 
     def CheckFuncConditions(self, funcStr):
         self.isUIVisible(funcStr, True)
@@ -1805,8 +1897,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             return
 
         LogTrackingMgr.LogTrackingMgr.Server_Role_Login(
+            self.gbID,
+            _account.clientDistinctId,
             _account.accountName,
             self.gbID,
+            self.obId,
             self.getRoleCacheAttr('school'),
             self.getRoleCacheAttr('name'),
             self.getRoleCacheAttr('level'),
@@ -1921,3 +2016,34 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def getAnnouncement(self):
         gameengine.getGlobalBase('ActStub').getAnnouncement(self)
+
+    # 客户端上报非法事件
+    @gamedecorator.crossServer
+    def onIllegalEvent(self, exposed, eventType, eventData):
+        if eventType == gameconst.IllegalEventType.CHAT:
+            self.onChatIllegal(eventData)
+
+    # tagId：标签id（字符串）
+    # tagValue：腾讯云标签英文（字符串）
+    # tagName：标签中文（字符串）
+    # serverId：角色服务器id（数值）
+    # userGameId：账号id（字符串）
+    # userGameRoleId：角色id（数值）
+    # roleName：角色名称（字符串）
+    # sendTime：yyyy-MM-dd HH:mm:ss（字符串，用户发送文本的时间）
+    # idempotentKey: "770aa385f3e63ede0c444bb5420c37a1"（字符串，用作幂等字段）
+    def onChatIllegal(self, eventData):
+        res = {}
+        data = json.loads(eventData)
+        tagValue = data['tagValue']
+        res['tagId'] = gameconst.AutoForbidData[tagValue]['id']
+        res['tagValue'] = tagValue
+        res['tagName'] = gameconst.AutoForbidData[tagValue]['name']
+        res['serverId'] = self.serverId
+        res['userGameId'] = self.accountName
+        res['userGameRoleId'] = self.gbID
+        res['roleName'] = self.characterName
+        res['sendTime'] = datetime.fromtimestamp(utils.curTS()).strftime("%Y-%m-%d %H:%M:%S")
+        res['idempotentKey'] = str(uuid.uuid4()).replace("-", "")
+        res = json.dumps(res)
+        LOG_INFO("onChatIllegal", res)

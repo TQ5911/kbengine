@@ -158,5 +158,9 @@ datas = _tools.RODict({
     "deMail": _tools.RODict({
         "ID": "deMail",
         "value": 24,
+    }),
+    "awaitingAction": _tools.RODict({
+        "ID": "awaitingAction",
+        "value": "代理好友正在打开“{0}”，请等待操作",
     })
 })

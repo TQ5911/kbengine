@@ -19,11 +19,11 @@ class PlayerInfo(int):
     def __init__(self, *args, **kwargs):
         self._isDead = False
 
-    def isPlayerDead(self):
-        return self._isDead
-
     def onPlayerDead(self):
         self._isDead = True
+
+    def isPlayerDead(self):
+        return self._isDead
 
     def onPlayerRelive(self):
         self._isDead = False
@@ -51,9 +51,10 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         pass
 
     def syncPlayer(self, func):
-        for pid in self.players:
-            playerEnt = KBEngine.entities.get(pid)
-            playerEnt and func(playerEnt)
+        for _pid in self.players:
+            _playerEnt = KBEngine.entities.get(_pid)
+            if _playerEnt:
+                func(_playerEnt)
 
     def initFlowController(self):
         pass
@@ -63,13 +64,13 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def beNotifiedSpaceEvent(self, srcEntId, eventId, args):
         LOG_DBG('zt: beNotifiedSpaceEvent', srcEntId, eventId, args)
-        for entId in list(self.spaceEntities.keys()):
-            e = self.getEntityById(entId)
-            if e and e.checkAIEventListened(eventId):
-                e.aiReceiveEvent(srcEntId, eventId, args)
+        for _entId in list(self.spaceEntitiesDic.keys()):
+            _e = self.getEntityById(_entId)
+            if _e and _e.checkAIEventListened(eventId):
+                _e.aiReceiveEvent(srcEntId, eventId, args)
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
 
     def onGetWitness(self):
         pass
@@ -106,13 +107,12 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
     def onPlayerLeave(self, gbId, playerId, box):
         iShowMapEntityType.IShowMapEntityType.onPlayerLeave(self, gbId, playerId, box)
         self.players.pop(playerId, None)
-        self.setAvatarNearNotifyState(playerId, False)
 
     def addEntity(self, entId, tags):
-        for monsterId in self.entsForControl:
-            if str(monsterId) in tags:
+        for _monsterId in self.entsForControl:
+            if str(_monsterId) in tags:
                 return
-        self.spaceEntities[entId] = tags
+        self.spaceEntitiesDic[entId] = tags
 
         for tag in tags:
             self.tagEntities.setdefault(tag, []).append(entId)
@@ -131,72 +131,69 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
                 if entId not in self.lightPillarDict:
                     self.lightPillarDict[entId] = ent.lightPillar
                     self.syncPlayer(lambda box: box.client.onLightPillarUpdate([ent.lightPillar], [True]))
-        # if ent.IsMonster:
-        #     attrId = CBD.datas[ent.monsterId]['attribute']
-            # self._doActionByAttrKey(ent, utils.getMonsterAttrKey(attrId))
 
         self.addBoxGroupEntity(ent)
         iShowMapEntityType.IShowMapEntityType.addEntity(self, entId, tags)
 
     def setBossEntity(self, entId):
-        tag = 'boss'
-        bossList = self.tagEntities.setdefault(tag, [])
-        if entId in bossList:
+        _tag = 'boss'
+        _bossList = self.tagEntities.setdefault(_tag, [])
+        if entId in _bossList:
             LOG_WARN("setBossEntity:: already set boss", entId)
             return
-        bossList.append(entId)
-        if entId in self.spaceEntities:
-            _tags = self.spaceEntities[entId]
-            self.spaceEntities[entId] = _tags + (tag, )
+        _bossList.append(entId)
+        if entId in self.spaceEntitiesDic:
+            _tags = self.spaceEntitiesDic[entId]
+            self.spaceEntitiesDic[entId] = _tags + (_tag, )
         else:
-            self.spaceEntities[entId] = (tag, )
+            self.spaceEntitiesDic[entId] = (_tag, )
 
     def unsetBossEntity(self, entId):
-        tag = 'boss'
-        bossList = self.tagEntities.setdefault(tag, [])
+        _tag = 'boss'
+        bossList = self.tagEntities.setdefault(_tag, [])
         if entId not in bossList:
             LOG_WARN("unsetBossEntity:: boss not be setted", entId)
             return
         bossList.remove(entId)
-        _tags = self.spaceEntities[entId]
+        _tags = self.spaceEntitiesDic[entId]
         _tmpTags = list(_tags)
-        _tmpTags.remove(tag)
-        self.spaceEntities[entId] = tuple(_tmpTags)
+        _tmpTags.remove(_tag)
+        self.spaceEntitiesDic[entId] = tuple(_tmpTags)
 
     def getEntityById(self, entId):
-        if entId not in self.spaceEntities and entId not in self.players:
+        if entId not in self.spaceEntitiesDic and entId not in self.players:
             return None
 
-        e = KBEngine.entities.get(entId)
-        if not e or e.isDestroyed:
+        _e = KBEngine.entities.get(entId)
+        if not _e or _e.isDestroyed:
             return None
 
-        return e
+        return _e
 
     def listEntitiesByTag(self, tag):
         ents = []
         for eid in self.tagEntities.get(tag, []):
-            ent = self.getEntityById(eid)
-            if ent:
-                ents.append(ent)
+            _ent = self.getEntityById(eid)
+            if _ent:
+                ents.append(_ent)
 
         return ents
 
     def getEntitiyByTag(self, tag):
         for eid in self.tagEntities.get(tag, []):
-            ent = self.getEntityById(eid)
-            return ent
+            _ent = self.getEntityById(eid)
+            return _ent
 
-    def removeEntityById(self, entId):
-        if entId not in self.spaceEntities:
-            LOG_ERR('removeEntityById: entity does not exist', entId)
+    def removeEntById(self, entId):
+        if entId not in self.spaceEntitiesDic:
+            LOG_ERR('removeEntById: entity does not exist', entId)
             return
 
-        for tag in self.spaceEntities[entId]:
+        for tag in self.spaceEntitiesDic[entId]:
             tagList = self.tagEntities[tag]
             tagList.remove(entId)
 
-        self.spaceEntities.pop(entId)
+        self.spaceEntitiesDic.pop(entId)
         if entId in self.lightPillarDict:
             pillar = self.lightPillarDict.pop(entId)
             self.syncPlayer(lambda box: box.client.onLightPillarUpdate([pillar], [False]))
@@ -204,7 +201,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         ent = KBEngine.entities.get(entId)
         if ent:
             self.removeBoxGroupEntity(ent)
-        iShowMapEntityType.IShowMapEntityType.removeEntityById(self, entId)
+        iShowMapEntityType.IShowMapEntityType.removeEntById(self, entId)
 
     def getMonsterNumByGIDsAndTag(self, monsterGIDs, tag):
         _sum = 0
@@ -236,16 +233,12 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
         entIdList = list(self.tagEntities[tag])
         for eid in entIdList:
-            self.removeEntityById(eid)
+            self.removeEntById(eid)
 
         self.tagEntities.pop(tag)
-        gid = 0
-        if tag.startswith('gid_'):
-            _, gid = tag.split('_')
-            gid = int(gid)
 
     def destroyAllEntities(self):
-        for eid in list(self.spaceEntities.keys()):
+        for eid in list(self.spaceEntitiesDic.keys()):
             if eid == self.id:
                 continue
 
@@ -259,91 +252,84 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
                     continue
 
             e.safeDestroy()
-            # self.removeEntityById(eid)
 
     def destroyEntityById(self, eid):
         e = self.getEntityById(eid)
         if e:
             e.safeDestroy()
-            # self.removeEntityById(eid)
 
     def teleportEntityById(self, eid, pos, direction):
-        e = self.getEntityById(eid)
-        if e:
-            e.telToPos(pos, direction)
-
-    def addWholeAureoleEntId(self, eid):
-        if eid not in self.wholeAureoleEntIdList:
-            self.wholeAureoleEntIdList.append(eid)
+        _e = self.getEntityById(eid)
+        if _e:
+            _e.telToPos(pos, direction)
 
     def removeWholeAureoleEntId(self, eid):
         if eid in self.wholeAureoleEntIdList:
             self.wholeAureoleEntIdList.remove(eid)
 
+    def addWholeAuraEntId(self, eid):
+        if eid not in self.wholeAureoleEntIdList:
+            self.wholeAureoleEntIdList.append(eid)
+
     def getWholeAureoleEntityById(self, entId):
         if entId not in self.wholeAureoleEntIdList:
             return None
 
-        e = KBEngine.entities.get(entId)
-        if not e or e.isDestroyed:
+        _e = KBEngine.entities.get(entId)
+        if not _e or _e.isDestroyed:
             return None
 
-        return e
+        return _e
 
     def onEnterWholeAureoleSpace(self, eid):
-        entity = self.getEntityById(eid)
+        _entity = self.getEntityById(eid)
         for eid in self.wholeAureoleEntIdList:
             aureolEnt = self.getWholeAureoleEntityById(eid)
-            aureolEnt.onEnterWholeAureole(entity)
+            aureolEnt.onEnterWholeAureole(_entity)
 
     def onLeaveWholeAureoleSpace(self, eid):
         return
 
     def _getPlayers(self, players):
-        playerEnts = []
+        _playerEnts = []
         if type(players) is int:
             players = [players]
 
-        players = players or self.players.keys()
+        if not players:
+            players = self.players.keys()
+
         for pid in players:
             player = self.getEntityById(pid)
             if player:
-                playerEnts.append(player)
+                _playerEnts.append(player)
 
-        return playerEnts
+        return _playerEnts
 
     def _getEntities(self, entIds):
-        ents = []
+        _ents = []
         if type(entIds) is int:
             entIds = [entIds]
 
-        entIds = entIds or self.spaceEntities.keys()
+        entIds = entIds or self.spaceEntitiesDic.keys()
         for eid in entIds:
             e = self.getEntityById(eid)
-            ents.append(e)
+            _ents.append(e)
 
-        return ents
+        return _ents
 
     def _getEntitiesByTag(self, tag):
-        entIds = self.tagEntities.get(tag)
-        if not entIds:
+        _entIds = self.tagEntities.get(tag)
+        if not _entIds:
             return []
 
-        return self._getEntities(entIds)
+        return self._getEntities(_entIds)
 
     def onPlayerOffline(self, playerId, playerGbId):
         self.players.pop(playerId, None)
-        self.setAvatarNearNotifyState(playerId, False)
 
     def onPlayerRelogin(self, box, playerGbId):
         iShowMapEntityType.IShowMapEntityType.onPlayerRelogin(self, box, playerGbId)
         box.client.onLightPillarUpdate([value for value in self.lightPillarDict.values()], [True] * len(self.lightPillarDict))
-
-    def onPlayerDead(self, box, playerGbId):
-        if box.id not in self.players:
-            LOG_ERR("onPlayerDead:: player not found", box, box.id, playerGbId)
-            return
-        self.players[box.id].onPlayerDead()
 
     def onPlayerRelive(self, box, playerGbId):
         if box.id not in self.players:
@@ -351,38 +337,44 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             return
         self.players[box.id].onPlayerRelive()
 
+    def onPlayerDead(self, box, playerGbId):
+        if box.id not in self.players:
+            LOG_ERR("onPlayerDead:: player not found", box, box.id, playerGbId)
+            return
+        self.players[box.id].onPlayerDead()
+
     def onCollectionBeCollect(self, entityGID, collectionId):
         LOG_DBG("onCollectionBeCollect::", entityGID, collectionId)
-        self.collBeCollectedDict.setdefault(entityGID, 0)
-        self.collBeCollectedDict[entityGID] += 1
+        self.collBeCollectedDic.setdefault(entityGID, 0)
+        self.collBeCollectedDic[entityGID] += 1
 
     def chatToPlayers(self, src, players, msgId):
-        playerEnts = self._getPlayers(players)
+        _playerEnts = self._getPlayers(players)
 
-        for player in playerEnts:
+        for player in _playerEnts:
             player.client.aiChatToPlayer(src.id, msgId)
+
     def triggerEntityEventById(self, src, entIds, eventId, args):
-        ents = self._getEntities(entIds)
-        for e in ents:
-            e.triggerAIEvent(src.id, eventId, args)
+        _ents = self._getEntities(entIds)
+        for _e in _ents:
+            _e.triggerAIEvent(src.id, eventId, args)
 
     def triggerEntityEventByTag(self, src, tag, eventId, args):
-        ents = self._getEntitiesByTag(tag)
-        for e in ents:
-            e.triggerAIEvent(src.id, eventId, args)
+        _ents = self._getEntitiesByTag(tag)
+        for _e in _ents:
+            _e.triggerAIEvent(src.id, eventId, args)
 
-    def innerSetSpaceVar(self, opUUID, varSrc, desc, varId, fmlId, paramVarIdList, avatarVarDic):
-        LOG_DBG('innerSetSpaceVar:', varSrc, varId, fmlId, paramVarIdList, avatarVarDic)
-        paramList = []
+    def innerSetSpaceVar(self, opUUID, varSrc, desc, varId, fmlId, paramVarIdList, avatarVarDict):
+        LOG_DBG('innerSetSpaceVar:', varSrc, varId, fmlId, paramVarIdList, avatarVarDict)
+        _paramList = []
         for varId in paramVarIdList:
             if dataUtils.isAvatarVar(varId):
-                paramList.append(avatarVarDic[varId])
+                _paramList.append(avatarVarDict[varId])
             elif dataUtils.isSpaceVar(varId):
-                paramList.append(self.getSpaceVar(varId))
+                _paramList.append(self.getSpaceVar(varId))
 
-        newVal = utils.calcFormulaValue(fmlId, paramList)
+        newVal = utils.calcFormulaValue(fmlId, _paramList)
         self.setSpaceVar(varId, newVal, opUUID, varSrc, desc)
-        return
 
     def setSpaceVar(self, varId, newVal, opUUID, varSrc, desc):
         varData = dataUtils.getVariableData(varId)
@@ -390,21 +382,18 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         if varData['cntGamePlay'] != dungeonNo:
             LOG_WARN('setSpaceVar, not belong to the space:', varId, dungeonNo)
             return
-        oldVal = self.getSpaceVar(varId)
-        if oldVal == newVal:
+        _oldVal = self.getSpaceVar(varId)
+        if _oldVal == newVal:
             return
         self.spaceVars[varId] = newVal
-        #gamelog.makeSpaceVarChangedLog(self.spaceNo, varId, oldVal, newVal, opUUID, varSrc, desc)
 
         for entId in self.players:
-            ent = self.getEntityById(entId)
-            if not ent:
+            _ent = self.getEntityById(entId)
+            if not _ent:
                 continue
-            ent.base.syncSpaceVariable(self.spaceNo, {varId:newVal})
+            _ent.base.syncSpaceVariable(self.spaceNo, {varId:newVal})
 
         self.flowCtrlDungeonValueCheckChangedTrigger(varId)
-
-        return
 
     def addSpaceVar(self, varId, addVal, opUUID, varSrc, desc):
         varData = dataUtils.getVariableData(varId)
@@ -412,18 +401,17 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         if varData['cntGamePlay'] != dungeonNo:
             LOG_WARN('addSpaceVar, not belong to the space:', varId, dungeonNo)
             return
-        oldVal = self.getSpaceVar(varId)
-        self.spaceVars[varId] = oldVal + addVal
-        gamelog.makeSpaceVarChangedLog(self.spaceNo, varId, oldVal, self.spaceVars[varId], opUUID, varSrc, desc)
+        _oldVal = self.getSpaceVar(varId)
+        self.spaceVars[varId] = _oldVal + addVal
+        gamelog.makeSpaceVarChangedLog(self.spaceNo, varId, _oldVal, self.spaceVars[varId], opUUID, varSrc, desc)
 
         for entId in self.players:
-            ent = self.getEntityById(entId)
-            if not ent:
+            _ent = self.getEntityById(entId)
+            if not _ent:
                 continue
-            ent.base.syncSpaceVariable(self.spaceNo, {varId: self.spaceVars[varId]})
+            _ent.base.syncSpaceVariable(self.spaceNo, {varId: self.spaceVars[varId]})
 
         self.flowCtrlDungeonValueCheckChangedTrigger(varId)
-        return
 
     def getSpaceVar(self, varId):
         varData = dataUtils.getVariableData(varId)
@@ -432,59 +420,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             LOG_WARN('getSpaceVar, not belong to the space:', varId, dungeonNo)
             return
         return self.spaceVars.get(varId, dataUtils.getVariableDefaultVal(varId))
-
-    def setAvatarNearNotifyState(self, eid, isOn):
-        pass
-
-    def _getDistance(self, ent1, ent2):
-        return (ent1.position[0] - ent2.position[0]) ** 2 + (ent1.position[2] - ent2.position[2]) ** 2
-
-    def notifyAvatarNearMonPos(self):
-        if not self.notifyNearPosList:
-            return
-
-        mons = self.listEntitiesByTag('Monster')
-        for avatarId in self.notifyNearPosList:
-            avatar = self.getEntityById(avatarId)
-            if not avatar:
-                continue
-
-            nearDis = 2147483647
-            nearMon = None
-            for mon in mons:
-                if not mon:
-                    continue
-
-                if mon.hasState(gameconst.StateEnum.Death):
-                    continue
-
-                distance = self._getDistance(avatar, mon)
-                if self.isNearMonIgnore(mon, distance):
-                    continue
-
-                if distance < nearDis:
-                    nearDis = distance
-                    nearMon = mon
-
-            if nearMon:
-                avatar.client.notifyNearMonsterPos(nearMon.position, True)
-            else:
-                self.notifyNearNotFindMonster(avatar)
-
-    def notifyNearNotFindMonster(self, avatar):
-        avatar.client.notifyNearMonsterPos((0, 0, 0), False)
-
-    def isNearMonIgnore(self, monEnt, distance):
-        if monEnt.bornState == gameconst.BornStateType.stone or monEnt.bornState == gameconst.BornStateType.virtual:
-            return True
-
-        showArrowDistance = CBD.datas[monEnt.monsterId]['showArrowDistance']
-        if showArrowDistance == -1:
-            return True
-        elif showArrowDistance == 0:
-            return False
-
-        return distance < showArrowDistance
 
     # ----------------------------------------------------------------------
     # CINEMA
@@ -510,3 +445,5 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         self.syncPlayer(lambda box: box.client.onNotifyStartBattleCD(dungeonNo, ts))
         
 
+    def sendDungeonProps(self, box):
+        pass

@@ -24,8 +24,12 @@ class ICubeBase(object):
         # leftCubeTimes 这个现在是每天的免费次数
         # paidCubeTimes 这个是有一定消耗获得的次数
         tType = args[0] if len(args) >= 1 else 0
+        LOG_INFO("ICubeBase::_cubeDailyRefresh", tType)
         if tType == gameconst.CycleEventTriggerType.TIMED:
-            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.CUBE, self.leftCubeTimes, gameconst.FreeTicketUpdateType.RESET)
+            return
+        if tType == gameconst.CycleEventTriggerType.UPDATE:
+            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.CUBE, self.leftCubeTimes, gameconst.FreeTicketUpdateType.UPDATE)
+
         self.leftCubeTimes = cube_config.datas['dailyCubeNum']['value']
         self.cubeUseCoinTimes = 0
         self.cubePrayTimes = 0
@@ -168,7 +172,7 @@ class ICubeBase(object):
             return False
 
         _src = AAC_AACDD.datas.BONUS_SRC_CUBE_ROOM_ADD_TIMES
-        _detail = gameclass.AwardDetail(cubeTimes=num)
+        _detail = gameclass.AwardDetailCls(cubeTimes=num)
         self.deductWealth(_src, _award, opUUID, _detail)
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.cubeUseCoinTimes += num
@@ -198,6 +202,8 @@ class ICubeBase(object):
 
         LogTrackingMgr.LogTrackingMgr.Cube_Ticket(
             self.gbID,
+            self.accountEntity.clientDistinctId, 
+            self.gbID,
             src,
             delta,
             self.leftCubeTimes,
@@ -216,7 +222,7 @@ class ICubeBase(object):
         _opUUID = KBEngine.genUUID64()
         _award = dropAward.AwardVal()
         _award.addWealthByItemId(itemId, _addNum)
-        _detail = gameclass.AwardDetail(reason='add room duration failed')
+        _detail = gameclass.AwardDetailCls(reason='add room duration failed')
 
         self.addWealth(_src, _award, _opUUID, _detail)
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
@@ -259,7 +265,7 @@ class ICubeBase(object):
                 AAC_AACDD.datas.BONUS_SRC_CUBE_PRAY_COST_ITEM, 
                 _deductVal, 
                 KBEngine.genUUID64(), 
-                gameclass.AwardDetail(reason='qifu cost item'))
+                gameclass.AwardDetailCls(reason='qifu cost item'))
 
             for _data in cube_buff.datas.values():
                 if _data['type'] != gameconst.CUBE_PRAY_BUFF:

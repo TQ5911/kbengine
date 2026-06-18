@@ -238,5 +238,9 @@ datas = _tools.RODict({
     "deathOperationMsg": _tools.RODict({
         "ID": "deathOperationMsg",
         "value": 54000003,
+    }),
+    "explorationRateMsg": _tools.RODict({
+        "ID": "explorationRateMsg",
+        "value": 54001802,
     })
 })

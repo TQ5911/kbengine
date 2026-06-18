@@ -20,6 +20,7 @@ class BodyEquips(userType.UserSingleType):
         self._resetSetInfo()
         self.addSkillLvDic = {}
         self.blessAttrs = {}
+        self.waitExpireEquipList = {}
 
     def _lateReload(self):
         super(BodyEquips, self)._lateReload()
@@ -30,6 +31,10 @@ class BodyEquips(userType.UserSingleType):
         for v in self.lockData.values():
             if 'equipItem' in v and v['equipItem']:
                 v['equipItem'].reloadScript()
+
+        for v in self.waitExpireEquipList.values():
+            v.reloadScript()
+
         return
 
     @classmethod
@@ -60,6 +65,10 @@ class BodyEquips(userType.UserSingleType):
         self.blessAttrs = dataDic.get('blessAttrs', {})
         if not self.setInfo:
             self._resetSetInfo()
+
+        for equipItem in self.equips_map.values():
+            if equipItem.getOwnerGbId() > 0:
+                self.waitExpireEquipList[equipItem.uniqueId] = equipItem
 
     def _resetSetInfo(self):
         self.setInfo = {'setLv': 0, 'propVal': {}, 'equips': []}
@@ -234,6 +243,8 @@ class BodyEquips(userType.UserSingleType):
         self.changeAvatarAttrs(owner)
         owner.updateEquipmentScore()
         owner.updateEquipQualityAchievement()
+        if bagEquipItem.getOwnerGbId() > 0:
+            self.waitExpireEquipList[bagEquipItem.uniqueId] = bagEquipItem
 
     def updateEquipDressAppearance(self, owner, uniqueId):
         slotId, equipItem = self.getEquipItemByUniqueId(uniqueId)
@@ -251,6 +262,7 @@ class BodyEquips(userType.UserSingleType):
         owner.appearance.setEquip(owner, slotId, 0, 0)
         self.changeAvatarAttrs(owner)
         owner.updateEquipmentScore()
+        self.waitExpireEquipList.pop(equipItem.uniqueId, None)
         owner.client.onUndressEquipment(slotId)
         return equipItem
     
@@ -290,7 +302,7 @@ class BodyEquips(userType.UserSingleType):
         equipItem = self.equips_map.pop(slotId, None)
         if not equipItem:
             return equipItem
-        LOG_INFO("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
+        LOG_INFO(" BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
         self.recalculateAllInscriptionEffects(owner)
         LOG_INFO("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
         return equipItem
@@ -301,12 +313,32 @@ class BodyEquips(userType.UserSingleType):
         self.recalculateAllInscriptionEffects(owner)
         LOG_INFO("BodyEquips-->addEquipItem, end~")
 
+    def getDressedQualityDatas(self, excludeSlotId):
+        qualityData = {}
+        for slotId, equipObj in self.equips_map.items():
+            if slotId == excludeSlotId:
+                continue
+            quality = equipObj.getQuality()
+            qualityData[quality] = qualityData.get(quality, 0) + 1
+        return qualityData
+
     def recalculateAllInscriptionEffects(self, owner):
         LOG_INFO("recalculateAllInscriptionEffects")
+        changedInfo = {}
         owner.glyphEquipData.cleanInscriptionEffects(owner)
         for equipItem in self.equips_map.values():
-            owner.glyphEquipData.calculateAllInscriptionEffects(owner, equipItem.getGlyphAffixes())
+            owner.glyphEquipData.calculateAllInscriptionEffects(owner, changedInfo, equipItem.uniqueId, equipItem.getGlyphGroupId(), equipItem.getGlyphAffixes())
         owner.glyphEquipData.applyInscriptionEffects(owner)
+        datas = []
+        for uniqueId, changeData in changedInfo.items():
+            data = {
+                'uniqueId': uniqueId,
+                'groupId': changeData[0],
+                'status': changeData[1:],
+            }
+            datas.append(data)
+        LOG_INFO("recalculateAllInscriptionEffects : ", datas)
+        owner.client.onEquipGlyphStatusChange(datas)
 
     def getEquipsAddSkillLv(self, owner, skillId):
         inscriptionAddLevel = 0
@@ -349,4 +381,28 @@ class BodyEquips(userType.UserSingleType):
         allBlessVal = 0
         for equipItem in self.equips_map.values():
             allBlessVal += equipItem.getBlessVal()
-        return allBlessVal    
+        return allBlessVal
+    
+    def checkEquipExpire(self, owner):
+        expiredEquipUniqueIds = []
+        curTime = utils.curTS()
+        equipUniques = self.waitExpireEquipList.keys()
+        for equipUnique in equipUniques:
+            equipItem = self.waitExpireEquipList.get(equipUnique)
+            if equipItem.getOwnerGbId() != owner.gbId:
+                if curTime >= equipItem.getReturnTime():
+                    expiredEquipUniqueIds.append(equipUnique)
+
+        if len(expiredEquipUniqueIds) == 0:
+            return
+        
+        uniqueIds = []
+        slotIds = self.equips_map.keys()
+        for slotId in slotIds:
+            equipItem = self.equips_map.get(slotId)
+            if equipItem.uniqueId in expiredEquipUniqueIds:
+                uniqueIds.append(equipItem.uniqueId)
+
+        if len(uniqueIds) > 0:
+            for uniqueId in uniqueIds:
+                owner.onRemoveEquipNotifyCell(uniqueId)

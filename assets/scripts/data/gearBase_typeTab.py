@@ -19,25 +19,25 @@ datas = _tools.RODict({
         "ID": 1,
         "blessAffixID": 78002001,
         "auctionCategory": 2,
-        "deathDropWeight": 1
+        "deathDropWeight": 2
     }),
     2: _tools.RODict({
         "ID": 2,
         "blessAffixID": 0,
         "auctionCategory": 301,
-        "deathDropWeight": 3
+        "deathDropWeight": 4
     }),
     3: _tools.RODict({
         "ID": 3,
         "blessAffixID": 0,
         "auctionCategory": 302,
-        "deathDropWeight": 5
+        "deathDropWeight": 6
     }),
     4: _tools.RODict({
         "ID": 4,
         "blessAffixID": 0,
         "auctionCategory": 303,
-        "deathDropWeight": 10
+        "deathDropWeight": 6
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -49,13 +49,13 @@ datas = _tools.RODict({
         "ID": 6,
         "blessAffixID": 0,
         "auctionCategory": 402,
-        "deathDropWeight": 10
+        "deathDropWeight": 5
     }),
     7: _tools.RODict({
         "ID": 7,
         "blessAffixID": 0,
         "auctionCategory": 403,
-        "deathDropWeight": 10
+        "deathDropWeight": 5
     }),
     8: _tools.RODict({
         "ID": 8,

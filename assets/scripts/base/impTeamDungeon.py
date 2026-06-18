@@ -56,14 +56,6 @@ class ImpTeamDungeon(DungeonSheetMixin):
 
     # ===========================================
 
-    def checkTeamNeedItem(self, itemId, needCount, dungeonNo, extra):
-        deductWealthVal = dropAward.DeductWealthVal()
-        deductWealthVal.addWealthByItemId(itemId, needCount)
-        canDeduct = False
-        if self.canDeductWealth(deductWealthVal):
-            canDeduct = True
-        self.cell.onCheckTeamNeedItem(canDeduct, itemId, needCount, dungeonNo, extra)
-
     def checkCaptainTeamDungeonConditions(self, dungeonNo, teamUUID, extra):
         checkBox, _ = self._checkCaptainTeamDungeonConditions(dungeonNo, extra)
 
@@ -75,7 +67,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
 
         if _dunPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
             if not _canGetReward:
-                _extra = {'reason': gameconst.TeamDungeonCheckConditionErrno.REWARD_NUM_CHECK_FAIL,
+                _extra = {'reason': gameconst.TeamDunCheckCondErrno.REWARD_NUM_CHECK_FAIL,
                           'name': self.getRoleCacheAttr('name', '')}
                 checkBox = False
 
@@ -130,7 +122,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_ENTER_DUNGEON
-        detail = gameclass.AwardDetail(spaceNo=spaceNo)
+        detail = gameclass.AwardDetailCls(spaceNo=spaceNo)
         self.deductWealth(src, deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterTeamDungeon(
             gameconst.BagOPStat.OPERATE_BAG_STAT_OK, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)

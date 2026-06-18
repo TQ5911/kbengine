@@ -168,8 +168,8 @@ class BaseBag(itemContainer.ItemContainer):
 
         return opStat, gridId
 
-    def deductItemsByGrid(self, owner, grid2ItemNum, opUUID, srcType, detail, sendClient=True):
-        super(BaseBag, self).deductItemsByGrid(owner, grid2ItemNum, opUUID, srcType, detail, sendClient=sendClient)
+    def deductItemsByGridId(self, owner, grid2ItemNum, opUUID, srcType, detail, sendClient=True):
+        super(BaseBag, self).deductItemsByGridId(owner, grid2ItemNum, opUUID, srcType, detail, sendClient=sendClient)
 
         clientData = []
         for gridId in grid2ItemNum.keys():

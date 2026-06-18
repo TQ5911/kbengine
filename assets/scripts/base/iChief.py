@@ -16,9 +16,13 @@ import actionContext
 class IChief(object):
     def onChiefDailyRewardNumUpdate(self, *args):
         LOG_INFO('onChiefDailyRewardNumUpdate::')
-        dailyRewardNum = self.chiefInfo.dailyRewardNum
-        if self.chiefInfo.rewardNumber < dailyRewardNum:
-            self.chiefInfo.addRewardNumByDefault(dailyRewardNum - self.chiefInfo.rewardNumber)
+        tType = args[0] if len(args) >= 1 else 0
+        if tType == gameconst.CycleEventTriggerType.TIMED:
+            return
+        if tType == gameconst.CycleEventTriggerType.UPDATE:
+            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.CHIEF, self.chiefInfo.leftDailyRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
+
+        self.chiefInfo.dailyResetRewardNum()
         self.chiefInfo.rewardDailyCount = 0
         self.chiefInfo.resetUseCoinAddRewardDailyNum()
         self.chiefInfo = self.chiefInfo
@@ -26,12 +30,12 @@ class IChief(object):
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     def increaseChiefRewardNumber(self, exposed, coinNum, itemNum):
         LOG_INFO('increaseChiefRewardNumber::', coinNum, itemNum)
-        retCoin = self._useCoinToIncreaseChiefRewardNumber(coinNum, {}, needMsg = False)
+        retCoin, coinAddCount = self._useCoinToIncreaseChiefRewardNumber(coinNum, {}, needMsg = False)
         retItem = self._useItemToIncreaseChiefRewardNumber(itemNum, {}, needMsg = False)
         if retCoin or retItem:
             totalNum = 0
             if retCoin:
-                totalNum += coinNum
+                totalNum += coinAddCount
             if retItem:
                 totalNum += itemNum
             self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(totalNum)])
@@ -64,7 +68,7 @@ class IChief(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
-        detail = gameclass.AwardDetail(itemId=itemId, itemNum=itemNum)
+        detail = gameclass.AwardDetailCls(itemId=itemId, itemNum=itemNum)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
         self.onUseItemToIncreaseChiefRewardNumber(itemId, itemNum, extra, needMsg)
@@ -80,34 +84,47 @@ class IChief(object):
     def _useCoinToIncreaseChiefRewardNumber(self, useNum, extra, needMsg = True):
         LOG_INFO('_useCoinToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
-            return False
+            return False, 0
         
-        if not self.chiefInfo.isCanAddRewardByCoin(useNum):
-            LOG_ERR('useCoinToIncreaseChiefRewardNumber:: rewardNumber not enough')
-            return False
-        
-        rewardNumCoin = int(RBC_CFG.datas['rewardNumCoin']['value'])
-        deductWealthVal = dropAward.DeductWealthVal()
-        deductWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, rewardNumCoin * useNum)
+        addRewardNum = 0
+        for _ in range(0, useNum):
+            isFirst = self.chiefInfo.isFirstAddRewardNum()
+            idx = 0
+            if not isFirst:
+                idx = 1
+            cost = RBC_CFG.datas["rewardNumCoinCost"]["value"][idx]
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_ERR('_useCoinToIncreaseChiefRewardNumber::check failed')
-            return False
+            addRewardNum += cost[0]
+            itemId = cost[1]
+            itemNum = cost[2]
+            
+            if not self.chiefInfo.isCanAddRewardByCoin(1):
+                LOG_ERR('useCoinToIncreaseChiefRewardNumber:: rewardNumber not enough')
+                return False, 0
+            
+            deductWealthVal = dropAward.DeductWealthVal()
+            deductWealthVal.addWealthByItemId(itemId, itemNum)
 
-        opUUID = KBEngine.genUUID64()
-        srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
-        detail = gameclass.AwardDetail()
-        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+            if not self.canDeductWealth(deductWealthVal):
+                LOG_ERR('_useCoinToIncreaseChiefRewardNumber::check failed')
+                return False
 
-        self.onUseCoinToIncreaseChiefRewardNumber(useNum, extra, needMsg)
-        return True
+            opUUID = KBEngine.genUUID64()
+            srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
+            detail = gameclass.AwardDetailCls()
+            self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+            self.chiefInfo.deductUsedCoinAddRewardNum(1)
+
+        if addRewardNum > 0:
+            self.onUseCoinToIncreaseChiefRewardNumber(useNum, addRewardNum, extra, needMsg)
+        return True, addRewardNum
     
-    def onUseCoinToIncreaseChiefRewardNumber(self, useNum, extra, needMsg):
-        LOG_INFO('onUseCoinToIncreaseChiefRewardNumber::', useNum, extra, needMsg)
-        self.chiefInfo.addRewardNumByUseCoin(useNum)
+    def onUseCoinToIncreaseChiefRewardNumber(self, useNum, addRewardNum, extra, needMsg):
+        LOG_INFO('onUseCoinToIncreaseChiefRewardNumber::', useNum, addRewardNum, extra, needMsg)
+        self.chiefInfo.addRewardNumByUseCoin(addRewardNum)
         self.chiefInfo = self.chiefInfo
         if needMsg:
-            self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(useNum)])
+            self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(addRewardNum)])
 
     def onEnterChiefDungeon(self, spaceNo, dungeonNo, spaceMgrBox, extra):
         chiefInfo = self.chiefInfo
@@ -117,6 +134,8 @@ class IChief(object):
         self.activityComplete(RBC_CFG.datas['raidBossChallengeActID']['value'])
 
         LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
             extra.get('raidId'),
             gameconst.DungeonPlayModeEnum.CHIEF,
             dungeonNo,

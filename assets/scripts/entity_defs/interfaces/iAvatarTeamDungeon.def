@@ -1,21 +1,14 @@
 <root>
 
     <Properties>
-        <tDungeonCheckDic>
+        <tDungeonCheckDict>
             <Type>      PY_DICT       </Type>
             <Flags>     CELL_PRIVATE        </Flags>
             <Default>       {}           </Default>
-        </tDungeonCheckDic>
+        </tDungeonCheckDict>
     </Properties>
 
     <BaseMethods>
-        <checkTeamNeedItem>
-            <Arg>   UINT32  </Arg>
-            <Arg>   UINT32  </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   PYTHON      </Arg>
-        </checkTeamNeedItem>
-
         <checkCaptainTeamDungeonConditions>
             <Arg> DUNGEON_NO </Arg>
             <Arg> TEAMID </Arg>
@@ -49,9 +42,8 @@
         <leaveTeamDungeonCell>
         </leaveTeamDungeonCell>
         <onCheckTeamNeedItem>
-            <Arg>   UINT32  </Arg>
-            <Arg>   UINT32  </Arg>
-            <Arg>   UINT32  </Arg>
+            <Arg>   BOOL        </Arg>
+            <Arg>   ITEM_ID     </Arg>
             <Arg>   DUNGEON_NO  </Arg>
             <Arg>   PYTHON      </Arg>
         </onCheckTeamNeedItem>
@@ -109,12 +101,12 @@
             <Arg>   PYTHON         </Arg>
         </onCheckMemberTeamDungeonConditionsFailed>
 
-        <onCheckTeamDungeonConditions>
+        <onCheckTeamDunConditions>
             <Arg>   PLAYER_GBID    </Arg>
             <Arg>   PYTHON         </Arg>
             <Arg>   DUNGEON_NO     </Arg>
             <Arg>   PYTHON         </Arg>
-        </onCheckTeamDungeonConditions>
+        </onCheckTeamDunConditions>
 
         <onTeammateBeConfirmed>
             <Exposed/>
@@ -162,5 +154,12 @@
             <Arg>       DUNGEON_NO          </Arg>
             <Arg>   UNICODE     </Arg>
         </onTeammateConfirmBroadcastStatus>
+        <onLackChallengeNum>
+            <Arg> DUNGEON_NO </Arg>
+            <Arg> ARRAY <of>  UNICODE </of> </Arg>
+        </onLackChallengeNum>
+        <onMemberNoRewardNum>
+            <Arg> DUNGEON_NO </Arg>
+        </onMemberNoRewardNum>
     </ClientMethods>
 </root>

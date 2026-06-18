@@ -264,7 +264,257 @@ datas = _tools.RODict({
         "ID": 50,
         "itemNeeded": 30000001,
         "itemNum": 23
+    }),
+    51: _tools.RODict({
+        "ID": 51,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    52: _tools.RODict({
+        "ID": 52,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    53: _tools.RODict({
+        "ID": 53,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    54: _tools.RODict({
+        "ID": 54,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    55: _tools.RODict({
+        "ID": 55,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    56: _tools.RODict({
+        "ID": 56,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    57: _tools.RODict({
+        "ID": 57,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    58: _tools.RODict({
+        "ID": 58,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    59: _tools.RODict({
+        "ID": 59,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    60: _tools.RODict({
+        "ID": 60,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    61: _tools.RODict({
+        "ID": 61,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    62: _tools.RODict({
+        "ID": 62,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    63: _tools.RODict({
+        "ID": 63,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    64: _tools.RODict({
+        "ID": 64,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    65: _tools.RODict({
+        "ID": 65,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    66: _tools.RODict({
+        "ID": 66,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    67: _tools.RODict({
+        "ID": 67,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    68: _tools.RODict({
+        "ID": 68,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    69: _tools.RODict({
+        "ID": 69,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    70: _tools.RODict({
+        "ID": 70,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    71: _tools.RODict({
+        "ID": 71,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    72: _tools.RODict({
+        "ID": 72,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    73: _tools.RODict({
+        "ID": 73,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    74: _tools.RODict({
+        "ID": 74,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    75: _tools.RODict({
+        "ID": 75,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    76: _tools.RODict({
+        "ID": 76,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    77: _tools.RODict({
+        "ID": 77,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    78: _tools.RODict({
+        "ID": 78,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    79: _tools.RODict({
+        "ID": 79,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    80: _tools.RODict({
+        "ID": 80,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    81: _tools.RODict({
+        "ID": 81,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    82: _tools.RODict({
+        "ID": 82,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    83: _tools.RODict({
+        "ID": 83,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    84: _tools.RODict({
+        "ID": 84,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    85: _tools.RODict({
+        "ID": 85,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    86: _tools.RODict({
+        "ID": 86,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    87: _tools.RODict({
+        "ID": 87,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    88: _tools.RODict({
+        "ID": 88,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    89: _tools.RODict({
+        "ID": 89,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    90: _tools.RODict({
+        "ID": 90,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    91: _tools.RODict({
+        "ID": 91,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    92: _tools.RODict({
+        "ID": 92,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    93: _tools.RODict({
+        "ID": 93,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    94: _tools.RODict({
+        "ID": 94,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    95: _tools.RODict({
+        "ID": 95,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    96: _tools.RODict({
+        "ID": 96,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    97: _tools.RODict({
+        "ID": 97,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    98: _tools.RODict({
+        "ID": 98,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    99: _tools.RODict({
+        "ID": 99,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    100: _tools.RODict({
+        "ID": 100,
+        "itemNeeded": 30000001,
+        "itemNum": 25
     })
 })
 minKey = 1
-maxKey = 50
+maxKey = 100

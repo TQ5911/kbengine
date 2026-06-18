@@ -77,7 +77,7 @@ namespace KBEngine
 		{
 			ScriptModule pAccountModule = new ScriptModule("Account");
 			EntityDef.moduledefs["Account"] = pAccountModule;
-			EntityDef.idmoduledefs[38] = pAccountModule;
+			EntityDef.idmoduledefs[50] = pAccountModule;
 
 			Property pAccount_position = new Property();
 			pAccount_position.name = "position";
@@ -203,7 +203,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Account), method(onAvatarOfflineTime / 1071).");
 
 			List<DATATYPE_BASE> pAccount_onCharInfoChange_args = new List<DATATYPE_BASE>();
-			pAccount_onCharInfoChange_args.Add(EntityDef.id2datatypes[34]);
+			pAccount_onCharInfoChange_args.Add(EntityDef.id2datatypes[35]);
 
 			Method pAccount_onCharInfoChange = new Method();
 			pAccount_onCharInfoChange.name = "onCharInfoChange";
@@ -400,7 +400,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Account), method(onReqAvatarGBID / 9).");
 
 			List<DATATYPE_BASE> pAccount_onReqAvatarList_args = new List<DATATYPE_BASE>();
-			pAccount_onReqAvatarList_args.Add(EntityDef.id2datatypes[35]);
+			pAccount_onReqAvatarList_args.Add(EntityDef.id2datatypes[36]);
 			pAccount_onReqAvatarList_args.Add(EntityDef.id2datatypes[2]);
 			pAccount_onReqAvatarList_args.Add(EntityDef.id2datatypes[5]);
 
@@ -617,7 +617,7 @@ namespace KBEngine
 
 			ScriptModule pAvatarModule = new ScriptModule("Avatar");
 			EntityDef.moduledefs["Avatar"] = pAvatarModule;
-			EntityDef.idmoduledefs[39] = pAvatarModule;
+			EntityDef.idmoduledefs[51] = pAvatarModule;
 
 			Property pAvatar_position = new Property();
 			pAvatar_position.name = "position";
@@ -691,6 +691,36 @@ namespace KBEngine
 			pAvatarModule.idpropertys[(UInt16)pAvatar_PVPDmgAnti.aliasID] = pAvatar_PVPDmgAnti;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(PVPDmgAnti / 464).");
+
+			Property pAvatar_abyssAddTimes = new Property();
+			pAvatar_abyssAddTimes.name = "abyssAddTimes";
+			pAvatar_abyssAddTimes.properUtype = 336;
+			pAvatar_abyssAddTimes.properFlags = 32;
+			pAvatar_abyssAddTimes.aliasID = 54;
+			Byte Avatar_abyssAddTimes_defval;
+			Byte.TryParse("0", out Avatar_abyssAddTimes_defval);
+			pAvatar_abyssAddTimes.defaultVal = Avatar_abyssAddTimes_defval;
+			pAvatarModule.propertys["abyssAddTimes"] = pAvatar_abyssAddTimes; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_abyssAddTimes.aliasID] = pAvatar_abyssAddTimes;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(abyssAddTimes / 336).");
+
+			Property pAvatar_abyssTicket = new Property();
+			pAvatar_abyssTicket.name = "abyssTicket";
+			pAvatar_abyssTicket.properUtype = 316;
+			pAvatar_abyssTicket.properFlags = 32;
+			pAvatar_abyssTicket.aliasID = 55;
+			Byte Avatar_abyssTicket_defval;
+			Byte.TryParse("0", out Avatar_abyssTicket_defval);
+			pAvatar_abyssTicket.defaultVal = Avatar_abyssTicket_defval;
+			pAvatarModule.propertys["abyssTicket"] = pAvatar_abyssTicket; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_abyssTicket.aliasID] = pAvatar_abyssTicket;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(abyssTicket / 316).");
 
 			Property pAvatar_accuracy = new Property();
 			pAvatar_accuracy.name = "accuracy";
@@ -800,7 +830,7 @@ namespace KBEngine
 			pAvatar_authPermission.properUtype = 363;
 			pAvatar_authPermission.properFlags = 32;
 			pAvatar_authPermission.aliasID = 160;
-			pAvatar_authPermission.defaultVal = EntityDef.id2datatypes[355].parseDefaultValStr("");
+			pAvatar_authPermission.defaultVal = EntityDef.id2datatypes[368].parseDefaultValStr("");
 			pAvatarModule.propertys["authPermission"] = pAvatar_authPermission; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -813,7 +843,7 @@ namespace KBEngine
 			pAvatar_authStatistics.properUtype = 450;
 			pAvatar_authStatistics.properFlags = 32;
 			pAvatar_authStatistics.aliasID = 139;
-			pAvatar_authStatistics.defaultVal = EntityDef.id2datatypes[360].parseDefaultValStr("");
+			pAvatar_authStatistics.defaultVal = EntityDef.id2datatypes[373].parseDefaultValStr("");
 			pAvatarModule.propertys["authStatistics"] = pAvatar_authStatistics; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -926,6 +956,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(bePushedSpeed / 70).");
 
+			Property pAvatar_bigMonthCardExpireTime = new Property();
+			pAvatar_bigMonthCardExpireTime.name = "bigMonthCardExpireTime";
+			pAvatar_bigMonthCardExpireTime.properUtype = 552;
+			pAvatar_bigMonthCardExpireTime.properFlags = 32;
+			pAvatar_bigMonthCardExpireTime.aliasID = 59;
+			UInt32 Avatar_bigMonthCardExpireTime_defval;
+			UInt32.TryParse("0", out Avatar_bigMonthCardExpireTime_defval);
+			pAvatar_bigMonthCardExpireTime.defaultVal = Avatar_bigMonthCardExpireTime_defval;
+			pAvatarModule.propertys["bigMonthCardExpireTime"] = pAvatar_bigMonthCardExpireTime; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_bigMonthCardExpireTime.aliasID] = pAvatar_bigMonthCardExpireTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(bigMonthCardExpireTime / 552).");
+
 			Property pAvatar_bindMoney = new Property();
 			pAvatar_bindMoney.name = "bindMoney";
 			pAvatar_bindMoney.properUtype = 29;
@@ -974,7 +1019,7 @@ namespace KBEngine
 			pAvatar_chiefInfo.properUtype = 145;
 			pAvatar_chiefInfo.properFlags = 32;
 			pAvatar_chiefInfo.aliasID = 115;
-			pAvatar_chiefInfo.defaultVal = EntityDef.id2datatypes[207].parseDefaultValStr("");
+			pAvatar_chiefInfo.defaultVal = EntityDef.id2datatypes[214].parseDefaultValStr("");
 			pAvatarModule.propertys["chiefInfo"] = pAvatar_chiefInfo; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -987,7 +1032,7 @@ namespace KBEngine
 			pAvatar_chiefPassRecords.properUtype = 35;
 			pAvatar_chiefPassRecords.properFlags = 32;
 			pAvatar_chiefPassRecords.aliasID = 12;
-			pAvatar_chiefPassRecords.defaultVal = EntityDef.id2datatypes[414].parseDefaultValStr("");
+			pAvatar_chiefPassRecords.defaultVal = EntityDef.id2datatypes[427].parseDefaultValStr("");
 			pAvatarModule.propertys["chiefPassRecords"] = pAvatar_chiefPassRecords; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -1060,7 +1105,7 @@ namespace KBEngine
 			pAvatar_crusadeInfo.properUtype = 413;
 			pAvatar_crusadeInfo.properFlags = 32;
 			pAvatar_crusadeInfo.aliasID = 39;
-			pAvatar_crusadeInfo.defaultVal = EntityDef.id2datatypes[206].parseDefaultValStr("");
+			pAvatar_crusadeInfo.defaultVal = EntityDef.id2datatypes[213].parseDefaultValStr("");
 			pAvatarModule.propertys["crusadeInfo"] = pAvatar_crusadeInfo; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -1073,7 +1118,7 @@ namespace KBEngine
 			pAvatar_crusadePassRecords.properUtype = 41;
 			pAvatar_crusadePassRecords.properFlags = 32;
 			pAvatar_crusadePassRecords.aliasID = 14;
-			pAvatar_crusadePassRecords.defaultVal = EntityDef.id2datatypes[414].parseDefaultValStr("");
+			pAvatar_crusadePassRecords.defaultVal = EntityDef.id2datatypes[427].parseDefaultValStr("");
 			pAvatarModule.propertys["crusadePassRecords"] = pAvatar_crusadePassRecords; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -1236,7 +1281,7 @@ namespace KBEngine
 			pAvatar_duelAttr.properUtype = 133;
 			pAvatar_duelAttr.properFlags = 16;
 			pAvatar_duelAttr.aliasID = 82;
-			pAvatar_duelAttr.defaultVal = EntityDef.id2datatypes[334].parseDefaultValStr("");
+			pAvatar_duelAttr.defaultVal = EntityDef.id2datatypes[347].parseDefaultValStr("");
 			pAvatarModule.propertys["duelAttr"] = pAvatar_duelAttr; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -1379,6 +1424,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(freeRecoverDeathPenaltyTimes / 414).");
 
+			Property pAvatar_fromServerId = new Property();
+			pAvatar_fromServerId.name = "fromServerId";
+			pAvatar_fromServerId.properUtype = 585;
+			pAvatar_fromServerId.properFlags = 4;
+			pAvatar_fromServerId.aliasID = 70;
+			UInt16 Avatar_fromServerId_defval;
+			UInt16.TryParse("", out Avatar_fromServerId_defval);
+			pAvatar_fromServerId.defaultVal = Avatar_fromServerId_defval;
+			pAvatarModule.propertys["fromServerId"] = pAvatar_fromServerId; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_fromServerId.aliasID] = pAvatar_fromServerId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(fromServerId / 585).");
+
 			Property pAvatar_frozenAnti = new Property();
 			pAvatar_frozenAnti.name = "frozenAnti";
 			pAvatar_frozenAnti.properUtype = 113;
@@ -1504,7 +1564,7 @@ namespace KBEngine
 			pAvatar_guildBossPassRecords.properUtype = 48;
 			pAvatar_guildBossPassRecords.properFlags = 32;
 			pAvatar_guildBossPassRecords.aliasID = 16;
-			pAvatar_guildBossPassRecords.defaultVal = EntityDef.id2datatypes[414].parseDefaultValStr("");
+			pAvatar_guildBossPassRecords.defaultVal = EntityDef.id2datatypes[427].parseDefaultValStr("");
 			pAvatarModule.propertys["guildBossPassRecords"] = pAvatar_guildBossPassRecords; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -1696,7 +1756,7 @@ namespace KBEngine
 			pAvatar_instantPotionSlots.properUtype = 115;
 			pAvatar_instantPotionSlots.properFlags = 32;
 			pAvatar_instantPotionSlots.aliasID = 72;
-			pAvatar_instantPotionSlots.defaultVal = EntityDef.id2datatypes[332].parseDefaultValStr("");
+			pAvatar_instantPotionSlots.defaultVal = EntityDef.id2datatypes[345].parseDefaultValStr("");
 			pAvatarModule.propertys["instantPotionSlots"] = pAvatar_instantPotionSlots; 
 
 			pAvatarModule.usePropertyDescrAlias = true;
@@ -1764,6 +1824,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(knockEnh / 586).");
 
+			Property pAvatar_lastBigMonthCardDailyRewardTime = new Property();
+			pAvatar_lastBigMonthCardDailyRewardTime.name = "lastBigMonthCardDailyRewardTime";
+			pAvatar_lastBigMonthCardDailyRewardTime.properUtype = 609;
+			pAvatar_lastBigMonthCardDailyRewardTime.properFlags = 32;
+			pAvatar_lastBigMonthCardDailyRewardTime.aliasID = 92;
+			UInt32 Avatar_lastBigMonthCardDailyRewardTime_defval;
+			UInt32.TryParse("0", out Avatar_lastBigMonthCardDailyRewardTime_defval);
+			pAvatar_lastBigMonthCardDailyRewardTime.defaultVal = Avatar_lastBigMonthCardDailyRewardTime_defval;
+			pAvatarModule.propertys["lastBigMonthCardDailyRewardTime"] = pAvatar_lastBigMonthCardDailyRewardTime; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_lastBigMonthCardDailyRewardTime.aliasID] = pAvatar_lastBigMonthCardDailyRewardTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(lastBigMonthCardDailyRewardTime / 609).");
+
 			Property pAvatar_lastDeadTime = new Property();
 			pAvatar_lastDeadTime.name = "lastDeadTime";
 			pAvatar_lastDeadTime.properUtype = 415;
@@ -1793,6 +1868,21 @@ namespace KBEngine
 			pAvatarModule.idpropertys[(UInt16)pAvatar_lastDeathPentlyTime.aliasID] = pAvatar_lastDeathPentlyTime;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(lastDeathPentlyTime / 30242).");
+
+			Property pAvatar_lastMonthCardDailyRewardTime = new Property();
+			pAvatar_lastMonthCardDailyRewardTime.name = "lastMonthCardDailyRewardTime";
+			pAvatar_lastMonthCardDailyRewardTime.properUtype = 31613;
+			pAvatar_lastMonthCardDailyRewardTime.properFlags = 32;
+			pAvatar_lastMonthCardDailyRewardTime.aliasID = 60;
+			UInt32 Avatar_lastMonthCardDailyRewardTime_defval;
+			UInt32.TryParse("0", out Avatar_lastMonthCardDailyRewardTime_defval);
+			pAvatar_lastMonthCardDailyRewardTime.defaultVal = Avatar_lastMonthCardDailyRewardTime_defval;
+			pAvatarModule.propertys["lastMonthCardDailyRewardTime"] = pAvatar_lastMonthCardDailyRewardTime; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_lastMonthCardDailyRewardTime.aliasID] = pAvatar_lastMonthCardDailyRewardTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(lastMonthCardDailyRewardTime / 31613).");
 
 			Property pAvatar_leftCubeTimes = new Property();
 			pAvatar_leftCubeTimes.name = "leftCubeTimes";
@@ -1868,6 +1958,21 @@ namespace KBEngine
 			pAvatarModule.idpropertys[(UInt16)pAvatar_mainChnUIStatus.aliasID] = pAvatar_mainChnUIStatus;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(mainChnUIStatus / 246).");
+
+			Property pAvatar_mapMode = new Property();
+			pAvatar_mapMode.name = "mapMode";
+			pAvatar_mapMode.properUtype = 588;
+			pAvatar_mapMode.properFlags = 16;
+			pAvatar_mapMode.aliasID = 75;
+			Byte Avatar_mapMode_defval;
+			Byte.TryParse("0", out Avatar_mapMode_defval);
+			pAvatar_mapMode.defaultVal = Avatar_mapMode_defval;
+			pAvatarModule.propertys["mapMode"] = pAvatar_mapMode; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_mapMode.aliasID] = pAvatar_mapMode;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(mapMode / 588).");
 
 			Property pAvatar_maxMagicArmor = new Property();
 			pAvatar_maxMagicArmor.name = "maxMagicArmor";
@@ -2268,6 +2373,21 @@ namespace KBEngine
 			pAvatarModule.idpropertys[(UInt16)pAvatar_obId.aliasID] = pAvatar_obId;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(obId / 95).");
+
+			Property pAvatar_paidAbyssTicket = new Property();
+			pAvatar_paidAbyssTicket.name = "paidAbyssTicket";
+			pAvatar_paidAbyssTicket.properUtype = 317;
+			pAvatar_paidAbyssTicket.properFlags = 32;
+			pAvatar_paidAbyssTicket.aliasID = 57;
+			Byte Avatar_paidAbyssTicket_defval;
+			Byte.TryParse("0", out Avatar_paidAbyssTicket_defval);
+			pAvatar_paidAbyssTicket.defaultVal = Avatar_paidAbyssTicket_defval;
+			pAvatarModule.propertys["paidAbyssTicket"] = pAvatar_paidAbyssTicket; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_paidAbyssTicket.aliasID] = pAvatar_paidAbyssTicket;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(paidAbyssTicket / 317).");
 
 			Property pAvatar_paidCubeTimes = new Property();
 			pAvatar_paidCubeTimes.name = "paidCubeTimes";
@@ -2809,6 +2929,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(ultraSkillPower / 114).");
 
+			Property pAvatar_withDrawMoney = new Property();
+			pAvatar_withDrawMoney.name = "withDrawMoney";
+			pAvatar_withDrawMoney.properUtype = 579;
+			pAvatar_withDrawMoney.properFlags = 32;
+			pAvatar_withDrawMoney.aliasID = 66;
+			UInt64 Avatar_withDrawMoney_defval;
+			UInt64.TryParse("", out Avatar_withDrawMoney_defval);
+			pAvatar_withDrawMoney.defaultVal = Avatar_withDrawMoney_defval;
+			pAvatarModule.propertys["withDrawMoney"] = pAvatar_withDrawMoney; 
+
+			pAvatarModule.usePropertyDescrAlias = true;
+			pAvatarModule.idpropertys[(UInt16)pAvatar_withDrawMoney.aliasID] = pAvatar_withDrawMoney;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), property(withDrawMoney / 579).");
+
 			Property pAvatar_wonderLandAddTimes = new Property();
 			pAvatar_wonderLandAddTimes.name = "wonderLandAddTimes";
 			pAvatar_wonderLandAddTimes.properUtype = 106;
@@ -2857,7 +2992,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_beNotifiedApplyJoinRaid_args = new List<DATATYPE_BASE>();
 			pAvatar_beNotifiedApplyJoinRaid_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_beNotifiedApplyJoinRaid_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_beNotifiedApplyJoinRaid_args.Add(EntityDef.id2datatypes[137]);
+			pAvatar_beNotifiedApplyJoinRaid_args.Add(EntityDef.id2datatypes[144]);
 
 			Method pAvatar_beNotifiedApplyJoinRaid = new Method();
 			pAvatar_beNotifiedApplyJoinRaid.name = "beNotifiedApplyJoinRaid";
@@ -2931,6 +3066,26 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_bindPhoneReplay.methodUtype] = pAvatar_bindPhoneReplay;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(bindPhoneReplay / 195).");
+
+			List<DATATYPE_BASE> pAvatar_changeDungeonChallengeRemainTime_args = new List<DATATYPE_BASE>();
+			pAvatar_changeDungeonChallengeRemainTime_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_changeDungeonChallengeRemainTime_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_changeDungeonChallengeRemainTime = new Method();
+			pAvatar_changeDungeonChallengeRemainTime.name = "changeDungeonChallengeRemainTime";
+			pAvatar_changeDungeonChallengeRemainTime.methodUtype = 1150;
+			pAvatar_changeDungeonChallengeRemainTime.aliasID = -1;
+			pAvatar_changeDungeonChallengeRemainTime.args = pAvatar_changeDungeonChallengeRemainTime_args;
+
+			pAvatarModule.methods["changeDungeonChallengeRemainTime"] = pAvatar_changeDungeonChallengeRemainTime; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_changeDungeonChallengeRemainTime.methodUtype] = pAvatar_changeDungeonChallengeRemainTime;
+
+			pAvatarModule.cell_methods["changeDungeonChallengeRemainTime"] = pAvatar_changeDungeonChallengeRemainTime;
+
+			pAvatarModule.idcell_methods[pAvatar_changeDungeonChallengeRemainTime.methodUtype] = pAvatar_changeDungeonChallengeRemainTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(changeDungeonChallengeRemainTime / 1150).");
 
 			List<DATATYPE_BASE> pAvatar_changeDungeonRemainTime_args = new List<DATATYPE_BASE>();
 			pAvatar_changeDungeonRemainTime_args.Add(EntityDef.id2datatypes[4]);
@@ -3029,6 +3184,28 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(dragSkillChangeBuildSkills / 86).");
 
+			List<DATATYPE_BASE> pAvatar_drawCube_args = new List<DATATYPE_BASE>();
+			pAvatar_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pAvatar_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pAvatar_drawCube_args.Add(EntityDef.id2datatypes[13]);
+			pAvatar_drawCube_args.Add(EntityDef.id2datatypes[13]);
+
+			Method pAvatar_drawCube = new Method();
+			pAvatar_drawCube.name = "drawCube";
+			pAvatar_drawCube.methodUtype = 734;
+			pAvatar_drawCube.aliasID = -1;
+			pAvatar_drawCube.args = pAvatar_drawCube_args;
+
+			pAvatarModule.methods["drawCube"] = pAvatar_drawCube; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_drawCube.methodUtype] = pAvatar_drawCube;
+
+			pAvatarModule.cell_methods["drawCube"] = pAvatar_drawCube;
+
+			pAvatarModule.idcell_methods[pAvatar_drawCube.methodUtype] = pAvatar_drawCube;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(drawCube / 734).");
+
 			List<DATATYPE_BASE> pAvatar_duelFlagIn_args = new List<DATATYPE_BASE>();
 
 			Method pAvatar_duelFlagIn = new Method();
@@ -3106,8 +3283,107 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(notifyCastingSkill / 233).");
 
+			List<DATATYPE_BASE> pAvatar_onAbyssLeftTime_args = new List<DATATYPE_BASE>();
+			pAvatar_onAbyssLeftTime_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onAbyssLeftTime = new Method();
+			pAvatar_onAbyssLeftTime.name = "onAbyssLeftTime";
+			pAvatar_onAbyssLeftTime.methodUtype = 1045;
+			pAvatar_onAbyssLeftTime.aliasID = -1;
+			pAvatar_onAbyssLeftTime.args = pAvatar_onAbyssLeftTime_args;
+
+			pAvatarModule.methods["onAbyssLeftTime"] = pAvatar_onAbyssLeftTime; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAbyssLeftTime.methodUtype] = pAvatar_onAbyssLeftTime;
+
+			pAvatarModule.cell_methods["onAbyssLeftTime"] = pAvatar_onAbyssLeftTime;
+
+			pAvatarModule.idcell_methods[pAvatar_onAbyssLeftTime.methodUtype] = pAvatar_onAbyssLeftTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAbyssLeftTime / 1045).");
+
+			List<DATATYPE_BASE> pAvatar_onAbyssLeftTimeDuration_args = new List<DATATYPE_BASE>();
+			pAvatar_onAbyssLeftTimeDuration_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onAbyssLeftTimeDuration = new Method();
+			pAvatar_onAbyssLeftTimeDuration.name = "onAbyssLeftTimeDuration";
+			pAvatar_onAbyssLeftTimeDuration.methodUtype = 1046;
+			pAvatar_onAbyssLeftTimeDuration.aliasID = -1;
+			pAvatar_onAbyssLeftTimeDuration.args = pAvatar_onAbyssLeftTimeDuration_args;
+
+			pAvatarModule.methods["onAbyssLeftTimeDuration"] = pAvatar_onAbyssLeftTimeDuration; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAbyssLeftTimeDuration.methodUtype] = pAvatar_onAbyssLeftTimeDuration;
+
+			pAvatarModule.cell_methods["onAbyssLeftTimeDuration"] = pAvatar_onAbyssLeftTimeDuration;
+
+			pAvatarModule.idcell_methods[pAvatar_onAbyssLeftTimeDuration.methodUtype] = pAvatar_onAbyssLeftTimeDuration;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAbyssLeftTimeDuration / 1046).");
+
+			List<DATATYPE_BASE> pAvatar_onAbyssLoginData_args = new List<DATATYPE_BASE>();
+			pAvatar_onAbyssLoginData_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onAbyssLoginData_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onAbyssLoginData_args.Add(EntityDef.id2datatypes[233]);
+			pAvatar_onAbyssLoginData_args.Add(EntityDef.id2datatypes[10023]);
+
+			Method pAvatar_onAbyssLoginData = new Method();
+			pAvatar_onAbyssLoginData.name = "onAbyssLoginData";
+			pAvatar_onAbyssLoginData.methodUtype = 1082;
+			pAvatar_onAbyssLoginData.aliasID = -1;
+			pAvatar_onAbyssLoginData.args = pAvatar_onAbyssLoginData_args;
+
+			pAvatarModule.methods["onAbyssLoginData"] = pAvatar_onAbyssLoginData; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAbyssLoginData.methodUtype] = pAvatar_onAbyssLoginData;
+
+			pAvatarModule.cell_methods["onAbyssLoginData"] = pAvatar_onAbyssLoginData;
+
+			pAvatarModule.idcell_methods[pAvatar_onAbyssLoginData.methodUtype] = pAvatar_onAbyssLoginData;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAbyssLoginData / 1082).");
+
+			List<DATATYPE_BASE> pAvatar_onAbyssSwitch_args = new List<DATATYPE_BASE>();
+			pAvatar_onAbyssSwitch_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onAbyssSwitch_args.Add(EntityDef.id2datatypes[233]);
+
+			Method pAvatar_onAbyssSwitch = new Method();
+			pAvatar_onAbyssSwitch.name = "onAbyssSwitch";
+			pAvatar_onAbyssSwitch.methodUtype = 1047;
+			pAvatar_onAbyssSwitch.aliasID = -1;
+			pAvatar_onAbyssSwitch.args = pAvatar_onAbyssSwitch_args;
+
+			pAvatarModule.methods["onAbyssSwitch"] = pAvatar_onAbyssSwitch; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAbyssSwitch.methodUtype] = pAvatar_onAbyssSwitch;
+
+			pAvatarModule.cell_methods["onAbyssSwitch"] = pAvatar_onAbyssSwitch;
+
+			pAvatarModule.idcell_methods[pAvatar_onAbyssSwitch.methodUtype] = pAvatar_onAbyssSwitch;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAbyssSwitch / 1047).");
+
+			List<DATATYPE_BASE> pAvatar_onAddAbyssRewardRecord_args = new List<DATATYPE_BASE>();
+			pAvatar_onAddAbyssRewardRecord_args.Add(EntityDef.id2datatypes[10023]);
+
+			Method pAvatar_onAddAbyssRewardRecord = new Method();
+			pAvatar_onAddAbyssRewardRecord.name = "onAddAbyssRewardRecord";
+			pAvatar_onAddAbyssRewardRecord.methodUtype = 1081;
+			pAvatar_onAddAbyssRewardRecord.aliasID = -1;
+			pAvatar_onAddAbyssRewardRecord.args = pAvatar_onAddAbyssRewardRecord_args;
+
+			pAvatarModule.methods["onAddAbyssRewardRecord"] = pAvatar_onAddAbyssRewardRecord; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAddAbyssRewardRecord.methodUtype] = pAvatar_onAddAbyssRewardRecord;
+
+			pAvatarModule.cell_methods["onAddAbyssRewardRecord"] = pAvatar_onAddAbyssRewardRecord;
+
+			pAvatarModule.idcell_methods[pAvatar_onAddAbyssRewardRecord.methodUtype] = pAvatar_onAddAbyssRewardRecord;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddAbyssRewardRecord / 1081).");
+
 			List<DATATYPE_BASE> pAvatar_onAddAureole_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddAureole_args.Add(EntityDef.id2datatypes[94]);
+			pAvatar_onAddAureole_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pAvatar_onAddAureole = new Method();
 			pAvatar_onAddAureole.name = "onAddAureole";
@@ -3126,7 +3402,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddAureole / 213).");
 
 			List<DATATYPE_BASE> pAvatar_onAddAureoleFromOthers_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[94]);
+			pAvatar_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pAvatar_onAddAureoleFromOthers = new Method();
 			pAvatar_onAddAureoleFromOthers.name = "onAddAureoleFromOthers";
@@ -3170,7 +3446,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddBagItems / 110).");
 
 			List<DATATYPE_BASE> pAvatar_onAddBuff_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddBuff_args.Add(EntityDef.id2datatypes[109]);
+			pAvatar_onAddBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pAvatar_onAddBuff = new Method();
 			pAvatar_onAddBuff.name = "onAddBuff";
@@ -3189,7 +3465,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddBuff / 225).");
 
 			List<DATATYPE_BASE> pAvatar_onAddChallengeAvatar_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddChallengeAvatar_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onAddChallengeAvatar_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onAddChallengeAvatar = new Method();
 			pAvatar_onAddChallengeAvatar.name = "onAddChallengeAvatar";
@@ -3225,25 +3501,6 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onAddCubeRoomRewardRecord.methodUtype] = pAvatar_onAddCubeRoomRewardRecord;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddCubeRoomRewardRecord / 692).");
-
-			List<DATATYPE_BASE> pAvatar_onAddFirstBuyCredit_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddFirstBuyCredit_args.Add(EntityDef.id2datatypes[4]);
-
-			Method pAvatar_onAddFirstBuyCredit = new Method();
-			pAvatar_onAddFirstBuyCredit.name = "onAddFirstBuyCredit";
-			pAvatar_onAddFirstBuyCredit.methodUtype = 734;
-			pAvatar_onAddFirstBuyCredit.aliasID = -1;
-			pAvatar_onAddFirstBuyCredit.args = pAvatar_onAddFirstBuyCredit_args;
-
-			pAvatarModule.methods["onAddFirstBuyCredit"] = pAvatar_onAddFirstBuyCredit; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onAddFirstBuyCredit.methodUtype] = pAvatar_onAddFirstBuyCredit;
-
-			pAvatarModule.cell_methods["onAddFirstBuyCredit"] = pAvatar_onAddFirstBuyCredit;
-
-			pAvatarModule.idcell_methods[pAvatar_onAddFirstBuyCredit.methodUtype] = pAvatar_onAddFirstBuyCredit;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddFirstBuyCredit / 734).");
 
 			List<DATATYPE_BASE> pAvatar_onAddGatherRewardRecord_args = new List<DATATYPE_BASE>();
 			pAvatar_onAddGatherRewardRecord_args.Add(EntityDef.id2datatypes[10023]);
@@ -3304,7 +3561,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddLeaseTagSucc / 919).");
 
 			List<DATATYPE_BASE> pAvatar_onAddNewEquipDrop_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddNewEquipDrop_args.Add(EntityDef.id2datatypes[313]);
+			pAvatar_onAddNewEquipDrop_args.Add(EntityDef.id2datatypes[327]);
 
 			Method pAvatar_onAddNewEquipDrop = new Method();
 			pAvatar_onAddNewEquipDrop.name = "onAddNewEquipDrop";
@@ -3326,7 +3583,7 @@ namespace KBEngine
 			pAvatar_onAddNewRaidMember_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onAddNewRaidMember_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onAddNewRaidMember_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onAddNewRaidMember_args.Add(EntityDef.id2datatypes[116]);
+			pAvatar_onAddNewRaidMember_args.Add(EntityDef.id2datatypes[123]);
 
 			Method pAvatar_onAddNewRaidMember = new Method();
 			pAvatar_onAddNewRaidMember.name = "onAddNewRaidMember";
@@ -3389,7 +3646,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddSkill / 205).");
 
 			List<DATATYPE_BASE> pAvatar_onAddTeam_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddTeam_args.Add(EntityDef.id2datatypes[121]);
+			pAvatar_onAddTeam_args.Add(EntityDef.id2datatypes[128]);
 
 			Method pAvatar_onAddTeam = new Method();
 			pAvatar_onAddTeam.name = "onAddTeam";
@@ -3408,7 +3665,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddTeam / 351).");
 
 			List<DATATYPE_BASE> pAvatar_onAddTeamMember_args = new List<DATATYPE_BASE>();
-			pAvatar_onAddTeamMember_args.Add(EntityDef.id2datatypes[116]);
+			pAvatar_onAddTeamMember_args.Add(EntityDef.id2datatypes[123]);
 
 			Method pAvatar_onAddTeamMember = new Method();
 			pAvatar_onAddTeamMember.name = "onAddTeamMember";
@@ -3425,6 +3682,25 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onAddTeamMember.methodUtype] = pAvatar_onAddTeamMember;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddTeamMember / 350).");
+
+			List<DATATYPE_BASE> pAvatar_onAddTitles_args = new List<DATATYPE_BASE>();
+			pAvatar_onAddTitles_args.Add(EntityDef.id2datatypes[10028]);
+
+			Method pAvatar_onAddTitles = new Method();
+			pAvatar_onAddTitles.name = "onAddTitles";
+			pAvatar_onAddTitles.methodUtype = 638;
+			pAvatar_onAddTitles.aliasID = -1;
+			pAvatar_onAddTitles.args = pAvatar_onAddTitles_args;
+
+			pAvatarModule.methods["onAddTitles"] = pAvatar_onAddTitles; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAddTitles.methodUtype] = pAvatar_onAddTitles;
+
+			pAvatarModule.cell_methods["onAddTitles"] = pAvatar_onAddTitles;
+
+			pAvatarModule.idcell_methods[pAvatar_onAddTitles.methodUtype] = pAvatar_onAddTitles;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAddTitles / 638).");
 
 			List<DATATYPE_BASE> pAvatar_onAddWonderLandRewardRecord_args = new List<DATATYPE_BASE>();
 			pAvatar_onAddWonderLandRewardRecord_args.Add(EntityDef.id2datatypes[10023]);
@@ -3465,7 +3741,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAllAliasIds / 1056).");
 
 			List<DATATYPE_BASE> pAvatar_onAllApplyGuildUnion_args = new List<DATATYPE_BASE>();
-			pAvatar_onAllApplyGuildUnion_args.Add(EntityDef.id2datatypes[10068]);
+			pAvatar_onAllApplyGuildUnion_args.Add(EntityDef.id2datatypes[10069]);
 
 			Method pAvatar_onAllApplyGuildUnion = new Method();
 			pAvatar_onAllApplyGuildUnion.name = "onAllApplyGuildUnion";
@@ -3602,30 +3878,31 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onApplyGather / 122).");
 
-			List<DATATYPE_BASE> pAvatar_onApplyInviteTeamMsg_args = new List<DATATYPE_BASE>();
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[12]);
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[12]);
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onApplyInviteTeamMsg_args.Add(EntityDef.id2datatypes[3]);
+			List<DATATYPE_BASE> pAvatar_onApplyInviteTeam_args = new List<DATATYPE_BASE>();
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_onApplyInviteTeam_args.Add(EntityDef.id2datatypes[2]);
 
-			Method pAvatar_onApplyInviteTeamMsg = new Method();
-			pAvatar_onApplyInviteTeamMsg.name = "onApplyInviteTeamMsg";
-			pAvatar_onApplyInviteTeamMsg.methodUtype = 349;
-			pAvatar_onApplyInviteTeamMsg.aliasID = -1;
-			pAvatar_onApplyInviteTeamMsg.args = pAvatar_onApplyInviteTeamMsg_args;
+			Method pAvatar_onApplyInviteTeam = new Method();
+			pAvatar_onApplyInviteTeam.name = "onApplyInviteTeam";
+			pAvatar_onApplyInviteTeam.methodUtype = 729;
+			pAvatar_onApplyInviteTeam.aliasID = -1;
+			pAvatar_onApplyInviteTeam.args = pAvatar_onApplyInviteTeam_args;
 
-			pAvatarModule.methods["onApplyInviteTeamMsg"] = pAvatar_onApplyInviteTeamMsg; 
+			pAvatarModule.methods["onApplyInviteTeam"] = pAvatar_onApplyInviteTeam; 
 			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onApplyInviteTeamMsg.methodUtype] = pAvatar_onApplyInviteTeamMsg;
+			pAvatarModule.idmethods[pAvatar_onApplyInviteTeam.methodUtype] = pAvatar_onApplyInviteTeam;
 
-			pAvatarModule.cell_methods["onApplyInviteTeamMsg"] = pAvatar_onApplyInviteTeamMsg;
+			pAvatarModule.cell_methods["onApplyInviteTeam"] = pAvatar_onApplyInviteTeam;
 
-			pAvatarModule.idcell_methods[pAvatar_onApplyInviteTeamMsg.methodUtype] = pAvatar_onApplyInviteTeamMsg;
+			pAvatarModule.idcell_methods[pAvatar_onApplyInviteTeam.methodUtype] = pAvatar_onApplyInviteTeam;
 
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onApplyInviteTeamMsg / 349).");
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onApplyInviteTeam / 729).");
 
 			List<DATATYPE_BASE> pAvatar_onApplyJoinRaidLonelyFailed_args = new List<DATATYPE_BASE>();
 			pAvatar_onApplyJoinRaidLonelyFailed_args.Add(EntityDef.id2datatypes[3]);
@@ -3737,10 +4014,30 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onArenaKingPos / 365).");
 
+			List<DATATYPE_BASE> pAvatar_onAuctionSaleChatting_args = new List<DATATYPE_BASE>();
+			pAvatar_onAuctionSaleChatting_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onAuctionSaleChatting_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onAuctionSaleChatting = new Method();
+			pAvatar_onAuctionSaleChatting.name = "onAuctionSaleChatting";
+			pAvatar_onAuctionSaleChatting.methodUtype = 1159;
+			pAvatar_onAuctionSaleChatting.aliasID = -1;
+			pAvatar_onAuctionSaleChatting.args = pAvatar_onAuctionSaleChatting_args;
+
+			pAvatarModule.methods["onAuctionSaleChatting"] = pAvatar_onAuctionSaleChatting; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onAuctionSaleChatting.methodUtype] = pAvatar_onAuctionSaleChatting;
+
+			pAvatarModule.cell_methods["onAuctionSaleChatting"] = pAvatar_onAuctionSaleChatting;
+
+			pAvatarModule.idcell_methods[pAvatar_onAuctionSaleChatting.methodUtype] = pAvatar_onAuctionSaleChatting;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onAuctionSaleChatting / 1159).");
+
 			List<DATATYPE_BASE> pAvatar_onAvatarBountyInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onAvatarBountyInfo_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onAvatarBountyInfo_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onAvatarBountyInfo_args.Add(EntityDef.id2datatypes[10114]);
+			pAvatar_onAvatarBountyInfo_args.Add(EntityDef.id2datatypes[10111]);
 
 			Method pAvatar_onAvatarBountyInfo = new Method();
 			pAvatar_onAvatarBountyInfo.name = "onAvatarBountyInfo";
@@ -3821,6 +4118,7 @@ namespace KBEngine
 			pAvatar_onBeInvitedRaidByLeader_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onBeInvitedRaidByLeader_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onBeInvitedRaidByLeader_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onBeInvitedRaidByLeader_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onBeInvitedRaidByLeader = new Method();
 			pAvatar_onBeInvitedRaidByLeader.name = "onBeInvitedRaidByLeader";
@@ -3846,6 +4144,7 @@ namespace KBEngine
 			pAvatar_onBeInvitedRaidByMember_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onBeInvitedRaidByMember_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onBeInvitedRaidByMember_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onBeInvitedRaidByMember_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onBeInvitedRaidByMember = new Method();
 			pAvatar_onBeInvitedRaidByMember.name = "onBeInvitedRaidByMember";
@@ -3870,6 +4169,7 @@ namespace KBEngine
 			pAvatar_onBeInvitedRaidByTeamCaptain_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onBeInvitedRaidByTeamCaptain_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onBeInvitedRaidByTeamCaptain_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onBeInvitedRaidByTeamCaptain_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onBeInvitedRaidByTeamCaptain_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onBeInvitedRaidByTeamCaptain = new Method();
@@ -3907,6 +4207,46 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onBindItemSucc.methodUtype] = pAvatar_onBindItemSucc;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBindItemSucc / 125).");
+
+			List<DATATYPE_BASE> pAvatar_onBlockAllRaidMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onBlockAllRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onBlockAllRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onBlockAllRaidMemberMics = new Method();
+			pAvatar_onBlockAllRaidMemberMics.name = "onBlockAllRaidMemberMics";
+			pAvatar_onBlockAllRaidMemberMics.methodUtype = 1192;
+			pAvatar_onBlockAllRaidMemberMics.aliasID = -1;
+			pAvatar_onBlockAllRaidMemberMics.args = pAvatar_onBlockAllRaidMemberMics_args;
+
+			pAvatarModule.methods["onBlockAllRaidMemberMics"] = pAvatar_onBlockAllRaidMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onBlockAllRaidMemberMics.methodUtype] = pAvatar_onBlockAllRaidMemberMics;
+
+			pAvatarModule.cell_methods["onBlockAllRaidMemberMics"] = pAvatar_onBlockAllRaidMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onBlockAllRaidMemberMics.methodUtype] = pAvatar_onBlockAllRaidMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBlockAllRaidMemberMics / 1192).");
+
+			List<DATATYPE_BASE> pAvatar_onBlockAllTeamMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onBlockAllTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onBlockAllTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onBlockAllTeamMemberMics = new Method();
+			pAvatar_onBlockAllTeamMemberMics.name = "onBlockAllTeamMemberMics";
+			pAvatar_onBlockAllTeamMemberMics.methodUtype = 1186;
+			pAvatar_onBlockAllTeamMemberMics.aliasID = -1;
+			pAvatar_onBlockAllTeamMemberMics.args = pAvatar_onBlockAllTeamMemberMics_args;
+
+			pAvatarModule.methods["onBlockAllTeamMemberMics"] = pAvatar_onBlockAllTeamMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onBlockAllTeamMemberMics.methodUtype] = pAvatar_onBlockAllTeamMemberMics;
+
+			pAvatarModule.cell_methods["onBlockAllTeamMemberMics"] = pAvatar_onBlockAllTeamMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onBlockAllTeamMemberMics.methodUtype] = pAvatar_onBlockAllTeamMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBlockAllTeamMemberMics / 1186).");
 
 			List<DATATYPE_BASE> pAvatar_onBreakAwayStuckSuccess_args = new List<DATATYPE_BASE>();
 
@@ -3968,25 +4308,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBreakChannelingSkill / 223).");
 
-			List<DATATYPE_BASE> pAvatar_onBuyCreditSuccess_args = new List<DATATYPE_BASE>();
-			pAvatar_onBuyCreditSuccess_args.Add(EntityDef.id2datatypes[4]);
-
-			Method pAvatar_onBuyCreditSuccess = new Method();
-			pAvatar_onBuyCreditSuccess.name = "onBuyCreditSuccess";
-			pAvatar_onBuyCreditSuccess.methodUtype = 754;
-			pAvatar_onBuyCreditSuccess.aliasID = -1;
-			pAvatar_onBuyCreditSuccess.args = pAvatar_onBuyCreditSuccess_args;
-
-			pAvatarModule.methods["onBuyCreditSuccess"] = pAvatar_onBuyCreditSuccess; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onBuyCreditSuccess.methodUtype] = pAvatar_onBuyCreditSuccess;
-
-			pAvatarModule.cell_methods["onBuyCreditSuccess"] = pAvatar_onBuyCreditSuccess;
-
-			pAvatarModule.idcell_methods[pAvatar_onBuyCreditSuccess.methodUtype] = pAvatar_onBuyCreditSuccess;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBuyCreditSuccess / 754).");
-
 			List<DATATYPE_BASE> pAvatar_onBuyItemInCoinAuctionByAuctionItemUUID_args = new List<DATATYPE_BASE>();
 			pAvatar_onBuyItemInCoinAuctionByAuctionItemUUID_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onBuyItemInCoinAuctionByAuctionItemUUID_args.Add(EntityDef.id2datatypes[4]);
@@ -4029,6 +4350,46 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onBuyItemInCoinAuctionByAuctionItemUUIDFailed.methodUtype] = pAvatar_onBuyItemInCoinAuctionByAuctionItemUUIDFailed;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBuyItemInCoinAuctionByAuctionItemUUIDFailed / 823).");
+
+			List<DATATYPE_BASE> pAvatar_onBuyMallGiftStoreResult_args = new List<DATATYPE_BASE>();
+			pAvatar_onBuyMallGiftStoreResult_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onBuyMallGiftStoreResult_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onBuyMallGiftStoreResult = new Method();
+			pAvatar_onBuyMallGiftStoreResult.name = "onBuyMallGiftStoreResult";
+			pAvatar_onBuyMallGiftStoreResult.methodUtype = 1145;
+			pAvatar_onBuyMallGiftStoreResult.aliasID = -1;
+			pAvatar_onBuyMallGiftStoreResult.args = pAvatar_onBuyMallGiftStoreResult_args;
+
+			pAvatarModule.methods["onBuyMallGiftStoreResult"] = pAvatar_onBuyMallGiftStoreResult; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onBuyMallGiftStoreResult.methodUtype] = pAvatar_onBuyMallGiftStoreResult;
+
+			pAvatarModule.cell_methods["onBuyMallGiftStoreResult"] = pAvatar_onBuyMallGiftStoreResult;
+
+			pAvatarModule.idcell_methods[pAvatar_onBuyMallGiftStoreResult.methodUtype] = pAvatar_onBuyMallGiftStoreResult;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBuyMallGiftStoreResult / 1145).");
+
+			List<DATATYPE_BASE> pAvatar_onBuyMallMountStoreResult_args = new List<DATATYPE_BASE>();
+			pAvatar_onBuyMallMountStoreResult_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onBuyMallMountStoreResult_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onBuyMallMountStoreResult = new Method();
+			pAvatar_onBuyMallMountStoreResult.name = "onBuyMallMountStoreResult";
+			pAvatar_onBuyMallMountStoreResult.methodUtype = 1146;
+			pAvatar_onBuyMallMountStoreResult.aliasID = -1;
+			pAvatar_onBuyMallMountStoreResult.args = pAvatar_onBuyMallMountStoreResult_args;
+
+			pAvatarModule.methods["onBuyMallMountStoreResult"] = pAvatar_onBuyMallMountStoreResult; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onBuyMallMountStoreResult.methodUtype] = pAvatar_onBuyMallMountStoreResult;
+
+			pAvatarModule.cell_methods["onBuyMallMountStoreResult"] = pAvatar_onBuyMallMountStoreResult;
+
+			pAvatarModule.idcell_methods[pAvatar_onBuyMallMountStoreResult.methodUtype] = pAvatar_onBuyMallMountStoreResult;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onBuyMallMountStoreResult / 1146).");
 
 			List<DATATYPE_BASE> pAvatar_onBuyStoreItems_args = new List<DATATYPE_BASE>();
 			pAvatar_onBuyStoreItems_args.Add(EntityDef.id2datatypes[4]);
@@ -4211,6 +4572,25 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onCancelSaleItemInLeaseSucc / 887).");
 
+			List<DATATYPE_BASE> pAvatar_onChangeAbyssRenewTimes_args = new List<DATATYPE_BASE>();
+			pAvatar_onChangeAbyssRenewTimes_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onChangeAbyssRenewTimes = new Method();
+			pAvatar_onChangeAbyssRenewTimes.name = "onChangeAbyssRenewTimes";
+			pAvatar_onChangeAbyssRenewTimes.methodUtype = 1091;
+			pAvatar_onChangeAbyssRenewTimes.aliasID = -1;
+			pAvatar_onChangeAbyssRenewTimes.args = pAvatar_onChangeAbyssRenewTimes_args;
+
+			pAvatarModule.methods["onChangeAbyssRenewTimes"] = pAvatar_onChangeAbyssRenewTimes; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onChangeAbyssRenewTimes.methodUtype] = pAvatar_onChangeAbyssRenewTimes;
+
+			pAvatarModule.cell_methods["onChangeAbyssRenewTimes"] = pAvatar_onChangeAbyssRenewTimes;
+
+			pAvatarModule.idcell_methods[pAvatar_onChangeAbyssRenewTimes.methodUtype] = pAvatar_onChangeAbyssRenewTimes;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onChangeAbyssRenewTimes / 1091).");
+
 			List<DATATYPE_BASE> pAvatar_onChangeCaptain_args = new List<DATATYPE_BASE>();
 			pAvatar_onChangeCaptain_args.Add(EntityDef.id2datatypes[5]);
 
@@ -4251,7 +4631,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onChangeCityMoneyToGuildMoneyResult / 972).");
 
 			List<DATATYPE_BASE> pAvatar_onChangeRaidMark_args = new List<DATATYPE_BASE>();
-			pAvatar_onChangeRaidMark_args.Add(EntityDef.id2datatypes[118]);
+			pAvatar_onChangeRaidMark_args.Add(EntityDef.id2datatypes[125]);
 
 			Method pAvatar_onChangeRaidMark = new Method();
 			pAvatar_onChangeRaidMark.name = "onChangeRaidMark";
@@ -4290,7 +4670,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onChangeSkill / 854).");
 
 			List<DATATYPE_BASE> pAvatar_onChangeTeamMark_args = new List<DATATYPE_BASE>();
-			pAvatar_onChangeTeamMark_args.Add(EntityDef.id2datatypes[118]);
+			pAvatar_onChangeTeamMark_args.Add(EntityDef.id2datatypes[125]);
 
 			Method pAvatar_onChangeTeamMark = new Method();
 			pAvatar_onChangeTeamMark.name = "onChangeTeamMark";
@@ -4377,11 +4757,11 @@ namespace KBEngine
 			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[9]);
 			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[9]);
 			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[10097]);
-			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[10098]);
+			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[10094]);
+			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[10095]);
 			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[10099]);
+			pAvatar_onCityDataResponse_args.Add(EntityDef.id2datatypes[10096]);
 
 			Method pAvatar_onCityDataResponse = new Method();
 			pAvatar_onCityDataResponse.name = "onCityDataResponse";
@@ -4399,9 +4779,28 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onCityDataResponse / 971).");
 
+			List<DATATYPE_BASE> pAvatar_onClaimAllResult_args = new List<DATATYPE_BASE>();
+			pAvatar_onClaimAllResult_args.Add(EntityDef.id2datatypes[10032]);
+
+			Method pAvatar_onClaimAllResult = new Method();
+			pAvatar_onClaimAllResult.name = "onClaimAllResult";
+			pAvatar_onClaimAllResult.methodUtype = 1181;
+			pAvatar_onClaimAllResult.aliasID = -1;
+			pAvatar_onClaimAllResult.args = pAvatar_onClaimAllResult_args;
+
+			pAvatarModule.methods["onClaimAllResult"] = pAvatar_onClaimAllResult; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onClaimAllResult.methodUtype] = pAvatar_onClaimAllResult;
+
+			pAvatarModule.cell_methods["onClaimAllResult"] = pAvatar_onClaimAllResult;
+
+			pAvatarModule.idcell_methods[pAvatar_onClaimAllResult.methodUtype] = pAvatar_onClaimAllResult;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onClaimAllResult / 1181).");
+
 			List<DATATYPE_BASE> pAvatar_onClaimTask_args = new List<DATATYPE_BASE>();
 			pAvatar_onClaimTask_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onClaimTask_args.Add(EntityDef.id2datatypes[10039]);
+			pAvatar_onClaimTask_args.Add(EntityDef.id2datatypes[10040]);
 
 			Method pAvatar_onClaimTask = new Method();
 			pAvatar_onClaimTask.name = "onClaimTask";
@@ -4494,7 +4893,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onClientDataSyncFinished / 56).");
 
 			List<DATATYPE_BASE> pAvatar_onCreateRaid_args = new List<DATATYPE_BASE>();
-			pAvatar_onCreateRaid_args.Add(EntityDef.id2datatypes[149]);
+			pAvatar_onCreateRaid_args.Add(EntityDef.id2datatypes[156]);
 
 			Method pAvatar_onCreateRaid = new Method();
 			pAvatar_onCreateRaid.name = "onCreateRaid";
@@ -4535,7 +4934,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onCubeAutoRenewSwitch_args = new List<DATATYPE_BASE>();
 			pAvatar_onCubeAutoRenewSwitch_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onCubeAutoRenewSwitch_args.Add(EntityDef.id2datatypes[224]);
+			pAvatar_onCubeAutoRenewSwitch_args.Add(EntityDef.id2datatypes[231]);
 
 			Method pAvatar_onCubeAutoRenewSwitch = new Method();
 			pAvatar_onCubeAutoRenewSwitch.name = "onCubeAutoRenewSwitch";
@@ -4578,7 +4977,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onCubeLoginData_args = new List<DATATYPE_BASE>();
 			pAvatar_onCubeLoginData_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onCubeLoginData_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onCubeLoginData_args.Add(EntityDef.id2datatypes[224]);
+			pAvatar_onCubeLoginData_args.Add(EntityDef.id2datatypes[231]);
 			pAvatar_onCubeLoginData_args.Add(EntityDef.id2datatypes[10023]);
 			pAvatar_onCubeLoginData_args.Add(EntityDef.id2datatypes[2]);
 
@@ -4752,7 +5151,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onDealAuthResult / 1058).");
 
 			List<DATATYPE_BASE> pAvatar_onDeathPenaltyExpChange_args = new List<DATATYPE_BASE>();
-			pAvatar_onDeathPenaltyExpChange_args.Add(EntityDef.id2datatypes[10055]);
+			pAvatar_onDeathPenaltyExpChange_args.Add(EntityDef.id2datatypes[10056]);
 
 			Method pAvatar_onDeathPenaltyExpChange = new Method();
 			pAvatar_onDeathPenaltyExpChange.name = "onDeathPenaltyExpChange";
@@ -4773,8 +5172,8 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onDeathPenaltyReward_args = new List<DATATYPE_BASE>();
 			pAvatar_onDeathPenaltyReward_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onDeathPenaltyReward_args.Add(EntityDef.id2datatypes[12]);
-			pAvatar_onDeathPenaltyReward_args.Add(EntityDef.id2datatypes[10056]);
-			pAvatar_onDeathPenaltyReward_args.Add(EntityDef.id2datatypes[347]);
+			pAvatar_onDeathPenaltyReward_args.Add(EntityDef.id2datatypes[10057]);
+			pAvatar_onDeathPenaltyReward_args.Add(EntityDef.id2datatypes[360]);
 
 			Method pAvatar_onDeathPenaltyReward = new Method();
 			pAvatar_onDeathPenaltyReward.name = "onDeathPenaltyReward";
@@ -4872,7 +5271,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onDisbandRaid / 435).");
 
 			List<DATATYPE_BASE> pAvatar_onDressEquipment_args = new List<DATATYPE_BASE>();
-			pAvatar_onDressEquipment_args.Add(EntityDef.id2datatypes[202]);
+			pAvatar_onDressEquipment_args.Add(EntityDef.id2datatypes[209]);
 
 			Method pAvatar_onDressEquipment = new Method();
 			pAvatar_onDressEquipment.name = "onDressEquipment";
@@ -4995,7 +5394,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onDungeonCompleteDungeonData_args = new List<DATATYPE_BASE>();
 			pAvatar_onDungeonCompleteDungeonData_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onDungeonCompleteDungeonData_args.Add(EntityDef.id2datatypes[406]);
+			pAvatar_onDungeonCompleteDungeonData_args.Add(EntityDef.id2datatypes[419]);
 
 			Method pAvatar_onDungeonCompleteDungeonData = new Method();
 			pAvatar_onDungeonCompleteDungeonData.name = "onDungeonCompleteDungeonData";
@@ -5015,7 +5414,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onDungeonCompleteSettlementData_args = new List<DATATYPE_BASE>();
 			pAvatar_onDungeonCompleteSettlementData_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onDungeonCompleteSettlementData_args.Add(EntityDef.id2datatypes[10111]);
+			pAvatar_onDungeonCompleteSettlementData_args.Add(EntityDef.id2datatypes[10108]);
 
 			Method pAvatar_onDungeonCompleteSettlementData = new Method();
 			pAvatar_onDungeonCompleteSettlementData.name = "onDungeonCompleteSettlementData";
@@ -5056,7 +5455,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onDungeonCompleted / 102).");
 
 			List<DATATYPE_BASE> pAvatar_onEnemyDatas_args = new List<DATATYPE_BASE>();
-			pAvatar_onEnemyDatas_args.Add(EntityDef.id2datatypes[10090]);
+			pAvatar_onEnemyDatas_args.Add(EntityDef.id2datatypes[10087]);
 
 			Method pAvatar_onEnemyDatas = new Method();
 			pAvatar_onEnemyDatas.name = "onEnemyDatas";
@@ -5075,7 +5474,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onEnemyDatas / 859).");
 
 			List<DATATYPE_BASE> pAvatar_onEnemyRecord_args = new List<DATATYPE_BASE>();
-			pAvatar_onEnemyRecord_args.Add(EntityDef.id2datatypes[322]);
+			pAvatar_onEnemyRecord_args.Add(EntityDef.id2datatypes[335]);
 
 			Method pAvatar_onEnemyRecord = new Method();
 			pAvatar_onEnemyRecord.name = "onEnemyRecord";
@@ -5206,7 +5605,7 @@ namespace KBEngine
 			pAvatar_onEquipBlessSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipBlessSucc_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onEquipBlessSucc_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onEquipBlessSucc_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onEquipBlessSucc_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onEquipBlessSucc_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onEquipBlessSucc = new Method();
@@ -5307,11 +5706,30 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onEquipGlyphApplySucc / 1043).");
 
+			List<DATATYPE_BASE> pAvatar_onEquipGlyphStatusChange_args = new List<DATATYPE_BASE>();
+			pAvatar_onEquipGlyphStatusChange_args.Add(EntityDef.id2datatypes[10035]);
+
+			Method pAvatar_onEquipGlyphStatusChange = new Method();
+			pAvatar_onEquipGlyphStatusChange.name = "onEquipGlyphStatusChange";
+			pAvatar_onEquipGlyphStatusChange.methodUtype = 1162;
+			pAvatar_onEquipGlyphStatusChange.aliasID = -1;
+			pAvatar_onEquipGlyphStatusChange.args = pAvatar_onEquipGlyphStatusChange_args;
+
+			pAvatarModule.methods["onEquipGlyphStatusChange"] = pAvatar_onEquipGlyphStatusChange; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onEquipGlyphStatusChange.methodUtype] = pAvatar_onEquipGlyphStatusChange;
+
+			pAvatarModule.cell_methods["onEquipGlyphStatusChange"] = pAvatar_onEquipGlyphStatusChange;
+
+			pAvatarModule.idcell_methods[pAvatar_onEquipGlyphStatusChange.methodUtype] = pAvatar_onEquipGlyphStatusChange;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onEquipGlyphStatusChange / 1162).");
+
 			List<DATATYPE_BASE> pAvatar_onEquipGlyphWashingSucc_args = new List<DATATYPE_BASE>();
 			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[50]);
+			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[53]);
 			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipGlyphWashingSucc_args.Add(EntityDef.id2datatypes[2]);
@@ -5351,7 +5769,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onEquipMakeFailed / 647).");
 
 			List<DATATYPE_BASE> pAvatar_onEquipMakeSucc_args = new List<DATATYPE_BASE>();
-			pAvatar_onEquipMakeSucc_args.Add(EntityDef.id2datatypes[54]);
+			pAvatar_onEquipMakeSucc_args.Add(EntityDef.id2datatypes[57]);
 
 			Method pAvatar_onEquipMakeSucc = new Method();
 			pAvatar_onEquipMakeSucc.name = "onEquipMakeSucc";
@@ -5376,6 +5794,7 @@ namespace KBEngine
 			pAvatar_onEquipSoulSocketSucc_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onEquipSoulSocketSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipSoulSocketSucc_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onEquipSoulSocketSucc_args.Add(EntityDef.id2datatypes[4]);
 
 			Method pAvatar_onEquipSoulSocketSucc = new Method();
 			pAvatar_onEquipSoulSocketSucc.name = "onEquipSoulSocketSucc";
@@ -5418,7 +5837,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onEquipSpiritWashingSucc_args = new List<DATATYPE_BASE>();
 			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[52]);
+			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[55]);
 			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onEquipSpiritWashingSucc_args.Add(EntityDef.id2datatypes[2]);
@@ -5466,7 +5885,7 @@ namespace KBEngine
 			pAvatar_onEquipUpgradeSucc_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onEquipUpgradeSucc_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onEquipUpgradeSucc_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onEquipUpgradeSucc_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onEquipUpgradeSucc_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onEquipUpgradeSucc_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onEquipUpgradeSucc = new Method();
@@ -5484,6 +5903,30 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onEquipUpgradeSucc.methodUtype] = pAvatar_onEquipUpgradeSucc;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onEquipUpgradeSucc / 1054).");
+
+			List<DATATYPE_BASE> pAvatar_onEquipWashReply_args = new List<DATATYPE_BASE>();
+			pAvatar_onEquipWashReply_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onEquipWashReply_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onEquipWashReply_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_onEquipWashReply_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onEquipWashReply_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onEquipWashReply_args.Add(EntityDef.id2datatypes[3]);
+
+			Method pAvatar_onEquipWashReply = new Method();
+			pAvatar_onEquipWashReply.name = "onEquipWashReply";
+			pAvatar_onEquipWashReply.methodUtype = 965;
+			pAvatar_onEquipWashReply.aliasID = -1;
+			pAvatar_onEquipWashReply.args = pAvatar_onEquipWashReply_args;
+
+			pAvatarModule.methods["onEquipWashReply"] = pAvatar_onEquipWashReply; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onEquipWashReply.methodUtype] = pAvatar_onEquipWashReply;
+
+			pAvatarModule.cell_methods["onEquipWashReply"] = pAvatar_onEquipWashReply;
+
+			pAvatarModule.idcell_methods[pAvatar_onEquipWashReply.methodUtype] = pAvatar_onEquipWashReply;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onEquipWashReply / 965).");
 
 			List<DATATYPE_BASE> pAvatar_onEventTips_args = new List<DATATYPE_BASE>();
 			pAvatar_onEventTips_args.Add(EntityDef.id2datatypes[8]);
@@ -5585,9 +6028,28 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onFollowTeamCaptainAsk / 359).");
 
+			List<DATATYPE_BASE> pAvatar_onFreeTicketOneClickRecoveryInfo_args = new List<DATATYPE_BASE>();
+			pAvatar_onFreeTicketOneClickRecoveryInfo_args.Add(EntityDef.id2datatypes[10113]);
+
+			Method pAvatar_onFreeTicketOneClickRecoveryInfo = new Method();
+			pAvatar_onFreeTicketOneClickRecoveryInfo.name = "onFreeTicketOneClickRecoveryInfo";
+			pAvatar_onFreeTicketOneClickRecoveryInfo.methodUtype = 1135;
+			pAvatar_onFreeTicketOneClickRecoveryInfo.aliasID = -1;
+			pAvatar_onFreeTicketOneClickRecoveryInfo.args = pAvatar_onFreeTicketOneClickRecoveryInfo_args;
+
+			pAvatarModule.methods["onFreeTicketOneClickRecoveryInfo"] = pAvatar_onFreeTicketOneClickRecoveryInfo; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onFreeTicketOneClickRecoveryInfo.methodUtype] = pAvatar_onFreeTicketOneClickRecoveryInfo;
+
+			pAvatarModule.cell_methods["onFreeTicketOneClickRecoveryInfo"] = pAvatar_onFreeTicketOneClickRecoveryInfo;
+
+			pAvatarModule.idcell_methods[pAvatar_onFreeTicketOneClickRecoveryInfo.methodUtype] = pAvatar_onFreeTicketOneClickRecoveryInfo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onFreeTicketOneClickRecoveryInfo / 1135).");
+
 			List<DATATYPE_BASE> pAvatar_onFreeTicketRecoveryInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onFreeTicketRecoveryInfo_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onFreeTicketRecoveryInfo_args.Add(EntityDef.id2datatypes[10115]);
+			pAvatar_onFreeTicketRecoveryInfo_args.Add(EntityDef.id2datatypes[10112]);
 
 			Method pAvatar_onFreeTicketRecoveryInfo = new Method();
 			pAvatar_onFreeTicketRecoveryInfo.name = "onFreeTicketRecoveryInfo";
@@ -5627,7 +6089,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onFriendMsgChanged / 719).");
 
 			List<DATATYPE_BASE> pAvatar_onFriendRequests_args = new List<DATATYPE_BASE>();
-			pAvatar_onFriendRequests_args.Add(EntityDef.id2datatypes[10044]);
+			pAvatar_onFriendRequests_args.Add(EntityDef.id2datatypes[10045]);
 
 			Method pAvatar_onFriendRequests = new Method();
 			pAvatar_onFriendRequests.name = "onFriendRequests";
@@ -5743,7 +6205,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetAuctionItemsByAuctionIdsResp_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetAuctionItemsByAuctionIdsResp_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onGetAuctionItemsByAuctionIdsResp_args.Add(EntityDef.id2datatypes[302]);
+			pAvatar_onGetAuctionItemsByAuctionIdsResp_args.Add(EntityDef.id2datatypes[307]);
 			pAvatar_onGetAuctionItemsByAuctionIdsResp_args.Add(EntityDef.id2datatypes[10001]);
 			pAvatar_onGetAuctionItemsByAuctionIdsResp_args.Add(EntityDef.id2datatypes[10001]);
 
@@ -5765,7 +6227,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetAureoleInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
-			pAvatar_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[95]);
+			pAvatar_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pAvatar_onGetAureoleInfo = new Method();
 			pAvatar_onGetAureoleInfo.name = "onGetAureoleInfo";
@@ -5825,7 +6287,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetBuffInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetBuffInfo_args.Add(EntityDef.id2datatypes[8]);
-			pAvatar_onGetBuffInfo_args.Add(EntityDef.id2datatypes[110]);
+			pAvatar_onGetBuffInfo_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pAvatar_onGetBuffInfo = new Method();
 			pAvatar_onGetBuffInfo.name = "onGetBuffInfo";
@@ -5844,7 +6306,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetBuffInfo / 228).");
 
 			List<DATATYPE_BASE> pAvatar_onGetChagllengeDataInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetChagllengeDataInfo_args.Add(EntityDef.id2datatypes[265]);
+			pAvatar_onGetChagllengeDataInfo_args.Add(EntityDef.id2datatypes[273]);
 
 			Method pAvatar_onGetChagllengeDataInfo = new Method();
 			pAvatar_onGetChagllengeDataInfo.name = "onGetChagllengeDataInfo";
@@ -5865,7 +6327,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onGetCoinAuctionPlayerInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetCoinAuctionPlayerInfo_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetCoinAuctionPlayerInfo_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onGetCoinAuctionPlayerInfo_args.Add(EntityDef.id2datatypes[302]);
+			pAvatar_onGetCoinAuctionPlayerInfo_args.Add(EntityDef.id2datatypes[307]);
 
 			Method pAvatar_onGetCoinAuctionPlayerInfo = new Method();
 			pAvatar_onGetCoinAuctionPlayerInfo.name = "onGetCoinAuctionPlayerInfo";
@@ -5884,7 +6346,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetCoinAuctionPlayerInfo / 819).");
 
 			List<DATATYPE_BASE> pAvatar_onGetCollectInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetCollectInfo_args.Add(EntityDef.id2datatypes[10074]);
+			pAvatar_onGetCollectInfo_args.Add(EntityDef.id2datatypes[10073]);
 
 			Method pAvatar_onGetCollectInfo = new Method();
 			pAvatar_onGetCollectInfo.name = "onGetCollectInfo";
@@ -5906,7 +6368,7 @@ namespace KBEngine
 			pAvatar_onGetCurrentSaleItemInfoResp_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onGetCurrentSaleItemInfoResp_args.Add(EntityDef.id2datatypes[13]);
 			pAvatar_onGetCurrentSaleItemInfoResp_args.Add(EntityDef.id2datatypes[13]);
-			pAvatar_onGetCurrentSaleItemInfoResp_args.Add(EntityDef.id2datatypes[302]);
+			pAvatar_onGetCurrentSaleItemInfoResp_args.Add(EntityDef.id2datatypes[307]);
 			pAvatar_onGetCurrentSaleItemInfoResp_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onGetCurrentSaleItemInfoResp = new Method();
@@ -5926,7 +6388,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetCurrentSaleItemInfoResp / 831).");
 
 			List<DATATYPE_BASE> pAvatar_onGetDeathPenaltyExpLogin_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetDeathPenaltyExpLogin_args.Add(EntityDef.id2datatypes[10055]);
+			pAvatar_onGetDeathPenaltyExpLogin_args.Add(EntityDef.id2datatypes[10056]);
 
 			Method pAvatar_onGetDeathPenaltyExpLogin = new Method();
 			pAvatar_onGetDeathPenaltyExpLogin.name = "onGetDeathPenaltyExpLogin";
@@ -5945,7 +6407,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetDeathPenaltyExpLogin / 671).");
 
 			List<DATATYPE_BASE> pAvatar_onGetDrawCardInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetDrawCardInfo_args.Add(EntityDef.id2datatypes[10073]);
+			pAvatar_onGetDrawCardInfo_args.Add(EntityDef.id2datatypes[10072]);
 
 			Method pAvatar_onGetDrawCardInfo = new Method();
 			pAvatar_onGetDrawCardInfo.name = "onGetDrawCardInfo";
@@ -5964,7 +6426,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetDrawCardInfo / 749).");
 
 			List<DATATYPE_BASE> pAvatar_onGetEnemyFreshInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetEnemyFreshInfo_args.Add(EntityDef.id2datatypes[10089]);
+			pAvatar_onGetEnemyFreshInfo_args.Add(EntityDef.id2datatypes[10086]);
 
 			Method pAvatar_onGetEnemyFreshInfo = new Method();
 			pAvatar_onGetEnemyFreshInfo.name = "onGetEnemyFreshInfo";
@@ -5983,7 +6445,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetEnemyFreshInfo / 858).");
 
 			List<DATATYPE_BASE> pAvatar_onGetEnemyGuildInfosClient_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetEnemyGuildInfosClient_args.Add(EntityDef.id2datatypes[10066]);
+			pAvatar_onGetEnemyGuildInfosClient_args.Add(EntityDef.id2datatypes[10067]);
 
 			Method pAvatar_onGetEnemyGuildInfosClient = new Method();
 			pAvatar_onGetEnemyGuildInfosClient.name = "onGetEnemyGuildInfosClient";
@@ -6004,7 +6466,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onGetFriendMsgs_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetFriendMsgs_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetFriendMsgs_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onGetFriendMsgs_args.Add(EntityDef.id2datatypes[10050]);
+			pAvatar_onGetFriendMsgs_args.Add(EntityDef.id2datatypes[10051]);
 
 			Method pAvatar_onGetFriendMsgs = new Method();
 			pAvatar_onGetFriendMsgs.name = "onGetFriendMsgs";
@@ -6065,7 +6527,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetGuildBossHP / 68).");
 
 			List<DATATYPE_BASE> pAvatar_onGetGuildData_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetGuildData_args.Add(EntityDef.id2datatypes[266]);
+			pAvatar_onGetGuildData_args.Add(EntityDef.id2datatypes[274]);
 
 			Method pAvatar_onGetGuildData = new Method();
 			pAvatar_onGetGuildData.name = "onGetGuildData";
@@ -6103,7 +6565,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetGuildIronMine / 505).");
 
 			List<DATATYPE_BASE> pAvatar_onGetGuildListData_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetGuildListData_args.Add(EntityDef.id2datatypes[10060]);
+			pAvatar_onGetGuildListData_args.Add(EntityDef.id2datatypes[10061]);
 
 			Method pAvatar_onGetGuildListData = new Method();
 			pAvatar_onGetGuildListData.name = "onGetGuildListData";
@@ -6122,7 +6584,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetGuildListData / 741).");
 
 			List<DATATYPE_BASE> pAvatar_onGetGuildUnionApplySender_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetGuildUnionApplySender_args.Add(EntityDef.id2datatypes[10069]);
+			pAvatar_onGetGuildUnionApplySender_args.Add(EntityDef.id2datatypes[10070]);
 
 			Method pAvatar_onGetGuildUnionApplySender = new Method();
 			pAvatar_onGetGuildUnionApplySender.name = "onGetGuildUnionApplySender";
@@ -6141,7 +6603,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetGuildUnionApplySender / 951).");
 
 			List<DATATYPE_BASE> pAvatar_onGetInterInfoClient_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetInterInfoClient_args.Add(EntityDef.id2datatypes[183]);
+			pAvatar_onGetInterInfoClient_args.Add(EntityDef.id2datatypes[190]);
 
 			Method pAvatar_onGetInterInfoClient = new Method();
 			pAvatar_onGetInterInfoClient.name = "onGetInterInfoClient";
@@ -6243,7 +6705,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetLineInfo / 154).");
 
 			List<DATATYPE_BASE> pAvatar_onGetLingShouBattleList_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetLingShouBattleList_args.Add(EntityDef.id2datatypes[10041]);
+			pAvatar_onGetLingShouBattleList_args.Add(EntityDef.id2datatypes[10042]);
 
 			Method pAvatar_onGetLingShouBattleList = new Method();
 			pAvatar_onGetLingShouBattleList.name = "onGetLingShouBattleList";
@@ -6304,7 +6766,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onGetMeridianData_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetMeridianData_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetMeridianData_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onGetMeridianData_args.Add(EntityDef.id2datatypes[10104]);
+			pAvatar_onGetMeridianData_args.Add(EntityDef.id2datatypes[10101]);
 
 			Method pAvatar_onGetMeridianData = new Method();
 			pAvatar_onGetMeridianData.name = "onGetMeridianData";
@@ -6364,7 +6826,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetMineWarGuildMemberScore_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetMineWarGuildMemberScore_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onGetMineWarGuildMemberScore_args.Add(EntityDef.id2datatypes[10109]);
+			pAvatar_onGetMineWarGuildMemberScore_args.Add(EntityDef.id2datatypes[10106]);
 
 			Method pAvatar_onGetMineWarGuildMemberScore = new Method();
 			pAvatar_onGetMineWarGuildMemberScore.name = "onGetMineWarGuildMemberScore";
@@ -6403,31 +6865,10 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetNewMail / 679).");
 
-			List<DATATYPE_BASE> pAvatar_onGetPlayerPayInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetPlayerPayInfo_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onGetPlayerPayInfo_args.Add(EntityDef.id2datatypes[10032]);
-			pAvatar_onGetPlayerPayInfo_args.Add(EntityDef.id2datatypes[10072]);
-
-			Method pAvatar_onGetPlayerPayInfo = new Method();
-			pAvatar_onGetPlayerPayInfo.name = "onGetPlayerPayInfo";
-			pAvatar_onGetPlayerPayInfo.methodUtype = 735;
-			pAvatar_onGetPlayerPayInfo.aliasID = -1;
-			pAvatar_onGetPlayerPayInfo.args = pAvatar_onGetPlayerPayInfo_args;
-
-			pAvatarModule.methods["onGetPlayerPayInfo"] = pAvatar_onGetPlayerPayInfo; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onGetPlayerPayInfo.methodUtype] = pAvatar_onGetPlayerPayInfo;
-
-			pAvatarModule.cell_methods["onGetPlayerPayInfo"] = pAvatar_onGetPlayerPayInfo;
-
-			pAvatarModule.idcell_methods[pAvatar_onGetPlayerPayInfo.methodUtype] = pAvatar_onGetPlayerPayInfo;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetPlayerPayInfo / 735).");
-
 			List<DATATYPE_BASE> pAvatar_onGetPublicBountyList_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetPublicBountyList_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onGetPublicBountyList_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onGetPublicBountyList_args.Add(EntityDef.id2datatypes[10114]);
+			pAvatar_onGetPublicBountyList_args.Add(EntityDef.id2datatypes[10111]);
 			pAvatar_onGetPublicBountyList_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetPublicBountyList_args.Add(EntityDef.id2datatypes[4]);
 
@@ -6449,7 +6890,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetRaidAllMembersAttrs_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetRaidAllMembersAttrs_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onGetRaidAllMembersAttrs_args.Add(EntityDef.id2datatypes[10052]);
+			pAvatar_onGetRaidAllMembersAttrs_args.Add(EntityDef.id2datatypes[10053]);
 
 			Method pAvatar_onGetRaidAllMembersAttrs = new Method();
 			pAvatar_onGetRaidAllMembersAttrs.name = "onGetRaidAllMembersAttrs";
@@ -6469,7 +6910,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetRaidApplyJoinList_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetRaidApplyJoinList_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onGetRaidApplyJoinList_args.Add(EntityDef.id2datatypes[10051]);
+			pAvatar_onGetRaidApplyJoinList_args.Add(EntityDef.id2datatypes[10052]);
 
 			Method pAvatar_onGetRaidApplyJoinList = new Method();
 			pAvatar_onGetRaidApplyJoinList.name = "onGetRaidApplyJoinList";
@@ -6488,7 +6929,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetRaidApplyJoinList / 431).");
 
 			List<DATATYPE_BASE> pAvatar_onGetRaidData_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetRaidData_args.Add(EntityDef.id2datatypes[149]);
+			pAvatar_onGetRaidData_args.Add(EntityDef.id2datatypes[156]);
 
 			Method pAvatar_onGetRaidData = new Method();
 			pAvatar_onGetRaidData.name = "onGetRaidData";
@@ -6509,7 +6950,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onGetRaidList_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetRaidList_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onGetRaidList_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onGetRaidList_args.Add(EntityDef.id2datatypes[10053]);
+			pAvatar_onGetRaidList_args.Add(EntityDef.id2datatypes[10054]);
 
 			Method pAvatar_onGetRaidList = new Method();
 			pAvatar_onGetRaidList.name = "onGetRaidList";
@@ -6528,7 +6969,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetRaidList / 925).");
 
 			List<DATATYPE_BASE> pAvatar_onGetRedBagMyList_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetRedBagMyList_args.Add(EntityDef.id2datatypes[10102]);
+			pAvatar_onGetRedBagMyList_args.Add(EntityDef.id2datatypes[10099]);
 
 			Method pAvatar_onGetRedBagMyList = new Method();
 			pAvatar_onGetRedBagMyList.name = "onGetRedBagMyList";
@@ -6547,7 +6988,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetRedBagMyList / 1035).");
 
 			List<DATATYPE_BASE> pAvatar_onGetRedBagRankList_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetRedBagRankList_args.Add(EntityDef.id2datatypes[10102]);
+			pAvatar_onGetRedBagRankList_args.Add(EntityDef.id2datatypes[10099]);
 
 			Method pAvatar_onGetRedBagRankList = new Method();
 			pAvatar_onGetRedBagRankList.name = "onGetRedBagRankList";
@@ -6589,7 +7030,7 @@ namespace KBEngine
 			pAvatar_onGetSettlementRankList_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onGetSettlementRankList_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetSettlementRankList_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onGetSettlementRankList_args.Add(EntityDef.id2datatypes[10112]);
+			pAvatar_onGetSettlementRankList_args.Add(EntityDef.id2datatypes[10109]);
 
 			Method pAvatar_onGetSettlementRankList = new Method();
 			pAvatar_onGetSettlementRankList.name = "onGetSettlementRankList";
@@ -6609,7 +7050,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onGetStatisticsClient_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetStatisticsClient_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onGetStatisticsClient_args.Add(EntityDef.id2datatypes[10113]);
+			pAvatar_onGetStatisticsClient_args.Add(EntityDef.id2datatypes[10110]);
 
 			Method pAvatar_onGetStatisticsClient = new Method();
 			pAvatar_onGetStatisticsClient.name = "onGetStatisticsClient";
@@ -6631,7 +7072,7 @@ namespace KBEngine
 			pAvatar_onGetStatisticsDetailClient_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetStatisticsDetailClient_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onGetStatisticsDetailClient_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onGetStatisticsDetailClient_args.Add(EntityDef.id2datatypes[10113]);
+			pAvatar_onGetStatisticsDetailClient_args.Add(EntityDef.id2datatypes[10110]);
 
 			Method pAvatar_onGetStatisticsDetailClient = new Method();
 			pAvatar_onGetStatisticsDetailClient.name = "onGetStatisticsDetailClient";
@@ -6650,7 +7091,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetStatisticsDetailClient / 134).");
 
 			List<DATATYPE_BASE> pAvatar_onGetStoreLimitedItemList_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetStoreLimitedItemList_args.Add(EntityDef.id2datatypes[227]);
+			pAvatar_onGetStoreLimitedItemList_args.Add(EntityDef.id2datatypes[235]);
 			pAvatar_onGetStoreLimitedItemList_args.Add(EntityDef.id2datatypes[4]);
 
 			Method pAvatar_onGetStoreLimitedItemList = new Method();
@@ -6670,7 +7111,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetStoreLimitedItemList / 1037).");
 
 			List<DATATYPE_BASE> pAvatar_onGetStoreList_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetStoreList_args.Add(EntityDef.id2datatypes[10058]);
+			pAvatar_onGetStoreList_args.Add(EntityDef.id2datatypes[10059]);
 
 			Method pAvatar_onGetStoreList = new Method();
 			pAvatar_onGetStoreList.name = "onGetStoreList";
@@ -6710,7 +7151,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onGetTeamList_args = new List<DATATYPE_BASE>();
 			pAvatar_onGetTeamList_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onGetTeamList_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onGetTeamList_args.Add(EntityDef.id2datatypes[10037]);
+			pAvatar_onGetTeamList_args.Add(EntityDef.id2datatypes[10038]);
 
 			Method pAvatar_onGetTeamList = new Method();
 			pAvatar_onGetTeamList.name = "onGetTeamList";
@@ -6729,7 +7170,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetTeamList / 384).");
 
 			List<DATATYPE_BASE> pAvatar_onGetVariableData_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetVariableData_args.Add(EntityDef.id2datatypes[10035]);
+			pAvatar_onGetVariableData_args.Add(EntityDef.id2datatypes[10036]);
 			pAvatar_onGetVariableData_args.Add(EntityDef.id2datatypes[10008]);
 
 			Method pAvatar_onGetVariableData = new Method();
@@ -6749,7 +7190,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGetVariableData / 190).");
 
 			List<DATATYPE_BASE> pAvatar_onGetWelfareSignInInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onGetWelfareSignInInfo_args.Add(EntityDef.id2datatypes[299]);
+			pAvatar_onGetWelfareSignInInfo_args.Add(EntityDef.id2datatypes[304]);
 			pAvatar_onGetWelfareSignInInfo_args.Add(EntityDef.id2datatypes[1]);
 
 			Method pAvatar_onGetWelfareSignInInfo = new Method();
@@ -6808,7 +7249,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGobackServer / 352).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildApplyJoinList_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildApplyJoinList_args.Add(EntityDef.id2datatypes[10061]);
+			pAvatar_onGuildApplyJoinList_args.Add(EntityDef.id2datatypes[10062]);
 
 			Method pAvatar_onGuildApplyJoinList = new Method();
 			pAvatar_onGuildApplyJoinList.name = "onGuildApplyJoinList";
@@ -6827,7 +7268,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildApplyJoinList / 743).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildBuildingChanged_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildBuildingChanged_args.Add(EntityDef.id2datatypes[263]);
+			pAvatar_onGuildBuildingChanged_args.Add(EntityDef.id2datatypes[271]);
 
 			Method pAvatar_onGuildBuildingChanged = new Method();
 			pAvatar_onGuildBuildingChanged.name = "onGuildBuildingChanged";
@@ -6884,7 +7325,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildDispChanged / 800).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildEventLogs_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildEventLogs_args.Add(EntityDef.id2datatypes[10063]);
+			pAvatar_onGuildEventLogs_args.Add(EntityDef.id2datatypes[10064]);
 
 			Method pAvatar_onGuildEventLogs = new Method();
 			pAvatar_onGuildEventLogs.name = "onGuildEventLogs";
@@ -6960,7 +7401,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildIconChanged / 790).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildInfoFromCrossData_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildInfoFromCrossData_args.Add(EntityDef.id2datatypes[10065]);
+			pAvatar_onGuildInfoFromCrossData_args.Add(EntityDef.id2datatypes[10066]);
 
 			Method pAvatar_onGuildInfoFromCrossData = new Method();
 			pAvatar_onGuildInfoFromCrossData.name = "onGuildInfoFromCrossData";
@@ -6979,7 +7420,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildInfoFromCrossData / 931).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildInfosByRelationType_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildInfosByRelationType_args.Add(EntityDef.id2datatypes[10065]);
+			pAvatar_onGuildInfosByRelationType_args.Add(EntityDef.id2datatypes[10066]);
 			pAvatar_onGuildInfosByRelationType_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onGuildInfosByRelationType = new Method();
@@ -6999,7 +7440,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildInfosByRelationType / 937).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildInvateToClient_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildInvateToClient_args.Add(EntityDef.id2datatypes[295]);
+			pAvatar_onGuildInvateToClient_args.Add(EntityDef.id2datatypes[300]);
 
 			Method pAvatar_onGuildInvateToClient = new Method();
 			pAvatar_onGuildInvateToClient.name = "onGuildInvateToClient";
@@ -7018,7 +7459,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildInvateToClient / 804).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildJobData_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildJobData_args.Add(EntityDef.id2datatypes[239]);
+			pAvatar_onGuildJobData_args.Add(EntityDef.id2datatypes[247]);
 
 			Method pAvatar_onGuildJobData = new Method();
 			pAvatar_onGuildJobData.name = "onGuildJobData";
@@ -7037,7 +7478,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildJobData / 780).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildJoinCondChanged_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildJoinCondChanged_args.Add(EntityDef.id2datatypes[196]);
+			pAvatar_onGuildJoinCondChanged_args.Add(EntityDef.id2datatypes[203]);
 
 			Method pAvatar_onGuildJoinCondChanged = new Method();
 			pAvatar_onGuildJoinCondChanged.name = "onGuildJoinCondChanged";
@@ -7075,7 +7516,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildLevelChanged / 784).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildMemberDatas_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildMemberDatas_args.Add(EntityDef.id2datatypes[10062]);
+			pAvatar_onGuildMemberDatas_args.Add(EntityDef.id2datatypes[10063]);
 
 			Method pAvatar_onGuildMemberDatas = new Method();
 			pAvatar_onGuildMemberDatas.name = "onGuildMemberDatas";
@@ -7112,9 +7553,28 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildMoneyChanged / 786).");
 
+			List<DATATYPE_BASE> pAvatar_onGuildPublicDescChanged_args = new List<DATATYPE_BASE>();
+			pAvatar_onGuildPublicDescChanged_args.Add(EntityDef.id2datatypes[12]);
+
+			Method pAvatar_onGuildPublicDescChanged = new Method();
+			pAvatar_onGuildPublicDescChanged.name = "onGuildPublicDescChanged";
+			pAvatar_onGuildPublicDescChanged.methodUtype = 1097;
+			pAvatar_onGuildPublicDescChanged.aliasID = -1;
+			pAvatar_onGuildPublicDescChanged.args = pAvatar_onGuildPublicDescChanged_args;
+
+			pAvatarModule.methods["onGuildPublicDescChanged"] = pAvatar_onGuildPublicDescChanged; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onGuildPublicDescChanged.methodUtype] = pAvatar_onGuildPublicDescChanged;
+
+			pAvatarModule.cell_methods["onGuildPublicDescChanged"] = pAvatar_onGuildPublicDescChanged;
+
+			pAvatarModule.idcell_methods[pAvatar_onGuildPublicDescChanged.methodUtype] = pAvatar_onGuildPublicDescChanged;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildPublicDescChanged / 1097).");
+
 			List<DATATYPE_BASE> pAvatar_onGuildRelationAll_args = new List<DATATYPE_BASE>();
 			pAvatar_onGuildRelationAll_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onGuildRelationAll_args.Add(EntityDef.id2datatypes[10067]);
+			pAvatar_onGuildRelationAll_args.Add(EntityDef.id2datatypes[10068]);
 
 			Method pAvatar_onGuildRelationAll = new Method();
 			pAvatar_onGuildRelationAll.name = "onGuildRelationAll";
@@ -7151,7 +7611,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onGuildTrainResetClient / 802).");
 
 			List<DATATYPE_BASE> pAvatar_onGuildTrainsInit_args = new List<DATATYPE_BASE>();
-			pAvatar_onGuildTrainsInit_args.Add(EntityDef.id2datatypes[10075]);
+			pAvatar_onGuildTrainsInit_args.Add(EntityDef.id2datatypes[10074]);
 
 			Method pAvatar_onGuildTrainsInit = new Method();
 			pAvatar_onGuildTrainsInit.name = "onGuildTrainsInit";
@@ -7189,27 +7649,8 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onHealItemResult / 841).");
 
-			List<DATATYPE_BASE> pAvatar_onHolidayPayUpdate_args = new List<DATATYPE_BASE>();
-			pAvatar_onHolidayPayUpdate_args.Add(EntityDef.id2datatypes[267]);
-
-			Method pAvatar_onHolidayPayUpdate = new Method();
-			pAvatar_onHolidayPayUpdate.name = "onHolidayPayUpdate";
-			pAvatar_onHolidayPayUpdate.methodUtype = 737;
-			pAvatar_onHolidayPayUpdate.aliasID = -1;
-			pAvatar_onHolidayPayUpdate.args = pAvatar_onHolidayPayUpdate_args;
-
-			pAvatarModule.methods["onHolidayPayUpdate"] = pAvatar_onHolidayPayUpdate; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onHolidayPayUpdate.methodUtype] = pAvatar_onHolidayPayUpdate;
-
-			pAvatarModule.cell_methods["onHolidayPayUpdate"] = pAvatar_onHolidayPayUpdate;
-
-			pAvatarModule.idcell_methods[pAvatar_onHolidayPayUpdate.methodUtype] = pAvatar_onHolidayPayUpdate;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onHolidayPayUpdate / 737).");
-
 			List<DATATYPE_BASE> pAvatar_onHookRewardTaskRefresh_args = new List<DATATYPE_BASE>();
-			pAvatar_onHookRewardTaskRefresh_args.Add(EntityDef.id2datatypes[10038]);
+			pAvatar_onHookRewardTaskRefresh_args.Add(EntityDef.id2datatypes[10039]);
 
 			Method pAvatar_onHookRewardTaskRefresh = new Method();
 			pAvatar_onHookRewardTaskRefresh.name = "onHookRewardTaskRefresh";
@@ -7267,7 +7708,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onInitEnemyRecord_args = new List<DATATYPE_BASE>();
 			pAvatar_onInitEnemyRecord_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onInitEnemyRecord_args.Add(EntityDef.id2datatypes[10091]);
+			pAvatar_onInitEnemyRecord_args.Add(EntityDef.id2datatypes[10088]);
 
 			Method pAvatar_onInitEnemyRecord = new Method();
 			pAvatar_onInitEnemyRecord.name = "onInitEnemyRecord";
@@ -7285,24 +7726,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onInitEnemyRecord / 865).");
 
-			List<DATATYPE_BASE> pAvatar_onInitEquipDropData_args = new List<DATATYPE_BASE>();
-			pAvatar_onInitEquipDropData_args.Add(EntityDef.id2datatypes[316]);
+			List<DATATYPE_BASE> pAvatar_onInitEquipDropInfo_args = new List<DATATYPE_BASE>();
+			pAvatar_onInitEquipDropInfo_args.Add(EntityDef.id2datatypes[330]);
 
-			Method pAvatar_onInitEquipDropData = new Method();
-			pAvatar_onInitEquipDropData.name = "onInitEquipDropData";
-			pAvatar_onInitEquipDropData.methodUtype = 855;
-			pAvatar_onInitEquipDropData.aliasID = -1;
-			pAvatar_onInitEquipDropData.args = pAvatar_onInitEquipDropData_args;
+			Method pAvatar_onInitEquipDropInfo = new Method();
+			pAvatar_onInitEquipDropInfo.name = "onInitEquipDropInfo";
+			pAvatar_onInitEquipDropInfo.methodUtype = 990;
+			pAvatar_onInitEquipDropInfo.aliasID = -1;
+			pAvatar_onInitEquipDropInfo.args = pAvatar_onInitEquipDropInfo_args;
 
-			pAvatarModule.methods["onInitEquipDropData"] = pAvatar_onInitEquipDropData; 
+			pAvatarModule.methods["onInitEquipDropInfo"] = pAvatar_onInitEquipDropInfo; 
 			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onInitEquipDropData.methodUtype] = pAvatar_onInitEquipDropData;
+			pAvatarModule.idmethods[pAvatar_onInitEquipDropInfo.methodUtype] = pAvatar_onInitEquipDropInfo;
 
-			pAvatarModule.cell_methods["onInitEquipDropData"] = pAvatar_onInitEquipDropData;
+			pAvatarModule.cell_methods["onInitEquipDropInfo"] = pAvatar_onInitEquipDropInfo;
 
-			pAvatarModule.idcell_methods[pAvatar_onInitEquipDropData.methodUtype] = pAvatar_onInitEquipDropData;
+			pAvatarModule.idcell_methods[pAvatar_onInitEquipDropInfo.methodUtype] = pAvatar_onInitEquipDropInfo;
 
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onInitEquipDropData / 855).");
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onInitEquipDropInfo / 990).");
 
 			List<DATATYPE_BASE> pAvatar_onKillAvatar_args = new List<DATATYPE_BASE>();
 			pAvatar_onKillAvatar_args.Add(EntityDef.id2datatypes[12]);
@@ -7323,9 +7764,29 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onKillAvatar / 994).");
 
+			List<DATATYPE_BASE> pAvatar_onLackChallengeNum_args = new List<DATATYPE_BASE>();
+			pAvatar_onLackChallengeNum_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onLackChallengeNum_args.Add(EntityDef.id2datatypes[10001]);
+
+			Method pAvatar_onLackChallengeNum = new Method();
+			pAvatar_onLackChallengeNum.name = "onLackChallengeNum";
+			pAvatar_onLackChallengeNum.methodUtype = 1136;
+			pAvatar_onLackChallengeNum.aliasID = -1;
+			pAvatar_onLackChallengeNum.args = pAvatar_onLackChallengeNum_args;
+
+			pAvatarModule.methods["onLackChallengeNum"] = pAvatar_onLackChallengeNum; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onLackChallengeNum.methodUtype] = pAvatar_onLackChallengeNum;
+
+			pAvatarModule.cell_methods["onLackChallengeNum"] = pAvatar_onLackChallengeNum;
+
+			pAvatarModule.idcell_methods[pAvatar_onLackChallengeNum.methodUtype] = pAvatar_onLackChallengeNum;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLackChallengeNum / 1136).");
+
 			List<DATATYPE_BASE> pAvatar_onLeaderBoardAvatarAchievement_args = new List<DATATYPE_BASE>();
 			pAvatar_onLeaderBoardAvatarAchievement_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onLeaderBoardAvatarAchievement_args.Add(EntityDef.id2datatypes[10081]);
+			pAvatar_onLeaderBoardAvatarAchievement_args.Add(EntityDef.id2datatypes[10080]);
 			pAvatar_onLeaderBoardAvatarAchievement_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onLeaderBoardAvatarAchievement_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onLeaderBoardAvatarAchievement_args.Add(EntityDef.id2datatypes[2]);
@@ -7349,7 +7810,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onLeaderBoardAvatarLevel_args = new List<DATATYPE_BASE>();
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[10077]);
+			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[10076]);
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[2]);
@@ -7373,7 +7834,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onLeaderBoardAvatarLevelRushRank_args = new List<DATATYPE_BASE>();
 			pAvatar_onLeaderBoardAvatarLevelRushRank_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onLeaderBoardAvatarLevelRushRank_args.Add(EntityDef.id2datatypes[10080]);
+			pAvatar_onLeaderBoardAvatarLevelRushRank_args.Add(EntityDef.id2datatypes[10079]);
 			pAvatar_onLeaderBoardAvatarLevelRushRank_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onLeaderBoardAvatarLevelRushRank_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onLeaderBoardAvatarLevelRushRank_args.Add(EntityDef.id2datatypes[2]);
@@ -7397,7 +7858,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onLeaderBoardAvatarScore_args = new List<DATATYPE_BASE>();
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[10078]);
+			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[10077]);
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[2]);
@@ -7421,7 +7882,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onLeaderBoardGuild_args = new List<DATATYPE_BASE>();
 			pAvatar_onLeaderBoardGuild_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onLeaderBoardGuild_args.Add(EntityDef.id2datatypes[10079]);
+			pAvatar_onLeaderBoardGuild_args.Add(EntityDef.id2datatypes[10078]);
 			pAvatar_onLeaderBoardGuild_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onLeaderBoardGuild_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onLeaderBoardGuild_args.Add(EntityDef.id2datatypes[3]);
@@ -7444,7 +7905,6 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onLeaseItemSucc_args = new List<DATATYPE_BASE>();
 			pAvatar_onLeaseItemSucc_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onLeaseItemSucc_args.Add(EntityDef.id2datatypes[4]);
 
 			Method pAvatar_onLeaseItemSucc = new Method();
 			pAvatar_onLeaseItemSucc.name = "onLeaseItemSucc";
@@ -7462,46 +7922,9 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLeaseItemSucc / 836).");
 
-			List<DATATYPE_BASE> pAvatar_onLeaseRecords_args = new List<DATATYPE_BASE>();
-			pAvatar_onLeaseRecords_args.Add(EntityDef.id2datatypes[10085]);
-
-			Method pAvatar_onLeaseRecords = new Method();
-			pAvatar_onLeaseRecords.name = "onLeaseRecords";
-			pAvatar_onLeaseRecords.methodUtype = 918;
-			pAvatar_onLeaseRecords.aliasID = -1;
-			pAvatar_onLeaseRecords.args = pAvatar_onLeaseRecords_args;
-
-			pAvatarModule.methods["onLeaseRecords"] = pAvatar_onLeaseRecords; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onLeaseRecords.methodUtype] = pAvatar_onLeaseRecords;
-
-			pAvatarModule.cell_methods["onLeaseRecords"] = pAvatar_onLeaseRecords;
-
-			pAvatarModule.idcell_methods[pAvatar_onLeaseRecords.methodUtype] = pAvatar_onLeaseRecords;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLeaseRecords / 918).");
-
-			List<DATATYPE_BASE> pAvatar_onLeaseShopItems_args = new List<DATATYPE_BASE>();
-			pAvatar_onLeaseShopItems_args.Add(EntityDef.id2datatypes[10084]);
-
-			Method pAvatar_onLeaseShopItems = new Method();
-			pAvatar_onLeaseShopItems.name = "onLeaseShopItems";
-			pAvatar_onLeaseShopItems.methodUtype = 729;
-			pAvatar_onLeaseShopItems.aliasID = -1;
-			pAvatar_onLeaseShopItems.args = pAvatar_onLeaseShopItems_args;
-
-			pAvatarModule.methods["onLeaseShopItems"] = pAvatar_onLeaseShopItems; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onLeaseShopItems.methodUtype] = pAvatar_onLeaseShopItems;
-
-			pAvatarModule.cell_methods["onLeaseShopItems"] = pAvatar_onLeaseShopItems;
-
-			pAvatarModule.idcell_methods[pAvatar_onLeaseShopItems.methodUtype] = pAvatar_onLeaseShopItems;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLeaseShopItems / 729).");
-
 			List<DATATYPE_BASE> pAvatar_onLeaseShopSummary_args = new List<DATATYPE_BASE>();
-			pAvatar_onLeaseShopSummary_args.Add(EntityDef.id2datatypes[10083]);
+			pAvatar_onLeaseShopSummary_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onLeaseShopSummary_args.Add(EntityDef.id2datatypes[10082]);
 
 			Method pAvatar_onLeaseShopSummary = new Method();
 			pAvatar_onLeaseShopSummary.name = "onLeaseShopSummary";
@@ -7622,6 +8045,46 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLockItemSucc / 1005).");
 
+			List<DATATYPE_BASE> pAvatar_onMallGiftStoreLimit_args = new List<DATATYPE_BASE>();
+			pAvatar_onMallGiftStoreLimit_args.Add(EntityDef.id2datatypes[10032]);
+			pAvatar_onMallGiftStoreLimit_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pAvatar_onMallGiftStoreLimit = new Method();
+			pAvatar_onMallGiftStoreLimit.name = "onMallGiftStoreLimit";
+			pAvatar_onMallGiftStoreLimit.methodUtype = 1147;
+			pAvatar_onMallGiftStoreLimit.aliasID = -1;
+			pAvatar_onMallGiftStoreLimit.args = pAvatar_onMallGiftStoreLimit_args;
+
+			pAvatarModule.methods["onMallGiftStoreLimit"] = pAvatar_onMallGiftStoreLimit; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onMallGiftStoreLimit.methodUtype] = pAvatar_onMallGiftStoreLimit;
+
+			pAvatarModule.cell_methods["onMallGiftStoreLimit"] = pAvatar_onMallGiftStoreLimit;
+
+			pAvatarModule.idcell_methods[pAvatar_onMallGiftStoreLimit.methodUtype] = pAvatar_onMallGiftStoreLimit;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMallGiftStoreLimit / 1147).");
+
+			List<DATATYPE_BASE> pAvatar_onMallMountStoreLimit_args = new List<DATATYPE_BASE>();
+			pAvatar_onMallMountStoreLimit_args.Add(EntityDef.id2datatypes[10032]);
+			pAvatar_onMallMountStoreLimit_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pAvatar_onMallMountStoreLimit = new Method();
+			pAvatar_onMallMountStoreLimit.name = "onMallMountStoreLimit";
+			pAvatar_onMallMountStoreLimit.methodUtype = 1148;
+			pAvatar_onMallMountStoreLimit.aliasID = -1;
+			pAvatar_onMallMountStoreLimit.args = pAvatar_onMallMountStoreLimit_args;
+
+			pAvatarModule.methods["onMallMountStoreLimit"] = pAvatar_onMallMountStoreLimit; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onMallMountStoreLimit.methodUtype] = pAvatar_onMallMountStoreLimit;
+
+			pAvatarModule.cell_methods["onMallMountStoreLimit"] = pAvatar_onMallMountStoreLimit;
+
+			pAvatarModule.idcell_methods[pAvatar_onMallMountStoreLimit.methodUtype] = pAvatar_onMallMountStoreLimit;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMallMountStoreLimit / 1148).");
+
 			List<DATATYPE_BASE> pAvatar_onMapUnlockMessagePre_args = new List<DATATYPE_BASE>();
 			pAvatar_onMapUnlockMessagePre_args.Add(EntityDef.id2datatypes[3]);
 
@@ -7640,6 +8103,25 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onMapUnlockMessagePre.methodUtype] = pAvatar_onMapUnlockMessagePre;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMapUnlockMessagePre / 983).");
+
+			List<DATATYPE_BASE> pAvatar_onMemberNoRewardNum_args = new List<DATATYPE_BASE>();
+			pAvatar_onMemberNoRewardNum_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onMemberNoRewardNum = new Method();
+			pAvatar_onMemberNoRewardNum.name = "onMemberNoRewardNum";
+			pAvatar_onMemberNoRewardNum.methodUtype = 1140;
+			pAvatar_onMemberNoRewardNum.aliasID = -1;
+			pAvatar_onMemberNoRewardNum.args = pAvatar_onMemberNoRewardNum_args;
+
+			pAvatarModule.methods["onMemberNoRewardNum"] = pAvatar_onMemberNoRewardNum; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onMemberNoRewardNum.methodUtype] = pAvatar_onMemberNoRewardNum;
+
+			pAvatarModule.cell_methods["onMemberNoRewardNum"] = pAvatar_onMemberNoRewardNum;
+
+			pAvatarModule.idcell_methods[pAvatar_onMemberNoRewardNum.methodUtype] = pAvatar_onMemberNoRewardNum;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMemberNoRewardNum / 1140).");
 
 			List<DATATYPE_BASE> pAvatar_onMessage_args = new List<DATATYPE_BASE>();
 			pAvatar_onMessage_args.Add(EntityDef.id2datatypes[8]);
@@ -7684,7 +8166,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMineWarEndInfo / 1092).");
 
 			List<DATATYPE_BASE> pAvatar_onMineWarFlagSyncClient_args = new List<DATATYPE_BASE>();
-			pAvatar_onMineWarFlagSyncClient_args.Add(EntityDef.id2datatypes[10110]);
+			pAvatar_onMineWarFlagSyncClient_args.Add(EntityDef.id2datatypes[10107]);
 
 			Method pAvatar_onMineWarFlagSyncClient = new Method();
 			pAvatar_onMineWarFlagSyncClient.name = "onMineWarFlagSyncClient";
@@ -7703,8 +8185,8 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMineWarFlagSyncClient / 581).");
 
 			List<DATATYPE_BASE> pAvatar_onMineWarGuildOwnerRank_args = new List<DATATYPE_BASE>();
-			pAvatar_onMineWarGuildOwnerRank_args.Add(EntityDef.id2datatypes[395]);
-			pAvatar_onMineWarGuildOwnerRank_args.Add(EntityDef.id2datatypes[10107]);
+			pAvatar_onMineWarGuildOwnerRank_args.Add(EntityDef.id2datatypes[408]);
+			pAvatar_onMineWarGuildOwnerRank_args.Add(EntityDef.id2datatypes[10104]);
 
 			Method pAvatar_onMineWarGuildOwnerRank = new Method();
 			pAvatar_onMineWarGuildOwnerRank.name = "onMineWarGuildOwnerRank";
@@ -7723,8 +8205,8 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMineWarGuildOwnerRank / 1089).");
 
 			List<DATATYPE_BASE> pAvatar_onMineWarGuildPlayerRank_args = new List<DATATYPE_BASE>();
-			pAvatar_onMineWarGuildPlayerRank_args.Add(EntityDef.id2datatypes[396]);
-			pAvatar_onMineWarGuildPlayerRank_args.Add(EntityDef.id2datatypes[10108]);
+			pAvatar_onMineWarGuildPlayerRank_args.Add(EntityDef.id2datatypes[409]);
+			pAvatar_onMineWarGuildPlayerRank_args.Add(EntityDef.id2datatypes[10105]);
 
 			Method pAvatar_onMineWarGuildPlayerRank = new Method();
 			pAvatar_onMineWarGuildPlayerRank.name = "onMineWarGuildPlayerRank";
@@ -7743,7 +8225,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMineWarGuildPlayerRank / 1090).");
 
 			List<DATATYPE_BASE> pAvatar_onMineWarInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onMineWarInfo_args.Add(EntityDef.id2datatypes[10106]);
+			pAvatar_onMineWarInfo_args.Add(EntityDef.id2datatypes[10103]);
 
 			Method pAvatar_onMineWarInfo = new Method();
 			pAvatar_onMineWarInfo.name = "onMineWarInfo";
@@ -7840,27 +8322,8 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMultiEquipEnhance / 287).");
 
-			List<DATATYPE_BASE> pAvatar_onMyLeaseSaleInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onMyLeaseSaleInfo_args.Add(EntityDef.id2datatypes[10086]);
-
-			Method pAvatar_onMyLeaseSaleInfo = new Method();
-			pAvatar_onMyLeaseSaleInfo.name = "onMyLeaseSaleInfo";
-			pAvatar_onMyLeaseSaleInfo.methodUtype = 965;
-			pAvatar_onMyLeaseSaleInfo.aliasID = -1;
-			pAvatar_onMyLeaseSaleInfo.args = pAvatar_onMyLeaseSaleInfo_args;
-
-			pAvatarModule.methods["onMyLeaseSaleInfo"] = pAvatar_onMyLeaseSaleInfo; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onMyLeaseSaleInfo.methodUtype] = pAvatar_onMyLeaseSaleInfo;
-
-			pAvatarModule.cell_methods["onMyLeaseSaleInfo"] = pAvatar_onMyLeaseSaleInfo;
-
-			pAvatarModule.idcell_methods[pAvatar_onMyLeaseSaleInfo.methodUtype] = pAvatar_onMyLeaseSaleInfo;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onMyLeaseSaleInfo / 965).");
-
 			List<DATATYPE_BASE> pAvatar_onNewApplyGuildUnion_args = new List<DATATYPE_BASE>();
-			pAvatar_onNewApplyGuildUnion_args.Add(EntityDef.id2datatypes[339]);
+			pAvatar_onNewApplyGuildUnion_args.Add(EntityDef.id2datatypes[352]);
 
 			Method pAvatar_onNewApplyGuildUnion = new Method();
 			pAvatar_onNewApplyGuildUnion.name = "onNewApplyGuildUnion";
@@ -7899,7 +8362,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onNewEnemyRecord_args = new List<DATATYPE_BASE>();
 			pAvatar_onNewEnemyRecord_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onNewEnemyRecord_args.Add(EntityDef.id2datatypes[321]);
+			pAvatar_onNewEnemyRecord_args.Add(EntityDef.id2datatypes[334]);
 
 			Method pAvatar_onNewEnemyRecord = new Method();
 			pAvatar_onNewEnemyRecord.name = "onNewEnemyRecord";
@@ -7918,7 +8381,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onNewEnemyRecord / 861).");
 
 			List<DATATYPE_BASE> pAvatar_onNewGuildUnionApplySender_args = new List<DATATYPE_BASE>();
-			pAvatar_onNewGuildUnionApplySender_args.Add(EntityDef.id2datatypes[340]);
+			pAvatar_onNewGuildUnionApplySender_args.Add(EntityDef.id2datatypes[353]);
 
 			Method pAvatar_onNewGuildUnionApplySender = new Method();
 			pAvatar_onNewGuildUnionApplySender.name = "onNewGuildUnionApplySender";
@@ -7935,6 +8398,25 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onNewGuildUnionApplySender.methodUtype] = pAvatar_onNewGuildUnionApplySender;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onNewGuildUnionApplySender / 954).");
+
+			List<DATATYPE_BASE> pAvatar_onNewSafeBoxItem_args = new List<DATATYPE_BASE>();
+			pAvatar_onNewSafeBoxItem_args.Add(EntityDef.id2datatypes[454]);
+
+			Method pAvatar_onNewSafeBoxItem = new Method();
+			pAvatar_onNewSafeBoxItem.name = "onNewSafeBoxItem";
+			pAvatar_onNewSafeBoxItem.methodUtype = 1138;
+			pAvatar_onNewSafeBoxItem.aliasID = -1;
+			pAvatar_onNewSafeBoxItem.args = pAvatar_onNewSafeBoxItem_args;
+
+			pAvatarModule.methods["onNewSafeBoxItem"] = pAvatar_onNewSafeBoxItem; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onNewSafeBoxItem.methodUtype] = pAvatar_onNewSafeBoxItem;
+
+			pAvatarModule.cell_methods["onNewSafeBoxItem"] = pAvatar_onNewSafeBoxItem;
+
+			pAvatarModule.idcell_methods[pAvatar_onNewSafeBoxItem.methodUtype] = pAvatar_onNewSafeBoxItem;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onNewSafeBoxItem / 1138).");
 
 			List<DATATYPE_BASE> pAvatar_onNewbieGuideId_args = new List<DATATYPE_BASE>();
 			pAvatar_onNewbieGuideId_args.Add(EntityDef.id2datatypes[8]);
@@ -7975,7 +8457,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onNoNeedPlayFx / 299).");
 
 			List<DATATYPE_BASE> pAvatar_onNoticeAssignedHunter_args = new List<DATATYPE_BASE>();
-			pAvatar_onNoticeAssignedHunter_args.Add(EntityDef.id2datatypes[425]);
+			pAvatar_onNoticeAssignedHunter_args.Add(EntityDef.id2datatypes[438]);
 
 			Method pAvatar_onNoticeAssignedHunter = new Method();
 			pAvatar_onNoticeAssignedHunter.name = "onNoticeAssignedHunter";
@@ -7994,7 +8476,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onNoticeAssignedHunter / 458).");
 
 			List<DATATYPE_BASE> pAvatar_onNotifyApplyJoinInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onNotifyApplyJoinInfo_args.Add(EntityDef.id2datatypes[10036]);
+			pAvatar_onNotifyApplyJoinInfo_args.Add(EntityDef.id2datatypes[10037]);
 
 			Method pAvatar_onNotifyApplyJoinInfo = new Method();
 			pAvatar_onNotifyApplyJoinInfo.name = "onNotifyApplyJoinInfo";
@@ -8033,7 +8515,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onNotifyStartBattleCD / 143).");
 
 			List<DATATYPE_BASE> pAvatar_onNotiyNewAuctionItemCollection_args = new List<DATATYPE_BASE>();
-			pAvatar_onNotiyNewAuctionItemCollection_args.Add(EntityDef.id2datatypes[10082]);
+			pAvatar_onNotiyNewAuctionItemCollection_args.Add(EntityDef.id2datatypes[10081]);
 
 			Method pAvatar_onNotiyNewAuctionItemCollection = new Method();
 			pAvatar_onNotiyNewAuctionItemCollection.name = "onNotiyNewAuctionItemCollection";
@@ -8057,6 +8539,8 @@ namespace KBEngine
 			pAvatar_onOfficialMessage_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onOfficialMessage_args.Add(EntityDef.id2datatypes[10002]);
 			pAvatar_onOfficialMessage_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onOfficialMessage_args.Add(EntityDef.id2datatypes[1]);
+			pAvatar_onOfficialMessage_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onOfficialMessage = new Method();
 			pAvatar_onOfficialMessage.name = "onOfficialMessage";
@@ -8175,7 +8659,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onPayDropPrice / 606).");
 
 			List<DATATYPE_BASE> pAvatar_onPickNewEquipDrop_args = new List<DATATYPE_BASE>();
-			pAvatar_onPickNewEquipDrop_args.Add(EntityDef.id2datatypes[314]);
+			pAvatar_onPickNewEquipDrop_args.Add(EntityDef.id2datatypes[328]);
 
 			Method pAvatar_onPickNewEquipDrop = new Method();
 			pAvatar_onPickNewEquipDrop.name = "onPickNewEquipDrop";
@@ -8277,7 +8761,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onPurchasedOutfitIds / 569).");
 
 			List<DATATYPE_BASE> pAvatar_onQixieChanged_args = new List<DATATYPE_BASE>();
-			pAvatar_onQixieChanged_args.Add(EntityDef.id2datatypes[259]);
+			pAvatar_onQixieChanged_args.Add(EntityDef.id2datatypes[267]);
 
 			Method pAvatar_onQixieChanged = new Method();
 			pAvatar_onQixieChanged.name = "onQixieChanged";
@@ -8316,7 +8800,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onQueryItemLink_args = new List<DATATYPE_BASE>();
 			pAvatar_onQueryItemLink_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onQueryItemLink_args.Add(EntityDef.id2datatypes[44]);
+			pAvatar_onQueryItemLink_args.Add(EntityDef.id2datatypes[45]);
 
 			Method pAvatar_onQueryItemLink = new Method();
 			pAvatar_onQueryItemLink.name = "onQueryItemLink";
@@ -8335,7 +8819,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onQueryItemLink / 493).");
 
 			List<DATATYPE_BASE> pAvatar_onQueryPlayerLink_args = new List<DATATYPE_BASE>();
-			pAvatar_onQueryPlayerLink_args.Add(EntityDef.id2datatypes[112]);
+			pAvatar_onQueryPlayerLink_args.Add(EntityDef.id2datatypes[118]);
 
 			Method pAvatar_onQueryPlayerLink = new Method();
 			pAvatar_onQueryPlayerLink.name = "onQueryPlayerLink";
@@ -8379,7 +8863,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onQuerySiegeWarBiddingWinnerDataResult / 907).");
 
 			List<DATATYPE_BASE> pAvatar_onQuerySiegeWarCityFundUseRecordResult_args = new List<DATATYPE_BASE>();
-			pAvatar_onQuerySiegeWarCityFundUseRecordResult_args.Add(EntityDef.id2datatypes[10100]);
+			pAvatar_onQuerySiegeWarCityFundUseRecordResult_args.Add(EntityDef.id2datatypes[10097]);
 
 			Method pAvatar_onQuerySiegeWarCityFundUseRecordResult = new Method();
 			pAvatar_onQuerySiegeWarCityFundUseRecordResult.name = "onQuerySiegeWarCityFundUseRecordResult";
@@ -8398,7 +8882,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onQuerySiegeWarCityFundUseRecordResult / 973).");
 
 			List<DATATYPE_BASE> pAvatar_onQuerySiegeWarDefenderAndOffensiveResult_args = new List<DATATYPE_BASE>();
-			pAvatar_onQuerySiegeWarDefenderAndOffensiveResult_args.Add(EntityDef.id2datatypes[10094]);
+			pAvatar_onQuerySiegeWarDefenderAndOffensiveResult_args.Add(EntityDef.id2datatypes[10091]);
 
 			Method pAvatar_onQuerySiegeWarDefenderAndOffensiveResult = new Method();
 			pAvatar_onQuerySiegeWarDefenderAndOffensiveResult.name = "onQuerySiegeWarDefenderAndOffensiveResult";
@@ -8572,7 +9056,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onRecordList_args = new List<DATATYPE_BASE>();
 			pAvatar_onRecordList_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onRecordList_args.Add(EntityDef.id2datatypes[10092]);
+			pAvatar_onRecordList_args.Add(EntityDef.id2datatypes[10089]);
 
 			Method pAvatar_onRecordList = new Method();
 			pAvatar_onRecordList.name = "onRecordList";
@@ -8612,8 +9096,8 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onRecvAvatarChannelMsg_args = new List<DATATYPE_BASE>();
 			pAvatar_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[112]);
-			pAvatar_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[118]);
+			pAvatar_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_onRecvAvatarChannelMsg = new Method();
 			pAvatar_onRecvAvatarChannelMsg.name = "onRecvAvatarChannelMsg";
@@ -8650,27 +9134,6 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onRecvDuelReq.methodUtype] = pAvatar_onRecvDuelReq;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRecvDuelReq / 844).");
-
-			List<DATATYPE_BASE> pAvatar_onRecvTrumpetMsg_args = new List<DATATYPE_BASE>();
-			pAvatar_onRecvTrumpetMsg_args.Add(EntityDef.id2datatypes[112]);
-			pAvatar_onRecvTrumpetMsg_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onRecvTrumpetMsg_args.Add(EntityDef.id2datatypes[12]);
-
-			Method pAvatar_onRecvTrumpetMsg = new Method();
-			pAvatar_onRecvTrumpetMsg.name = "onRecvTrumpetMsg";
-			pAvatar_onRecvTrumpetMsg.methodUtype = 492;
-			pAvatar_onRecvTrumpetMsg.aliasID = -1;
-			pAvatar_onRecvTrumpetMsg.args = pAvatar_onRecvTrumpetMsg_args;
-
-			pAvatarModule.methods["onRecvTrumpetMsg"] = pAvatar_onRecvTrumpetMsg; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onRecvTrumpetMsg.methodUtype] = pAvatar_onRecvTrumpetMsg;
-
-			pAvatarModule.cell_methods["onRecvTrumpetMsg"] = pAvatar_onRecvTrumpetMsg;
-
-			pAvatarModule.idcell_methods[pAvatar_onRecvTrumpetMsg.methodUtype] = pAvatar_onRecvTrumpetMsg;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRecvTrumpetMsg / 492).");
 
 			List<DATATYPE_BASE> pAvatar_onRedBagPlayerInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onRedBagPlayerInfo_args.Add(EntityDef.id2datatypes[2]);
@@ -8711,13 +9174,33 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRedeemNotSetPrice / 567).");
 
+			List<DATATYPE_BASE> pAvatar_onRefreshLastDungeonFinishedTime_args = new List<DATATYPE_BASE>();
+			pAvatar_onRefreshLastDungeonFinishedTime_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onRefreshLastDungeonFinishedTime_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onRefreshLastDungeonFinishedTime = new Method();
+			pAvatar_onRefreshLastDungeonFinishedTime.name = "onRefreshLastDungeonFinishedTime";
+			pAvatar_onRefreshLastDungeonFinishedTime.methodUtype = 1130;
+			pAvatar_onRefreshLastDungeonFinishedTime.aliasID = -1;
+			pAvatar_onRefreshLastDungeonFinishedTime.args = pAvatar_onRefreshLastDungeonFinishedTime_args;
+
+			pAvatarModule.methods["onRefreshLastDungeonFinishedTime"] = pAvatar_onRefreshLastDungeonFinishedTime; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onRefreshLastDungeonFinishedTime.methodUtype] = pAvatar_onRefreshLastDungeonFinishedTime;
+
+			pAvatarModule.cell_methods["onRefreshLastDungeonFinishedTime"] = pAvatar_onRefreshLastDungeonFinishedTime;
+
+			pAvatarModule.idcell_methods[pAvatar_onRefreshLastDungeonFinishedTime.methodUtype] = pAvatar_onRefreshLastDungeonFinishedTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRefreshLastDungeonFinishedTime / 1130).");
+
 			List<DATATYPE_BASE> pAvatar_onReleaseRedBagMsg_args = new List<DATATYPE_BASE>();
 			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[12]);
-			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[112]);
+			pAvatar_onReleaseRedBagMsg_args.Add(EntityDef.id2datatypes[118]);
 
 			Method pAvatar_onReleaseRedBagMsg = new Method();
 			pAvatar_onReleaseRedBagMsg.name = "onReleaseRedBagMsg";
@@ -8776,7 +9259,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveApplyGuildUnion / 950).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveApplyedGuilds_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveApplyedGuilds_args.Add(EntityDef.id2datatypes[10059]);
+			pAvatar_onRemoveApplyedGuilds_args.Add(EntityDef.id2datatypes[10060]);
 
 			Method pAvatar_onRemoveApplyedGuilds = new Method();
 			pAvatar_onRemoveApplyedGuilds.name = "onRemoveApplyedGuilds";
@@ -8833,7 +9316,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveAureoleFromOthers / 217).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveBlocks_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveBlocks_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveBlocks_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveBlocks = new Method();
 			pAvatar_onRemoveBlocks.name = "onRemoveBlocks";
@@ -8910,7 +9393,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveCompleteWitness / 52).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveEnemy_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveEnemy_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveEnemy_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveEnemy = new Method();
 			pAvatar_onRemoveEnemy.name = "onRemoveEnemy";
@@ -8967,7 +9450,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveEquipReturn / 617).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveFriendRequests_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveFriendRequests_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveFriendRequests_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveFriendRequests = new Method();
 			pAvatar_onRemoveFriendRequests.name = "onRemoveFriendRequests";
@@ -8986,7 +9469,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveFriendRequests / 709).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveFriends_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveFriends_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveFriends_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveFriends = new Method();
 			pAvatar_onRemoveFriends.name = "onRemoveFriends";
@@ -9024,7 +9507,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveFromApplyList / 355).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveGuildApplys_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveGuildApplys_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveGuildApplys_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveGuildApplys = new Method();
 			pAvatar_onRemoveGuildApplys.name = "onRemoveGuildApplys";
@@ -9138,7 +9621,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemovePickEquipDrop / 850).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveRecent_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveRecent_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveRecent_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveRecent = new Method();
 			pAvatar_onRemoveRecent.name = "onRemoveRecent";
@@ -9157,7 +9640,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onRemoveRecent / 721).");
 
 			List<DATATYPE_BASE> pAvatar_onRemoveStrangers_args = new List<DATATYPE_BASE>();
-			pAvatar_onRemoveStrangers_args.Add(EntityDef.id2datatypes[10045]);
+			pAvatar_onRemoveStrangers_args.Add(EntityDef.id2datatypes[10046]);
 
 			Method pAvatar_onRemoveStrangers = new Method();
 			pAvatar_onRemoveStrangers.name = "onRemoveStrangers";
@@ -9195,10 +9678,69 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onReplyRaidStandbyChecker / 456).");
 
+			List<DATATYPE_BASE> pAvatar_onSafeBoxItemClaimed_args = new List<DATATYPE_BASE>();
+			pAvatar_onSafeBoxItemClaimed_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onSafeBoxItemClaimed = new Method();
+			pAvatar_onSafeBoxItemClaimed.name = "onSafeBoxItemClaimed";
+			pAvatar_onSafeBoxItemClaimed.methodUtype = 1137;
+			pAvatar_onSafeBoxItemClaimed.aliasID = -1;
+			pAvatar_onSafeBoxItemClaimed.args = pAvatar_onSafeBoxItemClaimed_args;
+
+			pAvatarModule.methods["onSafeBoxItemClaimed"] = pAvatar_onSafeBoxItemClaimed; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSafeBoxItemClaimed.methodUtype] = pAvatar_onSafeBoxItemClaimed;
+
+			pAvatarModule.cell_methods["onSafeBoxItemClaimed"] = pAvatar_onSafeBoxItemClaimed;
+
+			pAvatarModule.idcell_methods[pAvatar_onSafeBoxItemClaimed.methodUtype] = pAvatar_onSafeBoxItemClaimed;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSafeBoxItemClaimed / 1137).");
+
+			List<DATATYPE_BASE> pAvatar_onSafeBoxItemDeleted_args = new List<DATATYPE_BASE>();
+			pAvatar_onSafeBoxItemDeleted_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_onSafeBoxItemDeleted = new Method();
+			pAvatar_onSafeBoxItemDeleted.name = "onSafeBoxItemDeleted";
+			pAvatar_onSafeBoxItemDeleted.methodUtype = 1179;
+			pAvatar_onSafeBoxItemDeleted.aliasID = -1;
+			pAvatar_onSafeBoxItemDeleted.args = pAvatar_onSafeBoxItemDeleted_args;
+
+			pAvatarModule.methods["onSafeBoxItemDeleted"] = pAvatar_onSafeBoxItemDeleted; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSafeBoxItemDeleted.methodUtype] = pAvatar_onSafeBoxItemDeleted;
+
+			pAvatarModule.cell_methods["onSafeBoxItemDeleted"] = pAvatar_onSafeBoxItemDeleted;
+
+			pAvatarModule.idcell_methods[pAvatar_onSafeBoxItemDeleted.methodUtype] = pAvatar_onSafeBoxItemDeleted;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSafeBoxItemDeleted / 1179).");
+
+			List<DATATYPE_BASE> pAvatar_onSafeBoxPage_args = new List<DATATYPE_BASE>();
+			pAvatar_onSafeBoxPage_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onSafeBoxPage_args.Add(EntityDef.id2datatypes[10114]);
+			pAvatar_onSafeBoxPage_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onSafeBoxPage = new Method();
+			pAvatar_onSafeBoxPage.name = "onSafeBoxPage";
+			pAvatar_onSafeBoxPage.methodUtype = 1180;
+			pAvatar_onSafeBoxPage.aliasID = -1;
+			pAvatar_onSafeBoxPage.args = pAvatar_onSafeBoxPage_args;
+
+			pAvatarModule.methods["onSafeBoxPage"] = pAvatar_onSafeBoxPage; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSafeBoxPage.methodUtype] = pAvatar_onSafeBoxPage;
+
+			pAvatarModule.cell_methods["onSafeBoxPage"] = pAvatar_onSafeBoxPage;
+
+			pAvatarModule.idcell_methods[pAvatar_onSafeBoxPage.methodUtype] = pAvatar_onSafeBoxPage;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSafeBoxPage / 1180).");
+
 			List<DATATYPE_BASE> pAvatar_onSaleItemInCoinAuction_args = new List<DATATYPE_BASE>();
 			pAvatar_onSaleItemInCoinAuction_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onSaleItemInCoinAuction_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onSaleItemInCoinAuction_args.Add(EntityDef.id2datatypes[300]);
+			pAvatar_onSaleItemInCoinAuction_args.Add(EntityDef.id2datatypes[305]);
 
 			Method pAvatar_onSaleItemInCoinAuction = new Method();
 			pAvatar_onSaleItemInCoinAuction.name = "onSaleItemInCoinAuction";
@@ -9258,7 +9800,7 @@ namespace KBEngine
 			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[25]);
 			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[302]);
+			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[307]);
 			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_onSearchCoinAuctionItemsByItemId_args.Add(EntityDef.id2datatypes[10001]);
@@ -9282,7 +9824,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onSearchFriends_args = new List<DATATYPE_BASE>();
 			pAvatar_onSearchFriends_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onSearchFriends_args.Add(EntityDef.id2datatypes[10046]);
+			pAvatar_onSearchFriends_args.Add(EntityDef.id2datatypes[10047]);
 			pAvatar_onSearchFriends_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onSearchFriends = new Method();
@@ -9322,25 +9864,6 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onSellItemSucc.methodUtype] = pAvatar_onSellItemSucc;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSellItemSucc / 1006).");
-
-			List<DATATYPE_BASE> pAvatar_onSendHolidayPayInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onSendHolidayPayInfo_args.Add(EntityDef.id2datatypes[268]);
-
-			Method pAvatar_onSendHolidayPayInfo = new Method();
-			pAvatar_onSendHolidayPayInfo.name = "onSendHolidayPayInfo";
-			pAvatar_onSendHolidayPayInfo.methodUtype = 736;
-			pAvatar_onSendHolidayPayInfo.aliasID = -1;
-			pAvatar_onSendHolidayPayInfo.args = pAvatar_onSendHolidayPayInfo_args;
-
-			pAvatarModule.methods["onSendHolidayPayInfo"] = pAvatar_onSendHolidayPayInfo; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onSendHolidayPayInfo.methodUtype] = pAvatar_onSendHolidayPayInfo;
-
-			pAvatarModule.cell_methods["onSendHolidayPayInfo"] = pAvatar_onSendHolidayPayInfo;
-
-			pAvatarModule.idcell_methods[pAvatar_onSendHolidayPayInfo.methodUtype] = pAvatar_onSendHolidayPayInfo;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSendHolidayPayInfo / 736).");
 
 			List<DATATYPE_BASE> pAvatar_onSetAddSkillCd_args = new List<DATATYPE_BASE>();
 			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[4]);
@@ -9387,8 +9910,69 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSetDoubleBarFlag / 370).");
 
+			List<DATATYPE_BASE> pAvatar_onSetEquipPrice_args = new List<DATATYPE_BASE>();
+			pAvatar_onSetEquipPrice_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSetEquipPrice_args.Add(EntityDef.id2datatypes[9]);
+
+			Method pAvatar_onSetEquipPrice = new Method();
+			pAvatar_onSetEquipPrice.name = "onSetEquipPrice";
+			pAvatar_onSetEquipPrice.methodUtype = 733;
+			pAvatar_onSetEquipPrice.aliasID = -1;
+			pAvatar_onSetEquipPrice.args = pAvatar_onSetEquipPrice_args;
+
+			pAvatarModule.methods["onSetEquipPrice"] = pAvatar_onSetEquipPrice; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSetEquipPrice.methodUtype] = pAvatar_onSetEquipPrice;
+
+			pAvatarModule.cell_methods["onSetEquipPrice"] = pAvatar_onSetEquipPrice;
+
+			pAvatarModule.idcell_methods[pAvatar_onSetEquipPrice.methodUtype] = pAvatar_onSetEquipPrice;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSetEquipPrice / 733).");
+
+			List<DATATYPE_BASE> pAvatar_onSetEquipReturnTime_args = new List<DATATYPE_BASE>();
+			pAvatar_onSetEquipReturnTime_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSetEquipReturnTime_args.Add(EntityDef.id2datatypes[9]);
+
+			Method pAvatar_onSetEquipReturnTime = new Method();
+			pAvatar_onSetEquipReturnTime.name = "onSetEquipReturnTime";
+			pAvatar_onSetEquipReturnTime.methodUtype = 1131;
+			pAvatar_onSetEquipReturnTime.aliasID = -1;
+			pAvatar_onSetEquipReturnTime.args = pAvatar_onSetEquipReturnTime_args;
+
+			pAvatarModule.methods["onSetEquipReturnTime"] = pAvatar_onSetEquipReturnTime; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSetEquipReturnTime.methodUtype] = pAvatar_onSetEquipReturnTime;
+
+			pAvatarModule.cell_methods["onSetEquipReturnTime"] = pAvatar_onSetEquipReturnTime;
+
+			pAvatarModule.idcell_methods[pAvatar_onSetEquipReturnTime.methodUtype] = pAvatar_onSetEquipReturnTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSetEquipReturnTime / 1131).");
+
+			List<DATATYPE_BASE> pAvatar_onSetEquipTakeInfo_args = new List<DATATYPE_BASE>();
+			pAvatar_onSetEquipTakeInfo_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSetEquipTakeInfo_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSetEquipTakeInfo_args.Add(EntityDef.id2datatypes[9]);
+
+			Method pAvatar_onSetEquipTakeInfo = new Method();
+			pAvatar_onSetEquipTakeInfo.name = "onSetEquipTakeInfo";
+			pAvatar_onSetEquipTakeInfo.methodUtype = 1094;
+			pAvatar_onSetEquipTakeInfo.aliasID = -1;
+			pAvatar_onSetEquipTakeInfo.args = pAvatar_onSetEquipTakeInfo_args;
+
+			pAvatarModule.methods["onSetEquipTakeInfo"] = pAvatar_onSetEquipTakeInfo; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSetEquipTakeInfo.methodUtype] = pAvatar_onSetEquipTakeInfo;
+
+			pAvatarModule.cell_methods["onSetEquipTakeInfo"] = pAvatar_onSetEquipTakeInfo;
+
+			pAvatarModule.idcell_methods[pAvatar_onSetEquipTakeInfo.methodUtype] = pAvatar_onSetEquipTakeInfo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSetEquipTakeInfo / 1094).");
+
 			List<DATATYPE_BASE> pAvatar_onSetInstantPotionSlots_args = new List<DATATYPE_BASE>();
-			pAvatar_onSetInstantPotionSlots_args.Add(EntityDef.id2datatypes[331]);
+			pAvatar_onSetInstantPotionSlots_args.Add(EntityDef.id2datatypes[344]);
 
 			Method pAvatar_onSetInstantPotionSlots = new Method();
 			pAvatar_onSetInstantPotionSlots.name = "onSetInstantPotionSlots";
@@ -9647,7 +10231,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onShowRedBagInfo_args = new List<DATATYPE_BASE>();
 			pAvatar_onShowRedBagInfo_args.Add(EntityDef.id2datatypes[9]);
 			pAvatar_onShowRedBagInfo_args.Add(EntityDef.id2datatypes[8]);
-			pAvatar_onShowRedBagInfo_args.Add(EntityDef.id2datatypes[353]);
+			pAvatar_onShowRedBagInfo_args.Add(EntityDef.id2datatypes[366]);
 
 			Method pAvatar_onShowRedBagInfo = new Method();
 			pAvatar_onShowRedBagInfo.name = "onShowRedBagInfo";
@@ -9670,7 +10254,7 @@ namespace KBEngine
 			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[8]);
 			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[10096]);
+			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[10093]);
 			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onSiegeWarBattleEnd_args.Add(EntityDef.id2datatypes[3]);
@@ -9795,7 +10379,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSiegeWarMinimapInfoUpdate / 957).");
 
 			List<DATATYPE_BASE> pAvatar_onSiegeWarMinimapSignalChange_args = new List<DATATYPE_BASE>();
-			pAvatar_onSiegeWarMinimapSignalChange_args.Add(EntityDef.id2datatypes[10093]);
+			pAvatar_onSiegeWarMinimapSignalChange_args.Add(EntityDef.id2datatypes[10090]);
 
 			Method pAvatar_onSiegeWarMinimapSignalChange = new Method();
 			pAvatar_onSiegeWarMinimapSignalChange.name = "onSiegeWarMinimapSignalChange";
@@ -9815,8 +10399,8 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onSiegeWarScoreData_args = new List<DATATYPE_BASE>();
 			pAvatar_onSiegeWarScoreData_args.Add(EntityDef.id2datatypes[8]);
-			pAvatar_onSiegeWarScoreData_args.Add(EntityDef.id2datatypes[10095]);
-			pAvatar_onSiegeWarScoreData_args.Add(EntityDef.id2datatypes[243]);
+			pAvatar_onSiegeWarScoreData_args.Add(EntityDef.id2datatypes[10092]);
+			pAvatar_onSiegeWarScoreData_args.Add(EntityDef.id2datatypes[251]);
 
 			Method pAvatar_onSiegeWarScoreData = new Method();
 			pAvatar_onSiegeWarScoreData.name = "onSiegeWarScoreData";
@@ -9836,7 +10420,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onSiegeWarSearchTargetResult_args = new List<DATATYPE_BASE>();
 			pAvatar_onSiegeWarSearchTargetResult_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onSiegeWarSearchTargetResult_args.Add(EntityDef.id2datatypes[10101]);
+			pAvatar_onSiegeWarSearchTargetResult_args.Add(EntityDef.id2datatypes[10098]);
 
 			Method pAvatar_onSiegeWarSearchTargetResult = new Method();
 			pAvatar_onSiegeWarSearchTargetResult.name = "onSiegeWarSearchTargetResult";
@@ -9874,7 +10458,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSiegeWarSignUpBiddingResult / 893).");
 
 			List<DATATYPE_BASE> pAvatar_onSkillDamage_args = new List<DATATYPE_BASE>();
-			pAvatar_onSkillDamage_args.Add(EntityDef.id2datatypes[104]);
+			pAvatar_onSkillDamage_args.Add(EntityDef.id2datatypes[110]);
 
 			Method pAvatar_onSkillDamage = new Method();
 			pAvatar_onSkillDamage.name = "onSkillDamage";
@@ -10003,6 +10587,114 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onStopPlayEmote / 457).");
 
+			List<DATATYPE_BASE> pAvatar_onSubmitCheckResult_args = new List<DATATYPE_BASE>();
+			pAvatar_onSubmitCheckResult_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onSubmitCheckResult_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onSubmitCheckResult = new Method();
+			pAvatar_onSubmitCheckResult.name = "onSubmitCheckResult";
+			pAvatar_onSubmitCheckResult.methodUtype = 918;
+			pAvatar_onSubmitCheckResult.aliasID = -1;
+			pAvatar_onSubmitCheckResult.args = pAvatar_onSubmitCheckResult_args;
+
+			pAvatarModule.methods["onSubmitCheckResult"] = pAvatar_onSubmitCheckResult; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSubmitCheckResult.methodUtype] = pAvatar_onSubmitCheckResult;
+
+			pAvatarModule.cell_methods["onSubmitCheckResult"] = pAvatar_onSubmitCheckResult;
+
+			pAvatarModule.idcell_methods[pAvatar_onSubmitCheckResult.methodUtype] = pAvatar_onSubmitCheckResult;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSubmitCheckResult / 918).");
+
+			List<DATATYPE_BASE> pAvatar_onSwitchRaidMicsMode_args = new List<DATATYPE_BASE>();
+			pAvatar_onSwitchRaidMicsMode_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSwitchRaidMicsMode_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSwitchRaidMicsMode_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onSwitchRaidMicsMode_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onSwitchRaidMicsMode = new Method();
+			pAvatar_onSwitchRaidMicsMode.name = "onSwitchRaidMicsMode";
+			pAvatar_onSwitchRaidMicsMode.methodUtype = 392;
+			pAvatar_onSwitchRaidMicsMode.aliasID = -1;
+			pAvatar_onSwitchRaidMicsMode.args = pAvatar_onSwitchRaidMicsMode_args;
+
+			pAvatarModule.methods["onSwitchRaidMicsMode"] = pAvatar_onSwitchRaidMicsMode; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSwitchRaidMicsMode.methodUtype] = pAvatar_onSwitchRaidMicsMode;
+
+			pAvatarModule.cell_methods["onSwitchRaidMicsMode"] = pAvatar_onSwitchRaidMicsMode;
+
+			pAvatarModule.idcell_methods[pAvatar_onSwitchRaidMicsMode.methodUtype] = pAvatar_onSwitchRaidMicsMode;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSwitchRaidMicsMode / 392).");
+
+			List<DATATYPE_BASE> pAvatar_onSwitchTeamMicsMode_args = new List<DATATYPE_BASE>();
+			pAvatar_onSwitchTeamMicsMode_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSwitchTeamMicsMode_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSwitchTeamMicsMode_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onSwitchTeamMicsMode_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onSwitchTeamMicsMode = new Method();
+			pAvatar_onSwitchTeamMicsMode.name = "onSwitchTeamMicsMode";
+			pAvatar_onSwitchTeamMicsMode.methodUtype = 1176;
+			pAvatar_onSwitchTeamMicsMode.aliasID = -1;
+			pAvatar_onSwitchTeamMicsMode.args = pAvatar_onSwitchTeamMicsMode_args;
+
+			pAvatarModule.methods["onSwitchTeamMicsMode"] = pAvatar_onSwitchTeamMicsMode; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSwitchTeamMicsMode.methodUtype] = pAvatar_onSwitchTeamMicsMode;
+
+			pAvatarModule.cell_methods["onSwitchTeamMicsMode"] = pAvatar_onSwitchTeamMicsMode;
+
+			pAvatarModule.idcell_methods[pAvatar_onSwitchTeamMicsMode.methodUtype] = pAvatar_onSwitchTeamMicsMode;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSwitchTeamMicsMode / 1176).");
+
+			List<DATATYPE_BASE> pAvatar_onSyncAllRaidMemberMicsStatus_args = new List<DATATYPE_BASE>();
+			pAvatar_onSyncAllRaidMemberMicsStatus_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSyncAllRaidMemberMicsStatus_args.Add(EntityDef.id2datatypes[22]);
+			pAvatar_onSyncAllRaidMemberMicsStatus_args.Add(EntityDef.id2datatypes[22]);
+			pAvatar_onSyncAllRaidMemberMicsStatus_args.Add(EntityDef.id2datatypes[22]);
+
+			Method pAvatar_onSyncAllRaidMemberMicsStatus = new Method();
+			pAvatar_onSyncAllRaidMemberMicsStatus.name = "onSyncAllRaidMemberMicsStatus";
+			pAvatar_onSyncAllRaidMemberMicsStatus.methodUtype = 1188;
+			pAvatar_onSyncAllRaidMemberMicsStatus.aliasID = -1;
+			pAvatar_onSyncAllRaidMemberMicsStatus.args = pAvatar_onSyncAllRaidMemberMicsStatus_args;
+
+			pAvatarModule.methods["onSyncAllRaidMemberMicsStatus"] = pAvatar_onSyncAllRaidMemberMicsStatus; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSyncAllRaidMemberMicsStatus.methodUtype] = pAvatar_onSyncAllRaidMemberMicsStatus;
+
+			pAvatarModule.cell_methods["onSyncAllRaidMemberMicsStatus"] = pAvatar_onSyncAllRaidMemberMicsStatus;
+
+			pAvatarModule.idcell_methods[pAvatar_onSyncAllRaidMemberMicsStatus.methodUtype] = pAvatar_onSyncAllRaidMemberMicsStatus;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSyncAllRaidMemberMicsStatus / 1188).");
+
+			List<DATATYPE_BASE> pAvatar_onSyncAllTeamMemberMicsStatus_args = new List<DATATYPE_BASE>();
+			pAvatar_onSyncAllTeamMemberMicsStatus_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onSyncAllTeamMemberMicsStatus_args.Add(EntityDef.id2datatypes[22]);
+			pAvatar_onSyncAllTeamMemberMicsStatus_args.Add(EntityDef.id2datatypes[22]);
+			pAvatar_onSyncAllTeamMemberMicsStatus_args.Add(EntityDef.id2datatypes[22]);
+
+			Method pAvatar_onSyncAllTeamMemberMicsStatus = new Method();
+			pAvatar_onSyncAllTeamMemberMicsStatus.name = "onSyncAllTeamMemberMicsStatus";
+			pAvatar_onSyncAllTeamMemberMicsStatus.methodUtype = 1177;
+			pAvatar_onSyncAllTeamMemberMicsStatus.aliasID = -1;
+			pAvatar_onSyncAllTeamMemberMicsStatus.args = pAvatar_onSyncAllTeamMemberMicsStatus_args;
+
+			pAvatarModule.methods["onSyncAllTeamMemberMicsStatus"] = pAvatar_onSyncAllTeamMemberMicsStatus; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onSyncAllTeamMemberMicsStatus.methodUtype] = pAvatar_onSyncAllTeamMemberMicsStatus;
+
+			pAvatarModule.cell_methods["onSyncAllTeamMemberMicsStatus"] = pAvatar_onSyncAllTeamMemberMicsStatus;
+
+			pAvatarModule.idcell_methods[pAvatar_onSyncAllTeamMemberMicsStatus.methodUtype] = pAvatar_onSyncAllTeamMemberMicsStatus;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSyncAllTeamMemberMicsStatus / 1177).");
+
 			List<DATATYPE_BASE> pAvatar_onSyncCitySimpleData_args = new List<DATATYPE_BASE>();
 			pAvatar_onSyncCitySimpleData_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onSyncCitySimpleData_args.Add(EntityDef.id2datatypes[12]);
@@ -10026,7 +10718,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onSyncCitySimpleData / 975).");
 
 			List<DATATYPE_BASE> pAvatar_onTakeAchievementRewards_args = new List<DATATYPE_BASE>();
-			pAvatar_onTakeAchievementRewards_args.Add(EntityDef.id2datatypes[10087]);
+			pAvatar_onTakeAchievementRewards_args.Add(EntityDef.id2datatypes[10083]);
 			pAvatar_onTakeAchievementRewards_args.Add(EntityDef.id2datatypes[4]);
 
 			Method pAvatar_onTakeAchievementRewards = new Method();
@@ -10066,7 +10758,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTakeLeaseIncomeSucc / 912).");
 
 			List<DATATYPE_BASE> pAvatar_onTaskUpdate_args = new List<DATATYPE_BASE>();
-			pAvatar_onTaskUpdate_args.Add(EntityDef.id2datatypes[10039]);
+			pAvatar_onTaskUpdate_args.Add(EntityDef.id2datatypes[10040]);
 
 			Method pAvatar_onTaskUpdate = new Method();
 			pAvatar_onTaskUpdate.name = "onTaskUpdate";
@@ -10085,7 +10777,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTaskUpdate / 185).");
 
 			List<DATATYPE_BASE> pAvatar_onTasksRem_args = new List<DATATYPE_BASE>();
-			pAvatar_onTasksRem_args.Add(EntityDef.id2datatypes[10038]);
+			pAvatar_onTasksRem_args.Add(EntityDef.id2datatypes[10039]);
 
 			Method pAvatar_onTasksRem = new Method();
 			pAvatar_onTasksRem.name = "onTasksRem";
@@ -10282,6 +10974,7 @@ namespace KBEngine
 			pAvatar_onTryBeInvitedInRaid_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onTryBeInvitedInRaid_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_onTryBeInvitedInRaid_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onTryBeInvitedInRaid_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onTryBeInvitedInRaid = new Method();
 			pAvatar_onTryBeInvitedInRaid.name = "onTryBeInvitedInRaid";
@@ -10299,46 +10992,174 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTryBeInvitedInRaid / 446).");
 
-			List<DATATYPE_BASE> pAvatar_onUnblockRaidMemberMisc_args = new List<DATATYPE_BASE>();
-			pAvatar_onUnblockRaidMemberMisc_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onUnblockRaidMemberMisc_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onUnblockRaidMemberMisc_args.Add(EntityDef.id2datatypes[5]);
+			List<DATATYPE_BASE> pAvatar_onTurnOffRaidMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onTurnOffRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffRaidMemberMics_args.Add(EntityDef.id2datatypes[2]);
 
-			Method pAvatar_onUnblockRaidMemberMisc = new Method();
-			pAvatar_onUnblockRaidMemberMisc.name = "onUnblockRaidMemberMisc";
-			pAvatar_onUnblockRaidMemberMisc.methodUtype = 462;
-			pAvatar_onUnblockRaidMemberMisc.aliasID = -1;
-			pAvatar_onUnblockRaidMemberMisc.args = pAvatar_onUnblockRaidMemberMisc_args;
+			Method pAvatar_onTurnOffRaidMemberMics = new Method();
+			pAvatar_onTurnOffRaidMemberMics.name = "onTurnOffRaidMemberMics";
+			pAvatar_onTurnOffRaidMemberMics.methodUtype = 1190;
+			pAvatar_onTurnOffRaidMemberMics.aliasID = -1;
+			pAvatar_onTurnOffRaidMemberMics.args = pAvatar_onTurnOffRaidMemberMics_args;
 
-			pAvatarModule.methods["onUnblockRaidMemberMisc"] = pAvatar_onUnblockRaidMemberMisc; 
+			pAvatarModule.methods["onTurnOffRaidMemberMics"] = pAvatar_onTurnOffRaidMemberMics; 
 			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onUnblockRaidMemberMisc.methodUtype] = pAvatar_onUnblockRaidMemberMisc;
+			pAvatarModule.idmethods[pAvatar_onTurnOffRaidMemberMics.methodUtype] = pAvatar_onTurnOffRaidMemberMics;
 
-			pAvatarModule.cell_methods["onUnblockRaidMemberMisc"] = pAvatar_onUnblockRaidMemberMisc;
+			pAvatarModule.cell_methods["onTurnOffRaidMemberMics"] = pAvatar_onTurnOffRaidMemberMics;
 
-			pAvatarModule.idcell_methods[pAvatar_onUnblockRaidMemberMisc.methodUtype] = pAvatar_onUnblockRaidMemberMisc;
+			pAvatarModule.idcell_methods[pAvatar_onTurnOffRaidMemberMics.methodUtype] = pAvatar_onTurnOffRaidMemberMics;
 
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnblockRaidMemberMisc / 462).");
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTurnOffRaidMemberMics / 1190).");
 
-			List<DATATYPE_BASE> pAvatar_onUnblockTeamMemberMisc_args = new List<DATATYPE_BASE>();
-			pAvatar_onUnblockTeamMemberMisc_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onUnblockTeamMemberMisc_args.Add(EntityDef.id2datatypes[5]);
+			List<DATATYPE_BASE> pAvatar_onTurnOffTeamMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onTurnOffTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOffTeamMemberMics_args.Add(EntityDef.id2datatypes[2]);
 
-			Method pAvatar_onUnblockTeamMemberMisc = new Method();
-			pAvatar_onUnblockTeamMemberMisc.name = "onUnblockTeamMemberMisc";
-			pAvatar_onUnblockTeamMemberMisc.methodUtype = 392;
-			pAvatar_onUnblockTeamMemberMisc.aliasID = -1;
-			pAvatar_onUnblockTeamMemberMisc.args = pAvatar_onUnblockTeamMemberMisc_args;
+			Method pAvatar_onTurnOffTeamMemberMics = new Method();
+			pAvatar_onTurnOffTeamMemberMics.name = "onTurnOffTeamMemberMics";
+			pAvatar_onTurnOffTeamMemberMics.methodUtype = 1183;
+			pAvatar_onTurnOffTeamMemberMics.aliasID = -1;
+			pAvatar_onTurnOffTeamMemberMics.args = pAvatar_onTurnOffTeamMemberMics_args;
 
-			pAvatarModule.methods["onUnblockTeamMemberMisc"] = pAvatar_onUnblockTeamMemberMisc; 
+			pAvatarModule.methods["onTurnOffTeamMemberMics"] = pAvatar_onTurnOffTeamMemberMics; 
 			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onUnblockTeamMemberMisc.methodUtype] = pAvatar_onUnblockTeamMemberMisc;
+			pAvatarModule.idmethods[pAvatar_onTurnOffTeamMemberMics.methodUtype] = pAvatar_onTurnOffTeamMemberMics;
 
-			pAvatarModule.cell_methods["onUnblockTeamMemberMisc"] = pAvatar_onUnblockTeamMemberMisc;
+			pAvatarModule.cell_methods["onTurnOffTeamMemberMics"] = pAvatar_onTurnOffTeamMemberMics;
 
-			pAvatarModule.idcell_methods[pAvatar_onUnblockTeamMemberMisc.methodUtype] = pAvatar_onUnblockTeamMemberMisc;
+			pAvatarModule.idcell_methods[pAvatar_onTurnOffTeamMemberMics.methodUtype] = pAvatar_onTurnOffTeamMemberMics;
 
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnblockTeamMemberMisc / 392).");
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTurnOffTeamMemberMics / 1183).");
+
+			List<DATATYPE_BASE> pAvatar_onTurnOnRaidMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onTurnOnRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOnRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOnRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOnRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onTurnOnRaidMemberMics = new Method();
+			pAvatar_onTurnOnRaidMemberMics.name = "onTurnOnRaidMemberMics";
+			pAvatar_onTurnOnRaidMemberMics.methodUtype = 1189;
+			pAvatar_onTurnOnRaidMemberMics.aliasID = -1;
+			pAvatar_onTurnOnRaidMemberMics.args = pAvatar_onTurnOnRaidMemberMics_args;
+
+			pAvatarModule.methods["onTurnOnRaidMemberMics"] = pAvatar_onTurnOnRaidMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onTurnOnRaidMemberMics.methodUtype] = pAvatar_onTurnOnRaidMemberMics;
+
+			pAvatarModule.cell_methods["onTurnOnRaidMemberMics"] = pAvatar_onTurnOnRaidMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onTurnOnRaidMemberMics.methodUtype] = pAvatar_onTurnOnRaidMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTurnOnRaidMemberMics / 1189).");
+
+			List<DATATYPE_BASE> pAvatar_onTurnOnTeamMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onTurnOnTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOnTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onTurnOnTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onTurnOnTeamMemberMics = new Method();
+			pAvatar_onTurnOnTeamMemberMics.name = "onTurnOnTeamMemberMics";
+			pAvatar_onTurnOnTeamMemberMics.methodUtype = 1182;
+			pAvatar_onTurnOnTeamMemberMics.aliasID = -1;
+			pAvatar_onTurnOnTeamMemberMics.args = pAvatar_onTurnOnTeamMemberMics_args;
+
+			pAvatarModule.methods["onTurnOnTeamMemberMics"] = pAvatar_onTurnOnTeamMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onTurnOnTeamMemberMics.methodUtype] = pAvatar_onTurnOnTeamMemberMics;
+
+			pAvatarModule.cell_methods["onTurnOnTeamMemberMics"] = pAvatar_onTurnOnTeamMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onTurnOnTeamMemberMics.methodUtype] = pAvatar_onTurnOnTeamMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onTurnOnTeamMemberMics / 1182).");
+
+			List<DATATYPE_BASE> pAvatar_onUnblockAllRaidMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onUnblockAllRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUnblockAllRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onUnblockAllRaidMemberMics = new Method();
+			pAvatar_onUnblockAllRaidMemberMics.name = "onUnblockAllRaidMemberMics";
+			pAvatar_onUnblockAllRaidMemberMics.methodUtype = 1193;
+			pAvatar_onUnblockAllRaidMemberMics.aliasID = -1;
+			pAvatar_onUnblockAllRaidMemberMics.args = pAvatar_onUnblockAllRaidMemberMics_args;
+
+			pAvatarModule.methods["onUnblockAllRaidMemberMics"] = pAvatar_onUnblockAllRaidMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUnblockAllRaidMemberMics.methodUtype] = pAvatar_onUnblockAllRaidMemberMics;
+
+			pAvatarModule.cell_methods["onUnblockAllRaidMemberMics"] = pAvatar_onUnblockAllRaidMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onUnblockAllRaidMemberMics.methodUtype] = pAvatar_onUnblockAllRaidMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnblockAllRaidMemberMics / 1193).");
+
+			List<DATATYPE_BASE> pAvatar_onUnblockAllTeamMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onUnblockAllTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUnblockAllTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onUnblockAllTeamMemberMics = new Method();
+			pAvatar_onUnblockAllTeamMemberMics.name = "onUnblockAllTeamMemberMics";
+			pAvatar_onUnblockAllTeamMemberMics.methodUtype = 1187;
+			pAvatar_onUnblockAllTeamMemberMics.aliasID = -1;
+			pAvatar_onUnblockAllTeamMemberMics.args = pAvatar_onUnblockAllTeamMemberMics_args;
+
+			pAvatarModule.methods["onUnblockAllTeamMemberMics"] = pAvatar_onUnblockAllTeamMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUnblockAllTeamMemberMics.methodUtype] = pAvatar_onUnblockAllTeamMemberMics;
+
+			pAvatarModule.cell_methods["onUnblockAllTeamMemberMics"] = pAvatar_onUnblockAllTeamMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onUnblockAllTeamMemberMics.methodUtype] = pAvatar_onUnblockAllTeamMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnblockAllTeamMemberMics / 1187).");
+
+			List<DATATYPE_BASE> pAvatar_onUnblockRaidMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onUnblockRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUnblockRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUnblockRaidMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onUnblockRaidMemberMics = new Method();
+			pAvatar_onUnblockRaidMemberMics.name = "onUnblockRaidMemberMics";
+			pAvatar_onUnblockRaidMemberMics.methodUtype = 1191;
+			pAvatar_onUnblockRaidMemberMics.aliasID = -1;
+			pAvatar_onUnblockRaidMemberMics.args = pAvatar_onUnblockRaidMemberMics_args;
+
+			pAvatarModule.methods["onUnblockRaidMemberMics"] = pAvatar_onUnblockRaidMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUnblockRaidMemberMics.methodUtype] = pAvatar_onUnblockRaidMemberMics;
+
+			pAvatarModule.cell_methods["onUnblockRaidMemberMics"] = pAvatar_onUnblockRaidMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onUnblockRaidMemberMics.methodUtype] = pAvatar_onUnblockRaidMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnblockRaidMemberMics / 1191).");
+
+			List<DATATYPE_BASE> pAvatar_onUnblockTeamMemberMics_args = new List<DATATYPE_BASE>();
+			pAvatar_onUnblockTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUnblockTeamMemberMics_args.Add(EntityDef.id2datatypes[5]);
+
+			Method pAvatar_onUnblockTeamMemberMics = new Method();
+			pAvatar_onUnblockTeamMemberMics.name = "onUnblockTeamMemberMics";
+			pAvatar_onUnblockTeamMemberMics.methodUtype = 1184;
+			pAvatar_onUnblockTeamMemberMics.aliasID = -1;
+			pAvatar_onUnblockTeamMemberMics.args = pAvatar_onUnblockTeamMemberMics_args;
+
+			pAvatarModule.methods["onUnblockTeamMemberMics"] = pAvatar_onUnblockTeamMemberMics; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUnblockTeamMemberMics.methodUtype] = pAvatar_onUnblockTeamMemberMics;
+
+			pAvatarModule.cell_methods["onUnblockTeamMemberMics"] = pAvatar_onUnblockTeamMemberMics;
+
+			pAvatarModule.idcell_methods[pAvatar_onUnblockTeamMemberMics.methodUtype] = pAvatar_onUnblockTeamMemberMics;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnblockTeamMemberMics / 1184).");
 
 			List<DATATYPE_BASE> pAvatar_onUndressEquipment_args = new List<DATATYPE_BASE>();
 			pAvatar_onUndressEquipment_args.Add(EntityDef.id2datatypes[4]);
@@ -10400,7 +11221,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUnlockWarehouseGrids / 768).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateAchieveDatas_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateAchieveDatas_args.Add(EntityDef.id2datatypes[10088]);
+			pAvatar_onUpdateAchieveDatas_args.Add(EntityDef.id2datatypes[10084]);
 
 			Method pAvatar_onUpdateAchieveDatas = new Method();
 			pAvatar_onUpdateAchieveDatas.name = "onUpdateAchieveDatas";
@@ -10419,7 +11240,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateAchieveDatas / 846).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateApplyedGuilds_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateApplyedGuilds_args.Add(EntityDef.id2datatypes[10064]);
+			pAvatar_onUpdateApplyedGuilds_args.Add(EntityDef.id2datatypes[10065]);
 
 			Method pAvatar_onUpdateApplyedGuilds = new Method();
 			pAvatar_onUpdateApplyedGuilds.name = "onUpdateApplyedGuilds";
@@ -10438,7 +11259,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateApplyedGuilds / 775).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateAureoles_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateAureoles_args.Add(EntityDef.id2datatypes[95]);
+			pAvatar_onUpdateAureoles_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pAvatar_onUpdateAureoles = new Method();
 			pAvatar_onUpdateAureoles.name = "onUpdateAureoles";
@@ -10457,7 +11278,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateAureoles / 215).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateAureolesFromOthers_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[101]);
+			pAvatar_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[107]);
 
 			Method pAvatar_onUpdateAureolesFromOthers = new Method();
 			pAvatar_onUpdateAureolesFromOthers.name = "onUpdateAureolesFromOthers";
@@ -10476,7 +11297,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateAureolesFromOthers / 218).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateBlocks_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateBlocks_args.Add(EntityDef.id2datatypes[10047]);
+			pAvatar_onUpdateBlocks_args.Add(EntityDef.id2datatypes[10048]);
 
 			Method pAvatar_onUpdateBlocks = new Method();
 			pAvatar_onUpdateBlocks.name = "onUpdateBlocks";
@@ -10495,7 +11316,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateBlocks / 710).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateBuff_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateBuff_args.Add(EntityDef.id2datatypes[109]);
+			pAvatar_onUpdateBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pAvatar_onUpdateBuff = new Method();
 			pAvatar_onUpdateBuff.name = "onUpdateBuff";
@@ -10514,7 +11335,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateBuff / 227).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateBuffs_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateBuffs_args.Add(EntityDef.id2datatypes[110]);
+			pAvatar_onUpdateBuffs_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pAvatar_onUpdateBuffs = new Method();
 			pAvatar_onUpdateBuffs.name = "onUpdateBuffs";
@@ -10573,26 +11394,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateCollectionGatherPickTimes / 944).");
 
-			List<DATATYPE_BASE> pAvatar_onUpdateCreditNum_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateCreditNum_args.Add(EntityDef.id2datatypes[10071]);
-			pAvatar_onUpdateCreditNum_args.Add(EntityDef.id2datatypes[10032]);
-
-			Method pAvatar_onUpdateCreditNum = new Method();
-			pAvatar_onUpdateCreditNum.name = "onUpdateCreditNum";
-			pAvatar_onUpdateCreditNum.methodUtype = 733;
-			pAvatar_onUpdateCreditNum.aliasID = -1;
-			pAvatar_onUpdateCreditNum.args = pAvatar_onUpdateCreditNum_args;
-
-			pAvatarModule.methods["onUpdateCreditNum"] = pAvatar_onUpdateCreditNum; 
-			pAvatarModule.useMethodDescrAlias = false;
-			pAvatarModule.idmethods[pAvatar_onUpdateCreditNum.methodUtype] = pAvatar_onUpdateCreditNum;
-
-			pAvatarModule.cell_methods["onUpdateCreditNum"] = pAvatar_onUpdateCreditNum;
-
-			pAvatarModule.idcell_methods[pAvatar_onUpdateCreditNum.methodUtype] = pAvatar_onUpdateCreditNum;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateCreditNum / 733).");
-
 			List<DATATYPE_BASE> pAvatar_onUpdateDailyUseLimit_args = new List<DATATYPE_BASE>();
 			pAvatar_onUpdateDailyUseLimit_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onUpdateDailyUseLimit_args.Add(EntityDef.id2datatypes[4]);
@@ -10614,7 +11415,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateDailyUseLimit / 129).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateDrawCardInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateDrawCardInfo_args.Add(EntityDef.id2datatypes[272]);
+			pAvatar_onUpdateDrawCardInfo_args.Add(EntityDef.id2datatypes[277]);
 
 			Method pAvatar_onUpdateDrawCardInfo = new Method();
 			pAvatar_onUpdateDrawCardInfo.name = "onUpdateDrawCardInfo";
@@ -10633,7 +11434,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateDrawCardInfo / 988).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateFriendsDiff_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateFriendsDiff_args.Add(EntityDef.id2datatypes[10043]);
+			pAvatar_onUpdateFriendsDiff_args.Add(EntityDef.id2datatypes[10044]);
 
 			Method pAvatar_onUpdateFriendsDiff = new Method();
 			pAvatar_onUpdateFriendsDiff.name = "onUpdateFriendsDiff";
@@ -10652,7 +11453,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateFriendsDiff / 702).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateFriendsFull_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateFriendsFull_args.Add(EntityDef.id2datatypes[10042]);
+			pAvatar_onUpdateFriendsFull_args.Add(EntityDef.id2datatypes[10043]);
 
 			Method pAvatar_onUpdateFriendsFull = new Method();
 			pAvatar_onUpdateFriendsFull.name = "onUpdateFriendsFull";
@@ -10733,7 +11534,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateGridItemsNum / 112).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateGuildMemberDatas_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateGuildMemberDatas_args.Add(EntityDef.id2datatypes[10062]);
+			pAvatar_onUpdateGuildMemberDatas_args.Add(EntityDef.id2datatypes[10063]);
 
 			Method pAvatar_onUpdateGuildMemberDatas = new Method();
 			pAvatar_onUpdateGuildMemberDatas.name = "onUpdateGuildMemberDatas";
@@ -10752,7 +11553,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateGuildMemberDatas / 792).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateGuildTrains_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateGuildTrains_args.Add(EntityDef.id2datatypes[10075]);
+			pAvatar_onUpdateGuildTrains_args.Add(EntityDef.id2datatypes[10074]);
 
 			Method pAvatar_onUpdateGuildTrains = new Method();
 			pAvatar_onUpdateGuildTrains.name = "onUpdateGuildTrains";
@@ -10792,8 +11593,10 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateItemCD / 115).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateLeaseIncome_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateLeaseIncome_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_onUpdateLeaseIncome_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUpdateLeaseIncome_args.Add(EntityDef.id2datatypes[9]);
+			pAvatar_onUpdateLeaseIncome_args.Add(EntityDef.id2datatypes[9]);
+			pAvatar_onUpdateLeaseIncome_args.Add(EntityDef.id2datatypes[9]);
+			pAvatar_onUpdateLeaseIncome_args.Add(EntityDef.id2datatypes[9]);
 
 			Method pAvatar_onUpdateLeaseIncome = new Method();
 			pAvatar_onUpdateLeaseIncome.name = "onUpdateLeaseIncome";
@@ -10833,7 +11636,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateLingShouBattleList / 582).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateLingShouData_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateLingShouData_args.Add(EntityDef.id2datatypes[10040]);
+			pAvatar_onUpdateLingShouData_args.Add(EntityDef.id2datatypes[10041]);
 
 			Method pAvatar_onUpdateLingShouData = new Method();
 			pAvatar_onUpdateLingShouData.name = "onUpdateLingShouData";
@@ -10872,6 +11675,25 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateLingShouEquip / 374).");
 
+			List<DATATYPE_BASE> pAvatar_onUpdateMapExplore_args = new List<DATATYPE_BASE>();
+			pAvatar_onUpdateMapExplore_args.Add(EntityDef.id2datatypes[10085]);
+
+			Method pAvatar_onUpdateMapExplore = new Method();
+			pAvatar_onUpdateMapExplore.name = "onUpdateMapExplore";
+			pAvatar_onUpdateMapExplore.methodUtype = 636;
+			pAvatar_onUpdateMapExplore.aliasID = -1;
+			pAvatar_onUpdateMapExplore.args = pAvatar_onUpdateMapExplore_args;
+
+			pAvatarModule.methods["onUpdateMapExplore"] = pAvatar_onUpdateMapExplore; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUpdateMapExplore.methodUtype] = pAvatar_onUpdateMapExplore;
+
+			pAvatarModule.cell_methods["onUpdateMapExplore"] = pAvatar_onUpdateMapExplore;
+
+			pAvatarModule.idcell_methods[pAvatar_onUpdateMapExplore.methodUtype] = pAvatar_onUpdateMapExplore;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateMapExplore / 636).");
+
 			List<DATATYPE_BASE> pAvatar_onUpdateMemberAttr_args = new List<DATATYPE_BASE>();
 			pAvatar_onUpdateMemberAttr_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onUpdateMemberAttr_args.Add(EntityDef.id2datatypes[12]);
@@ -10898,7 +11720,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateMemberAttr / 367).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateOutfitData_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateOutfitData_args.Add(EntityDef.id2datatypes[10054]);
+			pAvatar_onUpdateOutfitData_args.Add(EntityDef.id2datatypes[10055]);
 
 			Method pAvatar_onUpdateOutfitData = new Method();
 			pAvatar_onUpdateOutfitData.name = "onUpdateOutfitData";
@@ -10977,6 +11799,26 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateRaidMemberLevel / 921).");
 
+			List<DATATYPE_BASE> pAvatar_onUpdateRaidMemberName_args = new List<DATATYPE_BASE>();
+			pAvatar_onUpdateRaidMemberName_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUpdateRaidMemberName_args.Add(EntityDef.id2datatypes[12]);
+
+			Method pAvatar_onUpdateRaidMemberName = new Method();
+			pAvatar_onUpdateRaidMemberName.name = "onUpdateRaidMemberName";
+			pAvatar_onUpdateRaidMemberName.methodUtype = 1164;
+			pAvatar_onUpdateRaidMemberName.aliasID = -1;
+			pAvatar_onUpdateRaidMemberName.args = pAvatar_onUpdateRaidMemberName_args;
+
+			pAvatarModule.methods["onUpdateRaidMemberName"] = pAvatar_onUpdateRaidMemberName; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUpdateRaidMemberName.methodUtype] = pAvatar_onUpdateRaidMemberName;
+
+			pAvatarModule.cell_methods["onUpdateRaidMemberName"] = pAvatar_onUpdateRaidMemberName;
+
+			pAvatarModule.idcell_methods[pAvatar_onUpdateRaidMemberName.methodUtype] = pAvatar_onUpdateRaidMemberName;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateRaidMemberName / 1164).");
+
 			List<DATATYPE_BASE> pAvatar_onUpdateRaidMemberPos_args = new List<DATATYPE_BASE>();
 			pAvatar_onUpdateRaidMemberPos_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_onUpdateRaidMemberPos_args.Add(EntityDef.id2datatypes[4]);
@@ -11019,7 +11861,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateRaidMemberScore / 579).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateRecentData_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateRecentData_args.Add(EntityDef.id2datatypes[10049]);
+			pAvatar_onUpdateRecentData_args.Add(EntityDef.id2datatypes[10050]);
 
 			Method pAvatar_onUpdateRecentData = new Method();
 			pAvatar_onUpdateRecentData.name = "onUpdateRecentData";
@@ -11058,7 +11900,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateSkillLevel / 80).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateStrangerData_args = new List<DATATYPE_BASE>();
-			pAvatar_onUpdateStrangerData_args.Add(EntityDef.id2datatypes[10048]);
+			pAvatar_onUpdateStrangerData_args.Add(EntityDef.id2datatypes[10049]);
 
 			Method pAvatar_onUpdateStrangerData = new Method();
 			pAvatar_onUpdateStrangerData.name = "onUpdateStrangerData";
@@ -11115,6 +11957,26 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onUpdateTeamMemberHp.methodUtype] = pAvatar_onUpdateTeamMemberHp;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateTeamMemberHp / 368).");
+
+			List<DATATYPE_BASE> pAvatar_onUpdateTeamMemberPlayerName_args = new List<DATATYPE_BASE>();
+			pAvatar_onUpdateTeamMemberPlayerName_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_onUpdateTeamMemberPlayerName_args.Add(EntityDef.id2datatypes[12]);
+
+			Method pAvatar_onUpdateTeamMemberPlayerName = new Method();
+			pAvatar_onUpdateTeamMemberPlayerName.name = "onUpdateTeamMemberPlayerName";
+			pAvatar_onUpdateTeamMemberPlayerName.methodUtype = 1163;
+			pAvatar_onUpdateTeamMemberPlayerName.aliasID = -1;
+			pAvatar_onUpdateTeamMemberPlayerName.args = pAvatar_onUpdateTeamMemberPlayerName_args;
+
+			pAvatarModule.methods["onUpdateTeamMemberPlayerName"] = pAvatar_onUpdateTeamMemberPlayerName; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onUpdateTeamMemberPlayerName.methodUtype] = pAvatar_onUpdateTeamMemberPlayerName;
+
+			pAvatarModule.cell_methods["onUpdateTeamMemberPlayerName"] = pAvatar_onUpdateTeamMemberPlayerName;
+
+			pAvatarModule.idcell_methods[pAvatar_onUpdateTeamMemberPlayerName.methodUtype] = pAvatar_onUpdateTeamMemberPlayerName;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUpdateTeamMemberPlayerName / 1163).");
 
 			List<DATATYPE_BASE> pAvatar_onUpdateTeamMemberPos_args = new List<DATATYPE_BASE>();
 			pAvatar_onUpdateTeamMemberPos_args.Add(EntityDef.id2datatypes[5]);
@@ -11271,7 +12133,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onUseStageSkill / 74).");
 
 			List<DATATYPE_BASE> pAvatar_onVariableChanged_args = new List<DATATYPE_BASE>();
-			pAvatar_onVariableChanged_args.Add(EntityDef.id2datatypes[10035]);
+			pAvatar_onVariableChanged_args.Add(EntityDef.id2datatypes[10036]);
 			pAvatar_onVariableChanged_args.Add(EntityDef.id2datatypes[10008]);
 
 			Method pAvatar_onVariableChanged = new Method();
@@ -11292,7 +12154,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onWarehouseInItems_args = new List<DATATYPE_BASE>();
 			pAvatar_onWarehouseInItems_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onWarehouseInItems_args.Add(EntityDef.id2datatypes[10076]);
+			pAvatar_onWarehouseInItems_args.Add(EntityDef.id2datatypes[10075]);
 
 			Method pAvatar_onWarehouseInItems = new Method();
 			pAvatar_onWarehouseInItems.name = "onWarehouseInItems";
@@ -11412,7 +12274,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_onWonderLandLoginData_args = new List<DATATYPE_BASE>();
 			pAvatar_onWonderLandLoginData_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_onWonderLandLoginData_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onWonderLandLoginData_args.Add(EntityDef.id2datatypes[225]);
+			pAvatar_onWonderLandLoginData_args.Add(EntityDef.id2datatypes[232]);
 			pAvatar_onWonderLandLoginData_args.Add(EntityDef.id2datatypes[10023]);
 
 			Method pAvatar_onWonderLandLoginData = new Method();
@@ -11433,7 +12295,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_onWonderLandSwitch_args = new List<DATATYPE_BASE>();
 			pAvatar_onWonderLandSwitch_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_onWonderLandSwitch_args.Add(EntityDef.id2datatypes[225]);
+			pAvatar_onWonderLandSwitch_args.Add(EntityDef.id2datatypes[232]);
 
 			Method pAvatar_onWonderLandSwitch = new Method();
 			pAvatar_onWonderLandSwitch.name = "onWonderLandSwitch";
@@ -11531,7 +12393,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(popDialog / 146).");
 
 			List<DATATYPE_BASE> pAvatar_recvGetGuildDetailInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_recvGetGuildDetailInfo_args.Add(EntityDef.id2datatypes[271]);
+			pAvatar_recvGetGuildDetailInfo_args.Add(EntityDef.id2datatypes[276]);
 
 			Method pAvatar_recvGetGuildDetailInfo = new Method();
 			pAvatar_recvGetGuildDetailInfo.name = "recvGetGuildDetailInfo";
@@ -11588,7 +12450,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(selfGuildNameChanged / 978).");
 
 			List<DATATYPE_BASE> pAvatar_sendAllSkills_args = new List<DATATYPE_BASE>();
-			pAvatar_sendAllSkills_args.Add(EntityDef.id2datatypes[40]);
+			pAvatar_sendAllSkills_args.Add(EntityDef.id2datatypes[41]);
 
 			Method pAvatar_sendAllSkills = new Method();
 			pAvatar_sendAllSkills.name = "sendAllSkills";
@@ -11629,7 +12491,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendEnemyPosInfoToClient / 864).");
 
 			List<DATATYPE_BASE> pAvatar_sendSkillBuilds_args = new List<DATATYPE_BASE>();
-			pAvatar_sendSkillBuilds_args.Add(EntityDef.id2datatypes[83]);
+			pAvatar_sendSkillBuilds_args.Add(EntityDef.id2datatypes[89]);
 
 			Method pAvatar_sendSkillBuilds = new Method();
 			pAvatar_sendSkillBuilds.name = "sendSkillBuilds";
@@ -11803,7 +12665,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(stopOfficialMessage / 66).");
 
 			List<DATATYPE_BASE> pAvatar_syncGuildTaskInfo_args = new List<DATATYPE_BASE>();
-			pAvatar_syncGuildTaskInfo_args.Add(EntityDef.id2datatypes[10070]);
+			pAvatar_syncGuildTaskInfo_args.Add(EntityDef.id2datatypes[10071]);
 
 			Method pAvatar_syncGuildTaskInfo = new Method();
 			pAvatar_syncGuildTaskInfo.name = "syncGuildTaskInfo";
@@ -11820,6 +12682,26 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_syncGuildTaskInfo.methodUtype] = pAvatar_syncGuildTaskInfo;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(syncGuildTaskInfo / 649).");
+
+			List<DATATYPE_BASE> pAvatar_syncIsFBTarget_args = new List<DATATYPE_BASE>();
+			pAvatar_syncIsFBTarget_args.Add(EntityDef.id2datatypes[8]);
+			pAvatar_syncIsFBTarget_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_syncIsFBTarget = new Method();
+			pAvatar_syncIsFBTarget.name = "syncIsFBTarget";
+			pAvatar_syncIsFBTarget.methodUtype = 1185;
+			pAvatar_syncIsFBTarget.aliasID = -1;
+			pAvatar_syncIsFBTarget.args = pAvatar_syncIsFBTarget_args;
+
+			pAvatarModule.methods["syncIsFBTarget"] = pAvatar_syncIsFBTarget; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_syncIsFBTarget.methodUtype] = pAvatar_syncIsFBTarget;
+
+			pAvatarModule.cell_methods["syncIsFBTarget"] = pAvatar_syncIsFBTarget;
+
+			pAvatarModule.idcell_methods[pAvatar_syncIsFBTarget.methodUtype] = pAvatar_syncIsFBTarget;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(syncIsFBTarget / 1185).");
 
 			List<DATATYPE_BASE> pAvatar_syncServerTime_args = new List<DATATYPE_BASE>();
 			pAvatar_syncServerTime_args.Add(EntityDef.id2datatypes[9]);
@@ -11840,6 +12722,25 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_syncServerTime.methodUtype] = pAvatar_syncServerTime;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(syncServerTime / 45).");
+
+			List<DATATYPE_BASE> pAvatar_updateForbidSkillTags_args = new List<DATATYPE_BASE>();
+			pAvatar_updateForbidSkillTags_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pAvatar_updateForbidSkillTags = new Method();
+			pAvatar_updateForbidSkillTags.name = "updateForbidSkillTags";
+			pAvatar_updateForbidSkillTags.methodUtype = 163;
+			pAvatar_updateForbidSkillTags.aliasID = -1;
+			pAvatar_updateForbidSkillTags.args = pAvatar_updateForbidSkillTags_args;
+
+			pAvatarModule.methods["updateForbidSkillTags"] = pAvatar_updateForbidSkillTags; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_updateForbidSkillTags.methodUtype] = pAvatar_updateForbidSkillTags;
+
+			pAvatarModule.cell_methods["updateForbidSkillTags"] = pAvatar_updateForbidSkillTags;
+
+			pAvatarModule.idcell_methods[pAvatar_updateForbidSkillTags.methodUtype] = pAvatar_updateForbidSkillTags;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(updateForbidSkillTags / 163).");
 
 			List<DATATYPE_BASE> pAvatar_updateSkillsExtraLevel_args = new List<DATATYPE_BASE>();
 			pAvatar_updateSkillsExtraLevel_args.Add(EntityDef.id2datatypes[2]);
@@ -11892,6 +12793,24 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_acceptRequest.methodUtype] = pAvatar_acceptRequest;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(acceptRequest / 701).");
+
+			List<DATATYPE_BASE> pAvatar_addAbyssTicket_args = new List<DATATYPE_BASE>();
+			pAvatar_addAbyssTicket_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_addAbyssTicket_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_addAbyssTicket_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_addAbyssTicket = new Method();
+			pAvatar_addAbyssTicket.name = "addAbyssTicket";
+			pAvatar_addAbyssTicket.methodUtype = 1031;
+			pAvatar_addAbyssTicket.aliasID = -1;
+			pAvatar_addAbyssTicket.args = pAvatar_addAbyssTicket_args;
+
+			pAvatarModule.methods["addAbyssTicket"] = pAvatar_addAbyssTicket; 
+			pAvatarModule.base_methods["addAbyssTicket"] = pAvatar_addAbyssTicket;
+
+			pAvatarModule.idbase_methods[pAvatar_addAbyssTicket.methodUtype] = pAvatar_addAbyssTicket;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(addAbyssTicket / 1031).");
 
 			List<DATATYPE_BASE> pAvatar_addBlazeId_args = new List<DATATYPE_BASE>();
 			pAvatar_addBlazeId_args.Add(EntityDef.id2datatypes[8]);
@@ -11995,7 +12914,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_authorizeRole_args = new List<DATATYPE_BASE>();
 			pAvatar_authorizeRole_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_authorizeRole_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_authorizeRole_args.Add(EntityDef.id2datatypes[355]);
+			pAvatar_authorizeRole_args.Add(EntityDef.id2datatypes[368]);
 
 			Method pAvatar_authorizeRole = new Method();
 			pAvatar_authorizeRole.name = "authorizeRole";
@@ -12153,21 +13072,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(cityDataRequest / 782).");
 
-			List<DATATYPE_BASE> pAvatar_clientBuyGoods_args = new List<DATATYPE_BASE>();
-			pAvatar_clientBuyGoods_args.Add(EntityDef.id2datatypes[4]);
+			List<DATATYPE_BASE> pAvatar_clientBuyPremiumGoods_args = new List<DATATYPE_BASE>();
+			pAvatar_clientBuyPremiumGoods_args.Add(EntityDef.id2datatypes[4]);
 
-			Method pAvatar_clientBuyGoods = new Method();
-			pAvatar_clientBuyGoods.name = "clientBuyGoods";
-			pAvatar_clientBuyGoods.methodUtype = 732;
-			pAvatar_clientBuyGoods.aliasID = -1;
-			pAvatar_clientBuyGoods.args = pAvatar_clientBuyGoods_args;
+			Method pAvatar_clientBuyPremiumGoods = new Method();
+			pAvatar_clientBuyPremiumGoods.name = "clientBuyPremiumGoods";
+			pAvatar_clientBuyPremiumGoods.methodUtype = 732;
+			pAvatar_clientBuyPremiumGoods.aliasID = -1;
+			pAvatar_clientBuyPremiumGoods.args = pAvatar_clientBuyPremiumGoods_args;
 
-			pAvatarModule.methods["clientBuyGoods"] = pAvatar_clientBuyGoods; 
-			pAvatarModule.base_methods["clientBuyGoods"] = pAvatar_clientBuyGoods;
+			pAvatarModule.methods["clientBuyPremiumGoods"] = pAvatar_clientBuyPremiumGoods; 
+			pAvatarModule.base_methods["clientBuyPremiumGoods"] = pAvatar_clientBuyPremiumGoods;
 
-			pAvatarModule.idbase_methods[pAvatar_clientBuyGoods.methodUtype] = pAvatar_clientBuyGoods;
+			pAvatarModule.idbase_methods[pAvatar_clientBuyPremiumGoods.methodUtype] = pAvatar_clientBuyPremiumGoods;
 
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(clientBuyGoods / 732).");
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(clientBuyPremiumGoods / 732).");
 
 			List<DATATYPE_BASE> pAvatar_clientLogAfterLogin_args = new List<DATATYPE_BASE>();
 			pAvatar_clientLogAfterLogin_args.Add(EntityDef.id2datatypes[8]);
@@ -12187,7 +13106,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(clientLogAfterLogin / 36).");
 
 			List<DATATYPE_BASE> pAvatar_createGuild_args = new List<DATATYPE_BASE>();
-			pAvatar_createGuild_args.Add(EntityDef.id2datatypes[197]);
+			pAvatar_createGuild_args.Add(EntityDef.id2datatypes[204]);
 
 			Method pAvatar_createGuild = new Method();
 			pAvatar_createGuild.name = "createGuild";
@@ -12384,6 +13303,22 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(editJobPermissions / 778).");
 
+			List<DATATYPE_BASE> pAvatar_enterCrossServerAbyss_args = new List<DATATYPE_BASE>();
+			pAvatar_enterCrossServerAbyss_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_enterCrossServerAbyss = new Method();
+			pAvatar_enterCrossServerAbyss.name = "enterCrossServerAbyss";
+			pAvatar_enterCrossServerAbyss.methodUtype = 1027;
+			pAvatar_enterCrossServerAbyss.aliasID = -1;
+			pAvatar_enterCrossServerAbyss.args = pAvatar_enterCrossServerAbyss_args;
+
+			pAvatarModule.methods["enterCrossServerAbyss"] = pAvatar_enterCrossServerAbyss; 
+			pAvatarModule.base_methods["enterCrossServerAbyss"] = pAvatar_enterCrossServerAbyss;
+
+			pAvatarModule.idbase_methods[pAvatar_enterCrossServerAbyss.methodUtype] = pAvatar_enterCrossServerAbyss;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(enterCrossServerAbyss / 1027).");
+
 			List<DATATYPE_BASE> pAvatar_enterCrossServerSiegeWarSpace_args = new List<DATATYPE_BASE>();
 
 			Method pAvatar_enterCrossServerSiegeWarSpace = new Method();
@@ -12562,6 +13497,23 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_getAvatarInterInfo.methodUtype] = pAvatar_getAvatarInterInfo;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(getAvatarInterInfo / 510).");
+
+			List<DATATYPE_BASE> pAvatar_getBackEquip_args = new List<DATATYPE_BASE>();
+			pAvatar_getBackEquip_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_getBackEquip_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_getBackEquip = new Method();
+			pAvatar_getBackEquip.name = "getBackEquip";
+			pAvatar_getBackEquip.methodUtype = 30511;
+			pAvatar_getBackEquip.aliasID = -1;
+			pAvatar_getBackEquip.args = pAvatar_getBackEquip_args;
+
+			pAvatarModule.methods["getBackEquip"] = pAvatar_getBackEquip; 
+			pAvatarModule.base_methods["getBackEquip"] = pAvatar_getBackEquip;
+
+			pAvatarModule.idbase_methods[pAvatar_getBackEquip.methodUtype] = pAvatar_getBackEquip;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(getBackEquip / 30511).");
 
 			List<DATATYPE_BASE> pAvatar_getCoinAuctionPlayerInfo_args = new List<DATATYPE_BASE>();
 
@@ -12851,6 +13803,23 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(getLevelRushRankList / 198).");
 
+			List<DATATYPE_BASE> pAvatar_getMapExploreReward_args = new List<DATATYPE_BASE>();
+			pAvatar_getMapExploreReward_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_getMapExploreReward_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatar_getMapExploreReward = new Method();
+			pAvatar_getMapExploreReward.name = "getMapExploreReward";
+			pAvatar_getMapExploreReward.methodUtype = 1095;
+			pAvatar_getMapExploreReward.aliasID = -1;
+			pAvatar_getMapExploreReward.args = pAvatar_getMapExploreReward_args;
+
+			pAvatarModule.methods["getMapExploreReward"] = pAvatar_getMapExploreReward; 
+			pAvatarModule.base_methods["getMapExploreReward"] = pAvatar_getMapExploreReward;
+
+			pAvatarModule.idbase_methods[pAvatar_getMapExploreReward.methodUtype] = pAvatar_getMapExploreReward;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(getMapExploreReward / 1095).");
+
 			List<DATATYPE_BASE> pAvatar_getPlayerBuyAuctionItemRecords_args = new List<DATATYPE_BASE>();
 			pAvatar_getPlayerBuyAuctionItemRecords_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_getPlayerBuyAuctionItemRecords_args.Add(EntityDef.id2datatypes[2]);
@@ -13076,6 +14045,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(kickMember / 759).");
 
+			List<DATATYPE_BASE> pAvatar_leaveCrossServerAbyss_args = new List<DATATYPE_BASE>();
+
+			Method pAvatar_leaveCrossServerAbyss = new Method();
+			pAvatar_leaveCrossServerAbyss.name = "leaveCrossServerAbyss";
+			pAvatar_leaveCrossServerAbyss.methodUtype = 1152;
+			pAvatar_leaveCrossServerAbyss.aliasID = -1;
+			pAvatar_leaveCrossServerAbyss.args = pAvatar_leaveCrossServerAbyss_args;
+
+			pAvatarModule.methods["leaveCrossServerAbyss"] = pAvatar_leaveCrossServerAbyss; 
+			pAvatarModule.base_methods["leaveCrossServerAbyss"] = pAvatar_leaveCrossServerAbyss;
+
+			pAvatarModule.idbase_methods[pAvatar_leaveCrossServerAbyss.methodUtype] = pAvatar_leaveCrossServerAbyss;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(leaveCrossServerAbyss / 1152).");
+
 			List<DATATYPE_BASE> pAvatar_leaveCrossServerSiegeWarSpace_args = new List<DATATYPE_BASE>();
 
 			Method pAvatar_leaveCrossServerSiegeWarSpace = new Method();
@@ -13109,7 +14093,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(levelUpPet / 246).");
 
 			List<DATATYPE_BASE> pAvatar_modifyAuthPermission_args = new List<DATATYPE_BASE>();
-			pAvatar_modifyAuthPermission_args.Add(EntityDef.id2datatypes[355]);
+			pAvatar_modifyAuthPermission_args.Add(EntityDef.id2datatypes[368]);
 			pAvatar_modifyAuthPermission_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_modifyAuthPermission = new Method();
@@ -13190,8 +14174,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(modifyGuildName / 774).");
 
+			List<DATATYPE_BASE> pAvatar_modifyGuildPublicDesc_args = new List<DATATYPE_BASE>();
+			pAvatar_modifyGuildPublicDesc_args.Add(EntityDef.id2datatypes[12]);
+
+			Method pAvatar_modifyGuildPublicDesc = new Method();
+			pAvatar_modifyGuildPublicDesc.name = "modifyGuildPublicDesc";
+			pAvatar_modifyGuildPublicDesc.methodUtype = 1096;
+			pAvatar_modifyGuildPublicDesc.aliasID = -1;
+			pAvatar_modifyGuildPublicDesc.args = pAvatar_modifyGuildPublicDesc_args;
+
+			pAvatarModule.methods["modifyGuildPublicDesc"] = pAvatar_modifyGuildPublicDesc; 
+			pAvatarModule.base_methods["modifyGuildPublicDesc"] = pAvatar_modifyGuildPublicDesc;
+
+			pAvatarModule.idbase_methods[pAvatar_modifyGuildPublicDesc.methodUtype] = pAvatar_modifyGuildPublicDesc;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(modifyGuildPublicDesc / 1096).");
+
 			List<DATATYPE_BASE> pAvatar_modifyJoinCond_args = new List<DATATYPE_BASE>();
-			pAvatar_modifyJoinCond_args.Add(EntityDef.id2datatypes[196]);
+			pAvatar_modifyJoinCond_args.Add(EntityDef.id2datatypes[203]);
 
 			Method pAvatar_modifyJoinCond = new Method();
 			pAvatar_modifyJoinCond.name = "modifyJoinCond";
@@ -13239,6 +14239,23 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_modifyPetBattleListName.methodUtype] = pAvatar_modifyPetBattleListName;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(modifyPetBattleListName / 584).");
+
+			List<DATATYPE_BASE> pAvatar_onIllegalEvent_args = new List<DATATYPE_BASE>();
+			pAvatar_onIllegalEvent_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onIllegalEvent_args.Add(EntityDef.id2datatypes[1]);
+
+			Method pAvatar_onIllegalEvent = new Method();
+			pAvatar_onIllegalEvent.name = "onIllegalEvent";
+			pAvatar_onIllegalEvent.methodUtype = 30320;
+			pAvatar_onIllegalEvent.aliasID = -1;
+			pAvatar_onIllegalEvent.args = pAvatar_onIllegalEvent_args;
+
+			pAvatarModule.methods["onIllegalEvent"] = pAvatar_onIllegalEvent; 
+			pAvatarModule.base_methods["onIllegalEvent"] = pAvatar_onIllegalEvent;
+
+			pAvatarModule.idbase_methods[pAvatar_onIllegalEvent.methodUtype] = pAvatar_onIllegalEvent;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onIllegalEvent / 30320).");
 
 			List<DATATYPE_BASE> pAvatar_onSiegeWarDeclareWar_args = new List<DATATYPE_BASE>();
 			pAvatar_onSiegeWarDeclareWar_args.Add(EntityDef.id2datatypes[2]);
@@ -13308,7 +14325,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onYiDunCheckToken / 30295).");
 
 			List<DATATYPE_BASE> pAvatar_oneKeyGuildApply_args = new List<DATATYPE_BASE>();
-			pAvatar_oneKeyGuildApply_args.Add(EntityDef.id2datatypes[10059]);
+			pAvatar_oneKeyGuildApply_args.Add(EntityDef.id2datatypes[10060]);
 
 			Method pAvatar_oneKeyGuildApply = new Method();
 			pAvatar_oneKeyGuildApply.name = "oneKeyGuildApply";
@@ -13713,22 +14730,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqAcceptBounty / 396).");
 
-			List<DATATYPE_BASE> pAvatar_reqAddLeaseTag_args = new List<DATATYPE_BASE>();
-			pAvatar_reqAddLeaseTag_args.Add(EntityDef.id2datatypes[5]);
-
-			Method pAvatar_reqAddLeaseTag = new Method();
-			pAvatar_reqAddLeaseTag.name = "reqAddLeaseTag";
-			pAvatar_reqAddLeaseTag.methodUtype = 636;
-			pAvatar_reqAddLeaseTag.aliasID = -1;
-			pAvatar_reqAddLeaseTag.args = pAvatar_reqAddLeaseTag_args;
-
-			pAvatarModule.methods["reqAddLeaseTag"] = pAvatar_reqAddLeaseTag; 
-			pAvatarModule.base_methods["reqAddLeaseTag"] = pAvatar_reqAddLeaseTag;
-
-			pAvatarModule.idbase_methods[pAvatar_reqAddLeaseTag.methodUtype] = pAvatar_reqAddLeaseTag;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqAddLeaseTag / 636).");
-
 			List<DATATYPE_BASE> pAvatar_reqAvatarCoinBill_args = new List<DATATYPE_BASE>();
 			pAvatar_reqAvatarCoinBill_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_reqAvatarCoinBill_args.Add(EntityDef.id2datatypes[3]);
@@ -13797,6 +14798,22 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqBindPhone / 192).");
 
+			List<DATATYPE_BASE> pAvatar_reqBuyGiftStore_args = new List<DATATYPE_BASE>();
+			pAvatar_reqBuyGiftStore_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_reqBuyGiftStore = new Method();
+			pAvatar_reqBuyGiftStore.name = "reqBuyGiftStore";
+			pAvatar_reqBuyGiftStore.methodUtype = 1141;
+			pAvatar_reqBuyGiftStore.aliasID = -1;
+			pAvatar_reqBuyGiftStore.args = pAvatar_reqBuyGiftStore_args;
+
+			pAvatarModule.methods["reqBuyGiftStore"] = pAvatar_reqBuyGiftStore; 
+			pAvatarModule.base_methods["reqBuyGiftStore"] = pAvatar_reqBuyGiftStore;
+
+			pAvatarModule.idbase_methods[pAvatar_reqBuyGiftStore.methodUtype] = pAvatar_reqBuyGiftStore;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqBuyGiftStore / 1141).");
+
 			List<DATATYPE_BASE> pAvatar_reqBuyItemsInStore_args = new List<DATATYPE_BASE>();
 			pAvatar_reqBuyItemsInStore_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_reqBuyItemsInStore_args.Add(EntityDef.id2datatypes[4]);
@@ -13834,6 +14851,22 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqBuyItemsInStoreWithSelection / 1032).");
 
+			List<DATATYPE_BASE> pAvatar_reqBuyMountStore_args = new List<DATATYPE_BASE>();
+			pAvatar_reqBuyMountStore_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_reqBuyMountStore = new Method();
+			pAvatar_reqBuyMountStore.name = "reqBuyMountStore";
+			pAvatar_reqBuyMountStore.methodUtype = 1142;
+			pAvatar_reqBuyMountStore.aliasID = -1;
+			pAvatar_reqBuyMountStore.args = pAvatar_reqBuyMountStore_args;
+
+			pAvatarModule.methods["reqBuyMountStore"] = pAvatar_reqBuyMountStore; 
+			pAvatarModule.base_methods["reqBuyMountStore"] = pAvatar_reqBuyMountStore;
+
+			pAvatarModule.idbase_methods[pAvatar_reqBuyMountStore.methodUtype] = pAvatar_reqBuyMountStore;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqBuyMountStore / 1142).");
+
 			List<DATATYPE_BASE> pAvatar_reqBuyOutfit_args = new List<DATATYPE_BASE>();
 			pAvatar_reqBuyOutfit_args.Add(EntityDef.id2datatypes[4]);
 
@@ -13866,22 +14899,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqCanShareReward / 212).");
 
-			List<DATATYPE_BASE> pAvatar_reqCancelLeaseTag_args = new List<DATATYPE_BASE>();
-			pAvatar_reqCancelLeaseTag_args.Add(EntityDef.id2datatypes[5]);
-
-			Method pAvatar_reqCancelLeaseTag = new Method();
-			pAvatar_reqCancelLeaseTag.name = "reqCancelLeaseTag";
-			pAvatar_reqCancelLeaseTag.methodUtype = 638;
-			pAvatar_reqCancelLeaseTag.aliasID = -1;
-			pAvatar_reqCancelLeaseTag.args = pAvatar_reqCancelLeaseTag_args;
-
-			pAvatarModule.methods["reqCancelLeaseTag"] = pAvatar_reqCancelLeaseTag; 
-			pAvatarModule.base_methods["reqCancelLeaseTag"] = pAvatar_reqCancelLeaseTag;
-
-			pAvatarModule.idbase_methods[pAvatar_reqCancelLeaseTag.methodUtype] = pAvatar_reqCancelLeaseTag;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqCancelLeaseTag / 638).");
-
 			List<DATATYPE_BASE> pAvatar_reqCancelSaleItemInLease_args = new List<DATATYPE_BASE>();
 			pAvatar_reqCancelSaleItemInLease_args.Add(EntityDef.id2datatypes[5]);
 
@@ -13898,6 +14915,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqCancelSaleItemInLease / 644).");
 
+			List<DATATYPE_BASE> pAvatar_reqClaimAllSafeBoxItems_args = new List<DATATYPE_BASE>();
+
+			Method pAvatar_reqClaimAllSafeBoxItems = new Method();
+			pAvatar_reqClaimAllSafeBoxItems.name = "reqClaimAllSafeBoxItems";
+			pAvatar_reqClaimAllSafeBoxItems.methodUtype = 1139;
+			pAvatar_reqClaimAllSafeBoxItems.aliasID = -1;
+			pAvatar_reqClaimAllSafeBoxItems.args = pAvatar_reqClaimAllSafeBoxItems_args;
+
+			pAvatarModule.methods["reqClaimAllSafeBoxItems"] = pAvatar_reqClaimAllSafeBoxItems; 
+			pAvatarModule.base_methods["reqClaimAllSafeBoxItems"] = pAvatar_reqClaimAllSafeBoxItems;
+
+			pAvatarModule.idbase_methods[pAvatar_reqClaimAllSafeBoxItems.methodUtype] = pAvatar_reqClaimAllSafeBoxItems;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqClaimAllSafeBoxItems / 1139).");
+
 			List<DATATYPE_BASE> pAvatar_reqClaimPcLoginReward_args = new List<DATATYPE_BASE>();
 
 			Method pAvatar_reqClaimPcLoginReward = new Method();
@@ -13912,6 +14944,22 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_reqClaimPcLoginReward.methodUtype] = pAvatar_reqClaimPcLoginReward;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqClaimPcLoginReward / 30).");
+
+			List<DATATYPE_BASE> pAvatar_reqClaimSafeBoxItem_args = new List<DATATYPE_BASE>();
+			pAvatar_reqClaimSafeBoxItem_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_reqClaimSafeBoxItem = new Method();
+			pAvatar_reqClaimSafeBoxItem.name = "reqClaimSafeBoxItem";
+			pAvatar_reqClaimSafeBoxItem.methodUtype = 1133;
+			pAvatar_reqClaimSafeBoxItem.aliasID = -1;
+			pAvatar_reqClaimSafeBoxItem.args = pAvatar_reqClaimSafeBoxItem_args;
+
+			pAvatarModule.methods["reqClaimSafeBoxItem"] = pAvatar_reqClaimSafeBoxItem; 
+			pAvatarModule.base_methods["reqClaimSafeBoxItem"] = pAvatar_reqClaimSafeBoxItem;
+
+			pAvatarModule.idbase_methods[pAvatar_reqClaimSafeBoxItem.methodUtype] = pAvatar_reqClaimSafeBoxItem;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqClaimSafeBoxItem / 1133).");
 
 			List<DATATYPE_BASE> pAvatar_reqCollect_args = new List<DATATYPE_BASE>();
 			pAvatar_reqCollect_args.Add(EntityDef.id2datatypes[2]);
@@ -14012,6 +15060,22 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqDeleteAvatar / 38).");
 
+			List<DATATYPE_BASE> pAvatar_reqDeleteSafeBoxItem_args = new List<DATATYPE_BASE>();
+			pAvatar_reqDeleteSafeBoxItem_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_reqDeleteSafeBoxItem = new Method();
+			pAvatar_reqDeleteSafeBoxItem.name = "reqDeleteSafeBoxItem";
+			pAvatar_reqDeleteSafeBoxItem.methodUtype = 1178;
+			pAvatar_reqDeleteSafeBoxItem.aliasID = -1;
+			pAvatar_reqDeleteSafeBoxItem.args = pAvatar_reqDeleteSafeBoxItem_args;
+
+			pAvatarModule.methods["reqDeleteSafeBoxItem"] = pAvatar_reqDeleteSafeBoxItem; 
+			pAvatarModule.base_methods["reqDeleteSafeBoxItem"] = pAvatar_reqDeleteSafeBoxItem;
+
+			pAvatarModule.idbase_methods[pAvatar_reqDeleteSafeBoxItem.methodUtype] = pAvatar_reqDeleteSafeBoxItem;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqDeleteSafeBoxItem / 1178).");
+
 			List<DATATYPE_BASE> pAvatar_reqDropTaskItem_args = new List<DATATYPE_BASE>();
 			pAvatar_reqDropTaskItem_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_reqDropTaskItem_args.Add(EntityDef.id2datatypes[4]);
@@ -14049,7 +15113,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_reqEnhanceMeridianSlot_args = new List<DATATYPE_BASE>();
 			pAvatar_reqEnhanceMeridianSlot_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_reqEnhanceMeridianSlot_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_reqEnhanceMeridianSlot_args.Add(EntityDef.id2datatypes[10103]);
+			pAvatar_reqEnhanceMeridianSlot_args.Add(EntityDef.id2datatypes[10100]);
 
 			Method pAvatar_reqEnhanceMeridianSlot = new Method();
 			pAvatar_reqEnhanceMeridianSlot.name = "reqEnhanceMeridianSlot";
@@ -14097,6 +15161,39 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_reqFetchRedBag.methodUtype] = pAvatar_reqFetchRedBag;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqFetchRedBag / 923).");
+
+			List<DATATYPE_BASE> pAvatar_reqFreeTicketOneClickRecovery_args = new List<DATATYPE_BASE>();
+			pAvatar_reqFreeTicketOneClickRecovery_args.Add(EntityDef.id2datatypes[3]);
+
+			Method pAvatar_reqFreeTicketOneClickRecovery = new Method();
+			pAvatar_reqFreeTicketOneClickRecovery.name = "reqFreeTicketOneClickRecovery";
+			pAvatar_reqFreeTicketOneClickRecovery.methodUtype = 1132;
+			pAvatar_reqFreeTicketOneClickRecovery.aliasID = -1;
+			pAvatar_reqFreeTicketOneClickRecovery.args = pAvatar_reqFreeTicketOneClickRecovery_args;
+
+			pAvatarModule.methods["reqFreeTicketOneClickRecovery"] = pAvatar_reqFreeTicketOneClickRecovery; 
+			pAvatarModule.base_methods["reqFreeTicketOneClickRecovery"] = pAvatar_reqFreeTicketOneClickRecovery;
+
+			pAvatarModule.idbase_methods[pAvatar_reqFreeTicketOneClickRecovery.methodUtype] = pAvatar_reqFreeTicketOneClickRecovery;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqFreeTicketOneClickRecovery / 1132).");
+
+			List<DATATYPE_BASE> pAvatar_reqFreeTicketRecovery_args = new List<DATATYPE_BASE>();
+			pAvatar_reqFreeTicketRecovery_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_reqFreeTicketRecovery_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_reqFreeTicketRecovery = new Method();
+			pAvatar_reqFreeTicketRecovery.name = "reqFreeTicketRecovery";
+			pAvatar_reqFreeTicketRecovery.methodUtype = 31625;
+			pAvatar_reqFreeTicketRecovery.aliasID = -1;
+			pAvatar_reqFreeTicketRecovery.args = pAvatar_reqFreeTicketRecovery_args;
+
+			pAvatarModule.methods["reqFreeTicketRecovery"] = pAvatar_reqFreeTicketRecovery; 
+			pAvatarModule.base_methods["reqFreeTicketRecovery"] = pAvatar_reqFreeTicketRecovery;
+
+			pAvatarModule.idbase_methods[pAvatar_reqFreeTicketRecovery.methodUtype] = pAvatar_reqFreeTicketRecovery;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqFreeTicketRecovery / 31625).");
 
 			List<DATATYPE_BASE> pAvatar_reqGetAllMailsAttach_args = new List<DATATYPE_BASE>();
 
@@ -14258,7 +15355,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqGetStoreLimitedItemList / 1038).");
 
 			List<DATATYPE_BASE> pAvatar_reqGetStoreList_args = new List<DATATYPE_BASE>();
-			pAvatar_reqGetStoreList_args.Add(EntityDef.id2datatypes[10057]);
+			pAvatar_reqGetStoreList_args.Add(EntityDef.id2datatypes[10058]);
 
 			Method pAvatar_reqGetStoreList = new Method();
 			pAvatar_reqGetStoreList.name = "reqGetStoreList";
@@ -14287,6 +15384,21 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_reqGetWarehouse.methodUtype] = pAvatar_reqGetWarehouse;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqGetWarehouse / 763).");
+
+			List<DATATYPE_BASE> pAvatar_reqGiftStoreLimit_args = new List<DATATYPE_BASE>();
+
+			Method pAvatar_reqGiftStoreLimit = new Method();
+			pAvatar_reqGiftStoreLimit.name = "reqGiftStoreLimit";
+			pAvatar_reqGiftStoreLimit.methodUtype = 1143;
+			pAvatar_reqGiftStoreLimit.aliasID = -1;
+			pAvatar_reqGiftStoreLimit.args = pAvatar_reqGiftStoreLimit_args;
+
+			pAvatarModule.methods["reqGiftStoreLimit"] = pAvatar_reqGiftStoreLimit; 
+			pAvatarModule.base_methods["reqGiftStoreLimit"] = pAvatar_reqGiftStoreLimit;
+
+			pAvatarModule.idbase_methods[pAvatar_reqGiftStoreLimit.methodUtype] = pAvatar_reqGiftStoreLimit;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqGiftStoreLimit / 1143).");
 
 			List<DATATYPE_BASE> pAvatar_reqItemDisassemble_args = new List<DATATYPE_BASE>();
 			pAvatar_reqItemDisassemble_args.Add(EntityDef.id2datatypes[3]);
@@ -14359,7 +15471,8 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_reqLeaseShopSummary_args = new List<DATATYPE_BASE>();
 			pAvatar_reqLeaseShopSummary_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_reqLeaseShopSummary_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_reqLeaseShopSummary_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_reqLeaseShopSummary_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_reqLeaseShopSummary = new Method();
 			pAvatar_reqLeaseShopSummary.name = "reqLeaseShopSummary";
@@ -14378,7 +15491,7 @@ namespace KBEngine
 			pAvatar_reqLevelUpMeridianPoint_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_reqLevelUpMeridianPoint_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_reqLevelUpMeridianPoint_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_reqLevelUpMeridianPoint_args.Add(EntityDef.id2datatypes[10103]);
+			pAvatar_reqLevelUpMeridianPoint_args.Add(EntityDef.id2datatypes[10100]);
 
 			Method pAvatar_reqLevelUpMeridianPoint = new Method();
 			pAvatar_reqLevelUpMeridianPoint.name = "reqLevelUpMeridianPoint";
@@ -14564,7 +15677,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_reqMineWarShareBonus_args = new List<DATATYPE_BASE>();
 			pAvatar_reqMineWarShareBonus_args.Add(EntityDef.id2datatypes[3]);
-			pAvatar_reqMineWarShareBonus_args.Add(EntityDef.id2datatypes[10105]);
+			pAvatar_reqMineWarShareBonus_args.Add(EntityDef.id2datatypes[10102]);
 
 			Method pAvatar_reqMineWarShareBonus = new Method();
 			pAvatar_reqMineWarShareBonus.name = "reqMineWarShareBonus";
@@ -14578,6 +15691,21 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_reqMineWarShareBonus.methodUtype] = pAvatar_reqMineWarShareBonus;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqMineWarShareBonus / 1085).");
+
+			List<DATATYPE_BASE> pAvatar_reqMountStoreLimit_args = new List<DATATYPE_BASE>();
+
+			Method pAvatar_reqMountStoreLimit = new Method();
+			pAvatar_reqMountStoreLimit.name = "reqMountStoreLimit";
+			pAvatar_reqMountStoreLimit.methodUtype = 1144;
+			pAvatar_reqMountStoreLimit.aliasID = -1;
+			pAvatar_reqMountStoreLimit.args = pAvatar_reqMountStoreLimit_args;
+
+			pAvatarModule.methods["reqMountStoreLimit"] = pAvatar_reqMountStoreLimit; 
+			pAvatarModule.base_methods["reqMountStoreLimit"] = pAvatar_reqMountStoreLimit;
+
+			pAvatarModule.idbase_methods[pAvatar_reqMountStoreLimit.methodUtype] = pAvatar_reqMountStoreLimit;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqMountStoreLimit / 1144).");
 
 			List<DATATYPE_BASE> pAvatar_reqMoveItemToBag_args = new List<DATATYPE_BASE>();
 			pAvatar_reqMoveItemToBag_args.Add(EntityDef.id2datatypes[4]);
@@ -14780,6 +15908,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_reqRandomSummonPet_args = new List<DATATYPE_BASE>();
 			pAvatar_reqRandomSummonPet_args.Add(EntityDef.id2datatypes[4]);
 			pAvatar_reqRandomSummonPet_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_reqRandomSummonPet_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_reqRandomSummonPet = new Method();
 			pAvatar_reqRandomSummonPet.name = "reqRandomSummonPet";
@@ -14797,6 +15926,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_reqRandomSynthesis_args = new List<DATATYPE_BASE>();
 			pAvatar_reqRandomSynthesis_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_reqRandomSynthesis_args.Add(EntityDef.id2datatypes[10018]);
+			pAvatar_reqRandomSynthesis_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_reqRandomSynthesis = new Method();
 			pAvatar_reqRandomSynthesis.name = "reqRandomSynthesis";
@@ -14929,10 +16059,10 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_reqReport_args = new List<DATATYPE_BASE>();
 			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[1]);
+			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[12]);
 			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[10013]);
-			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[1]);
-			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[1]);
+			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_reqReport_args.Add(EntityDef.id2datatypes[12]);
 
 			Method pAvatar_reqReport = new Method();
 			pAvatar_reqReport.name = "reqReport";
@@ -14946,6 +16076,22 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_reqReport.methodUtype] = pAvatar_reqReport;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqReport / 219).");
+
+			List<DATATYPE_BASE> pAvatar_reqSafeBoxPage_args = new List<DATATYPE_BASE>();
+			pAvatar_reqSafeBoxPage_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_reqSafeBoxPage = new Method();
+			pAvatar_reqSafeBoxPage.name = "reqSafeBoxPage";
+			pAvatar_reqSafeBoxPage.methodUtype = 1134;
+			pAvatar_reqSafeBoxPage.aliasID = -1;
+			pAvatar_reqSafeBoxPage.args = pAvatar_reqSafeBoxPage_args;
+
+			pAvatarModule.methods["reqSafeBoxPage"] = pAvatar_reqSafeBoxPage; 
+			pAvatarModule.base_methods["reqSafeBoxPage"] = pAvatar_reqSafeBoxPage;
+
+			pAvatarModule.idbase_methods[pAvatar_reqSafeBoxPage.methodUtype] = pAvatar_reqSafeBoxPage;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqSafeBoxPage / 1134).");
 
 			List<DATATYPE_BASE> pAvatar_reqSaleItemInLease_args = new List<DATATYPE_BASE>();
 			pAvatar_reqSaleItemInLease_args.Add(EntityDef.id2datatypes[5]);
@@ -15001,7 +16147,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqShareReward / 109).");
 
 			List<DATATYPE_BASE> pAvatar_reqSubmitTask_args = new List<DATATYPE_BASE>();
-			pAvatar_reqSubmitTask_args.Add(EntityDef.id2datatypes[10038]);
+			pAvatar_reqSubmitTask_args.Add(EntityDef.id2datatypes[10039]);
 
 			Method pAvatar_reqSubmitTask = new Method();
 			pAvatar_reqSubmitTask.name = "reqSubmitTask";
@@ -15353,7 +16499,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendFriendRequest / 700).");
 
 			List<DATATYPE_BASE> pAvatar_sendGuildChatMsg_args = new List<DATATYPE_BASE>();
-			pAvatar_sendGuildChatMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_sendGuildChatMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_sendGuildChatMsg = new Method();
 			pAvatar_sendGuildChatMsg.name = "sendGuildChatMsg";
@@ -15369,7 +16515,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendGuildChatMsg / 481).");
 
 			List<DATATYPE_BASE> pAvatar_sendNearbyChatMsg_args = new List<DATATYPE_BASE>();
-			pAvatar_sendNearbyChatMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_sendNearbyChatMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_sendNearbyChatMsg = new Method();
 			pAvatar_sendNearbyChatMsg.name = "sendNearbyChatMsg";
@@ -15384,9 +16530,26 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendNearbyChatMsg / 483).");
 
+			List<DATATYPE_BASE> pAvatar_sendPaidChatMsg_args = new List<DATATYPE_BASE>();
+			pAvatar_sendPaidChatMsg_args.Add(EntityDef.id2datatypes[8]);
+			pAvatar_sendPaidChatMsg_args.Add(EntityDef.id2datatypes[119]);
+
+			Method pAvatar_sendPaidChatMsg = new Method();
+			pAvatar_sendPaidChatMsg.name = "sendPaidChatMsg";
+			pAvatar_sendPaidChatMsg.methodUtype = 485;
+			pAvatar_sendPaidChatMsg.aliasID = -1;
+			pAvatar_sendPaidChatMsg.args = pAvatar_sendPaidChatMsg_args;
+
+			pAvatarModule.methods["sendPaidChatMsg"] = pAvatar_sendPaidChatMsg; 
+			pAvatarModule.base_methods["sendPaidChatMsg"] = pAvatar_sendPaidChatMsg;
+
+			pAvatarModule.idbase_methods[pAvatar_sendPaidChatMsg.methodUtype] = pAvatar_sendPaidChatMsg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendPaidChatMsg / 485).");
+
 			List<DATATYPE_BASE> pAvatar_sendRaidChatMsg_args = new List<DATATYPE_BASE>();
 			pAvatar_sendRaidChatMsg_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_sendRaidChatMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_sendRaidChatMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_sendRaidChatMsg = new Method();
 			pAvatar_sendRaidChatMsg.name = "sendRaidChatMsg";
@@ -15422,7 +16585,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendRaidMatchMessage / 629).");
 
 			List<DATATYPE_BASE> pAvatar_sendSiegeWarChatMsg_args = new List<DATATYPE_BASE>();
-			pAvatar_sendSiegeWarChatMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_sendSiegeWarChatMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_sendSiegeWarChatMsg = new Method();
 			pAvatar_sendSiegeWarChatMsg.name = "sendSiegeWarChatMsg";
@@ -15439,7 +16602,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_sendTeamChatMsg_args = new List<DATATYPE_BASE>();
 			pAvatar_sendTeamChatMsg_args.Add(EntityDef.id2datatypes[5]);
-			pAvatar_sendTeamChatMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_sendTeamChatMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_sendTeamChatMsg = new Method();
 			pAvatar_sendTeamChatMsg.name = "sendTeamChatMsg";
@@ -15475,7 +16638,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendTeamMatchMessage / 488).");
 
 			List<DATATYPE_BASE> pAvatar_sendWorldChatMsg_args = new List<DATATYPE_BASE>();
-			pAvatar_sendWorldChatMsg_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_sendWorldChatMsg_args.Add(EntityDef.id2datatypes[119]);
 
 			Method pAvatar_sendWorldChatMsg = new Method();
 			pAvatar_sendWorldChatMsg.name = "sendWorldChatMsg";
@@ -15573,7 +16736,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(setFollowPet / 385).");
 
 			List<DATATYPE_BASE> pAvatar_setInstantPotionSlots_args = new List<DATATYPE_BASE>();
-			pAvatar_setInstantPotionSlots_args.Add(EntityDef.id2datatypes[331]);
+			pAvatar_setInstantPotionSlots_args.Add(EntityDef.id2datatypes[344]);
 
 			Method pAvatar_setInstantPotionSlots = new Method();
 			pAvatar_setInstantPotionSlots.name = "setInstantPotionSlots";
@@ -15766,7 +16929,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(switchEnemySchedule / 96).");
 
 			List<DATATYPE_BASE> pAvatar_takeAchievementRewards_args = new List<DATATYPE_BASE>();
-			pAvatar_takeAchievementRewards_args.Add(EntityDef.id2datatypes[10087]);
+			pAvatar_takeAchievementRewards_args.Add(EntityDef.id2datatypes[10083]);
 
 			Method pAvatar_takeAchievementRewards = new Method();
 			pAvatar_takeAchievementRewards.name = "takeAchievementRewards";
@@ -15798,6 +16961,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(transformGuildMoneyToFund / 773).");
 
 			List<DATATYPE_BASE> pAvatar_tryGetMonthCardDailyReward_args = new List<DATATYPE_BASE>();
+			pAvatar_tryGetMonthCardDailyReward_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_tryGetMonthCardDailyReward = new Method();
 			pAvatar_tryGetMonthCardDailyReward.name = "tryGetMonthCardDailyReward";
@@ -16074,23 +17238,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(useLingShouEquip / 661).");
 
-			List<DATATYPE_BASE> pAvatar_useTrumpetItem_args = new List<DATATYPE_BASE>();
-			pAvatar_useTrumpetItem_args.Add(EntityDef.id2datatypes[4]);
-			pAvatar_useTrumpetItem_args.Add(EntityDef.id2datatypes[12]);
-
-			Method pAvatar_useTrumpetItem = new Method();
-			pAvatar_useTrumpetItem.name = "useTrumpetItem";
-			pAvatar_useTrumpetItem.methodUtype = 485;
-			pAvatar_useTrumpetItem.aliasID = -1;
-			pAvatar_useTrumpetItem.args = pAvatar_useTrumpetItem_args;
-
-			pAvatarModule.methods["useTrumpetItem"] = pAvatar_useTrumpetItem; 
-			pAvatarModule.base_methods["useTrumpetItem"] = pAvatar_useTrumpetItem;
-
-			pAvatarModule.idbase_methods[pAvatar_useTrumpetItem.methodUtype] = pAvatar_useTrumpetItem;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(useTrumpetItem / 485).");
-
 			List<DATATYPE_BASE> pAvatar_applyBecomeCaptain_args = new List<DATATYPE_BASE>();
 			pAvatar_applyBecomeCaptain_args.Add(EntityDef.id2datatypes[5]);
 
@@ -16209,6 +17356,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_applyInviteRaidLonely_args = new List<DATATYPE_BASE>();
 			pAvatar_applyInviteRaidLonely_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_applyInviteRaidLonely_args.Add(EntityDef.id2datatypes[12]);
+			pAvatar_applyInviteRaidLonely_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_applyInviteRaidLonely = new Method();
 			pAvatar_applyInviteRaidLonely.name = "applyInviteRaidLonely";
@@ -17171,6 +18319,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(followCaptainInCube / 1015).");
 
+			List<DATATYPE_BASE> pAvatar_getAbyssLeftTime_args = new List<DATATYPE_BASE>();
+
+			Method pAvatar_getAbyssLeftTime = new Method();
+			pAvatar_getAbyssLeftTime.name = "getAbyssLeftTime";
+			pAvatar_getAbyssLeftTime.methodUtype = 1030;
+			pAvatar_getAbyssLeftTime.aliasID = -1;
+			pAvatar_getAbyssLeftTime.args = pAvatar_getAbyssLeftTime_args;
+
+			pAvatarModule.methods["getAbyssLeftTime"] = pAvatar_getAbyssLeftTime; 
+			pAvatarModule.cell_methods["getAbyssLeftTime"] = pAvatar_getAbyssLeftTime;
+
+			pAvatarModule.idcell_methods[pAvatar_getAbyssLeftTime.methodUtype] = pAvatar_getAbyssLeftTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(getAbyssLeftTime / 1030).");
+
 			List<DATATYPE_BASE> pAvatar_getArenaKingPos_args = new List<DATATYPE_BASE>();
 
 			Method pAvatar_getArenaKingPos = new Method();
@@ -17803,6 +18966,7 @@ namespace KBEngine
 			pAvatar_replyInviteRaidLonely_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_replyInviteRaidLonely_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_replyInviteRaidLonely_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_replyInviteRaidLonely_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_replyInviteRaidLonely = new Method();
 			pAvatar_replyInviteRaidLonely.name = "replyInviteRaidLonely";
@@ -17839,6 +19003,7 @@ namespace KBEngine
 			List<DATATYPE_BASE> pAvatar_replyInviteTeam_args = new List<DATATYPE_BASE>();
 			pAvatar_replyInviteTeam_args.Add(EntityDef.id2datatypes[5]);
 			pAvatar_replyInviteTeam_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_replyInviteTeam_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_replyInviteTeam_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_replyInviteTeam = new Method();
@@ -17962,9 +19127,26 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqCaptainFollowInfo / 561).");
 
+			List<DATATYPE_BASE> pAvatar_reqChangeAbyssSwitch_args = new List<DATATYPE_BASE>();
+			pAvatar_reqChangeAbyssSwitch_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_reqChangeAbyssSwitch_args.Add(EntityDef.id2datatypes[233]);
+
+			Method pAvatar_reqChangeAbyssSwitch = new Method();
+			pAvatar_reqChangeAbyssSwitch.name = "reqChangeAbyssSwitch";
+			pAvatar_reqChangeAbyssSwitch.methodUtype = 1029;
+			pAvatar_reqChangeAbyssSwitch.aliasID = -1;
+			pAvatar_reqChangeAbyssSwitch.args = pAvatar_reqChangeAbyssSwitch_args;
+
+			pAvatarModule.methods["reqChangeAbyssSwitch"] = pAvatar_reqChangeAbyssSwitch; 
+			pAvatarModule.cell_methods["reqChangeAbyssSwitch"] = pAvatar_reqChangeAbyssSwitch;
+
+			pAvatarModule.idcell_methods[pAvatar_reqChangeAbyssSwitch.methodUtype] = pAvatar_reqChangeAbyssSwitch;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqChangeAbyssSwitch / 1029).");
+
 			List<DATATYPE_BASE> pAvatar_reqChangeCubeAutoRenewSwitch_args = new List<DATATYPE_BASE>();
 			pAvatar_reqChangeCubeAutoRenewSwitch_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_reqChangeCubeAutoRenewSwitch_args.Add(EntityDef.id2datatypes[224]);
+			pAvatar_reqChangeCubeAutoRenewSwitch_args.Add(EntityDef.id2datatypes[231]);
 
 			Method pAvatar_reqChangeCubeAutoRenewSwitch = new Method();
 			pAvatar_reqChangeCubeAutoRenewSwitch.name = "reqChangeCubeAutoRenewSwitch";
@@ -18013,7 +19195,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_reqChangeWonderLandSwitch_args = new List<DATATYPE_BASE>();
 			pAvatar_reqChangeWonderLandSwitch_args.Add(EntityDef.id2datatypes[2]);
-			pAvatar_reqChangeWonderLandSwitch_args.Add(EntityDef.id2datatypes[225]);
+			pAvatar_reqChangeWonderLandSwitch_args.Add(EntityDef.id2datatypes[232]);
 
 			Method pAvatar_reqChangeWonderLandSwitch = new Method();
 			pAvatar_reqChangeWonderLandSwitch.name = "reqChangeWonderLandSwitch";
@@ -18308,6 +19490,26 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_reqEquipUpgrade.methodUtype] = pAvatar_reqEquipUpgrade;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqEquipUpgrade / 1053).");
+
+			List<DATATYPE_BASE> pAvatar_reqEquipWash_args = new List<DATATYPE_BASE>();
+			pAvatar_reqEquipWash_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_reqEquipWash_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_reqEquipWash_args.Add(EntityDef.id2datatypes[5]);
+			pAvatar_reqEquipWash_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_reqEquipWash_args.Add(EntityDef.id2datatypes[3]);
+
+			Method pAvatar_reqEquipWash = new Method();
+			pAvatar_reqEquipWash.name = "reqEquipWash";
+			pAvatar_reqEquipWash.methodUtype = 349;
+			pAvatar_reqEquipWash.aliasID = -1;
+			pAvatar_reqEquipWash.args = pAvatar_reqEquipWash_args;
+
+			pAvatarModule.methods["reqEquipWash"] = pAvatar_reqEquipWash; 
+			pAvatarModule.cell_methods["reqEquipWash"] = pAvatar_reqEquipWash;
+
+			pAvatarModule.idcell_methods[pAvatar_reqEquipWash.methodUtype] = pAvatar_reqEquipWash;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(reqEquipWash / 349).");
 
 			List<DATATYPE_BASE> pAvatar_reqGetRaidList_args = new List<DATATYPE_BASE>();
 			pAvatar_reqGetRaidList_args.Add(EntityDef.id2datatypes[4]);
@@ -19018,7 +20220,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(setSkillAutoCombat / 667).");
 
 			List<DATATYPE_BASE> pAvatar_siegewarMinimapSignalChange_args = new List<DATATYPE_BASE>();
-			pAvatar_siegewarMinimapSignalChange_args.Add(EntityDef.id2datatypes[247]);
+			pAvatar_siegewarMinimapSignalChange_args.Add(EntityDef.id2datatypes[255]);
 
 			Method pAvatar_siegewarMinimapSignalChange = new Method();
 			pAvatar_siegewarMinimapSignalChange.name = "siegewarMinimapSignalChange";
@@ -19094,6 +20296,24 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_switchCubeLine.methodUtype] = pAvatar_switchCubeLine;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(switchCubeLine / 360).");
+
+			List<DATATYPE_BASE> pAvatar_switchMapMode_args = new List<DATATYPE_BASE>();
+			pAvatar_switchMapMode_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_switchMapMode_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_switchMapMode_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_switchMapMode = new Method();
+			pAvatar_switchMapMode.name = "switchMapMode";
+			pAvatar_switchMapMode.methodUtype = 1160;
+			pAvatar_switchMapMode.aliasID = -1;
+			pAvatar_switchMapMode.args = pAvatar_switchMapMode_args;
+
+			pAvatarModule.methods["switchMapMode"] = pAvatar_switchMapMode; 
+			pAvatarModule.cell_methods["switchMapMode"] = pAvatar_switchMapMode;
+
+			pAvatarModule.idcell_methods[pAvatar_switchMapMode.methodUtype] = pAvatar_switchMapMode;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(switchMapMode / 1160).");
 
 			List<DATATYPE_BASE> pAvatar_switchPKModel_args = new List<DATATYPE_BASE>();
 			pAvatar_switchPKModel_args.Add(EntityDef.id2datatypes[2]);
@@ -19292,6 +20512,23 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_transferRaidTeamCaptain.methodUtype] = pAvatar_transferRaidTeamCaptain;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(transferRaidTeamCaptain / 417).");
+
+			List<DATATYPE_BASE> pAvatar_tryApplyInviteGuild_args = new List<DATATYPE_BASE>();
+			pAvatar_tryApplyInviteGuild_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_tryApplyInviteGuild_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_tryApplyInviteGuild = new Method();
+			pAvatar_tryApplyInviteGuild.name = "tryApplyInviteGuild";
+			pAvatar_tryApplyInviteGuild.methodUtype = 1093;
+			pAvatar_tryApplyInviteGuild.aliasID = -1;
+			pAvatar_tryApplyInviteGuild.args = pAvatar_tryApplyInviteGuild_args;
+
+			pAvatarModule.methods["tryApplyInviteGuild"] = pAvatar_tryApplyInviteGuild; 
+			pAvatarModule.cell_methods["tryApplyInviteGuild"] = pAvatar_tryApplyInviteGuild;
+
+			pAvatarModule.idcell_methods[pAvatar_tryApplyInviteGuild.methodUtype] = pAvatar_tryApplyInviteGuild;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(tryApplyInviteGuild / 1093).");
 
 			List<DATATYPE_BASE> pAvatar_tryApplyInviteRaid_args = new List<DATATYPE_BASE>();
 			pAvatar_tryApplyInviteRaid_args.Add(EntityDef.id2datatypes[5]);
@@ -19550,7 +20787,7 @@ namespace KBEngine
 
 			ScriptModule pMonsterModule = new ScriptModule("Monster");
 			EntityDef.moduledefs["Monster"] = pMonsterModule;
-			EntityDef.idmoduledefs[40] = pMonsterModule;
+			EntityDef.idmoduledefs[52] = pMonsterModule;
 
 			Property pMonster_position = new Property();
 			pMonster_position.name = "position";
@@ -20075,6 +21312,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(aiChatToPlayer / 267).");
 
+			List<DATATYPE_BASE> pMonster_drawCube_args = new List<DATATYPE_BASE>();
+			pMonster_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pMonster_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pMonster_drawCube_args.Add(EntityDef.id2datatypes[13]);
+			pMonster_drawCube_args.Add(EntityDef.id2datatypes[13]);
+
+			Method pMonster_drawCube = new Method();
+			pMonster_drawCube.name = "drawCube";
+			pMonster_drawCube.methodUtype = 735;
+			pMonster_drawCube.aliasID = 18;
+			pMonster_drawCube.args = pMonster_drawCube_args;
+
+			pMonsterModule.methods["drawCube"] = pMonster_drawCube; 
+			pMonsterModule.useMethodDescrAlias = true;
+			pMonsterModule.idmethods[(UInt16)pMonster_drawCube.aliasID] = pMonster_drawCube;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(drawCube / 735).");
+
 			List<DATATYPE_BASE> pMonster_notifyCastingSkill_args = new List<DATATYPE_BASE>();
 			pMonster_notifyCastingSkill_args.Add(EntityDef.id2datatypes[4]);
 			pMonster_notifyCastingSkill_args.Add(EntityDef.id2datatypes[14]);
@@ -20092,7 +21347,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(notifyCastingSkill / 300).");
 
 			List<DATATYPE_BASE> pMonster_onAddAureole_args = new List<DATATYPE_BASE>();
-			pMonster_onAddAureole_args.Add(EntityDef.id2datatypes[94]);
+			pMonster_onAddAureole_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pMonster_onAddAureole = new Method();
 			pMonster_onAddAureole.name = "onAddAureole";
@@ -20107,7 +21362,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onAddAureole / 279).");
 
 			List<DATATYPE_BASE> pMonster_onAddAureoleFromOthers_args = new List<DATATYPE_BASE>();
-			pMonster_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[94]);
+			pMonster_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pMonster_onAddAureoleFromOthers = new Method();
 			pMonster_onAddAureoleFromOthers.name = "onAddAureoleFromOthers";
@@ -20122,7 +21377,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onAddAureoleFromOthers / 282).");
 
 			List<DATATYPE_BASE> pMonster_onAddBuff_args = new List<DATATYPE_BASE>();
-			pMonster_onAddBuff_args.Add(EntityDef.id2datatypes[109]);
+			pMonster_onAddBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pMonster_onAddBuff = new Method();
 			pMonster_onAddBuff.name = "onAddBuff";
@@ -20252,7 +21507,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pMonster_onGetAureoleInfo_args = new List<DATATYPE_BASE>();
 			pMonster_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
-			pMonster_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[95]);
+			pMonster_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pMonster_onGetAureoleInfo = new Method();
 			pMonster_onGetAureoleInfo.name = "onGetAureoleInfo";
@@ -20268,7 +21523,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pMonster_onGetBuffInfo_args = new List<DATATYPE_BASE>();
 			pMonster_onGetBuffInfo_args.Add(EntityDef.id2datatypes[8]);
-			pMonster_onGetBuffInfo_args.Add(EntityDef.id2datatypes[110]);
+			pMonster_onGetBuffInfo_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pMonster_onGetBuffInfo = new Method();
 			pMonster_onGetBuffInfo.name = "onGetBuffInfo";
@@ -20400,7 +21655,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onShooterSkillCanUse / 303).");
 
 			List<DATATYPE_BASE> pMonster_onSkillDamage_args = new List<DATATYPE_BASE>();
-			pMonster_onSkillDamage_args.Add(EntityDef.id2datatypes[104]);
+			pMonster_onSkillDamage_args.Add(EntityDef.id2datatypes[110]);
 
 			Method pMonster_onSkillDamage = new Method();
 			pMonster_onSkillDamage.name = "onSkillDamage";
@@ -20445,7 +21700,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onTelBack / 197).");
 
 			List<DATATYPE_BASE> pMonster_onUpdateAureoles_args = new List<DATATYPE_BASE>();
-			pMonster_onUpdateAureoles_args.Add(EntityDef.id2datatypes[95]);
+			pMonster_onUpdateAureoles_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pMonster_onUpdateAureoles = new Method();
 			pMonster_onUpdateAureoles.name = "onUpdateAureoles";
@@ -20460,7 +21715,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onUpdateAureoles / 281).");
 
 			List<DATATYPE_BASE> pMonster_onUpdateAureolesFromOthers_args = new List<DATATYPE_BASE>();
-			pMonster_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[101]);
+			pMonster_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[107]);
 
 			Method pMonster_onUpdateAureolesFromOthers = new Method();
 			pMonster_onUpdateAureolesFromOthers.name = "onUpdateAureolesFromOthers";
@@ -20475,7 +21730,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onUpdateAureolesFromOthers / 284).");
 
 			List<DATATYPE_BASE> pMonster_onUpdateBuff_args = new List<DATATYPE_BASE>();
-			pMonster_onUpdateBuff_args.Add(EntityDef.id2datatypes[109]);
+			pMonster_onUpdateBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pMonster_onUpdateBuff = new Method();
 			pMonster_onUpdateBuff.name = "onUpdateBuff";
@@ -20490,7 +21745,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(onUpdateBuff / 294).");
 
 			List<DATATYPE_BASE> pMonster_onUpdateBuffs_args = new List<DATATYPE_BASE>();
-			pMonster_onUpdateBuffs_args.Add(EntityDef.id2datatypes[110]);
+			pMonster_onUpdateBuffs_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pMonster_onUpdateBuffs = new Method();
 			pMonster_onUpdateBuffs.name = "onUpdateBuffs";
@@ -20611,6 +21866,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(showPopoverMsgWithArg / 838).");
 
+			List<DATATYPE_BASE> pMonster_updateForbidSkillTags_args = new List<DATATYPE_BASE>();
+			pMonster_updateForbidSkillTags_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pMonster_updateForbidSkillTags = new Method();
+			pMonster_updateForbidSkillTags.name = "updateForbidSkillTags";
+			pMonster_updateForbidSkillTags.methodUtype = 164;
+			pMonster_updateForbidSkillTags.aliasID = 23;
+			pMonster_updateForbidSkillTags.args = pMonster_updateForbidSkillTags_args;
+
+			pMonsterModule.methods["updateForbidSkillTags"] = pMonster_updateForbidSkillTags; 
+			pMonsterModule.useMethodDescrAlias = true;
+			pMonsterModule.idmethods[(UInt16)pMonster_updateForbidSkillTags.aliasID] = pMonster_updateForbidSkillTags;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Monster), method(updateForbidSkillTags / 164).");
+
 			List<DATATYPE_BASE> pMonster_cancelChargeSkill_args = new List<DATATYPE_BASE>();
 			pMonster_cancelChargeSkill_args.Add(EntityDef.id2datatypes[4]);
 
@@ -20661,7 +21931,7 @@ namespace KBEngine
 
 			ScriptModule pSummonModule = new ScriptModule("Summon");
 			EntityDef.moduledefs["Summon"] = pSummonModule;
-			EntityDef.idmoduledefs[41] = pSummonModule;
+			EntityDef.idmoduledefs[53] = pSummonModule;
 
 			Property pSummon_position = new Property();
 			pSummon_position.name = "position";
@@ -21141,6 +22411,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(aiChatToPlayer / 520).");
 
+			List<DATATYPE_BASE> pSummon_drawCube_args = new List<DATATYPE_BASE>();
+			pSummon_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pSummon_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pSummon_drawCube_args.Add(EntityDef.id2datatypes[13]);
+			pSummon_drawCube_args.Add(EntityDef.id2datatypes[13]);
+
+			Method pSummon_drawCube = new Method();
+			pSummon_drawCube.name = "drawCube";
+			pSummon_drawCube.methodUtype = 736;
+			pSummon_drawCube.aliasID = 13;
+			pSummon_drawCube.args = pSummon_drawCube_args;
+
+			pSummonModule.methods["drawCube"] = pSummon_drawCube; 
+			pSummonModule.useMethodDescrAlias = true;
+			pSummonModule.idmethods[(UInt16)pSummon_drawCube.aliasID] = pSummon_drawCube;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(drawCube / 736).");
+
 			List<DATATYPE_BASE> pSummon_notifyCastingSkill_args = new List<DATATYPE_BASE>();
 			pSummon_notifyCastingSkill_args.Add(EntityDef.id2datatypes[4]);
 			pSummon_notifyCastingSkill_args.Add(EntityDef.id2datatypes[14]);
@@ -21158,7 +22446,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(notifyCastingSkill / 553).");
 
 			List<DATATYPE_BASE> pSummon_onAddAureole_args = new List<DATATYPE_BASE>();
-			pSummon_onAddAureole_args.Add(EntityDef.id2datatypes[94]);
+			pSummon_onAddAureole_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pSummon_onAddAureole = new Method();
 			pSummon_onAddAureole.name = "onAddAureole";
@@ -21173,7 +22461,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onAddAureole / 532).");
 
 			List<DATATYPE_BASE> pSummon_onAddAureoleFromOthers_args = new List<DATATYPE_BASE>();
-			pSummon_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[94]);
+			pSummon_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pSummon_onAddAureoleFromOthers = new Method();
 			pSummon_onAddAureoleFromOthers.name = "onAddAureoleFromOthers";
@@ -21188,7 +22476,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onAddAureoleFromOthers / 535).");
 
 			List<DATATYPE_BASE> pSummon_onAddBuff_args = new List<DATATYPE_BASE>();
-			pSummon_onAddBuff_args.Add(EntityDef.id2datatypes[109]);
+			pSummon_onAddBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pSummon_onAddBuff = new Method();
 			pSummon_onAddBuff.name = "onAddBuff";
@@ -21304,7 +22592,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pSummon_onGetAureoleInfo_args = new List<DATATYPE_BASE>();
 			pSummon_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
-			pSummon_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[95]);
+			pSummon_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pSummon_onGetAureoleInfo = new Method();
 			pSummon_onGetAureoleInfo.name = "onGetAureoleInfo";
@@ -21320,7 +22608,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pSummon_onGetBuffInfo_args = new List<DATATYPE_BASE>();
 			pSummon_onGetBuffInfo_args.Add(EntityDef.id2datatypes[8]);
-			pSummon_onGetBuffInfo_args.Add(EntityDef.id2datatypes[110]);
+			pSummon_onGetBuffInfo_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pSummon_onGetBuffInfo = new Method();
 			pSummon_onGetBuffInfo.name = "onGetBuffInfo";
@@ -21452,7 +22740,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onShooterSkillCanUse / 556).");
 
 			List<DATATYPE_BASE> pSummon_onSkillDamage_args = new List<DATATYPE_BASE>();
-			pSummon_onSkillDamage_args.Add(EntityDef.id2datatypes[104]);
+			pSummon_onSkillDamage_args.Add(EntityDef.id2datatypes[110]);
 
 			Method pSummon_onSkillDamage = new Method();
 			pSummon_onSkillDamage.name = "onSkillDamage";
@@ -21482,7 +22770,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onStateChangedForce / 531).");
 
 			List<DATATYPE_BASE> pSummon_onUpdateAureoles_args = new List<DATATYPE_BASE>();
-			pSummon_onUpdateAureoles_args.Add(EntityDef.id2datatypes[95]);
+			pSummon_onUpdateAureoles_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pSummon_onUpdateAureoles = new Method();
 			pSummon_onUpdateAureoles.name = "onUpdateAureoles";
@@ -21497,7 +22785,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onUpdateAureoles / 534).");
 
 			List<DATATYPE_BASE> pSummon_onUpdateAureolesFromOthers_args = new List<DATATYPE_BASE>();
-			pSummon_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[101]);
+			pSummon_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[107]);
 
 			Method pSummon_onUpdateAureolesFromOthers = new Method();
 			pSummon_onUpdateAureolesFromOthers.name = "onUpdateAureolesFromOthers";
@@ -21512,7 +22800,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onUpdateAureolesFromOthers / 537).");
 
 			List<DATATYPE_BASE> pSummon_onUpdateBuff_args = new List<DATATYPE_BASE>();
-			pSummon_onUpdateBuff_args.Add(EntityDef.id2datatypes[109]);
+			pSummon_onUpdateBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pSummon_onUpdateBuff = new Method();
 			pSummon_onUpdateBuff.name = "onUpdateBuff";
@@ -21527,7 +22815,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(onUpdateBuff / 547).");
 
 			List<DATATYPE_BASE> pSummon_onUpdateBuffs_args = new List<DATATYPE_BASE>();
-			pSummon_onUpdateBuffs_args.Add(EntityDef.id2datatypes[110]);
+			pSummon_onUpdateBuffs_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pSummon_onUpdateBuffs = new Method();
 			pSummon_onUpdateBuffs.name = "onUpdateBuffs";
@@ -21648,6 +22936,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(showPopoverMsgWithArg / 560).");
 
+			List<DATATYPE_BASE> pSummon_updateForbidSkillTags_args = new List<DATATYPE_BASE>();
+			pSummon_updateForbidSkillTags_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pSummon_updateForbidSkillTags = new Method();
+			pSummon_updateForbidSkillTags.name = "updateForbidSkillTags";
+			pSummon_updateForbidSkillTags.methodUtype = 165;
+			pSummon_updateForbidSkillTags.aliasID = 17;
+			pSummon_updateForbidSkillTags.args = pSummon_updateForbidSkillTags_args;
+
+			pSummonModule.methods["updateForbidSkillTags"] = pSummon_updateForbidSkillTags; 
+			pSummonModule.useMethodDescrAlias = true;
+			pSummonModule.idmethods[(UInt16)pSummon_updateForbidSkillTags.aliasID] = pSummon_updateForbidSkillTags;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Summon), method(updateForbidSkillTags / 165).");
+
 			List<DATATYPE_BASE> pSummon_cancelChargeSkill_args = new List<DATATYPE_BASE>();
 			pSummon_cancelChargeSkill_args.Add(EntityDef.id2datatypes[4]);
 
@@ -21698,7 +23001,7 @@ namespace KBEngine
 
 			ScriptModule pBarrierModule = new ScriptModule("Barrier");
 			EntityDef.moduledefs["Barrier"] = pBarrierModule;
-			EntityDef.idmoduledefs[42] = pBarrierModule;
+			EntityDef.idmoduledefs[54] = pBarrierModule;
 
 			Property pBarrier_position = new Property();
 			pBarrier_position.name = "position";
@@ -21806,7 +23109,7 @@ namespace KBEngine
 			pBarrierModule.useMethodDescrAlias = true;
 			ScriptModule pTeleporterModule = new ScriptModule("Teleporter");
 			EntityDef.moduledefs["Teleporter"] = pTeleporterModule;
-			EntityDef.idmoduledefs[43] = pTeleporterModule;
+			EntityDef.idmoduledefs[55] = pTeleporterModule;
 
 			Property pTeleporter_position = new Property();
 			pTeleporter_position.name = "position";
@@ -21945,7 +23248,7 @@ namespace KBEngine
 
 			ScriptModule pCityBattleTeleporterModule = new ScriptModule("CityBattleTeleporter");
 			EntityDef.moduledefs["CityBattleTeleporter"] = pCityBattleTeleporterModule;
-			EntityDef.idmoduledefs[44] = pCityBattleTeleporterModule;
+			EntityDef.idmoduledefs[56] = pCityBattleTeleporterModule;
 
 			Property pCityBattleTeleporter_position = new Property();
 			pCityBattleTeleporter_position.name = "position";
@@ -22083,7 +23386,7 @@ namespace KBEngine
 
 			ScriptModule pCoreAreaFlagModule = new ScriptModule("CoreAreaFlag");
 			EntityDef.moduledefs["CoreAreaFlag"] = pCoreAreaFlagModule;
-			EntityDef.idmoduledefs[45] = pCoreAreaFlagModule;
+			EntityDef.idmoduledefs[57] = pCoreAreaFlagModule;
 
 			Property pCoreAreaFlag_position = new Property();
 			pCoreAreaFlag_position.name = "position";
@@ -22206,7 +23509,7 @@ namespace KBEngine
 			pCoreAreaFlagModule.useMethodDescrAlias = true;
 			ScriptModule pNpcModule = new ScriptModule("Npc");
 			EntityDef.moduledefs["Npc"] = pNpcModule;
-			EntityDef.idmoduledefs[46] = pNpcModule;
+			EntityDef.idmoduledefs[58] = pNpcModule;
 
 			Property pNpc_position = new Property();
 			pNpc_position.name = "position";
@@ -22565,6 +23868,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), property(selectedTargetId / 383).");
 
+			Property pNpc_siegeWarCamp = new Property();
+			pNpc_siegeWarCamp.name = "siegeWarCamp";
+			pNpc_siegeWarCamp.properUtype = 553;
+			pNpc_siegeWarCamp.properFlags = 4;
+			pNpc_siegeWarCamp.aliasID = 9;
+			Int32 Npc_siegeWarCamp_defval;
+			Int32.TryParse("0", out Npc_siegeWarCamp_defval);
+			pNpc_siegeWarCamp.defaultVal = Npc_siegeWarCamp_defval;
+			pNpcModule.propertys["siegeWarCamp"] = pNpc_siegeWarCamp; 
+
+			pNpcModule.usePropertyDescrAlias = true;
+			pNpcModule.idpropertys[(UInt16)pNpc_siegeWarCamp.aliasID] = pNpc_siegeWarCamp;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), property(siegeWarCamp / 553).");
+
 			Property pNpc_spaceNo = new Property();
 			pNpc_spaceNo.name = "spaceNo";
 			pNpc_spaceNo.properUtype = 39;
@@ -22641,6 +23959,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(aiChatToPlayer / 108).");
 
+			List<DATATYPE_BASE> pNpc_drawCube_args = new List<DATATYPE_BASE>();
+			pNpc_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pNpc_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pNpc_drawCube_args.Add(EntityDef.id2datatypes[13]);
+			pNpc_drawCube_args.Add(EntityDef.id2datatypes[13]);
+
+			Method pNpc_drawCube = new Method();
+			pNpc_drawCube.name = "drawCube";
+			pNpc_drawCube.methodUtype = 737;
+			pNpc_drawCube.aliasID = 16;
+			pNpc_drawCube.args = pNpc_drawCube_args;
+
+			pNpcModule.methods["drawCube"] = pNpc_drawCube; 
+			pNpcModule.useMethodDescrAlias = true;
+			pNpcModule.idmethods[(UInt16)pNpc_drawCube.aliasID] = pNpc_drawCube;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(drawCube / 737).");
+
 			List<DATATYPE_BASE> pNpc_notifyCastingSkill_args = new List<DATATYPE_BASE>();
 			pNpc_notifyCastingSkill_args.Add(EntityDef.id2datatypes[4]);
 			pNpc_notifyCastingSkill_args.Add(EntityDef.id2datatypes[14]);
@@ -22658,7 +23994,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(notifyCastingSkill / 261).");
 
 			List<DATATYPE_BASE> pNpc_onAddAureole_args = new List<DATATYPE_BASE>();
-			pNpc_onAddAureole_args.Add(EntityDef.id2datatypes[94]);
+			pNpc_onAddAureole_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pNpc_onAddAureole = new Method();
 			pNpc_onAddAureole.name = "onAddAureole";
@@ -22673,7 +24009,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onAddAureole / 240).");
 
 			List<DATATYPE_BASE> pNpc_onAddAureoleFromOthers_args = new List<DATATYPE_BASE>();
-			pNpc_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[94]);
+			pNpc_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pNpc_onAddAureoleFromOthers = new Method();
 			pNpc_onAddAureoleFromOthers.name = "onAddAureoleFromOthers";
@@ -22688,7 +24024,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onAddAureoleFromOthers / 243).");
 
 			List<DATATYPE_BASE> pNpc_onAddBuff_args = new List<DATATYPE_BASE>();
-			pNpc_onAddBuff_args.Add(EntityDef.id2datatypes[109]);
+			pNpc_onAddBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pNpc_onAddBuff = new Method();
 			pNpc_onAddBuff.name = "onAddBuff";
@@ -22818,7 +24154,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pNpc_onGetAureoleInfo_args = new List<DATATYPE_BASE>();
 			pNpc_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
-			pNpc_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[95]);
+			pNpc_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pNpc_onGetAureoleInfo = new Method();
 			pNpc_onGetAureoleInfo.name = "onGetAureoleInfo";
@@ -22834,7 +24170,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pNpc_onGetBuffInfo_args = new List<DATATYPE_BASE>();
 			pNpc_onGetBuffInfo_args.Add(EntityDef.id2datatypes[8]);
-			pNpc_onGetBuffInfo_args.Add(EntityDef.id2datatypes[110]);
+			pNpc_onGetBuffInfo_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pNpc_onGetBuffInfo = new Method();
 			pNpc_onGetBuffInfo.name = "onGetBuffInfo";
@@ -22966,7 +24302,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onShooterSkillCanUse / 264).");
 
 			List<DATATYPE_BASE> pNpc_onSkillDamage_args = new List<DATATYPE_BASE>();
-			pNpc_onSkillDamage_args.Add(EntityDef.id2datatypes[104]);
+			pNpc_onSkillDamage_args.Add(EntityDef.id2datatypes[110]);
 
 			Method pNpc_onSkillDamage = new Method();
 			pNpc_onSkillDamage.name = "onSkillDamage";
@@ -22996,7 +24332,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onStateChangedForce / 538).");
 
 			List<DATATYPE_BASE> pNpc_onUpdateAureoles_args = new List<DATATYPE_BASE>();
-			pNpc_onUpdateAureoles_args.Add(EntityDef.id2datatypes[95]);
+			pNpc_onUpdateAureoles_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pNpc_onUpdateAureoles = new Method();
 			pNpc_onUpdateAureoles.name = "onUpdateAureoles";
@@ -23011,7 +24347,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onUpdateAureoles / 242).");
 
 			List<DATATYPE_BASE> pNpc_onUpdateAureolesFromOthers_args = new List<DATATYPE_BASE>();
-			pNpc_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[101]);
+			pNpc_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[107]);
 
 			Method pNpc_onUpdateAureolesFromOthers = new Method();
 			pNpc_onUpdateAureolesFromOthers.name = "onUpdateAureolesFromOthers";
@@ -23026,7 +24362,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onUpdateAureolesFromOthers / 245).");
 
 			List<DATATYPE_BASE> pNpc_onUpdateBuff_args = new List<DATATYPE_BASE>();
-			pNpc_onUpdateBuff_args.Add(EntityDef.id2datatypes[109]);
+			pNpc_onUpdateBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pNpc_onUpdateBuff = new Method();
 			pNpc_onUpdateBuff.name = "onUpdateBuff";
@@ -23041,7 +24377,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(onUpdateBuff / 255).");
 
 			List<DATATYPE_BASE> pNpc_onUpdateBuffs_args = new List<DATATYPE_BASE>();
-			pNpc_onUpdateBuffs_args.Add(EntityDef.id2datatypes[110]);
+			pNpc_onUpdateBuffs_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pNpc_onUpdateBuffs = new Method();
 			pNpc_onUpdateBuffs.name = "onUpdateBuffs";
@@ -23162,6 +24498,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(showPopoverMsgWithArg / 162).");
 
+			List<DATATYPE_BASE> pNpc_updateForbidSkillTags_args = new List<DATATYPE_BASE>();
+			pNpc_updateForbidSkillTags_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pNpc_updateForbidSkillTags = new Method();
+			pNpc_updateForbidSkillTags.name = "updateForbidSkillTags";
+			pNpc_updateForbidSkillTags.methodUtype = 1153;
+			pNpc_updateForbidSkillTags.aliasID = 17;
+			pNpc_updateForbidSkillTags.args = pNpc_updateForbidSkillTags_args;
+
+			pNpcModule.methods["updateForbidSkillTags"] = pNpc_updateForbidSkillTags; 
+			pNpcModule.useMethodDescrAlias = true;
+			pNpcModule.idmethods[(UInt16)pNpc_updateForbidSkillTags.aliasID] = pNpc_updateForbidSkillTags;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), method(updateForbidSkillTags / 1153).");
+
 			List<DATATYPE_BASE> pNpc_cancelChargeSkill_args = new List<DATATYPE_BASE>();
 			pNpc_cancelChargeSkill_args.Add(EntityDef.id2datatypes[4]);
 
@@ -23228,7 +24579,7 @@ namespace KBEngine
 
 			ScriptModule pCollectionModule = new ScriptModule("Collection");
 			EntityDef.moduledefs["Collection"] = pCollectionModule;
-			EntityDef.idmoduledefs[47] = pCollectionModule;
+			EntityDef.idmoduledefs[59] = pCollectionModule;
 
 			Property pCollection_position = new Property();
 			pCollection_position.name = "position";
@@ -23348,6 +24699,36 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), property(dropEquipItemId / 443).");
 
+			Property pCollection_fBItemId = new Property();
+			pCollection_fBItemId.name = "fBItemId";
+			pCollection_fBItemId.properUtype = 589;
+			pCollection_fBItemId.properFlags = 4;
+			pCollection_fBItemId.aliasID = 11;
+			UInt32 Collection_fBItemId_defval;
+			UInt32.TryParse("", out Collection_fBItemId_defval);
+			pCollection_fBItemId.defaultVal = Collection_fBItemId_defval;
+			pCollectionModule.propertys["fBItemId"] = pCollection_fBItemId; 
+
+			pCollectionModule.usePropertyDescrAlias = true;
+			pCollectionModule.idpropertys[(UInt16)pCollection_fBItemId.aliasID] = pCollection_fBItemId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), property(fBItemId / 589).");
+
+			Property pCollection_fBProtectTime = new Property();
+			pCollection_fBProtectTime.name = "fBProtectTime";
+			pCollection_fBProtectTime.properUtype = 601;
+			pCollection_fBProtectTime.properFlags = 4;
+			pCollection_fBProtectTime.aliasID = 7;
+			UInt32 Collection_fBProtectTime_defval;
+			UInt32.TryParse("", out Collection_fBProtectTime_defval);
+			pCollection_fBProtectTime.defaultVal = Collection_fBProtectTime_defval;
+			pCollectionModule.propertys["fBProtectTime"] = pCollection_fBProtectTime; 
+
+			pCollectionModule.usePropertyDescrAlias = true;
+			pCollectionModule.idpropertys[(UInt16)pCollection_fBProtectTime.aliasID] = pCollection_fBProtectTime;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), property(fBProtectTime / 601).");
+
 			Property pCollection_force = new Property();
 			pCollection_force.name = "force";
 			pCollection_force.properUtype = 573;
@@ -23362,6 +24743,21 @@ namespace KBEngine
 			pCollectionModule.idpropertys[(UInt16)pCollection_force.aliasID] = pCollection_force;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), property(force / 573).");
+
+			Property pCollection_fromMonsterId = new Property();
+			pCollection_fromMonsterId.name = "fromMonsterId";
+			pCollection_fromMonsterId.properUtype = 592;
+			pCollection_fromMonsterId.properFlags = 4;
+			pCollection_fromMonsterId.aliasID = 17;
+			Int32 Collection_fromMonsterId_defval;
+			Int32.TryParse("", out Collection_fromMonsterId_defval);
+			pCollection_fromMonsterId.defaultVal = Collection_fromMonsterId_defval;
+			pCollectionModule.propertys["fromMonsterId"] = pCollection_fromMonsterId; 
+
+			pCollectionModule.usePropertyDescrAlias = true;
+			pCollectionModule.idpropertys[(UInt16)pCollection_fromMonsterId.aliasID] = pCollection_fromMonsterId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), property(fromMonsterId / 592).");
 
 			Property pCollection_gameEntityId = new Property();
 			pCollection_gameEntityId.name = "gameEntityId";
@@ -23437,48 +24833,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), property(spaceNo / 49).");
 
-			List<DATATYPE_BASE> pCollection_onAfterCollect_args = new List<DATATYPE_BASE>();
-
-			Method pCollection_onAfterCollect = new Method();
-			pCollection_onAfterCollect.name = "onAfterCollect";
-			pCollection_onAfterCollect.methodUtype = 165;
-			pCollection_onAfterCollect.aliasID = 1;
-			pCollection_onAfterCollect.args = pCollection_onAfterCollect_args;
-
-			pCollectionModule.methods["onAfterCollect"] = pCollection_onAfterCollect; 
-			pCollectionModule.useMethodDescrAlias = true;
-			pCollectionModule.idmethods[(UInt16)pCollection_onAfterCollect.aliasID] = pCollection_onAfterCollect;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), method(onAfterCollect / 165).");
-
-			List<DATATYPE_BASE> pCollection_onCancelCollect_args = new List<DATATYPE_BASE>();
-
-			Method pCollection_onCancelCollect = new Method();
-			pCollection_onCancelCollect.name = "onCancelCollect";
-			pCollection_onCancelCollect.methodUtype = 164;
-			pCollection_onCancelCollect.aliasID = 2;
-			pCollection_onCancelCollect.args = pCollection_onCancelCollect_args;
-
-			pCollectionModule.methods["onCancelCollect"] = pCollection_onCancelCollect; 
-			pCollectionModule.useMethodDescrAlias = true;
-			pCollectionModule.idmethods[(UInt16)pCollection_onCancelCollect.aliasID] = pCollection_onCancelCollect;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), method(onCancelCollect / 164).");
-
-			List<DATATYPE_BASE> pCollection_onEnterCollect_args = new List<DATATYPE_BASE>();
-
-			Method pCollection_onEnterCollect = new Method();
-			pCollection_onEnterCollect.name = "onEnterCollect";
-			pCollection_onEnterCollect.methodUtype = 163;
-			pCollection_onEnterCollect.aliasID = 3;
-			pCollection_onEnterCollect.args = pCollection_onEnterCollect_args;
-
-			pCollectionModule.methods["onEnterCollect"] = pCollection_onEnterCollect; 
-			pCollectionModule.useMethodDescrAlias = true;
-			pCollectionModule.idmethods[(UInt16)pCollection_onEnterCollect.aliasID] = pCollection_onEnterCollect;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), method(onEnterCollect / 163).");
-
 			List<DATATYPE_BASE> pCollection_popDialog_args = new List<DATATYPE_BASE>();
 			pCollection_popDialog_args.Add(EntityDef.id2datatypes[8]);
 
@@ -23525,9 +24879,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), method(showPopoverMsgWithArg / 169).");
 
+			List<DATATYPE_BASE> pCollection_syncIsFBTarget_args = new List<DATATYPE_BASE>();
+			pCollection_syncIsFBTarget_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pCollection_syncIsFBTarget = new Method();
+			pCollection_syncIsFBTarget.name = "syncIsFBTarget";
+			pCollection_syncIsFBTarget.methodUtype = 1151;
+			pCollection_syncIsFBTarget.aliasID = 5;
+			pCollection_syncIsFBTarget.args = pCollection_syncIsFBTarget_args;
+
+			pCollectionModule.methods["syncIsFBTarget"] = pCollection_syncIsFBTarget; 
+			pCollectionModule.useMethodDescrAlias = true;
+			pCollectionModule.idmethods[(UInt16)pCollection_syncIsFBTarget.aliasID] = pCollection_syncIsFBTarget;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Collection), method(syncIsFBTarget / 1151).");
+
 			ScriptModule pCreationModule = new ScriptModule("Creation");
 			EntityDef.moduledefs["Creation"] = pCreationModule;
-			EntityDef.idmoduledefs[48] = pCreationModule;
+			EntityDef.idmoduledefs[60] = pCreationModule;
 
 			Property pCreation_position = new Property();
 			pCreation_position.name = "position";
@@ -23646,21 +25015,6 @@ namespace KBEngine
 			pCreationModule.idpropertys[(UInt16)pCreation_dmgArmor.aliasID] = pCreation_dmgArmor;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), property(dmgArmor / 566).");
-
-			Property pCreation_fBProtectTime = new Property();
-			pCreation_fBProtectTime.name = "fBProtectTime";
-			pCreation_fBProtectTime.properUtype = 280;
-			pCreation_fBProtectTime.properFlags = 4;
-			pCreation_fBProtectTime.aliasID = 5;
-			UInt32 Creation_fBProtectTime_defval;
-			UInt32.TryParse("", out Creation_fBProtectTime_defval);
-			pCreation_fBProtectTime.defaultVal = Creation_fBProtectTime_defval;
-			pCreationModule.propertys["fBProtectTime"] = pCreation_fBProtectTime; 
-
-			pCreationModule.usePropertyDescrAlias = true;
-			pCreationModule.idpropertys[(UInt16)pCreation_fBProtectTime.aliasID] = pCreation_fBProtectTime;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), property(fBProtectTime / 280).");
 
 			Property pCreation_force = new Property();
 			pCreation_force.name = "force";
@@ -23946,6 +25300,24 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), property(state2 / 290).");
 
+			List<DATATYPE_BASE> pCreation_drawCube_args = new List<DATATYPE_BASE>();
+			pCreation_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pCreation_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pCreation_drawCube_args.Add(EntityDef.id2datatypes[13]);
+			pCreation_drawCube_args.Add(EntityDef.id2datatypes[13]);
+
+			Method pCreation_drawCube = new Method();
+			pCreation_drawCube.name = "drawCube";
+			pCreation_drawCube.methodUtype = 754;
+			pCreation_drawCube.aliasID = 11;
+			pCreation_drawCube.args = pCreation_drawCube_args;
+
+			pCreationModule.methods["drawCube"] = pCreation_drawCube; 
+			pCreationModule.useMethodDescrAlias = true;
+			pCreationModule.idmethods[(UInt16)pCreation_drawCube.aliasID] = pCreation_drawCube;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(drawCube / 754).");
+
 			List<DATATYPE_BASE> pCreation_notifyCastingSkill_args = new List<DATATYPE_BASE>();
 			pCreation_notifyCastingSkill_args.Add(EntityDef.id2datatypes[4]);
 			pCreation_notifyCastingSkill_args.Add(EntityDef.id2datatypes[14]);
@@ -23963,7 +25335,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(notifyCastingSkill / 619).");
 
 			List<DATATYPE_BASE> pCreation_onAddAureole_args = new List<DATATYPE_BASE>();
-			pCreation_onAddAureole_args.Add(EntityDef.id2datatypes[94]);
+			pCreation_onAddAureole_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pCreation_onAddAureole = new Method();
 			pCreation_onAddAureole.name = "onAddAureole";
@@ -23978,7 +25350,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onAddAureole / 598).");
 
 			List<DATATYPE_BASE> pCreation_onAddAureoleFromOthers_args = new List<DATATYPE_BASE>();
-			pCreation_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[94]);
+			pCreation_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[100]);
 
 			Method pCreation_onAddAureoleFromOthers = new Method();
 			pCreation_onAddAureoleFromOthers.name = "onAddAureoleFromOthers";
@@ -23993,7 +25365,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onAddAureoleFromOthers / 601).");
 
 			List<DATATYPE_BASE> pCreation_onAddBuff_args = new List<DATATYPE_BASE>();
-			pCreation_onAddBuff_args.Add(EntityDef.id2datatypes[109]);
+			pCreation_onAddBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pCreation_onAddBuff = new Method();
 			pCreation_onAddBuff.name = "onAddBuff";
@@ -24094,7 +25466,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pCreation_onGetAureoleInfo_args = new List<DATATYPE_BASE>();
 			pCreation_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
-			pCreation_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[95]);
+			pCreation_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pCreation_onGetAureoleInfo = new Method();
 			pCreation_onGetAureoleInfo.name = "onGetAureoleInfo";
@@ -24110,7 +25482,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pCreation_onGetBuffInfo_args = new List<DATATYPE_BASE>();
 			pCreation_onGetBuffInfo_args.Add(EntityDef.id2datatypes[8]);
-			pCreation_onGetBuffInfo_args.Add(EntityDef.id2datatypes[110]);
+			pCreation_onGetBuffInfo_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pCreation_onGetBuffInfo = new Method();
 			pCreation_onGetBuffInfo.name = "onGetBuffInfo";
@@ -24242,7 +25614,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onShooterSkillCanUse / 622).");
 
 			List<DATATYPE_BASE> pCreation_onSkillDamage_args = new List<DATATYPE_BASE>();
-			pCreation_onSkillDamage_args.Add(EntityDef.id2datatypes[104]);
+			pCreation_onSkillDamage_args.Add(EntityDef.id2datatypes[110]);
 
 			Method pCreation_onSkillDamage = new Method();
 			pCreation_onSkillDamage.name = "onSkillDamage";
@@ -24272,7 +25644,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onStateChangedForce / 539).");
 
 			List<DATATYPE_BASE> pCreation_onUpdateAureoles_args = new List<DATATYPE_BASE>();
-			pCreation_onUpdateAureoles_args.Add(EntityDef.id2datatypes[95]);
+			pCreation_onUpdateAureoles_args.Add(EntityDef.id2datatypes[101]);
 
 			Method pCreation_onUpdateAureoles = new Method();
 			pCreation_onUpdateAureoles.name = "onUpdateAureoles";
@@ -24287,7 +25659,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onUpdateAureoles / 600).");
 
 			List<DATATYPE_BASE> pCreation_onUpdateAureolesFromOthers_args = new List<DATATYPE_BASE>();
-			pCreation_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[101]);
+			pCreation_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[107]);
 
 			Method pCreation_onUpdateAureolesFromOthers = new Method();
 			pCreation_onUpdateAureolesFromOthers.name = "onUpdateAureolesFromOthers";
@@ -24302,7 +25674,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onUpdateAureolesFromOthers / 603).");
 
 			List<DATATYPE_BASE> pCreation_onUpdateBuff_args = new List<DATATYPE_BASE>();
-			pCreation_onUpdateBuff_args.Add(EntityDef.id2datatypes[109]);
+			pCreation_onUpdateBuff_args.Add(EntityDef.id2datatypes[115]);
 
 			Method pCreation_onUpdateBuff = new Method();
 			pCreation_onUpdateBuff.name = "onUpdateBuff";
@@ -24317,7 +25689,7 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onUpdateBuff / 613).");
 
 			List<DATATYPE_BASE> pCreation_onUpdateBuffs_args = new List<DATATYPE_BASE>();
-			pCreation_onUpdateBuffs_args.Add(EntityDef.id2datatypes[110]);
+			pCreation_onUpdateBuffs_args.Add(EntityDef.id2datatypes[116]);
 
 			Method pCreation_onUpdateBuffs = new Method();
 			pCreation_onUpdateBuffs.name = "onUpdateBuffs";
@@ -24392,6 +25764,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(onUseSkill / 592).");
 
+			List<DATATYPE_BASE> pCreation_updateForbidSkillTags_args = new List<DATATYPE_BASE>();
+			pCreation_updateForbidSkillTags_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pCreation_updateForbidSkillTags = new Method();
+			pCreation_updateForbidSkillTags.name = "updateForbidSkillTags";
+			pCreation_updateForbidSkillTags.methodUtype = 1154;
+			pCreation_updateForbidSkillTags.aliasID = 15;
+			pCreation_updateForbidSkillTags.args = pCreation_updateForbidSkillTags_args;
+
+			pCreationModule.methods["updateForbidSkillTags"] = pCreation_updateForbidSkillTags; 
+			pCreationModule.useMethodDescrAlias = true;
+			pCreationModule.idmethods[(UInt16)pCreation_updateForbidSkillTags.aliasID] = pCreation_updateForbidSkillTags;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Creation), method(updateForbidSkillTags / 1154).");
+
 			List<DATATYPE_BASE> pCreation_cancelChargeSkill_args = new List<DATATYPE_BASE>();
 			pCreation_cancelChargeSkill_args.Add(EntityDef.id2datatypes[4]);
 
@@ -24442,7 +25829,7 @@ namespace KBEngine
 
 			ScriptModule pDuelFlagModule = new ScriptModule("DuelFlag");
 			EntityDef.moduledefs["DuelFlag"] = pDuelFlagModule;
-			EntityDef.idmoduledefs[49] = pDuelFlagModule;
+			EntityDef.idmoduledefs[61] = pDuelFlagModule;
 
 			Property pDuelFlag_position = new Property();
 			pDuelFlag_position.name = "position";
@@ -24518,9 +25905,1570 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(DuelFlag), property(spaceNo / 129).");
 
 			pDuelFlagModule.useMethodDescrAlias = true;
+			ScriptModule pAvatarReplicaModule = new ScriptModule("AvatarReplica");
+			EntityDef.moduledefs["AvatarReplica"] = pAvatarReplicaModule;
+			EntityDef.idmoduledefs[62] = pAvatarReplicaModule;
+
+			Property pAvatarReplica_position = new Property();
+			pAvatarReplica_position.name = "position";
+			pAvatarReplica_position.properUtype = 40000;
+			pAvatarReplica_position.properFlags = 4;
+			pAvatarReplica_position.aliasID = 1;
+			Vector3 AvatarReplica_position_defval = new Vector3();
+			pAvatarReplica_position.defaultVal = AvatarReplica_position_defval;
+			pAvatarReplicaModule.propertys["position"] = pAvatarReplica_position; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_position.aliasID] = pAvatarReplica_position;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(position / 40000).");
+
+			Property pAvatarReplica_direction = new Property();
+			pAvatarReplica_direction.name = "direction";
+			pAvatarReplica_direction.properUtype = 40001;
+			pAvatarReplica_direction.properFlags = 4;
+			pAvatarReplica_direction.aliasID = 2;
+			Vector3 AvatarReplica_direction_defval = new Vector3();
+			pAvatarReplica_direction.defaultVal = AvatarReplica_direction_defval;
+			pAvatarReplicaModule.propertys["direction"] = pAvatarReplica_direction; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_direction.aliasID] = pAvatarReplica_direction;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(direction / 40001).");
+
+			Property pAvatarReplica_spaceID = new Property();
+			pAvatarReplica_spaceID.name = "spaceID";
+			pAvatarReplica_spaceID.properUtype = 40002;
+			pAvatarReplica_spaceID.properFlags = 16;
+			pAvatarReplica_spaceID.aliasID = 3;
+			UInt32 AvatarReplica_spaceID_defval;
+			UInt32.TryParse("", out AvatarReplica_spaceID_defval);
+			pAvatarReplica_spaceID.defaultVal = AvatarReplica_spaceID_defval;
+			pAvatarReplicaModule.propertys["spaceID"] = pAvatarReplica_spaceID; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_spaceID.aliasID] = pAvatarReplica_spaceID;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(spaceID / 40002).");
+
+			Property pAvatarReplica_adjCD = new Property();
+			pAvatarReplica_adjCD.name = "adjCD";
+			pAvatarReplica_adjCD.properUtype = 461;
+			pAvatarReplica_adjCD.properFlags = 16;
+			pAvatarReplica_adjCD.aliasID = 4;
+			float AvatarReplica_adjCD_defval;
+			float.TryParse("", out AvatarReplica_adjCD_defval);
+			pAvatarReplica_adjCD.defaultVal = AvatarReplica_adjCD_defval;
+			pAvatarReplicaModule.propertys["adjCD"] = pAvatarReplica_adjCD; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_adjCD.aliasID] = pAvatarReplica_adjCD;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(adjCD / 461).");
+
+			Property pAvatarReplica_antiFatal = new Property();
+			pAvatarReplica_antiFatal.name = "antiFatal";
+			pAvatarReplica_antiFatal.properUtype = 493;
+			pAvatarReplica_antiFatal.properFlags = 16;
+			pAvatarReplica_antiFatal.aliasID = 5;
+			Int32 AvatarReplica_antiFatal_defval;
+			Int32.TryParse("0", out AvatarReplica_antiFatal_defval);
+			pAvatarReplica_antiFatal.defaultVal = AvatarReplica_antiFatal_defval;
+			pAvatarReplicaModule.propertys["antiFatal"] = pAvatarReplica_antiFatal; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_antiFatal.aliasID] = pAvatarReplica_antiFatal;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(antiFatal / 493).");
+
+			Property pAvatarReplica_appearance = new Property();
+			pAvatarReplica_appearance.name = "appearance";
+			pAvatarReplica_appearance.properUtype = 366;
+			pAvatarReplica_appearance.properFlags = 128;
+			pAvatarReplica_appearance.aliasID = 6;
+			pAvatarReplica_appearance.defaultVal = EntityDef.id2datatypes[33].parseDefaultValStr("");
+			pAvatarReplicaModule.propertys["appearance"] = pAvatarReplica_appearance; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_appearance.aliasID] = pAvatarReplica_appearance;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(appearance / 366).");
+
+			Property pAvatarReplica_arType = new Property();
+			pAvatarReplica_arType.name = "arType";
+			pAvatarReplica_arType.properUtype = 358;
+			pAvatarReplica_arType.properFlags = 128;
+			pAvatarReplica_arType.aliasID = 7;
+			Byte AvatarReplica_arType_defval;
+			Byte.TryParse("", out AvatarReplica_arType_defval);
+			pAvatarReplica_arType.defaultVal = AvatarReplica_arType_defval;
+			pAvatarReplicaModule.propertys["arType"] = pAvatarReplica_arType; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_arType.aliasID] = pAvatarReplica_arType;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(arType / 358).");
+
+			Property pAvatarReplica_avatarId = new Property();
+			pAvatarReplica_avatarId.name = "avatarId";
+			pAvatarReplica_avatarId.properUtype = 347;
+			pAvatarReplica_avatarId.properFlags = 128;
+			pAvatarReplica_avatarId.aliasID = 8;
+			Int32 AvatarReplica_avatarId_defval;
+			Int32.TryParse("", out AvatarReplica_avatarId_defval);
+			pAvatarReplica_avatarId.defaultVal = AvatarReplica_avatarId_defval;
+			pAvatarReplicaModule.propertys["avatarId"] = pAvatarReplica_avatarId; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_avatarId.aliasID] = pAvatarReplica_avatarId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(avatarId / 347).");
+
+			Property pAvatarReplica_bePushedSpeed = new Property();
+			pAvatarReplica_bePushedSpeed.name = "bePushedSpeed";
+			pAvatarReplica_bePushedSpeed.properUtype = 504;
+			pAvatarReplica_bePushedSpeed.properFlags = 4;
+			pAvatarReplica_bePushedSpeed.aliasID = 9;
+			float AvatarReplica_bePushedSpeed_defval;
+			float.TryParse("", out AvatarReplica_bePushedSpeed_defval);
+			pAvatarReplica_bePushedSpeed.defaultVal = AvatarReplica_bePushedSpeed_defval;
+			pAvatarReplicaModule.propertys["bePushedSpeed"] = pAvatarReplica_bePushedSpeed; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_bePushedSpeed.aliasID] = pAvatarReplica_bePushedSpeed;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(bePushedSpeed / 504).");
+
+			Property pAvatarReplica_bornState = new Property();
+			pAvatarReplica_bornState.name = "bornState";
+			pAvatarReplica_bornState.properUtype = 386;
+			pAvatarReplica_bornState.properFlags = 128;
+			pAvatarReplica_bornState.aliasID = 10;
+			Byte AvatarReplica_bornState_defval;
+			Byte.TryParse("0", out AvatarReplica_bornState_defval);
+			pAvatarReplica_bornState.defaultVal = AvatarReplica_bornState_defval;
+			pAvatarReplicaModule.propertys["bornState"] = pAvatarReplica_bornState; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_bornState.aliasID] = pAvatarReplica_bornState;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(bornState / 386).");
+
+			Property pAvatarReplica_dmgArmor = new Property();
+			pAvatarReplica_dmgArmor.name = "dmgArmor";
+			pAvatarReplica_dmgArmor.properUtype = 502;
+			pAvatarReplica_dmgArmor.properFlags = 16;
+			pAvatarReplica_dmgArmor.aliasID = 11;
+			float AvatarReplica_dmgArmor_defval;
+			float.TryParse("0", out AvatarReplica_dmgArmor_defval);
+			pAvatarReplica_dmgArmor.defaultVal = AvatarReplica_dmgArmor_defval;
+			pAvatarReplicaModule.propertys["dmgArmor"] = pAvatarReplica_dmgArmor; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_dmgArmor.aliasID] = pAvatarReplica_dmgArmor;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(dmgArmor / 502).");
+
+			Property pAvatarReplica_firstHateTargetId = new Property();
+			pAvatarReplica_firstHateTargetId.name = "firstHateTargetId";
+			pAvatarReplica_firstHateTargetId.properUtype = 388;
+			pAvatarReplica_firstHateTargetId.properFlags = 128;
+			pAvatarReplica_firstHateTargetId.aliasID = 12;
+			Int32 AvatarReplica_firstHateTargetId_defval;
+			Int32.TryParse("0", out AvatarReplica_firstHateTargetId_defval);
+			pAvatarReplica_firstHateTargetId.defaultVal = AvatarReplica_firstHateTargetId_defval;
+			pAvatarReplicaModule.propertys["firstHateTargetId"] = pAvatarReplica_firstHateTargetId; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_firstHateTargetId.aliasID] = pAvatarReplica_firstHateTargetId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(firstHateTargetId / 388).");
+
+			Property pAvatarReplica_force = new Property();
+			pAvatarReplica_force.name = "force";
+			pAvatarReplica_force.properUtype = 547;
+			pAvatarReplica_force.properFlags = 4;
+			pAvatarReplica_force.aliasID = 13;
+			Int32 AvatarReplica_force_defval;
+			Int32.TryParse("", out AvatarReplica_force_defval);
+			pAvatarReplica_force.defaultVal = AvatarReplica_force_defval;
+			pAvatarReplicaModule.propertys["force"] = pAvatarReplica_force; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_force.aliasID] = pAvatarReplica_force;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(force / 547).");
+
+			Property pAvatarReplica_fullHp = new Property();
+			pAvatarReplica_fullHp.name = "fullHp";
+			pAvatarReplica_fullHp.properUtype = 433;
+			pAvatarReplica_fullHp.properFlags = 4;
+			pAvatarReplica_fullHp.aliasID = 14;
+			Int32 AvatarReplica_fullHp_defval;
+			Int32.TryParse("", out AvatarReplica_fullHp_defval);
+			pAvatarReplica_fullHp.defaultVal = AvatarReplica_fullHp_defval;
+			pAvatarReplicaModule.propertys["fullHp"] = pAvatarReplica_fullHp; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_fullHp.aliasID] = pAvatarReplica_fullHp;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(fullHp / 433).");
+
+			Property pAvatarReplica_fullMp = new Property();
+			pAvatarReplica_fullMp.name = "fullMp";
+			pAvatarReplica_fullMp.properUtype = 458;
+			pAvatarReplica_fullMp.properFlags = 4;
+			pAvatarReplica_fullMp.aliasID = 15;
+			Int32 AvatarReplica_fullMp_defval;
+			Int32.TryParse("", out AvatarReplica_fullMp_defval);
+			pAvatarReplica_fullMp.defaultVal = AvatarReplica_fullMp_defval;
+			pAvatarReplicaModule.propertys["fullMp"] = pAvatarReplica_fullMp; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_fullMp.aliasID] = pAvatarReplica_fullMp;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(fullMp / 458).");
+
+			Property pAvatarReplica_gameEntityId = new Property();
+			pAvatarReplica_gameEntityId.name = "gameEntityId";
+			pAvatarReplica_gameEntityId.properUtype = 551;
+			pAvatarReplica_gameEntityId.properFlags = 4;
+			pAvatarReplica_gameEntityId.aliasID = 16;
+			Int64 AvatarReplica_gameEntityId_defval;
+			Int64.TryParse("0", out AvatarReplica_gameEntityId_defval);
+			pAvatarReplica_gameEntityId.defaultVal = AvatarReplica_gameEntityId_defval;
+			pAvatarReplicaModule.propertys["gameEntityId"] = pAvatarReplica_gameEntityId; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_gameEntityId.aliasID] = pAvatarReplica_gameEntityId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(gameEntityId / 551).");
+
+			Property pAvatarReplica_hp = new Property();
+			pAvatarReplica_hp.name = "hp";
+			pAvatarReplica_hp.properUtype = 440;
+			pAvatarReplica_hp.properFlags = 4;
+			pAvatarReplica_hp.aliasID = 17;
+			Int32 AvatarReplica_hp_defval;
+			Int32.TryParse("", out AvatarReplica_hp_defval);
+			pAvatarReplica_hp.defaultVal = AvatarReplica_hp_defval;
+			pAvatarReplicaModule.propertys["hp"] = pAvatarReplica_hp; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_hp.aliasID] = pAvatarReplica_hp;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(hp / 440).");
+
+			Property pAvatarReplica_ignoreArmor = new Property();
+			pAvatarReplica_ignoreArmor.name = "ignoreArmor";
+			pAvatarReplica_ignoreArmor.properUtype = 501;
+			pAvatarReplica_ignoreArmor.properFlags = 16;
+			pAvatarReplica_ignoreArmor.aliasID = 18;
+			float AvatarReplica_ignoreArmor_defval;
+			float.TryParse("0", out AvatarReplica_ignoreArmor_defval);
+			pAvatarReplica_ignoreArmor.defaultVal = AvatarReplica_ignoreArmor_defval;
+			pAvatarReplicaModule.propertys["ignoreArmor"] = pAvatarReplica_ignoreArmor; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_ignoreArmor.aliasID] = pAvatarReplica_ignoreArmor;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(ignoreArmor / 501).");
+
+			Property pAvatarReplica_isBoss = new Property();
+			pAvatarReplica_isBoss.name = "isBoss";
+			pAvatarReplica_isBoss.properUtype = 377;
+			pAvatarReplica_isBoss.properFlags = 4;
+			pAvatarReplica_isBoss.aliasID = 19;
+			Byte AvatarReplica_isBoss_defval;
+			Byte.TryParse("0", out AvatarReplica_isBoss_defval);
+			pAvatarReplica_isBoss.defaultVal = AvatarReplica_isBoss_defval;
+			pAvatarReplicaModule.propertys["isBoss"] = pAvatarReplica_isBoss; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_isBoss.aliasID] = pAvatarReplica_isBoss;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(isBoss / 377).");
+
+			Property pAvatarReplica_isWitnessComplete = new Property();
+			pAvatarReplica_isWitnessComplete.name = "isWitnessComplete";
+			pAvatarReplica_isWitnessComplete.properUtype = 392;
+			pAvatarReplica_isWitnessComplete.properFlags = 4;
+			pAvatarReplica_isWitnessComplete.aliasID = 20;
+			Byte AvatarReplica_isWitnessComplete_defval;
+			Byte.TryParse("2", out AvatarReplica_isWitnessComplete_defval);
+			pAvatarReplica_isWitnessComplete.defaultVal = AvatarReplica_isWitnessComplete_defval;
+			pAvatarReplicaModule.propertys["isWitnessComplete"] = pAvatarReplica_isWitnessComplete; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_isWitnessComplete.aliasID] = pAvatarReplica_isWitnessComplete;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(isWitnessComplete / 392).");
+
+			Property pAvatarReplica_level = new Property();
+			pAvatarReplica_level.name = "level";
+			pAvatarReplica_level.properUtype = 406;
+			pAvatarReplica_level.properFlags = 4;
+			pAvatarReplica_level.aliasID = 21;
+			UInt32 AvatarReplica_level_defval;
+			UInt32.TryParse("1", out AvatarReplica_level_defval);
+			pAvatarReplica_level.defaultVal = AvatarReplica_level_defval;
+			pAvatarReplicaModule.propertys["level"] = pAvatarReplica_level; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_level.aliasID] = pAvatarReplica_level;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(level / 406).");
+
+			Property pAvatarReplica_mulCD = new Property();
+			pAvatarReplica_mulCD.name = "mulCD";
+			pAvatarReplica_mulCD.properUtype = 462;
+			pAvatarReplica_mulCD.properFlags = 16;
+			pAvatarReplica_mulCD.aliasID = 22;
+			float AvatarReplica_mulCD_defval;
+			float.TryParse("", out AvatarReplica_mulCD_defval);
+			pAvatarReplica_mulCD.defaultVal = AvatarReplica_mulCD_defval;
+			pAvatarReplicaModule.propertys["mulCD"] = pAvatarReplica_mulCD; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_mulCD.aliasID] = pAvatarReplica_mulCD;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(mulCD / 462).");
+
+			Property pAvatarReplica_mulSpeed = new Property();
+			pAvatarReplica_mulSpeed.name = "mulSpeed";
+			pAvatarReplica_mulSpeed.properUtype = 525;
+			pAvatarReplica_mulSpeed.properFlags = 8;
+			pAvatarReplica_mulSpeed.aliasID = 23;
+			float AvatarReplica_mulSpeed_defval;
+			float.TryParse("", out AvatarReplica_mulSpeed_defval);
+			pAvatarReplica_mulSpeed.defaultVal = AvatarReplica_mulSpeed_defval;
+			pAvatarReplicaModule.propertys["mulSpeed"] = pAvatarReplica_mulSpeed; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_mulSpeed.aliasID] = pAvatarReplica_mulSpeed;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(mulSpeed / 525).");
+
+			Property pAvatarReplica_name = new Property();
+			pAvatarReplica_name.name = "name";
+			pAvatarReplica_name.properUtype = 361;
+			pAvatarReplica_name.properFlags = 128;
+			pAvatarReplica_name.aliasID = 24;
+			string AvatarReplica_name_defval = "";
+			pAvatarReplica_name.defaultVal = AvatarReplica_name_defval;
+			pAvatarReplicaModule.propertys["name"] = pAvatarReplica_name; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_name.aliasID] = pAvatarReplica_name;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(name / 361).");
+
+			Property pAvatarReplica_replicaId = new Property();
+			pAvatarReplica_replicaId.name = "replicaId";
+			pAvatarReplica_replicaId.properUtype = 357;
+			pAvatarReplica_replicaId.properFlags = 128;
+			pAvatarReplica_replicaId.aliasID = 25;
+			Int32 AvatarReplica_replicaId_defval;
+			Int32.TryParse("", out AvatarReplica_replicaId_defval);
+			pAvatarReplica_replicaId.defaultVal = AvatarReplica_replicaId_defval;
+			pAvatarReplicaModule.propertys["replicaId"] = pAvatarReplica_replicaId; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_replicaId.aliasID] = pAvatarReplica_replicaId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(replicaId / 357).");
+
+			Property pAvatarReplica_school = new Property();
+			pAvatarReplica_school.name = "school";
+			pAvatarReplica_school.properUtype = 362;
+			pAvatarReplica_school.properFlags = 128;
+			pAvatarReplica_school.aliasID = 26;
+			UInt16 AvatarReplica_school_defval;
+			UInt16.TryParse("", out AvatarReplica_school_defval);
+			pAvatarReplica_school.defaultVal = AvatarReplica_school_defval;
+			pAvatarReplicaModule.propertys["school"] = pAvatarReplica_school; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_school.aliasID] = pAvatarReplica_school;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(school / 362).");
+
+			Property pAvatarReplica_selectedTargetId = new Property();
+			pAvatarReplica_selectedTargetId.name = "selectedTargetId";
+			pAvatarReplica_selectedTargetId.properUtype = 528;
+			pAvatarReplica_selectedTargetId.properFlags = 4;
+			pAvatarReplica_selectedTargetId.aliasID = 27;
+			Int32 AvatarReplica_selectedTargetId_defval;
+			Int32.TryParse("", out AvatarReplica_selectedTargetId_defval);
+			pAvatarReplica_selectedTargetId.defaultVal = AvatarReplica_selectedTargetId_defval;
+			pAvatarReplicaModule.propertys["selectedTargetId"] = pAvatarReplica_selectedTargetId; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_selectedTargetId.aliasID] = pAvatarReplica_selectedTargetId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(selectedTargetId / 528).");
+
+			Property pAvatarReplica_sex = new Property();
+			pAvatarReplica_sex.name = "sex";
+			pAvatarReplica_sex.properUtype = 364;
+			pAvatarReplica_sex.properFlags = 128;
+			pAvatarReplica_sex.aliasID = 28;
+			Byte AvatarReplica_sex_defval;
+			Byte.TryParse("", out AvatarReplica_sex_defval);
+			pAvatarReplica_sex.defaultVal = AvatarReplica_sex_defval;
+			pAvatarReplicaModule.propertys["sex"] = pAvatarReplica_sex; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_sex.aliasID] = pAvatarReplica_sex;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(sex / 364).");
+
+			Property pAvatarReplica_siegeWarCamp = new Property();
+			pAvatarReplica_siegeWarCamp.name = "siegeWarCamp";
+			pAvatarReplica_siegeWarCamp.properUtype = 562;
+			pAvatarReplica_siegeWarCamp.properFlags = 4;
+			pAvatarReplica_siegeWarCamp.aliasID = 33;
+			Int32 AvatarReplica_siegeWarCamp_defval;
+			Int32.TryParse("0", out AvatarReplica_siegeWarCamp_defval);
+			pAvatarReplica_siegeWarCamp.defaultVal = AvatarReplica_siegeWarCamp_defval;
+			pAvatarReplicaModule.propertys["siegeWarCamp"] = pAvatarReplica_siegeWarCamp; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_siegeWarCamp.aliasID] = pAvatarReplica_siegeWarCamp;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(siegeWarCamp / 562).");
+
+			Property pAvatarReplica_spaceNo = new Property();
+			pAvatarReplica_spaceNo.name = "spaceNo";
+			pAvatarReplica_spaceNo.properUtype = 529;
+			pAvatarReplica_spaceNo.properFlags = 16;
+			pAvatarReplica_spaceNo.aliasID = 29;
+			UInt32 AvatarReplica_spaceNo_defval;
+			UInt32.TryParse("", out AvatarReplica_spaceNo_defval);
+			pAvatarReplica_spaceNo.defaultVal = AvatarReplica_spaceNo_defval;
+			pAvatarReplicaModule.propertys["spaceNo"] = pAvatarReplica_spaceNo; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_spaceNo.aliasID] = pAvatarReplica_spaceNo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(spaceNo / 529).");
+
+			Property pAvatarReplica_speed = new Property();
+			pAvatarReplica_speed.name = "speed";
+			pAvatarReplica_speed.properUtype = 505;
+			pAvatarReplica_speed.properFlags = 4;
+			pAvatarReplica_speed.aliasID = 30;
+			float AvatarReplica_speed_defval;
+			float.TryParse("", out AvatarReplica_speed_defval);
+			pAvatarReplica_speed.defaultVal = AvatarReplica_speed_defval;
+			pAvatarReplicaModule.propertys["speed"] = pAvatarReplica_speed; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_speed.aliasID] = pAvatarReplica_speed;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(speed / 505).");
+
+			Property pAvatarReplica_state = new Property();
+			pAvatarReplica_state.name = "state";
+			pAvatarReplica_state.properUtype = 407;
+			pAvatarReplica_state.properFlags = 4;
+			pAvatarReplica_state.aliasID = 31;
+			Int64 AvatarReplica_state_defval;
+			Int64.TryParse("1", out AvatarReplica_state_defval);
+			pAvatarReplica_state.defaultVal = AvatarReplica_state_defval;
+			pAvatarReplicaModule.propertys["state"] = pAvatarReplica_state; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_state.aliasID] = pAvatarReplica_state;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(state / 407).");
+
+			Property pAvatarReplica_state2 = new Property();
+			pAvatarReplica_state2.name = "state2";
+			pAvatarReplica_state2.properUtype = 412;
+			pAvatarReplica_state2.properFlags = 4;
+			pAvatarReplica_state2.aliasID = 32;
+			Int64 AvatarReplica_state2_defval;
+			Int64.TryParse("0", out AvatarReplica_state2_defval);
+			pAvatarReplica_state2.defaultVal = AvatarReplica_state2_defval;
+			pAvatarReplicaModule.propertys["state2"] = pAvatarReplica_state2; 
+
+			pAvatarReplicaModule.usePropertyDescrAlias = true;
+			pAvatarReplicaModule.idpropertys[(UInt16)pAvatarReplica_state2.aliasID] = pAvatarReplica_state2;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), property(state2 / 412).");
+
+			List<DATATYPE_BASE> pAvatarReplica_aiChatToPlayer_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_aiChatToPlayer_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_aiChatToPlayer_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatarReplica_aiChatToPlayer = new Method();
+			pAvatarReplica_aiChatToPlayer.name = "aiChatToPlayer";
+			pAvatarReplica_aiChatToPlayer.methodUtype = 1099;
+			pAvatarReplica_aiChatToPlayer.aliasID = 1;
+			pAvatarReplica_aiChatToPlayer.args = pAvatarReplica_aiChatToPlayer_args;
+
+			pAvatarReplicaModule.methods["aiChatToPlayer"] = pAvatarReplica_aiChatToPlayer; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_aiChatToPlayer.aliasID] = pAvatarReplica_aiChatToPlayer;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(aiChatToPlayer / 1099).");
+
+			List<DATATYPE_BASE> pAvatarReplica_drawCube_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pAvatarReplica_drawCube_args.Add(EntityDef.id2datatypes[16]);
+			pAvatarReplica_drawCube_args.Add(EntityDef.id2datatypes[13]);
+			pAvatarReplica_drawCube_args.Add(EntityDef.id2datatypes[13]);
+
+			Method pAvatarReplica_drawCube = new Method();
+			pAvatarReplica_drawCube.name = "drawCube";
+			pAvatarReplica_drawCube.methodUtype = 1149;
+			pAvatarReplica_drawCube.aliasID = 30;
+			pAvatarReplica_drawCube.args = pAvatarReplica_drawCube_args;
+
+			pAvatarReplicaModule.methods["drawCube"] = pAvatarReplica_drawCube; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_drawCube.aliasID] = pAvatarReplica_drawCube;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(drawCube / 1149).");
+
+			List<DATATYPE_BASE> pAvatarReplica_notifyCastingSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_notifyCastingSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_notifyCastingSkill_args.Add(EntityDef.id2datatypes[14]);
+
+			Method pAvatarReplica_notifyCastingSkill = new Method();
+			pAvatarReplica_notifyCastingSkill.name = "notifyCastingSkill";
+			pAvatarReplica_notifyCastingSkill.methodUtype = 1126;
+			pAvatarReplica_notifyCastingSkill.aliasID = 2;
+			pAvatarReplica_notifyCastingSkill.args = pAvatarReplica_notifyCastingSkill_args;
+
+			pAvatarReplicaModule.methods["notifyCastingSkill"] = pAvatarReplica_notifyCastingSkill; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_notifyCastingSkill.aliasID] = pAvatarReplica_notifyCastingSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(notifyCastingSkill / 1126).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onAddAureole_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onAddAureole_args.Add(EntityDef.id2datatypes[100]);
+
+			Method pAvatarReplica_onAddAureole = new Method();
+			pAvatarReplica_onAddAureole.name = "onAddAureole";
+			pAvatarReplica_onAddAureole.methodUtype = 1110;
+			pAvatarReplica_onAddAureole.aliasID = 3;
+			pAvatarReplica_onAddAureole.args = pAvatarReplica_onAddAureole_args;
+
+			pAvatarReplicaModule.methods["onAddAureole"] = pAvatarReplica_onAddAureole; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onAddAureole.aliasID] = pAvatarReplica_onAddAureole;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onAddAureole / 1110).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onAddAureoleFromOthers_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onAddAureoleFromOthers_args.Add(EntityDef.id2datatypes[100]);
+
+			Method pAvatarReplica_onAddAureoleFromOthers = new Method();
+			pAvatarReplica_onAddAureoleFromOthers.name = "onAddAureoleFromOthers";
+			pAvatarReplica_onAddAureoleFromOthers.methodUtype = 1113;
+			pAvatarReplica_onAddAureoleFromOthers.aliasID = 4;
+			pAvatarReplica_onAddAureoleFromOthers.args = pAvatarReplica_onAddAureoleFromOthers_args;
+
+			pAvatarReplicaModule.methods["onAddAureoleFromOthers"] = pAvatarReplica_onAddAureoleFromOthers; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onAddAureoleFromOthers.aliasID] = pAvatarReplica_onAddAureoleFromOthers;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onAddAureoleFromOthers / 1113).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onAddBuff_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onAddBuff_args.Add(EntityDef.id2datatypes[115]);
+
+			Method pAvatarReplica_onAddBuff = new Method();
+			pAvatarReplica_onAddBuff.name = "onAddBuff";
+			pAvatarReplica_onAddBuff.methodUtype = 1120;
+			pAvatarReplica_onAddBuff.aliasID = 5;
+			pAvatarReplica_onAddBuff.args = pAvatarReplica_onAddBuff_args;
+
+			pAvatarReplicaModule.methods["onAddBuff"] = pAvatarReplica_onAddBuff; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onAddBuff.aliasID] = pAvatarReplica_onAddBuff;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onAddBuff / 1120).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onAddPassiveSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onAddPassiveSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onAddPassiveSkill_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatarReplica_onAddPassiveSkill = new Method();
+			pAvatarReplica_onAddPassiveSkill.name = "onAddPassiveSkill";
+			pAvatarReplica_onAddPassiveSkill.methodUtype = 1104;
+			pAvatarReplica_onAddPassiveSkill.aliasID = 6;
+			pAvatarReplica_onAddPassiveSkill.args = pAvatarReplica_onAddPassiveSkill_args;
+
+			pAvatarReplicaModule.methods["onAddPassiveSkill"] = pAvatarReplica_onAddPassiveSkill; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onAddPassiveSkill.aliasID] = pAvatarReplica_onAddPassiveSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onAddPassiveSkill / 1104).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onAddSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onAddSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onAddSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onAddSkill_args.Add(EntityDef.id2datatypes[2]);
+			pAvatarReplica_onAddSkill_args.Add(EntityDef.id2datatypes[14]);
+			pAvatarReplica_onAddSkill_args.Add(EntityDef.id2datatypes[13]);
+			pAvatarReplica_onAddSkill_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatarReplica_onAddSkill = new Method();
+			pAvatarReplica_onAddSkill.name = "onAddSkill";
+			pAvatarReplica_onAddSkill.methodUtype = 1103;
+			pAvatarReplica_onAddSkill.aliasID = 7;
+			pAvatarReplica_onAddSkill.args = pAvatarReplica_onAddSkill_args;
+
+			pAvatarReplicaModule.methods["onAddSkill"] = pAvatarReplica_onAddSkill; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onAddSkill.aliasID] = pAvatarReplica_onAddSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onAddSkill / 1103).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onBornAction_args = new List<DATATYPE_BASE>();
+
+			Method pAvatarReplica_onBornAction = new Method();
+			pAvatarReplica_onBornAction.name = "onBornAction";
+			pAvatarReplica_onBornAction.methodUtype = 1165;
+			pAvatarReplica_onBornAction.aliasID = 32;
+			pAvatarReplica_onBornAction.args = pAvatarReplica_onBornAction_args;
+
+			pAvatarReplicaModule.methods["onBornAction"] = pAvatarReplica_onBornAction; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onBornAction.aliasID] = pAvatarReplica_onBornAction;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onBornAction / 1165).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onBreakCastingSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onBreakCastingSkill_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onBreakCastingSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onBreakCastingSkill_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_onBreakCastingSkill = new Method();
+			pAvatarReplica_onBreakCastingSkill.name = "onBreakCastingSkill";
+			pAvatarReplica_onBreakCastingSkill.methodUtype = 1117;
+			pAvatarReplica_onBreakCastingSkill.aliasID = 8;
+			pAvatarReplica_onBreakCastingSkill.args = pAvatarReplica_onBreakCastingSkill_args;
+
+			pAvatarReplicaModule.methods["onBreakCastingSkill"] = pAvatarReplica_onBreakCastingSkill; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onBreakCastingSkill.aliasID] = pAvatarReplica_onBreakCastingSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onBreakCastingSkill / 1117).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onBreakChannelingSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onBreakChannelingSkill_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onBreakChannelingSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onBreakChannelingSkill_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_onBreakChannelingSkill = new Method();
+			pAvatarReplica_onBreakChannelingSkill.name = "onBreakChannelingSkill";
+			pAvatarReplica_onBreakChannelingSkill.methodUtype = 1118;
+			pAvatarReplica_onBreakChannelingSkill.aliasID = 9;
+			pAvatarReplica_onBreakChannelingSkill.args = pAvatarReplica_onBreakChannelingSkill_args;
+
+			pAvatarReplicaModule.methods["onBreakChannelingSkill"] = pAvatarReplica_onBreakChannelingSkill; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onBreakChannelingSkill.aliasID] = pAvatarReplica_onBreakChannelingSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onBreakChannelingSkill / 1118).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onDead_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onDead_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_onDead = new Method();
+			pAvatarReplica_onDead.name = "onDead";
+			pAvatarReplica_onDead.methodUtype = 1098;
+			pAvatarReplica_onDead.aliasID = 10;
+			pAvatarReplica_onDead.args = pAvatarReplica_onDead_args;
+
+			pAvatarReplicaModule.methods["onDead"] = pAvatarReplica_onDead; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onDead.aliasID] = pAvatarReplica_onDead;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onDead / 1098).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onExitShiftByConflict_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onExitShiftByConflict_args.Add(EntityDef.id2datatypes[16]);
+
+			Method pAvatarReplica_onExitShiftByConflict = new Method();
+			pAvatarReplica_onExitShiftByConflict.name = "onExitShiftByConflict";
+			pAvatarReplica_onExitShiftByConflict.methodUtype = 1128;
+			pAvatarReplica_onExitShiftByConflict.aliasID = 11;
+			pAvatarReplica_onExitShiftByConflict.args = pAvatarReplica_onExitShiftByConflict_args;
+
+			pAvatarReplicaModule.methods["onExitShiftByConflict"] = pAvatarReplica_onExitShiftByConflict; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onExitShiftByConflict.aliasID] = pAvatarReplica_onExitShiftByConflict;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onExitShiftByConflict / 1128).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onGetAureoleInfo_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onGetAureoleInfo_args.Add(EntityDef.id2datatypes[101]);
+
+			Method pAvatarReplica_onGetAureoleInfo = new Method();
+			pAvatarReplica_onGetAureoleInfo.name = "onGetAureoleInfo";
+			pAvatarReplica_onGetAureoleInfo.methodUtype = 1124;
+			pAvatarReplica_onGetAureoleInfo.aliasID = 12;
+			pAvatarReplica_onGetAureoleInfo.args = pAvatarReplica_onGetAureoleInfo_args;
+
+			pAvatarReplicaModule.methods["onGetAureoleInfo"] = pAvatarReplica_onGetAureoleInfo; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onGetAureoleInfo.aliasID] = pAvatarReplica_onGetAureoleInfo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onGetAureoleInfo / 1124).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onGetBuffInfo_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onGetBuffInfo_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onGetBuffInfo_args.Add(EntityDef.id2datatypes[116]);
+
+			Method pAvatarReplica_onGetBuffInfo = new Method();
+			pAvatarReplica_onGetBuffInfo.name = "onGetBuffInfo";
+			pAvatarReplica_onGetBuffInfo.methodUtype = 1123;
+			pAvatarReplica_onGetBuffInfo.aliasID = 13;
+			pAvatarReplica_onGetBuffInfo.args = pAvatarReplica_onGetBuffInfo_args;
+
+			pAvatarReplicaModule.methods["onGetBuffInfo"] = pAvatarReplica_onGetBuffInfo; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onGetBuffInfo.aliasID] = pAvatarReplica_onGetBuffInfo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onGetBuffInfo / 1123).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onMessage_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onMessage_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onMessage_args.Add(EntityDef.id2datatypes[10001]);
+
+			Method pAvatarReplica_onMessage = new Method();
+			pAvatarReplica_onMessage.name = "onMessage";
+			pAvatarReplica_onMessage.methodUtype = 1116;
+			pAvatarReplica_onMessage.aliasID = 14;
+			pAvatarReplica_onMessage.args = pAvatarReplica_onMessage_args;
+
+			pAvatarReplicaModule.methods["onMessage"] = pAvatarReplica_onMessage; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onMessage.aliasID] = pAvatarReplica_onMessage;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onMessage / 1116).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onOthersSkillDamage_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onOthersSkillDamage_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onOthersSkillDamage_args.Add(EntityDef.id2datatypes[10004]);
+
+			Method pAvatarReplica_onOthersSkillDamage = new Method();
+			pAvatarReplica_onOthersSkillDamage.name = "onOthersSkillDamage";
+			pAvatarReplica_onOthersSkillDamage.methodUtype = 1109;
+			pAvatarReplica_onOthersSkillDamage.aliasID = 15;
+			pAvatarReplica_onOthersSkillDamage.args = pAvatarReplica_onOthersSkillDamage_args;
+
+			pAvatarReplicaModule.methods["onOthersSkillDamage"] = pAvatarReplica_onOthersSkillDamage; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onOthersSkillDamage.aliasID] = pAvatarReplica_onOthersSkillDamage;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onOthersSkillDamage / 1109).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onRemoveAureole_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onRemoveAureole_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_onRemoveAureole = new Method();
+			pAvatarReplica_onRemoveAureole.name = "onRemoveAureole";
+			pAvatarReplica_onRemoveAureole.methodUtype = 1111;
+			pAvatarReplica_onRemoveAureole.aliasID = 16;
+			pAvatarReplica_onRemoveAureole.args = pAvatarReplica_onRemoveAureole_args;
+
+			pAvatarReplicaModule.methods["onRemoveAureole"] = pAvatarReplica_onRemoveAureole; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onRemoveAureole.aliasID] = pAvatarReplica_onRemoveAureole;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onRemoveAureole / 1111).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onRemoveAureoleFromOthers_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onRemoveAureoleFromOthers_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_onRemoveAureoleFromOthers = new Method();
+			pAvatarReplica_onRemoveAureoleFromOthers.name = "onRemoveAureoleFromOthers";
+			pAvatarReplica_onRemoveAureoleFromOthers.methodUtype = 1114;
+			pAvatarReplica_onRemoveAureoleFromOthers.aliasID = 17;
+			pAvatarReplica_onRemoveAureoleFromOthers.args = pAvatarReplica_onRemoveAureoleFromOthers_args;
+
+			pAvatarReplicaModule.methods["onRemoveAureoleFromOthers"] = pAvatarReplica_onRemoveAureoleFromOthers; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onRemoveAureoleFromOthers.aliasID] = pAvatarReplica_onRemoveAureoleFromOthers;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onRemoveAureoleFromOthers / 1114).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onRemoveBuff_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onRemoveBuff_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onRemoveBuff_args.Add(EntityDef.id2datatypes[10006]);
+
+			Method pAvatarReplica_onRemoveBuff = new Method();
+			pAvatarReplica_onRemoveBuff.name = "onRemoveBuff";
+			pAvatarReplica_onRemoveBuff.methodUtype = 1121;
+			pAvatarReplica_onRemoveBuff.aliasID = 18;
+			pAvatarReplica_onRemoveBuff.args = pAvatarReplica_onRemoveBuff_args;
+
+			pAvatarReplicaModule.methods["onRemoveBuff"] = pAvatarReplica_onRemoveBuff; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onRemoveBuff.aliasID] = pAvatarReplica_onRemoveBuff;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onRemoveBuff / 1121).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onSetAddSkillCd_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[13]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pAvatarReplica_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatarReplica_onSetAddSkillCd = new Method();
+			pAvatarReplica_onSetAddSkillCd.name = "onSetAddSkillCd";
+			pAvatarReplica_onSetAddSkillCd.methodUtype = 1125;
+			pAvatarReplica_onSetAddSkillCd.aliasID = 19;
+			pAvatarReplica_onSetAddSkillCd.args = pAvatarReplica_onSetAddSkillCd_args;
+
+			pAvatarReplicaModule.methods["onSetAddSkillCd"] = pAvatarReplica_onSetAddSkillCd; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onSetAddSkillCd.aliasID] = pAvatarReplica_onSetAddSkillCd;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onSetAddSkillCd / 1125).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onShooterSkillCanUse_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onShooterSkillCanUse_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onShooterSkillCanUse_args.Add(EntityDef.id2datatypes[14]);
+			pAvatarReplica_onShooterSkillCanUse_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatarReplica_onShooterSkillCanUse = new Method();
+			pAvatarReplica_onShooterSkillCanUse.name = "onShooterSkillCanUse";
+			pAvatarReplica_onShooterSkillCanUse.methodUtype = 1127;
+			pAvatarReplica_onShooterSkillCanUse.aliasID = 20;
+			pAvatarReplica_onShooterSkillCanUse.args = pAvatarReplica_onShooterSkillCanUse_args;
+
+			pAvatarReplicaModule.methods["onShooterSkillCanUse"] = pAvatarReplica_onShooterSkillCanUse; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onShooterSkillCanUse.aliasID] = pAvatarReplica_onShooterSkillCanUse;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onShooterSkillCanUse / 1127).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onSkillDamage_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onSkillDamage_args.Add(EntityDef.id2datatypes[110]);
+
+			Method pAvatarReplica_onSkillDamage = new Method();
+			pAvatarReplica_onSkillDamage.name = "onSkillDamage";
+			pAvatarReplica_onSkillDamage.methodUtype = 1108;
+			pAvatarReplica_onSkillDamage.aliasID = 21;
+			pAvatarReplica_onSkillDamage.args = pAvatarReplica_onSkillDamage_args;
+
+			pAvatarReplicaModule.methods["onSkillDamage"] = pAvatarReplica_onSkillDamage; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onSkillDamage.aliasID] = pAvatarReplica_onSkillDamage;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onSkillDamage / 1108).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onStateChangedForce_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onStateChangedForce_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatarReplica_onStateChangedForce = new Method();
+			pAvatarReplica_onStateChangedForce.name = "onStateChangedForce";
+			pAvatarReplica_onStateChangedForce.methodUtype = 1129;
+			pAvatarReplica_onStateChangedForce.aliasID = 22;
+			pAvatarReplica_onStateChangedForce.args = pAvatarReplica_onStateChangedForce_args;
+
+			pAvatarReplicaModule.methods["onStateChangedForce"] = pAvatarReplica_onStateChangedForce; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onStateChangedForce.aliasID] = pAvatarReplica_onStateChangedForce;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onStateChangedForce / 1129).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUpdateAureoles_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUpdateAureoles_args.Add(EntityDef.id2datatypes[101]);
+
+			Method pAvatarReplica_onUpdateAureoles = new Method();
+			pAvatarReplica_onUpdateAureoles.name = "onUpdateAureoles";
+			pAvatarReplica_onUpdateAureoles.methodUtype = 1112;
+			pAvatarReplica_onUpdateAureoles.aliasID = 23;
+			pAvatarReplica_onUpdateAureoles.args = pAvatarReplica_onUpdateAureoles_args;
+
+			pAvatarReplicaModule.methods["onUpdateAureoles"] = pAvatarReplica_onUpdateAureoles; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUpdateAureoles.aliasID] = pAvatarReplica_onUpdateAureoles;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUpdateAureoles / 1112).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUpdateAureolesFromOthers_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUpdateAureolesFromOthers_args.Add(EntityDef.id2datatypes[107]);
+
+			Method pAvatarReplica_onUpdateAureolesFromOthers = new Method();
+			pAvatarReplica_onUpdateAureolesFromOthers.name = "onUpdateAureolesFromOthers";
+			pAvatarReplica_onUpdateAureolesFromOthers.methodUtype = 1115;
+			pAvatarReplica_onUpdateAureolesFromOthers.aliasID = 24;
+			pAvatarReplica_onUpdateAureolesFromOthers.args = pAvatarReplica_onUpdateAureolesFromOthers_args;
+
+			pAvatarReplicaModule.methods["onUpdateAureolesFromOthers"] = pAvatarReplica_onUpdateAureolesFromOthers; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUpdateAureolesFromOthers.aliasID] = pAvatarReplica_onUpdateAureolesFromOthers;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUpdateAureolesFromOthers / 1115).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUpdateBuff_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUpdateBuff_args.Add(EntityDef.id2datatypes[115]);
+
+			Method pAvatarReplica_onUpdateBuff = new Method();
+			pAvatarReplica_onUpdateBuff.name = "onUpdateBuff";
+			pAvatarReplica_onUpdateBuff.methodUtype = 1122;
+			pAvatarReplica_onUpdateBuff.aliasID = 25;
+			pAvatarReplica_onUpdateBuff.args = pAvatarReplica_onUpdateBuff_args;
+
+			pAvatarReplicaModule.methods["onUpdateBuff"] = pAvatarReplica_onUpdateBuff; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUpdateBuff.aliasID] = pAvatarReplica_onUpdateBuff;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUpdateBuff / 1122).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUpdateBuffs_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUpdateBuffs_args.Add(EntityDef.id2datatypes[116]);
+
+			Method pAvatarReplica_onUpdateBuffs = new Method();
+			pAvatarReplica_onUpdateBuffs.name = "onUpdateBuffs";
+			pAvatarReplica_onUpdateBuffs.methodUtype = 1119;
+			pAvatarReplica_onUpdateBuffs.aliasID = 26;
+			pAvatarReplica_onUpdateBuffs.args = pAvatarReplica_onUpdateBuffs_args;
+
+			pAvatarReplicaModule.methods["onUpdateBuffs"] = pAvatarReplica_onUpdateBuffs; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUpdateBuffs.aliasID] = pAvatarReplica_onUpdateBuffs;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUpdateBuffs / 1119).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUseCasting_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUseCasting_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onUseCasting_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onUseCasting_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onUseCasting_args.Add(EntityDef.id2datatypes[10009]);
+			pAvatarReplica_onUseCasting_args.Add(EntityDef.id2datatypes[10004]);
+			pAvatarReplica_onUseCasting_args.Add(EntityDef.id2datatypes[10009]);
+
+			Method pAvatarReplica_onUseCasting = new Method();
+			pAvatarReplica_onUseCasting.name = "onUseCasting";
+			pAvatarReplica_onUseCasting.methodUtype = 1106;
+			pAvatarReplica_onUseCasting.aliasID = 27;
+			pAvatarReplica_onUseCasting.args = pAvatarReplica_onUseCasting_args;
+
+			pAvatarReplicaModule.methods["onUseCasting"] = pAvatarReplica_onUseCasting; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUseCasting.aliasID] = pAvatarReplica_onUseCasting;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUseCasting / 1106).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUseChanneling_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[10009]);
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[10004]);
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onUseChanneling_args.Add(EntityDef.id2datatypes[10009]);
+
+			Method pAvatarReplica_onUseChanneling = new Method();
+			pAvatarReplica_onUseChanneling.name = "onUseChanneling";
+			pAvatarReplica_onUseChanneling.methodUtype = 1107;
+			pAvatarReplica_onUseChanneling.aliasID = 28;
+			pAvatarReplica_onUseChanneling.args = pAvatarReplica_onUseChanneling_args;
+
+			pAvatarReplicaModule.methods["onUseChanneling"] = pAvatarReplica_onUseChanneling; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUseChanneling.aliasID] = pAvatarReplica_onUseChanneling;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUseChanneling / 1107).");
+
+			List<DATATYPE_BASE> pAvatarReplica_onUseSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_onUseSkill_args.Add(EntityDef.id2datatypes[2]);
+			pAvatarReplica_onUseSkill_args.Add(EntityDef.id2datatypes[4]);
+			pAvatarReplica_onUseSkill_args.Add(EntityDef.id2datatypes[8]);
+			pAvatarReplica_onUseSkill_args.Add(EntityDef.id2datatypes[10009]);
+			pAvatarReplica_onUseSkill_args.Add(EntityDef.id2datatypes[10004]);
+			pAvatarReplica_onUseSkill_args.Add(EntityDef.id2datatypes[10009]);
+
+			Method pAvatarReplica_onUseSkill = new Method();
+			pAvatarReplica_onUseSkill.name = "onUseSkill";
+			pAvatarReplica_onUseSkill.methodUtype = 1105;
+			pAvatarReplica_onUseSkill.aliasID = 29;
+			pAvatarReplica_onUseSkill.args = pAvatarReplica_onUseSkill_args;
+
+			pAvatarReplicaModule.methods["onUseSkill"] = pAvatarReplica_onUseSkill; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_onUseSkill.aliasID] = pAvatarReplica_onUseSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(onUseSkill / 1105).");
+
+			List<DATATYPE_BASE> pAvatarReplica_updateForbidSkillTags_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_updateForbidSkillTags_args.Add(EntityDef.id2datatypes[10005]);
+
+			Method pAvatarReplica_updateForbidSkillTags = new Method();
+			pAvatarReplica_updateForbidSkillTags.name = "updateForbidSkillTags";
+			pAvatarReplica_updateForbidSkillTags.methodUtype = 1155;
+			pAvatarReplica_updateForbidSkillTags.aliasID = 31;
+			pAvatarReplica_updateForbidSkillTags.args = pAvatarReplica_updateForbidSkillTags_args;
+
+			pAvatarReplicaModule.methods["updateForbidSkillTags"] = pAvatarReplica_updateForbidSkillTags; 
+			pAvatarReplicaModule.useMethodDescrAlias = true;
+			pAvatarReplicaModule.idmethods[(UInt16)pAvatarReplica_updateForbidSkillTags.aliasID] = pAvatarReplica_updateForbidSkillTags;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(updateForbidSkillTags / 1155).");
+
+			List<DATATYPE_BASE> pAvatarReplica_cancelChargeSkill_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_cancelChargeSkill_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatarReplica_cancelChargeSkill = new Method();
+			pAvatarReplica_cancelChargeSkill.name = "cancelChargeSkill";
+			pAvatarReplica_cancelChargeSkill.methodUtype = 1100;
+			pAvatarReplica_cancelChargeSkill.aliasID = -1;
+			pAvatarReplica_cancelChargeSkill.args = pAvatarReplica_cancelChargeSkill_args;
+
+			pAvatarReplicaModule.methods["cancelChargeSkill"] = pAvatarReplica_cancelChargeSkill; 
+			pAvatarReplicaModule.cell_methods["cancelChargeSkill"] = pAvatarReplica_cancelChargeSkill;
+
+			pAvatarReplicaModule.idcell_methods[pAvatarReplica_cancelChargeSkill.methodUtype] = pAvatarReplica_cancelChargeSkill;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(cancelChargeSkill / 1100).");
+
+			List<DATATYPE_BASE> pAvatarReplica_getAureoleInfo_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_getAureoleInfo_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_getAureoleInfo = new Method();
+			pAvatarReplica_getAureoleInfo.name = "getAureoleInfo";
+			pAvatarReplica_getAureoleInfo.methodUtype = 1102;
+			pAvatarReplica_getAureoleInfo.aliasID = -1;
+			pAvatarReplica_getAureoleInfo.args = pAvatarReplica_getAureoleInfo_args;
+
+			pAvatarReplicaModule.methods["getAureoleInfo"] = pAvatarReplica_getAureoleInfo; 
+			pAvatarReplicaModule.cell_methods["getAureoleInfo"] = pAvatarReplica_getAureoleInfo;
+
+			pAvatarReplicaModule.idcell_methods[pAvatarReplica_getAureoleInfo.methodUtype] = pAvatarReplica_getAureoleInfo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(getAureoleInfo / 1102).");
+
+			List<DATATYPE_BASE> pAvatarReplica_getBuffInfo_args = new List<DATATYPE_BASE>();
+			pAvatarReplica_getBuffInfo_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatarReplica_getBuffInfo = new Method();
+			pAvatarReplica_getBuffInfo.name = "getBuffInfo";
+			pAvatarReplica_getBuffInfo.methodUtype = 1101;
+			pAvatarReplica_getBuffInfo.aliasID = -1;
+			pAvatarReplica_getBuffInfo.args = pAvatarReplica_getBuffInfo_args;
+
+			pAvatarReplicaModule.methods["getBuffInfo"] = pAvatarReplica_getBuffInfo; 
+			pAvatarReplicaModule.cell_methods["getBuffInfo"] = pAvatarReplica_getBuffInfo;
+
+			pAvatarReplicaModule.idcell_methods[pAvatarReplica_getBuffInfo.methodUtype] = pAvatarReplica_getBuffInfo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(AvatarReplica), method(getBuffInfo / 1101).");
+
+			ScriptModule pAccountingModule = new ScriptModule("Accounting");
+			EntityDef.moduledefs["Accounting"] = pAccountingModule;
+			EntityDef.idmoduledefs[63] = pAccountingModule;
+
+			Property pAccounting_position = new Property();
+			pAccounting_position.name = "position";
+			pAccounting_position.properUtype = 40000;
+			pAccounting_position.properFlags = 4;
+			pAccounting_position.aliasID = 1;
+			Vector3 Accounting_position_defval = new Vector3();
+			pAccounting_position.defaultVal = Accounting_position_defval;
+			pAccountingModule.propertys["position"] = pAccounting_position; 
+
+			pAccountingModule.usePropertyDescrAlias = true;
+			pAccountingModule.idpropertys[(UInt16)pAccounting_position.aliasID] = pAccounting_position;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), property(position / 40000).");
+
+			Property pAccounting_direction = new Property();
+			pAccounting_direction.name = "direction";
+			pAccounting_direction.properUtype = 40001;
+			pAccounting_direction.properFlags = 4;
+			pAccounting_direction.aliasID = 2;
+			Vector3 Accounting_direction_defval = new Vector3();
+			pAccounting_direction.defaultVal = Accounting_direction_defval;
+			pAccountingModule.propertys["direction"] = pAccounting_direction; 
+
+			pAccountingModule.usePropertyDescrAlias = true;
+			pAccountingModule.idpropertys[(UInt16)pAccounting_direction.aliasID] = pAccounting_direction;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), property(direction / 40001).");
+
+			Property pAccounting_spaceID = new Property();
+			pAccounting_spaceID.name = "spaceID";
+			pAccounting_spaceID.properUtype = 40002;
+			pAccounting_spaceID.properFlags = 16;
+			pAccounting_spaceID.aliasID = 3;
+			UInt32 Accounting_spaceID_defval;
+			UInt32.TryParse("", out Accounting_spaceID_defval);
+			pAccounting_spaceID.defaultVal = Accounting_spaceID_defval;
+			pAccountingModule.propertys["spaceID"] = pAccounting_spaceID; 
+
+			pAccountingModule.usePropertyDescrAlias = true;
+			pAccountingModule.idpropertys[(UInt16)pAccounting_spaceID.aliasID] = pAccounting_spaceID;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), property(spaceID / 40002).");
+
+			List<DATATYPE_BASE> pAccounting_onGetAvataringCharacter_args = new List<DATATYPE_BASE>();
+			pAccounting_onGetAvataringCharacter_args.Add(EntityDef.id2datatypes[10115]);
+
+			Method pAccounting_onGetAvataringCharacter = new Method();
+			pAccounting_onGetAvataringCharacter.name = "onGetAvataringCharacter";
+			pAccounting_onGetAvataringCharacter.methodUtype = 1172;
+			pAccounting_onGetAvataringCharacter.aliasID = 6;
+			pAccounting_onGetAvataringCharacter.args = pAccounting_onGetAvataringCharacter_args;
+
+			pAccountingModule.methods["onGetAvataringCharacter"] = pAccounting_onGetAvataringCharacter; 
+			pAccountingModule.useMethodDescrAlias = true;
+			pAccountingModule.idmethods[(UInt16)pAccounting_onGetAvataringCharacter.aliasID] = pAccounting_onGetAvataringCharacter;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(onGetAvataringCharacter / 1172).");
+
+			List<DATATYPE_BASE> pAccounting_onKickAnotherAccount_args = new List<DATATYPE_BASE>();
+
+			Method pAccounting_onKickAnotherAccount = new Method();
+			pAccounting_onKickAnotherAccount.name = "onKickAnotherAccount";
+			pAccounting_onKickAnotherAccount.methodUtype = 1167;
+			pAccounting_onKickAnotherAccount.aliasID = 1;
+			pAccounting_onKickAnotherAccount.args = pAccounting_onKickAnotherAccount_args;
+
+			pAccountingModule.methods["onKickAnotherAccount"] = pAccounting_onKickAnotherAccount; 
+			pAccountingModule.useMethodDescrAlias = true;
+			pAccountingModule.idmethods[(UInt16)pAccounting_onKickAnotherAccount.aliasID] = pAccounting_onKickAnotherAccount;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(onKickAnotherAccount / 1167).");
+
+			List<DATATYPE_BASE> pAccounting_onLoginWaitMapResult_args = new List<DATATYPE_BASE>();
+			pAccounting_onLoginWaitMapResult_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAccounting_onLoginWaitMapResult = new Method();
+			pAccounting_onLoginWaitMapResult.name = "onLoginWaitMapResult";
+			pAccounting_onLoginWaitMapResult.methodUtype = 1161;
+			pAccounting_onLoginWaitMapResult.aliasID = 5;
+			pAccounting_onLoginWaitMapResult.args = pAccounting_onLoginWaitMapResult_args;
+
+			pAccountingModule.methods["onLoginWaitMapResult"] = pAccounting_onLoginWaitMapResult; 
+			pAccountingModule.useMethodDescrAlias = true;
+			pAccountingModule.idmethods[(UInt16)pAccounting_onLoginWaitMapResult.aliasID] = pAccounting_onLoginWaitMapResult;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(onLoginWaitMapResult / 1161).");
+
+			List<DATATYPE_BASE> pAccounting_popDialog_args = new List<DATATYPE_BASE>();
+			pAccounting_popDialog_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAccounting_popDialog = new Method();
+			pAccounting_popDialog.name = "popDialog";
+			pAccounting_popDialog.methodUtype = 1168;
+			pAccounting_popDialog.aliasID = 2;
+			pAccounting_popDialog.args = pAccounting_popDialog_args;
+
+			pAccountingModule.methods["popDialog"] = pAccounting_popDialog; 
+			pAccountingModule.useMethodDescrAlias = true;
+			pAccountingModule.idmethods[(UInt16)pAccounting_popDialog.aliasID] = pAccounting_popDialog;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(popDialog / 1168).");
+
+			List<DATATYPE_BASE> pAccounting_showPopoverMsg_args = new List<DATATYPE_BASE>();
+			pAccounting_showPopoverMsg_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAccounting_showPopoverMsg = new Method();
+			pAccounting_showPopoverMsg.name = "showPopoverMsg";
+			pAccounting_showPopoverMsg.methodUtype = 1169;
+			pAccounting_showPopoverMsg.aliasID = 3;
+			pAccounting_showPopoverMsg.args = pAccounting_showPopoverMsg_args;
+
+			pAccountingModule.methods["showPopoverMsg"] = pAccounting_showPopoverMsg; 
+			pAccountingModule.useMethodDescrAlias = true;
+			pAccountingModule.idmethods[(UInt16)pAccounting_showPopoverMsg.aliasID] = pAccounting_showPopoverMsg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(showPopoverMsg / 1169).");
+
+			List<DATATYPE_BASE> pAccounting_showPopoverMsgWithArg_args = new List<DATATYPE_BASE>();
+			pAccounting_showPopoverMsgWithArg_args.Add(EntityDef.id2datatypes[4]);
+			pAccounting_showPopoverMsgWithArg_args.Add(EntityDef.id2datatypes[10001]);
+
+			Method pAccounting_showPopoverMsgWithArg = new Method();
+			pAccounting_showPopoverMsgWithArg.name = "showPopoverMsgWithArg";
+			pAccounting_showPopoverMsgWithArg.methodUtype = 1170;
+			pAccounting_showPopoverMsgWithArg.aliasID = 4;
+			pAccounting_showPopoverMsgWithArg.args = pAccounting_showPopoverMsgWithArg_args;
+
+			pAccountingModule.methods["showPopoverMsgWithArg"] = pAccounting_showPopoverMsgWithArg; 
+			pAccountingModule.useMethodDescrAlias = true;
+			pAccountingModule.idmethods[(UInt16)pAccounting_showPopoverMsgWithArg.aliasID] = pAccounting_showPopoverMsgWithArg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(showPopoverMsgWithArg / 1170).");
+
+			List<DATATYPE_BASE> pAccounting_accountOffline_args = new List<DATATYPE_BASE>();
+
+			Method pAccounting_accountOffline = new Method();
+			pAccounting_accountOffline.name = "accountOffline";
+			pAccounting_accountOffline.methodUtype = 492;
+			pAccounting_accountOffline.aliasID = -1;
+			pAccounting_accountOffline.args = pAccounting_accountOffline_args;
+
+			pAccountingModule.methods["accountOffline"] = pAccounting_accountOffline; 
+			pAccountingModule.base_methods["accountOffline"] = pAccounting_accountOffline;
+
+			pAccountingModule.idbase_methods[pAccounting_accountOffline.methodUtype] = pAccounting_accountOffline;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(accountOffline / 492).");
+
+			List<DATATYPE_BASE> pAccounting_createAvataring_args = new List<DATATYPE_BASE>();
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[5]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[12]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[3]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[2]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[2]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[2]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[31]);
+			pAccounting_createAvataring_args.Add(EntityDef.id2datatypes[26]);
+
+			Method pAccounting_createAvataring = new Method();
+			pAccounting_createAvataring.name = "createAvataring";
+			pAccounting_createAvataring.methodUtype = 1166;
+			pAccounting_createAvataring.aliasID = -1;
+			pAccounting_createAvataring.args = pAccounting_createAvataring_args;
+
+			pAccountingModule.methods["createAvataring"] = pAccounting_createAvataring; 
+			pAccountingModule.base_methods["createAvataring"] = pAccounting_createAvataring;
+
+			pAccountingModule.idbase_methods[pAccounting_createAvataring.methodUtype] = pAccounting_createAvataring;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(createAvataring / 1166).");
+
+			List<DATATYPE_BASE> pAccounting_queryAvataringCharacter_args = new List<DATATYPE_BASE>();
+			pAccounting_queryAvataringCharacter_args.Add(EntityDef.id2datatypes[10046]);
+
+			Method pAccounting_queryAvataringCharacter = new Method();
+			pAccounting_queryAvataringCharacter.name = "queryAvataringCharacter";
+			pAccounting_queryAvataringCharacter.methodUtype = 1171;
+			pAccounting_queryAvataringCharacter.aliasID = -1;
+			pAccounting_queryAvataringCharacter.args = pAccounting_queryAvataringCharacter_args;
+
+			pAccountingModule.methods["queryAvataringCharacter"] = pAccounting_queryAvataringCharacter; 
+			pAccountingModule.base_methods["queryAvataringCharacter"] = pAccounting_queryAvataringCharacter;
+
+			pAccountingModule.idbase_methods[pAccounting_queryAvataringCharacter.methodUtype] = pAccounting_queryAvataringCharacter;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Accounting), method(queryAvataringCharacter / 1171).");
+
+			ScriptModule pAvataringModule = new ScriptModule("Avataring");
+			EntityDef.moduledefs["Avataring"] = pAvataringModule;
+			EntityDef.idmoduledefs[64] = pAvataringModule;
+
+			Property pAvataring_position = new Property();
+			pAvataring_position.name = "position";
+			pAvataring_position.properUtype = 40000;
+			pAvataring_position.properFlags = 4;
+			pAvataring_position.aliasID = 1;
+			Vector3 Avataring_position_defval = new Vector3();
+			pAvataring_position.defaultVal = Avataring_position_defval;
+			pAvataringModule.propertys["position"] = pAvataring_position; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_position.aliasID] = pAvataring_position;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(position / 40000).");
+
+			Property pAvataring_direction = new Property();
+			pAvataring_direction.name = "direction";
+			pAvataring_direction.properUtype = 40001;
+			pAvataring_direction.properFlags = 4;
+			pAvataring_direction.aliasID = 2;
+			Vector3 Avataring_direction_defval = new Vector3();
+			pAvataring_direction.defaultVal = Avataring_direction_defval;
+			pAvataringModule.propertys["direction"] = pAvataring_direction; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_direction.aliasID] = pAvataring_direction;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(direction / 40001).");
+
+			Property pAvataring_spaceID = new Property();
+			pAvataring_spaceID.name = "spaceID";
+			pAvataring_spaceID.properUtype = 40002;
+			pAvataring_spaceID.properFlags = 16;
+			pAvataring_spaceID.aliasID = 3;
+			UInt32 Avataring_spaceID_defval;
+			UInt32.TryParse("", out Avataring_spaceID_defval);
+			pAvataring_spaceID.defaultVal = Avataring_spaceID_defval;
+			pAvataringModule.propertys["spaceID"] = pAvataring_spaceID; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_spaceID.aliasID] = pAvataring_spaceID;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(spaceID / 40002).");
+
+			Property pAvataring_appearance = new Property();
+			pAvataring_appearance.name = "appearance";
+			pAvataring_appearance.properUtype = 593;
+			pAvataring_appearance.properFlags = 4;
+			pAvataring_appearance.aliasID = 4;
+			pAvataring_appearance.defaultVal = EntityDef.id2datatypes[33].parseDefaultValStr("");
+			pAvataringModule.propertys["appearance"] = pAvataring_appearance; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_appearance.aliasID] = pAvataring_appearance;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(appearance / 593).");
+
+			Property pAvataring_gbId = new Property();
+			pAvataring_gbId.name = "gbId";
+			pAvataring_gbId.properUtype = 578;
+			pAvataring_gbId.properFlags = 4;
+			pAvataring_gbId.aliasID = 6;
+			UInt64 Avataring_gbId_defval;
+			UInt64.TryParse("", out Avataring_gbId_defval);
+			pAvataring_gbId.defaultVal = Avataring_gbId_defval;
+			pAvataringModule.propertys["gbId"] = pAvataring_gbId; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_gbId.aliasID] = pAvataring_gbId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(gbId / 578).");
+
+			Property pAvataring_name = new Property();
+			pAvataring_name.name = "name";
+			pAvataring_name.properUtype = 600;
+			pAvataring_name.properFlags = 4;
+			pAvataring_name.aliasID = 5;
+			string Avataring_name_defval = "";
+			pAvataring_name.defaultVal = Avataring_name_defval;
+			pAvataringModule.propertys["name"] = pAvataring_name; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_name.aliasID] = pAvataring_name;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(name / 600).");
+
+			Property pAvataring_school = new Property();
+			pAvataring_school.name = "school";
+			pAvataring_school.properUtype = 610;
+			pAvataring_school.properFlags = 4;
+			pAvataring_school.aliasID = 7;
+			UInt16 Avataring_school_defval;
+			UInt16.TryParse("", out Avataring_school_defval);
+			pAvataring_school.defaultVal = Avataring_school_defval;
+			pAvataringModule.propertys["school"] = pAvataring_school; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_school.aliasID] = pAvataring_school;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(school / 610).");
+
+			Property pAvataring_sex = new Property();
+			pAvataring_sex.name = "sex";
+			pAvataring_sex.properUtype = 613;
+			pAvataring_sex.properFlags = 4;
+			pAvataring_sex.aliasID = 8;
+			Byte Avataring_sex_defval;
+			Byte.TryParse("", out Avataring_sex_defval);
+			pAvataring_sex.defaultVal = Avataring_sex_defval;
+			pAvataringModule.propertys["sex"] = pAvataring_sex; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_sex.aliasID] = pAvataring_sex;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(sex / 613).");
+
+			Property pAvataring_spaceNo = new Property();
+			pAvataring_spaceNo.name = "spaceNo";
+			pAvataring_spaceNo.properUtype = 280;
+			pAvataring_spaceNo.properFlags = 16;
+			pAvataring_spaceNo.aliasID = 9;
+			UInt32 Avataring_spaceNo_defval;
+			UInt32.TryParse("0", out Avataring_spaceNo_defval);
+			pAvataring_spaceNo.defaultVal = Avataring_spaceNo_defval;
+			pAvataringModule.propertys["spaceNo"] = pAvataring_spaceNo; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_spaceNo.aliasID] = pAvataring_spaceNo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(spaceNo / 280).");
+
+			Property pAvataring_speed = new Property();
+			pAvataring_speed.name = "speed";
+			pAvataring_speed.properUtype = 631;
+			pAvataring_speed.properFlags = 4;
+			pAvataring_speed.aliasID = 12;
+			float Avataring_speed_defval;
+			float.TryParse("6.0", out Avataring_speed_defval);
+			pAvataring_speed.defaultVal = Avataring_speed_defval;
+			pAvataringModule.propertys["speed"] = pAvataring_speed; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_speed.aliasID] = pAvataring_speed;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(speed / 631).");
+
+			Property pAvataring_state = new Property();
+			pAvataring_state.name = "state";
+			pAvataring_state.properUtype = 614;
+			pAvataring_state.properFlags = 4;
+			pAvataring_state.aliasID = 10;
+			Int64 Avataring_state_defval;
+			Int64.TryParse("0", out Avataring_state_defval);
+			pAvataring_state.defaultVal = Avataring_state_defval;
+			pAvataringModule.propertys["state"] = pAvataring_state; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_state.aliasID] = pAvataring_state;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(state / 614).");
+
+			Property pAvataring_state2 = new Property();
+			pAvataring_state2.name = "state2";
+			pAvataring_state2.properUtype = 630;
+			pAvataring_state2.properFlags = 4;
+			pAvataring_state2.aliasID = 11;
+			Int64 Avataring_state2_defval;
+			Int64.TryParse("0", out Avataring_state2_defval);
+			pAvataring_state2.defaultVal = Avataring_state2_defval;
+			pAvataringModule.propertys["state2"] = pAvataring_state2; 
+
+			pAvataringModule.usePropertyDescrAlias = true;
+			pAvataringModule.idpropertys[(UInt16)pAvataring_state2.aliasID] = pAvataring_state2;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), property(state2 / 630).");
+
+			List<DATATYPE_BASE> pAvataring_onClientDataSyncFinished_args = new List<DATATYPE_BASE>();
+
+			Method pAvataring_onClientDataSyncFinished = new Method();
+			pAvataring_onClientDataSyncFinished.name = "onClientDataSyncFinished";
+			pAvataring_onClientDataSyncFinished.methodUtype = 1173;
+			pAvataring_onClientDataSyncFinished.aliasID = 1;
+			pAvataring_onClientDataSyncFinished.args = pAvataring_onClientDataSyncFinished_args;
+
+			pAvataringModule.methods["onClientDataSyncFinished"] = pAvataring_onClientDataSyncFinished; 
+			pAvataringModule.useMethodDescrAlias = true;
+			pAvataringModule.idmethods[(UInt16)pAvataring_onClientDataSyncFinished.aliasID] = pAvataring_onClientDataSyncFinished;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(onClientDataSyncFinished / 1173).");
+
+			List<DATATYPE_BASE> pAvataring_onRecvAvatarChannelMsg_args = new List<DATATYPE_BASE>();
+			pAvataring_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[4]);
+			pAvataring_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[118]);
+			pAvataring_onRecvAvatarChannelMsg_args.Add(EntityDef.id2datatypes[119]);
+
+			Method pAvataring_onRecvAvatarChannelMsg = new Method();
+			pAvataring_onRecvAvatarChannelMsg.name = "onRecvAvatarChannelMsg";
+			pAvataring_onRecvAvatarChannelMsg.methodUtype = 1194;
+			pAvataring_onRecvAvatarChannelMsg.aliasID = 2;
+			pAvataring_onRecvAvatarChannelMsg.args = pAvataring_onRecvAvatarChannelMsg_args;
+
+			pAvataringModule.methods["onRecvAvatarChannelMsg"] = pAvataring_onRecvAvatarChannelMsg; 
+			pAvataringModule.useMethodDescrAlias = true;
+			pAvataringModule.idmethods[(UInt16)pAvataring_onRecvAvatarChannelMsg.aliasID] = pAvataring_onRecvAvatarChannelMsg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(onRecvAvatarChannelMsg / 1194).");
+
+			List<DATATYPE_BASE> pAvataring_popDialog_args = new List<DATATYPE_BASE>();
+			pAvataring_popDialog_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvataring_popDialog = new Method();
+			pAvataring_popDialog.name = "popDialog";
+			pAvataring_popDialog.methodUtype = 1156;
+			pAvataring_popDialog.aliasID = 8;
+			pAvataring_popDialog.args = pAvataring_popDialog_args;
+
+			pAvataringModule.methods["popDialog"] = pAvataring_popDialog; 
+			pAvataringModule.useMethodDescrAlias = true;
+			pAvataringModule.idmethods[(UInt16)pAvataring_popDialog.aliasID] = pAvataring_popDialog;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(popDialog / 1156).");
+
+			List<DATATYPE_BASE> pAvataring_showPopoverMsg_args = new List<DATATYPE_BASE>();
+			pAvataring_showPopoverMsg_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvataring_showPopoverMsg = new Method();
+			pAvataring_showPopoverMsg.name = "showPopoverMsg";
+			pAvataring_showPopoverMsg.methodUtype = 1157;
+			pAvataring_showPopoverMsg.aliasID = 9;
+			pAvataring_showPopoverMsg.args = pAvataring_showPopoverMsg_args;
+
+			pAvataringModule.methods["showPopoverMsg"] = pAvataring_showPopoverMsg; 
+			pAvataringModule.useMethodDescrAlias = true;
+			pAvataringModule.idmethods[(UInt16)pAvataring_showPopoverMsg.aliasID] = pAvataring_showPopoverMsg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(showPopoverMsg / 1157).");
+
+			List<DATATYPE_BASE> pAvataring_showPopoverMsgWithArg_args = new List<DATATYPE_BASE>();
+			pAvataring_showPopoverMsgWithArg_args.Add(EntityDef.id2datatypes[4]);
+			pAvataring_showPopoverMsgWithArg_args.Add(EntityDef.id2datatypes[10001]);
+
+			Method pAvataring_showPopoverMsgWithArg = new Method();
+			pAvataring_showPopoverMsgWithArg.name = "showPopoverMsgWithArg";
+			pAvataring_showPopoverMsgWithArg.methodUtype = 1158;
+			pAvataring_showPopoverMsgWithArg.aliasID = 10;
+			pAvataring_showPopoverMsgWithArg.args = pAvataring_showPopoverMsgWithArg_args;
+
+			pAvataringModule.methods["showPopoverMsgWithArg"] = pAvataring_showPopoverMsgWithArg; 
+			pAvataringModule.useMethodDescrAlias = true;
+			pAvataringModule.idmethods[(UInt16)pAvataring_showPopoverMsgWithArg.aliasID] = pAvataring_showPopoverMsgWithArg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(showPopoverMsgWithArg / 1158).");
+
+			List<DATATYPE_BASE> pAvataring_sendWorldChatMsg_args = new List<DATATYPE_BASE>();
+			pAvataring_sendWorldChatMsg_args.Add(EntityDef.id2datatypes[119]);
+
+			Method pAvataring_sendWorldChatMsg = new Method();
+			pAvataring_sendWorldChatMsg.name = "sendWorldChatMsg";
+			pAvataring_sendWorldChatMsg.methodUtype = 462;
+			pAvataring_sendWorldChatMsg.aliasID = -1;
+			pAvataring_sendWorldChatMsg.args = pAvataring_sendWorldChatMsg_args;
+
+			pAvataringModule.methods["sendWorldChatMsg"] = pAvataring_sendWorldChatMsg; 
+			pAvataringModule.base_methods["sendWorldChatMsg"] = pAvataring_sendWorldChatMsg;
+
+			pAvataringModule.idbase_methods[pAvataring_sendWorldChatMsg.methodUtype] = pAvataring_sendWorldChatMsg;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(sendWorldChatMsg / 462).");
+
+			List<DATATYPE_BASE> pAvataring_clientRemoveState_args = new List<DATATYPE_BASE>();
+			pAvataring_clientRemoveState_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvataring_clientRemoveState = new Method();
+			pAvataring_clientRemoveState.name = "clientRemoveState";
+			pAvataring_clientRemoveState.methodUtype = 1175;
+			pAvataring_clientRemoveState.aliasID = -1;
+			pAvataring_clientRemoveState.args = pAvataring_clientRemoveState_args;
+
+			pAvataringModule.methods["clientRemoveState"] = pAvataring_clientRemoveState; 
+			pAvataringModule.cell_methods["clientRemoveState"] = pAvataring_clientRemoveState;
+
+			pAvataringModule.idcell_methods[pAvataring_clientRemoveState.methodUtype] = pAvataring_clientRemoveState;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(clientRemoveState / 1175).");
+
+			List<DATATYPE_BASE> pAvataring_clientSetState_args = new List<DATATYPE_BASE>();
+			pAvataring_clientSetState_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvataring_clientSetState = new Method();
+			pAvataring_clientSetState.name = "clientSetState";
+			pAvataring_clientSetState.methodUtype = 1174;
+			pAvataring_clientSetState.aliasID = -1;
+			pAvataring_clientSetState.args = pAvataring_clientSetState_args;
+
+			pAvataringModule.methods["clientSetState"] = pAvataring_clientSetState; 
+			pAvataringModule.cell_methods["clientSetState"] = pAvataring_clientSetState;
+
+			pAvataringModule.idcell_methods[pAvataring_clientSetState.methodUtype] = pAvataring_clientSetState;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avataring), method(clientSetState / 1174).");
+
 			ScriptModule pRebornPosModule = new ScriptModule("RebornPos");
 			EntityDef.moduledefs["RebornPos"] = pRebornPosModule;
-			EntityDef.idmoduledefs[52] = pRebornPosModule;
+			EntityDef.idmoduledefs[65] = pRebornPosModule;
 
 			Property pRebornPos_position = new Property();
 			pRebornPos_position.name = "position";
@@ -24849,6 +27797,15 @@ namespace KBEngine
 
 			{
 				UInt16 utype = 34;
+				string typeName = "WAITMAP_CHARACTER";
+				DATATYPE_WAITMAP_CHARACTER datatype = new DATATYPE_WAITMAP_CHARACTER();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 35;
 				string typeName = "CHARACTER_VAL";
 				DATATYPE_CHARACTER_VAL datatype = new DATATYPE_CHARACTER_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24857,7 +27814,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 35;
+				UInt16 utype = 36;
 				string typeName = "CHARACTERS_INFO";
 				DATATYPE_CHARACTERS_INFO datatype = new DATATYPE_CHARACTERS_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24866,7 +27823,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 37;
+				UInt16 utype = 38;
 				string typeName = "CLIENT_SKILL_VAL";
 				DATATYPE_CLIENT_SKILL_VAL datatype = new DATATYPE_CLIENT_SKILL_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24875,7 +27832,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 38;
+				UInt16 utype = 39;
 				string typeName = "CLIENT_SKILL_SWITCH_VAL";
 				DATATYPE_CLIENT_SKILL_SWITCH_VAL datatype = new DATATYPE_CLIENT_SKILL_SWITCH_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24884,7 +27841,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 39;
+				UInt16 utype = 40;
 				string typeName = "CLIENT_SKILL_CD_STATUS";
 				DATATYPE_CLIENT_SKILL_CD_STATUS datatype = new DATATYPE_CLIENT_SKILL_CD_STATUS();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24893,7 +27850,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 40;
+				UInt16 utype = 41;
 				string typeName = "CLIENT_SKILLS";
 				DATATYPE_CLIENT_SKILLS datatype = new DATATYPE_CLIENT_SKILLS();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24902,7 +27859,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 44;
+				UInt16 utype = 45;
 				string typeName = "ITEM_VAL";
 				DATATYPE_ITEM_VAL datatype = new DATATYPE_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24911,7 +27868,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 45;
+				UInt16 utype = 46;
 				string typeName = "AFFIX_VAL";
 				DATATYPE_AFFIX_VAL datatype = new DATATYPE_AFFIX_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24920,7 +27877,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 46;
+				UInt16 utype = 47;
 				string typeName = "GLYPH_VAL";
 				DATATYPE_GLYPH_VAL datatype = new DATATYPE_GLYPH_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24929,7 +27886,25 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 50;
+				UInt16 utype = 51;
+				string typeName = "SPIRIT_BIND_VAL";
+				DATATYPE_SPIRIT_BIND_VAL datatype = new DATATYPE_SPIRIT_BIND_VAL();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 52;
+				string typeName = "GLYPH_BIND_VAL";
+				DATATYPE_GLYPH_BIND_VAL datatype = new DATATYPE_GLYPH_BIND_VAL();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 53;
 				string typeName = "CLI_GLYPH_INFO";
 				DATATYPE_CLI_GLYPH_INFO datatype = new DATATYPE_CLI_GLYPH_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24938,7 +27913,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 52;
+				UInt16 utype = 55;
 				string typeName = "CLI_SPIRIT_INFO";
 				DATATYPE_CLI_SPIRIT_INFO datatype = new DATATYPE_CLI_SPIRIT_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24947,7 +27922,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 54;
+				UInt16 utype = 57;
 				string typeName = "CLI_EQUIP_ITEM_VAL";
 				DATATYPE_CLI_EQUIP_ITEM_VAL datatype = new DATATYPE_CLI_EQUIP_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24956,7 +27931,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 59;
+				UInt16 utype = 65;
 				string typeName = "BAG_GRID_INFO";
 				DATATYPE_BAG_GRID_INFO datatype = new DATATYPE_BAG_GRID_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24965,7 +27940,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 60;
+				UInt16 utype = 66;
 				string typeName = "BAG_GRID_TIME_INFO";
 				DATATYPE_BAG_GRID_TIME_INFO datatype = new DATATYPE_BAG_GRID_TIME_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24974,7 +27949,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 61;
+				UInt16 utype = 67;
 				string typeName = "BAG_ITEM_VAL";
 				DATATYPE_BAG_ITEM_VAL datatype = new DATATYPE_BAG_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24983,7 +27958,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 64;
+				UInt16 utype = 70;
 				string typeName = "CLIENT_TARGET_VAL";
 				DATATYPE_CLIENT_TARGET_VAL datatype = new DATATYPE_CLIENT_TARGET_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -24992,7 +27967,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 66;
+				UInt16 utype = 72;
 				string typeName = "TASK_CLIENT_VAL";
 				DATATYPE_TASK_CLIENT_VAL datatype = new DATATYPE_TASK_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25001,7 +27976,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 69;
+				UInt16 utype = 75;
 				string typeName = "AWARD_ITEM_VAL";
 				DATATYPE_AWARD_ITEM_VAL datatype = new DATATYPE_AWARD_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25010,7 +27985,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 78;
+				UInt16 utype = 84;
 				string typeName = "SKILL_SLOT_INFO";
 				DATATYPE_SKILL_SLOT_INFO datatype = new DATATYPE_SKILL_SLOT_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25019,7 +27994,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 79;
+				UInt16 utype = 85;
 				string typeName = "SKILL_LEVEL_ITEM";
 				DATATYPE_SKILL_LEVEL_ITEM datatype = new DATATYPE_SKILL_LEVEL_ITEM();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25028,7 +28003,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 83;
+				UInt16 utype = 89;
 				string typeName = "CLIENT_BUILD_INFO";
 				DATATYPE_CLIENT_BUILD_INFO datatype = new DATATYPE_CLIENT_BUILD_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25037,7 +28012,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 86;
+				UInt16 utype = 92;
 				string typeName = "CLIENT_BUFF_ID_VAL";
 				DATATYPE_CLIENT_BUFF_ID_VAL datatype = new DATATYPE_CLIENT_BUFF_ID_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25046,7 +28021,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 94;
+				UInt16 utype = 100;
 				string typeName = "CLIENT_AUREOLE_VAL";
 				DATATYPE_CLIENT_AUREOLE_VAL datatype = new DATATYPE_CLIENT_AUREOLE_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25055,7 +28030,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 95;
+				UInt16 utype = 101;
 				string typeName = "CLIENT_AUREOLES";
 				DATATYPE_CLIENT_AUREOLES datatype = new DATATYPE_CLIENT_AUREOLES();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25064,7 +28039,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 100;
+				UInt16 utype = 106;
 				string typeName = "AUREOLE_FROM_OTHERS_VAL";
 				DATATYPE_AUREOLE_FROM_OTHERS_VAL datatype = new DATATYPE_AUREOLE_FROM_OTHERS_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25073,7 +28048,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 101;
+				UInt16 utype = 107;
 				string typeName = "AUREOLE_FROM_OTHERS";
 				DATATYPE_AUREOLE_FROM_OTHERS datatype = new DATATYPE_AUREOLE_FROM_OTHERS();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25082,7 +28057,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 103;
+				UInt16 utype = 109;
 				string typeName = "SKILL_DAMAGE_VAL";
 				DATATYPE_SKILL_DAMAGE_VAL datatype = new DATATYPE_SKILL_DAMAGE_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25091,7 +28066,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 104;
+				UInt16 utype = 110;
 				string typeName = "SKILL_DAMAGE_INFO";
 				DATATYPE_SKILL_DAMAGE_INFO datatype = new DATATYPE_SKILL_DAMAGE_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25100,7 +28075,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 109;
+				UInt16 utype = 115;
 				string typeName = "CLIENT_BUFF_VAL";
 				DATATYPE_CLIENT_BUFF_VAL datatype = new DATATYPE_CLIENT_BUFF_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25109,7 +28084,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 110;
+				UInt16 utype = 116;
 				string typeName = "CLIENT_BUFFS";
 				DATATYPE_CLIENT_BUFFS datatype = new DATATYPE_CLIENT_BUFFS();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25118,7 +28093,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 112;
+				UInt16 utype = 118;
 				string typeName = "CHAT_CHANNEL_AVATAR_INFO";
 				DATATYPE_CHAT_CHANNEL_AVATAR_INFO datatype = new DATATYPE_CHAT_CHANNEL_AVATAR_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25127,7 +28102,16 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 116;
+				UInt16 utype = 119;
+				string typeName = "CHAT_MSG_DATA";
+				DATATYPE_CHAT_MSG_DATA datatype = new DATATYPE_CHAT_MSG_DATA();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 123;
 				string typeName = "CLIENT_TEAM_MEMBER_VAL";
 				DATATYPE_CLIENT_TEAM_MEMBER_VAL datatype = new DATATYPE_CLIENT_TEAM_MEMBER_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25136,7 +28120,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 117;
+				UInt16 utype = 124;
 				string typeName = "CLIENT_TEAM_MARK_VAL";
 				DATATYPE_CLIENT_TEAM_MARK_VAL datatype = new DATATYPE_CLIENT_TEAM_MARK_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25145,7 +28129,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 118;
+				UInt16 utype = 125;
 				string typeName = "CLIENT_TEAM_MARK_INFO";
 				DATATYPE_CLIENT_TEAM_MARK_INFO datatype = new DATATYPE_CLIENT_TEAM_MARK_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25154,7 +28138,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 121;
+				UInt16 utype = 128;
 				string typeName = "CLIENT_TEAM_INFO";
 				DATATYPE_CLIENT_TEAM_INFO datatype = new DATATYPE_CLIENT_TEAM_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25163,7 +28147,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 128;
+				UInt16 utype = 135;
 				string typeName = "APPLY_JOIN_INFO";
 				DATATYPE_APPLY_JOIN_INFO datatype = new DATATYPE_APPLY_JOIN_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25172,7 +28156,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 137;
+				UInt16 utype = 144;
 				string typeName = "RAID_APPLY_JOIN_CLIENT_VAL";
 				DATATYPE_RAID_APPLY_JOIN_CLIENT_VAL datatype = new DATATYPE_RAID_APPLY_JOIN_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25181,7 +28165,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 146;
+				UInt16 utype = 153;
 				string typeName = "RAID_DUNGEON_CLIENT_CACHE_VAL";
 				DATATYPE_RAID_DUNGEON_CLIENT_CACHE_VAL datatype = new DATATYPE_RAID_DUNGEON_CLIENT_CACHE_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25190,7 +28174,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 147;
+				UInt16 utype = 154;
 				string typeName = "RAID_TEAM_CLIENT_VAL";
 				DATATYPE_RAID_TEAM_CLIENT_VAL datatype = new DATATYPE_RAID_TEAM_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25199,7 +28183,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 149;
+				UInt16 utype = 156;
 				string typeName = "RAID_CLIENT_VAL";
 				DATATYPE_RAID_CLIENT_VAL datatype = new DATATYPE_RAID_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25208,7 +28192,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 157;
+				UInt16 utype = 164;
 				string typeName = "FRIEND_VAL";
 				DATATYPE_FRIEND_VAL datatype = new DATATYPE_FRIEND_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25217,7 +28201,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 158;
+				UInt16 utype = 165;
 				string typeName = "FRIEND_CLIENT_DIFF";
 				DATATYPE_FRIEND_CLIENT_DIFF datatype = new DATATYPE_FRIEND_CLIENT_DIFF();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25226,7 +28210,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 159;
+				UInt16 utype = 166;
 				string typeName = "FRIEND_REQUEST_VAL";
 				DATATYPE_FRIEND_REQUEST_VAL datatype = new DATATYPE_FRIEND_REQUEST_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25235,7 +28219,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 160;
+				UInt16 utype = 167;
 				string typeName = "FRIEND_BLOCK_VAL";
 				DATATYPE_FRIEND_BLOCK_VAL datatype = new DATATYPE_FRIEND_BLOCK_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25244,7 +28228,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 161;
+				UInt16 utype = 168;
 				string typeName = "FRIEND_SEARCH_VAL";
 				DATATYPE_FRIEND_SEARCH_VAL datatype = new DATATYPE_FRIEND_SEARCH_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25253,7 +28237,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 162;
+				UInt16 utype = 169;
 				string typeName = "FRIEND_RECENT_VAL";
 				DATATYPE_FRIEND_RECENT_VAL datatype = new DATATYPE_FRIEND_RECENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25262,7 +28246,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 164;
+				UInt16 utype = 171;
 				string typeName = "FRIEND_CLIENT_MSG";
 				DATATYPE_FRIEND_CLIENT_MSG datatype = new DATATYPE_FRIEND_CLIENT_MSG();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25271,7 +28255,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 174;
+				UInt16 utype = 181;
 				string typeName = "STRANGER_FRIEND_VAL";
 				DATATYPE_STRANGER_FRIEND_VAL datatype = new DATATYPE_STRANGER_FRIEND_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25280,7 +28264,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 183;
+				UInt16 utype = 190;
 				string typeName = "AVATAR_INTER_VAL";
 				DATATYPE_AVATAR_INTER_VAL datatype = new DATATYPE_AVATAR_INTER_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25289,7 +28273,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 184;
+				UInt16 utype = 191;
 				string typeName = "CLIENT_OUTFIT_VAL";
 				DATATYPE_CLIENT_OUTFIT_VAL datatype = new DATATYPE_CLIENT_OUTFIT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25298,7 +28282,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 191;
+				UInt16 utype = 198;
 				string typeName = "LINGSHOU_BATTLE_LIST_VAL";
 				DATATYPE_LINGSHOU_BATTLE_LIST_VAL datatype = new DATATYPE_LINGSHOU_BATTLE_LIST_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25307,7 +28291,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 196;
+				UInt16 utype = 203;
 				string typeName = "GUILD_JOIN_COND_DATA_INFO";
 				DATATYPE_GUILD_JOIN_COND_DATA_INFO datatype = new DATATYPE_GUILD_JOIN_COND_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25316,7 +28300,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 197;
+				UInt16 utype = 204;
 				string typeName = "GUILD_CREATE_DATA";
 				DATATYPE_GUILD_CREATE_DATA datatype = new DATATYPE_GUILD_CREATE_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25325,7 +28309,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 198;
+				UInt16 utype = 205;
 				string typeName = "CLIENT_LINGSHOU_ITEM_VAL";
 				DATATYPE_CLIENT_LINGSHOU_ITEM_VAL datatype = new DATATYPE_CLIENT_LINGSHOU_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25334,7 +28318,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 202;
+				UInt16 utype = 209;
 				string typeName = "CLIENT_BODY_EQUIP_ITEM_VAL";
 				DATATYPE_CLIENT_BODY_EQUIP_ITEM_VAL datatype = new DATATYPE_CLIENT_BODY_EQUIP_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25343,7 +28327,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 203;
+				UInt16 utype = 210;
 				string typeName = "RANDOM_SYNTHESIS_ITEM_INFO";
 				DATATYPE_RANDOM_SYNTHESIS_ITEM_INFO datatype = new DATATYPE_RANDOM_SYNTHESIS_ITEM_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25352,7 +28336,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 204;
+				UInt16 utype = 211;
 				string typeName = "RANDOM_UPGRADE_SYNTHESIS_NUM_INFO";
 				DATATYPE_RANDOM_UPGRADE_SYNTHESIS_NUM_INFO datatype = new DATATYPE_RANDOM_UPGRADE_SYNTHESIS_NUM_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25361,7 +28345,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 205;
+				UInt16 utype = 212;
 				string typeName = "CLIENT_RANDOM_SYNTHESIS_NUM_VAL";
 				DATATYPE_CLIENT_RANDOM_SYNTHESIS_NUM_VAL datatype = new DATATYPE_CLIENT_RANDOM_SYNTHESIS_NUM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25370,7 +28354,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 206;
+				UInt16 utype = 213;
 				string typeName = "CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ";
 				DATATYPE_CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ datatype = new DATATYPE_CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25379,7 +28363,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 207;
+				UInt16 utype = 214;
 				string typeName = "CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ";
 				DATATYPE_CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ datatype = new DATATYPE_CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25388,7 +28372,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 208;
+				UInt16 utype = 215;
 				string typeName = "DEATH_PENALTY_EXP_VAL";
 				DATATYPE_DEATH_PENALTY_EXP_VAL datatype = new DATATYPE_DEATH_PENALTY_EXP_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25397,7 +28381,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 210;
+				UInt16 utype = 217;
 				string typeName = "RES_ITEM_BRIEF_VAL";
 				DATATYPE_RES_ITEM_BRIEF_VAL datatype = new DATATYPE_RES_ITEM_BRIEF_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25406,7 +28390,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 211;
+				UInt16 utype = 218;
 				string typeName = "BAG_ITEM_BRIEF_VAL";
 				DATATYPE_BAG_ITEM_BRIEF_VAL datatype = new DATATYPE_BAG_ITEM_BRIEF_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25415,7 +28399,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 212;
+				UInt16 utype = 219;
 				string typeName = "TITLE_WEALTH_VAL";
 				DATATYPE_TITLE_WEALTH_VAL datatype = new DATATYPE_TITLE_WEALTH_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25424,7 +28408,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 213;
+				UInt16 utype = 220;
 				string typeName = "MAIL_ATTACH";
 				DATATYPE_MAIL_ATTACH datatype = new DATATYPE_MAIL_ATTACH();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25433,7 +28417,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 222;
+				UInt16 utype = 229;
 				string typeName = "CLIENT_MAIL_VAL";
 				DATATYPE_CLIENT_MAIL_VAL datatype = new DATATYPE_CLIENT_MAIL_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25442,7 +28426,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 224;
+				UInt16 utype = 231;
 				string typeName = "CUBE_SWITCH";
 				DATATYPE_CUBE_SWITCH datatype = new DATATYPE_CUBE_SWITCH();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25451,7 +28435,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 225;
+				UInt16 utype = 232;
 				string typeName = "WONDER_LAND_SWITCH";
 				DATATYPE_WONDER_LAND_SWITCH datatype = new DATATYPE_WONDER_LAND_SWITCH();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25460,7 +28444,16 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 226;
+				UInt16 utype = 233;
+				string typeName = "ABYSS_SWITCH";
+				DATATYPE_ABYSS_SWITCH datatype = new DATATYPE_ABYSS_SWITCH();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 234;
 				string typeName = "STORE_ITEM_VAL";
 				DATATYPE_STORE_ITEM_VAL datatype = new DATATYPE_STORE_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25469,7 +28462,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 227;
+				UInt16 utype = 235;
 				string typeName = "CLIENT_STORE_VAL";
 				DATATYPE_CLIENT_STORE_VAL datatype = new DATATYPE_CLIENT_STORE_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25478,7 +28471,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 235;
+				UInt16 utype = 243;
 				string typeName = "GUILD_MEMBER_DATA_INFO";
 				DATATYPE_GUILD_MEMBER_DATA_INFO datatype = new DATATYPE_GUILD_MEMBER_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25487,7 +28480,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 238;
+				UInt16 utype = 246;
 				string typeName = "PERMISSION_GROUP_DATA_INFO";
 				DATATYPE_PERMISSION_GROUP_DATA_INFO datatype = new DATATYPE_PERMISSION_GROUP_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25496,7 +28489,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 239;
+				UInt16 utype = 247;
 				string typeName = "GUILD_PERMISSIONS_DATA_INFO";
 				DATATYPE_GUILD_PERMISSIONS_DATA_INFO datatype = new DATATYPE_GUILD_PERMISSIONS_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25505,7 +28498,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 241;
+				UInt16 utype = 249;
 				string typeName = "GUILD_LIST_VAL";
 				DATATYPE_GUILD_LIST_VAL datatype = new DATATYPE_GUILD_LIST_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25514,7 +28507,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 242;
+				UInt16 utype = 250;
 				string typeName = "SIEGEWAR_GUILD_VAL";
 				DATATYPE_SIEGEWAR_GUILD_VAL datatype = new DATATYPE_SIEGEWAR_GUILD_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25523,7 +28516,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 243;
+				UInt16 utype = 251;
 				string typeName = "SIEGEWAR_SCORE_VAL";
 				DATATYPE_SIEGEWAR_SCORE_VAL datatype = new DATATYPE_SIEGEWAR_SCORE_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25532,7 +28525,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 244;
+				UInt16 utype = 252;
 				string typeName = "SIEGEWAR_SEARCH_VAL";
 				DATATYPE_SIEGEWAR_SEARCH_VAL datatype = new DATATYPE_SIEGEWAR_SEARCH_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25541,7 +28534,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 245;
+				UInt16 utype = 253;
 				string typeName = "SIEGEWAR_BATTLE_END_DATA_VAL";
 				DATATYPE_SIEGEWAR_BATTLE_END_DATA_VAL datatype = new DATATYPE_SIEGEWAR_BATTLE_END_DATA_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25550,7 +28543,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 247;
+				UInt16 utype = 255;
 				string typeName = "SIEGEWAR_MINIMAP_SIGNAL_VAL";
 				DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL datatype = new DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25559,7 +28552,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 248;
+				UInt16 utype = 256;
 				string typeName = "CITY_RECENT_ACTIVITY_VAL";
 				DATATYPE_CITY_RECENT_ACTIVITY_VAL datatype = new DATATYPE_CITY_RECENT_ACTIVITY_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25568,7 +28561,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 250;
+				UInt16 utype = 258;
 				string typeName = "CITY_FUND_RECORD_VAL";
 				DATATYPE_CITY_FUND_RECORD_VAL datatype = new DATATYPE_CITY_FUND_RECORD_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25577,7 +28570,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 252;
+				UInt16 utype = 260;
 				string typeName = "CITY_OFFICER_LIST";
 				DATATYPE_CITY_OFFICER_LIST datatype = new DATATYPE_CITY_OFFICER_LIST();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25586,7 +28579,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 253;
+				UInt16 utype = 261;
 				string typeName = "CITY_ORDER_REMAIN_TIMES_VAL";
 				DATATYPE_CITY_ORDER_REMAIN_TIMES_VAL datatype = new DATATYPE_CITY_ORDER_REMAIN_TIMES_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25595,7 +28588,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 256;
+				UInt16 utype = 264;
 				string typeName = "GUILD_JOIN_APPLY_DATA_INFO";
 				DATATYPE_GUILD_JOIN_APPLY_DATA_INFO datatype = new DATATYPE_GUILD_JOIN_APPLY_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25604,7 +28597,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 259;
+				UInt16 utype = 267;
 				string typeName = "JUN_XU_QI_XIE_DATA_INFO";
 				DATATYPE_JUN_XU_QI_XIE_DATA_INFO datatype = new DATATYPE_JUN_XU_QI_XIE_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25613,7 +28606,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 260;
+				UInt16 utype = 268;
 				string typeName = "JUN_XU_ARCHITECTURE_DATA_INFO";
 				DATATYPE_JUN_XU_ARCHITECTURE_DATA_INFO datatype = new DATATYPE_JUN_XU_ARCHITECTURE_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25622,7 +28615,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 262;
+				UInt16 utype = 270;
 				string typeName = "GUILD_ARCHITECTURE_DATA_INFO";
 				DATATYPE_GUILD_ARCHITECTURE_DATA_INFO datatype = new DATATYPE_GUILD_ARCHITECTURE_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25631,7 +28624,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 263;
+				UInt16 utype = 271;
 				string typeName = "GUILD_BUILDING_DATA_INFO";
 				DATATYPE_GUILD_BUILDING_DATA_INFO datatype = new DATATYPE_GUILD_BUILDING_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25640,7 +28633,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 265;
+				UInt16 utype = 273;
 				string typeName = "CLI_GUILD_CHALLENGE_DATA_INFO";
 				DATATYPE_CLI_GUILD_CHALLENGE_DATA_INFO datatype = new DATATYPE_CLI_GUILD_CHALLENGE_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25649,7 +28642,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 266;
+				UInt16 utype = 274;
 				string typeName = "GUILD_CLIENT_DATA";
 				DATATYPE_GUILD_CLIENT_DATA datatype = new DATATYPE_GUILD_CLIENT_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25658,34 +28651,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 267;
-				string typeName = "HOLIDAYPAY_VAL";
-				DATATYPE_HOLIDAYPAY_VAL datatype = new DATATYPE_HOLIDAYPAY_VAL();
-				EntityDef.datatypes[typeName] = datatype;
-				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
-				EntityDef.datatype2id[typeName] = utype;
-			}
-
-			{
-				UInt16 utype = 268;
-				string typeName = "HOLIDAYPAY_LIST";
-				DATATYPE_HOLIDAYPAY_LIST datatype = new DATATYPE_HOLIDAYPAY_LIST();
-				EntityDef.datatypes[typeName] = datatype;
-				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
-				EntityDef.datatype2id[typeName] = utype;
-			}
-
-			{
-				UInt16 utype = 270;
-				string typeName = "CLI_BUY_CREDIT_NUM_DATA";
-				DATATYPE_CLI_BUY_CREDIT_NUM_DATA datatype = new DATATYPE_CLI_BUY_CREDIT_NUM_DATA();
-				EntityDef.datatypes[typeName] = datatype;
-				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
-				EntityDef.datatype2id[typeName] = utype;
-			}
-
-			{
-				UInt16 utype = 271;
+				UInt16 utype = 276;
 				string typeName = "GUILD_DETAIL_DATA";
 				DATATYPE_GUILD_DETAIL_DATA datatype = new DATATYPE_GUILD_DETAIL_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25694,7 +28660,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 272;
+				UInt16 utype = 277;
 				string typeName = "CLI_DRAW_CARD_INFO";
 				DATATYPE_CLI_DRAW_CARD_INFO datatype = new DATATYPE_CLI_DRAW_CARD_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25703,7 +28669,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 277;
+				UInt16 utype = 282;
 				string typeName = "GUILD_EVENT_LOG_DATA_INFO";
 				DATATYPE_GUILD_EVENT_LOG_DATA_INFO datatype = new DATATYPE_GUILD_EVENT_LOG_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25712,7 +28678,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 281;
+				UInt16 utype = 286;
 				string typeName = "TRAIN_DATA";
 				DATATYPE_TRAIN_DATA datatype = new DATATYPE_TRAIN_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25721,7 +28687,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 285;
+				UInt16 utype = 290;
 				string typeName = "APPLYED_GUILD_VAL_DATA_INFO";
 				DATATYPE_APPLYED_GUILD_VAL_DATA_INFO datatype = new DATATYPE_APPLYED_GUILD_VAL_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25730,7 +28696,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 286;
+				UInt16 utype = 291;
 				string typeName = "LEADER_BOARD_AVATAR_CACHE_DATA_INFO";
 				DATATYPE_LEADER_BOARD_AVATAR_CACHE_DATA_INFO datatype = new DATATYPE_LEADER_BOARD_AVATAR_CACHE_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25739,7 +28705,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 287;
+				UInt16 utype = 292;
 				string typeName = "LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO";
 				DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO datatype = new DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25748,7 +28714,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 293;
+				UInt16 utype = 298;
 				string typeName = "LEADER_BOARD_AVATAR_SCORE_DATA_INFO";
 				DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO datatype = new DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25757,7 +28723,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 294;
+				UInt16 utype = 299;
 				string typeName = "LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO";
 				DATATYPE_LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO datatype = new DATATYPE_LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25766,7 +28732,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 295;
+				UInt16 utype = 300;
 				string typeName = "INVITE_DATA";
 				DATATYPE_INVITE_DATA datatype = new DATATYPE_INVITE_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25775,7 +28741,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 296;
+				UInt16 utype = 301;
 				string typeName = "COLLECTIBLE_ITEM_VAL";
 				DATATYPE_COLLECTIBLE_ITEM_VAL datatype = new DATATYPE_COLLECTIBLE_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25784,7 +28750,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 299;
+				UInt16 utype = 304;
 				string typeName = "WELFARE_SIGN_IN_INFO";
 				DATATYPE_WELFARE_SIGN_IN_INFO datatype = new DATATYPE_WELFARE_SIGN_IN_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25793,7 +28759,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 300;
+				UInt16 utype = 305;
 				string typeName = "AUCTION_ITEM_CLIENT";
 				DATATYPE_AUCTION_ITEM_CLIENT datatype = new DATATYPE_AUCTION_ITEM_CLIENT();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25802,7 +28768,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 302;
+				UInt16 utype = 307;
 				string typeName = "AUCTION_ITEM_CLIENT_LIST";
 				DATATYPE_AUCTION_ITEM_CLIENT_LIST datatype = new DATATYPE_AUCTION_ITEM_CLIENT_LIST();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25811,7 +28777,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 309;
+				UInt16 utype = 314;
 				string typeName = "ACHIEVEMENT_VAL_DATA_INFO";
 				DATATYPE_ACHIEVEMENT_VAL_DATA_INFO datatype = new DATATYPE_ACHIEVEMENT_VAL_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25820,7 +28786,16 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 313;
+				UInt16 utype = 318;
+				string typeName = "MAP_EXPLORE_DATA_INFO";
+				DATATYPE_MAP_EXPLORE_DATA_INFO datatype = new DATATYPE_MAP_EXPLORE_DATA_INFO();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 327;
 				string typeName = "EQUIP_DROP_DATA_INFO";
 				DATATYPE_EQUIP_DROP_DATA_INFO datatype = new DATATYPE_EQUIP_DROP_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25829,7 +28804,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 314;
+				UInt16 utype = 328;
 				string typeName = "EQUIP_DROP_TAKER_DATA_INFO";
 				DATATYPE_EQUIP_DROP_TAKER_DATA_INFO datatype = new DATATYPE_EQUIP_DROP_TAKER_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25838,7 +28813,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 315;
+				UInt16 utype = 329;
 				string typeName = "EQUIP_DROP_MGR_TIMER_DATA_INFO";
 				DATATYPE_EQUIP_DROP_MGR_TIMER_DATA_INFO datatype = new DATATYPE_EQUIP_DROP_MGR_TIMER_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25847,7 +28822,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 316;
+				UInt16 utype = 330;
 				string typeName = "EQUIP_DROP_MGR_DATA_INFO";
 				DATATYPE_EQUIP_DROP_MGR_DATA_INFO datatype = new DATATYPE_EQUIP_DROP_MGR_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25856,7 +28831,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 321;
+				UInt16 utype = 334;
 				string typeName = "ENEMY_RECORD_DATA_INFO";
 				DATATYPE_ENEMY_RECORD_DATA_INFO datatype = new DATATYPE_ENEMY_RECORD_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25865,7 +28840,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 322;
+				UInt16 utype = 335;
 				string typeName = "ENEMY_RECORD_DATA_LIST";
 				DATATYPE_ENEMY_RECORD_DATA_LIST datatype = new DATATYPE_ENEMY_RECORD_DATA_LIST();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25874,7 +28849,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 324;
+				UInt16 utype = 337;
 				string typeName = "RELATION_ENEMY_DATA_INFO";
 				DATATYPE_RELATION_ENEMY_DATA_INFO datatype = new DATATYPE_RELATION_ENEMY_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25883,7 +28858,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 325;
+				UInt16 utype = 338;
 				string typeName = "ENEMY_FRESH_INFO";
 				DATATYPE_ENEMY_FRESH_INFO datatype = new DATATYPE_ENEMY_FRESH_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25892,7 +28867,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 331;
+				UInt16 utype = 344;
 				string typeName = "INSTANT_POTION_DATA_INFO";
 				DATATYPE_INSTANT_POTION_DATA_INFO datatype = new DATATYPE_INSTANT_POTION_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25901,7 +28876,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 332;
+				UInt16 utype = 345;
 				string typeName = "INSTANT_POTION_SLOTS_DATA_INFO";
 				DATATYPE_INSTANT_POTION_SLOTS_DATA_INFO datatype = new DATATYPE_INSTANT_POTION_SLOTS_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25910,7 +28885,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 334;
+				UInt16 utype = 347;
 				string typeName = "DUEL_ATTR_DATA_INFO";
 				DATATYPE_DUEL_ATTR_DATA_INFO datatype = new DATATYPE_DUEL_ATTR_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25919,7 +28894,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 336;
+				UInt16 utype = 349;
 				string typeName = "GUILD_CROSS_DATA_INFO";
 				DATATYPE_GUILD_CROSS_DATA_INFO datatype = new DATATYPE_GUILD_CROSS_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25928,7 +28903,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 338;
+				UInt16 utype = 351;
 				string typeName = "ENEMY_GUILD_CROSS_DATA_INFO";
 				DATATYPE_ENEMY_GUILD_CROSS_DATA_INFO datatype = new DATATYPE_ENEMY_GUILD_CROSS_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25937,7 +28912,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 339;
+				UInt16 utype = 352;
 				string typeName = "GUILD_APPLY_UNION_DATA_INFO";
 				DATATYPE_GUILD_APPLY_UNION_DATA_INFO datatype = new DATATYPE_GUILD_APPLY_UNION_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25946,7 +28921,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 340;
+				UInt16 utype = 353;
 				string typeName = "GUILD_APPLY_UNION_SENDER_DATA_INFO";
 				DATATYPE_GUILD_APPLY_UNION_SENDER_DATA_INFO datatype = new DATATYPE_GUILD_APPLY_UNION_SENDER_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25955,7 +28930,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 344;
+				UInt16 utype = 357;
 				string typeName = "GUILD_AND_RELATION";
 				DATATYPE_GUILD_AND_RELATION datatype = new DATATYPE_GUILD_AND_RELATION();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25964,7 +28939,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 345;
+				UInt16 utype = 358;
 				string typeName = "GUILD_ONETASK_INFO";
 				DATATYPE_GUILD_ONETASK_INFO datatype = new DATATYPE_GUILD_ONETASK_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25973,7 +28948,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 346;
+				UInt16 utype = 359;
 				string typeName = "POP_REWARD_ITEM_VAL";
 				DATATYPE_POP_REWARD_ITEM_VAL datatype = new DATATYPE_POP_REWARD_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25982,7 +28957,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 347;
+				UInt16 utype = 360;
 				string typeName = "KILLER_DATA";
 				DATATYPE_KILLER_DATA datatype = new DATATYPE_KILLER_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -25991,7 +28966,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 351;
+				UInt16 utype = 364;
 				string typeName = "RED_BAG_FETCH_VAL";
 				DATATYPE_RED_BAG_FETCH_VAL datatype = new DATATYPE_RED_BAG_FETCH_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26000,7 +28975,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 352;
+				UInt16 utype = 365;
 				string typeName = "RED_BAG_CLIENT_VAL";
 				DATATYPE_RED_BAG_CLIENT_VAL datatype = new DATATYPE_RED_BAG_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26009,7 +28984,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 353;
+				UInt16 utype = 366;
 				string typeName = "RED_BAG_FETCH_CLIENT_VAL";
 				DATATYPE_RED_BAG_FETCH_CLIENT_VAL datatype = new DATATYPE_RED_BAG_FETCH_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26018,7 +28993,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 355;
+				UInt16 utype = 368;
 				string typeName = "AUTH_PERMISSION_DATA_INFO";
 				DATATYPE_AUTH_PERMISSION_DATA_INFO datatype = new DATATYPE_AUTH_PERMISSION_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26027,7 +29002,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 358;
+				UInt16 utype = 371;
 				string typeName = "LEADER_BOARD_GUILD_DATA_INFO";
 				DATATYPE_LEADER_BOARD_GUILD_DATA_INFO datatype = new DATATYPE_LEADER_BOARD_GUILD_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26036,7 +29011,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 359;
+				UInt16 utype = 372;
 				string typeName = "ACT_TIMES_DATA_INFO";
 				DATATYPE_ACT_TIMES_DATA_INFO datatype = new DATATYPE_ACT_TIMES_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26045,7 +29020,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 360;
+				UInt16 utype = 373;
 				string typeName = "AUTH_STATISTICS_DATA_INFO";
 				DATATYPE_AUTH_STATISTICS_DATA_INFO datatype = new DATATYPE_AUTH_STATISTICS_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26054,7 +29029,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 375;
+				UInt16 utype = 388;
 				string typeName = "MERIDIAN_POINT_INFO";
 				DATATYPE_MERIDIAN_POINT_INFO datatype = new DATATYPE_MERIDIAN_POINT_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26063,7 +29038,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 376;
+				UInt16 utype = 389;
 				string typeName = "MERIDIAN_SLOT_INFO";
 				DATATYPE_MERIDIAN_SLOT_INFO datatype = new DATATYPE_MERIDIAN_SLOT_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26072,7 +29047,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 380;
+				UInt16 utype = 393;
 				string typeName = "MERIDIAN_ENHANCE_ITEM_INFO";
 				DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO datatype = new DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26081,7 +29056,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 393;
+				UInt16 utype = 406;
 				string typeName = "MINE_WAR_SINGLE_INFO";
 				DATATYPE_MINE_WAR_SINGLE_INFO datatype = new DATATYPE_MINE_WAR_SINGLE_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26090,7 +29065,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 395;
+				UInt16 utype = 408;
 				string typeName = "MINE_WAR_GUILD_RANK_INFO";
 				DATATYPE_MINE_WAR_GUILD_RANK_INFO datatype = new DATATYPE_MINE_WAR_GUILD_RANK_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26099,7 +29074,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 396;
+				UInt16 utype = 409;
 				string typeName = "MINE_WAR_GUILD_PLAYER_RANK_INFO";
 				DATATYPE_MINE_WAR_GUILD_PLAYER_RANK_INFO datatype = new DATATYPE_MINE_WAR_GUILD_PLAYER_RANK_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26108,7 +29083,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 399;
+				UInt16 utype = 412;
 				string typeName = "MINE_WAR_GUILD_SHARE_INFO";
 				DATATYPE_MINE_WAR_GUILD_SHARE_INFO datatype = new DATATYPE_MINE_WAR_GUILD_SHARE_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26117,7 +29092,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 400;
+				UInt16 utype = 413;
 				string typeName = "MINE_WAR_GUILD_MEMBER_SCORE_INFO";
 				DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO datatype = new DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26126,7 +29101,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 406;
+				UInt16 utype = 419;
 				string typeName = "CLI_DUNGEON_DATA";
 				DATATYPE_CLI_DUNGEON_DATA datatype = new DATATYPE_CLI_DUNGEON_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26135,7 +29110,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 407;
+				UInt16 utype = 420;
 				string typeName = "CLI_DUNGEON_SETTLEMENT_DATA";
 				DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA datatype = new DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26144,7 +29119,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 411;
+				UInt16 utype = 424;
 				string typeName = "CLI_DUNGEON_SETTLEMENT_RANK_DATA";
 				DATATYPE_CLI_DUNGEON_SETTLEMENT_RANK_DATA datatype = new DATATYPE_CLI_DUNGEON_SETTLEMENT_RANK_DATA();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26153,7 +29128,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 412;
+				UInt16 utype = 425;
 				string typeName = "STATISTIC_PLAYER_VAL";
 				DATATYPE_STATISTIC_PLAYER_VAL datatype = new DATATYPE_STATISTIC_PLAYER_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26162,7 +29137,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 414;
+				UInt16 utype = 427;
 				string typeName = "DUNGEON_PASS_RECRODS";
 				DATATYPE_DUNGEON_PASS_RECRODS datatype = new DATATYPE_DUNGEON_PASS_RECRODS();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26171,7 +29146,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 421;
+				UInt16 utype = 434;
 				string typeName = "CLI_MULTI_ENHANCE_EQUIP_RESULT";
 				DATATYPE_CLI_MULTI_ENHANCE_EQUIP_RESULT datatype = new DATATYPE_CLI_MULTI_ENHANCE_EQUIP_RESULT();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26180,7 +29155,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 422;
+				UInt16 utype = 435;
 				string typeName = "CLI_MULTI_ENHANCE_CONSUMED_RESULT";
 				DATATYPE_CLI_MULTI_ENHANCE_CONSUMED_RESULT datatype = new DATATYPE_CLI_MULTI_ENHANCE_CONSUMED_RESULT();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26189,7 +29164,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 423;
+				UInt16 utype = 436;
 				string typeName = "CLI_RECORD_DATA_INFO";
 				DATATYPE_CLI_RECORD_DATA_INFO datatype = new DATATYPE_CLI_RECORD_DATA_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26198,7 +29173,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 424;
+				UInt16 utype = 437;
 				string typeName = "BOUNTY_ITEM_VAL";
 				DATATYPE_BOUNTY_ITEM_VAL datatype = new DATATYPE_BOUNTY_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26207,7 +29182,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 425;
+				UInt16 utype = 438;
 				string typeName = "BOUNTY_ITEM_SYNC_VAL";
 				DATATYPE_BOUNTY_ITEM_SYNC_VAL datatype = new DATATYPE_BOUNTY_ITEM_SYNC_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26216,7 +29191,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 426;
+				UInt16 utype = 439;
 				string typeName = "BOUNTY_ITEM_CLIENT_VAL";
 				DATATYPE_BOUNTY_ITEM_CLIENT_VAL datatype = new DATATYPE_BOUNTY_ITEM_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26225,7 +29200,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 432;
+				UInt16 utype = 445;
 				string typeName = "TITLE_VAL_INFO";
 				DATATYPE_TITLE_VAL_INFO datatype = new DATATYPE_TITLE_VAL_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26234,7 +29209,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 433;
+				UInt16 utype = 446;
 				string typeName = "MINE_WAR_FLAG_STATE_INFO";
 				DATATYPE_MINE_WAR_FLAG_STATE_INFO datatype = new DATATYPE_MINE_WAR_FLAG_STATE_INFO();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26243,7 +29218,7 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 436;
+				UInt16 utype = 449;
 				string typeName = "FREE_TICKET_RECOVERY_CLIENT_VAL";
 				DATATYPE_FREE_TICKET_RECOVERY_CLIENT_VAL datatype = new DATATYPE_FREE_TICKET_RECOVERY_CLIENT_VAL();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26252,7 +29227,16 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 437;
+				UInt16 utype = 450;
+				string typeName = "FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL";
+				DATATYPE_FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL datatype = new DATATYPE_FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL();
+				EntityDef.datatypes[typeName] = datatype;
+				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
+				EntityDef.datatype2id[typeName] = utype;
+			}
+
+			{
+				UInt16 utype = 451;
 				string typeName = "LEASE_SHOP_SUMMARY";
 				DATATYPE_LEASE_SHOP_SUMMARY datatype = new DATATYPE_LEASE_SHOP_SUMMARY();
 				EntityDef.datatypes[typeName] = datatype;
@@ -26261,27 +29245,18 @@ namespace KBEngine
 			}
 
 			{
-				UInt16 utype = 438;
-				string typeName = "LEASE_MARKET_ITEM";
-				DATATYPE_LEASE_MARKET_ITEM datatype = new DATATYPE_LEASE_MARKET_ITEM();
+				UInt16 utype = 454;
+				string typeName = "CLI_SAFE_BOX_ITEM_VAL";
+				DATATYPE_CLI_SAFE_BOX_ITEM_VAL datatype = new DATATYPE_CLI_SAFE_BOX_ITEM_VAL();
 				EntityDef.datatypes[typeName] = datatype;
 				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
 				EntityDef.datatype2id[typeName] = utype;
 			}
 
 			{
-				UInt16 utype = 439;
-				string typeName = "LEASE_MY_SALE_ITEM";
-				DATATYPE_LEASE_MY_SALE_ITEM datatype = new DATATYPE_LEASE_MY_SALE_ITEM();
-				EntityDef.datatypes[typeName] = datatype;
-				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
-				EntityDef.datatype2id[typeName] = utype;
-			}
-
-			{
-				UInt16 utype = 440;
-				string typeName = "LEASE_RECORD";
-				DATATYPE_LEASE_RECORD datatype = new DATATYPE_LEASE_RECORD();
+				UInt16 utype = 461;
+				string typeName = "CLI_GLYPH_STATUS_CHANGE_INFO";
+				DATATYPE_CLI_GLYPH_STATUS_CHANGE_INFO datatype = new DATATYPE_CLI_GLYPH_STATUS_CHANGE_INFO();
 				EntityDef.datatypes[typeName] = datatype;
 				EntityDef.id2datatypes[utype] = EntityDef.datatypes[typeName];
 				EntityDef.datatype2id[typeName] = utype;

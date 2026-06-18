@@ -22,17 +22,29 @@ datas = _tools.RODict({
         "ChapterName": "双试锋芒"
     }),
     3: _tools.RODict({
-        "ChapterName": "解惑砺锋"
+        "ChapterName": "情劫共渡"
     }),
     4: _tools.RODict({
-        "ChapterName": "恶人叩门"
+        "ChapterName": "异乡隔阂"
     }),
     5: _tools.RODict({
-        "ChapterName": "祖珂悲歌"
+        "ChapterName": "深海挽歌"
     }),
     6: _tools.RODict({
-        "ChapterName": "前线告急"
+        "ChapterName": "同源异命"
+    }),
+    7: _tools.RODict({
+        "ChapterName": "飞沙告急"
+    }),
+    8: _tools.RODict({
+        "ChapterName": "飞沙之殇"
+    }),
+    9: _tools.RODict({
+        "ChapterName": "五毒奇遇"
+    }),
+    10: _tools.RODict({
+        "ChapterName": "起死回生"
     })
 })
 minKey = 1
-maxKey = 6
+maxKey = 10

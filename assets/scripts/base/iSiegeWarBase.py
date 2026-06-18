@@ -448,7 +448,7 @@ class ISiegeWarBase(object):
         if not self.guildBox:
             LOG_WARN('[lj]gm fast bidding: guildBox is None')
             return
-        self.guildBox.modifyGuildFund(100000, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_SIGN_UP, self.gbID, gameclass.AwardDetail())
+        self.guildBox.modifyGuildFund(100000, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_SIGN_UP, self.gbID, gameclass.AwardDetailCls())
         self.siegeWarSignUpBidding(self)
         self.guildBox.doDonateCityBattleToken(self.gbID, self, cnt, KBEngine.genUUID64())
         self.siegeWarTryBidding(self, cnt)

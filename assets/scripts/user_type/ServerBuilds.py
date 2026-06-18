@@ -254,7 +254,7 @@ class Build(userType.UserSingleType):
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_SKILL_UPGRADE
-        detail = gameclass.AwardDetail(skillId=skillId)
+        detail = gameclass.AwardDetailCls(skillId=skillId)
         owner.deductWealth(src, deductVal, opUUID, detail)
         newLevel = int(min(oldLevel + delta, self.getMaxLevel(owner, _morphBaseSkillId, oldSkillId)))
         self.skillLevels[skillId] = newLevel
@@ -276,7 +276,7 @@ class Build(userType.UserSingleType):
             owner,
             gameconst.AchieveType.LEVEL_UP_SKILL,
             actionContext.AchievementCtx(oldLevel=oldLevel, newLevel=newLevel))
-        LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
+        LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
         return True
 
     def resetAllSkill(self, caster):
@@ -324,7 +324,7 @@ class Build(userType.UserSingleType):
 
     def getSkillLevel(self, skillId):
         if skillId not in self.skillLevels:
-            LOG_ERR("getSkillLevel not in self.skillLevels")
+            LOG_ERR("getSkillLevel not in self.skillLevels", skillId)
             return 0
 
         return self.skillLevels[skillId]

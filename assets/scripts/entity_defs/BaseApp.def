@@ -76,16 +76,16 @@
             <Default>       []              </Default>
         </addictAccountIds>
 
-        <officialMesTimerDic>
+        <officialMesTimerDict>
             <Type>          PY_DICT          </Type>
             <Flags>         BASE            </Flags>
             <Default>       0               </Default>
-        </officialMesTimerDic>
+        </officialMesTimerDict>
 
-        <officialMesTickTimerDic>
+        <officialMesTickTimerDict>
             <Type>          PY_DICT          </Type>
             <Flags>         BASE            </Flags>
-        </officialMesTickTimerDic>
+        </officialMesTickTimerDict>
 
         <localStubCreated>
             <Type>          BOOL           </Type>

@@ -58,6 +58,7 @@ class GlyphAffix(Affix):
         self.glyphTypes = []
         self.glyphValues = []
         self.applyEffects()
+        self.isEffected = False
 
     def applyEffects(self):
         if self.afxId <= 0:
@@ -87,6 +88,7 @@ class GlyphAffix(Affix):
         vals.append(self.glyphQuality)
         vals.append(self.glyphTypes)
         vals.append(self.glyphValues)
+        vals.append(self.isEffected)
         return vals
 
     def fromAffixValList(self, val):
@@ -96,6 +98,7 @@ class GlyphAffix(Affix):
             self.glyphQuality = val[1]
             self.glyphTypes = val[2]
             self.glyphValues = val[3]
+            self.isEffected = val[4]
 
     def toAfxClientDic(self):
         return {
@@ -103,6 +106,7 @@ class GlyphAffix(Affix):
             'affixVal': self.affixVal,
             'glyphTypes': self.glyphTypes,
             'glyphEffects': self.getGlyphEffects(),
+            'isEffected': self.isEffected,
         }
 
     def getGlyphEffects(self):
@@ -114,6 +118,12 @@ class GlyphAffix(Affix):
     def iterGlyphEffect(self):
         for idx in range(len(self.glyphTypes)):
             yield self.glyphSkillId, self.glyphQuality, self.glyphTypes[idx], self.glyphValues[idx]
+
+    def setEffected(self, isEffected):
+        self.isEffected = isEffected
+
+    def getEffected(self):
+        return self.isEffected
 
 class AffixAdjustType(object):
     AFFIX_ADJUST_EQUIP_DROP = 0

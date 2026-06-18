@@ -26,7 +26,7 @@ class IScore(object):
         self.setTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist, m_dict)
         self._initAvatarCellScores()
         self.base.initAvatarBaseScores()
-        self.toCallbackAfter(10).checkInitScoreTimeout()
+        self.asyncCallbackAfter(10).checkInitScoreTimeout()
 
     def _initAvatarCellScores(self):
         self.updateSelfLevelScore()
@@ -102,11 +102,13 @@ class IScore(object):
         oldTotalScore = self.totalScore
         setattr(self.scoresInfo, key, val)
         # 每次重新计算祝福评分
-        oldBlessVal = self.scoresInfo.bless
-        blessVal = math.floor(dataUtils.calcAvatarBlessScore(self))
-        if blessVal >= 0 and blessVal != oldBlessVal:
-            setattr(self.scoresInfo, 'bless', blessVal)
-            self.base.baseScoreChanged(self.scoreInitFinished, 'bless', blessVal)
+        oldBlessScore = self.scoresInfo.bless
+        blessScore = dataUtils.calcAvatarBlessScore(self)
+        blessScore = math.floor(blessScore)
+        if blessScore >= 0 and blessScore != oldBlessScore:
+            setattr(self.scoresInfo, 'bless', blessScore)
+            self.base.baseScoreChanged(self.scoreInitFinished, 'bless', blessScore)
+        
         self.scoresInfo = self.scoresInfo
         self.totalScore = self.getTotalScore()
         if oldTotalScore != self.totalScore:

@@ -91,8 +91,6 @@ class IMineWarBase(object):
         """
         帮派变更回调
         """
-        # LOG_INFO('IMineWarBase.onGuildChange called for player:', self.id)
-
         # 重新请求
         self.reqSyncGuildData()
 
@@ -467,7 +465,7 @@ class IMineWarBase(object):
 
         gameengine.getGlobalBase('MineWarStub').doOnMineWarKillCoreForGuild(lineType, self, self.myGuildInfoBase)
 
-        LogTrackingMgr.LogTrackingMgr.MineBattle_KillCore(lineType, self.guildUUIDBase, self.gbID)
+        LogTrackingMgr.LogTrackingMgr.MineBattle_KillCore(self.gbID, self.accountEntity.clientDistinctId, lineType, self.guildUUIDBase, self.gbID)
 
     @gamedecorator.checkGameconfigEnable('mineBattle')
     def reqMineWarCollectInfo(self, exposed):

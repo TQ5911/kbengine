@@ -48,7 +48,7 @@ class IScore(object):
 
     def getTotalScore(self):
         return self.baseScoreInfo.totalScore
-
+    
     def baseScoreChanged(self, scoreInitFinished, scoreKey, scoreVal):
         oldTotalScore = self.getTotalScore()
         oldScoreVal = getattr(self.baseScoreInfo, scoreKey)

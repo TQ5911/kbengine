@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "AttentionMethod": _tools.RODict({
         "ID": "AttentionMethod",
-        "value": "第一步：关注官方公众号，发送口令\n“烽烟再起”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
+        "value": "第一步：关注官方公众号，发送口令\n“烽烟破晓”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
     }),
     "AttentionReward": _tools.RODict({
         "ID": "AttentionReward",
@@ -94,5 +94,9 @@ datas = _tools.RODict({
     "recoveryCostFree": _tools.RODict({
         "ID": "recoveryCostFree",
         "value": "免费找回",
+    }),
+    "recoveryNumCountDes": _tools.RODict({
+        "ID": "recoveryNumCountDes",
+        "value": "找回次数：{0}",
     })
 })

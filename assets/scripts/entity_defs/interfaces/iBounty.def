@@ -70,6 +70,7 @@
 
         <onNoticeBecomePreyHunter>
             <Arg>           BOUNTY_ITEM_SYNC_VAL     </Arg>
+            <Arg>           UINT8                    </Arg>
         </onNoticeBecomePreyHunter>
 
         <onNoticeHasAccepted>

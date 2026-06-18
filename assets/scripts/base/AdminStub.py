@@ -39,11 +39,11 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.pyAddTimer(1, 1, gametimer.ADMIN_STUB_ASYNC_TICK)
         gameglobal.localBaseApp.initAysncore()
 
-        self.pyAddTimer(gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL,
+        self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL,
                         gametimer.ADMIN_STUB_ACTIVE_TICK)
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.ADMIN_STUB_ASYNC_TICK:
             self._connectGmCenter()
         elif userArg == gametimer.ADMIN_STUB_ACTIVE_TICK:

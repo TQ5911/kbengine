@@ -237,6 +237,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "innerDemonTrigger": _tools.RODict({
+        "ID": "innerDemonTrigger",
+        "EventID": 10038,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

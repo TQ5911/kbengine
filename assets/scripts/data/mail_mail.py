@@ -95,8 +95,8 @@ datas = _tools.RODict({
     37000008: _tools.RODict({
         "ID": 37000008,
         "type": 2,
-        "title": "装备受损通知",
-        "content": "您的<link item id={0} gbid={1}>已受损，能量晶核遗失在<color=#54e7f2><link position x={2} z={3} spaceNo={4}></color>。",
+        "title": "装备遗失通知",
+        "content": "您的<link item id={0} gbid={1}>已受损，遗失在<color=#54e7f2><link position x={2} z={3} spaceNo={4} colorId=0></color>。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "1",
@@ -106,8 +106,8 @@ datas = _tools.RODict({
     37000009: _tools.RODict({
         "ID": 37000009,
         "type": 2,
-        "title": "装备修复通知",
-        "content": "受损装备<link item id={0} gbid={1}>的能量晶核已遗失，请尽快修复，否则将在<link time={2} format=yyyy-MM-dd HH:mm:ss>后彻底破碎。",
+        "title": "装备找回通知",
+        "content": "装备<link item id={0} gbid={1}>已遗失，请尽快找回，否则将在<link time={2} format=yyyy-MM-dd HH:mm:ss>后彻底破碎。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "24",
@@ -128,8 +128,8 @@ datas = _tools.RODict({
     37000011: _tools.RODict({
         "ID": 37000011,
         "type": 2,
-        "title": "能量晶核退回通知",
-        "content": "<link item id={0} gbid={1}>遗失的能量晶核已被退回，该装备将在30分钟后完成修复。",
+        "title": "装备退回通知",
+        "content": "<link item id={0} gbid={1}>遗失的装备已被退回，请及时领回。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -140,7 +140,7 @@ datas = _tools.RODict({
         "ID": 37000012,
         "type": 2,
         "title": "装备破碎通知",
-        "content": "<link item id={0} gbid=0>未修复，彻底损毁，能量晶核已消散。",
+        "content": "<link item id={0} gbid=0>未修复，彻底损毁，已消散。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -246,11 +246,66 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
+    37000022: _tools.RODict({
+        "ID": 37000022,
+        "type": 2,
+        "title": "巢穴挑战成功",
+        "content": "巢穴副本<color=#beab67>{0}</color>挑战圆满告捷！恭喜闯关成功，一身武艺果真名不虚传～",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000023: _tools.RODict({
+        "ID": 37000023,
+        "type": 2,
+        "title": "巢穴挑战失败",
+        "content": "巢穴副本<color=#beab67>{0}</color>挑战未能通关，想来是巢穴中强敌势大，不必气馁。稍作休整、重整锋芒，下次定能一举破关，师妹静待你的好消息！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000024: _tools.RODict({
+        "ID": 37000024,
+        "type": 2,
+        "title": "交易行抢购失败退还通知",
+        "content": "很遗憾，您参与的交易行抢购<link item id={0} gbid={1}>失败，现将您预付的元宝通过邮件退还给您，请及时领取！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
     37000030: _tools.RODict({
         "ID": 37000030,
         "type": 2,
         "title": "精灵遗器调整通知",
         "content": "由于版本更新，精灵装备栏位数量发生变化，为避免您的损失，我们自动为您回收了精灵遗器{0}，现通过邮件发放给您，请查收！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000031: _tools.RODict({
+        "ID": 37000031,
+        "type": 2,
+        "title": "月卡激活失败",
+        "content": "由于月卡有效时长已经超过上限，无法继续激活，未激活时长已换为等价值月卡激活道具，请检查背包或邮件~",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000032: _tools.RODict({
+        "ID": 37000032,
+        "type": 2,
+        "title": "月卡每日奖励补发",
+        "content": "您上次登录未及时领取月卡每日奖励，已为您发放至邮件，请查收！",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -696,10 +751,32 @@ datas = _tools.RODict({
         "period": "360",
         "event": "",
         "parm": ""
+    }),
+    37002017: _tools.RODict({
+        "ID": 37002017,
+        "type": 2,
+        "title": "魂魄发放",
+        "content": "您的奖励请注意查收",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37002018: _tools.RODict({
+        "ID": 37002018,
+        "type": 2,
+        "title": "帮会佣金发放",
+        "content": "您对帮会的贡献，获得了帮主的认可，您获得了帮主{0}犒赏的{1}帮会佣金。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
     })
 })
 minKey = 37000001
-maxKey = 37002016
+maxKey = 37002018
 
 MailArgsNumMap = _tools.RODict({ 
         37000001:0,
@@ -723,7 +800,12 @@ MailArgsNumMap = _tools.RODict({
         37000019:1,
         37000020:0,
         37000021:0,
+        37000022:1,
+        37000023:1,
+        37000024:2,
         37000030:1,
+        37000031:0,
+        37000032:0,
         37001001:0,
         37001002:0,
         37001003:0,
@@ -764,4 +846,6 @@ MailArgsNumMap = _tools.RODict({
         37002014:1,
         37002015:1,
         37002016:1,
+        37002017:0,
+        37002018:2,
 })

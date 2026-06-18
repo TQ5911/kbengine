@@ -12,6 +12,7 @@ import utils
 import gametimer
 import impDungeonCommon
 import math
+import CollectionCheckContext
 
 import message_Message_def as MMD
 import conflict_conflict_def as C_C_DD
@@ -75,7 +76,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         if self.isGlobalTeleportLocked(now=_now):
             LOG_WARN("gmEnterSingleDungeon:: teleport locked", self.teleportGlobalLockRlsT)
             return
-        self.aquireGlobalTeleportLock(now=_now)
+        self.acquireGlobalTeleportLock(now=_now)
 
         gameengine.getDungeonStubByDungeonNo(
             dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE).applyCreateDungeon(
@@ -116,7 +117,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         if self.isGlobalTeleportLocked(now=_now):
             LOG_WARN("onCheckSingleDungeonCondition:: teleport locked", self.teleportGlobalLockRlsT)
             return
-        self.aquireGlobalTeleportLock(now=_now)
+        self.acquireGlobalTeleportLock(now=_now)
         spaceUUID = 0
         if self.spaceMgr:
             spaceUUID = self.spaceMgr.spaceUUID
@@ -182,7 +183,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
                     'extra': extra}
         lCtx = {}
         src = extra.get('src')
-        context = {'e': eCtx, 'l': lCtx, 'src': src}
+        context = {'e': eCtx, 'l': lCtx, 'src': src, 'hasCheck': extra.get('hasCheck', False), 'hasCast': extra.get('hasCast', False)}
         options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
 
         canLeave = self.packComplexTeleportLeaveData(lCtx, judgeLeaveSrc=src)
@@ -193,6 +194,16 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
                 LOG_WARN("readyUseItemAndEnterSingleDungeon::failed, errno={}".format(canLeave.extra), self.spaceNo, spaceNo, context)
             return
 
+        if spaceMgrBox:
+            data = {
+                'name': self.name,
+                'school': self.school,
+                'level': self.level,
+                'sex': self.sex,
+                'gbId': self.gbId,
+                'eId': self.id,
+            }
+            spaceMgrBox.cell.doEnterSingleDungeon(self, playerGbId, extra.get('spaceUUID', 0), spaceBox, data)
         self.telFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     @gamedecorator.limitcall(5)
@@ -217,7 +228,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         if self.isGlobalTeleportLocked(now=_now):
             LOG_WARN("selfLeaveSingleDungeon:: teleport locked", dungeonNo, src, self.teleportGlobalLockRlsT)
             return
-        self.aquireGlobalTeleportLock(now=_now)
+        self.acquireGlobalTeleportLock(now=_now)
         self.doLeaveSingleDungeon(dungeonNo, src, 'server leave')
 
     def doLeaveSingleDungeon(self, dungeonNo, src, reason):
@@ -243,6 +254,9 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         lCtx = {'spaceMgrBox': self.spaceMgr.base, 'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID}
         eCtx = {}
         context = {'e': eCtx, 'l': lCtx, 'src': src}
+        if formula._isInnerDemonSpace(spaceNo):
+            self.enterCubeByMapIds([formula.fetchMapId(spaceNo)], {'hasCheck': True, 'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME, 'hasCast': False})
+            return
         options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
 
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
@@ -307,3 +321,6 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             src = dungeonSrc.DungeonFromFlowController(self.base, self.gbId)
             self._enterSingleDungeon(dstNo, src, {'position': (dstPos.x, dstPos.y, dstPos.z)})
 
+    def checkChallengeInnerDemon(self, *args):
+        LOG_DBG("checkChallengeInnerDemon", args)
+        return CollectionCheckContext.CollectionCheckInnerDemon(*args)

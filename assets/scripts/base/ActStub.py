@@ -52,7 +52,7 @@ class AnnouncementVal(object):
 class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
         self.announcementDict = {}
-        self.addDatetimeTimerTick()
+        self.initDatetimeTimerTick()
         self._resetActData()
 
     def onTimer(self, tid, userArg):
@@ -61,7 +61,7 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         elif userArg == gametimer.TIMER_CHECK_ANNOUNCEMENT:
             self.checkAnnouncement()
         else:
-            self._onTimer(tid, userArg)
+            self._onTimerTrigger(tid, userArg)
 
     def doNext(self):
         super().doNext()

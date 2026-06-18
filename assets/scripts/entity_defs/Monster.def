@@ -39,37 +39,11 @@
             <Flags>	OTHER_CLIENTS				</Flags>
         </name>
 
-        <moveController>
-            <Type>	UINT32						</Type>
-            <Flags>	CELL_PRIVATE 			</Flags>
-        </moveController>
-
-        <hateTrapId>
-            <Type>	UINT32						</Type>
-            <Flags>	CELL_PRIVATE 			</Flags>
-        </hateTrapId>
-
-        <bornPosition>
-            <Type>	POSITION3D				</Type>
-            <Flags>	CELL_PRIVATE 			</Flags>
-        </bornPosition>
-
         <bornRadius>
             <Type>    FLOAT        </Type>
             <Flags>   CELL_PRIVATE </Flags>
             <Default> 0.0          </Default>
         </bornRadius>
-
-        <route>
-            <Type>      PYTHON          </Type>
-            <Flags>     CELL_PRIVATE    </Flags>
-            <Default>    []             </Default>
-        </route>
-
-        <thinkTimer>
-            <Type>      TIMER_ID        </Type>
-            <Flags>     CELL_PRIVATE    </Flags>
-        </thinkTimer>
 
         <belongGbId>
             <Type>      PLAYER_GBID     </Type>
@@ -125,13 +99,6 @@
             <Type>          LONGTIME         </Type>
             <Flags>         CELL_PRIVATE     </Flags>
         </lastClearBeAttackAvatarsTime>
-
-        <siegeWarCamp>
-            <Type>          INT32           </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       0               </Default>
-            <WitnessName>   true            </WitnessName>
-        </siegeWarCamp>
 
         <needCountRefresh>
             <Type>      BOOL             </Type>

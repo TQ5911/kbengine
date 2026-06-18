@@ -11,14 +11,23 @@
             <Flags>         BASE                        </Flags>
             <Default>       {}                          </Default>
         </freeTickeRecoveryInfo>
+        <subType2FreeTicketInfo>
+            <Type>          PY_DICT                     </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       {}                          </Default>
+        </subType2FreeTicketInfo>
     </Properties>
 
     <BaseMethods>
-        <reqFreeTicketRecovery>
+        <reqFreeTicketRecovery> <Exposed/>
             <Arg>   UINT16       </Arg>
             <Arg>   UINT32       </Arg>
         </reqFreeTicketRecovery>
 
+        <reqFreeTicketOneClickRecovery> <Exposed/>
+            <Arg>   UINT16       </Arg>
+        </reqFreeTicketOneClickRecovery>
+        
         <onUpdateFreeTicketNumConfig>
             <Arg>   UINT16       </Arg>
         </onUpdateFreeTicketNumConfig>
@@ -32,5 +41,9 @@
             <Arg>   UINT16       </Arg>
             <Arg>   ARRAY   <of>    FREE_TICKET_RECOVERY_CLIENT_VAL     </of>   </Arg>
         </onFreeTicketRecoveryInfo>
+
+        <onFreeTicketOneClickRecoveryInfo>
+            <Arg>   ARRAY   <of>    FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL     </of>   </Arg>
+        </onFreeTicketOneClickRecoveryInfo>
     </ClientMethods>
 </root>

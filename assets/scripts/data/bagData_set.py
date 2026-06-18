@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     "commonBagCapacity": _tools.RODict({
         "ID": "commonBagCapacity",
-        "value": 150,
+        "value": 200,
     }),
     "currencyBagCapacity": _tools.RODict({
         "ID": "currencyBagCapacity",
@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "bankCapacity": _tools.RODict({
         "ID": "bankCapacity",
-        "value": 150,
+        "value": 200,
     }),
     "itemBatchUseUpLimit": _tools.RODict({
         "ID": "itemBatchUseUpLimit",

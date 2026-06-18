@@ -40,6 +40,10 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         _dunData = utils.getDunModuleData(_mapId)
         _iterGIDs = []
         for _gid in self.getMonsterGIDs():
+            if str(_gid) not in _dunData:
+                LOG_ERR('快联系策划把这个修改了,怪物组有个怪物没配置：', _gid, self.spaceNo)
+                continue
+
             _monData = _dunData[str(_gid)]
             _refreshNum = int(_monData['Props']['RefreshNum'])
             for i in utils.genGameEntityId(_gid, _refreshNum):
@@ -157,7 +161,7 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
                 monster.monsterGroupId = 0
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 

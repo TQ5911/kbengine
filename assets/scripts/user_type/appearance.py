@@ -199,6 +199,12 @@ class Appearance(userType.UserSingleType):
             owner.allClients.onAppearanceUpdated(part, realVal)
             owner.base.updateAccountCharacterAppearance({'breast':realVal})
 
+    def syncAppearanceToAccount(self, owner):
+        owner.base.updateAccountCharacterAppearance({
+            'breast': self.breast,
+            'weapon': self.weapon,
+        })
+
     def setOutfitId(self, owner, outfitType, outfitId):
         if self.checkOutfitIdSetup(outfitType, outfitId):
             LOG_WARN("setOutfitId ", outfitId, outfitType)

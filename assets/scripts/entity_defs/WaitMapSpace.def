@@ -1,0 +1,71 @@
+<root>
+    <Interfaces>
+        <Interface>   iBase  </Interface>
+        <Interface>   iCell  </Interface>
+        <Interface>   iTimerCell    </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaceid>
+            <Type>          SPACE_ID            </Type>
+            <Flags>         BASE            </Flags>
+        </spaceid>
+
+        <spaceno>
+            <Type>          SPACE_NO            </Type>
+            <Flags>         BASE            </Flags>
+        </spaceno>
+
+        <spacetype>
+            <Type>          UINT16        </Type>
+            <Flags>         BASE          </Flags>
+            <Default>       1             </Default>
+        </spacetype>
+
+        <chunkAlready>
+            <Type>      BOOL        </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   0       </Default>
+        </chunkAlready>
+
+        <notifiedSpaceReady>
+            <Type>      BOOL        </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   0       </Default>
+        </notifiedSpaceReady>
+
+        <cellappIndex>
+            <Type>  UINT32  </Type>
+            <Flags> BASE    </Flags>
+            <Default>   0   </Default>
+        </cellappIndex>
+
+        <spaceMap>
+            <Type>      PATH        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </spaceMap>
+
+        <onLoseCellReason>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE        </Flags>
+            <Default>       0           </Default>
+        </onLoseCellReason>
+
+
+    </Properties>
+
+    <BaseMethods>
+        <initCellField>
+            <Arg>       SPACE_ID    </Arg>
+        </initCellField>
+
+        <entireConstruct>
+            <Arg>       SPACE_ID    </Arg>
+        </entireConstruct>
+    </BaseMethods>
+
+    <CellMethods>
+        <destroyMySpace>
+        </destroyMySpace>
+    </CellMethods>
+</root>

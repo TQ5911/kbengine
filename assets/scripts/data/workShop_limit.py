@@ -15,10 +15,4 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    26: _tools.RODict({
-        "ID": 26,
-        "limit": 6000
-    })
 })
-minKey = 26
-maxKey = 26

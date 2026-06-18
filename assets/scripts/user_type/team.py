@@ -413,6 +413,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         self.teamMemberList = []
         self.siegeWarCamp = siegeWarCamp
         self.isInDungeon = False
+        self.lastDungeonFinishedTime = 0
         # endregion
 
     def _lateReload(self):
@@ -444,6 +445,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         self.isAutoExpedition = savedDataDict['isAutoExpedition']
         self.password = savedDataDict['password']
         self.isInDungeon = savedDataDict['isInDungeon']
+        self.lastDungeonFinishedTime = savedDataDict['lastDungeonFinishedTime']
         for i in savedDataDict['teamDungeonList']:
             self.teamDungeonDict[i.dungeonNo] = i
 
@@ -489,6 +491,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             'password': self.password,
             'isPublish': self.isPublish,
             'isInDungeon': self.isInDungeon,
+            'lastDungeonFinishedTime': self.lastDungeonFinishedTime,
             }
         return savedDict
     
@@ -527,6 +530,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             'password': self.password,
             'memberNum': self.getTeamMemberNum(),
             'siegeWarCamp': self.siegeWarCamp,
+            'lastDungeonFinishedTime': self.lastDungeonFinishedTime,
         }
         return clientData
     
@@ -571,7 +575,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                     LOG_ERR('teamMember is not online', _gbId)
                     continue
 
-                _box.cell.onAddTeamMemberCell(playerGbId, playerBox)
+                _box.cell.onAddTeamMemberToCell(playerGbId, playerBox)
                 if not _box.client:
                     LOG_WARN('teamMember has no client', _gbId)
                 else:
@@ -791,7 +795,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             if utils.checkBoxOffline(_box):
                 continue
 
-            if any(map(lambda _attr: _attr in attrDic, ('spaceNo', 'score', 'mountState'))):
+            if any(map(lambda _attr: _attr in attrDic, ('spaceNo', 'score', 'mountState', 'playerName'))):
                 if _box.cell:
                     _box.cell.onUpdateTeamMemberCell(playerGbId, attrDic)
 
@@ -810,6 +814,9 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
 
             if 'score' in attrDic:
                 _box.client.onUpdateTeamMemberScore(playerGbId, memberInfo.score)
+            
+            if 'playerName' in attrDic:
+                _box.client.onUpdateTeamMemberPlayerName(playerGbId, memberInfo.playerName)
             # ---------------------------------------------------------------------------
         return
 
@@ -846,8 +853,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                 if hasattr(_box, func):
                     getattr(_box, func, lambda *_, **__: None)(*args)
 
-    def broadcastToAllMembersCell(self, func, args):
+    def broadcastToAllMembersCell(self, func, args, exclude=None):
         for gbId, _teamPlayerVal in self.teamPlayerDict.items():
+            if exclude and gbId in exclude:
+                continue
             _box = _teamPlayerVal.playerBox
             if not _teamPlayerVal.bOnline:
                 continue
@@ -985,7 +994,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         self.isSilent = isSilent
         return
 
-    def sendTeamMemberMessage(self, msgId, messageArgs, localCross=False):
+    def sendTeamMemberMsg(self, msgId, messageArgs, localCross=False):
         if localCross:
             self.broadcastToAllMembersBase('onMessagePre_localCross', [msgId, messageArgs])
         else:
@@ -1005,18 +1014,23 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             if _teamMemberVal.isBlockMics:
                 _blockList.append(_teamMemberVal.playerGbId)
 
+        self.broadcastToAllMembersClient('onSyncAllTeamMemberMicsStatus',
+                                                    (self.teamId, _onList, _offList, _blockList))
+
         return _onList, _offList, _blockList
 
     def switchTeamMiscMode(self, srcGbId, mode, extraProps):
         if srcGbId != self.getCaptainGbId():
             return None, "TEAM_MISC_LEADER_MODE_LIMIT"
-
-        if self.teamMicsSwitch != mode:
+        oldMode = self.teamMicsSwitch
+        if oldMode != mode:
             try:
                 if mode == gameconst.TeamMicsModeEnum.OFF:
                     self._onTeamMiscModeSwitchOff()
                 elif mode == gameconst.TeamMicsModeEnum.FREE:
                     self._onTeamMiscModeSwitchToFree(extraProps)
+                elif mode == gameconst.TeamMicsModeEnum.LEADER:
+                    self._onTeamMiscModeSwitchToLeader(extraProps)
 
             except Exception as exce:
                 gameengine.reportCritital("switchTeamMiscMode::exce found", exce)
@@ -1025,6 +1039,9 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             self.teamMicsBlocked = False
 
         self.teamMicsSwitch = mode
+
+        self.broadcastToAllMembersClient('onSwitchTeamMicsMode',
+                                                    (self.teamId, srcGbId, oldMode, mode))
 
         return self, ""
 
@@ -1044,6 +1061,18 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                     _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = True, False
             else:
                 _teamMemberVal.enableMics = _teamMemberVal.isBlockMics = False
+
+    def _onTeamMiscModeSwitchToLeader(self, extraProps):
+        LOG_INFO("_onTeamMiscModeSwitchToLeader::", extraProps)
+        teamCaptainGBID = self.getCaptainGbId()
+        for _teamMemberVal in self.teamPlayerDict.values():
+            if _teamMemberVal.playerGbId == teamCaptainGBID:
+                if 'isForbidVoice' in extraProps:
+                    _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = False, False
+                else:
+                    _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = True, False
+            else:
+                _teamMemberVal.enableMics = _teamMemberVal.isBlockMics = False, True
 
     def turnOnTeamMemberMics(self, srcGbId, playerGBID, toClient=False):
         if not self.teamMicsSwitch:
@@ -1074,8 +1103,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             _memberVal.enableMics = True
 
         if toClient:
-            _unblockMics and self.broadcastToAllMembersClient('onUnblockTeamMemberMisc',
+            _unblockMics and self.broadcastToAllMembersClient('onUnblockTeamMemberMics',
                                                             (self.teamId, playerGBID))
+            self.broadcastToAllMembersClient('onTurnOnTeamMemberMics',
+                                           (srcGbId, self.teamId, playerGBID))
         return _memberVal, ""
 
     def turnOffTeamMemberMics(self, srcGbId, playerGBID, blockMics=False, toClient=False):
@@ -1100,6 +1131,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         if blockMics:
             _memberVal.isBlockMics = True
 
+        if toClient:
+            self.broadcastToAllMembersClient('onTurnOffTeamMemberMics',
+                                           (srcGbId, self.teamId, playerGBID, blockMics))
+
         return _memberVal, ""
 
     def unblockTeamMemberMisc(self, playerGBID, toClient=False):
@@ -1113,7 +1148,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         _memberVal.isBlockMics = False
 
         if toClient:
-            self.broadcastToAllMembersClient('onUnblockTeamMemberMisc',
+            self.broadcastToAllMembersClient('onUnblockTeamMemberMics',
                                            (self.teamId, playerGBID))
 
         return _memberVal, ""
@@ -1201,7 +1236,7 @@ class PlayerTeamMemberCacheVal(userType.UserSingleType):
             setattr(self, attrName, attrVal)
 
 
-class PlayerTeamCacheVal(userType.UserSingleType):
+class TeamCacheValInPlayer(userType.UserSingleType):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0):
         self.teamId = teamId
         self.teamTarget = teamTarget
@@ -1215,18 +1250,6 @@ class PlayerTeamCacheVal(userType.UserSingleType):
         self.teamCaptainGbId = 0
         self.teamPlayerDict = {}
         self.applyJoinDict = {}
-
-    def getTeamMemberIndex(self, playerGBID):
-        if playerGBID not in self.teamPlayerDict:
-            return 0
-        idx = 0
-        for pid in self.teamPlayerDict:
-            if pid == self.teamCaptainGbId:
-                continue
-            elif pid == playerGBID:
-                return idx
-            idx += 1
-        return 0
 
     def addMemberForPlayer(self, owner, playerGbId, playerBox, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0):
         if playerBox:
@@ -1365,7 +1388,7 @@ class PlayerTeamCacheVal(userType.UserSingleType):
         return savedDict
 
     def _lateReload(self):
-        super(PlayerTeamCacheVal, self)._lateReload()
+        super(TeamCacheValInPlayer, self)._lateReload()
 
         for v in self.teamPlayerDict.values():
             v.reloadScript()

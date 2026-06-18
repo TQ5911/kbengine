@@ -535,6 +535,10 @@ datas = _tools.RODict({
         "ID": "connectionTimedOut_msg",
         "value": 54980009,
     }),
+    "forceLogout": _tools.RODict({
+        "ID": "forceLogout",
+        "value": 54980011,
+    }),
     "changeAccountExplanation": _tools.RODict({
         "ID": "changeAccountExplanation",
         "value": "当日早5点至次日早5点间，只能切换一次账号进入。",
@@ -693,7 +697,7 @@ datas = _tools.RODict({
     }),
     "queuingWhiteList": _tools.RODict({
         "ID": "queuingWhiteList",
-        "value": 4500,
+        "value": 0,
     }),
     "accountsDinghao": _tools.RODict({
         "ID": "accountsDinghao",
@@ -906,5 +910,13 @@ datas = _tools.RODict({
     "fullUpdate_download": _tools.RODict({
         "ID": "fullUpdate_download",
         "value": 54002132,
+    }),
+    "register_blockNumbers": _tools.RODict({
+        "ID": "register_blockNumbers",
+        "value": ([17000000000, 170999999999], [17100000000, 171999999999], [16500000000, 165999999999], [16700000000, 167999999999], [16200000000, 162999999999]),
+    }),
+    "register_blockNumbersMsg": _tools.RODict({
+        "ID": "register_blockNumbersMsg",
+        "value": 54980012,
     })
 })

@@ -4,7 +4,10 @@ datas ={
     "entityID": [
       40260001,
       40260002,
-      40260003
+      40260003,
+      40260028,
+      40260029,
+      40260030
     ],
     "num": 0,
     "lv": "25",
@@ -15,18 +18,18 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1046
+      ]
+    }
   },
   "1001": {
     "type": "dunStart",
     "transition": {
       "finished": [
         1003,
-        1020,
-        1031,
-        1039,
-        1042,
-        1044
+        1020
       ]
     }
   },
@@ -38,22 +41,31 @@ datas ={
     "num": 0,
     "transition": {}
   },
-  "1031": {
-    "type": "taskFinished",
-    "taskID": 86010188,
+  "1046": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1032
+        1047
       ]
     }
   },
-  "1032": {
+  "1047": {
     "type": "createMonster",
     "entityID": [
       40260004,
-      40260006
+      40260006,
+      40260031,
+      40260032,
+      40260033,
+      40260034
     ],
     "num": 0,
     "lv": "25",
@@ -66,76 +78,27 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1033,
-        1035
+        1048
       ]
     }
   },
-  "1033": {
-    "type": "monsterHp",
+  "1048": {
+    "type": "monsterRestNum",
     "monsterID": [
-      40260006
+      -1
     ],
     "compare": 1,
-    "hpPercent": 0.0,
+    "restNum": 0,
+    "usePrototypeID": 0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1036
+        1049
       ]
     }
   },
-  "1035": {
-    "type": "monsterHp",
-    "monsterID": [
-      40260007
-    ],
-    "compare": 1,
-    "hpPercent": 0.0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1038
-      ]
-    }
-  },
-  "1036": {
-    "type": "createCreationInFixedPosition",
-    "monsterID": [
-      0
-    ],
-    "entityID": [
-      40268003
-    ],
-    "num": 0,
-    "transition": {}
-  },
-  "1038": {
-    "type": "createCreationInFixedPosition",
-    "monsterID": [
-      0
-    ],
-    "entityID": [
-      40268004
-    ],
-    "num": 0,
-    "transition": {}
-  },
-  "1039": {
-    "type": "taskFinished",
-    "taskID": 86010189,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1040,
-        1041
-      ]
-    }
-  },
-  "1040": {
+  "1049": {
     "type": "createMonster",
     "entityID": [
       40260007,
@@ -153,44 +116,40 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1050
+      ]
+    }
   },
-  "1041": {
-    "type": "createMonster",
-    "entityID": [
-      40260012,
-      40260013
+  "1050": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
     ],
-    "num": 0,
-    "lv": "25",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
-  },
-  "1042": {
-    "type": "taskFinished",
-    "taskID": 86010191,
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1043
+        1053
       ]
     }
   },
-  "1043": {
+  "1053": {
     "type": "createMonster",
     "entityID": [
-      40260016,
-      40260017,
       40260018,
       40260019,
-      40260020
+      40260020,
+      40260035,
+      40260036,
+      40260037,
+      40260038,
+      40260039,
+      40260040
     ],
     "num": 0,
     "lv": "25",
@@ -201,27 +160,76 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1054
+      ]
+    }
   },
-  "1044": {
-    "type": "taskFinished",
-    "taskID": 86010192,
+  "1054": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1045
+        1055
       ]
     }
   },
-  "1045": {
+  "1055": {
     "type": "createMonster",
     "entityID": [
-      40260021,
+      40260016
+    ],
+    "num": 0,
+    "lv": "25",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1056
+      ]
+    }
+  },
+  "1056": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1057
+      ]
+    }
+  },
+  "1057": {
+    "type": "createMonster",
+    "entityID": [
       40260022,
       40260023,
       40260024,
-      40260025
+      40260041,
+      40260042,
+      40260043,
+      40260044,
+      40260045,
+      40260046
     ],
     "num": 0,
     "lv": "25",
@@ -232,6 +240,78 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1058
+      ]
+    }
+  },
+  "1058": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1059
+      ]
+    }
+  },
+  "1059": {
+    "type": "createMonster",
+    "entityID": [
+      40260021
+    ],
+    "num": 0,
+    "lv": "25",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1060
+      ]
+    }
+  },
+  "1060": {
+    "type": "taskFinished",
+    "taskID": 86010193,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1061,
+        1062
+      ]
+    }
+  },
+  "1061": {
+    "type": "createCollection",
+    "entityID": [
+      40268005
+    ],
+    "num": 0,
+    "randomCollectionNum": 0,
+    "checkHaveInFixed": 0,
+    "transition": {}
+  },
+  "1062": {
+    "type": "createNPC",
+    "entityID": [
+      40264001
+    ],
+    "num": 0,
+    "lv": "25",
+    "ifSetBoss": 0,
     "transition": {}
   }
 }

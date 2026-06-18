@@ -77,7 +77,10 @@ class CubeArenaVal(userType.UserSingleType):
 
     def onArenaChangeSafeArea(self, player, beSafe, spaceMgr):
         if beSafe:
+            kingBuffId = self.kingBuffId
             if player.id == self.arenaKing and self.onPlayerLeaveArena(self.arenaKing, spaceMgr):
+                player.removeBuff(kingBuffId)
+                player.addBuff(self.getChallengerBuff(player.spaceNo), 1, player.id)
                 player.showMsg(cube_config.datas['cube_championDefenderLose']['value'], [])
         else:
             if player.id == self.arenaKing:

@@ -50,7 +50,11 @@ datas = _tools.RODict({
     9: _tools.RODict({
         "ID": 9,
         "name": "圆环形空气墙（月光世界boss）",
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "name": "圆环形空气墙（五毒世界boss）",
     })
 })
 minKey = 1
-maxKey = 9
+maxKey = 10

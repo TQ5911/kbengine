@@ -9,7 +9,6 @@ import gameglobal
 import importlib
 import functools
 import dataUtils
-import os
 import re
 
 
@@ -28,38 +27,35 @@ def _reloadSingleModule(module, mros=('root',), warningDepth=15, fatalDepth=100)
     module.__spec__: 包源信息
 
     """
-    depth = len(mros)
-    if depth >= fatalDepth:
-        LOG_ERR("[REALOAD-MODULE] mro stack deeply [{}]({})".format(depth, module.__name__))
+    _depth = len(mros)
+    if _depth >= fatalDepth:
+        LOG_ERR("[REALOAD-MODULE] mro stack deeply [{}]({})".format(_depth, module.__name__))
         LOG_ERR("                 --", ' -> '.join(mros), '-->', module)
         raise RecursionError("maximum recursion depth exceeded")
 
-    elif depth >= warningDepth:
-        LOG_WARN("[REALOAD-MODULE] mro stack deeply [{}]({})".format(depth, module.__name__))
+    elif _depth >= warningDepth:
+        LOG_WARN("[REALOAD-MODULE] mro stack deeply [{}]({})".format(_depth, module.__name__))
         LOG_WARN("                 --", ' -> '.join(mros), '-->', module)
 
     modulePath = getattr(module, '__file__', '')
     if not modulePath or 'assets' not in modulePath or _isData(module) or _isLib(
             module) or module.__name__ == 'gameglobal':
-        # LOG_DBG('[REALOD-MODULE] skipped module --- {modulePath}({moduleName})'.format(
-        #     modulePath=modulePath,
-        #     moduleName=module.__name__))
         return
 
-    if module.__name__ in gameglobal.reloadedModuleMap or id(module) in gameglobal.reloadedModuleIdMap:
+    if module.__name__ in gameglobal.reloadedModuleDic or id(module) in gameglobal.reloadedModuleIdDic:
         return
 
     LOG_INFO('[REALOD-MODULE]{intent} {mros} --- ({moduleName})'.format(
-        intent=depth * 2 * '',
+        intent=_depth * 2 * '',
         moduleName=module.__name__,
         mros=' -> '.join(mros), ))
 
-    gameglobal.reloadedModuleMap[module.__name__] = module
-    gameglobal.reloadedModuleIdMap[id(module)] = module
+    gameglobal.reloadedModuleDic[module.__name__] = module
+    gameglobal.reloadedModuleIdDic[id(module)] = module
 
-    for attName, attVal in module.__dict__.items():
-        if inspect.ismodule(attVal):
-            _reloadSingleModule(attVal, mros + (module.__name__,))
+    for _attVal in module.__dict__.values():
+        if inspect.ismodule(_attVal):
+            _reloadSingleModule(_attVal, mros + (module.__name__,))
 
     importlib.reload(module)
 
@@ -69,17 +65,17 @@ def _reloadModules():
 
     gameglobal.clearCommandsCache()
 
-    for moduleName in sorted(sys.modules.keys(), reverse=True):
-        module = sys.modules[moduleName]
+    for _moduleName in sorted(sys.modules.keys(), reverse=True):
+        module = sys.modules[_moduleName]
         _reloadSingleModule(module)
 
 
 def refreshScript():
     gameglobal.refreshCount += 1
-    for e in KBEngine.entities.values():
+    for _e in KBEngine.entities.values():
         try:
-            if e and hasattr(e, 'preReloadScript'):
-                e.preReloadScript()
+            if _e and hasattr(_e, 'preReloadScript'):
+                _e.preReloadScript()
         except:
             import gameengine, sys
             gameengine.exceptHook(*sys.exc_info())
@@ -105,22 +101,22 @@ def refreshScript():
 
 
 def _lateReload():
-    for e in KBEngine.entities.values():
+    for _e in KBEngine.entities.values():
         try:
-            e.reloadScript()
+            _e.reloadScript()
         except:
             import gameengine
             gameengine.exceptHook(*sys.exc_info())
 
-    for e in KBEngine.entities.values():
+    for _e in KBEngine.entities.values():
         try:
-            e.postReloadScript()
+            _e.postReloadScript()
         except:
             import gameengine
             gameengine.exceptHook(*sys.exc_info())
 
-    gameglobal.reloadedModuleMap = {}
-    gameglobal.reloadedModuleIdMap = {}
+    gameglobal.reloadedModuleDic = {}
+    gameglobal.reloadedModuleIdDic = {}
     gameglobal.reloadedCls = {}
 
 
@@ -130,154 +126,156 @@ _RELOADED_MODULES = {}
 def mismathObjectCheck(autoFixed=False, debug=False):
     import KBEngine
     import gameengine
-    import sys
 
-    for e in KBEngine.entities.values():
+    for _e in KBEngine.entities.values():
         try:
-            _mismatchSingleObjectCheck(e, e.__class__.__name__ + f"({e.id})", autoFixed=autoFixed, debug=debug)
+            _mismatchSingleObjectCheck(_e, _e.__class__.__name__ + f"({_e.id})", autoFixed=autoFixed, debug=debug)
         except Exception as exc:
             gameengine.panicStack("!!! CHECK EXCEPTION FOUND >>", exc)
 
 
-def _mismatchSingleObjectCheck(e, name, links=(), autoFixed=False, debug=False):
+def _mismatchSingleObjectCheck(ent, name, links=(), autoFixed=False, debug=False):
     import gameengine
 
-    if e in links:
+    if ent in links:
         return
 
-    if hasattr(e, '__dict__'):
-        for _n, _e in e.__dict__.items():
+    if hasattr(ent, '__dict__'):
+        for _n, _e in ent.__dict__.items():
             if not isinstance(_e, type):
                 try:
-                    _mismatchSingleObjectCheck(_e, name + '.' + _n, links + (e,), autoFixed=autoFixed, debug=debug)
+                    _mismatchSingleObjectCheck(_e, '{}.{}'.format(name, _n), links + (ent,), autoFixed=autoFixed, debug=debug)
                 except Exception as exc:
                     gameengine.panicStack("!!! CHECK EXCEPTION FOUND >>", exc)
 
-    if hasattr(e, '__iter__'):
-        for _e in e:
+    if hasattr(ent, '__iter__'):
+        for _e in ent:
             if not isinstance(_e, type):
                 try:
-                    _mismatchSingleObjectCheck(_e, name + '.IterableObj', links + (e,), autoFixed=autoFixed,
+                    _mismatchSingleObjectCheck(_e, name + '.IterableObj', links + (ent,), autoFixed=autoFixed,
                                                debug=debug)
                 except Exception as exc:
                     gameengine.panicStack("!!! CHECK EXCEPTION FOUND >>", exc)
 
-    if isinstance(e, dict):
-        for _, _e in e.copy().items():
-            if not isinstance(_e, type):
-                try:
-                    _mismatchSingleObjectCheck(_e, name + '.MappingObj', links + (e,), autoFixed=autoFixed, debug=debug)
-                except Exception as exc:
-                    gameengine.panicStack("!!! CHECK EXCEPTION FOUND >>", exc)
+    if isinstance(ent, dict):
+        for _, _e in ent.copy().items():
+            if isinstance(_e, type):
+                continue
 
-    _mismatchSingleObjectBasesClsCheck(e, links, e.__class__, checkName=name, autoFixed=autoFixed, debug=debug)
+            try:
+                _mismatchSingleObjectCheck(_e, name + '.MappingObj', links + (ent,), autoFixed=autoFixed, debug=debug)
+            except Exception as exc:
+                gameengine.panicStack("!!! CHECK EXCEPTION FOUND >>", exc)
+
+    _mismatchSingleObjectBasesClsCheck(ent, links, ent.__class__, checkTag=name, autoFixed=autoFixed, debug=debug)
 
 
-def _mismatchSingleObjectBasesClsCheck(e, links=(), __class__=object, __child_class__=None.__class__, baseIndex=0,
-                                       checkName='',
-                                       autoFixed=False, debug=False):
+def _mismatchSingleObjectBasesClsCheck(ent, links=(), __class__=object, __child_class__=None.__class__, baseIndex=0,
+                                       checkTag='',
+                                       autoFixed=False, debug=False,):
     if __class__ is object:
         return
 
     __bases__ = __class__.__bases__
     for idx, __upperCls__ in enumerate(__bases__):
-        _mismatchSingleObjectBasesClsCheck(e, links, __upperCls__, __class__, baseIndex=idx, checkName=checkName,
+        _mismatchSingleObjectBasesClsCheck(ent, links, __upperCls__, __class__, baseIndex=idx, checkTag=checkTag,
                                            autoFixed=autoFixed)
 
-    _mroCls = __class__
+    # 实体创建时绑定的旧类对象
+    _walkedCls = __class__
 
-    if not isinstance(e, _mroCls):
+    if not isinstance(ent, _walkedCls):
         debug and LOG_ERR(
-            f"!!! OBJECT MRO_ FAIL: [{checkName}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {e.__class__.__name__}({e}) "
-            f"|| lostCls={_mroCls}")
+            f"!!! OBJECT MRO_ FAIL: [{checkTag}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {ent.__class__.__name__}({ent}) "
+            f"|| lostCls={_walkedCls}")
         return
 
-    _module = sys.modules.get(_mroCls.__module__)
+    _module = sys.modules.get(_walkedCls.__module__)
     if not _module:
-        if _mroCls.__module__.endswith('_pb2'):
+        if _walkedCls.__module__.endswith('_pb2'):
             return
         debug and LOG_ERR(
-            f"!!! OBJECT NOT FOUND: [{checkName}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {e.__class__.__name__}({e}) "
-            f"|| lostCls={_mroCls}")
+            f"!!! OBJECT NOT FOUND: [{checkTag}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {ent.__class__.__name__}({ent}) "
+            f"|| lostCls={_walkedCls}")
         return
 
     _eCls = None.__class__
-    if hasattr(KBEngine, _mroCls.__name__):
-        _eCls = getattr(KBEngine, _mroCls.__name__)
-    if hasattr(Math, _mroCls.__name__):
-        _eCls = getattr(Math, _mroCls.__name__)
-    if hasattr(_module, _mroCls.__name__):
-        _eCls = getattr(_module, _mroCls.__name__)
+    if hasattr(KBEngine, _walkedCls.__name__):
+        _eCls = getattr(KBEngine, _walkedCls.__name__)
+    if hasattr(Math, _walkedCls.__name__):
+        _eCls = getattr(Math, _walkedCls.__name__)
+    if hasattr(_module, _walkedCls.__name__):
+        _eCls = getattr(_module, _walkedCls.__name__)
 
-    if _mroCls is not _eCls:
+    if _walkedCls is not _eCls:
         if _eCls is None.__class__:
-            # LOG_ERR(f"!!! OBJCLS NOT FOUND: [{checkName}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {e.__class__.__name__}({e}) "
-            #           f"|| lostCls={_mroCls}")
+            # LOG_ERR(f"!!! OBJCLS NOT FOUND: [{checkTag}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {ent.__class__.__name__}({ent}) "
+            #           f"|| lostCls={_walkedCls}")
             return
 
         if autoFixed:
             debug and LOG_WARN(
-                f">>> TRY AUTO FIXED MISMATCH CLS: [{checkName}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {e.__class__.__name__}({e}) "
-                f"|| {__child_class__ if __child_class__ is not None.__class__ else '<ROOT>'}.{_mroCls}(id={id(_mroCls)} ==> {_eCls}(id={id(_eCls)})")
+                f">>> TRY AUTO FIXED MISMATCH CLS: [{checkTag}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {ent.__class__.__name__}({ent}) "
+                f"|| {__child_class__ if __child_class__ is not None.__class__ else '<ROOT>'}.{_walkedCls}(id={id(_walkedCls)} ==> {_eCls}(id={id(_eCls)})")
             if __child_class__ == None.__class__:
-                if e.__class__.__name__ != 'Space':
+                if ent.__class__.__name__ != 'Space':
                     try:
-                        e.__class__ = _eCls
+                        ent.__class__ = _eCls
                         debug and LOG_DBG(
-                            f">>>    IN CLASS CHANGING: {e.__class__.__name__}(id={e.__class__}) ==> {_eCls.__name__}(id={_eCls})")
+                            f">>>    IN CLASS CHANGING: {ent.__class__.__name__}(id={ent.__class__}) ==> {_eCls.__name__}(id={_eCls})")
                     except Exception as exc:
                         debug and LOG_ERR(
-                            f"!!!    IN CLASS CHANGING: {e.__class__.__name__}(id={e.__class__}) =X> {_eCls.__name__}(id={_eCls}), exc={exc}")
+                            f"!!!    IN CLASS CHANGING: {ent.__class__.__name__}(id={ent.__class__}) =X> {_eCls.__name__}(id={_eCls}), exc={exc}")
                     return
 
             else:
                 __new_bases__ = []
-                for idx, i in enumerate(__child_class__.__bases__):
-                    if idx == baseIndex:
+                for _idx, i in enumerate(__child_class__.__bases__):
+                    if _idx == baseIndex:
                         __new_bases__.append(_eCls)
                         continue
                     __new_bases__.append(i)
                 __new_bases__ = tuple(__new_bases__)
                 debug and LOG_DBG(
-                    f">>>    IN BASES CHANGING: idx={baseIndex} || "
+                    f">>>    IN BASES CHANGING: _idx={baseIndex} || "
                     f"{__child_class__.__bases__}(cid={id(__child_class__.__bases__[baseIndex])}) "
                     f"==> {__new_bases__}(cid={id(__new_bases__[baseIndex])})")
                 __child_class__.__bases__ = __new_bases__
                 return
 
         debug and LOG_ERR(
-            f"!!! OBJECT MIS MATCH: [{checkName}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {e.__class__.__name__}({e}) "
-            f"|| sys/cls ==> {_eCls.__name__}(id={id(_eCls)}) /= {_mroCls.__name__}(id={id(_mroCls)})")
+            f"!!! OBJECT MIS MATCH: [{checkTag}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {ent.__class__.__name__}({ent}) "
+            f"|| sys/cls ==> {_eCls.__name__}(id={id(_eCls)}) /= {_walkedCls.__name__}(id={id(_walkedCls)})")
         return
 
-    if not isinstance(e, _eCls):
+    if not isinstance(ent, _eCls):
         debug and LOG_ERR(
-            f"!!! OBJECT INST FAIL: [{checkName}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {e.__class__.__name__}({e}) "
+            f"!!! OBJECT INST FAIL: [{checkTag}] -> {' -> '.join((i.__class__.__name__ for i in links))} => {ent.__class__.__name__}({ent}) "
             f"|| mischeckCls={_eCls}")
         return
-
-
-def refreshData(includeModules=None):
-    LOG_INFO('refreshData with args:', includeModules)
-    try:
-        _refreshData(includeModules)
-    finally:
-        _RELOADED_MODULES.clear()
 
 
 def _isData(module):
     return hasattr(module, '__file__') and 'data' in module.__file__ and hasattr(module, 'datas')
 
 
-pathSep = re.compile('[\\/]|\\\\|//')
+def refreshData(includeModules=None):
+    LOG_INFO('refreshData with args:', includeModules)
+    try:
+        _doRefreshData(includeModules)
+    finally:
+        _RELOADED_MODULES.clear()
+
+
+g_pathSep = re.compile('[\\/]|\\\\|//')
 
 
 def _isLib(module):
     if not hasattr(module, '__file__'):
         return False
-    parts = pathSep.split(module.__file__)
-    for i, p in enumerate(parts):
-        if p == 'common' and i < len(parts) - 1 and parts[i + 1] == 'Lib':
+    parts = g_pathSep.split(module.__file__)
+    for _i, p in enumerate(parts):
+        if p == 'common' and _i < len(parts) - 1 and parts[_i + 1] == 'Lib':
             return True
     return False
 
@@ -295,14 +293,14 @@ def clearCacheInTick(cacheList, timerId):
         KBEngine.delTimer(timerId)
         return
 
-    args = cacheList.pop()
-    _clearCache(*args)
+    _args = cacheList.pop()
+    _clearCache(*_args)
 
     if not cacheList:
         KBEngine.delTimer(timerId)
 
 
-def _refreshData(includeModules):
+def _doRefreshData(includeModules):
     globalAttrCacheList = {
         'gacha_gachaPool': ('expiredDrawCardPoolCache',),
     }
@@ -315,14 +313,14 @@ def _refreshData(includeModules):
                 continue
         modulePath = getattr(module, '__file__', '')
         if modulePath and _isData(module):
-            LOG_DBG('_refreshData::reload({})'.format(moduleName))
+            LOG_DBG('_doRefreshData::reload({})'.format(moduleName))
             new_module = importlib.reload(module)
             # add to reloaded modules
             _RELOADED_MODULES[moduleName] = new_module
             if moduleName in globalAttrCacheList:
                 for attrName in globalAttrCacheList[moduleName]:
                     clearGlobalAttrCacheList.append(getattr(sys.modules['gameglobal'], attrName, None))
-    LOG_DBG('_refreshData::clearDataCache', clearGlobalAttrCacheList)
+    LOG_DBG('_doRefreshData::clearDataCache', clearGlobalAttrCacheList)
     gameglobal.clearDataCache(clearGlobalAttrCacheList)
 
     # clear ai controller poll when refresh ai_ai data cfg
@@ -331,15 +329,16 @@ def _refreshData(includeModules):
         ('combatSkill', 'SkillBaseClass', 'clearAllCache'),
         ('buff', 'Buff', 'clearAllCache'),
         ('dataUtils', 'getTaskCfg', 'cache_clear'),
+        ('dataUtils', 'getTitleEndTime', 'cache_clear'),
         ('iMapMonsterRefresh', 'IMapMonsterRefresh', 'clearAllCache')
     ]
 
     KBEngine.addTimer(0.1, 0.1, functools.partial(clearCacheInTick, cacheList))
 
     for moduleName, module in sys.modules.items():
-        for r_name, r_module in _RELOADED_MODULES.items():
-            _module = getattr(module, r_name, None)
-            if _module and _module is not r_module:
-                LOG_DBG('_refreshData::reReference({}, {})'.format(
-                    moduleName, r_name))
-                setattr(module, r_name, r_module)
+        for rName, rModule in _RELOADED_MODULES.items():
+            _module = getattr(module, rName, None)
+            if _module and _module is not rModule:
+                LOG_DBG('_doRefreshData::reReference({}, {})'.format(
+                    moduleName, rName))
+                setattr(module, rName, rModule)

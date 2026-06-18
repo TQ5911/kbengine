@@ -20,16 +20,10 @@ import gameconfig
 import copy
 import impRaid
 
-import message_Message_def as MMD
+import message_Message_def as M_M_DD
 import message_Message as M_MD
-import gamePlay_gamePlay as DDID
-import conflict_conflict_def as C_C_DD
-import const_const as CONST
-import teamMatch_matchConfig as TMMCD
-import mounts_set as MSD
+import teamMatch_matchConfig as TM_MCD
 import gamedecorator
-import worldConfig_Area as WCAD
-import branchData_set as BDS
 import activityControl_activityData as AC_ADD
 import teamMatch_activity as TMACTD
 
@@ -90,32 +84,39 @@ class ImpTeam(object):
             lastRecord['excludedGbIDs'] = excludedPlayerIDs
             gameengine.getTeamStub(self.teamId).updateMemberVolatileAttr(self.teamId, self.gbId, lastRecord)
 
+    def stopTeamTimer(self):
+        if not self.teamTimerId:
+            return
+
+        self.pyDelTimer(self.teamTimerId, gametimer.TIMER_TEAM_TICK)
+        self.teamTimerId = 0
+
     def startTeamTimer(self):
         self.stopTeamTimer()
-        self.teamTimerId = self.pyAddTimer(1, 1, gametimer.TEAM_TICK)
-
-    def stopTeamTimer(self):
-        if self.teamTimerId:
-            self.pyDelTimer(self.teamTimerId, gametimer.TEAM_TICK)
-            self.teamTimerId = 0
+        self.teamTimerId = self.pyAddTimer(1, 1, gametimer.TIMER_TEAM_TICK)
 
     def checkInTeam(self, box, methodName, args):
-        if box and methodName:
-            getattr(box, methodName)(self.gbId, self.isInTeam(self.gbId), *args)
-        return
+        if not(box and methodName):
+            return
 
-    def isCaptain(self):
-        return True if self.teamInfo and self.teamInfo.teamCaptainGbId == self.gbId else False
+        getattr(box, methodName)(self.gbId, self.isInTeam(self.gbId), *args)
 
     def isInTeam(self, gbId=0):
-        gbId = gbId if gbId > 0 else self.gbId
+        if gbId <= 0:
+            gbId = self.gbId
+
         if self.teamId > 0:
             return self.teamInfo.isInTeam(gbId)
         return False
 
+    def isCaptain(self):
+        return True if self.teamInfo and self.teamInfo.teamCaptainGbId == self.gbId else False
+
     def sendTeamInfo(self, isRelogin):
         if self.teamId > 0:
-            gameengine.getTeamStub(self.teamId).notifyPlayerLogon(self.base, self.gbId, self.teamId, isRelogin)
+            gameengine\
+                .getTeamStub(self.teamId)\
+                .notifyPlayerLogon(self.base, self.gbId, self.teamId, isRelogin)
         else:
             self.client.onLeaveTeam()
 
@@ -148,38 +149,40 @@ class ImpTeam(object):
         if self.isInTeam(self.gbId):
             LOG_ERR("checkTeamCond player is already in team")
             return False
-        if self.isInRaid():
+        if self.inRaid():
             LOG_ERR("checkTeamCond player is already in raid")
             return False
         return self.checkBaseTeamCond(teamTarget, minLevel, minScore)
 
     def _getTeamPlayerInfoDic(self):
         return {
-            'box':self.base,
             'gbId':self.gbId,
+            'box':self.base,
             'playerName':self.name,
-            'level':self.level,
             'score':self.getTotalScore(),
-            'school':self.school,
+            'level':self.level,
             'sex':self.sex,
+            'school':self.school,
             'picFrameId': self.appearance.outfitData.picFrameId,
             'mountState': 0,
             'spaceNo': self.spaceNo,
             'guildUUID': 0,
             'openId': "openId",
             'siegeWarCamp': self.siegeWarCamp,
-            'joinType': gameconst.TeamJoinType.DEFAULT
+            'joinType': gameconst.TeamJoinType.DEFAULT,
         }
     
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
     @gamedecorator.limitcall(3)
+    @gamedecorator.crossServer
     def applyCreateTeam(self, exposed, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         LOG_INFO('applyCreateTeam', teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         if utils.formula.inRaidDungeonScene(self.spaceNo):
             LOG_WARN("applyCreateTeam, current space check fail")
             return
+
         if not dataUtils.checkTeamPassword(password):
             LOG_WARN("applyCreateTeam, illegal password", password)
             return
@@ -216,32 +219,36 @@ class ImpTeam(object):
         teamId = KBEngine.genUUID64()
         gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, self._getTeamPlayerInfoDic())
 
-    def refreshTryAddTeamCD(self, timeout):
-        return self._lockRaidProcess(timeout=timeout)
-
     def resetTryAddTeamCD(self):
         return self._unlockRaidProcess()
 
-    def isInTryAddTeamCD(self):
-        return self.isRaidLocked()
+    def refreshTryAddTeamCD(self, timeout):
+        return self._lockRaidProcess(timeout=timeout)
 
     def setTeamCaptainFlag(self, bTeamCaptain):
         self.bTeamCaptain = bTeamCaptain
 
+    def isInTryAddTeamCD(self):
+        return self.isRaidLocked()
+
     def isCanJoinTeam(self, teamId):
         if self.teamId > 0:
-            self.showMsg(TMMCD.datas['inTeamMsg']['value'], [])
+            self.showMsg(TM_MCD.datas['inTeamMsg']['value'], [])
             return False
 
-        if not self.isReachTeamMemMinLevel():
+        if not self.isReachTeamMemMinLv():
             return False
 
         return True
 
-    def isReachTeamMemMinLevel(self, bMsg=True):
-        if self.level < TMMCD.datas['teamMinLevel']['value']:
-            bMsg and self.showMsg(int(TMMCD.datas['teamMinLevelMsg']['value']), [str(TMMCD.datas['teamMinLevel']['value'])])
+    def isReachTeamMemMinLv(self, bMsg=True):
+        if self.level < TM_MCD.datas['teamMinLevel']['value']:
+            if bMsg:
+                self.showMsg(
+                    int(TM_MCD.datas['teamMinLevelMsg']['value']), 
+                    [str(TM_MCD.datas['teamMinLevel']['value'])])
             return False
+
         return True
 
     def isReachTeamMinCond(self, teamTarget):
@@ -261,7 +268,8 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def applyJoinTeam(self, exposed, teamId, password, applySource):
         LOG_INFO('applyJoinTeam::', teamId, password, applySource)
         if applySource not in gameconst.ApplySource.VALID_APPLY_SOURCE:
@@ -270,7 +278,7 @@ class ImpTeam(object):
         if self.isInTeam():
             LOG_WARN("applyJoinTeam player is already in raid ", self.teamId)
             return
-        if self.isInRaid():
+        if self.inRaid():
             LOG_WARN("applyJoinTeam player is already in team ", self.raidInfo.raidUUID)
             return
         if not dataUtils.checkTeamPassword(password):
@@ -295,26 +303,31 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def replyJoinTeam(self, exposed, gbId, bAgree):
         #客户端可能会连续点击同意多人入队，这里不加cd;在teamStub的replayJoinTeam有重复点击操作校验
         id = self.teamId % gameconst.TEAMSTUB_CONF_NUM
-        teamStubName = 'TeamStub' + str(id)
-        gameengine.getGlobalBase(teamStubName).replyJoinTeam(self.base, self.gbId, self.teamId, gbId, bAgree)
-        # self.client.onRemoveFromApplyList(gbId)
+        _teamStubName = 'TeamStub' + str(id)
+        gameengine.getGlobalBase(_teamStubName).replyJoinTeam(self.base, self.gbId, self.teamId, gbId, bAgree)
 
     def onReplyJoinTeam(self, captainGbId, teamId, gbId, playerName, level, school, applySource):
         # A请求进入队伍B和C；B和C同时同意A的申请，teamStub校验条件通过后，此时在A的onReplyJoinTeam
         if self.isInTryAddTeamCD() or self.teamId>0:
             LOG_WARN('onReplyJoinTeam, already in try add team cd')
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([captainGbId], 'onMessagePre',
-                                        (TMMCD.datas['targetInOtherTeamMsg']['value'], [playerName]), None, '', ())
+                                        (TM_MCD.datas['targetInOtherTeamMsg']['value'], [playerName]), None, '', ())
             return
 
-        if self.isInRaid():
+        if self.inRaid():
             LOG_WARN('onReplyJoinTeam, already in raid')
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([captainGbId], 'onMessagePre',
-                                        (MMD.datas.raidInviteFail_alreadyInRaid, []), None, '', ())
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                [captainGbId], 
+                'onMessagePre',
+                (M_M_DD.datas.raidInviteFail_alreadyInRaid, []), 
+                None, 
+                '', 
+                ())
             return
 
         if teamId not in self.getTempMiscProp(gameconst.EntityPropsEnum.teamJoinRecord, {}):
@@ -341,109 +354,155 @@ class ImpTeam(object):
 
         data.pop(teamId, None)
 
-    def isCanInviteTeam(self, gbId):
-        return self.isReachTeamMemMinLevel()
+    def isCanInviteTeam(self, needMsg=True):
+        return self.isReachTeamMemMinLv(needMsg)
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def applyInviteTeam(self, exposed, gbId, name):
         LOG_INFO('applyInviteTeam', gbId, name)
+        self.base.doInviteCheck(gbId, gameconst.InviteType.DEFAULT, gameconst.TeamType.TEAM, True)
 
-        if not self.isCanInviteTeam(gbId):
+    def doApplyInviteTeam(self, gbId, name, inviteType):
+        LOG_INFO('doApplyInviteTeam', gbId, name, inviteType)
+
+        needMsg = inviteType != gameconst.InviteType.GUILD
+        if not self.isCanInviteTeam(needMsg):
             return
-
+        # 在跨服服务器
         if gameconfig.isCrossServer():
             target = utils.getAvatarByGbId(gbId)
             if target and target.siegeWarCamp != self.siegeWarCamp and target.siegeWarCamp != 0 and self.siegeWarCamp != 0:
-                self.showMsg(MMD.datas.teamMatch_differentFactions, [])
+                if needMsg:
+                    self.showMsg(M_M_DD.datas.teamMatch_differentFactions, [])
                 return
-
+            
         if self.teamId > 0:
             datas = {}
             datas['isTeamUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), False)
             datas['isTeamDungeonUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), False)
+            datas['inviteType'] = inviteType
             gameengine.getTeamStub(self.teamId).applyInviteTeam(self.base, self.teamId, self.gbId, self.level, self.school, gbId, name, datas)
         else:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'procInviteTeamMsg', (
-                0, 0, self.gbId, self.name, self.name, self.level, self.school, 0, 0, False), self, 'onTeamInviteOffline', ())
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'procInviteTeamMsg', (
+                    0, 0, self.gbId, self.name, self.name, self.level, self.school, 0, 0, False, inviteType), self, 'onTeamInviteOffline', ())
+            else:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'procInviteTeamMsg', (
+                    0, 0, self.gbId, self.name, self.name, self.level, self.school, 0, 0, False, inviteType), None, '', ())
 
     def IDIPBanTeam(self, endTime, data):
         self.setPersistentMiscProp(gameconst.EntityPropsEnum.idipBanSocialTeam, (endTime, data))
 
     def onTeamInviteOffline(self, gbId):
-        self.showMsg(MMD.datas.tianyan_targfetOffLine, [])
+        self.showMsg(M_M_DD.datas.tianyan_targfetOffLine, [])
 
-    def _replyInviteTeamTimeout(self, srcTeamId, gbId):
-        LOG_WARN("_replyInviteTeamTimeout::", srcTeamId, gbId)
+    def _replyInviteTeamTimeout(self, srcTeamId, gbId, inviteType):
+        LOG_WARN("_replyInviteTeamTimeout::", srcTeamId, gbId, inviteType)
         teamInviteRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.teamInviteRecord, {})
         if (srcTeamId, gbId) not in teamInviteRecord:
             return
+
         timerId = teamInviteRecord[(srcTeamId, gbId)]
-        timerId and self.cancelTimerCB(timerId, gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT)
+        if timerId:
+            self.cancelTimerCB(timerId, gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT)
+
         teamInviteRecord[(srcTeamId, gbId)] = 0
-        self.selfReplyInviteTeam(srcTeamId, gbId, False)
+        self.selfReplyInviteTeam(srcTeamId, gbId, False, inviteType)
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    def replyInviteTeam(self, exposed, srcTeamId, gbId, bInvite):
-        LOG_INFO('replyInviteTeam::~', srcTeamId, gbId, bInvite)
-        self._replyInviteTeam(srcTeamId, gbId, bInvite)
+    @gamedecorator.crossServer
+    def replyInviteTeam(self, exposed, srcTeamId, gbId, isInvite, inviteType):
+        LOG_INFO('replyInviteTeam::~', srcTeamId, gbId, isInvite, inviteType)
+        self._replyInviteTeam(srcTeamId, gbId, isInvite, inviteType)
 
-    def selfReplyInviteTeam(self,srcTeamId, gbId, bInvite):
-        LOG_INFO('selfReplyInviteTeam::', srcTeamId, gbId, bInvite)
-        self._replyInviteTeam(srcTeamId, gbId, bInvite)
+    def selfReplyInviteTeam(self,srcTeamId, gbId, isInvite, inviteType):
+        LOG_INFO('selfReplyInviteTeam::', srcTeamId, gbId, isInvite, inviteType)
+        self._replyInviteTeam(srcTeamId, gbId, isInvite, inviteType)
 
-    def _replyInviteTeam(self, srcTeamId, gbId, bInvite):
-        if bInvite and self.isInTryAddTeamCD():
+    def _replyInviteTeam(self, srcTeamId, gbId, isInvite, inviteType):
+        if isInvite and self.isInTryAddTeamCD():
             LOG_WARN('replyInviteTeam, is in add team cd')
             return
-
+        needMsg = inviteType != gameconst.InviteType.GUILD
         teamInviteRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.teamInviteRecord, None)
         if teamInviteRecord is None or (srcTeamId, gbId) not in teamInviteRecord:
             return
 
         timerId = teamInviteRecord.pop((srcTeamId, gbId))
-        timerId and self.cancelTimerCB(
-            timerId,
-            gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT)
+        if timerId:
+            self.cancelTimerCB(
+                timerId,
+                gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT)
 
-        if not self.isCanInviteTeam(gbId):
+        if not self.isCanInviteTeam(needMsg):
             return
 
-        if not bInvite:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
-                                      (TMMCD.datas['inviteDeniedMsg']['value'], [self.name]), None, '', ())
-            return
+        if not isInvite:
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    [gbId], 
+                    'onMessagePre',
+                    (TM_MCD.datas['inviteDeniedMsg']['value'], [self.name]), 
+                    None, 
+                    '', 
+                    ())
 
-        if self.isInRaid():
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
-                                          (TMMCD.datas['targetInRaidMsg']['value'], [self.name]), None, '', ())
-            return
+        elif self.inRaid():
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    [gbId], 
+                    'onMessagePre',
+                    (TM_MCD.datas['targetInRaidMsg']['value'], [self.name]), 
+                    None, 
+                    '', 
+                    ())
 
-        if self.teamId > 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
-                                          (TMMCD.datas['targetInOtherTeamMsg']['value'], [self.name]), None, '', ())
-            return
+        elif self.teamId > 0:
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    [gbId], 
+                    'onMessagePre',
+                    (TM_MCD.datas['targetInOtherTeamMsg']['value'], [self.name]), 
+                    None, 
+                    '', 
+                    ())
 
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
-                                      (TMMCD.datas['targetAgreeMsg']['value'], [self.name]), None, '', ())
-        
-        datas = self._getTeamPlayerInfoDic()
-        datas['joinType'] = gameconst.TeamJoinType.RECRUIT
-        if srcTeamId > 0:
-            gameengine.getTeamStub(srcTeamId).replyInviteTeam(srcTeamId, gbId, datas)
         else:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'onReplyInviteTeam', (
-                srcTeamId, bInvite, datas), None, '', ())
-        self.refreshTryAddTeamCD(timeout=10)
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    [gbId], 
+                    'onMessagePre',
+                    (TM_MCD.datas['targetAgreeMsg']['value'], [self.name]), 
+                    None, 
+                    '', 
+                    ())
+            
+            datas = self._getTeamPlayerInfoDic()
+            datas['joinType'] = gameconst.TeamJoinType.RECRUIT
+            if srcTeamId > 0:
+                gameengine.getTeamStub(srcTeamId).replyInviteTeamInStub(srcTeamId, gbId, datas, inviteType)
+            else:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                    [gbId], 
+                    'onReplyInviteTeam', 
+                    (isInvite, datas, inviteType), 
+                    None, 
+                    '', 
+                    ())
 
-    def onReplyInviteTeam(self, teamId, bInvite, teamPlayerInfoDic):
-        if bInvite:
+            self.refreshTryAddTeamCD(timeout=10)
+
+    def onReplyInviteTeam(self, isInvite, teamPlayerInfoDic, inviteType):
+        if isInvite:
             if self.teamId <= 0:
                 self.createAndAddTeamMember(teamPlayerInfoDic)
             else:
-                gameengine.getTeamStub(self.teamId).replyInviteTeam(self.teamId, self.gbId, teamPlayerInfoDic)
+                gameengine.getTeamStub(self.teamId).replyInviteTeamInStub(
+                    self.teamId, self.gbId, teamPlayerInfoDic, inviteType)
 
     def createAndAddTeamMember(self, teamPlayerInfoDic):
         if self.isInTryAddTeamCD():
@@ -464,7 +523,7 @@ class ImpTeam(object):
             return
 
         teamId = KBEngine.genUUID64()
-        recruitInfo = TMMCD.datas['raidTeamTitleDes']['value']
+        recruitInfo = TM_MCD.datas['raidTeamTitleDes']['value']
         LOG_INFO('createAndAddTeamMember', teamId, teamTarget, cfgMinLv, cfgMinScore, recruitInfo, "", False, teamPlayerInfoDic)
 
         gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, cfgMinLv, cfgMinScore, recruitInfo, "", False, self._getTeamPlayerInfoDic())
@@ -472,7 +531,7 @@ class ImpTeam(object):
         gameengine.getTeamStub(teamId).addTeamMemberInStub(teamId, teamPlayerInfoDic)
         self.refreshTryAddTeamCD(timeout=10)
 
-    def isCanLeaveTeam(self):
+    def _isCanLeaveTeamInAvatar(self):
         if self.teamId <= 0:
             return False
         return True
@@ -480,9 +539,10 @@ class ImpTeam(object):
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(1)
+    @gamedecorator.crossServer
     def applyLeaveTeam(self, exposed):
         LOG_INFO('applyLeaveTeam')
-        if not self.isCanLeaveTeam():
+        if not self._isCanLeaveTeamInAvatar():
             return
 
         #主动离开team会清空怪物上的首刀归属者标记
@@ -494,15 +554,16 @@ class ImpTeam(object):
 
     def onLeaveTeam(self):
         LOG_INFO('onLeaveTeam')
-        teamMembers = []
-        for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDict.items():
-            if playerGBID == self.gbId or not playerBaseVal.playerBox:
+        _teamMembers = []
+        for _playerGBID, _playerBaseVal in self.teamInfo.teamPlayerDict.items():
+            if _playerGBID == self.gbId or not _playerBaseVal.playerBox:
                 continue
 
-            teamMember = KBEngine.entities.get(playerBaseVal.playerBox.id)
-            if teamMember and teamMember in self.entitiesInView(True):
-                teamMembers.append(teamMember)
-                self.reCheckRelationType(teamMember)
+            _teamMember = KBEngine.entities.get(_playerBaseVal.playerBox.id)
+            if _teamMember and _teamMember in self.entitiesInView(True):
+                _teamMembers.append(_teamMember)
+                self.reCheckRelationType(_teamMember)
+
         self._leaveTeam()
         self._clearRaidJoinRecords(withJoinTypes=(gameconst.RaidJoinTypeEnum.TEAM, ))
         self.resetStatisticsData()
@@ -528,26 +589,30 @@ class ImpTeam(object):
             self.selfLeaveTeamDungeon(dungeonSrc.BasicDungeonSrc())
 
         if formula.inLineScene(self.spaceNo):
-            lineType = formula.fetchMapId(self.spaceNo)
-            lineNo = formula.parseLineNo(self.spaceNo)
-            gameengine.getLineStub(lineType).updateLinePlayerInfo(lineNo, self.base, self.gbId, {'changeTeam':(oldTeamId, 0, False)})
+            _lineType = formula.fetchMapId(self.spaceNo)
+            _lineNo = formula.parseLineNo(self.spaceNo)
+            gameengine.getLineStub(_lineType).updateLinePlayerInfo(
+                _lineNo, self.base, self.gbId, {'changeTeam':(oldTeamId, 0, False)})
+
         self.resetTryAddTeamCD()
 
-    def isCanKickTeamMember(self, gbId):
+    def canKickTeamMember(self, gbId):
         if not self.isInTeam(gbId):
             return False
         if not self.isCaptain():
-            self.showMsg(TMMCD.datas['kickFromTeamNotCapMsg']['value'], [])
+            self.showMsg(TM_MCD.datas['kickFromTeamNotCapMsg']['value'], [])
             return False
         return True
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def applyKickTeamMember(self, exposed, gbId):
-        if not self.isCanKickTeamMember(gbId):
+        if not self.canKickTeamMember(gbId):
             return
 
-        gameengine.getTeamStub(self.teamId).kickTeamMember(self.teamId, self.gbId, gbId, False)
+        gameengine.getTeamStub(self.teamId).kickTeamMember(
+            self.teamId, self.gbId, gbId, False)
 
     def _canTransferCaptainInStub(self, gbId):
         if self.teamId <= 0:
@@ -556,33 +621,38 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def applyTransferCaptain(self, exposed, gbId):
         LOG_INFO("applyTransferCaptain::", exposed, gbId)
         if not self._canTransferCaptainInStub(gbId):
             return
 
-        gameengine.getTeamStub(self.teamId).transferCaptain(self.base, self.teamId, self.gbId, gbId)
+        gameengine.getTeamStub(self.teamId).doTransferCaptain(
+            self.base, self.teamId, self.gbId, gbId)
 
-    def onTransferCaptain(self, originCaptainGBID, transferredCaptainGBID):
-        LOG_INFO("onTransferCaptain::", originCaptainGBID, transferredCaptainGBID)
-        if transferredCaptainGBID == self.gbId:
-            self.showMsg(TMMCD.datas['transferCaptainMsg']['value'], [])
+    def onTransferCaptain(self, oldCaptainGbId, newCaptainGBID):
+        LOG_INFO("onTransferCaptain::", oldCaptainGbId, newCaptainGBID)
+        if newCaptainGBID == self.gbId:
+            self.showMsg(TM_MCD.datas['transferCaptainMsg']['value'], [])
 
-    def isCanBecomeCaptain(self):
+    def canBecomeCaptain(self):
         if self.teamId <= 0:
             return False
         return True
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def applyBecomeCaptain(self, exposed, gbId):
-        if not self.isCanBecomeCaptain():
+        if not self.canBecomeCaptain():
             return
 
-        gameengine.getTeamStub(self.teamId).doApplyBecomeCaptain(self.teamId, self.gbId, self.name)
+        gameengine.getTeamStub(self.teamId).doApplyBecomeCaptain(
+            self.teamId, self.gbId, self.name)
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def replyBecomeCaptain(self, exposed, gbId, bAgree):
         LOG_INFO('replyBecomeCaptain:', exposed, gbId, bAgree)
         self.doReplyBecomeCaptain(gbId, bAgree)
@@ -599,10 +669,11 @@ class ImpTeam(object):
 
         if not bAgree:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
-                                              (TMMCD.datas['applyCaptainDeniedMsg']['value'], []), None, '', ())
+                                              (TM_MCD.datas['applyCaptainDeniedMsg']['value'], []), None, '', ())
             return
 
-        gameengine.getTeamStub(self.teamId).replyBecomeCaptain(self.base, self.teamId, self.gbId, gbId)
+        gameengine.getTeamStub(self.teamId).replyBecomeCaptainInStub(
+            self.base, self.teamId, self.gbId, gbId)
 
     def onJoinTeam(self, teamId, joinType):
         LOG_INFO('onJoinTeam', teamId, joinType)
@@ -610,7 +681,7 @@ class ImpTeam(object):
             # 此时执行离开第一个队伍的操作，并且不需要回调 onLeaveTeam，否则会覆盖新的teamId
             gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, False)
 
-        if self.isInRaid() and teamId > 0:
+        if self.inRaid() and teamId > 0:
             gameengine.getTeamStub(teamId).leaveTeam(self.spaceNo, self.base, teamId, self.gbId, True)
 
         self.teamId = teamId
@@ -620,25 +691,31 @@ class ImpTeam(object):
         self.stopRaidMatch()
         self.resetTryAddTeamCD()
         self.resetAllTargetTypeCache()
-        self.cancelAllTeamAndRaidJoinRequest()
+        self.cancelAllTeamRaidJoinRequest()
 
     def _cancelAllTeamJoinRequest(self):
-        for teamId in self.getTempMiscProp(gameconst.EntityPropsEnum.teamJoinRecord, {}):
-            gameengine.getTeamStub(teamId).cancelTeamJoinRequest(self.base, self.gbId, teamId)
+        for _teamId in self.getTempMiscProp(gameconst.EntityPropsEnum.teamJoinRecord, {}):
+            gameengine.getTeamStub(_teamId).cancelTeamJoinRequest(self.base, self.gbId, _teamId)
 
-    def isCanDisbandTeam(self):
+    def canDisbandTeam(self):
         if self.teamId <= 0:
             return False
         return True
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def applyDisbandTeam(self, exposed):
         LOG_INFO('applyDisbandTeam')
-        if not self.isCanDisbandTeam():
+        if not self.canDisbandTeam():
             return
+        
+        #主动离开team会清空怪物上的首刀归属者标记
+        for e in self.entitiesInView(True):
+            if e.IsMonster:
+                e.clearFirstBlood(self.id)
 
-        gameengine.getTeamStub(self.teamId).disbandTeam(self.base, self.gbId, self.teamId)
+        gameengine.getTeamStub(self.teamId).doDisbandTeam(self.base, self.gbId, self.teamId)
 
     def onTeamDisband(self, bNotify):
         LOG_INFO('onTeamDisband')
@@ -655,6 +732,7 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def clearApplyJoinDic(self, exposed):
         LOG_INFO('clearApplyJoinDic')
         if not self.isCanClearApplyJoinDic():
@@ -671,112 +749,135 @@ class ImpTeam(object):
         if not self.isCaptain():
             return
 
-        for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDict.items():
-            if playerGBID==self.gbId or not playerBaseVal.playerBox:
+        for _playerGBID, _playerBaseVal in self.teamInfo.teamPlayerDict.items():
+            if _playerGBID==self.gbId or not _playerBaseVal.playerBox:
                 continue
 
             if beginComp==gameconst.BASE:
-                playerBaseVal.playerBox.beCheckedBaseByTeam(self.base, checkType, bothComp, beginComp, args)
+                _playerBaseVal.playerBox.checkedBaseByTeam(self.base, checkType, bothComp, beginComp, args)
             else:
-                playerBaseVal.playerBox.cell.beCheckedCellByTeam(checkType, bothComp, beginComp, args)
+                _playerBaseVal.playerBox.cell.checkedCellByTeam(checkType, bothComp, beginComp, args)
 
     #每个队员cell上执行的check函数
-    def beCheckedCellByTeam(self, checkType, bothComp, beginComp, args):
+    def checkedCellByTeam(self, checkType, bothComp, beginComp, args):
         captain = self.teamInfo.fetchCaptainBox()
         if not captain:
             LOG_ERR('cannot get captain', self.teamId, self.gbId)
             return
 
-        isFailed, cbArgs, baseArgs = False, (), ()
-        if checkType==gameconst.CheckMemberReason.CHECK_MEMBER_FOR_TEAM_DUEL:
+        _isFailed, _cbArgs, _baseArgs = False, (), ()
+        if checkType==gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_TEAM_DUEL:
             #返回值：是否检查失败了，回复给队长的参数，如果继续检查base传个base的参数
-            isFailed, cbArgs, baseArgs = self._checkMemberEnterTeamDuel(*args)
+            _isFailed, _cbArgs, _baseArgs = self._checkMemberEnterTeamDuel(*args)
 
-        elif checkType == gameconst.CheckMemberReason.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE:
-            isFailed, cbArgs, baseArgs = self._checkCreateRaidWithTeamMemberConditions(*args)
+        elif checkType == gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE:
+            _isFailed, _cbArgs, _baseArgs = self._checkCreateRaidWithTeamMemberConditions(*args)
 
-        if isFailed or not bothComp or beginComp==gameconst.BASE:
-            captain.cell.onCheckResultFromMember(checkType, self.gbId, cbArgs)
+        if _isFailed or not bothComp or beginComp==gameconst.BASE:
+            captain.cell.onCheckResultFromMember(checkType, self.gbId, _cbArgs)
         else:
-            self.base.beCheckedBaseByTeam(captain, checkType, bothComp, beginComp, baseArgs)
+            self.base.checkedBaseByTeam(captain, checkType, bothComp, beginComp, _baseArgs)
 
     #每个队员base、cell上条件检查完成后通知队长检查结果的回调
     def onCheckResultFromMember(self, checkType, memberGbId, args):
-        if checkType==gameconst.CheckMemberReason.CHECK_MEMBER_FOR_TEAM_DUEL:
+        if checkType==gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_TEAM_DUEL:
             self._onCheckedMemberEnterDuel(memberGbId, *args)
-        elif checkType == gameconst.CheckMemberReason.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE:
+        elif checkType == gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE:
             self._onCheckedMemberCreateRaidWithTeam(memberGbId, *args)
 
     # ---------------------------------------------------M_MD---------------------------------------------------
-    def procJoinTeamMsg(self, gbId, playerName, level, school, sex, score):
-        self.client.onApplyJoinTeamMsg(gbId, playerName, level, school, sex, score)
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
-                                                              (TMMCD.datas['applySentMsg']['value'], []), None, '', ())
+    def procJoinTeamMsg(self, gbId, playerName, playerLevel, school, sex, score):
+        self.client.onApplyJoinTeamMsg(gbId, playerName, playerLevel, school, sex, score)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [gbId], 'onMessagePre',
+            (TM_MCD.datas['applySentMsg']['value'], []), None, '', ())
 
-    def procInviteTeamMsg(self, srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool, teamScore, teamLevel, isDirect):
+    def procInviteTeamMsg(self, srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool, teamScore, teamLevel, isDirect, inviteType):
+        needMsg = inviteType != gameconst.InviteType.GUILD
         if teamTarget > gameconst.PARE_ACTIVITY_ID:
             if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), False) \
                 or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), False):
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                    (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                        (TM_MCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
                 return
         if formula.inDungeonScene(self.spaceNo):
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                  (TMMCD.datas['team_inCopyScene']['value'], []), None, '', ())
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (TM_MCD.datas['team_inCopyScene']['value'], []), None, '', ())
             return
 
         if self.isInTeam(self.gbId):
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                  (TMMCD.datas['targetInOtherTeamMsg']['value'], [self.name]), None, '', ())
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (TM_MCD.datas['targetInOtherTeamMsg']['value'], [self.name]), None, '', ())
             return
 
-        if self.isInRaid():
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                  (TMMCD.datas['targetInRaidMsg']['value'], [self.name]), None, '', ())
+        if self.inRaid():
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (TM_MCD.datas['targetInRaidMsg']['value'], [self.name]), None, '', ())
             return
 
         if self.level < teamLevel:
             LOG_WARN('procInviteTeamMsg, level failed:', self.level, teamLevel)
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-              (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                (int(TM_MCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
             return
         
         totalScore = self.getTotalScore()
         if totalScore < teamScore:
             LOG_WARN('procInviteTeamMsg, score failed:', totalScore, teamScore)
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-              (int(TMMCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
+            if needMsg:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                (int(TM_MCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
             return
+        
+        # 我在跨服，告诉对方，不能邀请
+        if self.isCrossServer:
+            LOG_WARN('procInviteTeamMsg, in cross server:', totalScore, teamScore)
+            srcBox = utils.getAvatarByGbId(srcPlayerGbId)
+            #对方在跨服允许邀请
+            if not srcBox:
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (int(TM_MCD.datas['teamInviteMapMsg']['value']), []), None, '', ())
+                return
         
         if isDirect:
             gameengine.getTeamStub(srcTeamId).addTeamMemberInStub(srcTeamId, self._getTeamPlayerInfoDic())
             return
         
         _skipInviteMsg = False
-        teamInviteRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.teamInviteRecord, None)
-        if teamInviteRecord is None:
-            teamInviteRecord = {(srcTeamId, srcPlayerGbId): 0}
-            self.setTempMiscProp(gameconst.EntityPropsEnum.teamInviteRecord, teamInviteRecord)
-        elif (srcTeamId, srcPlayerGbId) not in teamInviteRecord:
-            teamInviteRecord[(srcTeamId, srcPlayerGbId)] = 0
+        _teamInviteRecord = self.getTempMiscProp(gameconst.EntityPropsEnum.teamInviteRecord, None)
+        if _teamInviteRecord is None:
+            _teamInviteRecord = {(srcTeamId, srcPlayerGbId): 0}
+            self.setTempMiscProp(gameconst.EntityPropsEnum.teamInviteRecord, _teamInviteRecord)
+        elif (srcTeamId, srcPlayerGbId) not in _teamInviteRecord:
+            _teamInviteRecord[(srcTeamId, srcPlayerGbId)] = 0
         else:
             _skipInviteMsg = True
 
         if not _skipInviteMsg:
-            teamInviteRecord[(srcTeamId, srcPlayerGbId)] = self.toCallbackAfter(
-                max(M_MD.datas[TMMCD.datas["inviteToTeamMsg"]['value']]["defaultCountdown"], 0.1), gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT
-                )._replyInviteTeamTimeout(srcTeamId, srcPlayerGbId)
-            self.client.onApplyInviteTeamMsg(srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool)
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                                  (TMMCD.datas['inviteSentMsg']['value'], []), None, '', ())
+            _teamInviteRecord[(srcTeamId, srcPlayerGbId)] = self.asyncCallbackAfter(
+                max(M_MD.datas[TM_MCD.datas["inviteToTeamMsg"]['value']]["defaultCountdown"], 0.1), 
+                gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT
+            )._replyInviteTeamTimeout(srcTeamId, srcPlayerGbId, inviteType)
 
-    def procBecomeCaptainMsg(self, teamId, gbId, name):
-        LOG_INFO('procBecomeCaptainMsg:', teamId, gbId, name)
+            self.client.onApplyInviteTeam(srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool, inviteType)
+        if needMsg:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                [srcPlayerGbId], 'onMessagePre',
+                (TM_MCD.datas['inviteSentMsg']['value'], []), None, '', ())
+
+    def processBecomeCaptainMsg(self, teamId, gbId, name):
+        LOG_INFO('processBecomeCaptainMsg:', teamId, gbId, name)
         if self.replyTeamCaptainTimer:
             self.cancelTimerCB(self.replyTeamCaptainTimer, gametimer.TIMER_TAG_DO_REPLY_BECOME_CAPTAIN)
             self.replyTeamCaptainTimer = 0
 
-        _msgId = TMMCD.datas['applyCaptainMsg']['value']
+        _msgId = TM_MCD.datas['applyCaptainMsg']['value']
         _cd = M_MD.datas[_msgId]['defaultCountdown']
         self.replyTeamCaptainTimer = self.addTimerCB(_cd,
                                                     'doReplyBecomeCaptain', (gbId, True),
@@ -798,50 +899,39 @@ class ImpTeam(object):
         LOG_INFO('cancelFollowTeamCaptain')
 
     def getCaptainGBID(self):
-        _gbId  = 0
         if self.raidUUID > 0:
-            _gbId = self.raidInfo.raidLeaderGBID
+            return self.raidInfo.raidLeaderGBID
+
         elif self.teamId > 0:
-            _gbId = self.teamInfo.getCaptainGbId()
-        if not _gbId:
-            return 0
-        return _gbId
+            return self.teamInfo.getCaptainGbId()
+
+        return 0
 
     def fetchCaptainBox(self):
-        _box = None
         if self.raidUUID > 0:
-            _box = self.raidInfo.getRaidLeaderBox()
+            return self.raidInfo.getRaidLeaderBox()
+
         elif self.teamId > 0:
-            _box = self.teamInfo.fetchCaptainBox()
-        return _box
+            return self.teamInfo.fetchCaptainBox()
+
+        return None
 
     def getCaptainSpaceNo(self):
-        _spaceNo = 0
         if self.raidUUID > 0:
-            _spaceNo = self.raidInfo.getRaidLeaderSpaceNo()
+            return self.raidInfo.getRaidLeaderSpaceNo()
         elif self.teamId > 0:
-            _spaceNo = self.teamInfo.getCaptainSpaceNo()
-        if not _spaceNo:
-            return 0
-        return _spaceNo
+            return self.teamInfo.getCaptainSpaceNo()
+
+        return 0
 
     def getCaptainPosition(self):
-        _pos = None
         if self.raidUUID > 0:
-            _pos = self.raidInfo.getRaidLeaderPosition()
-        elif self.teamId > 0:
-            _pos = self.teamInfo.getCaptainPosition()
-        if _pos:
-            return tuple(_pos)
-        return _pos
+            return tuple(self.raidInfo.getRaidLeaderPosition())
 
-    def getTeamMemberIndex(self):
-        # TODO()(RAID_FOLLOW): 需要顶一下距离计算方案
-        if self.raidUUID > 0:
-            return 1
-        if self.teamId > 0:
-            return self.teamInfo.getTeamMemberIndex(self.gbId)
-        return 0
+        elif self.teamId > 0:
+            return tuple(self.teamInfo.getCaptainPosition())
+
+        return None
     
     def getAllTeamMemberGbIdSet(self):
         if not self.isInTeam():
@@ -857,7 +947,7 @@ class ImpTeam(object):
     @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
-    @gamedecorator.limitcall(int(TMMCD.datas['assembleTeammatesCD']['value']))
+    @gamedecorator.limitcall(int(TM_MCD.datas['assembleTeammatesCD']['value']))
     def sendAllMemberFollowAsk(self, exposed):
         LOG_INFO('sendAllMemberFollowAsk')
         if self.teamId <= 0 and self.raidUUID <= 0:
@@ -871,14 +961,17 @@ class ImpTeam(object):
             return
 
         if self.raidUUID > 0:
-            gameengine.getRaidStub(self.raidUUID).askAllMemberFollow(self.base, self.raidUUID, self.gbId, self.spaceNo, self.position)
+            gameengine.getRaidStub(self.raidUUID).askAllMemberFollowRaidStub(
+                self.base, self.raidUUID, self.gbId, self.spaceNo, self.position)
         elif self.teamId > 0:
-            gameengine.getTeamStub(self.teamId).askAllMemberFollow(self.base, self.teamId, self.gbId, self.spaceNo,
+            gameengine.getTeamStub(self.teamId).askAllMemberFollowTeamStub(
+                self.base, self.teamId, self.gbId, self.spaceNo,
                                                                    self.position)
     
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @gamedecorator.limitcall(int(TMMCD.datas['goToTheCaptainCD']['value']))
+    @gamedecorator.crossServer
+    @gamedecorator.limitcall(int(TM_MCD.datas['goToTheCaptainCD']['value']))
     def reqCaptainFollowInfo(self, exposed):
         LOG_INFO('reqCaptainFollowInfo')
 
@@ -896,34 +989,44 @@ class ImpTeam(object):
 
     def becomeTeamCaptain(self):
         self.setTeamCaptainFlag(True)
-        if formula.inLineScene(self.spaceNo):
-            lineType = formula.fetchMapId(self.spaceNo)
-            lineNo = formula.parseLineNo(self.spaceNo)
-            gameengine.getLineStub(lineType).updateLinePlayerInfo(
-                lineNo, self.base, self.gbId, {'changeTeam':(self.teamId, self.teamId, self.bTeamCaptain)})
+        if not formula.inLineScene(self.spaceNo):
+            return
 
-    def loseTeamCaptain(self):
+        _lineType = formula.fetchMapId(self.spaceNo)
+        _lineNo = formula.parseLineNo(self.spaceNo)
+        gameengine.getLineStub(_lineType).updateLinePlayerInfo(
+            _lineNo, self.base, self.gbId, 
+            {'changeTeam':(self.teamId, self.teamId, self.bTeamCaptain)}
+        )
+
+    def onLoseTeamCaptain(self):
         self.setTeamCaptainFlag(False)
-        if formula.inLineScene(self.spaceNo):
-            lineType = formula.fetchMapId(self.spaceNo)
-            lineNo = formula.parseLineNo(self.spaceNo)
-            gameengine.getLineStub(lineType).updateLinePlayerInfo(
-                lineNo, self.base, self.gbId, {'changeTeam':(self.teamId, self.teamId, self.bTeamCaptain)})
+        if not formula.inLineScene(self.spaceNo):
+            return
+
+        _lineType = formula.fetchMapId(self.spaceNo)
+        _lineNo = formula.parseLineNo(self.spaceNo)
+        gameengine.getLineStub(_lineType).updateLinePlayerInfo(
+            _lineNo, self.base, self.gbId, 
+            {'changeTeam':(self.teamId, self.teamId, self.bTeamCaptain)})
 
     # ---------------------------------------------------队伍缓存相关---------------------------------------------------
 
-    def onAddTeamMemberCell(self, gbId, box):
+    def onAddTeamMemberToCell(self, gbId, box):
         self.teamInfo.addMemberForPlayer(self, gbId, box)
-        # self.base.onFriendAddTeamMember([gbId])
         self._clearRaidJoinRecords(withJoinTypes=(gameconst.RaidJoinTypeEnum.TEAM, ))
         self.autoCancelDungeonTeammateBeConfirmed()
-        teamMember = KBEngine.entities.get(box.id)
-        if teamMember and teamMember in self.entitiesInView(True):
-            self.reCheckRelationType(teamMember)
+        _teamMember = KBEngine.entities.get(box.id)
+        if _teamMember and _teamMember in self.entitiesInView(True):
+            self.reCheckRelationType(_teamMember)
 
     def onAddTeamCell(self, teamInfo):
         LOG_INFO('onAddTeamCell', teamInfo)
-        self.teamInfo = team.PlayerTeamCacheVal(teamInfo.teamId, teamInfo.teamTarget, teamInfo.teamCaptainGbId)
+        self.teamInfo = team.TeamCacheValInPlayer(
+            teamInfo.teamId, 
+            teamInfo.teamTarget, 
+            teamInfo.teamCaptainGbId)
+
         for gbId, teamMemberVal in teamInfo.teamPlayerDict.items():
             self.teamInfo.addMemberForPlayer(self, gbId, teamMemberVal.playerBox, teamMemberVal.spaceNo,
                                     teamMemberVal.mountState, teamMemberVal.score)
@@ -931,34 +1034,25 @@ class ImpTeam(object):
         self.setTeamCaptainFlag(self.isCaptain())
         self.startTeamTimer()
         if formula.inLineScene(self.spaceNo):
-            lineType = formula.fetchMapId(self.spaceNo)
-            lineNo = formula.parseLineNo(self.spaceNo)
-            gameengine.getLineStub(lineType).updateLinePlayerInfo(
-                lineNo, self.base, self.gbId, {'changeTeam':(0, self.teamId, self.bTeamCaptain)})
-
-        # memberList = list(filter(lambda x: x != self.gbId, self.teamInfo.teamPlayerDict.keys()))
-        # self.base.onFriendAddTeamMember(memberList)
+            _lineType = formula.fetchMapId(self.spaceNo)
+            _lineNo = formula.parseLineNo(self.spaceNo)
+            gameengine.getLineStub(_lineType).updateLinePlayerInfo(
+                _lineNo, self.base, self.gbId, {'changeTeam':(0, self.teamId, self.bTeamCaptain)})
 
         #队员加入了新队伍，从队长那里同步组队任务
-        # if not self.isCaptain():
-        #     self.startSyncTasksFromCaptain()
 
         teamMembers = []
-        for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDict.items():
-            if playerGBID == self.gbId or not playerBaseVal.playerBox:
+        for _playerGBID, _playerBaseVal in self.teamInfo.teamPlayerDict.items():
+            if _playerGBID == self.gbId or not _playerBaseVal.playerBox:
                 continue
 
-            teamMember = KBEngine.entities.get(playerBaseVal.playerBox.id)
-            if teamMember and teamMember in self.entitiesInView(True):
-                teamMembers.append(teamMember)
-                self.reCheckRelationType(teamMember)
-        self.resetAllTargetTypeCache()
+            teamMember = KBEngine.entities.get(_playerBaseVal.playerBox.id)
+            if not (teamMember and teamMember in self.entitiesInView(True)):
+                continue
 
-    def onDelTeamMemberCell(self, gbId):
-        self.teamInfo.delMember(self, gbId)
-        self.removeTeamFriends(gbId)
-        self._clearRaidJoinRecords(withJoinTypes=(gameconst.RaidJoinTypeEnum.TEAM, ))
-        self.autoCancelDungeonTeammateBeConfirmed()
+            teamMembers.append(teamMember)
+            self.reCheckRelationType(teamMember)
+
         self.resetAllTargetTypeCache()
 
     def onChangeCaptainCell(self, gbId):
@@ -966,48 +1060,39 @@ class ImpTeam(object):
         if gbId == self.gbId:
             self.becomeTeamCaptain()
         elif self.bTeamCaptain:
-            self.loseTeamCaptain()
+            self.onLoseTeamCaptain()
         self._clearRaidJoinRecords(withJoinTypes=(gameconst.RaidJoinTypeEnum.TEAM, ))
         self.autoCancelDungeonTeammateBeConfirmed()
 
+    def onDelTeamMemberCell(self, gbId):
+        self.teamInfo.delMember(self, gbId)
+        self._clearRaidJoinRecords(withJoinTypes=(gameconst.RaidJoinTypeEnum.TEAM, ))
+        self.autoCancelDungeonTeammateBeConfirmed()
+        self.resetAllTargetTypeCache()
+
     def onUpdateOnlineCell(self, gbId, box):
-        if box:
-            pass
-            # self.base.onFriendAddTeamMember([gbId])
-        else:
-            self.removeTeamFriends(gbId)
         self.teamInfo.updateOnlineState(gbId, box)
         self._clearRaidJoinRecords(withJoinTypes=(gameconst.RaidJoinTypeEnum.TEAM, ))
         self.autoCancelDungeonTeammateBeConfirmed()
 
-    def onUpdateTeamMemberCell(self, gbId, attrDic):
-        self.teamInfo.updateMemberAttr(gbId, attrDic)
+    def onUpdateTeamMemberCell(self, gbId, attrDict):
+        self.teamInfo.updateMemberAttr(gbId, attrDict)
 
-    def updateAttrToStub(self, attrDic):
-        gameengine.getTeamStub(self.teamId).updateMemberAttr(self.base, self.teamId, self.gbId, attrDic)
-        self.teamInfo.updateMemberAttr(self.gbId, attrDic)
-
-    def addTeamFriends(self, friendsList):
-        LOG_INFO('add team friends:', friendsList)
-        for gbId in friendsList:
-            if gbId in self.teamInfo.teamPlayerDict and gbId not in self.teamFriends:
-                self.teamFriends.append(gbId)
-
-    def removeTeamFriends(self, gbId):
-        if gbId in self.teamFriends:
-            self.teamFriends.remove(gbId)
+    def updateAttrToStub(self, attrDict):
+        gameengine.getTeamStub(self.teamId).updateMemberAttr(self.base, self.teamId, self.gbId, attrDict)
+        self.teamInfo.updateMemberAttr(self.gbId, attrDict)
 
     def onGetAvatarInterInfo(self, box, myAccountName):
         _props = {
-            'gbId': self.gbId,
             'school': self.school,
+            'gbId': self.gbId,
             'sex': self.sex,
-            'picFrameId': self.appearance.outfitData.picFrameId,
             'level': self.level,
+            'picFrameId': self.appearance.outfitData.picFrameId,
             'name': self.name,
             'openId': myAccountName,
-            'id': self.id,
             'offlineTime': 0,
+            'id': self.id,
         }
 
         # 【【任务】隐藏在线状态效果调整】
@@ -1031,7 +1116,8 @@ class ImpTeam(object):
     #----------------------------------------------- 自动匹配 start ----------------------------------------------------
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def reqTeamAutoMatch(self, exposed):
         LOG_INFO('in reqTeamAutoMatch')
         if 0 == self.teamId:
@@ -1046,6 +1132,7 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqTeamStopAutoMatch(self, exposed):
         LOG_INFO('in reqTeamStopAutoMatch')
         if 0 == self.teamId:
@@ -1054,12 +1141,13 @@ class ImpTeam(object):
         if not self.isCaptain():
             LOG_WARN('   in reqTeamStopAutoMatch, not captain')
             return
-        gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
+        gameengine.getTeamStub(self.teamId).doTeamPrepareStopAutoMatch(self.teamId)
         return
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def reqPlayerAutoMatch(self, exposed, target):
         LOG_INFO('in reqPlayerAutoMatchTeam')
         if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), True) \
@@ -1074,7 +1162,7 @@ class ImpTeam(object):
             LOG_WARN('reqPlayerAutoMatchTeam, already in a team:', self.teamId)
             return
 
-        if self.isInRaid():
+        if self.inRaid():
             LOG_WARN('reqPlayerAutoMatchTeam, already in a raid:', self.raidUUID)
             return
 
@@ -1099,36 +1187,35 @@ class ImpTeam(object):
         self.stopRaidMatch()
 
         playerMatchDic = {
-            'target': target,
             'playerGbId': self.gbId,
+            'target': target,
             'playerBox': self.base,
-            'playerName': self.name,
             'level': self.level,
+            'playerName': self.name,
             'school': self.school,
             'sex': self.sex,
             'spaceNo': self.spaceNo,
-            'guildUUID': self.guildUUID,
             'score': self.getTotalScore(),
+            'guildUUID': self.guildUUID,
         }
         gameengine.getGlobalBase('TeamMatchStub').playerAutoMatch(playerMatchDic)
-        return
 
-    def onCellPlayerStartAutoMatch(self, startMatchTime, target):
+    def cellPlayerStartAutoMatch(self, startMatchTime, target):
         self.autoMatchStartTime = startMatchTime
         self.autoMatchTarget = target
 
     def playerMatchInfoUpdate(self):
         LOG_INFO('in playerMatchInfoUpdate self.autoMatchStartTime:', self.autoMatchStartTime)
-        if 0 == self.autoMatchStartTime:
+        if not self.autoMatchStartTime:
             return
+
         playerMatchDic = {
-            'playerGbId': self.gbId,
             'playerBox': self.base,
-            'level': self.level,
+            'playerGbId': self.gbId,
             'spaceNo': self.spaceNo,
+            'level': self.level,
         }
         gameengine.getGlobalBase('TeamMatchStub').onPlayerMatchInfoUpdate(playerMatchDic)
-        return
 
     def onPlayerMatchedTeam(self, teamId):
         if self.teamId > 0:
@@ -1139,44 +1226,46 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqPlayerStopAutoMatch(self, exposed):
         LOG_INFO('reqPlayerStopAutoMatch::~')
         self.stopTeamMatch()
 
     def stopTeamMatch(self):
-        if self.autoMatchStartTime > 0:
-            LOG_INFO('in stopTeamMatch')
-            self.autoMatchStartTime = 0
-            self.autoMatchTarget = 0
-            gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
+        if self.autoMatchStartTime <= 0:
+            return
 
-    def onPlayerMatchedSucc(self):
+        LOG_INFO('in stopTeamMatch')
+        self.autoMatchTarget = 0
+        self.autoMatchStartTime = 0
+        gameengine.getGlobalBase('TeamMatchStub').doPlayerStopAutoMatch(self.gbId)
+
+    def onPlayerMatchedSuccess(self):
         self.autoMatchStartTime = 0
         self.autoMatchTarget = 0
-        return
 
     def leaveTeamAuto(self):
         LOG_INFO("leaveTeamAuto~")
         if self.autoMatchStartTime > 0:
-            self.autoMatchStartTime = 0
             self.autoMatchTarget = 0
-            gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
+            self.autoMatchStartTime = 0
+            gameengine.getGlobalBase('TeamMatchStub').doPlayerStopAutoMatch(self.gbId)
 
         if self.teamId > 0 and self.isCaptain():
-            gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
+            gameengine.getTeamStub(self.teamId).doTeamPrepareStopAutoMatch(self.teamId)
 
         if self.isInTeam(self.gbId):
             gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, True)
-        return
 
     def onPlayerAutoMatchTimeout(self):
         self.autoMatchStartTime = 0
         self.autoMatchTarget = 0
-        self.showMsg(TMMCD.datas['leaveMatch_timeOverMsg']['value'], [])
+        self.showMsg(TM_MCD.datas['leaveMatch_timeOverMsg']['value'], [])
         return
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqSetTeamTarget(self, exposed, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         LOG_INFO("reqSetTeamTarget:", minLevel, minScore, recruitInfo, isAutoExpedition)
         if not self.isInTeam(self.gbId):
@@ -1207,11 +1296,13 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqGetTeamInfo(self, exposed, checkTeamId):
         gameengine.getTeamStub(checkTeamId).getTeamInfo(self.base, checkTeamId)
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqGetTeamList(self, exposed, lastTime, teamTarget):
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
@@ -1224,49 +1315,41 @@ class ImpTeam(object):
                LOG_ERR("reqGetTeamList, wrong activity control need team type", teamTarget, lastTime)
                return
 
-        recordsDic = self.getTempMiscProp(gameconst.EntityPropsEnum.getTeamListRecordData)
-        if not recordsDic:
-            recordsDic = {}
-            self.setTempMiscProp(gameconst.EntityPropsEnum.getTeamListRecordData, recordsDic)
+        _recordsDic = self.getTempMiscProp(gameconst.EntityPropsEnum.getTeamListRecordData)
+        if not _recordsDic:
+            _recordsDic = {}
+            self.setTempMiscProp(gameconst.EntityPropsEnum.getTeamListRecordData, _recordsDic)
 
-        if teamTarget not in recordsDic:
-            recordsDic.setdefault(teamTarget, [0, 0])
+        if teamTarget not in _recordsDic:
+            _recordsDic.setdefault(teamTarget, [0, 0])
 
         now = utils.curTS()
-        lastGetTime = recordsDic[teamTarget][1]
+        lastGetTime = _recordsDic[teamTarget][1]
         if lastGetTime+1 >= now:
-            LOG_WARN('Frequently call reqGetTeamList, teamtarget:', teamTarget, recordsDic)
+            LOG_WARN('Frequently call reqGetTeamList, teamtarget:', teamTarget, _recordsDic)
             return
-        recordsDic[teamTarget][1] = now
+        _recordsDic[teamTarget][1] = now
 
-        lastTeamStubIndex = recordsDic[teamTarget][0]
-        checkTime = utils.curTS()
+        lastTeamStubIndex = _recordsDic[teamTarget][0]
+        _checkTime = utils.curTS()
         # checkTime 会下发给客户端，客户端根据 checkTime 判断是否是同一次 reqGetTeamList 的查询结果
-        if lastTime == checkTime:
-            checkTime += 1
+        if lastTime == _checkTime:
+            _checkTime += 1
 
-        checkTeamstubNum = 0
+        _checkTeamstubNum = 0
         sendTeamNum=0
         startTeamStubIndex = lastTeamStubIndex+1
-        gameengine.getTeamStub(startTeamStubIndex+checkTeamstubNum).getTeamList(self.base, teamTarget, checkTime,
-                                                                       checkTeamstubNum, sendTeamNum, startTeamStubIndex)
+        gameengine.getTeamStub(startTeamStubIndex+_checkTeamstubNum).getTeamList(self.base, teamTarget, _checkTime,
+                                                                       _checkTeamstubNum, sendTeamNum, startTeamStubIndex)
     def onGetTeamListFinished(self, lastTeamStubIndex, teamTarget):
         self.client.onGetAllTeamList(teamTarget)
-        recordsDic = self.getTempMiscProp(gameconst.EntityPropsEnum.getTeamListRecordData)
-        recordsDic[teamTarget][0] = lastTeamStubIndex
+        _recordsDic = self.getTempMiscProp(gameconst.EntityPropsEnum.getTeamListRecordData)
+        _recordsDic[teamTarget][0] = lastTeamStubIndex
 
     #------------                   ----------------------------------- 自动匹配 end   ----------------------------------------------------
-
-    def AddTeamCaptainFrdNtf(self, teamId, teamCaptainGbId):
-        LOG_INFO('in AddTeamCaptainFrdNtf:', teamId, teamCaptainGbId)
-        if not self.isInTeam(self.gbId):
-            return
-        if teamCaptainGbId != self.teamInfo.getCaptainGbId():
-            return
-        return
-
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqUpdateTeamSilentAttr(self, exposed, isSilent):
         #队长在客户端2分钟没有任何操作，认为是静默队伍
         LOG_INFO('in reqUpdateTeamSilentAttr:', isSilent)
@@ -1282,17 +1365,12 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def clientSetAutoAskTeam(self, exposed, autoAskTeam):
         LOG_INFO('clientSetAutoAskTeam autoAskTeam ', autoAskTeam)
         if autoAskTeam < 0:
             return
         self.autoAskTeam = autoAskTeam
-
-    def setAutoAskTeam(self, askType):
-        self.autoAskTeam |= 1 << askType
-
-    def removeAutoAskTeam(self, askType):
-        self.autoAskTeam &= ~(1 << askType)
 
     def notifyTeamMemberLogon(self, box, gbId, teamId, isRelogin):
         LOG_INFO("notifyTeamMemberLogon::", box, gbId, teamId, isRelogin)
@@ -1301,11 +1379,11 @@ class ImpTeam(object):
 
         if isRelogin and self.hasTempMiscProp(gameconst.EntityPropsEnum.teamDungeonTeammateConfirmRecord):
             _record = self.getTempMiscProp(gameconst.EntityPropsEnum.teamDungeonTeammateConfirmRecord)
-            _dungeonPlayMode = _record['extra'].get('dungeonPlayMode')
-            _dungeonNo = _record['dungeonNo']
+            _dungeonPlayMode, _dungeonNo = _record['extra'].get('dungeonPlayMode'), _record['dungeonNo']
 
             fnName, args, _ = self.getTeamDungeonTeammateConfimFunction(_dungeonNo, _dungeonPlayMode)
-            box and getattr(box.client, fnName)(*args)
+            if box:
+                getattr(box.client, fnName)(*args)
 
     def clearTeamCacheBoxOnOffline(self):
         if self.teamId > 0:
@@ -1313,49 +1391,31 @@ class ImpTeam(object):
             for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDict.items():
                 self.teamInfo.updateMemberAttr(playerGBID, {'playerBox': None})
 
-    def addFullHpByNpc(self):
-        if self.bTeamCaptain:
-            for playerGbId, teamMemberVal in self.teamInfo.teamPlayerDict.items():
-                if not teamMemberVal.playerBox:
-                    continue
-                ent = KBEngine.entities.get(teamMemberVal.playerBox.id)
-                if not ent:
-                    continue
-                if sMath.distance2D(self.position, ent.position) > dataUtils.getConstVal('dropShareRange'):
-                    continue
-                ent._addFullHpByNpc()
-        else:
-            self._addFullHpByNpc()
-
-    def _addFullHpByNpc(self):
-        if self.isDie():
-            return
-        self.modifyHP(self.fullHp, self.id, gameconst.SourceType.SrcTpEventAction, self.id)
-
     # --------------------------------------------------------------------
     # TEAM MICS
     @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
-    def switchTeamMicsMode(self, exposed, mode):
+    def switchTeamMicsMode(self, exposed, modeType):
         """API: 开启小队麦功能"""
-        LOG_INFO("switchTeamMicsMode~")
-        _, err = self._switchTeamMicsModeCheck(mode)
+        LOG_INFO("switchTeamMicsMode~", modeType)
+        _, err = self._switchTeamMicsModeCheck(modeType)
         if err:
             LOG_ERR("switchTeamMicsMode::failed, errno={}".format(err))
             return
 
-        self.base.switchTeamMicsModeBase(self.teamId, mode)
+        self.base.switchTeamMicsModeBase(self.teamId, modeType)
 
     def _switchTeamMicsModeCheck(self, mode):
         if not self.isInTeam():
             return None, "TEAM_NOT_IN_TEAM"
 
-        if not self.isCaptain():
+        elif not self.isCaptain():
             return None, "TEAM_IS_NOT_CAPTAIN"
 
-        if mode not in gameconst.TeamMicsModeEnum.COLL_ALL:
+        elif mode not in gameconst.TeamMicsModeEnum.COLL_ALL:
             return None, "TEAM_MICS_MODE_ERR"
+
         return None, ""
 
     @gamedecorator.checkGameconfigEnable('team')
@@ -1364,26 +1424,29 @@ class ImpTeam(object):
     def turnOnTeamMics(self, exposed):
         """API: 小队成员打开麦克风"""
         LOG_INFO("turnOnTeamMics::~")
-        _, err = self._turnOnTeamMicsCheck()
-        if err:
-            LOG_ERR("turnOnTeamMics::failed, errno={}".format(err))
+        _, _err = self._turnOnTeamMicsCheck()
+        if _err:
+            LOG_ERR("turnOnTeamMics::failed, errno={}".format(_err))
             return
 
         self.base.turnOnTeamMicsBase(self.teamId)
 
     def _turnOnTeamMicsCheck(self):
-        if not self.isInTeam():
-            return None, "TEAM_NOT_IN_TEAM"
-        return None, ""
+        if self.isInTeam():
+            return None, ""
+
+        return None, "TEAM_NOT_IN_TEAM"
 
     def turnOffTeamMicsByForbidVoiceChat(self):
         LOG_INFO("turnOffTeamMicsByForbidVoiceChat")
-        _, err = self._turnOffTeamMicsCheck()
-        if err:
+        _, _err = self._turnOffTeamMicsCheck()
+        if _err:
             return
 
-        extraProps = {}
-        gameengine.getTeamStub(self.teamId).turnOffTeamMics(self.base, self.gbId, self.teamId, self.gbId, extraProps)
+        _extraProps = {}
+        gameengine\
+            .getTeamStub(self.teamId)\
+            .turnOffTeamMics(self.base, self.gbId, self.teamId, self.gbId, _extraProps)
 
     @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
@@ -1391,35 +1454,36 @@ class ImpTeam(object):
     def turnOffTeamMics(self, exposed):
         """API: 团队成员关闭麦克风"""
         LOG_INFO("turnOffTeamMics::~")
-        _, err = self._turnOffTeamMicsCheck()
-        if err:
-            LOG_ERR("turnOffTeamMics::failed, errno={}".format(err))
+        _, _err = self._turnOffTeamMicsCheck()
+        if _err:
+            LOG_ERR("turnOffTeamMics::failed, errno={}".format(_err))
             return
 
-        extraProps = {}
-        gameengine.getTeamStub(self.teamId).turnOffTeamMics(
-            self.base, self.gbId, self.teamId, self.gbId, extraProps)
+        _extraProps = {}
+        gameengine\
+            .getTeamStub(self.teamId)\
+            .turnOffTeamMics(
+                self.base, self.gbId, self.teamId, self.gbId, _extraProps)
 
     def _turnOffTeamMicsCheck(self):
         if not self.isInTeam():
             return None, "TEAM_NOT_IN_TEAM"
-        # if self.isCaptain():
-        #     return None, "TEAM_CAPTAIN_NOT_VALID"
         return None, ""
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def turnOnTeamMemberMics(self, exposed, playerGBID):
         """API: 打开特定成员麦克风"""
         LOG_INFO("turnOnTeamMemberMics::~")
-        _, err = self._turnOnTeamMemberMicsCheck()
-        if err:
-            LOG_ERR("turnOnTeamMemberMics::failed, errno={}".format(err))
+        _, _err = self._turnOnTeamMemberMicsCheck()
+        if _err:
+            LOG_ERR("turnOnTeamMemberMics::failed, errno={}".format(_err))
             return
 
-        extraProps = {}
+        _extraProps = {}
         gameengine.getTeamStub(self.teamId).turnOnTeamMics(
-            self.base, self.gbId, self.teamId, playerGBID, extraProps)
+            self.base, self.gbId, self.teamId, playerGBID, _extraProps)
 
     def _turnOnTeamMemberMicsCheck(self):
         if not self.isInTeam():
@@ -1428,6 +1492,7 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def turnOffTeamMemberMics(self, exposed, playerGBID):
         """API: 关闭特定成员麦克风"""
         LOG_INFO("turnOffTeamMemberMics::~", playerGBID)
@@ -1436,9 +1501,9 @@ class ImpTeam(object):
             LOG_ERR("turnOffTeamMemberMics::failed, errno={}".format(err))
             return
 
-        extraProps = {}
+        _extraProps = {}
         gameengine.getTeamStub(self.teamId).turnOffTeamMics(
-            self.base, self.gbId, self.teamId, playerGBID, extraProps)
+            self.base, self.gbId, self.teamId, playerGBID, _extraProps)
 
     def _turnOffTeamMemberMicsCheck(self):
         if not self.isInTeam():
@@ -1447,6 +1512,7 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def blockTeamMemberMics(self, exposed, playerGBID):
         """API: 团长禁言团员"""
         LOG_INFO("blockTeamMemberMics::~", playerGBID)
@@ -1455,19 +1521,21 @@ class ImpTeam(object):
             LOG_ERR("blockTeamMemberMics::failed, errno={}".format(err))
             return
 
-        extraProps = {}
+        _extraProps = {}
         gameengine.getTeamStub(self.teamId).blockTeamMemberMics(
-            self.base, self.gbId, self.teamId, playerGBID, extraProps)
+            self.base, self.gbId, self.teamId, playerGBID, _extraProps)
 
     def _blockTeamMemberMicsCheck(self, playerGBID):
         if not self.isInTeam():
             return None, "TEAM_NOT_IN_TEAM"
-        if not self.isCaptain():
+        elif not self.isCaptain():
             return None, "TEAM_NOT_CAPTAIN"
-        return None, ""
+        else:
+            return None, ""
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def unblockTeamMemberMics(self, exposed, playerGBID):
         """API: 团长解除团员禁言"""
         LOG_INFO("unblockTeamMemberMics::~", playerGBID)
@@ -1476,20 +1544,22 @@ class ImpTeam(object):
             LOG_ERR("unblockTeamMemberMics::failed, errno={}".format(err))
             return
 
-        extraProps = {}
+        _extraProps = {}
         gameengine.getTeamStub(self.teamId).unblockTeamMemberMics(
-            self.base, self.gbId, self.teamId, playerGBID, extraProps)
+            self.base, self.gbId, self.teamId, playerGBID, _extraProps)
 
     def _unblockTeamMemberMicsCheck(self, playerGBID):
         if not self.isInTeam():
             return None, "TEAM_NOT_IN_TEAM"
-        if not self.isCaptain():
+        elif not self.isCaptain():
             return None, "TEAM_NOT_CAPTAIN"
-        return None, ""
+        else:
+            return None, ""
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(1)
+    @gamedecorator.crossServer
     def blockAllTeamMemberMics(self, exposed):
         """API: 队长禁言所有队员"""
         LOG_INFO("blockAllTeamMemberMics::~")
@@ -1498,20 +1568,22 @@ class ImpTeam(object):
             LOG_ERR("blockAllTeamMemberMics::failed, errno={}".format(err))
             return
 
-        extraProps = {}
+        _extraProps = {}
         gameengine.getTeamStub(self.teamId).blockAllTeamMemberMics(
-            self.base, self.gbId, self.teamId, extraProps)
+            self.base, self.gbId, self.teamId, _extraProps)
 
     def _blockAllTeamMemberMics(self):
         if not self.isInTeam():
             return None, "TEAM_NOT_IN_TEAM"
-        if not self.isCaptain():
+        elif not self.isCaptain():
             return None, "TEAM_NOT_CAPTAIN"
-        return None, ""
+        else:
+            return None, ""
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(1)
+    @gamedecorator.crossServer
     def unblockAllTeamMemberMics(self, exposed):
         """API: 队长禁言所有队员"""
         LOG_INFO("unblockAllTeamMemberMics::~")
@@ -1520,21 +1592,23 @@ class ImpTeam(object):
             LOG_ERR("unblockAllTeamMemberMics::failed, errno={}".format(err))
             return
 
-        extraProps = {}
+        _extraProps = {}
         gameengine.getTeamStub(self.teamId).unblockAllTeamMemberMics(
-            self.base, self.gbId, self.teamId, extraProps)
+            self.base, self.gbId, self.teamId, _extraProps)
 
     def _unblockAllTeamMemberMics(self):
         if not self.isInTeam():
             return None, "TEAM_NOT_IN_TEAM"
-        if not self.isCaptain():
+        elif not self.isCaptain():
             return None, "TEAM_NOT_CAPTAIN"
-        return None, ""
+        else:
+            return None, ""
     # --------------------------------------------------------------------
 
     #------------------------------------------- 队伍标记  start -----------------------------------------------
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqAddMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """API: 请求增加标记"""
         LOG_INFO('reqAddMarkMember', self.teamId, type, index, name, gbId, entId, pos)
@@ -1548,6 +1622,7 @@ class ImpTeam(object):
 
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqDelMarkMember(self, exposed, type, index):
         """API: 请求删除标记"""
         LOG_INFO('reqDelMarkMember', self.teamId, type, index)
@@ -1561,6 +1636,7 @@ class ImpTeam(object):
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(2)
+    @gamedecorator.crossServer
     def reqChangeOnlyCaptain(self, exposed, state):
         """API: 请求改变仅队长修改标记的状态"""
         LOG_INFO('reqChangeOnlyCaptain', state)
@@ -1574,7 +1650,8 @@ class ImpTeam(object):
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(3)
-    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.UNKNOWN, onlyMode=True)
+    @gamedecorator.crossServer
     def reqJoinTeam(self, exposed, teamID, password):
         LOG_INFO('reqJoinTeam::', teamID, password)
         _, err = self._onJoinRaidCheck(teamID)

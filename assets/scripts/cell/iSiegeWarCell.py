@@ -172,4 +172,4 @@ class ISiegeWarCell(object):
     def onSiegeWarChatMsg(self, channelID, avatarInfo, msg, src):
         LOG_DBG('[lj]on siege war chat msg', channelID, avatarInfo, msg, src)
         if src.siegeWarCamp == self.siegeWarCamp:
-            self.client.onRecvAvatarChannelMsg(channelID, avatarInfo, msg)
+            self.client.onRecvAvatarChannelMsg(channelID, avatarInfo, {"msg": msg, "code": 0, "voiceUrl": '', "msgType": 0})

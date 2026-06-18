@@ -23,6 +23,7 @@ datas ={
     "TaskType": 1
   },
   "86010002": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -35,7 +36,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000003,
-        "DialogId": 19100007,
+        "DialogId": 19100004,
         "StoryId": 0
       },
       {
@@ -53,7 +54,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010008,
+    "FinRewardID": 40010010,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -62,6 +64,7 @@ datas ={
     "TaskType": 1
   },
   "86010003": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -74,7 +77,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000030,
-        "DialogId": 19100057,
+        "DialogId": 19100005,
         "StoryId": 0
       },
       {
@@ -93,7 +96,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900362,
-    "FinRewardID": 40010009,
+    "FinRewardID": 40010011,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010022,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -103,13 +107,15 @@ datas ={
     "TaskType": 1
   },
   "86010004": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010035,
-    "FinCondDefaultText": "\u79bb\u5f00\u7801\u5934",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u67e5\u63a2\u4f55\u4e8b\u53d1\u751f",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1001,
@@ -123,8 +129,8 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900433,
-    "FinRewardID": 40010084,
+    "FinRewardID": 40010104,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010011,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -134,6 +140,7 @@ datas ={
     "TaskType": 1
   },
   "86010005": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -146,7 +153,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000025,
-        "DialogId": 19100022,
+        "DialogId": 19100020,
         "StoryId": 0
       },
       {
@@ -164,9 +171,11 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900413,
     "FinRewardEventName": "OpenPopInfoPanel",
     "FinRewardEventParam": "99000027",
-    "FinRewardID": 40010044,
+    "FinRewardID": 40010060,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -186,6 +195,7 @@ datas ={
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinRewardCameraData": 0,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010001",
     "OpenCondRelateTaskState": 5,
@@ -195,6 +205,7 @@ datas ={
     "TaskType": 1
   },
   "86010007": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -207,7 +218,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000004,
-        "DialogId": 19100009,
+        "DialogId": 19100007,
         "StoryId": 0
       },
       {
@@ -226,7 +237,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900332,
-    "FinRewardID": 40010011,
+    "FinRewardID": 40010013,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -238,9 +250,7 @@ datas ={
     "BelongChapter": 1,
     "BelongMap": 0,
     "ChildTaskIds": [
-      86010009,
-      86010010,
-      86010011
+      86010009
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -258,6 +268,7 @@ datas ={
     "TaskType": 1
   },
   "86010009": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -272,17 +283,18 @@ datas ={
       "X": 367.443,
       "Y": 7.515747,
       "Z": 147.9866,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
-      "IsShowFx": 0
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
     },
-    "FinNpcId": "18000017",
+    "FinNpcId": "18000032",
     "FinNpcMapId": 1002,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010012,
-    "FNFinDialogId": "19100010",
+    "FinRewardID": 40010014,
+    "FinRewardTaskID": "0",
+    "FNFinDialogId": "19100008",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -291,29 +303,33 @@ datas ={
     "TaskType": 1
   },
   "86010010": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010008,
-    "FinBlockPopReward": True,
-    "FinCondDefaultText": "\u5bfb\u627e\u94c1\u5320",
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4043,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010255,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
-      "MapId": 1002,
-      "X": 318.2781,
-      "Y": 2.953067,
-      "Z": 177.5544,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "MapId": 4043,
+      "X": 253.2361,
+      "Y": 525.812,
+      "Z": 26.36631,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900363,
-    "FinRewardID": 40010013,
+    "FinRewardDialog": 19900556,
+    "FinRewardID": 40010220,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -322,46 +338,8 @@ datas ={
     "TaskType": 1
   },
   "86010011": {
-    "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
-    "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010008,
-    "FinCondDefaultText": "\u51fb\u6740\u8def\u4e0a\u51fa\u73b0\u7684\u9b54\u7269",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1002,
-        "MonsterId": 11210013,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210012,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 1,
-    "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900364,
-    "FinRewardID": 40010014,
-    "IsCanReset": False,
+    "FatherTaskId": 86010017,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -382,12 +360,14 @@ datas ={
     "TaskType": 1
   },
   "86010013": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010028,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u79bb\u5f00\u8859\u95e8",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -402,7 +382,8 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010064,
+    "FinRewardID": 40010081,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010006,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -412,18 +393,20 @@ datas ={
     "TaskType": 1
   },
   "86010014": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010026,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bfb\u627e\u5e08\u53d4",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000026,
-        "DialogId": 19100059,
+        "DialogId": 19100022,
         "StoryId": 0
       },
       {
@@ -442,7 +425,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900406,
-    "FinRewardID": 40010046,
+    "FinRewardID": 40010062,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -475,7 +459,10 @@ datas ={
       86010086
     ],
     "ClaimCondAutoTake": True,
+    "ClaimNpcId": "18000067",
+    "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
+    "CNFinDialogId": "19800023",
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
@@ -507,7 +494,8 @@ datas ={
       86010055,
       86010056,
       86010042,
-      86010043
+      86010043,
+      86010011
     ],
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
@@ -530,12 +518,14 @@ datas ={
     "AbanRemoveItems": [
       30990189
     ],
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010016,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bfb\u627e\u94c1\u5320\u5b9d\u7bb1",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -553,7 +543,8 @@ datas ={
     "FinRewardDialog": 19900402,
     "FinRewardEventName": "sendMsg",
     "FinRewardEventParam": "54990125",
-    "FinRewardID": 40010047,
+    "FinRewardID": 40010063,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -583,6 +574,7 @@ datas ={
     "FinRewardCameraData": 0,
     "FinRewardID": 40020081,
     "FinRewardTriggerStoryID": 98000001,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -590,18 +582,20 @@ datas ={
     "TaskType": 1
   },
   "86010020": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010035,
-    "FinCondDefaultText": "\u5bf9\u8bdd\u7cbe\u7075\u6218\u58eb",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u67e5\u63a2\u539f\u56e0",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
-        "NPCId": 18000610,
-        "DialogId": 19100036,
+        "NPCId": 18000133,
+        "DialogId": 19100039,
         "StoryId": 0
       },
       {
@@ -619,8 +613,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900469,
-    "FinRewardID": 40010085,
+    "FinRewardID": 40010105,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -629,6 +623,7 @@ datas ={
     "TaskType": 1
   },
   "86010021": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -650,7 +645,8 @@ datas ={
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900411,
-    "FinRewardID": 40010052,
+    "FinRewardID": 40010068,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -659,18 +655,20 @@ datas ={
     "TaskType": 1
   },
   "86010022": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010036,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u8c12\u89c1\u7cbe\u7075\u5973\u738b",
     "FinCondFinDialogs": [
       {
         "MapId": 1005,
         "NPCId": 18000063,
-        "DialogId": 19100037,
+        "DialogId": 19100026,
         "StoryId": 0
       },
       {
@@ -688,7 +686,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010053,
+    "FinRewardID": 40010069,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -712,7 +711,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86060137",
+    "OpenCondRelateTaskId": "86060038",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -720,18 +719,20 @@ datas ={
     "TaskType": 1
   },
   "86010024": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010023,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5411\u5b88\u5c06\u4e86\u89e3\u60c5\u51b5",
     "FinCondFinDialogs": [
       {
         "MapId": 1002,
         "NPCId": 18000012,
-        "DialogId": 19100013,
+        "DialogId": 19100019,
         "StoryId": 0
       },
       {
@@ -750,7 +751,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900395,
-    "FinRewardID": 40010042,
+    "FinRewardID": 40010058,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -759,12 +761,14 @@ datas ={
     "TaskType": 1
   },
   "86010025": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010023,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u8fdb\u5165\u65b0\u5143\u57ce",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -772,15 +776,16 @@ datas ={
       "X": 176.86,
       "Y": 1.01,
       "Z": 121.75,
-      "Width": 4,
-      "Length": 4,
+      "Width": 2,
+      "Length": 2,
       "TriggerDis": 0,
       "Angles": 0,
-      "IsShowFx": 0
+      "IsShowFx": 31710009
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900399,
-    "FinRewardID": 40010043,
+    "FinRewardID": 40010059,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98000037,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -812,18 +817,20 @@ datas ={
     "TaskType": 1
   },
   "86010027": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010026,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u524d\u5f80\u9556\u5c40",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000046,
-        "DialogId": 19100023,
+        "DialogId": 19100021,
         "StoryId": 0
       },
       {
@@ -842,7 +849,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900415,
-    "FinRewardID": 40010045,
+    "FinRewardID": 40010061,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -875,18 +883,20 @@ datas ={
     "TaskType": 1
   },
   "86010029": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010028,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5411\u529f\u66f9\u4e86\u89e3\u60c5\u51b5",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000025,
-        "DialogId": 19100053,
+        "DialogId": 19100030,
         "StoryId": 0
       },
       {
@@ -904,7 +914,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010062,
+    "FinRewardID": 40010079,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -935,8 +946,10 @@ datas ={
     "TaskType": 1
   },
   "86010031": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimDialog": 19900500,
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
@@ -948,15 +961,16 @@ datas ={
       "X": 190.4718,
       "Y": 170.6262,
       "Z": 473.3229,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900419,
-    "FinRewardID": 40010065,
+    "FinRewardID": 40010082,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -965,16 +979,18 @@ datas ={
     "TaskType": 1
   },
   "86010032": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010102,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1030,
         "NPCId": 18000741,
-        "DialogId": 19100120,
+        "DialogId": 19100044,
         "StoryId": 0
       },
       {
@@ -991,6 +1007,9 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010125,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1009,20 +1028,27 @@ datas ={
       86010106,
       86010211
     ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010102",
+    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010033,
     "TaskType": 1
   },
   "86010034": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -1030,6 +1056,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010033,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u524d\u5f80\u6708\u5149\u6d77\u6e2f\u4e8c\u5c42",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -1037,14 +1064,16 @@ datas ={
       "X": 603.1259,
       "Y": 307.128,
       "Z": 317.464,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900533,
+    "FinRewardID": 40010126,
     "FinRewardInstance": {
       "MapId": 4030,
       "NeedConfirm": False,
@@ -1057,6 +1086,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1114,12 +1144,14 @@ datas ={
     "TaskType": 1
   },
   "86010037": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010036,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u8fdb\u5165\u7cbe\u7075\u5b9d\u6bbf",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -1134,7 +1166,8 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010054,
+    "FinRewardID": 40010070,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1143,18 +1176,20 @@ datas ={
     "TaskType": 1
   },
   "86010038": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010036,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u627e\u5230\u7cbe\u7075\u5973\u738b",
     "FinCondFinDialogs": [
       {
         "MapId": 1006,
         "NPCId": 18000064,
-        "DialogId": 19100038,
+        "DialogId": 19100027,
         "StoryId": 0
       },
       {
@@ -1173,7 +1208,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900427,
-    "FinRewardID": 40010055,
+    "FinRewardID": 40010071,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1209,6 +1245,7 @@ datas ={
     "TaskType": 1
   },
   "86010040": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -1217,12 +1254,13 @@ datas ={
     "FailCondIfDie": True,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010039,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5411\u7cbe\u7075\u5973\u738b\u590d\u547d",
     "FinCondFinDialogs": [
       {
         "MapId": 1006,
         "NPCId": 18000064,
-        "DialogId": 19100054,
+        "DialogId": 19100028,
         "StoryId": 0
       },
       {
@@ -1241,7 +1279,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900500,
-    "FinRewardID": 40010060,
+    "FinRewardID": 40010077,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010013,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -1251,6 +1290,7 @@ datas ={
     "TaskType": 1
   },
   "86010041": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -1259,6 +1299,7 @@ datas ={
     "FailCondIfDie": True,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010039,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u98de\u8fc7\u773c\u524d\u7684\u9ad8\u53f0",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -1274,7 +1315,8 @@ datas ={
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900417,
-    "FinRewardID": 40010057,
+    "FinRewardID": 40010074,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1307,8 +1349,12 @@ datas ={
     "BelongChapter": 4,
     "BelongMap": 0,
     "ChildTaskIds": [
+      86010353,
       86010045,
-      86010046
+      86010046,
+      86010146,
+      86010147,
+      86010148
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -1318,7 +1364,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010182",
+    "OpenCondRelateTaskId": "86010339",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -1326,17 +1372,19 @@ datas ={
     "TaskType": 1
   },
   "86010045": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010044,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000074,
-        "DialogId": 19100041,
+        "DialogId": 19100109,
         "StoryId": 0
       },
       {
@@ -1355,7 +1403,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900453,
-    "FinRewardID": 40010123,
+    "FinRewardID": 40010333,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1364,6 +1413,7 @@ datas ={
     "TaskType": 1
   },
   "86010046": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -1375,7 +1425,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1011,
-        "MonsterId": 11240010,
+        "MonsterId": 11240022,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -1383,23 +1433,23 @@ datas ={
       },
       {
         "MapId": 1011,
-        "MonsterId": 11240012,
+        "MonsterId": 11240025,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1011,
-        "MonsterId": 11240011,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1011,
-        "MonsterId": 11240013,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -1409,8 +1459,9 @@ datas ={
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900454,
-    "FinRewardID": 40010124,
+    "FinRewardDialog": 19900385,
+    "FinRewardID": 40010334,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1449,6 +1500,7 @@ datas ={
     "BelongChapter": 4,
     "BelongMap": 0,
     "ChildTaskIds": [
+      86010127,
       86010050,
       86010073,
       86010074,
@@ -1464,7 +1516,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010075",
+    "OpenCondRelateTaskId": "86010289",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -1472,18 +1524,20 @@ datas ={
     "TaskType": 1
   },
   "86010050": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010049,
-    "FinCondDefaultText": "\u627e\u9053\u5c0a\u590d\u547d",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u4f55\u73ed\u836f\u4f3c\u4e4e\u6709\u4e8b",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
-        "NPCId": 18000074,
-        "DialogId": 19100043,
+        "NPCId": 18000133,
+        "DialogId": 19100090,
         "StoryId": 0
       },
       {
@@ -1501,7 +1555,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010129,
+    "FinRewardID": 40010257,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1528,10 +1583,13 @@ datas ={
     "TaskType": 1
   },
   "86010053": {
-    "BelongChapter": 4,
     "BelongMap": 0,
     "ChildTaskIds": [
-      86010054
+      86010054,
+      86010156,
+      86010438,
+      86010157,
+      86010158
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -1541,7 +1599,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010156",
+    "OpenCondRelateTaskId": "86010159",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -1549,20 +1607,37 @@ datas ={
     "TaskType": 1
   },
   "86010054": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
-    "ClickTaskClientEvent": "sendMsg",
-    "ClickTaskEventParam": "54990134",
-    "ClickTaskEventState": "3",
-    "DeliMetdManual": True,
+    "DeliMetdNoLimit": True,
     "FatherTaskId": 86010053,
-    "FinCondDefaultText": "\u63d0\u5347\u7b49\u7ea7\u523034\u7ea7",
-    "FinCondToLevel": 34,
+    "FinCondDefaultText": "\u8ba8\u4f10\u7956\u67ef",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1021,
+        "NPCId": 18000074,
+        "DialogId": 19800123,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900473,
-    "FinRewardID": 40010166,
+    "FinRewardDialog": 19900586,
+    "FinRewardID": 40010371,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1612,17 +1687,20 @@ datas ={
     "TaskType": 1
   },
   "86010058": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010057,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u9053\u5c0a\u6709\u4e8b\u76f8\u53ec",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000078,
-        "DialogId": 19100045,
+        "DialogId": 19100126,
         "StoryId": 0
       },
       {
@@ -1640,7 +1718,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010180,
+    "FinRewardID": 40010435,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1649,27 +1728,46 @@ datas ={
     "TaskType": 1
   },
   "86010059": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010057,
-    "FinCondDefaultText": "\u524d\u5f80\u652f\u63f4\u98de\u6c99\u8981\u585e",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 1004,
-      "X": 93.95223,
-      "Y": -2.885513,
-      "Z": 15.29964,
-      "Width": 4,
-      "Length": 4,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 0
-    },
+    "FinCondDefaultText": "\u6e05\u7406\u98de\u6c99\u5468\u8fb9\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010181,
+    "FinRewardID": 40010436,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1705,18 +1803,20 @@ datas ={
   "86010062": {
     "AbanCanRemoveItems": True,
     "AbanRemoveItems": [],
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010016,
-    "FinCondDefaultText": "\u5b8c\u6210\u667a\u7684\u8003\u9a8c",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u94c1\u5320",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000067,
-        "DialogId": 19100061,
+        "DialogId": 19100023,
         "StoryId": 0
       },
       {
@@ -1735,7 +1835,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900400,
-    "FinRewardID": 40010048,
+    "FinRewardID": 40010064,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1744,6 +1845,7 @@ datas ={
     "TaskType": 9
   },
   "86010063": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -1751,15 +1853,11 @@ datas ={
     "ClickTaskClientEvent": "sendMsg",
     "ClickTaskEventParam": "54990136",
     "ClickTaskEventState": "3",
-    "ClickTaskState": "3",
-    "ClickTaskToMapID": 1005,
-    "ClickTaskToPosX": 98.92,
-    "ClickTaskToPosY": 158.83,
-    "ClickTaskToPosZ": 260.04,
     "DeliMetdNoLimit": True,
     "FailCondIfDie": True,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010039,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u98de\u56de\u5e73\u53f0",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -1774,11 +1872,9 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010058,
+    "FinRewardID": 40010076,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
-    "NavTaskClientEvent": "sendMsg",
-    "NavTaskEventParam": "54990136",
-    "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -1786,18 +1882,20 @@ datas ={
     "TaskType": 1
   },
   "86010064": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010036,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": " \u4e0e\u7cbe\u7075\u5973\u738b\u5bf9\u8bdd",
     "FinCondFinDialogs": [
       {
         "MapId": 1006,
         "NPCId": 18000064,
-        "DialogId": 19100039,
+        "DialogId": 19800027,
         "StoryId": 0
       },
       {
@@ -1817,7 +1915,7 @@ datas ={
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900412,
-    "FinRewardID": 40010056,
+    "FinRewardID": 40010072,
     "FinRewardInstance": {
       "MapId": 1005,
       "NeedConfirm": False,
@@ -1830,6 +1928,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": False
     },
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010012,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -1864,6 +1963,7 @@ datas ={
     "TaskType": 1
   },
   "86010067": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -1893,7 +1993,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900418,
-    "FinRewardID": 40010059,
+    "FinRewardID": 40010075,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -1913,9 +2014,10 @@ datas ={
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900430,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010100",
+    "OpenCondRelateTaskId": "86010097",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -1925,25 +2027,30 @@ datas ={
   "86010069": {
     "BelongChapter": 0,
     "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClaimCondAutoTake": True,
+    "ChildTaskIds": [
+      86010267,
+      86010268
+    ],
+    "ClaimNpcId": "18000075",
+    "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
+    "CNFinDialogId": "19700016",
     "DeliMetdNoLimit": True,
-    "DispHiddenTask": True,
+    "DispInTaskBar": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondNoLimit": True,
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010035",
+    "OpenCondRelateTaskId": "86010097",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010069,
-    "TaskType": 5
+    "TaskType": 2
   },
   "86010070": {
+    "AbanRewardTaskID": "0",
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -1957,7 +2064,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000148,
-        "DialogId": 19100075,
+        "DialogId": 19700013,
         "StoryId": 0
       },
       {
@@ -1976,7 +2083,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900435,
-    "FinRewardID": 40010086,
+    "FinRewardID": 40010163,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010234",
@@ -2009,18 +2117,20 @@ datas ={
     "TaskType": 1
   },
   "86010072": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010071,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5411\u9053\u5c0a\u6c47\u62a5",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000074,
-        "DialogId": 19100042,
+        "DialogId": 19100110,
         "StoryId": 0
       },
       {
@@ -2038,8 +2148,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900471,
-    "FinRewardID": 40010125,
+    "FinRewardID": 40010338,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2048,18 +2158,20 @@ datas ={
     "TaskType": 1
   },
   "86010073": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010049,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u8be2\u95ee\u532a\u60a3",
     "FinCondFinDialogs": [
       {
         "MapId": 1011,
-        "NPCId": 18000721,
-        "DialogId": 19100093,
+        "NPCId": 18000792,
+        "DialogId": 19100091,
         "StoryId": 0
       },
       {
@@ -2077,7 +2189,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010130,
+    "FinRewardID": 40010258,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2086,18 +2199,20 @@ datas ={
     "TaskType": 1
   },
   "86010074": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010049,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u8be2\u95ee\u6076\u4eba\u5e2e\u60c5\u51b5",
     "FinCondFinDialogs": [
       {
         "MapId": 1011,
         "NPCId": 18000682,
-        "DialogId": 19100094,
+        "DialogId": 19100092,
         "StoryId": 0
       },
       {
@@ -2115,7 +2230,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010131,
+    "FinRewardID": 40010259,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2127,7 +2243,9 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [
       86010135,
-      86010136
+      86010136,
+      86010264,
+      86010265
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -2147,18 +2265,20 @@ datas ={
     "TaskType": 1
   },
   "86010076": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010071,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u4e86\u89e3\u5546\u8def\u4e4b\u60a3",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000076,
-        "DialogId": 19100055,
+        "DialogId": 19100111,
         "StoryId": 0
       },
       {
@@ -2176,7 +2296,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010126,
+    "FinRewardID": 40010339,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2197,7 +2318,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010148",
+    "OpenCondRelateTaskId": "86010292",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -2219,6 +2340,7 @@ datas ={
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010030",
@@ -2231,6 +2353,7 @@ datas ={
   "86010079": {
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "DispHiddenTask": True,
@@ -2243,7 +2366,7 @@ datas ={
     "FinRewardID": 40010112,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010131",
+    "OpenCondRelateTaskId": "86010464",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -2251,34 +2374,45 @@ datas ={
     "TaskType": 5
   },
   "86010080": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010057,
-    "FinCondFinDialogs": [
+    "FinCondDefaultText": "\u6e05\u7406\u98de\u6c99\u5468\u8fb9\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
       {
-        "MapId": 1004,
-        "NPCId": 18000129,
-        "DialogId": 19100046,
-        "StoryId": 0
+        "MapId": 1011,
+        "MonsterId": 11240036,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240034,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       },
       {
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
-    "FinCondHasFinDia": True,
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010182,
+    "FinRewardID": 40010437,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2287,6 +2421,7 @@ datas ={
     "TaskType": 1
   },
   "86010081": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -2300,7 +2435,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000148,
-        "DialogId": 19100092,
+        "DialogId": 19700014,
         "StoryId": 0
       },
       {
@@ -2318,17 +2453,19 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010113,
+    "FinRewardID": 40010227,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010110",
+    "OpenCondRelateTaskId": "86010262",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010081,
-    "TaskType": 2
+    "TaskType": 1
   },
   "86010082": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -2341,7 +2478,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000030,
-        "DialogId": 19100008,
+        "DialogId": 19100006,
         "StoryId": 0
       },
       {
@@ -2360,7 +2497,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900361,
-    "FinRewardID": 40010010,
+    "FinRewardID": 40010012,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2370,7 +2508,15 @@ datas ={
   },
   "86010083": {
     "BelongMap": 0,
-    "ChildTaskIds": [],
+    "ChildTaskIds": [
+      86010398,
+      86010399,
+      86010400,
+      86010401,
+      86010402,
+      86010403,
+      86010443
+    ],
     "ClaimCondAutoTake": True,
     "ClaimCondLevelMin": 30,
     "ClamiCameraData": 0,
@@ -2384,12 +2530,15 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010171",
+    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010083,
-    "TaskType": 5
+    "TaskType": 2
   },
   "86010084": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -2403,10 +2552,11 @@ datas ={
     "FinCondToLevel": 28,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900499,
-    "FinRewardID": 40010141,
+    "FinRewardID": 40010271,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010146",
+    "OpenCondRelateTaskId": "86010292",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -2418,10 +2568,13 @@ datas ={
     "AbanRemoveItems": [
       30990189
     ],
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
+    "ClickTaskClientEvent": "54990125",
+    "ClickTaskEventState": "sendMsg",
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1001,
     "ClickTaskToPosX": 62.16068,
@@ -2450,7 +2603,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900404,
-    "FinRewardID": 40010049,
+    "FinRewardID": 40010065,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "NavTaskClientEvent": "sendMsg",
     "NavTaskEventParam": "54990125",
@@ -2466,12 +2620,14 @@ datas ={
     "AbanRemoveItems": [
       30990189
     ],
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010016,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u63d0\u4ea4\u94c1\u5320\u7684\u5de5\u5177",
     "FinCondGatherCanNavigateToNpc": True,
     "FinCondGatherItems": [
@@ -2500,13 +2656,14 @@ datas ={
         "Ratio": 0
       }
     ],
-    "FinCondGatherSubDia": "19100067",
+    "FinCondGatherSubDia": "19100024",
     "FinCondGatherSubMapId": 1001,
     "FinCondGatherSubNpc": "18000067",
     "FinCondHasGatherItems": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900405,
-    "FinRewardID": 40010050,
+    "FinRewardID": 40010066,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2515,18 +2672,20 @@ datas ={
     "TaskType": 9
   },
   "86010087": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010036,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u56de\u62a5\u5e08\u53d4",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000026,
-        "DialogId": 19100060,
+        "DialogId": 19100025,
         "StoryId": 0
       },
       {
@@ -2545,7 +2704,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900408,
-    "FinRewardID": 40010051,
+    "FinRewardID": 40010067,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2554,6 +2714,7 @@ datas ={
     "TaskType": 1
   },
   "86010088": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -2564,7 +2725,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000026,
-        "DialogId": 19100062,
+        "DialogId": 19100029,
         "StoryId": 0
       },
       {
@@ -2583,7 +2744,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900409,
-    "FinRewardID": 40010061,
+    "FinRewardID": 40010078,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2592,17 +2754,20 @@ datas ={
     "TaskType": 1
   },
   "86010089": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010030,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bf9\u8bdd\u5b88\u536b\u4e86\u89e3\u60c5\u51b5",
     "FinCondFinDialogs": [
       {
         "MapId": 1030,
         "NPCId": 18000757,
-        "DialogId": 19100117,
+        "DialogId": 19100032,
         "StoryId": 0
       },
       {
@@ -2621,7 +2786,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900501,
-    "FinRewardID": 40010066,
+    "FinRewardID": 40010083,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2630,6 +2796,7 @@ datas ={
     "TaskType": 1
   },
   "86010090": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -2664,6 +2831,10 @@ datas ={
     ],
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 12,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900525,
+    "FinRewardID": 40010091,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2672,15 +2843,17 @@ datas ={
     "TaskType": 1
   },
   "86010091": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010204,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1030,
         "NPCId": 18000741,
-        "DialogId": 19100065,
+        "DialogId": 19100034,
         "StoryId": 0
       },
       {
@@ -2697,6 +2870,9 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010092,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2705,6 +2881,7 @@ datas ={
     "TaskType": 1
   },
   "86010092": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -2739,6 +2916,10 @@ datas ={
     ],
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900420,
+    "FinRewardID": 40010093,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2747,6 +2928,7 @@ datas ={
     "TaskType": 1
   },
   "86010093": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -2757,6 +2939,7 @@ datas ={
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010078,
     "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8c03\u67e5\u6c89\u8239",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -2776,6 +2959,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900522,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000032",
+    "FinRewardID": 40010085,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2807,6 +2995,7 @@ datas ={
     "TaskType": 1
   },
   "86010095": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -2818,7 +3007,7 @@ datas ={
       {
         "MapId": 1030,
         "NPCId": 18000741,
-        "DialogId": 19100066,
+        "DialogId": 19100036,
         "StoryId": 0
       },
       {
@@ -2836,8 +3025,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900424,
-    "FinRewardID": 40010072,
+    "FinRewardID": 40010101,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2846,6 +3035,7 @@ datas ={
     "TaskType": 1
   },
   "86010096": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -2855,6 +3045,10 @@ datas ={
     "FatherTaskId": 0,
     "FinCondDefaultText": "\u63d0\u5347\u5b9e\u529b\u523020\u7ea7",
     "FinCondToLevel": 20,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900532,
+    "FinRewardID": 40010107,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010035",
@@ -2862,19 +3056,22 @@ datas ={
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010096,
-    "TaskType": 0
+    "TaskType": 1
   },
   "86010097": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010035,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u6c42\u5e08\u53d4\u5e2e\u52a9",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000026,
-        "DialogId": 19100063,
+        "DialogId": 19100040,
         "StoryId": 0
       },
       {
@@ -2892,8 +3089,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900425,
-    "FinRewardID": 40010073,
+    "FinRewardID": 40010106,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2902,6 +3099,7 @@ datas ={
     "TaskType": 1
   },
   "86010098": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -2913,7 +3111,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000025,
-        "DialogId": 19100026,
+        "DialogId": 19100037,
         "StoryId": 0
       },
       {
@@ -2931,7 +3129,9 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010082,
+    "FinRewardDialog": 19900529,
+    "FinRewardID": 40010102,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2940,6 +3140,7 @@ datas ={
     "TaskType": 1
   },
   "86010099": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -2951,7 +3152,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000049,
-        "DialogId": 19100027,
+        "DialogId": 19100038,
         "StoryId": 0
       },
       {
@@ -2969,7 +3170,9 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010083,
+    "FinRewardDialog": 19900531,
+    "FinRewardID": 40010103,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -2978,6 +3181,7 @@ datas ={
     "TaskType": 1
   },
   "86010100": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3015,6 +3219,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010127,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3023,6 +3229,7 @@ datas ={
     "TaskType": 1
   },
   "86010101": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3032,6 +3239,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010033,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -3060,6 +3268,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900534,
+    "FinRewardID": 40010128,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3089,18 +3300,20 @@ datas ={
     "TaskType": 1
   },
   "86010103": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010102,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u89d0\u89c1\u6cd5\u5723",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000132,
-        "DialogId": 19100076,
+        "DialogId": 19100043,
         "StoryId": 0
       },
       {
@@ -3118,7 +3331,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010088,
+    "FinRewardID": 40010124,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3127,6 +3341,7 @@ datas ={
     "TaskType": 1
   },
   "86010104": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3136,6 +3351,8 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010033,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8c03\u67e5\u9057\u7559\u65e5\u5fd7",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -3155,6 +3372,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900535,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000034",
+    "FinRewardID": 40010129,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3163,6 +3385,7 @@ datas ={
     "TaskType": 1
   },
   "86010105": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3172,6 +3395,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010033,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -3200,6 +3424,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900536,
+    "FinRewardID": 40010130,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3208,6 +3435,7 @@ datas ={
     "TaskType": 1
   },
   "86010106": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3217,6 +3445,8 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010033,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8c03\u67e5\u9057\u7559\u65e5\u5fd7",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -3236,6 +3466,10 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000035",
+    "FinRewardID": 40010131,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3246,8 +3480,11 @@ datas ={
   "86010107": {
     "BelongMap": 0,
     "ChildTaskIds": [
+      86010372,
       86010108,
-      86010109
+      86010109,
+      86010376,
+      86010377
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -3263,7 +3500,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010130",
+    "OpenCondRelateTaskId": "86010363",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -3271,45 +3508,48 @@ datas ={
     "TaskType": 1
   },
   "86010108": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
     "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4018,
+    "FailCondInstId": 4038,
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010107,
-    "FinCondDefaultText": "\u524d\u5f80\u51c0\u5316\u9b54\u6c14",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 1032,
-      "X": 294.7883,
-      "Y": 309.5037,
-      "Z": 172.1057,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
-      "IsShowFx": 31710009
-    },
-    "FinHasRewardInst": True,
+    "FinCondDefaultText": "\u6e05\u9664\u788d\u773c\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4038,
+        "MonsterId": 11216203,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 4038,
+        "MonsterId": 11216202,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010115,
-    "FinRewardInstance": {
-      "MapId": 4018,
-      "NeedConfirm": False,
-      "UseConfigPos": True,
-      "X": 294.063,
-      "Y": 309.3536,
-      "Z": 178.7661,
-      "Dir": 355.3228,
-      "Angles": 0,
-      "IsShowFx": 0,
-      "NeedPlayFx": True
-    },
+    "FinRewardID": 40010184,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3318,31 +3558,160 @@ datas ={
     "TaskType": 1
   },
   "86010109": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
     "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4018,
+    "FailCondInstId": 4038,
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010107,
-    "FinCondDefaultText": "\u51c0\u5316\u9b54\u6c14",
+    "FinCondDefaultText": "\u6e05\u9664\u9b54\u7269\u9996\u9886",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
-        "MapId": 4018,
-        "MonsterId": 11214201,
+        "MapId": 4038,
+        "MonsterId": 11216201,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 1
       },
       {
-        "MapId": 4018,
-        "MonsterId": 11214202,
+        "MapId": 4,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900437,
+    "FinRewardID": 40010185,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 5,
+    "FinRewardLevInsID": 4018,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010109,
+    "TaskType": 1
+  },
+  "86010110": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010111,
+      86010112,
+      86010113,
+      86010379,
+      86010184
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010373",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010110,
+    "TaskType": 1
+  },
+  "86010111": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4038,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010110,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1032,
+      "X": 507.08,
+      "Y": 242.276,
+      "Z": 103.61,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010192,
+    "FinRewardInstance": {
+      "MapId": 4039,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 513.6803,
+      "Y": 246.6957,
+      "Z": 93.1711,
+      "Dir": 141.4388,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010111,
+    "TaskType": 1
+  },
+  "86010112": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4038,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010110,
+    "FinCondDefaultText": "\u51fb\u8d25\u6cbf\u9014\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4039,
+        "MonsterId": 11216303,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4039,
+        "MonsterId": 11216302,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -3358,130 +3727,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900437,
-    "FinRewardID": 40010116,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 5,
-    "FinRewardLevInsID": 4018,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010109,
-    "TaskType": 1
-  },
-  "86010110": {
-    "BelongMap": 0,
-    "ChildTaskIds": [
-      86010111,
-      86010112,
-      86010113,
-      86010184
-    ],
-    "ClaimCondAutoTake": True,
-    "ClamiCameraData": 0,
-    "DeliMetdNoLimit": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinRewardCameraData": 0,
-    "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010107",
-    "OpenCondRelateTaskState": 5,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010110,
-    "TaskType": 1
-  },
-  "86010111": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "DeliMetdNoLimit": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4019,
-    "FailCondInstType": 0,
-    "FailCondQuitIfFail": True,
-    "FatherTaskId": 86010110,
-    "FinCondDefaultText": "\u524d\u5f80\u51c0\u5316\u9b54\u6c14",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 1032,
-      "X": 355.3025,
-      "Y": 317.0895,
-      "Z": 327.5364,
-      "Width": 4,
-      "Length": 4,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 31710009
-    },
-    "FinHasRewardInst": True,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40010117,
-    "FinRewardInstance": {
-      "MapId": 4019,
-      "NeedConfirm": False,
-      "UseConfigPos": True,
-      "X": 357.5425,
-      "Y": 317.0895,
-      "Z": 331.5541,
-      "Dir": 29.14176,
-      "Angles": 0,
-      "IsShowFx": 0,
-      "NeedPlayFx": True
-    },
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010111,
-    "TaskType": 1
-  },
-  "86010112": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "DeliMetdNoLimit": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4019,
-    "FailCondInstType": 0,
-    "FailCondQuitIfFail": True,
-    "FatherTaskId": 86010110,
-    "FinCondDefaultText": "\u51c0\u5316\u9b54\u6c14",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 4019,
-        "MonsterId": 11214302,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 4
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinRewardCameraData": 0,
     "FinRewardDialog": 19900441,
-    "FinRewardID": 40010118,
+    "FinRewardID": 40010193,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3490,23 +3738,23 @@ datas ={
     "TaskType": 1
   },
   "86010113": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
     "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4019,
+    "FailCondInstId": 4038,
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010110,
-    "FinCondDefaultText": "\u51c0\u5316\u9b54\u6c14",
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
-        "MapId": 4019,
-        "MonsterId": 11214301,
+        "MapId": 4039,
+        "MonsterId": 11216301,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -3531,10 +3779,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900498,
-    "FinRewardID": 40010119,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 3,
-    "FinRewardLevInsID": 4019,
+    "FinRewardID": 40010194,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3543,6 +3789,7 @@ datas ={
     "TaskType": 1
   },
   "86010114": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -3553,6 +3800,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010178,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u5316\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -3561,7 +3809,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 9
+        "Count": 8
       },
       {
         "MapId": 4025,
@@ -3569,7 +3817,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 3
+        "Count": 4
       },
       {
         "MapId": 1,
@@ -3582,7 +3830,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900444,
-    "FinRewardID": 40010097,
+    "FinRewardID": 40010147,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3593,7 +3842,10 @@ datas ={
   "86010115": {
     "BelongMap": 0,
     "ChildTaskIds": [
-      86010116
+      86010116,
+      86010242,
+      86010243,
+      86010244
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -3603,7 +3855,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010178",
+    "OpenCondRelateTaskId": "86010387",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -3611,18 +3863,20 @@ datas ={
     "TaskType": 1
   },
   "86010116": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010115,
-    "FinCondDefaultText": "\u56de\u65b0\u5143\u57ce\u627e\u6cd5\u5723",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u6682\u56de\u65b0\u5143\u57ce",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
-        "NPCId": 18000117,
-        "DialogId": 19100078,
+        "NPCId": 18000754,
+        "DialogId": 19100055,
         "StoryId": 0
       },
       {
@@ -3640,7 +3894,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010098,
+    "FinRewardID": 40010207,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3649,6 +3904,7 @@ datas ={
     "TaskType": 1
   },
   "86010117": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -3658,6 +3914,10 @@ datas ={
     "FatherTaskId": 0,
     "FinCondDefaultText": "\u63d0\u5347\u5b9e\u529b\u523023\u7ea7",
     "FinCondToLevel": 23,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900544,
+    "FinRewardID": 40010162,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010234",
@@ -3665,7 +3925,7 @@ datas ={
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010117,
-    "TaskType": 0
+    "TaskType": 1
   },
   "86010118": {
     "BelongMap": 0,
@@ -3678,7 +3938,6 @@ datas ={
       86010124,
       86010125,
       86010126,
-      86010127,
       86010128,
       86010129
     ],
@@ -3690,7 +3949,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010115",
+    "OpenCondRelateTaskId": "86010132",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -3698,17 +3957,19 @@ datas ={
     "TaskType": 1
   },
   "86010119": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010118,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u56de\u62a5\u89c2\u661f\u957f\u8001",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000117,
-        "DialogId": 19100079,
+        "DialogId": 19100070,
         "StoryId": 0
       },
       {
@@ -3727,7 +3988,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900448,
-    "FinRewardID": 40010100,
+    "FinRewardID": 40010228,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3736,17 +3998,19 @@ datas ={
     "TaskType": 1
   },
   "86010120": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010118,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bf9\u8bdd\u65b0\u5143\u4e66\u751f",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000549,
-        "DialogId": 19100080,
+        "DialogId": 19100071,
         "StoryId": 0
       },
       {
@@ -3764,7 +4028,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010101,
+    "FinRewardID": 40010229,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3773,17 +4038,19 @@ datas ={
     "TaskType": 1
   },
   "86010121": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010118,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5e2e\u4e66\u751f\u53d6\u7c2a\u5b50",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000070,
-        "DialogId": 19100081,
+        "DialogId": 19100072,
         "StoryId": 0
       },
       {
@@ -3801,7 +4068,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010102,
+    "FinRewardID": 40010230,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3810,6 +4078,7 @@ datas ={
     "TaskType": 1
   },
   "86010122": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3819,7 +4088,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000546,
-        "DialogId": 19100082,
+        "DialogId": 19100073,
         "StoryId": 0
       },
       {
@@ -3838,7 +4107,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900447,
-    "FinRewardID": 40010103,
+    "FinRewardID": 40010231,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3847,6 +4117,7 @@ datas ={
     "TaskType": 1
   },
   "86010123": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -3857,7 +4128,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000687,
-        "DialogId": 19100083,
+        "DialogId": 19100074,
         "StoryId": 0
       },
       {
@@ -3875,7 +4146,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010104,
+    "FinRewardID": 40010232,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3884,6 +4156,7 @@ datas ={
     "TaskType": 1
   },
   "86010124": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -3893,7 +4166,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000556,
-        "DialogId": 19100084,
+        "DialogId": 19100075,
         "StoryId": 0
       },
       {
@@ -3912,7 +4185,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900449,
-    "FinRewardID": 40010105,
+    "FinRewardID": 40010233,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3921,17 +4195,19 @@ datas ={
     "TaskType": 1
   },
   "86010125": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010118,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bf9\u8bdd\u65b0\u5143\u5987\u4eba",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000563,
-        "DialogId": 19100085,
+        "DialogId": 19100076,
         "StoryId": 0
       },
       {
@@ -3949,7 +4225,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010106,
+    "FinRewardID": 40010234,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3958,6 +4235,7 @@ datas ={
     "TaskType": 1
   },
   "86010126": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -3968,7 +4246,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000535,
-        "DialogId": 19100086,
+        "DialogId": 19100077,
         "StoryId": 0
       },
       {
@@ -3986,7 +4264,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010107,
+    "FinRewardID": 40010235,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -3995,44 +4274,29 @@ datas ={
     "TaskType": 1
   },
   "86010127": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010118,
-    "FinCondDefaultText": "\u83b7\u53d6\u9b54\u7269\u7cbe\u8089",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1002,
-        "MonsterId": 11210037,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210036,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 5,
+    "FatherTaskId": 86010049,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u79bb\u5f00\u6b64\u5730",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1001,
+      "X": 306.7034,
+      "Y": 0.3616214,
+      "Z": 182.9036,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900450,
-    "FinRewardID": 40010108,
+    "FinRewardDialog": 19900576,
+    "FinRewardID": 40010256,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4041,16 +4305,18 @@ datas ={
     "TaskType": 1
   },
   "86010128": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010118,
-    "FinCondDefaultText": "\u5bf9\u8bdd\u540c\u5fc3\u8c37\u9a6c\u592b",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u65b0\u5143\u644a\u4e3b",
     "FinCondFinDialogs": [
       {
-        "MapId": 1002,
-        "NPCId": 18000527,
-        "DialogId": 19100087,
+        "MapId": 1001,
+        "NPCId": 18000537,
+        "DialogId": 19100078,
         "StoryId": 0
       },
       {
@@ -4068,7 +4334,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010109,
+    "FinRewardID": 40010236,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4077,16 +4344,18 @@ datas ={
     "TaskType": 1
   },
   "86010129": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010118,
     "FinCondDefaultText": "\u4f20\u8fbe\u5546\u60c5",
     "FinCondFinDialogs": [
       {
-        "MapId": 1005,
-        "NPCId": 18000598,
-        "DialogId": 19100088,
+        "MapId": 1001,
+        "NPCId": 18000076,
+        "DialogId": 19100079,
         "StoryId": 0
       },
       {
@@ -4105,7 +4374,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900451,
-    "FinRewardID": 40010110,
+    "FinRewardID": 40010237,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4116,7 +4386,8 @@ datas ={
   "86010130": {
     "BelongMap": 0,
     "ChildTaskIds": [
-      86010131
+      86010131,
+      86010269
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -4134,17 +4405,19 @@ datas ={
     "TaskType": 1
   },
   "86010131": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010130,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000117,
-        "DialogId": 19100090,
+        "DialogId": 19100080,
         "StoryId": 0
       },
       {
@@ -4162,8 +4435,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900470,
-    "FinRewardID": 40010111,
+    "FinRewardID": 40010238,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4172,6 +4445,7 @@ datas ={
     "TaskType": 1
   },
   "86010132": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -4186,10 +4460,11 @@ datas ={
     "FinCondToLevel": 25,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900499,
-    "FinRewardID": 40010114,
+    "FinRewardID": 40010226,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010110",
+    "OpenCondRelateTaskId": "86010262",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -4197,38 +4472,51 @@ datas ={
     "TaskType": 1
   },
   "86010133": {
-    "BelongMap": 0,
-    "ChildTaskIds": [
-      86010134
-    ],
-    "ClaimCondAutoTake": True,
-    "ClamiCameraData": 0,
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
+    "FatherTaskId": 86010373,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1032,
+      "X": 496.0473,
+      "Y": 237.0333,
+      "Z": 167.8775,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010189,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010084",
-    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010133,
     "TaskType": 1
   },
   "86010134": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010133,
-    "FinCondDefaultText": "\u518d\u6b21\u5bf9\u8bdd\u9986\u957f",
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4045,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010280,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8be2\u95ee\u7ebf\u4eba\u7ebf\u7d22",
     "FinCondFinDialogs": [
       {
-        "MapId": 1001,
-        "NPCId": 18000558,
-        "DialogId": 19100113,
+        "MapId": 4045,
+        "NPCId": 18000791,
+        "DialogId": 19100085,
         "StoryId": 0
       },
       {
@@ -4246,7 +4534,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010142,
+    "FinRewardDialog": 19900573,
+    "FinRewardID": 40010247,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4255,6 +4544,7 @@ datas ={
     "TaskType": 1
   },
   "86010135": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -4266,6 +4556,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010075,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u524d\u5f80\u57ce\u90ca\u8c03\u67e5",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -4281,7 +4572,7 @@ datas ={
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010127,
+    "FinRewardID": 40010340,
     "FinRewardInstance": {
       "MapId": 4007,
       "NeedConfirm": False,
@@ -4294,6 +4585,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4302,6 +4594,7 @@ datas ={
     "TaskType": 1
   },
   "86010136": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -4318,15 +4611,64 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 4007,
-        "MonsterId": 11213301,
+        "MonsterId": 11213302,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 4007,
-        "MonsterId": 11213302,
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterNum": 3,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900194,
+    "FinRewardID": 40010341,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010136,
+    "TaskType": 1
+  },
+  "86010137": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimDialog": 19900455,
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010049,
+    "FinCondDefaultText": "\u6e05\u9664\u532a\u60a3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240029,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240027,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -4342,24 +4684,56 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 3,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900194,
-    "FinRewardID": 40010128,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 4,
-    "FinRewardLevInsID": 4007,
+    "FinRewardDialog": 19900456,
+    "FinRewardID": 40010260,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010136,
+    "TaskId": 86010137,
     "TaskType": 1
   },
-  "86010137": {
+  "86010138": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClaimDialog": 19900455,
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010028,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u79bb\u5f00\u8859\u95e8",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1001,
+      "X": 228.5638,
+      "Y": 0.5866394,
+      "Z": 325.9734,
+      "Width": 4,
+      "Length": 4,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenTaskDialogPanel",
+    "FinRewardEventParam": "19100031",
+    "FinRewardID": 40010080,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010138,
+    "TaskType": 1
+  },
+  "86010139": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
@@ -4369,7 +4743,56 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1011,
-        "MonsterId": 11240018,
+        "MonsterId": 11240026,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240028,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900457,
+    "FinRewardID": 40010261,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010139,
+    "TaskType": 1
+  },
+  "86010140": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010049,
+    "FinCondDefaultText": "\u6e05\u9664\u532a\u60a3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240019,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -4395,133 +4818,9 @@ datas ={
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900456,
-    "FinRewardID": 40010132,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010137,
-    "TaskType": 1
-  },
-  "86010138": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "ClaimTaskNeedTips": None,
-    "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010028,
-    "FinBlockPopReward": True,
-    "FinCondDefaultText": "\u79bb\u5f00\u8859\u95e8",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 1001,
-      "X": 228.5638,
-      "Y": 0.5866394,
-      "Z": 325.9734,
-      "Width": 4,
-      "Length": 4,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 0
-    },
-    "FinRewardCameraData": 0,
-    "FinRewardEventName": "OpenTaskDialogPanel",
-    "FinRewardEventParam": "19100101",
-    "FinRewardID": 40010063,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010138,
-    "TaskType": 1
-  },
-  "86010139": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
-    "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010049,
-    "FinCondDefaultText": "\u6e05\u9664\u532a\u60a3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1011,
-        "MonsterId": 11240019,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1011,
-        "MonsterId": 11240021,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 15,
-    "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900457,
-    "FinRewardID": 40010133,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010139,
-    "TaskType": 1
-  },
-  "86010140": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
-    "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010049,
-    "FinCondDefaultText": "\u6e05\u9664\u532a\u60a3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1011,
-        "MonsterId": 11240026,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1011,
-        "MonsterId": 11240029,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 15,
-    "FinRewardCameraData": 0,
     "FinRewardDialog": 19900459,
-    "FinRewardID": 40010134,
+    "FinRewardID": 40010262,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4558,6 +4857,7 @@ datas ={
     "TaskType": 1
   },
   "86010142": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -4569,6 +4869,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010141,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5077\u542c\u5bf9\u8bdd",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -4583,9 +4884,11 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900463,
     "FinRewardEventName": "OpenTaskDialogPanel",
-    "FinRewardEventParam": "19100097",
-    "FinRewardID": 40010136,
+    "FinRewardEventParam": "19100093",
+    "FinRewardID": 40010263,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4594,6 +4897,7 @@ datas ={
     "TaskType": 1
   },
   "86010143": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -4621,7 +4925,8 @@ datas ={
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010135,
+    "FinRewardDialog": 19900462,
+    "FinRewardID": 40010264,
     "FinRewardInstance": {
       "MapId": 4013,
       "NeedConfirm": False,
@@ -4634,6 +4939,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4642,9 +4948,10 @@ datas ={
     "TaskType": 1
   },
   "86010144": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClaimDialog": 19900463,
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
@@ -4662,7 +4969,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 3
+        "Count": 8
       },
       {
         "MapId": 4013,
@@ -4670,7 +4977,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 3
+        "Count": 4
       },
       {
         "MapId": 1,
@@ -4683,7 +4990,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900464,
-    "FinRewardID": 40010137,
+    "FinRewardID": 40010265,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4692,6 +5000,7 @@ datas ={
     "TaskType": 1
   },
   "86010145": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -4732,10 +5041,11 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900468,
-    "FinRewardID": 40010138,
+    "FinRewardID": 40010266,
     "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 5,
+    "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4013,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4744,58 +5054,94 @@ datas ={
     "TaskType": 1
   },
   "86010146": {
-    "BelongMap": 0,
-    "ChildTaskIds": [
-      86010147,
-      86010148
-    ],
-    "ClaimCondAutoTake": True,
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
+    "FatherTaskId": 86010044,
+    "FinCondDefaultText": "\u51fb\u6740\u57ce\u90ca\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900479,
+    "FinRewardID": 40010335,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010141",
-    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010146,
     "TaskType": 1
   },
   "86010147": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010146,
-    "FinCondDefaultText": "\u7980\u544a\u9053\u5c0a",
-    "FinCondFinDialogs": [
+    "FatherTaskId": 86010044,
+    "FinCondDefaultText": "\u51fb\u6740\u57ce\u90ca\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
       {
-        "MapId": 1001,
-        "NPCId": 18000074,
-        "DialogId": 19100095,
-        "StoryId": 0
+        "MapId": 1011,
+        "MonsterId": 11240045,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240043,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       },
       {
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
-    "FinCondHasFinDia": True,
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900502,
-    "FinRewardID": 40010139,
+    "FinRewardDialog": 19900479,
+    "FinRewardID": 40010336,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4804,36 +5150,46 @@ datas ={
     "TaskType": 1
   },
   "86010148": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010146,
-    "FinCondDefaultText": "\u5411\u9986\u957f\u53d6\u7ecf",
-    "FinCondFinDialogs": [
+    "FatherTaskId": 86010044,
+    "FinCondDefaultText": "\u51fb\u6740\u57ce\u90ca\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
       {
-        "MapId": 1001,
-        "NPCId": 18000558,
-        "DialogId": 19100096,
-        "StoryId": 0
+        "MapId": 1011,
+        "MonsterId": 11240044,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240046,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       },
       {
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
-    "FinCondHasFinDia": True,
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010140,
+    "FinRewardDialog": 19900454,
+    "FinRewardID": 40010337,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4854,7 +5210,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010185",
+    "OpenCondRelateTaskId": "86010075",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -4867,6 +5223,8 @@ datas ={
       86010151,
       86010152,
       86010153,
+      86010239,
+      86010240,
       86010154,
       86010155
     ],
@@ -4878,7 +5236,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010195",
+    "OpenCondRelateTaskId": "86010149",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -4886,6 +5244,7 @@ datas ={
     "TaskType": 1
   },
   "86010151": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -4897,7 +5256,7 @@ datas ={
       {
         "MapId": 1011,
         "NPCId": 18000074,
-        "DialogId": 19100109,
+        "DialogId": 19100113,
         "StoryId": 0
       },
       {
@@ -4916,7 +5275,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900475,
-    "FinRewardID": 40010153,
+    "FinRewardID": 40010345,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4925,18 +5285,20 @@ datas ={
     "TaskType": 1
   },
   "86010152": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010150,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bf9\u8bdd\u5148\u950b\u961f\u957f",
     "FinCondFinDialogs": [
       {
         "MapId": 1020,
         "NPCId": 18000600,
-        "DialogId": 19100111,
+        "DialogId": 19100114,
         "StoryId": 0
       },
       {
@@ -4955,7 +5317,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900474,
-    "FinRewardID": 40010154,
+    "FinRewardID": 40010346,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -4964,18 +5327,19 @@ datas ={
     "TaskType": 1
   },
   "86010153": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010150,
-    "FinCondDefaultText": "\u51fb\u6740\u7956\u67ef\u9b54\u7269",
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1020,
-        "MonsterId": 11231018,
+        "MonsterId": 11231015,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -4983,7 +5347,7 @@ datas ={
       },
       {
         "MapId": 1020,
-        "MonsterId": 11231020,
+        "MonsterId": 11231016,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -5001,8 +5365,8 @@ datas ={
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900476,
-    "FinRewardID": 40010155,
+    "FinRewardID": 40010347,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5011,17 +5375,19 @@ datas ={
     "TaskType": 1
   },
   "86010154": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010150,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u63a2\u67e5\u8ddf\u8e2a\u4e4b\u4eba",
     "FinCondFinDialogs": [
       {
         "MapId": 1020,
         "NPCId": 18000741,
-        "DialogId": 19100102,
+        "DialogId": 19100115,
         "StoryId": 0
       },
       {
@@ -5039,7 +5405,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010156,
+    "FinRewardID": 40010350,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5048,15 +5415,17 @@ datas ={
     "TaskType": 1
   },
   "86010155": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010150,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1020,
         "NPCId": 18000600,
-        "DialogId": 19100103,
+        "DialogId": 19100116,
         "StoryId": 0
       },
       {
@@ -5074,7 +5443,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010157,
+    "FinRewardID": 40010351,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5083,57 +5453,90 @@ datas ={
     "TaskType": 1
   },
   "86010156": {
-    "BelongMap": 0,
-    "ChildTaskIds": [
-      86010157,
-      86010158
-    ],
-    "ClaimCondAutoTake": True,
-    "ClamiCameraData": 0,
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
+    "FatherTaskId": 86010053,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010372,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86060141",
-    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010156,
     "TaskType": 1
   },
   "86010157": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
-    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010156,
-    "FinCondFinDialogs": [
+    "FatherTaskId": 86010053,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
       {
-        "MapId": 1020,
-        "NPCId": 18000741,
-        "DialogId": 19100104,
-        "StoryId": 0
+        "MapId": 1021,
+        "MonsterId": 11232012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       },
       {
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
-    "FinCondHasFinDia": True,
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900496,
-    "FinRewardID": 40010164,
+    "FinRewardID": 40010374,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5142,35 +5545,43 @@ datas ={
     "TaskType": 1
   },
   "86010158": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010156,
-    "FinCondFinDialogs": [
+    "FatherTaskId": 86010053,
+    "FinCondDefaultText": "\u51fb\u8d25\u6cbf\u9014\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
       {
-        "MapId": 1011,
-        "NPCId": 18000074,
-        "DialogId": 19100105,
-        "StoryId": 0
+        "MapId": 1021,
+        "MonsterId": 11232015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       },
       {
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
-    "FinCondHasFinDia": True,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40010165,
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010375,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5191,7 +5602,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010053",
+    "OpenCondRelateTaskId": "86060141",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -5208,6 +5619,9 @@ datas ={
       86010166,
       86010167,
       86010169,
+      86010439,
+      86010436,
+      86010437,
       86010170
     ],
     "ClaimCondAutoTake": True,
@@ -5220,7 +5634,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010159",
+    "OpenCondRelateTaskId": "86010431",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -5228,6 +5642,7 @@ datas ={
     "TaskType": 1
   },
   "86010161": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5249,8 +5664,9 @@ datas ={
     "FinNpcId": "18000074",
     "FinNpcMapId": 1011,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010167,
-    "FNFinDialogId": "19100106",
+    "FinRewardID": 40010370,
+    "FinRewardTaskID": "0",
+    "FNFinDialogId": "19100123",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5259,8 +5675,10 @@ datas ={
     "TaskType": 1
   },
   "86010162": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimDialog": 19900589,
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
@@ -5270,23 +5688,29 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010160,
-    "FinCondDefaultText": "\u524d\u5f80\u6e05\u7406\u9b54\u7269",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 1021,
-      "X": 366.9706,
-      "Y": 100.4505,
-      "Z": 228.9409,
-      "Width": 2,
-      "Length": 2,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 31710009
-    },
+    "FinCondDefaultText": "\u5f00\u542f\u7956\u67ef\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000145,
+        "Count": 1,
+        "MapId": 1021
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900478,
-    "FinRewardID": 40010168,
+    "FinRewardDialog": 19900590,
+    "FinRewardID": 40010393,
     "FinRewardInstance": {
       "MapId": 4023,
       "NeedConfirm": False,
@@ -5299,6 +5723,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5307,6 +5732,7 @@ datas ={
     "TaskType": 1
   },
   "86010163": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5326,7 +5752,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 6
       },
       {
         "MapId": 4023,
@@ -5334,7 +5760,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 3
       },
       {
         "MapId": 1,
@@ -5347,7 +5773,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900479,
-    "FinRewardID": 40010169,
+    "FinRewardID": 40010394,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5356,6 +5783,7 @@ datas ={
     "TaskType": 1
   },
   "86010164": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5366,22 +5794,38 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010160,
-    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 4023,
-      "X": 357.3004,
-      "Y": 100.1987,
-      "Z": 272.0052,
-      "Width": 4,
-      "Length": 4,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 0
-    },
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4023,
+        "MonsterId": 11214706,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 12
+      },
+      {
+        "MapId": 4023,
+        "MonsterId": 11214707,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900480,
-    "FinRewardID": 40010170,
+    "FinRewardID": 40010395,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5390,6 +5834,7 @@ datas ={
     "TaskType": 1
   },
   "86010165": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5409,7 +5854,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 8
       },
       {
         "MapId": 1,
@@ -5429,7 +5874,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010171,
+    "FinRewardID": 40010396,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5438,6 +5884,7 @@ datas ={
     "TaskType": 1
   },
   "86010166": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5478,7 +5925,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010172,
+    "FinRewardID": 40010397,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5487,6 +5935,7 @@ datas ={
     "TaskType": 1
   },
   "86010167": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimDialog": 19900488,
@@ -5508,7 +5957,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 6
       },
       {
         "MapId": 4023,
@@ -5516,7 +5965,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 6
       },
       {
         "MapId": 1,
@@ -5528,7 +5977,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010173,
+    "FinRewardID": 40010398,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5537,8 +5987,10 @@ datas ={
     "TaskType": 1
   },
   "86010168": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -5547,6 +5999,7 @@ datas ={
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010078,
     "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8c03\u67e5\u660e\u6708\u53f7\u7ebf\u7d22",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -5566,6 +6019,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900523,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000033",
+    "FinRewardID": 40010086,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5574,6 +6032,7 @@ datas ={
     "TaskType": 1
   },
   "86010169": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5589,11 +6048,11 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 4023,
-        "MonsterId": 11214702,
+        "MonsterId": 11214709,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 1
+        "Count": 7
       },
       {
         "MapId": 4023,
@@ -5601,20 +6060,21 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 14
       },
       {
         "MapId": 4023,
-        "MonsterId": 11214709,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900486,
-    "FinRewardID": 40010175,
+    "FinRewardID": 40010399,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5623,6 +6083,7 @@ datas ={
     "TaskType": 1
   },
   "86010170": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5634,7 +6095,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010160,
-    "FinCondDefaultText": "\u51fb\u8d25\u7956\u67ef\u9996\u9886",
+    "FinCondDefaultText": "\u94f2\u9664\u7956\u73c2",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -5646,27 +6107,28 @@ datas ={
         "Count": 1
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 4023,
+        "MonsterId": 11214704,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 0
+        "Count": 6
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 4023,
+        "MonsterId": 11214705,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 0
+        "Count": 6
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010176,
+    "FinRewardID": 40010403,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 3,
     "FinRewardLevInsID": 4023,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5689,25 +6151,27 @@ datas ={
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010160",
-    "OpenCondRelateTaskState": 4,
+    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86010171,
     "TaskType": 1
   },
   "86010172": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010171,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5411\u6cd5\u5723\u5bfb\u6c42\u5e2e\u52a9",
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000132,
-        "DialogId": 19100107,
+        "DialogId": 19100124,
         "StoryId": 0
       },
       {
@@ -5725,7 +6189,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010177,
+    "FinRewardID": 40010404,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5734,6 +6199,7 @@ datas ={
     "TaskType": 1
   },
   "86010173": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5746,7 +6212,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000074,
-        "DialogId": 19100108,
+        "DialogId": 19100125,
         "StoryId": 0
       },
       {
@@ -5766,7 +6232,8 @@ datas ={
     "FinRewardCameraData": 0,
     "FinRewardEventName": "OpenPopInfoPanel",
     "FinRewardEventParam": "99000031",
-    "FinRewardID": 40010178,
+    "FinRewardID": 40010405,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5775,6 +6242,7 @@ datas ={
     "TaskType": 1
   },
   "86010174": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -5789,7 +6257,8 @@ datas ={
     "FinCondToLevel": 35,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900473,
-    "FinRewardID": 40010179,
+    "FinRewardID": 40010406,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010171",
@@ -5826,6 +6295,7 @@ datas ={
     "TaskType": 1
   },
   "86010176": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5837,22 +6307,23 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010175,
-    "FinCondDefaultText": "\u5bfb\u627e\u9ec4\u91d1\u7684\u6d88\u606f",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1031,
       "X": 269.5821,
       "Y": 307.6032,
       "Z": 222.8702,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010092,
+    "FinRewardID": 40010135,
     "FinRewardInstance": {
       "MapId": 4024,
       "NeedConfirm": False,
@@ -5865,6 +6336,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5873,6 +6345,7 @@ datas ={
     "TaskType": 1
   },
   "86010177": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5883,7 +6356,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010175,
-    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u536b\u9b54\u7269",
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u53d8\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -5912,7 +6385,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010093,
+    "FinRewardID": 40010136,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5948,6 +6422,7 @@ datas ={
     "TaskType": 1
   },
   "86010179": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -5958,22 +6433,23 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010178,
-    "FinCondDefaultText": "\u5bfb\u627e\u9ec4\u91d1\u6d88\u606f",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u8239\u5458\u8e2a\u8ff9",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1031,
       "X": 312.5329,
       "Y": 321.3022,
       "Z": 551.4589,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010094,
+    "FinRewardID": 40010144,
     "FinRewardInstance": {
       "MapId": 4025,
       "NeedConfirm": False,
@@ -5986,6 +6462,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -5994,8 +6471,10 @@ datas ={
     "TaskType": 1
   },
   "86010180": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
@@ -6033,7 +6512,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010095,
+    "FinRewardID": 40010145,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6042,6 +6522,7 @@ datas ={
     "TaskType": 1
   },
   "86010181": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -6098,10 +6579,8 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900442,
-    "FinRewardID": 40010096,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 3,
-    "FinRewardLevInsID": 4025,
+    "FinRewardID": 40010146,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6112,7 +6591,8 @@ datas ={
   "86010182": {
     "BelongMap": 0,
     "ChildTaskIds": [
-      86010183
+      86010183,
+      86010295
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -6122,7 +6602,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010132",
+    "OpenCondRelateTaskId": "86010084",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -6130,6 +6610,7 @@ datas ={
     "TaskType": 1
   },
   "86010183": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -6141,7 +6622,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000132,
-        "DialogId": 19100112,
+        "DialogId": 19100097,
         "StoryId": 0
       },
       {
@@ -6160,9 +6641,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900497,
-    "FinRewardEventName": "OpenPopInfoPanel",
-    "FinRewardEventParam": "99000029",
-    "FinRewardID": 40010122,
+    "FinRewardID": 40010272,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6171,36 +6651,60 @@ datas ={
     "TaskType": 1
   },
   "86010184": {
+    "AbanCanRemoveItems": True,
+    "AbanRemoveItems": [
+      30990190
+    ],
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4038,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86010110,
-    "FinCondFinDialogs": [
+    "FinCondDefaultText": "\u5411\u51cc\u51dd\u8be2\u95ee\u60c5\u51b5",
+    "FinCondGatherCanNavigateToNpc": True,
+    "FinCondGatherItems": [
       {
-        "MapId": 1001,
-        "NPCId": 18000117,
-        "DialogId": 19100091,
-        "StoryId": 0
+        "ItemId": 30990190,
+        "Count": 1,
+        "RelateMonster": "",
+        "RelateCollect": "",
+        "MapId": 1,
+        "Ratio": 0
       },
       {
+        "ItemId": 0,
+        "Count": 0,
+        "RelateMonster": "",
+        "RelateCollect": "",
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "Ratio": 0
       },
       {
+        "ItemId": 0,
+        "Count": 0,
+        "RelateMonster": "",
+        "RelateCollect": "",
         "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
+        "Ratio": 0
       }
     ],
-    "FinCondHasFinDia": True,
+    "FinCondGatherSubDia": "19100052",
+    "FinCondGatherSubMapId": 4039,
+    "FinCondGatherSubNpc": "18000741",
+    "FinCondHasGatherItems": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010121,
+    "FinRewardID": 40010196,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4039,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6216,9 +6720,11 @@ datas ={
       86010188,
       86010189,
       86010190,
+      86010421,
       86010191,
       86010192,
-      86010193
+      86010193,
+      86010307
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -6229,7 +6735,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010133",
+    "OpenCondRelateTaskId": "86010305",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -6237,6 +6743,7 @@ datas ={
     "TaskType": 1
   },
   "86010186": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -6248,6 +6755,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010185,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u524d\u5f80\u6708\u5149\u6d77\u6e2f\u6df1\u5904",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -6263,7 +6771,7 @@ datas ={
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010143,
+    "FinRewardID": 40010283,
     "FinRewardInstance": {
       "MapId": 4026,
       "NeedConfirm": False,
@@ -6276,6 +6784,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6284,6 +6793,7 @@ datas ={
     "TaskType": 1
   },
   "86010187": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -6302,137 +6812,11 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 1
+        "Count": 2
       },
       {
         "MapId": 4026,
         "MonsterId": 11215005,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 2
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40010144,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010187,
-    "TaskType": 1
-  },
-  "86010188": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "DeliMetdNoLimit": True,
-    "FailCondCanGiveUp": True,
-    "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4026,
-    "FailCondInstType": 0,
-    "FailCondQuitIfFail": True,
-    "FatherTaskId": 86010185,
-    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 4026,
-      "X": 490.0114,
-      "Y": 149.0962,
-      "Z": 408.3366,
-      "Width": 4,
-      "Length": 4,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 0
-    },
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40010145,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010188,
-    "TaskType": 1
-  },
-  "86010189": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "DeliMetdNoLimit": True,
-    "FailCondCanGiveUp": True,
-    "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4026,
-    "FailCondInstType": 0,
-    "FailCondQuitIfFail": True,
-    "FatherTaskId": 86010185,
-    "FinCondDefaultText": "\u51c0\u5316\u9b54\u6c14",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 4026,
-        "MonsterId": 11215007,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 4026,
-        "MonsterId": 11215006,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40010146,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86010189,
-    "TaskType": 1
-  },
-  "86010190": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "DeliMetdNoLimit": True,
-    "FailCondCanGiveUp": True,
-    "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4026,
-    "FailCondInstType": 0,
-    "FailCondQuitIfFail": True,
-    "FatherTaskId": 86010185,
-    "FinCondDefaultText": "\u51c0\u5316\u9b54\u6c14",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 4026,
-        "MonsterId": 11215003,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 4026,
-        "MonsterId": 11215007,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -6448,15 +6832,17 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010147,
+    "FinRewardID": 40010284,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010190,
+    "TaskId": 86010187,
     "TaskType": 1
   },
-  "86010191": {
+  "86010188": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -6466,29 +6852,46 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010185,
-    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 4026,
-      "X": 477,
-      "Y": 157,
-      "Z": 338,
-      "Width": 4,
-      "Length": 4,
-      "TriggerDis": 0,
-      "Angles": 0,
-      "IsShowFx": 0
-    },
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4026,
+        "MonsterId": 11215007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4026,
+        "MonsterId": 11215006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010148,
+    "FinRewardID": 40010285,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010191,
+    "TaskId": 86010188,
     "TaskType": 1
   },
-  "86010192": {
+  "86010189": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -6503,39 +6906,41 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 4026,
-        "MonsterId": 11215002,
+        "MonsterId": 11215007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4026,
+        "MonsterId": 11215003,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 1
       },
       {
-        "MapId": 4026,
-        "MonsterId": 11215008,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
-      },
-      {
-        "MapId": 4026,
-        "MonsterId": 11215009,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 2
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010149,
+    "FinRewardID": 40010286,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010192,
+    "TaskId": 86010189,
     "TaskType": 1
   },
-  "86010193": {
+  "86010190": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -6545,7 +6950,105 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010185,
-    "FinCondDefaultText": "\u51c0\u5316\u9b54\u7269",
+    "FinCondDefaultText": "\u51c0\u5316\u6d77\u6e2f\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4026,
+        "MonsterId": 11215009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4026,
+        "MonsterId": 11215008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010287,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010190,
+    "TaskType": 1
+  },
+  "86010191": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4026,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010185,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u6e2f\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4026,
+        "MonsterId": 11215005,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4026,
+        "MonsterId": 11215004,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010289,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010191,
+    "TaskType": 1
+  },
+  "86010192": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4026,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010185,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u5316\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -6557,28 +7060,70 @@ datas ={
         "Count": 1
       },
       {
-        "MapId": 4026,
-        "MonsterId": 11215004,
+        "MapId": 4,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 0
       },
       {
-        "MapId": 4026,
-        "MonsterId": 11215005,
+        "MapId": 4,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010150,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 3,
-    "FinRewardLevInsID": 4026,
+    "FinRewardID": 40010290,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010192,
+    "TaskType": 1
+  },
+  "86010193": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "ClickTaskState": "3",
+    "ClickTaskToMapID": 4026,
+    "ClickTaskToPosX": 507.1419,
+    "ClickTaskToPosY": 168.513,
+    "ClickTaskToPosZ": 297.5477,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4026,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010185,
+    "FinCondDefaultText": "\u524d\u5f80\u60ac\u5d16\u4e0b\u65b9",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 4026,
+      "X": 547.25,
+      "Y": 148.8416,
+      "Z": 309.2722,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900579,
+    "FinRewardID": 40010291,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "NavTaskClientEvent": "sendMsg",
+    "NavTaskEventParam": "54990140",
+    "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -6586,6 +7131,7 @@ datas ={
     "TaskType": 1
   },
   "86010194": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -6597,7 +7143,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000074,
-        "DialogId": 19100098,
+        "DialogId": 19100112,
         "StoryId": 0
       },
       {
@@ -6615,10 +7161,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900472,
-    "FinRewardEventName": "OpenPopInfoPanel",
-    "FinRewardEventParam": "99000030",
-    "FinRewardID": 40010151,
+    "FinRewardID": 40010344,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6627,6 +7171,7 @@ datas ={
     "TaskType": 1
   },
   "86010195": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -6641,10 +7186,11 @@ datas ={
     "FinCondToLevel": 30,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900499,
-    "FinRewardID": 40010152,
+    "FinRewardID": 40010317,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010149",
+    "OpenCondRelateTaskId": "86010329",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -6670,13 +7216,13 @@ datas ={
     "OpenCondTaskeState": 0,
     "OpenCondTriggerArea": {
       "MapId": 3100,
-      "X": 69.62949,
-      "Y": 5.123144,
-      "Z": 33.13277,
-      "Width": 30.0,
-      "Length": 30.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "X": 130.4835,
+      "Y": 517.1338,
+      "Z": 20.5996,
+      "Width": 30,
+      "Length": 30,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 0
     },
     "TaskGroup": 0,
@@ -6684,8 +7230,10 @@ datas ={
     "TaskType": 2
   },
   "86010197": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -6694,19 +7242,24 @@ datas ={
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010078,
     "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u9b54\u7269\u6c14\u606f\u5904",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 4029,
       "X": 344.3479,
       "Y": 148.6693,
       "Z": 316.0761,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900524,
+    "FinRewardID": 40010087,
+    "FinRewardTaskID": "0",
+    "FinRewardTriggerStoryID": 98010024,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6728,9 +7281,9 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 3100,
-      "X": 73.95,
-      "Y": 3.668,
-      "Z": 67.8,
+      "X": 198.8528,
+      "Y": 527.6233,
+      "Z": 32.42004,
       "Width": 4,
       "Length": 4,
       "TriggerDis": 0,
@@ -6746,12 +7299,14 @@ datas ={
     "TaskType": 2
   },
   "86010199": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010039,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -6765,7 +7320,23 @@ datas ={
       "Angles": 0,
       "IsShowFx": 0
     },
+    "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010073,
+    "FinRewardInstance": {
+      "MapId": 1005,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 98.56143,
+      "Y": 158.8377,
+      "Z": 253.5922,
+      "Dir": 207.3931,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": False
+    },
+    "FinRewardTaskID": "0",
+    "FinRewardTriggerStoryID": 98010023,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6784,7 +7355,7 @@ datas ={
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u5b8c\u6210\u667a\u7684\u8003\u9a8c",
+    "FinCondDefaultText": "\u5b8c\u6210\u4efb\u52a1\u3010\u667a\u7684\u8003\u9a8c\u3011",
     "FinCondRelateTaskId": "86010016",
     "FinCondRelateTaskState": 5,
     "FinRewardCameraData": 0,
@@ -6798,6 +7369,7 @@ datas ={
     "TaskType": 1
   },
   "86010201": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -6836,6 +7408,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010088,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6844,6 +7418,7 @@ datas ={
     "TaskType": 1
   },
   "86010202": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -6881,9 +7456,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010089,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4029,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6892,9 +7469,11 @@ datas ={
     "TaskType": 1
   },
   "86010203": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -6910,14 +7489,15 @@ datas ={
       "X": 195.5599,
       "Y": 165.9853,
       "Z": 417.8917,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010084,
     "FinRewardInstance": {
       "MapId": 4029,
       "NeedConfirm": False,
@@ -6930,6 +7510,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -6960,17 +7541,20 @@ datas ={
     "TaskType": 1
   },
   "86010205": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010204,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bf9\u8bdd\u795e\u79d8\u5c11\u5973",
     "FinCondFinDialogs": [
       {
         "MapId": 1030,
         "NPCId": 18000741,
-        "DialogId": 19100064,
+        "DialogId": 19100033,
         "StoryId": 0
       },
       {
@@ -6987,6 +7571,9 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010090,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7016,16 +7603,19 @@ datas ={
     "TaskType": 0
   },
   "86010207": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010206,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1001,
         "NPCId": 18000026,
-        "DialogId": 19100070,
+        "DialogId": 19100041,
         "StoryId": 0
       },
       {
@@ -7043,9 +7633,9 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900430,
-    "FinRewardEventName": "OpenPopInfoPanel",
-    "FinRewardID": 40010076,
+    "FinRewardDialog": 19900521,
+    "FinRewardID": 40010122,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7054,6 +7644,7 @@ datas ={
     "TaskType": 1
   },
   "86010208": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -7066,7 +7657,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000743,
-        "DialogId": 19100068,
+        "DialogId": 19100042,
         "StoryId": 0
       },
       {
@@ -7085,7 +7676,10 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900426,
-    "FinRewardID": 40010077,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000028",
+    "FinRewardID": 40010123,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7115,16 +7709,18 @@ datas ={
     "TaskType": 1
   },
   "86010210": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010209,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1031,
         "NPCId": 18000741,
-        "DialogId": 19100121,
+        "DialogId": 19100045,
         "StoryId": 0
       },
       {
@@ -7142,6 +7738,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010133,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7150,6 +7748,7 @@ datas ={
     "TaskType": 1
   },
   "86010211": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7159,6 +7758,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010033,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u6e2f\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7187,9 +7787,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010132,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4030,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7198,16 +7800,18 @@ datas ={
     "TaskType": 1
   },
   "86010212": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010209,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1031,
-        "MonsterId": 11222009,
+        "MonsterId": 11222010,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -7215,7 +7819,7 @@ datas ={
       },
       {
         "MapId": 1031,
-        "MonsterId": 11222007,
+        "MonsterId": 11222008,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -7233,6 +7837,8 @@ datas ={
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010134,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7241,6 +7847,7 @@ datas ={
     "TaskType": 1
   },
   "86010213": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7250,6 +7857,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010175,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u53d8\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7278,6 +7886,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010137,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7286,6 +7896,7 @@ datas ={
     "TaskType": 1
   },
   "86010214": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7295,6 +7906,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010175,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7323,6 +7935,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900537,
+    "FinRewardID": 40010138,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7331,6 +7946,7 @@ datas ={
     "TaskType": 1
   },
   "86010215": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7340,6 +7956,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010175,
+    "FinCondDefaultText": "\u51c0\u5316\u9b54\u6c14",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -7359,9 +7976,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010139,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4024,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7373,8 +7992,8 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [
       86010217,
-      86010218,
-      86010219
+      86010219,
+      86010218
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -7392,15 +8011,17 @@ datas ={
     "TaskType": 1
   },
   "86010217": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010216,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1031,
         "NPCId": 18000741,
-        "DialogId": 19100122,
+        "DialogId": 19100046,
         "StoryId": 0
       },
       {
@@ -7418,6 +8039,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010140,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7426,15 +8049,17 @@ datas ={
     "TaskType": 1
   },
   "86010218": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010216,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1031,
-        "MonsterId": 11222023,
+        "MonsterId": 11222017,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -7442,7 +8067,7 @@ datas ={
       },
       {
         "MapId": 1031,
-        "MonsterId": 11222023,
+        "MonsterId": 11222015,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -7459,6 +8084,10 @@ datas ={
     ],
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010141,
+    "FinRewardTaskID": "0",
+    "FinRewardTriggerStoryID": 19900538,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7467,11 +8096,14 @@ datas ={
     "TaskType": 1
   },
   "86010219": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010216,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7501,6 +8133,9 @@ datas ={
     ],
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010142,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7513,9 +8148,12 @@ datas ={
     "ChildTaskIds": [
       86010221
     ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010216",
@@ -7526,16 +8164,20 @@ datas ={
     "TaskType": 1
   },
   "86010221": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010220,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u547c\u6551\u58f0\u6765\u6e90",
     "FinCondFinDialogs": [
       {
         "MapId": 1031,
         "NPCId": 18000754,
-        "DialogId": 19100077,
+        "DialogId": 19100047,
         "StoryId": 0
       },
       {
@@ -7552,6 +8194,9 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010143,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7560,6 +8205,7 @@ datas ={
     "TaskType": 1
   },
   "86010222": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7597,6 +8243,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010148,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7605,8 +8253,10 @@ datas ={
     "TaskType": 1
   },
   "86010223": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -7614,6 +8264,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010178,
+    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u536b\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7642,6 +8293,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010149,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7650,8 +8303,10 @@ datas ={
     "TaskType": 1
   },
   "86010224": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -7659,6 +8314,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010178,
+    "FinCondDefaultText": "\u5c01\u5370\u9b54\u6c14",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -7678,6 +8334,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010150,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4025,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7714,6 +8375,7 @@ datas ={
     "TaskType": 1
   },
   "86010226": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7723,6 +8385,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7751,6 +8414,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010152,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7759,6 +8424,7 @@ datas ={
     "TaskType": 1
   },
   "86010227": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7768,6 +8434,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u536b\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7796,6 +8463,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010153,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7804,6 +8473,7 @@ datas ={
     "TaskType": 1
   },
   "86010228": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7813,6 +8483,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u51fb\u8d25\u6321\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7825,7 +8496,7 @@ datas ={
       },
       {
         "MapId": 4031,
-        "MonsterId": 11215505,
+        "MonsterId": 11215506,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -7841,6 +8512,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010154,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7849,6 +8522,7 @@ datas ={
     "TaskType": 1
   },
   "86010229": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7858,6 +8532,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7886,6 +8561,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010155,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7894,6 +8571,7 @@ datas ={
     "TaskType": 1
   },
   "86010230": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7903,6 +8581,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u5c01\u5370\u9b54\u6c14",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -7922,6 +8601,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900539,
+    "FinRewardID": 40010156,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7930,6 +8612,7 @@ datas ={
     "TaskType": 1
   },
   "86010231": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -7939,6 +8622,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -7967,6 +8651,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010157,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -7975,8 +8661,10 @@ datas ={
     "TaskType": 1
   },
   "86010232": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -7984,6 +8672,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -8012,6 +8701,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900540,
+    "FinRewardID": 40010158,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -8020,6 +8712,7 @@ datas ={
     "TaskType": 1
   },
   "86010233": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -8029,6 +8722,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86010225,
+    "FinCondDefaultText": "\u8c03\u67e5\u822a\u6d77\u65e5\u5fd7",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -8053,9 +8747,14 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900591,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000036",
+    "FinRewardID": 40010159,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4031,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -8069,9 +8768,12 @@ datas ={
       86010235,
       86010236
     ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010225",
@@ -8082,22 +8784,29 @@ datas ={
     "TaskType": 1
   },
   "86010235": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010234,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u4e0e\u51cc\u51dd\u5546\u91cf",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1031,
       "X": 570.7783,
       "Y": 318.3942,
       "Z": 575.0528,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900543,
+    "FinRewardID": 40010160,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -8106,14 +8815,2912 @@ datas ={
     "TaskType": 1
   },
   "86010236": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86010234,
     "FinCondFinDialogs": [
       {
-        "MapId": 1030,
+        "MapId": 1031,
         "NPCId": 18000741,
+        "DialogId": 19100048,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010161,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010236,
+    "TaskType": 1
+  },
+  "86010237": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4031,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010225,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1031,
+      "X": 515.5007,
+      "Y": 320.7963,
+      "Z": 483.9975,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010151,
+    "FinRewardInstance": {
+      "MapId": 4031,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 519.515,
+      "Y": 319.1693,
+      "Z": 472.527,
+      "Dir": 163.6293,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010237,
+    "TaskType": 1
+  },
+  "86010238": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4037,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010356,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1032,
+      "X": 216.9692,
+      "Y": 162.2693,
+      "Z": 331.7112,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010169,
+    "FinRewardInstance": {
+      "MapId": 4037,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 224.3564,
+      "Y": 162.0906,
+      "Z": 327.4532,
+      "Dir": 139.7249,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010238,
+    "TaskType": 1
+  },
+  "86010239": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010150,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1020,
+        "MonsterId": 11231014,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010348,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010239,
+    "TaskType": 1
+  },
+  "86010240": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010150,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1020,
+        "MonsterId": 11231018,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900476,
+    "FinRewardID": 40010349,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010240,
+    "TaskType": 1
+  },
+  "86010241": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4049,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010263,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4049,
+        "MonsterId": 11217201,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010379,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4049,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010241,
+    "TaskType": 1
+  },
+  "86010242": {
+    "AbanRemoveItems": [],
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010115,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u6c42\u6cd5\u5723\u7684\u5e2e\u52a9",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000132,
+        "DialogId": 19100056,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010208,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010242,
+    "TaskType": 1
+  },
+  "86010243": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010115,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u89c2\u661f\u4f1a\u957f\u8001",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000117,
+        "DialogId": 1910057,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010209,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010243,
+    "TaskType": 1
+  },
+  "86010244": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010115,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u56de\u5fc6\u6c34\u624b\u8fc7\u5f80",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000754,
+        "DialogId": 19100058,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010210,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010244,
+    "TaskType": 1
+  },
+  "86010245": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010246,
+      86010247,
+      86010248,
+      86010249,
+      86010250,
+      86010251,
+      86010252
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010115",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010245,
+    "TaskType": 1
+  },
+  "86010246": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8ffd\u5fc6\u963f\u7126\u8fc7\u5f80",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1001,
+      "X": 161.7927,
+      "Y": 0.6902041,
+      "Z": 123.6175,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010211,
+    "FinRewardInstance": {
+      "MapId": 4042,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 158.6571,
+      "Y": 0.7267681,
+      "Z": 124.0006,
+      "Dir": 272.2709,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010246,
+    "TaskType": 1
+  },
+  "86010247": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u5218\u5170\u829d",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4042,
+        "NPCId": 18000773,
+        "DialogId": 19100059,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010212,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010247,
+    "TaskType": 1
+  },
+  "86010248": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u56de\u5fc6\u963f\u7126\u8fc7\u5f80",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4042,
+        "NPCId": 18000788,
+        "DialogId": 19100060,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900551,
+    "FinRewardID": 40010213,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010248,
+    "TaskType": 1
+  },
+  "86010249": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u5218\u5170\u829d",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4042,
+        "NPCId": 18000776,
+        "DialogId": 19100061,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010214,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010249,
+    "TaskType": 1
+  },
+  "86010250": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u56de\u5fc6\u963f\u7126\u8fc7\u53bb",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4042,
+        "NPCId": 18000789,
+        "DialogId": 19100062,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900553,
+    "FinRewardID": 40010215,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010250,
+    "TaskType": 1
+  },
+  "86010251": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u5218\u5170\u829d",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4042,
+        "NPCId": 18000779,
+        "DialogId": 19100063,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010216,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010251,
+    "TaskType": 1
+  },
+  "86010252": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4042,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010245,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u56de\u5fc6\u963f\u7126\u8fc7\u53bb",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4042,
+        "NPCId": 18000790,
+        "DialogId": 19100064,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900555,
+    "FinRewardID": 40010217,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4042,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010252,
+    "TaskType": 1
+  },
+  "86010253": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010254
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010245",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010253,
+    "TaskType": 1
+  },
+  "86010254": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010253,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000117,
+        "DialogId": 19100065,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010218,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010254,
+    "TaskType": 1
+  },
+  "86010255": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010256,
+      86010010,
+      86010257
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010253",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010255,
+    "TaskType": 1
+  },
+  "86010256": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4043,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010255,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u6e05\u9664\u5fc3\u9b54",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1001,
+      "X": 176.7141,
+      "Y": 2.519273,
+      "Z": 237.7556,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010219,
+    "FinRewardInstance": {
+      "MapId": 4043,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 244.2156,
+      "Y": 527.8172,
+      "Z": 18.81098,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010256,
+    "TaskType": 1
+  },
+  "86010257": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4043,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010255,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u51fb\u8d25\u6c34\u624b\u5fc3\u9b54",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4043,
+        "MonsterId": 11216601,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000042",
+    "FinRewardID": 40010221,
+    "FinRewardInstance": {
+      "MapId": 1001,
+      "NeedConfirm": False,
+      "UseConfigPos": False,
+      "X": 0,
+      "Y": 0,
+      "Z": 0,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": False
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010257,
+    "TaskType": 1
+  },
+  "86010258": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010259,
+      86010260,
+      86010261
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010255",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010258,
+    "TaskType": 1
+  },
+  "86010259": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010258,
+    "FinCondDefaultText": "\u770b\u671b\u963f\u7126",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000772,
+        "DialogId": 19100066,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900567,
+    "FinRewardID": 40010222,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010259,
+    "TaskType": 1
+  },
+  "86010260": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010258,
+    "FinCondDefaultText": "\u5bf9\u8d28\u51cc\u51dd",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000741,
+        "DialogId": 19100067,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900569,
+    "FinRewardID": 40010223,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010260,
+    "TaskType": 1
+  },
+  "86010261": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010258,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u6c42\u6cd5\u5723\u5e2e\u52a9",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000132,
+        "DialogId": 19100068,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000029",
+    "FinRewardID": 40010224,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010261,
+    "TaskType": 1
+  },
+  "86010262": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010392
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010258",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010262,
+    "TaskType": 1
+  },
+  "86010263": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010266,
+      86010270,
+      86010279,
+      86010241
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010053",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010263,
+    "TaskType": 1
+  },
+  "86010264": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4007,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010075,
+    "FinCondDefaultText": "\u51fb\u8d25\u540e\u63f4\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4007,
+        "MonsterId": 11213302,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 9
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010342,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010264,
+    "TaskType": 1
+  },
+  "86010265": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4007,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010075,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4007,
+        "MonsterId": 11213301,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010343,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4007,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010265,
+    "TaskType": 1
+  },
+  "86010266": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4049,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010263,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1021,
+      "X": 139.7893,
+      "Y": 98.66575,
+      "Z": 408.914,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010376,
+    "FinRewardInstance": {
+      "MapId": 4049,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 145.7255,
+      "Y": 100.1013,
+      "Z": 419.698,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010266,
+    "TaskType": 1
+  },
+  "86010267": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010069,
+    "FinCondDefaultText": "\u4f20\u8bdd\u5c60\u592b",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000536,
+        "DialogId": 19700017,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardID": 40010120,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010267,
+    "TaskType": 2
+  },
+  "86010268": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010069,
+    "FinCondDefaultText": "\u4f20\u8bdd\u4ea4\u6613\u884c\u8001\u677f",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000075,
+        "DialogId": 19700018,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardID": 40010121,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010268,
+    "TaskType": 2
+  },
+  "86010269": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010130,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u51c0\u4e16\u4f1a\u7ebf\u7d22",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000567,
+        "DialogId": 19100081,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010239,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010269,
+    "TaskType": 1
+  },
+  "86010270": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4049,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010263,
+    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u62a4\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4049,
+        "MonsterId": 11217202,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4049,
+        "MonsterId": 11217203,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010377,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010270,
+    "TaskType": 1
+  },
+  "86010271": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010272,
+      86010273,
+      86010274,
+      86010275,
+      86010276
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010130",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010271,
+    "TaskType": 1
+  },
+  "86010272": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4044,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010271,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u51c0\u4e16\u4f1a\u8e2a\u8ff9",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1001,
+      "X": 274.7427,
+      "Y": 0.4499317,
+      "Z": 276.8004,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010240,
+    "FinRewardInstance": {
+      "MapId": 4044,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 280.2871,
+      "Y": 0.6291891,
+      "Z": 276.696,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010272,
+    "TaskType": 1
+  },
+  "86010273": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4044,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010271,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u67e5\u63a2",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4044,
+        "NPCId": 18000663,
+        "DialogId": 19100082,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900574,
+    "FinRewardID": 40010241,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010273,
+    "TaskType": 1
+  },
+  "86010274": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4044,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010271,
+    "FinCondDefaultText": "\u51fb\u8d25\u51c0\u4e16\u4f1a\u52bf\u529b",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4044,
+        "MonsterId": 11216702,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 4044,
+        "MonsterId": 11216701,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010242,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010274,
+    "TaskType": 1
+  },
+  "86010275": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4044,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010271,
+    "FinCondDefaultText": "\u51fb\u8d25\u51c0\u4e16\u4f1a\u52bf\u529b",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4044,
+        "MonsterId": 11216702,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4044,
+        "MonsterId": 11216701,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010243,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010275,
+    "TaskType": 1
+  },
+  "86010276": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4044,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010271,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000792,
+        "DialogId": 19100083,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010244,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 0,
+    "FinRewardLevInsID": 4044,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010276,
+    "TaskType": 1
+  },
+  "86010277": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010278
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010271",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010277,
+    "TaskType": 1
+  },
+  "86010278": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010277,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u8859\u5f79\u5e2e\u52a9",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000674,
+        "DialogId": 19100084,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010245,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010278,
+    "TaskType": 1
+  },
+  "86010279": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4049,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010263,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4049,
+        "MonsterId": 11217202,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 4049,
+        "MonsterId": 11217203,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010378,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010279,
+    "TaskType": 1
+  },
+  "86010280": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010281,
+      86010134,
+      86010282,
+      86010283
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010277",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010280,
+    "TaskType": 1
+  },
+  "86010281": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4045,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010280,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u7ebf\u4eba",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1001,
+      "X": 55.96553,
+      "Y": 0.5996203,
+      "Z": 127.4305,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010246,
+    "FinRewardInstance": {
+      "MapId": 4045,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 50.0005,
+      "Y": 0.6155314,
+      "Z": 122.4447,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010281,
+    "TaskType": 1
+  },
+  "86010282": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4045,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010280,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d41\u7a9c\u51c0\u4e16\u4f1a",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4045,
+        "MonsterId": 11216801,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4045,
+        "MonsterId": 11216802,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010248,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010282,
+    "TaskType": 1
+  },
+  "86010283": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4045,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010280,
+    "FinCondDefaultText": "\u8be2\u95ee\u7ebf\u7d22",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4045,
+        "NPCId": 18000793,
+        "DialogId": 19100086,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010249,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4045,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010283,
+    "TaskType": 1
+  },
+  "86010284": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010285,
+      86010286,
+      86010287,
+      86010288
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010280",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010284,
+    "TaskType": 1
+  },
+  "86010285": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4046,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010284,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5f00\u542f\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000102,
+        "Count": 1,
+        "MapId": 1001
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010250,
+    "FinRewardInstance": {
+      "MapId": 4046,
+      "NeedConfirm": True,
+      "UseConfigPos": True,
+      "X": 522.9408,
+      "Y": 195.4831,
+      "Z": 527.5815,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010285,
+    "TaskType": 1
+  },
+  "86010286": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4046,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010284,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u63a2\u67e5\u6d88\u606f",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4046,
+        "NPCId": 18000663,
+        "DialogId": 19100087,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900571,
+    "FinRewardID": 40010251,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010286,
+    "TaskType": 1
+  },
+  "86010287": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4046,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010284,
+    "FinCondDefaultText": "\u51fb\u8d25\u6076\u4eba\u5e2e\u52bf\u529b",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4046,
+        "MonsterId": 11216902,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4046,
+        "MonsterId": 11216901,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010252,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010287,
+    "TaskType": 1
+  },
+  "86010288": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4046,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010284,
+    "FinCondDefaultText": "\u51fb\u8d25\u6076\u4eba\u5e2e\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4046,
+        "MonsterId": 11216903,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010253,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4046,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010288,
+    "TaskType": 1
+  },
+  "86010289": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010290,
+      86010291
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010284",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010289,
+    "TaskType": 1
+  },
+  "86010290": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010289,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5c06\u60c5\u51b5\u544a\u77e5\u6355\u5934",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000674,
+        "DialogId": 19100088,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000043",
+    "FinRewardID": 40010254,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010290,
+    "TaskType": 1
+  },
+  "86010291": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010289,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u56de\u544a\u9648\u54ac\u6625",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000117,
+        "DialogId": 19100089,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010255,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010291,
+    "TaskType": 1
+  },
+  "86010292": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010293,
+      86010294
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010141",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010292,
+    "TaskType": 1
+  },
+  "86010293": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010292,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000133,
+        "DialogId": 19100094,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000030",
+    "FinRewardID": 40010267,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010293,
+    "TaskType": 1
+  },
+  "86010294": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010292,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u6c42\u6559\u5b98\u5e2e\u52a9",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000558,
+        "DialogId": 19100095,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900577,
+    "FinRewardID": 40010268,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010294,
+    "TaskType": 1
+  },
+  "86010295": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010182,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u6708\u5149\u6d77\u6e2f4\u5c42",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1035,
+        "NPCId": 18000132,
+        "DialogId": 19100098,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010273,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010295,
+    "TaskType": 1
+  },
+  "86010296": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010297,
+      86010298,
+      86010299,
+      86010300,
+      86010301,
+      86010302,
+      86010303,
+      86010304
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010182",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010296,
+    "TaskType": 1
+  },
+  "86010297": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1035,
+      "X": 253.4336,
+      "Y": 148.4762,
+      "Z": 272.8658,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010274,
+    "FinRewardInstance": {
+      "MapId": 4033,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 261.3048,
+      "Y": 148.8118,
+      "Z": 276.5992,
+      "Dir": 80.14218,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010297,
+    "TaskType": 1
+  },
+  "86010298": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4033,
+        "MonsterId": 11215704,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4033,
+        "MonsterId": 11215703,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010275,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010298,
+    "TaskType": 1
+  },
+  "86010299": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000143,
+        "Count": 1,
+        "MapId": 4033
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010276,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010299,
+    "TaskType": 1
+  },
+  "86010300": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4033,
+        "MonsterId": 11215704,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 4033,
+        "MonsterId": 11215703,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010277,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010300,
+    "TaskType": 1
+  },
+  "86010301": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000143,
+        "Count": 1,
+        "MapId": 4033
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010278,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010301,
+    "TaskType": 1
+  },
+  "86010302": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000143,
+        "Count": 1,
+        "MapId": 4033
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010279,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010302,
+    "TaskType": 1
+  },
+  "86010303": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4033,
+        "MonsterId": 11215701,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010280,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010303,
+    "TaskType": 1
+  },
+  "86010304": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4033,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010296,
+    "FinCondDefaultText": "\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000143,
+        "Count": 1,
+        "MapId": 4033
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010281,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4033,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010304,
+    "TaskType": 1
+  },
+  "86010305": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010306
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010296",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010305,
+    "TaskType": 1
+  },
+  "86010306": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010305,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1035,
+        "NPCId": 18000132,
         "DialogId": 19100099,
         "StoryId": 0
       },
@@ -8131,62 +11738,4799 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010282,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010236,
+    "TaskId": 86010306,
     "TaskType": 1
   },
-  "86010237": {
+  "86010307": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4026,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010185,
+    "FinCondDefaultText": "\u5f00\u542f\u5b9d\u7bb1",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000103,
+        "Count": 1,
+        "MapId": 4026
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010292,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4026,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010307,
+    "TaskType": 1
+  },
+  "86010308": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010309
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010185",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010308,
+    "TaskType": 1
+  },
+  "86010309": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010308,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1035,
+        "NPCId": 18000132,
+        "DialogId": 19800099,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900472,
+    "FinRewardID": 40010293,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010309,
+    "TaskType": 1
+  },
+  "86010310": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010311,
+      86010312,
+      86010313
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010308",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010310,
+    "TaskType": 1
+  },
+  "86010311": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010310,
+    "FinCondDefaultText": "\u51fb\u6740\u5f02\u53d8\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010294,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010311,
+    "TaskType": 1
+  },
+  "86010312": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010310,
+    "FinCondDefaultText": "\u51fb\u6740\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010295,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010312,
+    "TaskType": 1
+  },
+  "86010313": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010310,
+    "FinCondDefaultText": "\u51fb\u8d25\u9057\u8ff9\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226028,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010296,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010313,
+    "TaskType": 1
+  },
+  "86010314": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010315,
+      86010316,
+      86010317,
+      86010318,
+      86010319,
+      86010320,
+      86010321,
+      86010322,
+      86010323,
+      86010324,
+      86010325,
+      86010326
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": True,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010310",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010314,
+    "TaskType": 1
+  },
+  "86010315": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1035,
+      "X": 291.7078,
+      "Y": 202.9471,
+      "Z": 500.5571,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010297,
+    "FinRewardInstance": {
+      "MapId": 4034,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 295.4604,
+      "Y": 203.041,
+      "Z": 490.581,
+      "Dir": 203.8483,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010315,
+    "TaskType": 1
+  },
+  "86010316": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4034,
+        "MonsterId": 11215803,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4034,
+        "MonsterId": 11215804,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010298,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010316,
+    "TaskType": 1
+  },
+  "86010317": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000143,
+        "Count": 1,
+        "MapId": 4034
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010299,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010317,
+    "TaskType": 1
+  },
+  "86010318": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u6cd5\u5723\u4f3c\u4e4e\u6709\u8bdd\u8981\u8bf4",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4034,
+        "NPCId": 18000132,
+        "DialogId": 19100100,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010300,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010318,
+    "TaskType": 1
+  },
+  "86010319": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u51fb\u8d25\u4e0b\u4e00\u6ce2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4034,
+        "MonsterId": 11215805,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 5
+      },
+      {
+        "MapId": 4034,
+        "MonsterId": 11215806,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 10
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010301,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010319,
+    "TaskType": 1
+  },
+  "86010320": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u6536\u96c6\u9b54\u6c14\u788e\u7247",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000143,
+        "Count": 1,
+        "MapId": 4034
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010302,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010320,
+    "TaskType": 1
+  },
+  "86010321": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5411\u6cd5\u5723\u4e86\u89e3\u60c5\u51b5",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4034,
+        "NPCId": 18000132,
+        "DialogId": 19100101,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010303,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010321,
+    "TaskType": 1
+  },
+  "86010322": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u51fb\u8d25\u9ab8\u9aa8\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4034,
+        "MonsterId": 11215803,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4034,
+        "MonsterId": 11215804,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010304,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010322,
+    "TaskType": 1
+  },
+  "86010323": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4034,
+        "MonsterId": 11215802,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010305,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010323,
+    "TaskType": 1
+  },
+  "86010324": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4034,
+        "MonsterId": 11215805,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 10
+      },
+      {
+        "MapId": 4034,
+        "MonsterId": 11215806,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 5
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010306,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010324,
+    "TaskType": 1
+  },
+  "86010325": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4034,
+        "MonsterId": 11215801,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010307,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010325,
+    "TaskType": 1
+  },
+  "86010326": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4034,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010314,
+    "FinCondDefaultText": "\u5411\u6cd5\u5723\u4e86\u89e3\u60c5\u51b5",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4034,
+        "NPCId": 18000132,
+        "DialogId": 19100102,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010308,
+    "FinRewardInstance": {
+      "MapId": 1035,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 521.7444,
+      "Y": 149.5778,
+      "Z": 537.8468,
+      "Dir": 339.0005,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010326,
+    "TaskType": 1
+  },
+  "86010327": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010328
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010314",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010327,
+    "TaskType": 1
+  },
+  "86010328": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010327,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u6cd5\u5723",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1035,
+        "NPCId": 18000132,
+        "DialogId": 19100103,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010309,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010328,
+    "TaskType": 1
+  },
+  "86010329": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010330,
+      86010331,
+      86010332,
+      86010333,
+      86010334,
+      86010335,
+      86010336
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010327",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010329,
+    "TaskType": 1
+  },
+  "86010330": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u5f00\u542f\u673a\u5173",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1035,
+      "X": 521.1083,
+      "Y": 149.5601,
+      "Z": 535.0642,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010310,
+    "FinRewardInstance": {
+      "MapId": 4047,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 504.9636,
+      "Y": 148.7247,
+      "Z": 535.2832,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010330,
+    "TaskType": 1
+  },
+  "86010331": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinCondDefaultText": "\u51fb\u8d25\u6321\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4047,
+        "MonsterId": 11217001,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 5
+      },
+      {
+        "MapId": 4047,
+        "MonsterId": 11217002,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 10
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010311,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010331,
+    "TaskType": 1
+  },
+  "86010332": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinCondDefaultText": "\u5f00\u542f\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000102,
+        "Count": 1,
+        "MapId": 4047
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010312,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010332,
+    "TaskType": 1
+  },
+  "86010333": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinCondDefaultText": "\u5f00\u542f\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000104,
+        "Count": 1,
+        "MapId": 4047
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010313,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010333,
+    "TaskType": 1
+  },
+  "86010334": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinCondDefaultText": "\u5f00\u542f\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000105,
+        "Count": 1,
+        "MapId": 4047
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010314,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010334,
+    "TaskType": 1
+  },
+  "86010335": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinCondDefaultText": "\u5f00\u542f\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000106,
+        "Count": 1,
+        "MapId": 4047
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010315,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010335,
+    "TaskType": 1
+  },
+  "86010336": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4047,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010329,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u6cd5\u5723",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4047,
+        "NPCId": 18000132,
+        "DialogId": 19100104,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010316,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4047,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010336,
+    "TaskType": 1
+  },
+  "86010337": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010338
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010195",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010337,
+    "TaskType": 1
+  },
+  "86010338": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010337,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1035,
+        "NPCId": 18000132,
+        "DialogId": 19100105,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010318,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010338,
+    "TaskType": 1
+  },
+  "86010339": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010340,
+      86010341,
+      86010342,
+      86010343,
+      86010344,
+      86010345,
+      86010346,
+      86010347,
+      86010348,
+      86010349,
+      86010350,
+      86010351,
+      86010352
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010337",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010339,
+    "TaskType": 1
+  },
+  "86010340": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u63a2\u7d22\u9b54\u7a9f",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1035,
+      "X": 562.6503,
+      "Y": 149.6844,
+      "Z": 576.8689,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010319,
+    "FinRewardInstance": {
+      "MapId": 4032,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 254.6576,
+      "Y": 117.6078,
+      "Z": 452.3833,
+      "Dir": 215.4259,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010340,
+    "TaskType": 1
+  },
+  "86010341": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215605,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4032,
+        "MonsterId": 11215606,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010320,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010341,
+    "TaskType": 1
+  },
+  "86010342": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215602,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010321,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010342,
+    "TaskType": 1
+  },
+  "86010343": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4032,
+        "NPCId": 18000753,
+        "DialogId": 19100106,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010322,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010343,
+    "TaskType": 1
+  },
+  "86010344": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u50ac\u52a8\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000102,
+        "Count": 1,
+        "MapId": 4032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010323,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010344,
+    "TaskType": 1
+  },
+  "86010345": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u6740\u6d77\u6e2f\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215607,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4032,
+        "MonsterId": 11215608,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010324,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010345,
+    "TaskType": 1
+  },
+  "86010346": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u6740\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215607,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 4032,
+        "MonsterId": 11215608,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010325,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010346,
+    "TaskType": 1
+  },
+  "86010347": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u6740\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215603,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010326,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010347,
+    "TaskType": 1
+  },
+  "86010348": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u53d8\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215610,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4032,
+        "MonsterId": 11215609,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010327,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010348,
+    "TaskType": 1
+  },
+  "86010349": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u6740\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215604,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010328,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010349,
+    "TaskType": 1
+  },
+  "86010350": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u50ac\u52a8\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000104,
+        "Count": 1,
+        "MapId": 4032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010329,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010350,
+    "TaskType": 1
+  },
+  "86010351": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4032,
+        "NPCId": 18000753,
+        "DialogId": 19100107,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000044",
+    "FinRewardID": 40010330,
+    "FinRewardInstance": {
+      "MapId": 4032,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 311.8423,
+      "Y": 98.02,
+      "Z": 370.2297,
+      "Dir": 10.84491,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010351,
+    "TaskType": 1
+  },
+  "86010352": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4032,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010339,
+    "FinCondDefaultText": "\u51fb\u8d25\u5e55\u540e\u771f\u51f6",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4032,
+        "MonsterId": 11215601,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000039",
+    "FinRewardID": 40010331,
+    "FinRewardInstance": {
+      "MapId": 1001,
+      "NeedConfirm": False,
+      "UseConfigPos": False,
+      "X": 0,
+      "Y": 0,
+      "Z": 0,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": False
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010352,
+    "TaskType": 1
+  },
+  "86010353": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010044,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000132,
+        "DialogId": 19100108,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000041",
+    "FinRewardID": 40010332,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010353,
+    "TaskType": 1
+  },
+  "86010354": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010428,
+      86010355
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010425",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010354,
+    "TaskType": 1
+  },
+  "86010355": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010354,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u6e2f\u4e09\u5c42\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223025,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010168,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010355,
+    "TaskType": 1
+  },
+  "86010356": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010238,
+      86010357,
+      86010358,
+      86010359,
+      86010360
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010354",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010356,
+    "TaskType": 1
+  },
+  "86010357": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4037,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010356,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u53d8\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4037,
+        "MonsterId": 11216102,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4037,
+        "MonsterId": 11216103,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010170,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010357,
+    "TaskType": 1
+  },
+  "86010358": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4037,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010356,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4037,
+        "MonsterId": 11216101,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010171,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010358,
+    "TaskType": 1
+  },
+  "86010359": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4037,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010356,
+    "FinCondDefaultText": "\u89e3\u6551\u8239\u5458",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 4037
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010172,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010359,
+    "TaskType": 1
+  },
+  "86010360": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4037,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010356,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5411\u6c34\u624b\u4e86\u89e3\u60c5\u51b5",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4037,
+        "NPCId": 18000760,
+        "DialogId": 19800050,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900546,
+    "FinRewardID": 40010173,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4037,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010360,
+    "TaskType": 1
+  },
+  "86010361": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010362
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "ClickTaskClientEvent": "sendMsg",
+    "ClickTaskEventParam": "54990139",
+    "ClickTaskEventState": "3",
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010356",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010361,
+    "TaskType": 1
+  },
+  "86010362": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "FatherTaskId": 86010361,
+    "FinCondDefaultText": "\u6551\u51fa\u6240\u6709\u7684\u6c34\u624b",
+    "FinCondRelateTaskId": "86010387",
+    "FinCondRelateTaskState": 5,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900550,
+    "FinRewardID": 40010174,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010362,
+    "TaskType": 1
+  },
+  "86010363": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010364,
+      86010365,
+      86010366,
+      86010367,
+      86010368,
+      86010369,
+      86010370,
+      86010371
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010356",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010363,
+    "TaskType": 1
+  },
+  "86010364": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u6e2f\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223028,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223026,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010175,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010364,
+    "TaskType": 1
+  },
+  "86010365": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u51fb\u6740\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900547,
+    "FinRewardID": 40010176,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010365,
+    "TaskType": 1
+  },
+  "86010366": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u6551\u51fa\u6c34\u624b",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 1032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardID": 40010177,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010366,
+    "TaskType": 1
+  },
+  "86010367": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u6551\u51fa\u4e0b\u4e00\u4e2a\u6c34\u624b",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 1032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardID": 40010178,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010367,
+    "TaskType": 1
+  },
+  "86010368": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u6e2f\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010179,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010368,
+    "TaskType": 1
+  },
+  "86010369": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u6551\u51fa\u88ab\u56f0\u6c34\u624b",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 1032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardID": 40010180,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010369,
+    "TaskType": 1
+  },
+  "86010370": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u6551\u51fa\u4e0b\u4e00\u4e2a\u6c34\u624b",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 1032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010181,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010370,
+    "TaskType": 1
+  },
+  "86010371": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010363,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900548,
+    "FinRewardID": 40010182,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010371,
+    "TaskType": 1
+  },
+  "86010372": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4038,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010107,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1032,
+      "X": 399.4178,
+      "Y": 220.9661,
+      "Z": 311.8016,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010183,
+    "FinRewardInstance": {
+      "MapId": 4038,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 405.8577,
+      "Y": 221.7682,
+      "Z": 310.3781,
+      "Dir": 130.2489,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010372,
+    "TaskType": 1
+  },
+  "86010373": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010374,
+      86010133,
+      86010375,
+      86010378
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010107",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010373,
+    "TaskType": 1
+  },
+  "86010374": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010373,
+    "FinCondDefaultText": "\u51fb\u6740\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223011,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010188,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010374,
+    "TaskType": 1
+  },
+  "86010375": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010373,
+    "FinCondDefaultText": "\u51fb\u6740\u6d77\u6e2f\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1032,
+        "MonsterId": 11223012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1032,
+        "MonsterId": 11223011,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010190,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010375,
+    "TaskType": 1
+  },
+  "86010376": {
+    "AbanCanRemoveItems": True,
+    "AbanRemoveItems": [
+      30990190
+    ],
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4038,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010107,
+    "FinCondDefaultText": "\u5f00\u542f\u795e\u79d8\u5b9d\u7bb1",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000139,
+        "Count": 1,
+        "MapId": 4038
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010186,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010376,
+    "TaskType": 1
+  },
+  "86010377": {
+    "AbanCanRemoveItems": True,
+    "AbanRemoveItems": [
+      30990190
+    ],
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4031,
+    "FailCondInstId": 4038,
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
-    "FatherTaskId": 86010225,
-    "FinCondIsTriggerArea": True,
-    "FinCondReachArea": {
-      "MapId": 1031,
-      "X": 515.5007,
-      "Y": 320.7963,
-      "Z": 483.9975,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
-      "IsShowFx": 31710009
-    },
-    "FinHasRewardInst": True,
+    "FatherTaskId": 86010107,
+    "FinCondDefaultText": "\u5411\u51cc\u51dd\u4e86\u89e3\u60c5\u51b5",
+    "FinCondGatherCanNavigateToNpc": True,
+    "FinCondGatherItems": [
+      {
+        "ItemId": 30990190,
+        "Count": 1,
+        "RelateMonster": "",
+        "RelateCollect": "",
+        "MapId": 1,
+        "Ratio": 0
+      },
+      {
+        "ItemId": 0,
+        "Count": 0,
+        "RelateMonster": "",
+        "RelateCollect": "",
+        "MapId": 1,
+        "Ratio": 0
+      },
+      {
+        "ItemId": 0,
+        "Count": 0,
+        "RelateMonster": "",
+        "RelateCollect": "",
+        "MapId": 1,
+        "Ratio": 0
+      }
+    ],
+    "FinCondGatherSubDia": "19100051",
+    "FinCondGatherSubMapId": 4038,
+    "FinCondGatherSubNpc": "18000741",
+    "FinCondHasGatherItems": True,
     "FinRewardCameraData": 0,
-    "FinRewardInstance": {
-      "MapId": 4031,
-      "NeedConfirm": False,
-      "UseConfigPos": True,
-      "X": 519.515,
-      "Y": 319.1693,
-      "Z": 472.527,
-      "Dir": 163.6293,
-      "Angles": 0,
-      "IsShowFx": 0,
-      "NeedPlayFx": True
-    },
+    "FinRewardID": 40010187,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4038,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010237,
+    "TaskId": 86010377,
     "TaskType": 1
   },
-  "86010238": {
+  "86010378": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010373,
+    "FinCondDefaultText": "\u89e3\u6551\u6c34\u624b",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 1032
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900548,
+    "FinRewardID": 40010191,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010378,
+    "TaskType": 1
+  },
+  "86010379": {
+    "AbanCanRemoveItems": True,
+    "AbanRemoveItems": [
+      30990190
+    ],
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4038,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010110,
+    "FinCondDefaultText": "\u5f00\u542f\u795e\u79d8\u5b9d\u7bb1",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000139,
+        "Count": 1,
+        "MapId": 4039
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900549,
+    "FinRewardID": 40010195,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010379,
+    "TaskType": 1
+  },
+  "86010380": {
     "BelongMap": 0,
     "ChildTaskIds": [
-      86010239,
-      86010240,
-      86010241
+      86010393,
+      86010394,
+      86010395
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010263",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010380,
+    "TaskType": 1
+  },
+  "86010381": {
+    "AbanRewardTaskID": "0",
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010382,
+      86010383,
+      86010384,
+      86010385
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardID": 40010197,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010110",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010381,
+    "TaskType": 1
+  },
+  "86010382": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4040,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010381,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1032,
+      "X": 435.5125,
+      "Y": 243.3781,
+      "Z": 35.45922,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010198,
+    "FinRewardInstance": {
+      "MapId": 4040,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 431.3769,
+      "Y": 245.1718,
+      "Z": 32.71489,
+      "Dir": 229.0939,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010382,
+    "TaskType": 1
+  },
+  "86010383": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4040,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010381,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u5316\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4040,
+        "MonsterId": 11216402,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4040,
+        "MonsterId": 11216403,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010199,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010383,
+    "TaskType": 1
+  },
+  "86010384": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4040,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010381,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4040,
+        "MonsterId": 11216401,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010200,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010384,
+    "TaskType": 1
+  },
+  "86010385": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4040,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010381,
+    "FinCondDefaultText": "\u5f00\u542f\u795e\u79d8\u5b9d\u7bb1",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000144,
+        "Count": 1,
+        "MapId": 4040
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010201,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4040,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010385,
+    "TaskType": 1
+  },
+  "86010386": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010464,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5411\u51cc\u51dd\u4e86\u89e3\u771f\u76f8",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1032,
+        "NPCId": 18000741,
+        "DialogId": 19100053,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010202,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010386,
+    "TaskType": 1
+  },
+  "86010387": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010388,
+      86010389,
+      86010390,
+      86010391
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010464",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010387,
+    "TaskType": 1
+  },
+  "86010388": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4041,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010387,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1032,
+      "X": 422.8863,
+      "Y": 239.3151,
+      "Z": 61.00458,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010203,
+    "FinRewardInstance": {
+      "MapId": 4041,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 417.0077,
+      "Y": 239.3367,
+      "Z": 64.38231,
+      "Dir": 293.1074,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010388,
+    "TaskType": 1
+  },
+  "86010389": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4041,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010387,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u5996\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4041,
+        "MonsterId": 11216502,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4041,
+        "MonsterId": 11216503,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010204,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010389,
+    "TaskType": 1
+  },
+  "86010390": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4041,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010387,
+    "FinCondDefaultText": "\u51fb\u8d25\u6d77\u5996\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4041,
+        "MonsterId": 11216501,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010205,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010390,
+    "TaskType": 1
+  },
+  "86010391": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4041,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010387,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u6551\u51fa\u6c34\u624b",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4041,
+        "NPCId": 18000772,
+        "DialogId": 19100054,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010206,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4041,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010391,
+    "TaskType": 1
+  },
+  "86010392": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010262,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u6c42\u89c2\u661f\u4f1a\u63d0\u5347\u5b9e\u529b",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000117,
+        "DialogId": 19100069,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010225,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010392,
+    "TaskType": 1
+  },
+  "86010393": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010380,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232018,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010380,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010393,
+    "TaskType": 1
+  },
+  "86010394": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010380,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u5316\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010381,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010394,
+    "TaskType": 1
+  },
+  "86010395": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010380,
+    "FinCondDefaultText": "\u5f00\u542f\u7b2c\u4e00\u4e2a\u673a\u5173",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000146,
+        "Count": 1,
+        "MapId": 1021
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010382,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010395,
+    "TaskType": 1
+  },
+  "86010396": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010440,
+      86010397,
+      86010429,
+      86010441,
+      86010442,
+      86010430
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010380",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010396,
+    "TaskType": 1
+  },
+  "86010397": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010396,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010384,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010397,
+    "TaskType": 1
+  },
+  "86010398": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000732,
+        "DialogId": 19700023,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010407,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010398,
+    "TaskType": 2
+  },
+  "86010399": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinCondDefaultText": "\u63a2\u67e5\u7956\u73c2",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010408,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010399,
+    "TaskType": 2
+  },
+  "86010400": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinCondDefaultText": "\u6e05\u527f\u6cbf\u9014\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235018,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010409,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010400,
+    "TaskType": 2
+  },
+  "86010401": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u901a\u8fc7\u9b54\u7269\u957f\u5eca",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1024,
+      "X": 159.1878,
+      "Y": 220.0477,
+      "Z": 520.3177,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010410,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010401,
+    "TaskType": 2
+  },
+  "86010402": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinCondDefaultText": "\u51fb\u6740\u7956\u67ef\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235018,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010411,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010402,
+    "TaskType": 2
+  },
+  "86010403": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u901a\u8fc7\u957f\u5eca",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1024,
+      "X": 145.3064,
+      "Y": 208.3766,
+      "Z": 367.1656,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010412,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010403,
+    "TaskType": 2
+  },
+  "86010404": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010405,
+      86010406,
+      86010444,
+      86010445,
+      86010446,
+      86010447,
+      86010448,
+      86010449,
+      86010450,
+      86010451
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010083",
+    "OpenCondRelateTaskState": 4,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010404,
+    "TaskType": 2
+  },
+  "86010405": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinBlockPopReward": True,
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1024,
+      "X": 204.341461,
+      "Y": 215.435776,
+      "Z": 456.138977,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010414,
+    "FinRewardInstance": {
+      "MapId": 4051,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 205.1287,
+      "Y": 215.2577,
+      "Z": 460.6959,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010405,
+    "TaskType": 2
+  },
+  "86010406": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u51fb\u6740\u5b88\u536b\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4051,
+        "MonsterId": 11217401,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010415,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010406,
+    "TaskType": 2
+  },
+  "86010407": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010408
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010404",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010407,
+    "TaskType": 2
+  },
+  "86010408": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010407,
+    "FinCondDefaultText": "\u963f\u5149\u4f3c\u4e4e\u6709\u4e8b",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000565,
+        "DialogId": 19700020,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010424,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010408,
+    "TaskType": 2
+  },
+  "86010409": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010410,
+      86010411,
+      86010412,
+      86010413,
+      86010414
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010407",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010409,
+    "TaskType": 2
+  },
+  "86010410": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010409,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5230\u8fbe\u7956\u73c2\u6df1\u5904",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1024,
+      "X": 491.7411,
+      "Y": 126.5758,
+      "Z": 223.6657,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010425,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010410,
+    "TaskType": 2
+  },
+  "86010411": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010409,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010426,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010411,
+    "TaskType": 2
+  },
+  "86010412": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010409,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010427,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010412,
+    "TaskType": 2
+  },
+  "86010413": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010409,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1024,
+      "X": 260.1022,
+      "Y": 161.3619,
+      "Z": 198.1234,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardID": 40010428,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010413,
+    "TaskType": 2
+  },
+  "86010414": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010409,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010429,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010414,
+    "TaskType": 2
+  },
+  "86010415": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010416,
+      86010417,
+      86010452
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010409",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010415,
+    "TaskType": 2
+  },
+  "86010416": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4052,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010415,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1024,
+      "X": 195.6818,
+      "Y": 167.5374,
+      "Z": 155.889,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010430,
+    "FinRewardInstance": {
+      "MapId": 4052,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 189.8493,
+      "Y": 169.6119,
+      "Z": 155.7819,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010416,
+    "TaskType": 2
+  },
+  "86010417": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4052,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010415,
+    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u536b\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4052,
+        "MonsterId": 11217503,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 4052,
+        "MonsterId": 11217502,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010431,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010417,
+    "TaskType": 2
+  },
+  "86010418": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010453,
+      86010419
+    ],
+    "ClaimCondAutoTake": True,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010415",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010418,
+    "TaskType": 1
+  },
+  "86010419": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010418,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u7ae0\u5149",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000565,
+        "DialogId": 19700022,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010434,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010419,
+    "TaskType": 1
+  },
+  "86010420": {
+    "AbanRewardTaskID": "0",
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdFinDialogs": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondCountID": 10,
+    "FinCondCountParam": "2201",
+    "FinCondCountTgt": 1,
+    "FinCondDefaultText": "\u901a\u5173\u4e00\u6b21\u9996\u9886\u5de2\u7a74",
+    "FinNpcId": "18000558",
+    "FinNpcMapId": 1001,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010269,
+    "FNFinDialogId": "19100096",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010077",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010420,
+    "TaskType": 1
+  },
+  "86010421": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4026,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010185,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4026,
+        "MonsterId": 11215002,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010288,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010421,
+    "TaskType": 1
+  },
+  "86010422": {
+    "AbanRewardTaskID": "0",
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
+    "DispNotInTaskPanel": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900578,
+    "FinRewardID": 40010270,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010420",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010422,
+    "TaskType": 0
+  },
+  "86010423": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010424
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -8200,20 +16544,22 @@ datas ={
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010238,
+    "TaskId": 86010423,
     "TaskType": 1
   },
-  "86010239": {
+  "86010424": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010238,
+    "FatherTaskId": 86010423,
     "FinCondFinDialogs": [
       {
         "MapId": 1031,
         "NPCId": 18000741,
-        "DialogId": 19100099,
+        "DialogId": 19100049,
         "StoryId": 0
       },
       {
@@ -8231,32 +16577,65 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010164,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010239,
+    "TaskId": 86010424,
     "TaskType": 1
   },
-  "86010240": {
+  "86010425": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010426,
+      86010427
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010423",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010425,
+    "TaskType": 1
+  },
+  "86010426": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010238,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4036,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010425,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u51fb\u8d25\u9b54\u7269",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1031,
-      "X": 572.624,
-      "Y": 318.1325,
-      "Z": 575.9714,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "X": 567.5756,
+      "Y": 318.8806,
+      "Z": 575.9666,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010165,
     "FinRewardInstance": {
       "MapId": 4036,
       "NeedConfirm": False,
@@ -8273,14 +16652,22 @@ datas ={
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010240,
+    "TaskId": 86010426,
     "TaskType": 1
   },
-  "86010241": {
+  "86010427": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "DeliMetdManual": None,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86010238,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4036,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010425,
+    "FinCondDefaultText": "\u51fb\u8d25\u6321\u8def\u8725\u8734",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -8309,14 +16696,1630 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010166,
     "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsDelay": 0,
     "FinRewardLevInsID": 4036,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86010241,
+    "TaskId": 86010427,
+    "TaskType": 1
+  },
+  "86010428": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010354,
+    "FinBlockPopReward": True,
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1031,
+        "NPCId": 18000741,
+        "DialogId": 19100050,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900545,
+    "FinRewardID": 40010167,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010428,
+    "TaskType": 1
+  },
+  "86010429": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010396,
+    "FinCondDefaultText": "\u51fb\u8d25\u6321\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardID": 40010385,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010429,
+    "TaskType": 1
+  },
+  "86010430": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010396,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u8df3\u8fc7\u60ac\u5d16",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1021,
+      "X": 426.5201,
+      "Y": 108.3604,
+      "Z": 367.2656,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010388,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010430,
+    "TaskType": 1
+  },
+  "86010431": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010432,
+      86010433,
+      86010434,
+      86010435
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010396",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010431,
+    "TaskType": 1
+  },
+  "86010432": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4048,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010431,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1021,
+      "X": 439.0879,
+      "Y": 113.112,
+      "Z": 392.5886,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010389,
+    "FinRewardInstance": {
+      "MapId": 4048,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 452.0246,
+      "Y": 114.4161,
+      "Z": 409.0575,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010432,
+    "TaskType": 1
+  },
+  "86010433": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4048,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010431,
+    "FinCondDefaultText": "\u51fb\u8d25\u6321\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4048,
+        "MonsterId": 11217101,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4048,
+        "MonsterId": 11217102,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010390,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010433,
+    "TaskType": 1
+  },
+  "86010434": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4048,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010431,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4048,
+        "MonsterId": 11217102,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4048,
+        "MonsterId": 11217101,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010391,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010434,
+    "TaskType": 1
+  },
+  "86010435": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4048,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010431,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4048,
+        "MonsterId": 11217103,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardEventName": "OpenPopInfoPanel",
+    "FinRewardEventParam": "99000040",
+    "FinRewardID": 40010392,
+    "FinRewardInstance": {
+      "MapId": 1021,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 383.377167,
+      "Y": 100.053871,
+      "Z": 236.224472,
+      "Dir": 230.390045,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010435,
+    "TaskType": 1
+  },
+  "86010436": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4023,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010160,
+    "FinCondDefaultText": "\u51fb\u8d25\u5c18\u5c01\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4023,
+        "MonsterId": 11214704,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4023,
+        "MonsterId": 11214705,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010401,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010436,
+    "TaskType": 1
+  },
+  "86010437": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4023,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010160,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4023,
+        "MonsterId": 11214702,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010402,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010437,
+    "TaskType": 1
+  },
+  "86010438": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010053,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1021,
+      "X": 274.0433,
+      "Y": 89.97328,
+      "Z": 174.9857,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010373,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010438,
+    "TaskType": 1
+  },
+  "86010439": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010160,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 4023,
+      "X": 303.8191,
+      "Y": 110.7614,
+      "Z": 394.5408,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardID": 40010400,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010439,
+    "TaskType": 1
+  },
+  "86010440": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010396,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1021,
+      "X": 563.3359,
+      "Y": 83.95723,
+      "Z": 284.6347,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010383,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010440,
+    "TaskType": 1
+  },
+  "86010441": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010396,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1021,
+      "X": 459.4792,
+      "Y": 116.9429,
+      "Z": 280.8543,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010386,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010441,
+    "TaskType": 1
+  },
+  "86010442": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010396,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f02\u5316\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010387,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010442,
+    "TaskType": 1
+  },
+  "86010443": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010083,
+    "FinCondDefaultText": "\u6e05\u9664\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235025,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010413,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010443,
+    "TaskType": 2
+  },
+  "86010444": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u91c7\u96c6\u7956\u73c2\u77ff\u7269",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000147,
+        "Count": 1,
+        "MapId": 4051
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010416,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010444,
+    "TaskType": 2
+  },
+  "86010445": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u91c7\u96c6\u7956\u73c2\u77ff\u7269",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000147,
+        "Count": 1,
+        "MapId": 4051
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010417,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010445,
+    "TaskType": 2
+  },
+  "86010446": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u536b\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4051,
+        "MonsterId": 11217402,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010418,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010446,
+    "TaskType": 2
+  },
+  "86010447": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u91c7\u96c6\u7956\u67ef\u77ff\u77f3",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000148,
+        "Count": 1,
+        "MapId": 4051
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010419,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010447,
+    "TaskType": 2
+  },
+  "86010448": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u91c7\u96c6\u7956\u67ef\u77ff\u77f3",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000148,
+        "Count": 1,
+        "MapId": 4051
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010420,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010448,
+    "TaskType": 2
+  },
+  "86010449": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u51fb\u8d25\u5b88\u62a4\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4051,
+        "MonsterId": 11217403,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010421,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010449,
+    "TaskType": 2
+  },
+  "86010450": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4051,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u91c7\u96c6\u7956\u73c2\u77ff\u7269",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000149,
+        "Count": 2,
+        "MapId": 4051
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010422,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4051,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010450,
+    "TaskType": 2
+  },
+  "86010451": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherTaskId": 86010404,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u77ff\u4ea7\u5546\u4eba",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1001,
+        "NPCId": 18000732,
+        "DialogId": 19700019,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010423,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010451,
+    "TaskType": 2
+  },
+  "86010452": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4052,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010415,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4052,
+        "MonsterId": 11217501,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010432,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4052,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010452,
+    "TaskType": 2
+  },
+  "86010453": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010418,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u63a2\u8def\u5148\u950b",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1024,
+        "NPCId": 18000799,
+        "DialogId": 19700021,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010433,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010453,
+    "TaskType": 1
+  },
+  "86010454": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010455,
+      86010456,
+      86010457,
+      86010458,
+      86010459,
+      86010460,
+      86010461,
+      86010463,
+      86010462
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010057",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010454,
+    "TaskType": 1
+  },
+  "86010455": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondDefaultText": "\u8fdb\u5165\u98de\u6c99\u57ce",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1004,
+      "X": 93.83151,
+      "Y": -2.949978,
+      "Z": 14.32332,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010438,
+    "FinRewardInstance": {
+      "MapId": 4050,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 93.72595,
+      "Y": -2.943966,
+      "Z": 14.714,
+      "Dir": 0,
+      "Angles": 0,
+      "IsShowFx": 0,
+      "NeedPlayFx": True
+    },
+    "FinRewardTriggerStoryID": 98010025,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010455,
+    "TaskType": 1
+  },
+  "86010456": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010439,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010456,
+    "TaskType": 1
+  },
+  "86010457": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010440,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010457,
+    "TaskType": 1
+  },
+  "86010458": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010441,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010458,
+    "TaskType": 1
+  },
+  "86010459": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010442,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010459,
+    "TaskType": 1
+  },
+  "86010460": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010443,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010460,
+    "TaskType": 1
+  },
+  "86010461": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 8
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010444,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010461,
+    "TaskType": 1
+  },
+  "86010462": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4050,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217301,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010445,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010462,
+    "TaskType": 1
+  },
+  "86010463": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010454,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4050,
+        "MonsterId": 11217304,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 5
+      },
+      {
+        "MapId": 4050,
+        "MonsterId": 11217305,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 10
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardID": 40010446,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010463,
+    "TaskType": 1
+  },
+  "86010464": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010386
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010381",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010464,
+    "TaskType": 1
+  },
+  "86010465": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86010466
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010454",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010465,
+    "TaskType": 1
+  },
+  "86010466": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86010465,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u6307\u6325\u5b98",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 1004,
+        "NPCId": 18000129,
+        "DialogId": 19100127,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardID": 40010447,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010466,
+    "TaskType": 1
+  },
+  "86010467": {
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u656c\u8bf7\u671f\u5f85\u540e\u7eed\u4efb\u52a1",
+    "FinCondToLevel": 100,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010465",
+    "OpenCondRelateTaskState": 4,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86010467,
     "TaskType": 1
   },
   "86020001": {
@@ -21629,6 +31632,8 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
@@ -21644,6 +31649,7 @@ datas ={
     "TaskType": 5
   },
   "86030002": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -21653,9 +31659,9 @@ datas ={
     "ClickTaskEventState": "3",
     "ClickTaskState": "",
     "ClickTaskToMapID": 0,
-    "ClickTaskToPosX": 0.0,
-    "ClickTaskToPosY": 0.0,
-    "ClickTaskToPosZ": 0.0,
+    "ClickTaskToPosX": 0,
+    "ClickTaskToPosY": 0,
+    "ClickTaskToPosZ": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -21668,6 +31674,8 @@ datas ={
     "FinCondDefaultText": "\u5207\u6362\u5584\u6076\u6a21\u5f0f",
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900509,
+    "FinRewardID": 40010116,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
@@ -21677,6 +31685,7 @@ datas ={
     "TaskType": 2
   },
   "86030003": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -21692,14 +31701,15 @@ datas ={
       "X": 220.1907,
       "Y": 164.1771,
       "Z": 404.1092,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010114,
     "FinRewardInstance": {
       "MapId": 4027,
       "NeedConfirm": False,
@@ -21712,6 +31722,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -21725,6 +31736,8 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
@@ -21743,15 +31756,15 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
-    "DeliMetdManual": True,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86060105",
-    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86030005,
@@ -21760,15 +31773,18 @@ datas ={
   "86030006": {
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
-    "DeliMetdManual": True,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86060105",
+    "OpenCondRelateTaskId": "86050071",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -21776,6 +31792,7 @@ datas ={
     "TaskType": 5
   },
   "86030007": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -21816,9 +31833,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010117,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4027,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -21830,7 +31849,9 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
-    "DeliMetdManual": True,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
@@ -21845,12 +31866,18 @@ datas ={
   "86030009": {
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
-    "DeliMetdManual": True,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinBlockPopReward": True,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40000045,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86060103",
@@ -21863,15 +31890,19 @@ datas ={
   "86030010": {
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
-    "DeliMetdManual": True,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010067",
+    "OpenCondRelateTaskId": "86010040",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -21884,12 +31915,14 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900427,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010038",
@@ -21902,14 +31935,21 @@ datas ={
   "86030012": {
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "DeliMetdManual": None,
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900541,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010069",
+    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86030012,
@@ -21918,7 +31958,11 @@ datas ={
   "86030013": {
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "DeliMetdManual": None,
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
@@ -21926,6 +31970,8 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010418",
+    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86030013,
@@ -21937,6 +31983,7 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
@@ -21958,6 +32005,8 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
@@ -21978,11 +32027,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010007",
@@ -22003,7 +32054,7 @@ datas ={
     "ClaimNpcId": "18000025",
     "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
-    "CNFinDialogId": "19100110",
+    "CNFinDialogId": "19700008",
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FailCondCanGiveUp": True,
@@ -22014,9 +32065,8 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": True,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010035",
+    "OpenCondRelateTaskId": "86010097",
     "OpenCondRelateTaskState": 5,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86030017,
@@ -22031,7 +32081,7 @@ datas ={
     "ClaimNpcId": "18000067",
     "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
-    "CNFinDialogId": "19100117",
+    "CNFinDialogId": "19700009",
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FatherFailIfChildFail": False,
@@ -22039,12 +32089,15 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86010097",
+    "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86030018,
     "TaskType": 2
   },
   "86030019": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
@@ -22070,6 +32123,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010118,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22078,6 +32133,7 @@ datas ={
     "TaskType": 2
   },
   "86030020": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22088,7 +32144,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000067,
-        "DialogId": 19100118,
+        "DialogId": 19700010,
         "StoryId": 0
       },
       {
@@ -22106,6 +32162,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010119,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22122,7 +32180,7 @@ datas ={
     "ClaimNpcId": "18000076",
     "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
-    "CNFinDialogId": "19100119",
+    "CNFinDialogId": "19700011",
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FatherFailIfChildFail": False,
@@ -22130,7 +32188,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010035",
+    "OpenCondRelateTaskId": "86010097",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -22138,6 +32196,7 @@ datas ={
     "TaskType": 2
   },
   "86030022": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
@@ -22163,6 +32222,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010112,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22171,6 +32232,7 @@ datas ={
     "TaskType": 2
   },
   "86030023": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22182,7 +32244,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000076,
-        "DialogId": 19100114,
+        "DialogId": 19700012,
         "StoryId": 0
       },
       {
@@ -22200,6 +32262,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010113,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22215,7 +32279,7 @@ datas ={
     "ClaimNpcId": "18000567",
     "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
-    "CNFinDialogId": "19100115",
+    "CNFinDialogId": "19700005",
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FatherFailIfChildFail": False,
@@ -22233,6 +32297,7 @@ datas ={
     "UnlockCustomText": "\u52a0\u5165\u5e2e\u4f1a"
   },
   "86030025": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
@@ -22243,7 +32308,7 @@ datas ={
       {
         "MapId": 1001,
         "NPCId": 18000565,
-        "DialogId": 19100116,
+        "DialogId": 19700006,
         "StoryId": 0
       },
       {
@@ -22260,6 +32325,8 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardID": 40010111,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22273,6 +32340,7 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
@@ -22293,11 +32361,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86050075",
@@ -22313,11 +32383,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86050003",
@@ -22333,9 +32405,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "DispNotInTaskBar": True,
+    "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010013",
@@ -22351,11 +32427,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010027",
@@ -22371,11 +32449,14 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900434,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86050035",
@@ -22391,11 +32472,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010038",
@@ -22411,6 +32494,7 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
@@ -22432,11 +32516,13 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010024",
@@ -22452,6 +32538,7 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
@@ -22467,6 +32554,7 @@ datas ={
     "TaskType": 5
   },
   "86030036": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22484,14 +32572,16 @@ datas ={
       "X": 206.8933,
       "Y": 160.1955,
       "Z": 376.5744,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900513,
+    "FinRewardID": 40010115,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22505,14 +32595,17 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900469,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010081",
+    "OpenCondRelateTaskId": "86010020",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -22525,14 +32618,17 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900425,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010096",
+    "OpenCondRelateTaskId": "86010086",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -22545,11 +32641,11 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "DispNotInTaskBar": True,
-    "DispNotInTaskPanel": True,
+    "DispInTaskBar": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010081",
@@ -22565,6 +32661,7 @@ datas ={
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
     "DispNotInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
@@ -22584,6 +32681,7 @@ datas ={
     "BelongChapter": 1,
     "BelongMap": 0,
     "ChildTaskIds": [
+      86050071,
       86050060
     ],
     "ClaimCondAutoTake": True,
@@ -22595,7 +32693,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010127",
+    "OpenCondRelateTaskId": "86060127",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -22603,6 +32701,7 @@ datas ={
     "TaskType": 1
   },
   "86050002": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimDialog": 19900374,
@@ -22643,7 +32742,8 @@ datas ={
     "FinCondKillMonsterNum": 6,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900376,
-    "FinRewardID": 40010022,
+    "FinRewardID": 40010025,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22652,6 +32752,7 @@ datas ={
     "TaskType": 1
   },
   "86050003": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimDialog": 19900369,
@@ -22659,14 +32760,13 @@ datas ={
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
-    "FailCondCanGiveUp": True,
     "FatherTaskId": 86050057,
     "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 1002,
         "NPCId": 18000018,
-        "DialogId": 19100015,
+        "DialogId": 19100009,
         "StoryId": 0
       },
       {
@@ -22685,7 +32785,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900365,
-    "FinRewardID": 40010019,
+    "FinRewardID": 40010022,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22694,18 +32795,20 @@ datas ={
     "TaskType": 1
   },
   "86050004": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86050007,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bfb\u627e\u4f20\u4ee4\u5175",
     "FinCondFinDialogs": [
       {
         "MapId": 1002,
         "NPCId": 18000035,
-        "DialogId": 19100016,
+        "DialogId": 19100010,
         "StoryId": 0
       },
       {
@@ -22723,7 +32826,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010020,
+    "FinRewardID": 40010023,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22778,6 +32882,7 @@ datas ={
     "TaskType": 1
   },
   "86050008": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22805,6 +32910,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010028,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22813,6 +32920,7 @@ datas ={
     "TaskType": 2
   },
   "86050009": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22820,6 +32928,7 @@ datas ={
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FatherTaskId": 86050007,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u4e00\u63a2\u7a76\u7adf",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -22827,14 +32936,15 @@ datas ={
       "X": 402.9838,
       "Y": 15.12833,
       "Z": 483.6943,
-      "Width": 4,
-      "Length": 4,
+      "Width": 2,
+      "Length": 2,
       "TriggerDis": 0,
       "Angles": 0,
-      "IsShowFx": 0
+      "IsShowFx": 31710009
     },
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010021,
+    "FinRewardID": 40010024,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22897,6 +33007,7 @@ datas ={
     "TaskType": 2
   },
   "86050014": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22907,7 +33018,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000694,
-        "DialogId": 19100018,
+        "DialogId": 19100012,
         "StoryId": 0
       },
       {
@@ -22926,6 +33037,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900377,
+    "FinRewardID": 40010029,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -22960,6 +33073,7 @@ datas ={
     "TaskType": 2
   },
   "86050016": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -22988,6 +33102,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010027,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -23307,28 +33423,7 @@ datas ={
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondCheckValue": [
-      {
-        "ID": 1,
-        "CompareType": 0,
-        "Value": 0,
-        "Text": 0
-      },
-      {
-        "ID": 2,
-        "CompareType": 0,
-        "Value": 0,
-        "Text": 0
-      },
-      {
-        "ID": 3,
-        "CompareType": 0,
-        "Value": 0,
-        "Text": 0
-      }
-    ],
     "FinCondDefaultText": "\u89e3\u51b3\u524d\u65b9\u7684\u95ee\u9898",
-    "FinCondNeedCheckValue": True,
     "FinCondRelateTaskId": "86050013",
     "FinCondRelateTaskState": 5,
     "FinRewardCameraData": 0,
@@ -23540,23 +33635,24 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [
-      86050071,
       86050072,
       86050078,
       86050079
     ],
-    "ClaimCondAutoTake": True,
+    "ClaimNpcId": "18000094",
+    "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
+    "CNFinDialogId": "19700001",
     "DeliMetdNoLimit": True,
     "DispInClaimList": False,
-    "DispNotInTaskBar": True,
+    "DispInTaskBar": True,
     "DispNotInTaskPanel": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010096",
+    "OpenCondRelateTaskId": "86010097",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -23866,6 +33962,7 @@ datas ={
     "TaskType": 2
   },
   "86050057": {
+    "AbanRewardTaskID": "0",
     "BelongMap": 0,
     "ChildTaskIds": [
       86050058,
@@ -23881,6 +33978,7 @@ datas ={
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010018,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86050001",
@@ -23891,6 +33989,7 @@ datas ={
     "TaskType": 1
   },
   "86050058": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -23918,7 +34017,7 @@ datas ={
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010016,
+    "FinRewardID": 40010019,
     "FinRewardInstance": {
       "MapId": 4008,
       "NeedConfirm": False,
@@ -23931,6 +34030,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -23980,6 +34080,7 @@ datas ={
     "TaskType": 2
   },
   "86050060": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -23992,7 +34093,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000018,
-        "DialogId": 19100014,
+        "DialogId": 19800008,
         "StoryId": 0
       },
       {
@@ -24011,7 +34112,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900367,
-    "FinRewardID": 40010015,
+    "FinRewardID": 40010017,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24067,6 +34169,7 @@ datas ={
     "TaskType": 2
   },
   "86050066": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -24109,7 +34212,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010017,
+    "FinRewardID": 40010020,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24118,6 +34222,7 @@ datas ={
     "TaskType": 1
   },
   "86050067": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimDialog": 19900368,
@@ -24160,10 +34265,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010018,
+    "FinRewardID": 40010021,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 3,
     "FinRewardLevInsID": 4008,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24199,6 +34305,7 @@ datas ={
     "TaskType": 1
   },
   "86050069": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -24206,7 +34313,6 @@ datas ={
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
     "FailCondFailIfQtInst": True,
     "FailCondInstId": 4015,
     "FailCondInstType": 0,
@@ -24220,15 +34326,15 @@ datas ={
       "X": 266.3162,
       "Y": 33.07588,
       "Z": 465.0514,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010027,
+    "FinRewardID": 40010030,
     "FinRewardInstance": {
       "MapId": 4015,
       "NeedConfirm": False,
@@ -24241,6 +34347,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24249,15 +34356,14 @@ datas ={
     "TaskType": 1
   },
   "86050070": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "ClaimDialog": 19900378,
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "DispInTaskBar": True,
     "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
     "FailCondFailIfQtInst": True,
     "FailCondInstId": 4015,
     "FailCondInstType": 0,
@@ -24292,10 +34398,12 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010028,
+    "FinRewardDialog": 19900370,
+    "FinRewardID": 40010032,
     "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 5,
+    "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4015,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24309,39 +34417,32 @@ datas ={
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FatherTaskId": 86050035,
-    "FinCondDefaultText": "\u58eb\u5175\u4f3c\u4e4e\u6709\u4e8b",
-    "FinCondFinDialogs": [
-      {
-        "MapId": 1001,
-        "NPCId": 18000094,
-        "DialogId": 19100071,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      },
-      {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
-        "StoryId": 0
-      }
-    ],
-    "FinCondHasFinDia": True,
+    "FatherTaskId": 86050001,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondReachArea": {
+      "MapId": 1002,
+      "X": 393.3739,
+      "Y": 13.07673,
+      "Z": 251.5625,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
+      "IsShowFx": 31710009
+    },
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010078,
+    "FinRewardDialog": 19900592,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86050071,
-    "TaskType": 2
+    "TaskType": 1
   },
   "86050072": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -24371,7 +34472,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010079,
+    "FinRewardID": 40010108,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24402,18 +34504,20 @@ datas ={
     "TaskType": 1
   },
   "86050075": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86050073,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u4e0e\u5b88\u5c06\u6c9f\u901a\u519b\u60c5",
     "FinCondFinDialogs": [
       {
         "MapId": 1002,
         "NPCId": 18000012,
-        "DialogId": 19100012,
+        "DialogId": 19100017,
         "StoryId": 0
       },
       {
@@ -24432,7 +34536,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900366,
-    "FinRewardID": 40010032,
+    "FinRewardID": 40010034,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24441,45 +34546,21 @@ datas ={
     "TaskType": 1
   },
   "86050077": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86050073,
-    "FinCondDefaultText": "\u6e05\u9664\u62e6\u8def\u9b54\u7269",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1002,
-        "MonsterId": 11210021,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210020,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u5bfb\u627e\u5b88\u5c06",
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 6,
+    "FinCondNoLimit": True,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900375,
-    "FinRewardID": 40010030,
+    "FinRewardID": 40010033,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24488,6 +34569,7 @@ datas ={
     "TaskType": 1
   },
   "86050078": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -24517,7 +34599,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010080,
+    "FinRewardID": 40010109,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24526,6 +34609,7 @@ datas ={
     "TaskType": 2
   },
   "86050079": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -24556,7 +34640,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900434,
-    "FinRewardID": 40010081,
+    "FinRewardID": 40010110,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24565,6 +34650,7 @@ datas ={
     "TaskType": 2
   },
   "86050080": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -24577,7 +34663,7 @@ datas ={
       {
         "MapId": 1002,
         "NPCId": 18000034,
-        "DialogId": 19100017,
+        "DialogId": 19100011,
         "StoryId": 0
       },
       {
@@ -24595,6 +34681,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010026,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24603,10 +34691,17 @@ datas ={
     "TaskType": 2
   },
   "86050081": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4015,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86050068,
     "FinCondDefaultText": "\u51fb\u8d25\u675c\u683c\u56e2\u4f19",
     "FinCondHasKillMon": True,
@@ -24637,6 +34732,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900378,
+    "FinRewardID": 40010031,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -24825,6 +34923,7 @@ datas ={
     "FatherTaskId": 0,
     "FinRewardCameraData": 0,
     "IsAutoQuit": True,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -25169,6 +35268,7 @@ datas ={
     "TaskType": 1
   },
   "86060031": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -25209,7 +35309,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010034,
+    "FinRewardID": 40010052,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010017",
@@ -25244,6 +35345,7 @@ datas ={
     "TaskType": 1
   },
   "86060033": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimCondAutoTake": True,
@@ -25284,7 +35386,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010036,
+    "FinRewardID": 40010053,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86060032",
@@ -25379,6 +35482,7 @@ datas ={
     "TaskType": 1
   },
   "86060039": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -25390,22 +35494,23 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060038,
-    "FinCondDefaultText": "\u524d\u5f80\u65b0\u5143\u57ce\u9053",
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u524d\u5f80\u51fb\u8d25\u9b54\u7269",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1002,
       "X": 58.16061,
       "Y": 33.10546,
       "Z": 186.3459,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010033,
+    "FinRewardID": 40010051,
     "FinRewardInstance": {
       "MapId": 4003,
       "UseConfigPos": True,
@@ -25416,6 +35521,7 @@ datas ={
       "NeedConfirm": False,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -25471,7 +35577,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010030",
+    "OpenCondRelateTaskId": "86010204",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -25488,6 +35594,7 @@ datas ={
     "TaskType": 1
   },
   "86060044": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimDialog": 19900288,
@@ -25495,13 +35602,12 @@ datas ={
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
     "FailCondFailIfQtInst": True,
     "FailCondInstId": 4004,
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060042,
-    "FinCondDefaultText": "\u51fb\u8d25\u95f9\u4e8b\u7684\u9b54\u7269",
+    "FinCondDefaultText": "\u51fb\u8d25\u95f9\u4e8b\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -25530,7 +35636,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010071,
+    "FinRewardID": 40010095,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -25543,7 +35650,10 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [
       86060046,
-      86060047
+      86060047,
+      86060161,
+      86060162,
+      86060163
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -25566,6 +35676,7 @@ datas ={
     "TaskType": 1
   },
   "86060046": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -25577,34 +35688,36 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060045,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u83b7\u53d6\u8840\u8109\u7ed3\u6676",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1020,
-      "X": 523.0591,
-      "Y": 105.2704,
-      "Z": 159.771,
-      "Width": 4,
-      "Length": 4,
+      "X": 513.9414,
+      "Y": 107.7275,
+      "Z": 155.938,
+      "Width": 2,
+      "Length": 2,
       "TriggerDis": 0,
       "Angles": 0,
-      "IsShowFx": 0
+      "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010158,
+    "FinRewardID": 40010352,
     "FinRewardInstance": {
       "MapId": 4005,
       "NeedConfirm": False,
       "UseConfigPos": True,
-      "X": 530.2449,
-      "Y": 104.6607,
-      "Z": 160.597,
-      "Dir": 88.37499,
+      "X": 523.0591,
+      "Y": 105.2704,
+      "Z": 159.771,
+      "Dir": 55,
       "Angles": 0,
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -25613,6 +35726,7 @@ datas ={
     "TaskType": 1
   },
   "86060047": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -25629,19 +35743,11 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 4005,
-        "MonsterId": 11213401,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 4005,
         "MonsterId": 11213402,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 4
       },
       {
         "MapId": 4005,
@@ -25649,15 +35755,20 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 8
+      },
+      {
+        "MapId": 4,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900437,
-    "FinRewardID": 40010159,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 2,
-    "FinRewardLevInsID": 4005,
+    "FinRewardID": 40010353,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -26481,7 +36592,15 @@ datas ={
         "Count": 1
       },
       {
-        "MapId": 1,
+        "MapId": 4002,
+        "MonsterId": 11212021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 4,
         "MonsterId": 0,
         "X": 0,
         "Y": 0,
@@ -26594,7 +36713,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 8
+        "Count": 4
       },
       {
         "MapId": 4002,
@@ -26605,12 +36724,12 @@ datas ={
         "Count": 16
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 4002,
+        "MonsterId": 11212025,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 0
+        "Count": 4
       }
     ],
     "FinRewardCameraData": 0,
@@ -26656,6 +36775,7 @@ datas ={
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060097,
     "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u4e4b\u7075",
@@ -26706,7 +36826,10 @@ datas ={
   "86060089": {
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimEventName": "temporaryskill",
+    "ClaimEventParam": "1001,1002,1003;{\"1001\": [90010005,90010010,90010015,90010020,90010025,90010030,90010035,90010040,90010045,90010050,90010055,90010060 ],\"1002\": [90020005,90020110,90020015,90020020,90020025,90020030,90020035,90020040,90020045,90020050,90020055,90020060 ],\"1003\": [90030005,90030010,90030015,90030030,90030040,90030045,90030050,90030055,90030056,90030060,90030065,90030070,90030075]}",
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060097,
     "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
@@ -26742,7 +36865,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 8
+        "Count": 10
       },
       {
         "MapId": 4002,
@@ -26750,7 +36873,15 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 4
+        "Count": 6
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
       }
     ],
     "FinRewardCameraData": 0,
@@ -26764,16 +36895,16 @@ datas ={
   "86060090": {
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "DispHiddenTask": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNoLimit": True,
-    "FinRewardCameraData": 0,
-    "FinRewardEventName": "temporaryskill",
-    "FinRewardEventParam": "1001,1002,1003;{\"1001\": [90010005,90010010,90010015,90010020,90010025,90010030,90010035,90010040,90010045,90010050,90010055,90010060 ],\"1002\": [90020005,90020110,90020015,90020020,90020025,90020030,90020035,90020040,90020045,90020450,90020055,90020060 ],\"1003\": [90030005,90030010,90030015,90030030,90030040,90030045,90030050,90030055,90030056,90030060,90030065,90030070,90030075]}",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86060087",
+    "OpenCondRelateTaskState": 4,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86060090,
@@ -27065,7 +37196,7 @@ datas ={
       {
         "MapId": 4002,
         "NPCId": 18000038,
-        "DialogId": 19100004,
+        "DialogId": 19100001,
         "StoryId": 0
       },
       {
@@ -27116,7 +37247,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86060101",
+    "OpenCondRelateTaskId": "86060099",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -27124,12 +37255,14 @@ datas ={
     "TaskType": 1
   },
   "86060105": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -27144,6 +37277,10 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
+    "FinRewardEventName": "sendGuide",
+    "FinRewardEventParam": "242301",
+    "FinRewardID": 40010001,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010002,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -27153,17 +37290,19 @@ datas ={
     "TaskType": 1
   },
   "86060106": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 4001,
         "NPCId": 18000036,
-        "DialogId": 19100005,
+        "DialogId": 19100002,
         "StoryId": 0
       },
       {
@@ -27182,6 +37321,8 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900356,
+    "FinRewardID": 40010002,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27190,12 +37331,14 @@ datas ={
     "TaskType": 1
   },
   "86060107": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bfb\u627e\u53eb\u58f0\u6765\u6e90",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -27211,6 +37354,8 @@ datas ={
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900358,
+    "FinRewardID": 40010003,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010003,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -27220,6 +37365,7 @@ datas ={
     "TaskType": 1
   },
   "86060108": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -27258,7 +37404,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010001,
+    "FinRewardID": 40010004,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27267,16 +37414,18 @@ datas ={
     "TaskType": 1
   },
   "86060109": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondFinDialogs": [
       {
         "MapId": 4001,
         "NPCId": 18000037,
-        "DialogId": 19100006,
+        "DialogId": 19100003,
         "StoryId": 0
       },
       {
@@ -27294,7 +37443,8 @@ datas ={
     ],
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010002,
+    "FinRewardID": 40010005,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27303,11 +37453,14 @@ datas ={
     "TaskType": 1
   },
   "86060110": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u524d\u5f80\u6751\u5e84\u67e5\u63a2",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -27322,7 +37475,8 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010003,
+    "FinRewardID": 40010006,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27331,6 +37485,7 @@ datas ={
     "TaskType": 1
   },
   "86060111": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimDialog": 19900359,
@@ -27369,7 +37524,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010004,
+    "FinRewardID": 40010007,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27378,12 +37534,14 @@ datas ={
     "TaskType": 1
   },
   "86060112": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u524d\u5f80\u6751\u5e84\u67e5\u63a2",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -27399,7 +37557,8 @@ datas ={
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900360,
-    "FinRewardID": 40010005,
+    "FinRewardID": 40010008,
+    "FinRewardTaskID": "0",
     "FinRewardTriggerStoryID": 98010001,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -27409,12 +37568,14 @@ datas ={
     "TaskType": 1
   },
   "86060113": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u51fb\u8d25\u6765\u88ad\u7684\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
@@ -27446,7 +37607,8 @@ datas ={
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 10,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010006,
+    "FinRewardID": 40010009,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27494,6 +37656,7 @@ datas ={
     "DeliMetdNoLimit": True,
     "DispHiddenTask": True,
     "FatherTaskId": 86060104,
+    "FinBlockPopReward": True,
     "FinCondNoLimit": True,
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
@@ -27519,8 +37682,10 @@ datas ={
     "TaskType": 1
   },
   "86060116": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -27548,9 +37713,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010039,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
-    "FinRewardLevInsID": 4017,
+    "FinRewardLevInsID": 4016,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27571,6 +37738,7 @@ datas ={
     "TaskType": 1
   },
   "86060118": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -27600,9 +37768,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010044,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4017,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27611,8 +37781,10 @@ datas ={
     "TaskType": 1
   },
   "86060119": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -27649,6 +37821,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010056,
+    "FinRewardTaskID": "0",
+    "FinRewardTriggerStoryID": 98000076,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27669,6 +37844,7 @@ datas ={
     "TaskType": 1
   },
   "86060121": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -27706,9 +37882,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010057,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 0,
     "FinRewardLevInsID": 4003,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27717,6 +37895,7 @@ datas ={
     "TaskType": 1
   },
   "86060122": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -27733,17 +37912,18 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1002,
-      "X": 102.8555,
-      "Y": 23.53387,
-      "Z": 205.9613,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "X": 107.596054,
+      "Y": 24.1250458,
+      "Z": 202.901443,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010045,
     "FinRewardInstance": {
       "MapId": 4028,
       "NeedConfirm": False,
@@ -27756,6 +37936,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27776,6 +37957,7 @@ datas ={
     "TaskType": 1
   },
   "86060124": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -27815,6 +37997,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010046,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27823,6 +38007,7 @@ datas ={
     "TaskType": 1
   },
   "86060125": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -27834,6 +38019,8 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060032,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u70b9\u71c3\u70fd\u70df",
     "FinCondHasInterCollect": True,
     "FinCondInterCollect": [
       {
@@ -27855,6 +38042,11 @@ datas ={
     "FinRewardCameraData": 0,
     "FinRewardEventName": "OpenPopInfoPanel",
     "FinRewardEventParam": "99000037",
+    "FinRewardID": 40010049,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4028,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27886,6 +38078,7 @@ datas ={
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010008",
@@ -27924,26 +38117,36 @@ datas ={
     "TaskType": 1
   },
   "86060129": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4035,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060127,
     "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u51fb\u8d25\u6751\u5e84\u9b54\u7269",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1002,
-      "X": 323.1215,
-      "Y": 2.912597,
-      "Z": 171.659,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "X": 316.2903,
+      "Y": 2.978596,
+      "Z": 180.3593,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900363,
+    "FinRewardID": 40010015,
     "FinRewardInstance": {
       "MapId": 4035,
       "NeedConfirm": False,
@@ -27956,6 +38159,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -27967,7 +38171,12 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [
       86060131,
-      86060140
+      86060140,
+      86060164,
+      86060165,
+      86060166,
+      86060167,
+      86060168
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -27990,6 +38199,7 @@ datas ={
     "TaskType": 1
   },
   "86060131": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28001,13 +38211,14 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060130,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u83b7\u53d6\u8840\u8109\u7ed3\u6676",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1020,
-      "X": 392.154,
-      "Y": 119.9925,
-      "Z": 210.055,
+      "X": 290.0567,
+      "Y": 129.9876,
+      "Z": 142.0873,
       "Width": 2,
       "Length": 2,
       "TriggerDis": 0,
@@ -28016,19 +38227,20 @@ datas ={
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010160,
+    "FinRewardID": 40010357,
     "FinRewardInstance": {
       "MapId": 4020,
       "NeedConfirm": False,
       "UseConfigPos": True,
-      "X": 387.5554,
-      "Y": 119.9649,
-      "Z": 210.1311,
+      "X": 284.871,
+      "Y": 131.43,
+      "Z": 138.0066,
       "Dir": 270.7428,
       "Angles": 0,
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28041,9 +38253,12 @@ datas ={
     "ChildTaskIds": [
       86060133
     ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86060032",
@@ -28054,17 +38269,19 @@ datas ={
     "TaskType": 1
   },
   "86060133": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060132,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bf9\u8bdd\u961f\u957f",
     "FinCondFinDialogs": [
       {
         "MapId": 1002,
         "NPCId": 18000012,
-        "DialogId": 19100056,
+        "DialogId": 19100018,
         "StoryId": 0
       },
       {
@@ -28081,6 +38298,9 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010050,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28119,6 +38339,7 @@ datas ={
     "TaskType": 1
   },
   "86060135": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28135,18 +38356,18 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1002,
-      "X": 199.979,
-      "Y": 23.85948,
-      "Z": 348.453,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "X": 190.5322,
+      "Y": 26.813,
+      "Z": 322.4152,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010038,
+    "FinRewardID": 40010035,
     "FinRewardInstance": {
       "MapId": 4016,
       "NeedConfirm": False,
@@ -28159,6 +38380,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28167,6 +38389,7 @@ datas ={
     "TaskType": 1
   },
   "86060136": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28186,7 +38409,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 10
+        "Count": 4
       },
       {
         "MapId": 4016,
@@ -28194,19 +38417,20 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 5
+        "Count": 2
       },
       {
-        "MapId": 4016,
-        "MonsterId": 11214001,
+        "MapId": 4,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 1
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010039,
+    "FinRewardID": 40010036,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28244,6 +38468,7 @@ datas ={
     "TaskType": 1
   },
   "86060138": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28262,10 +38487,10 @@ datas ={
       "X": 146.1464,
       "Y": 24.19928,
       "Z": 322.3597,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
@@ -28283,6 +38508,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28291,6 +38517,7 @@ datas ={
     "TaskType": 1
   },
   "86060139": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28330,8 +38557,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900393,
     "FinRewardID": 40010041,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28340,6 +38567,7 @@ datas ={
     "TaskType": 1
   },
   "86060140": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28351,17 +38579,9 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060130,
-    "FinCondDefaultText": "\u51fb\u8d25\u7956\u67ef\u9b54\u7269",
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
-      {
-        "MapId": 4020,
-        "MonsterId": 11214501,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
       {
         "MapId": 4020,
         "MonsterId": 11214502,
@@ -28376,15 +38596,20 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 4
+      },
+      {
+        "MapId": 4,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900437,
-    "FinRewardID": 40010161,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 2,
-    "FinRewardLevInsID": 4020,
+    "FinRewardID": 40010358,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28396,7 +38621,10 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [
       86060142,
-      86060143
+      86060143,
+      86060172,
+      86060173,
+      86060174
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -28411,7 +38639,7 @@ datas ={
     "FinRewardCameraData": 0,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86060130",
+    "OpenCondRelateTaskId": "86060170",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -28419,6 +38647,7 @@ datas ={
     "TaskType": 1
   },
   "86060142": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28430,13 +38659,14 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060141,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u83b7\u53d6\u8840\u8109\u7ed3\u6676",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1020,
-      "X": 311.2886,
-      "Y": 142.4199,
-      "Z": 296.0291,
+      "X": 306.6242,
+      "Y": 142.436,
+      "Z": 345.1849,
       "Width": 2,
       "Length": 2,
       "TriggerDis": 0,
@@ -28445,19 +38675,20 @@ datas ={
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010162,
+    "FinRewardID": 40010365,
     "FinRewardInstance": {
       "MapId": 4021,
       "NeedConfirm": False,
       "UseConfigPos": True,
-      "X": 308.404,
-      "Y": 142.416,
-      "Z": 295.9344,
-      "Dir": 327.6158,
+      "X": 298.2437,
+      "Y": 142.436,
+      "Z": 338.875,
+      "Dir": 344.6006,
       "Angles": 0,
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28466,6 +38697,7 @@ datas ={
     "TaskType": 1
   },
   "86060143": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28482,11 +38714,11 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 4021,
-        "MonsterId": 11214601,
+        "MonsterId": 11214603,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 1
+        "Count": 5
       },
       {
         "MapId": 4021,
@@ -28494,23 +38726,21 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 10
       },
       {
         "MapId": 4021,
-        "MonsterId": 11214603,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 2
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900477,
-    "FinRewardID": 40010163,
-    "FinRewardLeaveInstance": True,
-    "FinRewardLevInsDelay": 2,
-    "FinRewardLevInsID": 4021,
+    "FinRewardID": 40010366,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28552,7 +38782,8 @@ datas ={
       "Z": 343,
       "Dir": 293,
       "Angles": 0,
-      "IsShowFx": 0
+      "IsShowFx": 0,
+      "NeedPlayFx": True
     },
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
@@ -28562,6 +38793,7 @@ datas ={
     "TaskType": 1
   },
   "86060145": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28573,6 +38805,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060042,
+    "FinBlockPopReward": True,
     "FinCondDefaultText": "\u5bfb\u627e\u6d77\u6e2f\u771f\u51f6",
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
@@ -28580,15 +38813,15 @@ datas ={
       "X": 508.6215,
       "Y": 125.5647,
       "Z": 256.4736,
-      "Width": 2.0,
-      "Length": 2.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 2,
+      "Length": 2,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 31710009
     },
     "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40010070,
+    "FinRewardID": 40010094,
     "FinRewardInstance": {
       "MapId": 4004,
       "NeedConfirm": False,
@@ -28601,6 +38834,7 @@ datas ={
       "IsShowFx": 0,
       "NeedPlayFx": True
     },
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28622,10 +38856,10 @@ datas ={
       "X": 360.0927,
       "Y": 89.73132,
       "Z": 348.9021,
-      "Width": 3.0,
-      "Length": 30.0,
-      "TriggerDis": 0.0,
-      "Angles": 0.0,
+      "Width": 3,
+      "Length": 30,
+      "TriggerDis": 0,
+      "Angles": 0,
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
@@ -28637,11 +38871,18 @@ datas ={
     "TaskType": 1
   },
   "86060147": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4035,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060127,
+    "FinCondDefaultText": "\u51fb\u8d25\u6751\u5e84\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -28670,9 +38911,11 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010016,
     "FinRewardLeaveInstance": True,
     "FinRewardLevInsDelay": 2,
     "FinRewardLevInsID": 4035,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28681,8 +38924,10 @@ datas ={
     "TaskType": 1
   },
   "86060148": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -28719,6 +38964,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010037,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28727,8 +38974,10 @@ datas ={
     "TaskType": 1
   },
   "86060149": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondFailIfQtInst": True,
@@ -28761,10 +39010,12 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 1
+        "Count": 0
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010038,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28773,6 +39024,7 @@ datas ={
     "TaskType": 1
   },
   "86060150": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -28811,6 +39063,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010042,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28819,6 +39073,7 @@ datas ={
     "TaskType": 1
   },
   "86060151": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -28856,6 +39111,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010043,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28864,6 +39121,7 @@ datas ={
     "TaskType": 1
   },
   "86060152": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -28874,8 +39132,36 @@ datas ={
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060032,
     "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
-    "FinCondNoLimit": True,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4028,
+        "MonsterId": 11215202,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 2
+      },
+      {
+        "MapId": 4028,
+        "MonsterId": 11215203,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 4
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010047,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28884,6 +39170,7 @@ datas ={
     "TaskType": 1
   },
   "86060153": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -28893,6 +39180,7 @@ datas ={
     "FailCondInstType": 0,
     "FailCondQuitIfFail": True,
     "FatherTaskId": 86060032,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -28921,6 +39209,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010048,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28929,6 +39219,7 @@ datas ={
     "TaskType": 1
   },
   "86060154": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
@@ -28968,6 +39259,9 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010054,
+    "FinRewardTaskID": "0",
+    "FinRewardTriggerStoryID": 98010005,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -28976,6 +39270,7 @@ datas ={
     "TaskType": 1
   },
   "86060155": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "DeliMetdNoLimit": True,
@@ -29014,6 +39309,8 @@ datas ={
       }
     ],
     "FinRewardCameraData": 0,
+    "FinRewardID": 40010055,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -29022,11 +39319,18 @@ datas ={
     "TaskType": 1
   },
   "86060156": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4004,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060042,
+    "FinCondDefaultText": "\u51fb\u8d25\u95f9\u4e8b\u9b54\u7269",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -29054,6 +39358,10 @@ datas ={
         "Count": 0
       }
     ],
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900526,
+    "FinRewardID": 40010096,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -29062,10 +39370,39 @@ datas ={
     "TaskType": 1
   },
   "86060157": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4004,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060042,
+    "FinCondDefaultText": "\u89e3\u6551\u8239\u5458",
+    "FinCondHasInterCollect": True,
+    "FinCondInterCollect": [
+      {
+        "CollId": 16000134,
+        "Count": 1,
+        "MapId": 4004
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      },
+      {
+        "CollId": 0,
+        "Count": 0,
+        "MapId": 1
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010097,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -29074,27 +39411,24 @@ datas ={
     "TaskType": 1
   },
   "86060158": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "DeliMetdManual": None,
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4004,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060042,
-    "IsCanReset": False,
-    "OpenCondCheckSex": 0,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86060158,
-    "TaskType": 1
-  },
-  "86060159": {
-    "ChildDoInQueue": False,
-    "ChildTaskIds": [],
-    "DeliMetdManual": None,
-    "FatherTaskId": 86060042,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u89e3\u6551\u8239\u5458",
     "FinCondFinDialogs": [
       {
-        "MapId": 1,
-        "NPCId": 0,
-        "DialogId": 0,
+        "MapId": 4004,
+        "NPCId": 18000752,
+        "DialogId": 19100135,
         "StoryId": 0
       },
       {
@@ -29111,6 +39445,60 @@ datas ={
       }
     ],
     "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900527,
+    "FinRewardID": 40010098,
+    "FinRewardTaskID": "0",
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060158,
+    "TaskType": 1
+  },
+  "86060159": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4004,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060042,
+    "FinCondDefaultText": "\u51fb\u8d25\u95f9\u4e8b\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4004,
+        "MonsterId": 11223202,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 4004,
+        "MonsterId": 11223203,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900528,
+    "FinRewardID": 40010099,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -29119,15 +39507,637 @@ datas ={
     "TaskType": 1
   },
   "86060160": {
+    "AbanRewardTaskID": "0",
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
-    "DeliMetdManual": None,
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4004,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060042,
+    "FinCondDefaultText": "\u51fb\u8d25\u5e55\u540e\u771f\u51f6",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4004,
+        "MonsterId": 11223201,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010100,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4004,
+    "FinRewardTaskID": "0",
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86060160,
+    "TaskType": 1
+  },
+  "86060161": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4005,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060045,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4005,
+        "MonsterId": 11213401,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010354,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060161,
+    "TaskType": 1
+  },
+  "86060162": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4005,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060045,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u4e0e\u51cc\u51dd\u4ea4\u6d41\u60c5\u51b5",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4005,
+        "NPCId": 18000741,
+        "DialogId": 19100117,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010355,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060162,
+    "TaskType": 1
+  },
+  "86060163": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4005,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060045,
+    "FinBlockPopReward": True,
+    "FinCondDefaultText": "\u4e86\u89e3\u7956\u73c2\u4fe1\u606f",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4005,
+        "NPCId": 18000758,
+        "DialogId": 19100118,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900580,
+    "FinRewardID": 40010356,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4005,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060163,
+    "TaskType": 1
+  },
+  "86060164": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4020,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060130,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4020,
+        "MonsterId": 11214502,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 4020,
+        "MonsterId": 11214503,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010359,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060164,
+    "TaskType": 1
+  },
+  "86060165": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4020,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060130,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4020,
+        "MonsterId": 11214501,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010360,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060165,
+    "TaskType": 1
+  },
+  "86060166": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4020,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060130,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4020,
+        "MonsterId": 11214503,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 6
+      },
+      {
+        "MapId": 4020,
+        "MonsterId": 11214502,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 3
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterNum": 4020,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010361,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060166,
+    "TaskType": 1
+  },
+  "86060167": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4020,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060130,
+    "FinCondDefaultText": "\u51fb\u8d25\u7956\u73c2\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4020,
+        "MonsterId": 11214501,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010362,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060167,
+    "TaskType": 1
+  },
+  "86060168": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4020,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060130,
+    "FinCondDefaultText": "\u4ea4\u6d41\u7956\u795e",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4020,
+        "NPCId": 18000758,
+        "DialogId": 19100120,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900582,
+    "FinRewardID": 40010363,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4020,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060168,
+    "TaskType": 1
+  },
+  "86060170": {
+    "BelongMap": 0,
+    "ChildTaskIds": [
+      86060171
+    ],
+    "ClaimCondAutoTake": True,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinRewardCameraData": 0,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondRelateTaskId": "86060130",
+    "OpenCondRelateTaskState": 5,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060170,
+    "TaskType": 1
+  },
+  "86060171": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060170,
+    "FinCondDefaultText": "\u51fb\u8d25\u62e6\u8def\u9b54\u7269",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1020,
+        "MonsterId": 11231006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 15,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010364,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060171,
+    "TaskType": 1
+  },
+  "86060172": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4021,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060141,
+    "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u9996\u9886",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4021,
+        "MonsterId": 11214601,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010367,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060172,
+    "TaskType": 1
+  },
+  "86060173": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4021,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060141,
+    "FinCondDefaultText": "\u5bf9\u8bdd\u7956\u795e",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4021,
+        "NPCId": 18000758,
+        "DialogId": 19100121,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40010368,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060173,
+    "TaskType": 1
+  },
+  "86060174": {
+    "AbanRewardTaskID": "0",
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdNoLimit": True,
+    "FailCondCanGiveUp": True,
+    "FailCondFailIfQtInst": True,
+    "FailCondInstId": 4021,
+    "FailCondInstType": 0,
+    "FailCondQuitIfFail": True,
+    "FatherTaskId": 86060141,
+    "FinCondDefaultText": "\u6c9f\u901a\u51cc\u51dd",
+    "FinCondFinDialogs": [
+      {
+        "MapId": 4021,
+        "NPCId": 18000741,
+        "DialogId": 19100122,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      },
+      {
+        "MapId": 1,
+        "NPCId": 0,
+        "DialogId": 0,
+        "StoryId": 0
+      }
+    ],
+    "FinCondHasFinDia": True,
+    "FinRewardCameraData": 0,
+    "FinRewardDialog": 19900584,
+    "FinRewardID": 40010369,
+    "FinRewardLeaveInstance": True,
+    "FinRewardLevInsDelay": 2,
+    "FinRewardLevInsID": 4021,
+    "IsCanReset": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060174,
     "TaskType": 1
   },
   "86080001": {
@@ -41607,11 +52617,6 @@ datas ={
     "ClaimNpcId": "18000519",
     "ClaimNpcMapId": 1002,
     "ClamiCameraData": 0,
-    "ClickTaskState": "3",
-    "ClickTaskToMapID": 1002,
-    "ClickTaskToPosX": 277.618,
-    "ClickTaskToPosY": 32.23608,
-    "ClickTaskToPosZ": 473.5033,
     "CNFinDialogId": "19300010",
     "CNUnFinDiallogId": "19300082",
     "DeliMetdManual": True,
@@ -41725,9 +52730,6 @@ datas ={
     "FinRewardDialog": 19900235,
     "FinRewardID": 40012005,
     "IsCanReset": False,
-    "NavTaskClientEvent": "sendMsg",
-    "NavTaskEventParam": "54990100",
-    "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86010025",
     "OpenCondRelateTaskState": 5,
@@ -41891,9 +52893,9 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1002,
-      "X": 289.6715,
-      "Y": 4.161701,
-      "Z": 196.8904,
+      "X": 246.089859,
+      "Y": 3.57946825,
+      "Z": 161.262924,
       "Width": 4.0,
       "Length": 4.0,
       "TriggerDis": 0.0,
@@ -41917,9 +52919,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1002,
-    "ClickTaskToPosX": 289.6715,
-    "ClickTaskToPosY": 4.161701,
-    "ClickTaskToPosZ": 196.8904,
+    "ClickTaskToPosX": 246.089859,
+    "ClickTaskToPosY": 3.57946825,
+    "ClickTaskToPosZ": 161.262924,
     "DeliMetdManual": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -42021,6 +53023,7 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900207,
+    "IsCanReset": False,
     "NavTaskClientEvent": "sendMsg",
     "NavTaskEventParam": "54990066",
     "NoNeedPathFinding": True,
@@ -42149,11 +53152,11 @@ datas ={
     "FinCondKillMonsterMode": 1,
     "FinCondKillMonsterNum": 30,
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900246,
+    "FinRewardDialog": 19900593,
     "FinRewardID": 40012023,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010045",
+    "OpenCondRelateTaskId": "86010050",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -42410,16 +53413,16 @@ datas ={
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
-        "MapId": 1030,
-        "MonsterId": 11221019,
+        "MapId": 1031,
+        "MonsterId": 11222007,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 10
       },
       {
-        "MapId": 1030,
-        "MonsterId": 11221020,
+        "MapId": 1031,
+        "MonsterId": 11222009,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -42441,7 +53444,7 @@ datas ={
     "FinRewardID": 40012020,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010031",
+    "OpenCondRelateTaskId": "86010013",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -42678,7 +53681,7 @@ datas ={
     "FinRewardID": 40012024,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010045",
+    "OpenCondRelateTaskId": "86010050",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -42770,11 +53773,6 @@ datas ={
     "ClaimNpcId": "18000537",
     "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
-    "ClickTaskState": "3",
-    "ClickTaskToMapID": 1011,
-    "ClickTaskToPosX": 210.0,
-    "ClickTaskToPosY": 176.0,
-    "ClickTaskToPosZ": 525.0,
     "CNFinDialogId": "19300021",
     "CNUnFinDiallogId": "19300082",
     "DeliMetdManual": True,
@@ -42783,7 +53781,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u8d25\u57ce\u90ca\u957f\u89d2\u9b54\u7269",
+    "FinCondDefaultText": "\u6536\u96c6\u57ce\u90ca\u9b54\u7269\u7259",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -42796,14 +53794,6 @@ datas ={
       },
       {
         "MapId": 1011,
-        "MonsterId": 11240007,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1011,
         "MonsterId": 11240006,
         "X": 0,
         "Y": 0,
@@ -42811,8 +53801,16 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1011,
-        "MonsterId": 11240008,
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -42825,11 +53823,8 @@ datas ={
     "FinRewardDialog": 19900248,
     "FinRewardID": 40012026,
     "IsCanReset": False,
-    "NavTaskClientEvent": "sendMsg",
-    "NavTaskEventParam": "54990094",
-    "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010045",
+    "OpenCondRelateTaskId": "86010050",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -42844,11 +53839,6 @@ datas ={
     "ClaimNpcId": "18000686",
     "ClaimNpcMapId": 1001,
     "ClamiCameraData": 0,
-    "ClickTaskState": "3",
-    "ClickTaskToMapID": 1030,
-    "ClickTaskToPosX": 209.8035,
-    "ClickTaskToPosY": 155.0188,
-    "ClickTaskToPosZ": 327.9385,
     "CNFinDialogId": "19300022",
     "CNUnFinDiallogId": "19300082",
     "DeliMetdManual": True,
@@ -42857,7 +53847,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u6740\u6d77\u6e2f\u4e00\u5c42\u7ea2\u8272\u87fe\u870d",
+    "FinCondDefaultText": "\u6536\u96c6\u87fe\u870d\u5185\u4e39",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -42870,7 +53860,7 @@ datas ={
       },
       {
         "MapId": 1030,
-        "MonsterId": 11221023,
+        "MonsterId": 11221024,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -42891,11 +53881,8 @@ datas ={
     "FinRewardDialog": 19900226,
     "FinRewardID": 40012021,
     "IsCanReset": False,
-    "NavTaskClientEvent": "sendMsg",
-    "NavTaskEventParam": "54990123",
-    "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010031",
+    "OpenCondRelateTaskId": "86010013",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -42924,7 +53911,7 @@ datas ={
     "FinRewardID": 40012022,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010031",
+    "OpenCondRelateTaskId": "86010013",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -42989,6 +53976,7 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900229,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -43070,7 +54058,7 @@ datas ={
     "FinRewardID": 40012027,
     "IsCanReset": False,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010150",
+    "OpenCondRelateTaskId": "86010161",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -45131,8 +56119,9 @@ datas ={
     "TaskType": 9
   },
   "86090093": {
+    "AbanCanRemoveItems": True,
     "AbanRemoveItems": [
-      0
+      30990166
     ],
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
@@ -45389,32 +56378,32 @@ datas ={
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
-        "MapId": 1031,
-        "MonsterId": 11222012,
+        "MapId": 1030,
+        "MonsterId": 11221028,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1031,
-        "MonsterId": 11222014,
+        "MapId": 1030,
+        "MonsterId": 11221025,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1031,
-        "MonsterId": 11222011,
+        "MapId": 1030,
+        "MonsterId": 11221026,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1031,
-        "MonsterId": 11222013,
+        "MapId": 1030,
+        "MonsterId": 11221027,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -45442,7 +56431,7 @@ datas ={
       86090100,
       86090103
     ],
-    "ClaimCondLevelMin": 22,
+    "ClaimCondLevelMin": 23,
     "ClaimNpcId": "18000726",
     "ClaimNpcMapId": 1030,
     "ClamiCameraData": 0,
@@ -45476,9 +56465,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1032,
-    "ClickTaskToPosX": 466.6388,
-    "ClickTaskToPosY": 321.0575,
-    "ClickTaskToPosZ": 121.9329,
+    "ClickTaskToPosX": 376.9496,
+    "ClickTaskToPosY": 162.1949,
+    "ClickTaskToPosZ": 213.0978,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -45590,7 +56579,7 @@ datas ={
     "TaskGroup": 0,
     "TaskId": 86090102,
     "TaskType": 9,
-    "UnlockCustomText": "\u90aa\u4e0d\u538b\u6b63"
+    "UnlockCustomText": "\u5b8c\u6210\u540c\u5fc3\u8c37\u5176\u4f59\u5730\u533a\u4efb\u52a1\u540e\u89e3\u9501"
   },
   "86090103": {
     "AbanCanRemoveItems": True,
@@ -45599,6 +56588,7 @@ datas ={
     ],
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
@@ -45792,7 +56782,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1011,
-        "MonsterId": 11240011,
+        "MonsterId": 11240010,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -45941,7 +56931,7 @@ datas ={
     "TaskGroup": 0,
     "TaskId": 86090110,
     "TaskType": 9,
-    "UnlockCustomText": "\u5b8c\u6210\u65b0\u5143\u57ce\u6240\u6709\u5730\u533a\u4efb\u52a1"
+    "UnlockCustomText": "\u5b8c\u6210\u65b0\u5143\u57ce\u5176\u4f59\u5730\u533a\u4efb\u52a1\u540e\u89e3\u9501"
   },
   "86090111": {
     "AbanCanRemoveItems": True,
@@ -46074,9 +57064,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1035,
-    "ClickTaskToPosX": 272.9504,
-    "ClickTaskToPosY": 202.7656,
-    "ClickTaskToPosZ": 520.335,
+    "ClickTaskToPosX": 245.97406,
+    "ClickTaskToPosY": 225.097839,
+    "ClickTaskToPosZ": 474.353027,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -46118,9 +57108,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1011,
-    "ClickTaskToPosX": 237.2542,
-    "ClickTaskToPosY": 155.3814,
-    "ClickTaskToPosZ": 352.0121,
+    "ClickTaskToPosX": 159.6382,
+    "ClickTaskToPosY": 180.9257,
+    "ClickTaskToPosZ": 475.3792,
     "DeliMetdManual": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -46525,6 +57515,7 @@ datas ={
     "FinCondKillMonsterNum": 5,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900257,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -46712,10 +57703,10 @@ datas ={
     "ClickTaskEventParam": "54990083",
     "ClickTaskEventState": "3",
     "ClickTaskState": "3",
-    "ClickTaskToMapID": 0,
-    "ClickTaskToPosX": 0.0,
-    "ClickTaskToPosY": 0.0,
-    "ClickTaskToPosZ": 0.0,
+    "ClickTaskToMapID": 1001,
+    "ClickTaskToPosX": 307.4753,
+    "ClickTaskToPosY": -0.658749163,
+    "ClickTaskToPosZ": 90.8483,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -46742,6 +57733,8 @@ datas ={
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900255,
     "IsCanReset": False,
+    "NavTaskClientEvent": "sendMsg",
+    "NavTaskEventParam": "54990083",
     "NoNeedPathFinding": True,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
@@ -46842,9 +57835,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1001,
-    "ClickTaskToPosX": 330.9597,
-    "ClickTaskToPosY": 10.50429,
-    "ClickTaskToPosZ": 305.7262,
+    "ClickTaskToPosX": 353.125671,
+    "ClickTaskToPosY": 19.9797058,
+    "ClickTaskToPosZ": 302.4627,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -46974,9 +57967,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 4012,
-    "ClickTaskToPosX": 290.2047,
-    "ClickTaskToPosY": 165.8463,
-    "ClickTaskToPosZ": 578.1014,
+    "ClickTaskToPosX": 298.4026,
+    "ClickTaskToPosY": 165.871,
+    "ClickTaskToPosZ": 577.5226,
     "DeliMetdNoLimit": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -47033,9 +58026,9 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1011,
-      "X": 188.7813,
-      "Y": 164.5103,
-      "Z": 400.8804,
+      "X": 168.93161,
+      "Y": 165.345978,
+      "Z": 425.246155,
       "Width": 4.0,
       "Length": 4.0,
       "TriggerDis": 0.0,
@@ -47390,9 +58383,9 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1011,
-      "X": 497.5268,
-      "Y": 117.8723,
-      "Z": 153.1488,
+      "X": 429.969147,
+      "Y": 118.82196,
+      "Z": 300.458984,
       "Width": 4.0,
       "Length": 4.0,
       "TriggerDis": 0.0,
@@ -47402,6 +58395,7 @@ datas ={
     "FinRewardCameraData": 0,
     "FinRewardEventName": "sendMsg",
     "FinRewardEventParam": "54990088",
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -47414,9 +58408,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1011,
-    "ClickTaskToPosX": 497.5268,
-    "ClickTaskToPosY": 117.8723,
-    "ClickTaskToPosZ": 153.1488,
+    "ClickTaskToPosX": 428.10675,
+    "ClickTaskToPosY": 118.406136,
+    "ClickTaskToPosZ": 296.90863,
     "DeliMetdManual": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -47442,6 +58436,7 @@ datas ={
     ],
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900264,
+    "IsCanReset": False,
     "NavTaskClientEvent": "sendMsg",
     "NavTaskEventParam": "54990088",
     "NoNeedPathFinding": True,
@@ -47619,6 +58614,7 @@ datas ={
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900266,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -47630,11 +58626,6 @@ datas ={
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
-    "ClickTaskState": "3",
-    "ClickTaskToMapID": 1020,
-    "ClickTaskToPosX": 392.4284,
-    "ClickTaskToPosY": 119.9921,
-    "ClickTaskToPosZ": 209.7635,
     "DeliMetdManual": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
@@ -47671,9 +58662,7 @@ datas ={
     "FinCondKillMonsterNum": 20,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900267,
-    "NavTaskClientEvent": "sendMsg",
-    "NavTaskEventParam": "54990089",
-    "NoNeedPathFinding": True,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -47834,16 +58823,16 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1011,
-        "MonsterId": 11240007,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1011,
-        "MonsterId": 11240008,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48287,7 +59276,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1011,
-        "MonsterId": 11240030,
+        "MonsterId": 11240035,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48295,7 +59284,7 @@ datas ={
       },
       {
         "MapId": 1011,
-        "MonsterId": 11240032,
+        "MonsterId": 11240037,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48327,7 +59316,7 @@ datas ={
     "ChildTaskIds": [
       86090161
     ],
-    "ClaimCondLevelMin": 23,
+    "ClaimCondLevelMin": 31,
     "ClaimNpcId": "18000666",
     "ClaimNpcMapId": 1011,
     "ClamiCameraData": 0,
@@ -48364,7 +59353,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1011,
-        "MonsterId": 11240018,
+        "MonsterId": 11240049,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48372,7 +59361,7 @@ datas ={
       },
       {
         "MapId": 1011,
-        "MonsterId": 11240020,
+        "MonsterId": 11240047,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48380,7 +59369,7 @@ datas ={
       },
       {
         "MapId": 1011,
-        "MonsterId": 11240021,
+        "MonsterId": 11240048,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48388,7 +59377,7 @@ datas ={
       },
       {
         "MapId": 1011,
-        "MonsterId": 11240019,
+        "MonsterId": 11240050,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -48477,9 +59466,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1021,
-    "ClickTaskToPosX": 190.1302,
-    "ClickTaskToPosY": 101.9838,
-    "ClickTaskToPosZ": 163.8911,
+    "ClickTaskToPosX": 207.6387,
+    "ClickTaskToPosY": 115.0262,
+    "ClickTaskToPosZ": 232.5425,
     "CNFinDialogId": "19300120",
     "CNUnFinDiallogId": "19300082",
     "DeliMetdNoLimit": True,
@@ -48535,9 +59524,9 @@ datas ={
     "ClamiCameraData": 0,
     "ClickTaskState": "3",
     "ClickTaskToMapID": 1021,
-    "ClickTaskToPosX": 267.2139,
-    "ClickTaskToPosY": 111.1667,
-    "ClickTaskToPosZ": 272.5461,
+    "ClickTaskToPosX": 497.8281,
+    "ClickTaskToPosY": 94.54575,
+    "ClickTaskToPosZ": 352.9431,
     "CNFinDialogId": "19300121",
     "CNUnFinDiallogId": "19300082",
     "DeliMetdNoLimit": True,
@@ -48669,6 +59658,7 @@ datas ={
     },
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900277,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -49035,9 +60025,9 @@ datas ={
     "FinCondIsTriggerArea": True,
     "FinCondReachArea": {
       "MapId": 1011,
-      "X": 247.0,
-      "Y": 168.0,
-      "Z": 534.0,
+      "X": 272.611755,
+      "Y": 165.512711,
+      "Z": 561.012756,
       "Width": 2.0,
       "Length": 2.0,
       "TriggerDis": 0.0,
@@ -49051,10 +60041,10 @@ datas ={
       "MapId": 4012,
       "NeedConfirm": False,
       "UseConfigPos": True,
-      "X": 255.4897,
-      "Y": 255.4897,
-      "Z": 534.4927,
-      "Dir": 76.0,
+      "X": 272.6118,
+      "Y": 165.5127,
+      "Z": 561.0128,
+      "Dir": 41.86347,
       "Angles": 0,
       "IsShowFx": 0,
       "NeedPlayFx": True
@@ -49071,11 +60061,6 @@ datas ={
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
     "ClamiCameraData": 0,
-    "ClickTaskState": "3",
-    "ClickTaskToMapID": 1004,
-    "ClickTaskToPosX": 93.92023,
-    "ClickTaskToPosY": 0.5416479,
-    "ClickTaskToPosZ": 120.2276,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86090010,
     "FinCondDefaultText": "\u5c06\u4fe1\u9001\u7ed9\u674e\u94c1",
@@ -49102,9 +60087,7 @@ datas ={
     "FinCondHasFinDia": True,
     "FinRewardCameraData": 0,
     "FinRewardDialog": 19900203,
-    "NavTaskClientEvent": "sendMsg",
-    "NavTaskEventParam": "54990101",
-    "NoNeedPathFinding": True,
+    "IsCanReset": False,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -50339,7 +61322,8 @@ datas ={
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86090207,
-    "TaskType": 9
+    "TaskType": 9,
+    "UnlockCustomText": "\u5b8c\u6210\u57ce\u90ca\u5176\u4f59\u5730\u533a\u4efb\u52a1\u540e\u89e3\u9501"
   },
   "86090208": {
     "BelongMap": 105,

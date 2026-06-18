@@ -61,7 +61,7 @@ class INewbie(object):
 
                 rewardId = data['rewardTag']
                 if rewardId:
-                    ctx = self._getAvatarAwardCtx(rewardId, None)
+                    ctx = self.getAvatarAwardCtx(rewardId, None)
                     wealthVal = dropAward.getAward(rewardId, 1, ctx)
                     srcType = AACAACDD.datas.BONUS_SRC_GM
                     opUUID = KBEngine.genUUID64()

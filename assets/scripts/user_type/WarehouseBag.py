@@ -20,7 +20,7 @@ class WarehouseBag(BaseBag.BaseBag):
 
     def __init__(self, capacity=0):
         super(WarehouseBag, self).__init__(capacity)
-        self.bagType = gameconst.BagType.BAG_TYPE_WAREHOUSE
+        self.bagType = gameconst.BagTypeEnum.BAG_TYPE_WAREHOUSE
 
     def warehouseDailyUpdate(self):
         for itemObj in self.gridIdToGridObj.values():
@@ -57,11 +57,13 @@ class WarehouseBag(BaseBag.BaseBag):
             return
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_UNLOCK_GRIDS
-        detail = gameclass.AwardDetail(capacity=self.capacity, newCapacity=newCapacity)
+        detail = gameclass.AwardDetailCls(capacity=self.capacity, newCapacity=newCapacity)
         owner.deductWealth(srcType, deductWealthVal, opUUID, detail)
         self.capacity = newCapacity
 
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
+            owner.gbID,
+            owner.accountEntity.clientDistinctId, 
             opUUID,
             owner.gbID,
             gameconst.CapacityExpansionType.WAREHOUSE_GOLD,

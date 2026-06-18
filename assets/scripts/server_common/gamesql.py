@@ -17,7 +17,6 @@ import gameconst
 import dataUtils
 import dropAward
 
-
 def createExtraIndex():
     # 创建数据库中某些表的uniq索引
     # sql = "CALL gamesp_createindex('tbl_Avatar_inv_item','invItemIdIndex', 'sm_id', 0)"
@@ -564,7 +563,7 @@ def checkOfflineDeductWealth(gbId, itemId, deductNum, checkCallback):
                 if hasNum < needDeductTotal:
                     checkCallback(gameconst.GMCommandErr.GM_RET_INSUFFICIENT, hasNum, alreadyRemovedNum, needDeduct)
                     return
-            elif itemId == gameconst.ItemId.COIN:
+            elif itemId == gameconst.ItemIdEnum.COIN:
                 hasNum = coinVal
                 if wealthVal.coin.data and wealthVal.coin.data > coinVal:
                     checkCallback(gameconst.GMCommandErr.GM_RET_INSUFFICIENT, coinVal, alreadyRemovedNum, needDeduct)
@@ -883,18 +882,99 @@ def getBanLogin(gbId, callback):
     _sql = f'SELECT sm_banLogin FROM tbl_Avatar WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
+def beginBanLogin(gbId, callback):
+    _sql = f'SELECT sm_autoBanLoginFlag, sm_banLogin FROM tbl_Avatar WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
 
-def banLogin(gbId, endTime, callback):
-    _sql = f'UPDATE tbl_Avatar SET sm_banLogin={endTime} WHERE sm_gbID={gbId}'
+def banLogin(gbId, autoFlag, endTime, callback):
+    _sql = f'UPDATE tbl_Avatar SET sm_autoBanLoginFlag={autoFlag}, sm_banLogin={endTime} WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 
 def disbanLogin(gbId, callback):
-    _sql = f'UPDATE tbl_Avatar SET sm_banLogin=0 WHERE sm_gbID={gbId}'
+    _sql = f'UPDATE tbl_Avatar SET sm_autoBanLoginFlag=-1, sm_banLogin=0 WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
+
+def queryBanInfo(gbId, callback):
+    _sql = f'SELECT sm_autoBanLoginFlag, sm_banLogin, sm_idipBanDict, sm_idipBanDataDict FROM tbl_Avatar WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 def getAvatarAuthOfflineTime(gbId, callback):
     _sql = f'SELECT sm_gbID, sm_authStatistics_authOffline, sm_tsLastOfflineBase FROM tbl_Avatar WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 # --------------------------- auth avatar end --------------------------------
+
+# =========================== SAFE BOX ======================================
+
+def loadSafeBoxUnclaimed(gbId, limit, callback):
+    _sql = (
+        f'SELECT id, itemId, itemCount, itemPrice, claimed, '
+        f'claimTime, orderId, orderTime '
+        f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+        f'WHERE gbId={gbId} AND claimed=0 '
+        f'ORDER BY orderTime DESC, id DESC '
+        f'LIMIT {limit}'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def loadSafeBoxRecentClaimed(gbId, limit, callback):
+    _sql = (
+        f'SELECT id, itemId, itemCount, itemPrice, claimed, '
+        f'claimTime, orderId, orderTime '
+        f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+        f'WHERE gbId={gbId} AND claimed=1 '
+        f'ORDER BY claimTime DESC, id DESC '
+        f'LIMIT {limit}'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def loadMoreUnclaimedSafeBox(gbId, cursorOrderTime, cursorId, limit, callback):
+    _sql = (
+        f'SELECT id, itemId, itemCount, itemPrice, claimed, '
+        f'claimTime, orderId, orderTime '
+        f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+        f'WHERE gbId={gbId} AND claimed=0 AND '
+        f'(orderTime < {cursorOrderTime} OR '
+        f'(orderTime = {cursorOrderTime} AND id < {cursorId})) '
+        f'ORDER BY orderTime DESC, id DESC '
+        f'LIMIT {limit}'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def insertSafeBoxItem(gbId, itemId, itemCount, itemPrice, orderId, orderTime, callback):
+    _sql = (
+        f'INSERT INTO {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+        f'(gbId, itemId, itemCount, itemPrice, claimed, claimTime, orderId, orderTime) '
+        f'VALUES ({gbId}, {itemId}, {itemCount}, {itemPrice}, {gameconst.SafeBoxClaimState.INIT}, {0}, {utils.escape_string(orderId)}, {orderTime})'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
+
+
+def claimSafeBoxItem(safeBoxId, claimTime, callback):
+    _sql = f'UPDATE {gameconst.TABLE_NAME_GAME_SAFE_BOX} SET claimed={gameconst.SafeBoxClaimState.CLAIMED}, claimTime={claimTime} WHERE id={safeBoxId}'
+    KBEngine.executeRawDatabaseCommand(_sql, lambda ret, num, insertId, err: callback(ret, num, insertId, err))
+
+def deleteSafeBoxItem(safeBoxId, callback=None):
+    _sql = f'DELETE FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} WHERE id={safeBoxId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback or (lambda ret, num, insertId, err: None))
+
+
+def checkOrderExists(orderId, callback):
+    _sql = (
+        f'SELECT id FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX_IDEMPOTENT} '
+        f'WHERE orderId="{utils.escape_string(orderId)}" '
+        f'LIMIT 1'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+def recordOrderId(orderId, callback):
+    _sql = (
+        f'INSERT INTO {gameconst.TABLE_NAME_GAME_SAFE_BOX_IDEMPOTENT} '
+        f'(orderId) '
+        f'VALUES ({utils.escape_string(orderId)})'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, callback)

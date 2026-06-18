@@ -69,8 +69,18 @@ class DungeonPlayModePlayerMiXin(userType.UserSingleType):
     def isCanAddRewardByCoin(self, useNum):
         return self.useCoinAddRewardNum >= useNum
 
+    def isFirstAddRewardNum(self):
+        return self.rewardNumCoinDailyLimit == self.useCoinAddRewardNum
+
     def resetUseCoinAddRewardDailyNum(self):
         self.useCoinAddRewardNum = self.rewardNumCoinDailyLimit
+
+    def dailyResetRewardNum(self):
+        self.rewardNumber = self.dailyRewardNum + self.rewardCoinNumber + self.rewardItemNumber
+
+    @property
+    def leftDailyRewardNum(self):
+        return self.rewardNumber - self.rewardItemNumber - self.rewardCoinNumber
 
     def addRewardNumByDefault(self, num):
         self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, num, overLimit=False)
@@ -78,9 +88,11 @@ class DungeonPlayModePlayerMiXin(userType.UserSingleType):
     def addRewardNumByUseSpecialItem(self, num):
         self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, num, overLimit=True)
 
-    def addRewardNumByUseCoin(self, num):
-        self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, num, overLimit=True)
-        nn = self.useCoinAddRewardNum - num
+    def addRewardNumByUseCoin(self, addRewardNum):
+        self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, addRewardNum, overLimit=True)
+
+    def deductUsedCoinAddRewardNum(self, useNum):
+        nn = self.useCoinAddRewardNum - useNum
         self.useCoinAddRewardNum = nn if nn >= 0 else 0
 
     def addRewardNum(self, countType, num, overLimit=False):
@@ -109,18 +121,16 @@ class DungeonPlayModePlayerMiXin(userType.UserSingleType):
     def deductRewardNum(self):
         LOG_INFO('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
         if self.rewardNumber > 0:
-            # 优先使用金币购买的次数
-            if self.rewardCoinNumber > 0:
+            # 看看默认次数是否还有，优先使用默认次数，后面再使用道具购买的，最后使用金币购买的
+            if self.rewardNumber - self.rewardItemNumber - self.rewardCoinNumber > 0:
+                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, -1)
+                self.ticketType = gameconst.DungeonTicketType.NORMAL
+            elif self.rewardItemNumber > 0:
+                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, -1)
+                self.ticketType = gameconst.DungeonTicketType.ITEM
+            elif self.rewardCoinNumber > 0:
                 self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, -1)
                 self.ticketType = gameconst.DungeonTicketType.GOLD
-            else:
-                # 看看默认次数是否还有，优先使用默认次数，后面再使用道具购买的，避免后续有其他业务导致玩家损失
-                if self.rewardNumber - self.rewardItemNumber > 0:
-                    self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, -1)
-                    self.ticketType = gameconst.DungeonTicketType.NORMAL
-                elif self.rewardItemNumber > 0:
-                    self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, -1)
-                    self.ticketType = gameconst.DungeonTicketType.ITEM
         else:
             gameengine.panicStack(f"{self.__class__.__name__}::deductRewardNum:: remain count is zero !!!", self)
         LOG_INFO('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
@@ -149,7 +159,7 @@ class CrusadeDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
 
     @property
     def rewardNumCoinDailyLimit(self):
-        return int(TDC_CFG.datas['rewardNumCoinDailyLimit']['value'])
+        return len(TDC_CFG.datas["rewardNumCoinCost"]["value"])
 
 class ChiefDungeonPlayMode(_DungeonPlayMode):
 
@@ -172,7 +182,7 @@ class ChiefDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
 
     @property
     def rewardNumCoinDailyLimit(self):
-        return int(RBC_CFG.datas['rewardNumCoinDailyLimit']['value'])
+        return len(RBC_CFG.datas["rewardNumCoinCost"]["value"])
     
 class DungeonPassRecords(userType.UserSingleType):
     def __init__(self, entryIds=[], entryStatus=[]):
@@ -188,3 +198,8 @@ class DungeonPassRecords(userType.UserSingleType):
             return entryId not in self.passEntryRecords
         return False
 
+class ChallengeInnerDemonPlayMode(_DungeonPlayMode):
+    def __init__(self, ownerGbId=0, challengeEndTime=0):
+        super(ChallengeInnerDemonPlayMode, self).__init__(gameconst.DungeonPlayModeEnum.INNER_DEMON)
+        self.ownerGbId = ownerGbId
+        self.challengeEndTime = 0

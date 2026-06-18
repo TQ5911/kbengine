@@ -165,13 +165,12 @@ datas ={
     }
   },
   "1064": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      -1
+    "type": "collBeCollected",
+    "entityID": [
+      40308004
     ],
-    "compare": 1,
-    "restNum": 0,
     "usePrototypeID": 0,
+    "infLoop": 1,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {

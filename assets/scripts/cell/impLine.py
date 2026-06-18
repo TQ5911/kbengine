@@ -121,8 +121,7 @@ class ImpLine(object):
         self.spaceMgr.onPlayerEnter(self.id)
 
         fromSpaceMgrBox = extra.get('fromSpaceMgrBox')
-        if fromSpaceMgrBox:
-            fromSpaceMgrBox.onPlayerLeave(self.gbId, self.id, self.base)
+        self.afterEnterWorldLine(fromSpaceNo, fromSpaceMgrBox)
 
         if self.teleportLock:
             self.releaseTeleportLock(gameconst.TeleportLockEnum.ENTER_LINE)
@@ -136,6 +135,14 @@ class ImpLine(object):
             ret = self.setPKModel(gameconst.PKModel.PEACE)
             if ret:
                 self.changePKModeResetTargetId()
+
+    def afterEnterWorldLine(self, fromSpaceNo, fromSpaceMgrBox):
+        if fromSpaceMgrBox:
+            fromSpaceMgrBox.onPlayerLeave(self.gbId, self.id, self.base)
+
+        if formula.inMineWarScene(fromSpaceNo):
+            self.mineWarCamp = 0
+            self.onLeaveMineWarSpace()
 
     def _checkSwitchLine(self, toLineNo):
         if not formula.inLineScene(self.spaceNo):
@@ -262,7 +269,7 @@ class ImpLine(object):
 
         # 这时候可能被传到副本里，会报错
         if formula.inLineScene(self.spaceNo):
-            gameengine.getLineStub(lineType).switchLine(lineNo, toLineNo, self.base, self.gbId, extra)
+            gameengine.getLineStub(lineType).doSwitchLine(lineNo, toLineNo, self.base, self.gbId, extra)
 
     # 已经在目标分线占了人数坑位，如果进入失败需要释放坑位
     def beginSwitchLine(self, lineType, fromLineNo, toLineNo, toSpaceBox, extra):
@@ -282,11 +289,17 @@ class ImpLine(object):
             enterPos = BDSL.datas[lineType]['position']
         extra['fromSpaceMgrBox'] = self.spaceMgr
 
-        self.teleportToCell(toSpaceBox.cell, spaceNo, enterPos, enterDir, '_onSwitchLine',
-                            (lineType, fromLineNo, toLineNo, extra))
+        self.teleportToCell(
+            toSpaceBox.cell, 
+            spaceNo, enterPos, 
+            enterDir, 
+            '_onSwitchLine',
+            (lineType, self.spaceNo, toLineNo, extra)
+        )
 
-    def _onSwitchLine(self, lineType, fromLineNo, toLineNo, extra):
-        LOG_INFO('_onSwitchLine', lineType, fromLineNo, toLineNo, extra)
+    def _onSwitchLine(self, lineType, fromSpaceNo, toLineNo, extra):
+        LOG_INFO('_onSwitchLine', lineType, fromSpaceNo, toLineNo, extra)
+        fromLineNo = formula.parseLineNo(fromSpaceNo)
         gameengine.getLineStub(lineType).switchLineSuccess(fromLineNo, toLineNo, self.base, self.gbId, extra)
 
         if self.teleportLock:
@@ -300,8 +313,7 @@ class ImpLine(object):
         self.spaceMgr.onPlayerEnter(self.id)
 
         fromSpaceMgrBox = extra.get('fromSpaceMgrBox')
-        if fromSpaceMgrBox:
-            fromSpaceMgrBox.onPlayerLeave(self.gbId, self.id, self.base)
+        self.afterEnterWorldLine(fromSpaceNo, fromSpaceMgrBox)
 
     @utils.isMyself
     def applyLeaveLine(self, exposed):

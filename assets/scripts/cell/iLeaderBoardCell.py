@@ -22,3 +22,5 @@ class ILeaderBoardCell(object):
         #     _dur,
         #     gametimer.UPDATE_AVATAR_LEADERBOARD)
 
+    def syncAvatarScoreRank(self, rank):
+        self.avatarScoreRankCell = rank

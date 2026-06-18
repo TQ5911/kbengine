@@ -22,9 +22,9 @@
         <playerAutoMatch>
             <Arg>           PY_DICT         </Arg>
         </playerAutoMatch>
-        <playerStopAutoMatch>
+        <doPlayerStopAutoMatch>
             <Arg>           PLAYER_GBID     </Arg>
-        </playerStopAutoMatch>
+        </doPlayerStopAutoMatch>
         <onPlayerMatchInfoUpdate>
             <Arg>           PY_DICT         </Arg>
         </onPlayerMatchInfoUpdate>

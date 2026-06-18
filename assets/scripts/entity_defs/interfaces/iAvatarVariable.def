@@ -1,11 +1,11 @@
 <root>
     <Properties>
-        <avatarVarDic>
+        <avatarVarDict>
             <Type>          PY_DICT               </Type>
             <Flags>         BASE                  </Flags>
             <Default>       {}                    </Default>
             <Persistent>    true                </Persistent>
-        </avatarVarDic>
+        </avatarVarDict>
         <spaceVarDic>
             <Type>          PY_DICT               </Type>
             <Flags>         BASE                  </Flags>
@@ -35,13 +35,6 @@
             <Arg>       VALUE_SRC     </Arg>
             <Arg>       STRING        </Arg>
         </incAvatarVariable>
-        <incAvatarVariableByTag>
-            <Arg>       UNICODE       </Arg>
-            <Arg>       INT32         </Arg>
-            <Arg>       UUID          </Arg>
-            <Arg>       VALUE_SRC     </Arg>
-            <Arg>       STRING        </Arg>
-        </incAvatarVariableByTag>
         <syncSpaceVariable>
             <Arg>       SPACE_NO      </Arg>
             <Arg>       PY_DICT       </Arg>

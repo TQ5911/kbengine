@@ -46,8 +46,8 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
     def initNpc(self):
         if not self.level:
             self.level = gameconst.MIN_LEVEL
-        elif self.level > utils.getPlayerMaxLevel():
-            self.level = utils.getPlayerMaxLevel()
+        elif self.level > utils.getMaxPlayerLevel():
+            self.level = utils.getMaxPlayerLevel()
 
         if not self.name:
             self.name = NPC_DATA.datas.get(self.npcId, {}).get('name', '无名NPC')
@@ -66,7 +66,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         if self.force == 0:
             self.force = gameconst.ForceTypeEnum.NPC
 
-        self.initBornAction()
+        self.initEntBornAction()
 
         spaceMgr = self.spaceMgr
 
@@ -90,7 +90,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         #     dataUtils.allFestivalStubDo('festivalEntityLoad', (self.belongFestivalLoadId, self))
         self.addListener('onBeat', self.id, 'onBeAttacked', ())
         self.triggerAIEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
-        self.setBornState(gameconst.BornStateType.move)
+        self.setBornState(gameconst.BornStateEnum.move)
 
     def initCNpc(self):
         iAICombatUnit.IAICombatUnit.__init__(self)
@@ -118,27 +118,27 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             return
 
         self.bornState = state
-        if state == gameconst.BornStateType.move:
+        if state == gameconst.BornStateEnum.move:
             pathId = self.getPathId()
             if pathId:
                 self.addTimerCB(1, 'setRoute', (pathId, True if self.aiController else False),
                                gametimer.TIMER_TAG_SET_ROUTE)
-        elif state == gameconst.BornStateType.reMove:
-            self.bornState = gameconst.BornStateType.move
-        elif state == gameconst.BornStateType.afterDialog:
+        elif state == gameconst.BornStateEnum.reMove:
+            self.bornState = gameconst.BornStateEnum.move
+        elif state == gameconst.BornStateEnum.afterDialog:
             self.stopThink()
             self.interruptRouting()
             self.removeMoveController()
             self.killCastingSkill(gameconst.EndCasting.ECEnumCaptureMonster)
             self.killChannelingSkill(gameconst.ChannelingBreak.BREAK_TP_CAPTURE)
-        elif state == gameconst.BornStateType.normal:
+        elif state == gameconst.BornStateEnum.normal:
             self.addTimerCB(0.5, 'startThink', (), gametimer.TIMER_TAG_START_THINK)
 
     @property
     def creepbaseId(self):
         return NPC_DATA.datas[self.npcId].get('creepID', 0)
 
-    def initBornAction(self):
+    def initEntBornAction(self):
         self.otherClients.onBornAction()
 
     def setAI(self, aiName):
@@ -146,14 +146,14 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         pass
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 
         elif userData == gametimer.COMBAT_UNIT_AI_THINK:
             self.aiController and self.aiTick()
 
-        elif userData == gametimer.TIMER_CELL_SAFE_DESTROY:
+        elif userData == gametimer.TIMER_CELL_DELAY_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
 
         elif userData == gametimer.GUIDE_WALK_TIMER:
@@ -179,7 +179,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
     def _preSafeDestory(self):
         super()._preSafeDestory()
         if self.spaceMgr:
-            self.spaceMgr.removeEntityById(self.id)
+            self.spaceMgr.removeEntById(self.id)
 
     def onDead(self, killer, *args, **kwargs):
         super().onDead(killer)
@@ -195,7 +195,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         self.addDungeonKillCount()
 
-        self.triggeredFlowControllerRestNumDecreased()
+        self.triggeredFlowControllerRestNumDec()
 
         self.delaySafeDestroy(3)
 

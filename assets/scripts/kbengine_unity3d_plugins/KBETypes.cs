@@ -5474,6 +5474,18 @@ namespace KBEngine
 
 	}
 
+	public class WAITMAP_CHARACTER
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt16 level = 0;
+		public Byte sex = 0;
+		public UInt16 school = 0;
+		public string guildName = "";
+		public APPEARANCE_INFO appearance = new APPEARANCE_INFO();
+
+	}
+
 	public class CHARACTER_VAL
 	{
 		public UInt64 parentID = 0;
@@ -5560,6 +5572,20 @@ namespace KBEngine
 
 	}
 
+	public class SPIRIT_BIND_VAL
+	{
+		public Byte pos = 0;
+		public Byte bindType = 0;
+
+	}
+
+	public class GLYPH_BIND_VAL
+	{
+		public Byte pos = 0;
+		public Byte bindType = 0;
+
+	}
+
 	public class CLI_GLYPH_INFO
 	{
 		public Byte glyphPos = 0;
@@ -5584,6 +5610,8 @@ namespace KBEngine
 		public List<CLI_SPIRIT_INFO> spiritDatas = new List<CLI_SPIRIT_INFO>();
 		public Byte spiritGroup = 0;
 		public List<AFFIX_VAL> blessAffixes = new List<AFFIX_VAL>();
+		public List<AFFIX_VAL> soulAffixes = new List<AFFIX_VAL>();
+		public UInt32 soulItemId = 0;
 		public List<CLI_GLYPH_INFO> glyphInfos = new List<CLI_GLYPH_INFO>();
 		public Byte glyphGroup = 0;
 		public Byte enhanceLv = 0;
@@ -5592,10 +5620,16 @@ namespace KBEngine
 		public UInt32 dropFixEndTime = 0;
 		public Int64 score = 0;
 		public UInt16 bindValue = 0;
-		public Byte isAddBindValue = 0;
+		public UInt16 bindEnhanceCost = 0;
+		public UInt16 bindBlessCost = 0;
+		public List<SPIRIT_BIND_VAL> spiritBindTypes = new List<SPIRIT_BIND_VAL>();
+		public List<GLYPH_BIND_VAL> glyphBindTypes = new List<GLYPH_BIND_VAL>();
+		public Byte soulBindType = 0;
 		public Byte grade = 0;
 		public Byte maxEnhanceLv = 0;
 		public UInt32 returnTime = 0;
+		public UInt64 ownerId = 0;
+		public Byte whyInMyBag = 0;
 
 	}
 
@@ -5760,6 +5794,15 @@ namespace KBEngine
 
 	}
 
+	public class CHAT_MSG_DATA
+	{
+		public string msg = "";
+		public Int32 code = 0;
+		public string voiceUrl = "";
+		public Byte msgType = 0;
+
+	}
+
 	public class CLIENT_TEAM_MEMBER_VAL
 	{
 		public UInt64 playerGbId = 0;
@@ -5818,6 +5861,7 @@ namespace KBEngine
 		public Byte isAutoExpedition = 0;
 		public string password = "";
 		public Byte siegeWarCamp = 0;
+		public UInt32 lastDungeonFinishedTime = 0;
 
 	}
 
@@ -5881,6 +5925,7 @@ namespace KBEngine
 		public Byte isAutoExpedition = 0;
 		public string password = "";
 		public Byte siegeWarCamp = 0;
+		public UInt32 lastDungeonFinishedTime = 0;
 
 	}
 
@@ -6017,6 +6062,7 @@ namespace KBEngine
 	{
 		public string guildName = "";
 		public string desc = "";
+		public string publicDesc = "";
 		public Byte dspFlag = 0;
 		public GUILD_JOIN_COND_DATA_INFO joinCond = new GUILD_JOIN_COND_DATA_INFO();
 
@@ -6161,10 +6207,19 @@ namespace KBEngine
 
 	}
 
+	public class ABYSS_SWITCH
+	{
+		public Byte coinSwitch = 0;
+		public Byte itemSwitch = 0;
+		public Byte times = 0;
+
+	}
+
 	public class STORE_ITEM_VAL
 	{
 		public UInt32 itemId = 0;
 		public Int32 buyNum = 0;
+		public Int32 price = 0;
 
 	}
 
@@ -6360,6 +6415,7 @@ namespace KBEngine
 	{
 		public string name = "";
 		public string desc = "";
+		public string publicDesc = "";
 		public UInt64 guildUUID = 0;
 		public Byte dspFlag = 0;
 		public UInt32 guildLevel = 0;
@@ -6373,26 +6429,6 @@ namespace KBEngine
 		public Byte siegeWarSignUped = 0;
 		public JUN_XU_ARCHITECTURE_DATA_INFO junXuArchitecture = new JUN_XU_ARCHITECTURE_DATA_INFO();
 		public UInt32 cityBattleToken = 0;
-
-	}
-
-	public class HOLIDAYPAY_VAL
-	{
-		public UInt32 holidayID = 0;
-		public UInt32 creditID = 0;
-		public Byte gainTimes = 0;
-
-	}
-
-	public class HOLIDAYPAY_LIST : List<HOLIDAYPAY_VAL>
-	{
-
-	}
-
-	public class CLI_BUY_CREDIT_NUM_DATA
-	{
-		public UInt32 creditId = 0;
-		public UInt16 buyNum = 0;
 
 	}
 
@@ -6414,6 +6450,7 @@ namespace KBEngine
 		public UInt32 num = 0;
 		public UInt32 guaranteed = 0;
 		public UInt32 dailyNum = 0;
+		public UInt32 coinLeftTimes = 0;
 
 	}
 
@@ -6528,6 +6565,7 @@ namespace KBEngine
 		public UInt32 number = 0;
 		public Byte status = 0;
 		public ITEM_VAL itemData = new ITEM_VAL();
+		public UInt32 addPublicityTime = 0;
 
 	}
 
@@ -6544,6 +6582,18 @@ namespace KBEngine
 
 	}
 
+	public class MAP_EXPLORE_DATA_INFO
+	{
+		public UInt32 mapId = 0;
+		public List<Int32> personalBox = new List<Int32>();
+		public List<Int32> viewPoint = new List<Int32>();
+		public List<Int32> hookTask = new List<Int32>();
+		public List<Int32> areaTask = new List<Int32>();
+		public List<Int32> rewardData = new List<Int32>();
+		public Int32 rewardSlot = 0;
+
+	}
+
 	public class EQUIP_DROP_DATA_INFO
 	{
 		public UInt64 uniqueId = 0;
@@ -6556,6 +6606,9 @@ namespace KBEngine
 		public string killerName = "";
 		public UInt32 endTime = 0;
 		public UInt32 redeemWaitTime = 0;
+		public Byte hasPrice = 0;
+		public UInt32 returnTime = 0;
+		public UInt64 takerGbId = 0;
 
 	}
 
@@ -6568,6 +6621,7 @@ namespace KBEngine
 		public UInt32 price = 0;
 		public UInt32 redeemWaitTime = 0;
 		public Byte hasPrice = 0;
+		public UInt32 returnTime = 0;
 
 	}
 
@@ -6582,7 +6636,6 @@ namespace KBEngine
 	{
 		public List<EQUIP_DROP_DATA_INFO> dropList = new List<EQUIP_DROP_DATA_INFO>();
 		public List<EQUIP_DROP_TAKER_DATA_INFO> takerList = new List<EQUIP_DROP_TAKER_DATA_INFO>();
-		public List<EQUIP_DROP_TAKER_DATA_INFO> takerWaitList = new List<EQUIP_DROP_TAKER_DATA_INFO>();
 		public UInt32 lockTime = 0;
 		public List<EQUIP_DROP_MGR_TIMER_DATA_INFO> timerData = new List<EQUIP_DROP_MGR_TIMER_DATA_INFO>();
 
@@ -6906,6 +6959,7 @@ namespace KBEngine
 		public Byte win = 0;
 		public Int32 elapsedTime = 0;
 		public Int64 endTime = 0;
+		public UInt32 innerDemonTime = 0;
 		public UInt32 dungeonNo = 0;
 		public Byte playMode = 0;
 		public UInt32 rewardCount = 0;
@@ -6962,9 +7016,9 @@ namespace KBEngine
 		public UInt64 uniqueId = 0;
 		public UInt16 enhanceLv = 0;
 		public UInt64 score = 0;
-		public Byte addBindValueStatus = 0;
 		public Byte bindType = 0;
 		public UInt16 maxEnhanceLv = 0;
+		public UInt16 bindEnhanceCost = 0;
 
 	}
 
@@ -6993,6 +7047,7 @@ namespace KBEngine
 	{
 		public UInt64 uuid = 0;
 		public UInt32 timestamp = 0;
+		public UInt32 expiredTimestamp = 0;
 		public UInt32 leftTime = 0;
 		public UInt32 acceptedLeftTime = 0;
 		public Byte bountyType = 0;
@@ -7053,64 +7108,39 @@ namespace KBEngine
 
 	}
 
+	public class FREE_TICKET_ONE_CLICK_RECOVERY_CLIENT_VAL
+	{
+		public UInt16 subType = 0;
+		public UInt16 num = 0;
+
+	}
+
 	public class LEASE_SHOP_SUMMARY
 	{
 		public UInt32 itemId = 0;
-		public Byte quality = 0;
-		public Byte equipType = 0;
-		public Byte equipSubType = 0;
-		public Byte school = 0;
-		public string itemName = "";
 		public UInt32 onSaleCount = 0;
 		public UInt32 minPrice = 0;
 
 	}
 
-	public class LEASE_MARKET_ITEM
+	public class CLI_SAFE_BOX_ITEM_VAL
 	{
-		public UInt64 uniqueId = 0;
+		public UInt64 boxId = 0;
 		public UInt32 itemId = 0;
-		public UInt64 leaseOwnerGbId = 0;
-		public UInt32 pricePerDay = 0;
-		public UInt32 returnEndTime = 0;
-		public Byte quality = 0;
-		public Byte equipType = 0;
-		public Byte equipSubType = 0;
-		public Byte school = 0;
-		public UInt32 score = 0;
-		public string itemName = "";
-		public Byte isDropEquip = 0;
-		public UInt32 leaseOwnerServerId = 0;
+		public UInt16 itemCount = 0;
+		public double itemPrice = 0d;
+		public Int64 orderTime = 0;
+		public Byte claimed = 0;
+		public Int64 claimTime = 0;
+		public string orderId = "";
 
 	}
 
-	public class LEASE_MY_SALE_ITEM
+	public class CLI_GLYPH_STATUS_CHANGE_INFO
 	{
 		public UInt64 uniqueId = 0;
-		public UInt32 itemId = 0;
-		public UInt64 leaseOwnerGbId = 0;
-		public UInt32 pricePerDay = 0;
-		public UInt32 returnEndTime = 0;
-		public Byte quality = 0;
-		public Byte equipType = 0;
-		public Byte equipSubType = 0;
-		public Byte school = 0;
-		public UInt32 score = 0;
-		public string itemName = "";
-		public Byte isDropEquip = 0;
-		public UInt32 leaseOwnerServerId = 0;
-		public UInt64 incomeBindGold = 0;
-		public UInt64 incomeGold = 0;
-
-	}
-
-	public class LEASE_RECORD
-	{
-		public UInt32 timestamp = 0;
-		public UInt32 itemId = 0;
-		public UInt64 bindGold = 0;
-		public UInt64 gold = 0;
-		public UInt64 cost = 0;
+		public Byte groupId = 0;
+		public List<Byte> status = new List<Byte>();
 
 	}
 

@@ -66,5 +66,25 @@ datas = _tools.RODict({
     "rankWorldLevel": _tools.RODict({
         "ID": "rankWorldLevel",
         "value": 300,
+    }),
+    "offlineExpTime": _tools.RODict({
+        "ID": "offlineExpTime",
+        "value": 480,
+    }),
+    "equipLimitText": _tools.RODict({
+        "ID": "equipLimitText",
+        "value": "{0}级可穿戴{1}件{2}品质的装备",
+    }),
+    "petLimitText": _tools.RODict({
+        "ID": "petLimitText",
+        "value": "{0}级可出战{1}只{2}品质的精灵",
+    }),
+    "equipUpperLimitText": _tools.RODict({
+        "ID": "equipUpperLimitText",
+        "value": "可穿戴{0}件{1}品质的装备",
+    }),
+    "petUpperLimitText": _tools.RODict({
+        "ID": "petUpperLimitText",
+        "value": "可出战{0}只{1}品质的精灵",
     })
 })

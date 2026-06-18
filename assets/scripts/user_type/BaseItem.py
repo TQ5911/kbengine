@@ -247,3 +247,7 @@ class BaseItem(userType.UserSingleType, metaclass=abc.ABCMeta):
     
     def isLocked(self):
         return self.lockStatus == gameconst.ItemLockStatus.LOCKED
+    
+    def isSoul(self):
+        return self.itemType == gameconst.ItemType.Normal and self.itemSubType == gameconst.ItemSubType.EQUIP_SOUL
+    

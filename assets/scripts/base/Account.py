@@ -52,7 +52,7 @@ class AccountStatus(object):
     avatarLoaded = 3
 
 
-class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
+class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     """
     账号实体
     客户端登陆到服务端后，服务端将自动创建这个实体，通过这个实体与客户端进行交互
@@ -61,7 +61,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def __init__(self):
         KBEngine.Proxy.__init__(self)
-        iCycleEvent.ICycleEvent.__init__(self)
+        iCycleEvent.ICycleEventMixin.__init__(self)
         self.avatarID = 0
         self.shouldAutoBackup = False
 
@@ -86,16 +86,19 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         if self.isCrossServer:
             clientData = self.getClientJsonData()
-            crossServerToken = clientData.get('crossServerToken')
-            gameengine.getGlobalBase('CrossServerStub').checkCrossServerToken(self.accountName, crossServerToken, self,
-                                                                        "onCheckCrossServerTokenRet",
-                                                                        (crossServerToken, ))
+            _crossServerToken = clientData.get('crossServerToken')
+            gameengine.getGlobalBase('CrossServerStub').checkCrossServerToken(
+                self.accountName, _crossServerToken, self,
+                "onCheckCrossServerTokenRet",
+                (_crossServerToken, ))
 
         self.callbackList = []
         self.addTimerCB(0.1, 'loadSwitchServerRecrod', (), gametimer.TIMER_TAG_LOAD_SWITCH_SERVER_RECORD)
 
         _interval = 5 * 60
         self.pyAddTimer(_interval, _interval, gametimer.ACCOUNT_WRITE_CHAR)
+
+        self.pyAddTimer(10, 10, gametimer.CHECK_CHAR_EXPIRE)
         self._loadAccountOfflineFunc()
 
     def loadSwitchServerRecrod(self):
@@ -168,40 +171,43 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         return self.__ACCOUNT_NAME__
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
+        elif userArg == gametimer.CHECK_CHAR_EXPIRE:
+            self.checkAuthCharExpire()
         elif userArg == gametimer.ACCOUNT_WRITE_CHAR:
             self._writeCharacters(True)
 
     @property
     def avatar(self):
-        a = KBEngine.entities.get(self.avatarID, None)
-        return a
+        return KBEngine.entities.get(self.avatarID, None)
 
     @property
     def isCrossServer(self):
         return self.accountType==centralLogin.ACCOUNT_CROSS_SERVER
 
+    def createAvatarGenerateGbId(self, props):
+        _gbId = utils.generateUniqGlobalId()
+        _sql = "select sm_gbID from tbl_Avatar where sm_gbID = %s " % _gbId
+        props["gbId"] = _gbId
+        props["checkCnt"] += 1
+        KBEngine.executeRawDatabaseCommand(
+            _sql,
+            lambda ret, num, insertId, err, props=props: self.checkGbIdCallback(
+                ret, num,
+                insertId,
+                err,
+                props))
+
     @property
     def crossServerEntityCall(self):
-        serverId = gameconfig.serverId()
-        if not serverId:
+        _serverId = gameconfig.serverId()
+        if not _serverId:
             return
-        return iRouter.RemoteServerBoxEntityCall(serverId, self)
-
-    def createAvatarGenerateGbId(self, props):
-        gbId = utils.generateUniqGlobalId()
-        sql = "select sm_gbID from tbl_Avatar where sm_gbID = %s " % gbId
-        props["gbId"] = gbId
-        props["checkCnt"] += 1
-        KBEngine.executeRawDatabaseCommand(sql,
-                                           lambda ret, num, insertId, err, props=props: self.checkGbIdCallback(ret, num,
-                                                                                                               insertId,
-                                                                                                               err,
-                                                                                                               props))
+        return iRouter.RemoteServerBoxEntityCall(_serverId, self)
 
     def checkGbIdCallback(self, result, nrows, insertid, error, props):
         if error:
@@ -229,8 +235,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LOG_INFO('createAvatar', avatarProps)
 
         # TODO X: bag capacity
-        bag = Bag.Bag(gameconst.BagType.BAG_TYPE_NORMAL)
-        petBag = Bag.Bag(gameconst.BagType.BAG_TYPE_LINGSHOU_PEN, PDSD.datas['petBagCapacity']['value'])
+        bag = Bag.Bag(gameconst.BagTypeEnum.BAG_TYPE_NORMAL)
+        petBag = Bag.Bag(gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN, PDSD.datas['petBagCapacity']['value'])
         warehouse = WarehouseBag.WarehouseBag(capacity=BGDSD.datas['initBankCapacity']['value'])
 
         _appearance = appearance.Appearance()
@@ -284,6 +290,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             creationOrder += 1
             self.setPersistentMiscProp(gameconst.EntityPropsEnum.creationOrder, creationOrder)
             LogTrackingMgr.LogTrackingMgr.Server_Create_Role(
+                '',
+                self.clientDistinctId,
                 self.accountName,
                 avatarProps['gbId'],
                 avatarProps['school'],
@@ -383,9 +391,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def checkNameDuplicate(self, props, callback):
         val = self.nameRedisTableKey()
-        gameglobal.localBaseApp.getRedisClient().hsetnx(gameconst.RedisKey.avatarNameTbl, props['name'],
-                                                        val.encode('ascii'),
-                                                        lambda cid, err, result: callback(props, cid, err, result))
+        gameglobal.localBaseApp.getRedisClient().hsetnx(
+            gameconst.RedisKey.avatarNameTbl, props['name'],
+            val.encode('ascii'),
+            lambda cid, err, result: callback(props, cid, err, result))
 
     def onCheckNameDuplicate(self, props, cid, err, result):
         if err:
@@ -448,8 +457,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             return
 
         self.accountStatus = AccountStatus.creating
-        props = {"school": school, "name": name, 'sex': sex, "gbId": 0, "checkCnt": 0, 'faceData': faceData}
-        self.checkNameDuplicate(props, self.onCheckNameDuplicate)
+        _props = {"school": school, "name": name, 'sex': sex, "gbId": 0, "checkCnt": 0, 'faceData': faceData}
+        self.checkNameDuplicate(_props, self.onCheckNameDuplicate)
         LOG_INFO('create avatar begin：', self.accountName, name)
 
     @gamedecorator.limitcall(1)
@@ -486,9 +495,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             LOG_ERR('avatar is online', self.avatar.gbId, name)
             return
 
-        for key, info in self.characters.items():
+        for _key, info in self.characters.items():
             if info.name == name:
-                found = key
+                found = _key
                 break
 
         if self.checkHasAuth(found):
@@ -647,7 +656,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             # Avatar继承了Teleport，Teleport.onClientEnabled会将玩家创建在具体的场景中
             self.accountStatus = AccountStatus.avatarLoading
             cVal = self.characters[gbId]
-            KBEngine.createEntityFromDBID("Avatar", cVal.dbId, functools.partial(self._onAvatarLoaded, gbId, isForceHost))
+            KBEngine.createEntityFromDBID(
+                "Avatar", 
+                cVal.dbId, 
+                functools.partial(self._onAvatarLoaded, gbId, isForceHost),
+            )
         else:
             LOG_ERR("Account[%i]::selectAvatarGame: not found database id(%s)" % (self.id, gbId))
 
@@ -726,10 +739,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LOG_INFO('create avatar succ', avatar.id, avatar.gbID, otherChn)
         if otherChn is None:
             LOG_ERR('_onAvatarLoaded but not has valid client')
+            self.accountStatus = AccountStatus.normal
             return
 
+        if not wasActive:
+            # 如果wasActive 为 False这时候玩家是第一次创建出来，
+            # 如果不把登录流程走完，玩家会卡死在线上
+            isForceHost = True
+
         if not isForceHost and otherChn != gameconst.ClientCallChannel.SUB_CHANNEL:
-            LOG_ERR('_onAvatarLoaded but not has valid client', isForceHost)
+            LOG_ERR('_onAvatarLoaded but not has valid client', isForceHost, wasActive)
+            self.accountStatus = AccountStatus.normal
             return
 
         if otherChn == gameconst.ClientCallChannel.SUB_CHANNEL:
@@ -792,7 +812,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             LOG_ERR(
                 "Account[%i]::onClientEnabled:maximum login account. entityCall:%s, clientType(%i), clientDatas=(%s), hasAvatar=%s, accountName=%s" % \
                 (self.id, self.client, self.getClientType(chn), self.getClientDatas(chn), self.avatarID, self.accountName),
-                self.avatar, getattr(self.avatar, 'canRelogin', False), _currentLoginCount, _maximumLimit)
+                self.avatar, getattr(self.avatar, 'canRelogin', False), _maximumLimit, _currentLoginCount)
             self.destroyAccount()
             return
 
@@ -808,6 +828,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         clientData = self.getClientJsonData()
         appVersion = clientData.get('appVersion', '0.0.0.0')
         LogTrackingMgr.LogTrackingMgr.Server_Login(
+            '',
+            self.clientDistinctId,
             self.accountName,
             self.devicePlatId,
             self.clientIP,
@@ -857,9 +879,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         return utils.decClientData(_data)
 
     def parseClientDatas(self):
-        clientDatas = self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL)
-        if isinstance(clientDatas, tuple):
-            loginJsonData = clientDatas[0]
+        _clientDatas = self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL)
+        if isinstance(_clientDatas, tuple):
+            loginJsonData = _clientDatas[0]
             if not loginJsonData:
                 # giveClientTo会把Account的loginData清空，转设给Avatar
                 # 某些情况下客户端会对Account执行reloginbaseapp，这个时候如果执行过giveClientTo(self.avatar)，就没有loginData
@@ -868,24 +890,28 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             if loginJsonData.decode('utf-8') == 'bots':
                 self.deviceUniqueIdentifier = 'bots'
                 return {}
-            clientDatas = json.loads(loginJsonData.decode('utf-8'))
-            self.userInfoId = clientDatas.get('userId', '')
-            self.centralServerId = clientDatas.get('loginServerId', 1)
-            self.otherData = clientDatas.get('otherData', {})
-            self.deviceUniqueIdentifier = clientDatas.get('deviceUniqueIdentifier', '')
-            self.packageSource = clientDatas.get('packageSource', '')
-            self.devicePlatId = clientDatas.get('devicePlatId', 0)
-            self.operatingSystem = clientDatas.get('operatingSystem', '')
-            self.channelId = clientDatas.get('channelId', 0)
-            if 'banPostTime' in clientDatas and 'banPostReason' in clientDatas and self.loginCount == 1:
-                self.banAllServerPostTime = clientDatas.get('banPostTime', 0)
-                self.banAllServerPostReason = clientDatas.get('banPostReason', 0)
-            self.loginChannel = str(clientDatas.get('loginChannel', ''))
+            _clientDatas = json.loads(loginJsonData.decode('utf-8'))
+            self.userInfoId = _clientDatas.get('userId', '')
+            self.centralServerId = _clientDatas.get('loginServerId', 1)
+            self.otherData = _clientDatas.get('otherData', {})
+            self.deviceUniqueIdentifier = _clientDatas.get('deviceUniqueIdentifier', '')
+            self.packageSource = _clientDatas.get('packageSource', '')
+            self.devicePlatId = _clientDatas.get('devicePlatId', 0)
+            self.operatingSystem = _clientDatas.get('operatingSystem', '')
+            self.channelId = _clientDatas.get('channelId', 0)
+            self.webToken = _clientDatas.get('token', '')
+            self.clientDistinctId = 'clientTODO'
+            if 'banPostTime' in _clientDatas\
+                    and 'banPostReason' in _clientDatas\
+                    and self.loginCount == 1:
+                self.banAllServerPostTime = _clientDatas.get('banPostTime', 0)
+                self.banAllServerPostReason = _clientDatas.get('banPostReason', 0)
+            self.loginChannel = str(_clientDatas.get('loginChannel', ''))
 
             if not self.registerChannel:
-                self.registerChannel = str(clientDatas.get('loginChannel', ''))
+                self.registerChannel = str(_clientDatas.get('loginChannel', ''))
 
-            return clientDatas
+            return _clientDatas
 
         return {}
 
@@ -907,32 +933,35 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             LOG_ERR('_onLoadCharacterAppearance err:', err)
             return
 
-        parentIDDic= {}
-        for data in ret:
-            parentID = int(data[0])
-            gbId = int(data[1])
-            birthInDB = int(data[2])
+        _parentIDDic= {}
+        for _data in ret:
+            parentID = int(_data[0])
+            gbId = int(_data[1])
+            birthInDB = int(_data[2])
             _appearance = appearance.Appearance()
-            _appearance.updateFromAvatarAppearanceDBData(data, 6)
+            _appearance.updateFromAvatarAppearanceDBData(_data, 6)
             self.characters[gbId].birthInDB = birthInDB
-            self.characters[gbId].setLevel(int(data[5]))
+            self.characters[gbId].setLevel(int(_data[5]))
             self.characters[gbId].setAppearance(_appearance)
-            parentIDDic[parentID] = gbId
+            _parentIDDic[parentID] = gbId
 
-        gamesql.loadAvatarOutfitDataFromDB(parentIDDic.keys(), lambda ret, num, insertId, err, parentIDDic=parentIDDic: self._onLoadCharacterOutfitData(ret, num, insertId, err, parentIDDic))
+        gamesql.loadAvatarOutfitDataFromDB(
+            _parentIDDic.keys(), 
+            functools.partial(self._onLoadCharacterOutfitData, _parentIDDic)
+        )
 
-    def _onLoadCharacterOutfitData(self, ret, num, insertId, err, parentIDDic):
+    def _onLoadCharacterOutfitData(self, parentIDDic, ret, num, insertId, err):
         LOG_INFO('_onLoadCharacterOutfitData', ret, num, err, parentIDDic)
         if err:
             LOG_ERR('_onLoadCharacterOutfitData err:', err)
             return
 
-        for parentID, sm_outfitType, sm_outfitId, sm_expireTime in ret:
-            parentID = int(parentID)
+        for _parentID, sm_outfitType, sm_outfitId, sm_expireTime in ret:
+            _parentID = int(_parentID)
             outfitType = int(sm_outfitType)
             outfitId = int(sm_outfitId)
             expireTime = int(sm_expireTime)
-            gbId = parentIDDic[parentID]
+            gbId = parentIDDic[_parentID]
             self.characters[gbId].charAppearance.resetOutfitData(outfitType, outfitId, expireTime)
 
         self._loadFinish()
@@ -944,49 +973,60 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         self._clearExpireChars()
         self.client.onReqAvatarList(self.characters, False, self.databaseID)
-        # self.client.onReqAvatarGBID(self.avatarGBID)
 
     def _clearExpireChars(self):
-        for gbId in list(self.characters):
-            if self.isAuthHost(gbId):
+        _now = utils.curTS()
+        _changeList = []
+        for _cVal in list(self.characters.values()):
+            if not _cVal.authExpire:
                 continue
 
-            if self.isAuthExpire(gbId):
-                self.characters.removeCharacter(gbId)
+            if _cVal.authExpire >= _now:
+                continue
+
+            _cVal.setAuthDbId(0, 0)
+            _changeList.append(_cVal)
+            if self.isAuthHost(_cVal.gbId):
+                continue
+
+            self.characters.removeCharacter(_cVal.gbId)
+
+        return _changeList
 
     def sendHotfix(self):
         if gameconfig.hotfixVersion():
             self.client.onHotfixVersion(gameconfig.hotfixVersion())
 
-    def registerCBStream(self, dataId, func, args):
-        self.streamDic[dataId].append((func, args))
-
     def streamStringProxy(self, data, desc, dataId):
         LOG_DBG('streamStringProxy:', dataId)
-        if self.client:
-            if self.streamDic.get(dataId):
-                LOG_DBG('need delay for the stream:', dataId)
-                self.registerCBStream(dataId, 'streamStringProxy', (data, desc, dataId))
-                return
+        if not self.client:
+            return
 
-            self.streamDic[dataId] = []
-            self.streamStringToClient(data, desc, dataId)
-        return
+        if self.streamProxyDic.get(dataId):
+            LOG_DBG('need delay for the stream:', dataId)
+            self.registerStreamCB(dataId, 'streamStringProxy', (data, desc, dataId))
+            return
+
+        self.streamProxyDic[dataId] = []
+        self.streamStringToClient(data, desc, dataId)
+
+    def registerStreamCB(self, dataId, func, args):
+        self.streamProxyDic[dataId].append((func, args))
 
     def onStreamComplete(self, resId, success):
         if not success:
             LOG_ERR('onStreamComplete: send stream to client fail', resId, success)
 
-        if resId not in self.streamDic:
+        if resId not in self.streamProxyDic:
             return
 
-        if self.streamDic.get(resId, []):
-            func, args = self.streamDic.get(resId).pop(0)
-            if not self.streamDic.get(resId, []):
-                self.streamDic.pop(resId)
+        if self.streamProxyDic.get(resId, []):
+            func, args = self.streamProxyDic.get(resId).pop(0)
+            if not self.streamProxyDic.get(resId, []):
+                self.streamProxyDic.pop(resId)
             getattr(self, func)(*args)
         else:
-            self.streamDic.pop(resId, None)
+            self.streamProxyDic.pop(resId, None)
 
     def _reloginAvatar(self):
         if self.avatar:
@@ -994,17 +1034,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         else:
             LOG_INFO('reloginAvatar fail')
 
-    def destroyActiveAvatar(self, reason=gameconst.OFFLINE_REASON_DESTORY):
+    def destroyActiveAvatar(self, destroyReason=gameconst.OFFLINE_REASON_DESTORY):
         if not self.avatar:
             return True
 
-        if self.avatar.destroySelf(reason):
+        if self.avatar.destroySelf(destroyReason):
             return True
         return False
 
-    def isDeviceNotSame(self, loginDataDict):
-        LOG_DBG("login device info", self.deviceUniqueIdentifier, loginDataDict)
-        return self.deviceUniqueIdentifier and loginDataDict.get('deviceUniqueIdentifier',
+    def isDeviceNotSame(self, loginDataDic):
+        LOG_DBG("login device info", self.deviceUniqueIdentifier, loginDataDic)
+        return self.deviceUniqueIdentifier and loginDataDic.get('deviceUniqueIdentifier',
                                                                  None) != self.deviceUniqueIdentifier
 
     def onLogOnAttempt(self, ip, port, password):
@@ -1024,7 +1064,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _chn = self.avatar.getAccountChn(self.id)
             if self.avatar.hasChnClient(_chn):
                 # 顶avatar分支
-                self.modifyDinghaoInfo()
+                self._modifyDinghaoInfo()
                 if self.dinghaoNum >= 10:
                     return KBEngine.LOG_ON_DINHAO_REJECT
 
@@ -1046,7 +1086,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.loginState = gameconst.LoginState.NORMAL
             if self.hasClient:
                 # client存在进顶account分支,无需二次确认直接顶号
-                self.modifyDinghaoInfo()
+                self._modifyDinghaoInfo()
                 if self.dinghaoNum >= 10:
                     return KBEngine.LOG_ON_DINHAO_REJECT
 
@@ -1054,7 +1094,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 return KBEngine.LOG_ON_ACCEPT
             return KBEngine.LOG_ON_ACCEPT
 
-    def modifyDinghaoInfo(self):
+    def _modifyDinghaoInfo(self):
         if not self.dinghaoFirstTime:
             self.dinghaoFirstTime = utils.curTS()
 
@@ -1093,6 +1133,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def destroyAccount(self, reason=gameconst.OFFLINE_REASON_DESTORY):
         LogTrackingMgr.LogTrackingMgr.Server_Logout(
+            '',
+            self.clientDistinctId,
             self.accountName,
             self.devicePlatId,
             self.clientIP,
@@ -1218,30 +1260,27 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         cVal.setAppearance(appearance)
 
     def updateAppearance(self, dbid, updateDic):
-        cVal = self.characters.get(dbid)
-        if not cVal:
+        _cVal = self.characters.get(dbid)
+        if not _cVal:
             return
         #cVal.charAppearance.__dict__.update(updateDic)
         for attrName, attrVal in updateDic.items():
-            if hasattr(cVal.charAppearance, attrName):
-                setattr(cVal.charAppearance, attrName, attrVal)
+            if hasattr(_cVal.charAppearance, attrName):
+                setattr(_cVal.charAppearance, attrName, attrVal)
 
     def updateOutfit(self, dbid, attrName, attrVal):
-        cVal = self.characters.get(dbid)
-        if not cVal:
+        _cVal = self.characters.get(dbid)
+        if not _cVal:
             return
         # TODO X: update outfit
-        # setattr(cVal.charAppearance.outfitData, attrName, attrVal)
 
     def reloadScript(self):
-        for pName, pVal in self.__dict__.items():
-            if pName.startswith('__'):
+        for _pName, pVal in self.__dict__.items():
+            if _pName.startswith('__'):
                 continue
 
             if hasattr(pVal, 'reloadScript'):
                 pVal.reloadScript()
-
-        return
 
     def postReloadScript(self):
         super(Account, self).postReloadScript()
@@ -1263,16 +1302,16 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         except:
             return '0.0.0.0'
 
-    def onCheckCrossServerTokenRet(self, checkRet, otherServerAvatarBox, token):
-        LOG_INFO("onCheckCrossServerTokenRet", checkRet, otherServerAvatarBox, token)
+    def onCheckCrossServerTokenRet(self, checkRet, otherSrcAvatarBox, token):
+        LOG_INFO("onCheckCrossServerTokenRet", checkRet, otherSrcAvatarBox, token)
         if not checkRet:
             LOG_ERR("onCheckCrossServerTokenRet check error, destroy self")
             self.destroyAccount(gameconst.OFFLINE_REASON_END_CROSS_SERVER)
             return
 
-        if checkRet and otherServerAvatarBox:
-            self.otherServerAvatarBox = otherServerAvatarBox
-            otherServerAvatarBox.onReqGetAvatarPorperties(token, self.crossServerEntityCall)
+        if checkRet and otherSrcAvatarBox:
+            self.otherServerAvatarBox = otherSrcAvatarBox
+            otherSrcAvatarBox.onReqGetAvatarPorperties(token, self.crossServerEntityCall)
 
     def onGetAvatarPorpertiesResp(self, baseMemoryStream, cellMemoryStream):
         LOG_INFO("onGetAvatarPorpertiesResp", len(baseMemoryStream), len(cellMemoryStream))
@@ -1310,14 +1349,14 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         #     WXWorkClient.instance().sendOnlineMsg(avatar.characterName + "上线了")
 
     # 注册回调函数,在玩家client激活时候触发,但是触发的是account的方法
-    def registerAvatarClientEnableCB(self, func, args):
-        self.avatarClientEnableCBs.append((func, args))
-
     def doAllAvatarClientEnableCB(self):
-        for func, args in self.avatarClientEnableCBs:
-            getattr(self, func)(*args)
+        for _func, args in self.avatarClientEnableCBs:
+            getattr(self, _func)(*args)
 
         self.avatarClientEnableCBs = []
+
+    def registerAvatarClientEnableCB(self, func, args):
+        self.avatarClientEnableCBs.append((func, args))
 
     def kickAccount(self, reason, accountName, accountType):
         LOG_INFO("kickAccount", reason, accountName, accountType)
@@ -1353,8 +1392,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         logData = avatar.loginLogInfo()
         logData.update(clientData)
         LogTrackingMgr.LogTrackingMgr.Server_Role_Login(
+            '',
+            self.clientDistinctId,
             self.accountName,
             avatar.gbID,
+            avatar.obId,
             avatar.getRoleCacheAttr('school'),
             avatar.getRoleCacheAttr('name'),
             avatar.getRoleCacheAttr('level'),
@@ -1857,6 +1899,14 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         self.client.onAvatarOfflineTime(fcVal.gbId, _time)
 
+    def checkAuthCharExpire(self):
+        _changeList = self._clearExpireChars()
+        if not _changeList:
+            return
+
+        for _cVal in _changeList:
+            self.client.onCharInfoChange(_cVal)
+
     def onAvatarAuthExpire(self, gbId):
         _cVal = self.characters.get(gbId)
         if not _cVal:
@@ -1916,7 +1966,6 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not self.__ACCOUNT_NAME__ in  gameglobal.localMinorAccountCache:
             return
         LOG_INFO("minorAccountConstraintTip", gameglobal.antiAddictionData)
-        #self.client.onMessage(AASC.datas['reminderTimeMsg']['value'], [str(gameglobal.antiAddictionData[1])])
         self.client.minorAccountConstraintTip(gameglobal.antiAddictionData[1])
 
     def setTempMiscProp(self, propId, value):

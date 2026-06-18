@@ -2,15 +2,9 @@
 
 from KBEDebug import *
 
-import KBEngine
-import utils
-import buyCredit_buyCreditConst as BCBCCD
-import buyCredit_buyCredit as BCBCD
-import time
 import gameconst
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import dropAward
-import gameclass
+import gameconfig
+import utils
 
 class IMonthCard(object):
     def __init__(self):
@@ -19,4 +13,16 @@ class IMonthCard(object):
     def addMonthCardByItem(self, monthCardId, opUUID, ctx):
         self.setPendingUseId(opUUID, ctx)
         self.base.addMonthCardByItem(monthCardId, opUUID, ctx)
-        return gameconst.UseItem.PENDING
+        return gameconst.UseItemEnum.PENDING
+
+    def syncMonthCardInfo(self, monthCardExpireTime, bigMonthCardExpireTime):
+        self.monthCardExpireTimeCell = monthCardExpireTime
+        self.bigMonthCardExpireTimeCell = bigMonthCardExpireTime
+
+    def isMonthCardExpiredCell(self):
+        if not gameconfig.visibleConfigEnabled('monthCard'):
+            return True
+        return self.monthCardExpireTimeCell < utils.curTS() and self.bigMonthCardExpireTimeCell < utils.curTS()
+    
+    def isBigMonthCardExpiredCell(self):
+        return self.bigMonthCardExpireTimeCell < utils.curTS()

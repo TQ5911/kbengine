@@ -94,7 +94,7 @@ datas ={
     "lv": "1",
     "initState": 0,
     "hp": 0,
-    "minAtk": 0,
+    "minAtk": 9999,
     "maxAtk": 0,
     "ifSetBoss": 0,
     "aiName": 0,

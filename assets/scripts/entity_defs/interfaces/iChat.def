@@ -7,6 +7,12 @@
             <Default>       0               </Default>
         </sendWorldMsgTime>
 
+        <sendPaidMsgTime>
+            <Type>          LONGTIME        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </sendPaidMsgTime>
+
         <sendSiegeWarMsgTime>
             <Type>          LONGTIME        </Type>
             <Flags>         BASE            </Flags>
@@ -87,15 +93,20 @@
         </removeChatChannel>
 
         <sendWorldChatMsg> <Exposed/>
-            <Arg>           UNICODE         </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
         </sendWorldChatMsg>
 
+        <sendPaidChatMsg> <Exposed/>
+            <Arg>           INT32                 </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
+        </sendPaidChatMsg>
+
         <sendSiegeWarChatMsg> <Exposed/>
-            <Arg>           UNICODE         </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
         </sendSiegeWarChatMsg>
 
         <sendGuildChatMsg> <Exposed/>
-            <Arg>           UNICODE         </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
         </sendGuildChatMsg>
 
         <sendGuildPickChatMsg>
@@ -104,22 +115,17 @@
 
         <sendTeamChatMsg> <Exposed/>
             <Arg>           TEAMID          </Arg>
-            <Arg>           UNICODE         </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
         </sendTeamChatMsg>
 
         <sendNearbyChatMsg> <Exposed/>
-            <Arg>           UNICODE         </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
         </sendNearbyChatMsg>
 
         <sendRaidChatMsg>    <Exposed/>
             <Arg>           RAID_ID         </Arg>
-            <Arg>           UNICODE         </Arg>
+            <Arg>           CHAT_MSG_DATA         </Arg>
         </sendRaidChatMsg>
-
-        <useTrumpetItem> <Exposed/>
-            <Arg>           UINT32          </Arg>
-            <Arg>           UNICODE         </Arg>
-        </useTrumpetItem>
 
         <queryItemLink> <Exposed/>
             <Arg>           UINT64              </Arg>
@@ -160,21 +166,10 @@
             <Arg>           ARRAY <of>  UINT64 </of>           </Arg>
         </registerItemLink>
 
-        <checkUseTrumpetBase>
-            <Arg>          UINT16                   </Arg>
-            <Arg>          UNICODE                   </Arg>
-        </checkUseTrumpetBase>
-
-        <onRecvAvatarChannelMsgPre>
-            <Arg>           CHAT_CHANNEL                </Arg>
-            <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>           UNICODE                     </Arg>
-        </onRecvAvatarChannelMsgPre>
-
         <onRecvChannelMsg>
             <Arg>           CHAT_CHANNEL                </Arg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>           UNICODE                     </Arg>
+            <Arg>           CHAT_MSG_DATA               </Arg>
         </onRecvChannelMsg>
     </BaseMethods>
 
@@ -182,32 +177,21 @@
         <handleAvatarChannelMsg>
             <Arg>           CHAT_CHANNEL                </Arg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>           UNICODE                     </Arg>
+            <Arg>           CHAT_MSG_DATA               </Arg>
         </handleAvatarChannelMsg>
         <handleTeamChannelMatchTeamMsg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
             <Arg>           INT8                        </Arg>
             <Arg>           UNICODE                     </Arg>
         </handleTeamChannelMatchTeamMsg>
-
-        <afterCheckTrumpetMsg>
-            <Arg>          UINT16                   </Arg>
-            <Arg>          UNICODE                   </Arg>
-        </afterCheckTrumpetMsg>
     </CellMethods>
 
     <ClientMethods>
         <onRecvAvatarChannelMsg>
             <Arg>           CHAT_CHANNEL                </Arg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>           UNICODE                     </Arg>
+            <Arg>           CHAT_MSG_DATA               </Arg>
         </onRecvAvatarChannelMsg>
-
-        <onRecvTrumpetMsg>
-            <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
-            <Arg>           ITEM_ID                     </Arg>
-            <Arg>           UNICODE                     </Arg>
-        </onRecvTrumpetMsg>
 
         <onQueryItemLink>
             <Arg>           UINT64          </Arg>
@@ -222,5 +206,9 @@
         <onQueryPlayerLink>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
         </onQueryPlayerLink>
+        <onAuctionSaleChatting>
+            <Arg>   AUCTION_ITEM_UUID   </Arg>
+            <Arg>   ITEM_ID             </Arg>
+        </onAuctionSaleChatting>
     </ClientMethods>
 </root>

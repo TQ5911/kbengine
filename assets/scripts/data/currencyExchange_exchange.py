@@ -84,7 +84,17 @@ datas = _tools.RODict({
         "exchangeRate": 1,
         "timeLimit": 1000,
         "dailyLimit": -1,
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "typeID": 4,
+        "currencyFrom": 30000021,
+        "currencyTo": 30000235,
+        "exchangeType": 1,
+        "exchangeRate": 100,
+        "timeLimit": 100,
+        "dailyLimit": -1,
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 8

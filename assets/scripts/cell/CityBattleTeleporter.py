@@ -39,7 +39,7 @@ class CityBattleTeleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity, 
         self.spaceMgr.addEntity(self.id, [self.CBTelType])
 
     def onTimer(self, tid, userData):
-        self._onTimer(tid, userData)
+        self._onTimerTrigger(tid, userData)
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
         elif userData == gametimer.CITY_BATTLE_TELEPORTER_TICK:

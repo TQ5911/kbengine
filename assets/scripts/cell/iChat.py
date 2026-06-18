@@ -17,24 +17,8 @@ class IChat(object):
                 e.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.NEARBY, avatarInfo, msg)
 
     def handleTeamChannelMatchTeamMsg(self, avatarInfo, channel, msg):
-        self.client.onRecvAvatarChannelMsg(channel, avatarInfo, msg)
+        self.client.onRecvAvatarChannelMsg(channel, avatarInfo, {"msg": msg, "code": 0, "voiceUrl": '', "msgType": 0})
 
     def _getChatChannelAvatarInfo(self):
         return utils.buildChatChannelAvatarData(
             self.id, self.gbId, self.school, self.name, self.level, self.sex, self.appearance.outfitData.picFrameId)
-
-    def checkUseTrumpet(self, gridId, itemId, useNum, useItemCtx):
-        LOG_DBG('in checkUseTrumpet:', gridId, itemId, useNum, useItemCtx)
-        self.setPendingCheckId(gridId, itemId, useNum, useItemCtx, False)
-        msg = useItemCtx.argsList[0]
-        self.base.checkUseTrumpetBase(useItemCtx.pendingOpId,msg)
-        return gameconst.UseItem.PENDING
-
-    def afterCheckTrumpetMsg(self, pendingCheckId, originalMsg):
-        LOG_DBG("afterCheckTrumpetMsg", originalMsg)
-
-        pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
-        pendingData =pendingIdDict[pendingCheckId]
-        if pendingData:
-            pendingData[3].argsList = [originalMsg]
-        self.onPendingCheckItem(pendingCheckId, gameconst.UseItem.TRUE)

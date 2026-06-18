@@ -50,7 +50,7 @@ class IWarehouse(object):
         bankCapacity = BGDSD.datas['bankCapacity']['value']
         if self.warehouse.capacity >= bankCapacity:
             LOG_WARN('   in warehouseExpansion, reach limit 1:', self.warehouse.capacity)
-            self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+            self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
             return
         
         oldCapacity = self.warehouse.capacity
@@ -59,9 +59,11 @@ class IWarehouse(object):
             LOG_WARN('   in warehouseExpansion, reach limit 2:', newCapacity)
             newCapacity = bankCapacity
         self.warehouse.capacity = newCapacity
-        self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+        self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
         
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             opUUID,
             self.gbID,
             gameconst.CapacityExpansionType.WAREHOUSE_ITEM,
@@ -122,7 +124,7 @@ class IWarehouse(object):
         
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BAG_WAREHOUSE
-        detail = gameclass.AwardDetail(gridId=gridId, itemId=itemId, itemCount=itemNum)
+        detail = gameclass.AwardDetailCls(gridId=gridId, itemId=itemId, itemCount=itemNum)
         # 全部移动
         if itemObj.itemNum == itemNum:
             # 检查进入仓库
@@ -148,12 +150,12 @@ class IWarehouse(object):
                 self.onMessagePre(BGDSD.datas['putInFail_bankFull_msg']['value'], [])
                 return
             # 从背包按照指定格子移除
-            self.bagData.deductItemsByGrid(self, {gridId: itemNum}, opUUID, srcType, detail)
+            self.bagData.deductItemsByGridId(self, {gridId: itemNum}, opUUID, srcType, detail)
             # 加入仓库
             opStat, planDic = self.warehouse.addItemsWithPlan(self, [itemObj, ], opUUID, srcType, detail, notify=False)
             if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 gameengine.panicStack('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId, itemNum)
-        LogTrackingMgr.LogTrackingMgr.Item_Movement(opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.BagToWarehouse)
+        LogTrackingMgr.LogTrackingMgr.Item_Movement(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.BagToWarehouse)
         self.client.onWarehouseInItems(opStat, self.warehouse._getClientDataFromPlanDic(planDic))
 
     @gamedecorator.checkGameconfigEnable('warehouse')
@@ -186,7 +188,7 @@ class IWarehouse(object):
         
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BAG_WAREHOUSE
-        detail = gameclass.AwardDetail(gridId=gridId, itemId=itemId, itemCount=itemNum)
+        detail = gameclass.AwardDetailCls(gridId=gridId, itemId=itemId, itemCount=itemNum)
         # 全移
         if itemObj.itemNum == itemNum:
              # 检查进入背包
@@ -212,12 +214,12 @@ class IWarehouse(object):
                 self.onMessagePre(BGDSD.datas['putInFail_bankFull_msg']['value'], [])
                 return
             # 从背包按照指定格子移除
-            self.warehouse.deductItemsByGrid(self, {gridId: itemNum}, opUUID, srcType, detail)
+            self.warehouse.deductItemsByGridId(self, {gridId: itemNum}, opUUID, srcType, detail)
             # 加入仓库
             opStat, planDic = self.bagData.addItemsWithPlan(self, [itemObj, ], opUUID, srcType, detail, notify=False)
             if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 gameengine.panicStack('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
-        LogTrackingMgr.LogTrackingMgr.Item_Movement(opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.WarehouseToBag)
+        LogTrackingMgr.LogTrackingMgr.Item_Movement(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.WarehouseToBag)
         self.client.onWarehouseOutItems(opStat, gridId, itemNum)
 
     @gamedecorator.checkGameconfigEnable('warehouse')

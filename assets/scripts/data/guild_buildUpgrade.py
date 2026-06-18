@@ -18,31 +18,31 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "upgradeExp": 15000,
-        "upgradeCost": 7000,
+        "upgradeCost": 7500,
         "juYingGeLv": 2
     }),
     2: _tools.RODict({
         "ID": 2,
         "upgradeExp": 100000,
-        "upgradeCost": 45000,
+        "upgradeCost": 50000,
         "juYingGeLv": 3
     }),
     3: _tools.RODict({
         "ID": 3,
         "upgradeExp": 300000,
-        "upgradeCost": 140000,
+        "upgradeCost": 150000,
         "juYingGeLv": 4
     }),
     4: _tools.RODict({
         "ID": 4,
-        "upgradeExp": 750000,
-        "upgradeCost": 360000,
+        "upgradeExp": 800000,
+        "upgradeCost": 400000,
         "juYingGeLv": 5
     }),
     5: _tools.RODict({
         "ID": 5,
-        "upgradeExp": 1400000,
-        "upgradeCost": 700000,
+        "upgradeExp": 900000,
+        "upgradeCost": 450000,
         "juYingGeLv": 6
     })
 })

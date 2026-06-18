@@ -236,6 +236,7 @@
             <Exposed/>
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   UNICODE         </Arg>  <!--被邀请玩家姓名-->
+            <Arg>   UINT8           </Arg>
         </applyInviteRaidLonely>
 
         <!--团长/队长/队员 邀请小队入团-->
@@ -261,6 +262,7 @@
             <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   PY_DICT         </Arg>
+            <Arg>   PY_DICT         </Arg>          
         </onReplyInviteRaidLonelyWithLonely>
 
         <!--玩家回应单独邀请-->
@@ -270,6 +272,7 @@
             <Arg>   UUID        </Arg>      <!--邀请记录ID, 服务端会发给客户端-->
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   BOOL        </Arg>
+            <Arg>   UINT8       </Arg>
         </replyInviteRaidLonely>
 
         <!--玩家回应组队邀请-->
@@ -565,6 +568,16 @@
             <Arg>   ENTITY_ID    </Arg>
         </onRaidRemoveMember>
         
+        <tryApplyInviteGuild> <Exposed/>
+            <Arg>   UINT8   </Arg>
+            <Arg>   UINT8   </Arg>
+        </tryApplyInviteGuild>
+
+        <doTryApplyInviteRaid>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   UINT8           </Arg>
+        </doTryApplyInviteRaid>
     </CellMethods>
 
     <ClientMethods>
@@ -679,6 +692,7 @@
             <Arg>   TEAMID          </Arg>
             <Arg>   UNICODE         </Arg>
             <Arg>   BOOL            </Arg>
+            <Arg>   UINT8           </Arg>
         </onTryBeInvitedInRaid>
 
         <!--团长邀请入团后被邀请者(玩家/队长)回调-->
@@ -690,6 +704,7 @@
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
+            <Arg>   UINT8           </Arg>
         </onBeInvitedRaidByLeader>
 
         <!--队长邀请入团后被邀请者(玩家)回调-->
@@ -700,6 +715,7 @@
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
+            <Arg>   UINT8           </Arg>
             <Arg>   UINT8           </Arg>
         </onBeInvitedRaidByTeamCaptain>
 
@@ -712,6 +728,7 @@
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
+            <Arg>   UINT8           </Arg>
         </onBeInvitedRaidByMember>
 
         <!--入团相关: END-->
@@ -738,12 +755,6 @@
             <Arg>   RAID_ID     </Arg>
             <Arg>   BOOL    </Arg>
         </onReplyRaidStandbyChecker>
-
-        <onUnblockRaidMemberMisc>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-        </onUnblockRaidMemberMisc>
 
         <onRaidPlayerStartAutoMatch>
         </onRaidPlayerStartAutoMatch>
@@ -786,6 +797,11 @@
             <Arg>           UINT32          </Arg>
         </onUpdateRaidMemberLevel>
 
+        <onUpdateRaidMemberName>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UNICODE         </Arg>
+        </onUpdateRaidMemberName>
+
         <onApplyJoinRaidLonelyFailed>
             <Arg>           UINT16       </Arg>
             <Arg>           RAID_ID      </Arg>
@@ -794,6 +810,55 @@
             <Arg>           STRING       </Arg>
             <Arg>           INT8         </Arg>
         </onApplyJoinRaidLonelyFailed>
+        
+        <onSwitchRaidMicsMode>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+        </onSwitchRaidMicsMode>
+
+        <onSyncAllRaidMemberMicsStatus>
+            <Arg>   RAID_ID     </Arg>
+            <!-- on -->
+            <Arg>   AVATARGBID_LIST     </Arg>
+            <!-- off -->
+            <Arg>   AVATARGBID_LIST     </Arg>
+            <!-- block -->
+            <Arg>   AVATARGBID_LIST     </Arg>
+        </onSyncAllRaidMemberMicsStatus>
+
+        <onTurnOnRaidMemberMics>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+        </onTurnOnRaidMemberMics>
+
+        <onTurnOffRaidMemberMics>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <!-- 是否因团长禁言被闭麦 -->
+            <Arg>   BOOL        </Arg>
+        </onTurnOffRaidMemberMics>
+
+        <onUnblockRaidMemberMics>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+        </onUnblockRaidMemberMics>
+
+        <onBlockAllRaidMemberMics>
+            <Arg>   PLAYER_GBID      </Arg>
+            <Arg>   RAID_ID     </Arg>
+        </onBlockAllRaidMemberMics>
+
+        <onUnblockAllRaidMemberMics>
+            <Arg>   PLAYER_GBID      </Arg>
+            <Arg>   RAID_ID     </Arg>
+        </onUnblockAllRaidMemberMics>
     </ClientMethods>
 
 </root>

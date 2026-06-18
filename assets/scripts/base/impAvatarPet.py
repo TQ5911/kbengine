@@ -4,6 +4,7 @@ import KBEngine
 
 import random
 
+import gameengine
 import gameconst
 import gameglobal
 import gameclass
@@ -58,7 +59,7 @@ class ImpAvatarPet(object):
                 battleData.append([petId, pet.quality, pet.level, pet.equipList])
             else:
                 battleListInfo.append((0, []))
-        self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData)
+        self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData, True)
 
     def sendLingShouInfo(self):
         self.lingShouInfo.sendLingShouData(self)
@@ -74,18 +75,32 @@ class ImpAvatarPet(object):
 
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
     def setFollowPet(self, exposed, bFollow, petId):
+        self._setFollowPet(bFollow, petId)
+        self.syncMethodCallToLocalServerBase('onCrossServerSetFollowPet', (bFollow, petId))
+
+    def _setFollowPet(self, bFollow, petId):
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
             LOG_ERR("setFollowPet pet not found", petId)
             return
 
         self.cell.setFollowPet(bFollow, petId, [pet.quality, pet.level, pet.equipList])
+
+    def onCrossServerSetFollowPet(self, bFollow, petId):
+        LOG_INFO('onCrossServerSetFollowPet', bFollow, petId)
+        self._setFollowPet(bFollow, petId)
         
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
     def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
         LOG_INFO('updateLingShouBattleList', battleIndex, petId, slotId)
+        self._updateLingShouBattleList(battleIndex, petId, slotId)
+        self.syncMethodCallToLocalServerBase('onCrossServerUpdateLingShouBattleList', (battleIndex, petId, slotId))
+
+    def _updateLingShouBattleList(self, battleIndex, petId, slotId):
         myLevel = gameglobal.roleCache[self.id]['level']
         unlockRank = PDUD.datas[slotId+1]['unlockRank']
         if myLevel < unlockRank:
@@ -109,7 +124,9 @@ class ImpAvatarPet(object):
             LOG_ERR("updateLingShouBattleList pet id is repeated", battleIndex, slotId, petId)
             return
         
-        self.lingShouInfo.updateBattleList(self, battleIndex, slotId, petId)
+        if not self.lingShouInfo.updateBattleList(self, battleIndex, slotId, petId):
+            return
+        
         if battleIndex == self.battleIndex:
             equipList = pet.equipList if pet else []
             self.cell.onUpdateLingShouBattleList((petId, equipList), slotId)
@@ -122,6 +139,10 @@ class ImpAvatarPet(object):
             self,
             gameconst.AchieveType.PET_BATTLE,
             actionContext.AchievementCtx())
+
+    def onCrossServerUpdateLingShouBattleList(self, battleIndex, petId, slotId):
+        LOG_INFO('onCrossServerUpdateLingShouBattleList', battleIndex, petId, slotId)
+        self._updateLingShouBattleList(battleIndex, petId, slotId)
 
     def curBattlePetNum(self):
         if not self.lingShouInfo.battleList:
@@ -212,7 +233,12 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.limitcall(PDSD.datas['petTeamSwitchCD']['value'])
+    @gamedecorator.crossServer
     def setBattleIndex(self, exposed, battleIndex):
+        self._setBattleIndex(battleIndex)
+        self.syncMethodCallToLocalServerBase('onCrossServerSetBattleIndex', (battleIndex,))
+
+    def _setBattleIndex(self, battleIndex):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             LOG_ERR("setBattleIndex battleIndex invalid", battleIndex)
             return
@@ -231,39 +257,53 @@ class ImpAvatarPet(object):
                 battleData.append([petId, pet.quality, pet.level, pet.equipList])
             else:
                 battleListInfo.append((0, []))
-        self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData)
+        self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData, False)
         self.updatePetScore()
+
+    def onCrossServerSetBattleIndex(self, battleIndex):
+        LOG_INFO('onCrossServerSetBattleIndex', battleIndex)
+        self._setBattleIndex(battleIndex)
 
     # ---------------------------      item   ------------------------------------
     def checkLingShouEggItemCondBase(self, pendingCheckId):
         # if self.lingShouInfo.isLingShouFull():
         #     self.onMessagePre(MMD.datas.usePetEgg_PlaceFull, [])
-        #     self.cell.onPendingCheckItem(pendingCheckId, gameconst.UseItem.FALSE)
+        #     self.cell.onPendingCheckItemFinished(pendingCheckId, gameconst.UseItemEnum.FALSE)
         #     return
 
-        self.cell.onPendingCheckItem(pendingCheckId, gameconst.UseItem.TRUE)
+        self.cell.onPendingCheckItemFinished(pendingCheckId, gameconst.UseItemEnum.TRUE)
 
     def useLingShouEggItemBase(self, pendingUseId, bagType, opUUID):
         LOG_INFO('useLingShouEggItemBase')
         dataDic = self.getTempMiscProp(gameconst.EntityPropsEnum.useBagItemData)
         if not dataDic:
             LOG_WARN('useLingShouEggItemBase, no popPersistentMiscProp data')
-            self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+            self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
             return
         info = dataDic.get(opUUID, None)
         if not info:
-            self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
+            self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
             return
 
         abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': info['gridObj'], 'school':self.getAvatarSchool()})
         self.addLingShouBase(abCtx)
+        self.syncMethodCallToLocalServerBase('onCrossServerAddLingShouBase', (abCtx,))
 
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
-        self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+        self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
+    
+    def onCrossServerAddLingShouBase(self, abCtx):
+        LOG_INFO('onCrossServerAddLingShouBase')
+        self.addLingShouBase(abCtx)
 
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
     def useLingShouEquip(self, exposed, gridId, petId, slotId):
+        if self._useLingShouEquip(gridId, petId, slotId):
+            self.syncMethodCallToLocalServerBase('onCrossServerUseLingShouEquip', (gridId, petId, slotId))
+
+    def _useLingShouEquip(self, gridId, petId, slotId):
         LOG_INFO("useLingShouEquip ", gridId, petId, slotId)
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
@@ -279,7 +319,7 @@ class ImpAvatarPet(object):
             LOG_ERR('useLingShouEquip not lingShou item', itemId)
             return
 
-        if not pet.canReplaceEquip(slotId, itemId):
+        if not pet.canReplaceEquip(self, slotId, itemId):
             LOG_ERR('useLingShouEquip not canReplaceEquip', slotId, itemId)
             return
 
@@ -290,7 +330,7 @@ class ImpAvatarPet(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_PETGEAR_DRESS
-        detail = gameclass.AwardDetail(petId=petId)
+        detail = gameclass.AwardDetailCls(petId=petId)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
         self.removePetEquipNumByPet(pet)
@@ -301,6 +341,12 @@ class ImpAvatarPet(object):
             self,
             gameconst.AchieveType.PET_EQUIP,
             actionContext.AchievementCtx())
+        return True
+    
+    def onCrossServerUseLingShouEquip(self, gridId, petId, slotId):
+        LOG_INFO('onCrossServerUseLingShouEquip')
+        if not self._useLingShouEquip(gridId, petId, slotId):
+            gameengine.panicStack('onCrossServerUseLingShouEquip failed', gridId, petId, slotId)
 
     def addLingShouBase(self, addContext):
         LOG_INFO("addLingShouBase ", addContext.__dict__)
@@ -319,11 +365,20 @@ class ImpAvatarPet(object):
 
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
     def levelUpPet(self, exposed, gridIds, petId):
-        LOG_INFO("levelUpPet ", exposed, gridIds, petId)
+        ret = self._levelUpPet(gridIds, petId)
+        if ret:
+            ok, curLevel, curExp, isTopLevel = ret
+            self.syncMethodCallToLocalServerBase('onCrossServerLevelUpPet', (gridIds, petId, curLevel, curExp, isTopLevel))
+
+    def _levelUpPet(self, gridIds, petId):
+        LOG_INFO("levelUpPet ", gridIds, petId)
         # 检查消耗的格子数
-        if len(gridIds) == 0:
-            LOG_ERR("levelUpPet, lack of materials ", gridIds, petId)
+        tmpGridIds = [gridId for gridId in gridIds]
+        tmpGridIds = set(tmpGridIds)
+        if len(tmpGridIds) == 0 or len(tmpGridIds) != len(gridIds):
+            gameengine.panicStack("levelUpPet, lack of materials, grid id repeated ", gridIds, petId)
             return
         # 检查宠物
         pet = self.lingShouInfo.getLingShouByPetId(petId)
@@ -395,7 +450,7 @@ class ImpAvatarPet(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_PET_LEVEL_UP
-        detail = gameclass.AwardDetail(petId=petId)
+        detail = gameclass.AwardDetailCls(petId=petId)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
         
         topExps = leveUpExps[curLevel - 1:]
@@ -420,16 +475,27 @@ class ImpAvatarPet(object):
         oldLevel = pet.level
         pet.setLevelAndExp(oldLevel, curLevel, curExp, self)
         newScore = pet.baseScore - oldScore
-        LogTrackingMgr.LogTrackingMgr.Pet_LevelUp(self.gbID, opUUID, pet.petId, pet.quality, oldLevel, pet.level, pet.equipList, newScore)
+        LogTrackingMgr.LogTrackingMgr.pet_levelup(self.gbID, self.accountEntity.clientDistinctId, self.gbID, opUUID, pet.petId, pet.quality, oldLevel, pet.level, pet.equipList, newScore)
         LOG_INFO("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
         # 更新客户端宠物数据   
         self.client.onLevelUpPet(petId, curLevel, curExp, isTopLevel)
-        return True
+        return True, curLevel, curExp, isTopLevel
+
+    def onCrossServerLevelUpPet(self, gridIds, petId, curLevel, curExp, isTopLevel):
+        LOG_INFO('onCrossServerLevelUpPet')
+        ret = self._levelUpPet(gridIds, petId)
+        if not ret:
+            gameengine.panicStack('onCrossServerLevelUpPet failed', gridIds, petId, curLevel, curExp, isTopLevel)
+        else:
+            ok, curLevel, curExp, isTopLevel = ret
+            if curLevel != curLevel or curExp != curExp or isTopLevel != isTopLevel:
+                gameengine.panicStack('onCrossServerLevelUpPet check failed', gridIds, petId, curLevel, curExp, isTopLevel)
     
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
     def remodelingPet(self, exposed, gridId):
-        LOG_INFO("remodelingPet ", exposed, gridId)
+        LOG_INFO("remodelingPet ", gridId)
         itemObj = self.petBag.getItemObjByGridId(gridId)
         if not itemObj:
             LOG_WARN('remodelingPet pet bag is not found', gridId)
@@ -496,14 +562,30 @@ class ImpAvatarPet(object):
             return
         
         opUUID = KBEngine.genUUID64()
-        detail = gameclass.AwardDetail(costItems=costItems)
+        detail = gameclass.AwardDetailCls(costItems=costItems)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        crossDeductWealthData = (srcType, deductWealthVal, opUUID, detail)
 
-        detail = gameclass.AwardDetail(costItems={itemObj.itemId:1})
-        self.petBag.deductItemsByGrid(self, {gridId:1}, opUUID, srcType, detail)
+        detail = gameclass.AwardDetailCls(costItems={itemObj.itemId:1})
+        self.petBag.deductItemsByGridId(self, {gridId:1}, opUUID, srcType, detail)
+        crossDeductItemsData = ({gridId:1}, opUUID, srcType, detail)
 
-        detail = gameclass.AwardDetail(addItems={itemId:1})
+        detail = gameclass.AwardDetailCls(addItems={itemId:1})
         self.addWealth(srcType, addWealthVal, opUUID, detail)
+        crossAddWealthData = (srcType, addWealthVal, opUUID, detail)
 
         self.client.onRemodelingPet(gameconst.RemodelingPetResult.SUCCESS, itemId, 1)
-        
+        self.syncMethodCallToLocalServerBase('onCrossServerRemodelingPet', (crossDeductWealthData, crossDeductItemsData, crossAddWealthData))
+
+    def onCrossServerRemodelingPet(self, crossDeductWealthData, crossDeductItemsData, crossAddWealthData):
+        LOG_INFO('onCrossServerRemodelingPet', crossDeductWealthData, crossDeductItemsData, crossAddWealthData)
+        #精灵重塑校验没过得运营手动补偿了
+        srcType, deductWealthVal, opUUID, detail = crossDeductWealthData
+        if not self.deductWealth(srcType, deductWealthVal, opUUID, detail):
+            gameengine.panicStack('onCrossServerRemodelingPet deduct wealth failed', srcType, deductWealthVal, opUUID, detail)
+            return
+        #扣不了会直接抛异常
+        grid2num, opUUID, srcType, detail = crossDeductItemsData
+        self.petBag.deductItemsByGridId(self, grid2num, opUUID, srcType, detail)
+        srcType, addWealthVal, opUUID, detail = crossAddWealthData
+        self.addWealth(srcType, addWealthVal, opUUID, detail)

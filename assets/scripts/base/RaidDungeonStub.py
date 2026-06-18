@@ -42,7 +42,7 @@ class RaidDungeonCreatingMixin(object):
                         raidUUID, self.creatingRaidDic[playerGBID], playerGBID)
         self.creatingRaidDic[raidUUID] = _Record(raidUUID, playerGBID)
         if timeout:
-            self.toCallbackAfter(3)._releaseRaidDungeonCreatingLockTimeout(raidUUID)
+            self.asyncCallbackAfter(3)._releaseRaidDungeonCreatingLockTimeout(raidUUID)
 
     def _releaseRaidDungeonCreatingLockTimeout(self, raidUUID):
         LOG_WARN('_rmRaidDungeonCreatingRecordTimeout:: timeout rm timerId', raidUUID)
@@ -85,27 +85,27 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
     def doNext(self):
         super(RaidDungeonStub, self).doNext()
         # add check destroy cycle tick
-        self.pyAddTimer(30, 30, gametimer.DUNGEON_CHECK_DESTROY)
-        self.pyAddTimer(1, 0.1, gametimer.DUNGEON_ENTITY_GENERATOR)
+        self.pyAddTimer(30, 30, gametimer.TIMER_DUNGEON_CHECK_DESTROY)
+        self.pyAddTimer(1, 0.1, gametimer.TIMER_DUNGEON_ENTITY_GENERATOR)
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
-        if userArg == gametimer.DUNGEON_CHECK_DESTROY:
-            self._checkDestroyDungeonSpace()
-        elif userArg == gametimer.DUNGEON_ENTITY_GENERATOR:
+        self._onTimerTrigger(tid, userArg)
+        if userArg == gametimer.TIMER_DUNGEON_CHECK_DESTROY:
+            self._checkDungeonSpaceDestroy()
+        elif userArg == gametimer.TIMER_DUNGEON_ENTITY_GENERATOR:
             self.onTimerCreateEntity()
         else:
             super(RaidDungeonStub, self).onTimer(tid, userArg)
 
-    def _checkDestroyDungeonSpace(self):
-        # LOG_DBG('_checkDestroyDungeonSpace::~~~~~~~~~~~~~~~~~')
+    def _checkDungeonSpaceDestroy(self):
+        # LOG_DBG('_checkDungeonSpaceDestroy::~~~~~~~~~~~~~~~~~')
         now = utils.curTS()
         needDestroyList = []
         realDestroyList = []
         for spaceNo, sVal in self.spaces.items():
             # CASE_1: 超过最大清理次數, 報錯
             if sVal.nDestoryCnt > 3:
-                LOG_WARN('_checkDestroyDungeonSpace:: cannot destroy space currently', spaceNo)
+                LOG_WARN('_checkDungeonSpaceDestroy:: cannot destroy space currently', spaceNo)
                 # reset nDestoryCnt
                 sVal.nDestoryCnt = 0
                 continue
@@ -119,8 +119,8 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
             needDestroyList.append((spaceNo, sVal.spaceUUID, 'time delay destroy'))
 
-        self.toCallbackAfter(0.1)._checkTryMarkDestroyDungeonSpaces(needDestroyList)
-        self.toCallbackAfter(0.2)._checkRealDestroyDungeonSpaces(realDestroyList)
+        self.asyncCallbackAfter(0.1)._checkTryMarkDestroyDungeonSpaces(needDestroyList)
+        self.asyncCallbackAfter(0.2)._checkRealDestroyDungeonSpaces(realDestroyList)
 
     def _checkRealDestroyDungeonSpaces(self, realDestroyList):
         for rArgs in realDestroyList:
@@ -142,7 +142,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
                 self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
-                spaceVal.spaceBox.entireDestroy(False, False)
+                spaceVal.spaceBox.doEntireDestroy(False, False)
                 self.spaces.pop(spaceNo)
 
 
@@ -176,7 +176,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         # 【大量机器人新号登录后立刻下线后副本报错】
         self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
-        spaceVal.spaceBox.entireDestroy(False, False)
+        spaceVal.spaceBox.doEntireDestroy(False, False)
         del self.spaces[spaceNo]
         return spaceVal, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
@@ -314,6 +314,9 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
         # 副本完成后倒计时
         if delay > 0:
+            lastDungeonFinishedTime = utils.curTS() + delay
+            _raidStub = gameengine.getRaidStub(sVal.raidUUID)
+            _raidStub.refreshLastDungeonFinishedTime(sVal.raidUUID, lastDungeonFinishedTime)
             sVal.completeDungeonTimer = self.addTimerCB(
                 delay, '_onRaidDungeonCompletedCallback',
                 (spaceNo, sVal.spaceUUID, 'dungeon complete', win), gametimer.TIMER_TAG_ON_RAID_DUNGEON_COMPLETED_CALLBACK)
@@ -371,9 +374,6 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
     def _getDungeonSpaceWeight(self, enterNum=40) -> int:
         return utils.calcSpaceWeight(enterNum, False, gameconst.EntNumPerPlayerInAOI.teamDungeon)
 
-    def _needSpaceMgr(self, spaceNo):
-        return True
-
     def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGBID, raidUUID, extra):
         self.onLoadDungeonSpaceReady(playerBox, playerGBID, spaceNo, raidUUID, extra)
 
@@ -427,13 +427,17 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, raidUUID, extra):
         """团队成员离开副本成功后回调"""
         LOG_INFO('leaveDungeonSpaceSucc::', spaceNo, playerBox, playerGbId, raidUUID, extra)
-        founderVla, err = self._leaveDungeonSpaceSucc(spaceNo, playerBox, playerGbId, raidUUID)
+        dungeonVal, founderVla, err = self._leaveDungeonSpaceSucc(spaceNo, playerBox, playerGbId, raidUUID)
         if err != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
             LOG_ERR('leaveDungeonSpaceSucc:: failed, {}'.format(err))
-
-        # 退出团队
-        extraProps = {'leaveDungen':True}
-        gameengine.getRaidStub(raidUUID).leaveRaid(playerBox, playerGbId, raidUUID, extraProps)
+        src = extra.get('src', None)
+        # 来自客户端的主动退出
+        if src and src.srcId==gameconst.DungeonSrcEnum.FROM_CLIENT:
+            # 副本还在进行中退出的，直接退出队伍
+            if dungeonVal.completedReasonType == gameconst.DunegonCompleteReasonType.DEFAULT:
+                # 退出团队
+                extraProps = {'leaveDungen':True}
+                gameengine.getRaidStub(raidUUID).leaveRaid(playerBox, playerGbId, raidUUID, extraProps)
 
     def _leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGBID, raidUUID):
         if spaceNo not in self.spaces:
@@ -443,7 +447,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         if not founderVal:
             return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_FOUNDER_VAL_NOT_FOUND
         founderVal.onAvatarLeave(playerGBID, isOffline=False)
-        return founderVal, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
+        return dungeonVal, founderVal, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
     def leaveRaidDungeon(self, spaceNo, raidUUID, src, playerBox):
         LOG_INFO("leaveRaidDungeon~ ", spaceNo, raidUUID, src, playerBox)

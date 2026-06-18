@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "upgradeItemText": _tools.RODict({
         "ID": "upgradeItemText",
-        "value": "{0}·盈能法阵",
+        "value": "混沌熔炉",
     }),
     "msgId_syntheticNoItem": _tools.RODict({
         "ID": "msgId_syntheticNoItem",
@@ -86,5 +86,13 @@ datas = _tools.RODict({
     "synthesRandomMsg": _tools.RODict({
         "ID": "synthesRandomMsg",
         "value": 54003501,
+    }),
+    "upgradeIconNormal": _tools.RODict({
+        "ID": "upgradeIconNormal",
+        "value": "Assets/Res/ui/texture/synthesis/synthesis_tripod_icon.png",
+    }),
+    "upgradeIconRandom": _tools.RODict({
+        "ID": "upgradeIconRandom",
+        "value": "Assets/Res/ui/texture/synthesis/synthesis_tripod_icon02.png",
     })
 })

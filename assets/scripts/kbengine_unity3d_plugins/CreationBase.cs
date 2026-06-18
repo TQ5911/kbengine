@@ -25,8 +25,6 @@ namespace KBEngine
 		
 		public virtual void onCreationIdChanged(Int32 oldValue) {}
 		public float dmgArmor = 0f;
-		public UInt32 fBProtectTime = 0;
-		public virtual void onFBProtectTimeChanged(UInt32 oldValue) {}
 		
 		
 		
@@ -140,6 +138,13 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 754:
+					Vector3 drawCube_arg1 = stream.readVector3();
+					Vector3 drawCube_arg2 = stream.readVector3();
+					float drawCube_arg3 = stream.readFloat();
+					float drawCube_arg4 = stream.readFloat();
+					drawCube(drawCube_arg1, drawCube_arg2, drawCube_arg3, drawCube_arg4);
+					break;
 				case 619:
 					UInt32 notifyCastingSkill_arg1 = stream.readUint32();
 					double notifyCastingSkill_arg2 = stream.readDouble();
@@ -289,6 +294,10 @@ namespace KBEngine
 					List<float> onUseSkill_arg6 = ((DATATYPE_AnonymousArray_10009)method.args[5]).createFromStreamEx(stream);
 					onUseSkill(onUseSkill_arg1, onUseSkill_arg2, onUseSkill_arg3, onUseSkill_arg4, onUseSkill_arg5, onUseSkill_arg6);
 					break;
+				case 1154:
+					List<UInt16> updateForbidSkillTags_arg1 = ((DATATYPE_AnonymousArray_10005)method.args[0]).createFromStreamEx(stream);
+					updateForbidSkillTags(updateForbidSkillTags_arg1);
+					break;
 				default:
 					break;
 			};
@@ -426,22 +435,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDmgArmorChanged(oldval_dmgArmor);
-						}
-
-						break;
-					case 280:
-						UInt32 oldval_fBProtectTime = fBProtectTime;
-						fBProtectTime = stream.readUint32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onFBProtectTimeChanged(oldval_fBProtectTime);
-						}
-						else
-						{
-							if(inWorld)
-								onFBProtectTimeChanged(oldval_fBProtectTime);
 						}
 
 						break;
@@ -902,27 +895,6 @@ namespace KBEngine
 					else
 					{
 						onDmgArmorChanged(oldval_dmgArmor);
-					}
-				}
-			}
-
-			UInt32 oldval_fBProtectTime = fBProtectTime;
-			Property prop_fBProtectTime = pdatas[5];
-			if(prop_fBProtectTime.isBase())
-			{
-				if(inited && !inWorld)
-					onFBProtectTimeChanged(oldval_fBProtectTime);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_fBProtectTime.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onFBProtectTimeChanged(oldval_fBProtectTime);
 					}
 				}
 			}

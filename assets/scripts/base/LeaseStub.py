@@ -41,11 +41,11 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def _fullPrepare(self):
         self.pyAddTimer(1, 1, gametimer.LEASE_STUB_ASYNC_TICK)
         gameglobal.localBaseApp.initAysncore()
-        self.pyAddTimer(gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVER_HEARTBEAT_INTERVAL,
+        self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL,
                         gametimer.LEASE_STUB_ACTIVE_TICK)
 
     def onTimer(self, tid, userArg):
-        self._onTimer(tid, userArg)
+        self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.LEASE_STUB_ASYNC_TICK:
             self._connectLeaseCenter()
         elif userArg == gametimer.LEASE_STUB_ACTIVE_TICK:
@@ -79,7 +79,6 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     # ---------- 请求转发 ----------
 
     def addItemPrepare(self, playerGBID, uniqueId, itemId, itemData, pricePerDay, leaseDays, returnServer, returnOwner, returnTime, returnReason, opUUID):
-        LOG_INFO("addItemPrepare", playerGBID, uniqueId, itemId, pricePerDay, leaseDays, returnServer, returnOwner, returnTime, returnReason, opUUID)
         if not self.isLeaseCenterActive():
             LOG_ERR("addItemPrepare leaseCenter is not active")
             return
@@ -100,7 +99,6 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.leaseService.serviceStub.addItemPrepare(None, request, None)
 
     def addItemCommit(self, uniqueId, playerGBID, opUUID):
-        LOG_INFO("addItemCommit", playerGBID, uniqueId, opUUID)
         if not self.isLeaseCenterActive(False):
             LOG_ERR("addItemCommit leaseCenter is not active")
             return
@@ -113,7 +111,6 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.leaseService.serviceStub.addItemCommit(None, request, None)
 
     def addItemRollback(self, uniqueId, opUUID):
-        LOG_INFO("addItemRollback", uniqueId, opUUID)
         if not self.isLeaseCenterActive(False):
             LOG_ERR("addItemRollback leaseCenter is not active")
             return
@@ -125,7 +122,6 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.leaseService.serviceStub.addItemRollback(None, request, None)
 
     def leaseItemPrepare(self, uniqueId, buyerServerId, buyerGBID, opUUID):
-        LOG_INFO("leaseItemPrepare", uniqueId, buyerServerId, buyerGBID, opUUID)
         if not self.isLeaseCenterActive():
             LOG_ERR("leaseItemPrepare leaseCenter is not active")
             return
@@ -138,20 +134,19 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.leaseService.serviceStub.leaseItemPrepare(None, request, None)
 
-    def leaseItemCommit(self, uniqueId, opUUID):
-        LOG_INFO("leaseItemCommit", uniqueId, opUUID)
+    def leaseItemCommit(self, uniqueId, playerGBID, opUUID):
         if not self.isLeaseCenterActive(False):
             LOG_ERR("leaseItemCommit leaseCenter is not active")
             return
 
         request = LeaseItemCommitReq()
         request.uniqueId = uniqueId
+        request.playerGBID = playerGBID
         request.opUUID = opUUID
 
         self.leaseService.serviceStub.leaseItemCommit(None, request, None)
 
     def leaseItemRollback(self, uniqueId, opUUID=0):
-        LOG_INFO("leaseItemRollback", uniqueId, opUUID)
         if not self.isLeaseCenterActive(False):
             LOG_ERR("leaseItemRollback leaseCenter is not active")
             return
@@ -174,21 +169,20 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.leaseService.serviceStub.cancelItem(None, request, None)
 
-    def getShopSummary(self, serverId, equipType, equipSubType, classFilter, playerGBID):
-        LOG_INFO("getShopSummary", serverId, equipType, equipSubType, classFilter, playerGBID)
+    def getShopSummary(self, categoryId, itemIdList, playerGBID):
         if not self.isLeaseCenterActive():
             LOG_ERR("getShopSummary leaseCenter is not active")
             return
 
         request = LeaseShopSummaryReq()
-        request.equipType = equipType
-        request.equipSubType = equipSubType
+        request.categoryId = categoryId
+        for itemId in itemIdList:
+            request.itemIds.append(itemId)
         request.playerGBID = playerGBID
 
         self.leaseService.serviceStub.getShopSummary(None, request, None)
 
-    def getShopItems(self, serverId, itemId, sortType, sortAsc, page, pageSize, playerGBID):
-        LOG_INFO("getShopItems", serverId, itemId, sortType, sortAsc, page, pageSize, playerGBID)
+    def getShopItems(self, itemId, page, pageSize, playerGBID):
         if not self.isLeaseCenterActive():
             LOG_ERR("getShopItems leaseCenter is not active")
             return
@@ -201,8 +195,7 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.leaseService.serviceStub.getShopItems(None, request, None)
 
-    def getMySaleList(self, serverId, playerGBID):
-        LOG_INFO("getMySaleList", serverId, playerGBID)
+    def getMySaleList(self, playerGBID):
         if not self.isLeaseCenterActive():
             LOG_ERR("getMySaleList leaseCenter is not active")
             return
@@ -223,6 +216,7 @@ class LeaseStubService(GameServer):
         self.channel.connect((address[0], int(address[1])))
 
     def on_connected(self):
+        LOG_INFO("connect to lease service: ", self.address)
         self._reportServerId()
 
     def on_disconnected(self):
@@ -256,16 +250,25 @@ class LeaseStubService(GameServer):
         return {
             'uniqueId': item.uniqueId,
             'itemId': item.itemId,
-            'leaseOwnerGbId': item.leaseOwnerGbId,
+            'lessorGbId': item.lessorGbId,
+            'lessorServerId': item.lessorServerId,
             'pricePerDay': item.pricePerDay,
-            'leftTime': item.leftTime,
+            'leaseDay': item.leaseDay,
+            'returnEndTime': item.returnEndTime,
             'itemData': item.itemData,
         }
 
     def _transLeaseMySaleItem(self, item):
         if not item:
             return None
-        return self._transLeaseShopItem(item)
+        return {
+            'uniqueId': item.uniqueId,
+            'itemId': item.itemId,
+            'pricePerDay': item.pricePerDay,
+            'leaseDay': item.leaseDay,
+            'returnEndTime': item.returnEndTime,
+            'itemData': item.itemData,
+        }
 
     # ---------- 接收 LeaseServer 回调 ----------
 
@@ -276,12 +279,15 @@ class LeaseStubService(GameServer):
         opUUID = request.opUUID
         LOG_INFO("replyAddItemPrepare", playerGBID, uniqueId, result, opUUID)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onReplyAddItemPrepare",
-                (uniqueId, result, opUUID),
-                None, '', ()
-            )
+        if playerGBID == 0:
+            LOG_ERR("replyAddItemPrepare no gbid:", opUUID)
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onReplyAddItemPrepare",
+            (uniqueId, result, opUUID),
+            None, '', ()
+        )
 
     def replyAddItemCommit(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -290,11 +296,15 @@ class LeaseStubService(GameServer):
         opUUID = request.opUUID
         LOG_INFO("replyAddItemCommit", playerGBID, uniqueId, result, opUUID)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onReplyAddItemCommit",
-                (uniqueId, result, opUUID),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyAddItemCommit no gbid:", opUUID)
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onReplyAddItemCommit",
+            (uniqueId, result, opUUID),
+            None, '', ()
+        )
 
     def replyLeaseItemPrepare(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -304,30 +314,40 @@ class LeaseStubService(GameServer):
         opUUID = request.opUUID
         LOG_INFO("replyLeaseItemPrepare", playerGBID, uniqueId, result, totalPrice, opUUID)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onReplyLeaseItemPrepare",
-                (uniqueId, totalPrice, result, opUUID),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyLeaseItemPrepare no gbid:", opUUID)
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onReplyLeaseItemPrepare",
+            (uniqueId, totalPrice, result, opUUID),
+            None, '', ()
+        )
 
     def replyLeaseItemCommit(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         uniqueId = request.uniqueId
         result = request.result
         opUUID = request.opUUID
-        startLeaseTime = request.startLeaseTime
+        leaseStartTime = request.leaseStartTime
+        leaseEndTime = request.leaseEndTime
+        lessorGBID = request.lessorGBID
         ownerGBID = request.ownerGBID
-        gold = request.gold
-        bindGold = request.bindGold
-        cost = request.cost
-        itemId = request.itemId
-        LOG_INFO("replyLeaseItemCommit", playerGBID, uniqueId, result, opUUID, startLeaseTime, ownerGBID, gold, bindGold, cost, itemId)
+        leaseGold = request.leaseGold
+        leaseBindGold = request.leaseBindGold
+        leaseCost = request.leaseCost
+        itemData = request.itemData
+        LOG_INFO("replyLeaseItemCommit", opUUID, result, playerGBID, lessorGBID, uniqueId, ownerGBID)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onReplyLeaseItemCommit",
-                (opUUID, uniqueId, result, startLeaseTime, ownerGBID, gold, bindGold, cost, itemId),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyLeaseItemCommit no gbid:", opUUID)
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onReplyLeaseItemCommit",
+            (opUUID, uniqueId, result, leaseStartTime, leaseEndTime, lessorGBID, ownerGBID, leaseGold, leaseBindGold, leaseCost, itemData),
+            None, '', ()
+        )
 
     def replyCancelItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -336,51 +356,70 @@ class LeaseStubService(GameServer):
         result = request.result
         LOG_INFO("replyCancelItem", playerGBID, uniqueId, result)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onReplyCancelItemInLease",
-                (uniqueId, result, itemData),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyCancelItem no gbid:", uniqueId)
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onReplyCancelItemInLease",
+            (uniqueId, result, itemData),
+            None, '', ()
+        )
 
     def replyShopSummary(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
+        categoryId = request.categoryId
         items = []
         for item in request.items:
             items.append(self._transLeaseShopSummary(item))
-        LOG_INFO("replyShopSummary", playerGBID, len(items))
+        LOG_DBG("replyShopSummary", playerGBID, categoryId, len(items))
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onLeaseShopSummaryResp",
-                (items,),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyShopSummary no gbid:")
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onLeaseShopSummaryResp",
+            (categoryId, items),
+            None, '', ()
+        )
 
     def replyShopItems(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         itemId = request.itemId
+        page = request.page
+        pageSize = request.pageSize
         items = []
         for item in request.items:
             items.append(self._transLeaseShopItem(item))
-        LOG_INFO("replyShopItems", playerGBID, itemId, len(items))
+        LOG_DBG("replyShopItems", playerGBID, itemId, page, pageSize, len(items))
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onLeaseShopItemsResp",
-                (itemId, items),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyShopItems no gbid:")
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onLeaseShopItemsResp",
+            (itemId, page, pageSize, items),
+            None, '', ()
+        )
 
     def replyMySaleList(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         items = []
         for item in request.items:
             items.append(self._transLeaseMySaleItem(item))
-        LOG_INFO("replyMySaleList", playerGBID, len(items))
+        LOG_DBG("replyMySaleList", playerGBID, len(items))
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onMyLeaseSaleInfo",
-                (items, ),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("replyMySaleList no gbid:")
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onMyLeaseSaleInfo",
+            (items, ),
+            None, '', ()
+        )
 
     def giveItemToPlayer(self, rpc_controller, request, done):
         ownerServer = request.returnOwnerServerId
@@ -392,35 +431,18 @@ class LeaseStubService(GameServer):
         returnTime = request.returnEndTime
         LOG_INFO("giveItemToPlayer", opUUID, playerGBID, uniqueId, ownerServer, ownerGBID, returnTime)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onGiveLeaseItem",
-                (opUUID, uniqueId, itemData, ownerServer, ownerGBID, returnTime),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("giveItemToPlayer no gbid:", opUUID)
+            return
 
-    def removeItemFromPlayer(self, rpc_controller, request, done):
-        playerGBID = request.playerGBID
-        uniqueId = request.uniqueId
-        LOG_INFO("removeItemFromPlayer", playerGBID, uniqueId)
-
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "doRemoveLeasedItem",
-                (uniqueId,),
-                None, '', ())
-
-    def returnItemToOwner(self, rpc_controller, request, done):
-        playerGBID = request.playerGBID
-        uniqueId = request.uniqueId
-        itemData = request.itemData
-        LOG_INFO("returnItemToOwner", playerGBID, uniqueId)
-
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onReturnLeaseItemToOwner",
-                (uniqueId, itemData),
-                None, '', ())
-
+        callbackArgs = (opUUID, uniqueId, itemData, ownerServer, ownerGBID, returnTime)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onGiveLeaseItem",
+            callbackArgs,
+            gameengine.getGlobalBase('PlayerStub'), 'recordOfflineCallback',
+            (playerGBID, 'onGiveLeaseItem', callbackArgs)
+        )
+            
     def addIncomeToOwner(self, rpc_controller, request, done):
         uniqueId = request.uniqueId
         playerGBID = request.playerGBID
@@ -429,10 +451,17 @@ class LeaseStubService(GameServer):
         itemId = request.itemId
         opUUID = request.opUUID
         returnTime = request.returnEndTime
-        LOG_INFO("addIncomeToOwner", opUUID, uniqueId, playerGBID, bindGold, gold, itemId, returnTime)
+        itemData = request.itemData
+        LOG_INFO("addIncomeToOwner", opUUID, uniqueId, playerGBID, bindGold, gold, itemId, returnTime, itemData)
 
-        if playerGBID != 0:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "onAddLeaseIncome",
-                (uniqueId, itemId, bindGold, gold, opUUID, returnTime),
-                None, '', ())
+        if playerGBID == 0:
+            LOG_ERR("addIncomeToOwner no gbid:", opUUID)
+            return
+
+        callbackArgs = (uniqueId, itemId, bindGold, gold, opUUID, returnTime, itemData)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [playerGBID], "onAddLeaseIncome",
+            callbackArgs,
+            gameengine.getGlobalBase('PlayerStub'), 'recordOfflineCallback',
+            (playerGBID, 'onAddLeaseIncome', callbackArgs)
+        )

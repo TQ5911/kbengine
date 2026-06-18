@@ -20,21 +20,21 @@ datas = _tools.RODict({
         "upgradeContributionCost": 500,
         "upgradeCoinCost": 5000,
         "yanWuGeLvReq": 1,
-        "charLevelReq": 15
+        "charLevelReq": 18
     }),
     2: _tools.RODict({
         "ID": 2,
         "upgradeContributionCost": 550,
-        "upgradeCoinCost": 5000,
+        "upgradeCoinCost": 6000,
         "yanWuGeLvReq": 1,
-        "charLevelReq": 15
+        "charLevelReq": 18
     }),
     3: _tools.RODict({
         "ID": 3,
         "upgradeContributionCost": 600,
-        "upgradeCoinCost": 5000,
+        "upgradeCoinCost": 7500,
         "yanWuGeLvReq": 1,
-        "charLevelReq": 15
+        "charLevelReq": 18
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -52,28 +52,28 @@ datas = _tools.RODict({
     }),
     6: _tools.RODict({
         "ID": 6,
-        "upgradeContributionCost": 750,
+        "upgradeContributionCost": 800,
         "upgradeCoinCost": 30000,
         "yanWuGeLvReq": 1,
         "charLevelReq": 30
     }),
     7: _tools.RODict({
         "ID": 7,
-        "upgradeContributionCost": 800,
+        "upgradeContributionCost": 1000,
         "upgradeCoinCost": 50000,
         "yanWuGeLvReq": 1,
         "charLevelReq": 33
     }),
     8: _tools.RODict({
         "ID": 8,
-        "upgradeContributionCost": 900,
+        "upgradeContributionCost": 1200,
         "upgradeCoinCost": 100000,
         "yanWuGeLvReq": 1,
         "charLevelReq": 36
     }),
     9: _tools.RODict({
         "ID": 9,
-        "upgradeContributionCost": 1200,
+        "upgradeContributionCost": 1500,
         "upgradeCoinCost": 200000,
         "yanWuGeLvReq": 1,
         "charLevelReq": 39
@@ -104,70 +104,70 @@ datas = _tools.RODict({
         "upgradeContributionCost": 3500,
         "upgradeCoinCost": 600000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 51
+        "charLevelReq": 50
     }),
     14: _tools.RODict({
         "ID": 14,
         "upgradeContributionCost": 4000,
         "upgradeCoinCost": 700000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 53
+        "charLevelReq": 52
     }),
     15: _tools.RODict({
         "ID": 15,
         "upgradeContributionCost": 4500,
         "upgradeCoinCost": 800000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 55
+        "charLevelReq": 54
     }),
     16: _tools.RODict({
         "ID": 16,
         "upgradeContributionCost": 5000,
         "upgradeCoinCost": 900000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 57
+        "charLevelReq": 56
     }),
     17: _tools.RODict({
         "ID": 17,
         "upgradeContributionCost": 5500,
         "upgradeCoinCost": 1000000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 59
+        "charLevelReq": 58
     }),
     18: _tools.RODict({
         "ID": 18,
         "upgradeContributionCost": 6000,
         "upgradeCoinCost": 1100000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 61
+        "charLevelReq": 60
     }),
     19: _tools.RODict({
         "ID": 19,
         "upgradeContributionCost": 6500,
         "upgradeCoinCost": 1200000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 63
+        "charLevelReq": 62
     }),
     20: _tools.RODict({
         "ID": 20,
         "upgradeContributionCost": 7000,
         "upgradeCoinCost": 1300000,
         "yanWuGeLvReq": 2,
-        "charLevelReq": 65
+        "charLevelReq": 64
     }),
     21: _tools.RODict({
         "ID": 21,
         "upgradeContributionCost": 7500,
         "upgradeCoinCost": 1400000,
         "yanWuGeLvReq": 3,
-        "charLevelReq": 67
+        "charLevelReq": 66
     }),
     22: _tools.RODict({
         "ID": 22,
         "upgradeContributionCost": 8000,
         "upgradeCoinCost": 1500000,
         "yanWuGeLvReq": 3,
-        "charLevelReq": 69
+        "charLevelReq": 68
     }),
     23: _tools.RODict({
         "ID": 23,
@@ -264,35 +264,35 @@ datas = _tools.RODict({
         "ID": 36,
         "upgradeContributionCost": 15000,
         "upgradeCoinCost": 2900000,
-        "yanWuGeLvReq": 4,
+        "yanWuGeLvReq": 5,
         "charLevelReq": 83
     }),
     37: _tools.RODict({
         "ID": 37,
         "upgradeContributionCost": 15500,
         "upgradeCoinCost": 3000000,
-        "yanWuGeLvReq": 4,
+        "yanWuGeLvReq": 5,
         "charLevelReq": 84
     }),
     38: _tools.RODict({
         "ID": 38,
         "upgradeContributionCost": 16000,
         "upgradeCoinCost": 3100000,
-        "yanWuGeLvReq": 4,
+        "yanWuGeLvReq": 5,
         "charLevelReq": 85
     }),
     39: _tools.RODict({
         "ID": 39,
         "upgradeContributionCost": 16500,
         "upgradeCoinCost": 3200000,
-        "yanWuGeLvReq": 4,
+        "yanWuGeLvReq": 5,
         "charLevelReq": 86
     }),
     40: _tools.RODict({
         "ID": 40,
         "upgradeContributionCost": 17000,
         "upgradeCoinCost": 3300000,
-        "yanWuGeLvReq": 4,
+        "yanWuGeLvReq": 5,
         "charLevelReq": 87
     })
 })

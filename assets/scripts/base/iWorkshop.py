@@ -9,6 +9,7 @@ import gamedecorator
 import dataUtils
 import dropAward
 import gameclass
+import gameengine
 import LogTrackingMgr
 
 import workShop_config as WSC
@@ -44,6 +45,14 @@ class IWorkshop(object):
     @gamedecorator.limitcall(1)
     def reqWorkshopMF(self, exposed, itemID, batchCount, gridIds, gridNums):    
         LOG_INFO("reqWorkshopMF ", exposed, itemID, batchCount, gridIds, gridNums)
+        tmpGridIds = [gridId for gridId in gridIds]
+        tmpGridIds = set(tmpGridIds)
+        if len(tmpGridIds) == 0 or len(tmpGridIds) != len(gridIds):
+            gameengine.panicStack("reqWorkshopMF, lack of materials, grid id repeated ", gridIds)
+            return
+        if len(gridIds) != len(gridNums):
+            gameengine.panicStack("reqWorkshopMF, lack of materials, grid id list is not equal to grid num list ", gridIds, gridNums)
+            return
         normalDatas = []
         luckyDatas = []
         if not gameconfig.enableWorkshop():
@@ -92,13 +101,10 @@ class IWorkshop(object):
         itemTypeId = dataUtils.getItemTypeID(itemID)
         wslData = WSL.datas.get(itemTypeId)
         if wslData:
-            usedCount = self.monthlyLimit.get(itemTypeId, None)
-            if usedCount is None:
-                self.monthlyLimit[itemTypeId] = 0
-            else:
-                if usedCount + batchCount > wslData['limit']:
-                    self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_OVER_MONTHLY_LIMIT, normalDatas, luckyDatas)
-                    return
+            usedCount = self.monthlyLimit.get(itemTypeId, 0)
+            if usedCount + batchCount > wslData['limit']:
+                self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_OVER_MONTHLY_LIMIT, normalDatas, luckyDatas)
+                return
             
         datas = self.calculateComsumeItems(gridIds, gridNums)
         if not datas:
@@ -114,10 +120,8 @@ class IWorkshop(object):
         else:
             # 成功处理，记录次数
             itemTypeId = dataUtils.getItemTypeID(itemID)
-            usedCount = self.monthlyLimit.get(itemTypeId, None)
-            if not (usedCount is None):
-                totalCount = usedCount + batchCount
-                self.monthlyLimit[itemTypeId] = totalCount
+            usedCount = self.monthlyLimit.get(itemTypeId, 0)
+            self.monthlyLimit[itemTypeId] = usedCount + batchCount
 
         self.client.onWorkshopMF(ret, normalDatas, luckyDatas)
     #------------------------------------------------client api------------------------------------------------------------------
@@ -211,14 +215,14 @@ class IWorkshop(object):
                 if mID == itemID:
                     addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
                     normalWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
-                normalDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindType':mBindType, 'quality':dataUtils.getItemQuality(mID)})
+                normalDatas.append({'item_id':mID, 'item_count':outItemCount, 'bind_type':mBindType, 'item_quality':dataUtils.getItemQuality(mID)})
             
             # 幸运物品
             for outItemKey, outItemCount in luckyItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
                 luckyWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
-                luckyDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindType':mBindType, 'quality':dataUtils.getItemQuality(mID)})
+                luckyDatas.append({'item_id':mID, 'item_count':outItemCount, 'bind_type':mBindType, 'item_quality':dataUtils.getItemQuality(mID)})
 
             if not self.canAddWealthVal(srcType, addWealthVal):
                 LOG_WARN("doWorkshopManufactoring ~ bag space is not enough")
@@ -231,8 +235,8 @@ class IWorkshop(object):
                 LOG_WARN("doWorkshopManufactoring ~ item is not enough")
                 return gameconst.WorkshopResult.WORKSHOP_LIMIT_CURRENCY_IS_NOT_ENOUGH, None, None
             
-            costDetail = gameclass.AwardDetail()
-            gotDetail = gameclass.AwardDetail()
+            costDetail = gameclass.AwardDetailCls()
+            gotDetail = gameclass.AwardDetailCls()
 
             consumedGirdData = {}
             totalCount = len(gridIds)
@@ -241,14 +245,18 @@ class IWorkshop(object):
                 gridNum = gridNums[idx]
                 consumedGirdData[gridId] = consumedGirdData.get(gridId, 0) + gridNum
             
-            self.bagData.deductItemsByGrid(self, consumedGirdData, opUUID, srcType, costDetail)
+            self.bagData.deductItemsByGridId(self, consumedGirdData, opUUID, srcType, costDetail)
                 
             # 扣除消耗道具
             self.deductWealth(srcType, deductWealthVal, opUUID, costDetail)
             # 增加获得道具
             self.addWealth(srcType, addWealthVal, opUUID, gotDetail)
 
-            LogTrackingMgr.LogTrackingMgr.Work_Shop(opUUID, self.gbID, itemID, batchCount, normalDatas, luckyDatas)
+            targetDatas = []
+            itemData = {'item_id':itemID, 'item_count':1, 'item_quality':dataUtils.getItemQuality(itemID)}
+            for _ in range(0, batchCount):
+                targetDatas.append(itemData)
+            LogTrackingMgr.LogTrackingMgr.workshop(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, targetDatas, batchCount, normalDatas, luckyDatas)
             return ret, normalWealthVal.toBriefList(), luckyWealthVal.toBriefList()
         return ret, None, None
 

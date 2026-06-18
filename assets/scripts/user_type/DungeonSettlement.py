@@ -119,3 +119,7 @@ class DungeonSettlementData(userType.UserSingleType):
         rewardData['wait'] = True
 
         return extra
+
+    def _calcInnerDemonSettlement(self, box, rewardDatas, opUUId, uniqueId, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score):
+        extra = self._getDungeonExtraData(rewardDatas, dungeonExtraDatas, win, 0, score)
+        entity.base.onDungeonSettlement(gameconst.DungeonPlayModeEnum.INNER_DEMON, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)

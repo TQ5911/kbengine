@@ -55,7 +55,7 @@ class AvatarScores(userType.UserSingleType):
 
     def getTlogStr(self):
         return ','.join(["{}:{}".format(scoreName, getattr(self, scoreName)) for scoreName in self.__attrs__])
-
+    
 class AvatarScoresInfo(userType.ABCInfo):
     def createObjFromDict(self, dic):
         return AvatarScores(**dic)
@@ -70,7 +70,7 @@ class AvatarScoresInfo(userType.ABCInfo):
             'skill': math.floor(obj.skill),
             'guildtrain': math.floor(obj.guildtrain),
             'meridian': math.floor(obj.meridian),
-            'bless': math.floor(obj.bless)
+            'bless': math.floor(obj.bless),
         }
 
     def isSameType(self, obj):

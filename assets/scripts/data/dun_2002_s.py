@@ -9,6 +9,7 @@ datas ={
         "CustomID": "",
         "Dir": 208.7285,
         "DisplayName": "",
+        "EliteCustomID": "",
         "EntityID": 0,
         "ID": 20020001,
         "PosX": 374.510651,

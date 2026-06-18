@@ -81,16 +81,23 @@ def reloadDataBase(su):
     import gamerefresh
     gamerefresh.refreshData()
 
-@gm_cmd('$kickavatar', (Player("gbId or Id"), Int('msg Id')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
-def kickAvatar(su, player, msgId):
-    if msgId == 0:
-        msgId = LGSD.datas['login_serverClosed']['value']
-    if not player.gmMode :
-        player.onMessagePre(msgId, [])
-        ret = player.destroySelf(gameconst.OFFLINE_REASON_GMKICK)
+@gm_cmd('$kickavatar', (Player("gbId or Id", raw=True), Str('msg content')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
+def kickAvatar(su, player, msgContent):
+    if gmCommand.isRawPlayer(player):
+        return su.onCommandResult(0, f'command success', {
+            'effective': 1
+        })
 
-        return ret, '执行完成：%s,%s'% (ret, msgId)
+    if not player.gmMode:
+        player.onMessagePre(LGSD.datas['forceLogout']['value'], [msgContent])
+        player.destroySelf(gameconst.OFFLINE_REASON_GMKICK)
+        return su.onCommandResult(0, f'command success', {
+            'effective': 1
+        })
 
+    return su.onCommandResult(0, f'avatar is gm', {
+        'effective': 0
+    })
 
 def _kickAllAccount(msgId, *args):
     import gameengine

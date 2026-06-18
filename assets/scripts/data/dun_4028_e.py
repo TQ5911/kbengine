@@ -121,7 +121,7 @@ datas ={
   "1060": {
     "type": "createCollection",
     "entityID": [
-      40028003
+      40288003
     ],
     "num": 0,
     "randomCollectionNum": 0,
@@ -133,13 +133,8 @@ datas ={
     }
   },
   "1061": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      -1
-    ],
-    "compare": 1,
-    "restNum": 0,
-    "usePrototypeID": 0,
+    "type": "taskFinished",
+    "taskID": 86060153,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -151,7 +146,7 @@ datas ={
   "1062": {
     "type": "collBeCollected",
     "entityID": [
-      40028003
+      40288003
     ],
     "usePrototypeID": 0,
     "infLoop": 1,
@@ -166,7 +161,7 @@ datas ={
   "1063": {
     "type": "createNPC",
     "entityID": [
-      40024001
+      40284001
     ],
     "num": 0,
     "lv": "1",

@@ -2,7 +2,55 @@
 from KBEDebug import *
 
 import ResMgr
+import gameglobal
 
+def wrapFunc(f):
+
+    @functools.wraps(f)
+    def _wrapper(self, *args, **kwargs):
+        msgId = gameglobal.globalBlockExposedFuncName.get(f.__name__, None)
+        if msgId is not None:
+            if KBEngine.component == 'cellapp':
+                self.showMsg(msgId, [])
+            else:
+                self.onMessagePre(msgId, [])
+            return
+
+        if self.isCrossServer and not f.crossServerCallable:
+            ERROR_MSG("call func not crossServerCallable in crossServer", f.__name__)
+            return
+
+        if not self.isCrossServer and not f.localServerCallable:
+            ERROR_MSG("call func not localServerCallable in localServer", f.__name__)
+            return
+
+        return f(self, *args, **kwargs)
+
+    return _wrapper
+
+class ExposedWrapperMetaClass(type):
+    def __new__(cls, name, bases, attrs):
+        exposedMethods = KBEngine.getExposedMethods(name)
+        whole = len(exposedMethods)
+        count = 0
+        for methodName in exposedMethods:
+            if methodName in attrs:
+                method = attrs[methodName]
+                setattr(method, 'crossServerCallable', getattr(method, 'crossServerCallable', False))
+                setattr(method, 'localServerCallable', getattr(method, 'localServerCallable', True))
+                attrs[methodName] = wrapFunc(method)
+                count += 1
+            else:
+                for baseCls in bases:
+                    if hasattr(baseCls, methodName):
+                        func = getattr(baseCls, methodName)
+                        setattr(func, 'crossServerCallable', getattr(func, 'crossServerCallable', False))
+                        setattr(func, 'localServerCallable', getattr(func, 'localServerCallable', True))
+                        setattr(baseCls, methodName, wrapFunc(func))
+                        count += 1
+
+        WARNING_MSG('meta exposed methods:', name, whole, count)
+        return super().__new__(cls, name, bases, attrs)
 
 def getPersistBaseProp(attr):
     def f(self):

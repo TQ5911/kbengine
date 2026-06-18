@@ -23,7 +23,7 @@ class SpaceMapStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onTimer(self, timerID, userData):
-        self._onTimer(timerID, userData)
+        self._onTimerTrigger(timerID, userData)
         if userData == gametimer.SPACE_MAP_STUB_READY:
             self._doReady()
         return

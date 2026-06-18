@@ -79,7 +79,7 @@ class Space(iBase.IBase):
         elif formula.inDungeonScene(self.spaceno):
             gameengine.getDungeonStubBySpaceNo(self.spaceno).onDungeonSpaceGone(self.spaceno, reason)
 
-        self.entireDestroy(False, False)
+        self.doEntireDestroy(False, False)
 
         return
 
@@ -123,14 +123,16 @@ class Space(iBase.IBase):
             gameengine.getWonderLandStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
         elif formula.inSiegeWarScene(self.spaceno):
             gameengine.getGlobalBase('SiegeWarSpaceStub').onStaticSpaceReady(self.spaceno)
+        elif formula.inAbyssScene(self.spaceno):
+            gameengine.getAbyssStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
         else:
             LOG_ERR('unsupported space', self.spaceno)
         return
 
-    def entireDestroy(self, deleteFromDB, writeToDB):
+    def doEntireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
-        LOG_INFO("space entireDestroy ", self.spaceno)
+        LOG_INFO("space doEntireDestroy ", self.spaceno)
 
         self._preEntireDestroy()
 
@@ -160,14 +162,6 @@ class Space(iBase.IBase):
 
     def _initData(self):
         LOG_INFO("Space#initData", self.spaceid, self.spaceno)
-        # gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACENO_TO_SPACEID+':'+str(self.spaceno), self.spaceid)
-        # gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACEID_TO_SPACENO+':'+str(self.spaceid), self.spaceno)
-
-        # if self.spacetype == gameconst.SpaceType.SpaceWorld:
-        #     for baseApp in gameengine.getAllBaseApps():
-        #         baseApp.supplyMarker(self.spaceno, self.spaceid)
-
-        return
 
     def setBaseAppData(self, key, val):
         gameengine.setBaseAppData(key, val)

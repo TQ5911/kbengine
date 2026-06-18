@@ -5,7 +5,7 @@ datas ={
       23020001
     ],
     "num": 0,
-    "lv": "35",
+    "lv": "50",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -85,7 +85,7 @@ datas ={
     "entityID": [
       23020001
     ],
-    "dialogID": 19031002,
+    "dialogID": 19032002,
     "transition": {
       "finished": [
         1005
@@ -97,7 +97,7 @@ datas ={
     "entityID": [
       23020001
     ],
-    "dialogID": 19031001,
+    "dialogID": 19032001,
     "transition": {}
   },
   "1036": {

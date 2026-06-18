@@ -19,6 +19,7 @@ import dropAward
 import gameclass
 import random
 import actionContext
+import gamedecorator
 
 class IBounty(object):
     def __init__(self):
@@ -194,7 +195,7 @@ class IBounty(object):
         if realMoney < 0:
             LOG_ERR("IBounty::reqPublishBounty money cfg error")
             return
-        curMoney = self.getItemNum(gameconst.ItemId.MONEY)
+        curMoney = self.getItemNum(gameconst.ItemIdEnum.MONEY)
         if curMoney < realMoney:
             self.onMessagePre(MMD.datas.LackingMoneyMsg, [])
             LOG_WARN("IBounty::reqPublishBounty no enough money", curMoney, realMoney, publishMoney, depositMoney)
@@ -339,17 +340,22 @@ class IBounty(object):
             realMoney = prePublishItem.publishMoney
         elif prePublishItem.bountyType == gameconst.BountyType.ASSIGN:
             realMoney = prePublishItem.publishMoney + prePublishItem.depositMoney
-        deductWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, realMoney)
+        deductWealthVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, realMoney)
         if not self.canDeductWealth(deductWealthVal):
             gameengine.getGlobalBase('BountyStub').onPublisherPrePublishBountyRes(self, bountyDict, gameconst.PublishBountyResType.PUBLISHER_NOT_ENOUGH_MONEY)
             LOG_WARN("IBounty::onPublisherPrePublishBounty no enough money")
             return
 
         srcType = AAC_AACDD.datas.BONUS_SRC_BOUNTY_COST
-        detail = gameclass.AwardDetail(costItemId=gameconst.ItemId.MONEY, costItemNum=realMoney)
+        detail = gameclass.AwardDetailCls(costItemId=gameconst.ItemIdEnum.MONEY, costItemNum=realMoney)
         self.deductWealth(srcType, deductWealthVal, prePublishItem.uuid, detail)
         gameengine.getGlobalBase('BountyStub').onPublisherPrePublishBountyRes(self, prePublishItem.toSyncDict(), gameconst.PublishBountyResType.SUCCESS)
         LOG_INFO("IBounty::onPublisherPrePublishBounty end")
+
+    @gamedecorator.offlineCallback
+    def onPublishBountyOffline(self):
+        LOG_INFO("IBounty::onPublishBountyOffline")
+        self.triggerAchievementWithCtx(gameconst.AchieveType.BOUNTY, actionContext.AchievementCtx(bountyType=gameconst.AchieveBountyType.PUBLISH_BOUNTY))
 
     def onNoticeBecomePrey(self, preyDict):
         LOG_INFO("IBounty::onNoticeBecomePrey", preyDict)
@@ -358,19 +364,31 @@ class IBounty(object):
         if self.preyInfo:
             LOG_ERR("IBounty::onNoticeBecomePrey error", self.preyInfo)
         self.preyInfo = preyItem
-
+        self.triggerAchievementWithCtx(gameconst.AchieveType.BOUNTY, actionContext.AchievementCtx(bountyType=gameconst.AchieveBountyType.BE_BOUNTY))
         self.cell.setPreyInfo(self.preyInfo.toSyncDict())
         #self.client
 
-    def onNoticeBecomePreyHunter(self, preyHunterDict):
-        LOG_INFO("IBounty::onNoticeBecomePreyHunter", preyHunterDict)
+    @gamedecorator.offlineCallback
+    def onNoticeBecomePreyOffline(self):
+        LOG_INFO("IBounty::onNoticeBecomePreyOffline")
+        self.triggerAchievementWithCtx(gameconst.AchieveType.BOUNTY, actionContext.AchievementCtx(bountyType=gameconst.AchieveBountyType.BE_BOUNTY))
+
+    def onNoticeBecomePreyHunter(self, preyHunterDict, curFlag):
+        LOG_INFO("IBounty::onNoticeBecomePreyHunter", preyHunterDict, curFlag)
         preyHunterItem = bountyItem()
         preyHunterItem.initFromSyncDict(preyHunterDict)
+        if curFlag == gameconst.BountyFlag.PREY_HUNTER:
+            self.triggerAchievementWithCtx(gameconst.AchieveType.BOUNTY, actionContext.AchievementCtx(bountyType=gameconst.AchieveBountyType.BE_BOUNTY))
         self.preyInfo = preyHunterItem
         LOG_INFO("IBounty::onNoticeBecomePreyHunter preyInfo", self.preyInfo)
 
         self.cell.setPreyInfo(self.preyInfo.toSyncDict())
         #self.client
+
+    @gamedecorator.offlineCallback
+    def onNoticeBecomePreyHunterOffline(self):
+        LOG_INFO("IBounty::onNoticeBecomePreyHunterOffline")
+        self.triggerAchievementWithCtx(gameconst.AchieveType.BOUNTY, actionContext.AchievementCtx(bountyType=gameconst.AchieveBountyType.BE_BOUNTY))
 
     def onNoticeHasAccepted(self, preyHunterDict):
         LOG_INFO("IBounty::onNoticeHasAccepted", preyHunterDict)
@@ -429,7 +447,7 @@ class IBounty(object):
             LOG_ERR("IBounty::reqAcceptBounty depositMoney error", depositMoneyCfg)
             return
         realMoney = depositMoneyCfg
-        curMoney = self.getItemNum(gameconst.ItemId.MONEY)
+        curMoney = self.getItemNum(gameconst.ItemIdEnum.MONEY)
         if curMoney < realMoney:
             self.onMessagePre(MMD.datas.LessMoneyMsg, [])
             LOG_WARN("IBounty::reqAcceptBounty no enough money", curMoney, realMoney)
@@ -508,14 +526,14 @@ class IBounty(object):
 
         deductWealthVal = dropAward.DeductWealthVal()
         realMoney = preAcceptItem.depositMoney
-        deductWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, realMoney)
+        deductWealthVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, realMoney)
         if not self.canDeductWealth(deductWealthVal):
             gameengine.getGlobalBase('BountyStub').onHunterPreAcceptBountyRes(self, bountyDict, gameconst.AcceptBountyResType.HUNTER_NOT_ENOUGH_MONEY)
             LOG_WARN("IBounty::onHunterPreAcceptBounty no enough money")
             return
 
         srcType = AAC_AACDD.datas.BONUS_SRC_KILLER_COST
-        detail = gameclass.AwardDetail(costItemId=gameconst.ItemId.MONEY, costItemNum=realMoney)
+        detail = gameclass.AwardDetailCls(costItemId=gameconst.ItemIdEnum.MONEY, costItemNum=realMoney)
         self.deductWealth(srcType, deductWealthVal, preAcceptItem.uuid, detail)
 
         preAcceptItem.hunterName = self.characterName
@@ -549,8 +567,8 @@ class IBounty(object):
 
     def bountyAddWealth(self, src, money, uuid):
         addWealthVal = dropAward.AwardVal()
-        detail = gameclass.AwardDetail(costItemId=gameconst.ItemId.MONEY, costItemNum=money)
-        addWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, money)
+        detail = gameclass.AwardDetailCls(costItemId=gameconst.ItemIdEnum.MONEY, costItemNum=money)
+        addWealthVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, money)
         self.addWealth(src, addWealthVal, uuid, detail)
 
     def onNoticeExpiredBounty(self, expiredDict, baType, beType):

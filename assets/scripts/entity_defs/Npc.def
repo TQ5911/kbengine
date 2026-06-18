@@ -36,27 +36,6 @@
             <Flags>	OTHER_CLIENTS				</Flags>
         </name>
 
-        <moveController>
-            <Type>	UINT32						</Type>
-            <Flags>	CELL_PRIVATE 			</Flags>
-        </moveController>
-
-        <bornPosition>
-            <Type>	POSITION3D				</Type>
-            <Flags>	CELL_PRIVATE 			</Flags>
-        </bornPosition>
-
-        <route>
-            <Type>      PYTHON        </Type>
-            <Flags>     CELL_PRIVATE    </Flags>
-            <Default>    []            </Default>
-        </route>
-
-        <thinkTimer>
-            <Type>      TIMER_ID        </Type>
-            <Flags>     CELL_PRIVATE    </Flags>
-        </thinkTimer>
-
         <belongFestivalId>
             <Type>      UINT32           </Type>
             <Flags>     CELL_PRIVATE     </Flags>

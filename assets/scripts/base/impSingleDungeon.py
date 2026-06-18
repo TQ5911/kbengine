@@ -17,6 +17,19 @@ import gameclass
 
 
 class ImpSingleDungeon(object):
+    def onInnerDemonRewardCntRefreshDaily(self, *args):
+        self.innerDemonRewardCnt = 0
+
+    def updateInnerDemonRewardCnt(self):
+        self.innerDemonRewardCnt += 1
+
+    def checkInnerDemonRewardCnt(self):
+        maxRewardCnt = 1
+        res = self.innerDemonRewardCnt < maxRewardCnt
+        LOG_INFO('checkInnerDemonRewardCnt', self.innerDemonRewardCnt, maxRewardCnt, res)
+        if not res:
+            self.onMessagePre(MMD.datas.cube_innerDemonNoTimes, [])
+        return res
 
     def _getParamBydungeonNo(self, dungeonNo, pName):
         if dungeonNo in DDL.datas:
@@ -46,7 +59,7 @@ class ImpSingleDungeon(object):
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_ENTER_DUNGEON
-        detail = gameclass.AwardDetail(spaceNo=spaceNo)
+        detail = gameclass.AwardDetailCls(spaceNo=spaceNo)
         self.deductWealth(src, deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterSingleDungeon(
             gameconst.BagOPStat.OPERATE_BAG_STAT_OK, spaceBox, spaceMgrBox,

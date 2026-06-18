@@ -157,7 +157,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
             if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
                 self._onDatetimeTimerTick()
             else:
-                self._onTimer(tid, userArg)
+                self._onTimerTrigger(tid, userArg)
 
     def _onSiegeWarSpaceTick(self):
         if not self.spaceInvoked:

@@ -5,9 +5,8 @@ import KBEngine
 
 import utils
 import formula
-import gamelog
-import gameconst
 import gameclass
+import gameconst
 import gameengine
 import gamedecorator
 
@@ -18,8 +17,8 @@ import dungeonSrc
 import complexTeleportOption
 import gametimer
 
-import message_Message_def as MMD
-import gamePlay_gamePlay as DDID
+import message_Message_def as M_M_DD
+import gamePlay_gamePlay as GP_GPD
 import raid_raidConst as RAID_CONST
 import dungeonPlayMode
 import raidBossChallenge_config as RBC_CFG
@@ -38,13 +37,13 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         self.setTempMiscProp(gameconst.EntityPropsEnum.raidDungeonCheckRecord, newValue)
 
     def resetCreateRaidDungeonCheckRecord(self, cacheArgs=(), initChecklist=True):
-        d = self.createRaidDungeonCheckRecord
+        _d = self.createRaidDungeonCheckRecord
         newUUID = KBEngine.genUUID64()
-        d['checkUUID'] = newUUID
-        d['checklist'].clear()
+        _d['checkUUID'] = newUUID
+        _d['checklist'].clear()
         if initChecklist:
-            d['checklist'].update({i: None for i in self.raidInfo.getAllPlayerGBIDList()})
-        d['cacheArgs'] = cacheArgs
+            _d['checklist'].update({i: None for i in self.raidInfo.getAllPlayerGBIDList()})
+        _d['cacheArgs'] = cacheArgs
         return newUUID
 
     def isAllCreateRaidDungeonChecked(self, dungeonPlayMode=None):
@@ -52,36 +51,41 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
 
     def _isAllCreateRaidDungeonChecked(self):
-        r = True
-        for k, v in self.createRaidDungeonCheckRecord['checklist'].items():
-            if v is None:
+        _r = True
+        for _, _v in self.createRaidDungeonCheckRecord['checklist'].items():
+            if _v is None:
                 return False, False
-            elif not v:
-                r = v
-        return True, r
+            elif not _v:
+                _r = _v
+        return True, _r
 
     # ===========================================
     # DUNGEON TRAP METHODS
 
     def _createRaidDungeonTrap(self, dungeonNo):
-        self.addTimerCB(1, '_raidDungeonTrapCallback', (dungeonNo, self.DEFAULT_EXIT_COUNT), gametimer.TIMER_TAG_RAID_DUNGEON_TRAP_CALLBACK)
+        self.addTimerCB(
+            1, 
+            '_raidDungeonTrapCallback', 
+            (dungeonNo, self.DEFAULT_EXIT_COUNT), 
+            gametimer.TIMER_TAG_RAID_DUNGEON_TRAP_CALLBACK,
+        )
 
     def _raidDungeonTrapCallback(self, dungeonNo, exitCount):
         if formula.fetchMapId(self.spaceNo) != dungeonNo:
             return
         
-        mapInfo = self._getMapInfoByDungeonNo(dungeonNo)
-        if not mapInfo:
+        _mapInfo = self._getMapInfoByDungeonNo(dungeonNo)
+        if not _mapInfo:
             return
 
-        if not self._isPlayerInMap(mapInfo):
+        if not self._isPlayerInMap(_mapInfo):
             if exitCount <= 0:
-                self.showMsg(MMD.datas.crossingDungeonArea, [])
+                self.showMsg(M_M_DD.datas.crossingDungeonArea, [])
                 self.leaveRaidDungeon(self.id)
                 return
 
             if exitCount == self.DEFAULT_EXIT_COUNT:
-                self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
+                self.showMsg(M_M_DD.datas.leavingDungeonArea, [str(exitCount)])
 
             LOG_INFO('_raidDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
@@ -106,20 +110,21 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
     def onSetRaidDungeonInfo(self, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox):
         """设置团队副本后团队回调(from RaidStub)"""
         LOG_INFO('onSetRaidDungeonInfo::', dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox)
-        if not self.isInRaid():
+        if not self.inRaid():
             LOG_WARN('onSetRaidDungeonInfo:: missing raid cache')
             return
-        raidDungeonVal = raid.RaidDungeonCacheVal(dungeonNo=dungeonNo,
-                                                  spaceNo=spaceNo,
-                                                  spaceUUID=spaceUUID,
-                                                  spaceBox=spaceBox,
-                                                  spaceMgrBox=spaceMgrBox)
-        self.raidInfo.raidDungeonRecords[dungeonNo] = raidDungeonVal
+        _raidDungeonVal = raid.RaidDungeonCacheVal(
+            dungeonNo=dungeonNo,
+            spaceNo=spaceNo,
+            spaceUUID=spaceUUID,
+           spaceBox=spaceBox,
+           spaceMgrBox=spaceMgrBox,)
+        self.raidInfo.raidDungeonRecords[dungeonNo] = _raidDungeonVal
 
     def onClearRaidDungeonInfo(self, dungeonNo, spaceNo, spaceUUID):
         """清除团队副本后团队回调(from RaidStub)"""
         LOG_INFO('onClearRaidDungeonInfo::', dungeonNo, spaceNo, spaceUUID)
-        if not self.isInRaid():
+        if not self.inRaid():
             LOG_WARN('onClearRaidDungeonInfo:: missing raid cache')
             return
 
@@ -127,8 +132,8 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             LOG_WARN('onClearRaidDungeonInfo:: missing raid dungeon cache', dungeonNo)
             return
 
-        record = self.raidInfo.raidDungeonRecords[dungeonNo]    # type: raid.RaidDungeonCacheVal
-        if record.spaceNo != spaceNo or record.spaceUUID != spaceUUID:
+        _record = self.raidInfo.raidDungeonRecords[dungeonNo]    # type: raid.RaidDungeonCacheVal
+        if _record.spaceNo != spaceNo or _record.spaceUUID != spaceUUID:
             LOG_WARN('onClearRaidDungeonInfo:: space out date', dungeonNo, spaceNo, spaceUUID)
             return
 
@@ -136,29 +141,24 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     @utils.isMyself
-    @gamedecorator.limitcall(3, msgId=MMD.datas.dungeonRefused)
+    @gamedecorator.limitcall(3, msgId=M_M_DD.datas.dungeonRefused)
     def enterRaidChallengeDungeon(self, exposed, dungeonNo, isHero):
         LOG_INFO("enterRaidChallengeDungeon::~", dungeonNo, isHero)
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self._enterRaidChallengeDungeon(dungeonNo, isHero, src=src)
 
     def _enterRaidChallengeDungeon(self, dungeonNo, isHero, src=None):
-        src = src or dungeonSrc.BasicDungeonSrc()
-        dunPlayMode = dungeonPlayMode.GuildChallengePlayMode(isHero)
+        if not src:
+            src = dungeonSrc.BasicDungeonSrc()
+
+        _dunPlayMode = dungeonPlayMode.GuildChallengePlayMode(isHero)
         self._enterRaidDungeon(dungeonNo, src, {
-            'dungeonPlayMode': dunPlayMode
+            'dungeonPlayMode': _dunPlayMode
         })
 
     def selfEnterRaidDungeon(self, dungeonNo, src):
-        LOG_INFO("selfEnterRaidDungeon::", dungeonNo, src)
+        LOG_INFO("selfEnterRaidDungeon::", src, dungeonNo)
         self._enterRaidDungeon(dungeonNo, src, {})
-
-    def createRaidDungeonAndNotEnter(self, dungeonNo, src, extraProps):
-        LOG_INFO('createRaidDungeonAndNotEnter::', dungeonNo, src, extraProps)
-        if extraProps is None:
-            extraProps = {}
-        extraProps['noEnterDungeon'] = True
-        self._enterRaidDungeon(dungeonNo, src, extraProps)
 
     def _handleEnterRaidDungeonFail(self, err, dungeonNo, src):
         if err == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_IN_RAID:
@@ -167,48 +167,47 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
     def enterRaidDungeon(self, dungeonNo, src, extraProps):
         self._enterRaidDungeon(dungeonNo, src, extraProps)
         
-    def _enterRaidDungeon(self, dungeonNo, src, extraProps):
-        LOG_INFO('enterRaidDungeon::~', dungeonNo, extraProps)
-        _, err = self._enterRaidDungeonPreCheck(dungeonNo)
+    def _enterRaidDungeon(self, dunNo, src, extraProps):
+        LOG_INFO('enterRaidDungeon::~', dunNo, extraProps)
+        _, err = self._enterRaidDungeonPreCheck(dunNo)
         if err != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
             LOG_WARN('enterRaidDungeon:: pre-check failed, {}'.format(err))
-            self._handleEnterRaidDungeonFail(err, dungeonNo, src)
+            self._handleEnterRaidDungeonFail(err, dunNo, src)
             return
 
-        if dungeonNo in self.raidInfo.raidDungeonRecords:
+        if dunNo in self.raidInfo.raidDungeonRecords:
             # 直接进入团队副本
-            self.enterRaidDungeonDirectly(dungeonNo, src, extraProps)
+            self.enterRaidDunDirectly(dunNo, src, extraProps)
         else:
             # 创建并且进入团队副本
-            self.createAndEnterRaidDungeon(dungeonNo, src, extraProps)
+            self.createAndEnterRaidDungeon(dunNo, src, extraProps)
 
     def _enterRaidDungeonPreCheck(self, dungeonNo):
         _errno = gameconst.RaidDungeonErrno
-        if dungeonNo not in DDID.datas:
+        if dungeonNo not in GP_GPD.datas:
             return None, _errno.ENUM_RAID_DUNGEON_ID_NOT_FOUND.initkvbody(dungeonNo=dungeonNo)
         if formula.parseDungeonNoBySpaceNo(self.spaceNo) == dungeonNo:
             return None, _errno.ENUM_RAIDDUN_REPEAT_ENTER_SAME_DUNGEON.initkvbody(dungeonNo=dungeonNo)
         if not self.checkCrtMapCanEnterDungeon():
-            return None, _errno.UNKNOWN.initkvbody(reason='current space not allowed enter dungeon')
-        if not self.isInRaid():
+            return None, _errno.UNKNOWN.initkvbody(reason='cur space not allowed enter dungeon')
+        if not self.inRaid():
             return None, _errno.ENUM_RAIDDUN_NOT_IN_RAID.initkvbody(dungeonNo=dungeonNo)
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, dungeonNo) or not self.canDoCompleteTeleport(noErrorMsg=True):
             return None, _errno.ENUM_RAIDDUN_NOT_IN_AVAILABLE_SPACE.initkvbody(spaceNo=self.spaceNo)
         return None, _errno.ENUM_RAIDDUN_OK
 
-    def enterRaidDungeonDirectly(self, dungeonNo, src, extraProps):
+    def enterRaidDunDirectly(self, dungeonNo, src, extraProps):
         """直接进入团队副本"""
-        LOG_INFO('enterRaidDungeonDirectly::', dungeonNo, src, extraProps)
+        LOG_INFO('enterRaidDunDirectly::', src, dungeonNo, extraProps)
         _, err = self._enterRaidDugeonDirectlyCheck(dungeonNo, src, extraProps)
         if err != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
-            LOG_ERR('enterRaidDungeonDirectly:: failed, {}'.format(err))
+            LOG_ERR('enterRaidDunDirectly:: failed, {}'.format(err))
         raidDungeonVal = self.raidInfo.raidDungeonRecords[dungeonNo]    # type: raid.RaidDungeonCacheVal
-        spaceNo, spaceUUID = raidDungeonVal.spaceNo, raidDungeonVal.spaceUUID
+        _, spaceUUID = raidDungeonVal.spaceNo, raidDungeonVal.spaceUUID
         spaceBox, spaceMgrBox = raidDungeonVal.spaceBox, raidDungeonVal.spaceMgrBox
-        # self._doEnterRaidDungeon(dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra)
-        spaceMgrBox.cell.enterRaidDungeonDirectly(self.base, self.gbId, spaceUUID, spaceBox, src, extraProps)
+        spaceMgrBox.cell.enterRaidDunDirectly(self.base, self.gbId, spaceUUID, spaceBox, src, extraProps)
 
-    def _enterRaidDugeonDirectlyCheck(self, dungeonNo, src, extra):
+    def _enterRaidDugeonDirectlyCheck(self, dungeonNo, *_):
         if dungeonNo not in self.raidInfo.raidDungeonRecords:
             return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_DUNGEON_VAL_NOT_FOUND
         return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
@@ -216,12 +215,12 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
     def createAndEnterRaidDungeon(self, dungeonNo, src, extraProps):
         """团队当前没有副本, 创建副本后进入"""
         LOG_INFO('createAndEnterRaidDungeon::', dungeonNo, src, extraProps)
-        dungeonPlayMode = extraProps.get("dungeonPlayMode")
-        _, err = self._createAndEnterRaidDungeonCheck(dungeonNo, dungeonPlayMode)
+        _dungeonPlayMode = extraProps.get("dungeonPlayMode")
+        _, err = self._createAndEnterRaidDungeonCheck(dungeonNo)
         if err != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
             _i_logErr = False
             if err == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_RAID_LEADER:
-                self.showMsg(MMD.datas.dfzz_open_notRaidLeader, [])
+                self.showMsg(M_M_DD.datas.dfzz_open_notRaidLeader, [])
             elif err == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_GUILD_LEVEL_LOWER:
                 pass
             elif err == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_PLAYER_NOT_IN_GUILD:
@@ -240,40 +239,33 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         newCheckUUID = self.resetCreateRaidDungeonCheckRecord((extraProps, ))
 
         raidUUID = self.raidUUID
-        for _, memberGbId, memberVal in self.raidInfo.iterGetRaidMember():
-            _extra = {'checkUUID': newCheckUUID, 'dungeonPlayMode': dungeonPlayMode}
-            # if memberGbId == self.gbId:
-            #     _extra['_avatarProps'] = {'level': self.level, 'guildUUID': self.guildUUID, 'name': self.name}
-            #     self.onCreateAndEnterRaidDungeonAllMemberPreCheck(
-            #         gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK.errno,
-            #         raidUUID, dungeonNo, src, self.gbId, self.name, _extra)
-            #     continue
-
-            if memberVal.playerBox and memberVal.playerBox.cell:
-                memberVal.playerBox.cell.createAndEnterRaidDungeonAllMemberPreCheck(
+        for _, _, _memberVal in self.raidInfo.iterGetRaidMember():
+            _extra = {'checkUUID': newCheckUUID, 'dungeonPlayMode': _dungeonPlayMode}
+            if _memberVal.playerBox and _memberVal.playerBox.cell:
+                _memberVal.playerBox.cell.createAndEnterRaidDungeonAllMemberPreCheck(
                     self.base, raidUUID, dungeonNo, src, _extra)
 
     def _checkCreateDungeonByGuildLevel(self, dungeonNo):
-        openGuildLevel = DDID.datas[dungeonNo]['openGuildLevel']
-        if not openGuildLevel:
+        _openGuildLevel = GP_GPD.datas[dungeonNo]['openGuildLevel']
+        if not _openGuildLevel:
             return True
 
-        return self.guildLevel >= openGuildLevel
+        return self.guildLevel >= _openGuildLevel
 
     def _checkCreateDungeonNeedPlayerNum(self, dungeonNo):
         minNum = self._getParamBydungeonNo(dungeonNo, 'minNum')
         maxNum = self._getParamBydungeonNo(dungeonNo, 'maxNum')
         raidPlayerNum = self.raidInfo.raidPlayerNum
         if raidPlayerNum < minNum:
-            self.showMsg(MMD.datas.dungeonMinNum, [str(minNum)])
+            self.showMsg(M_M_DD.datas.dungeonMinNum, [str(minNum)])
             return False
         elif raidPlayerNum > maxNum:
-            self.showMsg(MMD.datas.dungeonMaxNum, [str(maxNum)])
+            self.showMsg(M_M_DD.datas.dungeonMaxNum, [str(maxNum)])
             return False
         else:
             return True
 
-    def _createAndEnterRaidDungeonCheck(self, dungeonNo, dungeonPlayMode=None):
+    def _createAndEnterRaidDungeonCheck(self, dungeonNo):
         if not self.isRaidLeader():
             return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_RAID_LEADER
 
@@ -307,31 +299,26 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
     def onCreateAndEnterRaidDungeonAllMemberPreCheck(self, errno, raidUUID, dungeonNo, src, playerGBID, playerName, extra):
-        errno = gameconst.RaidDungeonErrno._errno(errno)
-        LOG_INFO("onCreateAndEnterRaidDungeonAllMemberPreCheck::", errno, raidUUID, dungeonNo, src, extra)
+        _errno = gameconst.RaidDungeonErrno._errno(errno)
+        LOG_INFO("onCreateAndEnterRaidDungeonAllMemberPreCheck::", _errno, raidUUID, dungeonNo, src, extra)
 
-        createRaidDungeonCheckRecord = self.createRaidDungeonCheckRecord
-        if extra.get("checkUUID", -1) != createRaidDungeonCheckRecord['checkUUID']:
+        _createRaidDungeonCheckRecord = self.createRaidDungeonCheckRecord
+        if extra.get("checkUUID", -1) != _createRaidDungeonCheckRecord['checkUUID']:
             LOG_WARN("onCreateAndEnterRaidDungeonAllMemberPreCheck:: uuid not match, ignored",
-                        extra.get("checkUUID", -1), createRaidDungeonCheckRecord['checkUUID'])
+                        extra.get("checkUUID", -1), _createRaidDungeonCheckRecord['checkUUID'])
             return
 
-        if playerGBID not in createRaidDungeonCheckRecord['checklist']:
+        if playerGBID not in _createRaidDungeonCheckRecord['checklist']:
             LOG_ERR("onCreateAndEnterRaidDungeonAllMemberPreCheck:: playerGBID not found",
                       playerGBID, playerName)
             return
 
-        _checkResult = gameclass.BoolResult(errno == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK, extra=(errno, extra['_avatarProps']))
-        createRaidDungeonCheckRecord['checklist'][playerGBID] = _checkResult
+        _checkResult = gameclass.ResultBool(_errno == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK, extra=(_errno, extra['_avatarProps']))
+        _createRaidDungeonCheckRecord['checklist'][playerGBID] = _checkResult
 
-        cachedArgs = createRaidDungeonCheckRecord['cacheArgs']
+        cachedArgs = _createRaidDungeonCheckRecord['cacheArgs']
         cacheExtra = cachedArgs[0]
         _dungeonPlayMode = cacheExtra.get("dungeonPlayMode")
-
-        # if errno != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
-        #     LOG_WARN("onCreateAndEnterRaidDungeonAllMemberPreCheck:: check failed")
-        #     self.onCreateAndEnterRaidDungeonAllMemberPreCheckFailedMsg()
-        #     return
 
         allchecked, checkresult = self.isAllCreateRaidDungeonChecked(_dungeonPlayMode)
         if not allchecked:
@@ -340,25 +327,25 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
         if not checkresult:
             LOG_WARN("onCreateAndEnterRaidDungeonAllMemberPreCheck:: someone check failed")
-            self.onCreateAndEnterRaidDungeonAllMemberPreCheckFailedMsg()
+            self.onCreateAndEnterRaidDungeonAllMemberPreCheckFailedMsg(dungeonNo)
             return
 
         self.resetCreateRaidDungeonCheckRecord(initChecklist=False)
 
-        raidUUID = self.raidUUID
-        raidStub = gameengine.getRaidStub(raidUUID)
+        _raidUUID = self.raidUUID
+        raidStub = gameengine.getRaidStub(_raidUUID)
         raidStub.createAndEnterRaidDungeonPreCheck(
-            self.base, self.gbId, raidUUID, dungeonNo, src, cacheExtra)
+            self.base, self.gbId, _raidUUID, dungeonNo, src, cacheExtra)
 
-    def onCreateAndEnterRaidDungeonAllMemberPreCheckFailedMsg(self):
+    def onCreateAndEnterRaidDungeonAllMemberPreCheckFailedMsg(self, dungeonNo):
         _rcMemberLevelFailedList = []
         _rcMemberSpaceFailedList = []
         _fightStateFailedList = []
         _rewardNumFailedList = []
-        for playerGBID, checkBox in self.createRaidDungeonCheckRecord['checklist'].items():
-            if checkBox:
+        for playerGBID, _checkBox in self.createRaidDungeonCheckRecord['checklist'].items():
+            if _checkBox:
                 continue
-            _errno, _avatarProps = checkBox.extra
+            _errno, _avatarProps = _checkBox.extra
             if _errno == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_PLAYER_IN_FIGHT_STATE:
                 _fightStateFailedList.append((playerGBID, _avatarProps['name']))
             elif _errno == gameconst.RaidDungeonErrno.ENUM_RAIDDUN_MEMBER_LEVEL_LOWER:
@@ -367,20 +354,26 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
                 _rewardNumFailedList.append((playerGBID, _avatarProps['name']))
 
         if _fightStateFailedList:
-            self.showMsg(MMD.datas.enterDunFailFightTeammate, ['、'.join([i[1] for i in _fightStateFailedList]), ])
+            self.showMsg(M_M_DD.datas.enterDunFailFightTeammate, ['、'.join([_i[1] for _i in _fightStateFailedList]), ])
         if _rcMemberLevelFailedList:
-            self.showMsg(MMD.datas.slslTeammateLevel, ['、'.join([i[1] for i in _rcMemberLevelFailedList]), ])
+            self.showMsg(M_M_DD.datas.slslTeammateLevel, ['、'.join([_i[1] for _i in _rcMemberLevelFailedList]), ])
         if _rcMemberSpaceFailedList:
-            self.showMsg(MMD.datas.testMessage, ["{0}不在团本中，无法就位".format('、'.join([i[1] for i in _rcMemberSpaceFailedList])), ])
+            self.showMsg(M_M_DD.datas.testMessage, ["{0}不在团本中，无法就位".format('、'.join([_i[1] for _i in _rcMemberSpaceFailedList])), ])
         if _rewardNumFailedList:
-            self.showMsg(MMD.datas.raid_memberNoRewardNum, ['、'.join([i[1] for i in _rewardNumFailedList]), ]) 
+            self.client.onLackChallengeNum(dungeonNo, [_i[1] for _i in _rcMemberSpaceFailedList])
+
+            for data in _rewardNumFailedList:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                        [data[0], ], 'onMemberNoRewardNum',
+                        (dungeonNo,),
+                        None, '', ())
 
     def onCreateAndEnterRaidDungeonCheckOk(self, raidUUID, dungeonNo, src, extraProps):
         """createAndEnterRaidDungeon:: 团队检查条件完毕后回调"""
         LOG_INFO('onCreateAndEnterRaidDungeonCheckOk::', raidUUID, dungeonNo, src, extraProps)
 
         def _check():
-            if not self.isInRaid():
+            if not self.inRaid():
                 return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_IN_RAID
             if self.raidUUID != raidUUID:
                 return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_RAID_ID_NOT_MATCH
@@ -395,7 +388,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
         # 这次改版，需要废除这个二次standby的check流程
         # # CASE1: 团队副本二次确认
-        # if DDID.datas[dungeonNo]['teammateConfirm'] and self.raidInfo.raidPlayerNum > 1:
+        # if GP_GPD.datas[dungeonNo]['teammateConfirm'] and self.raidInfo.raidPlayerNum > 1:
         #     raidUUID = self.raidUUID
 
         #     extraProps.update({'enterDungeonNo': dungeonNo,
@@ -408,37 +401,37 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         # CASE2: 直接创建团队
         self.doCreateAndEnterRaidDungeon(raidUUID, dungeonNo, src, extraProps)
 
-    def doCreateAndEnterRaidDungeon(self, raidUUID, dungeonNo, src, extraProps):
+    def doCreateAndEnterRaidDungeon(self, raidUUID, dungeonNo, src, extra):
         """createAndEnterRaidDungeon:: 团队check完毕, 进行团队副本创建"""
-        LOG_INFO('doCreateAndEnterRaidDungeon::', raidUUID, dungeonNo, src, extraProps)
+        LOG_INFO('doCreateAndEnterRaidDungeon::', raidUUID, dungeonNo, src, extra)
 
         # lock for raid leader
         _now = utils.curTS()
         if self.isGlobalTeleportLocked(now=_now):
             LOG_WARN("doCreateAndEnterRaidDungeon:: teleport locked", self.teleportGlobalLockRlsT)
             return
-        self.aquireGlobalTeleportLock(now=_now)
+        self.acquireGlobalTeleportLock(now=_now)
 
-        if not extraProps:
-            extraProps = {}
-        extraProps.update({'src': src, 'createAndEnter': self.gbId})
+        if not extra:
+            extra = {}
+        extra.update({'src': src, 'createAndEnter': self.gbId})
         gameengine.getDungeonStubByDungeonNo(
             dungeonNo, gameconst.DungeonEnterTypeEnum.RAID).applyCreateDungeon(
-                self.base, self.gbId, raidUUID, extraProps)
+                self.base, self.gbId, raidUUID, extra)
 
     @gamedecorator.teleportInQueue
     def doEnterRaidDungeonAfterCheck(self, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps):
-        """每个团员检查完毕后直接进入团队副本"""
+        """--每个团员检查完毕后直接进入团队副本--"""
         def _enterCheck():
-            if extraProps.get('createAndEnter', 0) != self.gbId:
+            if extraProps.get('createAndEnter', None) != self.gbId:
                 # lock for raid members
                 _now = utils.curTS()
                 if self.isGlobalTeleportLocked(now=_now):
                     LOG_WARN("doEnterRaidDungeonAfterCheck:: teleport locked", self.teleportGlobalLockRlsT)
                     return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_TELGLOBAL_LOCKED
-                self.aquireGlobalTeleportLock(now=_now)
+                self.acquireGlobalTeleportLock(now=_now)
 
-            if not self.isInRaid():
+            if not self.inRaid():
                 return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_IN_RAID
             return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
@@ -447,11 +440,9 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             LOG_ERR('doEnterRaidDungeonAfterCheck:: failed, {}'.format(err))
             return
 
-        noEnterDungeon = extraProps.get('noEnterDungeon', False)
-        if not noEnterDungeon:
+        _noEnterDungeon = extraProps.get('noEnterDungeon', False)
+        if not _noEnterDungeon:
             self._doEnterRaidDungeon(dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extraProps)
-        else:
-            pass
 
     def _doEnterRaidDungeon(self, dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra):
         LOG_INFO('_doEnterRaidDungeon:', dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra)
@@ -475,9 +466,6 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
         self.telFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
-        # gamelog.raidDungeonLogger.enterDungeonSucc(
-        #     extra.get('dungeonPlayMode'), self.gbId, src.srcId, dungeonNo=dungeonNo)
-
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     @utils.isMyself
     @gamedecorator.limitcall(3)
@@ -487,8 +475,8 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         self.leaveRaidDungeonCell()
 
     def leaveRaidDungeonCell(self):
-        src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        self._leaveRaidDungeon(src)
+        _src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+        self._leaveRaidDungeon(_src)
 
     def _leaveRaidDungeon(self, src):
         _, err = self._leaveRaidDungeonCheck()
@@ -504,13 +492,8 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         if self.isGlobalTeleportLocked(now=_now):
             LOG_WARN("selfLeaveRaidDungeon:: teleport locked", src, self.teleportGlobalLockRlsT)
             return
-        self.aquireGlobalTeleportLock(now=_now)
+        self.acquireGlobalTeleportLock(now=_now)
         self._leaveRaidDungeon(src)
-
-    def _leaveRaidDungeonCheck(self):
-        if not self.isInRaidDungeon():
-            return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_IN_RAID_DUNGEON
-        return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
     def _doLeaveRaidDungeon(self, src, extra):
         lCtx = {'raidUUID': self.raidUUID,
@@ -521,13 +504,14 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         context = {'e': eCtx, 'l': lCtx, 'src': src}
 
         spaceType = self._getParamBydungeonNo(formula.parseDungeonNoBySpaceNo(self.spaceNo), 'type')
-        _mMapId, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
+        _mMapId, _ = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
         spaceNo = formula.combineLineSpaceNo(_mMapId)
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 
-        # gamelog.raidDungeonLogger.leaveDungeon(
-        #     self.spaceMgr.dungeonPlayMode, self.gbId,
-        #     dungeonNo=formula.parseDungeonNoBySpaceNo(self.spaceNo))
+    def _leaveRaidDungeonCheck(self):
+        if not self.isInRaidDungeon():
+            return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_NOT_IN_RAID_DUNGEON
+        return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
 
     # ----------------------------------------------------------------------------
     # GM Commends
@@ -543,7 +527,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         if dungeonNo in self.raidInfo.raidDungeonRecords:
             # 直接进入团队副本
             LOG_WARN("  |- gmEnterRaidDungeon::EnterDirecty", dungeonNo, src)
-            self.enterRaidDungeonDirectly(dungeonNo, src, {})
+            self.enterRaidDunDirectly(dungeonNo, src, {})
         else:
             LOG_WARN("  |- gmEnterRaidDungeon::CreateAndEnter", dungeonNo, src)
             self.doCreateAndEnterRaidDungeon(self.raidUUID, dungeonNo, src, {})

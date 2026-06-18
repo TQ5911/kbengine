@@ -130,7 +130,7 @@ class IGuild(object):
 
         _deductVal = dropAward.DeductWealthVal()
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
 
         _cost = G_GCD.datas['guildEstablishCost']['value']
         for _itemId, _num in _cost:
@@ -165,7 +165,7 @@ class IGuild(object):
             pass
 
         _opUUID = ctx['uuid']
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         _src = AAC_AACDD.datas.BONUS_SRC_CREATE_GUILD
         _awardVal = dropAward.AwardVal()
 
@@ -632,6 +632,24 @@ class IGuild(object):
         self.guildBox.doModifyGuildDesc(self.gbID, self, desc)
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
+    def modifyGuildPublicDesc(self, exposed, desc):
+        LOG_INFO("IGuild::modifyGuildPublicDesc:", desc)
+        if not self.guildInitStatus:
+            self.registerTempEvent(
+                gameconst.EntityPropsEnum.guildInitEvent, 
+                'modifyGuildPublicDesc', 
+                (exposed, desc,))
+            return
+
+        if not self.guildUUIDBase:
+            return
+
+        if not self.guildBox:
+            return
+
+        self.guildBox.doModifyGuildPublicDesc(self.gbID, self, desc)
+
+    @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def modifyMemberJob(self, exposed, gbId, job):
         LOG_INFO("IGuild::modifyMemberJob:", gbId, job)
         if not self.guildInitStatus:
@@ -746,7 +764,7 @@ class IGuild(object):
         _deductVal = dropAward.DeductWealthVal()
         _itemId, _num = G_GCD.datas['guildAssistCost']['value']
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, _num)
         if not self.canDeductWealth(_deductVal):
@@ -761,10 +779,10 @@ class IGuild(object):
 
     def onGuildAssistResult(self, success, opUUID):
         if success:
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_GUILD_ASSIST
             _rewardId = G_GCD.datas['guildAssistRewardID']['value']
-            _ctx = self._getAvatarAwardCtx(_rewardId, None)
+            _ctx = self.getAvatarAwardCtx(_rewardId, None)
             _awardVal = dropAward.getAwardOne(
                 _rewardId,
                 _ctx
@@ -779,7 +797,7 @@ class IGuild(object):
                 self.startGuildAssistRecoverTimer()
 
         else:
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_GUILD_ASSIST
             _awardVal = dropAward.AwardVal()
             _itemId, _num = G_GCD.datas['guildAssistCost']['value']
@@ -840,7 +858,7 @@ class IGuild(object):
         _deductVal = dropAward.DeductWealthVal()
         _itemId = G_GCD.datas['guildRenameItemID']['value']
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, 1)
         if not self.canDeductWealth(_deductVal):
@@ -859,7 +877,7 @@ class IGuild(object):
     def modifyGuildNameResult(self, success, ctx):
         if not success:
             _opUUID = ctx['uuid']
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_MODIFY_GUILD_NAME
             _awardVal = dropAward.AwardVal()
             _itemId = G_GCD.datas['guildRenameItemID']['value']
@@ -882,7 +900,7 @@ class IGuild(object):
             LOG_ERR('IGuild::guildDonate: guildBox is None')
             return
 
-        if itemId == gameconst.ItemId.COIN:
+        if itemId == gameconst.ItemIdEnum.COIN:
             _actId = GA_ACT.guildDonateCoin
         else:
             _actId = GA_ACT.guildDonateMoney
@@ -900,13 +918,13 @@ class IGuild(object):
             LOG_ERR('IGuild::guildDonate: guildBox is None')
             return
 
-        if itemId == gameconst.ItemId.COIN:
+        if itemId == gameconst.ItemIdEnum.COIN:
             _deductVal = dropAward.DeductWealthVal(coin=num)
         else:
             _deductVal = dropAward.DeductWealthVal(money=num)
 
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
 
         if not self.canDeductWealth(_deductVal):
             LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
@@ -915,7 +933,7 @@ class IGuild(object):
         _src = AAC_AACDD.datas.BONUS_SRC_GUILD_DONATE
         self.deductWealth(_src, _deductVal, _opUUID, _detail)
 
-        if itemId == gameconst.ItemId.COIN:
+        if itemId == gameconst.ItemIdEnum.COIN:
             self.guildDonateCoin += num
             _dailyNum = self.guildDonateCoin
         else:
@@ -932,9 +950,9 @@ class IGuild(object):
     def guildDonateResult(self, success, ctx):
         if not success:
             _opUUID = ctx['uuid']
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_GUILD_DONATE
-            if ctx['itemId'] == gameconst.ItemId.COIN:
+            if ctx['itemId'] == gameconst.ItemIdEnum.COIN:
                 _awardVal = dropAward.AwardVal(coin=ctx['num'])
                 self.guildDonateCoin -= ctx['num']
             else:
@@ -945,10 +963,10 @@ class IGuild(object):
 
         else:
             _opUUID = ctx['uuid']
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_GUILD_DONATE
 
-            if ctx['itemId'] == gameconst.ItemId.COIN:
+            if ctx['itemId'] == gameconst.ItemIdEnum.COIN:
                 _num = int(ctx['num'] // G_GCD.datas['guildDonateCoinCopper']['value'])
                 _rewardId = G_GCD.datas['guildDonateCoinRewardID']['value']
 
@@ -956,7 +974,7 @@ class IGuild(object):
                 _num = int(ctx['num'] // G_GCD.datas['guildDonateMoneyCopper']['value'])
                 _rewardId = G_GCD.datas['guildDonateMoneyRewardID']['value']
 
-            _ctx = self._getAvatarAwardCtx(_rewardId, None)
+            _ctx = self.getAvatarAwardCtx(_rewardId, None)
             _awardVal = dropAward.getAward(_rewardId, _num, _ctx)
             self.addWealth(_src, _awardVal, _opUUID, _detail)
             self.completeGuildTask(gameconst.GuildTaskType.DONATION,ctx['itemId'], ctx['num'])
@@ -1120,9 +1138,9 @@ class IGuild(object):
             return
 
         _deductVal = dropAward.DeductWealthVal()
-        _itemId = gameconst.ItemId.COIN
+        _itemId = gameconst.ItemIdEnum.COIN
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, cost)
         if not self.canDeductWealth(_deductVal):
@@ -1137,10 +1155,10 @@ class IGuild(object):
 
     def onQixieAssistResult(self, success, opUUID, cost):
         if success:
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_QIXIE_ASSIST
             _rewardId = G_GCD.datas['equipmentAssistRewardID']['value']
-            _ctx = self._getAvatarAwardCtx(_rewardId, None)
+            _ctx = self.getAvatarAwardCtx(_rewardId, None)
             _awardVal = dropAward.getAwardOne(
                 _rewardId,
                 _ctx
@@ -1154,10 +1172,10 @@ class IGuild(object):
                 self.startRecoverQixieAssistTimer()
 
         else:
-            _detail = gameclass.AwardDetail()
+            _detail = gameclass.AwardDetailCls()
             _src = AAC_AACDD.datas.BONUS_SRC_QIXIE_ASSIST
             _awardVal = dropAward.AwardVal()
-            _itemId = gameconst.ItemId.COIN
+            _itemId = gameconst.ItemIdEnum.COIN
 
             _awardVal.addWealthByItemId(_itemId, cost)
             self.addWealth(_src, _awardVal, opUUID, _detail)
@@ -1235,7 +1253,7 @@ class IGuild(object):
         _deductVal = dropAward.DeductWealthVal()
         _itemId = G_GCD.datas['cityBattleTokenID']['value']
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, num)
         if not self.canDeductWealth(_deductVal):
@@ -1249,7 +1267,7 @@ class IGuild(object):
 
         _num = int(num // G_GCD.datas['guildDonateTokenCopper']['value'])
         _rewardId = G_GCD.datas['guildDonateTokenRewardID']['value']
-        _ctx = self._getAvatarAwardCtx(_rewardId, None)
+        _ctx = self.getAvatarAwardCtx(_rewardId, None)
         _awardVal = dropAward.getAward(_rewardId, _num, _ctx)
         self.addWealth(_src, _awardVal, _opUUID, _detail)
 
@@ -1347,16 +1365,18 @@ class IGuild(object):
             return
         #发奖
         _rewardId = G_GT.datas[taskID]['reward']
-        _ctx = self._getAvatarAwardCtx(_rewardId, None)
+        _ctx = self.getAvatarAwardCtx(_rewardId, None)
         _awardVal = dropAward.getAwardOne(_rewardId,_ctx)
         opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail()
+        _detail = gameclass.AwardDetailCls()
         srcType = AAC_AACDD.datas.BONUS_SRC_GUILD_COMPLETE_TASK
         self.addWealth(srcType, _awardVal, opUUID, _detail)
         self.guildTask[taskID]['isCompleted'] = True
         self.syncGuildTaskInfoToClinet()
 
         LogTrackingMgr.LogTrackingMgr.Guild_Task(
+            self.gbID,
+            self.accountEntity.clientDistinctId, 
             self.gbID,
             taskID,
             self.guildTask[taskID].get('num', 0),
@@ -1382,6 +1402,8 @@ class IGuild(object):
             needSyncClient = True
 
             LogTrackingMgr.LogTrackingMgr.Guild_Task(
+                self.gbID,
+                self.accountEntity.clientDistinctId, 
                 self.gbID,
                 taskID,
                 self.guildTask[taskID].get('num', 0),

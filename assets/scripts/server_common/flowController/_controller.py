@@ -3,6 +3,7 @@ from KBEDebug import *
 import KBEngine
 
 import gameengine
+import gameglobal
 import gameconst
 import formula
 import random
@@ -21,6 +22,7 @@ import skill_skill as SSD
 import buff_buff as BUFF
 import NPC_NPC as NPC_DATA
 import formula_generalFormula as F_GFD
+import cube_config as CC
 
 from ._conditions import *
 from ._events import *
@@ -70,8 +72,8 @@ class _FlowControllerBeTriggeredMixin(object):
         gameengine.panicStack("onDungeonCollectionReleaseComplete::deprecated",
                                   collGIDs, self.owner.spaceNo)
 
-    def onDungeonCollectionBeCollected(self, collGID):
-        LOG_DBG('FlowController::onDungeonCollectionBeCollected -> {}'.format(collGID))
+    def onDunCollectionBeCollected(self, collGID):
+        LOG_DBG('FlowController::onDunCollectionBeCollected -> {}'.format(collGID))
         self._onBeCollected(collGID)
         self._onMultiCollectionAllBeCollected(collGID)
 
@@ -176,8 +178,8 @@ class _FlowControllerBeTriggeredMixin(object):
         else:
             self.toBeTriggerWithEids(_key, eids)
 
-    def onDungeonEntityReleaseCompleteByEventId(self, flagIds, fromEventId):
-        LOG_DBG(f"FlowController::onDungeonEntityReleaseCompleteByEventId -> {flagIds} {fromEventId}")
+    def onDunEntityReleaseCompleteByEventId(self, flagIds, fromEventId):
+        LOG_DBG(f"FlowController::onDunEntityReleaseCompleteByEventId -> {flagIds} {fromEventId}")
         self.toBeTrigger(getCommonReleaseKey(fromEventId, flagIds))
 
 
@@ -391,19 +393,19 @@ class _FlowControllerBeTriggeredMixin(object):
             for fn in (self.cmHandleNumLe, self.cmHandleNumLt, self.cmHandleNumEq):
                 fn(_dic, _restNum)
 
-    def onDungeonMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
+    def onDunMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
         _monsterKillNumEvents, _globalMonsterKillNumEvents = self.getDungeonMonsterKillNumEvents(monsterGID)
         if not (_monsterKillNumEvents or _globalMonsterKillNumEvents):
             return
 
-        LOG_DBG('FlowController::onDungeonMonsterKillNumIncreased {}: {} {}'.format(
+        LOG_DBG('FlowController::onDunMonsterKillNumIncreased {}: {} {}'.format(
             monsterGID, newNumber, newTotalNumber))
 
         for fn in (self.cmHandleNumGe, self.cmHandleNumGt, self.cmHandleNumEq):
             _monsterKillNumEvents and fn(_monsterKillNumEvents, newNumber)
             _globalMonsterKillNumEvents and fn(_globalMonsterKillNumEvents, newTotalNumber)
 
-    def onCheckDungeonEntityKillNumberTriggered(self, monsterGID, symbol, number, currentKillNum, usePrototypeID, eids):
+    def onCheckDunEntityKillNumberTriggered(self, monsterGID, symbol, number, curKillNum, usePrototypeID, eids):
         _checkAll = monsterGID < 0
         if (monsterGID > 0 and usePrototypeID):
             _monsterGID = 'cbid{}'.format(monsterGID)
@@ -414,20 +416,20 @@ class _FlowControllerBeTriggeredMixin(object):
         if not (_monsterKillNumEvents or _globalMonsterKillNumEvents):
             return
 
-        LOG_DBG('FlowController::onCheckDungeonEntityKillNumberTriggered {}: symbol={} new->{} old->{} eids={}'.format(
-            _monsterGID, symbol, currentKillNum, number, eids))
+        LOG_DBG('FlowController::onCheckDunEntityKillNumberTriggered {}: symbol={} new->{} old->{} eids={}'.format(
+            _monsterGID, symbol, curKillNum, number, eids))
 
         _triggerList = []
         if _checkAll:
             for _killNum, events in _globalMonsterKillNumEvents.get(symbol, {}).items():
-                _ret = gameconst.DungeonFlowCompSym.compare(symbol, currentKillNum, _killNum)
+                _ret = gameconst.DungeonFlowCompSym.compare(symbol, curKillNum, _killNum)
                 if not _ret:
                     continue
                 _triggerList.extend(events)
 
         else:
             for _killNum, events in _monsterKillNumEvents.get(symbol, {}).items():
-                _ret = gameconst.DungeonFlowCompSym.compare(symbol, currentKillNum, _killNum)
+                _ret = gameconst.DungeonFlowCompSym.compare(symbol, curKillNum, _killNum)
                 if not _ret:
                     continue
                 _triggerList.extend(events)
@@ -487,12 +489,12 @@ class _FlowControllerBeTriggeredMixin(object):
         for fn in fns:
             fn(hpEvents, oldHpPercent, curHpPercent)
 
-    def onDungeonValueCheckChanged(self, varId):
+    def onDunValueCheckChanged(self, varId):
         mEvents = self.getDungeonValueCheckHoldEvents()
         if not mEvents:
             return
 
-        LOG_DBG('FlowController::onDungeonValueCheckChanged -> {}'.format(varId))
+        LOG_DBG('FlowController::onDunValueCheckChanged -> {}'.format(varId))
         triggerEvents = []
         for _iVarId, _iEvents in mEvents.items():
             if _iVarId == varId:
@@ -827,7 +829,25 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSingleType,
         event.putArgument('initState', initState)
         return event
 
+    def buildReleaseDungeonInnerDemonEvent(self, eventId, innerDemonGIDs, overwriteProps, ifSetBoss, initState):
+        event = self.buildElement(DungeonInnerDemonReleaseEvent, element_id=eventId,
+                               eventHandler=handleReleaseInnerDemon, innerDemonGIDs=innerDemonGIDs,
+                               name=gameconst.DungeonFlowEventType.EVcreateInnerDemon)
+        event.putArgument('innerDemonGIDs', innerDemonGIDs)
+        event.putArgument('overwriteProps', overwriteProps)
+        event.putArgument('ifSetBoss', ifSetBoss)
+        event.putArgument('initState', initState)
+        return event
 
+    def buildNotifyInnerDemonDataEvent(self, eventId, innerDemonGIDs, dungeonNo, spaceNo):
+        event = self.buildElement(FlowNodeEvent, element_id=eventId,
+                               eventHandler=handleNotifyInnerDemonData, innerDemonGIDs=innerDemonGIDs,
+                               name=gameconst.DungeonFlowEventType.EVnotifyInnerDemonData)
+        event.putArgument('innerDemonGIDs', innerDemonGIDs)
+        event.putArgument('dungeonNo', dungeonNo)
+        event.putArgument('spaceNo', spaceNo)
+        return event
+    
     def buildMonsterChangeInitState(self, eventId, monsterGIDs, initState):
         event = self.buildElement(FlowNodeEvent, element_id=eventId,
                                eventHandler=handleMonsterChangeInitState,
@@ -1919,7 +1939,34 @@ def handleReleaseMonster(event, srcE, ctx, **refParams):
     LOG_WARN('DUNGEON FLOW -- EVENT[{}]: release monster -> {}:{}(op={})'.format(
         event.id, monsterGIDs, monsterNum, overwriteProps))
 
+def handleReleaseInnerDemon(event, srcE, ctx, **refParams):
+    innerDemonGIDs = event.fetchArgument('innerDemonGIDs')
+    overwriteProps = event.fetchArgument('overwriteProps')
+    spaceNo = refParams['spaceNo']
+    dungeonNo = refParams['dungeonNo']
+    spaceMgr = event.controller.owner
+    LOG_WARN('DUNGEON FLOW -- EVENT[{}]: release inner demon -> {}:{}(op={}, dungeonNo={}, spaceNo={}, playerMode={})'.format(event.id, innerDemonGIDs, 1, overwriteProps, dungeonNo, spaceNo, spaceMgr.dungeonPlayMode))
+    
+    # 通知stub
+    _dungeonSpaceType = GP_GPD.datas[dungeonNo].get('type', 0)
+    if gameconst.DungeonTypeJudge.isDungeon(_dungeonSpaceType):
+        endTime = utils.curTS() + CC.datas.get('cube_innerDemonTime', {}).get('value', 300)
+        spaceMgr.dungeonPlayMode.challengeEndTime = endTime
+        dunStubBox = gameengine.getDungeonStubBySpaceNo(spaceNo)
+        dunStubBox.onDungeonStartChallenge(spaceNo, endTime)
+    else:
+        LOG_ERR('flowController::handleReleaseInnerDemon: err', dungeonNo, _dungeonSpaceType)
+        return
 
+def handleNotifyInnerDemonData(event, srcE, ctx, **refParams):
+    innerDemonGIDs = event.fetchArgument('innerDemonGIDs')
+    dungeonNo = event.fetchArgument('dungeonNo')
+    spaceNo = event.fetchArgument('spaceNo')
+    spaceMgr = event.controller.owner
+    LOG_WARN('DUNGEON FLOW -- EVENT[{}]: notify inner demon data-> {}:{}(dungeonNo={}, spaceNo={}, playerMode={})'.format(event.id, innerDemonGIDs, 1, dungeonNo, spaceNo, spaceMgr.dungeonPlayMode))
+    
+    spaceMgr.notifyInnerDemonData(dungeonNo, spaceNo)
+    
 def handleRecycleMonster(event, srcE, ctx, **refParams):
     monsterGIDs = event.fetchArgument('monsterGIDs')
     LOG_WARN('DUNGEON FLOW -- EVENT[{}]: recycle monster -> {}'.format(event.id, monsterGIDs))
@@ -2051,7 +2098,7 @@ def handleTaskUndertake(event, srcE, ctx, **refParams):
     if not spaceMgr:
         return
 
-    spaceMgr.syncPlayer(lambda boxCell: boxCell.startClaimTask(taskId))
+    spaceMgr.syncPlayer(lambda boxCell: boxCell.doStartClaimTask(taskId))
 
 
 def handleWaitingTaskCompleteEvent(event, srcE, ctx, **refParams):
@@ -2505,7 +2552,7 @@ def handleClearDungeon(event, srcE, ctx, **referenceArgument):
     LOG_WARN('DUNGEON FLOW -- EVENT[{}]: clear dungeon'.format(event.id))
     import SkillManager
     spaceMgr = event.controller.owner
-    for eventId in [_ for _ in spaceMgr.spaceEntities]:
+    for eventId in [_ for _ in spaceMgr.spaceEntitiesDic]:
         if eventId == spaceMgr.id:
             continue
         _ent = KBEngine.entities.get(eventId)
