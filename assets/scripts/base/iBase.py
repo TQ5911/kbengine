@@ -2,70 +2,62 @@
 from KBEDebug import *
 import KBEngine
 
-import utils
 import gametimer
+import utils
 
 
 class IBase(KBEngine.Entity):
     IsAvatar = False
 
+    def __init__(self):
+        super(IBase, self).__init__()
+        self.birthInMem = utils.curTS()
+        self.shouldAutoBackup = False
+
     @classmethod
     def classname(cls):
         return cls.__name__
 
-    def __init__(self):
-        super(IBase, self).__init__()
-
-        self.birthInMem = utils.curTS()
-
-        self.shouldAutoBackup = False
-
-        return
-
     def preReloadScript(self):
-        return
+        pass
 
     def reloadScript(self):
-        for pName, pVal in self.__dict__.items():
+        for pName, _pVal in self.__dict__.items():
             if pName.startswith('__'):
                 continue
 
-            if hasattr(pVal, 'reloadScript'):
-                pVal.reloadScript()
+            if hasattr(_pVal, 'reloadScript'):
+                _pVal.reloadScript()
 
         if hasattr(self, 'cellData'):
-            for pName, pVal in self.cellData.items():
-                if hasattr(pVal, 'reloadScript'):
-                    pVal.reloadScript()
-
-        return
+            for pName, _pVal in self.cellData.items():
+                if hasattr(_pVal, 'reloadScript'):
+                    _pVal.reloadScript()
 
     def postReloadScript(self):
-        if hasattr(super(IBase, self), 'postReloadScript'):
-            super(IBase, self).postReloadScript()
+        if not hasattr(super(IBase, self), 'postReloadScript'):
+            return
 
-    def isPersistent(self):
-        return False
+        super(IBase, self).postReloadScript()
 
     def doEntireDestroy(self, deleteFromDB, writeToDB):
         pass
+
+    def isPersistent(self):
+        return False
 
     def renewalBase(self, attr):
         for k, v, in attr.items():
             setattr(self, k, v)
 
-        return
-
-    def callMethod(self, methodName, methodArgs):
+    def callMethod(self, methodName, args):
         if not hasattr(self, methodName):
             return
 
-        getattr(self, methodName)(*methodArgs)
-        return
+        getattr(self, methodName)(*args)
 
     def createCellNearSelf(self, baseMailbox):
         baseMailbox.createCellNearHere(self.cell)
-        return
 
     def createCellNearHere(self, cellMailbox):
         try:
@@ -73,16 +65,15 @@ class IBase(KBEngine.Entity):
         except Exception as e:
             LOG_ERR('createCellNearHere: fail to create cellEntity', cellMailbox, e)
             self.doEntireDestroy(False, False)
-        return
 
     def hasArchive(self):
         return self.databaseID != 0
 
-    def _postEntireDestroy(self):
-        pass
-
     def resetLimitcall(self):
         self.methodPoolBase.clear()
+
+    def _onPostEntireDestroy(self):
+        pass
 
     # 分批次调用，必须继承iTimer
     # 只在base支持，因为cell中_callback参数里不能包含callable
@@ -98,20 +89,20 @@ class IBase(KBEngine.Entity):
 
         self.addTimerCB(interval, 'batchlyCall', (it, batchNum, interval, callback), gametimer.TIMER_TAG_BATCHLY_CALL)
 
-    def getCellData(self, key, defaultValue):
-        return self.cellData.get(key, defaultValue)
-
-    def setTempMiscProp(self, propId, value):
+    def setTempMiscProp(self, propId, val):
         if type(propId) is not int:
             return
 
-        self.tempMiscPropsBase[propId] = value
+        self.baseTempMiscProps[propId] = val
 
-    def getTempMiscProp(self, propId, default=None):
-        return self.tempMiscPropsBase.get(propId, default)
+    def getCellData(self, key, defaultValue):
+        return self.cellData.get(key, defaultValue)
 
     def popTempMiscProp(self, propId, default=None):
-        return self.tempMiscPropsBase.pop(propId, default)
+        return self.baseTempMiscProps.pop(propId, default)
+
+    def getTempMiscProp(self, propId, default=None):
+        return self.baseTempMiscProps.get(propId, default)
 
     def hasTempMiscProp(self, propId):
-        return propId in self.tempMiscPropsBase
+        return propId in self.baseTempMiscProps

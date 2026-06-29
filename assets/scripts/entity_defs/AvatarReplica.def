@@ -14,6 +14,7 @@
         <Interface>    iFubenSpace      </Interface>
         <Interface>    iGameEntity      </Interface>
         <Interface>    iMonsterGrp      </Interface>
+        <Interface>    iReplicaAvatar   </Interface>
     </Interfaces>
 
     <Properties>
@@ -62,18 +63,6 @@
             <Type>          APPEARANCE_INFO         </Type>
             <Flags>         OTHER_CLIENTS           </Flags>
         </appearance>
-
-        <summonSlotIdx>
-            <Type>          SLOTID                      </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </summonSlotIdx>
-
-        <ultraSkillPower>
-            <Type>          UINT8                       </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-        </ultraSkillPower>
 
         <glyphEquipData>
             <Type>          GLYPH_EQUIP_INFO        </Type>

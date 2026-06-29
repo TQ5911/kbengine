@@ -169,7 +169,7 @@ datas = _tools.RODict({
     }),
     "guildAssistCost": _tools.RODict({
         "key": "guildAssistCost",
-        "value": (30000002, 400),
+        "value": (30000002, 600),
     }),
     "guildAssistRewardID": _tools.RODict({
         "key": "guildAssistRewardID",
@@ -177,11 +177,11 @@ datas = _tools.RODict({
     }),
     "guildDonateCoinCopper": _tools.RODict({
         "key": "guildDonateCoinCopper",
-        "value": 200,
+        "value": 300,
     }),
     "guildDonateCoinToGuildCoin": _tools.RODict({
         "key": "guildDonateCoinToGuildCoin",
-        "value": 1,
+        "value": 2,
     }),
     "guildDonateCoinRewardID": _tools.RODict({
         "key": "guildDonateCoinRewardID",
@@ -567,93 +567,13 @@ datas = _tools.RODict({
         "key": "guild_buildUpgraded_msg",
         "value": 58000014,
     }),
-    "guild_unionNum": _tools.RODict({
-        "key": "guild_unionNum",
-        "value": 3,
-    }),
-    "guild_unionNum2": _tools.RODict({
-        "key": "guild_unionNum2",
-        "value": 2,
-    }),
-    "guild_unionNum3": _tools.RODict({
-        "key": "guild_unionNum3",
-        "value": 1,
-    }),
-    "guild_unionApplicationNum": _tools.RODict({
-        "key": "guild_unionApplicationNum",
-        "value": 10,
-    }),
-    "guild_unionDesc": _tools.RODict({
-        "key": "guild_unionDesc",
-        "value": "我帮与帮会{0}结为同盟",
-    }),
-    "guild_relieveUnionDes": _tools.RODict({
-        "key": "guild_relieveUnionDes",
-        "value": "我帮与帮会{0}解除同盟",
-    }),
-    "guild_enmityDesc1": _tools.RODict({
-        "key": "guild_enmityDesc1",
-        "value": "我帮向帮会{0}宣战",
-    }),
-    "guild_enmityDesc2": _tools.RODict({
-        "key": "guild_enmityDesc2",
-        "value": "{0}帮会向我帮宣战",
-    }),
-    "guild_unionNumDesc": _tools.RODict({
-        "key": "guild_unionNumDesc",
-        "value": "结盟帮会：{0}/{1}",
-    }),
     "guild_commissariatLevel": _tools.RODict({
         "key": "guild_commissariatLevel",
         "value": "军需处等级达到{0}级",
     }),
-    "guild_enmityCost": _tools.RODict({
-        "key": "guild_enmityCost",
-        "value": (30000007, 50000),
-    }),
-    "guild_relieveUnion": _tools.RODict({
-        "key": "guild_relieveUnion",
-        "value": 54003058,
-    }),
-    "guild_enmityConfirm": _tools.RODict({
-        "key": "guild_enmityConfirm",
-        "value": 54003059,
-    }),
     "guild_crossServerJoin": _tools.RODict({
         "key": "guild_crossServerJoin",
         "value": 54003060,
-    }),
-    "guild_unionNumDes": _tools.RODict({
-        "key": "guild_unionNumDes",
-        "value": 54003061,
-    }),
-    "guild_enmityNumDes": _tools.RODict({
-        "key": "guild_enmityNumDes",
-        "value": 54003062,
-    }),
-    "guild_enmityFail": _tools.RODict({
-        "key": "guild_enmityFail",
-        "value": 54003063,
-    }),
-    "guild_enmityAlready": _tools.RODict({
-        "key": "guild_enmityAlready",
-        "value": 54003064,
-    }),
-    "guild_unionApplicationDes": _tools.RODict({
-        "key": "guild_unionApplicationDes",
-        "value": 54003069,
-    }),
-    "guild_unionApplicationDes2": _tools.RODict({
-        "key": "guild_unionApplicationDes2",
-        "value": 54003070,
-    }),
-    "guild_unionAppliedFor": _tools.RODict({
-        "key": "guild_unionAppliedFor",
-        "value": 54003074,
-    }),
-    "guild_dismissed": _tools.RODict({
-        "key": "guild_dismissed",
-        "value": 54003075,
     }),
     "guild_pkPrompt": _tools.RODict({
         "key": "guild_pkPrompt",
@@ -662,14 +582,6 @@ datas = _tools.RODict({
     "guild_pkPrompt2": _tools.RODict({
         "key": "guild_pkPrompt2",
         "value": 58000034,
-    }),
-    "guild_unionPrompt": _tools.RODict({
-        "key": "guild_unionPrompt",
-        "value": 54003076,
-    }),
-    "guild_alreadyEnmity": _tools.RODict({
-        "key": "guild_alreadyEnmity",
-        "value": 54003077,
     }),
     "guild_noCompletedTask": _tools.RODict({
         "key": "guild_noCompletedTask",
@@ -714,14 +626,6 @@ datas = _tools.RODict({
     "guild_warEquipmentName": _tools.RODict({
         "key": "guild_warEquipmentName",
         "value": ('主城门', '副城门', '新元旗帜', '攻城兽', '守城弩', '矿区核心', '矿区荣誉旗帜', '矿区枢纽'),
-    }),
-    "guild_unionApplicationTimeLimit": _tools.RODict({
-        "key": "guild_unionApplicationTimeLimit",
-        "value": 3,
-    }),
-    "guild_enmityTime": _tools.RODict({
-        "key": "guild_enmityTime",
-        "value": 21600,
     }),
     "guild_declareWar": _tools.RODict({
         "key": "guild_declareWar",
@@ -794,5 +698,185 @@ datas = _tools.RODict({
     "guild_dividendConversionGoldMail": _tools.RODict({
         "key": "guild_dividendConversionGoldMail",
         "value": 37002018,
+    }),
+    "guild_unionApplicationTimeLimit": _tools.RODict({
+        "key": "guild_unionApplicationTimeLimit",
+        "value": 3,
+    }),
+    "guild_enmityTime": _tools.RODict({
+        "key": "guild_enmityTime",
+        "value": 21600,
+    }),
+    "guild_unionNum": _tools.RODict({
+        "key": "guild_unionNum",
+        "value": 5,
+    }),
+    "guild_unionNum2": _tools.RODict({
+        "key": "guild_unionNum2",
+        "value": 2,
+    }),
+    "guild_unionNum3": _tools.RODict({
+        "key": "guild_unionNum3",
+        "value": 1,
+    }),
+    "guild_unionApplicationNum": _tools.RODict({
+        "key": "guild_unionApplicationNum",
+        "value": 10,
+    }),
+    "guild_unionApplicatedNum": _tools.RODict({
+        "key": "guild_unionApplicatedNum",
+        "value": 20,
+    }),
+    "guild_exitUnionCd": _tools.RODict({
+        "key": "guild_exitUnionCd",
+        "value": 60,
+    }),
+    "guild_aidRequirement": _tools.RODict({
+        "key": "guild_aidRequirement",
+        "value": 2,
+    }),
+    "guild_unionDesc": _tools.RODict({
+        "key": "guild_unionDesc",
+        "value": "我帮与帮会{0}结为联盟",
+    }),
+    "guild_relieveUnionDes": _tools.RODict({
+        "key": "guild_relieveUnionDes",
+        "value": "我帮与帮会{0}解除联盟",
+    }),
+    "guild_enmityDesc1": _tools.RODict({
+        "key": "guild_enmityDesc1",
+        "value": "我帮向帮会{0}宣战",
+    }),
+    "guild_enmityDesc2": _tools.RODict({
+        "key": "guild_enmityDesc2",
+        "value": "{0}帮会向我帮宣战",
+    }),
+    "guild_unionNumDesc": _tools.RODict({
+        "key": "guild_unionNumDesc",
+        "value": "结盟帮会：{0}/{1}",
+    }),
+    "guild_enmityCost": _tools.RODict({
+        "key": "guild_enmityCost",
+        "value": (30000007, 50000),
+    }),
+    "guild_enmityUnionCost": _tools.RODict({
+        "key": "guild_enmityUnionCost",
+        "value": (30000022, 50000),
+    }),
+    "guild_relieveUnion": _tools.RODict({
+        "key": "guild_relieveUnion",
+        "value": 54003058,
+    }),
+    "guild_enmityConfirm": _tools.RODict({
+        "key": "guild_enmityConfirm",
+        "value": 54003059,
+    }),
+    "guild_unionNumDes": _tools.RODict({
+        "key": "guild_unionNumDes",
+        "value": 54003061,
+    }),
+    "guild_enmityNumDes": _tools.RODict({
+        "key": "guild_enmityNumDes",
+        "value": 54003062,
+    }),
+    "guild_enmityFail": _tools.RODict({
+        "key": "guild_enmityFail",
+        "value": 54003063,
+    }),
+    "guild_enmityAlready": _tools.RODict({
+        "key": "guild_enmityAlready",
+        "value": 54003064,
+    }),
+    "guild_unionApplicationDes": _tools.RODict({
+        "key": "guild_unionApplicationDes",
+        "value": 54003069,
+    }),
+    "guild_unionApplicationDes2": _tools.RODict({
+        "key": "guild_unionApplicationDes2",
+        "value": 54003070,
+    }),
+    "guild_unionAppliedFor": _tools.RODict({
+        "key": "guild_unionAppliedFor",
+        "value": 54003074,
+    }),
+    "guild_dismissed": _tools.RODict({
+        "key": "guild_dismissed",
+        "value": 54003075,
+    }),
+    "guild_unionPrompt": _tools.RODict({
+        "key": "guild_unionPrompt",
+        "value": 54003076,
+    }),
+    "guild_alreadyEnmity": _tools.RODict({
+        "key": "guild_alreadyEnmity",
+        "value": 54003077,
+    }),
+    "guild_unionName": _tools.RODict({
+        "key": "guild_unionName",
+        "value": 54003160,
+    }),
+    "guild_unionMemberLimit": _tools.RODict({
+        "key": "guild_unionMemberLimit",
+        "value": 54003161,
+    }),
+    "guild_unionJoinedMsg": _tools.RODict({
+        "key": "guild_unionJoinedMsg",
+        "value": 54003162,
+    }),
+    "guild_declareWarLimit": _tools.RODict({
+        "key": "guild_declareWarLimit",
+        "value": 54003163,
+    }),
+    "guild_declareNoFund": _tools.RODict({
+        "key": "guild_declareNoFund",
+        "value": 54003164,
+    }),
+    "guild_unionLeaderPermission": _tools.RODict({
+        "key": "guild_unionLeaderPermission",
+        "value": 54003165,
+    }),
+    "guild_unionExitPermission": _tools.RODict({
+        "key": "guild_unionExitPermission",
+        "value": 54003166,
+    }),
+    "guild_unionExitLimit": _tools.RODict({
+        "key": "guild_unionExitLimit",
+        "value": 54003167,
+    }),
+    "guild_unionRecruitPermission": _tools.RODict({
+        "key": "guild_unionRecruitPermission",
+        "value": 54003168,
+    }),
+    "guild_unionLeadeDeclare": _tools.RODict({
+        "key": "guild_unionLeadeDeclare",
+        "value": 54003169,
+    }),
+    "guild_unionDeclareConfirm": _tools.RODict({
+        "key": "guild_unionDeclareConfirm",
+        "value": 54003170,
+    }),
+    "guild_unionNoFund": _tools.RODict({
+        "key": "guild_unionNoFund",
+        "value": 54003171,
+    }),
+    "guild_unionDonatePermission": _tools.RODict({
+        "key": "guild_unionDonatePermission",
+        "value": 54003172,
+    }),
+    "guild_unionSupportPermission": _tools.RODict({
+        "key": "guild_unionSupportPermission",
+        "value": 54003175,
+    }),
+    "guild_unionSupportChoice": _tools.RODict({
+        "key": "guild_unionSupportChoice",
+        "value": 54003176,
+    }),
+    "guild_unionSupportMsg": _tools.RODict({
+        "key": "guild_unionSupportMsg",
+        "value": 54003177,
+    }),
+    "guild_commissionHelpinfoID": _tools.RODict({
+        "key": "guild_commissionHelpinfoID",
+        "value": 74,
     })
 })

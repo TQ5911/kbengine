@@ -2,7 +2,7 @@
 import KBEngine
 from KBEDebug import *
 
-import NPC_NPC as NPC_DATA
+import NPC_NPC as N_ND
 import creep_base
 
 import iCell
@@ -41,7 +41,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             self.initCNpc()
         else:
             self.initNpc()
-        LOG_INFO('on create', self.spaceNo, self.position, self.npcId)
+        LOG_INFO('on create', self.spaceNo, self.npcId, self.position)
 
     def initNpc(self):
         if not self.level:
@@ -50,18 +50,17 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             self.level = utils.getMaxPlayerLevel()
 
         if not self.name:
-            self.name = NPC_DATA.datas.get(self.npcId, {}).get('name', '无名NPC')
+            self.name = N_ND.datas.get(self.npcId, {}).get('name', '无名NPC')
 
-        self.hp = self.fullHp
         self.mp = self.fullMp
+        self.hp = self.fullHp
         self.speed = float(creep_base.datas.get(self.creepbaseId, {}).get('baseSpeed', 3.0))
 
-        self.isNameDisplay = NPC_DATA.datas[self.npcId].get('isNameDisplay', 1)
-        self.isSelectable = NPC_DATA.datas[self.npcId].get('isSelectable', 1)
-
-        self.baseDodge = 0
+        self.isNameDisplay = N_ND.datas[self.npcId].get('isNameDisplay', 1)
+        self.isSelectable = N_ND.datas[self.npcId].get('isSelectable', 1)
 
         self.bornPosition = tuple(self.position)
+        self.baseDodge = 0
 
         if self.force == 0:
             self.force = gameconst.ForceTypeEnum.NPC
@@ -71,9 +70,13 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         spaceMgr = self.spaceMgr
 
         if formula.inDungeonScene(self.spaceNo) and spaceMgr:
-            gid = utils.parseGidFromGameEntityId(self.gameEntityId)
-            spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.npcId),
-                                         'gid_{}'.format(gid), self.__class__.__name__,))
+            _gid = utils.parseGidFromGameEntityId(self.gameEntityId)
+            spaceMgr.addEntity(self.id, (
+                str(self.npcId),
+                str(self.fbEntityId), 
+                'gid_{}'.format(_gid), 
+                self.__class__.__name__,
+            ))
             if self.isBoss:
                 spaceMgr.setBossEntity(self.id)
 
@@ -86,8 +89,6 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
                                          self.__class__.__name__,))
 
         self.triggeredFlowControllerRestNumIncreased()
-        # if not self.IsCombatUnit and self.belongFestivalLoadId:
-        #     dataUtils.allFestivalStubDo('festivalEntityLoad', (self.belongFestivalLoadId, self))
         self.addListener('onBeat', self.id, 'onBeAttacked', ())
         self.triggerAIEvent(self.id, gameconst.AI_EVENT_ENTITY_BORN, ())
         self.setBornState(gameconst.BornStateEnum.move)
@@ -98,19 +99,18 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
     # ------------------------------------------------------------------
 
-    def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
-        super().onEnterTrap(entity, rangeXZ, rangeY, controllerId, userArg)
-        if userArg == gameconst.ESCORT_ROUTE_TRAP:
+    def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userData):
+        super().onEnterTrap(entity, rangeXZ, rangeY, controllerId, userData)
+        if userData == gameconst.ESCORT_ROUTE_TRAP:
             self.onPlayerEnterEscortTrap(entity, rangeXZ, rangeY, controllerId)
 
     def getPathId(self):
-        return NPC_DATA.datas[self.npcId].get('pathID', 0)
+        return N_ND.datas[self.npcId].get('pathID', 0)
 
     def faceToPlayer(self, captainPos):
-        direction = sMath.vector3WithoutY(captainPos - self.position)
-        yaw = sMath.getYawFromDirection(direction)
+        _direction = sMath.vector3WithoutY(captainPos - self.position)
+        yaw = sMath.getYawFromDirection(_direction)
         self.direction = (0.0, 0.0, yaw)
-        return
 
     def setBornState(self, state):
         if self.bornState >= state:
@@ -136,7 +136,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
 
     @property
     def creepbaseId(self):
-        return NPC_DATA.datas[self.npcId].get('creepID', 0)
+        return N_ND.datas[self.npcId].get('creepID', 0)
 
     def initEntBornAction(self):
         self.otherClients.onBornAction()
@@ -156,8 +156,6 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         elif userData == gametimer.TIMER_CELL_DELAY_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
 
-        elif userData == gametimer.GUIDE_WALK_TIMER:
-            self.onTimerGuideWalk()
         else:
             super().onTimer(tid, userData)
 
@@ -165,25 +163,25 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         self.aiController and self.aiController.tickOnce()
 
     def _addTrap(self):
-        radii = self.getAlertDistance()
-        if radii<=0:
+        _radii = self.getAlertDistance()
+        if _radii<=0:
             return
-        self.hateTrapId = self.addProximity(radii, radii, gameconst.AGGRO_TRIGGER_TRAP)
+        self.hateTrapId = self.addProximity(_radii, _radii, gameconst.AGGRO_TRIGGER_TRAP)
         leaveAoiRange = self.getLeaveAlertDistance()
         self.addProximity(leaveAoiRange, 0.0, gameconst.AOI_EXIT_TRAP)
-
-    def onBeAttacked(self, arg):
-        attackerId = arg.triggerRoleId
-        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
 
     def _preSafeDestory(self):
         super()._preSafeDestory()
         if self.spaceMgr:
             self.spaceMgr.removeEntById(self.id)
 
+    def onBeAttacked(self, arg):
+        attackerId = arg.triggerRoleId
+        self.triggerAIEvent(self.id, gameconst.AI_EVENT_ON_BE_ATTACKED, (attackerId,))
+
     def onDead(self, killer, *args, **kwargs):
         super().onDead(killer)
-        self.removeAllBuff()
+        self.doRemoveAllBuff()
         self.removeMoveController()
         self.destroySummonOnDead()
 

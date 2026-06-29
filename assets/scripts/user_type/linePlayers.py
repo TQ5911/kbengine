@@ -12,14 +12,14 @@ import gametimer
 class LinePlayerVal(userType.UserSingleType):
     NONE = 0
     ENTERING = 1
-    IN_LINE = 2
+    INLINE = 2
     SWITCHING = 3
 
     def __init__(self, box, gbId, teamUUID, areaId, playerStatus, curSpaceNo, tEnter, guildUUID=0):
         self.playerBox = box
         self.gbId = gbId
-        self.teamUUID = teamUUID
         self.areaId = areaId
+        self.teamUUID = teamUUID
         self.playerStatus = playerStatus
         self.curSpaceNo = curSpaceNo
         self.checkEnterTimer = 0
@@ -27,35 +27,35 @@ class LinePlayerVal(userType.UserSingleType):
         self.guildUUID = guildUUID
         self.tEnter = tEnter
 
-    def onTeamChanged(self, teamUUID):
-        self.teamUUID = teamUUID
-
-    def onAreaChanged(self, areaId):
-        self.areaId = areaId
-
     def setPlayerStatus(self, st, stArgs=None):
         self.playerStatus = st
         self.statusArgs = stArgs
 
+    def onAreaChanged(self, areaId):
+        self.areaId = areaId
+
+    def onTeamChanged(self, teamUUID):
+        self.teamUUID = teamUUID
+
 
 class LinePlayers(userType.UserDictType):
     def __init__(self, lineNo):
-        self.lineNo = lineNo
         self.pendingSec = 0
+        self.lineNo = lineNo
         self.pendingSecNum = 0
-        self.areaPlayers = {}
-        self.teamPlayers = {}
-        self.pendingEnterPlayers = {}
+        self.teamPlayersDic = {}
+        self.areaPlayersDic = {}
+        self.pendingEnterPlayersDic = {}
         self.lastUpPlayerNum = 0
 
     def clearTimeOutInfo(self, timestamp):
         _clearList = []
-        for gbId, sec in self.pendingEnterPlayers.items():
+        for gbId, sec in self.pendingEnterPlayersDic.items():
             if timestamp > sec:
                 _clearList.append(gbId)
 
         for gbId in _clearList:
-            self.pendingEnterPlayers.pop(gbId)
+            self.pendingEnterPlayersDic.pop(gbId)
 
         _clearList = []
 
@@ -73,114 +73,122 @@ class LinePlayers(userType.UserDictType):
         self[playerVal.gbId] = playerVal
 
         if playerVal.teamUUID:
-            self.teamPlayers.setdefault(playerVal.teamUUID, {})
-            self.teamPlayers[playerVal.teamUUID][playerVal.gbId] = isLeader
+            self.teamPlayersDic.setdefault(playerVal.teamUUID, {})
+            self.teamPlayersDic[playerVal.teamUUID][playerVal.gbId] = isLeader
 
         if playerVal.areaId:
-            self.areaPlayers.setdefault(playerVal.areaId, {})
-            self.areaPlayers[playerVal.areaId][playerVal.gbId] = 1
+            self.areaPlayersDic.setdefault(playerVal.areaId, {})
+            self.areaPlayersDic[playerVal.areaId][playerVal.gbId] = 1
 
         self.removePendingEnterPlayer(None, playerVal.gbId)
 
-    def doAddLinePlayer(self, owner, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo):
-        self[gbId] = LinePlayerVal(box, gbId, teamUUID, areaId, status, curSpaceNo, utils.curTS(), extraInfo.get('selfGuildUUID', 0))
+    def doAddLinePlayer(self, owner, box, gbId, teamUUID, areaId, status, curSpaceNo, extra):
+        self[gbId] = LinePlayerVal(
+            box, 
+            gbId, 
+            teamUUID,
+            areaId,
+            status,
+            curSpaceNo, 
+            utils.curTS(), 
+            extra.get('selfGuildUUID', 0))
 
         if teamUUID:
-            self.teamPlayers.setdefault(teamUUID, {})
-            self.teamPlayers[teamUUID][gbId] = extraInfo.get('isLeader', False)
+            self.teamPlayersDic.setdefault(teamUUID, {})
+            self.teamPlayersDic[teamUUID][gbId] = extra.get('isLeader', False)
 
         if areaId:
-            self.areaPlayers.setdefault(areaId, {})
-            self.areaPlayers[areaId][gbId] = 1
+            self.areaPlayersDic.setdefault(areaId, {})
+            self.areaPlayersDic[areaId][gbId] = 1
 
         self.removePendingEnterPlayer(owner, gbId)
 
     def isTeamLeader(self, teamUUID, gbId):
-        return self.teamPlayers.get(teamUUID, {}).get(gbId)
+        return self.teamPlayersDic.get(teamUUID, {}).get(gbId)
 
     def hasTeamMember(self, teamUUID):
-        return self.teamPlayers.get(teamUUID)
+        return self.teamPlayersDic.get(teamUUID)
 
     def getLeaderGbId(self, teamUUID):
-        for gbId, isLeader in self.teamPlayers.get(teamUUID, {}).items():
+        for gbId, isLeader in self.teamPlayersDic.get(teamUUID, {}).items():
             if isLeader:
                 return gbId
         return 0
 
-    def doRemoveLinePlayer(self, owner, gbId):
-        pVal = self.pop(gbId, None)
-        if not pVal:
+    def doRemoveLinePlayer(self, _, gbId):
+        _pVal = self.pop(gbId, None)
+        if not _pVal:
             return False
 
-        self._removeFromTeamPlayers(pVal)
-        self._removeFromAreaPlayers(pVal)
+        self._removeFromTeamPlayers(_pVal)
+        self._removeFromAreaPlayers(_pVal)
         return True
 
     def _removeFromTeamPlayers(self, pVal):
-        if pVal.teamUUID in self.teamPlayers:
-            self.teamPlayers[pVal.teamUUID].pop(pVal.gbId, 0)
-            if not self.teamPlayers[pVal.teamUUID]:
-                self.teamPlayers.pop(pVal.teamUUID)
+        if pVal.teamUUID in self.teamPlayersDic:
+            self.teamPlayersDic[pVal.teamUUID].pop(pVal.gbId, 0)
+            if not self.teamPlayersDic[pVal.teamUUID]:
+                self.teamPlayersDic.pop(pVal.teamUUID)
 
     def _removeFromAreaPlayers(self, pVal):
-        if pVal.areaId in self.areaPlayers:
-            self.areaPlayers[pVal.areaId].pop(pVal.gbId, 0)
-            if not self.areaPlayers[pVal.areaId]:
-                self.areaPlayers.pop(pVal.areaId)
+        if pVal.areaId in self.areaPlayersDic:
+            self.areaPlayersDic[pVal.areaId].pop(pVal.gbId, 0)
+            if not self.areaPlayersDic[pVal.areaId]:
+                self.areaPlayersDic.pop(pVal.areaId)
 
     def onPlayerTeamChanged(self, gbId, oldTeamUUID, newTeamUUID, isLeader):
-        pVal = self.get(gbId)
-        if not pVal:
+        _pVal = self.get(gbId)
+        if not _pVal:
             return
 
-        if oldTeamUUID and oldTeamUUID != pVal.teamUUID:
-            LOG_WARN('teamUUID mismatch', pVal, gbId, oldTeamUUID, newTeamUUID)
+        if oldTeamUUID and oldTeamUUID != _pVal.teamUUID:
+            LOG_WARN('teamUUID mismatch', _pVal, gbId, oldTeamUUID, newTeamUUID)
 
-        self._removeFromTeamPlayers(pVal)
-        pVal.onTeamChanged(newTeamUUID)
+        self._removeFromTeamPlayers(_pVal)
+        _pVal.onTeamChanged(newTeamUUID)
 
         if newTeamUUID:
-            self.teamPlayers.setdefault(newTeamUUID, {})
-            self.teamPlayers[newTeamUUID][gbId] = isLeader
+            self.teamPlayersDic.setdefault(newTeamUUID, {})
+            self.teamPlayersDic[newTeamUUID][gbId] = isLeader
 
     def onPlayerAreaChanged(self, gbId, newArea):
-        pVal = self.get(gbId)
-        if not pVal:
+        _pVal = self.get(gbId)
+        if not _pVal:
             return
 
-        if newArea == pVal.areaId:
+        if newArea == _pVal.areaId:
             return
 
-        self._removeFromAreaPlayers(pVal)
-        pVal.onAreaChanged(newArea)
+        self._removeFromAreaPlayers(_pVal)
+        _pVal.onAreaChanged(newArea)
 
         if newArea:
-            self.areaPlayers.setdefault(newArea, {})
-            self.areaPlayers[newArea][gbId] = 1
+            self.areaPlayersDic.setdefault(newArea, {})
+            self.areaPlayersDic[newArea][gbId] = 1
 
     def playersInArea(self, areaId):
-        return self.areaPlayers.get(areaId, {})
+        return self.areaPlayersDic.get(areaId, {})
 
     def addPendingEnterPlayer(self, owner, gbId):
-        if gbId in self.pendingEnterPlayers:
+        if gbId in self.pendingEnterPlayersDic:
             self.removePendingEnterPlayer(owner, gbId)
 
-        sec = utils.curTS()
-        self.pendingEnterPlayers[gbId] = sec
-        if self.pendingSec == sec:
+        _sec = utils.curTS()
+        self.pendingEnterPlayersDic[gbId] = _sec
+        if self.pendingSec == _sec:
             self.pendingSecNum += 1
         else:
-            self.pendingSec = sec
+            self.pendingSec = _sec
             self.pendingSecNum = 1
 
-    def removePendingEnterPlayer(self, owner, gbId):
-        if gbId not in self.pendingEnterPlayers:
+    def removePendingEnterPlayer(self, _, gbId):
+        if gbId not in self.pendingEnterPlayersDic:
             return
 
-        self.pendingEnterPlayers.pop(gbId)
+        self.pendingEnterPlayersDic.pop(gbId)
 
     def getPendingEnterNum(self):
-        return len(self.pendingEnterPlayers)
+        return len(self.pendingEnterPlayersDic)
 
     def getPendingEnterNumNowSec(self):
         sec = utils.curTS()
@@ -193,36 +201,36 @@ class AllLinePlayers(userType.UserDictType):
     def __init__(self, lineType):
         self.lineType = lineType
 
-    def getLinePlayers(self, lineNo):
-        return self.get(lineNo)
-
     def getPlayer(self, lineNo, gbId):
         if lineNo < 0:
-            for playersVal in self.values():
-                if gbId in playersVal:
-                    return playersVal[gbId]
+            for _playersVal in self.values():
+                if gbId in _playersVal:
+                    return _playersVal[gbId]
         else:
-            linePlayers = self.getLinePlayers(lineNo)
-            if not linePlayers:
+            _linePlayers = self.getLinePlayers(lineNo)
+            if not _linePlayers:
                 return None
-            return linePlayers.get(gbId, None)
+            return _linePlayers.get(gbId, None)
 
         return None
 
-    def addLinePlayer(self, owner, lineNo, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo):
-        players = self.getLinePlayers(lineNo)
-        players.doAddLinePlayer(owner, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo)
+    def getLinePlayers(self, lineNo):
+        return self.get(lineNo)
+
+    def addLinePlayer(self, owner, lineNo, box, gbId, teamUUID, areaId, status, curSpaceNo, extra):
+        _players = self.getLinePlayers(lineNo)
+        _players.doAddLinePlayer(owner, box, gbId, teamUUID, areaId, status, curSpaceNo, extra)
 
     def removeLinePlayer(self, owner, lineNo, gbId):
-        players = self.getLinePlayers(lineNo)
-        if not players:
+        _players = self.getLinePlayers(lineNo)
+        if not _players:
             return
 
-        if not players.doRemoveLinePlayer(owner, gbId):
+        if not _players.doRemoveLinePlayer(owner, gbId):
             LOG_ERR('zt: fail to remove player', lineNo, gbId)
             for ln, playersVal in self.items():
                 if ln == lineNo:
                     continue
-                if players.doRemoveLinePlayer(owner, gbId):
+                if _players.doRemoveLinePlayer(owner, gbId):
                     LOG_DBG('zt: remove player', ln, gbId)
 

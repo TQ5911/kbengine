@@ -1,31 +1,31 @@
 
 class BalancedObjectGenerator(list):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, **keywordArgs):
+        super().__init__(*args, **keywordArgs)
         self._beBroken = False
 
     def popitems(self, maxObjectNum, breakKey=None):
-        results = []
+        _results = []
 
         if not self:
-            return results, 0
+            return _results, 0
 
         if self._beBroken:
-            results.append(self.pop())
+            _results.append(self.pop())
             self._beBroken = False
-            return results, 1
+            return _results, 1
 
-        for i in range(maxObjectNum):
+        for _ in range(maxObjectNum):
             if not self:
                 break
 
-            item = self.pop()
+            _item = self.pop()
 
-            if callable(breakKey) and breakKey(item):
+            if callable(breakKey) and breakKey(_item):
                 self._beBroken = True
-                self.append(item)
+                self.append(_item)
                 break
 
-            results.append(item)
+            _results.append(_item)
 
-        return results, len(results)
+        return _results, len(_results)

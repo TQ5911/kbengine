@@ -32,12 +32,12 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         self.version = 0
 
     def reloadScript(self):
-        for pName, pVal in self.__dict__.items():
-            if pName.startswith('__'):
+        for _pName, _pVal in self.__dict__.items():
+            if _pName.startswith('__'):
                 continue
 
-            if hasattr(pVal, 'reloadScript'):
-                pVal.reloadScript()
+            if hasattr(_pVal, 'reloadScript'):
+                _pVal.reloadScript()
      
     def doNext(self):
         super().doNext()
@@ -384,10 +384,10 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
     def showData(self):
         LOG_INFO('redbagStub showData:', len(self.redbagDict), len(self.fetchCacheDict))
         for redbagId, _RbVal in self.redbagDict.items():
-            LOG_INFO('redbagDict: {}'.format(_RbVal.toSaveDict()))
+            LOG_INFO('redbagDict: {}'.format(_RbVal.toStreamSaveDict()))
         
         for redbagId, _FcVal in self.fetchCacheDict.items():
-            LOG_INFO('fetchCacheDict: {}: {}'.format(redbagId, _FcVal.toSaveDict()))
+            LOG_INFO('fetchCacheDict: {}: {}'.format(redbagId, _FcVal.toStreamSaveDict()))
             
             
         

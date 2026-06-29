@@ -55,7 +55,7 @@ class AuctionItem(userType.UserSTSoleType):
                 setattr(self, _k, v)
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         mDictData = {}
         for attr in self.__attrs__:
             if attr == 'extraInfo':
@@ -279,7 +279,7 @@ class Auction(userType.UserSTSoleType):
         self.refreshAuctionDefaultSortData()
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         m_result = {
             'auctionIndexInfo': list(self.auctionIndexInfo),
             'auctionType': self.auctionType,
@@ -565,13 +565,13 @@ class AuctionPlayerCache(userType.UserSTSoleType):
 
         return self
 
-    def toSavedDict(self):
-        m_data = {
+    def toStreamSavedDic(self):
+        mData = {
             'auctionType': self.auctionType,
             'unlockedGrids': self.unlockedGrids,
         }
 
-        return m_data
+        return mData
 
     @classmethod
     def _checkIgnores_(cls):
@@ -663,7 +663,7 @@ class AuctionItemRecord(userType.UserSTSoleType):
         self.number = dataDic['number']
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'itemId': self.itemId,
             'recordUUID': self.recordUUID,
@@ -702,7 +702,7 @@ class AuctionItemRecommendRecord(userType.UserSTSoleType):
         self.price = dataDic['price']
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'itemId': self.itemId,
             'recordUUID': self.recordUUID,

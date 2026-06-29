@@ -71,11 +71,11 @@ class ServerBuildsInfo(object):
 
         return buildVal
 
-    def getDictFromObj(self, obj):
-        return obj.getData()
-
     def isSameType(self, obj):
         return type(obj) is ServerBuilds.Build
+
+    def getDictFromObj(self, obj):
+        return obj.getData()
 
 serverBuildsInstance = ServerBuildsInfo()
 

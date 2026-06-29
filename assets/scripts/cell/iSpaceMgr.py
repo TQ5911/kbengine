@@ -101,7 +101,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             # 修改玩家PK模式
             mapId = formula.fetchMapId(self.spaceNo)
             pkModel = GGD.datas.get(mapId, {}).get('pkModel', 0) - 1
-            if pkModel >= 0 and pkModel <= gameconst.PKModel.MAX_PK:
+            if pkModel >= 0 and pkModel <= gameconst.PKModelEnum.MAX_PK:
                 ent.setPKModel(pkModel)
 
     def onPlayerLeave(self, gbId, playerId, box):
@@ -214,11 +214,11 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
                 _tagStr = str(_gid)
 
             for i in self.tagEntities.get(_tagStr, ()):
-                _ent = KBEngine.entities.get(i)
-                if not (_ent and not _ent.isDie()):
+                _entity = KBEngine.entities.get(i)
+                if not (_entity and not _entity.isDie()):
                     continue
 
-                _enth, _ = utils.getRealAvatarEntity(_ent)
+                _enth, _ = utils.getRealAvatarEntity(_entity)
                 if _enth and _enth.IsAvatar:
                     continue
 

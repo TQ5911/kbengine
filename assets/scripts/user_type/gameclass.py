@@ -7,14 +7,14 @@ from KBEDebug import *
 
 class ResultBool(userType.UserSingleType):
     def __init__(self, boolVal, extra=-1):
-        self.boolVal = boolVal
         self.extra = extra
-
-    def __bool__(self):
-        return self.boolVal
+        self.boolVal = boolVal
 
     def __str__(self):
         return '%s, %s' % (self.boolVal, self.extra)
+
+    def __bool__(self):
+        return self.boolVal
 
 
 class TaskCondResultCls(ResultBool):
@@ -64,12 +64,12 @@ class DuplicatedCallList(object):
 
 class LockMinHpInfo(userType.UserSingleType):
     def __init__(self, srcType, srcId, hpPct, totalTimes, minHp):
-        self.srcType = srcType
         self.srcId = srcId
-        self.hpPct = hpPct
+        self.srcType = srcType
         self.totalTimes = totalTimes
-        self.minHp = minHp
+        self.hpPct = hpPct
         self.effectTimes = 0
+        self.minHp = minHp
 
     def isValid(self):
         if self.totalTimes == -1:

@@ -253,7 +253,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     # 否则，使用gamebase.createGlobal的方式直接创建
     def createArchiveStub(self, clsName, properties, globalName):
         self.preparingEntTypes.append(clsName)
-        _dbid = gameglobal.entityTypeToDBID.get(clsName)
+        _dbid = gameglobal.entityTypeToDBIDDic.get(clsName)
         LOG_INFO('createArchiveStub', clsName, globalName, _dbid)
         if not _dbid:
             self._onArchiveStubLookup(clsName, 0, properties, globalName, False)
@@ -301,11 +301,6 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.preparingEntTypes.append(clsName)
         gamebase.createGlobal(clsName, props, globalName)
 
-    def destroyMarker(self, spaceNo):
-        sm = gamebase.getSpaceMarkerBaseByNo(spaceNo)
-        if sm:
-            sm.doEntireDestroy(False, False)
-
     def _loadEntityTypeToDBID(self):
         self.addInitProcedure(gameconst.BaseAppIniting.LOAD_ENTITY_DBID)
         _sql = 'SELECT entityType, entityDBID FROM game_entity_dbid'
@@ -319,7 +314,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             LOG_ERR('==========Error:failed to exec query base==========%s' % error)
             return
 
-        gameglobal.entityTypeToDBID = {}
+        gameglobal.entityTypeToDBIDDic = {}
         self.onInitProcedureDone(gameconst.BaseAppIniting.LOAD_ENTITY_DBID)
         if not result:
             return
@@ -331,7 +326,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             except:
                 gamesql.deleteEntityDBID(_entityType)
                 continue
-            gameglobal.entityTypeToDBID[_entityType] = int(dbid)
+            gameglobal.entityTypeToDBIDDic[_entityType] = int(dbid)
 
     def onGmFindAccount(self, result, accountName, idx, raw, uid):
         gmCommand.onFindAccount(result, accountName, idx, raw, uid)

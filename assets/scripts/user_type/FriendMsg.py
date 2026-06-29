@@ -11,7 +11,7 @@ class MessageVal(userType.UserSingleType):
         self.msg = msg
         self.ts = ts
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             "msg": self.msg,
             "ts": self.ts
@@ -29,7 +29,7 @@ class MessageListVal(userType.UserSingleType):
     def toClientMsgs(self):
         msgList = []
         for msg in self.msgList:
-            msgList.append(msg.toSavedDict())
+            msgList.append(msg.toStreamSavedDic())
 
         return msgList
 
@@ -84,10 +84,10 @@ class MessageListVal(userType.UserSingleType):
                 self.msgList = self.msgList[i:]
                 return
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         msgList = []
         for msg in self.msgList:
-            msgList.append(msg.toSavedDict())
+            msgList.append(msg.toStreamSavedDic())
 
         return {
             "msgList": msgList,

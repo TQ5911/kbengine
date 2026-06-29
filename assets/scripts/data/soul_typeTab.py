@@ -33,19 +33,19 @@ datas = _tools.RODict({
     }),
     5: _tools.RODict({
         "ID": 5,
-        "actionCategory": 1006
+        "actionCategory": 1005
     }),
     6: _tools.RODict({
         "ID": 6,
-        "actionCategory": 1007
+        "actionCategory": 1006
     }),
     7: _tools.RODict({
         "ID": 7,
-        "actionCategory": 1008
+        "actionCategory": 1007
     }),
     8: _tools.RODict({
         "ID": 8,
-        "actionCategory": 1005
+        "actionCategory": 1008
     })
 })
 minKey = 1

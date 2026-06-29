@@ -27,7 +27,7 @@ datas ={
       40330006
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "28",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -78,7 +78,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1049
+        1049,
+        1056
       ]
     }
   },
@@ -96,7 +97,7 @@ datas ={
       40330015
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "28",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -129,8 +130,7 @@ datas ={
   "1051": {
     "type": "createCollection",
     "entityID": [
-      40338004,
-      40338005
+      40338004
     ],
     "num": 0,
     "randomCollectionNum": 0,
@@ -143,12 +143,13 @@ datas ={
   },
   "1052": {
     "type": "taskFinished",
-    "taskID": 86010302,
+    "taskID": 86010301,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1053
+        1057,
+        1062
       ]
     }
   },
@@ -158,7 +159,7 @@ datas ={
       40330019
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "28",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -192,6 +193,75 @@ datas ={
     "type": "createCollection",
     "entityID": [
       40338006
+    ],
+    "num": 0,
+    "randomCollectionNum": 0,
+    "checkHaveInFixed": 0,
+    "transition": {
+      "finished": [
+        1060
+      ]
+    }
+  },
+  "1056": {
+    "type": "removeCollection",
+    "entityID": [
+      40338003
+    ],
+    "transition": {}
+  },
+  "1057": {
+    "type": "removeCollection",
+    "entityID": [
+      40338004
+    ],
+    "transition": {
+      "finished": [
+        1058
+      ]
+    }
+  },
+  "1058": {
+    "type": "taskFinished",
+    "taskID": 86010302,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1059,
+        1053
+      ]
+    }
+  },
+  "1059": {
+    "type": "removeCollection",
+    "entityID": [
+      40338005
+    ],
+    "transition": {}
+  },
+  "1060": {
+    "type": "taskFinished",
+    "taskID": 86010302,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1061
+      ]
+    }
+  },
+  "1061": {
+    "type": "removeCollection",
+    "entityID": [
+      40338006
+    ],
+    "transition": {}
+  },
+  "1062": {
+    "type": "createCollection",
+    "entityID": [
+      40338005
     ],
     "num": 0,
     "randomCollectionNum": 0,

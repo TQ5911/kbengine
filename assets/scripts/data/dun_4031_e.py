@@ -28,7 +28,7 @@ datas ={
       40310006
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "20",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -72,7 +72,7 @@ datas ={
       40310018
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "20",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -129,7 +129,7 @@ datas ={
       40310040
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "20",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -160,13 +160,19 @@ datas ={
     }
   },
   "1063": {
-    "type": "createCollection",
+    "type": "createMonster",
     "entityID": [
       40310041
     ],
     "num": 0,
-    "randomCollectionNum": 0,
-    "checkHaveInFixed": 0,
+    "lv": "20",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
     "transition": {
       "finished": [
         1064
@@ -206,7 +212,7 @@ datas ={
       40310028
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "20",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -242,7 +248,7 @@ datas ={
       40310019
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "20",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

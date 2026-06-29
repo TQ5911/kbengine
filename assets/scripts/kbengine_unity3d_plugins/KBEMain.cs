@@ -109,6 +109,7 @@ public class KBEMain : MonoBehaviour
 #endif
 
         paramDic.Add("deviceModel", deviceModel);
+        paramDic.Add("deviceId", SystemInfo.deviceUniqueIdentifier);
         paramDic.Add("deviceUniqueIdentifier", GetDeviceUniqueIdentifier());
         paramDic.Add("devicePlatId", devicePlatId);
         paramDic.Add("appVersion", MainStart.GetAppVersion());
@@ -143,7 +144,10 @@ public class KBEMain : MonoBehaviour
 #endif
         paramDic.Add("packageSource", MainStart.Instance.PackageSource);
 
-    string oaidStr = "";
+        //add 数数访客id
+        paramDic["distinct_id"] = MyUtils.GetThinkDistinctId();
+    
+        string oaidStr = "";
 #if UNITY_ANDROID && !UNITY_EDITOR
 
         paramDic["imei"] = MyUtils.GetAndroidDeviceIMEI();

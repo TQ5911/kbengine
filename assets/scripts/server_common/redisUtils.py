@@ -1025,13 +1025,16 @@ class PlayerLeaseRecord(object):
     @classmethod
     def getMessageRecord(cls, box, gbId, number=-1, rtype=1):
         key = cls._getKey(gbId, rtype)
-        def _onGetMessageRecordWarpper(cid, error, result):
-            return cls.onGetMessageRecord(cid, error, result, box, gbId, rtype)
-        number = max(number - 1, -1)
-        gameglobal.localBaseApp.getRedisClient().lrange(key, 0, number, _onGetMessageRecordWarpper)
+        _number = max(number - 1, -1)
+        gameglobal.localBaseApp.getRedisClient().lrange(
+            key, 
+            0, 
+            _number, 
+            functools.partial(cls.onGetMessageRecord, box, gbId, rtype)
+        )
 
     @classmethod
-    def onGetMessageRecord(cls, cid, error, result, box, gbId, rtype=1):
+    def onGetMessageRecord(cls, box, gbId, rtype, cid, error, result):
         LOG_DBG('PlayerLeaseRecord::onGetMessageRecord~', error, len(result))
         if error != "":
             LOG_WARN("PlayerLeaseRecord.onGetMessageRecord::cache missing", error)
@@ -1409,7 +1412,6 @@ class RedBagUtils:
             100, 
             True, 
             False, 
-            None,
             functools.partial(cls.callbackGetRankList, cb))
 
     @classmethod

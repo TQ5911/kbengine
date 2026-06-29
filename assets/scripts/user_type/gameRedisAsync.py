@@ -42,8 +42,8 @@ class AsyncRedisClient(object):
     port = 0
 
     # 定义构造方法
-    # connectCallback===>PyObject * (*connectCallback)(PyObject *cid, PyObject *connected);
-    # disconnectCallback===>PyObject * (*connectCallback)(PyObject *cid);
+    # connectRedisCB===>PyObject * (*connectRedisCB)(PyObject *cid, PyObject *connected);
+    # disconnectCallback===>PyObject * (*connectRedisCB)(PyObject *cid);
     def __init__(self, host, port, passwd, username):
         self.host = host
         self.port = port
@@ -54,9 +54,8 @@ class AsyncRedisClient(object):
 
     # 连接redis数据库
     def onConnect(self):
-        self.cid = GameCommon.connectRedis(self.host, self.port, self.connectCallback, self.disconnectCallback)
+        self.cid = GameCommon.connectRedis(self.host, self.port, self.connectRedisCB, self.disconnectCallback)
         LOG_INFO("AsyncRedisClient::onConnect")
-        return
 
     # 是否已经连接上redis数据库
     def isConnect(self):
@@ -69,18 +68,18 @@ class AsyncRedisClient(object):
             GameCommon.executeRawRedis(self.cid, 'auth {}'.format(self.passwd), None)
 
     # TCP建链成功或失败之后会调用的函数
-    def connectCallback(self, cid, connected):
+    def connectRedisCB(self, cid, connected):
         if connected:
             self.cid = cid
             self.connected = True
-            LOG_INFO("AsyncRedisClient::connectCallback is suc... connected={} cid={} host={} port={}".format(connected,
+            LOG_INFO("AsyncRedisClient::connectRedisCB is suc... connected={} cid={} host={} port={}".format(connected,
                                                                                                               self.cid,
                                                                                                               self.host,
                                                                                                               self.port))
             self.auth()
         else:
             LOG_INFO(
-                "AsyncRedisClient::connectCallback is error... connected={} cid={} host={} port={}".format(connected,
+                "AsyncRedisClient::connectRedisCB is error... connected={} cid={} host={} port={}".format(connected,
                                                                                                            self.cid,
                                                                                                            self.host,
                                                                                                            self.port))
@@ -121,8 +120,7 @@ class AsyncRedisClient(object):
                 resultCallback(self.cid, 'redis not connect', None)
             return False
 
-        args = tuple(args)
-        GameCommon.executeBytesRedis(self.cid, args, resultCallback)
+        GameCommon.executeBytesRedis(self.cid, tuple(args), resultCallback)
         return True
 
     # 获取tableName内元素的数量
@@ -163,10 +161,10 @@ class AsyncRedisClient(object):
         if type(dictobj) is not dict or not len(dictobj):
             LOG_ERR("AsyncRedisClient::add type(dictobj) is {}, len={}".format(type(dictobj), len(dictobj)))
             return False
-        cmd = "ZADD " + tableName
+        _cmd = "ZADD " + tableName
         for m, s in dictobj.items():
-            cmd += " " + str(s) + " " + str(m)
-        return self._executeRawRedis(cmd, resultCallback)
+            _cmd += " " + str(s) + " " + str(m)
+        return self._executeRawRedis(_cmd, resultCallback)
 
     # 在tableName对应的有序集合中删除元素
     def delete(self, tableName, memberList, resultCallback=None):
@@ -177,24 +175,24 @@ class AsyncRedisClient(object):
             LOG_ERR(
                 "AsyncRedisClient::delete type(memberList) is {}, len={}".format(type(memberList), len(memberList)))
             return False
-        cmd = "ZREM " + tableName
+        _cmd = "ZREM " + tableName
         for i in range(len(memberList)):
-            cmd += " " + str(memberList[i])
-        return self._executeRawRedis(cmd, resultCallback)
+            _cmd += " " + str(memberList[i])
+        return self._executeRawRedis(_cmd, resultCallback)
 
     # 按照索引范围获取tableName的元素
-    def getRange(self, tableName, start, end, desc=True, withscores=False, score_cast_func=int, resultCallback=None):
+    def getRange(self, tableName, start, end, desc=True, withscores=False, resultCallback=None):
         if not tableName:
             LOG_ERR("AsyncRedisClient::getRange tableName={}".format(tableName))
             return False
         if desc:
-            cmd = "ZREVRANGE " + tableName + " " + str(start) + " " + str(end)
+            _cmd = "ZREVRANGE " + tableName + " " + str(start) + " " + str(end)
         else:
-            cmd = "ZRANGE " + tableName + " " + str(start) + " " + str(end)
+            _cmd = "ZRANGE " + tableName + " " + str(start) + " " + str(end)
         if withscores:
-            cmd += " WITHSCORES"
-        # cmd += " withscores=" + str(withscores) + " score_cast_func=" + str("int")
-        return self._executeRawRedis(cmd, resultCallback)
+            _cmd += " WITHSCORES"
+
+        return self._executeRawRedis(_cmd, resultCallback)
 
     def zRemRangeByRank(self, tableName, start, end, resultCallback=None):
         if not tableName:
@@ -213,18 +211,17 @@ class AsyncRedisClient(object):
         return self._executeRawRedis(cmd, resultCallback)
 
     # 按照score在[min,max]范围获取tableName的元素
-    def getRangeByScore(self, tableName, min, max, start=None, num=None, withscores=False, score_cast_func=int,
+    def getRangeByScore(self, tableName, min, max, start=None, num=None, withscores=False,
                         resultCallback=None):
         if not tableName:
             LOG_ERR("AsyncRedisClient::getRangeByScore tableName={}".format(tableName))
             return False
-        cmd = "ZRANGEBYSCORE " + tableName + " " + str(min) + " " + str(max)
+        _cmd = "ZRANGEBYSCORE " + tableName + " " + str(min) + " " + str(max)
         if start != None and num != None:
-            cmd += " LIMIT " + str(start) + " " + str(num)
+            _cmd += " LIMIT " + str(start) + " " + str(num)
         if withscores:
-            cmd += " WITHSCORES"
-        # cmd += " withscores=" + str(withscores) + " score_cast_func=" + str("int")
-        return self._executeRawRedis(cmd, resultCallback)
+            _cmd += " WITHSCORES"
+        return self._executeRawRedis(_cmd, resultCallback)
 
     # 获取value的排名，从小到大排序
     def getRank(self, tableName, value, resultCallback=None):
@@ -322,10 +319,10 @@ class AsyncRedisClient(object):
         if type(valuelist) is not list or not len(valuelist):
             LOG_ERR("AsyncRedisClient::sadd type(valuelist) is {}, len={}".format(type(valuelist), len(valuelist)))
             return False
-        cmd = "SADD " + tableName
+        _cmd = "SADD " + tableName
         for i in range(len(valuelist)):
-            cmd += " " + str(valuelist[i])
-        return self._executeRawRedis(cmd, resultCallback)
+            _cmd += " " + str(valuelist[i])
+        return self._executeRawRedis(_cmd, resultCallback)
 
     # 获取tableName对应的集合的所有成员
     def smembers(self, tableName, resultCallback=None):
@@ -412,8 +409,8 @@ class AsyncRedisClient(object):
 
         if isBytes:
             cmdArgs = [b'HMSET', tableName.encode('utf-8')]
-            for k, v in dictobj.items():
-                cmdArgs.append(str(k).encode('utf-8'))
+            for _k, v in dictobj.items():
+                cmdArgs.append(str(_k).encode('utf-8'))
                 cmdArgs.append(v)
             return self._executeBytesRedis(cmdArgs, resultCallback)
         else:
@@ -431,10 +428,10 @@ class AsyncRedisClient(object):
         if type(keysList) is not list or not len(keysList):
             LOG_ERR("AsyncRedisClient::hmget type(keysList) is {}, len={}".format(type(keysList), len(keysList)))
             return False
-        cmd = "HMGET " + tableName
+        _cmd = "HMGET " + tableName
         for i in range(len(keysList)):
-            cmd += " " + str(keysList[i])
-        return self._executeRawRedis(cmd, resultCallback)
+            _cmd += " " + str(keysList[i])
+        return self._executeRawRedis(_cmd, resultCallback)
 
     def hlen(self, tableName, resultCallback=None):
         if not tableName:
@@ -536,15 +533,15 @@ class AsyncRedisClient(object):
         if not name:
             LOG_ERR("AsyncRedisClient::ltrim name={}".format(name))
             return False
-        cmd = "LTRIM " + name + " " + str(start) + " " + str(end)
-        return self._executeRawRedis(cmd, resultCallback)
+        _cmd = "LTRIM " + name + " " + str(start) + " " + str(end)
+        return self._executeRawRedis(_cmd, resultCallback)
 
     def lrange(self, name, start, end, resultCallback=None):
         if not name:
             LOG_ERR("AsyncRedisClient::lrange name={}".format(name))
             return False
-        cmd = "LRANGE " + name + " " + str(start) + " " + str(end)
-        return self._executeRawRedis(cmd, resultCallback)
+        _cmd = "LRANGE " + name + " " + str(start) + " " + str(end)
+        return self._executeRawRedis(_cmd, resultCallback)
 
     # 右侧插入
     def rpush(self, name, *args, resultCallback=None):
@@ -789,11 +786,11 @@ def main():
 
     # ----------------------------SET------------------------------------
     name = "tableName"
-    min = 1
-    max = 5
+    _min = 1
+    _max = 5
     start = 1
     num = 5
-    rac.getRangeByScore(name, min, max, start=start, num=num, resultCallback=ResultCallback_test)
+    rac.getRangeByScore(name, _min, _max, start=start, num=num, resultCallback=ResultCallback_test)
 
     # ----------------------------ZRANK------------------------------------
     name = "tableName"

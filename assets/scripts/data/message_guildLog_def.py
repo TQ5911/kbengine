@@ -33,4 +33,14 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     guild_enmityDesc2 = 38000015
     guild_siegeOrderExpire = 38000016
     guild_biddingReturn = 38000017
+    guild_unionCreate = 38000018
+    guild_unionJoin = 38000019
+    guild_unionExit = 38000020
+    guild_enmityDeclare = 38000021
+    guild_unionDeclare = 38000022
+    guild_enmityDeclare2 = 38000023
+    guild_unionDeclare2 = 38000024
+    guild_unionSupport1 = 38000025
+    guild_unionSupport2 = 38000026
+    guild_unionSupport3 = 38000027
 

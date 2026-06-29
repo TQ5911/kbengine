@@ -17,9 +17,9 @@ class ImpTeam(object):
 
 	# 每个队员base上执行的check函数
 	def checkedBaseByTeam(self, captainBox, checkType, bothComp, beginComp, args):
-		isFailed, cbArgs, cellArgs = False, (), ()
-		if isFailed or not bothComp or beginComp == gameconst.CELL:
-			captainBox.cell.onCheckResultFromMember(checkType, self.gbId, cbArgs)
+		_isFailed, cbArgs, cellArgs = False, (), ()
+		if _isFailed or not bothComp or beginComp == gameconst.CELL:
+			captainBox.cell.checkResultFromMember(checkType, self.gbId, cbArgs)
 		else:
 			self.cell.checkedCellByTeam(checkType, bothComp, beginComp, cellArgs)
 
@@ -28,20 +28,20 @@ class ImpTeam(object):
 		gameengine.getTeamStub(teamId).kickTeamMember(teamId, self.gbID, gbId, True)
 
 	def switchTeamMicsModeBase(self, teamId, mode):
-		extraProps = {}
-		gameengine.getTeamStub(teamId).switchTeamMicsMode(self, self.gbID, teamId, mode, extraProps)
+		_extraProps = {}
+		gameengine.getTeamStub(teamId).switchTeamMicsMode(self, self.gbID, teamId, mode, _extraProps)
 
 	def turnOnTeamMicsBase(self, teamId):
-		extraProps = {}
-		gameengine.getTeamStub(teamId).turnOnTeamMics(self, self.gbID, teamId, self.gbID, extraProps)
+		_extraProps = {}
+		gameengine.getTeamStub(teamId).turnOnTeamMics(self, self.gbID, teamId, self.gbID, _extraProps)
 
 	def switchRaidMicsModeBase(self, raidUUID, mode):
-		extraProps = {}
-		gameengine.getRaidStub(raidUUID).switchRaidMicsMode(self, self.gbID, raidUUID, mode, extraProps)
+		_extraProps = {}
+		gameengine.getRaidStub(raidUUID).switchRaidMicsMode(self, self.gbID, raidUUID, mode, _extraProps)
 
 	def turnOnRaidMicsBase(self, raidUUID):
-		extraProps = {}
-		gameengine.getRaidStub(raidUUID).turnOnRaidMics(self, self.gbID, raidUUID, self.gbID, extraProps)
+		_extraProps = {}
+		gameengine.getRaidStub(raidUUID).turnOnRaidMics(self, self.gbID, raidUUID, self.gbID, _extraProps)
 
 	def onRaidChanged(self, newRaidUUID):
 		self.raidUUIDBase = newRaidUUID

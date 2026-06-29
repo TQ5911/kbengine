@@ -2464,7 +2464,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090369,
         "Target": "self",
-        "EventCD": 60.0
+        "EventCD": 120.0
     }),
     13090370: _tools.RODict({
         "ID": 13090370,

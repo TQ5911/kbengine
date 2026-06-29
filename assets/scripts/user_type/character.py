@@ -172,16 +172,15 @@ class Characters(userType.UserDictType):
         return self.pop(gbId, None)
 
     def modifyCharacterName(self, gbId, name):
-        cVal = self.get(gbId)
-        if not cVal:
+        _cVal = self.get(gbId)
+        if not _cVal:
             return
 
-        cVal.name = name
+        _cVal.name = name
 
     def _lateReload(self):
         super(Characters, self)._lateReload()
 
-        for v in self.values():
-            v.reloadScript()
+        for _v in self.values():
+            _v.reloadScript()
 
-        return

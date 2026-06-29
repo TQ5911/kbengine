@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package RouterGameServer;
-
+option go_package = "../gameServerService";
 option py_generic_services = true;
 
 message Void {
@@ -21,6 +21,29 @@ message OthersBaseRequest
     bytes memoryStream = 4;
 }
 
+//单个服务器的流量统计
+message ServerTrafficEntry
+{
+    uint32 serverId = 1;
+    uint64 requestCount = 2;
+    uint64 byteCount = 3;
+}
+
+//路由器整体流量统计：分别按来源服务器和目标服务器汇总
+message TrafficStats
+{
+    repeated ServerTrafficEntry sourceTraffic = 1;
+    repeated ServerTrafficEntry destTraffic = 2;
+    uint64 totalRequests = 3;
+    uint64 totalBytes = 4;
+}
+
+//重置统计信息的返回结果
+message ResetTrafficStatsResult
+{
+    bool success = 1;
+}
+
 
 //中心服务器向游戏服提供的rpc
 service RouterServer
@@ -28,6 +51,10 @@ service RouterServer
     rpc registerBaseapp(BaseAppInfo) returns(Void);
     rpc doOnOthersBase(OthersBaseRequest) returns(Void);
     rpc activeTick(Void) returns(Void);
+    //获取路由器当前的流量统计信息，结果通过 getTrafficStatsCallback 回传
+    rpc getTrafficStats(Void) returns(Void);
+    //重置路由器当前的流量统计信息，结果通过 resetTrafficStatsCallback 回传
+    rpc resetTrafficStats(Void) returns(Void);
 }
 
 //游戏服向中心服的rpc
@@ -35,4 +62,8 @@ service GameServer
 {
     rpc onRemoteCallFromOthersBase(OthersBaseRequest) returns(Void);
     rpc activeTickCallback(Void) returns(Void);
+    //getTrafficStats 请求的回传，返回路由器当前的流量统计信息
+    rpc getTrafficStatsCallback(TrafficStats) returns(Void);
+    //resetTrafficStats 请求的回传，返回重置结果
+    rpc resetTrafficStatsCallback(ResetTrafficStatsResult) returns(Void);
 }

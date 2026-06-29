@@ -26,21 +26,21 @@
             <Arg>   TASK_ID     </Arg>
         </flowCtrlOnTaskInProgress>
 
-        <flowCtrlDungeonMonsterReleaseComplete>
+        <flowCtrlDunMonsterReleaseComplete>
             <Arg>   PY_LIST     </Arg>
-        </flowCtrlDungeonMonsterReleaseComplete>
+        </flowCtrlDunMonsterReleaseComplete>
 
-        <flowCtrlDungeonMonsterKillNumIncreased>
+        <flowCtrlDunMonsterKillNumInc>
             <Arg>   GAME_ENTITY_ID  </Arg>
             <Arg>   UINT32          </Arg>
             <Arg>   UINT32          </Arg>
-        </flowCtrlDungeonMonsterKillNumIncreased>
+        </flowCtrlDunMonsterKillNumInc>
 
-        <flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId>
+        <flowCtrlDunMonsterKillNumIncByMonsterId>
             <Arg>   OBJECT_ID       </Arg>
             <Arg>   UINT32          </Arg>
             <Arg>   UINT32          </Arg>
-        </flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId>
+        </flowCtrlDunMonsterKillNumIncByMonsterId>
 
     </BaseMethods>
 

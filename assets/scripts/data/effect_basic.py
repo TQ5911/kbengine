@@ -74,7 +74,13 @@ datas = _tools.RODict({
         "Func": "cantUseSkillTag",
         "ParameterType": "Hash{{key=\"tag\",value=\"tagid\"},{key=\"Value\",value=\"int()\"}}",
         "Example": "[{\"EffectId\": 13010011, \"Tag\": \"SkillTagId\", \"Value\": 146}]"
+    }),
+    13010012: _tools.RODict({
+        "ID": 13010012,
+        "Func": "damageRatioLimit",
+        "ParameterType": "Hash{{key=\"tag\",value=\"tagid\"},{key=\"Value\",value=\"int()\"}}",
+        "Example": "[{\"EffectId\": 13010012, \"Value\": ((3, 0.2),)}]"
     })
 })
 minKey = 13010001
-maxKey = 13010011
+maxKey = 13010012

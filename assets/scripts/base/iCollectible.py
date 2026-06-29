@@ -41,7 +41,7 @@ class ICollectible(object):
         clientData = []
         for item in self.collectibleData.collectibleDict.values():
             clientData.append(
-                item.toSavedDict()
+                item.toStreamSavedDic()
             )
         self.client.onGetCollectInfo(clientData)
         LOG_INFO('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
@@ -59,8 +59,8 @@ class ICollectible(object):
 
         self.collectibleData.collectibleDict.setdefault(collectID, collectItem(collectID))
         self.collectibleData.collectibleDict[collectID].onMark(isMark)
-        self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
-        LOG_INFO('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
+        self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toStreamSavedDic()])
+        LOG_INFO('call reqMark done', self.collectibleData.collectibleDict[collectID].toStreamSavedDic())
 
     @gamedecorator.checkGameconfigEnable('collection')
     def reqCollect(self, exposed, bagType, bagGridID, itemUniqueID, useBind, collectID, collectGridID):
@@ -105,11 +105,10 @@ class ICollectible(object):
         self.collectibleData.collectibleDict[collectID].onComplete(collectGridID)
         if not self.collectibleData.collectibleDict[collectID].isCompleteAll(equipment_len + prop_len):
             LOG_INFO('reqCollect not Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
-            self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
-            LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
+            self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toStreamSavedDic()])
+            LogTrackingMgr.LogTrackingMgr.collectible_detail(
                 self.gbID,
                 self.accountEntity.clientDistinctId, 
-                self.gbID,
                 collectID,
                 gameconst.CollectibleDetailStatus.COLLECTING,
                 "",
@@ -121,7 +120,7 @@ class ICollectible(object):
         # 获得奖励
         self._onScore(collectProp, opUUID)
         # 发送进度信息给客户端
-        self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
+        self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toStreamSavedDic()])
         LOG_INFO('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
 
         self.achievementInfo.triggerAchieveByType(

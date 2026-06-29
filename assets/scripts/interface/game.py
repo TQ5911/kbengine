@@ -13,7 +13,6 @@ import time
 import login_set as LSD
 import message_Message as MMD
 import gameglobal
-import gamelog
 import httpcommon
 import proto.centralLogin_pb2 as centralLogin
 import urllib

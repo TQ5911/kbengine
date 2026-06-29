@@ -191,6 +191,24 @@ class WealthItem(WealthUnit):
                 _otherObjs.append(it)
         self.itemsObjs = _otherObjs
         return petItemList
+    
+    def popSoulItemObjs(self):
+        soulList = []
+        _otherObjs = []
+        soulList = []
+        for it in self.itemsObjs:
+            if it.isSoul():
+                soulList.append(it)
+            else:
+                _otherObjs.append(it)
+        self.itemsObjs = _otherObjs
+
+        for itemId in list(self.data.keys()):
+            if dataUtils.getItemSubType(itemId) in gameconst.ItemSubEnum.EQUIP_SOUL_TYPE:
+                datas = self.data.pop(itemId)
+                for bindType, itemNum in datas.items():
+                    soulList.extend(itemFactory.ItemFactory.createItemList(itemId, itemNum, bindType))
+        return soulList
 
     def popExtractRewardItems(self):
         _extractRewardItemsDic = {}
@@ -199,8 +217,8 @@ class WealthItem(WealthUnit):
             if not _itemData:
                 LOG_WARN('popExtractRewardItems, no _itemData:', self.data)
                 continue
-            if _itemData['type'] == gameconst.ItemType.Normal and _itemData[
-                'subType'] == gameconst.ItemSubType.ExtractReward:
+            if _itemData['type'] == gameconst.ItemEnum.Normal and _itemData[
+                'subType'] == gameconst.ItemSubEnum.ExtractReward:
                 _extractRewardItemsDic[_itemId] = self.data.pop(_itemId)
         return _extractRewardItemsDic
 
@@ -272,7 +290,7 @@ class WealthTitleOne(userType.UserSingleType):
         if startTime == -1:
             self.startTime = utils.curTS()
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {'titleId': self.titleId, 'startTime': self.startTime}
 
 
@@ -577,19 +595,19 @@ class BaseAwardVal(WealthVal, AwardMixin):
             return self
 
         _type = _itemData.get('type')
-        if _type == gameconst.ItemType.Normal:
+        if _type == gameconst.ItemEnum.Normal:
             if _itemData['subType'] in itemFactory.ItemFactory.NormalItemClassMap:
                 itemObjs = itemFactory.ItemFactory.createItemList(itemId, num, bindType, **kwargs)
                 self.itemWealth.addItemObjs(itemObjs)
             else:
                 self.itemWealth.addAwardItem(itemId, num, bindType)
-        elif _type == gameconst.ItemType.LingShou:
+        elif _type == gameconst.ItemEnum.LingShou:
             if _itemData['subType'] in itemFactory.ItemFactory.LingShouItemClassMap:
                 itemObjs = itemFactory.ItemFactory.createItemList(itemId, num, bindType, **kwargs)
                 self.petItemWealth.addItemObjs(itemObjs)
             else:
                 self.petItemWealth.addAwardItem(itemId, num, bindType)
-        elif _type == gameconst.ItemType.Title:
+        elif _type == gameconst.ItemEnum.Title:
             self.titleWealth.data.append(WealthTitleOne(itemId))
 
         return self
@@ -606,7 +624,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
                 continue
             itemData = dataUtils.getCommItemData(it.itemId)
             itemType = itemData.get('type')
-            if itemType == gameconst.ItemType.LingShou:
+            if itemType == gameconst.ItemEnum.LingShou:
                 petItemList.append(it)
             else:
                 normalItemList.append(it)
@@ -656,9 +674,9 @@ class AwardVal(BaseAwardVal):
 
     def toClientDisplayVal(self):
         _retList = []
-        _retList.extend({'itemId': itemId, 'itemNum': num} for itemId, num in self.getNoObjItemDic().items())
-        _retList.extend({'itemId': i.itemId, 'itemNum': i.itemNum, 'type': i.bindType} for i in self.itemWealth.getItemObjs())
-        _retList.extend({'itemId': i.itemId, 'itemNum': i.itemNum, 'type': i.bindType} for i in self.petItemWealth.getItemObjs())
+        _retList.append([{'itemId': itemId, 'itemNum': num} for itemId, num in self.getNoObjItemDic().items()])
+        _retList.append([{'itemId': i.itemId, 'itemNum': i.itemNum, 'bindType': i.bindType} for i in self.itemWealth.getItemObjs()])
+        _retList.append([{'itemId': i.itemId, 'itemNum': i.itemNum, 'bindType': i.bindType} for i in self.petItemWealth.getItemObjs()])
         return _retList
 
 
@@ -709,9 +727,9 @@ class DeductWealthVal(WealthVal, AwardMixin):
                 return self
 
         itemType = dataUtils.getCommItemData(itemId).get('type')
-        if itemType == gameconst.ItemType.Normal:
+        if itemType == gameconst.ItemEnum.Normal:
             self.itemWealth.addAwardItem(itemId, num, bindType)
-        elif itemType == gameconst.ItemType.LingShou:
+        elif itemType == gameconst.ItemEnum.LingShou:
             self.petItemWealth.addAwardItem(itemId, num, bindType)
         else:
             LOG_ERR('DeductWealthVal error:', itemId, bindType, num)
@@ -732,7 +750,7 @@ class DeductWealthVal(WealthVal, AwardMixin):
                 continue
             itemData = dataUtils.getCommItemData(it.itemId)
             itemType = itemData.get('type')
-            if itemType == gameconst.ItemType.LingShou:
+            if itemType == gameconst.ItemEnum.LingShou:
                 petItemList.append(it)
             else:
                 normalItemList.append(it)
@@ -947,7 +965,7 @@ def _getResourceFixReward(awardId, context):
         if callable(_itemId):
             _itemId = _itemId()
         _itemData = dataUtils.getCommItemData(_itemId)
-        if _itemData.get('type') != gameconst.ItemType.Resource:
+        if _itemData.get('type') != gameconst.ItemEnum.Resource:
             continue
         if callable(_itemNum):
             _itemNum = int(_itemNum(context.args))  # context.args: srcLv, playerLevel
@@ -1019,7 +1037,7 @@ def _getResourceExReward(awardId, context):
         if callable(_itemId):
             _itemId = _itemId()
         _itemData = dataUtils.getCommItemData(_itemId)
-        if _itemData.get('type') != gameconst.ItemType.Resource:
+        if _itemData.get('type') != gameconst.ItemEnum.Resource:
             continue
         if callable(_num):
             _num = int(_num(context.args))  # context.args: srcLv
@@ -1084,7 +1102,7 @@ def _getFixRewardBaseOnSexual(awardId, context):
             bindType = _getDefaultBindType(itemId)
 
         itemData = dataUtils.getCommItemData(itemId)
-        if itemData.get('type') != gameconst.ItemType.Normal:
+        if itemData.get('type') != gameconst.ItemEnum.Normal:
             continue
         _addItemToAward(awardVal, itemId, itemNum, bindType, 0, context)
 
@@ -1202,7 +1220,7 @@ def _getSinAward(singleAward, context, itemType):
             bindType = _getDefaultBindType(itemId)
 
         _itemData = dataUtils.getCommItemData(itemId)
-        if _itemData.get('type') == gameconst.ItemType.Normal or _itemData.get('type') == gameconst.ItemType.LingShou:
+        if _itemData.get('type') == gameconst.ItemEnum.Normal or _itemData.get('type') == gameconst.ItemEnum.LingShou:
             _addItemToAward(awardVal, itemId, num, bindType, quality, context)
     return awardVal
 
@@ -1227,7 +1245,8 @@ def _getBindWeightRank(extra):
     for _, v in R_RD.datas.items():
         l, r = v['rankRange'][0], v['rankRange'][1]
         if rank >= l and rank <= r:
-            if v["isMonthCard"] and isBigMonthCardExpired:
+            #  【任务】大月卡特权调整+动态商品购买增加月卡特权 - 服务端
+            if v["isMonthCard"] and (isBigMonthCardExpired or isMonthCardExpired):
                 continue
             if v["isCrossServer"] == 0 and isCrossServer:
                 continue
@@ -1470,7 +1489,7 @@ def getAwardOne(awardId, context, isNeedDisturb=False):
         _award += _getResourceExReward(awardId, context)
 
     if fixAward:
-        _award += _getFixedAward(fixAward, context, gameconst.ItemType.Normal)
+        _award += _getFixedAward(fixAward, context, gameconst.ItemEnum.Normal)
 
     if fixRewardBaseOnSexual:
         _award += _getFixRewardBaseOnSexual(awardId, context)
@@ -1479,22 +1498,22 @@ def getAwardOne(awardId, context, isNeedDisturb=False):
         _award += _getNestedFixAward(awardId, context, isNeedDisturb)
 
     if exAward:
-        _award += _getExtraAward(exAward, context, gameconst.ItemType.Normal)
+        _award += _getExtraAward(exAward, context, gameconst.ItemEnum.Normal)
 
     if nextedExtAward:
         _award += _getNestedExAward(awardId, context, isNeedDisturb)
 
     if singleAward:
-        _award += _getSinAward(singleAward, context, gameconst.ItemType.Normal)
+        _award += _getSinAward(singleAward, context, gameconst.ItemEnum.Normal)
 
     if fixPetReward:
-        _award += _getFixedAward(fixPetReward, context, gameconst.ItemType.LingShou)
+        _award += _getFixedAward(fixPetReward, context, gameconst.ItemEnum.LingShou)
 
     if singlePetReward:
-        _award += _getSinAward(singlePetReward, context, gameconst.ItemType.LingShou)
+        _award += _getSinAward(singlePetReward, context, gameconst.ItemEnum.LingShou)
 
     if exPetReward:
-        _award += _getExtraAward(exPetReward, context, gameconst.ItemType.LingShou)
+        _award += _getExtraAward(exPetReward, context, gameconst.ItemEnum.LingShou)
 
     if dropID:
         _award += _getDropAward(dropID, context)

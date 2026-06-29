@@ -23,13 +23,13 @@ datas = _tools.RODict({
         "ID": "wonderLandNumCoin",
         "value": 100,
     }),
-    "wonderLandNumCoinCost": _tools.RODict({
-        "ID": "wonderLandNumCoinCost",
-        "value": ((1, 30000021, 50), (2, 30000001, 100)),
-    }),
     "wonderLandNumCoinDailyLimit": _tools.RODict({
         "ID": "wonderLandNumCoinDailyLimit",
         "value": 2,
+    }),
+    "wonderLandNumCoinCost": _tools.RODict({
+        "ID": "wonderLandNumCoinCost",
+        "value": ((1, 30000021, 50), (2, 30000001, 100)),
     }),
     "wonderLandNumItem": _tools.RODict({
         "ID": "wonderLandNumItem",

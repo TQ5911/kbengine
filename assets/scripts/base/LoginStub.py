@@ -5,12 +5,10 @@ import KBEngine
 
 import urllib.parse
 import collections
-import hashlib
 import json
 import http
 
 import gameconst
-import gameengine
 import gamebase
 import gametimer
 import gamesql
@@ -25,8 +23,6 @@ import iBaseNoCell
 import iGlobal
 import iCentralLogin
 import iTimer
-import globalDataCounter
-from Crypto.Cipher import AES
 import LogTrackingMgr
 import redisUtils
 
@@ -70,40 +66,38 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         gameglobal.localBaseApp.initAysncore()
 
-    def onTimer(self, timerID, userData):
-        self._onTimerTrigger(timerID, userData)
-        if userData == gametimer.LOGIN_STUB_ASYNC_TICK:
+    def onTimer(self, timerID, userArg):
+        self._onTimerTrigger(timerID, userArg)
+        if userArg == gametimer.LOGIN_STUB_ASYNC_TICK:
             self.connectAllCentralServer()
 
-        elif userData == gametimer.LOGIN_STUB_SERVERINFO_SYNC:
+        elif userArg == gametimer.LOGIN_STUB_SERVERINFO_SYNC:
             if gameconfig.enableCentralLogin():
                 self.updateServerInfo()
                 if gameglobal.isBootstrap:
                     self.updateSVIPOnlineNum()
 
-        elif userData == gametimer.LOGIN_STUB_ACTIVE_TICK:
+        elif userArg == gametimer.TIMER_LOGIN_STUB_ACTIVE_TICK:
             if gameconfig.enableCentralLogin():
                 self.checkAllCentralServerActive()
 
-        elif utils.isBelongTimerTag(userData):
+        elif utils.isBelongTimerTag(userArg):
             self._onTimerCallback(timerID)
 
-        elif userData == gametimer.LOGIN_STUB_TLOG_GAMESVR_STATE:
-            serverid = gameconfig.serverId()
+        elif userArg == gametimer.LOGIN_STUB_TLOG_GAMESVR_STATE:
             iZoneAreaID = gameconfig.serverId()
             gamelog.makeGameSvrStateLog(iZoneAreaID)
 
-        elif userData == gametimer.LOGIN_STUB_SYNC_INTERFACE_REGNUM:
+        elif userArg == gametimer.LOGIN_STUB_SYNC_INTERFACE_REGNUM:
             gameglobal.localBaseApp.notifyInterfaceSyncRegisterCount(self.accountRegNum.dataSum)
         
-        elif userData == gametimer.LOGIN_STUB_LOG_TRACKING_PCU:
+        elif userArg == gametimer.LOGIN_STUB_LOG_TRACKING_PCU:
             LogTrackingMgr.LogTrackingMgr.Server_Pcu(
                 'LoginStub',
                 '', 
+                gameconfig.serverId(),
                 self.getGlobalAccountNum(),
             )
-
-        return
 
     def getConfig(self):
         return gameconfig
@@ -111,18 +105,22 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def onCentralServerConnected(self, centralServerId):
         LOG_INFO('onCentralServerConnected', centralServerId, KBEngine.getComponentGroupOrder())
         if KBEngine.getComponentGroupOrder()==1:
-            self.tryRegisterServer(centralServerId)
+            self.tryRegisterLoginServer(centralServerId)
 
         if self.heartBeatTimer:
-            self.pyDelTimer(self.heartBeatTimer, gametimer.LOGIN_STUB_ACTIVE_TICK)
+            self.pyDelTimer(self.heartBeatTimer, gametimer.TIMER_LOGIN_STUB_ACTIVE_TICK)
 
-        self.heartBeatTimer = self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gametimer.LOGIN_STUB_ACTIVE_TICK)
+        self.heartBeatTimer = self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gametimer.TIMER_LOGIN_STUB_ACTIVE_TICK)
 
-    def tryRegisterServer(self, centralServerId):
-        if not KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
-            self.addTimerCB(5, 'tryRegisterServer', (centralServerId,), gametimer.TIMER_TAG_TRY_REGISTER_SERVER)
-        else:
+    def tryRegisterLoginServer(self, centralServerId):
+        if KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
             self.registerServer(centralServerId)
+        else:
+            self.addTimerCB(
+                5, 
+                'tryRegisterLoginServer', 
+                (centralServerId,), 
+                gametimer.TIMER_TAG_TRY_REGISTER_SERVER)
 
     def onAccountDestroy(self, accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr):
         LOG_INFO("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr)
@@ -131,9 +129,9 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         # deduct account online num
         self.accountNumCounter.decSum(self)
 
-        curPlat = self.playerNumPlat.setdefault(devicePlatId, {})
-        curNum = curPlat.get(channelId, 0)
-        self.playerNumPlat[devicePlatId][channelId] = max(curNum - 1, 0)
+        _curPlat = self.playerNumPlat.setdefault(devicePlatId, {})
+        _curNum = _curPlat.get(channelId, 0)
+        self.playerNumPlat[devicePlatId][channelId] = max(_curNum - 1, 0)
 
         if gameconfig.enableCentralLogin():
             self.notifyCentralServerOffline(accountName, accountType, centralServerId, sessionIdStr)
@@ -187,8 +185,8 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.updateTodayRegNum()
 
         curPlat = self.playerNumPlat.setdefault(devicePlatId, {})
-        curNum = curPlat.get(channelId, 0)
-        self.playerNumPlat[devicePlatId][channelId] = curNum + 1
+        _curNum = curPlat.get(channelId, 0)
+        self.playerNumPlat[devicePlatId][channelId] = _curNum + 1
         
         redisUtils.RedisUtils.getSVIPFlag(accountName, self._onIncSVIPAccount)
 
@@ -203,9 +201,6 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         LOG_WARN("onKickAccountFail", failOpenIds, realAccountName)
         self.kickAccountSet = set.union(self.kickAccountSet, set(realAccountName))
         self.addTimerCB(30, 'rmFromKickAccountSet', (realAccountName,), gametimer.TIMER_TAG_REMOVE_FROM_KICK_ACCOUNT_SET)
-
-    def rmFromKickAccountSet(self, realAccountName):
-        self.kickAccountSet.discard(realAccountName)
 
     def doOnOthersBaseByAccountName(self, otherAccountNames, otherMethod, otherArgs, failCallbackBox, failCallbackMethod, failCallbackArgs):
         failAccounts = []
@@ -224,13 +219,16 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
             getattr(failCallbackBox, failCallbackMethod)(*failArgs)
 
-    def getGlobalAccountNum(self):
-        return self.accountNumCounter.dataSum
+    def rmFromKickAccountSet(self, realAccountName):
+        self.kickAccountSet.discard(realAccountName)
 
     def globalDataCounterCallback(self, counter, callback, args):
         getattr(counter, callback)(*args)
 
-    def _initAccountRegNum(self, ret, num, insertId, err):
+    def getGlobalAccountNum(self):
+        return self.accountNumCounter.dataSum
+
+    def _initAccountRegNum(self, ret, num, _, err):
         if err:
             LOG_ERR('LoginStub::_initAccountRegSet query db err.', err)
             return

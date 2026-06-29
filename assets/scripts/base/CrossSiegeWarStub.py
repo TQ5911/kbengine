@@ -90,7 +90,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.checkBattleStart()
             self.cityOwnerMgrTick()
             self.onCrossSiegeWarStateCheck()
-        elif userData == gametimer.CYCLE_EVENT_TICK_TIMER:
+        elif userData == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
 
     def getFirstMonthlyStartTime(self):

@@ -114,7 +114,7 @@
     <GUILD_MONEY>       UINT32          </GUILD_MONEY>
     <GUILD_MEMBER_CNT>  UINT8           </GUILD_MEMBER_CNT>
     <GUILD_EVENT_ID>    UINT32         </GUILD_EVENT_ID>
-    <GUILD_CONTRIB>     UINT32          </GUILD_CONTRIB>
+    <GUILD_CONTRIB>     INT32          </GUILD_CONTRIB>
     <GUILD_FUND>        UINT32          </GUILD_FUND>
     <GUILD_BUILDING_ID>        UINT8    </GUILD_BUILDING_ID>
     <GUILD_ICON_ID>     UINT8           </GUILD_ICON_ID>
@@ -458,28 +458,6 @@
         </Properties>
     </ATTR_VAL>
 
-    <SPIRIT_BIND_VAL> FIXED_DICT
-        <Properties>
-            <pos>
-                <Type> UINT8 </Type>
-            </pos>
-            <bindType>
-                <Type> UINT8 </Type>
-            </bindType>
-        </Properties>
-    </SPIRIT_BIND_VAL>
-
-    <GLYPH_BIND_VAL> FIXED_DICT
-        <Properties>
-            <pos>
-                <Type> UINT8 </Type>
-            </pos>
-            <bindType>
-                <Type> UINT8 </Type>
-            </bindType>
-        </Properties>
-    </GLYPH_BIND_VAL>
-
     <CLI_GLYPH_INFO> FIXED_DICT
         <Properties>
             <glyphPos>
@@ -522,6 +500,12 @@
             <spiritDatas>
                 <Type>  ARRAY <of>  CLI_SPIRIT_INFO </of>   </Type>
             </spiritDatas>
+            <previewSpiritDatas>
+                <Type>  ARRAY <of>  CLI_SPIRIT_INFO </of>   </Type>
+            </previewSpiritDatas>
+            <previewSpiritBindTypes>
+                <Type>  ARRAY <of> UINT8 </of>   </Type>
+            </previewSpiritBindTypes>
             <spiritGroup>
                 <Type> UINT8 </Type>
             </spiritGroup>
@@ -565,10 +549,10 @@
                 <Type>  UINT16  </Type>
             </bindBlessCost>
             <spiritBindTypes>
-                <Type>  ARRAY <of> SPIRIT_BIND_VAL </of>   </Type>
+                <Type>  ARRAY <of> UINT8 </of>   </Type>
             </spiritBindTypes>
             <glyphBindTypes>
-                <Type>  ARRAY <of> GLYPH_BIND_VAL </of>   </Type>
+                <Type>  ARRAY <of> UINT8 </of>   </Type>
             </glyphBindTypes>
             <soulBindType>
                 <Type>  UINT8  </Type>
@@ -3169,6 +3153,18 @@
             <histCond>
                 <Type>  HIST_COND        </Type>
             </histCond>
+            <commissionGold>
+                <Type>  UINT32          </Type>
+            </commissionGold>
+            <commissionGoldDaily>
+                <Type>  UINT32          </Type>
+            </commissionGoldDaily>
+            <commissionCumTenure>
+                <Type>  UINT32          </Type>
+            </commissionCumTenure>
+            <jobPositionTime>
+                <Type>  UINT32          </Type>
+            </jobPositionTime>
         </Properties>
     </GUILD_MEMBER_DATA_INFO>
 
@@ -3635,6 +3631,21 @@
             <cityBattleToken>
                 <Type>  CITY_BATTLE_TOKEN              </Type>
             </cityBattleToken>
+            <guildCommission>
+                <Type>  MONEY                          </Type>
+            </guildCommission>
+            <gamePlayScoreCurrent>
+                <Type> UINT32                          </Type>
+            </gamePlayScoreCurrent>
+            <gamePlayScoreLimit>
+                <Type> UINT32                          </Type>
+            </gamePlayScoreLimit>
+            <guildMicsSwitch>
+                <Type>  UINT8                           </Type>
+            </guildMicsSwitch>
+            <guildMicsBlockList>
+                <Type>  ARRAY <of>  PLAYER_GBID  </of>   </Type>
+            </guildMicsBlockList>
         </Properties>
     </GUILD_CLIENT_DATA>
 

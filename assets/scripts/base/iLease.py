@@ -26,6 +26,8 @@ import message_Message_def as MMD
 import auction_auctionConst as AUC_CONST
 import gearBase_gearBase as GBGBD
 import antiAddictCategory_antiAddictCategory_def as ACACD
+import agent_agentFunction as A_AFD
+import agent_agentConfig as A_ACD
 import itemData_itemType as IDITD
 import itemData_itemData_set as IDID_SET
 import gearBase_typeExplanation as GBTED
@@ -60,6 +62,7 @@ LEASE_IN_COOLDOWN = 8
 LEASE_DB_ERROR = 9
 LEASE_RATE_LIMIT = 10
 LEASE_SELF_LEASE = 11
+LEASE_SHELF_FULL = 12
 
 class ILease(object):
     """Avatar 租赁系统 Mixin"""
@@ -133,10 +136,15 @@ class ILease(object):
     # 上架流程（跨服，二阶段提交）
     # -------------------------------------------------------------
 
-    @gamedecorator.limitcall(0.5)
+    @gamedecorator.limitcall(2)
     @gamedecorator.checkGameconfigEnable('lease')
     def reqSaleItemInLease(self, exposed, uniqueId, pricePerDay, days):
         LOG_INFO("reqSaleItemInLease", uniqueId, pricePerDay, days)
+        if not self.checkAuthDisassembleAndMsg(
+                A_AFD.Rental, 
+                A_ACD.datas['restrictedPromptMsg1']['value']):
+            return
+
         if not self.leaseStub:
             LOG_INFO("reqSaleItemInLease leaseStub not found")
             self.onMessagePre(MMD.datas.rent01, [])
@@ -218,11 +226,20 @@ class ILease(object):
             opUUID,
         )
 
+        LogTrackingMgr.LogTrackingMgr.rent_item_sale(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            item.itemId,
+            item.uniqueId,
+            pricePerDay,
+        )
+
     def onReplyAddItemPrepare(self, uniqueId, result, opUUID):
         LOG_DBG("onReplyAddItemPrepare", uniqueId, result, opUUID)
         if result != 0:
             LOG_INFO("onReplyAddItemPrepare failed", uniqueId, result)
             self._leasePending.pop(uniqueId, None)
+            # TODO: 若需要区分提示，可配置 rentalShelfFullMsg
             self.onMessagePre(MMD.datas.rent01, [])
             return
 
@@ -278,10 +295,15 @@ class ILease(object):
     # 租借流程（跨服，二阶段提交）
     # -------------------------------------------------------------
 
-    @gamedecorator.limitcall(0.5)
+    @gamedecorator.limitcall(2)
     @gamedecorator.checkGameconfigEnable('lease')
     def reqLeaseItem(self, exposed, uniqueId):
         LOG_INFO("reqLeaseItem", uniqueId)
+        if not self.checkAuthDisassembleAndMsg(
+                A_AFD.Rental, 
+                A_ACD.datas['restrictedPromptMsg1']['value']):
+            return
+
         if not self.leaseStub:
             LOG_ERR("reqLeaseItem leaseStub not found")
             return
@@ -297,7 +319,7 @@ class ILease(object):
                 self.onMessagePre(MMD.datas.rent07, [])
                 return
             if result == LEASE_TIMEOUT:
-                self.onMessagePre(MMD.datas.rent08, [])
+                self.onMessagePre(MMD.datas.redeem08, [])
                 return
 
             self.onMessagePre(MMD.datas.rent02, [])
@@ -345,6 +367,26 @@ class ILease(object):
             gold=gold,
             cost=cost,
             opUUID=opUUID,
+        )
+
+        # 
+        itemDict = json.loads(itemData)
+        item = itemFactory.ItemFactory.createItemWithSavedDict(itemDict)
+        if not item:
+            LOG_ERR("onReplyLeaseItemCommit log failed", uniqueId)
+            return
+        LogTrackingMgr.LogTrackingMgr.rent_item_deal(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            item.itemId,
+            uniqueId,
+            cost,
+            gold,
+            bindGold,
+            ownerGBID,
+            0,
+            lessorGBID,
+            0,
         )
 
     @gamedecorator.offlineCallback
@@ -419,7 +461,7 @@ class ILease(object):
     # 下架流程（跨服）
     # -------------------------------------------------------------
 
-    @gamedecorator.limitcall(0.5)
+    @gamedecorator.limitcall(1)
     @gamedecorator.checkGameconfigEnable('lease')
     def reqCancelSaleItemInLease(self, exposed, uniqueId):
         LOG_INFO("reqCancelSaleItemInLease", uniqueId)
@@ -434,10 +476,28 @@ class ILease(object):
             self.onMessagePre(MMD.datas.rent05, [])
             return
 
+        # 锁定背包，防止并发操作导致格子被占用
+        if not self.bagData.tryLockBag(3, 'lease_cancel_sale'):
+            LOG_INFO("_doCancelSaleItemInLease lock bag failed", uniqueId)
+            self.onMessagePre(MMD.datas.rent03, [])
+            return
+
         self.leaseStub.cancelItem(self.gbID, uniqueId)
+
+        LogTrackingMgr.LogTrackingMgr.rent_item_cancel(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            0,
+            uniqueId,
+            0,
+            'cancel'
+        )
 
     def onReplyCancelItemInLease(self, uniqueId, result, itemDataStr):
         LOG_DBG("onReplyCancelItemInLease", uniqueId, result)
+        # 解锁背包（与 _doCancelSaleItemInLease 中的 tryLockBag 配对）
+        self.bagData.unLockBag()
+
         if result:
             LOG_INFO('ILease::onReplyCancelItemInLease failed:', uniqueId, result)
             self.onMessagePre(MMD.datas.rent03, [])
@@ -458,7 +518,8 @@ class ILease(object):
         returnTime = item.getReturnTime()
         if returnTime and returnTime < utils.curTS():
             LOG_ERR("onReplyCancelItemInLease item already expired", uniqueId, returnTime)
-            self.onMessagePre(MMD.datas.rent07, [])
+            self.onMessagePre(MMD.datas.redeem07, [])
+            self.client.onCancelSaleItemInLeaseSucc(uniqueId)
             return
 
         srcType = ACACD.datas.BONUS_SRC_LEASE_CANCEL

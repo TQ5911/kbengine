@@ -135,17 +135,17 @@ class Bag(BaseBag.BaseBag):
 
         return _opStat, gridId
 
-    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
+    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDic=None, notify=True, syncToClient=True,
                          directly=True):
-        _opStat, planDict = super(Bag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDict, notify,
+        _opStat, planDic = super(Bag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDic, notify,
                                                              syncToClient)
         if _opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
-            return _opStat, planDict
+            return _opStat, planDic
 
         tmpItem = {}
         tmpEquipList = []
 
-        for _gridId, _planItems in planDict['old'].items():
+        for _gridId, _planItems in planDic['old'].items():
             item = self.getItemObjByGridId(_gridId)
             mergeNum = sum([num for _, num in _planItems])
             _itemData = ITEM_DATA.datas.get(item.itemId, None)
@@ -172,7 +172,7 @@ class Bag(BaseBag.BaseBag):
                 detail,
             )
 
-        for _gridId, _planItems in planDict['new'].items():
+        for _gridId, _planItems in planDic['new'].items():
             item = self.getItemObjByGridId(_gridId)
             sumNum = sum([num for _, num in _planItems])
             _itemData = dataUtils.getCommItemData(item.itemId)
@@ -210,7 +210,7 @@ class Bag(BaseBag.BaseBag):
 
         if notify and directly:
             owner._showPopReward(src, popRewardUUID, detail)
-        return _opStat, planDict
+        return _opStat, planDic
 
     # 这里要求外部检查好每个格子有物品且数量足够，否则抛异常
     def deductItemsByGridId(self, owner, grid2ItemNum, opUUID, srcType, detail, sendClient=True):
@@ -263,11 +263,11 @@ class Bag(BaseBag.BaseBag):
             owner._cancelDatetimeCallback(tid, gametimer.REPLACE_EXPIRED_ITEM)
         return _cleanItem
 
-    def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDict=None, isCheckLock=True):
-        _opStat, planDict = super(Bag, self).deductItemsWithPlan(owner, itemsDict, itemsObjs, opUUID, srcType, detail,
-                                                                planDict, isCheckLock)
+    def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDic=None, isCheckLock=True):
+        _opStat, planDic = super(Bag, self).deductItemsWithPlan(owner, itemsDict, itemsObjs, opUUID, srcType, detail,
+                                                                planDic, isCheckLock)
 
-        return _opStat, planDict
+        return _opStat, planDic
 
     def useItemsFail(self, owner, errCode, itemId=0):
         LOG_INFO('useItemsFail, errCode:', errCode, itemId)
@@ -296,9 +296,9 @@ class Bag(BaseBag.BaseBag):
             owner.client.onUpdateDailyUseLimit(gridItem.itemId, self.dailyUseLimitDic.get(gridItem.itemId, 0))
 
         owner.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetUseItem'], (gridItem.itemId, useNum))
-        if _itemData['type'] == gameconst.ItemType.Normal:
-            if _itemData['subType'] == gameconst.ItemSubType.HEAL_HP\
-                    or _itemData['subType'] == gameconst.ItemSubType.HEAL_MP:
+        if _itemData['type'] == gameconst.ItemEnum.Normal:
+            if _itemData['subType'] == gameconst.ItemSubEnum.HEAL_HP\
+                    or _itemData['subType'] == gameconst.ItemSubEnum.HEAL_MP:
                 owner.triggerAchievementWithCtx(
                     gameconst.AchieveType.USE_POTION, 
                     actionContext.AchievementCtx(itemId=int(gridItem.itemId), useNum=useNum))

@@ -426,6 +426,15 @@ datas = _tools.RODict({
     "AbanRewardEventParam": _tools.RODict({
         "value": ''
     }),
+    "AbanRewardLeaveInstance": _tools.RODict({
+        "value": False
+    }),
+    "AbanRewardLevInsID": _tools.RODict({
+        "value": 0
+    }),
+    "AbanRewardLevInsDelay": _tools.RODict({
+        "value": 0
+    }),
     "CheckFollowNPC": _tools.RODict({
         "value": False
     }),

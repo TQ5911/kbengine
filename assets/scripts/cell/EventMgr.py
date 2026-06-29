@@ -8,92 +8,90 @@ class EffectEvent(userType.UserSingleType):
     def __init__(self, name, triggerRoleId, targetRoleId, eventContext):
         self.name = name
         self.triggerRoleId = triggerRoleId
-        self.targetRoleId = targetRoleId
         self.eventContext = eventContext
+        self.targetRoleId = targetRoleId
 
 class EventMgr(object):
 
     def __init__(self):
         pass
-        # self.eventDic = {'events':[{'name': 'ontest', 'listeners': [{'entityId': entityId, 'callback': 'testtest', 'callbackArgs': ()}]}]}
 
-    def addListener(self, name, srcKey, callback, callbackArgs = None):
-        if not callbackArgs:
-            callbackArgs = ()
+    def addListener(self, name, srcKey, callback, args= None):
+        if not args:
+            args = ()
 
-        self.eventDic.setdefault(name, {})
-        self.eventDic[name][srcKey] = (callback, callbackArgs)
+        self.eventDict.setdefault(name, {})
+        self.eventDict[name][srcKey] = (callback, args)
 
     def _reloadEventDic(self):
-        for eventMap in self.eventDic.values():
-            for e in eventMap.values():
-                args = e[1]
-                if hasattr(args, 'reloadScript'):
-                    args.reloadScript()
-                elif hasattr(args, '__iter__'):
-                    for v in args:
-                        if hasattr(v, 'reloadScript'):
-                            v.reloadScript()
+        for _eventMap in self.eventDict.values():
+            for _e in _eventMap.values():
+                _args = _e[1]
+                if hasattr(_args, 'reloadScript'):
+                    _args.reloadScript()
+                elif hasattr(_args, '__iter__'):
+                    for _v in _args:
+                        if hasattr(_v, 'reloadScript'):
+                            _v.reloadScript()
 
     def postReloadScript(self):
+        self._reloadEventDic()
         if hasattr(super(EventMgr, self), 'postReloadScript'):
             super(EventMgr, self).postReloadScript()
-        self._reloadEventDic()
 
     def removeListener(self, name, srcKey):
-        if name not in self.eventDic:
+        if name not in self.eventDict:
             return
 
-        self.eventDic[name].pop(srcKey, None)
-        if not self.eventDic[name]:
-            self.eventDic.pop(name)
+        self.eventDict[name].pop(srcKey, None)
+        if not self.eventDict[name]:
+            self.eventDict.pop(name)
 
     def onEffectEventCall(self, name, triggerId, targetId, eventContext):
-        event = EffectEvent(name, triggerId, targetId, eventContext)
-        self.raiseEvent(name, event)
+        _event = EffectEvent(name, triggerId, targetId, eventContext)
+        self.raiseEvent(name, _event)
 
     def raiseEvent(self, name, event):
-        cbMap = self.eventDic.get(name, {})
-        for cbKey in list(cbMap.keys()):
-            if cbKey not in cbMap:
+        _cbMap = self.eventDict.get(name, {})
+        for _cbKey in list(_cbMap.keys()):
+            if _cbKey not in _cbMap:
                 continue
-            callback, callbackArgs = cbMap[cbKey]
+            callback, callbackArgs = _cbMap[_cbKey]
 
-            func = getattr(self, callback, None)
-            func and func(event, *callbackArgs)
+            _func = getattr(self, callback, None)
+            _func and _func(event, *callbackArgs)
 
     def notifyEffectActionEvent(self, event, effectCaller, effectId, effectIndex):
+        _effectVal = effectCaller.getEffectVal(self, effectId, effectIndex)
+        if _effectVal:
+            _effectVal.onActionEvent(self, effectCaller, event)
 
-        effectVal = effectCaller.getEffectVal(self, effectId, effectIndex)
-        if effectVal:
-            effectVal.onActionEvent(self, effectCaller, event)
-
-    def notifyEffectAddSkill(self, event, effectCaller, effectId, effectIndex, needSkillIds):
-        if event.eventContext.skillId not in needSkillIds:
+    def notifyEffectAddSkill(self, event, effectCaller, effectId, effectIndex, needSkills):
+        if event.eventContext.skillId not in needSkills:
             return
 
-        effect = effectCaller.getEffectVal(self, effectId, effectIndex)
-        if effect:
-            effect.onAddSkill(self, effectCaller, event, event.eventContext.skillId)
+        _effect = effectCaller.getEffectVal(self, effectId, effectIndex)
+        if _effect:
+            _effect.onAddSkill(self, effectCaller, event, event.eventContext.skillId)
 
     def onEventSkill(self, event, buffId, buffSrcKey):
-        buff = self.getBuffByBuffId(buffId, buffSrcKey)
-        if buff:
-            buff.onEventSkill(self, event, buffId)
+        _buff = self.getBuffByBuffId(buffId, buffSrcKey)
+        if _buff:
+            _buff.onEventSkill(self, event, buffId)
 
     def onEventBeat(self, event, buffId, buffSrcKey):
-        buff = self.getBuffByBuffId(buffId, buffSrcKey)
-        if buff:
-            buff.onEventBeat(self, event, buffId)
+        _buff = self.getBuffByBuffId(buffId, buffSrcKey)
+        if _buff:
+            _buff.onEventBeat(self, event, buffId)
 
     def onEventHit(self, event, buffId, buffSrcKey):
-        buff = self.getBuffByBuffId(buffId, buffSrcKey)
-        if buff:
-            buff.onEventHit(self, event, buffId)
+        _buff = self.getBuffByBuffId(buffId, buffSrcKey)
+        if _buff:
+            _buff.onEventHit(self, event, buffId)
 
     def onEventDead(self, event, buffId, buffSrcKey):
-        buff = self.getBuffByBuffId(buffId, buffSrcKey)
-        if buff:
-            buff.onEventDead(self, event, buffId)
+        _buff = self.getBuffByBuffId(buffId, buffSrcKey)
+        if _buff:
+            _buff.onEventDead(self, event, buffId)
 
 

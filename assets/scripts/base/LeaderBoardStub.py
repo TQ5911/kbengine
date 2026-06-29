@@ -76,7 +76,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             self._checkRushRankRefresh()
         elif userArg == gametimer.GEN_RUSH_RANK_DATA:
             self._genRushRankData()
-        elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
+        elif userArg == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
         else:
             self._onTimerTrigger(tid, userArg)

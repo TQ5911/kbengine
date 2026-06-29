@@ -382,11 +382,11 @@ class ImpAutoCombat(object):
             return
 
         if not self.useTargetTypeCacheFlag:
-            viewRadius = self.getViewRadius() if self.IsAvatar else gameconst.DEFAULT_AOI
-            for e in self.entitiesInRange(viewRadius):
-                if e.IsCombatUnit:
-                    utils.isEnemy(self, e)
-                    utils.isFriend(self, e)
+            _viewRadius = self.getViewRadius() if self.IsAvatar else gameconst.DEFAULT_AOI
+            for _e in self.entitiesInRange(_viewRadius):
+                if _e.IsCombatUnit:
+                    utils.isEnemy(self, _e)
+                    utils.isFriend(self, _e)
 
             if self.spaceMgr:
                 _ents = self.spaceMgr.listEntitiesByTag('largeEnt')
@@ -449,7 +449,7 @@ class ImpAutoCombat(object):
             self.autoCmbtDic['skill'] = _skill
             if not _skill:
                 return AutoCombatRetEnum.FAIL_SKILL
-            if not utils.hasSkillTagById(_skill.skillId, gameconst.SkillTag.GeneralSkill):
+            if not utils.hasSkillTagById(_skill.skillId, gameconst.SkillTagEnum.GeneralSkill):
                 skillFrequentNormal = C_CD.datas['skillFrequentNormal']['value']
                 k = random.randint(int(skillFrequentNormal[0] * 1000), int(skillFrequentNormal[1] * 1000))
                 self.autoCmbtDic['ungeneralSkillLimitTime'] = utils.getTimestamp64() + k
@@ -525,7 +525,7 @@ class ImpAutoCombat(object):
         if skill.getEffectTargetType(skill.skillId) == 'Self':
             return self
 
-        if skill.hasSkillTag(gameconst.SkillTag.Hot) or skill.hasSkillTag(gameconst.SkillTag.Heal):
+        if skill.hasSkillTag(gameconst.SkillTagEnum.Hot) or skill.hasSkillTag(gameconst.SkillTagEnum.Heal):
             _target = self.getTeamTarget(True, skill)
         else:
             _target = KBEngine.entities.get(self.selectedTargetId, None)
@@ -570,7 +570,7 @@ class ImpAutoCombat(object):
 
     def getEffectSelectTarget(self, skill):
         if skill.getEffectTargetType(skill.skillId) in ('Friend', 'Self', 'Any', 'FriendExGB'):
-            if skill.hasSkillTag(gameconst.SkillTag.Hot) or skill.hasSkillTag(gameconst.SkillTag.Heal):
+            if skill.hasSkillTag(gameconst.SkillTagEnum.Hot) or skill.hasSkillTag(gameconst.SkillTagEnum.Heal):
                 return self.getTeamTarget(True, skill)
             return self
         else:
@@ -578,11 +578,11 @@ class ImpAutoCombat(object):
 
     def getTeamTargets(self):
         _targets = []
-        for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDict.items():
-            if playerGBID == self.gbId or not playerBaseVal.playerBox:
+        for _playerGBID, _playerBaseVal in self.teamInfo.teamPlayerDict.items():
+            if _playerGBID == self.gbId or not _playerBaseVal.playerBox:
                 continue
 
-            teamMember = KBEngine.entities.get(playerBaseVal.playerBox.id)
+            teamMember = KBEngine.entities.get(_playerBaseVal.playerBox.id)
             if not teamMember:
                 continue
 
@@ -666,6 +666,12 @@ class ImpAutoCombat(object):
             _now = utils.curTS()
             if _now - _ts < gameconst.FIGHT_BACK_DELAY:
                 return True
+            
+            _target = KBEngine.entities.get(self.fightBackTarget)
+            if _target:
+                if _target.IsAvatar:
+                    if _target.inPKSafeArea():
+                        return True
 
         return False
 
@@ -795,26 +801,39 @@ class ImpAutoCombat(object):
 
         inAutoFightSkillCD = utils.getTimestamp64() < self.autoCmbtDic.get('ungeneralSkillLimitTime', 0)
         for skillId, skill in self.skillDic.items():
+            weight = SSD.datas[skillId].get('autoBattleWeight')
+            if skill.hasSkillTag(gameconst.SkillTagEnum.GeneralSkill):
+                if _load > 0.85:
+                    return skill
+                
+                elif _load > 0.70:
+                    # *22 大概能让普攻的随到概率达到三分之二
+                    weight *= 22
+
+                elif _load > 0.55:
+                    # * 11 大概能让普攻随到概率达到二分之一
+                    weight *= 11
+
             ret = self.skillDic.checkSkillSwitch(skillId, gameconst.SkillSwitchStatus.AUTO)
             if not ret:
                 continue
-            if not skill.hasSkillTag(gameconst.SkillTag.AutoCombat):
+            if not skill.hasSkillTag(gameconst.SkillTagEnum.AutoCombat):
                 continue
             if skill.inCDTime():
                 continue
             if self.mp < skill.getCostMp(self, skill.skillId, self.mpCostRatio):
                 continue
-            if skill.hasSkillTag(gameconst.SkillTag.FightStateSkill) and not self.hasState(gameconst.StateEnum.Fighting):
+            if skill.hasSkillTag(gameconst.SkillTagEnum.FightStateSkill) and not self.hasState(gameconst.StateEnum.Fighting):
                 continue
-            if utils.hasSkillTagById(skillId, gameconst.SkillTag.GeneralSkill) and not self.checkConflictState(C_C_DD.datas.useGeneralSkill, False):
+            if utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.GeneralSkill) and not self.checkConflictState(C_C_DD.datas.useGeneralSkill, False):
                 continue
-            if utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill) and not self.isUltraSkillPowerMax():
+            if utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.UltraSkill) and not self.isUltraSkillPowerMax():
                 # 大招进度没满
                 continue
-            if utils.hasSkillTagById(skillId, gameconst.SkillTag.HealSkill) and not isHpLow:
+            if utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.HealSkill) and not isHpLow:
                 continue
             # 改变技能CD状态
-            if utils.hasSkillTagById(skillId, gameconst.SkillTag.changeCDStatusSkill):
+            if utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.changeCDStatusSkill):
                 # 不能用
                 if skill.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED:
                     continue
@@ -825,14 +844,14 @@ class ImpAutoCombat(object):
 
             # 自动战斗技能公共CD中，只能用普攻
             if not self.autoCombatSkillFrequent:
-                if inAutoFightSkillCD and not utils.hasSkillTagById(skillId, gameconst.SkillTag.GeneralSkill):
+                if inAutoFightSkillCD and not utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.GeneralSkill):
                     continue
 
             if self.checkForbidSkill(skillId):
                 continue
 
             skillList.append(skill)
-            weight = SSD.datas[skillId].get('autoBattleWeight')
+
             skillWeightList.append(weight)
 
         return utils.weightChoices(skillList, skillWeightList)[0][0] if skillList else None
@@ -890,7 +909,7 @@ class ImpAutoCombat(object):
             return
 
         realSkill, replaceSkill = _skill.getRealSkillVal(self)
-        isCastSkill = realSkill.hasSkillTag(gameconst.SkillTag.Casting)
+        isCastSkill = realSkill.hasSkillTag(gameconst.SkillTagEnum.Casting)
 
         _direction = sMath.vector3WithoutY(_target.position - self.position)
         if _target.id != self.id:
@@ -972,7 +991,7 @@ class ImpAutoCombat(object):
     def removeHate(self, targetId):
         aiController = self.getTempMiscProp(gameconst.EntityPropsEnum.aiController, None)
         if aiController:
-            aiController.hateDict.removeHate(targetId)
+            aiController.hateDic.removeHate(targetId)
 
     def setMoveController(self, contoller):
         self.autoCmbtDic['moveController'] = contoller

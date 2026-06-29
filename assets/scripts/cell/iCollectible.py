@@ -18,10 +18,9 @@ class ICollectible(object):
             propChange = self._addAwardCollectPropsCell(propList)
             if not opUUID:
                 continue
-            LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
+            LogTrackingMgr.LogTrackingMgr.collectible_detail(
                 self.gbId,
                 self.clientDistinctIdCell,
-                self.gbId,
                 propIndex,
                 gameconst.CollectibleDetailStatus.COLLECTED,
                 propChange,

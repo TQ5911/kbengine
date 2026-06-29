@@ -27,7 +27,6 @@ import fightProp_define
 import gamePlay_gamePlay as GPGP
 import gamePlay_enterScene as GPES
 import const_const as CCT
-import NPC_teleporter as NTD
 import creep_force
 import PKData_PKData as PKD
 import PKData_moralValueEffect as PKMVE
@@ -1290,13 +1289,37 @@ def addResourceVal(oldVal, delta, valType):
     if _newVal < 0:
         if valType in (
                 gameconst.ReourceValType.UINT32, gameconst.ReourceValType.UINT64, gameconst.ReourceValType.UINT8,):
-            gameengine.panicStack('checkResourceValLimit, minus source val:', _newVal, valType)
+            gameengine.panicStack('add checkResourceValLimit, minus source val:', _newVal, valType)
             _newVal = 0
     elif _newVal > _maxVal:
-        gameengine.panicStack('checkResourceValLimit, exceed max val:', _newVal, valType, _maxVal)
+        gameengine.panicStack('add checkResourceValLimit, exceed max val:', _newVal, valType, _maxVal)
         _newVal = _maxVal
     return _newVal
 
+def deductResourceVal(oldVal, delta, valType):
+    _newVal = oldVal + delta
+    if valType == gameconst.ReourceValType.UINT32:
+        _minVal = 0
+    elif valType == gameconst.ReourceValType.INT32:
+        _minVal = -0x80000000
+    elif valType == gameconst.ReourceValType.UINT64:
+        _minVal = 0
+    elif valType == gameconst.ReourceValType.INT64:
+        _minVal = -0x8000000000000000
+    elif valType == gameconst.ReourceValType.UINT8:
+        _minVal = 0
+    else:
+        return _newVal
+
+    if _newVal < 0:
+        if valType in (
+                gameconst.ReourceValType.UINT32, gameconst.ReourceValType.UINT64, gameconst.ReourceValType.UINT8,):
+            gameengine.panicStack('deduct checkResourceValLimit, minus source val:', _newVal, valType)
+            _newVal = 0
+    elif _newVal < _minVal:
+        gameengine.panicStack('deduct checkResourceValLimit, exceed max val:', _newVal, valType, _minVal)
+        _newVal = _minVal
+    return _newVal
 
 def getFraction(val, len=100):
     return int(round(val - int(val), 2) * len)
@@ -1556,7 +1579,7 @@ def getGuildUUIDPair(guildUUID1, guildUUID2):
 
 
 def isEnemyInPK(src, target):
-    if src.pkModel == gameconst.PKModel.PEACE:
+    if src.pkModel == gameconst.PKModelEnum.PEACE:
         return False
 
     if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE) or utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE):
@@ -1565,10 +1588,10 @@ def isEnemyInPK(src, target):
     if src.inPKProtect(target):
         return False
 
-    if src.pkModel == gameconst.PKModel.JUSTICE:
+    if src.pkModel == gameconst.PKModelEnum.JUSTICE:
         return target.inRedName() or target.isGreyName()
 
-    elif src.pkModel == gameconst.PKModel.ENEMY:
+    elif src.pkModel == gameconst.PKModelEnum.ENEMY:
         if target.inRedName() or target.isGreyName():
             return True
 
@@ -3353,7 +3376,7 @@ def rollEquipSoulProps(itemId, schoolId):
     return finalRes
 
 def rollItemProps(itemId, itemSubType, schoolId):
-    if itemSubType == gameconst.ItemSubType.EQUIP_SOUL:
+    if itemSubType in gameconst.ItemSubEnum.EQUIP_SOUL_TYPE:
         return rollEquipSoulProps(itemId, schoolId)
     return []
 
@@ -3417,3 +3440,31 @@ def debugFullStack():
         LOG_INFO(f"Frame {idx}: File {fname}, line {line_no}, func={func_name}|")
 
     LOG_INFO("====================【完整调用栈 END】====================\n")
+
+def safe_str_to_int(s, default=0):
+    s_clean = str(s).strip()
+    if not s_clean:
+        return default
+    if s_clean.startswith("-"):
+        if s_clean[1:].isdigit():
+            return int(s_clean)
+    else:
+        if s_clean.isdigit():
+            return int(s_clean)
+    return default
+
+def checkInTimePeriod(curTime, deadTimePeriod, comp=0):
+    startTimeCron, _ = nextByCronTupleList(deadTimePeriod[0], curTime)
+    startTime = startTimeCron + curTime
+    endTimeCron, _ = nextByCronTupleList(deadTimePeriod[1], curTime)
+    endTime = endTimeCron + curTime
+    if startTime >= endTime:
+        startTime -= 86400
+    if comp == 0:
+        return startTime <= curTime and curTime < endTime
+    elif comp == 1:
+        return startTime < curTime and curTime <= endTime
+    elif comp == 2:
+        return startTime < curTime and curTime < endTime
+    elif comp == 3:
+        return startTime <= curTime and curTime <= endTime

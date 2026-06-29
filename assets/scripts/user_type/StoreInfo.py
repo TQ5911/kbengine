@@ -10,11 +10,11 @@ class StoreItemInfo(object):
         storeItem.fromStoreItemSavedDict(dataDict)
         return storeItem
 
-    def getDictFromObj(self, obj):
-        return obj.toStoreItemSavedDict()
-
     def isSameType(self, obj):
         return type(obj) is Store.StoreItem
+
+    def getDictFromObj(self, obj):
+        return obj.toStoreItemSavedDict()
 
 
 storeItemInstance = StoreItemInfo()
@@ -26,11 +26,11 @@ class StoreInfo(object):
         store.fromStoreDataSavedDict(dataDict)
         return store
 
-    def getDictFromObj(self, obj):
-        return obj.toStoreDataSavedDict()
-
     def isSameType(self, obj):
         return type(obj) is Store.StoreData
+
+    def getDictFromObj(self, obj):
+        return obj.toStoreDataSavedDict()
 
 
 storeInstance = StoreInfo()

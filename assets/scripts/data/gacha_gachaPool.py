@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     101: _tools.RODict({
         "ID": 101,
-        "name": "精灵召唤",
+        "name": "精英召唤",
         "poolGroupId": 101,
         "timeLimit": 0,
         "startTime": "",
@@ -36,7 +36,7 @@ datas = _tools.RODict({
     }),
     102: _tools.RODict({
         "ID": 102,
-        "name": "精良精灵召唤",
+        "name": "普通召唤",
         "poolGroupId": 102,
         "timeLimit": 0,
         "startTime": "",

@@ -16,16 +16,16 @@ class ILineSpaceStub(object):
     def __init__(self):
         pass
 
-    def doNext(self):
-        if hasattr(super(), 'doNext'):
-            super().doNext()
-        self.createLines()
-
     def createLines(self):
         for ln in range(utils.fetchLineMaxNumber(self.lineType)):
             lineMaxCnt = B_BD.datas[self.lineType]['N1']
             spaceWeight = utils.calcSpaceWeight(0, False, gameconst.EntNumPerPlayerInAOI.worldLine, lineMaxCnt/10)
             self.addTimerCB(ln*0.2, '_createLineSpaceRemote', (ln,spaceWeight), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
+
+    def doNext(self):
+        if hasattr(super(), 'doNext'):
+            super().doNext()
+        self.createLines()
 
     def newLineSpaceVal(self, lineType, lineNo):
         return StaticSpaceVal.StaticSpaceVal(lineType, lineNo)
@@ -36,27 +36,27 @@ class ILineSpaceStub(object):
 
     def createCellEntityInSpace(self, spaceNo, className, bornPosition, bornDirection, params):
         lineNo = formula.parseLineNo(spaceNo)
-        spaceVal = self.getLineSpaceVal(lineNo)
-        params['spaceMgrId'] = spaceVal.spaceMgrBoxCell.id
+        _spaceVal = self.getLineSpaceVal(lineNo)
+        params['spaceMgrId'] = _spaceVal.spaceMgrBoxCell.id
 
-        spaceVal.lineSpaceBox.cell.createCellLocally(className, bornPosition, bornDirection, params)
+        _spaceVal.lineSpaceBox.cell.createCellLocally(className, bornPosition, bornDirection, params)
 
     def _createLineSpaceRemote(self, lineNo, spaceWeight=10):
-        spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
+        _spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
 
         self.lineSpaces[lineNo] = self.newLineSpaceVal(self.lineType, lineNo)
 
         cellappIndx = lineNo + 1 + gameconst.getWorldLineCellIdx(self.lineType)
-        LOG_INFO('zt: create line', lineNo, spaceNo, spaceWeight, self.lineType, cellappIndx)
+        LOG_INFO('zt: create line', lineNo, _spaceNo, spaceWeight, self.lineType, cellappIndx)
         KBEngine.createEntityAnywhere('Space',
                                       {
-                                          'spaceno': spaceNo,
-                                          'spaceNo': spaceNo,
+                                          'spaceno': _spaceNo,
+                                          'spaceNo': _spaceNo,
                                           'position': gameconst.SPACE_FIX_POS,
                                           'spaceWeight': spaceWeight,
                                           'cellappIndex': cellappIndx
                                       },
-                                      lambda spaceBox, spaceNo=spaceNo:
+                                      lambda spaceBox, spaceNo=_spaceNo:
                                       self._onCreateLineSpace(spaceBox, spaceNo)
                                       )
 
@@ -92,8 +92,8 @@ class ILineSpaceStub(object):
         linePlayers = self.allPlayers.getLinePlayers(lineNo)
         return 0 if not linePlayers else len(linePlayers)
 
-    def onLineSpaceReady(self, spaceNo):
-        LOG_INFO('onLineSpaceReady', spaceNo)
+    def onSpaceLineReady(self, spaceNo):
+        LOG_INFO('onSpaceLineReady', spaceNo)
         lineNo = formula.parseLineNo(spaceNo)
         self.lineSpaces[lineNo].lineSpaceReady()
         
@@ -115,50 +115,51 @@ class ILineSpaceStub(object):
         gameengine.callBaseApps('gameglobal.onLineEntityReady', (spaceNo,))
 
     def handleCellappDeath(self, groupOrder):
-        LOG_INFO('handleCellappDeath', groupOrder)
+        LOG_INFO('handleCellappDeath', self.id, groupOrder)
         if groupOrder not in self.deadApps:
             self.deadApps.append(groupOrder)
 
     def onLineSpaceGone(self, spaceNo, groupOrder):
         LOG_ERR('onLineSpaceGone', spaceNo, groupOrder)
-        lineNo = formula.parseLineNo(spaceNo)
-        self.lineSpaces.pop(lineNo, None)
+        _lineNo = formula.parseLineNo(spaceNo)
+        self.lineSpaces.pop(_lineNo, None)
         self.collectionSharedLimitDic.pop(spaceNo, None)
-        self.missedLines[lineNo] = groupOrder
+        self.missedLines[_lineNo] = groupOrder
 
     def onCellappRelive(self, groupOrder):
         if groupOrder not in self.relivedCellapps:
             self.relivedCellapps.append(groupOrder)
         LOG_INFO('LineStub:onCellappRelive', groupOrder, self.deadApps, self.relivedCellapps)
 
-        self._tryRecoverLines()
+        self._doRecoverLines()
 
-    def _tryRecoverLines(self):
+    def _doRecoverLines(self):
         if len(self.relivedCellapps) == len(self.deadApps):
             LOG_INFO('recove lines:', self.missedLines)
-            delay = 0
+            _delay = 0
             for ln, order in self.missedLines.items():
                 self.willRecoverLine(ln)
-                self.addTimerCB(delay, '_createLineSpaceRemote', (ln,), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
-                delay += 0.2
+                self.addTimerCB(
+                    _delay, 
+                    '_createLineSpaceRemote', 
+                    (ln,), 
+                    gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
+                _delay += 0.2
 
             self.relivedCellapps = []
             self.deadApps = []
             self.missedLines.clear()
 
-    def willRecoverLine(self, lineNo):
-        pass
-
     def checkAllLineSpaceReady(self, box, callback, args):
         if len(self.lineSpaces) == utils.fetchLineMaxNumber(self.lineType):
-            allLineReady = all([sVal.isSpaceReady() for sVal in self.lineSpaces.values()])
+            _allLineReady = all([sVal.isSpaceReady() for sVal in self.lineSpaces.values()])
         else:
-            allLineReady = False
+            _allLineReady = False
 
-        getattr(box, callback)(self.lineType, allLineReady, *args)
+        getattr(box, callback)(self.lineType, _allLineReady, *args)
 
-    def getLineNoReadyForEnter(self):
-        return sorted([lineNo for lineNo, sVal in self.lineSpaces.items() if sVal.isReadyEnter()])
+    def willRecoverLine(self, lineNo):
+        pass
 
     def createCellEntityInLine(self, box, spaceNo):
         lineNo = formula.parseLineNo(spaceNo)
@@ -173,6 +174,9 @@ class ILineSpaceStub(object):
 
         sVal.lineSpaceBox.createCellNearSelf(box)
 
+    def getLineNoReadyForEnter(self):
+        return sorted([_lineNo for _lineNo, sVal in self.lineSpaces.items() if sVal.isReadyEnter()])
+
     def createRefreshTimers(self):
         for lineNo, line in self.lineSpaces.items():
             spaceNo = formula.combineLineSpaceNo(gameconst.SpaceType.SpaceLine, lineNo)
@@ -184,25 +188,6 @@ class ILineSpaceStub(object):
 
     def onCollectionBeCollectAndDestroyed(self, spaceNo, posIndex, gameEntityId):
         LOG_DBG('onCollectionBeCollectAndDestroyed::', spaceNo, posIndex, gameEntityId)
-
-    def loadSingleEntity(self, spaceNo, clsName, needCreateBase, pos, direction, props):
-        # LOG_DBG("--- iLineSpaceStub loadSingleEntity", spaceNo, clsName, pos, direction, props)
-        if needCreateBase:
-            props.update({
-                'spaceNo': spaceNo,
-                'pos': pos,
-                'direction': direction
-            })
-            e = KBEngine.createEntityLocally(
-                clsName,
-                props
-            )
-            if not e:
-                LOG_ERR("loadSingleEntity base entity failed", clsName)
-            if clsName == 'MonsterGrp':
-                e.createMonstersFromGrp(props)
-        else:
-            self.createCellEntityInSpace(spaceNo, clsName, pos, direction, props)
 
     def onLoadGroupEntities(self, info):
         lineNoList = list(self.lineSpaces.keys())

@@ -47,24 +47,23 @@ class EquipmentItem(BaseItem.BaseItem):
         if itemId == gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID:
             gameengine.panicStack('EquipmentItem.__init__, comm itemId found')
             return
-        self.itemType = gameconst.ItemType.Normal
-        self.itemSubType = gameconst.ItemSubType.Equipment
+        self.itemType = gameconst.ItemEnum.Normal
+        self.itemSubType = gameconst.ItemSubEnum.Equipment
         self.equipAttr = EquipAttr()
         self.uniqueId = 0
-        gearBaseData = dataUtils.getEquipItemData(self.itemId)
-        self.quality = gearBaseData['quality']
-        return
+        _gearBaseData = dataUtils.getEquipItemData(self.itemId)
+        self.quality = _gearBaseData['quality']
 
     def _lateReload(self):
         super(EquipmentItem, self)._lateReload()
         self.equipAttr.reloadScript()
 
-    def isEquipmentItem(self):
-        return True
-
     def canMerge(self, withIt, **kwargs):
         # 对于装备, 永远不能merge到一起
         return False
+
+    def isEquipmentItem(self):
+        return True
 
     def onItemDailyUpdate(self):
         return
@@ -114,17 +113,16 @@ class EquipmentItem(BaseItem.BaseItem):
 
     def initEquipFromGearbaseData(self):
         #以 gearbase 表的数据 创建新装备
-        gearBaseData = dataUtils.getEquipItemData(self.itemId)
-        self.quality = gearBaseData['quality']
-        self.equipAttr.initAttrFromTemplate(self.itemId, gearBaseData)
+        _gearBaseData = dataUtils.getEquipItemData(self.itemId)
+        self.quality = _gearBaseData['quality']
+        self.equipAttr.initAttrFromTemplate(self.itemId, _gearBaseData)
         return True
 
     def onSpecificItemChanged(self, savedJson):
-        gearBaseData = dataUtils.getEquipItemData(self.itemId)
-        self.quality = gearBaseData['quality']
+        _gearBaseData = dataUtils.getEquipItemData(self.itemId)
+        self.quality = _gearBaseData['quality']
         self.equipAttr = EquipAttr()
-        savedDict = self.equipAttr.fromJson(savedJson)
-        return
+        self.equipAttr.fromJson(savedJson)
 
     def setDropFixEndTime(self, t):
         self.equipAttr.dropFixEndTime = t
@@ -135,14 +133,14 @@ class EquipmentItem(BaseItem.BaseItem):
 
     def attr2Dict(self):
         extra = {}
-        return self.equipAttr.toDict(extraAttrs=extra)
+        return self.equipAttr.toAttrDic(extraAttrs=extra)
 
     def toClientBodyEquipItemDict(self, slotId):
         return {
-            'itemId' : self.itemId,
             'itemNum' : self.itemNum,
-            'createTime' : self.createTime,
+            'itemId' : self.itemId,
             'expireTime' : self.expireTime,
+            'createTime' : self.createTime,
             'slotId': slotId,
             'uniqueId': self.uniqueId,
             'bindType': self.bindType,
@@ -153,8 +151,8 @@ class EquipmentItem(BaseItem.BaseItem):
     def toClientEquipItemDict(self):
         cliDic = {
             'itemId': self.itemId,
-            'createTime': self.createTime,
             'expireTime': self.expireTime,
+            'createTime': self.createTime,
             'uniqueId': self.uniqueId,
             'bindType': self.bindType,
             'lockStatus' : self.lockStatus,
@@ -251,27 +249,6 @@ class EquipmentItem(BaseItem.BaseItem):
             return None
         return cfgData['glyphCraftResult']
         
-    def bindValueWashingNeedItems(self, washCount):
-        # 计算实际消耗，也不能多扣
-        bindValue = self.getBindValue()
-        if washCount >= bindValue:
-            washCount = bindValue
-        gearBaseData = dataUtils.getEquipItemData(self.itemId)
-        itemsCostDic = {}
-        needUnbindItemDic = {}
-        consumedCoin = gearBaseData.get('washConsumeMoney')
-        if consumedCoin:
-            for val in consumedCoin:
-                costItemId, itemNum = val
-                itemsCostDic[costItemId] = itemsCostDic.get(costItemId, 0) + itemNum * washCount
-
-        consumedItem = gearBaseData.get('washConsumeItem')
-        if consumedItem:
-            for val in consumedItem:
-                costItemId, itemNum = val
-                needUnbindItemDic[costItemId] = needUnbindItemDic.get(costItemId, 0) + itemNum * washCount
-        return itemsCostDic, needUnbindItemDic
-
     def blessNeedItems(self):
         cfgData = self.equipAttr.getBlessCfgData(1)
         if not cfgData:
@@ -480,11 +457,50 @@ class EquipmentItem(BaseItem.BaseItem):
             self.applyEquipEffectToAvatar(owner)
         LOG_INFO('     in doUpgradeEquip, success:', self.getGrade())
 
-    def doEquipSpiritWashing(self, owner, spiritPos, unbindValue):
+    def doEquipSpiritWashingPreview(self, owner, spiritPos, unbindValue):
+        """
+        附灵 preview：计算属性并写入 previewSpiritDatas，不应用装备效果。
+        """
         ret, oldSpiritAffixes, newSpiritAffixes = self.equipAttr.spiritWashing(spiritPos, unbindValue)
-        if ret:
-            self.onEquipAffixChanged()
         return ret, oldSpiritAffixes, newSpiritAffixes
+
+    def doEquipSpiritWashingConfirm(self, owner, spiritPos, onBody=False):
+        """
+        附灵 confirm：将 previewSpiritDatas[spiritPos] 覆盖到 spiritDatas[spiritPos]，
+        执行原应用逻辑并清空 previewSpiritDatas[spiritPos]。
+        """
+        if spiritPos < 0 or spiritPos >= self.equipAttr.spiritSlotNum:
+            LOG_ERR('in doEquipSpiritWashingConfirm invalid spiritPos', spiritPos)
+            return False
+
+        if spiritPos >= len(self.equipAttr.previewSpiritDatas):
+            LOG_ERR('in doEquipSpiritWashingConfirm previewSpiritDatas not initialized', spiritPos)
+            return False
+
+        previewSpiritData = self.equipAttr.previewSpiritDatas[spiritPos]
+        if not previewSpiritData or len(previewSpiritData.GetSpiritAffixes()) == 0:
+            LOG_ERR('in doEquipSpiritWashingConfirm previewSpiritDatas is empty', spiritPos)
+            return False
+
+        if onBody:
+            self.removeEquipEffectToAvatar(owner)
+
+        if spiritPos + 1 > len(self.equipAttr.spiritDatas):
+            for _ in range(len(self.equipAttr.spiritDatas), spiritPos + 1):
+                self.equipAttr.spiritDatas.append(SpiritInfo.SpiritInfo())
+        self.equipAttr.spiritDatas[spiritPos].UpdateSpiritAffixes(previewSpiritData.GetSpiritAffixes())
+
+        # 清空 preview 数据
+        previewSpiritData.UpdateSpiritAffixes([])
+        self.removePreviewSpiritBindType(spiritPos)
+
+        self.equipAttr.calcScore()
+        self.equipAttr.setDirtyFlag()
+        self.onEquipAffixChanged()
+
+        if onBody:
+            self.applyEquipEffectToAvatar(owner)
+        return True
     
     def doEquipSoulSocket(self, owner, rollProps, itemId, isEquip=False):
         ret = self.equipAttr.soulSocket(rollProps, itemId)
@@ -553,7 +569,6 @@ class EquipmentItem(BaseItem.BaseItem):
         LOG_INFO('in equipmnetItem recordAffixAddSingleProp:', attrName, attrVal)
         self.equipAttr.baseAttrsByAfxVal.setdefault(attrName, 0)
         self.equipAttr.baseAttrsByAfxVal[attrName] += attrVal
-        return
 
     def isGood(self, gbId, ignoreCheckOwner = False):
         curTs = utils.curTS()
@@ -569,48 +584,135 @@ class EquipmentItem(BaseItem.BaseItem):
         return True
 
     def hasBindValue(self):
-        return self.equipAttr.isAddBindValue or self.equipAttr.bindValue > 0
+        if self.equipAttr.bindValue > 0:
+            return True
+        if self.equipAttr.bindEnhanceCost > 0:
+            return True
+        if self.equipAttr.bindBlessCost > 0:
+            return True
+        if self.equipAttr.soulBindType == gameconst.ItemBindType.BIND:
+            return True
+        if self.equipAttr.glyphBindTypes:
+            return True
+        if self.equipAttr.spiritBindTypes:
+            return True
+        return False
 
-    def setBindValue(self, value):
-        self.equipAttr.bindValue = value
+    def _updateBindType(self):
         if self.hasBindValue():
             self.bindType = gameconst.ItemBindType.BIND
         else:
             self.bindType = gameconst.ItemBindType.NORMAL
 
-    def doDecreaseBindValue(self, opUUID, value):
-        if value >= self.getBindValue():
-            self.equipAttr.isAddBindValue = False
-            self.setBindValue(0)
-        elif value >= self.getOriginalBindValue():
-            self.setBindValue(0)
+    def setBindValue(self, value):
+        """升阶绑定值"""
+        self.equipAttr.bindValue = value
+        self._updateBindType()
+
+    def addBindValue(self, delta):
+        self.setBindValue(self.equipAttr.bindValue + delta)
+
+    def setBindEnhanceCost(self, value):
+        """强化绑定消耗"""
+        self.equipAttr.bindEnhanceCost = value
+        self._updateBindType()
+
+    def addBindEnhanceCost(self, delta):
+        self.setBindEnhanceCost(self.equipAttr.bindEnhanceCost + delta)
+
+    def setBindBlessCost(self, value):
+        """祝福绑定消耗"""
+        self.equipAttr.bindBlessCost = value
+        self._updateBindType()
+
+    def addBindBlessCost(self, delta):
+        self.setBindBlessCost(self.equipAttr.bindBlessCost + delta)
+
+    def setGlyphBindType(self, pos, bindType):
+        """铭文槽位绑定状态：绑定则把 pos 加入列表，非绑则移除"""
+        glyphBindTypes = self.equipAttr.glyphBindTypes
+        if bindType == gameconst.ItemBindType.BIND:
+            if pos not in glyphBindTypes:
+                glyphBindTypes.append(pos)
         else:
-            self.setBindValue(self.equipAttr.bindValue - value)
+            if pos in glyphBindTypes:
+                glyphBindTypes.remove(pos)
+        self.equipAttr.glyphBindTypes = glyphBindTypes
+        self._updateBindType()
+
+    def setSpiritBindType(self, pos, bindType):
+        """附灵槽位绑定状态：绑定则把 pos 加入列表，非绑则移除"""
+        spiritBindTypes = self.equipAttr.spiritBindTypes
+        if bindType == gameconst.ItemBindType.BIND:
+            if pos not in spiritBindTypes:
+                spiritBindTypes.append(pos)
+        else:
+            if pos in spiritBindTypes:
+                spiritBindTypes.remove(pos)
+        self.equipAttr.spiritBindTypes = spiritBindTypes
+        self._updateBindType()
+
+    def setPreviewSpiritBindType(self, pos, bindType):
+        """附灵预览槽位绑定状态：绑定则把 pos 加入列表，非绑则移除"""
+        previewSpiritBindTypes = self.equipAttr.previewSpiritBindTypes
+        if bindType == gameconst.ItemBindType.BIND:
+            if pos not in previewSpiritBindTypes:
+                previewSpiritBindTypes.append(pos)
+        else:
+            if pos in previewSpiritBindTypes:
+                previewSpiritBindTypes.remove(pos)
+        self.equipAttr.previewSpiritBindTypes = previewSpiritBindTypes
+        self.equipAttr.setDirtyFlag()
+
+    def isPreviewSpiritBindType(self, pos):
+        """判断指定 preview 槽位是否为绑定状态"""
+        return pos in self.equipAttr.previewSpiritBindTypes
+
+    def removePreviewSpiritBindType(self, pos):
+        """移除指定 preview 槽位的绑定状态"""
+        previewSpiritBindTypes = self.equipAttr.previewSpiritBindTypes
+        if pos in previewSpiritBindTypes:
+            previewSpiritBindTypes.remove(pos)
+            self.equipAttr.previewSpiritBindTypes = previewSpiritBindTypes
+            self.equipAttr.setDirtyFlag()
+
+    def calcSpiritWashingPreviewScore(self, spiritPos):
+        """根据 previewSpiritDatas 计算本次确认后的装备评分（不修改装备数据）"""
+        if spiritPos != self.equipAttr.spiritGroup:
+            return self.getEquipScore()
+        oldSpiritData = self.equipAttr.spiritDatas[spiritPos] if spiritPos < len(self.equipAttr.spiritDatas) else None
+        newSpiritData = self.equipAttr.previewSpiritDatas[spiritPos] if spiritPos < len(self.equipAttr.previewSpiritDatas) else None
+        oldScore = sum(affix.getAfxScore(self.equipAttr.school) for affix in oldSpiritData.GetSpiritAffixes()) if oldSpiritData else 0
+        newScore = sum(affix.getAfxScore(self.equipAttr.school) for affix in newSpiritData.GetSpiritAffixes()) if newSpiritData else 0
+        return self.getEquipScore() - oldScore + newScore
+
+    def setSoulBindType(self, bindType):
+        """魂魄绑定状态"""
+        self.equipAttr.soulBindType = bindType
+        self._updateBindType()
 
     def getBindValue(self):
-        addValue = int(GEGCD.datas['gearEnhanceBindLimit']['value']) if self.equipAttr.isAddBindValue else 0
-        return self.equipAttr.bindValue + addValue
+        return self.equipAttr.bindValue
 
     def getOriginalBindValue(self):
         return self.equipAttr.bindValue
 
-    def addSingleSkLvByEquip(self, owner, skillId, afxValList, isLogin=False, valIdx=0):
-        LOG_INFO('in addSingleSkLvByEquip:', skillId, afxValList, isLogin)
-        if len(afxValList) > 0:
-            self.equipAttr.skillAddLvDic.setdefault(skillId, 0)
-            self.equipAttr.skillAddLvDic[skillId] += afxValList[valIdx]
-            owner.bodyEquipData.addSkillLv(owner, [skillId], [afxValList[valIdx]], isLogin=isLogin)
-
     def addClassSkLvByEquip(self, owner, aVals, school, valIdx=0, isLogin=False):
-        LOG_INFO('in addClassSkLvByEquip:', aVals, school, owner.school, valIdx)
+        LOG_INFO('in addClassSkLvByEquip:', aVals, school, valIdx, owner.school)
         if school != owner.school:
             return
         if len(aVals) == 0 or valIdx >= len(aVals):
             gameengine.panicStack('     in addClassSkLvByAffix, aVals empty')
             return
-        self.equipAttr.skillAddLvDic.setdefault(gameconst.ClassSkillID, 0)
-        self.equipAttr.skillAddLvDic[gameconst.ClassSkillID] += aVals[valIdx]
-        owner.bodyEquipData.addSkillLv(owner, [gameconst.ClassSkillID], [aVals[valIdx]], isLogin=isLogin)
+        _dic = self.equipAttr.skillAddLvDic
+        _dic[gameconst.ClassSkillID] = _dic.get(gameconst.ClassSkillID, 0) + aVals[valIdx]
+        owner.bodyEquipData.addSkillLv(owner, [gameconst.ClassSkillID], [aVals[valIdx]], isLogin=isLogin,)
+
+    def addSingleSkLvByEquip(self, owner, skillId, afxValList, isLogin=False, valIdx=0):
+        LOG_INFO('in addSingleSkLvByEquip:', skillId, isLogin, afxValList)
+        if len(afxValList) > 0:
+            self.equipAttr.skillAddLvDic[skillId] = self.equipAttr.skillAddLvDic.get(skillId, 0) + afxValList[valIdx]
+            owner.bodyEquipData.addSkillLv(owner, [skillId], [afxValList[valIdx]], isLogin=isLogin)
 
     def applyAffixesToAvatar(self, owner, isLogin=False):
         self.equipAttr.resetEquipAffixPropsData()
@@ -652,15 +754,14 @@ class EquipmentItem(BaseItem.BaseItem):
         LOG_INFO('in removeAffixesFromAvatar  ', self.equipAttr.baseAttrsByAfxVal)
         AffixInfo.removeAffixEffectFromAvatar(owner, self, self.equipAttr.baseAttrsByAfxVal, gameconst.SourceType.SrcTpEquip)
         self.equipAttr.resetEquipAffixPropsData()
-        return
 
     def removeAddSkillLv(self, owner):
-        skillLvDic = self.getAddSkillLvDic()
+        _skillLvDic = self.getAddSkillLvDic()
         skillIdList = []
         deltaLvList = []
-        for skId, addLv in skillLvDic.items():
-            skillIdList.append(skId)
-            deltaLvList.append(-1*addLv)
+        for _skId, _addLv in _skillLvDic.items():
+            skillIdList.append(_skId)
+            deltaLvList.append(-1*_addLv)
         owner.bodyEquipData.addSkillLv(owner, skillIdList, deltaLvList)
         return
 
@@ -767,14 +868,6 @@ class EquipmentItem(BaseItem.BaseItem):
 
     def hasGlyphData(self):
         return len(self.equipAttr.glyphInfo) > 0
-
-    def updateBindValue(self):
-        if not self.equipAttr.isAddBindValue:
-            self.equipAttr.isAddBindValue = True
-            self.bindType = gameconst.ItemBindType.BIND
-
-    def getAddBindValueStatus(self):
-        return self.equipAttr.isAddBindValue
 
     def setEquipSchool(self, school):
         self.equipAttr.school = school
@@ -906,7 +999,7 @@ class EquipmentItem(BaseItem.BaseItem):
             if not costItem or costItem == 0:
                 return None
             itemId = costItem[0][0]
-            num = gameconst.EquipWashConfig.DEFAULT_ENHANCE_COST_NUM * count
+            num = count
             return {itemId: num}
 
         elif washType == gameconst.EquipWashType.BLESS:
@@ -919,7 +1012,7 @@ class EquipmentItem(BaseItem.BaseItem):
             if not gearBlessItem:
                 return None
             itemId = gearBlessItem[0][0]
-            num = gameconst.EquipWashConfig.DEFAULT_BLESS_COST_NUM * count
+            num = count
             return {itemId: num}
 
         elif washType == gameconst.EquipWashType.UPGRADE:
@@ -938,7 +1031,7 @@ class EquipmentItem(BaseItem.BaseItem):
         actualCount: 校验后实际可洗涤次数
         costItemDic: 洗涤消耗 {itemId: num}，失败时可能为 None
         """
-        if count <= 0 or count > gameconst.EquipWashConfig.MAX_WASH_COUNT:
+        if count <= 0:
             return gameconst.EquipWashResult.WASH_COUNT_ERR, 0, None
 
         if washType not in gameconst.EquipWashType.DIRECT_WASH_TYPES:
@@ -972,17 +1065,13 @@ class EquipmentItem(BaseItem.BaseItem):
     def doEquipWash(self, washType, count):
         """执行洗涤，扣除绑定材料计数"""
         if washType == gameconst.EquipWashType.ENHANCE:
-            self.equipAttr.bindEnhanceCost = max(0, self.equipAttr.bindEnhanceCost - count)
+            self.setBindEnhanceCost(max(0, self.equipAttr.bindEnhanceCost - count))
         elif washType == gameconst.EquipWashType.BLESS:
-            self.equipAttr.bindBlessCost = max(0, self.equipAttr.bindBlessCost - count)
+            self.setBindBlessCost(max(0, self.equipAttr.bindBlessCost - count))
         elif washType == gameconst.EquipWashType.UPGRADE:
-            self.equipAttr.bindValue = max(0, self.equipAttr.bindValue - count)
+            self.setBindValue(max(0, self.equipAttr.bindValue - count))
         else:
             return False
-
-        # 全部洗涤完成后解除绑定，变为可交易
-        if self.isAllWashCompleted():
-            self.bindType = gameconst.ItemBindType.NORMAL
         return True
 
     def isWashNeed(self, washType):
@@ -994,20 +1083,9 @@ class EquipmentItem(BaseItem.BaseItem):
         elif washType == gameconst.EquipWashType.UPGRADE:
             return self.equipAttr.bindValue > 0
         elif washType == gameconst.EquipWashType.GLYPH:
-            for glyphData in self.equipAttr.glyphInfo:
-                pos = glyphData.getGlyphPos()
-                bindType = self.equipAttr.glyphBindTypes.get(pos, gameconst.ItemBindType.BIND)
-                if bindType == gameconst.ItemBindType.BIND:
-                    return True
-            return False
+            return len(self.equipAttr.glyphBindTypes) > 0
         elif washType == gameconst.EquipWashType.SPIRIT:
-            for idx, spiritData in enumerate(self.equipAttr.spiritDatas):
-                if not spiritData.spiritAffixes:
-                    continue
-                bindType = self.equipAttr.spiritBindTypes.get(idx, gameconst.ItemBindType.BIND)
-                if bindType == gameconst.ItemBindType.BIND:
-                    return True
-            return False
+            return len(self.equipAttr.spiritBindTypes) > 0
         elif washType == gameconst.EquipWashType.SOUL:
             return self.equipAttr.soulBindType == gameconst.ItemBindType.BIND
         return False
@@ -1020,17 +1098,10 @@ class EquipmentItem(BaseItem.BaseItem):
             return False
         if self.equipAttr.bindValue > 0:
             return False
-        for glyphData in self.equipAttr.glyphInfo:
-            pos = glyphData.getGlyphPos()
-            bindType = self.equipAttr.glyphBindTypes.get(pos, gameconst.ItemBindType.BIND)
-            if bindType == gameconst.ItemBindType.BIND:
-                return False
-        for idx, spiritData in enumerate(self.equipAttr.spiritDatas):
-            if not spiritData.spiritAffixes:
-                continue
-            bindType = self.equipAttr.spiritBindTypes.get(idx, gameconst.ItemBindType.BIND)
-            if bindType == gameconst.ItemBindType.BIND:
-                return False
+        if self.equipAttr.glyphBindTypes:
+            return False
+        if self.equipAttr.spiritBindTypes:
+            return False
         if self.equipAttr.soulBindType == gameconst.ItemBindType.BIND:
             return False
         return True
@@ -1048,6 +1119,10 @@ class EquipAttr(userType.UserSingleType):
         self.score = 0
         # 附灵数据
         self.spiritDatas = []
+        # 附灵预览数据（preview 阶段写入，confirm 后覆盖到 spiritDatas 并清空）
+        self.previewSpiritDatas = []
+        # 附灵预览槽位绑定状态：绑定的 spiritPos 列表，与 spiritBindTypes 保持一致
+        self.previewSpiritBindTypes = []
         # 附灵编组
         self.soulAffixes = []
         self.soulItemId = 0
@@ -1072,8 +1147,6 @@ class EquipAttr(userType.UserSingleType):
         self.resetEquipAffixPropsData()
 
         self.attrJson = ""
-        self.bindValue = 0
-        self.isAddBindValue = False
         self.school = 0
         self.blessLvFailedCount = {}
         # 装备服务器id
@@ -1088,22 +1161,23 @@ class EquipAttr(userType.UserSingleType):
         self.whyInMyBag = 0
 
         # 装备洗涤新增字段
+        self.bindValue = 0
         self.bindEnhanceCost = 0        # 强化累计消耗的绑定强化石数量
         self.bindBlessCost = 0          # 祝福累计消耗的绑定祝福石数量
         # self.bindUpgradeEquipCost = 0   # 升阶累计消耗的绑定装备（或核心）数量；这里直接使用原来的 bindValue
-        self.glyphBindTypes = {}        # 铭文各槽位绑定状态 {glyphPos: bindType}
-        self.spiritBindTypes = {}       # 附灵各槽位绑定状态 {spiritPos: bindType}
-        self.soulBindType = 0           # 魂魄绑定状态 0=未镶嵌 1=绑定 2=非绑
+        self.glyphBindTypes = []        # 铭文各槽位绑定状态，列表中存在的 glyphPos 表示绑定
+        self.spiritBindTypes = []       # 附灵各槽位绑定状态，列表中存在的 spiritPos 表示绑定
+        self.soulBindType = gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED           # 魂魄绑定状态 2=未知 0=绑定 1=非绑
 
         self.setDirtyFlag(False)
+
+    def __setattr__(self, keyName, value):
+        object.__setattr__(self, keyName, value)
+        self.setDirtyFlag()
 
     def __setstate__(self, state):
         self.__init__()
         self.__dict__.update(state)
-
-    def __setattr__(self, key, value):
-        object.__setattr__(self, key, value)
-        self.setDirtyFlag()
 
     @classmethod
     def _checkIgnores_(cls):
@@ -1111,11 +1185,11 @@ class EquipAttr(userType.UserSingleType):
         # fromJson()会设置 attrJson 为与最新的attrJson(与EquipAttr 对应)
         return 'attrJson'
 
+    def checkDirty(self):
+        return self.dirty
+
     def setDirtyFlag(self, flag=True):
         object.__setattr__(self, 'dirty', flag)
-
-    def isDirty(self):
-        return self.dirty
 
     @property
     def glyphSlotNum(self):
@@ -1159,29 +1233,32 @@ class EquipAttr(userType.UserSingleType):
             key = self.getBlessKey(self.blessAffixes[0].affixVal + addVal)
         return GEBLD.datas.get(key)
     
+    def _lateReload(self):
+        super(EquipAttr, self)._lateReload()
+
+        for _v in self.blessAffixes:
+            _v.reloadScript()
+
+        for _v in self.spiritDatas:
+            _v.reloadScript()
+
+        for _v in self.previewSpiritDatas:
+            _v.reloadScript()
+
+        for _v in self.glyphInfo:
+            _v.reloadScript()
+
+        for _v in self.soulAffixes:
+            _v.reloadScript()
+
     def resetEquipAffixPropsData(self):
         # 装备的词缀加成数据清空
         self.baseAttrsByAfxVal = {}
         self.skillAddLvDic = {}
 
-    def _lateReload(self):
-        super(EquipAttr, self)._lateReload()
-
-        for v in self.blessAffixes:
-            v.reloadScript()
-
-        for v in self.spiritDatas:
-            v.reloadScript()
-
-        for v in self.glyphInfo:
-            v.reloadScript()
-
-        for v in self.soulAffixes:
-            v.reloadScript()
-
     def toJson(self, extraAttrs=None):
-        if not self.attrJson or self.isDirty():
-            self.attrJson = json.dumps(self.toDict(extraAttrs=extraAttrs))
+        if not self.attrJson or self.checkDirty():
+            self.attrJson = json.dumps(self.toAttrDic(extraAttrs=extraAttrs))
             self.setDirtyFlag(False)
         return self.attrJson
 
@@ -1194,6 +1271,10 @@ class EquipAttr(userType.UserSingleType):
         for spiritData in self.spiritDatas:
             spiritDatas.append(spiritData.toClientData())
 
+        previewSpiritDatas = []
+        for spiritData in self.previewSpiritDatas:
+            previewSpiritDatas.append(spiritData.toClientData())
+
         glyphInfos = []
         for glyphData in self.glyphInfo:
             glyphInfos.append(glyphData.toClientData())
@@ -1202,16 +1283,10 @@ class EquipAttr(userType.UserSingleType):
         for oneAffix in self.soulAffixes:
             soulAffixes.append(oneAffix.toAfxClientDic())
 
-        glyphBindTypes = []
-        for pos, bind in self.glyphBindTypes.items():
-            glyphBindTypes.append({'pos': pos, 'bindType': bind})
-
-        spiritBindTypes = []
-        for pos, bind in self.spiritBindTypes.items():
-            spiritBindTypes.append({'pos': pos, 'bindType': bind})
-
         return {
             'spiritDatas': spiritDatas,
+            'previewSpiritDatas': previewSpiritDatas,
+            'previewSpiritBindTypes': list(self.previewSpiritBindTypes),
             'spiritGroup': self.spiritGroup,
             'blessAffixes': blessAffixes,
             'soulAffixes': soulAffixes,
@@ -1224,7 +1299,6 @@ class EquipAttr(userType.UserSingleType):
             'dropFixEndTime': self.dropFixEndTime,
             'score': self.score,
             'bindValue': self.bindValue,
-            'isAddBindValue': self.isAddBindValue,
             'grade': self.grade,
             'maxEnhanceLv': self.maxEnhanceLv,
             'returnTime': self.returnTime,
@@ -1233,12 +1307,12 @@ class EquipAttr(userType.UserSingleType):
             'whyInMyBag': self.whyInMyBag,
             'bindEnhanceCost': self.bindEnhanceCost,
             'bindBlessCost': self.bindBlessCost,
-            'glyphBindTypes': glyphBindTypes,
-            'spiritBindTypes': spiritBindTypes,
+            'glyphBindTypes': self.glyphBindTypes,
+            'spiritBindTypes': self.spiritBindTypes,
             'soulBindType': self.soulBindType,
         }
     
-    def toDict(self, extraAttrs=None):
+    def toAttrDic(self, extraAttrs=None):
         blessAffixes = []
         for oneAffix in self.blessAffixes:
             blessAffixes.append(oneAffix.toAffixValList())
@@ -1246,6 +1320,10 @@ class EquipAttr(userType.UserSingleType):
         spiritDatas = []
         for spiritData in self.spiritDatas:
             spiritDatas.append(spiritData.toDBData())
+
+        previewSpiritDatas = []
+        for spiritData in self.previewSpiritDatas:
+            previewSpiritDatas.append(spiritData.toDBData())
 
         glyphInfos = []
         for glyphData in self.glyphInfo:
@@ -1255,10 +1333,12 @@ class EquipAttr(userType.UserSingleType):
         for oneAffix in self.soulAffixes:
             soulAffixes.append(oneAffix.toAffixValList())
 
-        jsonDic = {
+        _jsonDic = {
             'templateId': self.templateId,
             'score': self.score,
             'spiritDatas': spiritDatas,
+            'previewSpiritDatas': previewSpiritDatas,
+            'previewSpiritBindTypes': list(self.previewSpiritBindTypes),
             'spiritGroup': self.spiritGroup,
             'blessAffixes': blessAffixes,
             'soulAffixes': soulAffixes,
@@ -1274,7 +1354,6 @@ class EquipAttr(userType.UserSingleType):
             'skillAddLvDic': self.skillAddLvDic,
             'dropFixEndTime': self.dropFixEndTime,
             'bindValue': self.bindValue,
-            'isAddBindValue': self.isAddBindValue,
             'blessLvFailedCount': self.blessLvFailedCount,
             'grade': self.grade,
             'school': self.school,
@@ -1291,8 +1370,8 @@ class EquipAttr(userType.UserSingleType):
         }
 
         if extraAttrs:
-            jsonDic.update(extraAttrs)
-        return jsonDic
+            _jsonDic.update(extraAttrs)
+        return _jsonDic
 
     def fromJson(self, jsonStr):
         try:
@@ -1315,6 +1394,15 @@ class EquipAttr(userType.UserSingleType):
                 newSpiritData = SpiritInfo.SpiritInfo()
                 newSpiritData.fromDBData(spiritData)
                 self.spiritDatas.append(newSpiritData)
+
+            self.previewSpiritDatas = []
+            previewSpiritDatas = value.get('previewSpiritDatas', [])
+            for spiritData in previewSpiritDatas:
+                newSpiritData = SpiritInfo.SpiritInfo()
+                newSpiritData.fromDBData(spiritData)
+                self.previewSpiritDatas.append(newSpiritData)
+
+            self.previewSpiritBindTypes = list(value.get('previewSpiritBindTypes', []))
 
             self.spiritGroup = value.get('spiritGroup', 0)
 
@@ -1352,18 +1440,17 @@ class EquipAttr(userType.UserSingleType):
             self.baseAttrsByAfxVal = value.get('baseAttrsByAfxVal', {})
             self.dropFixEndTime = value.get('dropFixEndTime', 0)
 
-            skillAddLvDic = value.get('skillAddLvDic', {})
+            _skillAddLvDic = value.get('skillAddLvDic', {})
             self.skillAddLvDic = {}
-            for k, v in skillAddLvDic.items():
+            for k, v in _skillAddLvDic.items():
                 self.skillAddLvDic[int(k)] = v
 
             self.bindValue = value.get('bindValue', 0)
-            self.isAddBindValue = value.get('isAddBindValue', False)
             self.bindEnhanceCost = value.get('bindEnhanceCost', 0)
             self.bindBlessCost = value.get('bindBlessCost', 0)
-            self.glyphBindTypes = value.get('glyphBindTypes', {})
-            self.spiritBindTypes = value.get('spiritBindTypes', {})
-            self.soulBindType = value.get('soulBindType', 0)
+            self.glyphBindTypes = value.get('glyphBindTypes', [])
+            self.spiritBindTypes = value.get('spiritBindTypes', [])
+            self.soulBindType = value.get('soulBindType', gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED)
             blessLvFailedCount = value.get('blessLvFailedCount', {})
             for k,v in blessLvFailedCount.items():
                 self.blessLvFailedCount[int(k)] = v
@@ -1518,19 +1605,19 @@ class EquipAttr(userType.UserSingleType):
             return None
         templateData = dataUtils.getEquipItemData(self.templateId)
         iLevel = templateData['iLevel']
-        levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
-        affixLv = min(max(math.ceil(iLevel / levelGap), 1), affixData['maxLevel'])
+        _levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
+        _affixLv = min(max(math.ceil(iLevel / _levelGap), 1), affixData['maxLevel'])
         assessmentWeight = affixData.get('assessmentWeight')
         if affixData['floor'] and affixData['ceiling']:
             LOG_INFO('generateAffix 1', affixData['floor'], affixData['ceiling'])
-            affixValFloorList = affixData['floor'](affixLv)
-            affixValCeilList = affixData['ceiling'](affixLv)
-            for floorVal, ceilVal in zip(affixValFloorList, affixValCeilList):
-                if isinstance(floorVal, int) and isinstance(ceilVal, int):
-                    val = random.randint(floorVal, ceilVal)
+            affixValFloorList = affixData['floor'](_affixLv)
+            affixValCeilList = affixData['ceiling'](_affixLv)
+            for _floorVal, ceilVal in zip(affixValFloorList, affixValCeilList):
+                if isinstance(_floorVal, int) and isinstance(ceilVal, int):
+                    _val = random.randint(_floorVal, ceilVal)
                 else:
-                    val = random.uniform(floorVal, ceilVal)
-                    val = round(val, 4)
+                    _val = random.uniform(_floorVal, ceilVal)
+                    _val = round(_val, 4)
                 break
         elif assessmentWeight:
             LOG_INFO('generateAffix 2', assessmentWeight)
@@ -1543,14 +1630,14 @@ class EquipAttr(userType.UserSingleType):
             affixValFloor = assessmentInterval[0]
             affixValCeil = assessmentInterval[1]
             if isinstance(affixValFloor, int) and isinstance(affixValCeil, int):
-                val = random.randint(affixValFloor, affixValCeil)
+                _val = random.randint(affixValFloor, affixValCeil)
             else:
-                val = random.uniform(affixValFloor, affixValCeil)
-                val = round(val, 4)
+                _val = random.uniform(affixValFloor, affixValCeil)
+                _val = round(_val, 4)
         else:
             LOG_WARN('in _doRandomAffix, no affixValFloorList:', affixId)
-            val = 0
-        affix = AffixInfo.genRandomAffix(affixId, iLevel, val, isGlyph)
+            _val = 0
+        affix = AffixInfo.genRandomAffix(affixId, iLevel, _val, isGlyph)
         return affix
 
     def isBaseAttrsMaxVal(self):
@@ -1676,6 +1763,9 @@ class EquipAttr(userType.UserSingleType):
         return True
     
     def spiritWashing(self, spiritPos, unbindValue):
+        """
+        附灵洗练：计算新属性并写入 previewSpiritDatas，推进幸运值，不重新计算装备评分。
+        """
         LOG_INFO('in spiritWashing:', self.washingLuckData, spiritPos, unbindValue)
         if self.spiritSlotNum <= 0:
             LOG_ERR('in spiritWashing spiritSlotNum is 0')
@@ -1751,14 +1841,13 @@ class EquipAttr(userType.UserSingleType):
             LOG_ERR('in spiritWashing empty spirit affixes', totalAffixesNum)
             return False, None, None
 
-        if spiritPos + 1 > len(self.spiritDatas):
+        if spiritPos + 1 > len(self.previewSpiritDatas):
             # 提前初始化结构数据
-            for _ in range(len(self.spiritDatas), spiritPos + 1):
-                self.spiritDatas.append(SpiritInfo.SpiritInfo())
-        spiritData = self.spiritDatas[spiritPos]
+            for _ in range(len(self.previewSpiritDatas), spiritPos + 1):
+                self.previewSpiritDatas.append(SpiritInfo.SpiritInfo())
+        spiritData = self.previewSpiritDatas[spiritPos]
         oldSpiritAffixes = spiritData.GetSpiritAffixes()
         spiritData.UpdateSpiritAffixes(newSpiritAffixes)
-        self.calcScore()
         self.setDirtyFlag()
         return True, oldSpiritAffixes, newSpiritAffixes
 
@@ -1775,11 +1864,10 @@ class EquipAttr(userType.UserSingleType):
             if idx in self.washingLuckData and self.washingLuckData[idx][0] < self.washingLuckData[idx][1]:
                 continue
             luckData = GEFLD.datas[int(idx)]
-            dstNum = round(luckData['reforgeCount'] * random.uniform(lowerRate, highRate))
-            self.washingLuckData[idx] = [0, dstNum]
+            _dstNum = round(luckData['reforgeCount'] * random.uniform(lowerRate, highRate))
+            self.washingLuckData[idx] = [0, _dstNum]
         self.setDirtyFlag(True)
         LOG_INFO('after refresh, _refreshWashingLuckData:', self.washingLuckData)
-        return
 
     def glyphWashing(self, glyphPos, glyphCraftResult, affixIds = None):
         LOG_INFO('in glyphWashing', glyphPos, glyphCraftResult, affixIds)
@@ -1995,8 +2083,8 @@ class EquipItemIdGen(object):
     @classmethod
     def calcEquipQuality(cls, monsterId, srcLevel):
         dropQualityDataList = sorted(DGQWD.datas.values(), key=lambda elem:elem['ID'])
-        creepMD = dataUtils.getCreepMD(monsterId)
-        weight_list = [elem['Probability'](elem['weight'], elem['ID'], creepMD, srcLevel) for elem in dropQualityDataList]
+        _creepMD = dataUtils.getCreepMD(monsterId)
+        weight_list = [elem['Probability'](elem['weight'], elem['ID'], _creepMD, srcLevel) for elem in dropQualityDataList]
         idx = utils.randomByWeight(weight_list)
         LOG_INFO('calcEquipQuality, weight_list:', monsterId, srcLevel, weight_list, idx)
         return dropQualityDataList[idx]['ID']

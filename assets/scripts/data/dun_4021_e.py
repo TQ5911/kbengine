@@ -109,7 +109,7 @@ datas ={
       40214002
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "",
     "ifSetBoss": 0,
     "transition": {}
   }

@@ -17,11 +17,11 @@
             <Flags>         BASE        </Flags>
         </methodPoolBase>
 
-        <tempMiscPropsBase>
+        <baseTempMiscProps>
             <Type>     PY_DICT                  </Type>
             <Flags>    BASE                  </Flags>
             <Default>   {}                    </Default>
-        </tempMiscPropsBase>
+        </baseTempMiscProps>
     </Properties>
 
     <BaseMethods>

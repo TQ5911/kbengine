@@ -28,7 +28,7 @@ import LogTrackingMgr
 import itemData_itemData as ITEM_DATA
 
 class OrderStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-    def __init__(self):
+    def __init__(self, **kwargs):
         iGlobal.IGlobal.__init__(self)
         iBaseNoCell.IBaseNoCell.__init__(self)
         iTimer.ITimer.__init__(self)

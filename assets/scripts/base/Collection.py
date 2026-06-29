@@ -12,7 +12,7 @@ class Collection(iBaseWithCell.IBaseWithCell):
 
         return
 
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 

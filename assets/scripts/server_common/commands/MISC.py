@@ -633,6 +633,8 @@ def gm_setPosition(superUser, playerEnt, x, y, z, direction=0, spaceNo=0):
 @gm_cmd('$getrandomitems', (Player("gbId or Id"), Int('bagType'), Int('item num'), Int('bindType')), RARG(0), BASE,
         '获取随机物品', ALLSIDE, GOD_GROUPS)
 def gm_getRandomItems(superUser, playerEnt, bagType, itemNum, bindType):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     if itemNum < 1 or itemNum > 99:
         return False, '执行失败'
     _itemsFilter = filter(lambda data: bagType == data['type'], ITEM_DATA.datas.values())
@@ -681,6 +683,8 @@ def gm_getRandomItems(superUser, playerEnt, bagType, itemNum, bindType):
         (Player("gbId or Id", raw=True), Int('bagType'), Int('itemId'), Int('bindType'), Str('boxItemsJson')), RARG(0),
         BASE, '获取固定内容宝箱', ALLSIDE, GOD_GROUPS)
 def gm_getFixedItemsBox(superUser, playerEnt, bagType, itemId, bindType, boxItemsJson):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     if bagType not in (0, 1, 2, 3):
         return False, '执行失败, 无法添加此物品ID, 背包类型错误, {}-{}--{}'.format(itemId, bagType, bindType)
     try:
@@ -712,6 +716,8 @@ def gm_getFixedItemsBox(superUser, playerEnt, bagType, itemId, bindType, boxItem
 @gm_cmd('$getitems', (Player("gbId or Id", raw=True), Int('bagType'), Int('itemNum'), Float('_bindType'), Int('itemId_Start'), Int('itemId_End')),
         RARG(0), BASE, '获取指定物品', ALLSIDE, GOD_GROUPS, minArgs=4)
 def gm_getItems(superUser, playerEnt, bagType, itemNum, _bindType, itemId_Start, itemId_End = 0):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     if itemId_End == 0 and itemId_Start != 0:
         itemId_End = itemId_Start
     if bagType not in (0, 1, 2, 3):
@@ -779,6 +785,8 @@ def gm_clenBag(superUser, playerEnt, bagType):
 
 @gm_cmd('$getGearbaseEquipItem', (Player("gbId or Id"), Int('templateId'), Int('bindType'), Int('grade')), RARG(0), BASE, '获取装备', ALLSIDE, GOD_GROUPS)
 def gm_getGear(superUser, playerEnt, templateId, bindType, grade):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     if gmCommand.isRawPlayer(playerEnt):
         return False, '执行失败'
     ret = playerEnt.gmAddGearbaseEquipItem(templateId, bindType, grade)
@@ -790,6 +798,8 @@ def gm_getGear(superUser, playerEnt, templateId, bindType, grade):
 
 @gm_cmd('$getReward', (Player("gbId or Id"), Int('dropId'), Int('num'),), RARG(0), BASE, '获取奖励', ALLSIDE, GOD_GROUPS)
 def gm_getReward(superUser, playerEnt, dropId, num):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     awardCtx = awardContext.CommonContext(0, {'lv': playerEnt.getRoleCacheAttr('level', 0)})
     _opUUID = KBEngine.genUUID64()
     ret = playerEnt.addAwards(AAC_AACDD.datas.BONUS_SRC_GM, dropId, num, _opUUID, '', awardCtx)
@@ -800,6 +810,8 @@ def gm_getReward(superUser, playerEnt, dropId, num):
 
 @gm_cmd('$getDropid', (Player("gbId or Id"), Int('dropId'), Int('num'),), RARG(0), BASE, '执行掉落', ALLSIDE, GOD_GROUPS)
 def gm_getDropid(superUser, playerEnt, dropId, num):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     for i in range(num):
         awardCtx = awardContext.CommonContext(0, {'lv': playerEnt.getRoleCacheAttr('level', 0)})
         awardCtx.addContextVar('avatarId', playerEnt.id)
@@ -1437,7 +1449,6 @@ def gm_loadentity(superUser, playerEnt, className, objId, entityId, num):
     import utils
     import Npc as _Npc
     import Collection as _Collection
-    import NPC_teleporter as NPC_T
     import NPC_NPC as NPC_D
     import NPC_Pick as NPC_P
     import creep_base as CB
@@ -2014,6 +2025,8 @@ def gm_addBuff(superUser, entity, buffId, buffLv=1, duration=-1):
 
 @gm_cmd('$setlv', (Player("gbId or Id"), Int("int lv"),), RARG(0), gameconst.CELL, '设置人物等级', ALLSIDE, GOD_GROUPS)
 def gm_setPlayerlv(superUser, playerEnt, lv):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
     if lv < playerEnt.level:
         return False, '等级不能降低'
     _opUUID = KBEngine.genUUID64()
@@ -2456,7 +2469,7 @@ def gm_clearPickedCollections(superUser, playerEnt, collectionId):
             continue
 
         playerEnt.pickedCollections.pop(collectionId, None)
-        m.gatherAvatars.pop(playerEnt.gbId, None)
+        m.gatherAvatarDic.pop(playerEnt.gbId, None)
         playerEnt.checkCollectionGatherFlag(m.id)
         if m.type == gameconst.CollectionType.VIEWPOINT:
             playerEnt.checkRelationType(m)

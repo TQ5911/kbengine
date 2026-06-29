@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys
-import os
 import ast,symtable
 import re
 import itertools
-import methodInfo as MI
 import const
+import methodInfo as MI
 
 INDENT = ' '*4
 
@@ -22,10 +21,10 @@ MULTI_IMPORT_PT = re.compile(
 NEW_METHOD_BEGIN_MARK = '# --auto genterate mark--'
 
 def getImportInfo(methodInfo:MI.MethodInfo):
-    importLines = []
+    _importLines = []
     fileObject = open(methodInfo.codePath, 'rb')
     if not fileObject:
-        return importLines
+        return _importLines
 
     func = methodInfo.symtable.lookup(methodInfo.name).get_namespace()
     funcGlobals = func.get_globals()
@@ -87,16 +86,16 @@ def getImportInfo(methodInfo:MI.MethodInfo):
             for mod in modules:
                 mod = mod.strip()
                 if mod in funcGlobals:
-                    importLines.append(strLine.replace('\r\n', '\n').lstrip())
+                    _importLines.append(strLine.replace('\r\n', '\n').lstrip())
                     importedMods.append(mod)
 
             continue
 
-        matchImport = IMPORT_AS_PT.search(strLine) or IMPORT_PT.search(strLine)
-        if matchImport:
-            moduleName = matchImport.groups()[0].strip()
+        _matchImport = IMPORT_AS_PT.search(strLine) or IMPORT_PT.search(strLine)
+        if _matchImport:
+            moduleName = _matchImport.groups()[0].strip()
             if moduleName in funcGlobals:
-                importLines.append(strLine.replace('\r\n', '\n'))
+                _importLines.append(strLine.replace('\r\n', '\n'))
                 importedMods.append(moduleName)
 
             continue
@@ -104,7 +103,7 @@ def getImportInfo(methodInfo:MI.MethodInfo):
         matchFrom = FROM_IMPORT_PT.search(strLine)
         if matchFrom:
             moduleName = matchFrom.group(1).split('.')[0].strip()
-            importLines.append(strLine.replace('\r\n', '\n'))
+            _importLines.append(strLine.replace('\r\n', '\n'))
             if moduleName not in importedMods:
                 importedMods.append(moduleName)
 
@@ -121,16 +120,16 @@ def getImportInfo(methodInfo:MI.MethodInfo):
     #dealing @utils.isMySelf
     for decMod in methodInfo.decratorMods:
         if decMod not in importedMods:
-            importLines.append('import {}\n'.format(decMod))
+            _importLines.append('import {}\n'.format(decMod))
 
-    importLines.append('import {}\n'.format(methodInfo.inModuleName))
+    _importLines.append('import {}\n'.format(methodInfo.inModuleNameData))
 
     # 从类型注解和默认值里找需要 import 的模块
     # 注意：Python 的 symtable.get_globals() 不会收集仅出现在类型注解里的名字
     # （比如 def f(x: dropAward.MailWealthVal): pass 里的 dropAward），
     # 所以这部分得自己遍历 AST 来补齐。
     try:
-        method_ast = ast.parse(methodInfo.sourceCode)
+        method_ast = ast.parse(methodInfo.sourceCodeData)
         func_def_node = method_ast.body[0]
         if isinstance(func_def_node, ast.FunctionDef):
             import astor
@@ -171,7 +170,7 @@ def getImportInfo(methodInfo:MI.MethodInfo):
             # 把模块名追加成 `import xxx`，要求是合法标识符且未添加过
             def _addMod(mod):
                 if mod and mod not in importedMods and re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', mod):
-                    importLines.append('import {}\n'.format(mod))
+                    _importLines.append('import {}\n'.format(mod))
                     importedMods.append(mod)
 
             # 1) 处理返回值注解，例如 def f() -> dropAward.X
@@ -199,88 +198,88 @@ def getImportInfo(methodInfo:MI.MethodInfo):
         print("Warning: Could not parse annotations/defaults for extra imports: {}".format(e))
 
 
-    return importedMods, importLines
+    return importedMods, _importLines
 
-def setupSysPath(component):
-    if component == const.CELLAPP:
+def setupSysPath(comp):
+    if comp == const.CELLAPP:
         sys.path.extend(const.CELL_PATH)
-    elif component == const.BASEAPP:
+    elif comp == const.BASEAPP:
         sys.path.extend(const.BASE_PATH)
-    elif component == const.INTERFACE:
+    elif comp == const.INTERFACE:
         sys.path.extend(const.INTERFACE_PATH)
     else:
-        print("supported components: {}|{}".format(const.CELLAPP, const.BASEAPP))
+        print("supported components: {}|{}".format(const.BASEAPP, const.CELLAPP))
         exit(1)
 
-def appendNewMethod(scriptPath, component, newMethodLines):
-    newScriptLines = []
+def appendNewMethod(scriptPath, comp, newMethodLines):
+    _newScriptLines = []
     with open(scriptPath, 'r', encoding='utf-8') as fScript:
         inTargetBlock = False
-        done = False
+        _done = False
         for line in fScript.readlines():
-            if done:
-                newScriptLines.append(line)
+            if _done:
+                _newScriptLines.append(line)
                 continue
             if re.search(r'\brefreshCell\b', line):
-                inTargetBlock = (component==const.CELLAPP)
+                inTargetBlock = (comp==const.CELLAPP)
             elif re.search(r'\brefreshBase\b', line):
-                inTargetBlock = (component==const.BASEAPP)
+                inTargetBlock = (comp==const.BASEAPP)
             elif re.search(r'\brefreshInterface\b', line):
-                inTargetBlock = (component==const.INTERFACE)
+                inTargetBlock = (comp==const.INTERFACE)
 
             if inTargetBlock and NEW_METHOD_BEGIN_MARK in line:
-                newScriptLines.extend(['{}{}'.format(INDENT, nl) for nl in newMethodLines])
-                newScriptLines.append('\n')
-                done = True
+                _newScriptLines.extend(['{}{}'.format(INDENT, nl) for nl in newMethodLines])
+                _newScriptLines.append('\n')
+                _done = True
 
-            newScriptLines.append(line)
+            _newScriptLines.append(line)
 
-        if not done:
+        if not _done:
             print('error:cannot find target block')
             return False
 
     with open(scriptPath, 'w', encoding='utf-8') as fScript:
-        for line in newScriptLines:
+        for line in _newScriptLines:
             fScript.writelines([line])
 
     return True
 
 
 def generateCode(scriptPath, component, moduleName, clsName, methodName):
-    info = MI.MethodInfo(component, moduleName, clsName, methodName)
-    importedMods, resultLines = getImportInfo(info)
+    _info = MI.MethodInfo(component, moduleName, clsName, methodName)
+    importedMods, resultLines = getImportInfo(_info)
     resultLines.append('\n')
 
-    fSource = open(info.codePath, 'r', encoding='utf-8')
+    fSource = open(_info.codePath, 'r', encoding='utf-8')
     src = fSource.read()
     fSource.close()
-    srcSym = symtable.symtable(src, info.codePath, 'exec')
+    srcSym = symtable.symtable(src, _info.codePath, 'exec')
 
     replaceGlobals = {}
 
     #find local defined module variable
-    func = info.symtable.lookup(info.name).get_namespace()
+    func = _info.symtable.lookup(_info.name).get_namespace()
     funcGlobals = func.get_globals()
-    for var in funcGlobals:
+    for _var in funcGlobals:
         try:
-            sb = srcSym.lookup(var)
+            sb = srcSym.lookup(_var)
         except:
             continue
 
         if sb.is_imported():
-            assert var in importedMods, "missing import for var={!r}, importedMods={}".format(var, importedMods)
+            assert _var in importedMods, "missing import for _var={!r}, importedMods={}".format(_var, importedMods)
 
         if sb.is_assigned():
-            replaceGlobals[sb.get_name()] = '{}.{}'.format(info.inModuleName, sb.get_name())
+            replaceGlobals[sb.get_name()] = '{}.{}'.format(_info.inModuleNameData, sb.get_name())
 
     #replace module variable
-    for old, new in itertools.chain(replaceGlobals.items(), info.replaceDecorator.items()):
-        info.replaceSymbol(old, new)
+    for old, new in itertools.chain(replaceGlobals.items(), _info.replaceDecorator.items()):
+        _info.replaceSymbol(old, new)
 
-    resultLines.extend(info.sourceLines)
+    resultLines.extend(_info.sourceLines)
 
     #assign method finally
-    if info.checkClassValid():
+    if _info.checkClassValid():
         resultLines.append('{}.{}.{} = {}\n'.format(moduleName, clsName, methodName, methodName))
         #resultLines.append("hotpatch_method({}.{}, '{}', {})\n".format(moduleName, clsName, methodName, methodName))
     else:
@@ -294,24 +293,24 @@ def generateCode(scriptPath, component, moduleName, clsName, methodName):
 
 if __name__ == "__main__":
     if len(sys.argv)==5:
-        component = sys.argv[1]
-        module = sys.argv[2]
-        cls = sys.argv[3]
+        comp = sys.argv[1]
+        mod = sys.argv[2]
+        _cls = sys.argv[3]
         method = sys.argv[4]
     elif len(sys.argv)==4:
-        component = sys.argv[1]
-        module = sys.argv[2]
-        cls = ''
+        comp = sys.argv[1]
+        mod = sys.argv[2]
+        _cls = ''
         method = sys.argv[3]
     else:
-        print("fix class method usage: genhotfix.py component, module, class, method")
-        print("fix module method usage: genhotfix.py component, module, method")
+        print("fix class method usage: genhotfix.py comp, mod, class, method")
+        print("fix mod method usage: genhotfix.py comp, mod, method")
         exit(1)
 
     targetFile = '../scripts/server_common/hotReload.py'
 
-    setupSysPath(component)
-    generateCode(targetFile, component, module, cls, method)
+    setupSysPath(comp)
+    generateCode(targetFile, comp, mod, _cls, method)
 
 
 

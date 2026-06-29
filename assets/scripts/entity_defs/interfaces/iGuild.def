@@ -420,6 +420,47 @@
 
         <getGuildIronMine> <Exposed/>
         </getGuildIronMine>
+
+        <reqShareCommission> <Exposed/>
+            <Arg>       ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
+        </reqShareCommission>
+
+        <reqGuildGamePlayData> <Exposed/>
+        </reqGuildGamePlayData>
+
+
+        <enterGuildMics> <Exposed/>
+        </enterGuildMics>
+
+        <leaveGuildMics> <Exposed/>
+        </leaveGuildMics>
+
+        <turnOnGuildMics> <Exposed/>
+        </turnOnGuildMics>
+
+        <turnOffGuildMics> <Exposed/>
+        </turnOffGuildMics>
+
+        <switchGuildMicsMode> <Exposed/>
+            <Arg>      UINT8    </Arg>
+        </switchGuildMicsMode>
+
+        <blockGuildMemberMics> <Exposed/>
+            <Arg>      PLAYER_GBID    </Arg>
+        </blockGuildMemberMics>
+
+        <unblockGuildMemberMics> <Exposed/>
+        </unblockGuildMemberMics>
+
+        <blockAllGuildMemberMics> <Exposed/>
+        </blockAllGuildMemberMics>
+
+        <unblockAllGuildMemberMics> <Exposed/>
+        </unblockAllGuildMemberMics>
+
+        <inviteGuildMics> <Exposed/>
+            <Arg>      PLAYER_GBID    </Arg>
+        </inviteGuildMics>
     </BaseMethods>
 
     <CellMethods>
@@ -591,5 +632,69 @@
         <onGetGuildIronMine>
             <Arg>      INT32                   </Arg>
         </onGetGuildIronMine>
+
+        <onShareCommissionResult>
+            <Arg>      BOOL                     </Arg>
+        </onShareCommissionResult>
+        
+        <onGuildCommissionChanged>
+            <Arg>      GUILD_MONEY              </Arg>
+        </onGuildCommissionChanged>
+
+        <onGuildGamePlayScoreCurrentChanged>
+            <Arg>      UINT32                   </Arg>
+        </onGuildGamePlayScoreCurrentChanged>
+
+        <onGetGuildGamePlayData>
+            <Arg>      UINT32                   </Arg>
+            <Arg>      UINT32                   </Arg>
+            <Arg>      UINT32                   </Arg>
+        </onGetGuildGamePlayData>
+
+
+        <onSyncAllGuildMemberMicsStatus>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       ARRAY   <of>    PLAYER_GBID          </of>   </Arg>
+            <Arg>       ARRAY   <of>    PLAYER_GBID          </of>   </Arg>
+            <Arg>       ARRAY   <of>    PLAYER_GBID          </of>   </Arg>
+        </onSyncAllGuildMemberMicsStatus>
+
+        <onSwitchGuildMicsMode>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+        </onSwitchGuildMicsMode>
+
+        <onBlockGuildMemberMics>
+            <Arg>       PLAYER_GBID              </Arg>
+            <Arg>       GUILD_UUID               </Arg>
+            <Arg>       PLAYER_GBID              </Arg>
+        </onBlockGuildMemberMics>
+
+        <onUnblockGuildMemberMics>
+            <Arg>       GUILD_UUID               </Arg>
+            <Arg>       PLAYER_GBID              </Arg>
+        </onUnblockGuildMemberMics>
+
+        <onBlockAllGuildMemberMics>
+            <Arg>       PLAYER_GBID              </Arg>
+            <Arg>       GUILD_UUID               </Arg>
+        </onBlockAllGuildMemberMics>
+
+        <onUnblockAllGuildMemberMics>
+            <Arg>       PLAYER_GBID              </Arg>
+            <Arg>       GUILD_UUID               </Arg>
+        </onUnblockAllGuildMemberMics>
+
+        <onInviteGuildMics>
+            <Arg>       PLAYER_GBID              </Arg>
+        </onInviteGuildMics>
+
+        <onAvatarChangeGuildMics>
+            <Arg>       GUILD_UUID               </Arg>
+            <Arg>       PLAYER_GBID              </Arg>
+            <Arg>       UINT32                   </Arg>
+        </onAvatarChangeGuildMics>
     </ClientMethods>
 </root>

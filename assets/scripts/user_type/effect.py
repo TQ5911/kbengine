@@ -262,7 +262,6 @@ class BasicEffect(EffectBase):
                 'notifyEffectAddSkill', 
                 (callerInfo, self.effectId, self.effectIndex, pendingSkills,),
             )
-        return
 
     def undoAddSkillCd(self, owner, callerInfo, isOverleap):
         _effectDict = self.getEffectDict(owner, callerInfo)
@@ -394,6 +393,20 @@ class BasicEffect(EffectBase):
         LOG_DBG("undoCantUseSkillTag", value, tags, owner.id)
         owner.unForbidSkillByTags(tags)
 
+    def damageRatioLimit(self, owner, callerInfo):
+        effectDict = self.getEffectDict(owner, callerInfo)
+        value = effectDict.get('Value')
+        limitInfo = self.getRealValue(owner, callerInfo, value)
+        LOG_DBG("damageRatioLimit", value, limitInfo, owner.id)
+        owner.addDamageRatioLimit(limitInfo)
+
+    def undoDamageRatioLimit(self, owner, callerInfo, isOverleap):
+        effectDict = self.getEffectDict(owner, callerInfo)
+        value = effectDict.get('Value')
+        limitInfo = self.getRealValue(owner, callerInfo, value)
+        LOG_DBG("undoDamageRatioLimit", value, limitInfo, owner.id)
+        owner.removeDamageRatioLimit(limitInfo)
+        
     def undoAddDefensiveShield(self, owner, callerInfo, isOverleap):
         owner.removeShield(callerInfo.buffId)
         return 0
@@ -506,7 +519,7 @@ class EventEffect(EffectBase):
         _ret = None
         if (target and target.IsCombatUnit) or _targetType=='None':
             _argsDict = self.getActionArgs(owner, callerInfo)
-            if event.eventContext is not effectEventCtx.EE_DEFAULT_CONTEXT:
+            if event.eventContext is not effectEventCtx.EE_DEFAULT_CTX:
                 _argsDict.update(vars(event.eventContext))
 
             _action = _effectData.get('Action')

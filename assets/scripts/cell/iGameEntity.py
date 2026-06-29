@@ -69,31 +69,31 @@ class IGameEntity(object):
         attachedHost.setTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, attachedIDList)
 
     def onDisappearTimerEnded(self):
-        LOG_DBG('id={} gameEntityId={} over time limit, destroy'.format(self.id, self.gameEntityId))
+        LOG_DBG('onDisappearTimerEnded over time limit, destroy', self.id, self.gameEntityId)
         self.safeDestroy()
 
     def initPosition(self):
-        result, newPosition = self._initPosition()
-        if result:
-            self.telToPos(newPosition)
+        _result, _newPosition = self._initPosition()
+        if _result:
+            self.telToPos(_newPosition)
         self.bornPosition = tuple(self.position)
         self.bornDirection = tuple(self.direction)
         self.context = self.tmpProps.pop('context', None)
 
     def _initPosition(self):
-        radius = self.tmpProps.pop('createRadius', None)
-        count = self.tmpProps.pop('createCount', None)
+        _radius = self.tmpProps.pop('createRadius', None)
+        _count = self.tmpProps.pop('createCount', None)
         idx = self.tmpProps.pop('createIndex', None)
-        if not (radius and count and idx):
+        if not (_radius and _count and idx):
             return False, self.position
 
-        _l = self.getRandomPoints(self.position, radius, 1, 0)
+        _l = self.getRandomPoints(self.position, _radius, 1, 0)
 
         if _l:
             return True, Math.Vector3(_l[0])
 
         LOG_ERR("engine can't find navigate point, use origin:",
-                  self.gameEntityId, self.creepbaseId, self.spaceNo, self.position, radius)
+                  self.gameEntityId, self.creepbaseId, self.spaceNo, self.position, _radius)
         return False, self.position
 
     @property

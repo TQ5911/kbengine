@@ -36,7 +36,7 @@ class IScore(object):
             if skillId in CHAR_CD.datas[school]['build']:
                 skillScore += SKILL_PP.datas[skillLv]['score']
 
-            elif utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill):
+            elif utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.UltraSkill):
                 skillScore += SKILL_PP.datas[skillLv]['score2']
                 
         LOG_DBG('getTotalSkillScore ', skillScore)
@@ -50,8 +50,6 @@ class IScore(object):
         return self.baseScoreInfo.totalScore
     
     def baseScoreChanged(self, scoreInitFinished, scoreKey, scoreVal):
-        oldTotalScore = self.getTotalScore()
-        oldScoreVal = getattr(self.baseScoreInfo, scoreKey)
         self.baseScoreInfo.updateScore(scoreKey, scoreVal)
         totalScore = self.getTotalScore()
         self.updateScoreToRedis(totalScore)

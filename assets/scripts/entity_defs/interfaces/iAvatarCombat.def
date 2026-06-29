@@ -19,12 +19,6 @@
             <Default>       0                           </Default>
         </summonSlotIdxBase>
 
-        <summonSlotIdx>
-            <Type>          SLOTID                      </Type>
-            <Flags>         OWN_CLIENT                  </Flags>
-            <Default>       0                           </Default>
-        </summonSlotIdx>
-
         <buildDic>
             <Type>            BUILD_INFO                </Type>
             <Flags>           BASE                     </Flags>
@@ -131,22 +125,10 @@
             <Default>       0                    </Default>
         </totalPayFreeReliveTimes>
 
-        <mp>
-            <Type>          MP          </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Persistent>    true            </Persistent>
-            <DelaySync>     true            </DelaySync>
-        </mp>
-
         <isClientOnGround>
             <Type>          BOOL                </Type>
             <Flags>         ALL_CLIENTS         </Flags>
         </isClientOnGround>
-
-        <ultraSkillPower>
-            <Type>          UINT8                       </Type>
-            <Flags>         OWN_CLIENT                  </Flags>
-        </ultraSkillPower>
 
         <instantPotionSlots>
             <Type>          INSTANT_POTION_SLOTS_DATA_INFO  </Type>
@@ -154,65 +136,11 @@
             <Persistent>    true                            </Persistent>
         </instantPotionSlots>
 
-        <healHpRatio>
-            <Type>          HEAL_RATIO                      </Type>
-            <Flags>         OWN_CLIENT                      </Flags>
-            <Persistent>    true                            </Persistent>
-            <Default>       80                              </Default>
-        </healHpRatio>
-
-        <healMpRatio>
-            <Type>          HEAL_RATIO                      </Type>
-            <Flags>         OWN_CLIENT                      </Flags>
-            <Persistent>    true                            </Persistent>
-            <Default>       80                              </Default>
-        </healMpRatio>
-
         <autoDrinkPotionTimerId>
             <Type>          TIMER_ID                        </Type>
             <Flags>         BASE                            </Flags>
             <Default>       0                               </Default>
         </autoDrinkPotionTimerId>
-        <expGrow>
-            <Type>          FLOAT               </Type>
-            <Flags>         OWN_CLIENT        </Flags>
-        </expGrow>
-        <adjExpGrow>
-            <Type>          FLOAT               </Type>
-            <Flags>         CELL_PRIVATE        </Flags>
-        </adjExpGrow>
-        <copper>
-            <Type>          FLOAT               </Type>
-            <Flags>         OWN_CLIENT        </Flags>
-        </copper>
-        <adjCopper>
-            <Type>          FLOAT               </Type>
-            <Flags>         CELL_PRIVATE        </Flags>
-        </adjCopper>
-        <medicineRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         OWN_CLIENT   </Flags>
-        </medicineRate>
-        <adjMedicineRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjMedicineRate>
-        <miningRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         OWN_CLIENT   </Flags>
-        </miningRate>
-        <adjMiningRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjMiningRate>
-        <gatherRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         OWN_CLIENT   </Flags>
-        </gatherRate>
-        <adjGatherRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjGatherRate>
 
         <viewCrossServerSet>
             <Type>          PYTHON              </Type>

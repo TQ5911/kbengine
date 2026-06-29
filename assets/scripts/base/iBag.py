@@ -463,42 +463,64 @@ class AwardMixin(object):
         if awardVal.isEmpty():
             return
         
-        disaItems = []
-        # 检测自动分解来源
-        if dataUtils.checkAutoDisassembly(srcType):
-            # 检测自动分解开关
-            autoDisassemble = self.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY,
-                                                    gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL)
-            if autoDisassemble:
-                equipList = awardVal.itemWealth.popDropEquipObjs()
-                disassembleEquips = []
-                for it in equipList:
-                    if self.canEquipAutoDisassemble(self, it) and it.canBeDisassembled(self.gbID):
-                        d = it.returnWealthyByDisassemble(self)
-                        disaItems.extend(d.toBriefList())
-                        awardVal += d
-                        disassembleEquips.append(it)
-                for it in disassembleEquips:
-                    equipList.remove(it)
-                awardVal.itemWealth.addItemObjs(equipList)
         # 合并分解出来的同类数据
         mergedDisaItems = {}
-        if len(disaItems) > 0:
-            for disaItem in disaItems:
-                disaItemId = disaItem['itemId']
-                disaItemNum = disaItem['itemNum']
-                disaBindType = disaItem['bindType']
-                disaDatas = mergedDisaItems.get(disaItem['itemId'], None)
-                if not disaDatas:
-                    disaDatas = [0, 0, 0]
-                    mergedDisaItems[disaItemId] = disaDatas
 
-                if disaBindType == gameconst.ItemBindType.BIND:
-                    disaDatas[0] += disaItemNum
-                elif disaBindType == gameconst.ItemBindType.NORMAL:
-                    disaDatas[1] += disaItemNum
-                elif disaBindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
-                    disaDatas[2] += disaItemNum
+        # 检测自动分解开关
+        autoEquipDisassemble = self.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY,
+                                                gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL)
+        if autoEquipDisassemble:
+            if dataUtils.checkAutoDisassemblySwitch(autoEquipDisassemble):
+                disaItems = []
+                # 检测自动分解来源
+                if dataUtils.checkAutoDisassemblySource(srcType):
+                    equipList = awardVal.itemWealth.popDropEquipObjs()
+                    disassembleEquips = []
+                    for it in equipList:
+                        if self.canEquipAutoDisassemble(self, it) and it.canBeDisassembled(self.gbID):
+                            d = it.returnWealthyByDisassemble(self)
+                            disaItems.extend(d.toBriefList())
+                            awardVal += d
+                            disassembleEquips.append(it)
+                    for it in disassembleEquips:
+                        equipList.remove(it)
+                    awardVal.itemWealth.addItemObjs(equipList)
+                # 检测魂魄自动分解开关
+                if dataUtils.checkSoulSwitch(autoEquipDisassemble):
+                    soulList = awardVal.itemWealth.popSoulItemObjs()
+                    disassembleSouls = []
+                    for it in soulList:
+                        # 魂魄要属性为空的才自动分解
+                        if len(it.rollProps) != 0:
+                            continue
+                        ret, awardId = dataUtils.checkItemCanBeDisassembled(it.itemId, it.bindType)
+                        if ret:
+                            d = dropAward.getAwardOne(awardId, awardCtx)
+                            disaItems.extend(d.toBriefList())
+                            awardVal += d
+                            disassembleSouls.append(it)
+                    # 移除已分解
+                    for it in disassembleSouls:
+                        soulList.remove(it)
+                    # 剩余的塞回去
+                    awardVal.itemWealth.addItemObjs(soulList)
+
+                if len(disaItems) > 0:
+                    for disaItem in disaItems:
+                        disaItemId = disaItem['itemId']
+                        disaItemNum = disaItem['itemNum']
+                        disaBindType = disaItem['bindType']
+                        disaDatas = mergedDisaItems.get(disaItem['itemId'], None)
+                        if not disaDatas:
+                            disaDatas = [0, 0, 0]
+                            mergedDisaItems[disaItemId] = disaDatas
+
+                        if disaBindType == gameconst.ItemBindType.BIND:
+                            disaDatas[0] += disaItemNum
+                        elif disaBindType == gameconst.ItemBindType.NORMAL:
+                            disaDatas[1] += disaItemNum
+                        elif disaBindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
+                            disaDatas[2] += disaItemNum
 
         hasCtx = awardCtx is not None
         
@@ -650,6 +672,11 @@ class AwardMixin(object):
             _briefList = awardVal.toBriefList()
             LOG_INFO('add wonderland brief:', _briefList)
             self.cell.addWonderLandRewardRecord(_briefList)
+        
+        elif formula.inAbyssScene(awardCtx.extra.get('monsterSpaceNo', 0)):
+            _briefList = awardVal.toBriefList()
+            LOG_INFO('add abyss brief:', _briefList)
+            self.cell.addAbyssRewardRecord(_briefList)
 
         if not self.accountEntity.isAuthHost(self.gbID):
             self.addAuthStatistics(awardVal)
@@ -772,7 +799,7 @@ class AwardMixin(object):
                 if planDic:
                     opStat, _ = self.bagData.addItemsWithPlan(
                         self, itemsList, opUUID, srcType, detail,
-                        planDict=planDic, notify=notify,
+                        planDic=planDic, notify=notify,
                         directly=False)
 
                     if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
@@ -806,7 +833,7 @@ class AwardMixin(object):
                 if planDic:
                     opStat, _ = self.petBag.addItemsWithPlan(
                         self, petItemList, opUUID, srcType, detail,
-                        planDict=planDic, notify=notify,
+                        planDic=planDic, notify=notify,
                         directly=False)
 
                     if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
@@ -922,7 +949,7 @@ class CoinBillMixin(object):
 
     # Exposed
     @gamedecorator.checkGameconfigEnable('bag')
-    @gamedecorator.limitcall(1, keyFunc=lambda x: '{}-{}-{}'.format(*x))
+    @gamedecorator.limitcall(1, keyFun=lambda x: '{}-{}-{}'.format(*x))
     def reqAvatarCoinBill(self, exposed, coinType, tabIndex, tabCount):
         LOG_INFO('reqAvatarCoinBill~', coinType, tabIndex, tabCount)
         tabCount = min(tabCount, 16)
@@ -1026,6 +1053,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def reqGetOnlineTimeReward(self, exposed, rewardIdx):
         return
 
+    @gamedecorator.checkGameconfigEnable('bag', ['checkInnerDemonUseItems'])
     def baseUseItems(self, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
         LOG_INFO('in baseUseItems:', gridId, itemId, useNum, useItemCtx.targetId)
         if dataUtils.isLingShouItem(itemId):
@@ -1387,7 +1415,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             opStat, _ = self.bagData.deductItemsWithPlan(self, deductWealthObj.itemWealth.data,
                                                          deductWealthObj.itemWealth.itemsObjs,
                                                          opUUID, srcType, detail,
-                                                         planDict=planDic)
+                                                         planDic=planDic)
             if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 gameengine.panicStack('deduct items fail:', srcType, deductWealthObj)
                 return
@@ -1399,7 +1427,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             opStat, _ = self.petBag.deductItemsWithPlan(self, deductWealthObj.petItemWealth.data,
                                                         deductWealthObj.petItemWealth.itemsObjs,
                                                         opUUID, srcType, detail,
-                                                        planDict=planDic)
+                                                        planDic=planDic)
             if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 gameengine.panicStack('deduct items fail:', srcType, deductWealthObj)
                 return
@@ -1446,7 +1474,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if itemId == gameconst.ItemIdEnum.APPEARANCE_COIN:
             return self.appearanceCoin
         itemData = dataUtils.getCommItemData(itemId)
-        if not (itemData and itemData['type'] == gameconst.ItemType.Normal):
+        if not (itemData and itemData['type'] == gameconst.ItemEnum.Normal):
             gameengine.panicStack('getItemNum: not support itemId:', itemId)
             return 0
         return self.bagData.getItemCount(self.gbID, itemId, bindType)
@@ -1456,6 +1484,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
 
         targetMoney = utils.addResourceVal(self.money, deltaNum, gameconst.ReourceValType.INT32)
+        self.money = targetMoney
+        self.onItemCountChanged([gameconst.ItemIdEnum.MONEY, ])
+
+    def gmDeductMoney(self, delta, opUUID, src, detail):
+        targetMoney = utils.deductResourceVal(self.money, delta, gameconst.ReourceValType.INT32)
         self.money = targetMoney
         self.onItemCountChanged([gameconst.ItemIdEnum.MONEY, ])
 
@@ -1488,6 +1521,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.darkIron = targetDarkIron
         self.onItemCountChanged([gameconst.ItemIdEnum.DARK_IRON, ])
         return
+
+    def gmDeductDarkIron(self, delta, opUUID, src, detail):
+        targetDarkIron = utils.deductResourceVal(self.darkIron, delta, gameconst.ReourceValType.INT64)
+        self.darkIron = targetDarkIron
+        self.onItemCountChanged([gameconst.ItemIdEnum.DARK_IRON, ])
 
     def deductDarkIron(self, subNum, opUUID, src, detail, srcSubType=0, idipSource=0, bMsg=True):
         if subNum < 0:
@@ -1534,6 +1572,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.bindMoney = targetBindMoney
         self.onItemCountChanged([gameconst.ItemIdEnum.BIND_MONEY, ])
 
+    def gmDeductBindMoney(self, delta, opUUID, src, detail):
+        targetBindMoney = utils.deductResourceVal(self.bindMoney, delta, gameconst.ReourceValType.INT32)
+        self.bindMoney = targetBindMoney
+        self.onItemCountChanged([gameconst.ItemIdEnum.BIND_MONEY, ])
+
     def deductBindMoney(self, subNum, opUUID, src, detail, srcSubType=0, idipSource=0, bMsg=True):
         if subNum < 0:
             return False
@@ -1565,6 +1608,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                                  self.coinFraction)
         LOG_INFO("addCoin", self.coin, self.coinFraction)
         return True, [(gameconst.ItemIdEnum.COIN, addNum)]
+
+    def gmDeductCoin(self, delta, opUUID, src, detail):
+        targetCoin = utils.deductResourceVal(self.coin, delta, gameconst.ReourceValType.INT64)
+        self.coin = targetCoin
+        self.onItemCountChanged([gameconst.ItemIdEnum.COIN, ])
 
     def deductCoin(self, subNum, opUUID, src, detail, srcSubType=0, idipSource=0, bMsg=True):
         if subNum < 0:
@@ -1919,7 +1967,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     awardVal = dropAward.AwardVal()
                     for customAwardVal in context.customAward:
                         awardVal.addWealthByItemId(customAwardVal['itemId'], customAwardVal['count'])
-                    self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail)
+                    self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx)
                 else:
                     self.addAwards(
                         AAC_AAC_DD.datas.BONUS_SRC_GATHER, 
@@ -2348,7 +2396,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     @gamedecorator.offlineCallback
     def gmAddItems(self, bagType, itemId, totalNum, detail, bindType=dataUtils.getItemDefaultBindType(), awardCtx=None):
         LOG_INFO('gmAddItems:', itemId, totalNum, str(detail))
-        awardCtx = awardCtx or awardContext.CommonContext(0)
+        awardCtx = awardCtx or self.getAvatarAwardCtx(itemId, None)
         opUUID = KBEngine.genUUID64()
 
         srcType = AAC_AAC_DD.datas.BONUS_SRC_GM
@@ -2525,7 +2573,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
 
         _itemData = ITEM_DATA.datas.get(itemId, None)
-        if not _itemData or _itemData['type'] != 0 or _itemData['subType'] != gameconst.ItemSubType.ChoiceNItem:
+        if not _itemData or _itemData['type'] != 0 or _itemData['subType'] != gameconst.ItemSubEnum.ChoiceNItem:
             LOG_INFO('openNChoiceGift wrong item {}'.format(itemId))
             return False
 
@@ -2687,7 +2735,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         _checkData = self._exchangeCurrency(self.id, cId, cost)
         #跨服兑换货币，本服也会同时兑换一次，校验一下两边兑换的结果是否一致
         if _checkData != checkData:
-            LOG_ERR("onCrossServerExchangeCurrency failed!!!!", checkData, _checkData)
+            gameengine.panicStack("onCrossServerExchangeCurrency failed!!!!", checkData, _checkData)
         else:
             LOG_INFO("onCrossServerExchangeCurrency check ok", checkData, _checkData)
 
@@ -2733,7 +2781,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.onMessagePre(gameconst.GiftCodeResultMsg[code], [])
             return
         else:
-            self.onMessagePre(M_M_DD.datas.CDK_anomaly['value'], [])
+            self.onMessagePre(M_M_DD.datas.CDK_anomaly, [])
             LOG_ERR("exchangeGiftKeyReward unknown code", code, data)
             return
 
@@ -3497,18 +3545,18 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if itemObj.isEquipmentItem() and not itemObj.isGood(self.gbID):
             LOG_WARN("reqSellItem, equipment item is broken ", itemId)
             return
-
-        # 扣除道具
-        deductWealthVal = dropAward.DeductWealthVal()
-        deductWealthVal.addWealthByItemId(itemId, itemNum)
-        # 扣除操作检查
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN("reqSellItem, item is not enough", itemId, itemNum)
+        if itemObj.itemNum < itemNum:
+            LOG_WARN("reqSellItem, item is not enough ", itemId)
             return
-
-        # 加入铜币
+        
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AAC_DD.datas.BONUS_SRC_RECYCLE_ITEM
+
+        # 扣除道具
+        deductDetail = gameclass.AwardDetailCls(itemId=itemId, itemNum=itemNum)
+
+        self.bagData.deductItemsByGridId(self, {gridId: itemNum}, opUUID, srcType, deductDetail)
+        # 加入铜币
 
         addWealthVal = dropAward.AwardVal()
         addWealthVal.addWealthByItemId(gameconst.ItemIdEnum.COIN, sellPrice * itemNum)
@@ -3517,9 +3565,6 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not self.canAddWealthVal(srcType, addWealthVal):
             LOG_WARN("reqSellItem ~ bag space is not enough")
             return
-
-        deductDetail = gameclass.AwardDetailCls(itemId=itemId, itemNum=itemNum)
-        self.deductWealth(srcType, deductWealthVal, opUUID, deductDetail)
 
         addDetail = gameclass.AwardDetailCls(itemId=gameconst.ItemIdEnum.COIN, itemNum=itemNum, sellPrice = sellPrice)
         self.addWealth(srcType, addWealthVal, opUUID, addDetail)
@@ -3565,3 +3610,44 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
     def _checkEquipExpire(self):
         self.bagData.checkEquipExpire(self)
+
+    def gmModifyCurrency(self, itemId, updateNum):
+        LOG_INFO("gmModifyCurrency1", itemId, updateNum)
+        modify = {
+            gameconst.ItemIdEnum.MONEY              :   [lambda self: self.money, lambda self: self.addMoney, lambda self: self.gmDeductMoney],
+            gameconst.ItemIdEnum.BIND_MONEY         :   [lambda self: self.bindMoney, lambda self: self.addBindMoney, lambda self: self.gmDeductBindMoney],
+            gameconst.ItemIdEnum.COIN               :   [lambda self: self.coin, lambda self: self.addCoin, lambda self: self.gmDeductCoin],
+            gameconst.ItemIdEnum.DARK_IRON          :   [lambda self: self.darkIron, lambda self: self.addDarkIron, lambda self: self.gmDeductDarkIron],
+            gameconst.ItemIdEnum.GUILD_CONTRIB      :   [lambda self: self.guildContrib, lambda self: self.addGuildContrib, lambda self: self.gmDeductGuildContrib],
+        }
+        if itemId not in modify:
+            LOG_ERR("gmModifyCurrency err", itemId, updateNum)
+            return False, 0, 0
+        
+        opUUID = KBEngine.genUUID64()
+        src = AAC_AAC_DD.datas.BONUS_SRC_GM_DEDUCT
+        oldNum = modify[itemId][0](self)
+        if updateNum > 0:
+            modify[itemId][1](self)(updateNum, opUUID, src, None)
+        elif updateNum < 0:
+            modify[itemId][2](self)(updateNum, opUUID, src, None)
+        newNum = modify[itemId][0](self)
+        LOG_INFO("gmModifyCurrency success", oldNum, newNum)
+
+        self.makeItemFlowLog(
+            self.bagData.bagType,
+            gameconst.ItemBindType.NORMAL,
+            itemId,
+            0,
+            updateNum,
+            opUUID,
+            src,
+            newNum,
+            None,
+        )
+        return True, oldNum, newNum
+
+    def checkInnerDemonUseItems(self, owner, gridId, itemId, useNum, useItemCtx, isBaseAct):
+        res = self.instantPotionSlots.checkInnerDemonUseItems(itemId)
+        LOG_DBG("checkInnerDemonUseItems base", gridId, itemId, useNum, useItemCtx, isBaseAct, res)
+        return res

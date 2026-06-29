@@ -19,10 +19,10 @@ import AuctionSnatchRecords
 import mailAssistor
 import dropAward
 import utils
+import dataUtils
 
 import auction_auctionConst as AUC_CONST
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import itemData_itemData as ID_IDD
 import mall_coinPrice
 
 from rpc import RpcChannel, TcpClient
@@ -40,7 +40,7 @@ import LogTrackingMgr
 import auction_onSaleChatting as ASC
 
 class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-    def __init__(self):
+    def __init__(self, **kwargs):
         iGlobal.IGlobal.__init__(self)
         iBaseNoCell.IBaseNoCell.__init__(self)
         iTimer.ITimer.__init__(self)
@@ -515,7 +515,7 @@ class AuctionStubService(GameServer):
                 None, '', ())
 
             LogTrackingMgr.LogTrackingMgr.auction_item_sale(playerGBID, '', playerGBID, extra.get('opUUID'), auctionItem.auctionItemUUID, auctionItem.itemId, \
-                                                        ID_IDD.datas[auctionItem.itemId]['type'], auctionItem.number, auctionItem.price, auctionItem.totalPrice, auctionItem.addPublicityTime > 0)
+                                                        dataUtils.getItemType(auctionItem.itemId), auctionItem.number, auctionItem.price, auctionItem.totalPrice, auctionItem.addPublicityTime > 0)
 
     def replyBuyItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -600,7 +600,7 @@ class AuctionStubService(GameServer):
                 m_playerStub, 'recordOfflineCallback',
                 (playerGBID, 'doCancelSaleItemInCoinAuction', (errno, auctionItem, extra)))
             LogTrackingMgr.LogTrackingMgr.auction_item_cancel(playerGBID, '', playerGBID, auctionItem.auctionItemUUID, auctionItem.itemId, \
-                                                        ID_IDD.datas[auctionItem.itemId]['type'], auctionItem.number, auctionItem.price, auctionItem.totalPrice, \
+                                                        dataUtils.getItemType(auctionItem.itemId), auctionItem.number, auctionItem.price, auctionItem.totalPrice, \
                                                         auctionItem.addPublicityTime > 0, auctionItem.itemData.createTime, auctionItem.addTime, auctionItem.itemData.expireTime, auctionItem.status)
             
     def replySearchItemsByItemId(self, rpc_controller, request, done):
@@ -713,7 +713,7 @@ class AuctionStubService(GameServer):
 
 
         LogTrackingMgr.LogTrackingMgr.auction_item_deal(playerGBID, '', playerGBID, opUUID, auctionItem.auctionItemUUID, \
-                                                       auctionItem.itemId, ID_IDD.datas[auctionItem.itemId]['type'], auctionItem.addPublicityTime > 0, \
+                                                       auctionItem.itemId, dataUtils.getItemType(auctionItem.itemId), auctionItem.addPublicityTime > 0, \
                                                        auctionItem.number, totalPrice, totalPriceInDeductTax, totalPriceTax, auctionItem.fromPlayerGBID, \
                                                        roleName, roleAccount)
         

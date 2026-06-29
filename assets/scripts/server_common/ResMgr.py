@@ -15,10 +15,10 @@ def kbengineConfig():
     if __KBE_CONFIG_ROOT:
         return __KBE_CONFIG_ROOT
 
-    fConfig = KBEngine.open('server/kbengine.xml', 'rb')
-    content = ''.join([str(line, 'utf-8') for line in fConfig.readlines()])
-    fConfig.close()
-    __KBE_CONFIG_ROOT = ET.fromstring(content)
+    _fConfig = KBEngine.open('server/kbengine.xml', 'rb')
+    _content = ''.join([str(line, 'utf-8') for line in _fConfig.readlines()])
+    _fConfig.close()
+    __KBE_CONFIG_ROOT = ET.fromstring(_content)
     return __KBE_CONFIG_ROOT
 
 
@@ -30,40 +30,40 @@ def entityDefTypes():
     if __ENTITY_DEF_TYPES_ROOT:
         return __ENTITY_DEF_TYPES_ROOT
 
-    types = KBEngine.open('scripts/entity_defs/types.xml', 'rb')
-    content = ''.join([str(line, 'utf-8') for line in types.readlines()])
-    types.close()
-    __ENTITY_DEF_TYPES_ROOT = ET.fromstring(content)
+    _types = KBEngine.open('scripts/entity_defs/types.xml', 'rb')
+    _content = ''.join([str(line, 'utf-8') for line in _types.readlines()])
+    _types.close()
+    __ENTITY_DEF_TYPES_ROOT = ET.fromstring(_content)
     return __ENTITY_DEF_TYPES_ROOT
 
 
 def getStringContentFromPath(root, path):
-    pathComps = path.split('/')
-    element = root
-    for comp in pathComps:
-        element = element.find(comp)
+    _pathComps = path.split('/')
+    _element = root
+    for _comp in _pathComps:
+        _element = _element.find(_comp)
 
-    return element.text.strip()
+    return _element.text.strip()
 
 
 def getStringContentListForPath(root, path):
     pathComps = path.split('/')
     retList = []
-    element = root
+    _element = root
     for comp in pathComps:
-        element = element.find(comp)
+        _element = _element.find(comp)
 
-    for child in list(element):
-        retList.append(child.attrib)
+    for _child in list(_element):
+        retList.append(_child.attrib)
 
     return retList
 
 
 def getChildrenName(root, path):
-    pathComps = path.split('/')
+    _pathComps = path.split('/')
     element = root
 
-    for comp in pathComps:
+    for comp in _pathComps:
         element = element.find(comp)
 
     return [c.tag for c in list(element)]
@@ -79,27 +79,27 @@ def loadAreaData():
             # LOG_WARN('loadAreaData has no config areaData', mapId)
             continue
         dataFile = KBEngine.open(filePath, 'rt')
-        firstLine = dataFile.readline()
+        _firstLine = dataFile.readline()
 
-        width, height = firstLine.split()
+        width, height = _firstLine.split()
         width = int(width)
         height = int(height)
 
         LOG_INFO('load area data:', mapId, width, height)
         data = {}
 
-        for i in range(height-1,-1,-1):
-            line = dataFile.readline()
-            line = line.strip()
-            areaIds = line.split()
+        for _i in range(height-1,-1,-1):
+            _line = dataFile.readline()
+            _line = _line.strip()
+            areaIds = _line.split()
             if len(areaIds)!=width:
-                LOG_ERR('area data error:', i, width, len(areaIds))
+                LOG_ERR('area data error:', _i, width, len(areaIds))
                 return
 
-            for j,aid in enumerate(areaIds):
-                aid = int(aid)
-                if aid>0:
-                    data[i*height+j]=aid
+            for j, _aid in enumerate(areaIds):
+                _aid = int(_aid)
+                if _aid>0:
+                    data[_i*height+j] = _aid
         dataFile.close()
         allData[mapId] = (height, data)
 

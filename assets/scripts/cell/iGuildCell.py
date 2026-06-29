@@ -28,4 +28,8 @@ class IGuildCell(object):
             gameconst.GuildTaskType.COMPLETEMAP, 
             TDC_CFG.datas['teamDunChallengeActID']['value'],
             1)
-
+        
+    def doKillMonster(self):
+        if not self.guildUUID:
+            return
+        self.guildBoxCell.statGuildData(gameconst.GuildGamePlayType.WORLD_BOSS_KILLER)

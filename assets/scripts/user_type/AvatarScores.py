@@ -14,21 +14,21 @@ class AvatarScores(userType.UserSingleType):
     def __repr__(self):
         return '{}({})'.format(
             self.__class__.__name__,
-            ','.join(['{}={}'.format(k, v) for k, v in self.__dict__.items()])
+            ','.join(['{}={}'.format(_k, _v) for _k, _v in self.__dict__.items()])
         )
 
-    def __setattr__(self, key, value):
-        if key not in self.__dict__:
-            return object.__setattr__(self, key, value)
+    def __setattr__(self, keyName, value):
+        if keyName not in self.__dict__:
+            return object.__setattr__(self, keyName, value)
 
-        crtValue = self.__dict__.get(key, 0)
-        if crtValue != value:
-            object.__setattr__(self, key, value)
-            LOG_DBG('\- AvatarScoreColl:: set "{}" from {} to {}'.format(key, crtValue, value))
+        _crtValue = self.__dict__.get(keyName, 0)
+        if _crtValue != value:
+            object.__setattr__(self, keyName, value)
+            LOG_DBG('\- AvatarScoreColl:: set "{}" from {} to {}'.format(keyName, _crtValue, value))
             LOG_DBG('  |- CurrentScore: ', self.__repr__())
             LOG_DBG('  |- TotalScore:   ', self.totalScore)
         else:
-            LOG_DBG('\= AvatarScoreColl:: un-change "{}" {} == {}'.format(key, crtValue, value))
+            LOG_DBG('\= AvatarScoreColl:: un-change "{}" {} == {}'.format(keyName, _crtValue, value))
 
     def __init__(self, equipments=0, level=0, rewardFightProp=0, mount=0, pet=0, skill=0, guildtrain=0, meridian=0, bless=0):
         self.equipments = equipments            # 装备评分
@@ -48,22 +48,20 @@ class AvatarScores(userType.UserSingleType):
         return totalScores
 
     def updateScore(self, scoreKey, newScoreVal):
-        crtScoreVal = getattr(self, scoreKey)
-        newScoreVal = math.floor(newScoreVal)
-        setattr(self, scoreKey, newScoreVal)
-        return crtScoreVal, newScoreVal
+        _crtScoreVal = getattr(self, scoreKey)
+        _newScoreVal = math.floor(newScoreVal)
+        setattr(self, scoreKey, _newScoreVal)
+        return _crtScoreVal, _newScoreVal
 
-    def getTlogStr(self):
-        return ','.join(["{}:{}".format(scoreName, getattr(self, scoreName)) for scoreName in self.__attrs__])
-    
+
 class AvatarScoresInfo(userType.ABCInfo):
-    def createObjFromDict(self, dic):
-        return AvatarScores(**dic)
+    def createObjFromDict(self, dict):
+        return AvatarScores(**dict)
 
     def getDictFromObj(self, obj: AvatarScores):
         return {
-            'equipments': math.floor(obj.equipments),
             'level': math.floor(obj.level),
+            'equipments': math.floor(obj.equipments),
             'rewardFightProp': math.floor(obj.rewardFightProp),
             'mount': math.floor(obj.mount),
             'pet': math.floor(obj.pet),

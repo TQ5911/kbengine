@@ -128,7 +128,8 @@ datas ={
       "finished": [
         1009,
         1025,
-        1026
+        1026,
+        1042
       ]
     }
   },
@@ -331,6 +332,21 @@ datas ={
   "1041": {
     "type": "taskUndertake",
     "taskID": 86030005,
+    "transition": {}
+  },
+  "1042": {
+    "type": "createNPC",
+    "entityID": [
+      40014005,
+      40014006,
+      40014007,
+      40014008,
+      40014009,
+      40014010
+    ],
+    "num": 1,
+    "lv": "7",
+    "ifSetBoss": 0,
     "transition": {}
   }
 }

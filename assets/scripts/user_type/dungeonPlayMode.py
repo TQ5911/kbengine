@@ -12,7 +12,7 @@ import dropAward
 import awardContext
 import gameengine
 
-import gamePlay_gamePlay as DDI
+import gamePlay_gamePlay as GP_GPD
 import teamDunChallenge_config as TDC_CFG
 import raidBossChallenge_config as RBC_CFG
 
@@ -21,18 +21,18 @@ class _DungeonPlayMode(userType.UserSingleType):
 
     def __init__(self, playMode=0, **kwargs):
         self.playMode = playMode
-        self.spaceUUID = kwargs.get('spaceUUID', 0)
         self.tCreate = kwargs.get('tCreate', 0)
+        self.spaceUUID = kwargs.get('spaceUUID', 0)
 
     def getTEnd(self, dungeonNo):
         if not self.tCreate:
             LOG_WARN('_DungeonPlayMode:: tCreate not set', self.tCreate)
             return 0
-        return int(self.tCreate + DDI.datas[dungeonNo]['timeOut'] * 60 + 1)
+        return int(self.tCreate + GP_GPD.datas[dungeonNo]['timeOut'] * 60 + 1)
 
 
 class UnknownDungeonPlayMode(_DungeonPlayMode):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(UnknownDungeonPlayMode, self).__init__(
             playMode=gameconst.DungeonPlayModeEnum.UNKNOWN)
 

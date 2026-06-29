@@ -264,12 +264,45 @@
             <Flags>         BASE             </Flags>
             <Persistent>    true             </Persistent>
         </guildRankIdx>
+
+        <guildStatData>
+            <Type>          PY_DICT          </Type>
+            <Flags>         BASE             </Flags>
+            <Default>       {}               </Default>
+            <Persistent>    true             </Persistent>
+        </guildStatData>
+
+        <guildCommission>
+            <Type>          GUILD_MONEY     </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+            <Default>       0               </Default>
+        </guildCommission>
+
+        <totalCommissionGold>
+            <Type>      UINT32     </Type>
+            <Flags>     BASE       </Flags>
+            <Default>   0          </Default>
+            <Persistent>    true   </Persistent>
+        </totalCommissionGold>
+
+        <gamePlayScoreCurrent>
+            <Type>      UINT32     </Type>
+            <Flags>     BASE       </Flags>
+            <Default>   0          </Default>
+            <Persistent>    true   </Persistent>
+        </gamePlayScoreCurrent>
     </Properties>
 
     <BaseMethods>
+        <statGuildData>
+            <Arg>   UINT8   </Arg>
+        </statGuildData>
+
         <doSendGuildClientData>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       ENTITYCALL              </Arg>
+            <Arg>       UINT32                  </Arg>
         </doSendGuildClientData>
 
         <onFirstCreateGuild>
@@ -857,5 +890,59 @@
             <Arg>       UINT8            </Arg>
             <Arg>       UINT8            </Arg>
         </tryApplyInviteGuild>
+
+        <addCommissionGold>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT32                  </Arg>
+        </addCommissionGold>
+
+        <doShareCommission>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
+            <Arg>       MAILBOX                 </Arg>
+        </doShareCommission>
+
+        <doGetGuildGamePlayData>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       UINT32              </Arg>
+        </doGetGuildGamePlayData>
+
+
+        <onAvatarEnterMics>
+            <Arg>       PLAYER_GBID             </Arg>
+        </onAvatarEnterMics>
+
+        <onAvatarLeaveMics>
+            <Arg>       PLAYER_GBID             </Arg>
+        </onAvatarLeaveMics>
+
+        <onAvatarChangeGuildMics>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </onAvatarChangeGuildMics>
+
+        <onSetGuildMicsSwitch>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+        </onSetGuildMicsSwitch>
+
+        <changeMicsBlock>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </changeMicsBlock>
+
+        <changeMicsBlockAll>
+            <Arg>       BOOL                    </Arg>
+        </changeMicsBlockAll>
+
+        <inviteGuildMics>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </inviteGuildMics>
+
+        <getGuildMicsMembers>
+            <Arg>       ENTITYCALL          </Arg>
+        </getGuildMicsMembers>
     </BaseMethods>
 </root>

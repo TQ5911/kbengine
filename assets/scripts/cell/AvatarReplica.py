@@ -12,6 +12,7 @@ import iFubenSpace
 import EventMgr
 import iGameEntity
 import iMonsterGrp
+import iReplicaAvatar
 import formula
 import math
 import dataUtils
@@ -29,10 +30,11 @@ import awardContext
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import character_charData as CHD
 import skill_skill as SSD
+import buff
 
 class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer, 
                     iGameEntity.IGameEntity, EventMgr.EventMgr, iFubenSpace.IFubenSpace,
-                    iMonsterGrp.IMonsterGrp):
+                    iMonsterGrp.IMonsterGrp, iReplicaAvatar.IReplicaAvatar):
     IsAvatarReplica = True
 
     def __init__(self):
@@ -44,6 +46,7 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         iAICombatUnit.IAICombatUnit.__init__(self)
         EventMgr.EventMgr.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
+        iReplicaAvatar.IReplicaAvatar.__init__(self)
         dataCfg = self.getCreepData()
         self.collidable = dataCfg.get('collisionDiameter', True)
         if self.force == 0:
@@ -53,6 +56,7 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         self.initEntitySkills()
         self.initEntityGrowthData()
         self.onInitPropsCompleted()
+        self.filterEntityGrowthData()
         self.initEntBornAction()
         spaceMgr = self.spaceMgr
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
@@ -122,20 +126,20 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         self.bornState = newState
 
     def setAI(self, aiName):
-        LOG_DBG("AvatarReplica::setAI", self.aiName, self.getDefenderAI(), self.checkActiveAttack())
+        LOG_DBG("AvatarReplica::setAI", self.aiName, self.getDefenderAIName(), self.checkActiveAttack())
         if not aiName:
-            self.aiName = self.getDefenderAI()
+            self.aiName = self.getDefenderAIName()
         else:
             self.aiName = aiName
 
         if self.aiName <= 0:
             return
 
-        self.aiController = aiController.AIController(self.id, self.aiName, self.checkActiveAttack())
+        self.aiController = aiController.AIControllerCls(self.id, self.aiName, self.checkActiveAttack())
         if not self.aiController:
             return
 
-        if self.aiController.needTickOnce():
+        if self.aiController.needOnceTick():
             self.startThink()
 
     def initEntitySkills(self, creepData=None):
@@ -151,9 +155,9 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             #cdDelta = skill['cdDelta']
 
             wight, switch = (SSD.datas[skillId].get('autoBattleWeight', 10), 1)
-            if utils.hasSkillTagById(skillId, gameconst.SkillTag.DodgeSkill):
+            if utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.DodgeSkill):
                 wight, switch = (0, 0)
-            #elif utils.hasSkillTagById(skillId, gameconst.SkillTag.GeneralSkill):
+            #elif utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.GeneralSkill):
             #    wight, switch = (10, 1)
                 
             _skillList.append(skillId)
@@ -172,21 +176,21 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         buffData = {'buffs': []}
         buffList = buffData['buffs']
         for buffId, buffMap in self.buffMgrDic.items():
-            for buffSrcKey, buffVal in buffMap.items():
-                data = {
-                    'tStartTime': buffVal.tStartTime,
-                    'attNum': buffVal.attNum,
-                    'skillNum': buffVal.skillNum,
-                    'beatNum': buffVal.beatNum
+            for _buffSrcKey, _buffVal in buffMap.items():
+                _data = {
+                    'tStartTime': _buffVal.tStartTime,
+                    'attNum': _buffVal.attNum,
+                    'skillNum': _buffVal.skillNum,
+                    'beatNum': _buffVal.beatNum
                 }
-                buffInfo = {
+                _buffInfo = {
                     'buffId': buffId,
-                    'buffSrcKey': buffSrcKey,
-                    'level': buffVal.level,
+                    'buffSrcKey': _buffSrcKey,
+                    'level': _buffVal.level,
                     'releaseId': 0,
-                    'data': data
+                    'data': _data,
                 }
-                buffList.append(buffInfo)
+                buffList.append(_buffInfo)
         return buffData
 
     def initEntityGrowthData(self):
@@ -195,10 +199,8 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         for buffInfo in buffs:
             buffId = buffInfo['buffId']
             level = buffInfo['level']
-            #buffSrcKey = buffInfo['buffSrcKey']
-            #releaseId = buffInfo['releaseId']
-            #data = buffInfo['data']
-            self.addBuff(buffId, level, self.id)
+            duration = buffInfo['duration']
+            self.addBuff(buffId, level, self.id, duration)
         LOG_DBG("AvatarReplica::initEntityGrowthData2", self.getBuffData())
 
     def onInitPropsCompleted(self):
@@ -212,6 +214,15 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             setattr(self, prop, propValDic[prop])
             #LOG_DBG("AvatarReplica::onInitPropsCompleted self/avatar prop/value", prop, avatar.getProp(prop), getattr(self, prop))
 
+    def filterEntityGrowthData(self):
+        buffIdList = []
+        for buffId, buffMap in self.buffMgrDic.items():
+            if buff.Buff.getKind(buffId) >= 0:
+                continue
+            buffIdList.append(buffId)
+        for buffId in buffIdList:
+            self.removeBuff(buffId)
+    
     def overwriteProps(self):
         LOG_DBG("AvatarReplica::overwriteProps")
         overwriteProps = self.tmpProps.pop('overwriteProps', {})
@@ -219,10 +230,10 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         initMpMult = overwriteProps.get('mpMult', 1.0)
         LOG_DBG("AvatarReplica::overwriteProps self overwriteProps, hpMult, mpMult", overwriteProps, initHpMult, initMpMult)
         if initHpMult > 0:
-            self.fullHp = max(1, math.ceil(self.fullHp * initHpMult))
+            self.addProp("mulFullHp", max(0, initHpMult - 1))
             self.hp = self.fullHp
         if initMpMult > 0:
-            self.fullMp = max(1, math.ceil(self.fullMp * initMpMult))
+            self.addProp("mulFullMp", max(0, initMpMult - 1))
             self.mp = self.fullMp
         LOG_DBG("AvatarReplica::overwriteProps self hp/fullHp", self.hp, self.fullHp)
         LOG_DBG("AvatarReplica::overwriteProps self mp/fullMp", self.mp, self.fullMp)
@@ -244,10 +255,10 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         self.aiController and self.aiController.tickOnce()
 
     def _addTrap(self):
-        radii = self.getAlertDistance()
-        if radii <= 0:
+        _radii = self.getAlertDistance()
+        if _radii <= 0:
             return
-        self.hateTrapId = self.addProximity(radii, radii, gameconst.AGGRO_TRIGGER_TRAP)
+        self.hateTrapId = self.addProximity(_radii, _radii, gameconst.AGGRO_TRIGGER_TRAP)
         leaveAoiRange = self.getLeaveAlertDistance()
         self.addProximity(leaveAoiRange, 0.0, gameconst.AOI_EXIT_TRAP)
 
@@ -259,10 +270,10 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
 
     def onWitnessed(self, isWitnessed):
         LOG_DBG("AvatarReplica::onWitnessed", isWitnessed)
-        if self.aiController and self.aiController.needTickOnce():
+        if self.aiController and self.aiController.needOnceTick():
             self.startThink()
 
-        if not self.aiController or not self.aiController.needTickOnce():
+        if not self.aiController or not self.aiController.needOnceTick():
             self.stopThink()
 
         if not isWitnessed and self.aiController:
@@ -309,7 +320,7 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         kwargs['delay'] = delay
         LOG_DBG("AvatarReplica::onDead", killer, args, kwargs)
         super(AvatarReplica, self).onDead(killer, *args, **kwargs)
-        self.removeAllBuff()
+        self.doRemoveAllBuff()
         self.removeMoveController()
         self.destroySummonOnDead()
         #self.cancelRouting()
@@ -346,21 +357,6 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
     def creepbaseId(self):
         return self.replicaId
 
-    def addUltraSkillPower(self, addVal, context = None):
-        if addVal <= 0:
-            return
-
-        _ultSkillId = CHD.datas[self.school]['ult']
-        ''''''
-        if not self.hasSkill(_ultSkillId):
-            return
-
-        ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
-        self.ultraSkillPower = min(ultimatePowerMax, self.ultraSkillPower + addVal)
-
-    def getInscriptionEffects(self, skillID, effectType):
-        return self.glyphEquipData.getInscriptionEffects(skillID, effectType)
-    
     def changeMorphStateCell(self, morphState):
         if self.skillPropInfo:
             for _idx, _skillId in enumerate(self.skillPropInfo[0]):

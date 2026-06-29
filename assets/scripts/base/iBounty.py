@@ -12,6 +12,8 @@ import gamesql
 import elasticUtils
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import message_Message_def as MMD
+import agent_agentFunction as A_AFD
+import agent_agentConfig as A_ACD
 import visible_visible as UVVD
 import const_const as CONST
 from BountyInfo import bountyItem
@@ -91,6 +93,7 @@ class IBounty(object):
             self.cell.setHunterInfo(self.hunterInfo.toSyncDict(), gameconst.UpdateHunterBuffFlag.ADD)
         LOG_INFO("IBounty::bountyOnLogin end")
 ################################################################################
+    @gamedecorator.checkGameconfigEnable('order')
     def reqGetAvatarBountyInfo(self, exposed, abType):
         LOG_INFO("IBounty::reqGetAvatarBountyInfo", abType)
         if abType not in gameconst.AvatarBountyInfoType.VALID_AVATAR_BOUNTY_TYPE:
@@ -155,7 +158,13 @@ class IBounty(object):
         self.client.onAvatarBountyInfo(gameconst.AvatarBountyInfoType.HUNTER, gameconst.AvatarBountyInfoUpdateType.CLIENT, [hunterItem.toClientDict()])
 
 ################################################################################
+    @gamedecorator.checkGameconfigEnable('order')
     def reqPublishBounty(self, exposed, preyName, money, bountyType, hunterName):
+        if not self.checkAuthDisassembleAndMsg(
+                A_AFD.KillOrder, 
+                A_ACD.datas['restrictedPromptMsg1']['value']):
+            return
+
         now = utils.curTS()
         publishItem = self.getTempMiscProp(gameconst.EntityPropsEnum.publishBounty, None)
         if publishItem:
@@ -410,6 +419,7 @@ class IBounty(object):
         stubBox.onWaitForPrePublishBounty(playerbox, prePublishDict)
         self.client.onNoticeAssignedHunter(prePublishDict)
 
+    @gamedecorator.checkGameconfigEnable('order')
     def reqReplyAssignedHunter(self, exposed, uuid, res):
         LOG_INFO("IBounty::reqReplyAssignedHunter", res)
 
@@ -422,8 +432,13 @@ class IBounty(object):
             LOG_INFO("IBounty::reqReplyAssignedHunter carry info")
         gameengine.getGlobalBase('BountyStub').onHunterPrePublishBountyRes(self, hunterItem.toSyncDict(), res)
 ################################################################################
+    @gamedecorator.checkGameconfigEnable('order')
     def reqAcceptBounty(self, exposed, uuid):
         LOG_INFO("IBounty::reqAcceptBounty", uuid)
+        if not self.checkAuthDisassembleAndMsg(
+                A_AFD.KillOrder, 
+                A_ACD.datas['restrictedPromptMsg1']['value']):
+            return
 
         now = utils.curTS()
         acceptItem = self.getTempMiscProp(gameconst.EntityPropsEnum.acceptBounty, None)
@@ -683,6 +698,7 @@ class IBounty(object):
                 self.cell.setHunterInfo(self.hunterInfo.toSyncDict(), gameconst.UpdateHunterBuffFlag.NONE)
                 self.reqGetAvatarBountyInfo(self.gbID, gameconst.AvatarBountyInfoType.HUNTER)
 ################################################################################
+    @gamedecorator.checkGameconfigEnable('order')
     def reqGetPublicRankList(self, exposed, brType, versionId):
         LOG_INFO("IBounty::reqGetPublicRankList", brType, versionId)
         if brType not in gameconst.BountyRankType.ALL_VALID_RANK_TYPE:
@@ -690,6 +706,7 @@ class IBounty(object):
 
         gameengine.getGlobalBase('BountyStub').getShowPublicRankList(self, brType, versionId)
 
+    @gamedecorator.checkGameconfigEnable('order')
     def reqGetPublicBountyList(self, exposed, startIdx, versionId):
         LOG_INFO("IBounty::reqGetPublicBountyList", startIdx, versionId)
         if startIdx < 0:

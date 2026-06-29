@@ -51,11 +51,11 @@ class ImpEquipment(object):
         self.base.streamStringProxy(zStr, '', gameconst.StreamStringID.BODY_EQUIP_DATA)
         return
 
-    def applyBodyEquipsOnLogin(self):
-        self.bodyEquipData.applyBodyEquipsProps(self, isLogin=True)
-
     def syncBodyEquipDressData(self):
         self.base.updateBodyEquipDressData(self.bodyEquipData.getBodyEquipScoreDic())
+
+    def applyBodyEquipsOnLogin(self):
+        self.bodyEquipData.applyBodyEquipsProps(self, isLogin=True)
 
     def cellDressEquipment(self, opUUID, gridObjDic, dstSlotId):
         LOG_INFO('in cellDressEquipment:', gridObjDic, dstSlotId)
@@ -69,25 +69,25 @@ class ImpEquipment(object):
             self.unlockBodyEquips()
             return
 
-        bagEquipItem = itemFactory.ItemFactory.createItemWithSavedDict(gridObjDic)
+        _bagEquipItem = itemFactory.ItemFactory.createItemWithSavedDict(gridObjDic)
 
-        slotId, bodyEquipItem = self.bodyEquipData.getDressSlotInfo(bagEquipItem, dstSlotId)
+        slotId, bodyEquipItem = self.bodyEquipData.getDressSlotInfo(_bagEquipItem, dstSlotId)
         if slotId is None:
             self.base.dressEquipmentCB(opUUID, gameconst.DressEquipOpEnum.EQUIP_OP_FAILED, {})
             self.unlockBodyEquips()
             return
         
         # 检查等级穿戴限制
-        qualityData = QD_QDD.datas.get(bagEquipItem.getQuality(), None)
+        qualityData = QD_QDD.datas.get(_bagEquipItem.getQuality(), None)
         if not qualityData:
-            LOG_WARN('   in cellDressEquipment, missing quality data cfg ', bagEquipItem.getQuality())
+            LOG_WARN('   in cellDressEquipment, missing quality data cfg ', _bagEquipItem.getQuality())
             self.base.dressEquipmentCB(opUUID, gameconst.DressEquipOpEnum.EQUIP_OP_FAILED, {})
             self.unlockBodyEquips()
             return
         
         equipLimits = qualityData['equipLimit']
         if not equipLimits:
-            LOG_WARN('   in cellDressEquipment, missing quality limit data cfg ', bagEquipItem.getQuality())
+            LOG_WARN('   in cellDressEquipment, missing quality limit data cfg ', _bagEquipItem.getQuality())
             self.base.dressEquipmentCB(opUUID, gameconst.DressEquipOpEnum.EQUIP_OP_FAILED, {})
             self.unlockBodyEquips()
             return 
@@ -102,7 +102,7 @@ class ImpEquipment(object):
             lastIdx = idx + 1
         
         if lastIdx <= -1:
-            LOG_WARN('   in cellDressEquipment, missing equip no cfg ', bagEquipItem.getQuality())
+            LOG_WARN('   in cellDressEquipment, missing equip no cfg ', _bagEquipItem.getQuality())
             self.base.onMessagePre(GB_GCD.datas['equipWearLowRoleLevel']['value'], [])
             self.base.dressEquipmentCB(opUUID, gameconst.DressEquipOpEnum.EQUIP_OP_FAILED, {})
             self.unlockBodyEquips()
@@ -115,7 +115,7 @@ class ImpEquipment(object):
             
         qualityData = self.bodyEquipData.getDressedQualityDatas(excludeSlotId)
 
-        if qualityData.get(bagEquipItem.getQuality(), 0) >= lastIdx:
+        if qualityData.get(_bagEquipItem.getQuality(), 0) >= lastIdx:
             self.base.onMessagePre(GB_GCD.datas['equipWearLowRoleLevel']['value'], [])
             self.base.dressEquipmentCB(opUUID, gameconst.DressEquipOpEnum.EQUIP_OP_FAILED, {})
             self.unlockBodyEquips()
@@ -123,16 +123,15 @@ class ImpEquipment(object):
 
         if bodyEquipItem is None:
             # only dress
-            self.bodyEquipData.dressEquip(self, slotId, bagEquipItem)
+            self.bodyEquipData.dressEquip(self, slotId, _bagEquipItem)
             self.base.dressEquipmentCB(opUUID, gameconst.DressEquipOpEnum.EQUIP_OP_ONLY_DRESS,
-                                       bagEquipItem.toItemSavedDict())
+                                       _bagEquipItem.toItemSavedDict())
             self.unlockBodyEquips()
-            self.client.onDressEquipment(bagEquipItem.toClientBodyEquipItemDict(slotId))
+            self.client.onDressEquipment(_bagEquipItem.toClientBodyEquipItemDict(slotId))
             return
 
         self.unlockBodyEquips()
-        self.replaceBodyEquip(slotId, opUUID, bagEquipItem, bodyEquipItem)
-        return
+        self.replaceBodyEquip(slotId, opUUID, _bagEquipItem, bodyEquipItem)
 
     def replaceBodyEquip(self, slotId, opUUID, bagEquipItem, bodyEquipItem, swapEnhance=False):
         LOG_INFO('replaceBodyEquip:', slotId, opUUID, bagEquipItem.itemId, bodyEquipItem.itemId, swapEnhance)
@@ -151,12 +150,12 @@ class ImpEquipment(object):
             self.base.cellUndressEquipmentFail(slotId, 'cellUndressEquipment, state conflict')
             return
 
-        bodyEquip = self.bodyEquipData.doBodyUndressEquip(self, slotId)
-        if not bodyEquip:
+        _bodyEquip = self.bodyEquipData.doBodyUndressEquip(self, slotId)
+        if not _bodyEquip:
             self.base.cellUndressEquipmentFail(slotId, 'cellUndressEquipment, data error')
             return
 
-        self.base.cellUndressEquipmentSucc(bodyEquip.toItemSavedDict())
+        self.base.cellUndressEquipmentSucc(_bodyEquip.toItemSavedDict())
 
     def cellLeaseExpireRemoveEquip(self, uniqueId):
         """租赁到期，强制从身上移除装备（不检查状态冲突，但检查装备锁）"""
@@ -276,7 +275,8 @@ class ImpEquipment(object):
         gradeBefore = equipItem.getGrade()
         bindValueBefore = equipItem.getBindValue()
         equipItem.doUpgradeEquip(self, opUUID, upgradeType, targetLv, onBody=True)
-        equipItem.setBindValue(equipItem.getOriginalBindValue() + bindValue)
+        if bindValue > 0:
+            equipItem.addBindValue(bindValue)
         bindValueAfter = equipItem.getBindValue()
         self.updateEquipmentScore()
         self.bodyEquipData.updateEquipDressAppearance(self, equipItem.uniqueId)
@@ -328,12 +328,9 @@ class ImpEquipment(object):
             ret = dataUtils.checkEquipmentSpiritType(equipItem.equipAttr.equipType)
             if not ret:
                 LOG_ERR('   in reqEquipSpiritWashing, equipment can not affix, equipment:', equipItem)
-                return False
-
-            if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipSpiritWashing'):
-                LOG_WARN('   in reqEquipSpiritWashing, locked')
                 return
 
+            # preview 阶段不加锁
             if not equipItem.checkSpiritNum(spiritPos):
                 LOG_ERR('    in reqEquipSpiritWashing, slot is empty')
                 return
@@ -348,41 +345,100 @@ class ImpEquipment(object):
             
             detail = gameclass.AwardDetailCls(uniqueId=equipItem.uniqueId, costCurrencyDic=costCurrencyDic, costItemDic=costItemDic)
             self.base.baseEquipDeductItemsWithBindTypes(costCurrencyDic, costItemDic, itemIds, bindTypes, opUUID, srcType, detail, self,
-                                                        'cellEquipSpiritWashing', (opUUID, equipPos, uniqueId, spiritPos))
+                                                        'cellEquipSpiritWashingPreview', (opUUID, equipPos, uniqueId, spiritPos))
         return
 
-    def cellEquipSpiritWashing(self, opStat, bindValue, unbinValue, opUUID, slotId, uniqueId, spiritPos):
-        LOG_INFO('in cellEquipSpiritWashing:', opStat, bindValue, opUUID, slotId, uniqueId)
-        self.unlockBodyEquips()
+    def cellEquipSpiritWashingPreview(self, opStat, bindValue, unbinValue, opUUID, slotId, uniqueId, spiritPos):
+        LOG_INFO('in cellEquipSpiritWashingPreview:', opStat, bindValue, unbinValue, opUUID, slotId, uniqueId, spiritPos)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
-            LOG_INFO('     in cellEquipSpiritWashing, cost items not enough')
+            LOG_INFO('     in cellEquipSpiritWashingPreview, cost items not enough')
             return
             
         equipItem = self.bodyEquipData.getEquipItem(slotId)
+        if not equipItem or equipItem.uniqueId != uniqueId:
+            LOG_WARN('   in cellEquipSpiritWashingPreview, equip not found or uniqueId not matched:', slotId, uniqueId)
+            return
+
+        ret, _, _ = equipItem.doEquipSpiritWashingPreview(self, spiritPos, unbinValue)
+        if not ret:
+            LOG_ERR('   in cellEquipSpiritWashingPreview, calc preview failed:', slotId, spiritPos)
+            return
+
+        previewSpiritData = equipItem.equipAttr.previewSpiritDatas[spiritPos]
+        previewScore = equipItem.calcSpiritWashingPreviewScore(spiritPos)
+        spiritBindType = gameconst.ItemBindType.BIND if bindValue > 0 else gameconst.ItemBindType.NORMAL
+        equipItem.setPreviewSpiritBindType(spiritPos, spiritBindType)
+        self.client.onEquipSpiritWashingPreview(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, spiritPos,
+                                                previewSpiritData.toClientData(), previewScore,
+                                                spiritBindType, equipItem.bindType, opUUID)
+        return
+
+    @gamedecorator.checkGameconfigEnable('equip_spirit')
+    @utils.isMyself
+    def reqEquipSpiritWashingConfirm(self, exposed, equipIn, equipPos, spiritPos, uniqueId):
+        LOG_INFO('in reqEquipSpiritWashingConfirm:', equipIn, equipPos, spiritPos, uniqueId)
+        if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
+            self.base.bagEquipSpiritWashingConfirm(equipPos, spiritPos, uniqueId)
+            return
+        elif equipIn != gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
+            LOG_WARN('   in reqEquipSpiritWashingConfirm, unknown equipIn:', equipIn)
+            return
+
+        equipItem = self.bodyEquipData.getEquipItem(equipPos)
+        if not equipItem or equipItem.uniqueId != uniqueId:
+            LOG_WARN('   in reqEquipSpiritWashingConfirm, equip not found or uniqueId not matched:', equipPos, uniqueId)
+            self.client.onEquipSpiritWashingConfirmFail(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos)
+            return
+
+        if spiritPos >= len(equipItem.equipAttr.previewSpiritDatas):
+            LOG_WARN('   in reqEquipSpiritWashingConfirm, preview data not found:', equipPos, spiritPos)
+            self.client.onEquipSpiritWashingConfirmFail(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos)
+            return
+
+        previewSpiritData = equipItem.equipAttr.previewSpiritDatas[spiritPos]
+        if not previewSpiritData or len(previewSpiritData.GetSpiritAffixes()) == 0:
+            LOG_WARN('   in reqEquipSpiritWashingConfirm, preview data is empty:', equipPos, spiritPos)
+            self.client.onEquipSpiritWashingConfirmFail(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos)
+            return
+
+        if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipSpiritWashingConfirm'):
+            LOG_WARN('   in reqEquipSpiritWashingConfirm, locked')
+            self.client.onEquipSpiritWashingConfirmFail(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos)
+            return
 
         spiritDataBefore = equipItem.getSpiritDatas()
-        addBindValueBefore = equipItem.getAddBindValueStatus()
         bindValueBefore = equipItem.getBindValue()
-        if bindValue > 0:
-            equipItem.updateBindValue()
-        equipItem.removeEquipEffectToAvatar(self)
-        ret, _, _ = equipItem.doEquipSpiritWashing(self, spiritPos, unbinValue)
-        # 记录附灵绑定状态：消耗绑定材料则为绑定，否则为非绑
-        if ret:
-            if bindValue > 0:
-                equipItem.equipAttr.spiritBindTypes[spiritPos] = gameconst.ItemBindType.BIND
-            else:
-                equipItem.equipAttr.spiritBindTypes[spiritPos] = gameconst.ItemBindType.NORMAL
-        equipItem.applyEquipEffectToAvatar(self)
+
+        ret = equipItem.doEquipSpiritWashingConfirm(self, spiritPos, onBody=True)
+        if not ret:
+            LOG_ERR('   in reqEquipSpiritWashingConfirm, apply failed:', equipPos, spiritPos)
+            self.unlockBodyEquips()
+            self.client.onEquipSpiritWashingConfirmFail(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos)
+            return
+
         self.updateEquipmentScore()
         bindValueAfter = equipItem.getBindValue()
-        if ret:
-            spiritData = equipItem.equipAttr.spiritDatas[spiritPos]
-            LogTrackingMgr.LogTrackingMgr.equip_spirit(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
-                                                        equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, spiritDataBefore,\
-                                                        equipItem.getSpiritDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, equipItem.getEquipScore(), spiritPos, bindValueBefore, bindValueAfter)
-            self.client.onEquipSpiritWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, spiritData.toClientData(), spiritPos,
-                                                 equipItem.getEquipScore(), equipItem.equipAttr.spiritBindTypes[spiritPos], equipItem.bindType)
+
+        # 记录附灵绑定状态：消耗绑定材料则为绑定，否则为非绑
+        spiritBindType = gameconst.ItemBindType.BIND if equipItem.isPreviewSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+        equipItem.removePreviewSpiritBindType(spiritPos)
+        equipItem.setSpiritBindType(spiritPos, spiritBindType)
+
+        spiritData = equipItem.equipAttr.spiritDatas[spiritPos]
+        self.client.onEquipSpiritWashingSucc(
+            gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY,
+            equipPos,
+            spiritData.toClientData(),
+            spiritPos,
+            equipItem.getEquipScore(),
+            spiritBindType,
+            equipItem.bindType
+        )
+        self.unlockBodyEquips()
+
+        LogTrackingMgr.LogTrackingMgr.equip_spirit(self.gbId, self.clientDistinctIdCell, 0, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
+                                                    equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, spiritDataBefore,\
+                                                    equipItem.getSpiritDatas(), 0, 0, spiritBindType, equipItem.getEquipScore(), spiritPos, bindValueBefore, bindValueAfter)
         return
 
     @gamedecorator.checkGameconfigEnable('equip_soul')
@@ -421,7 +477,7 @@ class ImpEquipment(object):
                                                         'bodyEquipSoulSocketDeductItemsCB', (opUUID, equipPos, soulGridId))
         return
 
-    def cellEquipSoulSocket(self, opStat, bindValue, unbinValue, opUUID, slotId, rollProps, soulItemId):
+    def cellEquipSoulSocket(self, opStat, bindValue, unbinValue, opUUID, slotId, rollProps, soulItemId, soulBindType):
         LOG_INFO('in cellEquipSoulSocket:', opStat, bindValue, opUUID, slotId, rollProps, soulItemId)
         self.unlockBodyEquips()
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
@@ -430,13 +486,9 @@ class ImpEquipment(object):
             
         equipItem = self.bodyEquipData.getEquipItem(slotId)
 
-        if bindValue > 0:
-            equipItem.updateBindValue()
-        # 记录魂魄绑定状态：消耗绑定材料则为绑定，否则为非绑
-        if bindValue > 0:
-            equipItem.equipAttr.soulBindType = gameconst.ItemBindType.BIND
-        else:
-            equipItem.equipAttr.soulBindType = gameconst.ItemBindType.NORMAL
+        # 记录魂魄绑定状态
+        equipItem.setSoulBindType(soulBindType)
+        
         equipItem.removeEquipEffectToAvatar(self)
         ret = equipItem.doEquipSoulSocket(self, rollProps, soulItemId, True)
         equipItem.applyEquipEffectToAvatar(self)
@@ -584,32 +636,27 @@ class ImpEquipment(object):
         equipItem = self.bodyEquipData.getEquipItem(slotId)
 
         glyphDataBefore = equipItem.getGlyphDatas()
-        addBindValueBefore = equipItem.getAddBindValueStatus()
         bindValueBefore = equipItem.getBindValue()
-        if bindValue > 0:
-            equipItem.updateBindValue()
         equipItem.removeEquipEffectToAvatar(self)
         ret, _, _ = equipItem.doEquipGlyphWashing(self, glyphPos)
-        # 记录铭文绑定状态：消耗绑定材料则为绑定，否则为非绑
-        if ret:
-            if bindValue > 0:
-                equipItem.equipAttr.glyphBindTypes[glyphPos] = gameconst.ItemBindType.BIND
-            else:
-                equipItem.equipAttr.glyphBindTypes[glyphPos] = gameconst.ItemBindType.NORMAL
+
         equipItem.applyEquipEffectToAvatar(self)
         self.updateEquipmentScore()
         bindValueAfter = equipItem.getBindValue()
         if ret:
+            # 记录铭文绑定状态
+            glyphBindType = gameconst.ItemBindType.BIND if bindValue > 0 else gameconst.ItemBindType.NORMAL
+            equipItem.setGlyphBindType(glyphPos, glyphBindType)
             glyphData = equipItem.equipAttr.getGlyphData(glyphPos)
             self.bodyEquipData.recalculateAllInscriptionEffects(self)
             
             LogTrackingMgr.LogTrackingMgr.equip_glyph(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
                                                         equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, glyphDataBefore,\
-                                                        equipItem.getGlyphDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, equipItem.getEquipScore(), glyphPos // 2, glyphPos, bindValueBefore, bindValueAfter)
+                                                        equipItem.getGlyphDatas(), 0, 0, bindValue, equipItem.getEquipScore(), glyphPos // 2, glyphPos, bindValueBefore, bindValueAfter)
 
 
             self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, glyphPos, glyphData.toClientData(),
-                                                equipItem.getEquipScore(), equipItem.equipAttr.glyphBindTypes[glyphPos], equipItem.bindType)
+                                                equipItem.getEquipScore(), glyphBindType, equipItem.bindType)
             
             self.base.triggerAchievement(gameconst.AchieveType.INSCRIPTION)
         return
@@ -666,10 +713,9 @@ class ImpEquipment(object):
         blessDataBefore = equipItem.getBlessDatas()
         blessLvRateBefore = equipItem.getBlessLvRate()
         maxBlessLvBefore = equipItem.getBlessMaxLv()
-        addBindValueBefore = equipItem.getAddBindValueStatus()
         bindValueBefore = equipItem.getBindValue()
         if bindValue > 0:
-            equipItem.updateBindValue()
+            equipItem.addBindBlessCost(bindValue)
         equipItem.removeEquipEffectToAvatar(self)
         ret = equipItem.doEquipBlessing(self)
         equipItem.applyEquipEffectToAvatar(self)
@@ -681,7 +727,7 @@ class ImpEquipment(object):
         if ret:
             LogTrackingMgr.LogTrackingMgr.equip_bless(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
                                                         equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, blessDataBefore, \
-                                                        equipItem.getBlessDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, blessLvRateBefore, equipItem.getBlessLvRate(), \
+                                                        equipItem.getBlessDatas(), 0, 0, bindValue, blessLvRateBefore, equipItem.getBlessLvRate(), \
                                                         maxBlessLvBefore, equipItem.getBlessMaxLv(), equipItem.getEquipScore(), bindValueBefore, bindValueAfter)
 
             blessAffixes = []
@@ -741,56 +787,41 @@ class ImpEquipment(object):
     def getBodyEquipExtraSkillLv(self, skillId):
         return self.bodyEquipData.getEquipsAddSkillLv(self, skillId)
 
-    def addPropByGear(self, target, context, propList, startIdx=0, endIdx=-1):
-        if context.actionType == actionContext.ACTION_EQUIP:
-            context.affixItem.addPropByEquip(self, propList, context.affixVals, startIdx=startIdx, endIdx=endIdx)
-        elif context.actionType == actionContext.ACTION_EQUIP_SET:
-            context.bodyEquips.addPropBySet(self, propList, context.vals, startIdx=startIdx, endIdx=endIdx)
-        return
-
-    def addSingleSkLvByGear(self, target, context, skillId, valIdx=0):
-        if context.actionType == actionContext.ACTION_EQUIP:
-            context.affixItem.addSingleSkLvByEquip(self, skillId, context.affixVals, context.isLogin, valIdx=valIdx)
-        return
-
-    def addClassSkLvByGear(self, target, context, schoolList, valIdx=0):
-        for school in schoolList:
-            if self.school != school:
-                continue
-            if context.actionType == actionContext.ACTION_EQUIP:
-                context.affixItem.addClassSkLvByEquip(self, context.affixVals, school, valIdx, context.isLogin)
-        return
+    def addPropByGear(self, _, ctx, propList, startIdx=0, endIdx=-1):
+        if ctx.actionType == actionContext.ACTION_EQUIP:
+            ctx.affixItem.addPropByEquip(self, propList, ctx.affixVals, startIdx=startIdx, endIdx=endIdx)
+        elif ctx.actionType == actionContext.ACTION_EQUIP_SET:
+            ctx.bodyEquips.addPropBySet(self, propList, ctx.vals, startIdx=startIdx, endIdx=endIdx)
 
     def onBodyEquipLoseSoulRecovery(self, equipUniqueIdList):
         LOG_INFO('in onBodyEquipLoseSoulRecovery:', equipUniqueIdList)
         gridIdList = []
         equipDataList = []
-        for uniqueId in equipUniqueIdList:
-            slotId, equipItem = self.bodyEquipData.getBodyEquipByUniqueId(uniqueId)
-            if not equipItem:
-                LOG_WARN('       in onBodyEquipLoseSoulRecovery, no lose soul equip:', slotId, uniqueId)
+        for _uniqueId in equipUniqueIdList:
+            slotId, _equipItem = self.bodyEquipData.getBodyEquipByUniqueId(_uniqueId)
+            if not _equipItem:
+                LOG_WARN('       in onBodyEquipLoseSoulRecovery, no lose soul equip:', slotId, _uniqueId)
                 continue
 
-            if equipItem.loseSoulHasFixed():
-                LOG_WARN('       in onBodyEquipLoseSoulRecovery, equip already return to normal:', slotId, equipItem.itemId)
+            if _equipItem.loseSoulHasFixed():
+                LOG_WARN('       in onBodyEquipLoseSoulRecovery, equip already return to normal:', slotId, _equipItem.itemId)
                 continue
 
-            equipItem.fixLoseSoul()
-            equipItem.applyEquipEffectToAvatar(self)
+            _equipItem.fixLoseSoul()
+            _equipItem.applyEquipEffectToAvatar(self)
             gridIdList.append(slotId)
-            equipDataList.append(equipItem.toClientEquipItemDict())
+            equipDataList.append(_equipItem.toClientEquipItemDict())
 
         if gridIdList:
             self.updateEquipmentScore()
-            self.client.onEquipFixLoseSoulSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, gridIdList, equipDataList)
-
-        return
+            self.client.onEquipFixLoseSoulSucc(
+                gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, gridIdList, equipDataList)
 
     def sendItemLinkInfoCell(self, box, uniqueId, itemId):
         if dataUtils.isEquipItemByItemId(itemId):
-            for slotId, item in self.bodyEquipData.equips_map.items():
-                if item.itemId == itemId and item.uniqueId == uniqueId:
-                    box.client.onQueryItemLink(uniqueId, item.toItemSavedDict())
+            for _item in self.bodyEquipData.equips_map.values():
+                if _item.itemId == itemId and _item.uniqueId == uniqueId:
+                    box.client.onQueryItemLink(uniqueId, _item.toItemSavedDict())
                     return
         box.onMessagePre(MMD.datas.channel_noItem, [])
 
@@ -871,9 +902,10 @@ class ImpEquipment(object):
                 ret, _, _ = equipItem.doEquipGlyphWashing(self, glyphPos, affixIds=[affixId1, affixId2])
                 if ret:
                     glyphData = equipItem.equipAttr.getGlyphData(glyphPos)
+                    glyphBindType = gameconst.ItemBindType.BIND if glyphPos in equipItem.equipAttr.glyphBindTypes else gameconst.ItemBindType.NORMAL
                     self.bodyEquipData.recalculateAllInscriptionEffects(self)
                     self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, glyphPos, glyphData.toClientData(),
-                                                        equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType)
+                                                        equipItem.getEquipScore(), glyphBindType, equipItem.bindType)
             return True
         else:
             LOG_ERR('in gmGlyphWashingEquips, error equipPos ', equipPos, itemId, affixId1, affixId2)
@@ -934,18 +966,19 @@ class ImpEquipment(object):
         if not bodyEquip:
             LOG_ERR('in dropEquip, no equip in slotId:', slotId)
             return
-
-        LogTrackingMgr.LogTrackingMgr.Drop_Equip(
+        
+        LogTrackingMgr.LogTrackingMgr.drop_equip(
             self.gbId,
             self.clientDistinctIdCell, 
             self.gbId,
+            self.name,
+            self.accountNameCell,
             bodyEquip.uniqueId,
             bodyEquip.itemId,
             bodyEquip.getQuality(),
             bodyEquip.getGrade(),
             formula.fetchMapId(self.spaceNo),
             str(self.position),
-            gameconst.EQUIP_OPR_DROP,
         )
 
         self.dropEquipByItem(bodyEquip, killerName)
@@ -1027,20 +1060,6 @@ class ImpEquipment(object):
             srcType=AAC_AACDD.datas.BONUS_SRC_EQUIPMENT_DROP
         )
 
-    def logPickDropEquip(self, uniqueId, itemId, quality, grade):
-        LogTrackingMgr.LogTrackingMgr.Drop_Equip(
-            self.gbId,
-            self.clientDistinctIdCell, 
-            self.gbId,
-            uniqueId,
-            itemId,
-            quality,
-            grade,
-            formula.fetchMapId(self.spaceNo),
-            str(self.position),
-            gameconst.EQUIP_OPR_PICK,
-        )
-
     def onRemoveEquipNotifyCell(self, uniqueId):
         LOG_INFO('in onRemoveEquipNotifyCell:', uniqueId)
         slotId, equipItem = self.bodyEquipData.getEquipItemByUniqueId(uniqueId)
@@ -1051,66 +1070,7 @@ class ImpEquipment(object):
         
     ################################### drop equip end ##############################
 
-    def getInscriptionEffects(self, skillID, effectType):
-        return self.glyphEquipData.getInscriptionEffects(skillID, effectType)
-
     @gamedecorator.checkGameconfigEnable('equip_unbundle')
-    @utils.isMyself
-    def reqEquipBindValueWashing(self, exposed, equipIn, equipPos, uniqueId, washCount):
-        LOG_INFO('in reqEquipBindValueWashing:', equipIn, equipPos, uniqueId, washCount)
-        if washCount <= 0:
-            LOG_ERR('     in reqEquipBindValueWashing, washCount is zero:', washCount)
-            return
-
-        if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
-            self.base.bagEquipBindWashing(equipPos, uniqueId, washCount)
-        elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
-            equipItem = self.bodyEquipData.getEquipItem(equipPos)
-            if not equipItem:
-                LOG_WARN('    in reqEquipBindValueWashing, equipPos error:', equipPos)
-                return
-            if equipItem.uniqueId != uniqueId:
-                LOG_WARN('   in reqEquipBindValueWashing, uniqueId not matched:', equipItem.uniqueId, uniqueId)
-                return
-            if not equipItem.hasBindValue() or equipItem.getBindValue() < washCount:
-                LOG_ERR('     in reqEquipBindValueWashing, no bind value remain:', equipItem.uniqueId)
-                return
-
-            if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipBindValueWashing'):
-                LOG_WARN('   in reqEquipBindValueWashing, locked')
-                return
-            
-            costItemDic, needUnbindItemDic = equipItem.bindValueWashingNeedItems(washCount)
-            if not costItemDic or not needUnbindItemDic:
-                LOG_ERR('     in reqEquipBindValueWashing, cost is empty')
-                return
-            
-            opUUID = KBEngine.genUUID64()
-            src = AAC_AACDD.datas.BONUS_SRC_BINDVALUE_WASHING_BODY_EQUIP
-            detail = gameclass.AwardDetailCls(itemId=equipItem.uniqueId)
-            self.base.baseEquipDeductItems(costItemDic, None, None, None, opUUID, src, detail, self,
-                                  'cellEquipBindValueWashing', [needUnbindItemDic, opUUID, equipPos, washCount], False, True)
-        return
-
-    def cellEquipBindValueWashing(self, opStat, opUUID, slotId, washCount):
-        LOG_INFO('in cellEquipBindValueWashing:', opStat, slotId, washCount)
-        self.unlockBodyEquips()
-        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
-            LOG_WARN('in cellEquipBindValueWashing, items not enouth')
-            self.client.onEquipBindValueWashingFailed(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId)
-            return
-
-        equipItem = self.bodyEquipData.getEquipItem(slotId)
-        addBindValueBefore = equipItem.getAddBindValueStatus()
-        bindValueBefore = equipItem.getBindValue()
-        equipItem.doDecreaseBindValue(opUUID, washCount)
-
-        LogTrackingMgr.LogTrackingMgr.Equip_BindValue_Washing(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, bindValueBefore, \
-                                                             equipItem.getBindValue(), addBindValueBefore, equipItem.getAddBindValueStatus(), washCount)
-
-        self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, equipItem.getBindValue(), equipItem.getAddBindValueStatus(), equipItem.bindType)
-
-    @gamedecorator.checkGameconfigEnable('equip')
     @utils.isMyself
     def reqEquipWash(self, exposed, equipIn, equipPos, uniqueId, washType, count):
         LOG_INFO('in reqEquipWash:', equipIn, equipPos, uniqueId, washType, count)
@@ -1202,7 +1162,7 @@ class ImpEquipment(object):
                     self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ARG_ERR, [], [], isMulti)
                     LOG_WARN('reqMultiEquipEnhance, wrong args 2:', ins, pos, ids)
                     return
-                validBodyItems[equipItem.uniqueId] = [pos, equipItem.getAddBindValueStatus(), currencyDic, costItemDic]
+                validBodyItems[equipItem.uniqueId] = [pos, False, currencyDic, costItemDic]
             else:
                 self.unlockBodyEquips()
                 self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ARG_ERR, [], [], isMulti)
@@ -1237,14 +1197,12 @@ class ImpEquipment(object):
             baseAttrsBefore = equipItem.getBaseAttrs()
             enhanceAttrsBefore = equipItem.getEnhanceAttrs()
             upgradeAttrsBefore = equipItem.getUpgradeAttrs()
-            addBindValueBefore = equipItem.getAddBindValueStatus()
             levelBefore = equipItem.getEnhanceLevel()
             bindValueBefore = equipItem.getBindValue()
 
             if bindValue > 0:
-                equipItem.updateBindValue()
                 # 记录强化消耗的绑定强化石数量（用于装备洗涤）
-                equipItem.equipAttr.bindEnhanceCost += bindValue
+                equipItem.addBindEnhanceCost(bindValue)
 
             enhanceLv = equipItem.equipAttr.getEnhanceLv()
             checkEnhanceLv = enhanceLv + 1
@@ -1271,8 +1229,7 @@ class ImpEquipment(object):
             
             LogTrackingMgr.LogTrackingMgr.equip_enhancement(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
                                                             equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, \
-                                                            upgradeAttrsBefore, equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), addBindValueBefore, \
-                                                            equipItem.getAddBindValueStatus(), bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore(), \
+                                                            upgradeAttrsBefore, equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), 0, 0, bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore(), \
                                                             bindValueBefore, bindValueAfter, equipAttrsBefore, equipAttrsAfter)
 
             self.base.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
@@ -1329,3 +1286,5 @@ class ImpEquipment(object):
 
     def _checkEquipExpire(self):
         self.bodyEquipData.checkEquipExpire(self)
+
+  

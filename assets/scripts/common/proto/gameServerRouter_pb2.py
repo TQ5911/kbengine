@@ -20,8 +20,8 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='gameServerRouter.proto',
   package='RouterGameServer',
   syntax='proto3',
-  serialized_options=_b('\220\001\001'),
-  serialized_pb=_b('\n\x16gameServerRouter.proto\x12\x10RouterGameServer\"\x06\n\x04Void\"4\n\x0b\x42\x61seAppInfo\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x13\n\x0b\x63omponentId\x18\x02 \x01(\r\"e\n\x11OthersBaseRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x13\n\x0b\x64stServerId\x18\x02 \x01(\r\x12\x13\n\x0b\x63omponentId\x18\x03 \x01(\r\x12\x14\n\x0cmemoryStream\x18\x04 \x01(\x0c\x32\xe5\x01\n\x0cRouterServer\x12H\n\x0fregisterBaseapp\x12\x1d.RouterGameServer.BaseAppInfo\x1a\x16.RouterGameServer.Void\x12M\n\x0e\x64oOnOthersBase\x12#.RouterGameServer.OthersBaseRequest\x1a\x16.RouterGameServer.Void\x12<\n\nactiveTick\x12\x16.RouterGameServer.Void\x1a\x16.RouterGameServer.Void2\xad\x01\n\nGameServer\x12Y\n\x1aonRemoteCallFromOthersBase\x12#.RouterGameServer.OthersBaseRequest\x1a\x16.RouterGameServer.Void\x12\x44\n\x12\x61\x63tiveTickCallback\x12\x16.RouterGameServer.Void\x1a\x16.RouterGameServer.VoidB\x03\x90\x01\x01\x62\x06proto3')
+  serialized_options=_b('Z\024../gameServerService\220\001\001'),
+  serialized_pb=_b('\n\x16gameServerRouter.proto\x12\x10RouterGameServer\"\x06\n\x04Void\"4\n\x0b\x42\x61seAppInfo\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x13\n\x0b\x63omponentId\x18\x02 \x01(\r\"e\n\x11OthersBaseRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x13\n\x0b\x64stServerId\x18\x02 \x01(\r\x12\x13\n\x0b\x63omponentId\x18\x03 \x01(\r\x12\x14\n\x0cmemoryStream\x18\x04 \x01(\x0c\"O\n\x12ServerTrafficEntry\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x14\n\x0crequestCount\x18\x02 \x01(\x04\x12\x11\n\tbyteCount\x18\x03 \x01(\x04\"\xb1\x01\n\x0cTrafficStats\x12;\n\rsourceTraffic\x18\x01 \x03(\x0b\x32$.RouterGameServer.ServerTrafficEntry\x12\x39\n\x0b\x64\x65stTraffic\x18\x02 \x03(\x0b\x32$.RouterGameServer.ServerTrafficEntry\x12\x15\n\rtotalRequests\x18\x03 \x01(\x04\x12\x12\n\ntotalBytes\x18\x04 \x01(\x04\"*\n\x17ResetTrafficStatsResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xed\x02\n\x0cRouterServer\x12H\n\x0fregisterBaseapp\x12\x1d.RouterGameServer.BaseAppInfo\x1a\x16.RouterGameServer.Void\x12M\n\x0e\x64oOnOthersBase\x12#.RouterGameServer.OthersBaseRequest\x1a\x16.RouterGameServer.Void\x12<\n\nactiveTick\x12\x16.RouterGameServer.Void\x1a\x16.RouterGameServer.Void\x12\x41\n\x0fgetTrafficStats\x12\x16.RouterGameServer.Void\x1a\x16.RouterGameServer.Void\x12\x43\n\x11resetTrafficStats\x12\x16.RouterGameServer.Void\x1a\x16.RouterGameServer.Void2\xe0\x02\n\nGameServer\x12Y\n\x1aonRemoteCallFromOthersBase\x12#.RouterGameServer.OthersBaseRequest\x1a\x16.RouterGameServer.Void\x12\x44\n\x12\x61\x63tiveTickCallback\x12\x16.RouterGameServer.Void\x1a\x16.RouterGameServer.Void\x12Q\n\x17getTrafficStatsCallback\x12\x1e.RouterGameServer.TrafficStats\x1a\x16.RouterGameServer.Void\x12^\n\x19resetTrafficStatsCallback\x12).RouterGameServer.ResetTrafficStatsResult\x1a\x16.RouterGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -140,9 +140,142 @@ _OTHERSBASEREQUEST = _descriptor.Descriptor(
   serialized_end=207,
 )
 
+
+_SERVERTRAFFICENTRY = _descriptor.Descriptor(
+  name='ServerTrafficEntry',
+  full_name='RouterGameServer.ServerTrafficEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='serverId', full_name='RouterGameServer.ServerTrafficEntry.serverId', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='requestCount', full_name='RouterGameServer.ServerTrafficEntry.requestCount', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='byteCount', full_name='RouterGameServer.ServerTrafficEntry.byteCount', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=209,
+  serialized_end=288,
+)
+
+
+_TRAFFICSTATS = _descriptor.Descriptor(
+  name='TrafficStats',
+  full_name='RouterGameServer.TrafficStats',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='sourceTraffic', full_name='RouterGameServer.TrafficStats.sourceTraffic', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='destTraffic', full_name='RouterGameServer.TrafficStats.destTraffic', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='totalRequests', full_name='RouterGameServer.TrafficStats.totalRequests', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='totalBytes', full_name='RouterGameServer.TrafficStats.totalBytes', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=291,
+  serialized_end=468,
+)
+
+
+_RESETTRAFFICSTATSRESULT = _descriptor.Descriptor(
+  name='ResetTrafficStatsResult',
+  full_name='RouterGameServer.ResetTrafficStatsResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='success', full_name='RouterGameServer.ResetTrafficStatsResult.success', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=470,
+  serialized_end=512,
+)
+
+_TRAFFICSTATS.fields_by_name['sourceTraffic'].message_type = _SERVERTRAFFICENTRY
+_TRAFFICSTATS.fields_by_name['destTraffic'].message_type = _SERVERTRAFFICENTRY
 DESCRIPTOR.message_types_by_name['Void'] = _VOID
 DESCRIPTOR.message_types_by_name['BaseAppInfo'] = _BASEAPPINFO
 DESCRIPTOR.message_types_by_name['OthersBaseRequest'] = _OTHERSBASEREQUEST
+DESCRIPTOR.message_types_by_name['ServerTrafficEntry'] = _SERVERTRAFFICENTRY
+DESCRIPTOR.message_types_by_name['TrafficStats'] = _TRAFFICSTATS
+DESCRIPTOR.message_types_by_name['ResetTrafficStatsResult'] = _RESETTRAFFICSTATSRESULT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Void = _reflection.GeneratedProtocolMessageType('Void', (_message.Message,), dict(
@@ -166,6 +299,27 @@ OthersBaseRequest = _reflection.GeneratedProtocolMessageType('OthersBaseRequest'
   ))
 _sym_db.RegisterMessage(OthersBaseRequest)
 
+ServerTrafficEntry = _reflection.GeneratedProtocolMessageType('ServerTrafficEntry', (_message.Message,), dict(
+  DESCRIPTOR = _SERVERTRAFFICENTRY,
+  __module__ = 'gameServerRouter_pb2'
+  # @@protoc_insertion_point(class_scope:RouterGameServer.ServerTrafficEntry)
+  ))
+_sym_db.RegisterMessage(ServerTrafficEntry)
+
+TrafficStats = _reflection.GeneratedProtocolMessageType('TrafficStats', (_message.Message,), dict(
+  DESCRIPTOR = _TRAFFICSTATS,
+  __module__ = 'gameServerRouter_pb2'
+  # @@protoc_insertion_point(class_scope:RouterGameServer.TrafficStats)
+  ))
+_sym_db.RegisterMessage(TrafficStats)
+
+ResetTrafficStatsResult = _reflection.GeneratedProtocolMessageType('ResetTrafficStatsResult', (_message.Message,), dict(
+  DESCRIPTOR = _RESETTRAFFICSTATSRESULT,
+  __module__ = 'gameServerRouter_pb2'
+  # @@protoc_insertion_point(class_scope:RouterGameServer.ResetTrafficStatsResult)
+  ))
+_sym_db.RegisterMessage(ResetTrafficStatsResult)
+
 
 DESCRIPTOR._options = None
 
@@ -175,8 +329,8 @@ _ROUTERSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=210,
-  serialized_end=439,
+  serialized_start=515,
+  serialized_end=880,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerBaseapp',
@@ -205,6 +359,24 @@ _ROUTERSERVER = _descriptor.ServiceDescriptor(
     output_type=_VOID,
     serialized_options=None,
   ),
+  _descriptor.MethodDescriptor(
+    name='getTrafficStats',
+    full_name='RouterGameServer.RouterServer.getTrafficStats',
+    index=3,
+    containing_service=None,
+    input_type=_VOID,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='resetTrafficStats',
+    full_name='RouterGameServer.RouterServer.resetTrafficStats',
+    index=4,
+    containing_service=None,
+    input_type=_VOID,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_ROUTERSERVER)
 
@@ -217,8 +389,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=442,
-  serialized_end=615,
+  serialized_start=883,
+  serialized_end=1235,
   methods=[
   _descriptor.MethodDescriptor(
     name='onRemoteCallFromOthersBase',
@@ -235,6 +407,24 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     index=1,
     containing_service=None,
     input_type=_VOID,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='getTrafficStatsCallback',
+    full_name='RouterGameServer.GameServer.getTrafficStatsCallback',
+    index=2,
+    containing_service=None,
+    input_type=_TRAFFICSTATS,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='resetTrafficStatsCallback',
+    full_name='RouterGameServer.GameServer.resetTrafficStatsCallback',
+    index=3,
+    containing_service=None,
+    input_type=_RESETTRAFFICSTATSRESULT,
     output_type=_VOID,
     serialized_options=None,
   ),

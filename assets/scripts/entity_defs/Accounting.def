@@ -70,6 +70,9 @@
         <accountOffline> <Exposed/>
         </accountOffline>
 
+        <avatarOffline>
+            <Arg>       UINT8     </Arg>
+        </avatarOffline>
     </BaseMethods>
 
     <ClientMethods>
@@ -83,5 +86,9 @@
         <onGetAvataringCharacter>
             <Arg>       ARRAY   <of>    WAITMAP_CHARACTER   </of>   </Arg>
         </onGetAvataringCharacter>
+
+        <minorAccountConstraintTip>
+            <Arg>       UINT64              </Arg>
+        </minorAccountConstraintTip>
     </ClientMethods>
 </root>

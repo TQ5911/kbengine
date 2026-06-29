@@ -465,7 +465,7 @@ class IMineWarBase(object):
 
         gameengine.getGlobalBase('MineWarStub').doOnMineWarKillCoreForGuild(lineType, self, self.myGuildInfoBase)
 
-        LogTrackingMgr.LogTrackingMgr.MineBattle_KillCore(self.gbID, self.accountEntity.clientDistinctId, lineType, self.guildUUIDBase, self.gbID)
+        LogTrackingMgr.LogTrackingMgr.mineBattle_coreEvent('MineWarStub', '', lineType, self.guildUUIDBase, self.gbID)
 
     @gamedecorator.checkGameconfigEnable('mineBattle')
     def reqMineWarCollectInfo(self, exposed):

@@ -23,17 +23,17 @@ datas = _tools.RODict({
         "ID": "rewardNumCoin",
         "value": 50,
     }),
-    "rewardNumCoinDailyLimit": _tools.RODict({
-        "ID": "rewardNumCoinDailyLimit",
-        "value": 1,
-    }),
     "rewardNumItem": _tools.RODict({
         "ID": "rewardNumItem",
         "value": 30000219,
     }),
+    "rewardNumCoinDailyLimit": _tools.RODict({
+        "ID": "rewardNumCoinDailyLimit",
+        "value": 1,
+    }),
     "rewardNumCoinCost": _tools.RODict({
         "ID": "rewardNumCoinCost",
-        "value": ((1, 30000021, 50), (2, 30000001, 50)),
+        "value": ((1, 30000021, 50),),
     }),
     "teamDunChallengeActID": _tools.RODict({
         "ID": "teamDunChallengeActID",

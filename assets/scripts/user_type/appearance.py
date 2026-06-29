@@ -3,12 +3,10 @@ import KBEngine
 import gameconst
 from KBEDebug import *
 import userType
-import gameengine
 import dataUtils
 import utils
 import json
 
-import appearance_ModelResource as AMRD
 import mounts_mounts as MOUNTS
 import gearBase_gearBase as GBGBD
 
@@ -32,7 +30,7 @@ class FaceDataVal(userType.UserSingleType):
         self.hairIdFaceId = 0
         self.hairColorIdSkinColorId = 0
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'suitId': self.suitId,
             'hairIdFaceId': self.hairIdFaceId,
@@ -58,7 +56,7 @@ class FaceDataVal(userType.UserSingleType):
         return self
 
     def toJsonString(self):
-        return json.dumps(self.toSavedDict())
+        return json.dumps(self.toStreamSavedDic())
 
 
 class OutfitDataVal(userType.UserSingleType):
@@ -77,10 +75,10 @@ class OutfitDataVal(userType.UserSingleType):
             wingId=self.wingId,
             mountId=self.mountId)
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
-            'hairId': self.hairId,
             'clothesId': self.clothesId,
+            'hairId': self.hairId,
             'picFrameId': self.picFrameId,
             'wingId': self.wingId,
             'mountId': self.mountId,
@@ -88,14 +86,14 @@ class OutfitDataVal(userType.UserSingleType):
 
     def initFromDict(self, savedDic):
         self.hairId = savedDic['hairId']
-        self.clothesId = savedDic['clothesId']
         self.picFrameId = savedDic['picFrameId']
+        self.clothesId = savedDic['clothesId']
         self.wingId = savedDic['wingId']
         self.mountId = savedDic['mountId']
         return self
 
     def toJsonString(self):
-        return json.dumps(self.toSavedDict())
+        return json.dumps(self.toStreamSavedDic())
 
 
 class AvatarPhotoDataVal(userType.UserSingleType):
@@ -103,7 +101,7 @@ class AvatarPhotoDataVal(userType.UserSingleType):
         self.avatar = avatarId
         self.avatarFrame = avatarFrameId
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'avatar': self.avatar,
             'avatarFrame': self.avatarFrame,
@@ -115,7 +113,7 @@ class AvatarPhotoDataVal(userType.UserSingleType):
         return self
 
     def toJsonString(self):
-        return json.dumps(self.toSavedDict())
+        return json.dumps(self.toStreamSavedDic())
 
     def setDefaultData(self, avatarId, avatarFrameId):
         self.avatar = avatarId
@@ -137,7 +135,7 @@ class Appearance(userType.UserSingleType):
             outfitData=self.outfitData.clone(),
             faceData=self.faceData.clone())
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'weapon': self.weapon,
             'breast': self.breast,
@@ -153,8 +151,8 @@ class Appearance(userType.UserSingleType):
 
     def _lateReload(self):
         super(Appearance, self)._lateReload()
-        self.faceData.reloadScript()
         self.outfitData.reloadScript()
+        self.faceData.reloadScript()
 
     def initFromDict(self, savedDic):
         self.weapon = savedDic['weapon']
@@ -209,71 +207,64 @@ class Appearance(userType.UserSingleType):
         if self.checkOutfitIdSetup(outfitType, outfitId):
             LOG_WARN("setOutfitId ", outfitId, outfitType)
             return
-        if outfitType == gameconst.OutfitType.wing:
+        if outfitType == gameconst.OutfitEnum.wing:
             self.outfitData.wingId = outfitId
-            outfitName = 'wingId'
-        elif outfitType == gameconst.OutfitType.hair:
+        elif outfitType == gameconst.OutfitEnum.hair:
             self.outfitData.hairId = outfitId
-            outfitName = 'hairId'
-        elif outfitType == gameconst.OutfitType.clothes:
+        elif outfitType == gameconst.OutfitEnum.clothes:
             self.outfitData.clothesId = outfitId
-            outfitName = 'clothesId'
-        elif outfitType == gameconst.OutfitType.picFrame:
+        elif outfitType == gameconst.OutfitEnum.picFrame:
             self.outfitData.picFrameId = outfitId
-            outfitName = 'picFrameId'
-            # owner.updatePicFrameId(self.outfitData.picFrameId)
-        elif outfitType == gameconst.OutfitType.mount:
+        elif outfitType == gameconst.OutfitEnum.mount:
             self.outfitData.mountId = outfitId
-            outfitName = 'mountId'
         else:
             LOG_ERR("setOutfitId wrong type", outfitId)
             return
         owner.allClients.onAppearanceOutfitUpdated(outfitType, outfitId)
-        return
 
     def getOutFitId(self, school, sex, outfitType, outfitId):
         LOG_DBG("getOutFitId", school, sex, outfitType, outfitId)
         return school * 100000 + sex * 10000 + outfitType * 1000 + outfitId
 
-    def removeOutfitId(self, owner, outfitType, outfitId):
+    def removeOutfitById(self, owner, outfitType, outfitId):
         if not self.checkOutfitIdSetup(outfitType, outfitId):
             return
-        if outfitType == gameconst.OutfitType.wing:
+        if outfitType == gameconst.OutfitEnum.wing:
             self.outfitData.wingId = 0
-            outfitName = 'wingId'
-        elif outfitType == gameconst.OutfitType.hair:
+            _outfitName = 'wingId'
+        elif outfitType == gameconst.OutfitEnum.hair:
             self.outfitData.hairId = 0
-            outfitName = 'hairId'
-        elif outfitType == gameconst.OutfitType.clothes:
+            _outfitName = 'hairId'
+        elif outfitType == gameconst.OutfitEnum.clothes:
             self.outfitData.clothesId = 0
-            outfitName = 'clothesId'
-        elif outfitType == gameconst.OutfitType.picFrame:
+            _outfitName = 'clothesId'
+        elif outfitType == gameconst.OutfitEnum.picFrame:
             self.outfitData.picFrameId = 0
-            outfitName = 'picFrameId'
+            _outfitName = 'picFrameId'
             owner.updatePicFrameId(self.outfitData.picFrameId)
-        elif outfitType == gameconst.OutfitType.mount:
+        elif outfitType == gameconst.OutfitEnum.mount:
             self.outfitData.mountId = 0
-            outfitName = 'mountId'
+            _outfitName = 'mountId'
         else:
             LOG_ERR("setOutfitId wrong type", outfitId, outfitType)
             return
         owner.allClients.onAppearanceOutfitUpdated(outfitType, 0)
-        owner.base.updateAccountCharacterOutfit(outfitName, 0)
+        owner.base.updateAccountCharacterOutfit(_outfitName, 0)
 
     def checkOutfitIdSetup(self, outfitType, outfitId):
-        if outfitType == gameconst.OutfitType.wing:
+        if outfitType == gameconst.OutfitEnum.wing:
             if self.outfitData.wingId == outfitId:
                 return True
-        elif outfitType == gameconst.OutfitType.hair:
+        elif outfitType == gameconst.OutfitEnum.hair:
             if self.outfitData.hairId == outfitId:
                 return True
-        elif outfitType == gameconst.OutfitType.clothes:
+        elif outfitType == gameconst.OutfitEnum.clothes:
             if self.outfitData.clothesId == outfitId:
                 return True
-        elif outfitType == gameconst.OutfitType.picFrame:
+        elif outfitType == gameconst.OutfitEnum.picFrame:
             if self.outfitData.picFrameId == outfitId:
                 return True
-        elif outfitType == gameconst.OutfitType.mount:
+        elif outfitType == gameconst.OutfitEnum.mount:
             if self.outfitData.mountId == outfitId:
                 return True
 
@@ -281,19 +272,18 @@ class Appearance(userType.UserSingleType):
 
     def removeAccountOutfitId(self, outfitType, outfitId):
         LOG_DBG("removeAccountOutfitId ", outfitType, outfitId)
-        if outfitType == gameconst.OutfitType.wing:
+        if outfitType == gameconst.OutfitEnum.wing:
             self.outfitData.wingId = 0
-        elif outfitType == gameconst.OutfitType.hair:
+        elif outfitType == gameconst.OutfitEnum.hair:
             self.outfitData.hairId = 0
-        elif outfitType == gameconst.OutfitType.clothes:
+        elif outfitType == gameconst.OutfitEnum.clothes:
             self.outfitData.clothesId = 0
-        elif outfitType == gameconst.OutfitType.picFrame:
+        elif outfitType == gameconst.OutfitEnum.picFrame:
             self.outfitData.picFrameId = 0
-        elif outfitType == gameconst.OutfitType.mount:
+        elif outfitType == gameconst.OutfitEnum.mount:
             self.outfitData.mountId = 0
         else:
             LOG_ERR("removeAccountOutfitId wrong type", outfitId, outfitType)
-            return
 
     def resetOutfitData(self, outfitType, outfitId, expireTime):
         if not self.checkOutfitIdSetup(outfitType, outfitId):
@@ -312,27 +302,22 @@ class AvatarOutfit(userType.UserSingleType):
 
     def _lateReload(self):
         super(AvatarOutfit, self)._lateReload()
-        return
 
     # db -> obj
     def initFromDict(self, savedDataDict):
         self.outfitId = savedDataDict['outfitId']
-        self.outfitType = savedDataDict['outfitType']
         self.expireTime = savedDataDict['expireTime']
+        self.outfitType = savedDataDict['outfitType']
         self.isNew = savedDataDict['isNew']
 
     # obj -> db
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'outfitId': self.outfitId,
-            'outfitType': self.outfitType,
             'expireTime': self.expireTime,
+            'outfitType': self.outfitType,
             'isNew': self.isNew,
         }
-
-    def toClientData(self):
-        clientData = self.toSavedDict()
-        return clientData
 
     def setExpireTime(self, expireTime):
         if not self.expireTime:
@@ -343,48 +328,51 @@ class AvatarOutfit(userType.UserSingleType):
             return
         self.expireTime = expireTime
 
+    def toClientData(self):
+        clientData = self.toStreamSavedDic()
+        return clientData
+
 
 class AvatarOutfitInfo(userType.UserSingleType):
     def __init__(self):
-        self.outfitDict = {}
-
-    def _lateReload(self):
-        super(AvatarOutfitInfo, self)._lateReload()
-        for v in self.outfitDict.values():
-            v.reloadScript()
-        return
+        self.outfitDic = {}
 
     def getOutfitKey(self, outfitType, outfitId):
         return str(outfitType) + str(outfitId)
 
+    def _lateReload(self):
+        super(AvatarOutfitInfo, self)._lateReload()
+        for _v in self.outfitDic.values():
+            _v.reloadScript()
+
     # db -> obj
     def initFromDict(self, savedDataDict):
-        for dataDict in savedDataDict['outfitList']:
+        for _dataDict in savedDataDict['outfitList']:
             outfit = AvatarOutfit()
-            outfit.initFromDict(dataDict)
-            self.outfitDict[self.getOutfitKey(dataDict['outfitType'], dataDict['outfitId'])] = outfit
+            outfit.initFromDict(_dataDict)
+            self.outfitDic[self.getOutfitKey(_dataDict['outfitType'], _dataDict['outfitId'])] = outfit
 
     # obj -> db
-    def toSavedDict(self):
-        outfitList = []
-        for outfit in self.outfitDict.values():
-            outfitList.append(outfit.toSavedDict())
-        return {'outfitList': outfitList, }
+    def toStreamSavedDic(self):
+        _outfitList = []
+        for outfit in self.outfitDic.values():
+            _outfitList.append(outfit.toStreamSavedDic())
+        return {'outfitList': _outfitList, }
 
     def toClientData(self, outfits=None):
-        outfitList = []
+        _outfitList = []
         if not outfits:
-            for outfit in self.outfitDict.values():
-                if not dataUtils.checkOutfitOpen(outfit.outfitType, outfit.outfitId):
+            for outfit in self.outfitDic.values():
+                if not dataUtils.checkOpenOutfit(outfit.outfitType, outfit.outfitId):
                     continue
-                outfitList.append(outfit.toClientData())
+                _outfitList.append(outfit.toClientData())
         else:
-            for outfitType, outfitId in outfits:
-                outfitKey = self.getOutfitKey(outfitType, outfitId)
-                if not dataUtils.checkOutfitOpen(outfitType, outfitId):
+            for _outfitType, outfitId in outfits:
+                outfitKey = self.getOutfitKey(_outfitType, outfitId)
+                if not dataUtils.checkOpenOutfit(_outfitType, outfitId):
                     continue
-                outfitList.append(self.outfitDict[outfitKey].toClientData())
-        return outfitList
+                _outfitList.append(self.outfitDic[outfitKey].toClientData())
+        return _outfitList
 
     def addOutfit(self, owner, outfitType, outfitId, expireTime, isNew=True):
         LOG_INFO("addOutfit ", outfitType, outfitId, expireTime)
@@ -392,8 +380,8 @@ class AvatarOutfitInfo(userType.UserSingleType):
         if not outfit:
             outfit = AvatarOutfit(outfitType, outfitId, expireTime, isNew)
             outfitKey = self.getOutfitKey(outfitType, outfitId)
-            self.outfitDict[outfitKey] = outfit
-            if outfitType == gameconst.OutfitType.mount:
+            self.outfitDic[outfitKey] = outfit
+            if outfitType == gameconst.OutfitEnum.mount:
                 prop = MOUNTS.datas[outfitId]['prop']
                 if prop:
                     owner.cell.updatePropByMount(outfitId, True)
@@ -403,14 +391,14 @@ class AvatarOutfitInfo(userType.UserSingleType):
 
     def removeOutfit(self, owner, outfitType, outfitId):
         LOG_INFO("removeOutfit ", outfitType, outfitId)
-        outfit = self.getOutfitInfo(outfitType, outfitId)
-        if not outfit:
+        _outfit = self.getOutfitInfo(outfitType, outfitId)
+        if not _outfit:
             return
 
         outfitKey = self.getOutfitKey(outfitType, outfitId)
-        self.outfitDict.pop(outfitKey, None)
+        self.outfitDic.pop(outfitKey, None)
 
-        if outfitType == gameconst.OutfitType.mount:
+        if outfitType == gameconst.OutfitEnum.mount:
             prop = MOUNTS.datas[outfitId]['prop']
             if prop:
                 owner.cell.updatePropByMount(outfitId, False)
@@ -420,12 +408,12 @@ class AvatarOutfitInfo(userType.UserSingleType):
 
     def getOutfitInfo(self, outfitType, outfitId):
         outfitKey = self.getOutfitKey(outfitType, outfitId)
-        return self.outfitDict.get(outfitKey, None)
+        return self.outfitDic.get(outfitKey, None)
 
     def setClickOutfit(self, outfitType, outfitId):
         outfitKey = self.getOutfitKey(outfitType, outfitId)
-        if not self.outfitDict.get(outfitKey, None):
+        if not self.outfitDic.get(outfitKey, None):
             LOG_ERR("setClickOutfit ", outfitType, outfitId)
             return
-        self.outfitDict[outfitKey].isNew = False
+        self.outfitDic[outfitKey].isNew = False
         return True

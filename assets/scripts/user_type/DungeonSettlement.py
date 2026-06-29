@@ -19,20 +19,20 @@ import teamMatch_pointsRanking as TM_PR
 
 class DungeonExtraData(userType.UserSingleType):
     def __init__(self, gbId = 0, name = '', school = 0, level = 0, sex = 0, eId = 0):
-        self.gbId = gbId
         self.name = name
+        self.gbId = gbId
         self.school = school
-        self.level = level
         self.sex = sex
+        self.level = level
         self.eId = eId
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
-            'gbId': self.gbId,
             'name': self.name,
+            'gbId': self.gbId,
             'school': self.school,
-            'level': self.level,
             'sex': self.sex,
+            'level': self.level,
             'eId': self.eId,
         }
 
@@ -41,7 +41,7 @@ class DungeonExtraData(userType.UserSingleType):
         return obj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is DungeonExtraData

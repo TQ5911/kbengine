@@ -423,6 +423,22 @@ datas = _tools.RODict({
         "tmxRes": "shiLianFeng_01",
         "weatherType": 0,
     }),
+    "field_heiyandigong_01": _tools.RODict({
+        "sceneRes": "field_heiyandigong_01",
+        "sceneName": "黑炎地宫一层",
+        "defaultMapID": 5201,
+        "returnPos": None,
+        "tmxRes": "heiYanDiGong_01",
+        "weatherType": 0,
+    }),
+    "field_heiyandigong_02": _tools.RODict({
+        "sceneRes": "field_heiyandigong_02",
+        "sceneName": "黑炎地宫二层",
+        "defaultMapID": 5202,
+        "returnPos": None,
+        "tmxRes": "heiYanDiGong_03",
+        "weatherType": 0,
+    }),
     "field_heiyandigong_03": _tools.RODict({
         "sceneRes": "field_heiyandigong_03",
         "sceneName": "黑炎地宫三层",

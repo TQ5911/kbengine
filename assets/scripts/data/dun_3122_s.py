@@ -75,8 +75,10 @@ datas ={
           "PosY": 3.751575,
           "PosZ": 110.0,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 55,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -86,6 +88,7 @@ datas ={
             "RefreshTime": 5.0,
             "RefreshTimedID": 0,
             "Remark": "\u56fa\u5b9a\u8def\u7ebf3",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -104,8 +107,10 @@ datas ={
           "PosY": 3.75157,
           "PosZ": 58.0,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 55,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -164,8 +169,10 @@ datas ={
           "PosY": 3.751575,
           "PosZ": 68.0,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 55,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -225,8 +232,10 @@ datas ={
           "PosY": 3.75157,
           "PosZ": 100.0,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 55,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -315,6 +324,7 @@ datas ={
           "PosY": 3.835837,
           "PosZ": 80.0,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 55,
             "LightPillar": "",
@@ -342,13 +352,16 @@ datas ={
           "Dir": 179.4406,
           "DisplayName": "",
           "EliteCustomID": "",
-          "EntityID": 16002002,
+          "EntityID": 16002005,
           "ID": 31228002,
           "PosX": 69.57,
           "PosY": 8.806934,
           "PosZ": 153.29,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 300.0,

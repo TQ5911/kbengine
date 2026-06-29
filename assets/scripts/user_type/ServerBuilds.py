@@ -51,13 +51,13 @@ class Build(userType.UserSingleType):
         return slots[slotId]
 
     def isRightSlot(self, skillId, slotId):
-        isUltraSkill = utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill)
-        isGeneralSkill = utils.hasSkillTagById(skillId, gameconst.SkillTag.GeneralSkill)
+        isUltraSkill = utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.UltraSkill)
+        _isGeneralSkill = utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.GeneralSkill)
         if slotId is None:
             return False
-        if slotId == 0 and not isGeneralSkill:
+        if slotId == 0 and not _isGeneralSkill:
             return False
-        if slotId != 0 and isGeneralSkill:
+        if slotId != 0 and _isGeneralSkill:
             return False
         if slotId == Build.ULTRA_SKILL_SLOT and not isUltraSkill:
             return False
@@ -67,7 +67,7 @@ class Build(userType.UserSingleType):
         return True
 
     def getSkillRecommendSlot(self, owner, skillId):
-        if utils.hasSkillTagById(skillId, gameconst.SkillTag.UltraSkill):
+        if utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.UltraSkill):
             if not self.activeSkills[Build.ULTRA_SKILL_SLOT]:
                 return Build.ULTRA_SKILL_SLOT
             else:
@@ -78,12 +78,12 @@ class Build(userType.UserSingleType):
             return None
 
         recommendSkills = charData['build']
-        recommendSlot = recommendSkills.index(skillId) if skillId in recommendSkills else None
-        if recommendSlot is not None and not self.activeSkills[recommendSlot]:
-            if not self.isRightSlot(skillId, recommendSlot):
-                LOG_ERR('skill and slot mismatch', recommendSlot, skillId)
+        _recommendSlot = recommendSkills.index(skillId) if skillId in recommendSkills else None
+        if _recommendSlot is not None and not self.activeSkills[_recommendSlot]:
+            if not self.isRightSlot(skillId, _recommendSlot):
+                LOG_ERR('skill and slot mismatch', _recommendSlot, skillId)
                 return None
-            return recommendSlot
+            return _recommendSlot
 
         return None
 
@@ -91,17 +91,17 @@ class Build(userType.UserSingleType):
         return skillId in self.activeSkills
 
     def getSkillCfg(self):
-        slots = self.activeSkills
+        _slots = self.activeSkills
         return [{
             'skillId': skillId,
             'slotId': slotId,
-        } for slotId, skillId in enumerate(slots)]
+        } for slotId, skillId in enumerate(_slots)]
 
     def getLevelsData(self):
         return [{
-            'skillId': skillId,
-            'level': level
-        } for skillId, level in self.skillLevels.items()]
+            'skillId': _skillId,
+            'level': _level
+        } for _skillId, _level in self.skillLevels.items()]
 
     def getData(self, isNeedActive=True, isNeedLevel=True):
         return {
@@ -195,7 +195,7 @@ class Build(userType.UserSingleType):
 
         _morphBaseSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
         if delta > 0 and self.skillLevels[skillId] + delta > self.getMaxLevel(owner, _morphBaseSkillId, _morphBaseSkillId):
-            LOG_DBG('skillLv reach max', owner.id, skillId, self.skillLevels)
+            LOG_DBG('skillLv reach max', owner.id, self.skillLevels, skillId)
             return False
 
         if delta < 0 and self.skillLevels[skillId] + delta < 1:
@@ -262,12 +262,12 @@ class Build(userType.UserSingleType):
         owner.updateSkillLevelSetSummonSlotIdx(skillId, newLevel)
 
         # 被动技能替换的技能一并要升级
-        relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-        skillIdList = [skillId] + list(relatedSkills)
-        for sid in relatedSkills:
-            if sid in self.skillLevels:
-                self.skillLevels[sid] = newLevel
-                owner.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
+        _relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
+        skillIdList = [skillId] + list(_relatedSkills)
+        for _sid in _relatedSkills:
+            if _sid in self.skillLevels:
+                self.skillLevels[_sid] = newLevel
+                owner.updateSkillLevelSetSummonSlotIdx(_sid, newLevel)
 
         owner.onChangeSkillLv(skillId, newLevel)
         owner.client.onUpdateSkillLevel(skillIdList, [newLevel] * len(skillIdList))
@@ -286,11 +286,11 @@ class Build(userType.UserSingleType):
             self.skillLevels[skillId] = 1
             caster.updateSkillLevelSetSummonSlotIdx(skillId, 1)
             relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-            for sid in relatedSkills:
-                totalSkillIdList.append(sid)
-                if sid in self.skillLevels:
-                    self.skillLevels[sid] = 1
-                    caster.updateSkillLevelSetSummonSlotIdx(sid, 1)
+            for _sid in relatedSkills:
+                totalSkillIdList.append(_sid)
+                if _sid in self.skillLevels:
+                    self.skillLevels[_sid] = 1
+                    caster.updateSkillLevelSetSummonSlotIdx(_sid, 1)
             caster.onChangeSkillLv(self.buildId, skillId, 1)
 
         caster.client.onUpdateSkillLevel(totalSkillIdList, [1] * len(totalSkillIdList))
@@ -300,8 +300,8 @@ class Build(userType.UserSingleType):
         return slots
 
     def updateSkillLevel(self, owner, skillIdLevelList):
-        for skillLevelInfo in skillIdLevelList:
-            skillId, skillLevel = skillLevelInfo
+        for _skillLevelInfo in skillIdLevelList:
+            skillId, skillLevel = _skillLevelInfo
 
             if skillId not in self.skillLevels:
                 return False
@@ -310,12 +310,12 @@ class Build(userType.UserSingleType):
             owner.updateSkillLevelSetSummonSlotIdx(skillId, skillLevel)
 
             # 被动技能替换的技能一并要升级
-            relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-            skillIdList = [skillId] + list(relatedSkills)
-            for sid in relatedSkills:
-                if sid in self.skillLevels:
-                    self.skillLevels[sid] = skillLevel
-                    owner.updateSkillLevelSetSummonSlotIdx(sid, skillLevel)
+            _relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
+            skillIdList = [skillId] + list(_relatedSkills)
+            for _sid in _relatedSkills:
+                if _sid in self.skillLevels:
+                    self.skillLevels[_sid] = skillLevel
+                    owner.updateSkillLevelSetSummonSlotIdx(_sid, skillLevel)
 
             owner.onChangeSkillLv(skillId, skillLevel)
             owner.client.onUpdateSkillLevel(skillIdList, [skillLevel] * len(skillIdList))
@@ -330,102 +330,15 @@ class Build(userType.UserSingleType):
         return self.skillLevels[skillId]
 
 
-def buildCheck(fn):
-    @functools.wraps(fn)
+def buildCheck(func):
+    @functools.wraps(func)
     def wrapfn(self, *args, **kwargs):
         if args[0] >= len(self):
-            LOG_ERR(fn.__name__, 'builds has no buildId', args[0])
+            LOG_ERR(func.__name__, 'builds has no buildId', args[0])
             return
 
-        return fn(self, *args, **kwargs)
+        return func(self, *args, **kwargs)
 
     return wrapfn
 
 
-class ServerBuilds(userType.UserListType):
-    def __init__(self):
-        pass
-
-    def getSlotId(self, buildId, skillId, isActive=True):
-        if buildId >= len(self):
-            LOG_ERR('getSlotId builds has no buildId', buildId)
-            return None
-
-        return self[buildId].getSlotId(skillId, isActive)
-
-    @buildCheck
-    def getSkillIdBySlotId(self, buildId, slotId, isActive=True):
-        return self[buildId].getSlotSkillId(slotId, isActive)
-
-    @buildCheck
-    def getBuildMirrorInfo(self, buildId):
-        return {'builds': [self[buildId].getData()]}
-
-    @buildCheck
-    def getBuildClientData(self, buildId):
-        return self[buildId].getData()
-
-    @buildCheck
-    def getClientData(self, buildId):
-        return self[buildId].getData()
-
-    def toClientData(self):
-        builds = []
-        for i, buildVal in enumerate(self):
-            if not self.isBuildUnLocked(i):
-                continue
-
-            builds.append(self.getBuildClientData(i))
-
-        return {'builds': builds}
-
-    def getDBData(self):
-        builds = []
-        for i, buildVal in enumerate(self):
-            builds.append(self.getBuildClientData(i))
-
-        return {'builds': builds}
-
-    @buildCheck
-    def getPassiveSkillClientData(self, buildId):
-        passiveData = self[buildId].getData(isNeedActive=False, isNeedLevel=False)
-        passiveData.pop('skills')
-        passiveData.pop('skillLevels')
-        passiveData.pop('pSkillLevels')
-        return passiveData
-
-    def initBuild(self, buildId, buildName, copyFromBuildVal=None):
-        self[buildId] = Build(buildId, buildName, copyFromBuildVal)
-        return self[buildId]
-
-    def isBuildUnLocked(self, buildId):
-        return self[buildId].buildName
-
-    def buildAddActiveSkill(self, owner, skillId, skillLv):
-        for buildVal in self:
-            if not buildVal:
-                continue
-            buildVal.doAddActiveSkill(owner, skillId, skillLv)
-
-    def setBuildSkillLv(self, owner, skillId, skillLv):
-        for buildVal in self:
-            if not buildVal:
-                continue
-
-            if skillId not in buildVal.skillLevels:
-                continue
-
-            buildVal.skillLevels[skillId] = skillLv
-        owner.onChangeSkillLv(owner.buildId, skillId, skillLv)
-
-    @buildCheck
-    def getSkills(self, buildId, isActive=True):
-        return self[buildId].getSkillIds(isActive)
-
-    def _lateReload(self):
-        super(ServerBuilds, self)._lateReload()
-
-        for i, buildVal in enumerate(self):
-            buildVal.reloadScript()
-
-        return

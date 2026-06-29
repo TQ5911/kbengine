@@ -61,7 +61,7 @@ class IFlowController(object):
         if self.flowController:
             self.flowController.onDungeonNPCReleaseComplete(npcGIDs)
 
-    def flowCtrlDungeonMonsterReleaseComplete(self, monsterGIDs):
+    def flowCtrlDunMonsterReleaseComplete(self, monsterGIDs):
         """释放怪物完成后向controller汇报, spaceMgr调用"""
         if self.flowController:
             self.flowController.onDungeonMonsterReleaseComplete(monsterGIDs)
@@ -131,13 +131,13 @@ class IFlowController(object):
                 _spaceMgr.flowController.onMonsterRestNumberDecreased(
                     self.creepbaseId, gameconst.FLOW_REST_MONSTER_TAG_CBID, _spaceMgr)
 
-    def flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(self, monsterId, newNumber, newTotalNumber):
+    def flowCtrlDunMonsterKillNumIncByMonsterId(self, monsterId, newNumber, newTotalNumber):
         """怪物击杀储量增加时向Controller汇报, spaceMgr 调用(使用原型ID判断)"""
         if self.flowController:
             _monsterGID = 'cbid{}'.format(monsterId)
             self.flowController.onDunMonsterKillNumIncreased(_monsterGID, newNumber, newTotalNumber)
 
-    def flowCtrlDungeonMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
+    def flowCtrlDunMonsterKillNumInc(self, monsterGID, newNumber, newTotalNumber):
         """怪物击杀储量增加时向Controller汇报, spaceMgr调用"""
         if self.flowController:
             self.flowController.onDunMonsterKillNumIncreased(monsterGID, newNumber, newTotalNumber)

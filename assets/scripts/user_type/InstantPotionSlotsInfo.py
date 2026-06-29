@@ -68,6 +68,14 @@ class InstantPotionSlotsVal(userType.UserSingleType):
         self.slots.append(potion)
         return True
 
+    def checkInnerDemonUseItems(self, itemId):
+        for _slot, _potion in enumerate(self.slots):
+            if _potion.itemId != itemId:
+                continue
+            return _potion.isInnerDemonUse()
+
+        return False
+
     def _hasAutoHealHp(self):
         for potion in self.slots:
             if potion.isHp() and utils.bhas(potion.potionState, gameconst.PotionState.AUTO):

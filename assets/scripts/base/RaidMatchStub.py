@@ -54,11 +54,10 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def postReloadScript(self):
         if hasattr(super(RaidMatchStub, self), 'postReloadScript'):
             super(RaidMatchStub, self).postReloadScript()
-        for v in self.raidsDic.values():
-            v.reloadScript()
-        for v in self.playersDic.values():
-            v.reloadScript()
-        return
+        for _v in self.raidsDic.values():
+            _v.reloadScript()
+        for _v in self.playersDic.values():
+            _v.reloadScript()
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
@@ -112,85 +111,78 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onRaidPlayerMatchInfoUpdate(self, playerInfoDic):
         LOG_INFO('in onRaidPlayerMatchInfoUpdate:', playerInfoDic)
-        pmVal = self.playersDic.get(playerInfoDic['playerGbId'], None)
-        if not pmVal:
+        _pmVal = self.playersDic.get(playerInfoDic['playerGbId'], None)
+        if not _pmVal:
             return
-        pmVal.updateMatchProp(playerInfoDic)
-        return
+        _pmVal.updateMatchProp(playerInfoDic)
 
     def raidPlayerAutoMatch(self, playerMatchDic):
         LOG_INFO('in playerAutoMatch:', playerMatchDic)
-        pmVal = self.playersDic.get(playerMatchDic['playerGbId'], None)
-        if pmVal:
+        _pmVal = self.playersDic.get(playerMatchDic['playerGbId'], None)
+        if _pmVal:
             self._rmPlayerFromMatchPool(playerMatchDic['playerGbId'])
 
         now = utils.curTS()
-        pmVal = RaidPlayerMatchVal(playerMatchDic, utils.curTS())
-        self._playerStartMatch(pmVal)
+        _pmVal = RaidPlayerMatchVal(playerMatchDic, utils.curTS())
+        self._playerStartMatch(_pmVal)
         playerMatchDic['playerBox'].cell.onCellRaidPlayerStartAutoMatch(now, playerMatchDic['target'])
-        return
 
     def _playerStartMatch(self, pmVal):
         self.playersDic[pmVal.playerGbId] = pmVal
         self.playersMatchPool[pmVal.target].append(pmVal.playerGbId)
-        return
 
     def playerMatchedSucc(self, playerGbId):
-        pmVal = self.playersDic.get(playerGbId, None)
-        if not pmVal:
+        _pmVal = self.playersDic.get(playerGbId, None)
+        if not _pmVal:
             return
         if self._rmPlayerFromMatchPool(playerGbId):
-            pmVal.playerBox.cell.onCellRaidPlayerMatchedSucc()
-        return
+            _pmVal.playerBox.cell.onCellRaidPlayerMatchedSucc()
 
     def raidPlayerStopAutoMatch(self, playerGbId):
         LOG_INFO('in raidPlayerStopAutoMatch:', playerGbId)
-        pmVal = self.playersDic.get(playerGbId, None)
-        if not pmVal:
+        _pmVal = self.playersDic.get(playerGbId, None)
+        if not _pmVal:
             return
         if self._rmPlayerFromMatchPool(playerGbId):
-            pmVal.playerBox.client.onRaidPlayerStopAutoMatch()
-        return
+            _pmVal.playerBox.client.onRaidPlayerStopAutoMatch()
 
     def playerAutoMatchTimeout(self, playerGbId):
         LOG_INFO('in playerAutoMatchTimeout:', playerGbId)
-        pmVal = self.playersDic.get(playerGbId, None)
-        if not pmVal:
+        _pmVal = self.playersDic.get(playerGbId, None)
+        if not _pmVal:
             return
         if self._rmPlayerFromMatchPool(playerGbId):
-            pmVal.playerBox.cell.onCellRaidPlayerAutoMatchTimeout()
+            _pmVal.playerBox.cell.onCellRaidPlayerAutoMatchTimeout()
         return
 
     def _rmPlayerFromMatchPool(self, playerGbId):
         LOG_INFO('in _rmPlayerFromMatchPool:', playerGbId)
-        pmVal = self.playersDic.pop(playerGbId, None)
-        if not pmVal:
+        _pmVal = self.playersDic.pop(playerGbId, None)
+        if not _pmVal:
             return False
-        if playerGbId in self.playersMatchPool[pmVal.target]:
-            self.playersMatchPool[pmVal.target].remove(playerGbId)
+        if playerGbId in self.playersMatchPool[_pmVal.target]:
+            self.playersMatchPool[_pmVal.target].remove(playerGbId)
         return True
 
     def _doMatch(self):
         self.addTimerCB(3, '_doMatch', (), gametimer.TIMER_TAG_DO_MATCH)
         if len(self.raidsDic) > 0 or len(self.playersDic) > 0:
-            # LOG_DBG('in _doMatch, playersMatchPool:', self.playersMatchPool)
-            # LOG_DBG('in _doMatch, matchRaidsPool:', self.matchRaidsPool)
             try:
                 matchedPlayers = []
-                for playerGbid, pmVal in self.playersDic.items():
-                    tgtId = pmVal.target
-                    if 0 == tgtId:
+                for playerGbid, _pmVal in self.playersDic.items():
+                    _tgtId = _pmVal.target
+                    if 0 == _tgtId:
                         continue
                     fullTeams = []
-                    for raidUUID in self.matchRaidsPool[tgtId]:
+                    for raidUUID in self.matchRaidsPool[_tgtId]:
                         tmVal = self.raidsDic.get(raidUUID, None)
                         if not tmVal:
                             continue
-                        if not tmVal.canAddPlayer(pmVal):
+                        if not tmVal.canAddPlayer(_pmVal):
                             continue
                         #matched
                         LOG_INFO('     in _doMatch, matched:', playerGbid, raidUUID)
-                        if tmVal.addPlayerToTeam(pmVal):
+                        if tmVal.addPlayerToTeam(_pmVal):
                             matchedPlayers.append(playerGbid)
                             if tmVal.isRaidFull():
                                 fullTeams.append(raidUUID)
@@ -206,12 +198,12 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def _checkTimeOutMatch(self):
         #LOG_DBG('in _checkTimeOutMatch')
         self.addTimerCB(10, '_checkTimeOutMatch', (), gametimer.TIMER_TAG_CHECK_TIME_OUT_MATCH)
-        rmPlayers = []
-        for playerGbid, pmVal in self.playersDic.items():
-            if pmVal.isTimeOut():
-                rmPlayers.append(playerGbid)
-                LOG_INFO('     in _checkTimeOutMatch, rmPlayers:', rmPlayers)
-        for playerGBID in rmPlayers:
+        _rmPlayers = []
+        for playerGbid, _pmVal in self.playersDic.items():
+            if _pmVal.isTimeOut():
+                _rmPlayers.append(playerGbid)
+                LOG_INFO('     in _checkTimeOutMatch, _rmPlayers:', _rmPlayers)
+        for playerGBID in _rmPlayers:
             self.playerAutoMatchTimeout(playerGBID)
 
         fullTeams = []
@@ -272,12 +264,12 @@ class RaidPlayerMatchVal(userType.UserSingleType):
     def __init__(self, playerInfoDic, startTime):
         self.startTime = startTime
         self.target = playerInfoDic['target']
-        self.playerGbId = playerInfoDic['playerGbId']
         self.playerBox = playerInfoDic['playerBox']
-        self.playerName = playerInfoDic['playerName']
+        self.playerGbId = playerInfoDic['playerGbId']
         self.level = playerInfoDic['level']
-        self.school = playerInfoDic['school']
+        self.playerName = playerInfoDic['playerName']
         self.sex = playerInfoDic['sex']
+        self.school = playerInfoDic['school']
         self.picFrameId = playerInfoDic['picFrameId']
         self.bOnline = playerInfoDic['bOnline']
         self.spaceNo = playerInfoDic['spaceNo']
@@ -298,21 +290,21 @@ class RaidPlayerMatchVal(userType.UserSingleType):
 
     def updateMatchProp(self, playerInfoDic):
         self.playerGbId = playerInfoDic['playerGbId']
-        self.playerBox = playerInfoDic['playerBox']
         self.playerName = playerInfoDic['playerName']
-        self.level = playerInfoDic['level']
+        self.playerBox = playerInfoDic['playerBox']
         self.school = playerInfoDic['school']
-        self.sex = playerInfoDic['sex']
+        self.level = playerInfoDic['level']
         self.picFrameId = playerInfoDic['picFrameId']
-        self.bOnline = playerInfoDic['bOnline']
+        self.sex = playerInfoDic['sex']
         self.spaceNo = playerInfoDic['spaceNo']
+        self.bOnline = playerInfoDic['bOnline']
         self.position = playerInfoDic['position']
-        self.hp = playerInfoDic['hp']
         self.fullHp = playerInfoDic['fullHp']
+        self.hp = playerInfoDic['hp']
         self.score = playerInfoDic['score']
         self.mountState = playerInfoDic['mountState']
-        self.raidUUID = playerInfoDic['raidUUID']
         self.enableMics = playerInfoDic['enableMics']
+        self.raidUUID = playerInfoDic['raidUUID']
         self.isBlockMics = playerInfoDic['isBlockMics']
-        self.isDead = playerInfoDic['isDead']
         self.openId = playerInfoDic['openId']
+        self.isDead = playerInfoDic['isDead']

@@ -204,7 +204,7 @@ class IFriendship(object):
 
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
-    @gamedecorator.limitcall(5, keyFunc=lambda x: '{}'.format(*x))
+    @gamedecorator.limitcall(5, keyFun=lambda x: '{}'.format(*x))
     def sendFriendRequest(self, exposed, gbId):
         LOG_INFO("IFriends::sendFriendRequest gbId={}".format(gbId))
         if self.friendship.isRecvReq(gbId):
@@ -970,52 +970,58 @@ class IFriendship(object):
 
     @gamedecorator.crossServer
     def getAvatarInterInfo(self, exposed, gbId):
-        LOG_DBG('ckz: getAvatarInterInfo ', gbId)
+        LOG_DBG('getAvatarInterInfo ', gbId)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase\
-            ([gbId], 'onGetAvatarInterInfoBase', (self, ), self, 'getInterInfoOffline', ())
-
-    def onGetAvatarInterInfoBase(self, box):
-        self.cell.onGetAvatarInterInfo(box, self.accountEntity.accountName)
+            (
+                [gbId], 
+                'doGetAvatarInterInfoBase', 
+                (self, ), 
+                self, 
+                'getInterInfoOffline', 
+                ()
+            )
 
     def sendMyDetailInfoBase(self, box):
-        basePropDic = {'magicFind':self.magicFind, 'obId':self.obId}
-        self.cell.sendMyDetailInfo(box, self.accountEntity.accountName, basePropDic, self.anonymousSwitchConfigs)
+        _basePropDic = {
+            'obId':self.obId,
+            'magicFind':self.magicFind, 
+        }
+        self.cell.sendMyDetailInfo(box, self.accountEntity.accountName, _basePropDic, self.anonymousSwitchConfigs)
+
+    def doGetAvatarInterInfoBase(self, box):
+        self.cell.onGetAvatarInterInfo(box, self.accountEntity.accountName)
 
     def getInterInfoOnline(self, dataDic):
         self.client.onGetInterInfoClient(dataDic)
 
     def getInterInfoOffline(self, gbIds):
-        gbId = gbIds[0]
+        _gbId = gbIds[0]
 
         def __tmp(fcVal):
             if fcVal.isDelete:
-                # self.onMessagePre(MMD.datas.relationRoleDeleted, [])
-                self.client.onAvatarHasBeenDeleted(gbId)
+                self.client.onAvatarHasBeenDeleted(_gbId)
                 return
 
-            # if self.friendsInfo.getAllKindsVal(gbId):
-            #     self.onUpdateFriendInfo(gbId, 0, {'level': fcVal.level, 'offlineTime': fcVal.offlineTime})
-
             self.client.onGetInterInfoClient({
-                'gbId': gbId,
+                'gbId': _gbId,
                 'teamId': 0,
                 'school': fcVal.school,
-                'sex': fcVal.sex,
                 'picFrameId': fcVal.picFrameId,
-                'level': fcVal.level,
+                'sex': fcVal.sex,
                 'teamAmount': 0,
+                'level': fcVal.level,
                 'teamTarget': 0,
-                'guildName': fcVal.guildName,
                 'isRaidLeader': False,
+                'guildName': fcVal.guildName,
                 'raidId': 0,
                 'name': fcVal.name,
-                'id': 0,
                 'openId': fcVal.accountName,
+                'id': 0,
                 'raidAmount': 0,
-                'offlineTime': fcVal.offlineTime,
                 'bountyId': 0,
+                'offlineTime': fcVal.offlineTime,
             })
-        redisUtils.RedisUtils.getSingleUserInfo(gbId, __tmp)
+        redisUtils.RedisUtils.getSingleUserInfo(_gbId, __tmp)
 
     # ------------------------ 角色授权开始 ---------------------------------------
     @gamedecorator.checkGameconfigEnable('roleAuthorization')
@@ -1167,6 +1173,7 @@ class IFriendship(object):
             functools.partial(self._onAgreeAuthRoleResult, gbId))
 
     def _onAgreeAuthRoleResult(self, gbId, ret):
+        LOG_DBG('_onAgreeAuthRoleResult', gbId, ret)
         self.popTempMiscProp(gameconst.EntityPropsEnum.authRoleInfo)
         if not ret:
             LOG_ERR('_onAgreeAuthRoleResult failed', ret)

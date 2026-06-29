@@ -285,11 +285,11 @@
             <Arg>           PYTHON          </Arg>
         </checkedCellByTeam>
 
-        <onCheckResultFromMember>
+        <checkResultFromMember>
             <Arg>           UINT8           </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           PYTHON          </Arg>
-        </onCheckResultFromMember>
+        </checkResultFromMember>
 
         <onGetAvatarInterInfo>
             <Arg>           ENTITYCALL      </Arg>

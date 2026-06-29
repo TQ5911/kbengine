@@ -26,7 +26,7 @@ class MineWarGuildVal():
         self.leaderName = ''
         self.leaderGbId = 0
         
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'guildGbId': self.guildGbId,
             'guildName': self.guildName,
@@ -74,7 +74,7 @@ class MineWarScore:
     def totalScore(self):
         return self._killScore + self.destroyScore
 
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'gbId': self.gbId,
             'name': self.name,
@@ -189,7 +189,7 @@ class MineWarMapVal():
 
         return self
     
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'mapId': self.mapId,
             'guildGbId': self.guildGbId,
@@ -197,10 +197,10 @@ class MineWarMapVal():
             'flagDestroyedNum': self.flagDestroyedNum,
             'flagDestroyedTime': self.flagDestroyedTime,
             'mineWarEvents': self.mineWarEvents,
-            'guildOwnerList': [val.toSaveDict() for val in self.guildOwnerDict.values()],
-            'playerScoreList': [val.toSaveDict() for val in self.playerScoreDict.values()],
-            'scoreRankList': [val.toSaveDict() for val in self.scoreRankList],
-            'currGuildInfo': [self.currGuildInfo.toSaveDict()],
+            'guildOwnerList': [val.toStreamSaveDict() for val in self.guildOwnerDict.values()],
+            'playerScoreList': [val.toStreamSaveDict() for val in self.playerScoreDict.values()],
+            'scoreRankList': [val.toStreamSaveDict() for val in self.scoreRankList],
+            'currGuildInfo': [self.currGuildInfo.toStreamSaveDict()],
             'currCollectNum': self.currCollectNum,
             'allCollectNum': self.allCollectNum,
         }
@@ -274,7 +274,7 @@ class MineWarMapVal():
                 # 归属帮派不需要该记录了 == todo=
                 # if self.guildGbId in self.guildOwnerDict:
                 #     del self.guildOwnerDict[self.guildGbId]
-                LOG_INFO('MineWarMapVal.onMineWarEnd: ', self.currGuildInfo.toSaveDict(), self.guildOwnerDict[self.tempGuildGbId].toSaveDict())
+                LOG_INFO('MineWarMapVal.onMineWarEnd: ', self.currGuildInfo.toStreamSaveDict(), self.guildOwnerDict[self.tempGuildGbId].toStreamSaveDict())
                 # 更新占领帮派
                 self.currGuildInfo = self.guildOwnerDict.get(self.tempGuildGbId, MineWarGuildVal().initFromDict({}))
                 self.mineWarEvents = []
@@ -367,7 +367,7 @@ class MineWarMapInfo(userType.UserSingleType):
         return obj
     
     def getDictFromObj(self, obj):
-        return obj.toSaveDict()
+        return obj.toStreamSaveDict()
 
     def isSameType(self, obj):
         return type(obj) is MineWarMapVal
@@ -379,7 +379,7 @@ class MineWarDataVal(userType.UserDictType):
         for _Val in mineWarData:
             self[_Val.mapId] = _Val
 
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'mineWarData': list(self.values()),
         }
@@ -392,7 +392,7 @@ class MineWarDataInfo(userType.UserSingleType):
         return obj
     
     def getDictFromObj(self, obj):
-        return obj.toSaveDict()
+        return obj.toStreamSaveDict()
     
     def isSameType(self, obj):
         return type(obj) is MineWarDataVal

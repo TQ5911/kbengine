@@ -57,11 +57,11 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onCheckCrossServerToken(self, accountName, token, crossServerEntityCall):
         LOG_INFO("onCheckCrossServerToken", accountName, token, crossServerEntityCall)
-        ret, _ = self._checkCrossServerToken(accountName, token)
-        crossServerEntityCall.onCheckCrossServerTokenResp(ret)
+        _ret, _ = self._checkCrossServerToken(accountName, token)
+        crossServerEntityCall.onCheckCrossServerTokenResp(_ret)
 
     def _checkCrossServerToken(self, accountName, token):
-        ret = False
+        _ret = False
         crossServerEntityCall = None
 
         if accountName not in self.accountDic:
@@ -71,16 +71,16 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             if crossServerToken != token:
                 LOG_ERR("_checkCrossServerToken token err", crossServerToken, token)
             else:
-                ret = True
+                _ret = True
                 crossServerEntityCall = self.accountDic[accountName].get("box")
-        return ret, crossServerEntityCall
+        return _ret, crossServerEntityCall
 
     def checkCrossServerToken(self, accountName, token, box, callBackFunc, callBackArgs):
         LOG_INFO("checkCrossServerToken", accountName, token, box, callBackFunc, callBackArgs)
-        ret, crossServerEntityCall = self._checkCrossServerToken(accountName, token)
-        args = [ret, crossServerEntityCall]
-        args.extend(callBackArgs)
-        getattr(box, callBackFunc)(*args)
+        _ret, crossServerEntityCall = self._checkCrossServerToken(accountName, token)
+        _args = [_ret, crossServerEntityCall]
+        _args.extend(callBackArgs)
+        getattr(box, callBackFunc)(*_args)
 
     def onGobackServer(self, accountName):
         LOG_INFO("onGobackServer", accountName)

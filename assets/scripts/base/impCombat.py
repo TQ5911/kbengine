@@ -419,6 +419,8 @@ class ImpCombat(AvatarBuildsMixin):
             _stateSkillId = dataUtils.getSkillIdByMorphState(_buildSkillId, self.morphState)
             self.deleteTemporarySkill(_buildSkillId, _stateSkillId)
         self.removeSkillChangeMorphState(unlockedSkills)
+        if unlockedSkills:
+            self.updateSkillScore()
 
         self.sendCliSkillBuildInfo()
 

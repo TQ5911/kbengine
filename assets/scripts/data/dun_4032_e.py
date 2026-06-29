@@ -30,7 +30,7 @@ datas ={
       40320010
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -67,7 +67,7 @@ datas ={
       40320011
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -99,7 +99,7 @@ datas ={
       40320026
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -143,7 +143,7 @@ datas ={
       40320023
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -179,7 +179,7 @@ datas ={
       40320027
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -223,7 +223,7 @@ datas ={
       40320036
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -259,7 +259,7 @@ datas ={
       40320037
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -299,7 +299,8 @@ datas ={
     "transition": {
       "finished": [
         1070,
-        1069
+        1069,
+        1079
       ]
     }
   },
@@ -341,7 +342,8 @@ datas ={
       "finished": [
         1049,
         1064,
-        1068
+        1068,
+        1078
       ]
     }
   },
@@ -405,7 +407,7 @@ datas ={
       40320001
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -413,6 +415,101 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1072,
+        1073,
+        1074
+      ]
+    }
+  },
+  "1072": {
+    "type": "monsterHp",
+    "monsterID": [
+      40320001
+    ],
+    "compare": 5,
+    "hpPercent": 80.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1075
+      ]
+    }
+  },
+  "1073": {
+    "type": "monsterHp",
+    "monsterID": [
+      40320001
+    ],
+    "compare": 5,
+    "hpPercent": 50.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1076
+      ]
+    }
+  },
+  "1074": {
+    "type": "monsterHp",
+    "monsterID": [
+      40320001
+    ],
+    "compare": 5,
+    "hpPercent": 10.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1077
+      ]
+    }
+  },
+  "1075": {
+    "type": "popupdialog",
+    "entityID": [
+      40320001
+    ],
+    "dialogID": 19900594,
+    "transition": {}
+  },
+  "1076": {
+    "type": "popupdialog",
+    "entityID": [
+      40320001
+    ],
+    "dialogID": 19900594,
+    "transition": {}
+  },
+  "1077": {
+    "type": "popupdialog",
+    "entityID": [
+      40320001
+    ],
+    "dialogID": 19900594,
+    "transition": {}
+  },
+  "1078": {
+    "type": "createNPC",
+    "entityID": [
+      40324005
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1079": {
+    "type": "createNPC",
+    "entityID": [
+      40324006
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
     "transition": {}
   }
 }

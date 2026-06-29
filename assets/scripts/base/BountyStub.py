@@ -69,7 +69,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
             self._onTimerCallback(timerID)
         elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
-        elif userData == gametimer.CYCLE_EVENT_TICK_TIMER:
+        elif userData == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
 
     def initClassifyBountyInfoData(self):
@@ -223,6 +223,34 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         LOG_INFO("BountyStub::onSaveCallback: success:", success, baseRef.databaseID, self.databaseID)
         if not success:
             LOG_ERR("BountyStub::onSaveCallback failed to save!")
+
+    def _logWantedNotice(self, item, isPublish):
+        """
+        悬赏令发布/完成埋点日志
+        """
+        if not item:
+            return
+        try:
+            orderType = "public" if item.bountyType == gameconst.BountyType.PUBLIC else "personal"
+            if isPublish:
+                LogTrackingMgr.LogTrackingMgr.wantednotice(
+                    'BountyStub', "",
+                    orderType,
+                    str(item.gbid) if item.bountyType == gameconst.BountyType.PUBLIC else "",
+                    str(item.gbid) if item.bountyType == gameconst.BountyType.ASSIGN else "",
+                    item.publishMoney if item.bountyType == gameconst.BountyType.PUBLIC else 0,
+                    item.publishMoney if item.bountyType == gameconst.BountyType.ASSIGN else 0,
+                    "", "", "")
+            else:
+                LogTrackingMgr.LogTrackingMgr.wantednotice(
+                    'BountyStub', "",
+                    '',
+                    "", "", 0, 0,
+                    orderType,
+                    str(item.hunterGbId) if item.bountyType == gameconst.BountyType.PUBLIC else "",
+                    str(item.hunterGbId) if item.bountyType == gameconst.BountyType.ASSIGN else "")
+        except Exception as e:
+            LOG_ERR("BountyStub::_logWantedNotice error:", e, item, isPublish)
 
 #########################################################################################
     def onHandlePublishedBountyExpired(self, expiredItem):
@@ -393,6 +421,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         self.persistentVersionId += 1
         self.sortShowPublicBountyList()
         self.addCheckExpiredBounty(prePublishItem)
+        self._logWantedNotice(prePublishItem, True)
 
         self.writeToDB(self.onSaveCallback)
         return prePublishItem
@@ -507,6 +536,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         acceptItem.lastCheckExpiredTimestamp = now
 
         self.addCheckExpiredBounty(acceptItem)
+        self._logWantedNotice(acceptItem, True)
 
         self.writeToDB(self.onSaveCallback)
         return acceptItem
@@ -680,6 +710,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
 
         complateItem.flag = gameconst.BountyFlag.NULL
         complateItem.state = gameconst.BountyState.COMPLATED
+        self._logWantedNotice(complateItem, False)
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([complateItem.gbid], 'onNoticeComplateBounty',
                                             (complateItem.toSyncDict(), gameconst.BountyAvatarType.PUBLISHER),

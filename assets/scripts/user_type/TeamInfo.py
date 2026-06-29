@@ -9,18 +9,18 @@ import team
 
 class TeamDungeonInfo(object):
     def createObjFromDict(self, dataDict):
-        teamObj = self._Type()()
-        teamObj.initFromDict(dataDict)
-        return teamObj
+        _teamObj = self._Type()()
+        _teamObj.initFromDict(dataDict)
+        return _teamObj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
-
-    def isSameType(self, obj):
-        return type(obj) is self._Type()
+        return obj.toStreamSavedDic()
 
     def _Type(self):
         return team.TeamDungeonCache
+
+    def isSameType(self, obj):
+        return type(obj) is self._Type()
 
 
 teamDungeonCacheInstance = TeamDungeonInfo()
@@ -28,13 +28,13 @@ teamDungeonCacheInstance = TeamDungeonInfo()
 
 class TeamDungeonSpaceInfo(TeamDungeonInfo):
 
-    def createObjFromDict(self, dataDict):
-        teamObj = self._Type()(0, 0, 0)
-        teamObj.initFromDict(dataDict)
-        return teamObj
-
     def _Type(self):
         return team.TeamDungeonSpaceCacheVal
+
+    def createObjFromDict(self, dataDict):
+        _teamObj = self._Type()(0, 0, 0)
+        _teamObj.initFromDict(dataDict)
+        return _teamObj
 
 
 teamDungeonSpaceCacheInstance = TeamDungeonSpaceInfo()
@@ -44,12 +44,12 @@ teamDungeonSpaceCacheInstance = TeamDungeonSpaceInfo()
 
 class TeamInfo(object):
     def createObjFromDict(self, dataDict):
-        teamObj = team.TeamVal()
-        teamObj.initFromDict(dataDict)
-        return teamObj
+        _teamObj = team.TeamVal()
+        _teamObj.initFromDict(dataDict)
+        return _teamObj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is team.TeamVal
@@ -57,18 +57,20 @@ class TeamInfo(object):
 teamInstance = TeamInfo()
 
 class ApplyJoinInfo(object):
-    def createObjFromDict(self, dataDict):
-        teamObj = team.ApplyJoinPlayerVal(dataDict['gbId'],
-                                          dataDict['playerName'],
-                                          dataDict['level'],
-                                          dataDict['school'],
-                                          dataDict['sex'],
-                                          dataDict['score'],
-                                          dataDict['applySource'])
-        return teamObj
+    def createObjFromDict(self, dataDic):
+        _teamObj = team.ApplyJoinPlayerVal(
+            dataDic['gbId'],
+            dataDic['playerName'],
+            dataDic['level'],
+            dataDic['school'],
+            dataDic['sex'],
+            dataDic['score'],
+            dataDic['applySource'],
+        )
+        return _teamObj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is team.ApplyJoinPlayerVal
@@ -82,7 +84,7 @@ class TeamInfoCache(object):
         return teamObj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is team.TeamCacheValInPlayer

@@ -31,12 +31,12 @@ class INewbie(object):
         return self.getTempMiscProp(gameconst.EntityPropsEnum.newbieStepCellCache, 0)
 
     def getNewbieStepDungeonNo(self):
-        newbieStep = self.getNewbieStepCell()
-        stepData = TCNSD.datas.get(newbieStep)
-        if not stepData:
+        _newbieStep = self.getNewbieStepCell()
+        _stepData = TCNSD.datas.get(_newbieStep)
+        if not _stepData:
             return
 
-        return stepData['lockDun']
+        return _stepData['lockDun']
 
     def newbieAllowLeave(self):
         newbieStep = self.getNewbieStepCell()

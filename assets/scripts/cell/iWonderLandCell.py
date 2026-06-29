@@ -3,6 +3,7 @@ from KBEDebug import *
 
 import KBEngine
 
+import gameconfig
 import utils
 import math
 import gameconst
@@ -83,7 +84,7 @@ class IWonderLandCell(object):
             self.base.checkAndEnterWonderLand(floor)
             return
 
-        extra = {'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_LEFT_TIME}
+        extra = {'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_LEFT_TIME, 'floor': floor}
         gameengine.getWonderLandStub(mapId).doEnterWonderLand(self.base, self.gbId, extra)
     
     def doSwitchWonderLandLine(self, spaceBox, spaceMgrBoxCellId, spaceNo, extra):
@@ -93,7 +94,7 @@ class IWonderLandCell(object):
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             'beginEnterWonderLand',
             (spaceBox, spaceMgrBoxCellId, spaceNo, extra),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
@@ -110,7 +111,8 @@ class IWonderLandCell(object):
             'l': _lContext,
             'src': _src,
             'hasCast': False,
-            'enterType': extra.get('enterWonderLandType', 0)
+            'enterType': extra.get('enterWonderLandType', 0),
+            'floor': extra.get('floor', 0)
         }
 
         _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
@@ -129,7 +131,7 @@ class IWonderLandCell(object):
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def leaveWonderLand(self, exposed):
-        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_CLIENT, False)
+        self.leaveWonderLandInternal(gameconst.DunSrcEnum.FROM_CLIENT, False)
 
     def leaveWonderLandInternal(self, srcId, hasCast=True):
         if not formula.inWonderLandScene(self.spaceNo):
@@ -210,7 +212,7 @@ class IWonderLandCell(object):
             return
 
         LOG_INFO('IWonderLandCell::_onWonderLandTimeOutEnd: {}'.format(self.spaceNo))
-        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT, True)
+        self.leaveWonderLandInternal(gameconst.DunSrcEnum.FROM_TIME_OUT, True)
 
     def _onWonderLandTimeOutRenew(self):
         LOG_INFO('IWonderLandCell::wonderLandRenewCB: {}'.format(self.spaceNo))
@@ -322,6 +324,9 @@ class IWonderLandCell(object):
         self._changeWonderLandSwitch(masterSwitch, switchData)
 
     def deadChangeWonderLandSwitch(self):
+        if gameconfig.isCrossServer():
+            return
+
         self.reqChangeWonderLandSwitch(self.id, False, WonderLandSwitch().toClientData())
 
     def _changeWonderLandSwitch(self, masterSwitch, switchData):

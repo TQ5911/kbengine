@@ -338,11 +338,11 @@ def botStartFight(su, mode):
         if _avatar.position[0] < 7000 or _avatar.position[0] > 8000:
             continue
         if mode == 1:
-            _avatar.switchPKModel(_avatar.id, gameconst.PKModel.ATTACK)
+            _avatar.switchPKModel(_avatar.id, gameconst.PKModelEnum.ATTACK)
             _avatar.startAutoCombat(_avatar.id,False)
         else:
             _avatar.stopAutoCombat(_avatar.id)
-            _avatar.switchPKModel(_avatar.id, gameconst.PKModel.PEACE)
+            _avatar.switchPKModel(_avatar.id, gameconst.PKModelEnum.PEACE)
 
 @gm_cmd('$botStartFightMode', (Player("gbId or Id"), Int('mode')), RARG(0), CELL, '机器人开始battle mode', ALLSIDE, GOD_GROUPS)
 def botStartFightMode(su, player, fightMode):

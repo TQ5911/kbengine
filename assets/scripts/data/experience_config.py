@@ -73,18 +73,18 @@ datas = _tools.RODict({
     }),
     "equipLimitText": _tools.RODict({
         "ID": "equipLimitText",
-        "value": "{0}级可穿戴{1}件{2}品质的装备",
+        "value": "<color=#d35a66>{0}</color>级可穿戴<color=#d35a66>{1}</color>件{2}品质的装备",
     }),
     "petLimitText": _tools.RODict({
         "ID": "petLimitText",
-        "value": "{0}级可出战{1}只{2}品质的精灵",
+        "value": "<color=#d35a66>{0}</color>级可出战<color=#d35a66>{1}</color>只{2}品质的精灵",
     }),
     "equipUpperLimitText": _tools.RODict({
         "ID": "equipUpperLimitText",
-        "value": "可穿戴{0}件{1}品质的装备",
+        "value": "可穿戴<color=#d35a66>{0}</color>件{1}品质的装备",
     }),
     "petUpperLimitText": _tools.RODict({
         "ID": "petUpperLimitText",
-        "value": "可出战{0}只{1}品质的精灵",
+        "value": "可出战<color=#d35a66>{0}</color>只{1}品质的精灵",
     })
 })

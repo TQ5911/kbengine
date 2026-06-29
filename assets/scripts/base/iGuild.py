@@ -270,7 +270,7 @@ class IGuild(object):
         if not self.guildBox:
             return
 
-        self.guildBox.doSendGuildClientData(self.gbID, self)
+        gameengine.getGlobalBase('GuildStub').doGetGamePlayScoreLimit(self.gbID, self, self.guildBox)
 
     def getGuildList(self, exposed):
         LOG_INFO("IGuild::getGuildList")
@@ -587,7 +587,7 @@ class IGuild(object):
 
         self.guildBox.doDealGuildApply(self.gbID, self, gbId, isAgree)
 
-    @gamedecorator.limitcall(5, keyFunc=lambda x: '{1}'.format(*x))
+    @gamedecorator.limitcall(5, keyFun=lambda x: '{1}'.format(*x))
     def getGuildDetailInfo(self, exposed, guildUUID):
         LOG_INFO("IGuild::getGuildDetailInfo:", guildUUID)
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -707,7 +707,7 @@ class IGuild(object):
 
         self.guildBox.doKickMember(self.gbID, self, gbId)
 
-    def addGuildContrib(self, num, opUUID, src, detail, srcSubType, idipSource):
+    def addGuildContrib(self, num, opUUID, src, detail, srcSubType=0, idipSource=0):
         if num < 0:
             return False
 
@@ -719,6 +719,10 @@ class IGuild(object):
             self.guildBox.addMemberHistCond(self.gbID, num)
 
         return True
+
+    def gmDeductGuildContrib(self, delta, opUUID, src, detail):
+        targetContrib = utils.deductResourceVal(self.guildContrib, delta, gameconst.ReourceValType.INT32)
+        self.guildContrib = targetContrib
 
     def deductGuildContrib(self, num, opUUID, src, detail):
         if num < 0:
@@ -1220,7 +1224,7 @@ class IGuild(object):
 
         self.guildBox.doDeclareEnemy(self.gbID, self, guildUUID)
 
-    @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
+    @gamedecorator.limitcall(1, keyFun=lambda x: '{}'.format(*x))
     def getGuildInfosByRelationType(self, exposed, relationType):
         LOG_INFO('IGuild::getGuildInfosByRelationType:', relationType)
         if not self.guildUUIDBase:
@@ -1292,7 +1296,7 @@ class IGuild(object):
 
         self.guildBox.doCancelApplyGuildUnion(self.gbID, self, guildUUID)
 
-    @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
+    @gamedecorator.limitcall(1, keyFun=lambda x: '{}'.format(*x))
     def getGuildDetailOtherServer(self, exposed, guildUUID):
         LOG_INFO('IGuild::getGuildDetailOtherServer:', guildUUID)
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetail(
@@ -1419,6 +1423,11 @@ class IGuild(object):
         for taskID,taskInfo in self.guildTask.items():
             TaskInfoList.append(GuildTaskInfo.GuildTaskInfoVal(taskID,taskInfo['num'],taskInfo['isCompleted']))
         self.client.syncGuildTaskInfo(TaskInfoList)
+    
+    def addGuildCommissionGold(self, goldCount):
+        # 通知公会折算
+        if self.guildBox:
+            self.guildBox.addCommissionGold(self.gbID, goldCount)
     # -------------------------------------- 帮会任务 end --------------------------------------
     
     @gamedecorator.checkGameconfigEnable('guild')
@@ -1428,3 +1437,95 @@ class IGuild(object):
             return
 
         self.guildBox.doGetGuildIronMine(self.gbID, self)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def reqShareCommission(self, exposed, shareList):
+        if not self.guildBox:
+            LOG_ERR('IGuild::reqShareCommission: guildBox is None')
+            return
+
+        self.guildBox.doShareCommission(self.gbID, shareList, self)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def reqGuildGamePlayData(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::reqGuildGamePlayData: guildBox is None')
+            return
+        gameengine.getGlobalBase('GuildStub').doGetGuildGamePlayData(self, self.guildBox)
+        
+    
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def enterGuildMics(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.onAvatarEnterMics(self.gbID)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def leaveGuildMics(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.onAvatarLeaveMics(self.gbID)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def turnOnGuildMics(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.onAvatarChangeGuildMics(self.gbID, True)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def turnOffGuildMics(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.onAvatarChangeGuildMics(self.gbID, False)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def switchGuildMicsMode(self, exposed, mode):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.onSetGuildMicsSwitch(self.gbID, mode)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def blockGuildMemberMics(self, exposed, gbId):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.changeMicsBlock(self.gbID, gbId, True)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def unblockGuildMemberMics(self, exposed, gbId):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.changeMicsBlock(self.gbID, gbId, False)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def blockAllGuildMemberMics(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.changeMicsBlockAll(True)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def unblockAllGuildMemberMics(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            return
+        self.guildBox.changeMicsBlockAll(False)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def inviteGuildMics(self, exposed, gbId):
+        if not self.guildBox:
+            LOG_ERR('IGuild::inviteGuildMember: guildBox is None')
+            return
+        self.guildBox.inviteGuildMics(self.gbID, gbId)
+
+    def _sendGuildMicsMembers(self):
+        if not self.guildBox:
+            return
+        self.guildBox.getGuildMicsMembers(self)

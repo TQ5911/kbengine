@@ -5,15 +5,15 @@ import avatarPet
 
 class LingShouInfo(object):
     def createObjFromDict(self, dataDict):
-        lingShouInfo = avatarPet.LingShouInfo()
-        lingShouInfo.initFromDict(dataDict)
-        return lingShouInfo
-
-    def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        _lingShouInfo = avatarPet.LingShouInfo()
+        _lingShouInfo.initFromDict(dataDict)
+        return _lingShouInfo
 
     def isSameType(self, obj):
         return type(obj) is avatarPet.LingShouInfo
+
+    def getDictFromObj(self, obj):
+        return obj.toStreamSavedDic()
 
 
 lingShouInstance = LingShouInfo()

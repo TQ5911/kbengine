@@ -27,7 +27,7 @@ class InstantPotionVal(userType.UserSingleType):
         if not itemData:
             return False
 
-        if itemData['type'] != gameconst.ItemType.Normal:
+        if itemData['type'] != gameconst.ItemEnum.Normal:
             return False
 
         return itemData['subType'] == 1
@@ -37,11 +37,18 @@ class InstantPotionVal(userType.UserSingleType):
         if not itemData:
             return False
 
-        if itemData['type'] != gameconst.ItemType.Normal:
+        if itemData['type'] != gameconst.ItemEnum.Normal:
             return False
 
         return itemData['subType'] == 2
 
+    def isInnerDemonUse(self):
+        itemData = ID_IDD.datas.get(self.itemId)
+        if not itemData:
+            return False
+
+        return itemData['isAutoUseInCustomSlot'] == 1
+    
     def toInstantPotionSavedDict(self):
         return {
             'itemId': self.itemId,

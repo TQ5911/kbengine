@@ -12,7 +12,7 @@ class Teleporter(iBaseWithCell.IBaseWithCell):
     def __init__(self):
         super(Teleporter, self).__init__()
 
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 

@@ -58,5 +58,9 @@ datas = _tools.RODict({
     "monthCardExtraTimes": _tools.RODict({
         "key": "monthCardExtraTimes",
         "value": ((10, 5), (20, 5), (30, 5), (40, 5)),
+    }),
+    "defaultBgImage": _tools.RODict({
+        "key": "defaultBgImage",
+        "value": "Assets/Res/ui/texture/giftstore/paystore_wechatpay_box_03_img.png",
     })
 })

@@ -83,7 +83,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
             
-        elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
+        elif userArg == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
         else:
             self._onTimerTrigger(tid, userArg)
@@ -228,14 +228,14 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 gameengine.getGlobalBase('GuildStub').callOnGuild(lastGuildId, 'doAddGuildIronMineFromStub', (mineWarVal.allCollectNum, ), None, '', ())
             # 需要先移，再重置
             mineWarVal.onStartReset()
+            gameengine.getGlobalBase('GuildStub').statGuildData(gameconst.GuildDataType.MIN_WAR_AREA_OPEN)
+            #
+            LogTrackingMgr.LogTrackingMgr.mineBattle_start('MineWarStub', '', mapId, self.startTime, mineWarVal.guildGbId)
 
         # 广播玩家
         gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarStartPlayer', (self.state, self.endTime), ()))
         gameengine.getGlobalBase('ActStub').updateAnnouncement(gameconst.AnnouncementType.MINE_WAR, gameconst.UpdateAnnouncementType.MINE_WAR_ONGOING, utils.curTS(), self.endTime)
-
         gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarFlagSync', (self.playerGetMineWarFlagState(),), ()))
-        #
-        LogTrackingMgr.LogTrackingMgr.MineBattle_Start('MineWarStub', '', self.startTime, {mapId: val.getGuildGbId() for mapId, val in self.mineMapData.items()})
 
     # 矿战结束阶段
     def _onMineWarEnd(self):
@@ -286,9 +286,9 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 logRankList = []
                 for i, guildVal in enumerate(ownerList):
                     logRankList.append({'rank': i+1, 'guildGbId': guildVal.guildGbId, 'ownerTime': guildVal.ownerTime, 'revenue': guildVal.revenue})
-                LogTrackingMgr.LogTrackingMgr.MineBattle_End('MineWarStub', '', self.endTime, mapId, tempguildGbId, logRankList)
+                LogTrackingMgr.LogTrackingMgr.mineBattle_end('MineWarStub', '', mapId, self.endTime, tempguildGbId, logRankList)
             except Exception as e:
-                LOG_ERR('LogTrackingMgr.MineBattle_End error:', mapId, tempguildGbId)
+                LOG_ERR('LogTrackingMgr.mineBattle_end error:', mapId, tempguildGbId)
 
         for guildGbId in loserDict:
             if guildGbId not in winnerDict:
@@ -353,7 +353,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         # 暂存
         mineWarVal.onFlagBeDestroyed()
         mineWarVal.addMineWarEvent(3, [guildName, killerName])
-        LogTrackingMgr.LogTrackingMgr.MineBattle_KillFlag('MineWarStub', '', mapId, guildGbId, killerGbId, mineWarVal.flagDestroyedNum)
+        LogTrackingMgr.LogTrackingMgr.mineBattle_flagEvent('MineWarStub', '', mapId, guildGbId, killerGbId, mineWarVal.flagDestroyedNum)
         #
         # mineWarVal.allCollectNum (这个矿区的玄铁总库存)
         # （1）、mineWarVal.allCollectNum *0.05 > 15 * 1万 仓库应该扣除: mineWarVal.allCollectNum * 0.05 玄铁 ，每个宝箱投放  mineWarVal.allCollectNum * 0.05 / 15 玄铁          
@@ -551,7 +551,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         # 重新拉下数据
         self.playerGetMineWarInfo(box, srcGbId)
 
-        LogTrackingMgr.LogTrackingMgr.MineBattle_Shared('MineWarStub', '', srcGbId, mapVal.getGuildGbId(), mapVal.currCollectNum, playerList, bonusNumList, opUUID)
+        LogTrackingMgr.LogTrackingMgr.mineBattle_dividendedCurrency('MineWarStub', '', srcGbId, mapVal.getGuildGbId(), mapVal.currCollectNum, playerList, bonusNumList, opUUID)
 
     def doGetMineWarGuildMemberScore(self, mapId, playerBox, guildGbId):
         mapVal = self.mineMapData.get(mapId, None)
@@ -603,7 +603,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         timeCfg = MBC.datas['mineBattle_bonusIncome']['value']
         for idx, ownerVal in enumerate(ownerList):
-            val = ownerVal.toSaveDict()
+            val = ownerVal.toStreamSaveDict()
             val['rankId'] = idx + 1
             if self.state == gameconst.MINE_WAR_STATE.RUNNING and not last:
                 val['revenue'] = int(min((val['ownerTime'] // timeCfg[0]) * timeCfg[1], timeCfg[2]))
@@ -615,7 +615,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 selfRankInfo = val
 
         if selfRankInfo is None:
-            selfRankInfo = MineWarInfo.MineWarGuildVal().initFromDict(guildInfo).toSaveDict()
+            selfRankInfo = MineWarInfo.MineWarGuildVal().initFromDict(guildInfo).toStreamSaveDict()
             selfRankInfo['rankId'] = 0
         
         # LOG_INFO('MineWarStub.doGetMineWarGuildOwnerRank response to player:', last, playerBox.id, guildInfo, selfRankInfo, rankList)
@@ -757,9 +757,9 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 logRankList = []
                 for i, obj in enumerate(mineWarVal.scoreRankList[:len(rankCfg)]):
                     logRankList.append({'rank': i+1, 'playerGbId': obj.gbId, 'playerScore': obj.totalScore})
-                LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward('MineWarStub', '', self.endTime, mapId, logRankList, opUUID)
+                LogTrackingMgr.LogTrackingMgr.mineBattle_reward('MineWarStub', '', mapId, self.endTime, logRankList, opUUID=opUUID)
             except Exception as e:
-                LOG_ERR('LogTrackingMgr.MineBattle_End_Reward error:', mapId)
+                LOG_ERR('LogTrackingMgr.mineBattle_reward error:', mapId)
                 
         LOG_INFO('MineWarStub.onEndRewardByScore done')
 

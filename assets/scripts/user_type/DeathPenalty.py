@@ -9,7 +9,7 @@ class DeathPenaltyVal(userType.UserSingleType):
         self.exp = exp
         self.expireTime = expireTime
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {"exp": self.exp, "expireTime": self.expireTime}
 
 
@@ -56,7 +56,7 @@ class DeathPenalty(userType.UserSingleType):
     def toClientDataAll(self):
         now = utils.curTS()
         self._clear(now)
-        return [x.toSavedDict() for x in self.deathPenaltyList]
+        return [x.toStreamSavedDic() for x in self.deathPenaltyList]
 
     def addDeathPenaltyExp(self, exp):
         _now = utils.curTS()
@@ -68,16 +68,16 @@ class DeathPenalty(userType.UserSingleType):
         self.deathPenaltyList.insert(0, _newVal)
 
         _retList = []
-        _retList.append(_newVal.toSavedDict())
+        _retList.append(_newVal.toStreamSavedDic())
 
         _retList.extend(self._clear(_now))
 
         return _retList
 
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         deathPenaltyList = []
         for _data in self.deathPenaltyList:
-            deathPenaltyList.append(_data.toSavedDict())
+            deathPenaltyList.append(_data.toStreamSavedDic())
         return {"deathPenaltyList": deathPenaltyList}
 
 
@@ -87,7 +87,7 @@ class DeathPenaltyInfo(object):
         return obj
 
     def getDictFromObj(self, obj):
-        return obj.toSaveDict()
+        return obj.toStreamSaveDict()
 
     def isSameType(self, obj):
         return type(obj) is DeathPenalty

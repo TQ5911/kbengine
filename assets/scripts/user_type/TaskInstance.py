@@ -6,16 +6,16 @@ import Task
 
 class TaskInfoVal(object):
     def createObjFromDict(self, dataDict):
-        taskInfo = TaskInfo.TaskInfo()
-        taskInfo.fromSavedDict(dataDict)
-        return taskInfo
-
-    def getDictFromObj(self, obj):
-        dic = obj.toTaskInfoSavedDict()
-        return dic
+        _taskInfo = TaskInfo.TaskInfo()
+        _taskInfo.fromSavedDict(dataDict)
+        return _taskInfo
 
     def isSameType(self, obj):
         return type(obj) is TaskInfo.TaskInfo
+
+    def getDictFromObj(self, obj):
+        _dic = obj.toTaskInfoSavedDict()
+        return _dic
 
 
 taskInfoInstance = TaskInfoVal()
@@ -23,16 +23,16 @@ taskInfoInstance = TaskInfoVal()
 
 class TaskClientInfoVal(object):
     def createObjFromDict(self, dataDict):
-        taskInfo = TaskInfo.TaskInfo()
-        taskInfo.fromSavedDict(dataDict)
-        return taskInfo
-
-    def getDictFromObj(self, obj):
-        dic = obj.toTaskInfoClientDict()
-        return dic
+        _taskInfo = TaskInfo.TaskInfo()
+        _taskInfo.fromSavedDict(dataDict)
+        return _taskInfo
 
     def isSameType(self, obj):
         return type(obj) is TaskInfo.TaskInfo
+
+    def getDictFromObj(self, obj):
+        _dic = obj.toTaskInfoClientDict()
+        return _dic
 
 
 taskClientInfoInstance = TaskClientInfoVal()
@@ -42,11 +42,11 @@ class TaskVal(object):
     def createObjFromDict(self, dataDict):
         return Task.TaskFactory.createTaskBySavedDict(dataDict)
 
-    def getDictFromObj(self, obj):
-        return obj.toTaskSavedDict()
-
     def isSameType(self, obj):
         return type(obj) is Task.Task
+
+    def getDictFromObj(self, obj):
+        return obj.toTaskSavedDict()
 
 
 taskValInstance = TaskVal()

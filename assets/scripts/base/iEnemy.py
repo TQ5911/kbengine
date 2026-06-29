@@ -15,7 +15,6 @@ import relationConfig_relationConfig as RC_RCD
 
 class IEnemy(object):
     def __init__(self):
-        #
         self.enemyScheduleTimerId = 0
 
     def onDeadAddEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score):
@@ -94,7 +93,6 @@ class IEnemy(object):
 
     def scheduleEnemyPosInfo(self, login=False):
         activeList, updateList = self.enemyMgr.getNeedUpdateEnemyIds(login)
-        # LOG_DBG('scheduleEnemyPosInfo, activeList:', activeList, 'updateList:', updateList)
         if not activeList:
             # 关闭图标
             self.client.showEnemyIcon(False)

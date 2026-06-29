@@ -50,16 +50,16 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
 
         stub.enterWaitMap(self.gbID, self)
 
-    def onEnterWaitMapSpace(self, spaceNo):
-        stub = gameengine.getGlobalBase('WaitMapSpaceStub')
-        if not stub:
+    def onEnterWaitMapSpace(self, spaceNo, spaceBox):
+        if not spaceBox:
+            LOG_ERR('Avataring::onEnterWaitMapSpace invalid spaceBox:', spaceNo)
             self.destroySelf()
             return
-        
+
         self.cellData['spaceNo'] = spaceNo
         self.cellData['position'] = (350, 100, 350)
         self.cellData['speed'] = 6.0
-        stub.doEnterWaitMap(self.gbID, spaceNo)
+        spaceBox.createCellNearSelf(self)
 
     def createCellNearHere(self, cellBox):
         LOG_INFO('Avataring::createCellNearHere~')
@@ -124,12 +124,13 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         self.popAvataringCache()
 
     def initAvataringCache(self):
+        ap = self.cellData.get('appearance', None)
         self.updateAvataringCache({
             'name': self.cellData.get('name', ''),
             'school': self.cellData.get('school', 0),
             'sex': self.cellData.get('sex', 0),
             'level': self.cellData.get('level', 0),
-            'picFrameId': self.cellData.get('appearance', {}).get('outfitData', {}).get('picFrameId', 0),
+            'picFrameId': ap.outfitData.picFrameId if ap and ap.outfitData else 0,
         })
 
     def updateAvataringCache(self, roleInfo):
@@ -151,7 +152,7 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         self.sendWorldMsgTime = now
         gameengine.broadcastBaseapp(
             'broadcastToAllAvataring',
-            (gameconst.BASE, 'onRecvChannelMsg',
+            ('onRecvChannelMsg',
              (gameconst.ChatChannelEnum.WORLD, self._getChatChannelAvatarInfo(), msg), ())
         )
 
@@ -172,5 +173,10 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         )
 
     def kickAvataring(self, reason):
-        LOG_INFO('Avataring::kickAvataring~', reason)
+        LOG_DBG('Avataring::kickAvataring~', reason)
         self.destroySelf(reason)
+
+    def startOffline(self, reason):
+        LOG_DBG('Avataring::startOffline~', reason)
+        accountEnt = self.accounting
+        accountEnt and accountEnt.avatarOffline(reason)

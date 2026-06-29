@@ -53,16 +53,20 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
         self._doInitBornState()
 
-        spaceMgr = self.spaceMgr
+        _spaceMgr = self.spaceMgr
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
-        if spaceMgr:
-            spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
+        if _spaceMgr:
+            _spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
         elif formula.inDungeonScene(self.spaceNo):
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.collectionId),
-                                             'gid_{}'.format(gid), self.__class__.__name__,))
-        elif spaceMgr:
-            spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
+            if _spaceMgr:
+                _spaceMgr.addEntity(self.id, (
+                    str(self.collectionId),
+                    str(self.fbEntityId), 
+                    'gid_{}'.format(gid), 
+                    self.__class__.__name__,
+                ))
+        elif _spaceMgr:
+            _spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
 
         self.awardContext = None
         self.createTime = utils.curTS()
@@ -135,49 +139,48 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         self.dropEquipId = 0
         self.delaySafeDestroy()
 
+    def initPosition(self):
+        if self.tmpProps.get('createCount') is None:
+            self.tmpProps['createCount'] = 1
+        super().initPosition()
+
     def _preSafeDestory(self):
         super(Collection, self)._preSafeDestory()
 
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.removeEntById(self.id)
-        if self.dropEquipId and self.gatherAvatars.get('gatherCnt', 0) == 0:
+        if self.dropEquipId and self.gatherAvatarDic.get('gatherCnt', 0) == 0:
             # 过5秒后检查状态并向玩家发送提醒邮件
             KBEngine.addTimer(5, 0, lambda *args: gameengine.getGlobalBase('DropStub').sendRepairDropMail(self.dropEquipId))
 
-    def initPosition(self):
-        if self.tmpProps.get('createCount', None) is None:
-            self.tmpProps['createCount'] = 1
-        super().initPosition()
-
     def addGatherAvatar(self, avatarId, gbId, collectionId):
-        avatar = KBEngine.entities.get(avatarId)
+        _avatar = KBEngine.entities.get(avatarId)
         collData = NPD.datas[collectionId]
         canPickTime = collData['timeCheck']
         if canPickTime:
-            self.gatherAvatars[gbId] = self.gatherAvatars.get(gbId, 0) + 1
-            avatar and avatar.checkCollectionGatherFlag(self.id)
+            self.gatherAvatarDic[gbId] = self.gatherAvatarDic.get(gbId, 0) + 1
+            _avatar and _avatar.checkCollectionGatherFlag(self.id)
 
-        pickTimes = self.getPickTimes(collectionId)
+        _pickTimes = self.getPickTimes(collectionId)
 
         shouldHide = collData.get('isDisappear', False)
         if canPickTime:
             if shouldHide:
-                avatar.addPickedCollections(self, canPickTime)
+                _avatar.addPickedCollections(self, canPickTime)
             else:
-                avatar.addPickedCollections(self, 0)
+                _avatar.addPickedCollections(self, 0)
 
-        if pickTimes > 0:
-            self.gatherAvatars['gatherCnt'] = self.gatherAvatars.get('gatherCnt', 0) + 1
-            if self.gatherAvatars['gatherCnt'] >= pickTimes:
+        if _pickTimes > 0:
+            self.gatherAvatarDic['gatherCnt'] = self.gatherAvatarDic.get('gatherCnt', 0) + 1
+            if self.gatherAvatarDic['gatherCnt'] >= _pickTimes:
                 self.onCollectRewards(avatarId, gbId, not shouldHide) #不隐藏的就销毁
             else:
                 self.onCollectRewards(avatarId, gbId, False)
-            self.gatherCnt = self.gatherAvatars['gatherCnt']
-        elif pickTimes == 0:
+            self.gatherCnt = self.gatherAvatarDic['gatherCnt']
+        elif _pickTimes == 0:
             # 永久Collection, 不删除实体
             self.onCollectRewards(avatarId, gbId, False)
-
 
     def checkAvatarGather(self, avatarBase, gbId, ctx, isPicking):
         ret = self._checkAvatarGather(avatarBase, gbId)
@@ -207,12 +210,12 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             avatarBase.onUpdateCollectionGatherFlag(self.id, 1)
 
     def _checkAvatarGather(self, avatarBase, gbId, sendMsg=True):
-        npData = NPD.datas[self.collectionId]
-        if npData['timeCheck'] and self.gatherAvatars.get(gbId, 0) >= npData['timeCheck']:
-            LOG_WARN("_checkAvatarGather failed1", npData['timeCheck'], self.gatherAvatars.get(gbId, 0))
+        _npData = NPD.datas[self.collectionId]
+        if _npData['timeCheck'] and self.gatherAvatarDic.get(gbId, 0) >= _npData['timeCheck']:
+            LOG_WARN("_checkAvatarGather failed1", _npData['timeCheck'], self.gatherAvatarDic.get(gbId, 0))
             return False
 
-        if npData.get('isInvalid'):
+        if _npData.get('isInvalid'):
             LOG_ERR('pick invalid collection!', self.collectionId)
             return False
 
@@ -220,7 +223,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             LOG_ERR('_checkAvatarGather, cannot find avatar111', avatarBase)
             return False
 
-        canPickTime = npData['timeCheck']
+        canPickTime = _npData['timeCheck']
         if canPickTime:
             avatar = KBEngine.entities.get(avatarBase.id)
             if not avatar or avatar.isDestroyed:
@@ -233,7 +236,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
         pickTimes = self.getPickTimes(self.collectionId)
 
-        if pickTimes and self.gatherAvatars.get('gatherCnt', 0) >= pickTimes:
+        if pickTimes and self.gatherAvatarDic.get('gatherCnt', 0) >= pickTimes:
             return False
 
         if hasattr(self, 'firstBloodTargetGbIds'):
@@ -253,15 +256,15 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
     def getGatherPickTimes(self, gbId):
         if self.type not in gameconst.CollectionType.ADD_PICK_AVATAR_CNT:
-            return self.gatherAvatars.get('gatherCnt', 0), self.getPickTimes(self.collectionId)
+            return self.gatherAvatarDic.get('gatherCnt', 0), self.getPickTimes(self.collectionId)
 
-        return self.gatherAvatars.get(gbId, 0), self.getSpecialPickTimes(self.collectionId)
+        return self.gatherAvatarDic.get(gbId, 0), self.getSpecialPickTimes(self.collectionId)
 
     def setSpecialGatherAvatar(self, avatarId, gbId, gatherCnt):
         if self.type not in gameconst.CollectionType.ADD_PICK_AVATAR_CNT:
             return
 
-        self.gatherAvatars[gbId] = gatherCnt
+        self.gatherAvatarDic[gbId] = gatherCnt
 
     def onDestroy(self):
         super().onDestroy()

@@ -3252,11 +3252,6 @@ datas = _tools.RODict({
     }),
     19100003004: _tools.RODict({
         "ID": 19100003004,
-        "event": "",
-        "parm": "",
-    }),
-    19100003005: _tools.RODict({
-        "ID": 19100003005,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3292,7 +3287,7 @@ datas = _tools.RODict({
     }),
     19100004006: _tools.RODict({
         "ID": 19100004006,
-        "event": "",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100004007: _tools.RODict({
@@ -5657,6 +5652,11 @@ datas = _tools.RODict({
     }),
     19100066015: _tools.RODict({
         "ID": 19100066015,
+        "event": "",
+        "parm": "",
+    }),
+    19100066016: _tools.RODict({
+        "ID": 19100066016,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -12011,7 +12011,6 @@ dialogIdMap = _tools.RODict({
         19100003002,
         19100003003,
         19100003004,
-        19100003005,
     ),
     19100004: (
         19100004000,
@@ -12642,6 +12641,7 @@ dialogIdMap = _tools.RODict({
         19100065002,
     ),
     19100066: (
+        19100066016,
         19100066000,
         19100066001,
         19100066002,

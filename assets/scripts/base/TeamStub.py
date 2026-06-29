@@ -98,7 +98,7 @@ class DungeonStubMixin(object):
     def createTeamDungeon(self, playerBox, gbId, dungeonNo, teamUUID, extraInfo):
         _src = extraInfo.get('src')
         _gmEnter = True if \
-            _src and _src.srcId == gameconst.DungeonSrcEnum.FROM_CLIENT_GM \
+            _src and _src.srcId == gameconst.DunSrcEnum.FROM_CLIENT_GM \
             else False
 
         if teamUUID not in self.teamDict:
@@ -218,7 +218,7 @@ class DungeonStubMixin(object):
     def _enterTeamDungeonInStub(self, box, gbId, teamUUID, dungeonNo, extra):
         LOG_INFO("_enterTeamDungeonInStub ", box, gbId, teamUUID, dungeonNo, extra)
         src = extra.get('src')
-        _gmEnter = True if src and src.srcId == gameconst.DungeonSrcEnum.FROM_CLIENT_GM else False
+        _gmEnter = True if src and src.srcId == gameconst.DunSrcEnum.FROM_CLIENT_GM else False
 
         if teamUUID not in self.teamDict:
             LOG_INFO("_enterTeamDungeonInStub ... teamUUID is existed !!!")
@@ -530,7 +530,7 @@ class _RaidMixin(object):
 
             lvLimit = UVVD.datas.get(RAID_CONST.datas["raidUIVisibleId"]["value"], {}).get('level', utils.getMaxPlayerLevel()+1)
             for memberVal in teamVal.teamPlayerDict.values():
-                memberDataList.append(memberVal.toSavedDict())
+                memberDataList.append(memberVal.toStreamSavedDic())
                 if memberVal.level < lvLimit:
                     return None, gameconst.RaidErrno.ENUM_RAID_UI_DENIED
 
@@ -768,7 +768,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             teamVal.isPublish = True
             # 自由组队目标大于2，才进匹配队列
             if teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
-                self.teamPrepareAutoMatch(teamId, teamPlayerInfoDic.get('guildUUID', 0))
+                self.teamPrepareAutoMatch(teamId)
 
         # 定时启动自动检查是否自动开始
         self.checkAutoStart(teamId)
@@ -1416,8 +1416,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
                 )
             )
 
-    def teamPrepareAutoMatch(self, teamId, guildUUID):
-        LOG_INFO('in teamPrepareAutoMatch:', teamId, guildUUID)
+    def teamPrepareAutoMatch(self, teamId):
+        LOG_INFO('in teamPrepareAutoMatch:', teamId)
         _teamVal = self.getTeamByTeamId(teamId)
         if not _teamVal:
             return
@@ -1427,7 +1427,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             LOG_WARN('   in teamPrepareAutoMatch, team full:', teamId)
             _teamVal.fetchCaptainBox().onMessagePre(TM_MCD.datas['teamMatch_fullMsg']['value'], [])
             return
-        _teamVal.startAutoMatch(guildUUID)
+        _teamVal.startAutoMatch()
 
     def doTeamPrepareStopAutoMatch(self, teamId):
         LOG_INFO('in doTeamPrepareStopAutoMatch:', teamId)
@@ -1445,7 +1445,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
         self.addTeamMemberInStub(teamId, newPlayerDic)
         return
 
-    def setTeamTarget(self, gbID, teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, guildUUID):
+    def setTeamTarget(self, gbID, teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             LOG_ERR('in setTeamTarget: missing team, ', teamId, teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
@@ -1469,7 +1469,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
         # 改完队伍的目标之后，统一刷一遍匹配条件
         self.doTeamPrepareStopAutoMatch(teamId)
         if teamVal.isPublish and teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
-            self.teamPrepareAutoMatch(teamId, guildUUID)
+            self.teamPrepareAutoMatch(teamId)
 
         self.checkAutoStart(teamId)
 
@@ -1835,3 +1835,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             teamVal.broadcastToAllMembersCell(func, args, exclude)
         else:
             teamVal.broadcastToAllMembersBase(func, args, exclude)
+    
+    def onTeamDungeonCompletedCB(self, teamId, dungeonNo, spaceNo, reason, extra):
+        LOG_INFO("onTeamDungeonCompletedCB team ", teamId, dungeonNo, spaceNo, reason, extra)
+        self.destroyTeamDungeonDelay(teamId, dungeonNo, spaceNo, reason, extra)
+        self.teamPrepareAutoMatch(teamId)

@@ -24,17 +24,17 @@
             <Default>       1             </Default>
         </spacetype>
 
-        <chunkAlready>
+        <alreadyTrunk>
             <Type>      BOOL        </Type>
             <Flags>     BASE        </Flags>
             <Default>   0       </Default>
-        </chunkAlready>
+        </alreadyTrunk>
 
-        <notifiedSpaceReady>
+        <isNotifiedSpaceReady>
             <Type>      BOOL        </Type>
             <Flags>     BASE        </Flags>
             <Default>   0       </Default>
-        </notifiedSpaceReady>
+        </isNotifiedSpaceReady>
 
         <cellappIndex>
             <!--this property use in KBEngine.createCellEntityInNewSpace-->
@@ -107,15 +107,6 @@
         <removeEntById>
             <Arg>       STRING          </Arg>
         </removeEntById>
-
-        <setHomeCompByteMap>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       INT32           </Arg>
-            <Arg>       INT32           </Arg>
-            <Arg>       UINT16          </Arg>
-            <Arg>       UINT16          </Arg>
-            <Arg>       ARRAY   <of>    UINT8      </of>   </Arg>
-        </setHomeCompByteMap>
 
         <updateSpaceWeight>
             <Arg>       UINT32          </Arg>

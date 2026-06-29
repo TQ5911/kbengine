@@ -19,8 +19,9 @@ datas = _tools.RODict({
         "ID": 1,
         "name": "大月卡",
         "itemId": 0,
-        "costItem": (30000001, 680),
-        "activateItem": 30000312,
+        "costItemFirst": (30000001, 980),
+        "costItem": (30000001, 1680),
+        "activateItem": 30000317,
         "reward": 40000156,
         "dailyReward": 40000157
     }),
@@ -28,10 +29,11 @@ datas = _tools.RODict({
         "ID": 2,
         "name": "小月卡",
         "itemId": 0,
-        "costItem": (30000001, 280),
-        "activateItem": 30000316,
-        "reward": 40000158,
-        "dailyReward": 40000159
+        "costItemFirst": (30000001, 680),
+        "costItem": (30000001, 980),
+        "activateItem": 30000318,
+        "reward": 40000193,
+        "dailyReward": 40000194
     })
 })
 minKey = 1

@@ -299,10 +299,10 @@ class ICubeCell(object):
             return
 
         if self.cubeQuota.leftTime <= 0:
-            self.base.beforeEnterCubeDecrementCnt({})
+            self.base.beforeEnterCubeDecrementCnt({'floor': _floor})
             return
 
-        extra = {'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME, 'hasCast': False}
+        extra = {'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME, 'hasCast': False, 'floor': _floor}
         gameengine.getCubeStub(_floor).doEnterCubeReady(
             self.base, self.gbId, extra)
 
@@ -413,7 +413,7 @@ class ICubeCell(object):
 
     @utils.isMyself
     def leaveCube(self, exposed):
-        self.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_CLIENT, False)
+        self.leaveCubeInternal(gameconst.DunSrcEnum.FROM_CLIENT, False)
 
     def leaveCubeInternal(self, srcId, hasCast=True):
         if not formula.inCubeScene(self.spaceNo):
@@ -528,7 +528,7 @@ class ICubeCell(object):
             self._onCubeTimeOutRenew()
 
         else:
-            self.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT, True)
+            self.leaveCubeInternal(gameconst.DunSrcEnum.FROM_TIME_OUT, True)
 
     def _checkAddCubeRoomDurationCondition(self):
         _curMapId = formula.fetchMapId(self.spaceNo)
@@ -695,7 +695,7 @@ class ICubeCell(object):
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             '_switchCubeLine',
             (lineNo,),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)

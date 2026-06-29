@@ -21,7 +21,7 @@ class collectItem(userType.UserSingleType):
         self.state = dataDict['state']
 
     # obj -> db
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'collectibleID': self.collectibleID,
             'state': self.state
@@ -69,10 +69,10 @@ class collectInfo(userType.UserSingleType):
             self.collectibleDict[data['collectibleID']] = collectible
 
     # obj -> db
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         collectibleList = []
         for data in self.collectibleDict.values():
-            collectibleList.append(data.toSavedDict())
+            collectibleList.append(data.toStreamSavedDic())
         return {
             'collectibleList': collectibleList,
         }
@@ -84,7 +84,7 @@ class collectInstance(object):
         return collectInstance
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is collectInfo

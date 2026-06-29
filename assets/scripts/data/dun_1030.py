@@ -10347,9 +10347,9 @@ datas ={
     "EntityID": 16000090,
     "ID": 10308017,
     "Name": "\u6708\u5149\u6d77\u6e2f\u73cd\u73e0",
-    "PosX": 458.49,
-    "PosY": 123.876,
-    "PosZ": 223.25,
+    "PosX": 458.4285,
+    "PosY": 123.6495,
+    "PosZ": 224.4417,
     "Props": {
       "ChestGroupID": "",
       "IsOnGround": 1,

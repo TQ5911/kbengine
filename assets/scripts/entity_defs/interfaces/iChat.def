@@ -133,9 +133,9 @@
             <Arg>           PLAYER_GBID         </Arg>
         </queryItemLink>
 
-        <onFindLinkItemOwnerFailed>
+        <onFindLinkItemOwnerFail>
             <Arg>           ARRAY <of>  PLAYER_GBID     </of>         </Arg>
-        </onFindLinkItemOwnerFailed>
+        </onFindLinkItemOwnerFail>
 
         <queryPlayerLink> <Exposed/>
             <Arg>           PLAYER_GBID      </Arg>

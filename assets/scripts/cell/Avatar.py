@@ -70,6 +70,7 @@ import iChief
 import iNewbie
 import iCrossServer
 import iWorldLevel
+import iReplicaAvatar
 
 import iMeridian
 import iMonthCard
@@ -105,7 +106,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              impAutoCombat.ImpAutoCombat, iScore.IScore, impAvatarPK.ImpAvatarPK, iChat.IChat,
              impTeamDungeon.ImpTeamDungeon, impSingleDungeon.ImpSingleDungeon, impRaidDungeon.ImpRaidDungeon,
              iMonsterGrp.IMonsterGrp, impOutfit.ImpOutfit, iMount.IMount, impAvatarPet.ImpAvatarPet,
-             impEquipment.ImpEquipment, iCrusade.ICrusade, iRelive.IRelive,
+             impEquipment.ImpEquipment, iCrusade.ICrusade, iRelive.IRelive, iReplicaAvatar.IReplicaAvatar,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief, iBounty.IBounty, iEmote.IEmote,
@@ -140,6 +141,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iWorldLevel.IWorldLevel.__init__(self)
         iEmote.IEmote.__init__(self)
         iSpeedCheck.ISpeedCheck.__init__(self)
+        iReplicaAvatar.IReplicaAvatar.__init__(self)
 
         self.initDatetimeTimerTick()
 
@@ -259,7 +261,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 LOG_INFO("del avatar cnt when destroy", gameglobal.cellAvatarCount)
             self.unsetAllHateRecord(gameconst.UnsetAllHateReason.destory)
             self.saveBuffs()
-            self.removeAllBuff()
+            self.doRemoveAllBuff()
             self.clearTeamCacheBoxOnOffline()
             self.clearRaidCacheBoxOnOffline()
         except Exception as e:
@@ -282,7 +284,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def backSelectCharacterFromCrossServer(self):
         LOG_INFO("backSelectCharacterFromCrossServer::")
-        self.setCrossServerWaitingClientInitReason(gameconst.CrossServerWaitingClientInitTuple.BACKSELECTCHARACTER)
+        self.setCrossServerWaitingClientInitReason(gameconst.CrossServerWaitClientInitTuple.BACKSELECTCHARACTER)
         # self.base.backSelectCharacterBase()
 
     def onSpaceGone(self):
@@ -311,7 +313,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def offlineFromCrossServer(self, reason):
         LOG_INFO("offlineFromCrossServer::", reason)
         self.setCrossServerWaitingClientInitReason(
-            gameconst.CrossServerWaitingClientInitTuple.OFFLINE,
+            gameconst.CrossServerWaitClientInitTuple.OFFLINE,
             reasonArgs=(reason, ), timeout=0.1)
 
     def _offline(self, reason):
@@ -469,9 +471,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.setProp('level', self.level, gameconst.SourceType.SrcTpInit)
         self.mp = self.fullMp
         self.hp = self.fullHp
-        self.pkProtect=1 << gameconst.PKProtectType.TEAM | 1 << gameconst.PKProtectType.GROUP | 1 << gameconst.PKProtectType.GUILD | 1 << gameconst.PKProtectType.UNION
+        self.pkProtect=1 << gameconst.PKProtectEnum.TEAM | 1 << gameconst.PKProtectEnum.GROUP | 1 << gameconst.PKProtectEnum.GUILD | 1 << gameconst.PKProtectEnum.UNION
         self.base.initNoviceBase()
-        self.base.updateRoleCache({'name': self.name, 'level': self.level, 'school': self.school,'sex': self.sex})
+        self.base.updateRoleCache({
+            'name': self.name, 
+            'school': self.school,
+            'level': self.level, 
+            'sex': self.sex,
+        })
 
         for i, val in enumerate(CONST.datas['autoFightSettingsDefaultStatus']['value']):
             self._updateCommonFlagCell(i, val)
@@ -588,7 +595,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             '_reqTransmitWithMapPoint',
             (mapId, exampleId),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
@@ -1067,16 +1074,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
             _fromMapId = formula.fetchMapId(self.lastTeleportSpaceNoRecord)
             _toMapId = formula.fetchMapId(self.spaceNo)
-            LogTrackingMgr.LogTrackingMgr.Teleport(
+            LogTrackingMgr.LogTrackingMgr.teleport(
                 self.gbId,
                 self.clientDistinctIdCell,
-                self.gbId,
-                self.level,
                 _fromMapId,
                 _toMapId,
-                '',
-                True,
-                '',
             )
 
     def onTeleportSuccess(self, nearbyEntity):
@@ -1316,6 +1318,16 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         2#敌对
         3#进视野早晚
         """
+        _load = KBEngine.getAverageLoad()
+
+        if _load > 0.9:
+            if KBEngine.time() - self.lastResortTimes < 30:
+                return
+
+        elif _load > 0.8:
+            if KBEngine.time() - self.lastResortTimes < 20:
+                return
+
         if not self.isNeedResortView:
             return
 
@@ -1341,59 +1353,60 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.reSortRelationListWithAllList(_allList)
 
     def reSortRelationListWithAllList(self, allList):
-        removeCurLevelSet = self.viewEnterViewSet.copy()
+        _removeCurLevelSet = self.viewEnterViewSet.copy()
         listLen = len(allList)
 
         showCompleteModelNum = self.showCompleteNum
         showNameNum = utils.fetchShowNameNum()
         curCompleteSet = set(allList[:min(listLen, showCompleteModelNum)])
         LOG_DBG('reSortRelationList curCompleteSet', curCompleteSet)
-        addList = curCompleteSet.difference(self.viewCompleteSet)
-        for eId in addList:
-            entity = KBEngine.entities.get(eId)
+        _addList = curCompleteSet.difference(self.viewCompleteSet)
+        for _eId in _addList:
+            entity = KBEngine.entities.get(_eId)
             entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
-            removeCurLevelSet.discard(eId)
-        rmCompleteSet = self.viewCompleteSet.difference(curCompleteSet)
-        removeCurLevelSet.update(rmCompleteSet)
-        if len(rmCompleteSet) > 0:
-            self.client.onRemoveCompleteWitness(list(rmCompleteSet))
+            _removeCurLevelSet.discard(_eId)
+        _rmCompleteSet = self.viewCompleteSet.difference(curCompleteSet)
+        _removeCurLevelSet.update(_rmCompleteSet)
+        if len(_rmCompleteSet) > 0:
+            self.client.onRemoveCompleteWitness(list(_rmCompleteSet))
         self.viewCompleteSet = curCompleteSet
 
-        ignoreNum = showCompleteModelNum + showNameNum
+        _ignoreNum = showCompleteModelNum + showNameNum
         if listLen >= showCompleteModelNum:
-            curNameSet = set(allList[showCompleteModelNum:min(listLen, ignoreNum)])
-            addNameList = curNameSet.difference(self.viewNameSet)
-            for eId in addNameList:
-                removeCurLevelSet.discard(eId)
-                entity = KBEngine.entities.get(eId)
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
+            _curNameSet = set(allList[showCompleteModelNum:min(listLen, _ignoreNum)])
+            _addNameList = _curNameSet.difference(self.viewNameSet)
+            for _eId in _addNameList:
+                _removeCurLevelSet.discard(_eId)
+                _entity = KBEngine.entities.get(_eId)
+                _entity and _entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
 
-            rmNameSet = self.viewNameSet.difference(curNameSet)
-            rmNameSet = rmNameSet.difference(self.viewCompleteSet)
-            removeCurLevelSet.update(rmNameSet)
-            self.viewNameSet = curNameSet
+            _rmNameSet = self.viewNameSet.difference(_curNameSet)
+            _rmNameSet = _rmNameSet.difference(self.viewCompleteSet)
+            _removeCurLevelSet.update(_rmNameSet)
+            self.viewNameSet = _curNameSet
         else:
             self.viewNameSet.clear()
 
         # 处理同一帧内出去又进来的情况
-        for eId in (self.viewEnterViewSet & self.viewLeaveViewSet):
-            removeCurLevelSet.discard(eId)
-            entity = KBEngine.entities.get(eId)
-            if eId in self.viewCompleteSet:
+        for _eId in (self.viewEnterViewSet & self.viewLeaveViewSet):
+            _removeCurLevelSet.discard(_eId)
+            entity = KBEngine.entities.get(_eId)
+            if _eId in self.viewCompleteSet:
                 entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
-            elif eId in self.viewNameSet:
+            elif _eId in self.viewNameSet:
                 entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
             else:
                 entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
 
-        for eId in removeCurLevelSet:
-            if eId in self.enterViewList or eId in self.viewCrossServerSet:
-                entity = KBEngine.entities.get(eId)
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
+        for _eId in _removeCurLevelSet:
+            if _eId in self.enterViewList or _eId in self.viewCrossServerSet:
+                _entity = KBEngine.entities.get(_eId)
+                _entity and _entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
 
         self.isNeedResortView = False
         self.viewEnterViewSet.clear()
         self.viewLeaveViewSet.clear()
+        self.lastResortTimes = KBEngine.time()
 
     def batchlyCall(self, iterableCall, batchNum, interval=0.5, callback=None):
         'callable obj cannot store in addTimerCB data'
@@ -1444,7 +1457,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             LOG_ERR('_onCommonCastTimer call but ctx is None:', castType, funcName, args)
             return
 
-        if castType != gameconst.CastType.teleportClientDelay and not self.hasState(_ctx.castState):
+        if castType != gameconst.CastEnum.teleportClientDelay and not self.hasState(_ctx.castState):
             _ctx.callFailedFunc(self)
             return
 
@@ -1796,7 +1809,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             '_switchMapModeTransmit',
             (mapId, exampleId, model),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
@@ -1832,3 +1845,24 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def switchMapModeTransmitFail(self, *args):
         LOG_INFO('switchMapModeTransmitFail', *args, self.mapMode)
         self.mapMode = args[0]
+        
+    def syncSpecialVisible(self, specialVisibleBits):
+        self.specialVisibleBitsCell = specialVisibleBits
+        LOG_DBG("updateSpecialVisibleBySpace cell", self.specialVisibleBitsCell.toBigBitSavedDict())
+
+    def _isSpecialVisible(self, bit):
+        return self.specialVisibleBitsCell.isHasState(bit)
+    
+    def checkSpecialVisible(self, name, type, funcList, *args):
+        LOG_DBG("checkSpecialVisible cell", name, type, funcList, *args)
+        for func in funcList:
+            if not func:
+                continue
+            if not hasattr(self, func):
+                continue
+            if getattr(self, func)(*args):
+                continue
+            LOG_DBG("checkSpecialVisible cell false", func)
+            return False
+        LOG_DBG("checkSpecialVisible cell success")
+        return True

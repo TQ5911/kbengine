@@ -6,15 +6,15 @@ import Bag
 
 class BagInfo(object):
     def createObjFromDict(self, dataDict):
-        bag = Bag.Bag()
-        bag.initFromDict(dataDict)
-        return bag
-
-    def getDictFromObj(self, obj):
-        return obj.toBagSavedDict()
+        _bag = Bag.Bag()
+        _bag.initFromDict(dataDict)
+        return _bag
 
     def isSameType(self, obj):
         return type(obj) is Bag.Bag
+
+    def getDictFromObj(self, obj):
+        return obj.toBagSavedDict()
 
 
 bagInstance = BagInfo()

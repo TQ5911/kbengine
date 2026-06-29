@@ -42,12 +42,25 @@
             <Persistent>    true                 </Persistent>
         </lastMonthCardHangupGetTime>
 
+        <lastFreeHangupGetTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+            <Persistent>    true                 </Persistent>
+        </lastFreeHangupGetTime>
+
         <totalOfflineExp>
             <Type>          EXP             </Type>
             <Flags>         BASE            </Flags>
             <Persistent>    true            </Persistent>
             <Default>       0               </Default>
         </totalOfflineExp>
+
+        <totalOfflineAward>
+            <Type>          PYTHON          </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       None            </Default>
+        </totalOfflineAward>
 
         <totalOfflineMinute>
             <Type>          UINT32          </Type>
@@ -75,6 +88,13 @@
             <Default>       0                       </Default>
             <Persistent>    true                    </Persistent>
         </bigMonthCardExpireTimeCell>
+
+        <monthCardFirstPurchaseRecord>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </monthCardFirstPurchaseRecord>
     </Properties>
 
     <BaseMethods>
@@ -110,6 +130,9 @@
         <onOfflineHangupData>
             <Arg>       LONGTIME       </Arg>
             <Arg>       EXP            </Arg>
+            <Arg>        ARRAY <of> AWARD_ITEM_VAL </of>     </Arg>
+            <Arg>        ARRAY <of> REWARD_VAL </of>     </Arg>
+            <Arg>        ARRAY <of> REWARD_VAL </of>     </Arg>
         </onOfflineHangupData>
     </ClientMethods>
 </root>

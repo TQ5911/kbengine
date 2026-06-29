@@ -8,6 +8,8 @@ set CSHARP_OUT_PATH=%curpath%/../../../../Client/Assets/CSHotUpdate/Scripts/Prot
 
 cd %PROTO_TOOL_PATH%/protoc-3.3.0-csharp/
 protoc -I %PROTO_SRC_PATH% --csharp_out=%CSHARP_OUT_PATH% %PROTO_SRC_PATH%/centralLogin.proto
+cd %curpath%
+python tools/read_proto_index.py scripts/common/proto/centralLogin_pb2.py --lua -o scripts\bots\centralLogin.lua
 
 cd %PROTO_TOOL_PATH%/protoc-3.6.1-win32/bin
 protoc -I=%PROTO_SRC_PATH% --python_out=%PROTO_OUT_PATH% adminServer.proto

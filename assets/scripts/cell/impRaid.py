@@ -14,8 +14,6 @@ import gameconfig
 
 import message_Message_def as M_M_DD
 import raid_raidConst as R_RCD
-import visible_visible as UVVD
-import teamMatch_matchConfig as TMMCD
 import activityControl_activityData as AC_ADD
 import teamMatch_activity as TMACTD
 import teamMatch_matchConfig as TM_MCD
@@ -148,9 +146,16 @@ class ImpRaid(object):
 
         if formula.inLineScene(self.spaceNo):
             isLeader = self.gbId == self.raidInfo.raidCaptainGBID
-            lineType = formula.fetchMapId(self.spaceNo)
+            _lineType = formula.fetchMapId(self.spaceNo)
             lineNo = formula.parseLineNo(self.spaceNo)
-            gameengine.getLineStub(lineType).updateLinePlayerInfo(lineNo, self.base, self.gbId, {'changeTeam':(self.raidId, newRaidCacheVal.raidUUID, isLeader)})
+            gameengine.getLineStub(_lineType).updateLinePlayerInfo(
+                lineNo, 
+                self.base, 
+                self.gbId, 
+                {
+                    'changeTeam':(self.raidId, newRaidCacheVal.raidUUID, isLeader),
+                }
+            )
 
         self.raidUUID = newRaidCacheVal.raidUUID
         # 【【程序自主】团队中团员职务暴露给所有客户端】
@@ -301,9 +306,6 @@ class ImpRaid(object):
         if 'hp' not in _lastRecord or _lastRecord['hp'] != self.hp or 'fullHp' not in _lastRecord or _lastRecord['fullHp'] != self.fullHp:
             _lastRecord['hp'] = self.hp
             _lastRecord['fullHp'] = self.fullHp
-            modified = True
-        if 'playerName' not in _lastRecord or _lastRecord['playerName'] != self.name:
-            _lastRecord['playerName'] = self.name
             modified = True
 
         oldScore = _lastRecord.get('score', 0)
@@ -650,7 +652,7 @@ class ImpRaid(object):
 
         raidUUID = KBEngine.genUUID64()
         LOG_INFO('createRaidLonely::raidUUID: ', raidUUID)
-        leaderProps = self._getAvatarPropsForRaid().toSavedDict()
+        leaderProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         leaderProps['joinType'] = gameconst.TeamJoinType.CREATE
         gameengine.getRaidStub(raidUUID).createRaidLonely(
             self.base, self.gbId, raidUUID, capacity, [leaderProps, ], {}, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
@@ -720,7 +722,7 @@ class ImpRaid(object):
         extraProps['isRaidUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False)
         extraProps['isRaidDungeonUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False)
         
-        joinProps = self._getAvatarPropsForRaid().toSavedDict()
+        joinProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         gameengine.getRaidStub(raidUUID).applyJoinRaidLonely(self.base, self.gbId, joinProps, raidUUID, extraProps, password, False, applySource)
 
     def _applyJoinRaidLonelyCheck(self, raidUUID, applySource):
@@ -854,7 +856,7 @@ class ImpRaid(object):
             err = err.initkvbody(source=self._applyJoinRaidLonelyCheck.__name__)
             LOG_ERR('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
         else:
-            playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            playerProps = self._getAvatarPropsForRaid().toStreamSavedDic()
             joinType = gameconst.TeamJoinType.DEFAULT
             if applySource == gameconst.ApplySource.RECRUIT:
                 joinType = gameconst.TeamJoinType.RECRUIT
@@ -884,7 +886,7 @@ class ImpRaid(object):
                 or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False):
                 if needMsg:
                     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                        (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                        (TM_MCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
                     return None, gameconst.RaidErrno.ENUM_RAID_UI_DENIED.initkvbody(level=self.level)
         return None, _errno.ENUM_RAID_OK
 
@@ -911,7 +913,7 @@ class ImpRaid(object):
             # when playerProps `bool(playerProps) is False`, stub check will be quickly failed before timeout
             _playerProps = {}
         else:
-            _playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            _playerProps = self._getAvatarPropsForRaid().toStreamSavedDic()
             
         extraProps.update({'memberCheckErrno': err})
         gameengine.getRaidStub(raidUUID).onReplyJoinRaidWithTeam(
@@ -1129,7 +1131,7 @@ class ImpRaid(object):
                 LOG_WARN('invitedPlayerOnApplyInvitedRaid:: func is locked, errno={}'.format(_err))
                 if needMsg:
                     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                    (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                    (TM_MCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
                 
             elif _err == gameconst.RaidErrno.ENUM_RAID_NOT_TEAM_CAPTAIN:
                 LOG_WARN('invitedPlayerOnApplyInvitedRaid:: not team captain, errno={}'.format(_err))
@@ -1165,18 +1167,22 @@ class ImpRaid(object):
                 LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player level too low, errno={}'.format(_err))
                 if needMsg:
                     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                        (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
+                        (int(TM_MCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
             elif _err == gameconst.RaidErrno.ENUM_RAID_SOCRE_IS_ILLEGAL:
                 LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player score too low, errno={}'.format(_err))
                 if needMsg:
                     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-                        (int(TMMCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
+                        (int(TM_MCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
             elif _err == gameconst.RaidErrno.ENUM_RAID_IN_CROSS_STATE:
                 LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player is in cross state, errno={}'.format(_err))
                 if needMsg:
                     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
                         (int(TM_MCD.datas['teamInviteMapMsg']['value']), []), None, '', ())
-
+            elif _err == gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_DUNGEON:
+                LOG_WARN('invitedPlayerOnApplyInvitedRaid:: player is in dungeon state, errno={}'.format(_err))
+                if needMsg:
+                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (TM_MCD.datas['team_inCopyScene']['value'], []), None, '', ())
             else:
                 LOG_ERR('invitedPlayerOnApplyInvitedRaid:: failed, {}'.format(_err))
 
@@ -1195,7 +1201,9 @@ class ImpRaid(object):
             if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False) \
                 or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False):
                 return None, gameconst.RaidErrno.ENUM_RAID_UI_DENIED.initkvbody(level=self.level)
-
+        if formula.inDungeonScene(self.spaceNo):
+            return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_DUNGEON
+        
         if self.inRaid():
             return None, gameconst.RaidErrno.ENUM_RAID_ALREADY_IN_RAID
         
@@ -1277,7 +1285,7 @@ class ImpRaid(object):
 
         # if reply succeed, pop all raidUUID be invited records
         self.raidBeInvitedRecordDic.clear()
-        _playerProps = self._getAvatarPropsForRaid().toSavedDict()
+        _playerProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         extraProps = {}
         extraProps['inviteType'] = inviteType
         if raidUUID > 0:
@@ -1326,7 +1334,7 @@ class ImpRaid(object):
             return
 
         raidUUID = KBEngine.genUUID64()
-        leaderProps = self._getAvatarPropsForRaid().toSavedDict()
+        leaderProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         leaderProps['joinType'] = gameconst.TeamJoinType.CREATE
         gameengine.getRaidStub(raidUUID).createRaid(
             self.base, self.gbId, raidUUID, dataUtils.getRaidConstDataValue('raidMemberLimit'), [leaderProps], {})
@@ -1432,7 +1440,7 @@ class ImpRaid(object):
         self.raidBeInvitedRecordDic.pop(raidUUID)
         teamUUID = record['teamUUID']
         teamMemberNum = len(self.teamInfo.teamPlayerDict)
-        playerProps = self._getAvatarPropsForRaid().toSavedDict()
+        playerProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         self._doReplyInviteRaidWithTeam(raidUUID, recordID, teamUUID, playerProps,
                                         teamMemberNum, srcPlayerGbId, isCaptain=True)
         self.teamInfo.allMembersCellDo('tryReplyInviteRaidFollowTeamCaptain',
@@ -1498,7 +1506,7 @@ class ImpRaid(object):
                 return
 
         else:
-            _playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            _playerProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         # always callback to raidStub
         self._doReplyInviteRaidWithTeam(raidUUID, recordID, teamUUID, _playerProps,
                                         teamMemberNum, srcPlayerGbId, isCaptain=False)
@@ -1799,15 +1807,15 @@ class ImpRaid(object):
         #变成团长
         if self.gbId == toPlayerGBID:
             if formula.inLineScene(self.spaceNo):
-                lineType = formula.fetchMapId(self.spaceNo)
+                _lineType = formula.fetchMapId(self.spaceNo)
                 lineNo = formula.parseLineNo(self.spaceNo)
-                gameengine.getLineStub(lineType).updateLinePlayerInfo(
+                gameengine.getLineStub(_lineType).updateLinePlayerInfo(
                     lineNo, self.base, self.gbId, {'changeTeam':(self.raidId, self.raidId, True)})
         elif self.gbId == srcPlayerGbId:
             if formula.inLineScene(self.spaceNo):
-                lineType = formula.fetchMapId(self.spaceNo)
+                _lineType = formula.fetchMapId(self.spaceNo)
                 lineNo = formula.parseLineNo(self.spaceNo)
-                gameengine.getLineStub(lineType).updateLinePlayerInfo(
+                gameengine.getLineStub(_lineType).updateLinePlayerInfo(
                     lineNo, self.base, self.gbId, {'changeTeam':(self.raidId, self.raidId, False)})
 
         teamCacheVal.teamCaptainGBID = toPlayerGBID
@@ -2346,15 +2354,15 @@ class ImpRaid(object):
         # 取消团队匹配
         self.stopRaidMatch()
 
-        playerMatchDic = {
-            'target' : target,
+        _playerMatchDic = {
             'playerGbId': self.gbId,
-            'playerBox': self.base,
+            'target' : target,
             'playerName': self.name,
-            'level': self.level,
+            'playerBox': self.base,
             'school': self.school,
-            'sex': self.sex,
+            'level': self.level,
             'picFrameId': self.appearance.outfitData.picFrameId,
+            'sex': self.sex,
             'bOnline': True,
             'spaceNo': self.spaceNo,
             'position': self.position,
@@ -2368,8 +2376,7 @@ class ImpRaid(object):
             'isDead': False,
             'openId': "openId",
         }
-        gameengine.getGlobalBase('RaidMatchStub').raidPlayerAutoMatch(playerMatchDic)
-        return
+        gameengine.getGlobalBase('RaidMatchStub').raidPlayerAutoMatch(_playerMatchDic)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
@@ -2430,7 +2437,7 @@ class ImpRaid(object):
         self.autoRaidMatchStartTime = 0
         self.autoRaidMatchTarget = 0
         self.client.onRaidPlayerStopAutoMatch()
-        self.showMsg(TMMCD.datas['leaveMatch_timeOverMsg']['value'], [])
+        self.showMsg(TM_MCD.datas['leaveMatch_timeOverMsg']['value'], [])
         return
 
     @gamedecorator.checkGameconfigEnable('raid')
@@ -2483,7 +2490,7 @@ class ImpRaid(object):
         if self.raidUUID > 0:
             LOG_WARN('in onPlayerMatchedRaid, already join a raid:', self.raidUUID)
             return
-        gameengine.getRaidStub(raidUUID).newRaidPlayerMatched(raidUUID, self._getAvatarPropsForRaid().toSavedDict())
+        gameengine.getRaidStub(raidUUID).newRaidPlayerMatched(raidUUID, self._getAvatarPropsForRaid().toStreamSavedDic())
         return
 
     def leaveRaidAuto(self):
@@ -2555,7 +2562,7 @@ class ImpRaid(object):
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
         else:
-            playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            playerProps = self._getAvatarPropsForRaid().toStreamSavedDic()
             gameengine.getRaidStub(raidUUID).reqJoinRaid(self.base, raidUUID, password, playerProps)
 
     def _onJoinRaidCheck(self):

@@ -41,12 +41,12 @@ class IAuctionMixin(object):
         if number > maxStackSize:
             return _r_False, gameconst.AuctionErrno.ERR_AUCTION_SALE_ITEM_NUM_ERROR
 
-        m_bagData = self.getBagByType(bagType)
-        if not m_bagData:
+        mBagData = self.getBagByType(bagType)
+        if not mBagData:
             return _r_False, gameconst.AuctionErrno.ERR_AUCTION_PLAYER_BAG_TYPE_UNKNOWN.initkvbody(
                 itemId=itemId, bagType=bagType)
 
-        m_gridId, m_itemObj = m_bagData.fetchItemByItemIdAndUniqueId(itemId, uniqueId, True)
+        m_gridId, m_itemObj = mBagData.fetchItemByItemIdAndUniqueId(itemId, uniqueId, True)
         curTime = utils.curTS()
         def __itemCommonCheck(_w_itemObj):
             """对于每个物品的check"""
@@ -77,18 +77,18 @@ class IAuctionMixin(object):
 
             return gameconst.AuctionErrno.ERR_AUCTION_OK
 
-        m_errno = __itemCommonCheck(m_itemObj)
-        if m_errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
-            return _r_False, m_errno
+        mErrno = __itemCommonCheck(m_itemObj)
+        if mErrno != gameconst.AuctionErrno.ERR_AUCTION_OK:
+            return _r_False, mErrno
 
         # CASE1: 可以当前(一个)格子扣除上架物品
         if m_itemObj.itemNum >= number:
-            return (m_itemObj, {m_gridId: number}), m_errno
+            return (m_itemObj, {m_gridId: number}), mErrno
 
         # OTHER_CASES: 需要扣除多个格子的物品
         _m_currentNum = m_itemObj.itemNum
         m_gridDict = {m_gridId: _m_currentNum}
-        for iGridId, iItemObj in m_bagData.iterGetItemByItemId(itemId):
+        for iGridId, iItemObj in mBagData.iterGetItemByItemId(itemId):
             if _m_currentNum >= number:
                 break
 
@@ -117,4 +117,4 @@ class IAuctionMixin(object):
         if _m_currentNum < number:
             return _r_False, gameconst.AuctionErrno.ERR_AUCTION_DEDUCT_ITEM_ERROR
 
-        return (m_itemObj, m_gridDict), m_errno
+        return (m_itemObj, m_gridDict), mErrno

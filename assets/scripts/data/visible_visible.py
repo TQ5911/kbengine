@@ -21,7 +21,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "x": _tools.RODict({
         "function": "x",
@@ -29,7 +30,8 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIBagPanel": _tools.RODict({
         "function": "UIBagPanel",
@@ -37,7 +39,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 1
     }),
     "ChangeTarget": _tools.RODict({
         "function": "ChangeTarget",
@@ -45,7 +48,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UI_camera": _tools.RODict({
         "function": "UI_camera",
@@ -53,7 +57,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UI_cards": _tools.RODict({
         "function": "UI_cards",
@@ -61,7 +66,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UI_hp": _tools.RODict({
         "function": "UI_hp",
@@ -69,7 +75,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UI_level": _tools.RODict({
         "function": "UI_level",
@@ -77,7 +84,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UI_score": _tools.RODict({
         "function": "UI_score",
@@ -85,7 +93,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "QuickSettings": _tools.RODict({
         "function": "QuickSettings",
@@ -93,7 +102,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "queueServer": _tools.RODict({
         "function": "queueServer",
@@ -101,7 +111,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "photograph": _tools.RODict({
         "function": "photograph",
@@ -109,7 +120,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "shareBtn": _tools.RODict({
         "function": "shareBtn",
@@ -117,7 +129,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "shareSystem": _tools.RODict({
         "function": "shareSystem",
@@ -125,7 +138,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Enemy": _tools.RODict({
         "function": "Enemy",
@@ -133,7 +147,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Duel": _tools.RODict({
         "function": "Duel",
@@ -141,15 +156,17 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "TenSign": _tools.RODict({
         "function": "TenSign",
         "type": "welfare_tenSign",
-        "level": 0,
+        "level": 999,
         "task": 86010003,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Meridian": _tools.RODict({
         "function": "Meridian",
@@ -157,7 +174,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030033,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Attention": _tools.RODict({
         "function": "Attention",
@@ -165,7 +183,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "phoneBind": _tools.RODict({
         "function": "phoneBind",
@@ -173,7 +192,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "LevelReward": _tools.RODict({
         "function": "LevelReward",
@@ -181,7 +201,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Questionnaire": _tools.RODict({
         "function": "Questionnaire",
@@ -189,7 +210,8 @@ datas = _tools.RODict({
         "level": 15,
         "task": 86010003,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "PcLoginReward": _tools.RODict({
         "function": "PcLoginReward",
@@ -197,7 +219,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "ResourceRecovery": _tools.RODict({
         "function": "ResourceRecovery",
@@ -205,7 +228,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIActivitiesPanel": _tools.RODict({
         "function": "UIActivitiesPanel",
@@ -213,7 +237,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "SevenSign": _tools.RODict({
         "function": "SevenSign",
@@ -221,7 +246,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UISkillSystemPanel": _tools.RODict({
         "function": "UISkillSystemPanel",
@@ -229,7 +255,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030027,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIRewardTaskPanel": _tools.RODict({
         "function": "UIRewardTaskPanel",
@@ -237,7 +264,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030029,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Stronger": _tools.RODict({
         "function": "Stronger",
@@ -245,7 +273,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010013,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIAppearancePanel": _tools.RODict({
         "function": "UIAppearancePanel",
@@ -253,7 +282,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030030,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIDrawPetPanel": _tools.RODict({
         "function": "UIDrawPetPanel",
@@ -261,7 +291,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030011,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIPetPanel": _tools.RODict({
         "function": "UIPetPanel",
@@ -269,7 +300,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030009,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIEquipTrainingPanel": _tools.RODict({
         "function": "UIEquipTrainingPanel",
@@ -277,7 +309,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030038,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipMakePanel": _tools.RODict({
         "function": "UIEquipMakePanel",
@@ -285,15 +318,17 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030028,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipWashPanel": _tools.RODict({
         "function": "UIEquipWashPanel",
         "type": "equip_unbundle",
         "level": 0,
-        "task": 86030028,
+        "task": 86010069,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UITaskInfoPanel": _tools.RODict({
         "function": "UITaskInfoPanel",
@@ -301,7 +336,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060104,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Team": _tools.RODict({
         "function": "Team",
@@ -309,7 +345,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UIWarehousePanel": _tools.RODict({
         "function": "UIWarehousePanel",
@@ -317,7 +354,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "ExitDun": _tools.RODict({
         "function": "ExitDun",
@@ -325,7 +363,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIAttributePanel": _tools.RODict({
         "function": "UIAttributePanel",
@@ -333,7 +372,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIFriendPanel": _tools.RODict({
         "function": "UIFriendPanel",
@@ -341,7 +381,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "GrowthGuide": _tools.RODict({
         "function": "GrowthGuide",
@@ -349,7 +390,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Chat": _tools.RODict({
         "function": "Chat",
@@ -357,7 +399,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIAchievementPanel": _tools.RODict({
         "function": "UIAchievementPanel",
@@ -365,7 +408,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Line": _tools.RODict({
         "function": "Line",
@@ -373,7 +417,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIMailPanel": _tools.RODict({
         "function": "UIMailPanel",
@@ -381,7 +426,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIMapPanel": _tools.RODict({
         "function": "UIMapPanel",
@@ -389,7 +435,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIPayStorePanel": _tools.RODict({
         "function": "UIPayStorePanel",
@@ -397,7 +444,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIPKProtectPanel": _tools.RODict({
         "function": "UIPKProtectPanel",
@@ -405,7 +453,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIPortableSetPanel": _tools.RODict({
         "function": "UIPortableSetPanel",
@@ -413,7 +462,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Raid": _tools.RODict({
         "function": "Raid",
@@ -421,7 +471,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UIRankPanel": _tools.RODict({
         "function": "UIRankPanel",
@@ -429,7 +480,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "DeathDrop": _tools.RODict({
         "function": "DeathDrop",
@@ -437,7 +489,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "AutoCombat": _tools.RODict({
         "function": "AutoCombat",
@@ -445,7 +498,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060146,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "AutoCollect": _tools.RODict({
         "function": "AutoCollect",
@@ -453,7 +507,8 @@ datas = _tools.RODict({
         "level": 4,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIRedPacketPanel": _tools.RODict({
         "function": "UIRedPacketPanel",
@@ -461,7 +516,8 @@ datas = _tools.RODict({
         "level": 9,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "MonthCard": _tools.RODict({
         "function": "MonthCard",
@@ -469,7 +525,8 @@ datas = _tools.RODict({
         "level": 999,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "quickTips": _tools.RODict({
         "function": "quickTips",
@@ -477,7 +534,8 @@ datas = _tools.RODict({
         "level": 9,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIPracticePanel": _tools.RODict({
         "function": "UIPracticePanel",
@@ -485,7 +543,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030033,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipIntensifyPage": _tools.RODict({
         "function": "UIEquipIntensifyPage",
@@ -493,7 +552,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030038,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Guild": _tools.RODict({
         "function": "Guild",
@@ -501,7 +561,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86050035,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIGuildPanel": _tools.RODict({
         "function": "UIGuildPanel",
@@ -509,7 +570,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86050035,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIGuildLobbyPanel": _tools.RODict({
         "function": "UIGuildLobbyPanel",
@@ -517,7 +579,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86050035,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UITeamDunPanel": _tools.RODict({
         "function": "UITeamDunPanel",
@@ -525,7 +588,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010068,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UISquarePanel": _tools.RODict({
         "function": "UISquarePanel",
@@ -533,7 +597,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030040,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UICollectionPanel": _tools.RODict({
         "function": "UICollectionPanel",
@@ -541,7 +606,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010005,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UISynthesisSystemPanel": _tools.RODict({
         "function": "UISynthesisSystemPanel",
@@ -549,7 +615,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030021,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIPropMakePanel": _tools.RODict({
         "function": "UIPropMakePanel",
@@ -557,7 +624,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030018,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "GuildBossChallenge": _tools.RODict({
         "function": "GuildBossChallenge",
@@ -565,7 +633,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030031,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIBusinessPanel": _tools.RODict({
         "function": "UIBusinessPanel",
@@ -573,7 +642,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010069,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipClassPage": _tools.RODict({
         "function": "UIEquipClassPage",
@@ -581,7 +651,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030037,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIWonderLandPanel": _tools.RODict({
         "function": "UIWonderLandPanel",
@@ -589,7 +660,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030039,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipEnchantingPage": _tools.RODict({
         "function": "UIEquipEnchantingPage",
@@ -597,7 +669,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010079,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UICrusadeSystemPanel": _tools.RODict({
         "function": "UICrusadeSystemPanel",
@@ -605,7 +678,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010077,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipRunePage": _tools.RODict({
         "function": "UIEquipRunePage",
@@ -613,7 +687,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010422,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipBlessPage": _tools.RODict({
         "function": "UIEquipBlessPage",
@@ -621,7 +696,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010309,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "MineBattle": _tools.RODict({
         "function": "MineBattle",
@@ -629,7 +705,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86030013,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIMineBattleManagePanel": _tools.RODict({
         "function": "UIMineBattleManagePanel",
@@ -637,7 +714,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86030013,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIRoleAuthorizationPanel": _tools.RODict({
         "function": "UIRoleAuthorizationPanel",
@@ -645,7 +723,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "CityBattle": _tools.RODict({
         "function": "CityBattle",
@@ -653,7 +732,8 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UICityBattlePanel": _tools.RODict({
         "function": "UICityBattlePanel",
@@ -661,7 +741,8 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIAbyssPanel": _tools.RODict({
         "function": "UIAbyssPanel",
@@ -669,7 +750,8 @@ datas = _tools.RODict({
         "level": 50,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "GeneralAttack": _tools.RODict({
         "function": "GeneralAttack",
@@ -677,7 +759,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Dodge": _tools.RODict({
         "function": "Dodge",
@@ -685,7 +768,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Sprint": _tools.RODict({
         "function": "Sprint",
@@ -693,7 +777,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060105,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Jump": _tools.RODict({
         "function": "Jump",
@@ -701,7 +786,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Fly": _tools.RODict({
         "function": "Fly",
@@ -709,7 +795,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill01": _tools.RODict({
         "function": "MageSkill01",
@@ -717,7 +804,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060055,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill02": _tools.RODict({
         "function": "MageSkill02",
@@ -725,15 +813,17 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060061,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill03": _tools.RODict({
         "function": "MageSkill03",
         "type": "skillMage",
         "level": 0,
-        "task": 86060089,
+        "task": 86060070,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill04": _tools.RODict({
         "function": "MageSkill04",
@@ -741,7 +831,8 @@ datas = _tools.RODict({
         "level": 6,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill05": _tools.RODict({
         "function": "MageSkill05",
@@ -749,7 +840,8 @@ datas = _tools.RODict({
         "level": 10,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill06": _tools.RODict({
         "function": "MageSkill06",
@@ -757,7 +849,8 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill07": _tools.RODict({
         "function": "MageSkill07",
@@ -765,31 +858,35 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill08": _tools.RODict({
         "function": "MageSkill08",
         "type": "skillMage",
-        "level": 24,
+        "level": 25,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill09": _tools.RODict({
         "function": "MageSkill09",
         "type": "skillMage",
-        "level": 28,
+        "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill10": _tools.RODict({
         "function": "MageSkill10",
         "type": "skillMage",
-        "level": 32,
+        "level": 35,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill11": _tools.RODict({
         "function": "MageSkill11",
@@ -797,7 +894,8 @@ datas = _tools.RODict({
         "level": 40,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkill12": _tools.RODict({
         "function": "MageSkill12",
@@ -805,7 +903,8 @@ datas = _tools.RODict({
         "level": 48,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MageSkillUlt": _tools.RODict({
         "function": "MageSkillUlt",
@@ -813,7 +912,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060090,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill01": _tools.RODict({
         "function": "TaoistSkill01",
@@ -821,7 +921,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060055,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill02": _tools.RODict({
         "function": "TaoistSkill02",
@@ -829,7 +930,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060061,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill03": _tools.RODict({
         "function": "TaoistSkill03",
@@ -837,7 +939,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060089,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill04": _tools.RODict({
         "function": "TaoistSkill04",
@@ -845,7 +948,8 @@ datas = _tools.RODict({
         "level": 6,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill05": _tools.RODict({
         "function": "TaoistSkill05",
@@ -853,7 +957,8 @@ datas = _tools.RODict({
         "level": 10,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill06": _tools.RODict({
         "function": "TaoistSkill06",
@@ -861,7 +966,8 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill07": _tools.RODict({
         "function": "TaoistSkill07",
@@ -869,31 +975,35 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill08": _tools.RODict({
         "function": "TaoistSkill08",
         "type": "skillTaoist",
-        "level": 24,
+        "level": 25,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill09": _tools.RODict({
         "function": "TaoistSkill09",
         "type": "skillTaoist",
-        "level": 28,
+        "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill10": _tools.RODict({
         "function": "TaoistSkill10",
         "type": "skillTaoist",
-        "level": 32,
+        "level": 35,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill11": _tools.RODict({
         "function": "TaoistSkill11",
@@ -901,7 +1011,8 @@ datas = _tools.RODict({
         "level": 40,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkill12": _tools.RODict({
         "function": "TaoistSkill12",
@@ -909,7 +1020,8 @@ datas = _tools.RODict({
         "level": 48,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "TaoistSkillUlt": _tools.RODict({
         "function": "TaoistSkillUlt",
@@ -917,7 +1029,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060090,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill01": _tools.RODict({
         "function": "WarriorSkill01",
@@ -925,7 +1038,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060055,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill02": _tools.RODict({
         "function": "WarriorSkill02",
@@ -933,7 +1047,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060061,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill03": _tools.RODict({
         "function": "WarriorSkill03",
@@ -941,7 +1056,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060089,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill04": _tools.RODict({
         "function": "WarriorSkill04",
@@ -949,7 +1065,8 @@ datas = _tools.RODict({
         "level": 6,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill05": _tools.RODict({
         "function": "WarriorSkill05",
@@ -957,7 +1074,8 @@ datas = _tools.RODict({
         "level": 10,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill06": _tools.RODict({
         "function": "WarriorSkill06",
@@ -965,7 +1083,8 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill07": _tools.RODict({
         "function": "WarriorSkill07",
@@ -973,31 +1092,35 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill08": _tools.RODict({
         "function": "WarriorSkill08",
         "type": "skillWarrior",
-        "level": 24,
+        "level": 25,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill09": _tools.RODict({
         "function": "WarriorSkill09",
         "type": "skillWarrior",
-        "level": 28,
+        "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill10": _tools.RODict({
         "function": "WarriorSkill10",
         "type": "skillWarrior",
-        "level": 32,
+        "level": 35,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill11": _tools.RODict({
         "function": "WarriorSkill11",
@@ -1005,7 +1128,8 @@ datas = _tools.RODict({
         "level": 40,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkill12": _tools.RODict({
         "function": "WarriorSkill12",
@@ -1013,7 +1137,8 @@ datas = _tools.RODict({
         "level": 48,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "WarriorSkillUlt": _tools.RODict({
         "function": "WarriorSkillUlt",
@@ -1021,7 +1146,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060090,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "xinyuanchengopentask": _tools.RODict({
         "function": "xinyuanchengopentask",
@@ -1029,7 +1155,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010024,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "tongxingguopentask": _tools.RODict({
         "function": "tongxingguopentask",
@@ -1037,7 +1164,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "feishayaosaiopentask": _tools.RODict({
         "function": "feishayaosaiopentask",
@@ -1045,7 +1173,8 @@ datas = _tools.RODict({
         "level": 35,
         "task": 86010058,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "jinglingcunopentask": _tools.RODict({
         "function": "jinglingcunopentask",
@@ -1053,7 +1182,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010087,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "jinglingbaodianopentask": _tools.RODict({
         "function": "jinglingbaodianopentask",
@@ -1061,23 +1191,26 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010087,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "shikuzoulangopentask": _tools.RODict({
         "function": "shikuzoulangopentask",
         "type": "mapTask",
-        "level": 40,
+        "level": 35,
         "task": 86010466,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "xinyuanchenjiaoopentask": _tools.RODict({
         "function": "xinyuanchenjiaoopentask",
         "type": "mapTask",
-        "level": 23,
+        "level": 25,
         "task": 86010050,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "zuke1Fopentask": _tools.RODict({
         "function": "zuke1Fopentask",
@@ -1085,7 +1218,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86010151,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "zuke2Fopentask": _tools.RODict({
         "function": "zuke2Fopentask",
@@ -1093,7 +1227,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86010161,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "zuke3Fopentask": _tools.RODict({
         "function": "zuke3Fopentask",
@@ -1101,7 +1236,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86010398,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "zuke4Fopentask": _tools.RODict({
         "function": "zuke4Fopentask",
@@ -1109,7 +1245,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86010398,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "zuke5Fopentask": _tools.RODict({
         "function": "zuke5Fopentask",
@@ -1117,7 +1254,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86010398,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "zuke6Fopentask": _tools.RODict({
         "function": "zuke6Fopentask",
@@ -1125,7 +1263,8 @@ datas = _tools.RODict({
         "level": 40,
         "task": 86010398,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "yueguang1Fopentask": _tools.RODict({
         "function": "yueguang1Fopentask",
@@ -1133,23 +1272,26 @@ datas = _tools.RODict({
         "level": 10,
         "task": 86010013,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "yueguang2Fopentask": _tools.RODict({
         "function": "yueguang2Fopentask",
         "type": "mapTask",
-        "level": 16,
+        "level": 20,
         "task": 86010032,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "yueguang3Fopentask": _tools.RODict({
         "function": "yueguang3Fopentask",
         "type": "mapTask",
-        "level": 22,
+        "level": 23,
         "task": 86010428,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "yueguang4Fopentask": _tools.RODict({
         "function": "yueguang4Fopentask",
@@ -1157,7 +1299,8 @@ datas = _tools.RODict({
         "level": 28,
         "task": 86010183,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "yueguang5Fopentask": _tools.RODict({
         "function": "yueguang5Fopentask",
@@ -1165,31 +1308,35 @@ datas = _tools.RODict({
         "level": 30,
         "task": 86010338,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "wudu1Fopentask": _tools.RODict({
         "function": "wudu1Fopentask",
         "type": "mapTask",
-        "level": 50,
+        "level": 45,
         "task": 86010466,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "wudu2Fopentask": _tools.RODict({
         "function": "wudu2Fopentask",
         "type": "mapTask",
-        "level": 52,
+        "level": 48,
         "task": 86010466,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "wudu4Fopentask": _tools.RODict({
         "function": "wudu4Fopentask",
         "type": "mapTask",
-        "level": 56,
+        "level": 50,
         "task": 86010466,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UISettingsPanel": _tools.RODict({
         "function": "UISettingsPanel",
@@ -1197,7 +1344,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIRedeemCodePanel": _tools.RODict({
         "function": "UIRedeemCodePanel",
@@ -1205,7 +1353,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIMainMenu": _tools.RODict({
         "function": "UIMainMenu",
@@ -1213,7 +1362,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "HotGift": _tools.RODict({
         "function": "HotGift",
@@ -1221,7 +1371,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "HolidayGift": _tools.RODict({
         "function": "HolidayGift",
@@ -1229,7 +1380,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Rmb": _tools.RODict({
         "function": "Rmb",
@@ -1237,7 +1389,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIGrowthGuidePanel": _tools.RODict({
         "function": "UIGrowthGuidePanel",
@@ -1245,7 +1398,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010013,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "PKStateArea": _tools.RODict({
         "function": "PKStateArea",
@@ -1253,7 +1407,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "UISocialPanel": _tools.RODict({
         "function": "UISocialPanel",
@@ -1261,7 +1416,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "Hotkey": _tools.RODict({
         "function": "Hotkey",
@@ -1269,7 +1425,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "MountBtn": _tools.RODict({
         "function": "MountBtn",
@@ -1277,7 +1434,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010027,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "CardChangeBtn": _tools.RODict({
         "function": "CardChangeBtn",
@@ -1285,7 +1443,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010037,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIDeathPunishmentPanel": _tools.RODict({
         "function": "UIDeathPunishmentPanel",
@@ -1293,7 +1452,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIMainLockPanel": _tools.RODict({
         "function": "UIMainLockPanel",
@@ -1301,7 +1461,8 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "CurrencyExchange": _tools.RODict({
         "function": "CurrencyExchange",
@@ -1309,7 +1470,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "worldLevel": _tools.RODict({
         "function": "worldLevel",
@@ -1317,7 +1479,8 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 1,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIActivityNotice": _tools.RODict({
         "function": "UIActivityNotice",
@@ -1325,7 +1488,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 1
+        "switch": 1,
+        "demon": 0
     }),
     "UIWorldBoss": _tools.RODict({
         "function": "UIWorldBoss",
@@ -1333,7 +1497,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIEquipSoul": _tools.RODict({
         "function": "UIEquipSoul",
@@ -1341,7 +1506,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010291,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Rental": _tools.RODict({
         "function": "Rental",
@@ -1349,7 +1515,8 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "Report": _tools.RODict({
         "function": "Report",
@@ -1357,7 +1524,8 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 2
+        "switch": 2,
+        "demon": 0
     }),
     "WorldTrumpet": _tools.RODict({
         "function": "WorldTrumpet",
@@ -1365,7 +1533,8 @@ datas = _tools.RODict({
         "level": 9,
         "task": 86060115,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
     }),
     "UIRoleAppearancePanel": _tools.RODict({
         "function": "UIRoleAppearancePanel",
@@ -1373,7 +1542,35 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
-        "switch": 0
+        "switch": 0,
+        "demon": 0
+    }),
+    "UIBountyPanel": _tools.RODict({
+        "function": "UIBountyPanel",
+        "type": "order",
+        "level": 30,
+        "task": 0,
+        "day": 0,
+        "switch": 0,
+        "demon": 0
+    }),
+    "RefundRecharge": _tools.RODict({
+        "function": "RefundRecharge",
+        "type": "welfare_refundRecharge",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0,
+        "demon": 0
+    }),
+    "UIActionVideoPanel": _tools.RODict({
+        "function": "UIActionVideoPanel",
+        "type": "posture",
+        "level": 999,
+        "task": 0,
+        "day": 0,
+        "switch": 0,
+        "demon": 0
     })
 })
 
@@ -1546,6 +1743,9 @@ Rental = 164
 Report = 165
 WorldTrumpet = 166
 UIRoleAppearancePanel = 167
+UIBountyPanel = 168
+RefundRecharge = 169
+UIActionVideoPanel = 170
 
 
 
@@ -1718,6 +1918,19 @@ funcDic = _tools.RODict({
     "Report" : 165,
     "WorldTrumpet" : 166,
     "UIRoleAppearancePanel" : 167,
+    "UIBountyPanel" : 168,
+    "RefundRecharge" : 169,
+    "UIActionVideoPanel" : 170,
+})
+demonDic = _tools.RODict({
+    "bag" : 1,
+})
+typeToBitsDic = _tools.RODict({
+    "bag" : _tools.RODict({
+        1 : _tools.ROList([
+            0,
+        ]),
+    }),
 })
 reverseFuncDic = _tools.RODict({
     0 : "UIBagPanel",
@@ -1888,8 +2101,18 @@ reverseFuncDic = _tools.RODict({
     165 : "Report",
     166 : "WorldTrumpet",
     167 : "UIRoleAppearancePanel",
+    168 : "UIBountyPanel",
+    169 : "RefundRecharge",
+    170 : "UIActionVideoPanel",
 })
 levelDic = _tools.RODict({
+    999 : _tools.ROList([
+        14,
+        54,
+        77,
+        78,
+        170,
+    ]),
     15 : _tools.ROList([
         19,
         90,
@@ -1905,14 +2128,12 @@ levelDic = _tools.RODict({
         55,
         166,
     ]),
-    999 : _tools.ROList([
-        54,
-        77,
-        78,
-    ]),
     30 : _tools.ROList([
         74,
         75,
+        93,
+        106,
+        119,
         131,
         132,
         133,
@@ -1923,10 +2144,11 @@ levelDic = _tools.RODict({
         162,
         165,
         167,
+        168,
     ]),
     50 : _tools.ROList([
         79,
-        142,
+        144,
     ]),
     6 : _tools.ROList([
         88,
@@ -1943,53 +2165,42 @@ levelDic = _tools.RODict({
         91,
         104,
         117,
+        138,
         160,
     ]),
-    24 : _tools.ROList([
+    25 : _tools.ROList([
         92,
         105,
         118,
+        130,
     ]),
-    28 : _tools.ROList([
-        93,
-        106,
-        119,
-        140,
-    ]),
-    32 : _tools.ROList([
+    35 : _tools.ROList([
         94,
         107,
         120,
+        126,
+        129,
     ]),
     40 : _tools.ROList([
         95,
         108,
         121,
-        129,
         136,
     ]),
     48 : _tools.ROList([
         96,
         109,
         122,
-    ]),
-    35 : _tools.ROList([
-        126,
-    ]),
-    23 : _tools.ROList([
-        130,
-    ]),
-    16 : _tools.ROList([
-        138,
-    ]),
-    22 : _tools.ROList([
-        139,
-    ]),
-    52 : _tools.ROList([
         143,
     ]),
-    56 : _tools.ROList([
-        144,
+    23 : _tools.ROList([
+        139,
+    ]),
+    28 : _tools.ROList([
+        140,
+    ]),
+    45 : _tools.ROList([
+        142,
     ]),
 })
 taskDic = _tools.RODict({
@@ -2002,6 +2213,7 @@ taskDic = _tools.RODict({
         17,
         18,
         19,
+        169,
     ]),
     86060115 : _tools.ROList([
         7,
@@ -2071,7 +2283,10 @@ taskDic = _tools.RODict({
     ]),
     86030028 : _tools.ROList([
         31,
+    ]),
+    86010069 : _tools.ROList([
         32,
+        67,
     ]),
     86060104 : _tools.ROList([
         33,
@@ -2101,9 +2316,6 @@ taskDic = _tools.RODict({
     ]),
     86030031 : _tools.ROList([
         66,
-    ]),
-    86010069 : _tools.ROList([
-        67,
     ]),
     86030037 : _tools.ROList([
         68,
@@ -2140,15 +2352,17 @@ taskDic = _tools.RODict({
         99,
         112,
     ]),
-    86060089 : _tools.ROList([
+    86060070 : _tools.ROList([
         87,
-        100,
-        113,
     ]),
     86060090 : _tools.ROList([
         97,
         110,
         123,
+    ]),
+    86060089 : _tools.ROList([
+        100,
+        113,
     ]),
     86010024 : _tools.ROList([
         124,
@@ -2208,6 +2422,6 @@ dayDic = _tools.RODict({
         160,
     ]),
 })
-maxBit = 167
+maxBit = 170
 
-typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip'}
+typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip', 'welfare_refundRecharge': 'welfare'}

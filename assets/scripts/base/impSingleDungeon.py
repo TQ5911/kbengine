@@ -2,18 +2,15 @@
 from KBEDebug import *
 import KBEngine
 
-import gameengine
 import gameconst
-import formula
 
 import dropAward
 
-import taskdata as TSKD
-import taskDesc_taskDesc as TSK_DESC
-import gamePlay_gamePlay as DDL
+import gamePlay_gamePlay as GP_GPD
 import message_Message_def as MMD
-import dataUtils
 import gameclass
+import cube_config
+import formula
 
 
 class ImpSingleDungeon(object):
@@ -32,10 +29,10 @@ class ImpSingleDungeon(object):
         return res
 
     def _getParamBydungeonNo(self, dungeonNo, pName):
-        if dungeonNo in DDL.datas:
-            prm = DDL.datas[dungeonNo]
-            if pName in prm:
-                return prm[pName]
+        if dungeonNo in GP_GPD.datas:
+            _prm = GP_GPD.datas[dungeonNo]
+            if pName in _prm:
+                return _prm[pName]
 
     def checkSingleDungeonCondition(self, dungeonNo, extra):
         LOG_INFO('checkSingleDungeonCondition::', dungeonNo, extra)
@@ -51,16 +48,19 @@ class ImpSingleDungeon(object):
                                      spaceNo, playerBox, playerGbId, teamUUID, extra):
         LOG_INFO('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
                   spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)
-        deductWealthVal = dropAward.DeductWealthVal()
-        deductWealthVal.addWealthByItemDict(needDic)
-        if not self.canDeductWealth(deductWealthVal):
+        _deductWealthVal = dropAward.DeductWealthVal()
+        _deductWealthVal.addWealthByItemDict(needDic)
+        if not self.canDeductWealth(_deductWealthVal):
             LOG_ERR('Enter singleDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
             return
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_ENTER_DUNGEON
         detail = gameclass.AwardDetailCls(spaceNo=spaceNo)
-        self.deductWealth(src, deductWealthVal, opUUID, detail)
+        self.deductWealth(src, _deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterSingleDungeon(
             gameconst.BagOPStat.OPERATE_BAG_STAT_OK, spaceBox, spaceMgrBox,
             spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)
+
+    def checkChallengingInnerDemon(self, spaceNo):
+        return formula.fetchMapId(spaceNo) == cube_config.datas['cube_innerDemon']['value']

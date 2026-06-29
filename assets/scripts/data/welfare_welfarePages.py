@@ -42,7 +42,11 @@ datas = _tools.RODict({
     7: _tools.RODict({
         "ID": 7,
         "unlockID": "ResourceRecovery",
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "unlockID": "RefundRecharge",
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 8

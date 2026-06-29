@@ -48,15 +48,12 @@ class Space(iBase.IBase):
         if formula.inStaticScene(self.spaceno):
             gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_TO_BASE + ':' + str(self.spaceno),
                                       utils.getPythonAddr())
-            gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(self.spaceno), self)
+            gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_SPACE_TO_BASE + ':' + str(self.spaceno), self)
 
-        if self.chunkAlready:
+        if self.alreadyTrunk:
             self.onSpaceCellReady()
 
-    def onCellAppDeath(self, addr, cid, groupOrder):
-        self.onLoseCell(reason=gameconst.OnLoseCellReason.CELLAPP_DEATH)
-
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 
@@ -81,73 +78,70 @@ class Space(iBase.IBase):
 
         self.doEntireDestroy(False, False)
 
-        return
+    def onCellAppDeath(self, addr, cid, groupOrder):
+        self.onLoseCell(reason=gameconst.OnLoseCellReasonEnum.CELLAPP_DEATH)
 
     def onCreateCellFailure(self):
         LOG_ERR('Space.onCreateCellFailture')
         self.destroy(deleteFromDB=False, writeToDB=False)
-        return
 
     def initCellField(self, spaceID):
         self.spaceid = spaceID
-        return
 
-    def entireConstruct(self, spaceID):
-        LOG_INFO('Space %s %s entireConstruct' % (self.spaceno, spaceID))
-        self.spaceid = spaceID
+    def entireConstruct(self, spaceId):
+        LOG_INFO('Space %s %s entireConstruct' % (self.spaceno, spaceId))
+        self.spaceid = spaceId
 
-        if self.chunkAlready:
+        if self.alreadyTrunk:
             return
 
-        self.chunkAlready = True
+        self.alreadyTrunk = True
 
         if self.cell:
             self.onSpaceCellReady()
 
     def onSpaceCellReady(self):
-        if self.notifiedSpaceReady:
+        if self.isNotifiedSpaceReady:
             return
-        self.notifiedSpaceReady = True
+        self.isNotifiedSpaceReady = True
 
         self._initData()
 
         self.cell.onEntireConstruct()
-        if formula.inDungeonScene(self.spaceno):
-            gameengine.getDungeonStubBySpaceNo(self.spaceno).onDungeonSpaceReady(self.spaceno)
-        elif formula.inLineScene(self.spaceno):
-            lineType = formula.fetchMapId(self.spaceno)
-            gameengine.getLineStub(lineType).onLineSpaceReady(self.spaceno)
-        elif formula.inCubeScene(self.spaceno):
-            gameengine.getCubeStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
-        elif formula.inWonderLandScene(self.spaceno):
-            gameengine.getWonderLandStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
-        elif formula.inSiegeWarScene(self.spaceno):
-            gameengine.getGlobalBase('SiegeWarSpaceStub').onStaticSpaceReady(self.spaceno)
-        elif formula.inAbyssScene(self.spaceno):
-            gameengine.getAbyssStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
+        _spaceNo = self.spaceno
+        if formula.inDungeonScene(_spaceNo):
+            gameengine.getDungeonStubBySpaceNo(_spaceNo).onDungeonSpaceReady(_spaceNo)
+        elif formula.inLineScene(_spaceNo):
+            lineType = formula.fetchMapId(_spaceNo)
+            gameengine.getLineStub(lineType).onSpaceLineReady(_spaceNo)
+        elif formula.inCubeScene(_spaceNo):
+            gameengine.getCubeStubBySpaceNo(_spaceNo).onStaticSpaceReady(_spaceNo)
+        elif formula.inWonderLandScene(_spaceNo):
+            gameengine.getWonderLandStubBySpaceNo(_spaceNo).onStaticSpaceReady(_spaceNo)
+        elif formula.inSiegeWarScene(_spaceNo):
+            gameengine.getGlobalBase('SiegeWarSpaceStub').onStaticSpaceReady(_spaceNo)
+        elif formula.inAbyssScene(_spaceNo):
+            gameengine.getAbyssStubBySpaceNo(_spaceNo).onStaticSpaceReady(_spaceNo)
         else:
-            LOG_ERR('unsupported space', self.spaceno)
-        return
+            LOG_ERR('unsupported space', _spaceNo)
 
     def doEntireDestroy(self, deleteFromDB, writeToDB):
         if self.isDestroyed:
             return
         LOG_INFO("space doEntireDestroy ", self.spaceno)
 
-        self._preEntireDestroy()
+        self._onPreEntireDestroy()
 
         if hasattr(self, 'cell') and self.cell:
-            self.isDeleteFromDB = deleteFromDB
+            self.isDelFromDB = deleteFromDB
             self.isWriteToDB = writeToDB
-            self.onLoseCellReason = gameconst.OnLoseCellReason.ENTIRE_DESTROY
+            self.onLoseCellReason = gameconst.OnLoseCellReasonEnum.ENTIRE_DESTROY
             self.cell.destroyMySpace()
         else:
             self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)
-            self._postEntireDestroy()
+            self._onPostEntireDestroy()
 
-        return
-
-    def _preEntireDestroy(self):
+    def _onPreEntireDestroy(self):
         # 广播删除场景NO到场景ID的映射
         # gameengine.delGlobalAppData(gameconst.GLOBALDATA_KEY_SPACENO_TO_SPACEID+':'+str(self.spaceno))
         # 广播删除场景ID到场景NO的映射
@@ -157,7 +151,7 @@ class Space(iBase.IBase):
 
         return
 
-    def _postEntireDestroy(self):
+    def _onPostEntireDestroy(self):
         return
 
     def _initData(self):

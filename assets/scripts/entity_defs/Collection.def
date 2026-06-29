@@ -34,11 +34,11 @@
             <Flags>	    OTHER_CLIENTS	</Flags>
         </collectionId>
 
-        <gatherAvatars>
+        <gatherAvatarDic>
             <Type>      PYTHON          </Type>
             <Flags>     CELL_PRIVATE    </Flags>
             <Default>   {}              </Default>
-        </gatherAvatars>
+        </gatherAvatarDic>
 
         <canGather>
             <Type>      BOOL            </Type>

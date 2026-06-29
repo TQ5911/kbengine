@@ -6,31 +6,30 @@ import MonsterGrp
 
 
 class IMonsterGrp(object):
+    def isMonsterInGroup(self):
+        return True if self.monsterGroupId else False
+
     @property
     def monsterGroup(self):
         return KBEngine.entities.get(self.monsterGroupId)
 
-    def isMonsterInGroup(self):
-        return True if self.monsterGroupId else False
-
     def addInMonsterGroup(self, groupId):
-        g = KBEngine.entities.get(groupId)
+        _g = KBEngine.entities.get(groupId)
 
-        if g and isinstance(g, MonsterGrp.MonsterGrp):
+        if _g and isinstance(_g, MonsterGrp.MonsterGrp):
             self.monsterGroupId = groupId
-            g.addId(self.id)
+            _g.addId(self.id)
 
     def rmFromMonsterGroup(self):
         if not self.monsterGroupId:
             return
 
-        monsterGrp = self.monsterGroup
+        _monsterGrp = self.monsterGroup
 
-        if not monsterGrp:
+        if not _monsterGrp:
             return
 
-        monsterGrp.removeId(self.id)
-        #self.monsterGroupId = 0
+        _monsterGrp.removeId(self.id)
 
     def selfSync(self, funcName, args=None, kwargs=None):
         if self.monsterGroup:

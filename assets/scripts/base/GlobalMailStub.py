@@ -21,20 +21,20 @@ import collections
 import gameglobal
 
 class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(GlobalMailStub, self).__init__()
-        self.delayMailTimerId = 0
         self.sendMailTimerId = 0
+        self.delayMailTimerId = 0
         self.sendMailDeque = collections.deque()
         LOG_DBG('GlobalMailStub')
                 
     def postReloadScript(self):
         super(GlobalMailStub, self).postReloadScript()
-        for globalMail in self.mailList:
-            globalMail.reloadScript()
+        for _globalMail in self.mailList:
+            _globalMail.reloadScript()
 
-        for globalMail in self.sendMailDeque:
-            globalMail.reloadScript()
+        for _globalMail in self.sendMailDeque:
+            _globalMail.reloadScript()
 
     def doNext(self):
         self.syncGlobalMailsList()
@@ -53,21 +53,21 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         if not self.delayMailList:
             return
-        now = utils.curTS()
+        _now = utils.curTS()
         sendMailList = []
         minLeftTime = float('inf')
-        for mail in self.delayMailList:
-            if mail.isExpired():
+        for _mail in self.delayMailList:
+            if _mail.isExpired():
                 continue
-            if mail.createTime <= now:
-                sendMailList.append(mail)
+            if _mail.createTime <= _now:
+                sendMailList.append(_mail)
                 continue
-            if mail.createTime-now < minLeftTime:
-                minLeftTime = mail.createTime-now
+            if _mail.createTime-_now < minLeftTime:
+                minLeftTime = _mail.createTime-_now
 
         LOG_INFO('trySendDelayMails, sendMailList:', [gmail.toGlobalMailDict() for gmail in sendMailList])
-        for gmail in sendMailList:
-            self.delayMailList.remove(gmail)
+        for _gmail in sendMailList:
+            self.delayMailList.remove(_gmail)
         self.addToSendMailDeque(sendMailList)
 
         if minLeftTime != float('inf'):
@@ -111,8 +111,8 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         title = title or ''
         cont = cont or ''
-        globalMail = Mail.GlobalMail()
-        globalMail.initNewGlobalMail(
+        _globalMail = Mail.GlobalMail()
+        _globalMail.initNewGlobalMail(
             mailId, 
             extraAttach, 
             despArgs, 
@@ -128,16 +128,16 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             mailTag
         )
 
-        if globalMail.isExpired():
+        if _globalMail.isExpired():
             LOG_WARN('   in sendGlobalMail, mail expired')
             return False
-        self.addToSendMailDeque([globalMail])
+        self.addToSendMailDeque([_globalMail])
         return True
 
-    def addToSendMailDeque(self, mailList):
-        if not mailList:
+    def addToSendMailDeque(self, mailsList):
+        if not mailsList:
             return
-        self.sendMailDeque.extend(mailList)
+        self.sendMailDeque.extend(mailsList)
         self.startSendGlobalMail()
 
     def startSendGlobalMail(self):
@@ -197,9 +197,9 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.checkGlobalMailNum()
 
     def findGlobalMailByMailGBID(self, globalMailGBID):
-        for mail in reversed(self.mailList):
-            if mail.globalMailGBID == globalMailGBID:
-                return mail
+        for _mail in reversed(self.mailList):
+            if _mail.globalMailGBID == globalMailGBID:
+                return _mail
 
     def checkGlobalMailNum(self):
         # 1.处理过期的全服邮件
@@ -231,16 +231,21 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def syncGlobalMailsList(self):
         gameengine.broadcastBaseapp('onSyncGlobalMailsList', (self.mailList,))
-        return
 
     ##################################### gm ##########################################
     def gmGetGlobalMailList(self, box, channelAvatarInfo, mailNum):
         import gameconst
-        mailList = [{'maiGBID':mail.globalMailGBID, 'mailId':mail.mailId,
-                     'createTime':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mail.createTime))}
-                     for mail in list(self.mailList)[:-(mailNum+1):-1]]
-        LOG_INFO('gmGetGlobalMailList:', str(mailList))
-        box.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, channelAvatarInfo, {"msg": str(mailList), "code": 0, "voiceUrl": '', "msgType": 0})
+        _mailList = [{
+            'maiGBID':_mail.globalMailGBID, 
+            'mailId':_mail.mailId,
+            'createTime':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(_mail.createTime)),
+        } for _mail in list(self.mailList)[:-(mailNum+1):-1]]
+
+        LOG_INFO('gmGetGlobalMailList:', str(_mailList))
+        box.client.onRecvAvatarChannelMsg(
+            gameconst.ChatChannelEnum.WORLD, 
+            channelAvatarInfo, 
+            {"msg": str(_mailList), "code": 0, "voiceUrl": '', "msgType": 0,})
 
     def gmDeleteOneGlobalMail(self, mailGBID):
         return

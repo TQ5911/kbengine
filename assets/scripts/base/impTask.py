@@ -40,21 +40,21 @@ class TaskEvent(object):
             if not eventName:
                 continue
 
-            _eventActionInfo = CommEventAction.CommEventActionMap.get(eventName)
+            _eventActionInfo = CommEventAction.CommEventActionDic.get(eventName)
             if not _eventActionInfo:
                 continue
             _actionType, _actionFunc = _eventActionInfo
             _eventArgs, eventKwargs = utils.parseCommEventParams(eventParams)
             eventKwargs['_srcTaskId'] = taskId
-            if _actionType == CommEventAction.ActionType.BASE:
+            if _actionType == CommEventAction.CommEvEnum.BASE:
                 _actionFunc(self, eventActionSrc, *_eventArgs, **eventKwargs)
             else:
                 self.cell.doCellCommEvent(eventActionSrc, eventName, _eventArgs, eventKwargs)
 
     def doBaseCommEvent(self, eventActionSrc, eventName, eventArgs, eventKwargs):
         LOG_INFO('in doBaseCommEvent:', eventActionSrc, eventName, eventArgs, eventKwargs)
-        _actionType, _actionFunc = CommEventAction.CommEventActionMap[eventName]
-        if _actionType != CommEventAction.ActionType.BASE:
+        _actionType, _actionFunc = CommEventAction.CommEventActionDic[eventName]
+        if _actionType != CommEventAction.CommEvEnum.BASE:
             gameengine.panicStack('doBaseCommEvent, actionType Error:', eventActionSrc, eventName, eventArgs,
                                       eventKwargs)
             return
@@ -202,19 +202,19 @@ class ImpTask(TaskProgress, TaskEvent):
             tgtList = task.getTgtsByType(gameconst.TaskTargetEnum.TASK_TARGET_ITEMS)
             tgtItems = dataUtils.getTaskFieldVal(taskData, 'FinCondGatherItems')
             tmpData = {}
-            for oneData in tgtItems:
-                itemId = oneData['ItemId']
-                dstCnt = oneData['Count']
+            for _oneData in tgtItems:
+                itemId = _oneData['ItemId']
+                dstCnt = _oneData['Count']
                 if itemId <= 0 or dstCnt <= 0:
                     continue
                 srcIdList = []
-                srcIdStr = oneData.get("RelateMonster", '')
+                srcIdStr = _oneData.get("RelateMonster", '')
                 if srcIdStr:
                     srcIdList.extend(srcIdStr.split('|'))
-                srcIdStr = oneData.get("RelateCollect", '')
+                srcIdStr = _oneData.get("RelateCollect", '')
                 if srcIdStr:
                     srcIdList.extend(srcIdStr.split('|'))
-                srcRatio = oneData.get("Ratio", 0)
+                srcRatio = _oneData.get("Ratio", 0)
                 tmpData[itemId] = {"srcIdList": srcIdList, "srcRatio": srcRatio}
 
             for tgt in tgtList:
@@ -382,8 +382,8 @@ class ImpTask(TaskProgress, TaskEvent):
         for abanRemoveItemId in abanRemoveItemIds:
             itemDataCfg = ITEM_DATA.datas.get(abanRemoveItemId)
             if not itemDataCfg \
-                or itemDataCfg['type'] != gameconst.ItemType.Normal \
-                or itemDataCfg['subType'] != gameconst.ItemSubType.TASK:
+                or itemDataCfg['type'] != gameconst.ItemEnum.Normal \
+                or itemDataCfg['subType'] != gameconst.ItemSubEnum.TASK:
                 LOG_WARN('abandonTaskItems, rem task items err, wrong item cfg:', abanRemoveItemId)
                 continue
 
@@ -709,6 +709,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def setBaseSpaceNo(self, spaceNo):
         LOG_INFO('setBaseSpaceNo {} ==> {}'.format(self.baseSpaceNo, spaceNo))
         self.baseSpaceNo = spaceNo
+        self.updateSpecialVisibleBySpace(self.baseSpaceNo)
         self.taskInfo.taskSpaceNoChanged(spaceNo)
 
     def gmClaimTaskRec(self, taskId):

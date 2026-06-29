@@ -65,10 +65,10 @@ class ImpAvatarPet(object):
         self.lingShouInfo.sendLingShouData(self)
 
     def _sendLingShouData(self, petList):
-        clientData = []
+        _clientData = []
         for pet in petList:
-            clientData.append(pet.toClientData())
-        self.client.onUpdateLingShouData(clientData)
+            _clientData.append(pet.toClientData())
+        self.client.onUpdateLingShouData(_clientData)
 
     def _sendBattleListData(self):
         self.lingShouInfo.sendBattleListData(self)
@@ -502,7 +502,7 @@ class ImpAvatarPet(object):
             self.client.onRemodelingPet(gameconst.RemodelingPetResult.WRONG_ARGS, 0, 0)
             return
         
-        if itemObj.itemType != gameconst.ItemType.LingShou or itemObj.itemSubType != gameconst.ItemSubType.LingShouEgg:
+        if itemObj.itemType != gameconst.ItemEnum.LingShou or itemObj.itemSubType != gameconst.ItemSubEnum.LingShouEgg:
             LOG_WARN('remodelingPet pet bag item type is wrong', gridId, itemObj.itemId)
             self.client.onRemodelingPet(gameconst.RemodelingPetResult.WRONG_ARGS, 0, 0)
             return

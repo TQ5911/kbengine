@@ -19,7 +19,7 @@ datas = _tools.RODict({
         "ID": 1,
         "type": 1,
         "cost": 30000315,
-        "wordsLimit": 30,
+        "wordsLimit": 100,
         "showTime": 20,
         "cd": 5,
         "showChannel": (1,)

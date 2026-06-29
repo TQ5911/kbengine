@@ -91,7 +91,7 @@ class UserSTSoleType(UserSingleType):
         raise NotImplementedError
         return
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         raise NotImplementedError
         return
 
@@ -108,7 +108,7 @@ class UserSTSoleInfo(ABCInfo):
         return _obj.initFromDict(dic)
 
     def getDictFromObj(self, objec: UserSTSoleType):
-        return objec.toSavedDict()
+        return objec.toStreamSavedDic()
 
     def isSameType(self, objec):
         return type(objec) == self.cls

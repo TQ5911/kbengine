@@ -323,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `game_safe_box`
         `gbId` bigint(20) NOT NULL,
         `itemId` int(10) NOT NULL,
         `itemCount` int(10) NOT NULL,
-        `itemPrice` decimal NOT NULL,
+        `itemPrice` decimal(10, 2) NOT NULL,
         `claimed` int(10) NOT NULL,
         `claimTime` int(10) NOT NULL,
         `orderId` varchar(64) NOT NULL,
@@ -339,3 +339,194 @@ CREATE TABLE IF NOT EXISTS `game_safe_box_idempotent`
         `orderId` varchar(64) NOT NULL,
         unique index (`orderId`)
         );
+
+CREATE TABLE IF NOT EXISTS `game_modify_currency`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sm_gbId` bigint UNSIGNED NOT NULL DEFAULT 0,
+  `sm_money` bigint NOT NULL DEFAULT 0,
+  `sm_bindMoney` bigint NOT NULL DEFAULT 0,
+  `sm_coin` bigint NOT NULL DEFAULT 0,
+  `sm_darkIron` bigint NOT NULL DEFAULT 0,
+  `sm_guildContrib` bigint NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idx_gbId`(`sm_gbId`)
+);
+
+DROP PROCEDURE IF EXISTS gamesp_record_modify_currency;
+DELIMITER ;;
+CREATE PROCEDURE gamesp_record_modify_currency(
+        IN gbId BIGINT(20),
+        IN fieldStr VARCHAR(255),
+        IN updateNum INT
+    )
+    BEGIN
+        DECLARE cur_value BIGINT DEFAULT 0;
+        DECLARE update_old_value BIGINT DEFAULT 0;
+        DECLARE update_new_value BIGINT DEFAULT 0;
+        
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+
+        SET @p_gbId = gbId;
+        SET @p_updateNum = updateNum;
+        
+        START TRANSACTION;
+        
+        SET @sql_cur = CONCAT('SELECT `', fieldStr, '` INTO @cur_val FROM `tbl_Avatar` WHERE `sm_gbID` = ? LIMIT 1');
+        PREPARE stmt FROM @sql_cur;
+        EXECUTE stmt USING @p_gbId;
+        DEALLOCATE PREPARE stmt;
+        SET cur_value = @cur_val;
+        
+        SET @old_val = NULL;
+        SET @sql_old = CONCAT('SELECT `', fieldStr, '` INTO @old_val FROM `game_modify_currency` WHERE `sm_gbID` = ? LIMIT 1');
+        PREPARE stmt FROM @sql_old;
+        EXECUTE stmt USING @p_gbId;
+        DEALLOCATE PREPARE stmt;
+        SET update_old_value = IFNULL(@old_val, 0);
+        
+        SET @sql_update = CONCAT(
+            'INSERT INTO `game_modify_currency` (`sm_gbID`, `', fieldStr, '`) VALUES (?, ?) ',
+            'ON DUPLICATE KEY UPDATE `', fieldStr, '` = `', fieldStr, '` + ?'
+        );
+        PREPARE stmt FROM @sql_update;
+        EXECUTE stmt USING @p_gbId, @p_updateNum, @p_updateNum;
+        DEALLOCATE PREPARE stmt;
+        
+        SET @sql_new = CONCAT('SELECT `', fieldStr, '` INTO @new_val FROM `game_modify_currency` WHERE `sm_gbID` = ? LIMIT 1');
+        PREPARE stmt FROM @sql_new;
+        EXECUTE stmt USING @p_gbId;
+        DEALLOCATE PREPARE stmt;
+        SET update_new_value = @new_val;
+        
+        SELECT 
+            gbId AS `gbId`,
+            fieldStr AS `fieldName`,
+            cur_value AS `curValue`,
+            updateNum AS `updateNum`,
+            update_old_value AS `updateOldNum`,
+            update_new_value AS `updateNewNum`;
+        
+        COMMIT;
+    END;;
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS gamesp_record_mul_modify_currency;
+DELIMITER ;;
+CREATE PROCEDURE gamesp_record_mul_modify_currency(
+        IN gbId BIGINT(20),
+        IN fieldListStr VARCHAR(1000),
+        IN updateNumListStr VARCHAR(1000)
+    )
+    BEGIN
+        DECLARE done INT DEFAULT FALSE;
+        DECLARE field_name VARCHAR(255);
+        DECLARE update_val BIGINT;
+        DECLARE cur_value BIGINT DEFAULT 0;
+        DECLARE update_old_value BIGINT DEFAULT 0;
+        DECLARE update_new_value BIGINT DEFAULT 0;
+        
+        DECLARE field_cursor CURSOR FOR 
+        SELECT 
+            TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(fieldListStr, ',', n.n), ',', -1)) AS field_name,
+            CAST(TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(updateNumListStr, ',', n.n), ',', -1)) AS SIGNED) AS update_val
+        FROM 
+            (SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 
+            UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) n
+        WHERE 
+            n.n <= (LENGTH(fieldListStr) - LENGTH(REPLACE(fieldListStr, ',', '')) + 1)
+        ORDER BY n.n;
+        
+        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+        
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            DROP TEMPORARY TABLE IF EXISTS temp_result;
+            ROLLBACK;
+            RESIGNAL;
+        END;
+        
+        DROP TEMPORARY TABLE IF EXISTS temp_result;
+        CREATE TEMPORARY TABLE temp_result (
+            fieldName VARCHAR(255),
+            curValue BIGINT,
+            updateNum BIGINT,
+            updateOldNum BIGINT,
+            updateNewNum BIGINT
+        );
+        
+        SET @p_gbId = gbId;
+        
+        START TRANSACTION;
+        
+        OPEN field_cursor;
+        
+        read_loop: LOOP
+            FETCH field_cursor INTO field_name, update_val;
+            IF done THEN
+                LEAVE read_loop;
+            END IF;
+            
+            SET @p_update_val = update_val;
+            SET @sql_cur = CONCAT('SELECT `', field_name, '` INTO @cur_val FROM `tbl_Avatar` WHERE `sm_gbID` = ? LIMIT 1');
+            PREPARE stmt FROM @sql_cur;
+            EXECUTE stmt USING @p_gbId;
+            DEALLOCATE PREPARE stmt;
+            SET cur_value = IFNULL(@cur_val, 0);
+            
+            SET @old_val = NULL;
+            SET @sql_old = CONCAT('SELECT `', field_name, '` INTO @old_val FROM `game_modify_currency` WHERE `sm_gbID` = ? LIMIT 1');
+            PREPARE stmt FROM @sql_old;
+            EXECUTE stmt USING @p_gbId;
+            DEALLOCATE PREPARE stmt;
+            SET update_old_value = IFNULL(@old_val, 0);
+            
+            SET @sql_update = CONCAT(
+                'INSERT INTO `game_modify_currency` (`sm_gbID`, `', field_name, '`) VALUES (?, ?) ',
+                'ON DUPLICATE KEY UPDATE `', field_name, '` = `', field_name, '` + ?'
+            );
+            PREPARE stmt FROM @sql_update;
+            EXECUTE stmt USING @p_gbId, @p_update_val, @p_update_val;
+            DEALLOCATE PREPARE stmt;
+            
+            SET @sql_new = CONCAT('SELECT `', field_name, '` INTO @new_val FROM `game_modify_currency` WHERE `sm_gbID` = ? LIMIT 1');
+            PREPARE stmt FROM @sql_new;
+            EXECUTE stmt USING @p_gbId;
+            DEALLOCATE PREPARE stmt;
+            SET update_new_value = IFNULL(@new_val, 0);
+            
+            INSERT INTO temp_result VALUES (field_name, cur_value, update_val, update_old_value, update_new_value);
+            
+            SET done = FALSE;
+        END LOOP;
+        
+        CLOSE field_cursor;
+        
+        SELECT 
+            gbId AS `gbId`,
+            fieldName,
+            curValue,
+            updateNum,
+            updateOldNum,
+            updateNewNum
+        FROM temp_result;
+        
+        DROP TEMPORARY TABLE IF EXISTS temp_result;
+        
+        COMMIT;
+    END;;
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS gamesp_load_modify_currency;
+DELIMITER ;;
+CREATE PROCEDURE gamesp_load_modify_currency(
+        IN gbId BIGINT(20)
+    )
+    BEGIN
+        SELECT `sm_money`, `sm_bindMoney`, `sm_coin`, `sm_darkIron`, `sm_guildContrib` FROM `game_modify_currency` where sm_gbID=gbId limit 1;
+        DELETE FROM `game_modify_currency` WHERE sm_gbID=gbId;
+    END;;
+DELIMITER ;

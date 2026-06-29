@@ -28,6 +28,7 @@ namespace KBEngine
 		
 		
 		
+		
 
 
 		public AvataringBase()
@@ -120,6 +121,9 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 1202:
+					onBreakAwayStuckSuccess();
+					break;
 				case 1173:
 					onClientDataSyncFinished();
 					break;
@@ -128,6 +132,17 @@ namespace KBEngine
 					CHAT_CHANNEL_AVATAR_INFO onRecvAvatarChannelMsg_arg2 = ((DATATYPE_CHAT_CHANNEL_AVATAR_INFO)method.args[1]).createFromStreamEx(stream);
 					CHAT_MSG_DATA onRecvAvatarChannelMsg_arg3 = ((DATATYPE_CHAT_MSG_DATA)method.args[2]).createFromStreamEx(stream);
 					onRecvAvatarChannelMsg(onRecvAvatarChannelMsg_arg1, onRecvAvatarChannelMsg_arg2, onRecvAvatarChannelMsg_arg3);
+					break;
+				case 1230:
+					List<Int32> onRemoveCompleteWitness_arg1 = ((DATATYPE_AnonymousArray_10004)method.args[0]).createFromStreamEx(stream);
+					onRemoveCompleteWitness(onRemoveCompleteWitness_arg1);
+					break;
+				case 1200:
+					UInt16 onStartPlayEmote_arg1 = stream.readUint16();
+					onStartPlayEmote(onStartPlayEmote_arg1);
+					break;
+				case 1201:
+					onStopPlayEmote();
 					break;
 				case 1156:
 					Int32 popDialog_arg1 = stream.readInt32();
@@ -231,6 +246,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onGbIdChanged(oldval_gbId);
+						}
+
+						break;
+					case 647:
+						Byte oldval_isWitnessComplete = isWitnessComplete;
+						isWitnessComplete = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onIsWitnessCompleteChanged(oldval_isWitnessComplete);
+						}
+						else
+						{
+							if(inWorld)
+								onIsWitnessCompleteChanged(oldval_isWitnessComplete);
 						}
 
 						break;
@@ -436,6 +467,27 @@ namespace KBEngine
 					else
 					{
 						onGbIdChanged(oldval_gbId);
+					}
+				}
+			}
+
+			Byte oldval_isWitnessComplete = isWitnessComplete;
+			Property prop_isWitnessComplete = pdatas[13];
+			if(prop_isWitnessComplete.isBase())
+			{
+				if(inited && !inWorld)
+					onIsWitnessCompleteChanged(oldval_isWitnessComplete);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_isWitnessComplete.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onIsWitnessCompleteChanged(oldval_isWitnessComplete);
 					}
 				}
 			}

@@ -10,12 +10,13 @@ import utils
 import gameconst
 import gameengine
 
+import rewardData_rewardData as RDDT
 import itemData_set as ID_SET
 import itemData_itemData as ITEMDATA
 import gearBase_gearBase as GBGBD
 import const_const as CONSTD
 import conflict_status as C_SD
-import value_value as VVD
+import value_value as V_VD
 import formula_generalFormula as FMLGD
 import antiAddictCategory_antiAddictCategory as AACADCD
 import taskdata as TSKD
@@ -26,7 +27,7 @@ import taskDesc_taskGroup as TTG
 import taskRandTargetPoint as TRTPD
 import mounts_mounts as MOUNTS
 import antiAddictCategory_antiAddictCategory as AAC_AAC
-import rewardData_rewardData as RWDRWDD
+import rewardData_rewardData as RD_RDD
 import creep_base as CBD
 import creep_coefficient as C_CD
 import gearBase_typeExplanation as GBTED
@@ -66,53 +67,53 @@ def isEquipItemByItemId(itemId):
     return itemId in GBGBD.datas or itemId == gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID
 
 def isReUseItem(itemId):
-    itemData = getCommItemData(itemId)
-    if not itemData:
+    _itemData = getCommItemData(itemId)
+    if not _itemData:
         return False
-    itemType = itemData.get('type')
-    subType = itemData.get('subType')
-    return itemType == gameconst.ItemType.Normal and subType == gameconst.ItemSubType.ReUseItem
+    itemType = _itemData.get('type')
+    subType = _itemData.get('subType')
+    return itemType == gameconst.ItemEnum.Normal and subType == gameconst.ItemSubEnum.ReUseItem
 
 
 def getVariableData(varId):
-    return VVD.datas[varId]
+    return V_VD.datas[varId]
+
+
+def checkVariableCond(owner, fmlId, paramsStr):
+    paramsStr = paramsStr.strip(' ')
+    _params = [owner.getVariable(int(varId)) for varId in paramsStr.split('|')] if paramsStr else ()
+    LOG_DBG('in checkVariableCond:', fmlId, paramsStr, _params)
+    return FMLGD.datas[int(fmlId)]['serverFormula'](*_params)
 
 
 def getVariableDefaultVal(varId):
     return getVariableData(varId)['defaultValue']
 
 
-def checkVariableCond(owner, fmlId, paramsStr):
-    paramsStr = paramsStr.strip(' ')
-    params = [owner.getVariable(int(varId)) for varId in paramsStr.split('|')] if paramsStr else ()
-    LOG_DBG('in checkVariableCond:', fmlId, paramsStr, params)
-    return FMLGD.datas[int(fmlId)]['serverFormula'](*params)
+def isAvatarVar(varId):
+    return getVariableData(varId)['type'] == gameconst.VariableType.VAR_TYPE_AVATAR
 
 
 def isSpaceVar(varId):
     return getVariableData(varId)['type'] == gameconst.VariableType.VAR_TYPE_SPACE
 
 
-def isAvatarVar(varId):
-    return getVariableData(varId)['type'] == gameconst.VariableType.VAR_TYPE_AVATAR
-
-
 def isRelateCharPropVar(varId):
-    return varId in VVD.AvatarDataVarIdDic
-
-
-def isValidItemId(itemId):
-    return bool(getItemSpecialDetailData(itemId))
+    return varId in V_VD.AvatarDataVarIdDic
 
 
 def getCommItemData(itemId):
     # 读取itemData_itemData表里的通用物品配置；装备物品会读取通用装备配置；魂卡目前没定义通用配置；
     itemId = int(itemId)
-    itemData = ITEMDATA.datas.get(itemId, None)
-    if itemData:
-        return itemData
+    _itemData = ITEMDATA.datas.get(itemId, None)
+    if _itemData:
+        return _itemData
     if isEquipItemByItemId(itemId):
         return ITEMDATA.datas.get(gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID, {})
+
+
+def isValidItemId(itemId):
+    return bool(getItemSpecialDetailData(itemId))
 
 
 def getItemSpecialDetailData(itemId):
@@ -130,8 +131,8 @@ def getItemDefaultBindType():
 
 def getConstVal(keyName, default=None):
     'tutorialMissionEnd'
-    data = CONSTD.datas.get(keyName, {})
-    return data.get('value', default)
+    _data = CONSTD.datas.get(keyName, {})
+    return _data.get('value', default)
 
 
 def getStateEventId(state):
@@ -143,25 +144,19 @@ def getAddItemExtraDesp(srcType):
 
 
 def isInCrontabDatetimeRange(t, startList, endedList):
-    nextStart, _ = utils.nextByCronTupleList(startList, now=t)
-    nextEnded, _ = utils.nextByCronTupleList(endedList, now=t)
-    if not nextStart and not nextEnded:
+    _nextStart, _ = utils.nextByCronTupleList(startList, now=t)
+    _nextEnded, _ = utils.nextByCronTupleList(endedList, now=t)
+    if not _nextStart and not _nextEnded:
         return True
-    if nextStart == sys.maxsize and nextEnded == sys.maxsize:
+    if _nextStart == sys.maxsize and _nextEnded == sys.maxsize:
         return False
-    if nextStart >= nextEnded:
+    if _nextStart >= _nextEnded:
         return True
     return False
 
 
 def getRealRewardId(rewardId, context, timeStamp=0):
-    times = 1
-    now = timeStamp or utils.curTS()
-
-    def untilGetValidRewardId(tmpId, tmpTimes):
-        return tmpId
-
-    realRewardId = untilGetValidRewardId(rewardId, times)
+    realRewardId = rewardId
     if realRewardId != rewardId:
         context.addContextVar('awardId', realRewardId)
     return realRewardId
@@ -176,14 +171,14 @@ def getTaskCfg(taskId):
 
 
 def getRootTaskData(taskId):
-    taskData = getTaskCfg(taskId)
-    fatherTaskId = taskData.get('FatherTaskId', 0)
+    _taskData = getTaskCfg(taskId)
+    fatherTaskId = _taskData.get('FatherTaskId', 0)
     loopCnt = 0
     while fatherTaskId != 0 and loopCnt < 10:
         loopCnt += 1
-        taskData = getTaskCfg(fatherTaskId)
-        fatherTaskId = getTaskFieldVal(taskData, 'FatherTaskId')
-    return taskData
+        _taskData = getTaskCfg(fatherTaskId)
+        fatherTaskId = getTaskFieldVal(_taskData, 'FatherTaskId')
+    return _taskData
 
 
 def getRootTaskId(taskId):
@@ -200,9 +195,9 @@ def isRootTask(taskId):
 
 def isSingleSupportTeamTask(taskId):
     # 支持单人的组队任务
-    rootTaskData = getRootTaskData(taskId)
-    if getTaskFieldVal(rootTaskData, 'ClaimCondCheckTeam').get('IsTaskSharing', False):
-        return rootTaskData.get('ClaimCondCheckTeam', {}).get('SupportSingle', False)
+    _rootTaskData = getRootTaskData(taskId)
+    if getTaskFieldVal(_rootTaskData, 'ClaimCondCheckTeam').get('IsTaskSharing', False):
+        return _rootTaskData.get('ClaimCondCheckTeam', {}).get('SupportSingle', False)
     else:
         return False
 
@@ -247,27 +242,27 @@ def getTaskRoundInfo(taskData):
     roundActList = []
     roundParamList = []
     # openCondTaskRound finRoundRewardID等导出的默认值可能是 None
-    openCondTaskRound = getTaskFieldVal(taskData, 'OpenCondTaskRound')
-    finRoundRewardID = getTaskFieldVal(taskData, 'FinRoundRewardID')
+    _openCondTaskRound = getTaskFieldVal(taskData, 'OpenCondTaskRound')
+    _finRoundRewardID = getTaskFieldVal(taskData, 'FinRoundRewardID')
     roundActionNames = getTaskFieldVal(taskData, 'FinRoundEventName')
     roundActionParams = getTaskFieldVal(taskData, 'FinRoundEventParam')
 
-    openCondTaskRound = openCondTaskRound if openCondTaskRound else ''
-    openCondTaskRound = openCondTaskRound.strip(' []')
-    if openCondTaskRound:
-        roundVal = int(openCondTaskRound)
+    _openCondTaskRound = _openCondTaskRound if _openCondTaskRound else ''
+    _openCondTaskRound = _openCondTaskRound.strip(' []')
+    if _openCondTaskRound:
+        roundVal = int(_openCondTaskRound)
 
-    finRoundRewardID = finRoundRewardID.strip(' []')
-    if finRoundRewardID:
-        roundRwdList = [int(i) for i in finRoundRewardID.split(",")]
+    _finRoundRewardID = _finRoundRewardID.strip(' []')
+    if _finRoundRewardID:
+        roundRwdList = [int(i) for i in _finRoundRewardID.split(",")]
 
     roundActionNames = roundActionNames.strip(' []')
     if roundActionNames:
-        roundActList = [actNames for actNames in roundActionNames.split(";")]
+        roundActList = [_actNames for _actNames in roundActionNames.split(";")]
 
     roundActionParams = roundActionParams.strip(' []')
     if roundActionParams:
-        roundParamList = [params for params in roundActionParams.split(";")]
+        roundParamList = [_params for _params in roundActionParams.split(";")]
 
     return roundVal, roundRwdList, roundActList, roundParamList
 
@@ -327,41 +322,40 @@ def getMailId(srcType, ctxMailId):
     return ctxMailId, abandonWhenBagFull
     
 def getOutfitConfigData(outfitType, outfitId):
-    if outfitType == gameconst.OutfitType.mount:
+    if outfitType == gameconst.OutfitEnum.mount:
         return MOUNTS.datas.get(outfitId)
     else:
         appeId = AMRD.outfitId2appeId.get(outfitId, None)
         if appeId:
             return AMRD.datas.get(appeId)
-    return
 
-def checkOutfitOpen(outfitType, outfitId):
-    configData = getOutfitConfigData(outfitType, outfitId)
-    if not configData:
+def checkOpenOutfit(outfitType, outfitId):
+    _configData = getOutfitConfigData(outfitType, outfitId)
+    if not _configData:
         return False
-    isOpen = configData.get('isOpen', None)
+    isOpen = _configData.get('isOpen', None)
     if not isOpen:
         return False
     return True
 
 def hasNormalBagRwdItems(rewardId, rwdData=None):
-    rwdData = rwdData or RWDRWDD.datas[rewardId]
+    rwdData = rwdData or RD_RDD.datas[rewardId]
     if rwdData.get('fixReward') or rwdData.get('singleReward') or rwdData.get('exReward'):
         return True
-    nestFixReward = rwdData.get('nestFixReward')
-    if nestFixReward:
-        for oneRwdData in nestFixReward:
+    _nestFixReward = rwdData.get('nestFixReward')
+    if _nestFixReward:
+        for oneRwdData in _nestFixReward:
             if hasNormalBagRwdItems(oneRwdData[0]):
                 return True
     nestExReward = rwdData.get('nestExReward')
     if nestExReward:
-        for oneRwdData in nestFixReward:
+        for oneRwdData in _nestFixReward:
             if hasNormalBagRwdItems(oneRwdData[0]):
                 return True
     return False
 
 def hasPetItemBagRwdItems(rewardId, rwdData=None):
-    rwdData = rwdData or RWDRWDD.datas[rewardId]
+    rwdData = rwdData or RD_RDD.datas[rewardId]
     fixPetReward = rwdData.get('fixPetReward')
     singlePetReward = rwdData.get('singlePetReward')
     exPetReward = rwdData.get('exPetReward')
@@ -369,17 +363,17 @@ def hasPetItemBagRwdItems(rewardId, rwdData=None):
 
 def isLingShouItem(itemId):
     itemData = getCommItemData(itemId)
-    return itemData and itemData['type'] == gameconst.ItemType.LingShou
+    return itemData and itemData['type'] == gameconst.ItemEnum.LingShou
 
 def isLingShouEquipmentItem(itemId):
     itemData = getCommItemData(itemId)
-    return itemData and itemData['type'] == gameconst.ItemType.LingShou and itemData['subType'] == gameconst.LingShouSubType.Equipment
+    return itemData and itemData['type'] == gameconst.ItemEnum.LingShou and itemData['subType'] == gameconst.LingShouSubType.Equipment
 
 def getCommItemBagType(itemId):
     itemData = getCommItemData(itemId)
-    if itemData['type'] == gameconst.ItemType.Normal:
+    if itemData['type'] == gameconst.ItemEnum.Normal:
         return gameconst.BagTypeEnum.BAG_TYPE_NORMAL
-    elif itemData['type'] == gameconst.ItemType.LingShou:
+    elif itemData['type'] == gameconst.ItemEnum.LingShou:
         return gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN
     return
 
@@ -471,13 +465,17 @@ def iterGetGearIdsByBaseInfo(quality, gearTypes, gearSubTypes, school):
         yield from GBGBD.datas.keys()
         return
 
-    _qualities = (quality, ) if quality != gameconst.ItemQuality.ALL_QUALITY else gameconst.ItemQuality.COLL_QUALITY
+    if quality != gameconst.ItemQuality.ALL_QUALITY:
+        _qualities = (quality, )
+    else:
+        _qualities = gameconst.ItemQuality.COLL_QUALITY
+
     _gearTypes = gearTypes or gameconst.EquipTypes.ALL_MAINTYPES
     _gearSubTypes = gearSubTypes or gameconst.EquipTypes.ALL_SUBTYPES
-    for _q in _qualities:
+    for _quality in _qualities:
         for _t in _gearTypes:
             for _st in _gearSubTypes:
-                for _celldata in _getGearIdsByBaseInfo(_q, _t, _st, school):
+                for _celldata in _getGearIdsByBaseInfo(_quality, _t, _st, school):
                     yield _celldata
 
 def getGearIdsByBaseInfo(quality, gearTypes, gearSubTypes, school):
@@ -750,7 +748,7 @@ def checkMailType(mailId, mailType):
     mailData = MAMAD.datas[mailId]
     return mailData and mailData['type'] == mailType
 
-# 背包分解默认的开关
+# 背包装备分解默认的开关
 def getAutoDisassemblyStatus():
     disassemblyStatus = gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL
     # 对应客户端背包分解里的优秀开关
@@ -771,10 +769,28 @@ def getAutoDisassemblyStatus():
     disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.RING
     # 手镯
     disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.BRACELET
+    # 魂魄
+    disassemblyStatus |= 1 << gameconst.AUTO_DISA_KEY.SOUL
     return disassemblyStatus
 
+# 检查自动分解开关
+def checkAutoDisassemblySwitch(cliConfig):
+    # 自动分解开关
+    autoSwitch = utils.bhas(cliConfig, gameconst.AUTO_DISA_KEY.AUTOS_WITCH)
+    if not autoSwitch:
+        return False
+    return True
+
+# 检查魂魄入包自动分解开关
+def checkSoulSwitch(cliConfig):
+    # 自动分解开关
+    autoSwitch = utils.bhas(cliConfig, gameconst.AUTO_DISA_KEY.SOUL)
+    if not autoSwitch:
+        return False
+    return True
+        
 # 检测自动分解来源
-def checkAutoDisassembly(srcType):
+def checkAutoDisassemblySource(srcType):
     # 狩猎
     autoResolveSrcTypes = ID_SET.datas['autoResolve_kill']['value']
     if autoResolveSrcTypes and srcType in autoResolveSrcTypes:
@@ -806,4 +822,42 @@ def getTitleEndTime(titleId):
         expireTime = int(utils.parseTimeStr(expireTimeStr))
 
     return expireTime
+
+
+def getItemType(itemID):
+    itemData = ITEMDATA.datas.get(itemID, None)
+    if itemData:
+        return itemData['type']
+    itemData = GBGBD.datas.get(itemID, None)
+    if itemData:
+        return itemData['type']
+    return None
+
+def getItemSubType(itemID):
+    itemData = ITEMDATA.datas.get(itemID, None)
+    if itemData:
+        return itemData['subType']
+    itemData = GBGBD.datas.get(itemID, None)
+    if itemData:
+        return itemData['subType']
+    return None
+
+def checkItemCanBeDisassembled(itemId, bindType):
+    itemData = ITEMDATA.datas.get(itemId, None)
+    if not itemData:
+        LOG_ERR('checkItemCanBeDisassembled missing item config', itemId)
+        return False, None
+    
+    dissassemblyReward = None
+    if bindType == gameconst.ItemBindType.BIND:
+        dissassemblyReward = itemData['disassemblyReward']
+    elif bindType == gameconst.ItemBindType.NORMAL:
+        dissassemblyReward = itemData['disassemblyReward2']
+    
+    if dissassemblyReward:
+        awardData = RDDT.datas.get(dissassemblyReward, None)
+        if not awardData:
+            LOG_ERR('checkItemCanBeDisassembled invalid dissassemle drop id config 1', itemId, bindType, dissassemblyReward)
+            return False, None
+    return True, dissassemblyReward
 

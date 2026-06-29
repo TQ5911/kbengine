@@ -19,15 +19,15 @@ class IMount(object):
     def __init__(self):
         pass
 
-    @property
-    def curMountId(self):
-        return self.appearance.outfitData.mountId
-
     def _initMountCell(self):
         if not self.curMountId:
             self._exitRiding()
         elif self.hasState(gameconst.StateEnum.riding):
             self.setCurMountSpeedBuff(False)
+
+    @property
+    def curMountId(self):
+        return self.appearance.outfitData.mountId
 
     def doAddMountAction(self, opUUID, ctx, itemId, durationDays):
         LOG_INFO('do get mount action:', itemId, durationDays)
@@ -46,7 +46,7 @@ class IMount(object):
         return gameconst.UseItemEnum.PENDING
 
     def setCurMountCell(self, mountId):
-        self.enableOutfit(gameconst.OutfitType.mount, mountId)
+        self.enableOutfit(gameconst.OutfitEnum.mount, mountId)
 
     # 由于跟随情况下上坐骑的玩家更多，所以这里用反状态，当玩家跟随不上坐骑，记下标志位
     @utils.isMyself
@@ -59,21 +59,15 @@ class IMount(object):
     @utils.isMyself
     def enterRiding(self, exposed, isCast):
         LOG_DBG('enter riding')
-        if not self._isCanRide(True):
+        if not self._checkCanRide(True):
             return
 
         self._enterRidingWithCast(True, isCast)
 
-    def _enterRidingWithCast(self, bMsg, isCast, finishFunc='', finishArgs=None):
-        if isCast:
-            self._commonNeedCast(C_C_DD.datas.summonMount, gameconst.StateEnum.summonMount, gameconst.CastType.ride,
-                                 '_enterRiding', (bMsg, finishFunc, finishArgs), failedFunc=finishFunc, failedArgs=finishArgs)
-        else:
-            self._enterRiding(bMsg, finishFunc, finishArgs)
-
-    def _isCanRide(self, bMsg):
+    def _checkCanRide(self, bMsg):
         if not self.curMountId:
-            bMsg and self.showMsg(MMD.datas.pressRideButtonNotEquipMount, [])
+            if bMsg:
+                self.showMsg(MMD.datas.pressRideButtonNotEquipMount, [])
             return False
 
         if not GPGPD.datas[formula.fetchMapId(self.spaceNo)]['ifRide']:
@@ -81,8 +75,21 @@ class IMount(object):
 
         return True
 
+    def _enterRidingWithCast(self, bMsg, isCast):
+        if isCast:
+            self._commonNeedCast(
+                C_C_DD.datas.summonMount, 
+                gameconst.StateEnum.summonMount, 
+                gameconst.CastEnum.ride,
+                '_enterRiding', 
+                (bMsg, '', None), 
+                failedFunc='', 
+                failedArgs=None)
+        else:
+            self._enterRiding(bMsg, '', None)
+
     def _enterRiding(self, bMsg, finishFunc, finishArgs):
-        if not self._isCanRide(bMsg) or\
+        if not self._checkCanRide(bMsg) or\
                 (not self.checkConflictState(C_C_DD.datas.ride, bMsg=bMsg)) or\
                 (not self._setMountState(gameconst.StateEnum.riding)):
             if finishFunc:
@@ -106,12 +113,17 @@ class IMount(object):
             self.removeState(gameconst.StateEnum.riding)
 
     def _setMountState(self, state):
-        ret = self.setState(state)
-        if ret:
+        _ret = self.setState(state)
+        if _ret:
             opUUID = KBEngine.genUUID64()
-            self.base.setAvatarVariableByTag('curMountID', self.curMountId, opUUID,
-                                             gameconst.VarChangeSrcEnum.VAR_SRC_ENTER_MOUNT, 'enter mount state:{}'.format(state))
-        return ret
+            self.base.setAvatarVariableByTag(
+                'curMountID', 
+                self.curMountId, 
+                opUUID,
+                gameconst.VarChangeSrcEnum.VAR_SRC_ENTER_MOUNT, 
+                'enter mount state:{}'.format(state))
+
+        return _ret
 
     def _onExitRiding(self, byConflictState):
         LOG_DBG('exit riding:', byConflictState)
@@ -174,14 +186,14 @@ class IMount(object):
 
         self.addTimerCB(2, '_notifyExitMount', (self.spaceNo, ), gametimer.TIMER_TAG_NOTIFY_EXIT_MOUNT)
 
-    def _notifyExitMount(self, lastSpaceNo):
-        if self.spaceNo != lastSpaceNo:
+    def _notifyExitMount(self, oldSpaceNo):
+        if self.spaceNo != oldSpaceNo:
             return
 
-        if self._isMountLegal(lastSpaceNo):
+        if self._isMountLegal(oldSpaceNo):
             return
 
-        self.addTimerCB(2, '_notifyExitMount', (lastSpaceNo, ), gametimer.TIMER_TAG_NOTIFY_EXIT_MOUNT)
+        self.addTimerCB(2, '_notifyExitMount', (oldSpaceNo, ), gametimer.TIMER_TAG_NOTIFY_EXIT_MOUNT)
 
     def _exitIllegalMount(self, lastSpaceNo):
         self.popTempMiscProp(gameconst.EntityPropsEnum.mountIllegalTimer, None)

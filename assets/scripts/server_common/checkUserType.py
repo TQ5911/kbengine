@@ -5,7 +5,6 @@ import time
 import userType
 from collections.abc import Iterable
 import BaseItem
-import math
 
 
 def checkProperty(owner):
@@ -13,119 +12,105 @@ def checkProperty(owner):
         return
 
     tempCostTime = time.time()
-    propList = KBEngine.getPersistentProperties('Avatar')
     propDic = KBEngine.getUserTypeProperties('Avatar')
     for pName in propDic:
         if hasattr(owner, pName):
-            # LOG_DBG("checkProperty            pName ", pName)
-            pObj = getattr(owner, pName)
-            dict = propDic[pName].getDictFromObj(pObj)
+            _pObj = getattr(owner, pName)
+            dict = propDic[pName].getDictFromObj(_pObj)
             checkObj = propDic[pName].createObjFromDict(dict)
-            checkObjProperty([pName], pObj, checkObj)
+            checkObjProperty([pName], _pObj, checkObj)
 
     LOG_DBG("const time is ", time.time() - tempCostTime)
 
 
-def getCheckObj(typeClass, pObj):
-    exec("import %s" % (typeClass.split('.')[0],))
-    dict = eval('%s.getDictFromObj(pObj)' % (typeClass,))
-    checkObj = eval('%s.createObjFromDict(dict)' % (typeClass,))
-    return checkObj
-
-
-def checkObjProperty(pNameList, propObj, checkObj):
+def checkObjProperty(pNameList, propObj, checkObj, **kwargs):
     if not isinstance(propObj, BaseItem.PureItem) and isinstance(checkObj, BaseItem.PureItem):
         checkObj.changeToSpecificItem()
 
-    propDict = propObj.__dict__
+    _propDict = propObj.__dict__
     checkDict = checkObj.__dict__
     igoreProps = propObj._checkIgnores_()
     if igoreProps:
-        propDict = dict(propDict)
+        _propDict = dict(_propDict)
         checkDict = dict(checkDict)
         for propName in igoreProps:
-            propDict.pop(propName, None)
+            _propDict.pop(propName, None)
             checkDict.pop(propName, None)
 
     pNameList.append(propObj.__class__)
-    checkValueProperty(pNameList, propDict, checkDict)
+    checkValueProperty(pNameList, _propDict, checkDict)
     pNameList.pop()
 
 
-def checkIterProperty(pNameList, value, checkValue):
-    # LOG_DBG("checkIterProperty value ", type(value), value)
-    # LOG_DBG("checkIterProperty checkValue ",  type(checkValue), checkValue)
-    if type(value) != type(checkValue):
-        valueModuleClass = value.__module__ + "." + value.__class__.__name__
-        checkValueModuleClass = checkValue.__module__ + "." + value.__class__.__name__
-        if valueModuleClass != checkValueModuleClass:
-            sendCheckError(pNameList, value, checkValue)
+def checkIterProperty(pNameList, val, checkValue):
+    if type(val) != type(checkValue):
+        _valueModuleClass = val.__module__ + "." + val.__class__.__name__
+        _checkValueModuleClass = checkValue.__module__ + "." + val.__class__.__name__
+        if _valueModuleClass != _checkValueModuleClass:
+            sendCheckError(pNameList, val, checkValue)
             return
 
-    if isinstance(value, set):
-        if value != checkValue:
-            sendCheckError(pNameList, value, checkValue)
+    if isinstance(val, set):
+        if val != checkValue:
+            sendCheckError(pNameList, val, checkValue)
             return
 
-    elif isinstance(value, str):
-        if value != checkValue:
-            sendCheckError(pNameList, value, checkValue)
+    elif isinstance(val, str):
+        if val != checkValue:
+            sendCheckError(pNameList, val, checkValue)
 
-    elif isinstance(value, dict):
-        for k, v in value.items():
-            if k not in checkValue:
-                sendCheckError(pNameList, value, checkValue)
+    elif isinstance(val, dict):
+        for _k, _v in val.items():
+            if _k not in checkValue:
+                sendCheckError(pNameList, val, checkValue)
             else:
-                pNameList.append(str(k))
-                checkValueProperty(pNameList, v, checkValue[k])
+                pNameList.append(str(_k))
+                checkValueProperty(pNameList, _v, checkValue[_k])
                 pNameList.pop()
 
     else:
-        iteValue = iter(value)
-        iteCheck = iter(checkValue)
+        _iteValue = iter(val)
+        _iteCheck = iter(checkValue)
         while True:
-            nextValue = next(iteValue, None)
-            nextCheckValue = next(iteCheck, None)
+            nextValue = next(_iteValue, None)
+            nextCheckValue = next(_iteCheck, None)
             if not nextValue and not nextCheckValue:
                 break
             if not nextValue or not nextCheckValue:
-                sendCheckError(pNameList, value, checkValue)
+                sendCheckError(pNameList, val, checkValue)
                 break
 
             checkValueProperty(pNameList, nextValue, nextCheckValue)
 
 
-def checkValueProperty(pNameList, value, checkValue):
-    # LOG_DBG("checkValueProperty value ", type(value), value)
-    # LOG_DBG("checkValueProperty checkValue ",  type(checkValue), checkValue)
-    if isinstance(value, Iterable):
-        checkIterProperty(pNameList, value, checkValue)
-    elif isinstance(value, userType.UserTypeBase):
-        checkObjProperty(pNameList, value, checkValue)
-    elif value.__class__.__base__.__name__ == 'UserSingleType':
-        checkObjProperty(pNameList, value, checkValue)
-    elif callable(value):
+def checkValueProperty(pNameList, val, checkValue):
+    if isinstance(val, Iterable):
+        checkIterProperty(pNameList, val, checkValue)
+    elif isinstance(val, userType.UserTypeBase):
+        checkObjProperty(pNameList, val, checkValue)
+    elif val.__class__.__base__.__name__ == 'UserSingleType':
+        checkObjProperty(pNameList, val, checkValue)
+    elif callable(val):
         return
     else:
         isError = False
-        if type(value) == float or type(checkValue) == float:
-            if abs(value - checkValue) > 1e-2:
+        if type(val) == float or type(checkValue) == float:
+            if abs(val - checkValue) > 1e-2:
                 isError = True
         else:
-            if value != checkValue:
+            if val != checkValue:
                 isError = True
         if isError:
-            sendCheckError(pNameList, value, checkValue)
-            return
+            sendCheckError(pNameList, val, checkValue)
 
 
 def sendCheckError(pNameList, value, checkValue):
-    errMsg = "Avatar property"
+    _errMsg = "Avatar property"
     for pName in pNameList:
-        errMsg = "{} => {}".format(errMsg, pName)
-    errMsg = "{} not same value ".format(errMsg)
-    LOG_ERR(errMsg)
-    errMsg = "value : {}".format(value)
-    LOG_ERR(errMsg)
-    errMsg = "checkValue : {}".format(checkValue)
-    LOG_ERR(errMsg)
+        _errMsg = "{} => {}".format(_errMsg, pName)
+    _errMsg = "{} not same value ".format(_errMsg)
+    LOG_ERR(_errMsg)
+    _errMsg = "value : {}".format(value)
+    LOG_ERR(_errMsg)
+    _errMsg = "checkValue : {}".format(checkValue)
+    LOG_ERR(_errMsg)

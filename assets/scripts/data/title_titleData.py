@@ -84,7 +84,17 @@ datas = _tools.RODict({
         "quality": 1,
         "levelRequirement": 0,
         "color": 215
+    }),
+    25000008: _tools.RODict({
+        "ID": 25000008,
+        "name": "努力升级",
+        "type": 0,
+        "subType": 0,
+        "class": 0,
+        "quality": 3,
+        "levelRequirement": 0,
+        "color": 222
     })
 })
 minKey = 25000001
-maxKey = 25000007
+maxKey = 25000008

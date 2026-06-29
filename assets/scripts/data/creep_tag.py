@@ -50,7 +50,11 @@ datas = _tools.RODict({
     99: _tools.RODict({
         "ID": 99,
         "value": ""
+    }),
+    100: _tools.RODict({
+        "ID": 100,
+        "value": ""
     })
 })
 minKey = 1
-maxKey = 99
+maxKey = 100

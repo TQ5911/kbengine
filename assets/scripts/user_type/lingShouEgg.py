@@ -6,13 +6,13 @@ from KBEDebug import *
 
 import dataUtils
 import Item
-import itemData_itemData as IDID
+import itemData_itemData as ID_IDD
 
 
 class LingShouEggItem(Item.Item):
-    def __init__(self, itemId, itemNum, bindType, growthRate=0, **kwargs):
+    def __init__(self, itemId, itemNum, bindType, growthRate=0, **keywardargs):
         super(LingShouEggItem, self).__init__(itemId, itemNum, bindType)
-        self.petId = IDID.datas[itemId].get('indexID', 0)
+        self.petId = ID_IDD.datas[itemId].get('indexID', 0)
         if not self.petId:
             LOG_ERR('petId is invalid:', itemId, itemNum)
 
@@ -21,9 +21,9 @@ class LingShouEggItem(Item.Item):
         return True
 
     def onSpecificItemChanged(self, jsonData):
-        itemData = dataUtils.getCommItemData(self.itemId)
-        self.quality = itemData['quality']
-        self.petId = IDID.datas[self.itemId].get('indexID', 0)
+        _itemData = dataUtils.getCommItemData(self.itemId)
+        self.quality = _itemData['quality']
+        self.petId = ID_IDD.datas[self.itemId].get('indexID', 0)
         self.rollProps = []
 
     def attr2Dict(self):

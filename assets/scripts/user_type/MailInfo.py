@@ -1,50 +1,50 @@
 # -*- encoding:utf-8 -*-
 
 from KBEDebug import *
-import Mail
 import dropAward
+import Mail
 
 
 class MailInst(object):
     def createObjFromDict(self, dataDict):
-        mailInfo = Mail.Mail()
-        mailInfo.initFromSavedMailDict(dataDict)
-        return mailInfo
-
-    def getDictFromObj(self, obj):
-        return obj.toMailSavedDict()
+        _mailInfo = Mail.Mail()
+        _mailInfo.initFromSavedMailDict(dataDict)
+        return _mailInfo
 
     def isSameType(self, obj):
         return isinstance(obj, Mail.Mail)
+
+    def getDictFromObj(self, obj):
+        return obj.toMailSavedDict()
 
 mailInstance = MailInst()
 
 class MailAttachInst(object):
     def createObjFromDict(self, dataDict):
-        mailAttach = dropAward.MailAttachVal()
-        mailAttach.fromMailWealthDict(dataDict)
-        return  mailAttach
-
-    def getDictFromObj(self, obj):
-        return obj.toMailWealthDict()
+        _mailAttach = dropAward.MailAttachVal()
+        _mailAttach.fromMailWealthDict(dataDict)
+        return  _mailAttach
 
     def isSameType(self, obj):
         return isinstance(obj, dropAward.MailAttachVal)
+
+    def getDictFromObj(self, obj):
+        return obj.toMailWealthDict()
 
 mailAttachInstance = MailAttachInst()
 
 
 class GlobalMailInst(object):
     def createObjFromDict(self, dataDict):
-        mailInfo = Mail.GlobalMail()
-        mailInfo.fromGlobalMailDict(dataDict)
-        return mailInfo
-
-    def getDictFromObj(self, obj):
-        return obj.toGlobalMailDict()
+        _mailInfo = Mail.GlobalMail()
+        _mailInfo.fromGlobalMailDict(dataDict)
+        return _mailInfo
 
     def isSameType(self, obj):
         return isinstance(obj, Mail.GlobalMail)
+
+    def getDictFromObj(self, obj):
+        return obj.toGlobalMailDict()
 
 globalMailInstance = GlobalMailInst()
 

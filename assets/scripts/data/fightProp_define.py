@@ -340,7 +340,7 @@ datas = _tools.RODict({
     }),
     "minPhysicalAtk": _tools.RODict({
         "ID": "minPhysicalAtk",
-        "name": "物理攻击力下限",
+        "name": "最小物理攻击力",
         "type": "int",
         "propType": 1,
         "ifSend": 1,
@@ -415,7 +415,7 @@ datas = _tools.RODict({
     }),
     "maxPhysicalAtk": _tools.RODict({
         "ID": "maxPhysicalAtk",
-        "name": "物理攻击力上限",
+        "name": "最大物理攻击力",
         "type": "int",
         "propType": 1,
         "ifSend": 1,
@@ -490,7 +490,7 @@ datas = _tools.RODict({
     }),
     "minMagicAtk": _tools.RODict({
         "ID": "minMagicAtk",
-        "name": "法术攻击力下限",
+        "name": "最小法术攻击力",
         "type": "int",
         "propType": 2,
         "ifSend": 1,
@@ -565,7 +565,7 @@ datas = _tools.RODict({
     }),
     "maxMagicAtk": _tools.RODict({
         "ID": "maxMagicAtk",
-        "name": "法术攻击力上限",
+        "name": "最大法术攻击力",
         "type": "int",
         "propType": 2,
         "ifSend": 1,

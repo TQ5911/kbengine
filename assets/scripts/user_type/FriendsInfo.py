@@ -8,7 +8,7 @@ class FriendshipInfo(object):
         return friendship
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is Friendship.Friendship

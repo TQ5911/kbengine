@@ -45,9 +45,9 @@
             <Arg>       METHOD_ARGS    </Arg>
         </checkAllLineSpaceReady>
 
-        <onLineSpaceReady>
+        <onSpaceLineReady>
             <Arg>       SPACE_NO       </Arg>
-        </onLineSpaceReady>
+        </onSpaceLineReady>
 
         <onLineSpaceGone>
             <Arg>       SPACE_NO       </Arg>

@@ -4,21 +4,22 @@ import KBEngine
 from KBEDebug import *
 
 import iLinkStub
-import message_Message_def as MMD
+import message_Message_def as M_M_DD
 
 class ItemLinkStub(iLinkStub.ILinkStub):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(ItemLinkStub, self).__init__()
 
-    def uploadItemInfo(self, uniqueId, itemVal):
-        self.addLinkInfo(uniqueId, itemVal)
+    def uploadItemInfo(self, uniqueId, item):
+        self.addLinkInfo(uniqueId, item)
 
     def downloadItemInfo(self, uniqueId, box):
-        itemVal = self.getLinkInfo(uniqueId)
+        _itemVal = self.getLinkInfo(uniqueId)
 
-        if itemVal:
-            box.client and box.client.onQueryItemLink(uniqueId, itemVal)
+        if _itemVal:
+            if box.client:
+                box.client.onQueryItemLink(uniqueId, _itemVal)
         else:
-            box.onMessagePre(MMD.datas.channel_noItem, [])
+            box.onMessagePre(M_M_DD.datas.channel_noItem, [])
 

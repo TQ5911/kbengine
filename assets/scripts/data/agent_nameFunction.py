@@ -31,66 +31,66 @@ datas = _tools.RODict({
         "functionID": 5,
     }),
     "UISynthesisSystemPanel": _tools.RODict({
-        "functionID": 7,
+        "functionID": 6,
     }),
     "UISkillSystemPanel": _tools.RODict({
-        "functionID": 8,
+        "functionID": 7,
     }),
     "UICrusadeSystemPanel": _tools.RODict({
-        "functionID": 9,
+        "functionID": 8,
     }),
     "UISquarePanel": _tools.RODict({
-        "functionID": 15,
+        "functionID": 9,
     }),
     "UIAchievementPanel": _tools.RODict({
-        "functionID": 16,
+        "functionID": 10,
     }),
     "UIGuildInsidePanel": _tools.RODict({
-        "functionID": 17,
+        "functionID": 11,
     }),
     "UIFriendPanel": _tools.RODict({
-        "functionID": 18,
+        "functionID": 12,
     }),
     "UIBusinessPanel": _tools.RODict({
-        "functionID": 19,
+        "functionID": 13,
     }),
     "UIRankPanel": _tools.RODict({
-        "functionID": 20,
+        "functionID": 14,
     }),
     "UIMailPanel": _tools.RODict({
-        "functionID": 22,
+        "functionID": 15,
     }),
     "UIDrawPetPanel": _tools.RODict({
-        "functionID": 23,
+        "functionID": 16,
     }),
     "UIGodownPanel": _tools.RODict({
-        "functionID": 24,
+        "functionID": 17,
     }),
     "UIWonderLandPanel": _tools.RODict({
-        "functionID": 25,
+        "functionID": 18,
     }),
     "UICollectionPanel": _tools.RODict({
-        "functionID": 26,
+        "functionID": 19,
     }),
     "UITeamDunPanel": _tools.RODict({
-        "functionID": 27,
+        "functionID": 20,
     }),
     "UINoticePanel": _tools.RODict({
-        "functionID": 29,
+        "functionID": 21,
     }),
     "UIPropMakePanel": _tools.RODict({
-        "functionID": 30,
+        "functionID": 22,
     }),
     "UIPracticePanel": _tools.RODict({
-        "functionID": 31,
+        "functionID": 23,
     }),
     "UIAttributePanel": _tools.RODict({
-        "functionID": 33,
+        "functionID": 24,
     }),
     "UIMainLockPanel": _tools.RODict({
-        "functionID": 34,
+        "functionID": 25,
     }),
     "UIAbyssPanel": _tools.RODict({
-        "functionID": 36,
+        "functionID": 26,
     })
 })

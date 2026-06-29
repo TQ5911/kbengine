@@ -14,39 +14,37 @@ import appearance_ModelResource as APM
 class ImpOutfit(object):
     def __init__(self):
         LOG_INFO("ImpOutfit __init__ ")
-        self.checkOutfitConfigOpen(gameconst.OutfitType.wing, self.appearance.outfitData.wingId)
-        self.checkOutfitConfigOpen(gameconst.OutfitType.hair, self.appearance.outfitData.hairId)
-        self.checkOutfitConfigOpen(gameconst.OutfitType.clothes, self.appearance.outfitData.clothesId)
-        self.checkOutfitConfigOpen(gameconst.OutfitType.picFrame, self.appearance.outfitData.picFrameId)
-        self.checkOutfitConfigOpen(gameconst.OutfitType.mount, self.appearance.outfitData.mountId)
+        self.checkOutfitConfigOpen(gameconst.OutfitEnum.wing, self.appearance.outfitData.wingId)
+        self.checkOutfitConfigOpen(gameconst.OutfitEnum.hair, self.appearance.outfitData.hairId)
+        self.checkOutfitConfigOpen(gameconst.OutfitEnum.clothes, self.appearance.outfitData.clothesId)
+        self.checkOutfitConfigOpen(gameconst.OutfitEnum.picFrame, self.appearance.outfitData.picFrameId)
+        self.checkOutfitConfigOpen(gameconst.OutfitEnum.mount, self.appearance.outfitData.mountId)
         self.base.onGetCellAppearance(self.appearance)
 
     def checkOutfitConfigOpen(self, outfitType, outfitId):
-        if not dataUtils.checkOutfitOpen(outfitType, outfitId):
-            self.appearance.removeOutfitId(self, outfitType, outfitId)
+        if not dataUtils.checkOpenOutfit(outfitType, outfitId):
+            self.appearance.removeOutfitById(self, outfitType, outfitId)
 
     @utils.isMyself
     def reqDisableOutfit(self, exposed, outfitType, outfitId):
         LOG_INFO('reqDisableOutfit:', outfitType, outfitId)
-        self.appearance.removeOutfitId(self, outfitType, outfitId)
+        self.appearance.removeOutfitById(self, outfitType, outfitId)
         return
 
     def enableOutfit(self, outfitType, outfitId):
         LOG_INFO('enableOutfit:', outfitType, outfitId)
-        if outfitType == gameconst.OutfitType.mount:
+        if outfitType == gameconst.OutfitEnum.mount:
             if outfitId != self.curMountId:
                 self._exitRiding()
 
         self.appearance.setOutfitId(self, outfitType, outfitId)
-        return
 
     def checkOutfitExpired(self, outfitList):
         for outfitType, outfitId in outfitList:
-            if outfitType == gameconst.OutfitType.mount and outfitId == self.curMountId:
+            if outfitType == gameconst.OutfitEnum.mount and outfitId == self.curMountId:
                 self._exitRiding()
 
-            self.appearance.removeOutfitId(self, outfitType, outfitId)
-        return
+            self.appearance.removeOutfitById(self, outfitType, outfitId)
 
     def updatePicFrameId(self, picFrameId):
         LOG_INFO('updatePicFrameId ', picFrameId)

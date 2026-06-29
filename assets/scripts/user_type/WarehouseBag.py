@@ -18,7 +18,7 @@ import gameclass
 
 class WarehouseBag(BaseBag.BaseBag):
 
-    def __init__(self, capacity=0):
+    def __init__(self, capacity=0, **kwargs):
         super(WarehouseBag, self).__init__(capacity)
         self.bagType = gameconst.BagTypeEnum.BAG_TYPE_WAREHOUSE
 

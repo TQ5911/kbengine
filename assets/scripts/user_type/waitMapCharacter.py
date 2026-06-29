@@ -13,7 +13,7 @@ class WaitMapCharacter(object):
         self.guildname = guildname
         self.appearance = ap or appearance.Appearance()
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'gbId': self.gbid,
             'name': self.name,
@@ -40,7 +40,7 @@ class WaitMapCharacterInfo(object):
         return WaitMapCharacter().initFromDict(dic)
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is WaitMapCharacter

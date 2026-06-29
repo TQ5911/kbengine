@@ -5,6 +5,7 @@
     <BaseMethods>
         <reqBindPhone> <Exposed/>
             <Arg>   UINT64            </Arg>
+            <Arg>   UNICODE           </Arg>
         </reqBindPhone>
 
         <reqVerifyCode> <Exposed/>
@@ -13,6 +14,9 @@
 
         <reqClaimPcLoginReward> <Exposed/>
         </reqClaimPcLoginReward>
+
+        <reqQueryRecharge> <Exposed/>
+        </reqQueryRecharge>
     </BaseMethods>
 
     <ClientMethods>
@@ -25,5 +29,9 @@
             <Arg>   UINT64              </Arg>
             <Arg>   UINT64              </Arg>
         </claimPcLoginRewardInfo>
+
+        <queryRechargeAmountReplay>
+            <Arg>   FLOAT               </Arg>
+        </queryRechargeAmountReplay>
     </ClientMethods>
 </root>

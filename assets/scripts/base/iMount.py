@@ -23,8 +23,8 @@ class IMount(object):
         pass
 
     def mountOnLogin(self):
-        for outfit in self.outfitInfo.outfitDict.values():
-            if outfit.outfitType == gameconst.OutfitType.mount:
+        for outfit in self.outfitInfo.outfitDic.values():
+            if outfit.outfitType == gameconst.OutfitEnum.mount:
                 configData = dataUtils.getOutfitConfigData(outfit.outfitType, outfit.outfitId)
                 if configData:
                     prop = configData.get('prop', [])
@@ -33,7 +33,7 @@ class IMount(object):
 
     def doAddMount(self, pid, mountId, durationDays):
         LOG_INFO('doAddMount:', pid, mountId, durationDays)
-        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
+        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitEnum.mount, mountId)
         hasUnlock = False
         if outfit:
             if not outfit.expireTime:
@@ -47,10 +47,10 @@ class IMount(object):
                     return
 
         if durationDays <= 0:
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, 0, gameconst.AddOutfitReason.MOUNT_ITEM)
+            self.addOutfitByReason(gameconst.OutfitEnum.mount, mountId, 0, gameconst.AddOutfitReason.MOUNT_ITEM)
         else:
             expireTime = utils.curTS() + int(durationDays * gameconst.ONE_DAY_COST_SECONDS)
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_ITEM)
+            self.addOutfitByReason(gameconst.OutfitEnum.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_ITEM)
 
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountActivated'])
 
@@ -77,7 +77,7 @@ class IMount(object):
 
     def _setCurMount(self, mountId):
         LOG_INFO(' set cur mount:', mountId)
-        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
+        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitEnum.mount, mountId)
         if outfit is None:
             return
 
@@ -99,26 +99,26 @@ class IMount(object):
             LOG_ERR('_eventActionAddMount but mount id invalid:', mountId)
             return
 
-        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
+        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitEnum.mount, mountId)
         if outfit and not outfit.expireTime:
             LOG_WARN('_eventActionAddMount: but has infinity')
             return
 
         if durationSeconds <= 0:
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, 0, gameconst.AddOutfitReason.MOUNT_EVENT)
+            self.addOutfitByReason(gameconst.OutfitEnum.mount, mountId, 0, gameconst.AddOutfitReason.MOUNT_EVENT)
         else:
             expireTime = utils.curTS() + durationSeconds
-            self.addOutfitByReason(gameconst.OutfitType.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_EVENT)
+            self.addOutfitByReason(gameconst.OutfitEnum.mount, mountId, expireTime, gameconst.AddOutfitReason.MOUNT_EVENT)
 
     def _eventActionRemoveMount(self, eventActionSrc, mountId, *args, **kwargs):
         LOG_INFO('_eventActionRemoveMount', mountId)
         mountId = int(mountId)
-        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
+        outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitEnum.mount, mountId)
         if not outfit:
             LOG_WARN('_eventActionRemoveMount mount id invalid:', mountId)
             return
 
-        self.outfitInfo.removeOutfit(self, gameconst.OutfitType.mount, mountId)
+        self.outfitInfo.removeOutfit(self, gameconst.OutfitEnum.mount, mountId)
         self.cell.checkOutfitExpired([(outfit.outfitType, outfit.outfitId)])
 
 

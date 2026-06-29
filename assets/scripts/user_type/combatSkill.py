@@ -738,7 +738,7 @@ class SkillBaseClass(userType.UserSingleType):
         return True
 
     def isMultiCastSkill(self, owner, context):
-        return self.hasSkillTag(gameconst.SkillTag.Casting) and self.getMaxTargetNum(owner, self.skillId, context) > 1
+        return self.hasSkillTag(gameconst.SkillTagEnum.Casting) and self.getMaxTargetNum(owner, self.skillId, context) > 1
 
     @staticmethod
     @functools.lru_cache(1024)
@@ -806,12 +806,12 @@ class SkillBaseClass(userType.UserSingleType):
     @functools.lru_cache(1024)
     def isChangePosSkill(skillId):
         _tags = SkillBaseClass.getTag(skillId)
-        return gameconst.SkillTag.ShiftSkill in _tags\
-            or gameconst.SkillTag.DodgeSkill in _tags\
-            or gameconst.SkillTag.Lunge in _tags\
-            or gameconst.SkillTag.Chongfeng in _tags\
-            or gameconst.SkillTag.TeleportSkill in _tags\
-            or gameconst.SkillTag.BlinkToTarget in _tags
+        return gameconst.SkillTagEnum.ShiftSkill in _tags\
+            or gameconst.SkillTagEnum.DodgeSkill in _tags\
+            or gameconst.SkillTagEnum.Lunge in _tags\
+            or gameconst.SkillTagEnum.Chongfeng in _tags\
+            or gameconst.SkillTagEnum.TeleportSkill in _tags\
+            or gameconst.SkillTagEnum.BlinkToTarget in _tags
 
     def clearCD(self, owner):
         _oldInCD = self.inCDTime()
@@ -1197,7 +1197,7 @@ class SkillBaseClass(userType.UserSingleType):
         return _arr
 
     def getSkillDesPosition(self, caster, target, skillArgs):
-        if self.hasSkillTag(gameconst.SkillTag.TeleportSkill):
+        if self.hasSkillTag(gameconst.SkillTagEnum.TeleportSkill):
             distance = self.getRange(caster, self.skillId, self.skillLv)
             dstPosition = sMath.getForwardPos(caster.position, caster.direction[2], distance)
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
@@ -1211,7 +1211,7 @@ class SkillBaseClass(userType.UserSingleType):
             _realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(_realDstPos)
 
-        elif self.hasSkillTag(gameconst.SkillTag.BlinkToTarget):
+        elif self.hasSkillTag(gameconst.SkillTagEnum.BlinkToTarget):
             offset = 2.0
             _yaw = sMath.getYawFromPoints(caster.position, target.position)
             targetPos = sMath.getForwardPos(target.position, _yaw, offset)
@@ -1219,14 +1219,14 @@ class SkillBaseClass(userType.UserSingleType):
             targetPos = utils.getSurfacePos(caster.spaceID, targetPos)
             _realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, targetPos)
             desPosition = list(_realDstPos)
-        elif self.hasSkillTag(gameconst.SkillTag.Chongfeng):
+        elif self.hasSkillTag(gameconst.SkillTagEnum.Chongfeng):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
 
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             dstPosition = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(dstPosition)
-        elif self.hasSkillTag(gameconst.SkillTag.Lunge):
+        elif self.hasSkillTag(gameconst.SkillTagEnum.Lunge):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             skillRange = self.getRange(caster, self.skillId, self.skillLv)
             # 根据target的碰撞距离处理
@@ -1244,7 +1244,7 @@ class SkillBaseClass(userType.UserSingleType):
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             _realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(_realDstPos)
-        elif self.hasSkillTag(gameconst.SkillTag.DodgeSkill) or self.hasSkillTag(gameconst.SkillTag.ShiftSkill):
+        elif self.hasSkillTag(gameconst.SkillTagEnum.DodgeSkill) or self.hasSkillTag(gameconst.SkillTagEnum.ShiftSkill):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
@@ -1295,7 +1295,7 @@ class SkillBaseClass(userType.UserSingleType):
         LOG_DBG("in _internalGetEffectTargets ", scopes, self.skillId, _scopeParams, scopeAddRatio)
 
         if not scopes or scopes == gameconst.SkillScopeEnum.TARGET_AUTO:
-            if self.hasSkillTag(gameconst.SkillTag.SingleHeal)\
+            if self.hasSkillTag(gameconst.SkillTagEnum.SingleHeal)\
                     and hasattr(caster, 'commonFlagCell')\
                     and caster.getCommonFlagCell(gameconst.CommonFlagCellType.IsHealHPLow)\
                     and (
@@ -1514,7 +1514,7 @@ class SkillBaseClass(userType.UserSingleType):
         if not code & ignoreReasons and owner.isDie():
             return code
 
-        if utils.hasSkillTagById(self.skillId, gameconst.SkillTag.UltraSkill):
+        if utils.hasSkillTagById(self.skillId, gameconst.SkillTagEnum.UltraSkill):
             code = gameconst.UseSkillCheck.USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
             if not code & ignoreReasons and not owner.isUltraSkillPowerMax():
                 owner.debugCombatMsg('_checkUseSkillOwner fail to use ultra skill power not enough: skillId:%s', self.getSkillId())
@@ -1532,7 +1532,7 @@ class SkillBaseClass(userType.UserSingleType):
                     owner.debugCombatMsg('_checkUseSkillOwner fail to use skill conflict state useSkill: skillId:%s', self.getSkillId())
                     return code
 
-                if utils.hasSkillTagById(self.skillId, gameconst.SkillTag.GeneralSkill) and not owner.checkConflictState(
+                if utils.hasSkillTagById(self.skillId, gameconst.SkillTagEnum.GeneralSkill) and not owner.checkConflictState(
                         C_C_DD.datas.useGeneralSkill, False):
                     return code
 
@@ -1548,7 +1548,7 @@ class SkillBaseClass(userType.UserSingleType):
         needReleaseTarget = self.needReleaseTarget()
         LOG_DBG('_checkUseSkillTarget', self.skillId, targetId, needReleaseTarget)
         owner.debugCombatMsg('_checkUseSkillTarget: skillId:%s, targetId:%s, needReleaseTarget:%s', self.skillId, targetId, needReleaseTarget)
-        if self.hasSkillTag(gameconst.SkillTag.SingleHeal):
+        if self.hasSkillTag(gameconst.SkillTagEnum.SingleHeal):
             target = KBEngine.entities.get(targetId)
             if not target:
                 return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
@@ -1564,7 +1564,7 @@ class SkillBaseClass(userType.UserSingleType):
             else:
                 res = self.inEffectRange(owner, target)
             if not res:
-                if self.hasSkillTag(gameconst.SkillTag.Channel) or self.hasSkillTag(gameconst.SkillTag.Casting):
+                if self.hasSkillTag(gameconst.SkillTagEnum.Channel) or self.hasSkillTag(gameconst.SkillTagEnum.Casting):
                     owner.showMsg(C_CD.datas['targetIsOutOfRange_butCasted']['value'], [])
                 else:
                     owner.showMsg(C_CD.datas['targetIsOutOfRange']['value'], [])
@@ -1620,7 +1620,7 @@ class SkillBaseClass(userType.UserSingleType):
     # 延迟结算时间
     def getSkillResultDelay(self, owner, targetId,  compensateTime):
         _delayTime = self.getFxDelay(self.skillId) - (compensateTime / 1000.0)
-        if self.hasSkillTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTagEnum.Channel):
             return sMath.limit(_delayTime, 0.0, 9999.0)
         if self.getBulletFx(self.skillId):
             _timeEx = self.calBulletTime(owner, targetId)
@@ -1716,7 +1716,7 @@ class SkillBaseClass(userType.UserSingleType):
         if not self.isInSkill:
             return
         if not self.hasSkillTag(
-                gameconst.SkillTag.Channel) and ctx.actionProgress == gameconst.ActionProgressEnum.actionDone:
+                gameconst.SkillTagEnum.Channel) and ctx.actionProgress == gameconst.ActionProgressEnum.actionDone:
 
             _remainTime = self.getSkillTime(self.skillId) - calcDelay - actionDuration
             if _remainTime <= 0:
@@ -1875,7 +1875,7 @@ class SkillBaseClass(userType.UserSingleType):
         if owner.hasState(_skillState) and doRemoveState:
             owner.removeState(_skillState)
 
-        if self.hasSkillTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTagEnum.Channel):
             owner.removeState(gameconst.StateEnum.UsingSkill)
 
         if self._cancelTempTimer(owner, gameconst.SkillTempDataKey.RESTORE_CD_TIMER, gametimer.TIMER_TAG_RESTORE_CD):
@@ -1893,12 +1893,12 @@ class SkillBaseClass(userType.UserSingleType):
 # 普通技能
 class CommonSkillVal(SkillBaseClass):
     def getSkillState(self):
-        if self.hasSkillTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTagEnum.Channel):
             if self.isMovingSkill(self.skillId):
                 return gameconst.StateEnum.moveChannel
 
             return gameconst.StateEnum.Channeling
-        elif self.hasSkillTag(gameconst.SkillTag.GeneralSkill):
+        elif self.hasSkillTag(gameconst.SkillTagEnum.GeneralSkill):
             return gameconst.StateEnum.GeneralAttack
         else:
             if self.isMovingSkill(self.skillId):
@@ -1990,11 +1990,11 @@ class CommonSkillVal(SkillBaseClass):
             owner.debugCombatMsg('SkillBaseClass.beginUseSkillStartAction do _startAction fail: skillId:%s, targetId:%s, ownerPosition:%s', self.skillId, targetId, owner.position)
             self.useSkillDone(owner, targetId, skillArgs, isSucc=False, startActionFail=_startActionFail)
             return startActionResult, None, None
-        elif utils.hasSkillTagById(self.skillId, gameconst.SkillTag.UltraSkill):
+        elif utils.hasSkillTagById(self.skillId, gameconst.SkillTagEnum.UltraSkill):
             owner.ultraSkillPower = 0
 
         if (not owner.IsAvatar or owner.gmModeCell != gameconst.GmModeEnum.GM_NO_SKILLCD) and enterCD and not self.hasSkillTag(
-                gameconst.SkillTag.Channel):
+                gameconst.SkillTagEnum.Channel):
             host = owner.getAvatar()
             LOG_DBG("in beginUseSkillStartAction ", owner, self.skillId, owner.IsAvatar, host, targetId, skillArgs)
             if host:
@@ -2052,7 +2052,7 @@ class CommonSkillVal(SkillBaseClass):
 
         calcDelay = self.getSkillResultDelay(owner, targetId, compensateTime)
         # ChannelingSkillVal废除，因为吟唱后也需要可以引导，所以把引导合并到CommonSkillVal
-        if self.hasSkillTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTagEnum.Channel):
             owner.setTempMiscProp(gameconst.EntityPropsEnum.currentChannelSkill, self)
 
             owner.debugCombatMsg('CommonSkillVal.doBeginUseSkill channel skill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, ownerPosition:%s, calcDelay:%s', 
@@ -2129,14 +2129,14 @@ class CommonSkillVal(SkillBaseClass):
             self.onChannelingEnd(owner, True)
 
     def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
-        if self.hasSkillTag(gameconst.SkillTag.Channel):
+        if self.hasSkillTag(gameconst.SkillTagEnum.Channel):
             self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CHANNELING_CALC_TIMER, gametimer.TIMER_TAG_CHANNELING_CALC)
             self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CHANNELING_BULLET_TIMER, gametimer.TIMER_TAG_CHANNELING_SKILL_EFFECT)
             self._cancelTempTimer(owner, gameconst.SkillTempDataKey.CHANNELING_END_TIMER, gametimer.TIMER_TAG_ON_CHANNELING_END)
             self.popTempData(gameconst.SkillTempDataKey.IS_CHANNELING_EMPTY, False)
             self.channelCount = 0
 
-        if self.hasSkillTag(gameconst.SkillTag.Lunge) and owner.hasState(gameconst.StateEnum.Shifting):
+        if self.hasSkillTag(gameconst.SkillTagEnum.Lunge) and owner.hasState(gameconst.StateEnum.Shifting):
             owner.onEndLunge(self, 0, [])
 
         super(CommonSkillVal, self).resetSkill(owner, reason, doRemoveState)
@@ -2258,7 +2258,7 @@ class CastingSkillVal(CommonSkillVal):
 
     def onChangedFromSkill(self, fromSkillVal):
         super(CastingSkillVal, self).onChangedFromSkill(fromSkillVal)
-        if fromSkillVal.hasSkillTag(gameconst.SkillTag.Casting):
+        if fromSkillVal.hasSkillTag(gameconst.SkillTagEnum.Casting):
             self.castingStartTime = fromSkillVal.castingStartTime
 
     def getEffectTargets(self, caster, targetId, arr, forceTarget=False, positionSkillArgs=None, context=None):
@@ -2532,17 +2532,17 @@ def fetchSkillClass(skillId):
         return
     tags = SkillBaseClass.getTag(skillId)
 
-    if gameconst.SkillTag.Casting in tags:
+    if gameconst.SkillTagEnum.Casting in tags:
         return CastingSkillVal
-    elif gameconst.SkillTag.Chongfeng in tags:
+    elif gameconst.SkillTagEnum.Chongfeng in tags:
         return ChongfengSkillVal
-    elif gameconst.SkillTag.Lunge in tags:
+    elif gameconst.SkillTagEnum.Lunge in tags:
         return LungeSkillVal
-    elif gameconst.SkillTag.MulStageSkill in tags:
+    elif gameconst.SkillTagEnum.MulStageSkill in tags:
         return StagedSkill
-    elif gameconst.SkillTag.DodgeSkill in tags:
+    elif gameconst.SkillTagEnum.DodgeSkill in tags:
         return DodgeSkillVal
-    elif gameconst.SkillTag.UltraSkill in tags:
+    elif gameconst.SkillTagEnum.UltraSkill in tags:
         return UltraSkillVal
     else:
         return CommonSkillVal

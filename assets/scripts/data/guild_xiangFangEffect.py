@@ -20,35 +20,35 @@ datas = _tools.RODict({
         "officalNum_1": 1,
         "officalNum_2": 1,
         "officalNum_3": 1,
-        "memberLimit": 50
+        "memberLimit": 40
     }),
     2: _tools.RODict({
         "ID": 2,
         "officalNum_1": 1,
         "officalNum_2": 1,
         "officalNum_3": 1,
-        "memberLimit": 60
+        "memberLimit": 50
     }),
     3: _tools.RODict({
         "ID": 3,
         "officalNum_1": 1,
         "officalNum_2": 1,
         "officalNum_3": 2,
-        "memberLimit": 70
+        "memberLimit": 60
     }),
     4: _tools.RODict({
         "ID": 4,
         "officalNum_1": 1,
         "officalNum_2": 2,
         "officalNum_3": 2,
-        "memberLimit": 80
+        "memberLimit": 70
     }),
     5: _tools.RODict({
         "ID": 5,
         "officalNum_1": 1,
         "officalNum_2": 2,
         "officalNum_3": 3,
-        "memberLimit": 90
+        "memberLimit": 80
     })
 })
 minKey = 1

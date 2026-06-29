@@ -288,7 +288,7 @@ class ILinePlayersStub(IBranchLineStub):
     def __init__(self):
         super(ILinePlayersStub, self).__init__()
 
-    def onLineSpaceReady(self, spaceNo):
+    def onSpaceLineReady(self, spaceNo):
         lineNo = formula.parseLineNo(spaceNo)
         self.allPlayers[lineNo] = linePlayers.LinePlayers(lineNo)
 
@@ -447,7 +447,7 @@ class ILinePlayersStub(IBranchLineStub):
 
         _playerVal.checkEnterTimer = 0
 
-        if _playerVal.playerStatus != _playerVal.IN_LINE:
+        if _playerVal.playerStatus != _playerVal.INLINE:
             spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
             if checkCnt < 5:
                 LOG_ERR('_checkPlayerEnterLine fail:', lineNo, box.id, gbId, checkCnt)
@@ -471,7 +471,7 @@ class ILinePlayersStub(IBranchLineStub):
             self.cancelTimerCB(_playerVal.checkEnterTimer, gametimer.TIMER_TAG_CHECK_PLAYER_ENTER_LINE)
             _playerVal.checkEnterTimer = 0
 
-        _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.IN_LINE)
+        _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.INLINE)
 
     def enterLineFailed(self, lineNo, box, gbId, extra):
         LOG_INFO('enterLineFailed:', lineNo, box.id, gbId, extra)
@@ -567,7 +567,7 @@ class ILinePlayersStub(IBranchLineStub):
 
         spaceNo = formula.combineLineSpaceNo(self.lineType, toLineNo)
         if _playerVal:
-            if _playerVal.playerStatus != linePlayers.LinePlayerVal.IN_LINE:
+            if _playerVal.playerStatus != linePlayers.LinePlayerVal.INLINE:
                 return False
 
             _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.SWITCHING, {'toLineNo': toLineNo})
@@ -590,7 +590,7 @@ class ILinePlayersStub(IBranchLineStub):
     def switchLineSuccess(self, fromLineNo, toLineNo, box, gbId, extraData):
         _playerVal = self.allPlayers.getPlayer(toLineNo, gbId)
         if _playerVal:
-            _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.IN_LINE)
+            _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.INLINE)
         else:
             LOG_ERR('switchLineSuccess: player is not in line', self.lineType, fromLineNo, toLineNo, box.id, gbId)
 
@@ -611,7 +611,7 @@ class ILinePlayersStub(IBranchLineStub):
 
         _playerVal = self.allPlayers.getPlayer(fromLineNo, gbId)
         if _playerVal:
-            _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.IN_LINE)
+            _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.INLINE)
         else:
             LOG_ERR('switchLineFailed: cannot find from player')
 

@@ -20,7 +20,7 @@ datas = _tools.RODict({
         "type": 7,
         "name": "血影魔熊",
         "costItem": ((30000001, 680),),
-        "monthCardCostItem": ((30000001, 680),),
+        "monthCardCostItem": ((30000021, 680),),
         "limitType": 1,
         "limitNumber": 1,
         "reward": 40000351
@@ -30,7 +30,7 @@ datas = _tools.RODict({
         "type": 7,
         "name": "锋刃战狼",
         "costItem": ((30000001, 1980),),
-        "monthCardCostItem": ((30000001, 1980),),
+        "monthCardCostItem": None,
         "limitType": 1,
         "limitNumber": 1,
         "reward": 40000352
@@ -40,7 +40,7 @@ datas = _tools.RODict({
         "type": 7,
         "name": "星瀚狮虎",
         "costItem": ((30000001, 1980),),
-        "monthCardCostItem": ((30000001, 1980),),
+        "monthCardCostItem": None,
         "limitType": 1,
         "limitNumber": 1,
         "reward": 40000353
@@ -50,7 +50,7 @@ datas = _tools.RODict({
         "type": 7,
         "name": "冰鹿",
         "costItem": ((30000001, 1980),),
-        "monthCardCostItem": ((30000001, 1980),),
+        "monthCardCostItem": None,
         "limitType": 1,
         "limitNumber": 1,
         "reward": 40000354

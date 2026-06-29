@@ -10,6 +10,7 @@ import awardContext
 import gameclass
 import Store
 import mall_storeList as MSLD
+import mall_mallConst as MMC
 import utils
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -84,6 +85,13 @@ class ImpStore(object):
         costItem = storeItemData.get('costItem')
         exType = storeItemData.get('exType')
         propItem = storeItemData.get('propItem')
+        itemType = storeItemData.get('type')
+
+        if not self.isBigMonthCardExpired():
+            if itemType == gameconst.StoreItemType.DYNAMIC_PRICE:
+                newCostItem = storeItemData.get('monthCardCostItem')
+                LOG_INFO('buyStoreItems isBigMonthCard', costItem, '->', newCostItem)
+                costItem = newCostItem
         
         #限量物品才可能有动态价格
         storeDic = self.storeData.getStoreDic(storeId)
@@ -108,14 +116,14 @@ class ImpStore(object):
         if propItem:
             if exType == gameconst.ItemExType.NORMAL:
                 for val in propItem:
-                    propItemId, num = val
-                    deductWealthVal.addWealthByItemId(propItemId, num*itemNum)
+                    propItemId, num, bindtype = val
+                    deductWealthVal.addWealthByItemId(propItemId, num*itemNum, bindtype)
             elif exType == gameconst.ItemExType.SELECTION:
                 if propSlot >= len(propItem) or propSlot < 0:
                     LOG_ERR('buyStoreItems: propSlot out of range:', propSlot, len(propItem))
                     return
-                propItemId, num = propItem[propSlot]
-                deductWealthVal.addWealthByItemId(propItemId, num*itemNum)
+                propItemId, num, bindtype = propItem[propSlot]
+                deductWealthVal.addWealthByItemId(propItemId, num*itemNum, bindtype)
 
         if not self.canDeductWealth(deductWealthVal):
             LOG_WARN('buyStoreItems: items not enough:', deductWealthVal)
@@ -169,8 +177,18 @@ class ImpStore(object):
             realItemId,
             itemNum,
             storeItemData['limitType'],
-            storeItemData['limitNumber'],
+            storeItemData['limitNumber'] + self._getBigMonthCardAddNum(storeItemData),
             buyNum,
             str(costItem),
             opUUID,
         )
+
+    def _getBigMonthCardAddNum(self, storeItemData):
+        if storeItemData['type'] == gameconst.StoreItemType.DYNAMIC_PRICE and not self.isBigMonthCardExpired():
+            level = self.getRoleCacheAttr('level')
+            count = 0
+            for val in MMC.datas['monthCardExtraTimes']['value']:
+                if level >= val[0]:
+                    count += val[1]
+            return count
+        return 0

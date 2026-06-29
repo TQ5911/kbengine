@@ -254,18 +254,18 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if aiName:
             self.aiName=aiName
         else:
-            self.aiName=self.getDefenderAI()
+            self.aiName=self.getDefenderAIName()
 
         if self.aiName<=0:
             return
 
-        self.aiController = aiController.AIController(self.id, self.aiName, self.checkActiveAttack())
+        self.aiController = aiController.AIControllerCls(self.id, self.aiName, self.checkActiveAttack())
         self.startThink()
 
     def onDead(self, killer, *args, **kwargs):
         LOG_DBG('Summon::onDead', killer)
         super(Summon, self).onDead(killer, hostId=self.hostId)
-        self.removeAllBuff()
+        self.doRemoveAllBuff()
         self.removeMoveController()
         self.destroySummonOnDead()
         if killer:

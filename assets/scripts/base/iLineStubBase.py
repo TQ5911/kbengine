@@ -2,38 +2,32 @@
 
 import KBEngine
 from KBEDebug import *
-import gameengine
-import gameconfig
-import gameglobal
-import gameconst
-import formula
 import utils
-import gametimer
 
 import iLineSpaceStub
 import iLinePlayersStub
 
 
 class ILineStubBase(iLineSpaceStub.ILineSpaceStub, iLinePlayersStub.ILinePlayersStub):
-    def __init__(self):
+    def __init__(self, **kwargs):
         iLineSpaceStub.ILineSpaceStub.__init__(self)
         iLinePlayersStub.ILinePlayersStub.__init__(self)
 
-    def onLineSpaceReady(self, spaceNo):
-        iLinePlayersStub.ILinePlayersStub.onLineSpaceReady(self, spaceNo)
-        iLineSpaceStub.ILineSpaceStub.onLineSpaceReady(self, spaceNo)
+    def onLineSpaceGone(self, spaceNo, groupOrderNum):
+        iLinePlayersStub.ILinePlayersStub.onLineSpaceGone(self, spaceNo, groupOrderNum)
+        iLineSpaceStub.ILineSpaceStub.onLineSpaceGone(self, spaceNo, groupOrderNum)
 
-    def onLineSpaceGone(self, spaceNo, groupOrder):
-        iLinePlayersStub.ILinePlayersStub.onLineSpaceGone(self, spaceNo, groupOrder)
-        iLineSpaceStub.ILineSpaceStub.onLineSpaceGone(self, spaceNo, groupOrder)
+    def onSpaceLineReady(self, spaceNo):
+        iLinePlayersStub.ILinePlayersStub.onSpaceLineReady(self, spaceNo)
+        iLineSpaceStub.ILineSpaceStub.onSpaceLineReady(self, spaceNo)
 
-    def onCellappRelive(self, groupOrder):
-        iLinePlayersStub.ILinePlayersStub.onCellappRelive(self, groupOrder)
-        iLineSpaceStub.ILineSpaceStub.onCellappRelive(self, groupOrder)
+    def handleCellappDeath(self, groupOrderNum):
+        iLinePlayersStub.ILinePlayersStub.handleCellappDeath(self, groupOrderNum)
+        iLineSpaceStub.ILineSpaceStub.handleCellappDeath(self, groupOrderNum)
 
-    def handleCellappDeath(self, groupOrder):
-        iLinePlayersStub.ILinePlayersStub.handleCellappDeath(self, groupOrder)
-        iLineSpaceStub.ILineSpaceStub.handleCellappDeath(self, groupOrder)
+    def onCellappRelive(self, groupOrderNum):
+        iLinePlayersStub.ILinePlayersStub.onCellappRelive(self, groupOrderNum)
+        iLineSpaceStub.ILineSpaceStub.onCellappRelive(self, groupOrderNum)
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)

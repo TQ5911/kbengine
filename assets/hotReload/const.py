@@ -1,21 +1,60 @@
 # -*- coding: utf-8 -*-
-CELL_PATH = ['../scripts/common', '../scripts/common/Lib', '../scripts/data', '../scripts/user_type', '../scripts/server_common',
-             '../scripts/cell', '../scripts/cell/interfaces', '../scripts/cell/components', '../../kbe/res/scripts',
-             '../../kbe/res/scripts/common', '../../kbe/res/scripts/common/lib-dynload', '../../kbe/res/scripts/common/DLLs',
-             '../../kbe/res/scripts/common/Lib', '../../kbe/res/scripts/common/Lib/site-packages',
-             '../../kbe/res/scripts/common/Lib/dist-packages']
+_SCRIPTS = '../scripts'
 
-BASE_PATH = ['../scripts/common', '../scripts/common/Lib', '../scripts/data', '../scripts/user_type', '../scripts/server_common',
-             '../scripts/base', '../scripts/base/interfaces', '../scripts/base/components', '../../kbe/res/scripts',
-             '../../kbe/res/scripts/common', '../../kbe/res/scripts/common/lib-dynload', '../../kbe/res/scripts/common/DLLs',
-             '../../kbe/res/scripts/common/Lib', '../../kbe/res/scripts/common/Lib/site-packages', '../../kbe/res/scripts/common/Lib/dist-packages']
 
-INTERFACE_PATH = ['../scripts/common', '../scripts/common/Lib', '../scripts/data', '../scripts/user_type', '../scripts/server_common',
-             '../scripts/interface', '../../kbe/res/scripts',
-             '../../kbe/res/scripts/common', '../../kbe/res/scripts/common/lib-dynload', '../../kbe/res/scripts/common/DLLs',
-             '../../kbe/res/scripts/common/Lib', '../../kbe/res/scripts/common/Lib/site-packages',
-             '../../kbe/res/scripts/common/Lib/dist-packages']
+CELL_PATH = [
+    f'{_SCRIPTS}/common', 
+    f'{_SCRIPTS}/common/Lib', 
+    f'{_SCRIPTS}/data', 
+    f'{_SCRIPTS}/user_type', 
+    f'{_SCRIPTS}/server_common',
+    f'{_SCRIPTS}/cell', 
+    f'{_SCRIPTS}/cell/interfaces', 
+    f'{_SCRIPTS}/cell/components', 
+    f'../../kbe/res/scripts',
+    f'../../kbe/res/scripts/common', 
+    f'../../kbe/res/scripts/common/lib-dynload', 
+    f'../../kbe/res/scripts/common/DLLs',
+    f'../../kbe/res/scripts/common/Lib', 
+    f'../../kbe/res/scripts/common/Lib/site-packages',
+    f'../../kbe/res/scripts/common/Lib/dist-packages',
+]
+
+BASE_PATH = [
+    f'{_SCRIPTS}/common', 
+    f'{_SCRIPTS}/common/Lib', 
+    f'{_SCRIPTS}/data', 
+    f'{_SCRIPTS}/user_type', 
+    f'{_SCRIPTS}/server_common',
+    f'{_SCRIPTS}/base', 
+    f'{_SCRIPTS}/base/interfaces', 
+    f'{_SCRIPTS}/base/components', 
+    f'../../kbe/res/scripts',
+    f'../../kbe/res/scripts/common', 
+    f'../../kbe/res/scripts/common/lib-dynload', 
+    f'../../kbe/res/scripts/common/DLLs',
+    f'../../kbe/res/scripts/common/Lib', 
+    f'../../kbe/res/scripts/common/Lib/site-packages', 
+    f'../../kbe/res/scripts/common/Lib/dist-packages']
+
+INTERFACE_PATH = [
+    f'{_SCRIPTS}/common', 
+    f'{_SCRIPTS}/common/Lib', 
+    f'{_SCRIPTS}/data', 
+    f'{_SCRIPTS}/user_type', 
+    f'{_SCRIPTS}/server_common',
+    f'{_SCRIPTS}/interface', 
+    f'../../kbe/res/scripts',
+    f'../../kbe/res/scripts/common', 
+    f'../../kbe/res/scripts/common/lib-dynload', 
+    f'../../kbe/res/scripts/common/DLLs',
+    f'../../kbe/res/scripts/common/Lib', 
+    f'../../kbe/res/scripts/common/Lib/site-packages',
+    f'../../kbe/res/scripts/common/Lib/dist-packages']
 
 CELLAPP = 'cellapp'
 BASEAPP = 'baseapp'
 INTERFACE = 'interface'
+
+if __name__ == '__main__':
+    print(CELL_PATH)

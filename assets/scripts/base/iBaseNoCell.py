@@ -9,18 +9,14 @@ class IBaseNoCell(iBase.IBase):
         if self.isDestroyed:
             return
 
-        self._preEntireDestroy()
-
+        self._onPreEntireDestroy()
         self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)
+        self._onPostEntireDestroy()
 
-        self._postEntireDestroy()
-
-        return
-
-    def _preEntireDestroy(self):
+    def _onPreEntireDestroy(self):
         print('sdfsfsdf')
 
-    def _postEntireDestroy(self):
+    def _onPostEntireDestroy(self):
         pass
 
     def globalDataSumCallback(self, obj, callbackName, args):

@@ -43,23 +43,27 @@ class IGameStart(object):
                 return
 
             comps = KBEngine.getComponents()
-            if len(comps['baseapps']) + 1 != gameconfig.baseAppCount():
+            _baseappNum = len(comps['baseapps']) + 1
+            if _baseappNum != gameconfig.baseAppCount():
                 LOG_INFO('start waiting: waiting for baseapps start: %s/%s' % (
-                len(comps['baseapps']) + 1, gameconfig.baseAppCount()))
+                    _baseappNum, 
+                    gameconfig.baseAppCount(),
+                ))
+
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
                 return
 
             LOG_INFO('starting: components ready')
 
-            self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_BASEAPPS)
+            self.pyAddTimer(1, 0, gametimer.TIMER_BASESTUB_TIMER_BASEAPPS)
 
-        elif userArg == gametimer.BASESTUB_TIMER_BASEAPPS:
+        elif userArg == gametimer.TIMER_BASESTUB_TIMER_BASEAPPS:
             baseAppCnt = gameconfig.baseAppCount()
             howManyBaseApp = gameengine.howManyBaseApps()
 
             if howManyBaseApp < baseAppCnt:
                 LOG_INFO('start waiting: waiting for creating all BaseApp Entity: %s/%s' % (howManyBaseApp, baseAppCnt))
-                self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_BASEAPPS)
+                self.pyAddTimer(1, 0, gametimer.TIMER_BASESTUB_TIMER_BASEAPPS)
                 return
 
             LOG_INFO('starting: successful to create all baseapps&cellapps, now create stubs')
@@ -134,16 +138,16 @@ class IGameStart(object):
                     return False
 
             for i in range(gameconst.RAIDSTUB_CONFIG_NUM):
-                stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
-                if not KBEngine.globalData.get(stubName):
-                    LOG_INFO('still waiting for raid stub', stubName)
+                _stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
+                if not KBEngine.globalData.get(_stubName):
+                    LOG_INFO('still waiting for raid stub', _stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
                 
-            for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
-                stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
-                if not KBEngine.globalData.get(stubName):
-                    LOG_INFO('still waiting for statistic stub', stubName)
+            for _i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
+                _stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(_i)
+                if not KBEngine.globalData.get(_stubName):
+                    LOG_INFO('still waiting for statistic stub', _stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
 
@@ -232,31 +236,31 @@ class IGameStart(object):
                     stub = gameengine.getLineStub(lineType)
                     stub.doNext()
 
-                for stubName in gameconst.GLOBAL_BASE_STUB_ARCHIVE:
-                    gameengine.getGlobalBase(stubName).doNext()
+                for _stubName in gameconst.GLOBAL_BASE_STUB_ARCHIVE:
+                    gameengine.getGlobalBase(_stubName).doNext()
 
-                for stubName in gameconst.GLOBAL_BASE_STUB_UNARCHIVE:
-                    gameengine.getGlobalBase(stubName).doNext()
+                for _stubName in gameconst.GLOBAL_BASE_STUB_UNARCHIVE:
+                    gameengine.getGlobalBase(_stubName).doNext()
 
-                for i in range(gameconst.TEAMSTUB_CONF_NUM):
-                    stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(i)
-                    stub = gameengine.getGlobalBase(stubName)
+                for _i in range(gameconst.TEAMSTUB_CONF_NUM):
+                    _stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(_i)
+                    stub = gameengine.getGlobalBase(_stubName)
                     stub.doNext()
 
-                for i in range(gameconst.RAIDSTUB_CONFIG_NUM):
-                    stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
-                    stub = gameengine.getGlobalBase(stubName)
+                for _i in range(gameconst.RAIDSTUB_CONFIG_NUM):
+                    _stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(_i)
+                    stub = gameengine.getGlobalBase(_stubName)
                     stub.doNext()
 
-                for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
-                    stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
-                    stub = gameengine.getGlobalBase(stubName)
+                for _i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
+                    _stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(_i)
+                    stub = gameengine.getGlobalBase(_stubName)
                     stub.doNext()
 
-                for dungeonNo, dVal in DDL.datas.items():
+                for dungeonNo, _dVal in DDL.datas.items():
 
-                    enterType = dVal['enterType']
-                    dungeonType = dVal['type']
+                    enterType = _dVal['enterType']
+                    dungeonType = _dVal['type']
 
                     if dungeonType not in gameconst.DungeonSpaceTypeEnum.COLL_DUNGEON:
                         LOG_INFO("BaseStub::BASESTUB_TIMER_GLOBAL_STUBS_HALF_PREPARE:: skip dungeonNo in gamePlay table: ",
@@ -315,11 +319,11 @@ class IGameStart(object):
                         return
 
             if gameglobal.isBootstrap:
-                import gmCommand
                 import gmGroup
+                import gmCommand
                 import gmAdmin
-                agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
-                gmCommand.doCommandInside(agent, "$hotreload")
+                _agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
+                gmCommand.doCommandInside(_agent, "$hotreload")
 
             gameglobal.localBaseApp.readhotfix()
 
@@ -375,8 +379,8 @@ class IGameStart(object):
                 import gmCommand
                 import gmGroup
                 import gmAdmin
-                agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
-                gmCommand.doCommandInside(agent, "$setcachecfg interfaceEnableLogin 1")
+                _agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
+                gmCommand.doCommandInside(_agent, "$setcachecfg interfaceEnableLogin 1")
                 gameengine.getGlobalBase('PlayerStub').syncOnlineNumToQueueServer()
 
     def _onServerOpenTime(self, ok, data):
@@ -440,84 +444,84 @@ class IGameStart(object):
         self.initProcedures.pop(key, None)
 
     def createGlobalStubs(self):
-        baseApps = gameengine.chooseGoodBaseApp()
+        _baseApps = gameengine.chooseGoodBaseApp()
         for stubName in gameconst.GLOBAL_BASE_STUB_ARCHIVE:
-            random.choice(baseApps).createArchiveStub(stubName, {}, '')
+            random.choice(_baseApps).createArchiveStub(stubName, {}, '')
 
         for stubName in gameconst.GLOBAL_BASE_STUB_UNARCHIVE:
-            random.choice(baseApps).createUnarchiveStub(stubName, {}, '')
+            random.choice(_baseApps).createUnarchiveStub(stubName, {}, '')
 
         for i in range(gameconst.TEAMSTUB_CONF_NUM):
             stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(i)
-            random.choice(baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_TEAMSTUB, {}, stubName)
+            random.choice(_baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_TEAMSTUB, {}, stubName)
 
-        for i in range(gameconst.RAIDSTUB_CONFIG_NUM):
-            stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
-            random.choice(baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_RAIDSTUB, {}, stubName)
+        for _i in range(gameconst.RAIDSTUB_CONFIG_NUM):
+            _stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(_i)
+            random.choice(_baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_RAIDSTUB, {}, _stubName)
 
         for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
             stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
-            random.choice(baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_STATISTICSTUB, {}, stubName)
+            random.choice(_baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_STATISTICSTUB, {}, stubName)
 
         # 每个地图一个stub,对应下面会创建 n个支线space
         for lineType, stubDic in gameconst.lineStubMap().items():
-            random.choice(baseApps).createUnarchiveStub(stubDic['stubName'], {'lineType':lineType}, gameengine.buildLineStubName(lineType))
+            random.choice(_baseApps).createUnarchiveStub(stubDic['stubName'], {'lineType':lineType}, gameengine.buildLineStubName(lineType))
 
         # 每个副本地图一个stub,下面创建多个 副本space,用到才创建
-        for dungeonNo, stubPrm in DDL.datas.items():
-            dungeonSpaceType = stubPrm.get('type', 0)
-            dungeonEnterType = stubPrm.get('enterType', 0)
+        for _dungeonNo, stubPrm in DDL.datas.items():
+            _dungeonSpaceType = stubPrm.get('type', 0)
+            _dungeonEnterType = stubPrm.get('enterType', 0)
 
-            if dungeonSpaceType not in gameconst.DungeonSpaceTypeEnum.COLL_DUNGEON:
-                LOG_INFO("BaseStub::_createGlobalStubs:: skip dungeonNo in gamePlay table: ",
-                         dungeonNo, dungeonSpaceType)
+            if _dungeonSpaceType not in gameconst.DungeonSpaceTypeEnum.COLL_DUNGEON:
+                LOG_INFO("BaseStub::_createGlobalStubs:: skip _dungeonNo in gamePlay table: ",
+                         _dungeonNo, _dungeonSpaceType)
                 continue
 
             hasSpace = False
-            if gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.TEAM)
-                random.choice(baseApps).createUnarchiveStub(
-                    'TeamDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
+            if gameconst.DungeonTypeJudge.isTeamDungeon(_dungeonSpaceType, _dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(_dungeonNo, gameconst.DungeonEnterTypeEnum.TEAM)
+                random.choice(_baseApps).createUnarchiveStub(
+                    'TeamDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
                 hasSpace = True
 
-            if gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE)
-                random.choice(baseApps).createUnarchiveStub(
-                    'SingleDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
+            if gameconst.DungeonTypeJudge.isSingleDungeon(_dungeonSpaceType, _dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(_dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE)
+                random.choice(_baseApps).createUnarchiveStub(
+                    'SingleDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
                 hasSpace = True
 
-            if gameconst.DungeonTypeJudge.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.RAID)
-                random.choice(baseApps).createUnarchiveStub(
-                    'RaidDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
+            if gameconst.DungeonTypeJudge.isRaidDungeon(_dungeonSpaceType, _dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(_dungeonNo, gameconst.DungeonEnterTypeEnum.RAID)
+                random.choice(_baseApps).createUnarchiveStub(
+                    'RaidDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
                 hasSpace = True
 
             # 公会boss副本
-            if gameconst.DungeonTypeJudge.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
-                globalName = formula.fetchDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterTypeEnum.GUILD)
-                random.choice(baseApps).createUnarchiveStub(
-                    'GuildBossDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
+            if gameconst.DungeonTypeJudge.isGuildBossDungeon(_dungeonSpaceType, _dungeonEnterType):
+                globalName = formula.fetchDungeonStubGlobalName(_dungeonNo, gameconst.DungeonEnterTypeEnum.GUILD)
+                random.choice(_baseApps).createUnarchiveStub(
+                    'GuildBossDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
                 hasSpace = True
 
             if not hasSpace:
-                LOG_WARN('_createGlobalStubs:: UN-KNOWN DungeonTypeJudge', dungeonNo, dungeonSpaceType, dungeonEnterType)
+                LOG_WARN('_createGlobalStubs:: UN-KNOWN DungeonTypeJudge', _dungeonNo, _dungeonSpaceType, _dungeonEnterType)
                 if not hasattr(self, '_skipInitDungeonStubs'):
                     self._skipInitDungeonStubs = []
-                self._skipInitDungeonStubs.append(dungeonNo)
+                self._skipInitDungeonStubs.append(_dungeonNo)
 
         # 每层单独一个stub,一个space
         for _floorNo in WL_FD.datas.keys():
-            random.choice(baseApps).createUnarchiveStub('WonderLandStub', {'floor': _floorNo}, 'WonderLandStub%d' % _floorNo)
+            random.choice(_baseApps).createUnarchiveStub('WonderLandStub', {'floor': _floorNo}, 'WonderLandStub%d' % _floorNo)
 
         for _floorNo in AB_FD.datas.keys():
-            random.choice(baseApps).createUnarchiveStub('AbyssStub', {'floor': _floorNo}, 'AbyssStub%d' % _floorNo)
+            random.choice(_baseApps).createUnarchiveStub('AbyssStub', {'floor': _floorNo}, 'AbyssStub%d' % _floorNo)
 
         # 每层单独一个stub,一个space
         for _floorNo in C_FD.datas.keys():
-            random.choice(baseApps).createUnarchiveStub('CubeStub', {'cubeNo': _floorNo}, 'CubeStub%d' % _floorNo)
+            random.choice(_baseApps).createUnarchiveStub('CubeStub', {'cubeNo': _floorNo}, 'CubeStub%d' % _floorNo)
 
         #todo读策划表
-        random.choice(baseApps).createUnarchiveStub('SiegeWarSpaceStub', {}, 'SiegeWarSpaceStub')
+        random.choice(_baseApps).createUnarchiveStub('SiegeWarSpaceStub', {}, 'SiegeWarSpaceStub')
 
     def fullPrepare(self, entType):
         LOG_INFO(entType, 'fullPrepare')

@@ -557,7 +557,7 @@ class IDungeonStubMonster(object):
             return
 
         if className == 'Monster':
-            _sVal.spaceMgr.cell.flowCtrlDungeonMonsterReleaseComplete(flagIds)
+            _sVal.spaceMgr.cell.flowCtrlDunMonsterReleaseComplete(flagIds)
         elif className in ('Npc', 'CNpc'):
             _sVal.spaceMgr.cell.flowCtrlDungeonNPCReleaseComplete(flagIds)
         elif className == 'Collection':
@@ -601,13 +601,13 @@ class IDungeonStubMonster(object):
                 _sVal.addTimeLine(flagId)
             _sVal.addKill(flagId)
             _needAddCreepBaseKillNumFlag = False
-            _sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreased(
+            _sVal.spaceMgr.cell.flowCtrlDunMonsterKillNumInc(
                 flagId, _sVal.getTimeLine(flagId).kills, _sVal.killSum)
 
         # 【【任务】副本编辑器新节点-指定怪物原型死亡数量】
         if creepbaseId:
             _sVal.addKillByCreepBaseId(creepbaseId, _needAddCreepBaseKillNumFlag)
-            _sVal.spaceMgr.cell.flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(
+            _sVal.spaceMgr.cell.flowCtrlDunMonsterKillNumIncByMonsterId(
                 creepbaseId, _sVal.getCreepBaseKilledNum(creepbaseId), _sVal.killSum)
 
         LOG_DBG('----- NOW KILL {} MONSTERS in space {}'

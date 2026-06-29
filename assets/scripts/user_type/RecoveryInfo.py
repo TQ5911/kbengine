@@ -31,7 +31,7 @@ class freeTicketRecoveryItem(userType.UserSingleType):
                 self.dateNumDeques[int(subType)].append([dateNumDict['date'], dateNumDict['num']])
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         dataDict = {}
         dataDict['rType'] = self.rType
         dateNumInfo = {}
@@ -44,7 +44,7 @@ class freeTicketRecoveryItem(userType.UserSingleType):
         
         dateNumInfoStr = json.dumps(dateNumInfo)
         dataDict['dateNumInfo'] = dateNumInfoStr
-        LOG_DBG("ResourceRecoveryStub::toSavedDict", dataDict)
+        LOG_DBG("ResourceRecoveryStub::toStreamSavedDic", dataDict)
         return dataDict
 
     def update(self, now, subType, nowDateTime, curNum):
@@ -81,7 +81,7 @@ class freeTicketRecoveryItem(userType.UserSingleType):
         lastData = self.dateNumDeques[subType][-1]
         LOG_INFO("freeTicketRecoveryItem::update has data1", lastData, nowDateTime, curNum)
         if nowDateTime < lastData[0]:
-            LOG_ERR("freeTicketRecoveryItem::update has data2")
+            LOG_WARN("freeTicketRecoveryItem::update has data2")
             return False
 
         if lastData[0] == nowDateTime:
@@ -158,11 +158,11 @@ class resourceRecoveryInfo(userType.UserSingleType):
         self.ftRecoveryItem.initFromDict(dataDict['freeTicket'])
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         dataDict = {}
-        freeTicket = self.ftRecoveryItem.toSavedDict()
+        freeTicket = self.ftRecoveryItem.toStreamSavedDic()
         dataDict['freeTicket'] = freeTicket
-        LOG_DBG("toSavedDict", dataDict)
+        LOG_DBG("toStreamSavedDic", dataDict)
         return dataDict
 
 class resourceRecoveryInstance(object):
@@ -172,7 +172,7 @@ class resourceRecoveryInstance(object):
         return info
     
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
     
     def isSameType(self, obj):
         return type(obj) is resourceRecoveryInfo

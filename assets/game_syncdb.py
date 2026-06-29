@@ -1,62 +1,61 @@
 # -*- encoding:utf-8 -*-
 
-import os
 import sys
+import os
 import xml.etree.ElementTree as ET
 
-pyPath = os.path.dirname(os.path.abspath(__file__))
-configPath = "/".join([pyPath, 'res', 'server', 'kbengine.xml'])
+PY_PATH = os.path.dirname(os.path.abspath(__file__))
+configPath = "/".join([PY_PATH, 'res', 'server', 'kbengine.xml'])
 
 def createCombineSql():
-    fConfig = open(configPath, 'rb')
-    content = ''.join([str(line, 'utf-8') for line in fConfig.readlines()])
-    fConfig.close()
+    _fConfig = open(configPath, 'rb')
+    content = ''.join([str(line, 'utf-8') for line in _fConfig.readlines()])
+    _fConfig.close()
     __KBE_CONFIG_ROOT = ET.fromstring(content)
-    element = __KBE_CONFIG_ROOT.find('sql_script_filename')
-    xzjSqlPath = element.text.strip()
-    with open(xzjSqlPath, 'r') as f:
+    _element = __KBE_CONFIG_ROOT.find('sql_script_filename')
+    _xzjSqlPath = _element.text.strip()
+    with open(_xzjSqlPath, 'r') as f:
         xzjSql = f.read()
 
-    otherSqlPath = "/".join([pyPath,'startServerDb.sql'])
-    with open(otherSqlPath, 'r') as f:
+    _otherSqlPath = "/".join([PY_PATH,'startServerDb.sql'])
+    with open(_otherSqlPath, 'r') as f:
         otherSql = f.read()
 
     combineSql = xzjSql+otherSql
-    combineSqlPath =  "/".join([pyPath,'combineSql.sql'])
+    combineSqlPath =  "/".join([PY_PATH,'combineSql.sql'])
     with open(combineSqlPath, 'w') as f:
         f.write(combineSql)
 
 def sourceSql():
-    fConfig = open(configPath, 'rb')
-    content = ''.join([str(line, 'utf-8') for line in fConfig.readlines()])
-    fConfig.close()
+    _fConfig = open(configPath, 'rb')
+    content = ''.join([str(line, 'utf-8') for line in _fConfig.readlines()])
+    _fConfig.close()
     __KBE_CONFIG_ROOT = ET.fromstring(content)
-    element = __KBE_CONFIG_ROOT.find('dbmgr')
-    element = element.find('databaseInterfaces')
-    element = element.find('default')
-    hostElement = element.find('host')
-    portElement = element.find('port')
-    authElement = element.find('auth')
-    usernameElement = authElement.find('username')
+    _element = __KBE_CONFIG_ROOT.find('dbmgr')
+    _element = _element.find('databaseInterfaces')
+    _element = _element.find('default')
+    _hostElement = _element.find('host')
+    portElement = _element.find('port')
+    authElement = _element.find('auth')
+    _usernameElement = authElement.find('username')
     passwordElement = authElement.find('password')
-    host = hostElement.text.strip()
+    host = _hostElement.text.strip()
     port = portElement.text.strip()
-    username = usernameElement.text.strip()
-    password = passwordElement.text.strip()
-    combineSqlPath = "/".join([pyPath, 'combineSql.sql'])
-    # print("mysql -h%s -P%s -%s -p%s < %s" % (host, port, username, password,combineSqlPath))
-    os.system("mysql -h%s -P%s -u%s -p%s < %s" % (host, port, username, password,combineSqlPath))
+    username = _usernameElement.text.strip()
+    _password = passwordElement.text.strip()
+    combineSqlPath = "/".join([PY_PATH, 'combineSql.sql'])
+    os.system("mysql -h%s -P%s -u%s -p%s < %s" % (host, port, username, _password,combineSqlPath))
 
 
 
 if __name__=='__main__':
     if len(sys.argv) == 1:
-        args = 0
+        _args = 0
     else :
-        args = sys.argv[1]
+        _args = sys.argv[1]
 
-    if args == 0:
-        createCombineSql()
+    createCombineSql()
+    if _args == 0:
+        pass
     else :
-        createCombineSql()
         sourceSql()

@@ -45,15 +45,12 @@ class StoreData(userType.UserSingleType):
         self.stores = {}
         self.limitedStores = {}
         self.resetStores()
-        return
 
     def _lateReload(self):
         super(StoreData, self)._lateReload()
-        for storeDic in self.stores.values():
-            for storeItem in storeDic.values():
+        for _storeDic in self.stores.values():
+            for storeItem in _storeDic.values():
                 storeItem.reloadScript()
-
-        return
 
     def resetStores(self):
         self.stores.clear()
@@ -66,32 +63,32 @@ class StoreData(userType.UserSingleType):
                 self.limitedStores.setdefault(storeId, {})
 
     def toStoreDataSavedDict(self):
-        stores = []
+        _stores = []
         for storeId, storeDic in self.stores.items():
-            stores.append({'storeId': storeId, 'itemsList': list(storeDic.values()),
+            _stores.append({'storeId': storeId, 'itemsList': list(storeDic.values()),
                            })
             
         limitedStores = []
         for storeId, storeDic in self.limitedStores.items():
             limitedStores.append({'storeId': storeId, 'itemsList': list(storeDic.values()),})
-        return {'stores': stores, 'limitedStores': limitedStores}
+        return {'stores': _stores, 'limitedStores': limitedStores}
 
     def fromStoreDataSavedDict(self, dic):
-        for storeDic in dic['stores']:
-            self.setStoreData(storeDic['storeId'], storeDic['itemsList'])
-        for storeDic in dic['limitedStores']:
-            storeId = storeDic['storeId']
-            for storeItem in storeDic['itemsList']:
+        for _storeDic in dic['stores']:
+            self.setStoreData(_storeDic['storeId'], _storeDic['itemsList'])
+        for _storeDic in dic['limitedStores']:
+            storeId = _storeDic['storeId']
+            for storeItem in _storeDic['itemsList']:
                 self.limitedStores[storeId][storeItem.itemId] = storeItem
 
     def setStoreData(self, storeId, savedStoreItemList):
-        storeCfgData = MSLD.datas.get(storeId)
-        if not storeCfgData:
+        _storeCfgData = MSLD.datas.get(storeId)
+        if not _storeCfgData:
             return
-        storeDataDic = self.getStoreDic(storeId)
+        _storeDataDic = self.getStoreDic(storeId)
         for storeItem in savedStoreItemList:
             # 处理有限量的物品
-            storeDataDic[storeItem.itemId] = storeItem
+            _storeDataDic[storeItem.itemId] = storeItem
         return
     
     def _checkAndUpdateLimitedStoreHourly(self, owner, storeId):
@@ -160,10 +157,10 @@ class StoreData(userType.UserSingleType):
     def sendStoreList(self, owner, storeIds):
         LOG_DBG('in sendStoreList:', storeIds)
         clientStoreList = []
-        for storeId in storeIds:
-            storeDic = self.getStoreDic(storeId)
+        for _storeId in storeIds:
+            storeDic = self.getStoreDic(_storeId)
             clientStoreDic = {
-                'storeId': storeId,
+                'storeId': _storeId,
                 'itemsList': list(storeDic.values())
             }
             clientStoreList.append(clientStoreDic)
@@ -283,15 +280,15 @@ class StoreData(userType.UserSingleType):
                 LOG_WARN('   in canBuyItems, not on sale:', storeId, itemId)
                 # 尚未到上架时间
                 return False
-
+        bigMonthCardAddNum = owner._getBigMonthCardAddNum(storeItemData)
         if storeItemData['limitNumber'] > 0 and storeItemData['groupId'] == 0:
             # 限量购买
             storeDic = self.getStoreDic(storeId)
             if itemId not in storeDic:
                 storeDic[itemId] = StoreItem(itemId, buyNum=0)
-            if itemNum > storeItemData['limitNumber'] - storeDic[itemId].buyNum:
+            if itemNum > storeItemData['limitNumber'] + bigMonthCardAddNum - storeDic[itemId].buyNum:
                 LOG_WARN('   in canBuyItems, weekBuyNum limit:',
-                            storeItemData['limitNumber'], storeDic[itemId].buyNum)
+                            storeItemData['limitNumber'], bigMonthCardAddNum, storeDic[itemId].buyNum)
                 owner.onMessagePre(MMCD.datas['mall_itemSoldOut_msg']['value'], [])
                 return False
         
@@ -301,8 +298,8 @@ class StoreData(userType.UserSingleType):
             if itemId not in storeDic:
                 LOG_ERR('   in canBuyItems, no item in limited storeDic:', storeId, itemId, storeDic)
                 return False
-            if itemNum > storeItemData['limitNumber'] - storeDic[itemId].buyNum:
-                LOG_WARN('in canBuyItems, itemSoldOut:', storeId, itemId, itemNum, storeItemData['limitNumber'], storeDic[itemId].buyNum)
+            if itemNum > storeItemData['limitNumber'] + bigMonthCardAddNum - storeDic[itemId].buyNum:
+                LOG_WARN('in canBuyItems, itemSoldOut:', storeId, itemId, itemNum, storeItemData['limitNumber'], bigMonthCardAddNum, storeDic[itemId].buyNum)
                 owner.onMessagePre(MMCD.datas['mall_itemSoldOut_msg']['value'], [])
                 return False
             

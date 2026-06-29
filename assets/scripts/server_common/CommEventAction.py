@@ -1,46 +1,46 @@
 # -*- coding: utf-8 -*-
 
-class ActionType(object):
+class CommEvEnum(object):
     BASE = 0
     CELL = 1
 
-CommEventActionMap = {
-    'Gettask': (ActionType.CELL,
-                lambda self, eventActionSrc, *args, **kwargs: self._eventActionGettask(eventActionSrc, *args, **kwargs)),
+CommEventActionDic = {
+    'Gettask': (CommEvEnum.CELL,
+                lambda self, src, *args, **kwargs: self._eventActionGettask(src, *args, **kwargs)),
 
-    'GettaskPopup': (ActionType.CELL,
-                    lambda self, eventActionSrc, *args, **kwargs: self._eventActionGettask(eventActionSrc, *args, **kwargs)),
+    'GettaskPopup': (CommEvEnum.CELL,
+                    lambda self, src, *args, **kwargs: self._eventActionGettask(src, *args, **kwargs)),
     
-    'Fnstalk': (ActionType.BASE,
-                lambda self, eventActionSrc, *args, **kwargs: self._eventActionFnstalk(eventActionSrc, *args, **kwargs)),
+    'Fnstalk': (CommEvEnum.BASE,
+                lambda self, src, *args, **kwargs: self._eventActionFnstalk(src, *args, **kwargs)),
     
-    'Fnstask': (ActionType.BASE,
-                lambda self, eventActionSrc, *args, **kwargs: self._eventActionFnstask(eventActionSrc, *args, **kwargs)),
+    'Fnstask': (CommEvEnum.BASE,
+                lambda self, src, *args, **kwargs: self._eventActionFnstask(src, *args, **kwargs)),
 
-    'Failtask': (ActionType.BASE, 
-                 lambda self, eventActionSrc, *args, **kwargs: self._eventActionFailtask(eventActionSrc, *args, **kwargs)),
+    'Failtask': (CommEvEnum.BASE, 
+                 lambda self, src, *args, **kwargs: self._eventActionFailtask(src, *args, **kwargs)),
 
-    'enterSence': (ActionType.CELL, lambda self, eventActionSrc, *args, **kwargs: self.enterLineByNpc(*args, **kwargs)),
+    'enterSence': (CommEvEnum.CELL, lambda self, src, *args, **kwargs: self.enterLineByNpc(*args, **kwargs)),
 
-    'taskRepeat': (ActionType.BASE,
-                   lambda self, eventActionSrc, *args, **kwargs: self._eventActionTaskRepeat(eventActionSrc, *args,
+    'taskRepeat': (CommEvEnum.BASE,
+                   lambda self, src, *args, **kwargs: self._eventActionTaskRepeat(src, *args,
                                                                                              **kwargs)),
-    'setVariableNoCharProp': (ActionType.BASE,
-                              lambda self, eventActionSrc, *args, **kwargs: self._eventActionSetVariableNoCharProp(
-                                  eventActionSrc, *args, **kwargs)),
-    'addEquipWashAnima': (ActionType.BASE, 
-                          lambda self, eventActionSrc, *args, **kwargs: self._eventActionAddEquipWashAnima(eventActionSrc, *args, 
+    'setVariableNoCharProp': (CommEvEnum.BASE,
+                              lambda self, src, *args, **kwargs: self._eventActionSetVariableNoCharProp(
+                                  src, *args, **kwargs)),
+    'addEquipWashAnima': (CommEvEnum.BASE, 
+                          lambda self, src, *args, **kwargs: self._eventActionAddEquipWashAnima(src, *args, 
                                                                                                            **kwargs)),
-    'AddSkillUltimatePoint': (ActionType.CELL, 
-                              lambda self, eventActionSrc, *args, **kwargs: self._eventActionAddUltraSkillPower(eventActionSrc, *args, 
+    'AddSkillUltimatePoint': (CommEvEnum.CELL, 
+                              lambda self, src, *args, **kwargs: self._eventActionAddUltraSkillPower(src, *args, 
                                                                                                                 **kwargs)),
 
-    'temporaryskill' : (ActionType.BASE, 
-                        lambda self, eventActionSrc, *args, **kwargs: self._eventActionTemporarySkill(eventActionSrc, *args, 
+    'temporaryskill' : (CommEvEnum.BASE, 
+                        lambda self, src, *args, **kwargs: self._eventActionTemporarySkill(src, *args, 
                                                                                                       **kwargs)),
 
-    'arenaKing' : (ActionType.CELL, 
-                        lambda self, eventActionSrc, *args, **kwargs: self._eventActionInteractArenaKing(*args, **kwargs))
+    'arenaKing' : (CommEvEnum.CELL, 
+                        lambda self, src, *args, **kwargs: self._eventActionInteractArenaKing(*args, **kwargs))
 
 }
 

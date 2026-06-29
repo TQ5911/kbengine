@@ -22,17 +22,17 @@
             <Default>       1             </Default>
         </spacetype>
 
-        <chunkAlready>
+        <alreadyTrunk>
             <Type>      BOOL        </Type>
             <Flags>     BASE        </Flags>
             <Default>   0       </Default>
-        </chunkAlready>
+        </alreadyTrunk>
 
-        <notifiedSpaceReady>
+        <isNotifiedSpaceReady>
             <Type>      BOOL        </Type>
             <Flags>     BASE        </Flags>
             <Default>   0       </Default>
-        </notifiedSpaceReady>
+        </isNotifiedSpaceReady>
 
         <cellappIndex>
             <Type>  UINT32  </Type>

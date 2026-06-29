@@ -17,7 +17,7 @@ class MeridianPointVal(userType.UserSingleType):
         self.level = dataDic['level']
         return self
     
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'pointIdx': self.pointIdx,
             'level': self.level,
@@ -70,11 +70,11 @@ class MeridianSlotVal(userType.UserSingleType):
             
         return self
     
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'slotIdx': self.slotIdx,
             'hasEnhance': self.hasEnhance,
-            'points': [v.toSaveDict() for v in self.pointDict.values()],
+            'points': [v.toStreamSaveDict() for v in self.pointDict.values()],
         }
     
     def toClientDict(self):
@@ -151,10 +151,10 @@ class MeridianVal(userType.UserSingleType):
             self.slotDict[self.curSlot] = MeridianSlotVal(slotIdx=self.curSlot)
         return self
     
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'curSlot': self.curSlot,
-            'slots': [v.toSaveDict() for v in self.slotDict.values()],
+            'slots': [v.toStreamSaveDict() for v in self.slotDict.values()],
         }
     
     def toClientDict(self):
@@ -213,7 +213,7 @@ class MeridianInfoVal(object):
         return meridian
     
     def getDictFromObj(self, obj):
-        return obj.toSaveDict()
+        return obj.toStreamSaveDict()
     
     def isSameType(self, obj):
         return type(obj) is MeridianVal

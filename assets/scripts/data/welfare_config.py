@@ -89,7 +89,7 @@ datas = _tools.RODict({
     }),
     "resourceRecoveryTimeDes": _tools.RODict({
         "ID": "resourceRecoveryTimeDes",
-        "value": "可找回{0}天内未使用的免费次数",
+        "value": "可找回<color=#038304>{0}</color>天内未使用的免费次数",
     }),
     "recoveryCostFree": _tools.RODict({
         "ID": "recoveryCostFree",
@@ -98,5 +98,29 @@ datas = _tools.RODict({
     "recoveryNumCountDes": _tools.RODict({
         "ID": "recoveryNumCountDes",
         "value": "找回次数：{0}",
+    }),
+    "refundRechargeSubtitle": _tools.RODict({
+        "ID": "refundRechargeSubtitle",
+        "value": "高额返利 等你来领",
+    }),
+    "refundRechargeTips1": _tools.RODict({
+        "ID": "refundRechargeTips1",
+        "value": "充值 0 - 50000 元，返还 100% <#itemId={0}>和 20% <#itemId={1}>\n充值 50000 元以上，返还 100% <#itemId={0}>",
+    }),
+    "refundRechargeTips2": _tools.RODict({
+        "ID": "refundRechargeTips2",
+        "value": "已累计充值",
+    }),
+    "refundRechargeTips3": _tools.RODict({
+        "ID": "refundRechargeTips3",
+        "value": "公测最终返还",
+    }),
+    "refundRechargeItem1": _tools.RODict({
+        "ID": "refundRechargeItem1",
+        "value": "30000001",
+    }),
+    "refundRechargeItem2": _tools.RODict({
+        "ID": "refundRechargeItem2",
+        "value": "30000021",
     })
 })

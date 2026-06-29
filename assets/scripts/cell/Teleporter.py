@@ -10,7 +10,7 @@ import iTimer
 import iGameEntity
 import iFubenSpace
 
-import NPC_teleporter as NPC_T
+import NPC_teleporter as N_TD
 import gameglobal
 import gametimer
 import formula
@@ -22,21 +22,24 @@ import gamedecorator
 
 class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
                  iFubenSpace.IFubenSpace):
-    IsTeleporter = True
-
     TELEPORT_TRAP = 1
+    IsTeleporter = True
 
     def __init__(self):
         super(Teleporter, self).__init__()
         if not self.name:
-            self.name = NPC_T.datas[self.teleporterId].get('name', '未知传送门')
+            self.name = N_TD.datas[self.teleporterId].get('name', '未知传送门')
 
-        spaceMgr = self.spaceMgr
+        _spaceMgr = self.spaceMgr
         if formula.inDungeonScene(self.spaceNo) or formula.inMineWarScene(self.spaceNo):
             gid = utils.parseGidFromGameEntityId(self.gameEntityId)
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.teleporterId),
-                                             'gid_{}'.format(gid), self.__class__.__name__,))
+            if _spaceMgr:
+                _spaceMgr.addEntity(self.id, (
+                    str(self.teleporterId),
+                    str(self.fbEntityId), 
+                    'gid_{}'.format(gid), 
+                    self.__class__.__name__,
+                ))
 
         # 【【任务】【程序自主】【组队跟随-远距离寻路优化】传送门相关迭代】
         gameglobal.teleporterGIDToEntIdMap.setdefault(self.spaceNo, {}).setdefault(
@@ -44,11 +47,6 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
 
         if self.ttl:
             self.pyAddTimer(self.ttl, 0, gametimer.TIMER_ON_CELL_TTL_DESTROY)
-
-    # self.addTimerCB(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
-
-    def _postSafeDestory(self):
-        gameglobal.teleporterGIDToEntIdMap.get(self.spaceNo, {}).pop(self.teleporterId, None)
 
     def onTimer(self, tid, userData):
         self._onTimerTrigger(tid, userData)
@@ -60,10 +58,13 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         else:
             super(Teleporter, self).onTimer(tid, userData)
 
+    def _postSafeDestory(self):
+        gameglobal.teleporterGIDToEntIdMap.get(self.spaceNo, {}).pop(self.teleporterId, None)
+
     def _addTrap(self):
-        teleportData = NPC_T.datas[self.teleporterId]
-        if teleportData.get('activateType', 0) == 3:
-            telRange = teleportData.get('activateParam')
+        _teleportData = N_TD.datas[self.teleporterId]
+        if _teleportData.get('activateType', 0) == 3:
+            telRange = _teleportData.get('activateParam')
             self.addProximity(telRange, 0.0, self.TELEPORT_TRAP)
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
@@ -72,13 +73,12 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
 
     def userDoTeleport(self, userId, desTelId, lineNo=-1, src=None):
         LOG_INFO("selfDoTeleport::", userId, desTelId, lineNo, src)
-        user = KBEngine.entities.get(userId)
-        if self._checkBadEnt(user):
+        _user = KBEngine.entities.get(userId)
+        if self._checkBadEnt(_user):
             return
-        self._doTeleport(user, desTelId, lineNo, src)
+        self._doTeleport(_user, desTelId, lineNo, src)
 
-
-    @gamedecorator.limitcall(1, keyFunc=lambda x: '{0}'.format(*x))
+    @gamedecorator.limitcall(1, keyFun=lambda x: '{0}'.format(*x))
     def doTeleport(self, exposed, desTelId, lineNo=-1):
         lineNo = -1
         LOG_INFO('doTeleport::~', exposed, desTelId, lineNo)

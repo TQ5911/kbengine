@@ -1,10 +1,10 @@
 <root>
     <Properties>
-        <eventDic>
+        <eventDict>
             <Type>            PYTHON             </Type>
             <Flags>           CELL_PRIVATE       </Flags>
             <Default>             {}             </Default>
-        </eventDic>
+        </eventDict>
     </Properties>
 
     <CellMethods>

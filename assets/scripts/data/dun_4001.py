@@ -694,7 +694,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "40014002": {
@@ -719,7 +721,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "40014003": {
@@ -744,7 +748,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "40014004": {
@@ -769,7 +775,171 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40014005": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 160.3263,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000800,
+    "ID": 40014005,
+    "Name": "\u98de\u6c99\u5927\u706b1",
+    "PosX": 316.43,
+    "PosY": 18.20109,
+    "PosZ": 45.25,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40014006": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 200.0966,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000801,
+    "ID": 40014006,
+    "Name": "\u98de\u6c99\u5927\u706b2",
+    "PosX": 319.76,
+    "PosY": 17.09835,
+    "PosZ": 24.14,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40014007": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 230.152,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000802,
+    "ID": 40014007,
+    "Name": "\u98de\u6c99\u5927\u706b3",
+    "PosX": 289.67,
+    "PosY": 17.81244,
+    "PosZ": 78.62,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40014008": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 230.152,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000803,
+    "ID": 40014008,
+    "Name": "\u98de\u6c99\u5927\u706b4",
+    "PosX": 314.38,
+    "PosY": 18.51634,
+    "PosZ": 58.66,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40014009": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 230.152,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000804,
+    "ID": 40014009,
+    "Name": "\u98de\u6c99\u5927\u706b5",
+    "PosX": 308.35,
+    "PosY": 17.10081,
+    "PosZ": 16.89,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40014010": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 230.152,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000805,
+    "ID": 40014010,
+    "Name": "\u98de\u6c99\u5927\u706b6",
+    "PosX": 322.82,
+    "PosY": 17.09782,
+    "PosZ": 30.52,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "40018001": {

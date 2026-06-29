@@ -992,7 +992,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001994,
-        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "rewardMessage": ('<color=&color211>离线奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
         "group": 1
     }),
     99: _tools.RODict({
@@ -1934,7 +1934,37 @@ datas = _tools.RODict({
         "messageId": 54001997,
         "rewardMessage": ('<color=&color211>精灵召唤</color>', '获得精灵：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
         "group": 1
+    }),
+    193: _tools.RODict({
+        "ID": 193,
+        "name": "BONUS_SRC_GM_DEDUCT",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    194: _tools.RODict({
+        "ID": 194,
+        "name": "BONUS_SRC_GUILD_COMMISSION",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    195: _tools.RODict({
+        "ID": 195,
+        "name": "BONUS_SRC_EQUIPMENT_DROP_EXPIRED_REMOVE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
     })
 })
 minKey = 1
-maxKey = 192
+maxKey = 195

@@ -113,7 +113,10 @@ class IWaitMapGameStart(object):
 
         elif userArg == gametimer.WAITMAP_TIMER_GLOBAL_STUBS_HALF_PREPARE:
             gameglobal.localAdminStub.doNext()
-            gameengine.getGlobalBase('WaitMapSpaceStub').doNext()
+
+            if gameglobal.isBootstrap:
+                gameengine.getGlobalBase('WaitMapSpaceStub').doNext()
+
             LOG_INFO('starting: all stubs doNext')
             self.pyAddTimer(0.1, 0, gametimer.WAITMAP_TIMER_GLOBAL_STUBS_FULL_PREPARE)
 
@@ -128,11 +131,11 @@ class IWaitMapGameStart(object):
         elif userArg == gametimer.WAITMAP_TIMER_SET_SERVER_STATE:
             LOG_INFO('starting: line entities ready')
             if gameglobal.isBootstrap:
-                import gmCommand
                 import gmGroup
+                import gmCommand
                 import gmAdmin
-                agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
-                gmCommand.doCommandInside(agent, "$hotreload")
+                _agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
+                gmCommand.doCommandInside(_agent, "$hotreload")
             gameglobal.localBaseApp.readhotfix()
 
             if not gameconfig.waitEntityLoading():
@@ -154,11 +157,11 @@ class IWaitMapGameStart(object):
             LOG_WARN('starting: all baseapp ready, set game ready')
             if gameglobal.isBootstrap:
                 gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_GAME_READY, True)
-                import gmCommand
                 import gmGroup
+                import gmCommand
                 import gmAdmin
-                agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
-                gmCommand.doCommandInside(agent, "$setcachecfg interfaceEnableLogin 1")
+                _agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
+                gmCommand.doCommandInside(_agent, "$setcachecfg interfaceEnableLogin 1")
 
     def createWaitMapLocalStubs(self):
         idx = formula.fetchStubIndex()
@@ -168,6 +171,7 @@ class IWaitMapGameStart(object):
     def createWaitMapGlobalStubs(self):
         baseApps = gameengine.chooseGoodBaseApp()
         random.choice(baseApps).createUnarchiveStub('WaitMapSpaceStub', {}, '')
+        random.choice(baseApps).createUnarchiveStub('AntiAddictionStub', {}, '')
 
     def _onWaitMapGetAllServerResult(self, httpCode, data, headers, success, *args):
         if not (httpCode == 200 and success):

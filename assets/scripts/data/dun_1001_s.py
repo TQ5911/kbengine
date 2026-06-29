@@ -4086,7 +4086,7 @@ datas ={
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 92.15229,
+          "Dir": 289.5624,
           "DisplayName": "",
           "EliteCustomID": "",
           "EntityID": 18000754,

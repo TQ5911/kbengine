@@ -99,7 +99,57 @@ datas = _tools.RODict({
         "ID": 38000017,
         "name": "guild_biddingReturn",
         "log": "竞价被超过，返还<color=#b35b00>{0}帮会灵核</color>",
+    }),
+    38000018: _tools.RODict({
+        "ID": 38000018,
+        "name": "guild_unionCreate",
+        "log": "{0}创建了帮会联盟{1}，开创了联盟的历史",
+    }),
+    38000019: _tools.RODict({
+        "ID": 38000019,
+        "name": "guild_unionJoin",
+        "log": "帮会{0}加入了{1}，大家热烈欢迎！",
+    }),
+    38000020: _tools.RODict({
+        "ID": 38000020,
+        "name": "guild_unionExit",
+        "log": "帮会{0}退出了{1}，江湖路远有缘再见！",
+    }),
+    38000021: _tools.RODict({
+        "ID": 38000021,
+        "name": "guild_enmityDeclare",
+        "log": "{0}对帮会{1}进行宣战，热血争锋，舍我其谁！",
+    }),
+    38000022: _tools.RODict({
+        "ID": 38000022,
+        "name": "guild_unionDeclare",
+        "log": "{0}对联盟{1}进行宣战，热血争锋，舍我其谁！",
+    }),
+    38000023: _tools.RODict({
+        "ID": 38000023,
+        "name": "guild_enmityDeclare2",
+        "log": "帮会{0}对我方联盟{1}进行宣战！",
+    }),
+    38000024: _tools.RODict({
+        "ID": 38000024,
+        "name": "guild_unionDeclare2",
+        "log": "联盟{0}对我方联盟{1}进行宣战！",
+    }),
+    38000025: _tools.RODict({
+        "ID": 38000025,
+        "name": "guild_unionSupport1",
+        "log": "我帮向帮会{0}援助{1}",
+    }),
+    38000026: _tools.RODict({
+        "ID": 38000026,
+        "name": "guild_unionSupport2",
+        "log": "帮会{0}向我帮援助{1}",
+    }),
+    38000027: _tools.RODict({
+        "ID": 38000027,
+        "name": "guild_unionSupport3",
+        "log": "帮会{0}向帮会{1}援助{2}",
     })
 })
 minKey = 38000001
-maxKey = 38000017
+maxKey = 38000027

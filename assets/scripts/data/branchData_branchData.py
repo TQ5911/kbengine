@@ -562,8 +562,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3102: _tools.RODict({
         "ID": 3102,
@@ -573,8 +573,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3103: _tools.RODict({
         "ID": 3103,
@@ -584,8 +584,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3104: _tools.RODict({
         "ID": 3104,
@@ -595,8 +595,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3105: _tools.RODict({
         "ID": 3105,
@@ -606,8 +606,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3110: _tools.RODict({
         "ID": 3110,
@@ -617,8 +617,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3111: _tools.RODict({
         "ID": 3111,
@@ -628,8 +628,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3112: _tools.RODict({
         "ID": 3112,
@@ -639,8 +639,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3113: _tools.RODict({
         "ID": 3113,
@@ -650,8 +650,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3114: _tools.RODict({
         "ID": 3114,
@@ -661,8 +661,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3116: _tools.RODict({
         "ID": 3116,
@@ -672,8 +672,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3118: _tools.RODict({
         "ID": 3118,
@@ -683,8 +683,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3119: _tools.RODict({
         "ID": 3119,
@@ -694,8 +694,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3120: _tools.RODict({
         "ID": 3120,
@@ -705,8 +705,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3121: _tools.RODict({
         "ID": 3121,
@@ -716,8 +716,8 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     3124: _tools.RODict({
         "ID": 3124,
@@ -727,30 +727,30 @@ datas = _tools.RODict({
         "N1": 200,
         "N2": 180,
         "N3": 170,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     5100: _tools.RODict({
         "ID": 5100,
         "name": "天劫崖一层",
         "subType": 1,
         "num": 1,
-        "N1": 400,
-        "N2": 380,
-        "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "N1": 200,
+        "N2": 180,
+        "N3": 170,
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     5201: _tools.RODict({
         "ID": 5201,
         "name": "归墟一层",
         "subType": 1,
         "num": 1,
-        "N1": 400,
-        "N2": 380,
-        "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "N1": 200,
+        "N2": 180,
+        "N3": 170,
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     9000: _tools.RODict({
         "ID": 9000,

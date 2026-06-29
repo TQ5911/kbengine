@@ -166,6 +166,7 @@ class IResourceRecovery(object):
         return leftNum
 
     @gamedecorator.limitcall(1)
+    @gamedecorator.checkGameconfigEnable('welfare_resourceRecovery')
     def reqFreeTicketRecovery(self, exposed, subType, num):
         LOG_INFO("IResourceRecovery::reqFreeTicketRecovery", num, subType - 1)
         subType -= 1
@@ -200,12 +201,14 @@ class IResourceRecovery(object):
         self.client.onFreeTicketOneClickRecoveryInfo(clientDataList)
 
     def recoveryFreeTicket(self, subType, addNum, costInfo, opUUID):
+        durationCostList = []
         infoList = self.freeTicketUseInfo.get(subType, [])
         for cInfo in costInfo:
-            for info in infoList:
+            for idx, info in enumerate(infoList):
                 if cInfo[0] != info[0]:
                     continue
                 info[1] -= cInfo[1]
+                durationCostList.append([len(infoList) - idx - 1, cInfo[1], cInfo[2], cInfo[1] * cInfo[3]])
                 break
 
         if subType in (gameconst.FreeTicketSubType.CRUSADE, gameconst.FreeTicketSubType.CHIEF):
@@ -214,8 +217,16 @@ class IResourceRecovery(object):
             self.subType2FreeTicketInfo[subType][1](self)(addNum, AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, opUUID)
 
         self.updateFreeTicketRecoveryInfo(subType)
+        LogTrackingMgr.LogTrackingMgr.resource_recovery(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            subType + 1,
+            addNum,
+            durationCostList,
+        )
 
     @gamedecorator.limitcall(1)
+    @gamedecorator.checkGameconfigEnable('welfare_resourceRecovery')
     def reqFreeTicketOneClickRecovery(self, exposed, rType):
         LOG_INFO("IResourceRecovery::reqFreeTicketOneClickRecovery", rType)
         if rType not in gameconst.FreeTicketOneClickRecoveryType.VALID_ONE_CLICK_TYPE:

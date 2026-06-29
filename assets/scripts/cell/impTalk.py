@@ -40,7 +40,7 @@ class ImpTalk(object):
     @utils.isMyself
     def talkToNpc(self, exposed, npcEntityId, taskId, dialogId, idx):
         LOG_INFO('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
-        npcId = 0
+        _npcId = 0
         if npcEntityId:
             ent = KBEngine.entities.get(npcEntityId)
             if not ent or not ent.IsNpc:
@@ -56,9 +56,9 @@ class ImpTalk(object):
                 LOG_WARN('talkToNpc but invalid targetId distance:', npcEntityId)
                 return
 
-            npcId = ent.npcId
+            _npcId = ent.npcId
 
-        self.makeTalkToNPC(npcEntityId, npcId, taskId, dialogId, idx)
+        self.makeTalkToNPC(npcEntityId, _npcId, taskId, dialogId, idx)
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
@@ -71,8 +71,8 @@ class ImpTalk(object):
         if taskId > 0:
             taskData = dataUtils.getTaskCfg(taskId)
             if taskData and taskData.get('CheckFollowNPC', False) and taskData.get('TaskFollowNPC', []):
-                for followInfo in taskData.get('TaskFollowNPC', []):
-                    if followInfo['NpcFollowID'] == npcId:
+                for _followInfo in taskData.get('TaskFollowNPC', []):
+                    if _followInfo['NpcFollowID'] == npcId:
                         if not self._checkTaskFollowNPC(0, taskId, npcId, dialogId):
                             return
 
@@ -83,13 +83,13 @@ class ImpTalk(object):
         if dialogData is None:
             return None, None
 
-        event_str = dialogData.get('event')
-        event_list = event_str.split('|')
+        _eventStr = dialogData.get('event')
+        _eventList = _eventStr.split('|')
 
         param_str = dialogData.get('parm')
         param_list = param_str.split('|')
-        LOG_INFO('in _checkDialogEventConfig:', event_list, param_list)
-        if 0 < len(event_list) < idx:
+        LOG_INFO('in _checkDialogEventConfig:', _eventList, param_list)
+        if 0 < len(_eventList) < idx:
             LOG_ERR('in _checkDialogEventConfig, event idx error:', idx)
             return None, None
 
@@ -97,12 +97,12 @@ class ImpTalk(object):
             LOG_ERR('in _checkDialogEventConfig, param idx error:', idx)
             return None, None
 
-        eventName = event_list[idx]
+        eventName = _eventList[idx]
         if not eventName:
             LOG_WARN('_checkDialogEventConfig, no eventName, dailog config error:', dialogId)
             return None, None
 
-        return event_list, param_list
+        return _eventList, param_list
 
     # 检查是否是提交任务
     def _checkGetTaskEvent(self, dialogId, idx):
@@ -122,11 +122,10 @@ class ImpTalk(object):
 
     def _checkTaskFollowNPC(self, targetId, taskId, npcId, dialogId):
         talkToNpcData = dataUtils.getTaskCfg(taskId).get('TaskFollowNPC', [])
-        for followInfo in talkToNpcData:
-            if followInfo['NpcFollowID'] == npcId:
-                worldAreaIds = followInfo['WorldAreaID'].split('|')
+        for _followInfo in talkToNpcData:
+            if _followInfo['NpcFollowID'] == npcId:
+                worldAreaIds = _followInfo['WorldAreaID'].split('|')
                 if str(self.areaId) in worldAreaIds:
-                    # self._doTaskTalkToNPC(targetId, taskId, npcId, dialogId, idx)
                     return True
         LOG_INFO('_checkTaskFollowNPC failed', taskId, npcId, dialogId)
         return False
@@ -159,24 +158,23 @@ class ImpTalk(object):
             LOG_ERR('_doTaskTalkToNPC, eventName not match:', eventName, taskId, npcId, dialogId)
             return
 
-        eventArgs, eventKwargs = utils.parseCommEventParams(param_list[idx])
-        eventKwargs['_targetId'] = targetId
-        eventKwargs['_srcTaskId'] = taskId
-        eventKwargs['_npcId'] = npcId
-        eventKwargs['_dialogId'] = dialogId
+        eventArgs, _eventKwargs = utils.parseCommEventParams(param_list[idx])
+        _eventKwargs['_targetId'] = targetId
+        _eventKwargs['_srcTaskId'] = taskId
+        _eventKwargs['_npcId'] = npcId
+        _eventKwargs['_dialogId'] = dialogId
 
-        talkType, actionFunc = CommEventAction.CommEventActionMap[eventName]
-        if talkType == CommEventAction.ActionType.CELL:
-            actionFunc(self, gameconst.EventActionSrc.SRC_DIALOG, *eventArgs, **eventKwargs)
+        _talkType, actionFunc = CommEventAction.CommEventActionDic[eventName]
+        if _talkType == CommEventAction.CommEvEnum.CELL:
+            actionFunc(self, gameconst.EventActionSrc.SRC_DIALOG, *eventArgs, **_eventKwargs)
         else:
-            self.base.doBaseCommEvent(gameconst.EventActionSrc.SRC_DIALOG, eventName, eventArgs, eventKwargs)
+            self.base.doBaseCommEvent(gameconst.EventActionSrc.SRC_DIALOG, eventName, eventArgs, _eventKwargs)
 
     def doCellCommEvent(self, eventActionSrc, eventName, eventArgs, eventKwargs):
-        actionType, actionFunc = CommEventAction.CommEventActionMap[eventName]
-        if actionType != CommEventAction.ActionType.CELL:
+        _actionType, actionFunc = CommEventAction.CommEventActionDic[eventName]
+        if _actionType != CommEventAction.CommEvEnum.CELL:
             return
         actionFunc(self, eventActionSrc, *eventArgs, **eventKwargs)
-        return
 
     def _eventActionGettask(self, eventActionSrc, *args, **kwargs):
         # claim task

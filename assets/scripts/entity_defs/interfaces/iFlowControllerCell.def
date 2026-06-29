@@ -34,9 +34,9 @@
             <Arg>   TASK_ID     </Arg>
         </flowCtrlOnTaskInProgress>
 
-        <flowCtrlDungeonMonsterReleaseComplete>
+        <flowCtrlDunMonsterReleaseComplete>
             <Arg>   PY_LIST     </Arg>
-        </flowCtrlDungeonMonsterReleaseComplete>
+        </flowCtrlDunMonsterReleaseComplete>
 
         <flowCtrlDungeonNPCReleaseComplete>
             <Arg>   PY_LIST     </Arg>
@@ -61,17 +61,17 @@
             <Arg>   HP              </Arg>
         </flowCtrlMonsterHpMonitorTrigger>
 
-        <flowCtrlDungeonMonsterKillNumIncreased>
+        <flowCtrlDunMonsterKillNumInc>
             <Arg>   GAME_ENTITY_ID  </Arg>
             <Arg>   UINT32          </Arg>
             <Arg>   UINT32          </Arg>
-        </flowCtrlDungeonMonsterKillNumIncreased>
+        </flowCtrlDunMonsterKillNumInc>
 
-        <flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId>
+        <flowCtrlDunMonsterKillNumIncByMonsterId>
             <Arg>   OBJECT_ID       </Arg>
             <Arg>   UINT32          </Arg>
             <Arg>   UINT32          </Arg>
-        </flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId>
+        </flowCtrlDunMonsterKillNumIncByMonsterId>
 
         <flowCtrlOnCheckDungeonEntityKillNumber>
             <Arg> UINT64 </Arg>

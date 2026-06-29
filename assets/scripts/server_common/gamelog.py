@@ -7,17 +7,13 @@
 
 from KBEDebug import *
 
-import functools
-import traceback
 import platform
 import json
 
 import gameconfig
 import gameengine
 import gameconst
-import formula
 import utils
-import time
 
 import inspect
 import gamewlog
@@ -31,12 +27,12 @@ else:
 
 
 class Rsyslogger(object):
-    def __init__(self, name):
+    def __init__(self, tagName):
         syslog.closelog()
-        syslog.openlog(name, 0, syslog.LOG_LOCAL0)
+        syslog.openlog(tagName, 0, syslog.LOG_LOCAL0)
 
-    def info(self, message):
-        syslog.syslog(syslog.LOG_INFO, message)
+    def info(self, msg):
+        syslog.syslog(syslog.LOG_INFO, msg)
 
 
 # data--dict
@@ -88,25 +84,6 @@ class IINVATION_LOG_STATUS(object):
     SELF_INVITECODE = 3  # 自己的邀请码
     INVALID_INVITECODE = 4  # 无效的邀请码
     TIMEOUT = 5  # 邀请码已过时
-
-
-class iTASKTYPE(object):
-    """MACROSGROUP::iTASKTYPE: 根据游戏情况自定义"""
-
-    TYPE_1 = 1  # 主线任务
-    TYPE_2 = 2  # 支线任务
-    TYPE_3 = 3  # 其他
-
-
-class iSTATE(object):
-    """MACROSGROUP::iSTATE: 根据游戏情况自定义"""
-
-    CLAIM = 1  # 接取
-    SUBMIT = 2  # 完成
-    TARGET_REACH = 3  # 目标达成
-    TARGET_FAILED = 4  # 目标失败
-    QUIT = 5  # 放弃
-
 
 
 class ChangeNameType(object):

@@ -29,7 +29,7 @@ class FetchPlayerVal(userType.UserSingleType):
         self.fetchTime = dataDic['fetchTime']
         return self
     
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'playerGbId': self.playerGbId,
             'name': self.name,
@@ -44,7 +44,7 @@ class FetchPlayerVal(userType.UserSingleType):
             'money': self.money,
         }
     def toEncodeData(self):
-        return json.dumps(self.toSaveDict())
+        return json.dumps(self.toStreamSaveDict())
 
 class RedBagFetchVal(userType.UserSingleType):
     """RED_BAG_FETCH_VAL"""
@@ -63,8 +63,8 @@ class RedBagFetchVal(userType.UserSingleType):
 
         return self
     
-    def toSaveDict(self):
-        return {i.playerGbId: i.toSaveDict() for i in self.fetchPlayerDict.values()}
+    def toStreamSaveDict(self):
+        return {i.playerGbId: i.toStreamSaveDict() for i in self.fetchPlayerDict.values()}
         
     
     def toClientDict(self):
@@ -74,7 +74,7 @@ class RedBagFetchVal(userType.UserSingleType):
         }
     
     def toEncodeData(self):
-        return json.dumps(self.toSaveDict())
+        return json.dumps(self.toStreamSaveDict())
     
     def toDecodeData(self, data):
         dataDic = {}
@@ -115,7 +115,7 @@ class RedBagVal(userType.UserSingleType):
         self.releaseTime = releaseTime
         self.desc = desc
 
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'redbagId': self.redbagId,
             'playerGbId': self.playerGbId,
@@ -186,7 +186,7 @@ class RedBagData(object):
         return obj
     
     def getDictFromObj(self, obj):
-        return obj.toSaveDict()
+        return obj.toStreamSaveDict()
     
     def isSameType(self, obj):
         return type(obj) is RedBagVal
@@ -199,7 +199,7 @@ class RedBagDataVal(userType.UserDictType):
         for _gmVal in redbags:
             self[_gmVal.redbagId] = _gmVal
 
-    def toSaveDict(self):
+    def toStreamSaveDict(self):
         return {
             'redbags': list(self.values()),
         }
@@ -211,7 +211,7 @@ class RedBagDataInfo(object):
         return obj
     
     def getDictFromObj(self, obj):
-        return obj.toSaveDict()
+        return obj.toStreamSaveDict()
     
     def isSameType(self, obj):
         return type(obj) is RedBagDataVal

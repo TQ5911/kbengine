@@ -73,7 +73,8 @@ class IBindPhone(object):
             LOG_WARN("IBindPhone controlReqLimit warning")
             self.onMessagePre(MMD.datas.web_requestException, [])
             return True
-        self.setTempMiscProp(gameconst.EntityPropsEnum.reqBindPhoneTimestamp, now + 3)
+        # 放宽频率
+        self.setTempMiscProp(gameconst.EntityPropsEnum.reqBindPhoneTimestamp, now + 1)
 
         resetTime = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.resetBindPhoneCntTime, 0)
         needSet = False
@@ -83,6 +84,7 @@ class IBindPhone(object):
             self.accountEntity.popPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
             needSet = True
 
+        # 加大上限值
         curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
         LOG_INFO("IBindPhone controlReqLimit ", curCnt, utils.getCommonTimeStrFromTimeStamp(resetTime))
         maxCnt = LSD.datas['phoneFrequentLockTime']['value']
@@ -112,7 +114,7 @@ class IBindPhone(object):
     @gamedecorator.limitcall(1)
     @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('phoneBind', {}).get('type', 'welfare'))
-    def reqBindPhone(self, exposed, phone):
+    def reqBindPhone(self, exposed, phone, verifyParam):
         LOG_INFO("IBindPhone reqBindPhone", phone, self.gbID, self.accountName, self.accountEntity.webToken)
         if self.accountType != centralLogin.ACCOUNT_TAPTAP:
             LOG_WARN("IBindPhone reqBindPhone channel error", self.accountType, self.accountName, centralLogin.ACCOUNT_TAPTAP)
@@ -132,7 +134,9 @@ class IBindPhone(object):
             "phone"         : str(phone),
             "loginType"     : int(centralLogin.THIRD_LOGIN_TAPTAP),
             "gameId"        : str(gameconfig.gameId()),
-            "userGameId"    : str(self.accountName)
+            "userGameId"    : str(self.accountName),
+            "captchaVerifyParam": str(verifyParam),
+            "deviceId"      : str(self.accountEntity.deviceId)
         })
         self.setTempPhone(phone)
         LOG_INFO("IBindPhone reqBindPhone url", url, message)
@@ -160,6 +164,11 @@ class IBindPhone(object):
             curCnt = max(int(curCnt - 1), 0)
             self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, curCnt)
             self.onMessagePre(MMD.datas.login_phoneRepeat, [])
+        elif code == 4005:
+            curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
+            curCnt = max(int(curCnt - 1), 0)
+            self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, curCnt)
+            self.client.bindPhoneReplay(gameconst.BindPhoneRes.CHECK_CAPTCHA_VERIF, self.getTempPhone())
         else:
             LOG_WARN("IBindPhone _reqBindPhoneResponse exception")
             self.onMessagePre(MMD.datas.web_requestException, [])
@@ -230,7 +239,7 @@ class IBindPhone(object):
         if code == 200:
             self.accountEntity.phone = self.getTempPhone()
             self.accountEntity.pyWriteToDB()
-            self.client.bindPhoneReplay(True, self.accountEntity.phone)
+            self.client.bindPhoneReplay(gameconst.BindPhoneRes.BIND_SUCCESSED, self.accountEntity.phone)
             self.popTempPhone()
             self.onMessagePre(MMD.datas.login_phoneSuccess, [])
             LOG_INFO("IBindPhone _reqVerifyCodeResponse success ", self.accountEntity.phone)
@@ -280,3 +289,47 @@ class IBindPhone(object):
         awardCtx = self.getAvatarAwardCtx(rewardId, None)
         detail = gameclass.AwardDetailCls(claimTimestamp=claimTimestamp)
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_PCDRAINAGE, rewardId, 1, opUUID, detail, awardCtx)
+#####################################################################################
+    def controlQueryRechargeLimit(self):
+        LOG_INFO("IBindPhone::controlQueryRechargeLimit")
+        now = utils.curTS()
+        queryRechargeTimestamp = self.getTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, 0)
+        if queryRechargeTimestamp > now:
+            LOG_WARN("IBindPhone::controlQueryRechargeLimit")
+            self.onMessagePre(MMD.datas.frequentRequests_tryLater, [])
+            return True
+
+        self.setTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, now + 3)
+        return False
+
+    @gamedecorator.limitcall(1)
+    @gamedecorator.checkGameconfigEnable('welfare_refundRecharge')
+    def reqQueryRecharge(self, exposed):
+        LOG_INFO("IBindPhone::reqQueryRecharge")
+        if self.controlQueryRechargeLimit():
+            return
+
+        url = gameconfig.queryRechargeUrl()
+        params = "?userGameId=" + str(self.accountName)
+        url += params
+        LOG_INFO("IBindPhone::reqQueryRecharge url, message", url)
+        KBEngine.urlopenv2(url, self._reqQueryRechargeResponse, method='GET',
+                headers={"satoken": self.accountEntity.webToken},
+                timeoutSec=5)
+
+    def _reqQueryRechargeResponse(self, httpCode, jsonData, headers, success, *args):
+        LOG_INFO("IBindPhone::_reqQueryRechargeResponse", httpCode, jsonData, headers, success)
+        if not (httpCode == 200 and success):
+            self.onMessagePre(MMD.datas.web_requestException, [])
+            LOG_ERR("IBindPhone::_reqQueryRechargeResponse failed")
+            return
+
+        data = json.loads(jsonData)
+        code = data['code']
+        if code == 0:
+            rechargeAmount = float(data['data'])
+            self.client.queryRechargeAmountReplay(rechargeAmount)
+            LOG_INFO("IBindPhone::_reqQueryRechargeResponse success ", rechargeAmount)
+        else:
+            self.onMessagePre(MMD.datas.web_requestException, [])
+            LOG_WARN("IBindPhone::_reqQueryRechargeResponse exception")

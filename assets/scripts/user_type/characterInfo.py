@@ -8,36 +8,36 @@ class CharacterValInfo(object):
     def createObjFromDict(self, dict):
         return character.CharacterVal.fromSavedData(dict)
 
-    def getDictFromObj(self, obj):
-        return obj.toSavedData()
-
     def isSameType(self, obj):
         return type(obj) is character.CharacterVal
+
+    def getDictFromObj(self, obj):
+        return obj.toSavedData()
 
 
 class CharactersInfo(object):
 
     def createObjFromDict(self, dict):
-        chars = character.Characters()
-        chars.isArchiving = dict.get('isArchiving', False)
-        chars.needArchiveAgain = dict.get('needArchiveAgain', False)
+        _chars = character.Characters()
+        _chars.isArchiving = dict.get('isArchiving', False)
+        _chars.needArchiveAgain = dict.get('needArchiveAgain', False)
 
         for charInfo in dict['characters']:
-            chars[charInfo.gbId] = charInfo
+            _chars[charInfo.gbId] = charInfo
 
-        return chars
-
-    def getDictFromObj(self, obj):
-        avals = {'characters': []}
-        avals['isArchiving'] = obj.isArchiving
-        avals['needArchiveAgain'] = obj.needArchiveAgain
-        for gbId, cVal in obj.items():
-            avals['characters'].append(cVal)
-
-        return avals
+        return _chars
 
     def isSameType(self, obj):
         return type(obj) is character.Characters
+
+    def getDictFromObj(self, obj):
+        _avals = {'characters': []}
+        _avals['isArchiving'] = obj.isArchiving
+        _avals['needArchiveAgain'] = obj.needArchiveAgain
+        for cVal in obj.values():
+            _avals['characters'].append(cVal)
+
+        return _avals
 
 
 instance = CharactersInfo()

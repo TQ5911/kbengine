@@ -113,6 +113,10 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 1225:
+					UInt64 minorAccountConstraintTip_arg1 = stream.readUint64();
+					minorAccountConstraintTip(minorAccountConstraintTip_arg1);
+					break;
 				case 1172:
 					List<WAITMAP_CHARACTER> onGetAvataringCharacter_arg1 = ((DATATYPE_AnonymousArray_10115)method.args[0]).createFromStreamEx(stream);
 					onGetAvataringCharacter(onGetAvataringCharacter_arg1);

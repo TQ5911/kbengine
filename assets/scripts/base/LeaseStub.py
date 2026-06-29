@@ -28,7 +28,7 @@ import LogTrackingMgr
 
 
 class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-    def __init__(self):
+    def __init__(self, **kwargs):
         iGlobal.IGlobal.__init__(self)
         iBaseNoCell.IBaseNoCell.__init__(self)
         iTimer.ITimer.__init__(self)
@@ -268,6 +268,8 @@ class LeaseStubService(GameServer):
             'leaseDay': item.leaseDay,
             'returnEndTime': item.returnEndTime,
             'itemData': item.itemData,
+            'status': item.status,
+            'saleEndTime': item.saleEndTime,
         }
 
     # ---------- 接收 LeaseServer 回调 ----------

@@ -28,16 +28,24 @@ namespace KBEngine
 		public virtual void onAvatarIdChanged(Int32 oldValue) {}
 		public float bePushedSpeed = 0f;
 		
+		public float copper = 0f;
 		public float dmgArmor = 0f;
+		public float expGrow = 0f;
 		public Int32 firstHateTargetId = 0;
 		
 		
 		
 		
+		public float gatherRate = 0f;
+		public Byte healHpRatio = 80;
+		public Byte healMpRatio = 80;
 		
 		public float ignoreArmor = 0f;
 		
 		
+		
+		public float medicineRate = 0f;
+		public float miningRate = 0f;
 		
 		
 		public float mulSpeed = 0f;
@@ -52,6 +60,8 @@ namespace KBEngine
 		
 		
 		
+		public Byte summonSlotIdx = 0;
+		public Byte ultraSkillPower = 0;
 
 
 		public AvatarReplicaBase()
@@ -472,6 +482,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 643:
+						float oldval_copper = copper;
+						copper = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onCopperChanged(oldval_copper);
+						}
+						else
+						{
+							if(inWorld)
+								onCopperChanged(oldval_copper);
+						}
+
+						break;
 					case 40001:
 						Vector3 oldval_direction = direction;
 						direction = stream.readVector3();
@@ -501,6 +527,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDmgArmorChanged(oldval_dmgArmor);
+						}
+
+						break;
+					case 642:
+						float oldval_expGrow = expGrow;
+						expGrow = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onExpGrowChanged(oldval_expGrow);
+						}
+						else
+						{
+							if(inWorld)
+								onExpGrowChanged(oldval_expGrow);
 						}
 
 						break;
@@ -584,6 +626,54 @@ namespace KBEngine
 						}
 
 						break;
+					case 646:
+						float oldval_gatherRate = gatherRate;
+						gatherRate = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onGatherRateChanged(oldval_gatherRate);
+						}
+						else
+						{
+							if(inWorld)
+								onGatherRateChanged(oldval_gatherRate);
+						}
+
+						break;
+					case 635:
+						Byte oldval_healHpRatio = healHpRatio;
+						healHpRatio = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onHealHpRatioChanged(oldval_healHpRatio);
+						}
+						else
+						{
+							if(inWorld)
+								onHealHpRatioChanged(oldval_healHpRatio);
+						}
+
+						break;
+					case 641:
+						Byte oldval_healMpRatio = healMpRatio;
+						healMpRatio = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onHealMpRatioChanged(oldval_healMpRatio);
+						}
+						else
+						{
+							if(inWorld)
+								onHealMpRatioChanged(oldval_healMpRatio);
+						}
+
+						break;
 					case 440:
 						Int32 oldval_hp = hp;
 						hp = stream.readInt32();
@@ -661,6 +751,54 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onLevelChanged(oldval_level);
+						}
+
+						break;
+					case 644:
+						float oldval_medicineRate = medicineRate;
+						medicineRate = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMedicineRateChanged(oldval_medicineRate);
+						}
+						else
+						{
+							if(inWorld)
+								onMedicineRateChanged(oldval_medicineRate);
+						}
+
+						break;
+					case 645:
+						float oldval_miningRate = miningRate;
+						miningRate = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMiningRateChanged(oldval_miningRate);
+						}
+						else
+						{
+							if(inWorld)
+								onMiningRateChanged(oldval_miningRate);
+						}
+
+						break;
+					case 634:
+						Int32 oldval_mp = mp;
+						mp = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMpChanged(oldval_mp);
+						}
+						else
+						{
+							if(inWorld)
+								onMpChanged(oldval_mp);
 						}
 
 						break;
@@ -876,6 +1014,38 @@ namespace KBEngine
 						}
 
 						break;
+					case 31364:
+						Byte oldval_summonSlotIdx = summonSlotIdx;
+						summonSlotIdx = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onSummonSlotIdxChanged(oldval_summonSlotIdx);
+						}
+						else
+						{
+							if(inWorld)
+								onSummonSlotIdxChanged(oldval_summonSlotIdx);
+						}
+
+						break;
+					case 31729:
+						Byte oldval_ultraSkillPower = ultraSkillPower;
+						ultraSkillPower = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onUltraSkillPowerChanged(oldval_ultraSkillPower);
+						}
+						else
+						{
+							if(inWorld)
+								onUltraSkillPowerChanged(oldval_ultraSkillPower);
+						}
+
+						break;
 					default:
 						break;
 				};
@@ -1034,6 +1204,27 @@ namespace KBEngine
 				}
 			}
 
+			float oldval_copper = copper;
+			Property prop_copper = pdatas[34];
+			if(prop_copper.isBase())
+			{
+				if(inited && !inWorld)
+					onCopperChanged(oldval_copper);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_copper.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onCopperChanged(oldval_copper);
+					}
+				}
+			}
+
 			Vector3 oldval_direction = direction;
 			Property prop_direction = pdatas[2];
 			if(prop_direction.isBase())
@@ -1072,6 +1263,27 @@ namespace KBEngine
 					else
 					{
 						onDmgArmorChanged(oldval_dmgArmor);
+					}
+				}
+			}
+
+			float oldval_expGrow = expGrow;
+			Property prop_expGrow = pdatas[35];
+			if(prop_expGrow.isBase())
+			{
+				if(inited && !inWorld)
+					onExpGrowChanged(oldval_expGrow);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_expGrow.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onExpGrowChanged(oldval_expGrow);
 					}
 				}
 			}
@@ -1181,6 +1393,69 @@ namespace KBEngine
 				}
 			}
 
+			float oldval_gatherRate = gatherRate;
+			Property prop_gatherRate = pdatas[36];
+			if(prop_gatherRate.isBase())
+			{
+				if(inited && !inWorld)
+					onGatherRateChanged(oldval_gatherRate);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_gatherRate.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onGatherRateChanged(oldval_gatherRate);
+					}
+				}
+			}
+
+			Byte oldval_healHpRatio = healHpRatio;
+			Property prop_healHpRatio = pdatas[37];
+			if(prop_healHpRatio.isBase())
+			{
+				if(inited && !inWorld)
+					onHealHpRatioChanged(oldval_healHpRatio);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_healHpRatio.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onHealHpRatioChanged(oldval_healHpRatio);
+					}
+				}
+			}
+
+			Byte oldval_healMpRatio = healMpRatio;
+			Property prop_healMpRatio = pdatas[38];
+			if(prop_healMpRatio.isBase())
+			{
+				if(inited && !inWorld)
+					onHealMpRatioChanged(oldval_healMpRatio);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_healMpRatio.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onHealMpRatioChanged(oldval_healMpRatio);
+					}
+				}
+			}
+
 			Int32 oldval_hp = hp;
 			Property prop_hp = pdatas[17];
 			if(prop_hp.isBase())
@@ -1282,6 +1557,69 @@ namespace KBEngine
 					else
 					{
 						onLevelChanged(oldval_level);
+					}
+				}
+			}
+
+			float oldval_medicineRate = medicineRate;
+			Property prop_medicineRate = pdatas[39];
+			if(prop_medicineRate.isBase())
+			{
+				if(inited && !inWorld)
+					onMedicineRateChanged(oldval_medicineRate);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_medicineRate.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMedicineRateChanged(oldval_medicineRate);
+					}
+				}
+			}
+
+			float oldval_miningRate = miningRate;
+			Property prop_miningRate = pdatas[40];
+			if(prop_miningRate.isBase())
+			{
+				if(inited && !inWorld)
+					onMiningRateChanged(oldval_miningRate);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_miningRate.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMiningRateChanged(oldval_miningRate);
+					}
+				}
+			}
+
+			Int32 oldval_mp = mp;
+			Property prop_mp = pdatas[41];
+			if(prop_mp.isBase())
+			{
+				if(inited && !inWorld)
+					onMpChanged(oldval_mp);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_mp.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMpChanged(oldval_mp);
 					}
 				}
 			}
@@ -1555,6 +1893,48 @@ namespace KBEngine
 					else
 					{
 						onState2Changed(oldval_state2);
+					}
+				}
+			}
+
+			Byte oldval_summonSlotIdx = summonSlotIdx;
+			Property prop_summonSlotIdx = pdatas[42];
+			if(prop_summonSlotIdx.isBase())
+			{
+				if(inited && !inWorld)
+					onSummonSlotIdxChanged(oldval_summonSlotIdx);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_summonSlotIdx.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onSummonSlotIdxChanged(oldval_summonSlotIdx);
+					}
+				}
+			}
+
+			Byte oldval_ultraSkillPower = ultraSkillPower;
+			Property prop_ultraSkillPower = pdatas[43];
+			if(prop_ultraSkillPower.isBase())
+			{
+				if(inited && !inWorld)
+					onUltraSkillPowerChanged(oldval_ultraSkillPower);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_ultraSkillPower.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onUltraSkillPowerChanged(oldval_ultraSkillPower);
 					}
 				}
 			}

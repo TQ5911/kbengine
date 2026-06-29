@@ -85,27 +85,15 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
 
         return True
 
-    def isAllMonstersDead(self):
-        monsters = self.monsters
-
-        if not monsters:
-            return True
-
-        for mid, m in monsters:
-            if not m.isDie():
-                return False
-
-        return True
-
     @property
     def monsters(self):
         """:return all live monsters entities list"""
         results = []
-        for mid in self.monsterIDs:
-            monster = KBEngine.entities.get(mid)
+        for _mid in self.monsterIDs:
+            _monster = KBEngine.entities.get(_mid)
 
-            if monster and not monster.isDestroyed:
-                results.append((mid, monster))
+            if _monster and not _monster.isDestroyed:
+                results.append((_mid, _monster))
 
         return results
 
@@ -120,7 +108,7 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         :param kwargs: callback kwargs
         :return: results dict with {monsterId, cbResult, ...}
         """
-        results = {}
+        _results = {}
 
         if args is None:
             args = []
@@ -128,22 +116,19 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         if kwargs is None:
             kwargs = {}
 
-        for mid, m in self.monsters:
-            if mid == monsterId:
+        for _mid, m in self.monsters:
+            if _mid == monsterId:
                 continue
 
-            results[mid] = getattr(m, syncFuncName)(*args, **kwargs)
+            _results[_mid] = getattr(m, syncFuncName)(*args, **kwargs)
 
-        return results
+        return _results
 
     def removeId(self, monsterId):
         try:
             self.monsterIDs.remove(monsterId)
         except ValueError:
             return
-
-    def addId(self, monsterId):
-        self.monsterIDs.append(monsterId)
 
     def onDestroy(self):
         """
@@ -154,11 +139,14 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
 
         self._clearMonsters()
 
+    def addId(self, monsterId):
+        self.monsterIDs.append(monsterId)
+
     def _clearMonsters(self):
         LOG_DBG('Reset monsters monsterGroupId.')
-        for _, monster in self.monsters:
-            if monster.monsterGroupId == self.id:
-                monster.monsterGroupId = 0
+        for _, _monster in self.monsters:
+            if _monster.monsterGroupId == self.id:
+                _monster.monsterGroupId = 0
 
     def onTimer(self, tid, userData):
         self._onTimerTrigger(tid, userData)

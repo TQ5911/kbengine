@@ -1,9 +1,16 @@
 <root>
     <Properties>
-        <crossServerDic>
+        <crossServerToSpaceNo>
+            <Type>          SPACE_NO                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </crossServerToSpaceNo>
+
+        <crossServerDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-        </crossServerDic>
+        </crossServerDict>
 
         <crossServerState>
             <Type>          UINT8                   </Type>

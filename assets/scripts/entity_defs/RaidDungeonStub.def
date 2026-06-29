@@ -12,11 +12,11 @@
             <Default>       {}             </Default>
         </spaces>
 
-        <creatingRaidDic>
+        <creatingRaidDict>
             <Type>      PY_DICT     </Type>
             <Flags>     BASE        </Flags>
             <Default>   {}          </Default>
-        </creatingRaidDic>
+        </creatingRaidDict>
 
     </Properties>
 

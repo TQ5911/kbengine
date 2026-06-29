@@ -2,7 +2,6 @@
 import KBEngine
 from KBEDebug import *
 
-import gameglobal
 import utils
 
 
@@ -31,28 +30,3 @@ def createArchiveStubGlobal(entType, properties, globalName):
     gbHere.onGlobalBase(True, globalName, recordDbid=True)
     return gbHere
 
-
-def getSpaceMarkerBaseByNo(spaceNo):
-    try:
-        sm, hasGotCell = gameglobal.localSpaceMarkers[spaceNo]
-    except KeyError:
-        return None
-    else:
-        return sm
-
-
-def getSpaceMarkerAny():
-    try:
-        sm, hasGotCell = next(iter(gameglobal.localSpaceMarkers.values()))
-    except:
-        return None
-    return sm
-
-
-def getSpaceMarkerCellByNo(spaceNo):
-    try:
-        sm, hasGotCell = gameglobal.localSpaceMarkers[spaceNo]
-    except KeyError:
-        return None
-    else:
-        return sm.cell

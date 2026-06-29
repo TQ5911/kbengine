@@ -14,9 +14,10 @@ import impDungeonCommon
 import math
 import CollectionCheckContext
 
-import message_Message_def as MMD
+import message_Message_def as M_M_DD
+
 import conflict_conflict_def as C_C_DD
-import gamePlay_gamePlay as DDID
+import gamePlay_gamePlay as GP_GPD
 import tutorConst_guideConfig as TCGCD
 
 import complexTeleportOption
@@ -28,37 +29,41 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
     # ===========================================
     # DUNGEON TRAP METHODS
 
-    def _createSingleDungeonTrap(self, dungeonNo):
-        self.addTimerCB(1, '_singleDungeonTrapCallback', (dungeonNo, self.DEFAULT_EXIT_COUNT), gametimer.TIMER_TAG_SINGLE_DUNGEON_TRAP_CALLBACK)
+    def _createSingleDungeonTrap(self, dunNo):
+        self.addTimerCB(
+            1, 
+            '_singleDungeonTrapCallback', 
+            (dunNo, self.DEFAULT_EXIT_COUNT_NUM), 
+            gametimer.TIMER_TAG_SINGLE_DUNGEON_TRAP_CALLBACK)
 
     def _singleDungeonTrapCallback(self, dungeonNo, exitCount):
         if formula.fetchMapId(self.spaceNo) != dungeonNo:
             return
         
-        mapInfo = self._getMapInfoByDungeonNo(dungeonNo)
-        if not mapInfo:
+        _mapInfo = self._getMapInfoByDungeonNo(dungeonNo)
+        if not _mapInfo:
             return
 
-        if not self._isPlayerInMap(mapInfo):
+        if not self._isPlayerInMap(_mapInfo):
             if exitCount <= 0:
-                self.showMsg(MMD.datas.crossingDungeonArea, [])
+                self.showMsg(M_M_DD.datas.crossingDungeonArea, [])
                 self.leaveSingleDungeon(self.id, dungeonNo)
                 return
 
-            if exitCount == self.DEFAULT_EXIT_COUNT:
-                self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
+            if self.DEFAULT_EXIT_COUNT_NUM == exitCount:
+                self.showMsg(M_M_DD.datas.leavingDungeonArea, [str(exitCount)])
 
             LOG_INFO('_singleDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
             exitCount -= 1
-        elif self.DEFAULT_EXIT_COUNT != exitCount:
-            exitCount = self.DEFAULT_EXIT_COUNT
+        elif self.DEFAULT_EXIT_COUNT_NUM != exitCount:
+            exitCount = self.DEFAULT_EXIT_COUNT_NUM
 
         self.addTimerCB(1, '_singleDungeonTrapCallback', (dungeonNo, exitCount), gametimer.TIMER_TAG_SINGLE_DUNGEON_TRAP_CALLBACK)
 
     # ===========================================
 
-    @gamedecorator.limitcall(2, msgId=MMD.datas.dungeonRefused)
+    @gamedecorator.limitcall(2, msgId=M_M_DD.datas.dungeonRefused)
     def selfEnterSingleDungeon(self, dungeonNo, src):
         LOG_INFO('selfEnterSingleDungeon:', dungeonNo, src)
 
@@ -70,6 +75,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def gmEnterSingleDungeon(self, dungeonNo, src):
         if not self._checkEnterSingleDungeon(dungeonNo):
+            LOG_ERR('gmEnterSingleDungeon', dungeonNo, src)
             return
 
         _now = utils.curTS()
@@ -81,7 +87,11 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         gameengine.getDungeonStubByDungeonNo(
             dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE).applyCreateDungeon(
                 self.base, self.gbId, self.teamId,
-                {'dungeonNo': dungeonNo, 'src': src, 'spaceLevel':self.level})
+                {
+                    'src': src, 
+                    'dungeonNo': dungeonNo, 
+                    'spaceLevel':self.level,
+                })
 
     def _enterSingleDungeon(self, dungeonNo, src, extra=None):
         if not self._checkEnterSingleDungeon(dungeonNo, src):
@@ -101,16 +111,16 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
         self.onCheckSingleDungeonCondition(dungeonNo, True, {}, extra)
 
-    def onCheckSingleDungeonCondition(self, dungeonNo, result, reasonDic, extra):
+    def onCheckSingleDungeonCondition(self, dungeonNo, result, reasonDic, extraData):
         LOG_INFO('onCheckSingleDungeonCondition::', dungeonNo, result, reasonDic)
         if not result:
             LOG_WARN('onCheckSingleDungeonCondition:: failed', dungeonNo, reasonDic)
             return
 
-        _hasCast = extra.get('hasCast', False)
+        _hasCast = extraData.get('hasCast', False)
         _spaceTemplateNo = gameconst.SpaceType.getSingleDungeonSpaceRange(dungeonNo)[0]
         if not _hasCast and utils.checkComplexTeleportNeedCast(self.spaceNo, _spaceTemplateNo, gameconst.ComplexTeleportEnum.ENTER, None, owner=self):
-            self.enterSpaceCommonNeedCast('_enterSingleDungeonAfterCast', (dungeonNo, extra))
+            self.enterSpaceCommonNeedCast('_enterSingleDungeonAfterCast', (dungeonNo, extraData))
             return
 
         _now = utils.curTS()
@@ -118,33 +128,32 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             LOG_WARN("onCheckSingleDungeonCondition:: teleport locked", self.teleportGlobalLockRlsT)
             return
         self.acquireGlobalTeleportLock(now=_now)
-        spaceUUID = 0
+        _spaceUUID = 0
         if self.spaceMgr:
-            spaceUUID = self.spaceMgr.spaceUUID
-        extra['inSpaceUUID'] = spaceUUID
+            _spaceUUID = self.spaceMgr.spaceUUID
+        extraData['inSpaceUUID'] = _spaceUUID
         gameengine.getDungeonStubByDungeonNo(
             dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE).applyCreateDungeon(
-            self.base, self.gbId, self.teamId, extra)
+            self.base, self.gbId, self.teamId, extraData)
         self.resetStatisticsData()
 
-    def _checkEnterSingleDungeon(self, dungeonNo, src=None, checkSameDungeon=True):
-        if dungeonNo not in DDID.datas:
-            LOG_INFO('{0} invalid'.format(dungeonNo))
+    def _checkEnterSingleDungeon(self, dunNo, src=None, checkSameDungeon=True):
+        if dunNo not in GP_GPD.datas:
+            LOG_INFO('{0} invalid'.format(dunNo))
             return False
 
-        if checkSameDungeon and formula.parseDungeonNoBySpaceNo(self.spaceNo) == dungeonNo:
-            LOG_WARN('_checkEnterSingleDungeon::repeat enter same dungeon', dungeonNo, self.spaceNo)
+        if checkSameDungeon and formula.parseDungeonNoBySpaceNo(self.spaceNo) == dunNo:
+            LOG_WARN('_checkEnterSingleDungeon::repeat enter same dungeon', dunNo, self.spaceNo)
             return False
 
         if not self.checkCrtMapCanEnterDungeon():
             return False
 
-        dungeonInfo = DDID.datas[dungeonNo]
+        dungeonInfo = GP_GPD.datas[dunNo]
         if not gameconst.DungeonTypeJudge.isSingleDungeon(dungeonInfo['type'],
                                                      dungeonInfo['enterType']):
-            LOG_INFO('{0} not single dungeon'.format(dungeonNo))
+            LOG_INFO('{0} not single dungeon'.format(dunNo))
             # TODO()(DUNGEON_EXTEND): add message
-            # self.showMsg(MMD.datas.CUSTOM_STRING6, ['该副本无法单人进入'])
             return False
 
         if not self.checkConflictState(C_C_DD.datas.teleport):
@@ -154,22 +163,22 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         # 【【任务】战斗状态&&进入副本判断】
         if not dungeonInfo["fightConflict"] and self.hasState(gameconst.StateEnum.Fighting):
             LOG_INFO("_checkEnterSingleDungeon:: fight state failed")
-            self.showMsg(MMD.datas.enterDunFailFightSingle, [])
+            self.showMsg(M_M_DD.datas.enterDunFailFightSingle, [])
             return False
 
         if not self.canDoCompleteTeleport(noErrorMsg=True, judgeLeaveSrc=src):
             LOG_WARN('_checkEnterSingleDungeon::can\'t enter space from current spaceNo', self.spaceNo)
-            # self.showMsg(MMD.datas.dungeonEntryMustBeWorld, [])
             return False
 
         return True
 
-    def onSingleDungeonSpaceReady(self, spaceBox, spaceMgrBox, spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        self.readyUseItemAndEnterSingleDungeon(0, spaceBox, spaceMgrBox, spaceMgrId,
-                                                   spaceNo, playerBox, playerGbId, teamUUID, extra)
+    def onSingleDungeonSpaceReady(self, spaceBox, spaceMgrBox, spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extraData):
+        self.readyUseItemAndEnterSingleDungeon(
+            0, spaceBox, spaceMgrBox, spaceMgrId,
+            spaceNo, playerBox, playerGbId, teamUUID, extraData)
 
     def readyUseItemAndEnterSingleDungeon(self, state,
-                                          spaceBox, spaceMgrBox, spaceMgrId, spaceNo, playerBox,
+                                          spaceBox, spaceMgrBox, _, spaceNo, playerBox,
                                           playerGbId, teamUUID, extra):
         if state != 0:
             LOG_ERR('Enter singleDungeon Failed, use item error: code={}, spaceNo={}'.format(state, spaceNo))
@@ -214,13 +223,13 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         if not self.newbieAllowLeave():
             return
 
-        src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        self.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
+        _src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+        self.doLeaveSingleDungeon(dungeonNo, _src, 'client leave')
 
     def leaveTutorialIsComplete(self, dungeonNo):
         LOG_INFO('leaveTutorialIsComplete:', dungeonNo)
-        src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        self.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
+        _src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+        self.doLeaveSingleDungeon(dungeonNo, _src, 'client leave')
 
     def selfLeaveSingleDungeon(self, dungeonNo, src):
         LOG_INFO('selfLeaveSingleDungeon:', dungeonNo, src)
@@ -273,11 +282,18 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
         dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         spaceType = self._getParamBydungeonNo(dungeonNo, 'type')
-        if self.autoCombat and DDID.datas[dungeonNo].get('leaveDungeonDisableAutoFight', 0):
+        if self.autoCombat and GP_GPD.datas[dungeonNo].get('leaveDungeonDisableAutoFight', 0):
             self.stopAutoCombat(self.id)
 
-        lCtx = {'spaceMgrBox': self.spaceMgr.base, 'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID,
-                    'overwrite': {'position': dstPos, 'direction': dstDir}}
+        lCtx = {
+            'spaceUUID': self.spaceMgr.dungeonPlayMode.spaceUUID,
+            'spaceMgrBox': self.spaceMgr.base, 
+            'overwrite': {
+                'position': dstPos, 
+                'direction': dstDir,
+            }
+        }
+
         context = {'e': {}, 'l': lCtx}
         options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
         spaceNo = formula.combineLineSpaceNo(dstNo)
@@ -289,12 +305,12 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
         dungeonNo = formula.fetchMapId(self.spaceNo)
 
-        if dungeonNo not in DDID.datas:
+        if dungeonNo not in GP_GPD.datas:
             LOG_ERR("isInTeamDungeon::can't find dungeonNo in DLL sheet")
             return False
 
-        dungeonSpaceType = DDID.datas[dungeonNo]['type']
-        dungeonEnterType = DDID.datas[dungeonNo]['enterType']
+        dungeonSpaceType = GP_GPD.datas[dungeonNo]['type']
+        dungeonEnterType = GP_GPD.datas[dungeonNo]['enterType']
 
         if gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
             return True
@@ -311,8 +327,8 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             self.doLeaveSingleDungeonWithDstPos(dstNo, dstPos, _dir)
             return
         
-        dungeonSpaceType = DDID.datas[dstNo]['type']
-        dungeonEnterType = DDID.datas[dstNo]['enterType']
+        dungeonSpaceType = GP_GPD.datas[dstNo]['type']
+        dungeonEnterType = GP_GPD.datas[dstNo]['enterType']
 
         if dstNo == formula.fetchMapId(self.spaceNo):
             self.telToPos(dstPos, _dir)
@@ -324,3 +340,12 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
     def checkChallengeInnerDemon(self, *args):
         LOG_DBG("checkChallengeInnerDemon", args)
         return CollectionCheckContext.CollectionCheckInnerDemon(*args)
+    
+    def checkChallengeInnerDemonCD(self):
+        now = utils.curTS()
+        nextTime = self.getPersistentMiscProp(gameconst.EntityPropsEnum.innerDemonCDTimestamp, 0)
+        if nextTime > now:
+            self.showMsg(M_M_DD.datas.cube_innerDemonCDMsg, [str(nextTime - now)])
+            return False
+        
+        return True

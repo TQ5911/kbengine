@@ -25,28 +25,27 @@ class BodyEquips(userType.UserSingleType):
     def _lateReload(self):
         super(BodyEquips, self)._lateReload()
 
-        for v in self.equips_map.values():
-            v.reloadScript()
+        for _v in self.equips_map.values():
+            _v.reloadScript()
 
-        for v in self.lockData.values():
-            if 'equipItem' in v and v['equipItem']:
-                v['equipItem'].reloadScript()
+        for _v in self.lockData.values():
+            if 'equipItem' in _v and _v['equipItem']:
+                _v['equipItem'].reloadScript()
 
-        for v in self.waitExpireEquipList.values():
-            v.reloadScript()
-
-        return
+        for _v in self.waitExpireEquipList.values():
+            _v.reloadScript()
 
     @classmethod
     def _checkIgnores_(cls):
         return 'lockedTime', 'lockedDesp'
     
     def onBodyEquipsDailyUpdate(self, owner):
-        updateSlotIds = []
+        _updateSlotIds = []
         for slotId, equipItem in self.equips_map.items():
             if equipItem.onItemDailyUpdate():
-                updateSlotIds.append(slotId)
-        updateSlotIds and owner.client.onBodyEquipDailyUpdate(updateSlotIds)
+                _updateSlotIds.append(slotId)
+        if _updateSlotIds:
+            owner.client.onBodyEquipDailyUpdate(_updateSlotIds)
 
     def initObjFromSavedDict(self, dataDic):
         for equipDic in dataDic['bodyEquipList']:
@@ -59,8 +58,8 @@ class BodyEquips(userType.UserSingleType):
             except Exception as e:
                 LOG_ERR('ERRRRRRRRROR!!! in initObjFromSavedDict:', e, equipDic)
                 continue
-        self.lockData = dataDic.get('lockData', {})
         self.setInfo = dataDic.get('setInfo', {})
+        self.lockData = dataDic.get('lockData', {})
         self.addSkillLvDic = dataDic.get('addSkillLvDic', {})
         self.blessAttrs = dataDic.get('blessAttrs', {})
         if not self.setInfo:
@@ -71,41 +70,45 @@ class BodyEquips(userType.UserSingleType):
                 self.waitExpireEquipList[equipItem.uniqueId] = equipItem
 
     def _resetSetInfo(self):
-        self.setInfo = {'setLv': 0, 'propVal': {}, 'equips': []}
+        self.setInfo = {
+            'setLv': 0, 
+            'propVal': {}, 
+            'equips': [],
+        }
 
     def toBodyEquipsSavedDict(self):
-        bodyEquipList = []
+        _bodyEquipList = []
         for slotId, equipObj in self.equips_map.items():
             equipDic = equipObj.toItemSavedDict()
             equipDic['gridId'] = slotId
-            bodyEquipList.append(equipDic)
+            _bodyEquipList.append(equipDic)
         return {
-                    'bodyEquipList':bodyEquipList,
-                    'lockData':self.lockData,
-                    'setInfo':self.setInfo,
-                    'addSkillLvDic':self.addSkillLvDic,
-                    'blessAttrs':self.blessAttrs,
-                }
+            'bodyEquipList':_bodyEquipList,
+            'lockData':self.lockData,
+            'setInfo':self.setInfo,
+            'addSkillLvDic':self.addSkillLvDic,
+            'blessAttrs':self.blessAttrs,
+        }
 
     def toBodyEquipsClientDict(self):
-        bodyEquipList = []
+        _bodyEquipList = []
         for slotId, equipObj in self.equips_map.items():
             try:
                 equipDic = equipObj.toClientBodyEquipItemDict(slotId)
-                bodyEquipList.append(equipDic)
+                _bodyEquipList.append(equipDic)
             except Exception as e:
                 LOG_ERR('ERRRRRRRRROR!!! in toBodyEquipsSavedDict:', slotId, e)
                 continue
-        return bodyEquipList
+        return _bodyEquipList
 
     def getBodyEquipScoreDic(self):
-        slotDressDic = {}
+        _slotDressDic = {}
         for slotId, equipObj in self.equips_map.items():
-            slotDressDic[slotId] = {
+            _slotDressDic[slotId] = {
                 'itemId':equipObj.itemId,
                 'score':equipObj.getEquipScore(),
             }
-        return slotDressDic
+        return _slotDressDic
 
     def loadEquipItem(self, slotId, equipItem):
         self.equips_map[slotId] = equipItem
@@ -131,10 +134,10 @@ class BodyEquips(userType.UserSingleType):
         return True
 
     def getBodyEquipByUniqueId(self, uniqueId):
-        for slotId, equipItem in self.equips_map.items():
+        for _slotId, equipItem in self.equips_map.items():
             if equipItem.uniqueId != uniqueId:
                 continue
-            return slotId, equipItem
+            return _slotId, equipItem
         return None, None
 
     def isBodyEquipsBeLocked(self):
@@ -149,10 +152,9 @@ class BodyEquips(userType.UserSingleType):
         LOG_INFO('in _removeSetEffect:', self.setInfo)
         if oldSetLv == 0:
             return
-        for attrName, val in self.setInfo['propVal'].items():
-            owner.addProp(attrName, -1*val, gameconst.SourceType.SrcTpEquip)
+        for _attrName, val in self.setInfo['propVal'].items():
+            owner.addProp(_attrName, -1*val, gameconst.SourceType.SrcTpEquip)
         self.setInfo = {'setLv':0, 'propVal':{}}
-        return
 
     def addPropBySet(self, owner, propList, valList, startIdx=0, endIdx=-1):
         LOG_INFO('in addPropBySet:', propList, valList)
@@ -161,39 +163,38 @@ class BodyEquips(userType.UserSingleType):
             gameengine.panicStack('addPropBySet, param error:', startIdx, endIdx, valList)
             return
 
-        for idx, attrName in enumerate(propList):
-            self.setInfo['propVal'].setdefault(attrName, 0)
-            valueIdx = startIdx+idx
+        for idx, _attrName in enumerate(propList):
+            self.setInfo['propVal'].setdefault(_attrName, 0)
+            _valueIdx = startIdx+idx
             if endIdx == -1:
-                val = valList[valueIdx] if valueIdx < valsNum else valList[endIdx]
+                val = valList[_valueIdx] if _valueIdx < valsNum else valList[endIdx]
             else:
-                val = valList[valueIdx] if valueIdx < endIdx else valList[endIdx]
+                val = valList[_valueIdx] if _valueIdx < endIdx else valList[endIdx]
 
-            self.setInfo['propVal'][attrName] += val
-            owner.addProp(attrName, val, gameconst.SourceType.SrcTpEquip)
+            self.setInfo['propVal'][_attrName] += val
+            owner.addProp(_attrName, val, gameconst.SourceType.SrcTpEquip)
         LOG_INFO('     in addPropBySet, after:', self.setInfo)
-        return
 
     def getDressSlotInfo(self, bagEquipItem, dstSlotId=0):
-        equipType, equipSubType = bagEquipItem.equipAttr.equipType, bagEquipItem.equipAttr.equipSubType
-        slotIds = dataUtils.equipSlot(equipType, equipSubType)
+        _equipType, equipSubType = bagEquipItem.equipAttr.equipType, bagEquipItem.equipAttr.equipSubType
+        slotIds = dataUtils.equipSlot(_equipType, equipSubType)
         if len(slotIds) == 0:
             return None, None
 
-        emptySlotId = None
+        _emptySlotId = None
         for slotId in slotIds:
             if slotId not in self.equips_map:
-                emptySlotId = slotId
+                _emptySlotId = slotId
                 break
 
-        if emptySlotId is None:
+        if _emptySlotId is None:
             #替换
-            if dataUtils.isRing(equipType, equipSubType):
+            if dataUtils.isRing(_equipType, equipSubType):
                 if dstSlotId in slotIds:
                     realSlotId = dstSlotId
                 else:
                     realSlotId = self.getRingReplaceSlotId()
-            elif dataUtils.isBracelet(equipType, equipSubType):
+            elif dataUtils.isBracelet(_equipType, equipSubType):
                 if dstSlotId in slotIds:
                     realSlotId = dstSlotId
                 else:
@@ -203,20 +204,20 @@ class BodyEquips(userType.UserSingleType):
             oldBodyEquip = self.getEquipItem(realSlotId)
         else:
             #有空位
-            realSlotId = emptySlotId
+            realSlotId = _emptySlotId
             oldBodyEquip = None
         return realSlotId, oldBodyEquip
 
     def getRingReplaceSlotId(self):
-        leftRing = self.getEquipItem(gameconst.BodyEquipSlot.EQUIP_RING_LEFT_SLOT)
-        if not leftRing:
+        _leftRing = self.getEquipItem(gameconst.BodyEquipSlot.EQUIP_RING_LEFT_SLOT)
+        if not _leftRing:
             return gameconst.BodyEquipSlot.EQUIP_RING_LEFT_SLOT
 
         rightRing = self.getEquipItem(gameconst.BodyEquipSlot.EQUIP_RING_RIGHT_SLOT)
-        if not leftRing:
+        if not _leftRing:
             return gameconst.BodyEquipSlot.EQUIP_RING_RIGHT_SLOT
 
-        if leftRing.getEquipScore() < rightRing.getEquipScore():
+        if _leftRing.getEquipScore() < rightRing.getEquipScore():
             return gameconst.BodyEquipSlot.EQUIP_RING_LEFT_SLOT
         else:
             return gameconst.BodyEquipSlot.EQUIP_RING_RIGHT_SLOT
@@ -349,16 +350,15 @@ class BodyEquips(userType.UserSingleType):
 
     def addSkillLv(self, owner, skillIdList, addLvList, isLogin=False):
         LOG_INFO('in bodyEquips:addSkillLv:', skillIdList, addLvList, self.addSkillLvDic)
-        newSkillLv = []
-        for skillId, addLv in zip(skillIdList, addLvList):
-            self.addSkillLvDic[skillId] = self.addSkillLvDic.get(skillId, 0) + addLv
+        _newSkillLv = []
+        for skillId, _addLv in zip(skillIdList, addLvList):
+            self.addSkillLvDic[skillId] = self.addSkillLvDic.get(skillId, 0) + _addLv
             if self.addSkillLvDic[skillId] < 0:
-                gameengine.panicStack('ERROR!!addSkillLv:', self.addSkillLvDic, skillId, addLv)
+                gameengine.panicStack('ERROR!!addSkillLv:', self.addSkillLvDic, skillId, _addLv)
                 self.addSkillLvDic[skillId] = 0
-            newSkillLv.append(self.addSkillLvDic[skillId])
+            _newSkillLv.append(self.addSkillLvDic[skillId])
         if not isLogin:
-            owner.client.updateSkillsExtraLevel(gameconst.SkillUpdateSrc.Equip, skillIdList, newSkillLv)
-        return
+            owner.client.updateSkillsExtraLevel(gameconst.SkillUpdateSrc.Equip, skillIdList, _newSkillLv)
     
     def calculateBlessAttrs(self, totalAffixVal):
         blessAttrs = None

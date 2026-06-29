@@ -136,40 +136,132 @@ def doOnAccounOfflineSafeByGbId(gbId, func, args):
     _sql = "SELECT parentID FROM game_account_characters WHERE gbID = {}".format(ctx.gbId)
     KBEngine.executeRawDatabaseCommand(_sql, functools.partial(doOnAccounOfflineSafeByGbIdAfterGetParentId, ctx))
 
+def _banIDIPAgain(gbId, banType, endTime, isAuto, *args):
+    # 再次封印一次，以防止出现极端情况
+    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+        [gbId],
+        'IDIPBanState',
+        (banType, endTime, isAuto),
+        None,
+        '',
+        ())
+
+def _afterBanIDIP(gbId, banType, endTime, isAuto, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_afterBanIDIP', err, ret)
+        return
+
+    KBEngine.addTimer(2, 0, functools.partial(_banIDIPAgain, gbId, banType, endTime, isAuto))
+
+def _onBeginBanIDIP(su, gbId, endTime, isAuto, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_onBeginBanIDIP err:', err)
+        su.onCommandResult(1, '_onBeginBanIDIP: err', {})
+        return
+
+    if not ret:
+        LOG_ERR('_onBeginBanLogin: not found')
+        su.onCommandResult(1, '_onBeginBanIDIP: not found', {})
+        return
+
+    idipBanDictData, idipBanDataDictData = ret[0]
+    idipBanDict = cPickle.loads(idipBanDictData)
+    idipBanDataDict = cPickle.loads(idipBanDataDictData)
+    
+    LOG_INFO('_onBeginBanIDIP: idipBanDict:', idipBanDict, 'idipBanDataDict:', idipBanDataDict)
+
+    if isAuto:
+        isBan = False
+        lastIsAuto = False
+        banType = gameconst.IDIPBanType.CHAT
+        if banType in idipBanDict:
+            if idipBanDict[banType] >= utils.curTS():
+                isBan = True
+                lastIsAuto = idipBanDataDict[banType]['isAuto']
+        LOG_INFO('IDIPBanState auto:', banType, isBan, lastIsAuto)
+        
+        #当前没被封直接封
+        if not isBan:
+            idipBanDict[banType] = endTime
+            idipBanDataDict[banType] = {'isAuto': isAuto}
+            LOG_INFO('IDIPBanState auto but not isBan', idipBanDict, idipBanDataDict)
+            gamesql.banIDIP(gbId, idipBanDict, idipBanDataDict, functools.partial(_afterBanIDIP, gbId, banType, endTime, isAuto))
+            su.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"effective": 1, "banExpireTime": endTime, "isAuto": 1 if isAuto else 0, "banType": gameconst.WebBanType.CHAT})
+            return True
+
+        #当前封禁中，并且是自动ban，如果时间更久，则覆盖
+        if lastIsAuto:
+            if endTime > idipBanDict[banType]:
+                idipBanDict[banType] = endTime
+                idipBanDataDict[banType] = {'isAuto': isAuto}
+                LOG_INFO('IDIPBanState auto but isBan and lastIsAuto', idipBanDict, idipBanDataDict)
+                gamesql.banIDIP(gbId, idipBanDict, idipBanDataDict, functools.partial(_afterBanIDIP, gbId, banType, endTime, isAuto))
+                su.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"effective": 1, "banExpireTime": endTime, "isAuto": 1 if isAuto else 0, "banType": gameconst.WebBanType.CHAT})
+                return True
+        
+        #当前封禁中，并且是手动ban，要报警
+        if not lastIsAuto:
+            LOG_ERR('IDIPBanState but autoBanLoginFlag is MANUAL', idipBanDict, idipBanDataDict)
+            su.onCommandResult(gameconst.ChatSysGMErr.FAIL, 'IDIPBanState but autoBanLoginFlag is MANUAL', {})
+            return False
+    else:
+        LOG_INFO('IDIPBanState but autoBanLoginFlag is MANUAL')
+        idipBanDict[banType] = endTime
+        idipBanDataDict[banType] = {'isAuto': isAuto}
+        gamesql.banIDIP(gbId, idipBanDict, idipBanDataDict, functools.partial(_afterBanIDIP, gbId, banType, endTime, isAuto))
+        su.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"effective": 1, "banExpireTime": endTime, "isAuto": 1 if isAuto else 0, "banType": gameconst.WebBanType.CHAT})
+        return True
+    su.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"effective": 0, "banExpireTime": idipBanDict[banType], "isAuto": 1 if isAuto else 0, "banType": gameconst.WebBanType.CHAT})
+    return True
 
 def _setChatForbidden(superUser, playerEnt, endTime, isAuto, banType):
     # 离线玩家处理
-    _args = (gameconst.IDIPBanType.CHAT, endTime, isAuto)
     if gmCommand.isRawPlayer(playerEnt):
         gbId, name, accountName, dbId = playerEnt
         LOG_INFO(f"gm offline setChatForbidden, gbID:{gbId}")
-        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPBanState', _args)
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
+        gamesql.beginBanIDIP(gbId, functools.partial(_onBeginBanIDIP, superUser, gbId, endTime, isAuto))
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"effective": 1, "banExpireTime": endTime, "isAuto": 1 if isAuto else 0, "banType": 2})
     # 在线玩家处理
     else:
-        LOG_INFO(f"gm online setChatForbidden, gbID:{playerEnt.gbID}")
-        if not playerEnt.IDIPBanState(*_args):
-            superUser.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-            return False, '执行失败'
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-    return True, 'command success'
+        LOG_INFO("gm online setChatForbidden")
+        playerEnt.IDIPBanState(superUser, gameconst.IDIPBanType.CHAT, endTime, isAuto)
+
+def _afterDisbanIDIP(superUser, gbId, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_afterDisbanIDIP err:', err)
+        return
+
+def _beginDisbanIDIP(superUser, gbId, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_beginDisbanIDIP err:', err)
+        superUser.onCommandResult(1, '_beginDisbanIDIP err:', {})
+        return
+    
+    idipBanDict, idipBanDataDict = ret[0]
+    idipBanDict = cPickle.loads(idipBanDict)
+    idipBanDataDict = cPickle.loads(idipBanDataDict)
+    LOG_INFO('_beginDisbanIDIP: idipBanDict:', idipBanDict, 'idipBanDataDict:', idipBanDataDict)
+
+    if gameconst.IDIPBanType.CHAT in idipBanDict:
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"wasBanned": 1, "previousBanExpireTime": idipBanDict[gameconst.IDIPBanType.CHAT],\
+            "isAuto": idipBanDataDict[gameconst.IDIPBanType.CHAT]['isAuto'], "banType": 2})
+        idipBanDict.pop(gameconst.IDIPBanType.CHAT)
+        idipBanDataDict.pop(gameconst.IDIPBanType.CHAT)
+        gamesql.disbanIDIP(gbId, idipBanDict, idipBanDataDict, functools.partial(_afterDisbanIDIP, superUser, gbId))
+    else:
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"wasBanned": 0, "previousBanExpireTime": 0, "isAuto": 0, "banType": 0})
 
 def _removeChatForbidden(superUser, playerEnt):
     # 离线玩家处理
-    _args = (gameconst.IDIPBanType.CHAT,)
     if gmCommand.isRawPlayer(playerEnt):
         gbId, name, accountName, dbId = playerEnt
         LOG_INFO(f"gm offline removeChatForbidden, gbID:{gbId}")
-        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPRemoveBanState', _args)
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
+        gamesql.beginDisbanIDIP(gbId, functools.partial(_beginDisbanIDIP, superUser, gbId))
+        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"wasBanned": 1, "previousBanExpireTime": 0, "isAuto": 1, "banType": 2})
     # 在线玩家处理
     else:
-        LOG_INFO(f"gm online removeChatForbidden, gbID:{playerEnt.gbID}")
-        if not playerEnt.IDIPRemoveBanState(*_args):
-            superUser.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-            return False, '执行失败'
-        superUser.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': playerEnt.gbID, 'isOffline': False})
-    return True, 'command success'
+        LOG_INFO(f"gm online removeChatForbidden")
+        playerEnt.IDIPRemoveBanState(superUser, gameconst.IDIPBanType.CHAT)
 
 def _afterBanLogin(gbId, endTime, isAuto, ret, num, insertId, err):
     if err:
@@ -188,13 +280,15 @@ def _banAvatarAgain(gbId, endTime, isAuto, *args):
         '',
         ())
 
-def _onBeginBanLogin(gbId, endTime, isAuto, ret, num, insertId, err):
+def _onBeginBanLogin(su, gbId, endTime, isAuto, ret, num, insertId, err):
     if err:
         LOG_ERR('_onBeginBanLogin err:', err)
+        su.onCommandResult(1, '_onBeginBanLogin err:', {})
         return
 
     if not ret:
         LOG_ERR('_onBeginBanLogin: not found')
+        su.onCommandResult(1, '_onBeginBanLogin: not found', {})
         return
     autoBanFlag, banLogin = ret[0]
     autoBanFlag = int(autoBanFlag.decode())
@@ -204,40 +298,68 @@ def _onBeginBanLogin(gbId, endTime, isAuto, ret, num, insertId, err):
         #当前封禁中并且是手动的，自动ban不能覆盖，且要报错
         if banLogin >= utils.curTS() and autoBanFlag == gameconst.AutoBanType.MANUAL:
             LOG_ERR('gmBanAvatar but autoBanLoginFlag is MANUAL')
+            su.onCommandResult(1, 'gmBanAvatar but autoBanLoginFlag is MANUAL', {})
+            return
         #自动ban时间更久，才覆盖
         if endTime > banLogin:
             LOG_INFO('gmBanAvatar but autoBanLoginFlag is AUTO, and endTime is more than banLogin', endTime, banLogin)
             gamesql.banLogin(gbId, gameconst.AutoBanType.AUTO, endTime, functools.partial(_afterBanLogin, gbId, endTime, isAuto))
+            su.onCommandResult(0, 'command success', {"effective": 1, "banExpireTime": endTime, "isAuto": 1, "banType": 1})
+        else:
+            su.onCommandResult(0, 'command success', {"effective": 0, "banExpireTime": banLogin, "isAuto": 1, "banType": 1})
     else:
         LOG_INFO('gmBanAvatar but banType is MANUAL', endTime)
         gamesql.banLogin(gbId, gameconst.AutoBanType.MANUAL, endTime, functools.partial(_afterBanLogin, gbId, endTime, isAuto))
+        su.onCommandResult(0, 'command success', {"effective": 1, "banExpireTime": endTime, "isAuto": 0, "banType": 1})
 
-@gm_cmd('$banAvatar', (Player("gbId or Id", raw=True), Int('endTime'), Int('isAuto'), Int('banType')), RONE, BASE, '封禁角色', ALLSIDE, DEVE_GROUPS)
+@gm_cmd('$banAvatar', (Player("gbId or Id", raw=True), Int('endTime'), Int('isAuto'), Int('banType')), RARG(0), BASE, '封禁角色', ALLSIDE, DEVE_GROUPS)
 def banAvatar(su, player, endTime, isAuto, banType):
     LOG_INFO('banAvatar', player, endTime, isAuto, banType)
     if banType == gameconst.WebBanType.CHAT:
         return _setChatForbidden(su, player, endTime, isAuto, banType)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        gamesql.beginBanLogin(gbId, functools.partial(_onBeginBanLogin, gbId, endTime, isAuto))
+        gamesql.beginBanLogin(gbId, functools.partial(_onBeginBanLogin, su, gbId, endTime, isAuto))
     else:
-        player.gmBanAvatar(endTime, isAuto)
-    return True, 'command success'
+        player.gmBanAvatar(su, endTime, isAuto)
+
+def _beginDisbanLogin(su, gbId, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_beginDisbanLogin err:', err)
+        su.onCommandResult(1, '_beginDisbanLogin err:', {})
+        return
+
+    autoBanFlag, banLogin = ret[0]
+    autoBanFlag = int(autoBanFlag.decode())
+    banLogin = int(banLogin.decode())
+    LOG_INFO('_beginDisbanLogin: autoBanFlag:', autoBanFlag, 'banLogin:', banLogin)
+    gamesql.disbanLogin(gbId, functools.partial(_afterDisbanLogin, su, gbId, banLogin, autoBanFlag))
+
+def _afterDisbanLogin(su, gbId, banLogin, autoBanFlag, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_afterDisbanLogin err:', err)
+        su.onCommandResult(1, '_afterDisbanLogin err:', {})
+        return
+
+    wasBanned = 1 if banLogin > utils.curTS() else 0
+    if wasBanned:
+        su.onCommandResult(0, 'command success', {"wasBanned": wasBanned, "previousBanExpireTime": banLogin, "isAuto": 1 if autoBanFlag == gameconst.AutoBanType.AUTO else 0, "banType": 1})
+    else:
+        su.onCommandResult(0, 'command success', {"wasBanned": 0, "previousBanExpireTime": 0, "isAuto": 0, "banType": 0})
 
 
-@gm_cmd('$disbanAvatar', (Player("gbId or Id", raw=True), Int('banType')), RONE, BASE, '解除封禁角色', ALLSIDE, DEVE_GROUPS)
+@gm_cmd('$disbanAvatar', (Player("gbId or Id", raw=True), Int('banType')), RARG(0), BASE, '解除封禁角色', ALLSIDE, DEVE_GROUPS)
 def disbanAvatar(su, player, banType):
     LOG_INFO('disbanAvatar', player, banType)
     if banType == gameconst.WebBanType.CHAT:
         return _removeChatForbidden(su, player)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
-        gamesql.disbanLogin(gbId, lambda *args: LOG_INFO('disbanAvatar success', args))
+        gamesql.beginDisbanLogin(gbId, functools.partial(_beginDisbanLogin, su, gbId))
     else:
         LOG_ERR('disbanAvatar error, player is online!!!!!!!', player)
-    return True, 'command success'
 
-@gm_cmd('$banMail', (Player("gbId or Id", raw=True), Int('endTime'), Int('banType')), RONE, BASE, '封禁邮件', ALLSIDE, DEVE_GROUPS)
+@gm_cmd('$banMail', (Player("gbId or Id", raw=True), Int('endTime'), Int('banType')), RARG(0), BASE, '封禁邮件', ALLSIDE, DEVE_GROUPS)
 def banMail(su, player, endTime, banType):
     LOG_INFO('banMail', player, endTime, banType)
     _args = (endTime, banType)
@@ -266,7 +388,7 @@ def _onQueryBanInfo(su, gbId, ret, num, insertId, err):
     resp.update(_genBanInfoResp(gameconst.WebBanType.LOGIN, banLogin, autoBanFlag))
     resp.update(_genBanInfoResp(gameconst.WebBanType.CHAT, 
                                 idipBanDict.get(gameconst.IDIPBanType.CHAT, 0), 
-                                idipBanDataDict.get(gameconst.IDIPBanType.CHAT, {}).get('isAuto', -1)))
+                                idipBanDataDict.get(gameconst.IDIPBanType.CHAT, {}).get('isAuto', 0)))
     LOG_INFO('_onQueryBanInfo: resp', resp)
     return su.onCommandResult(0, f'command success', resp)
 
@@ -275,15 +397,16 @@ def _genBanInfoResp(banType, expireTime, isAuto):
         gameconst.WebBanType.LOGIN : 'ban',
         gameconst.WebBanType.CHAT : 'mute',
     }
+    effective = 1 if expireTime > utils.curTS() else 0
     return {
         webBanType2Key[banType] : {
-            'effective' : 1 if expireTime > utils.curTS() else 0,
-            'expireTime' : expireTime,
-            'isAuto' : isAuto,
+            'effective' : effective,
+            'expireTime' : expireTime if effective else 0,
+            'isAuto' : isAuto if effective else 0,
         }
     }
 
-@gm_cmd('$queryAvatarBanInfo', (Player("gbId or Id", raw=True), ), RONE, BASE, '查询封禁信息', ALLSIDE, DEVE_GROUPS)
+@gm_cmd('$queryAvatarBanInfo', (Player("gbId or Id", raw=True), ), RARG(0), BASE, '查询封禁信息', ALLSIDE, DEVE_GROUPS)
 def queryAvatarBanInfo(su, player):
     LOG_INFO('queryAvatarBanInfo', player)
     if gmCommand.isRawPlayer(player):
@@ -292,7 +415,7 @@ def queryAvatarBanInfo(su, player):
     else:
         resp = {}
         resp.update(_genBanInfoResp(gameconst.WebBanType.LOGIN, player.banLogin, player.autoBanLoginFlag))
-        resp.update(_genBanInfoResp(gameconst.WebBanType.CHAT, player.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0), player.idipBanDataDict.get(gameconst.IDIPBanType.CHAT, -1)))
+        resp.update(_genBanInfoResp(gameconst.WebBanType.CHAT, player.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0), player.idipBanDataDict.get(gameconst.IDIPBanType.CHAT, {}).get('isAuto', 0)))
         LOG_INFO('queryAvatarBanInfo: resp:', resp)
         return su.onCommandResult(0, f'command success', resp)
 
@@ -326,3 +449,116 @@ def gm_sendEquipSoul(superUser, toGBID, itemId, bindType, rollProps):
     mailAssistor.sendMailToPlayers([_toGBID], 37002017, extraAttach=_addVal,
                                     srcType=AAC_AACDD.datas.BONUS_SRC_GM, opUUID=opUUID)
     return True, 'command success'
+
+def _onModifyCurrency(su, gbId, itemId, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_onModifyCurrency err:', err)
+        return
+    if not ret:
+        LOG_ERR('_onModifyCurrency: no ret')
+        return
+
+    gbId, fieldName, curVale, updateNum, updateOldNum, updateNewdNum = ret[0]
+    curVale = int(curVale.decode())
+    updateNum = int(updateNum.decode())
+    updateOldNum = int(updateOldNum.decode())
+    updateNewdNum = int(updateNewdNum.decode())
+
+    resp = {}
+    resp.update(_genModifyCurrencyInfoResp(True, itemId, updateNum, curVale + updateOldNum, curVale + updateNewdNum))
+
+    LOG_INFO('_onModifyCurrency: resp', resp)
+    return su.onCommandResult(0, f'command success', resp)
+
+def _genModifyCurrencyInfoResp(res, itemId, updateNum, oldNum, newNum):
+    return {
+            'effective' : int(res),
+            'itemId' : itemId,
+            'updateNum' : updateNum,
+            'oldNum' : oldNum,
+            'newNum' : newNum
+        }
+
+@gm_cmd('$modifyCurrency', (Player("gbId or Id", raw=True), Int("itemId"), Int("updateNum")), RARG(0), BASE, '修改玩家的货币类道具数量', ALLSIDE, DEVE_GROUPS)
+def modifyCurrency(su, player, itemId, updateNum):
+    LOG_INFO('modifyCurrency', itemId, updateNum)
+    if itemId not in gameconst.ItemIdEnum.GM_MODIFY_CURRENCY_ITEMS:
+        return su.onCommandResult(0, f'command failed, currency unsupported', {})
+    if updateNum == 0:
+        return su.onCommandResult(0, f'command success', {})
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        gamesql.recordModifyCurrency(gbId, itemId, updateNum, functools.partial(_onModifyCurrency, su, gbId, itemId))
+    else:
+        res, oldNum, newNum = player.gmModifyCurrency(itemId, updateNum)
+        resp = {}
+        resp.update(_genModifyCurrencyInfoResp(res, itemId, newNum - oldNum, oldNum, newNum))
+        LOG_INFO('modifyCurrency: resp:', resp)
+        return su.onCommandResult(0, f'command success', resp)
+
+#############################################################
+def _onModifyMulCurrency(su, gbId, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_onModifyMulCurrency err:', err)
+        return
+    if not ret:
+        LOG_ERR('_onModifyMulCurrency: no ret')
+        return
+
+    oldNumList = []
+    newNumList = []
+    updateNumList = []
+    for (_, _, curVale, updateNum, updateOldNum, updateNewdNum) in ret:
+        curVale = int(curVale.decode())
+        updateNum = int(updateNum.decode())
+        updateOldNum = int(updateOldNum.decode())
+        updateNewdNum = int(updateNewdNum.decode())
+        updateNumList.append(updateNum)
+        oldNumList.append(curVale + updateOldNum)
+        newNumList.append(curVale + updateNewdNum)
+
+    resp = {}
+    resp.update(_genModifyMulCurrencyInfoResp(True, updateNumList, oldNumList, newNumList))
+
+    LOG_INFO('_onModifyMulCurrency: resp', resp)
+    return su.onCommandResult(0, f'command success', resp)
+
+def _genModifyMulCurrencyInfoResp(res, updateNumList, oldNumList, newNumList):
+    return {
+            'effective' : int(res),
+            'updateNumList' : updateNumList,
+            'oldNumList' : oldNumList,
+            'newNumList' : newNumList
+        }
+
+@gm_cmd('$modifyMulCurrency', (Player("gbId or Id", raw=True), Str("modifyInfoStr")), RARG(0), BASE, '修改玩家的货币类道具数量', ALLSIDE, DEVE_GROUPS)
+def modifyMulCurrency(su, player, modifyInfoStr):
+    LOG_INFO('modifyMulCurrency', modifyInfoStr)
+
+    modifyInfoList = modifyInfoStr.split(',')
+    modifyNumList = []
+    for updateNumStr in modifyInfoList:
+        updateNum = utils.safe_str_to_int(updateNumStr)
+        modifyNumList.append(updateNum)
+    if len(modifyNumList) != len(gameconst.ItemIdEnum.GM_MODIFY_CURRENCY_ITEMS):
+        return su.onCommandResult(0, f'command failed, modifyInfo len not match {modifyNumList}, {gameconst.ItemIdEnum.GM_MODIFY_CURRENCY_ITEMS}', {})
+    
+    LOG_INFO('modifyMulCurrency: modifyNumList:', modifyNumList)
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        modifyNumListStr = ','.join(str(x) for x in modifyNumList)
+        gamesql.recordMulModifyCurrency(gbId, modifyNumListStr, functools.partial(_onModifyMulCurrency, su, gbId))
+    else:
+        oldNumList = []
+        newNumList = []
+        updateNumList = []
+        for idx, itemId in enumerate(gameconst.ItemIdEnum.GM_MODIFY_CURRENCY_ITEMS):
+            _, oldNum, newNum = player.gmModifyCurrency(itemId, modifyNumList[idx])
+            updateNumList.append(newNum - oldNum)
+            oldNumList.append(oldNum)
+            newNumList.append(newNum)
+        resp = {}
+        resp.update(_genModifyMulCurrencyInfoResp(True, updateNumList, oldNumList, newNumList))
+        LOG_INFO('modifyMulCurrency: resp:', resp)
+        return su.onCommandResult(0, f'command success', resp)
+

@@ -13,14 +13,13 @@ import utils
 import AvatarScores
 import dungeonSrc
 
-CrossServerWaitingClientInitTuple = collections.namedtuple(
-    "CrossServerWaitingClientInitTuple", ("reasonId", "reasonArgs"),
-    defaults = (gameconst.CrossServerWaitingClientInitTuple.DEFAULT, ())
+CrossServerWaitClientInitTuple = collections.namedtuple(
+    "CrossServerWaitClientInitTuple", 
+    ("reasonId", "reasonArgs"),
+    defaults = (gameconst.CrossServerWaitClientInitTuple.DEFAULT, ())
 )
 
 class ICrossServer(object):
-    CROSSSERVER_TIMEOUT = 10
-
     @property
     def crossServerWaitingClientInitTimerId(self):
         if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerWaitingClientInitTimerId):
@@ -35,7 +34,7 @@ class ICrossServer(object):
     def crossServerWaitingClientInitTuple(self):
         if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerWaitingClientInitTuple):
             self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerWaitingClientInitTuple,
-                                 CrossServerWaitingClientInitTuple())
+                                 CrossServerWaitClientInitTuple())
         return self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerWaitingClientInitTuple)
 
     @crossServerWaitingClientInitTuple.setter
@@ -43,7 +42,7 @@ class ICrossServer(object):
         self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerWaitingClientInitTuple, newVal)
 
     def setCrossServerWaitingClientInitReason(self, reasonId, reasonArgs=None, timeout=-1):
-        self.crossServerWaitingClientInitTuple = CrossServerWaitingClientInitTuple(reasonId, reasonArgs or ())
+        self.crossServerWaitingClientInitTuple = CrossServerWaitClientInitTuple(reasonId, reasonArgs or ())
         if timeout <= 0:
             # NOTE(QZZ)(CROSS_SERVER): 经验时间， 需要尽量保证在正常情况下客户端在该时间内loading完数据并回调initClientOnCell
             timeout = 40
@@ -52,8 +51,8 @@ class ICrossServer(object):
             timeout, gametimer.TIMER_TAG_CROSS_SERVER_WAITING_CLIENT_INIT
         ).handleCrossServerWaitingClientInitReasonTimeout(timeout)
 
-    def resetCrossServerWaitingClientInitReason(self):
-        self.crossServerWaitingClientInitTuple = CrossServerWaitingClientInitTuple()
+    def resetCrossServerWaitClientInitReason(self):
+        self.crossServerWaitingClientInitTuple = CrossServerWaitClientInitTuple()
         if self.crossServerWaitingClientInitTimerId > 0:
             self.cancelTimerCB(self.crossServerWaitingClientInitTimerId,
                                  gametimer.TIMER_TAG_CROSS_SERVER_WAITING_CLIENT_INIT)
@@ -69,43 +68,43 @@ class ICrossServer(object):
         _crossServerWaitingClientInitTuple = self.crossServerWaitingClientInitTuple
         LOG_INFO("handleCrossServerWaitingClientInitReason::", _crossServerWaitingClientInitTuple)
 
-        if _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitingClientInitTuple.BACKSELECTCHARACTER:
-            self.resetCrossServerWaitingClientInitReason()
+        if _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitClientInitTuple.BACKSELECTCHARACTER:
+            self.resetCrossServerWaitClientInitReason()
             self.base.backSelectCharacterBase(True)
 
-        elif _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitingClientInitTuple.OFFLINE:
+        elif _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitClientInitTuple.OFFLINE:
             _reason, *_ = _crossServerWaitingClientInitTuple.reasonArgs
-            self.resetCrossServerWaitingClientInitReason()
+            self.resetCrossServerWaitClientInitReason()
             self._offline(_reason)
 
         else:
-            self.resetCrossServerWaitingClientInitReason()
+            self.resetCrossServerWaitClientInitReason()
 
     def __init__(self):
         pass
 
-    def putCrossServerMethodSyncToLocalServer(self, fnname, args=None):
-        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell):
-            self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell, dict())
-        _tempDict = self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell)
-        _tempDict.setdefault(fnname, collections.deque()).append(args)
-
     def popleftCrossServerMethodSyncToLocalServer(self, fnname):
         if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell):
             self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell, dict())
-        _tempDict = self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell)
-        _fnqueue = _tempDict.setdefault(fnname, collections.deque())
+        _tempDic = self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell)
+        _fnqueue = _tempDic.setdefault(fnname, collections.deque())
         if not _fnqueue:
             return ()
         return _fnqueue.popleft()
 
-    @property
-    def isCrossServer(self):
-        return self.cellCrossServerState not in (gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER, gameconst.CrossServerState.ENUM_GOTO_CROSS_SERVER)
+    def putCrossServerMethodSyncToLocalServer(self, fnname, args=None):
+        if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell):
+            self.setTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell, dict())
+        _tempDic = self.getTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerCell)
+        _tempDic.setdefault(fnname, collections.deque()).append(args)
 
     @property
     def isCrossServerInOtherServer(self):
         return self.isCrossServer and not self.isInLocalServer
+
+    @property
+    def isCrossServer(self):
+        return self.cellCrossServerState not in (gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER, gameconst.CrossServerState.ENUM_GOTO_CROSS_SERVER)
 
     @property
     def isCrossServerInLocalServer(self):
@@ -117,12 +116,12 @@ class ICrossServer(object):
             isCrossServerStart = self.cellCrossServerState == gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER
             isCrossServerEnd = state == gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER
             if isCrossServerStart:
-                for e in self.getWitnessesWithHide():
-                    e and e.onCrossServerStart(self)
+                for _e in self.getWitnessesWithHide():
+                    _e and _e.onCrossServerStart(self)
 
             if isCrossServerEnd:
-                for e in self.getWitnessesWithHide():
-                    e and e.onCrossServerEnd(self)
+                for _e in self.getWitnessesWithHide():
+                    _e and _e.onCrossServerEnd(self)
 
             self.cellCrossServerState = state
 
@@ -137,7 +136,7 @@ class ICrossServer(object):
 
     # CrossServer
     def onCrossServerSyncOtherInitedDataToCrossServerCell(self, crossData, cellInitData):
-        LOG_WARN("onCrossServerSyncOtherInitedDataToCrossServerCell::", crossData, cellInitData)
+        LOG_WARN("onCrossServerSyncOtherInitedDataToCrossServerCell::", cellInitData, crossData)
         self.scoresInfo = AvatarScores.avatarScoresInstance.createObjFromDict(cellInitData["scoresInfo"])
         self.totalScore = cellInitData["totalScore"]
         self.onAllAvatarScoreBeInited()

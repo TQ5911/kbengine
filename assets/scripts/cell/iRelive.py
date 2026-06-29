@@ -67,18 +67,11 @@ class IRelive(object):
 
         else:
             self.addBuff(_buffId, _beInjuredBuffLevel, self.id)
-
-    def _onDeadPenalty(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
-        LOG_DBG('_onDeadPenalty', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
-        _now = utils.curTS()
+    
+    def _dealReliveTime(self, _now, dpData):
         self.lastDeadTime = _now # 上次死亡时间
-
-        _dpData = self._spaceDeathPenaltyData(srcType)
-
-        self._dealDeathDrop(killerGbId, killerName, _dpData['dropGear'])
-
         # 处理cd时间
-        if _dpData['addReliveTime']:
+        if dpData['addReliveTime']:
             if _now <= self.deathResetCD:
                 self.deathPenaltyTimes += 1 # 带有死亡惩罚的死亡次数
             else:
@@ -92,6 +85,16 @@ class IRelive(object):
 
         else:
             self.curReliveCD = 0
+
+    def _onDeadPenalty(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
+        LOG_DBG('_onDeadPenalty', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
+        _now = utils.curTS()
+
+        _dpData = self._spaceDeathPenaltyData(srcType)
+
+        self._dealDeathDrop(killerGbId, killerName, _dpData['dropGear'])
+
+        self._dealReliveTime(_now, _dpData)
 
         # 矿战特殊处理cd
         if self.spaceMgr:
@@ -125,6 +128,14 @@ class IRelive(object):
             self._deathPenaltyBeInjured()
         LOG_DBG('addDeathPenaltyVal', killerId, creationId, srcType)
         self.base.addDeathPenaltyVal(_deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType})
+
+        self.syncMethodCallToLocalServerCell("onCrossServerDeadSync", (_now, _dpData, _deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType}))
+
+    #跨服死亡分4块，1复活时间相关， 2死亡爆装，3经验，4死亡扣钱, 经验在_modifyExp里处理，其他在这里处理
+    def onCrossServerDeadSync(self, now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData):
+        LOG_INFO("onCrossServerDeadSync", now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
+        self._dealReliveTime(now, dpData)
+        self.base.addDeathPenaltyVal(deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
 
     @property
     def reliveCDEndTime(self):

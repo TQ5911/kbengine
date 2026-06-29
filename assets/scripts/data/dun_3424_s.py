@@ -1,37 +1,96 @@
 datas ={
   "SpaceConfig": {
+    "BornPos": {
+      "34240001": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BornPos",
+        "ClassNameType": 6,
+        "CustomID": "",
+        "Dir": 69.64355,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 34240001,
+        "PosX": 593.31,
+        "PosY": 1364.274,
+        "PosZ": 686.03,
+        "Props": {
+          "CameraId": 0,
+          "GateType": 1,
+          "MapEntityType": 0,
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1,
+          "TelDir": 172.9038,
+          "TelX": 595.3095,
+          "TelY": 1364.126,
+          "TelZ": 698.5129
+        }
+      }
+    },
     "InitEntities": {
-      "Monster": {
-        "34240001": {
+      "Teleporter": {
+        "34248010": {
           "ActivityID": 0,
           "AttachedGIDList": [],
-          "ClassName": "Monster",
-          "ClassNameType": 0,
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
           "CustomID": "",
-          "Dir": 0.0,
+          "Dir": 172.9038,
           "DisplayName": "",
           "EliteCustomID": "",
-          "EntityID": 0,
-          "ID": 34240001,
-          "PosX": 0.0,
-          "PosY": 0.0,
-          "PosZ": 0.0,
+          "EntityID": 17310002,
+          "ID": 34248010,
+          "PosX": 590.86,
+          "PosY": 1364.126,
+          "PosZ": 696.96,
           "Props": {
+            "CameraId": 0,
+            "GateType": 1,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "TelDir": 172.9038,
+            "TelX": 595.2976,
+            "TelY": 1364.126,
+            "TelZ": 698.6041
+          }
+        }
+      },
+      "Collection": {
+        "34248011": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 250.9674,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 16002003,
+          "ID": 34248011,
+          "PosX": 611.26,
+          "PosY": 1364.126,
+          "PosZ": 692.73,
+          "Props": {
+            "CameraId": 0,
             "ChestGroupID": "",
-            "GroupID": "",
-            "Level": 1,
-            "LightPillar": "",
-            "MapEntityScale": 0,
+            "GateType": 1,
+            "IsOnGround": 1,
+            "IsOpen": 1,
             "MapEntityType": 0,
-            "MonsterGroupID": "",
-            "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
-            "ShowMonsterGroupID": ""
+            "TelDir": 172.9038,
+            "TelX": 595.3095,
+            "TelY": 1364.126,
+            "TelZ": 698.5129
           }
         }
       }

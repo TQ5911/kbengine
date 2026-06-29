@@ -206,7 +206,15 @@ class MailCacheData(userType.UserSingleType):
         if not _mail:
             return
         _mail.setReadState(gameconst.MailReadState.HasRead)
-        LogTrackingMgr.LogTrackingMgr.Mail_Read(
+
+        result = []
+        attachStr = _mail.attach.getItemsTLogStr()
+        if ',' in attachStr:
+            tmp = {int(k): int(v) for k, v in (pair.split(',') for pair in attachStr.split(';'))}
+            for itemId, itemCount in tmp.items():
+                result.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
+
+        LogTrackingMgr.LogTrackingMgr.mail_read(
             avatar.gbID, 
             avatar.accountEntity.clientDistinctId, 
             avatar.gbID, 
@@ -218,7 +226,7 @@ class MailCacheData(userType.UserSingleType):
             _mail.srcSubType, 
             _mail.opUUID, 
             _mail.source, 
-            _mail.attach)
+            result)
 
     def setAttachHasGet(self, mailGBID):
         _mail = self.getMailByGBID(mailGBID)

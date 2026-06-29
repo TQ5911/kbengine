@@ -145,7 +145,7 @@ class ReceiverVal(userType.UserSingleType):
         self.school = fcVal.school
         self.level = fcVal.level
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             "gbId": self.gbId,
             "name": self.name,
@@ -177,7 +177,7 @@ class FriendBlockVal(userType.UserSingleType):
             "ts": self.ts
         }
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             "gbId": self.gbId,
             "name": self.name,
@@ -193,7 +193,7 @@ class RecentVal(userType.UserSingleType):
         self.gbId = gbId
         self.ts = ts
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             "gbId": self.gbId,
             "ts": self.ts
@@ -230,18 +230,18 @@ class Friendship(userType.UserSingleType):
     def _checkIgnores_(cls):
         return ["friendsDict", "strangersDict", "blockDict"]
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         receiveList = []
         for receiver in self.recvDict.values():
-            receiveList.append(receiver.toSavedDict())
+            receiveList.append(receiver.toStreamSavedDic())
 
         recentList = []
         for _recentVal in self.recentDic.values():
-            recentList.append(_recentVal.toSavedDict())
+            recentList.append(_recentVal.toStreamSavedDic())
 
         msgList = []
         for msgListVal in self.msgsDic.values():
-            msgList.append(msgListVal.toSavedDict())
+            msgList.append(msgListVal.toStreamSavedDic())
 
         blockList = []
         for _blockVal in self.blockDict.values():
@@ -347,7 +347,7 @@ class Friendship(userType.UserSingleType):
         receiver.timestamp = timestamp
         self.recvDict[receiver.gbId] = receiver
 
-        return receiver.toSavedDict()
+        return receiver.toStreamSavedDic()
 
     def getFriendsClientData(self):
         friendsList = []
@@ -359,7 +359,7 @@ class Friendship(userType.UserSingleType):
     def getReceiveReqClientData(self):
         receiveList = []
         for receiver in self.recvDict.values():
-            receiveList.append(receiver.toSavedDict())
+            receiveList.append(receiver.toStreamSavedDic())
 
         return receiveList
 
@@ -516,7 +516,7 @@ class Friendship(userType.UserSingleType):
     def getRecentClientData(self):
         recentList = []
         for _recentVal in self.recentDic.values():
-            recentList.append(_recentVal.toSavedDict())
+            recentList.append(_recentVal.toStreamSavedDic())
 
         return recentList
 
@@ -644,12 +644,12 @@ class Friendship(userType.UserSingleType):
             return
 
         _bVal.updateFromFcVal(fcVal)
-        return _bVal.toSavedDict()
+        return _bVal.toStreamSavedDic()
 
     def getBlocksClientData(self):
         blocksList = []
         for block in self.blockDict.values():
-            blocksList.append(block.toSavedDict())
+            blocksList.append(block.toStreamSavedDic())
 
         return blocksList
 

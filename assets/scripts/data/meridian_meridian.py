@@ -22,7 +22,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjFullHp', 125], ['adjMaxMagicAtk', 2], ['adjMaxPhysicalArmor', 2], ['adjMaxMagicArmor', 2], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 125], ['adjMaxPhysicalAtk', 2], ['adjMaxPhysicalArmor', 2], ['adjMaxMagicArmor', 2], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "needItems": _tools.ROList([[30000279, 10]]),
-        "needCoins": _tools.ROList([30000002, 20000])
+        "needCoins": _tools.ROList([30000002, 40000])
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -30,8 +30,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 150], ['adjMaxMagicAtk', 2], ['adjMaxPhysicalArmor', 2], ['adjMaxMagicArmor', 2], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 150], ['adjMaxMagicAtk', 2], ['adjMaxPhysicalArmor', 2], ['adjMaxMagicArmor', 2], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 150], ['adjMaxPhysicalAtk', 2], ['adjMaxPhysicalArmor', 2], ['adjMaxMagicArmor', 2], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000279, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000279, 20]]),
+        "needCoins": _tools.ROList([30000002, 50000])
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -39,8 +39,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 175], ['adjMaxMagicAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 175], ['adjMaxMagicAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 175], ['adjMaxPhysicalAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000279, 25]]),
-        "needCoins": _tools.ROList([30000002, 50000])
+        "needItems": _tools.ROList([[30000279, 30]]),
+        "needCoins": _tools.ROList([30000002, 60000])
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -48,7 +48,7 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 200], ['adjMaxMagicAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 200], ['adjMaxMagicAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 200], ['adjMaxPhysicalAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000280, 10]]),
+        "needItems": _tools.ROList([[30000279, 90]]),
         "needCoins": _tools.ROList([30000002, 100000])
     }),
     5: _tools.RODict({
@@ -57,7 +57,7 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 225], ['adjMaxMagicAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 225], ['adjMaxMagicAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 225], ['adjMaxPhysicalAtk', 3], ['adjMaxPhysicalArmor', 3], ['adjMaxMagicArmor', 3], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000280, 15]]),
+        "needItems": _tools.ROList([[30000279, 180]]),
         "needCoins": _tools.ROList([30000002, 300000])
     }),
     6: _tools.RODict({
@@ -66,7 +66,7 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 250], ['adjMaxMagicAtk', 4], ['adjMaxPhysicalArmor', 4], ['adjMaxMagicArmor', 4], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 250], ['adjMaxMagicAtk', 4], ['adjMaxPhysicalArmor', 4], ['adjMaxMagicArmor', 4], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 250], ['adjMaxPhysicalAtk', 4], ['adjMaxPhysicalArmor', 4], ['adjMaxMagicArmor', 4], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000280, 25]]),
+        "needItems": _tools.ROList([[30000280, 20]]),
         "needCoins": _tools.ROList([30000002, 600000])
     }),
     7: _tools.RODict({
@@ -84,7 +84,7 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 300], ['adjMaxMagicAtk', 4], ['adjMaxPhysicalArmor', 4], ['adjMaxMagicArmor', 4], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 300], ['adjMaxMagicAtk', 4], ['adjMaxPhysicalArmor', 4], ['adjMaxMagicArmor', 4], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 300], ['adjMaxPhysicalAtk', 4], ['adjMaxPhysicalArmor', 4], ['adjMaxMagicArmor', 4], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000280, 60]]),
+        "needItems": _tools.ROList([[30000280, 80]]),
         "needCoins": _tools.ROList([30000002, 2000000])
     }),
     9: _tools.RODict({
@@ -93,8 +93,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 325], ['adjMaxMagicAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 325], ['adjMaxMagicAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 325], ['adjMaxPhysicalAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000281, 10]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000280, 120]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     10: _tools.RODict({
         "ID": 10,
@@ -102,8 +102,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 350], ['adjMaxMagicAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 350], ['adjMaxMagicAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 350], ['adjMaxPhysicalAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000281, 15]]),
-        "needCoins": _tools.ROList([30000002, 5000000])
+        "needItems": _tools.ROList([[30000280, 180]]),
+        "needCoins": _tools.ROList([30000002, 7000000])
     }),
     11: _tools.RODict({
         "ID": 11,
@@ -112,7 +112,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjFullHp', 375], ['adjMaxMagicAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 375], ['adjMaxPhysicalAtk', 5], ['adjMaxPhysicalArmor', 5], ['adjMaxMagicArmor', 5], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "needItems": _tools.ROList([[30000281, 25]]),
-        "needCoins": _tools.ROList([30000002, 10000000])
+        "needCoins": _tools.ROList([30000002, 12000000])
     }),
     12: _tools.RODict({
         "ID": 12,
@@ -121,7 +121,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjFullHp', 400], ['adjMaxMagicAtk', 6], ['adjMaxPhysicalArmor', 6], ['adjMaxMagicArmor', 6], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 400], ['adjMaxPhysicalAtk', 6], ['adjMaxPhysicalArmor', 6], ['adjMaxMagicArmor', 6], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "needItems": _tools.ROList([[30000281, 30]]),
-        "needCoins": _tools.ROList([30000002, 15000000])
+        "needCoins": _tools.ROList([30000002, 17000000])
     }),
     13: _tools.RODict({
         "ID": 13,
@@ -138,16 +138,16 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 450], ['adjMaxMagicAtk', 6], ['adjMaxPhysicalArmor', 6], ['adjMaxMagicArmor', 6], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 450], ['adjMaxMagicAtk', 6], ['adjMaxPhysicalArmor', 6], ['adjMaxMagicArmor', 6], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 450], ['adjMaxPhysicalAtk', 6], ['adjMaxPhysicalArmor', 6], ['adjMaxMagicArmor', 6], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000282, 4]]),
+        "needItems": _tools.ROList([[30000281, 40]]),
         "needCoins": _tools.ROList([30000002, 25000000])
     }),
     15: _tools.RODict({
         "ID": 15,
         "prop0": None,
-        "prop1001": _tools.ROList([['adjFullHp', 475], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.00999999999999998], ['adjMonsterDmgAnti', 0.00999999999999998]]),
-        "prop1002": _tools.ROList([['adjFullHp', 475], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.00999999999999998], ['adjMonsterDmgAnti', 0.00999999999999998]]),
-        "prop1003": _tools.ROList([['adjFullHp', 475], ['adjMaxPhysicalAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.00999999999999998], ['adjMonsterDmgAnti', 0.00999999999999998]]),
-        "needItems": _tools.ROList([[30000282, 4]]),
+        "prop1001": _tools.ROList([['adjFullHp', 475], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
+        "prop1002": _tools.ROList([['adjFullHp', 475], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
+        "prop1003": _tools.ROList([['adjFullHp', 475], ['adjMaxPhysicalAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
+        "needItems": _tools.ROList([[30000281, 50]]),
         "needCoins": _tools.ROList([30000002, 30000000])
     }),
     16: _tools.RODict({
@@ -156,8 +156,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 500], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 500], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 500], ['adjMaxPhysicalAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000282, 5]]),
-        "needCoins": _tools.ROList([30000002, 35000000])
+        "needItems": _tools.ROList([[30000282, 6]]),
+        "needCoins": _tools.ROList([30000002, 40000000])
     }),
     17: _tools.RODict({
         "ID": 17,
@@ -165,17 +165,17 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 525], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 525], ['adjMaxMagicAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 525], ['adjMaxPhysicalAtk', 7], ['adjMaxPhysicalArmor', 7], ['adjMaxMagicArmor', 7], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000282, 6]]),
-        "needCoins": _tools.ROList([30000002, 40000000])
+        "needItems": _tools.ROList([[30000282, 7]]),
+        "needCoins": _tools.ROList([30000002, 50000000])
     }),
     18: _tools.RODict({
         "ID": 18,
         "prop0": None,
-        "prop1001": _tools.ROList([['adjFullHp', 550], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.00999999999999998], ['adjMonsterDmgAnti', 0.00999999999999998]]),
-        "prop1002": _tools.ROList([['adjFullHp', 550], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.00999999999999998], ['adjMonsterDmgAnti', 0.00999999999999998]]),
-        "prop1003": _tools.ROList([['adjFullHp', 550], ['adjMaxPhysicalAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.00999999999999998], ['adjMonsterDmgAnti', 0.00999999999999998]]),
-        "needItems": _tools.ROList([[30000282, 7]]),
-        "needCoins": _tools.ROList([30000002, 45000000])
+        "prop1001": _tools.ROList([['adjFullHp', 550], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
+        "prop1002": _tools.ROList([['adjFullHp', 550], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
+        "prop1003": _tools.ROList([['adjFullHp', 550], ['adjMaxPhysicalAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
+        "needItems": _tools.ROList([[30000282, 8]]),
+        "needCoins": _tools.ROList([30000002, 60000000])
     }),
     19: _tools.RODict({
         "ID": 19,
@@ -183,8 +183,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjFullHp', 575], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1002": _tools.ROList([['adjFullHp', 575], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 575], ['adjMaxPhysicalAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
-        "needItems": _tools.ROList([[30000282, 8]]),
-        "needCoins": _tools.ROList([30000002, 50000000])
+        "needItems": _tools.ROList([[30000282, 9]]),
+        "needCoins": _tools.ROList([30000002, 70000000])
     }),
     20: _tools.RODict({
         "ID": 20,
@@ -193,7 +193,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjFullHp', 600], ['adjMaxMagicAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "prop1003": _tools.ROList([['adjFullHp', 600], ['adjMaxPhysicalAtk', 8], ['adjMaxPhysicalArmor', 8], ['adjMaxMagicArmor', 8], ['adjCopper', 0.015], ['adjExpGrow', 0.015], ['adjMonsterDmg', 0.01], ['adjMonsterDmgAnti', 0.01]]),
         "needItems": _tools.ROList([[30000282, 10]]),
-        "needCoins": _tools.ROList([30000002, 55000000])
+        "needCoins": _tools.ROList([30000002, 80000000])
     })
 })
 minKey = 1

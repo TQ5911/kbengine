@@ -429,6 +429,14 @@ def reportUrl():
     return url
 
 @cache_wraper
+def queryRechargeUrl():
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/queryRechargeUrl')
+    except:
+        url = ''
+    return url
+
+@cache_wraper
 def patchVersion():
     try:
         versionStr = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/patchVersion')
@@ -908,7 +916,7 @@ def gameId():
     try:
         ret = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/gameId')
     except:
-        ret = ''
+        ret = 'fengyan'
     return ret
 
 

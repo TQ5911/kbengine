@@ -3,6 +3,7 @@
         <Interface> iBaseNoCell                 </Interface>
         <Interface> iGlobal                     </Interface>
         <Interface> iTimerBase                  </Interface>
+        <Interface>         iCycleEvent                 </Interface>
     </Interfaces>
 
     <Properties>
@@ -10,9 +11,27 @@
             <Type>      PY_DICT         </Type>
             <Flags>     BASE            </Flags>
         </guildDic>
+
+        <guildStatData>
+            <Type>          PY_DICT             </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                  </Default>
+            <Persistent>    true                </Persistent>
+        </guildStatData>
+
+        <gamePlayScoreLimit>
+            <Type>      UINT32     </Type>
+            <Flags>     BASE       </Flags>
+            <Default>   0          </Default>
+            <Persistent>    true   </Persistent>
+        </gamePlayScoreLimit>
     </Properties>
 
     <BaseMethods>
+        <statGuildData>
+            <Arg>   UINT8   </Arg>
+        </statGuildData>
+
         <getGuildsGbIdAndBox>
             <Arg>       ARRAY   <of>    GUILD_UUID  </of>     </Arg>
             <Arg>       ENTITYCALL              </Arg>
@@ -43,6 +62,12 @@
             <Arg>       ENTITYCALL              </Arg>
         </doGetGuildList>
 
+        <doGetGamePlayScoreLimit>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </doGetGamePlayScoreLimit>
+        
         <updateGuildCache>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       PYTHON                  </Arg>
@@ -96,5 +121,10 @@
             <Arg>       BOOL                    </Arg>
             <Arg>       PYTHON                  </Arg>
         </syncGuildMineWarToSpaceMgr>
+
+        <doGetGuildGamePlayData>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>    
+        </doGetGuildGamePlayData>
     </BaseMethods>
 </root>

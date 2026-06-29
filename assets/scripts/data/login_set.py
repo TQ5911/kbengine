@@ -913,10 +913,14 @@ datas = _tools.RODict({
     }),
     "register_blockNumbers": _tools.RODict({
         "ID": "register_blockNumbers",
-        "value": ([17000000000, 170999999999], [17100000000, 171999999999], [16500000000, 165999999999], [16700000000, 167999999999], [16200000000, 162999999999]),
+        "value": ([17000000000, 17099999999], [17100000000, 17199999999], [16500000000, 16599999999], [16700000000, 16799999999], [16200000000, 16299999999]),
     }),
     "register_blockNumbersMsg": _tools.RODict({
         "ID": "register_blockNumbersMsg",
         "value": 54980012,
+    }),
+    "loginFailDialogMsg": _tools.RODict({
+        "ID": "loginFailDialogMsg",
+        "value": 54482024,
     })
 })

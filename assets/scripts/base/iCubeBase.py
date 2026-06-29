@@ -53,8 +53,18 @@ class ICubeBase(object):
         gameengine.getCubeStub(1).doEnterCubeReady(
             self, self.gbID, extra)
 
-    def afterEnterCubeDeductTimes(self):
-        self.modifyLeftCubeTimes(-1, AAC_AACDD.datas.BONUS_SRC_ENTER_CUBE, KBEngine.genUUID64())
+    def afterEnterCubeDeductTimes(self, extra):
+        floor = extra.get('floor', 0)
+        ticketType = self.modifyLeftCubeTimes(-1, AAC_AACDD.datas.BONUS_SRC_ENTER_CUBE, KBEngine.genUUID64())
+        if floor:
+            LogTrackingMgr.LogTrackingMgr.cube_enter(
+                self.gbID,
+                self.accountEntity.clientDistinctId, 
+                floor,
+                utils.curTS(),
+                ticketType,
+                1,
+            )
 
     def autoRenewCubeRoom(self, switchData, cubeDurCtx):
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
@@ -176,6 +186,7 @@ class ICubeBase(object):
         self.deductWealth(_src, _award, opUUID, _detail)
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.cubeUseCoinTimes += num
+            self.addGuildCommissionGold(num * itemNum)
         else:
             self.cubeUseItemTimes = min(self.cubeUseItemTimes + num, 255)
 
@@ -185,20 +196,29 @@ class ICubeBase(object):
         else:
             self.modifyLeftCubeTimes(num, _src, opUUID)
 
+        LogTrackingMgr.LogTrackingMgr.cube_ticket_buy(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            addType,
+            num,
+        )
         return True
 
     def modifyLeftCubeTimes(self, delta, src, opUUID):
         if delta > 0:
             self.paidCubeTimes += delta
+            ticketType = gameconst.WONDER_LAND_ENTER_TICKET_PAID
 
         else:
-            if self.leftCubeTimes > -delta:
+            if self.leftCubeTimes >= -delta:
                 self.leftCubeTimes += delta
+                ticketType = gameconst.WONDER_LAND_ENTER_TICKET_FREE
 
             else:
                 self.paidCubeTimes = max(0, self.paidCubeTimes + self.leftCubeTimes + delta)
                 self.paidCubeTimes = min(255, self.paidCubeTimes)
                 self.leftCubeTimes = 0
+                ticketType = gameconst.WONDER_LAND_ENTER_TICKET_PAID
 
         LogTrackingMgr.LogTrackingMgr.Cube_Ticket(
             self.gbID,
@@ -210,6 +230,7 @@ class ICubeBase(object):
             self.paidCubeTimes,
             opUUID,
         )
+        return ticketType
 
     def addRoomDurationFailed(self, opUUID, addType, itemId, itemNum, num):
         LOG_INFO('addRoomDurationFailed: {}'.format(opUUID))

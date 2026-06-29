@@ -20,6 +20,9 @@ import creep_base as CBD
 import gameconfig
 import conflict_conflict_def as C_C_DD
 import const_const as CONST
+import agent_agentFunction as A_AFD
+import agent_agentConfig as A_ACD
+import formula
 
 
 class IAbyssBase(object):
@@ -151,7 +154,8 @@ class IAbyssBase(object):
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.abyssAddTimes -= num
-
+            self.addGuildCommissionGold(num * itemNum)
+            
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_ABYSS_TIMES
         _detail = gameclass.AwardDetailCls()
         self.deductWealth(_src, _award, opUUID, _detail)
@@ -241,6 +245,11 @@ class IAbyssBase(object):
     @utils.isMyself
     def enterCrossServerAbyss(self, exposed, floor):
         LOG_INFO('IAbyssBase::enterCrossServerAbyss: floor: {}'.format(floor))
+        if not self.checkAuthDisassembleAndMsg(
+                A_AFD.UIAbyssPanel, 
+                A_ACD.datas['restrictedPromptMsg2']['value']):
+            return
+
         noTicket = self.sumAbyssTicket() <= 0
         self.cell.checkAndEnterCrossServerAbyss(floor, noTicket)
 
@@ -251,12 +260,13 @@ class IAbyssBase(object):
                             gameconst.CrossServerReasonNo.ENTER_CROSS_ABYSS,
                             gameconst.CrossServerCBComponent.ENUM_BASE,
                             "onEnterCrossAbyssSpaceRemotely",
-                            (serverId, {"floor": floor}))
+                            (serverId, {"floor": floor}),
+                            formula.combineLineSpaceNo(AB_FD.datas[floor]['ID'], 0)
+                            )
 
     #在跨服中调用
     def onEnterCrossAbyssSpaceRemotely(self, serverId, extra):
-        LOG_DBG('[lj]on enter cross abyss space remotely', serverId, extra)
-        self.cell.enterAbyss(extra["floor"])
+        LOG_INFO('[lj]on enter cross abyss space remotely', serverId, extra)
 
     @gamedecorator.crossServer
     def leaveCrossServerAbyss(self, exposed):

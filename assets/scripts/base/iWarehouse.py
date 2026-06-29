@@ -25,25 +25,23 @@ import itemData_set as IDSD
 MAX_ROOMS_NUM = 4
 
 class IWarehouse(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(IWarehouse, self).__init__()
 
     def postReloadScript(self):
+        self.warehouse.reloadScript()
         if hasattr(super(IWarehouse, self), 'postReloadScript'):
             super(IWarehouse, self).postReloadScript()
-
-        self.warehouse.reloadScript()
 
     def doWarehouseDailyUpdate(self):
         self.warehouse.warehouseDailyUpdate()
         return
 
     def sendWarehouseData(self):
-        dic = self.warehouse.toBagSavedDict()
-        jsonStr = json.dumps(dic).encode('ascii')
-        zStr = gzip.compress(jsonStr)
-        self.streamStringProxy(zStr, '', gameconst.StreamStringID.WAREHOUSE_INFO)
-        return
+        _dic = self.warehouse.toBagSavedDict()
+        _jsonStr = json.dumps(_dic).encode('ascii')
+        _zStr = gzip.compress(_jsonStr)
+        self.streamStringProxy(_zStr, '', gameconst.StreamStringID.WAREHOUSE_INFO)
 
     def warehouseExpansion(self, pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context):
         LOG_INFO("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
@@ -227,10 +225,9 @@ class IWarehouse(object):
         LOG_INFO('in reqWarehouseSort:')
         if self.warehouse.doBagSort(self):
             dic = self.warehouse.toBagSavedDict()
-            jsonStr = json.dumps(dic).encode('ascii')
-            zStr = gzip.compress(jsonStr)
-            self.streamStringProxy(zStr, '', gameconst.StreamStringID.WAREHOUSE_SORT_INFO)
-        return
+            _jsonStr = json.dumps(dic).encode('ascii')
+            _zStr = gzip.compress(_jsonStr)
+            self.streamStringProxy(_zStr, '', gameconst.StreamStringID.WAREHOUSE_SORT_INFO)
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseLockItem(self, exposed, gridId, itemId, uniqueId, lockStatus):

@@ -112,7 +112,7 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             return
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
-            _playerVal.playerStatus = linePlayers.LinePlayerVal.IN_LINE
+            _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
             if _playerVal.curSpaceNo != spaceNo:
                 LOG_ERR('AbyssStub::onEnterAbyssSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))

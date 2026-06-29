@@ -10,7 +10,7 @@ import mail_mail as MAMAD
 import dropAward
 import gameengine
 import gameconst
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import antiAddictCategory_antiAddictCategory_def as AAC_AAC_DD
 import message_Message_def as MMD
 import mail_config as MACF
 import mailAssistor
@@ -55,7 +55,6 @@ class ImpMail(object):
         # 3. 下发邮件列表
         self.mailInitLockedTime = utils.curTS()+60
         mailAssistor.checkAccountMails(self.accountName, self.accountEntity.accountType, self.gbID, self.id)
-        return
 
     def onCheckAccountMailsFinished(self):
         self.startLoadSyncGlobalMailInfo()
@@ -75,11 +74,6 @@ class ImpMail(object):
         if not self.checkGlobalMail(globalMail):
             return
         self.doInsertGlobalMail(0, globalMail)
-        return
-
-    def startLoadSyncGlobalMailInfo(self):
-        # 首先获得同步过的全服邮件最新信息
-        gamesql.loadLastGlobalMailInfo(self.gbID, self.loadLastGlobalMailInfoCallback)
 
     def loadLastGlobalMailInfoCallback(self, ret, num, insertId, err):
         LOG_INFO('loadLastGlobalMailInfoCallback:', ret, num, insertId, err)
@@ -103,26 +97,36 @@ class ImpMail(object):
             newGlobalMailList.append(globalMail)
 
         if newGlobalMailList:
-            opUUID = KBEngine.genUUID64()
+            _opUUID = KBEngine.genUUID64()
             globalMail = newGlobalMailList.pop()
-            utils.setCallbackTmpInfo(self, opUUID, newGlobalMailList)
-            self.doInsertGlobalMail(opUUID, globalMail, True)
+            utils.setCallbackTmpInfo(self, _opUUID, newGlobalMailList)
+            self.doInsertGlobalMail(_opUUID, globalMail, True)
         else:
             #没有新的全服邮件
             LOG_INFO('no global mail, mail init finished')
             self.mailInitFinishedOnLogin()
             self.startLoadMails(gameconst.MailLoadType.GLOBAL_AND_PLAYER_MAIL)
-        return
+
+    def startLoadSyncGlobalMailInfo(self):
+        # 首先获得同步过的全服邮件最新信息
+        gamesql.loadLastGlobalMailInfo(self.gbID, self.loadLastGlobalMailInfoCallback)
 
     def doInsertGlobalMail(self, opUUID, globalMail, isLogin = False):
-        mailAssistor.sendMailToPlayers([self.gbID], globalMail.mailId, extraAttach=globalMail.extraAttach,
-                                       despArgs=globalMail.despArgs, globalMailGBID=globalMail.globalMailGBID,
-                                       createTime=globalMail.createTime, expiredTime=globalMail.expiredTime, title=globalMail.title,
-                                       cont=globalMail.cont, srcType=globalMail.srcType, callback=lambda ret, num, insertId, err, mailGBID:
-                                    self.insertGlobalMailCallback(ret, num, insertId, err, mailGBID, opUUID, globalMail.createTime, isLogin), isGlobal = True)
-        return
+        mailAssistor.sendMailToPlayers(
+            [self.gbID], 
+            globalMail.mailId, 
+            extraAttach=globalMail.extraAttach,
+            despArgs=globalMail.despArgs, 
+            createTime=globalMail.createTime, 
+            globalMailGBID=globalMail.globalMailGBID,
+            title=globalMail.title,
+            expiredTime=globalMail.expiredTime, 
+            cont=globalMail.cont, 
+            srcType=globalMail.srcType, 
+            callback=functools.partial(self.insertGlobalMailCallback, opUUID, globalMail.createTime, isLogin),
+            isGlobal = True)
 
-    def insertGlobalMailCallback(self, ret, num, insertId, err, mailGBID, opUUID, mailCreateTime, isLogin):
+    def insertGlobalMailCallback(self, opUUID, mailCreateTime, isLogin, ret, num, insertId, err, mailGBID):
         LOG_INFO('insertGlobalMailCallback:', ret, num, insertId, err, mailGBID, opUUID, mailCreateTime, isLogin)
         if err:
             gameengine.panicStack('insertGlobalMailCallback, error:', ret, num, insertId, err)
@@ -153,10 +157,13 @@ class ImpMail(object):
     def mailInitFinishedOnLogin(self):
         LOG_INFO('mailInitFinishedOnLogin')
         self.mailInitLockedTime = 0
-        lastGlobalMailTime = mailAssistor.getLastGlobalMailTime()
-        if lastGlobalMailTime:
-            gamesql.updateLastGlobaMailInfo(self.gbID, lastGlobalMailTime, lambda ret, num, insertId, err:
-                                            self._updateLastGlobalMailInfoCallback(ret, num, insertId, err, lastGlobalMailTime))
+        _lastGlobalMailTime = mailAssistor.getLastGlobalMailTime()
+        if _lastGlobalMailTime:
+            gamesql.updateLastGlobaMailInfo(
+                self.gbID, 
+                _lastGlobalMailTime, 
+                lambda ret, num, insertId, err:
+                                            self._updateLastGlobalMailInfoCallback(ret, num, insertId, err, _lastGlobalMailTime))
 
     def _updateLastGlobalMailInfoCallback(self, ret, num, insertId, err, lastGlobalMailTime):
         LOG_INFO('_updateLastGlobalMailInfoCallback:', ret, num, insertId, err, lastGlobalMailTime)
@@ -218,14 +225,14 @@ class ImpMail(object):
                 readStat = int(mailRowData[4].decode())
                 attachStat = int(mailRowData[10].decode())
                 if attachStat == gameconst.MailAttachState.NotGet or readStat == gameconst.MailReadState.NotRead:
-                    createTime = int(mailRowData[6].decode())
+                    _createTime = int(mailRowData[6].decode())
                     validMailGBIDSet.add(mailGBID)
-                    if createTime == minMailTime:
+                    if _createTime == minMailTime:
                         minMailTiemMailList.append(mailGBID)
                     if len(validMailGBIDSet) == maxMailNum:
                         break
 
-            delMailGBIDList = []
+            _delMailGBIDList = []
             leftNum = maxMailNum-len(validMailGBIDSet)
             for mailRowData in ret:
                 mailGBID = int(mailRowData[2].decode())
@@ -235,12 +242,12 @@ class ImpMail(object):
                     validMailList.append(mailRowData)
                     leftNum-=1
                 else:
-                    delMailGBIDList.append(mailGBID)
+                    _delMailGBIDList.append(mailGBID)
 
-            if len(delMailGBIDList) > 0:
-                gamesql.deleteMultiMails(self.gbID, delMailGBIDList, lambda ret, num, insertId, err:
-                                            self.deleteExceedMailsCallback(ret, num, insertId, err, delMailGBIDList))
-            if len(delMailGBIDList) >= maxMailNum:
+            if len(_delMailGBIDList) > 0:
+                gamesql.deleteMultiMails(self.gbID, _delMailGBIDList, lambda ret, num, insertId, err:
+                                            self.deleteExceedMailsCallback(ret, num, insertId, err, _delMailGBIDList))
+            if len(_delMailGBIDList) >= maxMailNum:
                 gamesql.deleteOldMails(self.gbID, minMailTime, minMailTiemMailList, isGlobal, lambda ret, num, insertId, err:
                                         self.deleteOldMailsCallback(ret, num, insertId, err, minMailTime))
 
@@ -265,7 +272,7 @@ class ImpMail(object):
         
         if len(updateDueTimeGBIDList) > 0:
             gamesql.updateMultiMails(self.gbID, updateDueTimeGBIDList, lambda ret, num, insertId, err:
-                                    self.updateMultiMailsCallback(ret, num, insertId, err, updateDueTimeGBIDList, AAC_AACDD.datas.BONUS_SRC_MAIL_CLEAR_DUETIME, 'clear due time'))
+                                    self.updateMultiMailsCallback(ret, num, insertId, err, updateDueTimeGBIDList, AAC_AAC_DD.datas.BONUS_SRC_MAIL_CLEAR_DUETIME, 'clear due time'))
             
         LOG_INFO('_loadMailsFromDBCallback:', isGlobal)
         rmCacheMailList = self.mailCacheData.getReplaceMailList(isGlobal)
@@ -273,16 +280,30 @@ class ImpMail(object):
         needDelete = False
         if len(rmCacheMailList) > 0:
             needDelete = True
-            gamesql.deleteMultiMails(self.gbID, rmCacheMailList, lambda ret, num, insertId, err:
-                                    self.deleteMultiMailsCallback(ret, num, insertId, err, rmMails, AAC_AACDD.datas.BONUS_SRC_EXCEED_DELETE_MAIL, 'exceed limit'))
+            gamesql.deleteMultiMails(
+                self.gbID,
+                rmCacheMailList,
+                functools.partial(
+                    self.deleteMultiMailsCallback, 
+                    rmMails, 
+                    AAC_AAC_DD.datas.BONUS_SRC_EXCEED_DELETE_MAIL, 
+                    'exceed limit'),
+            )
 
 
         self.doAfterLoadMails(mailLoadType, needDelete)
 
         if expiredMailGBIDList:
-            gamesql.deleteMultiMails(self.gbID, expiredMailGBIDList,
-                                     lambda ret, num, insertId, err:self.deleteMultiMailsCallback(ret, num, insertId,
-                                                                              err, expiredMailObjs, AAC_AACDD.datas.BONUS_SRC_EXPIRE_DELETE_MAIL, 'delete expired'))
+            gamesql.deleteMultiMails(
+                self.gbID, 
+                expiredMailGBIDList,
+                functools.partial(
+                    self.deleteMultiMailsCallback,
+                    expiredMailObjs, 
+                    AAC_AAC_DD.datas.BONUS_SRC_EXPIRE_DELETE_MAIL, 
+                    'delete expired'
+                ),
+            )
 
     def deleteExceedMailsCallback(self, ret, num, insertId, err, delMailGBIDList):
         if err:
@@ -340,10 +361,13 @@ class ImpMail(object):
     @gamedecorator.checkGameconfigEnable('mail')
     def reqReadOneMail(self, exposed, mailGBID):
         LOG_INFO('in reqReadOneMail:', mailGBID)
-        gamesql.setMailHasRead(self.gbID, mailGBID, lambda ret, num, insertId, err, mailGBID=mailGBID:
-                                            self.setMailHasReadCallback(ret, num, insertId, err, mailGBID))
+        gamesql.setMailHasRead(
+            self.gbID, 
+            mailGBID,
+            functools.partial(self.setMailHasReadCallback, mailGBID),
+        )
 
-    def setMailHasReadCallback(self, ret, num, insertId, err, mailGBID):
+    def setMailHasReadCallback(self, mailGBID, ret, num, insertId, err):
         LOG_INFO('in setMailHasReadCallback:', ret, num, insertId, err)
         if err:
             LOG_WARN('setMailHasReadCallback failed:', err)
@@ -355,26 +379,26 @@ class ImpMail(object):
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqGetOneMailAttach(self, exposed, mailGBID):
         LOG_INFO('in reqGetOneMailAttach:', mailGBID)
-        mail = self.mailCacheData.getMailByGBID(mailGBID)
-        if not mail:
+        _mail = self.mailCacheData.getMailByGBID(mailGBID)
+        if not _mail:
             return
-        self.getMailAttachByMailList([mail])
+        self.getMailAttachByMailList([_mail])
 
     @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     @gamedecorator.limitcall(2)
     def reqGetAllMailsAttach(self, exposed):
         LOG_INFO('in reqGetAllMailsAttach')
-        mailList = self.mailCacheData.getMailsWithAttachHasNotGet()
-        if not mailList:
+        _mailList = self.mailCacheData.getMailsWithAttachHasNotGet()
+        if not _mailList:
             LOG_WARN('   reqGetAllMailsAttach, no mail with attach has not get')
             return
-        self.getMailAttachByMailList(mailList)
+        self.getMailAttachByMailList(_mailList)
 
     def getMailAttachByMailList(self, mailList):
-        mailGBIDList = []
+        _mailGBIDList = []
         totalWealthVal = dropAward.AwardVal()
-        srcType = AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH
+        srcType = AAC_AAC_DD.datas.BONUS_SRC_MAIL_ATTACH
         hasSendSpaceNotEnoughMsg = False
         hasSendPotionMaxLimitMsg = False
         for mail in mailList:
@@ -387,8 +411,8 @@ class ImpMail(object):
                 continue
 
             #注意加号'+'前后的wealth顺序不能变
-            tryWealthVal = mail.attach.getAwardVal() + totalWealthVal
-            tryAddResult = self.canAddWealthVal(srcType, tryWealthVal, bMsg=False, fromMail=True)
+            _tryWealthVal = mail.attach.getAwardVal() + totalWealthVal
+            tryAddResult = self.canAddWealthVal(srcType, _tryWealthVal, bMsg=False, fromMail=True)
             if not tryAddResult:
                 if not hasSendSpaceNotEnoughMsg:
                     hasSendSpaceNotEnoughMsg = True
@@ -397,9 +421,9 @@ class ImpMail(object):
                 continue
 
             # 背包数量限制物品
-            if not tryWealthVal.isEmpty():
+            if not _tryWealthVal.isEmpty():
                 totalLimitItemNum = 0
-                for item in tryWealthVal.itemWealth.getItemObjs():
+                for item in _tryWealthVal.itemWealth.getItemObjs():
                     if item.itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
                         totalLimitItemNum += item.itemNum
                 if totalLimitItemNum != 0 and self.checkBagItemLimitNoItemId(totalLimitItemNum):
@@ -408,21 +432,20 @@ class ImpMail(object):
                         self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(self.drugsQuantityBase)])
                     continue
 
-            totalWealthVal = tryWealthVal
-            mailGBIDList.append(mail.mailGBID)
-        if not mailGBIDList:
+            totalWealthVal = _tryWealthVal
+            _mailGBIDList.append(mail.mailGBID)
+        if not _mailGBIDList:
             return
 
         if not self.bagData.tryLockBag(lockDesc='getMailAttachByMailList'):
             return
         #先设置缓存中附件为已领取状态
-        for mailGBID in mailGBIDList:
+        for mailGBID in _mailGBIDList:
             self.mailCacheData.setAttachHasGet(mailGBID)
-        gamesql.setMailHasGetAttach(self.gbID, mailGBIDList, lambda ret, num, insertId, err:
-                                      self.setMailAttachHasGetCallback(ret, num, insertId, err, mailGBIDList))
+        gamesql.setMailHasGetAttach(self.gbID, _mailGBIDList, lambda ret, num, insertId, err:
+                                      self.setMailAttachHasGetCallback(ret, num, insertId, err, _mailGBIDList))
 
     def setMailAttachHasGetCallback(self, ret, num, insertId, err, mailGBIDList):
-        #LOG_INFO('in getMailAttachCallback:', ret, num, insertId, err)
         self.unlockBag(gameconst.BagTypeEnum.BAG_TYPE_NORMAL)
         if err:
             LOG_WARN('   setMailAttachHasGetCallback failed:', err)
@@ -432,36 +455,58 @@ class ImpMail(object):
         popRewardUUID = KBEngine.genUUID64()
         now = utils.curTS()
         for mailGBID in mailGBIDList:
-            mail = self.mailCacheData.getMailByGBID(mailGBID)
-            if not mail:
+            _mail = self.mailCacheData.getMailByGBID(mailGBID)
+            if not _mail:
                 gameengine.panicStack('setMailAttachHasGetCallback, no mail:', mailGBID)
                 continue
 
-            wealthVal = mail.attach.getAwardVal()
-            opUUID = mail.opUUID or mail.mailGBID
-            if not self.canAddWealthVal(AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH, wealthVal, bMsg=True):
+            wealthVal = _mail.attach.getAwardVal()
+            opUUID = _mail.opUUID or _mail.mailGBID
+            if not self.canAddWealthVal(AAC_AAC_DD.datas.BONUS_SRC_MAIL_ATTACH, wealthVal, bMsg=True):
                 # 正常情况不会走到这里
-                gameengine.panicStack('setMailAttachHasGetCallback, add attach wealthval failed:', mailGBID, mail.mailId)
-                self.resetMailAttachState(opUUID, mailGBID, mail.readStat)
+                gameengine.panicStack('setMailAttachHasGetCallback, add attach wealthval failed:', mailGBID, _mail.mailId)
+                self.resetMailAttachState(opUUID, mailGBID, _mail.readStat)
                 continue
             _mailGBIDs.append(mailGBID)
-            mail.setReadState(gameconst.MailReadState.HasRead)
+            _mail.setReadState(gameconst.MailReadState.HasRead)
             wealthVal.scrubWealthItemObjs(createTime=now)
-            srcType = mail.srcType if mail.srcType else AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH
-            detail = gameclass.AwardDetailCls(mailId=mail.mailId, mailGBID=[mailGBID], desc=mail.desc, popRewardUUID=popRewardUUID)
-            self.addWealth(srcType, wealthVal, opUUID, detail=detail, srcSubType=mail.srcSubType, idipSource=mail.source, directly=False)
+            srcType = _mail.srcType if _mail.srcType else AAC_AAC_DD.datas.BONUS_SRC_MAIL_ATTACH
+            detail = gameclass.AwardDetailCls(mailId=_mail.mailId, mailGBID=[mailGBID], desc=_mail.desc, popRewardUUID=popRewardUUID)
+            self.addWealth(srcType, wealthVal, opUUID, detail=detail, srcSubType=_mail.srcSubType, idipSource=_mail.source, directly=False)
 
-            LogTrackingMgr.LogTrackingMgr.Mail_Get(self.gbID, self.accountEntity.clientDistinctId, self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
-        self._showPopReward(AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH, popRewardUUID, gameclass.AwardDetailCls(mailGBID=_mailGBIDs))
+            result = []
+            attachStr = _mail.attach.getItemsTLogStr()
+            if ',' in attachStr:
+                tmp = {int(k): int(v) for k, v in (pair.split(',') for pair in attachStr.split(';'))}
+                for itemId, itemCount in tmp.items():
+                    result.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
+            LogTrackingMgr.LogTrackingMgr.mail_get(
+                self.gbID, 
+                self.accountEntity.clientDistinctId, 
+                self.gbID, 
+                _mail.fromGBID, 
+                _mail.mailId, 
+                _mail.mailGBID, 
+                _mail.globalMailGBID, 
+                _mail.srcType, 
+                _mail.srcSubType, 
+                _mail.opUUID, 
+                _mail.source, 
+                result)
+
+        self._showPopReward(AAC_AAC_DD.datas.BONUS_SRC_MAIL_ATTACH, popRewardUUID, gameclass.AwardDetailCls(mailGBID=_mailGBIDs))
         self.client.onGetMailAttach(_mailGBIDs)
-        return
 
     def resetMailAttachState(self, opUUID, mailGBID, readState):
         LOG_INFO('resetMailAttachState:', opUUID, mailGBID, readState)
-        gamesql.resetMailAttachNotState(self.gbID, mailGBID, readState, lambda ret, num, insertId, err, opUUID=opUUID:
-                                            self.resetMailAttachStateCallback(ret, num, insertId, err, opUUID))
+        gamesql.resetMailAttachNotState(
+            self.gbID, 
+            mailGBID, 
+            readState, 
+            functools.partial(self.resetMailAttachStateCallback, opUUID)
+        )
 
-    def resetMailAttachStateCallback(self, ret, num, insertId, err, opUUID):
+    def resetMailAttachStateCallback(self, opUUID, ret, num, insertId, err):
         LOG_INFO('in resetMailAttachStateCallback:', ret, num, insertId, opUUID)
         mailGBIDList = utils.popCallbackTmpInfo(self, opUUID)
         if err:
@@ -469,11 +514,11 @@ class ImpMail(object):
             return
 
         for mailGBID in mailGBIDList:
-            mail = self.mailCacheData.getMailByGBID(mailGBID)
-            mail and mail.setAttachState(gameconst.MailAttachState.NotGet)
+            _mail = self.mailCacheData.getMailByGBID(mailGBID)
+            if _mail:
+                _mail.setAttachState(gameconst.MailAttachState.NotGet)
 
         LOG_INFO('resetMailAttachStateCallback, reset mail attach state succ:', mailGBIDList)
-        return
 
     @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
@@ -483,27 +528,32 @@ class ImpMail(object):
         if not mailGBIDList:
             return
         mailGBID = mailGBIDList[0]
-        mail = self.mailCacheData.getMailByGBID(mailGBID)
-        if not mail:
-            LOG_WARN('reqDelMails, no mail:', mailGBIDList)
+        _mail = self.mailCacheData.getMailByGBID(mailGBID)
+        if not _mail:
+            LOG_WARN('reqDelMails, no _mail:', mailGBIDList)
             return
 
-        if mail.coudlGetAttach():
-            LOG_INFO('reqDelMails, del mail failed, has attach:', mailGBID)
+        if _mail.coudlGetAttach():
+            LOG_INFO('reqDelMails, del _mail failed, has attach:', mailGBID)
             self.onMessagePre(MMD.datas.mailDelete_Fail, [])
             return
 
-        gamesql.deleteMailByMailGBID(self.gbID, mailGBID, lambda ret, num, insertId, err, mailGBID=mailGBID:
-                                            self.deleteMailByMailGBIDCallback(ret, num, insertId, err, mailGBID))
-        return
+        gamesql.deleteMailByMailGBID(
+            self.gbID, 
+            mailGBID, 
+            functools.partial(self.deleteMailByMailGBIDCallback, mailGBID),
+        )
 
-    def deleteMailByMailGBIDCallback(self, ret, num, insertId, err, mailGBID):
+    def deleteMailByMailGBIDCallback(self, mailGBID, ret, num, insertId, err):
         LOG_INFO('deleteMailByMailGBIDCallback:', ret, num, insertId, err, mailGBID)
         if err:
             gameengine.panicStack('   deleteMailByMailGBIDCallback failed:', mailGBID)
             return
-        self.onMailsDeleted({mailGBID:self.mailCacheData.getMailByGBID(mailGBID)}, srcType=AAC_AACDD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, desc='from client')
-        return
+
+        self.onMailsDeleted(
+            {mailGBID: self.mailCacheData.getMailByGBID(mailGBID)}, 
+            srcType=AAC_AAC_DD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, 
+            desc='from client')
 
     @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
@@ -514,33 +564,51 @@ class ImpMail(object):
             LOG_WARN('reqDelAllMails, no mail can delete')
             return
         rmMails = self.mailCacheData.deleteMailsCache(delMailGBIDList)
-        gamesql.deleteMultiMails(self.gbID, delMailGBIDList, lambda ret, num, insertId, err, delMailGBIDList=delMailGBIDList:
-                                            self.deleteMultiMailsCallback(ret, num, insertId, err, rmMails, AAC_AACDD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, 'from client'))
+        gamesql.deleteMultiMails(
+            self.gbID, 
+            delMailGBIDList, 
+            functools.partial(
+                self.deleteMultiMailsCallback,
+                rmMails, 
+                AAC_AAC_DD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, 
+                'from client'
+            ),
+        )
 
-    def deleteMultiMailsCallback(self, ret, num, insertId, err, rmMails, srcType, desc):
+    def deleteMultiMailsCallback(self, rmMails, srcType, desc, ret, num, insertId, err):
         if err:
             LOG_WARN('   deleteMultiMailsCallback failed')
             return
         self.onMailsDeleted(rmMails, srcType, desc=desc)
-        return
 
     def onMailsDeleted(self, rmMails, srcType=0, srcSubType=0, desc='', idipSource=0, sendClient=True):
-        mailGBIDList = list(rmMails.keys())
+        _mailGBIDList = list(rmMails.keys())
         now = utils.curTS()
         expireDuration = gameconst.ONE_DAY_COST_SECONDS * 60
         for mailGbId in list(self.hasGotGlobalMails.keys()):
             tAdd = self.hasGotGlobalMails[mailGbId]
             if mailGbId not in gameglobal.globalMailsCacheList and now - tAdd > expireDuration:
                 self.hasGotGlobalMails.pop(mailGbId, 0)
-        self.mailCacheData.deleteMailsCache(mailGBIDList)
-        sendClient and self.client.onDelMails(mailGBIDList, self.mailCacheData.playerMailSpaceLeft(), self.mailCacheData.systemMailSpaceLeft())
-        opUUID = KBEngine.genUUID64()
+        self.mailCacheData.deleteMailsCache(_mailGBIDList)
+        if sendClient:
+            self.client.onDelMails(
+                _mailGBIDList,
+                self.mailCacheData.playerMailSpaceLeft(),
+                self.mailCacheData.systemMailSpaceLeft()
+            )
+
+        _opUUID = KBEngine.genUUID64()
         for mailGBID, mVal in rmMails.items():
             if not mVal:
                 continue
-            self.doRecordDeleteMailLog(mVal, opUUID, srcType, srcSubType, desc, idipSource, mailGBID)
-        return
+            self.doRecordDeleteMailLog(mVal, _opUUID, srcType, srcSubType, desc, idipSource, mailGBID)
 
     def doRecordDeleteMailLog(self, mail, opUUID, srcType, srcSubType, desc, idipSource, mailGBID):
-        LogTrackingMgr.LogTrackingMgr.Mail_Delete(self.gbID, self.accountEntity.clientDistinctId, self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach, srcType)
+        result = []
+        attachStr = mail.attach.getItemsTLogStr()
+        if ',' in attachStr:
+            tmp = {int(k): int(v) for k, v in (pair.split(',') for pair in attachStr.split(';'))}
+            for itemId, itemCount in tmp.items():
+                result.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
+        LogTrackingMgr.LogTrackingMgr.mail_delete(self.gbID, self.accountEntity.clientDistinctId, self.gbID, mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, result, srcType)
 

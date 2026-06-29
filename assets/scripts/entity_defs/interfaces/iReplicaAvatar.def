@@ -1,0 +1,89 @@
+<root>
+    <Properties>
+        <summonSlotIdx>
+            <Type>          SLOTID                      </Type>
+            <Flags>         OWN_CLIENT                  </Flags>
+            <Default>       0                           </Default>
+        </summonSlotIdx>
+
+        <mp>
+            <Type>          MP          </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Persistent>    true            </Persistent>
+            <DelaySync>     true            </DelaySync>
+        </mp>
+
+        <ultraSkillPower>
+            <Type>          UINT8                       </Type>
+            <Flags>         OWN_CLIENT                  </Flags>
+            <Default>       0                           </Default>
+        </ultraSkillPower>
+
+        <healHpRatio>
+            <Type>          HEAL_RATIO                      </Type>
+            <Flags>         OWN_CLIENT                      </Flags>
+            <Persistent>    true                            </Persistent>
+            <Default>       80                              </Default>
+        </healHpRatio>
+
+        <healMpRatio>
+            <Type>          HEAL_RATIO                      </Type>
+            <Flags>         OWN_CLIENT                      </Flags>
+            <Persistent>    true                            </Persistent>
+            <Default>       80                              </Default>
+        </healMpRatio>
+
+        <expGrow>
+            <Type>          FLOAT               </Type>
+            <Flags>         OWN_CLIENT        </Flags>
+        </expGrow>
+        <adjExpGrow>
+            <Type>          FLOAT               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </adjExpGrow>
+        <copper>
+            <Type>          FLOAT               </Type>
+            <Flags>         OWN_CLIENT        </Flags>
+        </copper>
+        <adjCopper>
+            <Type>          FLOAT               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </adjCopper>
+        <medicineRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </medicineRate>
+        <adjMedicineRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMedicineRate>
+        <miningRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </miningRate>
+        <adjMiningRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMiningRate>
+        <gatherRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </gatherRate>
+        <adjGatherRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjGatherRate>
+    </Properties>
+
+    <CellMethods>
+        <changeMorphPreAddSkill>
+            <Arg>          MORPH_STATE  </Arg>
+        </changeMorphPreAddSkill>
+    </CellMethods>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

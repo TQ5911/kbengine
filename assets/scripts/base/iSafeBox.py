@@ -26,6 +26,7 @@ class ISafeBox(object):
         self._loadingMore = False
 
     def safeBoxOnLogin(self):
+        LOG_INFO('safeBoxOnLogin')
         self.safeBoxCache = {}
         self._cachedItems = []
         self._safeBoxReady = False
@@ -33,6 +34,7 @@ class ISafeBox(object):
         gamesql.loadSafeBoxUnclaimed(self.gbID, gameconst.SAFE_BOX_PAGE_SIZE * 3, self._onUnclaimedLoaded)
 
     def _onUnclaimedLoaded(self, ret, num, insertId, err):
+        LOG_INFO('_onUnclaimedLoaded ', num, insertId, err)
         if err:
             LOG_ERR('_onUnclaimedLoaded:: failed, {}'.format(err))
             self._safeBoxReady = True
@@ -44,6 +46,7 @@ class ISafeBox(object):
         gamesql.loadSafeBoxRecentClaimed(self.gbID, gameconst.SAFE_BOX_MAX_VISIBLE_CLAIMED, self._onClaimedLoaded)
 
     def _onClaimedLoaded(self, ret, num, insertId, err):
+        LOG_INFO('_onClaimedLoaded ', num, insertId, err)
         if err:
             LOG_ERR('_onClaimedLoaded:: failed, {}'.format(err))
             self._safeBoxReady = True
@@ -82,6 +85,7 @@ class ISafeBox(object):
         self._cachedItems = unclaimed + claimed
 
     def _loadMoreUnclaimed(self):
+        LOG_INFO('_loadMoreUnclaimed ')
         lastUnclaimed = None
         for rec in reversed(self._cachedItems):
             if not rec['claimed']:
@@ -96,6 +100,7 @@ class ISafeBox(object):
             gameconst.SAFE_BOX_PAGE_SIZE * 2, self._onMoreUnclaimedLoaded)
 
     def _onMoreUnclaimedLoaded(self, ret, num, insertId, err):
+        LOG_INFO('_onMoreUnclaimedLoaded ', num, insertId, err)
         self._loadingMore = False
         if err or not ret:
             self._sendPendingPage()
@@ -123,14 +128,15 @@ class ISafeBox(object):
             self._sendPage(self._pendingPageRequest)
             self._pendingPageRequest = None
 
-    @gamedecorator.limitcall(1)
     def reqSafeBoxPage(self, exposed, pageIndex):
+        LOG_INFO('reqSafeBoxPage ', pageIndex)
         if not self._safeBoxReady:
             self._pendingPageRequest = pageIndex
             return
         self._sendPage(pageIndex)
 
     def _sendPage(self, pageIndex):
+        LOG_INFO('_sendPage ', pageIndex)
         pageIndex = max(0, pageIndex)
         start = pageIndex * gameconst.SAFE_BOX_PAGE_SIZE
         end = start + gameconst.SAFE_BOX_PAGE_SIZE
@@ -146,15 +152,44 @@ class ISafeBox(object):
             self._pendingPageRequest = pageIndex
             self._loadMoreUnclaimed()
             return
+        self.client.onSafeBoxPage(0, [], 0)
 
     @gamedecorator.limitcall(1)
     def reqClaimSafeBoxItem(self, exposed, safeBoxId):
+        LOG_INFO('reqClaimSafeBoxItem ', safeBoxId)
         rec = self.safeBoxCache.get(safeBoxId)
         if not rec or rec['claimed']:
+            LOG_WARN('reqClaimSafeBoxItem no record', safeBoxId)
+            return
+        
+        itemId = rec['itemId']
+        itemCount = rec['itemCount']
+
+        itemData = ITEM_DATA.datas.get(itemId, None)
+        if not itemData:
+            LOG_WARN('reqClaimSafeBoxItem missing item', safeBoxId, itemId, rec)
+            return
+        
+        rewardId = itemData.get('pickUpReward', 0)
+        if not rewardId:
+            LOG_WARN('reqClaimSafeBoxItem no pickUpReward', safeBoxId, itemId, rec)
+            return
+        
+        _ctx = self.getAvatarAwardCtx(rewardId, None)
+        _ctx.args.addArg('autoUse', True)
+        _awardVal = dropAward.getAward(rewardId, itemCount, _ctx)
+        srcType = AAC_AACDD.datas.BONUS_SRC_BUYCREDIT
+        if not self.canAddWealthVal(srcType, _awardVal, _ctx, fromMail=True):
+            LOG_ERR('reqClaimSafeBoxItem bag is full', safeBoxId, itemId, rec)
+            self.onMessagePre(M_M_DD.datas.bagFullGeneralMessage, [])
+            return
+        if not self.bagData.tryLockBag(5, 'func::reqClaimSafeBoxItem'):
+            LOG_ERR("in reqClaimSafeBoxItem, lock bag fail")
             return
         self._claimSafeBoxRecord(rec)
 
     def _claimSafeBoxRecord(self, rec):
+        LOG_INFO("in _claimSafeBoxRecord, ", rec)
         safeBoxId = rec['boxId']
         itemId = rec['itemId']
         itemCount = rec['itemCount']
@@ -165,6 +200,8 @@ class ISafeBox(object):
             self._onSafeBoxItemClaimed(ret, num, insertId, err, safeBoxId, claimTime, itemId, itemCount))
 
     def _onSafeBoxItemClaimed(self, ret, num, insertId, err, safeBoxId, claimTime, itemId, itemCount):
+        LOG_INFO("in _onSafeBoxItemClaimed, ", ret, num, insertId, err, safeBoxId, claimTime, itemId, itemCount)
+        self.bagData.unLockBag()
         if err:
             LOG_ERR('_onSafeBoxItemClaimed:: failed, {}'.format(err))
             self.client.onSafeBoxItemClaimed(0)
@@ -205,6 +242,7 @@ class ISafeBox(object):
 
     @gamedecorator.limitcall(1)
     def reqClaimAllSafeBoxItems(self, exposed):
+        LOG_INFO("in reqClaimAllSafeBoxItems ")
         claimedIds = []
         for safeBoxId, rec in list(self.safeBoxCache.items()):
             if not rec['claimed']:
@@ -213,8 +251,9 @@ class ISafeBox(object):
         if claimedIds:
             self.client.onClaimAllResult(claimedIds)
 
-    @gamedecorator.limitcall(1)
+    @gamedecorator.limitcall(0.2)
     def reqDeleteSafeBoxItem(self, exposed, safeBoxId):
+        LOG_INFO("in reqDeleteSafeBoxItem ", safeBoxId)
         rec = self.safeBoxCache.get(safeBoxId)
         if not rec or not rec['claimed']:
             return
@@ -231,6 +270,7 @@ class ISafeBox(object):
         self.client.onSafeBoxItemDeleted(safeBoxId)
 
     def storePurchaseToSafeBox(self, orderId, orderTime, itemId, itemCount, itemPrice):
+        LOG_INFO("in storePurchaseToSafeBox ", orderId, orderTime, itemId, itemCount, itemPrice)
         if orderId:
             existing = self._findOrderInCache(orderId)
             if existing:
@@ -247,7 +287,9 @@ class ISafeBox(object):
                 return rec
 
     def _onSafeBoxStored(self, safeBoxId, itemId, itemCount, itemPrice, orderId, orderTime):
+        LOG_INFO("in _onSafeBoxStored ", safeBoxId, itemId, itemCount, itemPrice, orderId, orderTime)
         if safeBoxId in self.safeBoxCache:
+            LOG_ERR("in _onSafeBoxStored, repeated ", safeBoxId, itemId, itemCount, itemPrice, orderId, orderTime)
             return
         rec = {
             'boxId': safeBoxId,
@@ -277,6 +319,7 @@ class ISafeBox(object):
 
     @gamedecorator.offlineCallback
     def processPurchaseOrder(self, orderId, orderTime, itemId, itemCount, itemPrice, addToSafe):
+        LOG_INFO("in processPurchaseOrder ", orderId, orderTime, itemId, itemCount, itemPrice, addToSafe)
         if addToSafe:
             self.storePurchaseToSafeBox(orderId, orderTime, itemId, itemCount, itemPrice)
             return
@@ -285,12 +328,15 @@ class ISafeBox(object):
 
     def _processDirectDelivery(self, itemId, itemCount):
         if itemCount <= 0:
+            LOG_ERR("in _processDirectDelivery itemcount is zero", itemId, itemCount)
             return
         itemData = ITEM_DATA.datas.get(itemId, None)
         if not itemData:
+            LOG_ERR("in _processDirectDelivery missing item", itemId, itemCount)
             return
         rewardId = itemData.get('pickUpReward', 0)
         if not rewardId:
+            LOG_ERR("in _processDirectDelivery missing pickUpReward", itemId, itemCount)
             return
         _ctx = self.getAvatarAwardCtx(rewardId, None)
         _ctx.args.addArg('autoUse', True)
@@ -298,7 +344,9 @@ class ISafeBox(object):
         srcType = AAC_AACDD.datas.BONUS_SRC_BUYCREDIT
         opUUID = KBEngine.genUUID64()
         if not self.canAddWealthVal(srcType, _awardVal, _ctx):
-            self.onMessagePre(M_M_DD.datas.bagFullGeneralMessage, [])
+            LOG_ERR("in _processDirectDelivery bag is full", itemId, itemCount)
+            mailAssistor.sendMailToPlayers([self.gbID], gameconst.MailConstEnum.REWARD_MAIL_ID, extraAttach=_awardVal, opUUID=opUUID,
+                                       despArgs=(), srcType=AAC_AACDD.datas.BONUS_SRC_BUYCREDIT)
             return
 
         detail = gameclass.AwardDetailCls(itemId=itemId, itemCount=itemCount)

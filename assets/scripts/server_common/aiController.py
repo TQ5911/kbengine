@@ -171,7 +171,7 @@ class BehaveCtrl(object):
         _flag = False
         removeEnt = []
         invalidTargetLeave = False
-        for _eid in self.hateDict._hateDict.keys():
+        for _eid in self.hateDic._hateDict.keys():
             target = KBEngine.entities.get(_eid)
             if target and not target.isDie() and _owner.spaceNo == target.spaceNo and utils.isEnemy(_owner, target):
                 if _owner.isVisible(target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt):
@@ -187,9 +187,9 @@ class BehaveCtrl(object):
             else:
                 removeEnt.append(_eid)
         for _eid in removeEnt:
-            self.hateDict.removeHate(_eid)
+            self.hateDic.removeHate(_eid)
         if self.checkNavigationTimeExpire(0):
-            self.hateDict._hateDict.clear()
+            self.hateDic._hateDict.clear()
             _flag = False
 
         if invalidTargetLeave:
@@ -336,7 +336,8 @@ class BehaveCtrl(object):
         self.clearHateAndResetSkill()
         ret = self.moveToPosition(self.owner.bornPosition, 0, gamemove.AI_GO_HOME_MOVE_OVER)
         self.stateMachine.transform(self, StateEnum.BACK)
-        self.owner.resetFirstBlood()
+        if self.owner.IsMonster:
+            self.owner.resetFirstBlood()
         return ret
 
     def clearHateAndTelBack(self):
@@ -383,7 +384,7 @@ class BehaveCtrl(object):
 
     def turnOnBeAttacked(self):
         owner = self.owner
-        _randomTargetId = self.hateDict.getRandomHateTarget()
+        _randomTargetId = self.hateDic.getRandomHateTarget()
         _target = KBEngine.entities.get(_randomTargetId)
         if _target:
             _direction = sMath.vector3WithoutY(_target.position - owner.position)
@@ -438,7 +439,7 @@ class BehaveCtrl(object):
     def chooseDungeonTarget(self):
         _owner = self.owner
 
-        if self.hateDict.length: return
+        if self.hateDic.length: return
         if not _owner or not _owner.spaceMgr: return
 
         _players = _owner.spaceMgr.players
@@ -451,7 +452,7 @@ class BehaveCtrl(object):
             return
 
         if _owner.isVisible(_target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt):
-            isFirstHate = True if self.hateDict.length == 0 else False
+            isFirstHate = True if self.hateDic.length == 0 else False
             self.doIncreaseHate(_targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
 
     def adjustPetDistanceNormal(self):
@@ -595,7 +596,7 @@ class BehaveCtrl(object):
             self.patrol()
             return
 
-        if owner.getRouteState() == gameconst.RouteState.ROUTE_STATE_WAIT:
+        if owner.getRouteState() == gameconst.RouteStateEnum.ROUTE_STATE_WAIT:
             owner.startRouting()
         else:
             owner.continueRouting()
@@ -606,7 +607,7 @@ class BehaveCtrl(object):
         _owner = self.owner
         if not _owner or _owner.isDie() or _owner.isMoving(): return
 
-        if _owner.getRouteState() == gameconst.RouteState.ROUTE_STATE_WAIT:
+        if _owner.getRouteState() == gameconst.RouteStateEnum.ROUTE_STATE_WAIT:
             _owner.startRouting()
         else:
             _owner.continueRouting()
@@ -616,25 +617,6 @@ class BehaveCtrl(object):
         if not _owner or _owner.isDie(): return
 
         _owner.interruptRouting()
-
-    def selectRandomPlayerInDun(self):
-        _owner = self.owner
-        if not _owner or not _owner.spaceMgr: return False
-
-        _players = _owner.spaceMgr.players
-        if not _players:
-            return False
-
-        _targetId = random.choice(list(_players))
-        _target = KBEngine.entities.get(_targetId)
-        if not _owner or _owner.isDie() or not _target or _target.isDie():
-            return False
-
-        if _owner.isVisible(_target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt):
-            self.targetId = _targetId
-            return True
-
-        return False
 
     def farFromTarget(self):
         _owner = self.owner
@@ -688,7 +670,7 @@ class AuxFunc(object):
     def canUseSkill(self, skill):
         owner = self.owner
 
-        if skill.hasSkillTag(gameconst.SkillTag.GeneralSkill):
+        if skill.hasSkillTag(gameconst.SkillTagEnum.GeneralSkill):
             if not owner.checkConflictState(C_C_DD.datas.useGeneralSkill, False): return False
         else:
             if not owner.checkConflictState(C_C_DD.datas.useSkill, False): return False
@@ -796,9 +778,15 @@ class AuxFunc(object):
             if msgid:
                 self.broadcastMessagePreUseSkill(msgid, skill.skillId)
 
-            _direction = sMath.vector3WithoutY(target.position - owner.position)
-            if _direction[0] == _direction[1] == _direction[2] == 0:
-                _direction = sMath.getDirFromYaw(owner.direction[2])
+            if skill.hasSkillTag(gameconst.SkillTagEnum.birthDirection):
+                # 有这个tag的monster技能在选择节能方向时候恒定用出生方向
+                _d = owner.bornDirection
+                _direction = Math.Vector3(_d[0], _d[1], _d[2])
+            else:
+                _direction = sMath.vector3WithoutY(target.position - owner.position)
+                if _direction[0] == _direction[1] == _direction[2] == 0:
+                    _direction = sMath.getDirFromYaw(owner.direction[2])
+
             if owner.id != target.id and self.stateMachine.turnable:
                 yaw = sMath.getYawFromDirection(_direction)
                 owner.direction = (0.0, 0.0, yaw)
@@ -821,7 +809,7 @@ class AuxFunc(object):
             ret = owner.doUseSkill(skill, actionCtx)
 
             if ret is not None and ret != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
-                LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId, owner.aiVariables, self.hateDict._hateDict.keys())
+                LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId, owner.aiVariables, self.hateDic._hateDict.keys())
                 invaildTag = self.InvalidTargetTagWithTarget(targetId)
                 if not owner.actGetVar(invaildTag, None):
                     LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId)
@@ -830,7 +818,6 @@ class AuxFunc(object):
                     self.skillId = 0
             else:
                 self.clearInvalidTargetTimes()
-            
 
         self.stateMachine.transform(self, StateEnum.ANGRY)
 
@@ -932,23 +919,23 @@ class AuxFunc(object):
         if owner.isSiegeWarBoss():
             self.targetId = 0
             target = spaceMgr.getSiegeWarMainGate()
-            if target and not target.isDie() and self.hateDict.isInHateList(target.id):
+            if target and not target.isDie() and self.hateDic.isInHateList(target.id):
                 owner.doSetSelectedTargetId(target.id)
                 return target
             else:
                 return None
 
         if owner.isSiegeWarBow():
-            if self.targetId and self.hateDict.isInHateList(self.targetId):
+            if self.targetId and self.hateDic.isInHateList(self.targetId):
                 target = KBEngine.entities.get(self.targetId)
                 if target and not target.isDie():
                     if (not sMath.inRectRange2D(owner.getAlertDistance(), owner.position, target.position)) or (not owner.checkCombatRangeY(target)):
-                        self.hateDict.removeHate(self.targetId)
+                        self.hateDic.removeHate(self.targetId)
                         self.targetId = 0
 
             self.targetId = 0
             target = spaceMgr.getSiegeWarBoss()
-            if target and not target.isDie() and self.hateDict.isInHateList(target.id):
+            if target and not target.isDie() and self.hateDic.isInHateList(target.id):
                 owner.doSetSelectedTargetId(target.id)
                 return target
 
@@ -958,7 +945,7 @@ class AuxFunc(object):
         x, y, z, dx, dz, dy = CBC.datas["cityBattle_cityGatePassageArea"]["value"]
         withOutArea = (Math.Vector3(x - dx / 2, y, z - dz / 2), Math.Vector3(x + dx / 2, y + dy, z + dz / 2))
 
-        maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTargetByRange(_range, withOutArea)
+        maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTargetByRange(_range, withOutArea)
 
         if not maxHateTargetId or not maxHateTargetHate:
             owner.doSetSelectedTargetId(0)
@@ -977,15 +964,17 @@ class AuxFunc(object):
         if self.isSiegeWarMonster():
             return self.selectSiegeWarTarget()
 
-        if skill.hasSkillTag(gameconst.SkillTag.randomTarget):
-            _randomTargetId = self.hateDict.getRandomHateTarget()
+        if skill.hasSkillTag(gameconst.SkillTagEnum.randomTarget):
+            _randomTargetId = self.hateDic.getRandomHateTarget()
             _target = KBEngine.entities.get(_randomTargetId)
             _owner.doSetSelectedTargetId(_randomTargetId)
             return _target
 
         if self.targetId:
             _target = KBEngine.entities.get(self.targetId)
-            if _target and not _target.isDie() and _owner.spaceNo == _target.spaceNo and utils.isEnemy(_owner, _target) \
+            if _target and not _target.isDie()\
+                    and _owner.spaceNo == _target.spaceNo\
+                    and utils.isEnemy(_owner, _target) \
                     and (_owner.isVisible(_target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)):
                 _owner.doSetSelectedTargetId(self.targetId)
                 return _target
@@ -1033,11 +1022,11 @@ class AuxFunc(object):
     def getMaxHateTarget(self):
         owner = self.owner
         if self.stateMachine.moveable:
-            maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTarget()
+            maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTarget()
         else:
             _skill = self.owner.skillDic.doGetSkill(self.skillId)
             _range = _skill.getRange(owner, _skill.skillId, _skill.skillLv)
-            maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTargetByRange(_range)
+            maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTargetByRange(_range)
 
         return maxHateTargetId, maxHateTargetHate
 
@@ -1046,7 +1035,7 @@ class AuxFunc(object):
 
         maxHateTargetId, maxHateTargetHate = self.getMaxHateTarget()
 
-        _currentTargetHate = self.hateDict.getHate(owner.selectedTargetId)
+        _currentTargetHate = self.hateDic.getHate(owner.selectedTargetId)
         _otRatio = CONST.datas['OTRatio']['value']
 
         if not maxHateTargetId or not maxHateTargetHate:
@@ -1085,6 +1074,9 @@ class AuxFunc(object):
 
     def summonHostSelectTarget(self):
         owner = self.owner
+        if owner.hasCreepTag(gameconst.CREEP_TAG_NO_USE_HOST_TARGET):
+            return self.selectTarget()
+
         host = owner.getHost()
         if not host:
             return self.selectTarget()
@@ -1094,8 +1086,8 @@ class AuxFunc(object):
             # owner.doSetSelectedTargetId(0)
             return None
 
-        if skill.hasSkillTag(gameconst.SkillTag.randomTarget):
-            randomTargetId = self.hateDict.getRandomHateTarget()
+        if skill.hasSkillTag(gameconst.SkillTagEnum.randomTarget):
+            randomTargetId = self.hateDic.getRandomHateTarget()
             target = KBEngine.entities.get(randomTargetId)
             owner.doSetSelectedTargetId(randomTargetId)
             return target
@@ -1263,14 +1255,14 @@ class HateCtrl(object):
         _owner = self.owner
         if not _owner: return
 
-        _target = self.hateDict.getTarget(targetId)
+        _target = KBEngine.entities.get(targetId)
         if not _target or _target.isDie() or _target.isDestroyed: return
 
         if not utils.isEnemy(_owner, _target): return
 
-        isFirstHate = self.hateDict.isEmpty()
+        isFirstHate = self.hateDic.isEmpty()
         _targetLevel = _target.level
-        isInList = self.hateDict.isInHateList(targetId)
+        isInList = self.hateDic.isInHateList(targetId)
         fromSync = kwargs.pop('fromSync', False)
 
         if isInList:
@@ -1279,21 +1271,21 @@ class HateCtrl(object):
                     self.incTargetHostHate(_target, damage)
                 else:
                     self.incTargetHostHate(_target, damage * 0.1)
-                    self.hateDict.incHateByAttack(targetId, damage * 0.9)
+                    self.hateDic.incHateByAttack(targetId, damage * 0.9)
             else:
-                self.hateDict.incHateByAttack(targetId, damage)
+                self.hateDic.incHateByAttack(targetId, damage)
         else:
             if isVisionTrigger and damage <= 0:
-                self.hateDict.addToHateListByVisionTrigger(targetId, _targetLevel, **kwargs)
+                self.hateDic.addToHateListByVisionTrigger(targetId, _targetLevel, **kwargs)
             else:
                 if _target.IsSummon:
                     if not _target.canAttackable(_owner):
                         self.incTargetHostHate(_target, damage)
                     else:
                         self.incTargetHostHate(_target, damage * 0.1)
-                        self.hateDict.addHateListByAttack(targetId, damage * 0.9)
+                        self.hateDic.addHateListByAttack(targetId, damage * 0.9)
                 else:
-                    self.hateDict.addHateListByAttack(targetId, damage)
+                    self.hateDic.addHateListByAttack(targetId, damage)
 
 
         if self.isGroupMonster() and not fromSync and isFirstHate:
@@ -1313,9 +1305,9 @@ class HateCtrl(object):
 
     def decreaseHate(self, targetId, value, byPercentage=False, **kwargs):
         if byPercentage:
-            hate = self.hateDict.decHateByPercentage(targetId, value)
+            hate = self.hateDic.decHateByPercentage(targetId, value)
         else:
-            hate = self.hateDict.decHateByValue(targetId, value)
+            hate = self.hateDic.decHateByValue(targetId, value)
         return hate
 
     def incTargetHostHate(self, target, damage):
@@ -1325,10 +1317,10 @@ class HateCtrl(object):
         _host = target.getHost()
         if not _host or not _host.IsAvatar: return
 
-        if self.hateDict.isInHateList(_host.id):
-            self.hateDict.incHateByAttack(_host.id, damage)
+        if self.hateDic.isInHateList(_host.id):
+            self.hateDic.incHateByAttack(_host.id, damage)
         else:
-            self.hateDict.addHateListByAttack(_host.id, damage)
+            self.hateDic.addHateListByAttack(_host.id, damage)
 
     def isGroupMonster(self):
         _owner = self.owner
@@ -1343,7 +1335,7 @@ class HateCtrl(object):
         self.owner.selfSync("syncIncHateInGroupCB", args, kwargs)
 
     def syncIncHateInGroupCB(self, *args, **kwargs):
-        if not self.hateDict.isEmpty(False):
+        if not self.hateDic.isEmpty(False):
             return
 
         self.syncHateTo(*args, **kwargs)
@@ -1385,39 +1377,39 @@ class HateCtrl(object):
             if entity.hasState(gameconst.StateEnum.Fighting):
                 continue
 
-            for _targetId in self.hateDict._hateDict:
+            for _targetId in self.hateDic._hateDict:
                 if entity.aiController \
                         and entity.aiController.stateMachine.testEvent(Event.HATE)\
-                        and not entity.aiController.hateDict.isInHateList(_targetId):
+                        and not entity.aiController.hateDic.isInHateList(_targetId):
 
                     entity.aiController.syncHateTo(_targetId, isVisionTrigger=True)
 
     def clearHate(self):
         self.targetId = 0
         self.skillId = 0
-        self.hateDict.clearHate(self.owner)
+        self.hateDic.clearHate(self.owner)
         self.owner.firstHateTargetId = 0
 
         self.clearNavigationTimes()
 
     def inheritSourceHate(self, inheritorId):
         if inheritorId:
-            self.hateDict.inheritHate(inheritorId)
+            self.hateDic.inheritHate(inheritorId)
 
     def clearSourceHate(self):
-        self.hateDict.clearSourceHate(self.owner)
+        self.hateDic.clearSourceHate(self.owner)
 
     def transferHate(self, fromEntityId, toEntityId):
-        _fromHate = self.hateDict.getHate(fromEntityId)
+        _fromHate = self.hateDic.getHate(fromEntityId)
         if not _fromHate:
             return
 
-        _curHate = self.hateDict.getHate(toEntityId) or 0
+        _curHate = self.hateDic.getHate(toEntityId) or 0
         _curHateVal = _curHate.currentHate if _curHate else 0
         _hateVal = _curHateVal + _fromHate.currentHate
 
-        self.hateDict.setHate(toEntityId, _hateVal)
-        self.hateDict.removeHate(fromEntityId)
+        self.hateDic.setHate(toEntityId, _hateVal)
+        self.hateDic.removeHate(fromEntityId)
 
     def modifyOutVisionHate(self, entityId, pct):
         self.iTimerDict.pop(entityId, 0)
@@ -1429,10 +1421,10 @@ class HateCtrl(object):
             if entityId not in self.iTimerDict:
                 self.iTimerDict[entityId] = self.owner.modifyOutVisionHateCB(entityId)
         else:
-            self.hateDict.removeHate(targetId=entityId)
+            self.hateDic.removeHate(targetId=entityId)
 
 
-class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
+class AIControllerCls(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     '''
     怪物ai逻辑控制(这部分主要提供外部事件接口)
     '''
@@ -1440,7 +1432,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def __init__(self, ownerId, ainame, active=False):
         self.stateMachine = MachineBuilder.build(ainame)
         self.ownerId = ownerId
-        self.hateDict = monsterHate.MonsterHate(self.owner)
+        self.hateDic = monsterHate.MonsterHate(self.owner)
         self.speedState = gameconst.SpeedState.Normal
         self.isActive = active
         self.patrolTick = gameconst.AIDefine.AIEnumPatrolTick - 1
@@ -1460,14 +1452,14 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         self.warningList = []  # 警戒列表
 
     def tickOnce(self):
-        if self.needTickOnce():
+        if self.needOnceTick():
             self.stateMachine.tick(self)
 
     @property
     def owner(self):
         return KBEngine.entities.get(self.ownerId)
 
-    def needTickOnce(self):
+    def needOnceTick(self):
         _owner = self.owner
 
         if not _owner or _owner.isDie():
@@ -1519,8 +1511,8 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         if targetId in self.iTimerDict:
             _owner.cancelTimerCB(self.iTimerDict[targetId], gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
             self.iTimerDict.pop(targetId, None)
-        if (self.isActive and (_owner.isVisible(_target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
-            isFirstHate = True if self.hateDict.length == 0 else False
+        if (self.isActive and (_owner.isVisible(_target) or _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt))) and not self.hateDic.isInHateList(targetId):
+            isFirstHate = True if self.hateDic.length == 0 else False
             _owner.setTempMiscProp(gameconst.EntityPropsEnum.enterEnemyId, targetId)
             if self.stateMachine.testEvent(Event.HATE):
                 self.doIncreaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
@@ -1536,12 +1528,12 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         if _owner and _owner.selectedTargetId == targetId:
             _owner.selectedTargetId = 0
 
-        if not self.hateDict.isInHateList(targetId):
+        if not self.hateDic.isInHateList(targetId):
             return
 
         _enemy = KBEngine.entities.get(targetId)
         if not _enemy or not _owner or _owner.spaceNo != _enemy.spaceNo:
-            self.hateDict.removeHate(targetId)
+            self.hateDic.removeHate(targetId)
             return
 
         if (targetId not in self.iTimerDict
@@ -1580,11 +1572,11 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             return
 
         if _owner.isDie():
-            if self.isGroupMonster() and self.hateDict.isEmpty():
+            if self.isGroupMonster() and self.hateDic.isEmpty():
                 self.syncIncHateInGroup(targetId, damage=damage)
             return
 
-        dmg = self.hateDict.damageToHate(damage * hateRatio * skillHateRatio, '+')
+        dmg = self.hateDic.damageToHate(damage * hateRatio * skillHateRatio, '+')
         self.doIncreaseHate(targetId, damage=dmg)
         if self.stateMachine.onBeAttack:
             self.stateMachine.transform(self, StateEnum.ON_BE_ATTACK)
@@ -1684,13 +1676,6 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         if not _target:
             return
         self.tmpForceTargetId = targetId
-
-    def beCaught(self, targetId):
-        owner = self.owner
-        # self.doIncreaseHate(targetId, damage=SPEEL.datas['addHate']['value'])
-        self.doIncreaseHate(targetId, damage=100)
-        owner.setState(gameconst.StateEnum.Fighting, False)
-        self.forceExecuteTask(Task(Event.ATTACK, False, False, None))
 
     def boardAvatarsPopDialog(self, dlogId, iRange):
         owner = self.owner

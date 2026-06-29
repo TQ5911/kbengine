@@ -33,13 +33,13 @@ class IBaseWithCell(iBase.IBase):
 
         smCell = None
         if formula.inDungeonScene(spaceNo):
-            dungeonStub = gameengine.getDungeonStubBySpaceNo(spaceNo)
+            _dungeonStub = gameengine.getDungeonStubBySpaceNo(spaceNo)
             try:
-                sc = dungeonStub.spaces[spaceNo].spaceBox.cell
+                sc = _dungeonStub.spaces[spaceNo].spaceBox.cell
                 self._createCellEntityInCopySpace(sc, spaceNo)
             except:
-                # dungeonStub 不在当前进程
-                dungeonStub.requestSpaceCell(self, spaceNo)
+                # _dungeonStub 不在当前进程
+                _dungeonStub.requestSpaceCell(self, spaceNo)
             return
         elif formula.inWorldLineScene(spaceNo) or formula.inWonderLandScene(spaceNo):
             lineType = formula.fetchMapId(spaceNo)
@@ -52,12 +52,12 @@ class IBaseWithCell(iBase.IBase):
         try:
             self.createCellEntity(smCell)
         except:
-            LOG_ERR('Error: failed to create for exception', self.classname(), self.id, spaceNo, smCell)
+            LOG_ERR('Error: failed to create for exception', self.classname(), self.id, smCell, spaceNo)
             self.semiDestroy()
 
     def _createCellEntityInCopySpace(self, spaceCell, spaceNo):
         try:
-            if spaceCell.__class__.__name__ == 'CellEntityMailBox':
+            if 'CellEntityMailBox' == spaceCell.__class__.__name__:
                 self.createCellEntity(spaceCell)
             else:
                 spaceCell.base.createCellNearSelf(self)
@@ -66,15 +66,12 @@ class IBaseWithCell(iBase.IBase):
             LOG_ERR('Error:failed to create for exception:', self.classname(), self.id, spaceNo, str(e))
             self.semiDestroy()
 
-    def onCellSafeDestroy(self):
-        self.onLoseCellReason = gameconst.OnLoseCellReason.CELL_SAFE_DESTROY
-
     def onCreateCellFailure(self):
         LOG_ERR(self.classname() + '.onCreateCellFailture')
-
         self.destroy(deleteFromDB=False, writeToDB=False)
 
-        return
+    def onCellSafeDestroy(self):
+        self.onLoseCellReason = gameconst.OnLoseCellReasonEnum.CELL_SAFE_DESTROY
 
     def onGetCell(self):
         for callbackName, args in self.initCellCallbacks:
@@ -83,23 +80,21 @@ class IBaseWithCell(iBase.IBase):
 
         self.initCellCallbacks = []
 
-    def onCellAppDeath(self, addr, cid, groupOrder):
-        self.onLoseCellReason = gameconst.OnLoseCellReason.CELLAPP_DEATH
-        gameglobal.localBaseApp.addToCallQueue(lambda: self.onLoseCell(gameconst.OnLoseCellReason.CELLAPP_DEATH))
-
-    def onLoseCell(self, reason=0):
+    def onLoseCell(self, loseCellReason=0):
         if self.isDestroyed:
             return
 
-        if reason:
-            self.onLoseCellReason = reason
+        if loseCellReason:
+            self.onLoseCellReason = loseCellReason
 
-        if not hasattr(self, 'isDeleteFromDB') or not hasattr(self, 'isWriteToDB'):
+        if not (hasattr(self, 'isDelFromDB') and hasattr(self, 'isWriteToDB')):
             self.destroy(deleteFromDB=False, writeToDB=True)
         else:
-            self.destroy(deleteFromDB=self.isDeleteFromDB, writeToDB=self.isWriteToDB)
+            self.destroy(deleteFromDB=self.isDelFromDB, writeToDB=self.isWriteToDB)
 
-        return
+    def onCellAppDeath(self, addr, cid, groupOrder):
+        self.onLoseCellReason = gameconst.OnLoseCellReasonEnum.CELLAPP_DEATH
+        gameglobal.localBaseApp.addToCallQueue(lambda: self.onLoseCell(gameconst.OnLoseCellReasonEnum.CELLAPP_DEATH))
 
     def onTimer(self, timer, userData):
         self._onTimerTrigger(timer, userData)
@@ -112,53 +107,39 @@ class IBaseWithCell(iBase.IBase):
             if hasattr(self, 'cell'):
                 self.doEntireDestroy(False, False)
 
-        return
-
     def semiDestroy(self):
         self.pyAddTimer(10, 0, gametimer.TIMER_SEMI_DESTROY)
 
-        return
-
-    def delayDestroy(self, deleteFromDB):
-        if deleteFromDB:
-            self.pyAddTimer(10, 10, gametimer.TIMER_DELAY_DESTROY_TRUE)
-        else:
-            self.pyAddTimer(10, 10, gametimer.TIMER_DELAY_DESTROY_FALSE)
-
-        return
-
-    def doEntireDestroy(self, deleteFromDB, writeToDB):
+    def doEntireDestroy(self, isDelFromDB, writeToDB):
         if self.isDestroyed:
             return
 
-        LOG_DBG('base.doEntireDestroy', deleteFromDB, writeToDB, self.isDestroyed, self.cell)
+        LOG_DBG('base.doEntireDestroy', isDelFromDB, writeToDB, self.cell, self.isDestroyed)
 
-        self._preEntireDestroy()
+        self._onPreEntireDestroy()
 
         if hasattr(self, 'cell') and self.cell:
-            self.isDeleteFromDB = deleteFromDB
+            self.isDelFromDB = isDelFromDB
             self.isWriteToDB = writeToDB
             # cell被销毁之后，会触发onLoseCell方法，再销毁自己
-            self.onLoseCellReason = gameconst.OnLoseCellReason.ENTIRE_DESTROY
+            self.onLoseCellReason = gameconst.OnLoseCellReasonEnum.ENTIRE_DESTROY
             self.destroyCellEntity()
         else:
-            self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)
+            self.destroy(deleteFromDB=isDelFromDB, writeToDB=writeToDB)
 
-        self._postEntireDestroy()
+        self._onPostEntireDestroy()
 
+    def _onPostEntireDestroy(self):
         return
 
-    def _preEntireDestroy(self):
+    def _onPreEntireDestroy(self):
         return
-
-    def _postEntireDestroy(self):
-        return
-
-    def hasGotCell(self):
-        return self.cell
 
     def onRequestSpaceCell(self, spaceCell, spaceNo):
         self._createCellEntityInCopySpace(spaceCell, spaceNo)
+
+    def hasGotCell(self):
+        return self.cell
 
     def onRequestSpaceBox(self, spaceBox, spaceNo):
         self._createCellEntityInCopySpace(spaceBox.cell, spaceNo)

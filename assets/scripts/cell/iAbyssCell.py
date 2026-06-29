@@ -101,7 +101,7 @@ class IAbyssCell(object):
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             'beginEnterAbyss',
             (spaceBox, spaceMgrBoxCellId, spaceNo, extra),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
@@ -136,7 +136,7 @@ class IAbyssCell(object):
 
     #gm是本服的
     def gmLeaveAbyss(self):
-        srcId = gameconst.DungeonSrcEnum.FROM_CLIENT
+        srcId = gameconst.DunSrcEnum.FROM_CLIENT
         if not formula.inAbyssScene(self.spaceNo):
             LOG_WARN('IAbyssCell::leaveAbyss: spaceNo not line: {}'.format(self.spaceNo))
             return
@@ -377,11 +377,16 @@ class IAbyssCell(object):
             if noTicket:
                 return
 
+        #用票买时间
+        if self.abyssQuota.leftTime <= 0:
+            self.abyssQuota.addAbyssLeftTime(self, AB_CD.datas['abyssNumTime']['value'] * 60)
+            self.base.afterEnterAbyssDeductTimes()
+
         #本服判断可以进了，开始读条
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             '_doEnterCrossServerAbyss',
             (floor,),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)

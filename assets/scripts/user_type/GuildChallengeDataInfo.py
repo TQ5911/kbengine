@@ -23,7 +23,7 @@ class GuildChallengeDataInfoVal(userType.UserSingleType):
         self.fullHP = 0
         self.opUUID = opUUID
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'openedId': self.openedId,
             'openedFundCount': self.openedFundCount,
@@ -85,7 +85,7 @@ class GuildChallengeDataInfoVal(userType.UserSingleType):
         return obj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is GuildChallengeDataInfoVal

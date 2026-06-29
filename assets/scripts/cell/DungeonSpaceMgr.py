@@ -247,7 +247,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             ent = KBEngine.entities.get(pid)
             if ent and ent.isReal() and formula.inDungeonScene(ent.spaceNo):
                 if formula.parseDungeonNoBySpaceNo(self.spaceNo) == formula.parseDungeonNoBySpaceNo(ent.spaceNo):
-                    ent.client.changeDungeonChallengeRemainTime(self.spaceNo, endTime)
+                    ent.client.changeDungeonChallengeRemainTime(self.spaceNo, endTime, -1)
 
     def onPlayerRelogin(self, box, playerGbId):
         super(DungeonSpaceMgr, self).onPlayerRelogin(box, playerGbId)
@@ -771,9 +771,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
     def enterRaidDunDirectly(self, playerBox, playerGBID, spaceUUID, spaceBox, src, extraProps):
         LOG_INFO("enterRaidDunDirectly::", playerBox, playerGBID, spaceUUID, spaceBox, src, extraProps)
-        m_dungeonNo, m_errno = self._enterRaidDunDirectly(playerBox, playerGBID, spaceUUID, spaceBox, src)
-        if m_errno != gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK:
-            LOG_WARN(f"enterRaidDunDirectly::failed, errno={m_errno}")
+        m_dungeonNo, mErrno = self._enterRaidDunDirectly(playerBox, playerGBID, spaceUUID, spaceBox, src)
+        if mErrno != gameconst.RaidDunErrno.ENUM_RAIDDUN_OK:
+            LOG_WARN(f"enterRaidDunDirectly::failed, errno={mErrno}")
         playerBox.cell.doEnterRaidDungeonAfterCheck(m_dungeonNo, self.spaceNo, spaceUUID, spaceBox, self.base, src, extraProps)
 
     def _enterRaidDunDirectly(self, playerBox, playerGBID, spaceUUID, spaceBox, src):
@@ -784,9 +784,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 if not _pEnt:
                     continue
                 if _pEnt.hasState(gameconst.StateEnum.Fighting):
-                    return None, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_ENTER_BLOCK_BY_COMBAT
+                    return None, gameconst.RaidDunErrno.ENUM_RAIDDUN_ENTER_BLOCK_BY_COMBAT
 
-        return dungeonNo, gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
+        return dungeonNo, gameconst.RaidDunErrno.ENUM_RAIDDUN_OK
 
     def onCollectionBeCollect(self, entityGID, collectionId):
         super().onCollectionBeCollect(entityGID, collectionId)
@@ -1160,5 +1160,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             LOG_INFO("sendDungeonProps not inner demon mode")
             return
         
-        LOG_INFO("sendDungeonProps")
-        box.client.changeDungeonChallengeRemainTime(self.spaceNo, self.dungeonPlayMode.challengeEndTime)
+        score = self.dungeonSettlementDataCache.get('innerDemonTime', -1)
+        LOG_INFO("sendDungeonProps", score)
+        box.client.changeDungeonChallengeRemainTime(self.spaceNo, self.dungeonPlayMode.challengeEndTime, score)

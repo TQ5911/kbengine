@@ -257,7 +257,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             _linePlayers = self.allLines.get(spaceNo)
             if not _linePlayers:
                 return True
-            _curNum = len(_linePlayers) + len(_linePlayers.pendingEnterPlayers)
+            _curNum = len(_linePlayers) + len(_linePlayers.pendingEnterPlayersDic)
             return _curNum < B_BD.datas[_mapId]['N1']
         return super().canSpaceEnter(spaceNo)
 
@@ -314,7 +314,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _oldCanEnter = self.canMapEnter(_oldMapId)
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
-            _playerVal.playerStatus = linePlayers.LinePlayerVal.IN_LINE
+            _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
             if _playerVal.curSpaceNo != spaceNo:
                 LOG_ERR('CubeStub::onEnterCubeSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))

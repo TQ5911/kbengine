@@ -7,12 +7,12 @@ class ImpRaidDungeon(object):
     def createAndEnterRaidDungeonMemberPreCheck(self, srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData):
         LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
         dungeonPlayMode = extraData['dungeonPlayMode']
-        errno = gameconst.RaidDungeonErrno.ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL
+        errno = gameconst.RaidDunErrno.ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL
         if dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
             LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
             if self.chiefInfo.isCanTakeReward():
                 LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
-                errno = gameconst.RaidDungeonErrno.ENUM_RAIDDUN_OK
+                errno = gameconst.RaidDunErrno.ENUM_RAIDDUN_OK
         extraData.pop('dungeonPlayMode', None)
         srcPlayerBox.cell.onCreateAndEnterRaidDungeonAllMemberPreCheck(
             errno.errno, raidUUID, dungeonNo, dungeonSrc, extraData['_avatarProps']['gbId'], extraData['_avatarProps']['name'], extraData)

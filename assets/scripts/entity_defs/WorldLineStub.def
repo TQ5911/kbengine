@@ -17,12 +17,6 @@
     </Properties>
 
     <BaseMethods>
-        <checkAutoSwitchLine>
-            <Arg>       MAILBOX        </Arg>
-            <Arg>       PLAYER_GBID    </Arg>
-            <Arg>       SPACE_NO       </Arg>
-        </checkAutoSwitchLine>
-
         <onSpaceMgrReady>
             <Arg>       SPACE_NO       </Arg>
             <Arg>       ENTITYCALL     </Arg>

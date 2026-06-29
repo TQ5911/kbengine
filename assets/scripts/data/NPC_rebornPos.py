@@ -15,10 +15,14 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
+    0: _tools.RODict({
+        "ID": 0,
+        "name": "虚空复活点",
+    }),
     1: _tools.RODict({
         "ID": 1,
         "name": "火堆复活点",
     })
 })
-minKey = 1
+minKey = 0
 maxKey = 1

@@ -34,7 +34,7 @@ datas = _tools.RODict({
         "type": 1,
         "subType": 3,
         "time": 7,
-        "cost": ((1, 0, 0), (7, 30000021, 50)),
+        "cost": ((2, 0, 0), (7, 30000021, 50)),
     }),
     4: _tools.RODict({
         "ID": 4,

@@ -10,6 +10,7 @@
     <Interfaces>
         <Interface>   iClient     </Interface>
         <Interface>   iTimerBase  </Interface>
+        <Interface>   iTimerCell  </Interface>
     </Interfaces>
 
     <Properties>
@@ -99,6 +100,66 @@
             <Flags>         ALL_CLIENTS     </Flags>
             <Default>       6.0                   </Default>
         </speed>
+
+        <isWitnessComplete>
+            <Type>            UINT8                </Type>
+            <Flags>        ALL_CLIENTS             </Flags>
+            <Default>         2                    </Default>
+        </isWitnessComplete>
+
+        <enterViewList>
+            <Type>          PYTHON                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       []                      </Default>
+        </enterViewList>
+
+        <viewCompleteSet>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       set()               </Default>
+        </viewCompleteSet>
+
+        <viewNameSet>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       set()               </Default>
+        </viewNameSet>
+
+        <viewEnterViewSet>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       set()               </Default>
+        </viewEnterViewSet>
+
+        <viewLeaveViewSet>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       set()               </Default>
+        </viewLeaveViewSet>
+
+        <isNeedResortView>
+            <Type>          BOOL                </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </isNeedResortView>
+
+        <showCompleteNum>
+            <Type>          UINT8               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </showCompleteNum>
+
+        <lastSetCompleteNumTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </lastSetCompleteNumTime>
+
+        <showCompleteNumTimer>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </showCompleteNumTimer>
     </Properties>
 
     <BaseMethods>
@@ -114,6 +175,7 @@
 
         <onEnterWaitMapSpace>
             <Arg>       SPACE_NO        </Arg>
+            <Arg>       MAILBOX         </Arg>
         </onEnterWaitMapSpace>
 
         <createCellNearHere>
@@ -131,6 +193,10 @@
         <kickAvataring>
             <Arg>         UINT8                 </Arg>
         </kickAvataring>
+
+        <startOffline>
+            <Arg>         UINT8                 </Arg>
+        </startOffline>
     </BaseMethods>
 
     <CellMethods>
@@ -144,6 +210,29 @@
         <clientRemoveState> <Exposed/>
             <Arg>       UINT8       </Arg>
         </clientRemoveState>
+
+        <offline> <Exposed/>
+            <Arg>       UINT8                 </Arg>
+        </offline>
+
+        <jump> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       SPACE_NO        </Arg>
+        </jump>
+
+        <breakAwayStuck> <Exposed/>
+        </breakAwayStuck>
+
+        <reqPlayEmote> <Exposed/>
+            <Arg>       UINT16       </Arg>
+        </reqPlayEmote>
+
+        <reqStopPlayEmote> <Exposed/>
+        </reqStopPlayEmote>
+
+        <setShowCompleteNum> <Exposed/>
+            <Arg>       UINT8           </Arg>
+        </setShowCompleteNum>
     </CellMethods>
 
     <ClientMethods>
@@ -155,5 +244,19 @@
             <Arg>       CHAT_CHANNEL_AVATAR_INFO    </Arg>
             <Arg>       CHAT_MSG_DATA       </Arg>
         </onRecvAvatarChannelMsg>
+
+        <onBreakAwayStuckSuccess>
+        </onBreakAwayStuckSuccess>
+
+        <onStartPlayEmote>
+            <Arg>       UINT16       </Arg>
+        </onStartPlayEmote>
+
+        <onStopPlayEmote>
+        </onStopPlayEmote>
+
+        <onRemoveCompleteWitness>
+            <Arg>        ARRAY <of> OBJECT_ID </of>   </Arg>
+        </onRemoveCompleteWitness>
     </ClientMethods>
 </root>

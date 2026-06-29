@@ -2,11 +2,7 @@
 import KBEngine
 from KBEDebug import *
 
-import os
-
-import gameengine
 import gameconst
-import gametimer
 import formula
 import utils
 
@@ -16,32 +12,34 @@ import iLargeEnt
 import iFubenSpace
 import iGameEntity
 
-import NPC_airWall as NPA
-
 
 class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
               iGameEntity.IGameEntity, iLargeEnt.ILargeEnt):
-    IsMonster = False
     IsCombatUnit = False
+    IsMonster = False
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         iCell.ICell.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
 
-        spaceMgr = self.spaceMgr
+        _spaceMgr = self.spaceMgr
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         if formula.inDungeonScene(self.spaceNo):
             dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.barrierId),
-                                             'gid_{}'.format(gid), self.__class__.__name__,))
+            if _spaceMgr:
+                _spaceMgr.addEntity(self.id, (
+                    str(self.barrierId),
+                    str(self.fbEntityId), 
+                    'gid_{}'.format(gid), 
+                    self.__class__.__name__,
+                ))
             # large entity
-            entityMaxLength = self._getBarrierLargeEntLength(dungeonNo, gid)
-            if entityMaxLength > gameconst.DEFAULT_AOI:
-                self.setBodySize((entityMaxLength*1.414, entityMaxLength*1.414))
+            _entityMaxLength = self._getBarrierLargeEntLength(dungeonNo, gid)
+            if _entityMaxLength > gameconst.DEFAULT_AOI:
+                self.setBodySize((_entityMaxLength*1.414, _entityMaxLength*1.414))
         elif formula.inSiegeWarScene(self.spaceNo):
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, ('', self.__class__.__name__,))
+            if _spaceMgr:
+                _spaceMgr.addEntity(self.id, ('', self.__class__.__name__,))
 
         _area = self._getNavArea()
         if _area:
@@ -56,9 +54,9 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         return _airData.get(gid, 0)
 
     def _getBarrierLargeEntLength(self, dungeonNo, gid):
-        dunAllDatas = utils.getDunModuleData(dungeonNo)
-        dunData = dunAllDatas[str(gid)]
-        dunPropsData = dunData["Props"]
+        _dunAllDatas = utils.getDunModuleData(dungeonNo)
+        _dunData = _dunAllDatas[str(gid)]
+        dunPropsData = _dunData["Props"]
         _areaType = dunPropsData["AreaType"]
         _maxLength = 0
         if _areaType == gameconst.DungeonCustomAreaType.CIRCLE:
@@ -90,8 +88,8 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
 
         data = _getTmxModuleData()
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
-        props = data[str(gid)]['Props']
-        return int(props['MPosX']), int(props['MPosZ'])
+        _props = data[str(gid)]['Props']
+        return int(_props['MPosX']), int(_props['MPosZ'])
 
     def addEngineAirWall(self):
         name = self.getTmxName()
@@ -106,10 +104,10 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         else:
             super(Barrier, self).onTimer(tid, userData)
 
-    def onGetWitness(self):
+    def onLoseWitness(self):
         pass
 
-    def onLoseWitness(self):
+    def onGetWitness(self):
         pass
 
     def _preSafeDestory(self):

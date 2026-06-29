@@ -79,7 +79,7 @@ class IBag(object):
             useNum = BD_SD.datas['itemBatchUseUpLimit']['value']
 
         _useItemCtx = actionContext.UseItemCtx(targetId, argsList)
-        if itemData['subType'] in (gameconst.ItemSubType.Normal,):
+        if itemData['subType'] in (gameconst.ItemSubEnum.Normal,):
             _useItemCtx = actionContext.UseBoxTypeItemCtx(targetId, argsList)
 
         #检查跨服是否可以使用
@@ -656,7 +656,6 @@ class IBag(object):
         if triggerPos:
             if self.checkConflictState(C_C_DD.datas.teleport):
                 self.telToPos(triggerPos)
-            # self.base.teleportByNo(self.spaceNo, triggerPos, self.direction, '', ())
             else:
                 self.showMsg(NPCST.datas.get("pickFailedAlert_TransportFail", {}).get('value'), [_pickData['castDesc']])
 
@@ -742,6 +741,10 @@ class IBag(object):
 
     def useAddBuffByItem(self, itemId, *args):
         self.addBuffBySkill(self, actionContext.UseItemHealContext(itemId, self.id), *args)
+        return gameconst.UseItemEnum.TRUE
+
+    def useRemoveBuffByItem(self, itemId, *args):
+        self.removeBuffBySkill(self, actionContext.UseItemHealContext(itemId, self.id), *args)
         return gameconst.UseItemEnum.TRUE
 
     def useAddTargetBuffByItem(self, context, itemId, *args):
@@ -938,7 +941,7 @@ class IBag(object):
         _extra = {'dstSpaceNo': spaceNo, 'dstPos': dstPos}
         self._commonNeedCast(C_C_DD.datas.teleportCast,
                              gameconst.StateEnum.Teleporting,
-                             gameconst.CastType.teleportByUseItem,
+                             gameconst.CastEnum.teleportByUseItem,
                              'onTelToMainCityWithCast',
                              (None, spaceNo, dstPos, dstDir, callback, callbackArgs, fCallback, fCallbackArgs),
                              castTime=castTime,

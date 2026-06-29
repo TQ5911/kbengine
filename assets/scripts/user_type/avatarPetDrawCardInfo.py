@@ -24,7 +24,7 @@ class cardPoolInfo(userType.UserSingleType):
         self.dailyNum = dataDict['dailyNum']
         self.coinLeftTimes = dataDict['coinLeftTimes']
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         data = {
             'pool': self.pool,
             'num': self.num,
@@ -70,10 +70,10 @@ class petDrawCardInfo(userType.UserSTSoleType):
             self.cardPoolInfoDict[curInfo['pool']] = info
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         cardPoolInfoList = []
         for pool, info in self.cardPoolInfoDict.items():
-            cardPoolInfoList.append(info.toSavedDict())
+            cardPoolInfoList.append(info.toStreamSavedDic())
         data = {
             'cardPoolInfoList': cardPoolInfoList,
         }
@@ -102,7 +102,7 @@ class drawCardRecord(userType.UserSingleType):
         self.ts = dataDict['ts']
         self.items = dataDict['items']
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         data = {
             'id': self.id,
             'ts': self.ts,
@@ -172,7 +172,7 @@ class petDrawCardRecord(userType.UserSTSoleType):
             self.checkExpiredLimit(pool, ts)
         return self
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         # 落库前检测一次
         ts = utils.curTS()
         for pool in self.drawCardRecordDic.keys():
@@ -185,7 +185,7 @@ class petDrawCardRecord(userType.UserSTSoleType):
             recordDicList = []
             recordList = poolData["recordList"]
             for record in recordList:
-                recordDicList.append(record.toSavedDict())
+                recordDicList.append(record.toStreamSavedDic())
             poolRecordData['pool'] = pool
             poolRecordData['curCnt'] = len(recordDicList)
             poolRecordData['totalCnt'] = poolData["totalCnt"]

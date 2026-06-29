@@ -508,9 +508,9 @@ class CastCommonCtx(object):
         self.timer = 0
 
     def notifyClient(self, box, castType, extraProps=None):
-        if castType == gameconst.CastType.ride:
+        if castType == gameconst.CastEnum.ride:
             pass
-        elif castType == gameconst.CastType.teleportClientDelay:
+        elif castType == gameconst.CastEnum.teleportClientDelay:
             pass
         else:
             box.client.onTeleportCasting(castType, self.getCastTime(castType), self.startTime + self.getCastTime(castType))
@@ -636,7 +636,7 @@ class CubeDurCtx(object):
     def done(self, isSuccess):
         if not isSuccess:
             if self.failedLeaveCube:
-                self.avatarBase.cell.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT, True)
+                self.avatarBase.cell.leaveCubeInternal(gameconst.DunSrcEnum.FROM_TIME_OUT, True)
 
 class CreateSummonCtx(ActionContext):
     actionType = ACTION_UNKNOWN

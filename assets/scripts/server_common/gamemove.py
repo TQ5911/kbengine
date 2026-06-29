@@ -12,13 +12,13 @@ __all__ = [
     'AI_GO_HOME_MOVE_OVER',
 ]
 
-MOVE_GENERATOR = (i for i in range(1, 1000000))
+MOVE_GENERATOR = (_i for _i in range(1, 1000000))
 
 
 def defineMove(moveName):
-    modSelf = sys.modules[__name__]
-    setattr(modSelf, moveName, next(MOVE_GENERATOR))
+    _modSelf = sys.modules[__name__]
+    setattr(_modSelf, moveName, next(MOVE_GENERATOR))
 
 
-for name in __all__:
-    defineMove(name)
+for _name in __all__:
+    defineMove(_name)

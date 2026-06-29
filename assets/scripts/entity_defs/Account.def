@@ -197,19 +197,19 @@
             <Persistent>    true                    </Persistent>
         </phone>
 
-        <tempMiscPropsBase>
+        <baseTempMiscProps>
             <Type>     PY_DICT                      </Type>
             <Flags>    BASE                         </Flags>
             <Default>   {}                          </Default>
-        </tempMiscPropsBase>
+        </baseTempMiscProps>
 
-        <miscPropsBase>
+        <baseMiscProps>
             <Type>     PY_DICT                      </Type>
             <Flags>    BASE                         </Flags>
             <Default>   {}                          </Default>
             <DatabaseLength>  512000                </DatabaseLength>
             <Persistent>    true                    </Persistent>
-        </miscPropsBase>
+        </baseMiscProps>
 
         <waitingShutdown>
             <Type>     BOOL                         </Type>
@@ -226,6 +226,11 @@
             <Type>     STRING                       </Type>
             <Flags>    BASE                         </Flags>
         </clientDistinctId>
+
+        <deviceId>
+            <Type>     STRING                       </Type>
+            <Flags>    BASE                         </Flags>
+        </deviceId>
     </Properties>
 
     <ClientMethods>

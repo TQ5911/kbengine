@@ -27,10 +27,6 @@
         <semiDestroy>
         </semiDestroy>
 
-        <delayDestroy>
-            <Arg>           BOOL            </Arg>
-        </delayDestroy>
-
         <onRequestSpaceCell>
             <Arg>           MAILBOX         </Arg>
             <Arg>           SPACE_NO        </Arg>

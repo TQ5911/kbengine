@@ -2,15 +2,9 @@
 
 import KBEngine
 
-import KBEDebug
-
 import iFlowController
-
-import utils
 
 
 class ISpaceMgr(iFlowController.IFlowController):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(ISpaceMgr, self).__init__()
-
-        return

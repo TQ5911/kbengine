@@ -521,7 +521,7 @@ class ImpTask(impTalk.ImpTalk):
         if NeedPlayFx:
             self.client.onNoNeedPlayFx()
 
-        src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DungeonSrcEnum.FROM_TASK)
+        src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DunSrcEnum.FROM_TASK)
         myDungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
         if dungeonNo == myDungeonNo:
             # 相同單人副本之間的傳送到指定位置
@@ -558,7 +558,7 @@ class ImpTask(impTalk.ImpTalk):
             LOG_WARN('cant enter same dungeon')
             return
 
-        _src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DungeonSrcEnum.FROM_TASK)
+        _src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DunSrcEnum.FROM_TASK)
         self.selfEnterTeamDungeon(dungeonNo, _src)
 
     def onTaskRwdLeaveDungeon(self, taskId, dungeonNo, claimSrc):
@@ -575,6 +575,8 @@ class ImpTask(impTalk.ImpTalk):
             return
 
         leaveDelay = dataUtils.getTaskFieldVal(dataUtils.getTaskCfg(taskId), 'FinRewardLevInsDelay')
+        if claimSrc==gameconst.ClaimTaskSrcEnum.TASK_SRC_QUIT_TASK_REWARD_LEAVE_DUNGEON:
+            leaveDelay = dataUtils.getTaskFieldVal(dataUtils.getTaskCfg(taskId), 'AbanRewardLevInsDelay')
         box = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
         if box:
             if formula.inSingleDungeonScene(self.spaceNo):
@@ -592,7 +594,7 @@ class ImpTask(impTalk.ImpTalk):
             return
         LOG_INFO('cellEnterTaskTargetDungeon:', taskId, dungeonNo, extra)
         _src = dungeonSrc.BasicDungeonSrc(
-            srcId=gameconst.DungeonSrcEnum.FROM_TASK,
+            srcId=gameconst.DunSrcEnum.FROM_TASK,
             playerBox=self.base, playerGBID=self.gbId,
         )
 

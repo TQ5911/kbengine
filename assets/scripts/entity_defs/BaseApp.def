@@ -142,10 +142,6 @@
             <Arg>           STRING      </Arg>
         </createArchiveStub>
 
-        <destroyMarker>
-            <Arg>           SPACE_NO    </Arg>
-        </destroyMarker>
-
         <createLocalStubs>
         </createLocalStubs>
 

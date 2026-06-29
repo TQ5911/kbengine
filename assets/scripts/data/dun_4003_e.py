@@ -24,7 +24,7 @@ datas ={
       40030045
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -73,7 +73,7 @@ datas ={
       40030078
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -91,10 +91,10 @@ datas ={
       40030061
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
-    "minAtk": 9999,
+    "minAtk": 0,
     "maxAtk": 0,
     "ifSetBoss": 0,
     "aiName": 0,
@@ -171,7 +171,7 @@ datas ={
       40030087
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -202,7 +202,7 @@ datas ={
       40030067
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -243,7 +243,7 @@ datas ={
       40030090
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -276,7 +276,7 @@ datas ={
       40030081
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "13",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

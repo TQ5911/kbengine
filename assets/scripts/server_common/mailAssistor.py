@@ -13,8 +13,6 @@ import time
 import gameglobal
 import dataUtils
 # import idipDef
-import gamelog
-import gameconfig
 
 import LogTrackingMgr
 
@@ -193,7 +191,12 @@ def _onSendMailByGBIDSucc(toGBID, mailId, mailGBID, title, cont, attachStr, srcT
             None, '', ())
 
     mailData = M_MD.datas[mailId]
-    LogTrackingMgr.LogTrackingMgr.Mail_Send('Mail', '', toGBID, mailId, mailData['type'], mailGBID, srcType, srcSubType, opUUID, idipSource, attachStr) 
+    result = []
+    if ',' in attachStr:
+        tmp = {int(k): int(v) for k, v in (pair.split(',') for pair in attachStr.split(';'))}
+        for itemId, itemCount in tmp.items():
+            result.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
+    LogTrackingMgr.LogTrackingMgr.mail_send('Mail', '', toGBID, mailId, mailData['type'], mailGBID, srcType, srcSubType, opUUID, idipSource, result) 
 
 def getMyGlobalsMails(lastGBMailTime, roleChannel, roleRegTime, roleLoginTime, roleLevel, hasGotGlobalMails):
     LOG_INFO('in getMyGlobalsMails, lastGBMailTime:', lastGBMailTime, roleChannel, roleRegTime, roleLoginTime, roleLevel)

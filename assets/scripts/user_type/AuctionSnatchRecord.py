@@ -9,7 +9,7 @@ class AuctionSnatchRecord(userType.UserSingleType):
         self.name = name
         self.opUUID = opUUID
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'gbId': self.gbId,
             'name': self.name,
@@ -22,7 +22,7 @@ class AuctionSnatchRecordMgr(object):
         return obj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is AuctionSnatchRecord

@@ -186,23 +186,23 @@ class ItemContainer(userType.UserSingleType):
         else:
             return gameconst.BagOpPlan.OPERATE_BAG_OK, addPlanDict, leftItemList
 
-    def _calcAddSingleItemPlan(self, item, planDict):
+    def _calcAddSingleItemPlan(self, item, planDic):
         _totalNum = item.itemNum
         _maxStackSize = item.maxStackSize(item.itemId)
         oldGrids = self.getGridIdsByItemId(item.itemId)
         for gridId in oldGrids:
             _it = self.gridIdToGridObj[gridId]
-            _planItems = planDict['old'].get(gridId, [])
+            _planItems = planDic['old'].get(gridId, [])
             sumNum = sum([num for _, num in _planItems])
             if _it.canMerge(item) and _it.itemNum + sumNum < _maxStackSize:
                 addNum = min(_totalNum, _maxStackSize - _it.itemNum - sumNum)
                 _totalNum = _totalNum - addNum
                 _planItems.append((item, addNum))
-                planDict['old'][gridId] = _planItems
+                planDic['old'][gridId] = _planItems
                 if _totalNum == 0:
                     return gameconst.BagOpPlan.OPERATE_BAG_OK, _totalNum
 
-        for gridId, _planItems in planDict['new'].items():
+        for gridId, _planItems in planDic['new'].items():
             sumNum = sum([num for _, num in _planItems])
             _it = _planItems[0][0]
             if _it.canMerge(item) and sumNum < _maxStackSize:
@@ -214,44 +214,44 @@ class ItemContainer(userType.UserSingleType):
 
         for oneNum in range(0, _totalNum, _maxStackSize):
             addNum = min(_maxStackSize, _totalNum - oneNum)
-            newGridId = self.fetchEmptyGrid(excludes=list(planDict['new'].keys()))
+            newGridId = self.fetchEmptyGrid(excludes=list(planDic['new'].keys()))
             if newGridId is None:
                 return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, _totalNum
-            planDict['new'][newGridId] = [(item, addNum)]
+            planDic['new'][newGridId] = [(item, addNum)]
             _totalNum -= addNum
             if _totalNum == 0:
                 return gameconst.BagOpPlan.OPERATE_BAG_OK, _totalNum
 
         return gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN, _totalNum
 
-    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True):
+    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDic=None, notify=True, syncToClient=True):
         LOG_INFO('addItemsWithPlan', self.isLocked(), [(_i.itemId, _i.itemNum) for _i in itemList], opUUID, src)
         if self.isLocked():
             return gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, {}
 
-        if planDict:
+        if planDic:
             addPlanCode = gameconst.BagOpPlan.OPERATE_BAG_OK
         else:
-            addPlanCode, planDict, leftList = self.calcAddItemsPlan(itemList)
+            addPlanCode, planDic, leftList = self.calcAddItemsPlan(itemList)
 
-        LOG_INFO('addItemsWithPlan', addPlanCode, planDict)
+        LOG_INFO('addItemsWithPlan', addPlanCode, planDic)
 
         if addPlanCode != gameconst.BagOpPlan.OPERATE_BAG_OK:
             return gameconst.BagOPStat.OPERATE_BAG_NO_SPACE, None
 
-        for gridId, _planItems in planDict['old'].items():
+        for gridId, _planItems in planDic['old'].items():
             item = self.gridIdToGridObj[gridId]
             mergeNum = sum([num for _, num in _planItems])
             item.setItemNum(item.itemNum + mergeNum)
 
-        for gridId, _planItems in planDict['new'].items():
+        for gridId, _planItems in planDic['new'].items():
             sumNum = sum([num for _, num in _planItems])
             _it = _planItems[0][0]
             _it.setItemNum(sumNum)
             # addItemsWithPlan已经通知客户端一次，在addItemsWithPlan里调用addItemsToNewGrid，syncToClient为False
             self.addItemsToNewGrid(owner, _it, opUUID, src, detail, gridId, False)
 
-        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDict
+        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDic
 
     # 只计算扣除物品的方案，不扣除物品
     def calcDeductItemsPlan(self, itemsDict, itemObjs=None):
@@ -286,11 +286,11 @@ class ItemContainer(userType.UserSingleType):
 
         return gameconst.BagOpPlan.OPERATE_BAG_OK, removeDict
 
-    def _calcDeductSingleItemPlan(self, itemId, bindType, totalNum, planDict):
+    def _calcDeductSingleItemPlan(self, itemId, bindType, totalNum, planDic):
         itemGrids = self.getGridIdsByItemId(itemId)
         for gridId in itemGrids:
             _it = self.gridIdToGridObj[gridId]
-            planNum = planDict.get(gridId, 0)
+            planNum = planDic.get(gridId, 0)
 
             if _it.bindType != bindType:
                 continue
@@ -303,7 +303,7 @@ class ItemContainer(userType.UserSingleType):
                 # 如果这个格子已经被扣除了planNum了，这次扣除要先减去
                 _removeNum = min(totalNum, _it.itemNum - planNum)
                 totalNum = totalNum - _removeNum
-                planDict[gridId] = planNum + _removeNum
+                planDic[gridId] = planNum + _removeNum
                 if totalNum == 0:
                     return 0, gameconst.BagOpPlan.OPERATE_BAG_OK
 
@@ -368,7 +368,7 @@ class ItemContainer(userType.UserSingleType):
                 self._recycleGrid(_gridId, item.itemId)
         return
 
-    def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDict=None, isCheckLock=True):
+    def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDic=None, isCheckLock=True):
         LOG_INFO('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
         if self.isLocked():
             if isCheckLock:
@@ -376,17 +376,17 @@ class ItemContainer(userType.UserSingleType):
             else:
                 LOG_WARN("in Bag::deductItemsWithPlan, bag is locked, but isCheckLock is False", owner.id, itemsDict,
                             opUUID, srcType)
-        if planDict:
+        if planDic:
             deductPlan = gameconst.BagOpPlan.OPERATE_BAG_OK
         else:
-            deductPlan, planDict = self.calcDeductItemsPlan(itemsDict, itemsObjs)
+            deductPlan, planDic = self.calcDeductItemsPlan(itemsDict, itemsObjs)
 
         if deductPlan == gameconst.BagOpPlan.OPERATE_BAG_NO_PLAN:
             return gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH, None
 
-        self.deductItemsByGridId(owner, planDict, opUUID, srcType, detail)
+        self.deductItemsByGridId(owner, planDic, opUUID, srcType, detail)
 
-        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDict
+        return gameconst.BagOPStat.OPERATE_BAG_STAT_OK, planDic
 
     @utils.checkBagLocked
     def doCleanBag(self, owner, opUUID, src, detail):

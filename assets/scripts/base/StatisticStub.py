@@ -17,22 +17,19 @@ import gameglobal
 
 class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(StatisticStub, self).__init__()
         LOG_INFO("StatisticStub  __init__", self.classname())
         self.statisticDic = {}
-        return
 
     def postReloadScript(self):
         super(StatisticStub, self).postReloadScript()
-        for v in self.statisticDic.values():
-            v.reloadScript()
+        for _v in self.statisticDic.values():
+            _v.reloadScript()
 
     def doNext(self):
         gameglobal.localBaseApp.fullPrepare(self.classname())
-
         self.pyAddTimer(1, 1, gametimer.STATISTIC_STUB_UPDATE)
-        return
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
@@ -42,12 +39,8 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._updateTick()
 
     def _updateTick(self):
-        # if not gameconfig.enableStatistic():
-        #     return
-
-        for spaceNo, sVal in self.statisticDic.items():
+        for sVal in self.statisticDic.values():
             sVal.updateTick()
-
 
     def startReportStatistics(self, gbId, playerBox, spaceNo, extraDic):
         LOG_INFO("startReportStatistics", gbId, spaceNo, extraDic)
@@ -78,11 +71,10 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR("reportStatistics spaceNo not in self.statisticDic", spaceNo)
             return
 
-        sVal = self.statisticDic.get(spaceNo)
-        sVal.updateStatistics(gbId, statisticDic)
+        _sVal = self.statisticDic.get(spaceNo)
+        _sVal.updateStatistics(gbId, statisticDic)
 
     def startGetStatistics(self, gbId, playerBox, spaceNo, statisticType, extraDic):
-        # LOG_INFO("startGetStatistics", statisticType)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
             LOG_ERR("startGetStatistics space cannot statistic", gbId, spaceNo)
             return
@@ -103,8 +95,8 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if spaceNo not in self.statisticDic:
             return
 
-        sVal = self.statisticDic.get(spaceNo)
-        sVal.stopGetStatistics(gbId)
+        _sVal = self.statisticDic.get(spaceNo)
+        _sVal.stopGetStatistics(gbId)
 
     def onSpaceGone(self, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):

@@ -3,19 +3,16 @@ from KBEDebug import *
 import KBEngine
 
 import gameconst
-import iBaseWithCell
 import iFubenSpace
+import iBaseWithCell
 
 class Monster(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(Monster, self).__init__()
 
-        return
-
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 
         self.destroy(writeToDB=False)
-        return

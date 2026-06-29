@@ -288,7 +288,6 @@
 
         <teamPrepareAutoMatch>
             <Arg>           TEAMID       </Arg>
-            <Arg>           GUILD_UUID   </Arg>
         </teamPrepareAutoMatch>
 
         <doTeamPrepareStopAutoMatch>
@@ -309,7 +308,6 @@
             <Arg>           UNICODE      </Arg>
             <Arg>           STRING       </Arg>
             <Arg>           BOOL         </Arg>
-            <Arg>           GUILD_UUID   </Arg>
         </setTeamTarget>
 
         <getTeamInfo>
@@ -531,5 +529,13 @@
             <Arg>   METHOD_NAME </Arg>
             <Arg>   METHOD_ARGS </Arg>
         </broadcastToAllMembers>
+
+        <onTeamDungeonCompletedCB>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onTeamDungeonCompletedCB>
     </BaseMethods>
 </root>

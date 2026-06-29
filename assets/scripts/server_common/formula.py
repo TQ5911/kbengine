@@ -8,7 +8,7 @@ import math
 import cube_room
 import cube_config
 
-import gamePlay_gamePlay as GGD
+import gamePlay_gamePlay as GP_GPD
 import decimal
 import KBEngine
 import mineBattle_miningArea as MBMA
@@ -28,8 +28,8 @@ def getSpaceMap(spaceNo):
         _ = gameconst.gSpaceDict[mapId]
     elif mapId in gameconst.gSpaceDict:
         _ = gameconst.gSpaceDict[mapId]
-    elif mapId in GGD.datas:
-        spaceType = GGD.datas[mapId]['type']
+    elif mapId in GP_GPD.datas:
+        spaceType = GP_GPD.datas[mapId]['type']
         if gameconst.DungeonTypeJudge.isBigWorldDungeon(spaceType):
             _ = gameconst.gSpaceDict[gameconst.MapIdDef.mapXinYuanCheng]
         else:
@@ -39,7 +39,7 @@ def getSpaceMap(spaceNo):
     elif mapId == gameconst.MapIdDef.mapSpecial:
         _ = gameconst.gSpaceDict[gameconst.MapIdDef.mapXinYuanCheng]
     else:
-        raise TypeError('Unknown spaceNo :{}'.format(spaceNo))
+        raise TypeError(f'Unknown spaceNo :{spaceNo}')
 
     path = 'spaces/%s' % _['map']
     return path
@@ -50,7 +50,7 @@ def getSpaceType(spaceNo):
     if not mapId:
         return gameconst.SpaceType.UnKownSpaceType
 
-    return GGD.datas[mapId]['type']
+    return GP_GPD.datas[mapId]['type']
 
 @functools.lru_cache(1024, typed=False)
 def getSpaceSubType(spaceNo):
@@ -58,7 +58,7 @@ def getSpaceSubType(spaceNo):
     if not mapId:
         return gameconst.SpaceSubType.Yanwu
 
-    return GGD.datas[mapId]['subType']
+    return GP_GPD.datas[mapId]['subType']
 
 @functools.lru_cache(1024, typed=False)
 def getSpaceTypeWithSub(spaceNo):
@@ -66,7 +66,7 @@ def getSpaceTypeWithSub(spaceNo):
     if not mapId:
         return gameconst.SpaceType.UnKownSpaceType, 0
 
-    return GGD.datas[mapId]['type'], GGD.datas[mapId]['subType']
+    return GP_GPD.datas[mapId]['type'], GP_GPD.datas[mapId]['subType']
 
 
 def bornPosFromDunData(d):
@@ -115,7 +115,7 @@ def inWolrdBossScene(spaceNo):
 
 
 def checkDuelMapId(mapId):
-    _type, _sub = GGD.datas[mapId]['type'], GGD.datas[mapId]['subType']
+    _type, _sub = GP_GPD.datas[mapId]['type'], GP_GPD.datas[mapId]['subType']
     return _type == gameconst.SpaceType.SpaceLine and _sub == gameconst.SpaceSubType.Yanwu
 
 def inDuelScene(spaceNo):
@@ -196,42 +196,42 @@ def parseDungeonNoBySpaceNo(spaceNo):
 
 
 def bset(x, index, on=True):
-    bi = int(index / 8)
+    _bi = int(index / 8)
     si = index % 8
     qfl = len(x)
 
-    if on and qfl < bi + 1:
-        x.extend([0] * (bi - qfl + 1))
+    if on and qfl < _bi + 1:
+        x.extend([0] * (_bi - qfl + 1))
 
     tmp = 1 << si
 
     if on:
-        x[bi] |= tmp
+        x[_bi] |= tmp
     else:
         if bitGet(x, index):
-            x[bi] ^= tmp
+            x[_bi] ^= tmp
 
     return x
 
 
 def bitGet(x, index):
-    bi = int(index / 8)
+    _bi = int(index / 8)
     si = index % 8
-    if len(x) < bi + 1:
+    if len(x) < _bi + 1:
         return False
     else:
-        return (x[bi] & (1 << si)) != 0
+        return (x[_bi] & (1 << si)) != 0
 
 
 # 设置int64整数列表表示的bit vector中第index个bit值
 def setInt64ListBit(intList, index, on=True):
     ii = index // 64
-    bi = index % 64
+    _bi = index % 64
     if on:
-        intList[ii] |= 1 << bi
+        intList[ii] |= 1 << _bi
     else:
-        if intList[ii] & (1 << bi):
-            intList[ii] ^= 1 << bi
+        if intList[ii] & (1 << _bi):
+            intList[ii] ^= 1 << _bi
     return intList
 
 
@@ -261,20 +261,20 @@ def getInt64ListOnIndexes(intList):
 
 
 def hashableJsonHook(obj):
-    for v in obj.values():
-        hash(v)
+    for _v in obj.values():
+        hash(_v)
     return obj
 
 
-def round2(number, ndigit=None):
-    if ndigit and ndigit < 0:
-        return round(number, ndigit)
-    if ndigit is None:
-        TWOPLACES = decimal.Decimal()
+def round2(number, numDigit=None):
+    if numDigit and numDigit < 0:
+        return round(number, numDigit)
+    if numDigit is None:
+        _twoPlaces = decimal.Decimal()
     else:
-        TWOPLACES = decimal.Decimal(10) ** (-ndigit)
-    r = decimal.Decimal(str(number)).quantize(TWOPLACES, rounding=decimal.ROUND_HALF_UP)
-    if ndigit is None:
+        _twoPlaces = decimal.Decimal(10) ** (-numDigit)
+    r = decimal.Decimal(str(number)).quantize(_twoPlaces, rounding=decimal.ROUND_HALF_UP)
+    if numDigit is None:
         return int(r)
     else:
         return float(r)
@@ -326,7 +326,7 @@ def checkSpaceForbidTeamFollow(spaceNo):
         return True
 
     mapId = fetchMapId(spaceNo)
-    sceneInfo = GGD.datas.get(mapId, None)
+    sceneInfo = GP_GPD.datas.get(mapId, None)
     if sceneInfo and not sceneInfo['ifTeamFollow']:
         return True
 
@@ -337,7 +337,7 @@ def checkSpaceForbidAutoFight(spaceNo):
         return True
 
     mapId = fetchMapId(spaceNo)
-    sceneInfo = GGD.datas.get(mapId, None)
+    sceneInfo = GP_GPD.datas.get(mapId, None)
     if sceneInfo and not sceneInfo['ifAutoFight']:
         return True
 
@@ -355,7 +355,7 @@ def inSingleDungeonScene(spaceNo):
     if not inDungeonScene(spaceNo):
         return False
     dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    enterType = GP_GPD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
     if enterType == gameconst.DungeonEnterTypeEnum.BOTH:
         dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getSingleDungeonSpaceRange(dungeonNo)
         return dunSpaceStart <= spaceNo < dunSpaceEnd
@@ -367,7 +367,7 @@ def inTeamDungeonScene(spaceNo):
     if not inDungeonScene(spaceNo):
         return False
     dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    enterType = GP_GPD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
     if enterType == gameconst.DungeonEnterTypeEnum.BOTH:
         dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getTeamDungeonSpaceRange(dungeonNo)
         return dunSpaceStart <= spaceNo < dunSpaceEnd
@@ -378,7 +378,7 @@ def inRaidDungeonScene(spaceNo):
     if not inDungeonScene(spaceNo):
         return False
     dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    enterType = GP_GPD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
     if enterType == gameconst.DungeonEnterTypeEnum.RAID:
         return True
     return False
@@ -387,8 +387,8 @@ def inGuildBossDungeonScene(spaceNo):
     if not inDungeonScene(spaceNo):
         return False
     dungeonNo = parseDungeonNoBySpaceNo(spaceNo)
-    spaceType = GGD.datas[dungeonNo].get('type', gameconst.DungeonSpaceTypeEnum.UNKNOWN)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
+    spaceType = GP_GPD.datas[dungeonNo].get('type', gameconst.DungeonSpaceTypeEnum.UNKNOWN)
+    enterType = GP_GPD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterTypeEnum.UNKNOWN)
     if spaceType == gameconst.DungeonSpaceTypeEnum.GUILD_BOSS \
         and enterType == gameconst.DungeonEnterTypeEnum.GUILD:
         return True

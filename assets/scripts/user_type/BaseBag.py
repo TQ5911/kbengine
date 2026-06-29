@@ -5,18 +5,18 @@ import utils
 
 import gameconst
 import itemContainer
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import gameengine
-import itemData_itemType as IDITD
 import dataUtils
 import _pickle as cPickle
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import itemData_itemType as IDITD
 
 
 class BaseBag(itemContainer.ItemContainer):
-    def __init__(self, capacity=0):
+    def __init__(self, capacity=0, **kwargs):
         super(BaseBag, self).__init__(capacity)
-        self.bagType = 0
         self.lockedTime = 0
+        self.bagType = 0
         self.lockDesc = ''
         self.lastSortBag = 0
 
@@ -30,42 +30,37 @@ class BaseBag(itemContainer.ItemContainer):
         except TypeError as e:
             LOG_ERR('BaseBag', id(BaseBag), id(self.__class__), self.__class__.__name__)
             raise e
-        return
 
     def initFromDict(self, savedDataDict):
         super(BaseBag, self).initFromDict(savedDataDict)
-        self.bagType = savedDataDict['bagType']
         self.lastSortBag = savedDataDict.get('lastSortBag', 0)
+        self.bagType = savedDataDict['bagType']
 
     def toBagSavedDict(self):
-        containerData = super(BaseBag, self).toBagSavedDict()
+        _containerData = super(BaseBag, self).toBagSavedDict()
 
         bagData = {
             'bagType': self.bagType,
             'lastSortBag': self.lastSortBag,
         }
-        containerData.update(bagData)
+        _containerData.update(bagData)
 
-        return containerData
+        return _containerData
 
     def toBaseBagClientDict(self):
-        containerData = super(BaseBag, self).toItemContainerClientDict()
+        _containerData = super(BaseBag, self).toItemContainerClientDict()
 
         bagData = {
             'bagType': self.bagType,
             'lastSortBag': self.lastSortBag,
         }
-        containerData.update(bagData)
+        _containerData.update(bagData)
 
-        return containerData
+        return _containerData
 
     def isLocked(self):
-        now = utils.curTS()
-        return now < self.lockedTime
-
-    def unLockBag(self):
-        self.lockedTime = 0
-        self.lockDesc = ''
+        _now = utils.curTS()
+        return _now < self.lockedTime
 
     def tryLockBag(self, lockSecs=3, lockDesc=''):
         if self.isLocked():
@@ -74,53 +69,57 @@ class BaseBag(itemContainer.ItemContainer):
         self.lockDesc = lockDesc
         return True
 
+    def unLockBag(self):
+        self.lockedTime = 0
+        self.lockDesc = ''
+
     def _clientDataFromPlanDic(self, planDic):
         normalItemGridList = []
         normalItemList = []
         equipItemGridList = []
-        equipItemList = []
+        _equipItemList = []
 
-        for gridId in planDic['old'].keys():
-            item = self.getItemObjByGridId(gridId)
+        for _gridId in planDic['old'].keys():
+            item = self.getItemObjByGridId(_gridId)
             if item.isEquipmentItem():
-                equipItemGridList.append(gridId)
-                equipItemList.append(item.toClientEquipItemDict())
+                equipItemGridList.append(_gridId)
+                _equipItemList.append(item.toClientEquipItemDict())
             else:
-                normalItemGridList.append(gridId)
+                normalItemGridList.append(_gridId)
                 normalItemList.append(item.toItemSavedDict())
 
-        for gridId in planDic['new'].keys():
-            item = self.getItemObjByGridId(gridId)
+        for _gridId in planDic['new'].keys():
+            item = self.getItemObjByGridId(_gridId)
             if item.isEquipmentItem():
-                equipItemGridList.append(gridId)
-                equipItemList.append(item.toClientEquipItemDict())
+                equipItemGridList.append(_gridId)
+                _equipItemList.append(item.toClientEquipItemDict())
             else:
-                normalItemGridList.append(gridId)
+                normalItemGridList.append(_gridId)
                 normalItemList.append(item.toItemSavedDict())
 
-        return normalItemGridList, normalItemList, equipItemGridList, equipItemList
+        return normalItemGridList, normalItemList, equipItemGridList, _equipItemList
 
     def _getClientDataFromPlanDic(self, planDic):
         clientData = []
-        for gridId in planDic['old'].keys():
-            item = self.getItemObjByGridId(gridId)
-            clientData.append(item.toBagItemDict(gridId))
+        for _gridId in planDic['old'].keys():
+            item = self.getItemObjByGridId(_gridId)
+            clientData.append(item.toBagItemDict(_gridId))
 
-        for gridId in planDic['new'].keys():
-            item = self.getItemObjByGridId(gridId)
-            clientData.append(item.toBagItemDict(gridId))
+        for _gridId in planDic['new'].keys():
+            item = self.getItemObjByGridId(_gridId)
+            clientData.append(item.toBagItemDict(_gridId))
 
         return clientData
 
-    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True):
-        opStat, planDict = super(BaseBag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDict, notify,
+    def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDic=None, notify=True, syncToClient=True):
+        opStat, planDic = super(BaseBag, self).addItemsWithPlan(owner, itemList, opUUID, src, detail, planDic, notify,
                                                                  syncToClient)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
-            return opStat, planDict
+            return opStat, planDic
         if src == AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
-            return opStat, planDict
+            return opStat, planDic
         if syncToClient:
-            normalItemGridList, normalItemList, equipItemGridList, equipItemList = self._clientDataFromPlanDic(planDict)
+            normalItemGridList, normalItemList, equipItemGridList, equipItemList = self._clientDataFromPlanDic(planDic)
             owner.client.onAddBagItems(
                 self.bagType, 
                 src, 
@@ -131,7 +130,7 @@ class BaseBag(itemContainer.ItemContainer):
                 utils.itemListToBriefList(itemList)
             )
 
-        return opStat, planDict
+        return opStat, planDic
 
     def addItemsToNewGrid(self, owner, itemObj, opUUID, src, detail, gridId=None, syncToClient=True):
         opStat, gridId = super(BaseBag, self).addItemsToNewGrid(
@@ -172,25 +171,25 @@ class BaseBag(itemContainer.ItemContainer):
         super(BaseBag, self).deductItemsByGridId(owner, grid2ItemNum, opUUID, srcType, detail, sendClient=sendClient)
 
         clientData = []
-        for gridId in grid2ItemNum.keys():
-            item = self.getItemObjByGridId(gridId)
+        for _gridId in grid2ItemNum.keys():
+            item = self.getItemObjByGridId(_gridId)
             num = item.itemNum if item else 0
-            clientData.append({'gridId': gridId, 'itemNum': num})
+            clientData.append({'gridId': _gridId, 'itemNum': num})
 
-        sendClient and owner.client.onUpdateGridItemsNum(self.bagType, clientData)
-        return
+        if sendClient:
+            owner.client.onUpdateGridItemsNum(self.bagType, clientData)
 
     def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True):
-        cleanItem = super(BaseBag, self).cleanGridByGridId(owner, gridId, itemId, opUUID, srcType, detail, sendClient)
+        _cleanItem = super(BaseBag, self).cleanGridByGridId(owner, gridId, itemId, opUUID, srcType, detail, sendClient)
 
-        if sendClient and cleanItem:
+        if sendClient and _cleanItem:
             owner.client.onUpdateGridItemsNum(self.bagType, [{'gridId': gridId, 'itemNum': 0}])
-        return cleanItem
+        return _cleanItem
 
-    def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDict=None, isCheckLock=True):
-        opStat, planDict = super(BaseBag, self).deductItemsWithPlan(owner, itemsDict, itemsObjs, opUUID, srcType, detail,
-                                                                    planDict, isCheckLock)
-        return opStat, planDict
+    def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDic=None, isCheckLock=True):
+        opStat, planDic = super(BaseBag, self).deductItemsWithPlan(owner, itemsDict, itemsObjs, opUUID, srcType, detail,
+                                                                    planDic, isCheckLock)
+        return opStat, planDic
 
     @utils.checkBagLocked
     def doBagSort(self, owner, sortFunc=None):
@@ -201,18 +200,18 @@ class BaseBag(itemContainer.ItemContainer):
         bak_itemId2gridIds = cPickle.dumps(self.itemIdToGridIds)
         try:
             def _sortFunc(gridObj):
-                itemData = dataUtils.getCommItemData(gridObj.itemId)
-                sortKey = IDITD.ItemTypeSortDic.get(gridObj.itemType * 1000 + gridObj.itemSubType, gridObj.itemSubType)
-                equipLevel = itemData.get('levelRequirement', 0)
-                return (sortKey, -1 * gridObj.quality, equipLevel,
+                _itemData = dataUtils.getCommItemData(gridObj.itemId)
+                _sortKey = IDITD.ItemTypeSortDic.get(gridObj.itemType * 1000 + gridObj.itemSubType, gridObj.itemSubType)
+                equipLevel = _itemData.get('levelRequirement', 0)
+                return (_sortKey, -1 * gridObj.quality, equipLevel,
                         -gridObj.equipAttr.equipLv if gridObj.isEquipmentItem() else 0, gridObj.itemId, gridObj.bindType, 0)
 
-            gridObjs = self.gridIdToGridObj.values()
-            gridObjs = sorted(gridObjs, key=sortFunc or _sortFunc)
+            _gridObjs = self.gridIdToGridObj.values()
+            _gridObjs = sorted(_gridObjs, key=sortFunc or _sortFunc)
             self.reset()
-            opUUID = KBEngine.genUUID64()
+            _opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_BAG_SORT
-            opStat, _ = self.addItemsWithPlan(owner, gridObjs, opUUID, src, None, notify=False, syncToClient=False)
+            opStat, _ = self.addItemsWithPlan(owner, _gridObjs, _opUUID, src, None, notify=False, syncToClient=False)
             if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                 # raise Exception
                 gameengine.panicStack('!!!!! doBagSort error:', opStat)

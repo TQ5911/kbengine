@@ -316,7 +316,7 @@ class ISiegeWarBase(object):
                             gameconst.CrossServerReasonNo.ENTER_CROSS_SIEGE_WAR,
                             gameconst.CrossServerCBComponent.ENUM_BASE,
                             "onEnterCrossSiegeWarSpaceRemotely",
-                            (serverId, {"guildUUID": self.guildUUIDBase, "unionUUID": self.siegeWarUnionGuildUUID, "guildCache": dataDict}), _timeout)
+                            (serverId, {"guildUUID": self.guildUUIDBase, "unionUUID": self.siegeWarUnionGuildUUID, "guildCache": dataDict}), formula.combineLineSpaceNo(CBC.datas['cityBattle_MapID']['value'], 0), _timeout)
 
     def onEnterCrossSiegeWarSpaceRemotely(self, serverId, extra):
         LOG_DBG('[lj]on enter cross siege war space remotely', serverId, extra)

@@ -69,12 +69,12 @@ class IGuildTrainCell(object):
 
     def gmAddGuildTrainLevelCell(self, trainId, curLevel, targetLevel):
         gtData = GT_GTD.datas[trainId]
-        func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
+        _func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
         if curLevel:
-            curVal, _ = func(curLevel)
+            curVal, _ = _func(curLevel)
         else:
             curVal = 0
-        targetVal, _ = func(targetLevel)
+        _targetVal, _ = _func(targetLevel)
         propName = gtData['fightProp']
-        self.addProp(propName, targetVal - curVal, gameconst.SourceType.SrcTpGuildTrain)
+        self.addProp(propName, _targetVal - curVal, gameconst.SourceType.SrcTpGuildTrain)
 

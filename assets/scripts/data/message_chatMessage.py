@@ -344,7 +344,25 @@ datas = _tools.RODict({
         "name": "boss_born5005",
         "Message": "天地灵气骤然翻涌，<color=#fe6a6a>杜格教主</color>现身于<color=#54e7f2>杜格教廷五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
+    }),
+    58000218: _tools.RODict({
+        "ID": 58000218,
+        "name": "guild_unionSupport1",
+        "Message": "我帮向帮会{0}援助{1}",
+        "channelID": (3,)
+    }),
+    58000219: _tools.RODict({
+        "ID": 58000219,
+        "name": "guild_unionSupport2",
+        "Message": "帮会{0}向我帮援助{1}",
+        "channelID": (3,)
+    }),
+    58000220: _tools.RODict({
+        "ID": 58000220,
+        "name": "guild_unionSupport3",
+        "Message": "帮会{0}向帮会{1}援助{2}",
+        "channelID": (3,)
     })
 })
 minKey = 58000001
-maxKey = 58000217
+maxKey = 58000220

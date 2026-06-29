@@ -22,7 +22,7 @@ datas ={
       40360001
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "23",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

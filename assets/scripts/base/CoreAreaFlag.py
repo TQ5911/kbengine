@@ -8,7 +8,7 @@ class CoreAreaFlag(iBaseWithCell.IBaseWithCell):
     def __init__(self):
         pass
 
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 

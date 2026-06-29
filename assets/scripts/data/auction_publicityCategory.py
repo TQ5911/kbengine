@@ -172,28 +172,28 @@ datas = _tools.RODict({
     1005: _tools.RODict({
         "ID": 1005,
         "qualityAbove": None,
-        "soulQualityAbove": (8, 1),
+        "soulQualityAbove": (5, 1),
         "itemQualityAbove": None,
         "itemList": None
     }),
     1006: _tools.RODict({
         "ID": 1006,
         "qualityAbove": None,
-        "soulQualityAbove": (5, 1),
+        "soulQualityAbove": (6, 1),
         "itemQualityAbove": None,
         "itemList": None
     }),
     1007: _tools.RODict({
         "ID": 1007,
         "qualityAbove": None,
-        "soulQualityAbove": (6, 1),
+        "soulQualityAbove": (7, 1),
         "itemQualityAbove": None,
         "itemList": None
     }),
     1008: _tools.RODict({
         "ID": 1008,
         "qualityAbove": None,
-        "soulQualityAbove": (7, 1),
+        "soulQualityAbove": (8, 1),
         "itemQualityAbove": None,
         "itemList": None
     })

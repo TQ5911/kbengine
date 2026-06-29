@@ -1037,7 +1037,7 @@ datas = _tools.RODict({
     }),
     "teleportationProtectionTime": _tools.RODict({
         "ID": "teleportationProtectionTime",
-        "value": 5,
+        "value": 10,
     }),
     "legalRegulationsTest": _tools.RODict({
         "ID": "legalRegulationsTest",
@@ -1269,7 +1269,7 @@ datas = _tools.RODict({
     }),
     "flyEpRate": _tools.RODict({
         "ID": "flyEpRate",
-        "value": 8.0,
+        "value": 4.0,
     }),
     "ControlflyCheating": _tools.RODict({
         "ID": "ControlflyCheating",
@@ -1402,6 +1402,10 @@ datas = _tools.RODict({
     "userServiceIsLogin": _tools.RODict({
         "ID": "userServiceIsLogin",
         "value": 54482021,
+    }),
+    "webviewError": _tools.RODict({
+        "ID": "webviewError",
+        "value": 54482023,
     }),
     "bagFullGeneralMessage": _tools.RODict({
         "ID": "bagFullGeneralMessage",

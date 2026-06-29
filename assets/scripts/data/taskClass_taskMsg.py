@@ -234,5 +234,10 @@ datas = _tools.RODict({
         "ID": "TaskCanBeReExecuted",
         "value": 54002170,
         "type": "uint"
+    }),
+    "TaskTransferConflict": _tools.RODict({
+        "ID": "TaskTransferConflict",
+        "value": 54990146,
+        "type": "uint"
     })
 })

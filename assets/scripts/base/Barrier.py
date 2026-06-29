@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from KBEDebug import *
 
-import gameengine
-import utils
-import gameglobal
 import gameconst
 
 import iBaseWithCell
@@ -12,15 +9,11 @@ import iFubenSpace
 
 class Barrier(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(Barrier, self).__init__()
 
-
-        return
-
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 
         self.destroy(writeToDB=False)
-        return

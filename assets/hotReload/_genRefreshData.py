@@ -9,11 +9,11 @@ if gameglobal.isBootstrap:
 '''
 
 if __name__ == '__main__':
-    args = sys.argv[1:]
-    strs = ["'{}'".format(i) for i in args]
-    strs = ','.join(strs)
-    strs = '[{}]'.format(strs)
-    final_str = gen_str.replace('TAR_GET', strs)
+    _args = sys.argv[1:]
+    _strs = ["'{}'".format(i) for i in _args]
+    _strs = ','.join(_strs)
+    _strs = '[{}]'.format(_strs)
+    final_str = gen_str.replace('TAR_GET', _strs)
     with open('._refreshData.py', 'w') as fw:
         fw.write(final_str)
 

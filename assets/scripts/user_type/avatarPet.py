@@ -20,8 +20,8 @@ import dataUtils
 import LogTrackingMgr
 
 class LingShou(userType.UserSingleType):
-    def __init__(self, *args, **kwargs):
-        super(LingShou, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **keywordargs):
+        super(LingShou, self).__init__(*args, **keywordargs)
         self._score = 0
 
     @property
@@ -111,7 +111,7 @@ class LingShou(userType.UserSingleType):
         return
 
     # 服务器解析的数据结构可以和前端不一样,增加petMirror节点只做缓存不做入库处理以便通过checkProperty的检查
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         retDt = self.toClientDict()
         retDt['school'] = self.school
         return retDt
@@ -161,9 +161,9 @@ class LingShou(userType.UserSingleType):
                         tmpTypeList.append(PDPGD.datas[itemId]['type'])
                 # 检查是否超过N个相同的
                 if totalCount - len(set(tmpTypeList)) > sameCount:
-                    if quality == gameconst.ItemQuality.ORANGE:
+                    if quality == gameconst.ItemQuality.BLUE or quality == gameconst.ItemQuality.PURPLE:
                         owner.onMessagePre(PDSD.datas['petGearRuleTip1']['value'], [])
-                    elif quality == gameconst.ItemQuality.RED:
+                    elif quality == gameconst.ItemQuality.ORANGE:
                         owner.onMessagePre(PDSD.datas['petGearRuleTip2']['value'], [])
                     return False
                 break
@@ -249,27 +249,25 @@ class LingShouInfo(userType.UserSingleType):
     def _lateReload(self):
         super(LingShouInfo, self)._lateReload()
 
-        for v in self.pets.values():
-            v.reloadScript()
-
-        return
+        for _v in self.pets.values():
+            _v.reloadScript()
 
     # db -> obj
     def initFromDict(self, savedDataDict):
         for dataDict in savedDataDict['lingShouList']:
-            pet = LingShou()
-            pet.initFromDict(dataDict)
-            self.pets[dataDict['petId']] = pet
+            _pet = LingShou()
+            _pet.initFromDict(dataDict)
+            self.pets[dataDict['petId']] = _pet
 
         for battleList in savedDataDict['battleList']:
             battleListVal = LingShouBattleListVal(battleList['name'], battleList['petIdList'])
             self.battleList.append(battleListVal)
 
     # obj -> db
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         lingShouList = []
         for pet in self.pets.values():
-            lingShouList.append(pet.toSavedDict())
+            lingShouList.append(pet.toStreamSavedDic())
 
         battleList = []
         for val in self.battleList:
@@ -290,26 +288,27 @@ class LingShouInfo(userType.UserSingleType):
 
         return lingShouList
 
-    def lingShouNum(self):
-        return len(self.pets)
-
     def sendLingShouData(self, owner):
-        sendDic = {}
+        _sendDic = {}
         sendNum = 0
-        for petId, pet in self.pets.items():
+        for pet in self.pets.values():
             key = int(sendNum / 10)
-            lingShouList = sendDic.get(key, [])
-            lingShouList.append(pet)
-            sendDic[key] = lingShouList
+            _lingShouList = _sendDic.get(key, [])
+            _lingShouList.append(pet)
+            _sendDic[key] = _lingShouList
             sendNum += 1
-        for key, petList in sendDic.items():
+
+        for key, _petList in _sendDic.items():
             if not key:
-                owner._sendLingShouData(petList)
+                owner._sendLingShouData(_petList)
             else:
-                owner.addTimerCB(key * 0.1, '_sendLingShouData', (petList,), gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
+                owner.addTimerCB(key * 0.1, '_sendLingShouData', (_petList,), gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
 
         owner.addTimerCB((int(sendNum / 10) + 1) * 0.1, '_sendBattleListData', (),
                         gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
+
+    def lingShouNum(self):
+        return len(self.pets)
 
     def sendBattleListData(self, owner):
         battleList = []

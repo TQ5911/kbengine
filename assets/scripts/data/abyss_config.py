@@ -23,13 +23,13 @@ datas = _tools.RODict({
         "ID": "abyssNumCoin",
         "value": 100,
     }),
-    "abyssNumCoinCost": _tools.RODict({
-        "ID": "abyssNumCoinCost",
-        "value": ((1, 30000021, 100), (2, 30000001, 100)),
-    }),
     "abyssNumCoinDailyLimit": _tools.RODict({
         "ID": "abyssNumCoinDailyLimit",
         "value": 2,
+    }),
+    "abyssNumCoinCost": _tools.RODict({
+        "ID": "abyssNumCoinCost",
+        "value": ((1, 30000021, 50), (2, 30000001, 100)),
     }),
     "abyssNumItem": _tools.RODict({
         "ID": "abyssNumItem",
@@ -178,5 +178,9 @@ datas = _tools.RODict({
     "abyss_fullyBooked": _tools.RODict({
         "ID": "abyss_fullyBooked",
         "value": 54003424,
+    }),
+    "abyss_enterLimit": _tools.RODict({
+        "ID": "abyss_enterLimit",
+        "value": 54003431,
     })
 })

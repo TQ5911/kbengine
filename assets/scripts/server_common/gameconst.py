@@ -16,10 +16,11 @@ import character_charData as CCDD
 import wonderLand_floor as WL_FD
 import branchData_branchData as BD_BDD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import guildAuthorization_authorization_def as GA_A_DD
 
 
 # baseapp和cellapp上都有的数据key
-GLOBALDATA_KEY_SPACE_TO_ITS_BASE = 'kSpaceTobase'
+GLOBALDATA_KEY_SPACE_TO_BASE = 'kSpaceTobase'
 GLOBALDATA_KEY_SPACENO_TO_SPACEID = 'kSpaceNoToSpaceID'
 GLOBALDATA_KEY_SPACEID_TO_SPACENO = 'kSpaceIDToSpaceNo'
 GLOBALDATA_KEY_BASEAPP = 'kBaseApps'
@@ -363,6 +364,7 @@ INIT_CLIENT_SEND = (
         ('_sendDropEquipInfo', True),
         ('sendCollectInfo', True),
         ('sendWonderLandLoginData', True),
+        ('sendAbyssLoginData', True),
         ('sendSiegeWarLoginData', True),
         ('sendAllWelfareSignInInfo', False),
         ('avatarLogin', True),
@@ -378,16 +380,17 @@ INIT_CLIENT_SEND = (
         ('sendAllTitle', True),
         ('sendAllMapExploreData', True),
         ('sendAllRecoveryInfo', True),
+        ('_sendGuildMicsMembers', True),
 )
 
-class ItemType(object):
+class ItemEnum(object):
     Normal = 0
     LingShou = 1
     Resource = 2
     Title = 4
 
 
-class ItemSubType(object):
+class ItemSubEnum(object):
     Normal = 0
     LingShouEgg = 0
     HEAL_HP = 1
@@ -395,8 +398,26 @@ class ItemSubType(object):
     Equipment = 4
     EQUIP_CORE = 6
     TASK = 15
-    EQUIP_SOUL = 27
+
+    EQUIP_SOUL_WEAPON = 27
+    EQUIP_SOUL_CLOTHES = 28
+    EQUIP_SOUL_HEAD = 29
+    EQUIP_SOUL_SHOE = 30
+    EQUIP_SOUL_BELT = 31
+    EQUIP_SOUL_NECKLACE = 32
+    EQUIP_SOUL_RING = 33
+    EQUIP_SOUL_BRACELET = 34
+
     ExtractReward = 52
+
+    EQUIP_SOUL_TYPE = (EQUIP_SOUL_WEAPON, \
+                       EQUIP_SOUL_CLOTHES, \
+                       EQUIP_SOUL_HEAD, \
+                       EQUIP_SOUL_SHOE, \
+                       EQUIP_SOUL_BELT,\
+                       EQUIP_SOUL_NECKLACE,\
+                       EQUIP_SOUL_RING,\
+                       EQUIP_SOUL_BRACELET)
 
 class LingShouSubType(object):
     Egg = 0
@@ -564,6 +585,9 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     abyssRewardList = 415
 
     enterEnemyId = 416
+    queryRechargeTimestamp = 417
+    damageRatioLimit = 418
+    innerDemonCDTimestamp = 419
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -608,6 +632,8 @@ class ItemIdEnum(object):
     COLL_SKIP_MSG_HANDLE = ()
     BIND_MONEY = IDSD.datas['itemID_bind_money']['value']
     APPEARANCE_COIN = IDSD.datas['itemID_appearanceCoin']['value']
+
+    GM_MODIFY_CURRENCY_ITEMS = (MONEY, BIND_MONEY, COIN, DARK_IRON, GUILD_CONTRIB)
 
 class ItemBindType(object):
     BIND = 0
@@ -829,7 +855,7 @@ class ClaimTaskSrcEnum(object):
     TASK_SRC_INIT_NEWBIE_TASK = 9
     TASK_SRC_FROM_ACTION = 10
     TASK_SRC_NPC_DIALOG = 11
-
+    TASK_SRC_QUIT_TASK_REWARD_LEAVE_DUNGEON = 12
 
 class EntNumPerPlayerInAOI(object):
     worldLine = 15
@@ -1129,6 +1155,8 @@ class RedisKey(object):
     SERVER_OPEN_TIME = 'g:server_open_time'
     SERVER_OPEN_STATE = 'g:server_open_state'
     FULL_PLAYER_INFO_KEY = 'g:full_player_info'
+    WAITMAP_HEARTBEAT_KEY = 'waitmap:heartbeat'
+    WAITMAP_FREE_PREFIX = 'waitmap:free:'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1138,7 +1166,7 @@ class ForbidType(object):
 INVITE_CODE_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
-class OnLoseCellReason(object):
+class OnLoseCellReasonEnum(object):
     DEFAULT = 0
     CELLAPP_DEATH = 1
     ENTIRE_DESTROY = 2
@@ -1203,8 +1231,9 @@ CREEP_TAG_WONDERLAND_SUMMON_BOSS = 6 # 天劫崖召唤boss
 CREEP_TAG_TIP_MSG = 7 # 怪物进战时对仇恨目标级队友发送tips
 CREEP_TAG_ANTI_TAUNT = 98 # 嘲讽反制
 CREEP_TAG_ANTI_MOVE = 99 # 推拉反制
+CREEP_TAG_NO_USE_HOST_TARGET = 100 # ai不使用host的目标
 
-class SkillTag(metaclass=UniqueIntEnum):
+class SkillTagEnum(metaclass=UniqueIntEnum):
     Hot = 13
     Heal = 14
     SingleHeal = 20
@@ -1230,6 +1259,7 @@ class SkillTag(metaclass=UniqueIntEnum):
     talentSkill = 110
     changeCDStatusSkill = 130
     DodgeSkill = 146
+    birthDirection = 158 # 有这个tag的monster技能在选择节能方向时候恒定用出生方向
 
 class BuffTag(object):
     TagSeeHiddenEnt = 41
@@ -1538,7 +1568,7 @@ class RemoveTypeEnum(metaclass=UniqueIntEnum):
     RTEnumEndByAction = 6
     RTEnumRestoreRemove = 7
 
-class PKModel(object):
+class PKModelEnum(object):
     PEACE = 0
     JUSTICE = 1
     ENEMY = 2
@@ -1682,7 +1712,7 @@ class SpeedState(object):
     Normal = 1.0
     Patrol = 1.0
 
-class RouteState(object):
+class RouteStateEnum(object):
     ROUTE_STATE_IDLE = 0
     ROUTE_STATE_WAIT = 1
     ROUTE_STATE_MOVING = 2
@@ -1701,7 +1731,7 @@ class JumpType(object):
     FLYING = 3
     SPEED_FALL = 4
 
-class DungeonSrcEnum(object):
+class DunSrcEnum(object):
     DEFAULT = 0                                   # 默认
     FROM_CLIENT = 1                               # 客户端
     FROM_CLIENT_GM = 2                            # GM命令
@@ -1723,7 +1753,7 @@ class CompleteTeleportLeaveFailReason(object):
 
     COLL_USEROPRERRNO = (PLAYER_IN_WORLDGUIDE, PLAYER_IN_NEWBIEDUN)
 
-class CastType(object):
+class CastEnum(object):
     teleport = 1
     teleportClientDelay = 2
     ride = 3
@@ -1922,6 +1952,7 @@ class _RaidErrno(object):
     ENUM_RAID_IS_IN_DUNGEON                      = _errno(50112)     # 团队已进入副本
     ENUM_RAID_APPLY_LIST_IS_FULL                 = _errno(50113)     # 团队申请列表满了
     ENUM_RAID_IN_CROSS_STATE                     = _errno(50114)     # 在跨服状态
+    ENUM_RAID_ALREADY_IN_DUNGEON                 = _errno(50115)     # 已经在副本中了
     ENUM_RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
 
 
@@ -1990,7 +2021,7 @@ class ChangeAutoCombatReason(object):
     CaptainChange = 3
     CaptainEnterFightingState = 4
 
-class PKProtectType(object):
+class PKProtectEnum(object):
     TEAM = 0
     GROUP = 1
     GUILD = 2
@@ -2240,7 +2271,7 @@ class _RaidDungeonErrno(object):
     ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL           = _errno(20024)     # 副本可挑战次数不足
 
 
-RaidDungeonErrno = _RaidDungeonErrno()
+RaidDunErrno = _RaidDungeonErrno()
 
 class TeamDunCheckCondErrno(object):
     UNKNOWN = 0
@@ -2483,7 +2514,7 @@ class CheckMemberReasonEnum(object):
     CHECK_MEMBER_FOR_BATTLE_FIELD_REGISTRY = 2
     CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE = 3
 
-class OutfitType(object):
+class OutfitEnum(object):
     wing = 1
     hair = 2
     clothes = 3
@@ -2534,7 +2565,7 @@ class CreationHostType(object):
     EnumOther = 8
 
 class EntityType(object):
-    OTHER = 0
+    ALL = 0
     AVATAR = 1
     MONSTER = 2
     SUMMON = 3
@@ -2543,6 +2574,8 @@ class EntityType(object):
     AVATAR_MIRROR = 6
     NPC = 7
     COLLECTION = 8
+    AVATAR_REPLICA = 9
+    VALID_ENTITY_TYPE = (ALL, AVATAR, MONSTER, SUMMON, CREATION, PET, AVATAR_MIRROR, NPC, COLLECTION, AVATAR_REPLICA)
 
 className2EntityType = {
     "Monster": EntityType.MONSTER,
@@ -2701,6 +2734,8 @@ class AUTO_DISA_KEY(object):
     RING = 26
     # 手镯
     BRACELET = 27
+    # 魂魄
+    SOUL = 28
 
 class AUTO_DISA_MAP(object):
     datas = {
@@ -2924,7 +2959,7 @@ class CrossServerReasonNo(object):
     ENTER_CROSS_SIEGE_WAR = 1
     ENTER_CROSS_ABYSS = 2
 
-class CrossServerWaitingClientInitTuple(object):
+class CrossServerWaitClientInitTuple(object):
     DEFAULT = 0
     BACKSELECTCHARACTER = 1
     OFFLINE = 2
@@ -3039,6 +3074,10 @@ class StoreLimitType(object):
     DAILY = 2
     WEEKLY = 3
     MONTHLY = 4
+
+class StoreItemType(object):
+    NORMAL = 1
+    DYNAMIC_PRICE = 2
 
 class DropShareRewardType(object):
     RANDOM_ONE = 0
@@ -3397,6 +3436,9 @@ WONDER_LAND_DUR_TIMEOUT = 2 # 试炼峰超时
 WONDER_LAND_ENTER_TYPE_TICKET = 1 # 购票进入
 WONDER_LAND_ENTER_TYPE_LEFT_TIME = 2 # 还有剩余时间
 
+WONDER_LAND_ENTER_TICKET_FREE = 1 # 门票消耗类型1
+WONDER_LAND_ENTER_TICKET_PAID = 2 # 门票消耗类型2
+
 MORPH_BUILD_STATE = 1 # 变身状态对应技能在build里面对应的状态
 
 BLAZE_CHECK_DIS = 50 # 快速移动监测距离
@@ -3715,9 +3757,10 @@ class MonsterSuffix(object):
     NORMAL = 1 # 小怪
     ELITE = 4 # 头目
     BOSS = 5 # 首领
+    WORLD_BOSS = 6 # 世界boss
     LUCKY = 7 # 幸运怪
 
-    NEED_LOG_SUFFIX = (ELITE, BOSS, LUCKY)
+    NEED_LOG_SUFFIX = (ELITE, BOSS, WORLD_BOSS, LUCKY)
 
 class WorldLineSceneState(object):
     THUNDER = 0 # 落雷
@@ -4356,22 +4399,6 @@ class EquipWashResult(object):
     # 背包锁定
     BAG_LOCKED = 10
 
-class EquipWashConfig(object):
-    # 装备洗涤功能总开关配置键
-    ENABLE_KEY = 'enableEquipWash'
-    # 可洗涤最低品质配置键
-    MIN_QUALITY_KEY = 'equipWashMinQuality'
-    # 默认可洗涤最低品质（蓝色=3，对应 ItemQuality.BLUE=2，注意项目里品质枚举从0开始）
-    DEFAULT_MIN_QUALITY = 2
-    # 每级强化洗涤消耗的非绑强化石数量（默认1个）
-    DEFAULT_ENHANCE_COST_NUM = 1
-    # 每级祝福洗涤消耗的非绑祝福石数量（默认1个）
-    DEFAULT_BLESS_COST_NUM = 1
-    # 每个核心洗涤消耗的非绑核心数量（默认1个）
-    DEFAULT_UPGRADE_COST_NUM = 1
-    # 最大洗涤次数限制
-    MAX_WASH_COUNT = 999
-
 SERVER_LOG_TYPE_LOGIN = 1
 SERVER_LOG_TYPE_DAILY = 2
 
@@ -4545,6 +4572,7 @@ BOUNTY_AVATAR_TYPE_2_CONVERSION_DICT = {
 class WaitMapLoginResult(object):
     OK = 0
     ACCOUNT_LIMIT = 1
+    ANTI_ADDICTION = 2  # 未成年人禁玩时段
 
 class UpdateHunterRankProp(object):
     HUNTER_ONLINE = "online"
@@ -4758,3 +4786,68 @@ CrossServerExpIgnorelist = {
     AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
     AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY
 }
+
+class EquipReturnType(object):
+    # 自己拾回领取
+    TAKE_WAIT_DROP_GET = 1
+    # 赎回领取
+    REDEEM_WAIT_DROP_GET = 2
+    # 对方放弃领取
+    GIVEUP_WAIT_DROP_GET = 3
+    # 赎回期结束领取
+    REDEEM_EXPIRE_WAIT_TAKE_GET = 4
+    # 返还时间到领取
+    RETURN_GET = 5
+
+    ReturnTypeIndex = {
+        DropType.TYPE_TAKE_WAIT_DROP_GET : TAKE_WAIT_DROP_GET,
+        DropType.TYPE_REDEEM_WAIT_DROP_GET : REDEEM_WAIT_DROP_GET,
+        DropType.TYPE_GIVEUP_WAIT_DROP_GET : GIVEUP_WAIT_DROP_GET,
+        DropType.TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET : REDEEM_EXPIRE_WAIT_TAKE_GET,
+        DropType.TYPE_RETURN_GET : RETURN_GET,
+    }
+
+class GuildDataType(object):
+    # 世界boss刷新
+    WORLD_BOSS_REFRESH = 1
+    # 矿战矿区开启
+    MIN_WAR_AREA_OPEN = 2
+
+    VALID_TYPE = (WORLD_BOSS_REFRESH, MIN_WAR_AREA_OPEN)
+
+class GuildGamePlayType(object):
+    # 占领矿区
+    MIN_WAR_AERA_OCCUPY = 1
+    # 尾刀击杀世界boss
+    WORLD_BOSS_KILLER = 2
+
+    VALID_TYPE = (MIN_WAR_AERA_OCCUPY, WORLD_BOSS_KILLER)
+
+GUILD_MANAGE_POSITIONS = (GA_A_DD.datas.leader, GA_A_DD.datas.coleader, GA_A_DD.datas.elders)
+
+class GuildMicsMemberStat(object):
+    BLOCK = 0
+    OFF = 1
+    OPEN = 2
+
+class GuildMicsSwitch(object):
+    OFF = 0
+    FREE = 1
+    LEADER = 2
+
+    VALID_TYPE = (OFF, FREE, LEADER)
+
+class BindPhoneRes(object):
+    BIND_SUCCESSED = 0
+    CHECK_CAPTCHA_VERIF = 1
+
+class SpecialVisibleType:
+    INNER_DEMON = 0
+    OTHER = 1
+    
+    VALID_SPECIAL_VISIBLE_TYPE = (INNER_DEMON, )
+    MAX_CNT = OTHER
+
+class SpecialVisibleCheckType:
+    CONDITION_CHECK = 1
+    OPEN = 2

@@ -16,56 +16,56 @@ import visible_visible as V_VD
 
 class INewbie(object):
     def gmFinishedNewbie(self, stepLimit, delay=1):
-        gen = self.newbieIter(stepLimit)
-        self._gmFinishedNewbie(gen, delay, stepLimit)
+        _gen = self.newbieIter(stepLimit)
+        self._gmFinishedNewbie(_gen, delay, stepLimit)
 
     def _gmFinishedNewbie(self, gen, delay, stepLimit):
-        isFinished = False
+        _isFinished = False
         for i in range(3):
             ret = next(gen, False)
             if not ret:
-                isFinished = True
+                _isFinished = True
                 break
 
-        if isFinished:
+        if _isFinished:
             delay > 0 and self.addTimerCB(delay, '_gmNewbieFinishOffline', (), gametimer.TIMER_TAG_GM_NEWBIE_FINISH_OFFLINE)
         else:
             self.addTimerCB(0.1, '_gmFinishedNewbie', (gen, delay, stepLimit), gametimer.TIMER_TAG_NEWBIE_GM_ITER)
 
     def newbieIter(self, stepLimit):
-        import dropAward
         import antiAddictCategory_antiAddictCategory_def as AACAACDD
+        import dropAward
 
         if not stepLimit:
             stepLimit = max(TCNSD.datas.keys())
 
-        for step, data in TCNSD.datas.items():
-            if self.newbieStep <= step < stepLimit:
+        for _step, data in TCNSD.datas.items():
+            if self.newbieStep <= _step < stepLimit:
                 taskId = data['taskTag']
                 if taskId:
                     _subIds = self.taskInfo.getChildTaskIds(taskId)
-                    for subTaskId in _subIds:
-                        self.taskInfo.tasks.pop(subTaskId, None)
+                    for _subTaskId in _subIds:
+                        self.taskInfo.tasks.pop(_subTaskId, None)
 
                     self.taskInfo.tasks.pop(taskId, None)
                     self.taskInfo.taskRecordDic[taskId] = gameconst.TaskStatEnum.TASK_STAT_SUBMITTED
                     if taskId in V_VD.taskDic:
                         self.updateVisibleByList(V_VD.taskDic[taskId])
 
-                    for subTaskId in _subIds:
-                        if subTaskId in V_VD.taskDic:
-                            self.updateVisibleByList(V_VD.taskDic[subTaskId])
-                            self.unlockSkill(True, 0, subTaskId)
+                    for _subTaskId in _subIds:
+                        if _subTaskId in V_VD.taskDic:
+                            self.updateVisibleByList(V_VD.taskDic[_subTaskId])
+                            self.unlockSkill(True, 0, _subTaskId)
 
                     self.unlockSkill(True, 0, taskId)
 
                 rewardId = data['rewardTag']
                 if rewardId:
                     ctx = self.getAvatarAwardCtx(rewardId, None)
-                    wealthVal = dropAward.getAward(rewardId, 1, ctx)
-                    srcType = AACAACDD.datas.BONUS_SRC_GM
+                    _wealthVal = dropAward.getAward(rewardId, 1, ctx)
+                    _srcType = AACAACDD.datas.BONUS_SRC_GM
                     opUUID = KBEngine.genUUID64()
-                    self.addWealth(srcType, wealthVal, opUUID, None, ctx)
+                    self.addWealth(_srcType, _wealthVal, opUUID, None, ctx)
 
                 yield True
 
@@ -91,7 +91,7 @@ class INewbie(object):
 
     def _enterNewbieDungeon(self):
         LOG_DBG('newbie will enter', self.newbieStep)
-        cellData = self.cellData
+        _cellData = self.cellData
         dungeonNo = self.getNewbieLockDun()
         dunData = GPGPD.datas.get(dungeonNo)
         if not dunData:
@@ -102,7 +102,7 @@ class INewbie(object):
             LOG_ERR('_enterNewbieDungeon but dun invalid:', dungeonNo)
             return False
 
-        extra = {'dungeonNo': dungeonNo, 'isNewbie': True, 'spaceLevel': cellData.get("level", 1)}
+        extra = {'dungeonNo': dungeonNo, 'isNewbie': True, 'spaceLevel': _cellData.get("level", 1)}
         gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE)\
             .applyCreateDungeon(self, self.gbID, 0, extra)
         return True
@@ -113,28 +113,35 @@ class INewbie(object):
             LOG_WARN('dungeon ready but self destroyed')
             return
 
-        context = {'e': {'spaceMgrBox': spaceMgrBox,
-                         'playerBox': self,
-                         'playerGbId': self.gbID,
-                         'teamUUID': 0,
-                         'extra': {}}}
+        _context = {
+            'e': {
+                'spaceMgrBox': spaceMgrBox,
+                'playerGbId': self.gbID,
+                'playerBox': self,
+                'teamUUID': 0,
+                'extra': {},
+            }
+        }
         options = complexTeleportOption.ComplexTeleportOpt()
-        callback1, args1 = '_afterEnter_singleDungeon', (spaceNo, spaceNo, options, context)
+        callback1, args1 = '_afterEnter_singleDungeon', (spaceNo, spaceNo, options, _context)
         self.cellData.setdefault('tempMiscProps', {})
         self.cellData['tempMiscProps'][gameconst.EntityPropsEnum.newbieCreateCellCB] = ((callback1, args1),)
-        dstPos, dstDir = self._getNewbieEntrance(formula.fetchMapId(spaceNo))
-        self.cellData['position'] = dstPos
+        _dstPos, dstDir = self._getNewbieEntrance(formula.fetchMapId(spaceNo))
+        self.cellData['position'] = _dstPos
         self.cellData['direction'] = dstDir
         self.cellData['spaceNo'] = spaceNo
         spaceBox.createCellNearSelf(self)
 
     def _getNewbieEntrance(self, dungeonNo):
         dunSData = utils.getDunStructModData(dungeonNo)
-        stepData = TCNSD.datas.get(self.newbieStep)
-        if stepData and stepData['taskTag'] and not self.isTaskComplete(stepData['taskTag']) and stepData.get('bornPos'):
-            LOG_DBG('_getNewbieEntrance, step taskTag not complete:', stepData)
-            bornRotation = stepData['bornRotation']
-            return stepData.get('bornPos'), (0, 0, bornRotation * math.pi / 180)
+        _stepData = TCNSD.datas.get(self.newbieStep)
+        if _stepData and _stepData['taskTag']\
+                and not self.isTaskComplete(_stepData['taskTag'])\
+                and _stepData.get('bornPos'):
+
+            LOG_DBG('_getNewbieEntrance, step taskTag not complete:', _stepData)
+            _bornRotation = _stepData['bornRotation']
+            return _stepData.get('bornPos'), (0, 0, _bornRotation * math.pi / 180)
         elif 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
             return formula.bornPosFromDunData(d), (0, 0, d['Dir'] * math.pi / 180)

@@ -58,12 +58,10 @@ class ImpOutfit(object):
             self.outfitInfo.addOutfit(self, outfitType, outfitId, 0, isNew)
         else:
             self.outfitInfo.addOutfit(self, outfitType, outfitId, expireTime, isNew)
-        self.client.onUpdateOutfitData(self.outfitInfo.toClientData([(outfitType, outfitId), ]))
+        self.client.onUpdateOutfitData(self.outfitInfo.toClientData([(outfitType, outfitId)]))
 
         if expireTime:
             self.startOutfitTimer()
-        # if autoEnable:
-        #     self.cell.enableOutfit(outfitType, outfitId)
     
     def reqPurchasedOutfitIds(self, exposed):
         LOG_INFO('reqPurchasedOutfitIds:', self.purchasedOutfitIds)
@@ -141,30 +139,33 @@ class ImpOutfit(object):
             self.cancelTimerCB(self.outfitExpireTimerId, gametimer.TIMER_TAG_START_OUTFIT_TIMER)
             self.outfitExpireTimerId=0
 
-        now = utils.curTS()
-        expiredOutfitList = []
+        _now = utils.curTS()
+        _expiredOutfitList = []
         expiredOutfitClient = []
         minLeftSec = 0
-        for outfit in self.outfitInfo.outfitDict.values():
+        for outfit in self.outfitInfo.outfitDic.values():
             if outfit.expireTime == 0:
                 continue
-            if now >= outfit.expireTime:
-                expiredOutfitList.append((outfit.outfitType, outfit.outfitId))
-                expiredOutfitClient.append({'outfitId': outfit.outfitId, 'outfitType': outfit.outfitType})
+            if _now >= outfit.expireTime:
+                _expiredOutfitList.append((outfit.outfitType, outfit.outfitId))
+                expiredOutfitClient.append({
+                    'outfitType': outfit.outfitType,
+                    'outfitId': outfit.outfitId, 
+                })
                 continue
-            leftSec = outfit.expireTime-now
+            leftSec = outfit.expireTime-_now
             if 0 == minLeftSec or leftSec < minLeftSec:
                 minLeftSec = leftSec
 
-        for outfitType, outfitId in expiredOutfitList:
+        for outfitType, outfitId in _expiredOutfitList:
             self.outfitInfo.removeOutfit(self, outfitType, outfitId)
 
-        if expiredOutfitList:
-            self.cell.checkOutfitExpired(expiredOutfitList)
+        if _expiredOutfitList:
+            self.cell.checkOutfitExpired(_expiredOutfitList)
 
         popList = []
         for appearanceId, expireTime in self.purchasedappearanceIds.items():
-            if expireTime != 0 and expireTime < now:
+            if expireTime != 0 and expireTime < _now:
                 self.cell.updatePropByAppearance(appearanceId, False)
                 popList.append(appearanceId)
 
@@ -176,21 +177,25 @@ class ImpOutfit(object):
             self.outfitExpireTimerId = self.addTimerCB(gameconst.ONE_HOUR_COST_SECONDES, 'startOutfitTimer', (),
                                                       gametimer.TIMER_TAG_START_OUTFIT_TIMER, 'outfitExpireTimerId')
         elif minLeftSec > 0:
-            self.outfitExpireTimerId = self.addTimerCB(minLeftSec, 'startOutfitTimer', (),
-                                                      gametimer.TIMER_TAG_START_OUTFIT_TIMER, 'outfitExpireTimerId')
-        return
+            self.outfitExpireTimerId = self.addTimerCB(
+                minLeftSec, 
+                'startOutfitTimer', 
+                (),
+                gametimer.TIMER_TAG_START_OUTFIT_TIMER, 
+                'outfitExpireTimerId',
+            )
 
-    def updateAccountCharacterOutfit(self, attrName, attrVal):
-        self.accountEntity.updateOutfit(self.gbID, attrName, attrVal)
+    def updateAccountCharacterOutfit(self, attrName, attr):
+        self.accountEntity.updateOutfit(self.gbID, attrName, attr)
 
         if attrName == 'picFrameId':
-            self.updateRoleCache({'picFrameId': attrVal})
-            self._modifyRedisAttr({'picFrameId': attrVal})
+            self.updateRoleCache({'picFrameId': attr})
+            self._modifyRedisAttr({'picFrameId': attr})
 
     def getTotalMountScore(self):
         totalScore = 0
-        for outfit in self.outfitInfo.outfitDict.values():
-            if outfit.outfitType == gameconst.OutfitType.mount:
+        for outfit in self.outfitInfo.outfitDic.values():
+            if outfit.outfitType == gameconst.OutfitEnum.mount:
                 configData = dataUtils.getOutfitConfigData(outfit.outfitType, outfit.outfitId)
                 if configData:
                     prop = configData.get('prop', [])

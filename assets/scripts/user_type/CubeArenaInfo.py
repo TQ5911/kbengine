@@ -86,7 +86,7 @@ class CubeArenaVal(userType.UserSingleType):
             if player.id == self.arenaKing:
                 LOG_WARN("onArenaChangeSafeArea", self.arenaKing)
             else:
-                player.onSwitchPKModel(gameconst.PKModel.ATTACK)
+                player.onSwitchPKModel(gameconst.PKModelEnum.ATTACK)
 
     def doAddStage(self, curStage, spaceMgr):
         if not self.arenaStage:

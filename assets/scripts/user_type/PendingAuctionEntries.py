@@ -8,7 +8,7 @@ class PendingAuctionEntryVal(userType.UserSingleType):
     def __init__(self, pendingAuctionEntries=()):
         self.pendingAuctionEntries = pendingAuctionEntries
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'pendingAuctionEntries': self.pendingAuctionEntries,
         }
@@ -23,7 +23,7 @@ class PendingAuctionEntriesMgr(object):
         return obj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is PendingAuctionEntryVal

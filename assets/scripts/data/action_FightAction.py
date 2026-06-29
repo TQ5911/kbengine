@@ -244,6 +244,17 @@ def attackShare(self, target, context, *args):
             maxDamage = creep_base.datas.get(target.monsterId, {}).get("MaxDamage", -1)
             if maxDamage > 0:
                 realHurt = min(realHurt, maxDamage)
+    elif target.IsAvatarReplica:
+        beLimit = False
+        ratio = 0
+
+        if self.IsSummon:
+            beLimit, ratio = target.getEntityDamageRatioLimit(gameconst.EntityType.SUMMON)
+
+        if beLimit and ratio > 0:
+            fullHp = target.getProp("fullHp")
+            realHurt = min(realHurt,fullHp * ratio / 100.0)
+    
     # 承伤统计
     hurtDmg = realHurt
 

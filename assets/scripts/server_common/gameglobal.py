@@ -8,10 +8,8 @@ baseAppCache = {}
 spaceNOIDCache = {}
 # spaceId到spaceNo的对应映射,包括了该服务器的所有静态和副本地图
 spaceIDNOCache = {}
-# 记录了全局所有静态地图的spaceno到SpaceMarker的映射
-localSpaceMarkers = {}
 # 记录entity名字到它数据库中DBID的映射
-entityTypeToDBID = None
+entityTypeToDBIDDic = None
 
 # 记录accountBox
 localAccountCache = {}
@@ -30,11 +28,9 @@ roleGBIDToEntId = {}
 reloadedModuleDic = {}
 reloadedModuleIdDic = {}
 reloadedCls = {}
-
 gmCmdData = {}
-
-GM_CMDS = {}
 GM_CMD_FUNC_NAMES = set()
+GM_CMDS = {}
 GM_CMD_ARG_PERMISSION_CHECKER = {}
 
 

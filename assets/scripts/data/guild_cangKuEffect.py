@@ -20,7 +20,7 @@ datas = _tools.RODict({
         "guildCoinLimit": 50000,
         "guildMoneyLimit": 20000,
         "guildTokenLimit": 10000,
-        "dailyCoinDonation": 20000,
+        "dailyCoinDonation": 15000,
         "dailyMoneyDonation": 1000,
         "dailyTokenDonation": 5000
     }),
@@ -29,7 +29,7 @@ datas = _tools.RODict({
         "guildCoinLimit": 100000,
         "guildMoneyLimit": 40000,
         "guildTokenLimit": 20000,
-        "dailyCoinDonation": 22000,
+        "dailyCoinDonation": 18000,
         "dailyMoneyDonation": 1100,
         "dailyTokenDonation": 6000
     }),
@@ -38,7 +38,7 @@ datas = _tools.RODict({
         "guildCoinLimit": 200000,
         "guildMoneyLimit": 60000,
         "guildTokenLimit": 30000,
-        "dailyCoinDonation": 24000,
+        "dailyCoinDonation": 21000,
         "dailyMoneyDonation": 1200,
         "dailyTokenDonation": 7000
     }),
@@ -47,18 +47,18 @@ datas = _tools.RODict({
         "guildCoinLimit": 500000,
         "guildMoneyLimit": 80000,
         "guildTokenLimit": 40000,
-        "dailyCoinDonation": 26000,
-        "dailyMoneyDonation": 1300,
-        "dailyTokenDonation": 8000
+        "dailyCoinDonation": 25500,
+        "dailyMoneyDonation": 1350,
+        "dailyTokenDonation": 8500
     }),
     5: _tools.RODict({
         "ID": 5,
         "guildCoinLimit": 600000,
         "guildMoneyLimit": 100000,
         "guildTokenLimit": 50000,
-        "dailyCoinDonation": 28000,
-        "dailyMoneyDonation": 1400,
-        "dailyTokenDonation": 9000
+        "dailyCoinDonation": 30000,
+        "dailyMoneyDonation": 1500,
+        "dailyTokenDonation": 10000
     })
 })
 minKey = 1

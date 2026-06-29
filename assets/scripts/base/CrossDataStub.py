@@ -168,7 +168,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             self.remoteCallCache.pop(_uuid, None)
 
     def sendActiveTick(self):
-        for csInfo in self.centralServerDic.values():
+        for csInfo in self.centralServerDict.values():
             _client = self.csClients.get(csInfo.serverId)
             if not (_client and _client.channel.dispatcher):
                 continue

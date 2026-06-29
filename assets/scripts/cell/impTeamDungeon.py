@@ -704,7 +704,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         self.addTimerCB(
             1, 
             '_teamDungeonTrapCallback', 
-            (dunNo, self.DEFAULT_EXIT_COUNT), 
+            (dunNo, self.DEFAULT_EXIT_COUNT_NUM), 
             gametimer.TIMER_TAG_TEAM_DUNGEON_TRAP_CALLBACK)
 
     def _teamDungeonTrapCallback(self, dunNo, exitCount):
@@ -721,14 +721,14 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
                 self.selfLeaveTeamDungeon(_src)
                 return
 
-            if exitCount == self.DEFAULT_EXIT_COUNT:
+            if exitCount == self.DEFAULT_EXIT_COUNT_NUM:
                 self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
 
             LOG_INFO('_teamDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
             exitCount -= 1
-        elif self.DEFAULT_EXIT_COUNT != exitCount:
-            exitCount = self.DEFAULT_EXIT_COUNT
+        elif self.DEFAULT_EXIT_COUNT_NUM != exitCount:
+            exitCount = self.DEFAULT_EXIT_COUNT_NUM
 
         self.addTimerCB(
             1, 

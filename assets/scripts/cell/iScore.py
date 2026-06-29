@@ -22,8 +22,8 @@ class IScore(object):
         LOG_INFO('initAvatarScores')
         self.scoreInitFinished = False
         self.totalScore = 0
-        m_dict = {i: False for i in AvatarScores.AvatarScores.__attrs__}
-        self.setTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist, m_dict)
+        mDict = {i: False for i in AvatarScores.AvatarScores.__attrs__}
+        self.setTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist, mDict)
         self._initAvatarCellScores()
         self.base.initAvatarBaseScores()
         self.asyncCallbackAfter(10).checkInitScoreTimeout()
@@ -37,8 +37,8 @@ class IScore(object):
     def onInitAvatarBaseScores(self, data):
         LOG_INFO('onInitAvatarBaseScores::', data)
         data = data or {}
-        for k, v in data.items():
-            self._changeScore(k, v)
+        for _k, v in data.items():
+            self._changeScore(_k, v)
 
     def checkInitScoreTimeout(self):
         if self.scoreInitFinished:
@@ -98,9 +98,9 @@ class IScore(object):
     # --------------------------------------------------------------
     # UPDATE FUNC
 
-    def _changeScore(self, key, val):
-        oldTotalScore = self.totalScore
-        setattr(self.scoresInfo, key, val)
+    def _changeScore(self, scoreKey, val):
+        _oldTotalScore = self.totalScore
+        setattr(self.scoresInfo, scoreKey, val)
         # 每次重新计算祝福评分
         oldBlessScore = self.scoresInfo.bless
         blessScore = dataUtils.calcAvatarBlessScore(self)
@@ -111,45 +111,45 @@ class IScore(object):
         
         self.scoresInfo = self.scoresInfo
         self.totalScore = self.getTotalScore()
-        if oldTotalScore != self.totalScore:
-            self.base.baseScoreChanged(self.scoreInitFinished, key, val)
-        self.markAvatarScoreBeInited(key)
+        if _oldTotalScore != self.totalScore:
+            self.base.baseScoreChanged(self.scoreInitFinished, scoreKey, val)
+        self.markAvatarScoreBeInited(scoreKey)
 
-    def _onScoreChange(self):
+    def _doOnScoreChange(self):
         pass
-
-    def updateSelfLevelScore(self):
-        self._changeScore("level", math.floor(self.getSelfLevelScore()))
-        self._onScoreChange()
 
     def updateEquipmentScore(self):
         self._changeScore("equipments", math.floor(self.getTotalEquipmentsScore()))
-        self._onScoreChange()
+        self._doOnScoreChange()
         self.syncBodyEquipDressData()
+
+    def updateSelfLevelScore(self):
+        self._changeScore("level", math.floor(self.getSelfLevelScore()))
+        self._doOnScoreChange()
 
     def onUpdateRewardFightProp(self, newScore):
         self._changeScore("rewardFightProp", math.floor(newScore))
-        self._onScoreChange()
+        self._doOnScoreChange()
 
     def onUpdateMountScore(self, newScore):
         self._changeScore("mount", math.floor(newScore))
-        self._onScoreChange()
+        self._doOnScoreChange()
 
     def onUpdatePetScore(self, newScore):
         self._changeScore("pet", math.floor(newScore))
-        self._onScoreChange()
+        self._doOnScoreChange()
 
     def onUpdateSkillScore(self, newScore):
         self._changeScore("skill", math.floor(newScore))
-        self._onScoreChange()
+        self._doOnScoreChange()
 
     def onUpdateGuildTrainScore(self, newScore):
         self._changeScore("guildtrain", math.floor(newScore))
-        self._onScoreChange()
+        self._doOnScoreChange()
 
     def onUpdateMeridianScore(self, newScore):
         self._changeScore("meridian", math.floor(newScore))
-        self._onScoreChange()
+        self._doOnScoreChange()
     # --------------------------------------------------------------
 
     # --------------------------------------------------------------

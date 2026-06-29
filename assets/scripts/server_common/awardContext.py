@@ -6,16 +6,14 @@ from KBEDebug import *
 import time
 
 import userType
-import sMath
-import utils
 
 
 class AwardArgs(userType.UserSingleType):
     def __init__(self, lv=0, avatarLv=0, **kwargs):
-        self.lv = lv
         self.avatarLv = avatarLv
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+        self.lv = lv
+        for _k, v in kwargs.items():
+            setattr(self, _k, v)
 
     @property
     def expEx(self):
@@ -29,61 +27,61 @@ class AwardContext(userType.UserSingleType):
     def __init__(self):
         self.extra = None
 
-    def __str__(self):
-        return '%s:%s' % (self.srcType, str(vars(self)))
+    def addContextVar(self, name, val):
+        self.extra[name] = val
 
     def __getattr__(self, item):
         return self.extra.get(item, '')
 
-    def addContextVar(self, name, val):
-        self.extra[name] = val
+    def __str__(self):
+        return '%s:%s' % (self.srcType, str(vars(self)))
 
 
 class CommonContext(AwardContext):
     def __init__(self, mailId, argsDic=None, **kwargs):
-        self.mailId = mailId
         self.args = AwardArgs(**(argsDic or {}))
+        self.mailId = mailId
         self.extra = kwargs
         self.itemArgs = {}
 
     def __getstate__(self):
-        st = {}
+        _st = {}
         if self.mailId:
-            st['mailId'] = self.mailId
+            _st['mailId'] = self.mailId
         if vars(self.args):
-            st['args'] = vars(self.args)
+            _st['args'] = vars(self.args)
         if self.extra:
-            st['extra'] = self.extra
-        return st
+            _st['extra'] = self.extra
+        return _st
 
     def __setstate__(self, state):
-        self.__init__(state.get('mailId', 0), state.get('args'), **state.get('extra', {}))
+        self.__init__(state.get('mailId', 0), state.get('args', None), **state.get('extra', {}),)
 
 
 class DropAwardCtx(AwardContext):
-    def __init__(self, srcEntId, srcEntLevel, argsDic=None, **kwargs):
-        self.srcEntId = srcEntId
+    def __init__(self, srcEntId, srcEntLevel, argsDic=None, **keywordArgs):
         self.level = srcEntLevel
+        self.srcEntId = srcEntId
         self.args = AwardArgs(**(argsDic or {}))
-        self.extra = kwargs
+        self.extra = keywordArgs
 
         if srcEntLevel:
             self.args.lv = srcEntLevel
 
     def __getstate__(self):
-        st = {}
+        _st = {}
         if self.srcEntId:
-            st['srcEntId'] = self.srcEntId
+            _st['srcEntId'] = self.srcEntId
         if self.level:
-            st['level'] = self.level
+            _st['level'] = self.level
         if vars(self.args):
-            st['args'] = vars(self.args)
+            _st['args'] = vars(self.args)
         if self.extra:
-            st['extra'] = self.extra
-        return st
+            _st['extra'] = self.extra
+        return _st
 
     def __setstate__(self, state):
+        _argsDic = state.get('args', {})
         srcEntId = state.get('srcEntId', 0)
-        argsDic = state.get('args', {})
         srcEntLevel = state.get('level', 0)
-        self.__init__(srcEntId, srcEntLevel, argsDic, **state.get('extra', {}))
+        self.__init__(srcEntId, srcEntLevel, _argsDic, **state.get('extra', {}))

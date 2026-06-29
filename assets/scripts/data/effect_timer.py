@@ -406,22 +406,22 @@ def _13080069(self, target, context):
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
 def _13080070(self, target, context):
-   self.addExpAction(int(115.5606*math.pow(1.081, min( self.level,30)-20)))
+   self.addExpAction(int(125*math.pow(1.052, min( self.level,30)-20)))
 
 def _13080071(self, target, context):
-       self.addExpAction(int(251.676*math.pow(1.064, min( self.level,40)-30)))
+       self.addExpAction(int(209*math.pow(1.052, min( self.level,40)-30)))
 
 def _13080072(self, target, context):
-       self.addExpAction(int(467.2793*math.pow(1.063, min( self.level,50)-40)))
+       self.addExpAction(int(348*math.pow(1.052, min( self.level,50)-40)))
 
 def _13080073(self, target, context):
-    self.addExpAction(300)
+       self.addExpAction(int(580*math.pow(1.052, min( self.level,60)-50)))
 
 def _13080074(self, target, context):
-    self.addExpAction(400)
+       self.addExpAction(int(965*math.pow(1.052, min( self.level,70)-60)))
 
 def _13080075(self, target, context):
-    self.addExpAction(500)
+       self.addExpAction(int(1608*math.pow(1.052, min( self.level,80)-70)))
 
 def _13080076(self, target, context):
     buffSrc = context.getSrcEntity()
@@ -445,43 +445,55 @@ def _13080079(self, target, context):
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
 def _13080080(self, target, context):
-    self.addExpAction(int(0.45*115.5606*math.pow(1.081, min( self.level,30)-20)))
+    self.addExpAction(int(0.4*125*math.pow(1.052, min( self.level,30)-20)))
 
 def _13080081(self, target, context):
-    self.addExpAction(int(0.45*251.676*math.pow(1.064, min( self.level,40)-30)))
+    self.addExpAction(int(0.4*209*math.pow(1.052, min( self.level,40)-30)))
 
 def _13080082(self, target, context):
-    self.addExpAction(int(0.45*467.2793*math.pow(1.063, min( self.level,50)-40)))
+    self.addExpAction(int(0.4*348*math.pow(1.052, min( self.level,50)-40)))
 
 def _13080083(self, target, context):
-    self.addExpAction(int(0.9*115.5606*math.pow(1.081, min( self.level,30)-20)))
+    self.addExpAction(int(0.9*125*math.pow(1.052, min( self.level,30)-20)))
 
 def _13080084(self, target, context):
-    self.addExpAction(int(0.99*115.5606*math.pow(1.081, min( self.level,30)-20)))
+    self.addExpAction(int(1*125*math.pow(1.052, min( self.level,30)-20)))
 
 def _13080085(self, target, context):
-    self.addExpAction(int(1.08*115.5606*math.pow(1.081, min( self.level,30)-20)))
+    self.addExpAction(int(1.1*125*math.pow(1.052, min( self.level,30)-20)))
 
 def _13080086(self, target, context):
-     self.addExpAction(int(0.9*251.676*math.pow(1.064, min( self.level,40)-30)))
+     self.addExpAction(int(0.9*209*math.pow(1.052, min( self.level,40)-30)))
 
 def _13080087(self, target, context):
-     self.addExpAction(int(0.99*251.676*math.pow(1.064, min( self.level,40)-30)))
+     self.addExpAction(int(1*209*math.pow(1.052, min( self.level,40)-30)))
 
 def _13080088(self, target, context):
-     self.addExpAction(int(1.08*251.676*math.pow(1.064, min( self.level,40)-30)))
+     self.addExpAction(int(1.1*209*math.pow(1.052, min( self.level,40)-30)))
 
 def _13080089(self, target, context):
-    self.addExpAction(int(0.9*467.2793*math.pow(1.063, min( self.level,50)-40)))
+    self.addExpAction(int(0.9*348*math.pow(1.052, min( self.level,50)-40)))
 
 def _13080090(self, target, context):
-    self.addExpAction(int(0.99*467.2793*math.pow(1.063, min( self.level,50)-40)))
+    self.addExpAction(int(1*348*math.pow(1.052, min( self.level,50)-40)))
 
 def _13080091(self, target, context):
-    self.addExpAction(int(1.08*467.2793*math.pow(1.063, min( self.level,50)-40)))
+    self.addExpAction(int(1.1*348*math.pow(1.052, min( self.level,50)-40)))
 
 def _13080092(self, target, context):
     self.lockMinHpTime(self, context, context.args.ActionParam[0], context.args.ActionParam[1])
+
+def _13080093(self, target, context):
+    self.addExpAction(int(0.4*580*math.pow(1.052, min( self.level,60)-50)))
+
+def _13080094(self, target, context):
+    self.addExpAction(int(0.9*580*math.pow(1.052, min( self.level,60)-50)))
+
+def _13080095(self, target, context):
+    self.addExpAction(int(1*580*math.pow(1.052, min( self.level,60)-50)))
+
+def _13080096(self, target, context):
+    self.addExpAction(int(1.1*580*math.pow(1.052, min( self.level,60)-50)))
 
 datas = _tools.RODict({ 
     13080000: _tools.RODict({
@@ -819,7 +831,23 @@ datas = _tools.RODict({
     13080092: _tools.RODict({
         "ID": 13080092,
         "Action": _13080092
+    }),
+    13080093: _tools.RODict({
+        "ID": 13080093,
+        "Action": _13080093
+    }),
+    13080094: _tools.RODict({
+        "ID": 13080094,
+        "Action": _13080094
+    }),
+    13080095: _tools.RODict({
+        "ID": 13080095,
+        "Action": _13080095
+    }),
+    13080096: _tools.RODict({
+        "ID": 13080096,
+        "Action": _13080096
     })
 })
 minKey = 13080000
-maxKey = 13080092
+maxKey = 13080096

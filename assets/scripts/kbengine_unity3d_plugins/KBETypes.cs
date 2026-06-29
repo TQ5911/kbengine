@@ -4247,37 +4247,37 @@ namespace KBEngine
 
 	public struct GUILD_CONTRIB
 	{
-		UInt32 value;
+		Int32 value;
 
-		GUILD_CONTRIB(UInt32 value)
+		GUILD_CONTRIB(Int32 value)
 		{
 			this.value = value;
 		}
 
-		public static implicit operator UInt32(GUILD_CONTRIB value)
+		public static implicit operator Int32(GUILD_CONTRIB value)
 		{
 			return value.value;
 		}
 
-		public static implicit operator GUILD_CONTRIB(UInt32 value)
+		public static implicit operator GUILD_CONTRIB(Int32 value)
 		{
-			UInt32 tvalue = (UInt32)value;
+			Int32 tvalue = (Int32)value;
 			return new GUILD_CONTRIB(tvalue);
 		}
 
-		public static UInt32 MaxValue
+		public static Int32 MaxValue
 		{
 			get
 			{
-				return UInt32.MaxValue;
+				return Int32.MaxValue;
 			}
 		}
 
-		public static UInt32 MinValue
+		public static Int32 MinValue
 		{
 			get
 			{
-				return UInt32.MinValue;
+				return Int32.MinValue;
 			}
 		}
 	}
@@ -5572,20 +5572,6 @@ namespace KBEngine
 
 	}
 
-	public class SPIRIT_BIND_VAL
-	{
-		public Byte pos = 0;
-		public Byte bindType = 0;
-
-	}
-
-	public class GLYPH_BIND_VAL
-	{
-		public Byte pos = 0;
-		public Byte bindType = 0;
-
-	}
-
 	public class CLI_GLYPH_INFO
 	{
 		public Byte glyphPos = 0;
@@ -5608,6 +5594,8 @@ namespace KBEngine
 		public Byte bindType = 0;
 		public SByte lockStatus = 0;
 		public List<CLI_SPIRIT_INFO> spiritDatas = new List<CLI_SPIRIT_INFO>();
+		public List<CLI_SPIRIT_INFO> previewSpiritDatas = new List<CLI_SPIRIT_INFO>();
+		public List<Byte> previewSpiritBindTypes = new List<Byte>();
 		public Byte spiritGroup = 0;
 		public List<AFFIX_VAL> blessAffixes = new List<AFFIX_VAL>();
 		public List<AFFIX_VAL> soulAffixes = new List<AFFIX_VAL>();
@@ -5622,8 +5610,8 @@ namespace KBEngine
 		public UInt16 bindValue = 0;
 		public UInt16 bindEnhanceCost = 0;
 		public UInt16 bindBlessCost = 0;
-		public List<SPIRIT_BIND_VAL> spiritBindTypes = new List<SPIRIT_BIND_VAL>();
-		public List<GLYPH_BIND_VAL> glyphBindTypes = new List<GLYPH_BIND_VAL>();
+		public List<Byte> spiritBindTypes = new List<Byte>();
+		public List<Byte> glyphBindTypes = new List<Byte>();
 		public Byte soulBindType = 0;
 		public Byte grade = 0;
 		public Byte maxEnhanceLv = 0;
@@ -6244,6 +6232,10 @@ namespace KBEngine
 		public UInt32 fund = 0;
 		public UInt32 joinTime = 0;
 		public UInt32 histCond = 0;
+		public UInt32 commissionGold = 0;
+		public UInt32 commissionGoldDaily = 0;
+		public UInt32 commissionCumTenure = 0;
+		public UInt32 jobPositionTime = 0;
 
 	}
 
@@ -6429,6 +6421,11 @@ namespace KBEngine
 		public Byte siegeWarSignUped = 0;
 		public JUN_XU_ARCHITECTURE_DATA_INFO junXuArchitecture = new JUN_XU_ARCHITECTURE_DATA_INFO();
 		public UInt32 cityBattleToken = 0;
+		public UInt64 guildCommission = 0;
+		public UInt32 gamePlayScoreCurrent = 0;
+		public UInt32 gamePlayScoreLimit = 0;
+		public Byte guildMicsSwitch = 0;
+		public List<UInt64> guildMicsBlockList = new List<UInt64>();
 
 	}
 

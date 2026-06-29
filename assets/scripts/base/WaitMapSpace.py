@@ -19,10 +19,10 @@ class WaitMapSpace(iBase.IBase):
 
     def onGetCell(self):
         LOG_INFO('WaitMapSpace.onGetCell', self.spaceno, self.spacetype)
-        if self.chunkAlready:
+        if self.alreadyTrunk:
             self.onSpaceCellReady()
 
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         LOG_INFO("WaitMapSpace.onLoseCell:", self.spaceno, reason)
         if self.isDestroyed:
             return
@@ -43,16 +43,16 @@ class WaitMapSpace(iBase.IBase):
     def entireConstruct(self, spaceID):
         LOG_INFO('WaitMapSpace.entireConstruct', self.spaceno, spaceID)
         self.spaceid = spaceID
-        if self.chunkAlready:
+        if self.alreadyTrunk:
             return
-        self.chunkAlready = True
+        self.alreadyTrunk = True
         if self.cell:
             self.onSpaceCellReady()
 
     def onSpaceCellReady(self):
-        if self.notifiedSpaceReady:
+        if self.isNotifiedSpaceReady:
             return
-        self.notifiedSpaceReady = True
+        self.isNotifiedSpaceReady = True
         stub = gameengine.getGlobalBase('WaitMapSpaceStub', reportErr=False)
         if stub:
             stub.onWaitMapSpaceReady(self.spaceno)
@@ -62,9 +62,9 @@ class WaitMapSpace(iBase.IBase):
         if self.isDestroyed:
             return
         if hasattr(self, 'cell') and self.cell:
-            self.isDeleteFromDB = deleteFromDB
+            self.isDelFromDB = deleteFromDB
             self.isWriteToDB = writeToDB
-            self.onLoseCellReason = gameconst.OnLoseCellReason.ENTIRE_DESTROY
+            self.onLoseCellReason = gameconst.OnLoseCellReasonEnum.ENTIRE_DESTROY
             self.cell.destroyMySpace()
         else:
             self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)

@@ -11,8 +11,6 @@ import random
 import utils
 import gameconst
 
-import MaxHeap
-
 
 class TargetHate(object):
     def reloadScript(self):
@@ -169,18 +167,34 @@ class MonsterHate(object):
         return _maxTid, _maxHate
 
     def getFirstVisibleHateTarget(self):
-        entDic = {}
         _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
+        
+        best_tid = 0
+        best_hate_val = None
+        max_hate = -1  # 初始化一个极小值
+        
         for _tid, hateVal in self._hateDict.items():
+            # 1. 实体与所有者检查
             _ent = KBEngine.entities.get(_tid)
             if not _ent or not self.owner:
                 continue
+                
+            # 2. 可见性检查
             if not self.owner.isVisible(_ent) and not _canSeeHiddenEnt:
                 continue
+                
+            # 3. 可攻击性检查
             if not _ent.canAttackable(self.owner):
                 continue
-            entDic[_tid] = hateVal
-        return max(entDic.items(), key=lambda v: v[1].currentHate, default=(0, None))
+                
+            # 4. 动态比较仇恨值（替代 max 函数）
+            current_hate = hateVal.currentHate
+            if current_hate > max_hate:
+                max_hate = current_hate
+                best_tid = _tid
+                best_hate_val = hateVal
+                
+        return (best_tid, best_hate_val)
 
     def iterHatedEntities(self):
         for _eid, hateVal in self._hateDict.items():
@@ -406,7 +420,7 @@ class MonsterHate(object):
             LOG_DBG("inheritHate target", targetId, _target)
             if not _target or not hasattr(_target, 'aiController') or not _target.aiController:
                 continue
-            targetHate = _target.aiController.hateDict.getHate(self.owner.id)
+            targetHate = _target.aiController.hateDic.getHate(self.owner.id)
             if not targetHate:
                 continue
             if targetHate.currentHate <= 0:

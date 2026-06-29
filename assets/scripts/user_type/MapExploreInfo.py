@@ -5,7 +5,7 @@ import userType
 import gameconst
 import gamePlay_explorationRate as GED
 import gamePlay_explorationReward as GER
-
+from KBEDebug import *
 
 class MapExploreVal(userType.UserSingleType):
     '''MAP_EXPLORE_DATA_INFO'''
@@ -77,6 +77,9 @@ class MapExploreDictVal(userType.UserSingleType):
                         hookTask = [0, GED.datas[id]['targetParam'][0]]
                     elif targetType == gameconst.AchieveType.AREA_TASK:
                         areaTask = [0, GED.datas[id]['targetParam'][0]]
+                if mapId not in GER.mapId2Ids:
+                    LOG_ERR("策划没有配  玩法场景表-场景探索度表  mapid:", mapId)
+                    continue
                 rewardDataIds = GER.mapId2Ids[mapId]
                 rewardData[-1] = GER.datas[rewardDataIds[-1]]['acPoint']
                 self.mapDatas[mapId] = MapExploreVal(mapId=mapId, personalBox=personalBox, viewPoint=viewPoint, hookTask=hookTask,\

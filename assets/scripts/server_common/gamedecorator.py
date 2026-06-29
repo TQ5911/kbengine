@@ -4,10 +4,10 @@ from KBEDebug import *
 
 import decorator
 import functools
-import types
 import time
 import utils
 import gameconfig
+import gameconst
 
 import visible_visible as UVVD
 import const_const as C_CD
@@ -15,75 +15,69 @@ import const_const as C_CD
 SERVER_LOAD_LV_NORMAL = 0
 
 
-def _limitcall(interval, intervalOnHighLoad, bMsg, msgId, keyFunc=None, msgArgs=()):
+def _limitcall(interval, bMsg, msgId, keyFun=None, msgArgs=()):
     if KBEngine.component == 'baseapp':
-        def fwrap(f, self, *args, **kwargs):
+        def _fwrap(innerFunc, self, *args, **kwargs):
             if getattr(KBEngine, 'timeProxy', False):
-                return f(self, *args, **kwargs)
+                return innerFunc(self, *args, **kwargs)
 
-            now = time.time()
+            _now = time.time()
 
             if not hasattr(self, 'methodPoolBase'):
                 self.methodPoolBase = {}
 
-            if intervalOnHighLoad and hasattr(self, 'loadLv') and self.loadLv > SERVER_LOAD_LV_NORMAL:
-                _interval = intervalOnHighLoad
-            else:
-                _interval = interval
+            _interval = interval
 
-            keyName = keyFunc and '%s_%s' % (f.__name__, keyFunc(args)) or f.__name__
+            keyName = keyFun and '%s_%s' % (innerFunc.__name__, keyFun(args)) or innerFunc.__name__
 
-            if now > self.methodPoolBase.get(keyName, 0):
-                self.methodPoolBase[keyName] = now + _interval
-                return f(self, *args, **kwargs)
+            if _now > self.methodPoolBase.get(keyName, 0):
+                self.methodPoolBase[keyName] = _now + _interval
+                return innerFunc(self, *args, **kwargs)
 
             if bMsg and msgId and (utils.isinstanceof(self, 'Avatar') or utils.isinstanceof(self, 'Account')):
                 self.onMessagePre(msgId, list(msgArgs))
 
             return None
 
-        return fwrap
+        return _fwrap
 
     elif KBEngine.component == 'cellapp':
-        def fwrap(f, self, *args, **kwargs):
+        def _fwrap(innerFunc, self, *args, **kwargs):
             if getattr(KBEngine, 'timeProxy', False):
-                return f(self, *args, **kwargs)
+                return innerFunc(self, *args, **kwargs)
 
-            now = time.time()
+            _now = time.time()
 
-            if intervalOnHighLoad and hasattr(self, 'loadLv') and self.loadLv > SERVER_LOAD_LV_NORMAL:
-                _interval = intervalOnHighLoad
-            else:
-                _interval = interval
+            _interval = interval
 
-            keyName = keyFunc and '%s_%s' % (f.__name__, keyFunc(args)) or f.__name__
+            keyName = keyFun and '%s_%s' % (innerFunc.__name__, keyFun(args)) or innerFunc.__name__
 
-            if now > self.methodPool.get(keyName, 0):
-                self.methodPool[keyName] = now + _interval
-                return f(self, *args, **kwargs)
+            if _now > self.methodPool.get(keyName, 0):
+                self.methodPool[keyName] = _now + _interval
+                return innerFunc(self, *args, **kwargs)
 
             isAvatar = utils.isinstanceof(self, 'Avatar')
             if not isAvatar:
                 caller = KBEngine.entities.get(args[0])
-                isCallerAvatar = utils.isinstanceof(caller, 'Avatar')
+                isAvatarCaller = utils.isinstanceof(caller, 'Avatar')
 
-            if bMsg and msgId and (isAvatar or isCallerAvatar):
+            if bMsg and msgId and (isAvatar or isAvatarCaller):
                 self.showMsg(msgId, list(msgArgs))
 
             return None
 
-        return fwrap
+        return _fwrap
 
     else:
         raise NotImplementedError
 
 
-def limitcall(interval, bMsg=True, msgId=0, keyFunc=None, msgArgs=()):
-    return decorator.decorator(_limitcall(interval, 0, bMsg, msgId, keyFunc=keyFunc, msgArgs=msgArgs))
+def limitcall(interval, bMsg=True, msgId=0, keyFun=None, msgArgs=()):
+    return decorator.decorator(_limitcall(interval, bMsg, msgId, keyFun=keyFun, msgArgs=msgArgs))
 
 
 def _checkTeleportLock(lockReason):
-    def fwrap(f, self, *args, **kwargs):
+    def _fwrap(f, self, *args, **kwargs):
         _now = utils.curTS()
         if self.isTeleportLocked(lockReason, _now):
             LOG_WARN(
@@ -92,77 +86,77 @@ def _checkTeleportLock(lockReason):
             return None
         return f(self, *args, **kwargs)
 
-    return fwrap
+    return _fwrap
+
+
+def crossServerOnly(func):
+    func.crossServerCallable = True
+    func.localServerCallable = False
+
+    @functools.wraps(func)
+    def __(self, *args, **kwargs):
+        return func(self, *args, **kwargs)
+
+    return __
 
 
 def checkTeleportLock(lockReason):
     return decorator.decorator(_checkTeleportLock(lockReason))
 
 
-def crossServerOnly(fn):
-    fn.crossServerCallable = True
-    fn.localServerCallable = False
+def crossServer(func):
+    func.crossServerCallable = True
+    func.localServerCallable = True
 
-    @functools.wraps(fn)
+    @functools.wraps(func)
     def __(self, *args, **kwargs):
-        return fn(self, *args, **kwargs)
+        return func(self, *args, **kwargs)
 
     return __
 
 
-def crossServer(fn):
-    fn.crossServerCallable = True
-    fn.localServerCallable = True
-
-    @functools.wraps(fn)
-    def __(self, *args, **kwargs):
-        return fn(self, *args, **kwargs)
-
-    return __
-
-
-def forwardToLocal(fn):
-    @functools.wraps(fn)
-    def f(self, *args, **kwargs):
+def forwardToLocal(targetFunc):
+    @functools.wraps(targetFunc)
+    def returnFunc(self, *args, **kwargs):
         if self.isCrossServer and self.isCrossServerInOtherServer:
-            if KBEngine.component == 'cellapp':
-                box = self.otherServerAvatarBox.cell
-            else:
+            if KBEngine.component == 'baseapp':
                 box = self.otherServerAvatarBox
-            func = getattr(box, fn.__name__)
-            return func(*args, **kwargs)
+            else:
+                box = self.otherServerAvatarBox.cell
+            _func = getattr(box, targetFunc.__name__)
+            return _func(*args, **kwargs)
         else:
-            return fn(self, *args, **kwargs)
+            return targetFunc(self, *args, **kwargs)
 
-    return f
+    return returnFunc
 
 
-def forwardToCross(fn):
-    @functools.wraps(fn)
-    def f(self, *args, **kwargs):
+def forwardToCross(targetFunc):
+    @functools.wraps(targetFunc)
+    def returnFunc(self, *args, **kwargs):
         if self.isCrossServer and self.isCrossServerInLocalServer:
             if KBEngine.component == 'cellapp':
-                box = self.otherServerAvatarBox.cell
+                _box = self.otherServerAvatarBox.cell
             else:
-                box = self.otherServerAvatarBox
-            func = getattr(box, fn.__name__)
+                _box = self.otherServerAvatarBox
+            func = getattr(_box, targetFunc.__name__)
             return func(*args, **kwargs)
         else:
-            fn(self, *args, **kwargs)
+            targetFunc(self, *args, **kwargs)
 
-    return f
+    return returnFunc
 
 
-def offlineCallback(fn):
-    fn.offlineCall = True
+def offlineCallback(targetFunc):
+    targetFunc.offlineCall = True
 
-    @functools.wraps(fn)
+    @functools.wraps(targetFunc)
     def __(self, *args, **kwargs):
-        return fn(self, *args, **kwargs)
+        return targetFunc(self, *args, **kwargs)
 
     return __
 
-def doCheckGameConfig(avatar, name, needMsg = True):
+def doCheckGameConfig(avatar, name, needMsg, checkList, *args):
     info = gameconfig.CONFIG.get(name)
     if not info:
         LOG_ERR('gameconfig not found: 1', name)
@@ -190,13 +184,32 @@ def doCheckGameConfig(avatar, name, needMsg = True):
             if not v:
                 LOG_WARN('gameconfig not enable: 4', name)
                 return False
+    for _type in gameconst.SpecialVisibleType.VALID_SPECIAL_VISIBLE_TYPE:
+        if not avatar._isSpecialVisible(_type):
+            continue
+
+        bitsDic = UVVD.typeToBitsDic.get(name, {})
+        if not bitsDic:
+            return False
+        res = True
+        for checkType, bits in bitsDic.items():
+            if _type not in bits:
+                return False
+            if checkType == gameconst.SpecialVisibleCheckType.CONDITION_CHECK:
+                res &= avatar.checkSpecialVisible(name, _type, checkList, *args)
+            elif checkType == gameconst.SpecialVisibleCheckType.OPEN:
+                pass
+
+            if not res:
+                return False
+
     return True
 
-def checkGameconfigEnable(name):
+def checkGameconfigEnable(name, checkList=[]):
     def f(func):
         @functools.wraps(func)
         def wrapper(*args):
-            if doCheckGameConfig(args[0], name):
+            if doCheckGameConfig(args[0], name, True, checkList, *args):
                 return func(*args)
 
         return wrapper

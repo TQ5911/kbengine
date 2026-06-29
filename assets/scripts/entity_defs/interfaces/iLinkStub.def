@@ -11,10 +11,10 @@
             <Flags>     BASE                 </Flags>
         </linkCache>
 
-        <uniqueIdCache>
+        <uniqueIdsCache>
             <Type>      PY_LIST              </Type>
             <Flags>     BASE                 </Flags>
-        </uniqueIdCache>
+        </uniqueIdsCache>
     </Properties>
 
     <BaseMethods>

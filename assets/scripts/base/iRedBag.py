@@ -28,12 +28,12 @@ class IRedBag(object):
         self.rbVersion = 0
 
     def reloadScript(self):
-        for pName, pVal in self.__dict__.items():
-            if pName.startswith('__'):
+        for _pName, _pVal in self.__dict__.items():
+            if _pName.startswith('__'):
                 continue
 
-            if hasattr(pVal, 'reloadScript'):
-                pVal.reloadScript()
+            if hasattr(_pVal, 'reloadScript'):
+                _pVal.reloadScript()
 
     def redbagOnLogin(self):
         try:
@@ -191,9 +191,9 @@ class IRedBag(object):
         src = AAC_AACDD.datas.BONUS_SRC_SEND_RED_PACKET_COST
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(self.moneyItemId, _realMoney)
-        m_desc = "req-release-redbag-{}-{}-{}-{}".format(redbagType, channel, money, num)
-        LOG_INFO('deductWealth', _realMoney, m_desc)
-        self.deductWealth(src, deductWealthVal, redbagId, m_desc)
+        mDesc = "req-release-redbag-{}-{}-{}-{}".format(redbagType, channel, money, num)
+        LOG_INFO('deductWealth', _realMoney, mDesc)
+        self.deductWealth(src, deductWealthVal, redbagId, mDesc)
         self.setTempMiscProp(redbagId, _realMoney)
 
         gameengine.getGlobalBase('RedBagStub').doCreateRedBag(self, redbagId, self.gbID, self.characterName, self.guildUUIDBase, redbagType, channel, money, num, desc)
@@ -223,8 +223,8 @@ class IRedBag(object):
         addWealthVal = dropAward.AwardVal()
         _realMoney = self.popTempMiscProp(redbagId)
         addWealthVal.addWealthByItemId(self.moneyItemId, _realMoney)
-        m_desc = "on-release-redbag-fail-{}-{}-{}".format(redbagId, money, _realMoney)
-        self.addWealth(src, addWealthVal, redbagId, m_desc)
+        mDesc = "on-release-redbag-fail-{}-{}-{}".format(redbagId, money, _realMoney)
+        self.addWealth(src, addWealthVal, redbagId, mDesc)
 
     def getFetchRedBagTime(self, redbagId):
         return self.fetchRedBagDict.get(redbagId, 0)
@@ -276,8 +276,8 @@ class IRedBag(object):
             src = AAC_AACDD.datas.BONUS_SRC_GET_RED_PACKET_ITEM
             addWealthVal = dropAward.AwardVal()
             addWealthVal.addWealthByItemId(self.moneyItemId, money)
-            m_desc = "on-fetch-redbag-{}-{}".format(redbagId, money)
-            self.addWealth(src, addWealthVal, redbagId, m_desc)
+            mDesc = "on-fetch-redbag-{}-{}".format(redbagId, money)
+            self.addWealth(src, addWealthVal, redbagId, mDesc)
 
             # fetchDict['hasFetch'] = 1
 

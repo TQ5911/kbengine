@@ -110,6 +110,7 @@
         </autoRenewCubeRoom>
 
         <afterEnterCubeDeductTimes>
+            <Arg>           PY_DICT         </Arg>
         </afterEnterCubeDeductTimes>
 
         <cubePray> <Exposed/>

@@ -66,6 +66,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self._initGuildChallenge()
         self._initPermissions()
         self._loadGuildAvatars()
+        self._initMics()
         self.guildSyncDataToCrossDataCache = None
 
         # 检查帮会成员是否有变化
@@ -104,7 +105,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         # 清除帮会申请过期数据
         _dur = 59
         self.pyAddTimer(_dur, _dur, gametimer.CLEAR_GUILD_UNION_APPLY_EXPIRE)
-        
+
+        # 任期时间更新
+        _dur = 60
+        self.pyAddTimer(_dur, _dur, gametimer.UPDATE_COMMISSION_TENURE)
+
+        # 帮会佣金每日元宝回收上限重置
+        self.registerDailyEvent('_resetCommissionGoldDaily')
+
         # 开启副本倒计时计时器
         self.openDungeonCDTimer = 0
         # 开启副本计时器
@@ -112,7 +120,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         
         # 处理帮会Boss副本异常情况
         self.recoverGuildBossDungeonData()
-
+    
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
@@ -126,7 +134,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self._checkGuildApplyExp()
         elif userArg == gametimer.UPDATE_GUILD_SCORE:
             self._updateGuildScore()
-        elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
+        elif userArg == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
         elif userArg == gametimer.CHECK_GUILD_CLIENT_CACHE:
             self._checkGuildCacheToClient()
@@ -136,6 +144,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self._syncDataToCrossData()
         elif userArg == gametimer.CLEAR_GUILD_UNION_APPLY_EXPIRE:
             self._clearGuildUnionApplyExpire()
+        elif userArg == gametimer.UPDATE_COMMISSION_TENURE:
+            self._updateCommissionTenure()
         else:
             self._onTimerTrigger(tid, userArg)
 
@@ -613,7 +623,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         self.lastGuildClientCache = copy.deepcopy(self._toClientGuildInfo())
 
-    def _toClientGuildInfo(self):
+    def _toClientGuildInfo(self, gamePlayScoreLimit = 0):
         # GUILD_CLIENT_DATA
         return {
             'name': self.guildName,
@@ -632,10 +642,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             'siegeWarSignUped': self.siegeWarSignUped,
             'junXuArchitecture': self.junXuArchitecture,
             'cityBattleToken': self.cityBattleToken,
+            'guildCommission': self.guildCommission,
+            'gamePlayScoreCurrent': self.gamePlayScoreCurrent,
+            'gamePlayScoreLimit': gamePlayScoreLimit,
+            'guildMicsSwitch': self.guildMicsSwitch,
+            'guildMicsBlockList': self._getMicsBlockList(),
         }
 
-    def doSendGuildClientData(self, gbId, box):
-        box.client.onGetGuildData(self._toClientGuildInfo())
+    def doSendGuildClientData(self, gbId, box, gamePlayerScoreLimit):
+        box.client.onGetGuildData(self._toClientGuildInfo(gamePlayerScoreLimit))
 
         if self._checkHasPermission(gbId, GA_AI_DD.datas.allowApplication):
             box.client.onGuildApplyJoinList(list(self.applyJoins.values()))
@@ -658,6 +673,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
     def addGuildMember(self, gbId, job):
         _gmVal = GuildMemberInfo.GuildMemberVal(gbId, job=job, joinTime=utils.curTS())
+        # 记录下管理职位的数据
+        if job in gameconst.GUILD_MANAGE_POSITIONS:
+            _gmVal.jobPositionTime = utils.curTS()
         self.members[gbId] = _gmVal
         return _gmVal
 
@@ -1324,6 +1342,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         _gmVal.setProperty('job', job)
 
+        LogTrackingMgr.LogTrackingMgr.Guild_User_Set(
+            gbId,
+            '',
+            GA_AD.datas[job]["name"],
+        )
+
         if job == GA_A_DD.datas.leader:
             _eId = M_GL_DD.datas.guildLog_guildLeaderChanged
             _args = [_oprGmVal.name, _gmVal.name]
@@ -1388,6 +1412,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.onGuildLeaderChange(oprGbId, gbId, _gmVal.name, _gmVal.school, _gmVal.sex)
+
+        # 
+        if _gmVal.job in gameconst.GUILD_MANAGE_POSITIONS:
+            if _gmVal.jobPositionTime == 0:
+                _gmVal.jobPositionTime = utils.curTS()
+        else:
+            if _gmVal.jobPositionTime > 0:
+                _gmVal.commissionCumTenure += int((utils.curTS() - _gmVal.jobPositionTime) // 60)
+            _gmVal.jobPositionTime = 0
 
     def doResign(self, gbId, oprBox):
         _gmVal = self.members.get(gbId)
@@ -2003,6 +2036,132 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.doGetGuildIronMine(0, box)
 
         LogTrackingMgr.LogTrackingMgr.MineBattle_Shared('Guild', '', srcGbId, self.guildUUID, self.guildIronMine, playerList, bonusNumList, opUUID)
+
+    def addCommissionGold(self, gbId, amount):
+        LOG_INFO('addCommissionGold:', gbId, amount)
+        gmVal = self.members.get(gbId)
+        if not gmVal:
+            LOG_WARN('addCommissionGold: member not found', gbId)
+            return
+        if self.gamePlayScoreCurrent < G_GCD.datas['guild_commissionOpen']['value']:
+            return
+        # 回收金转换
+        amount = math.floor(amount * G_GCD.datas['guild_conversionRate']['value'] / 100)
+        dailyCap = G_GCD.datas['guild_conversionGoldLimit']['value']
+        remaining = dailyCap - gmVal.commissionGoldDaily
+        if remaining <= 0:
+            LOG_WARN('addCommissionGold: daily cap reached', gbId, gmVal.commissionGoldDaily)
+            return
+        actual = min(amount, remaining)
+        gmVal.commissionGold += actual
+        gmVal.commissionGoldDaily += actual
+        # 增量统计回收的货币
+        self.totalCommissionGold += actual
+
+    def doShareCommission(self, srcGbId, shareList, box):
+        LOG_WARN('doShareCommission: ', srcGbId, shareList, box)
+        if self.gamePlayScoreCurrent < G_GCD.datas['guild_commissionOpen']['value']:
+            box.onMessagePre(G_GCD.datas['guild_commissionCloseMsg']['value'], [])
+            return
+        
+        gmVal = self.members.get(srcGbId)
+        if not gmVal:
+            LOG_WARN('doShareCommission: src gbid member not in guild', srcGbId)
+            return
+        
+        jobInfo = GA_AD.datas.get(gmVal.job, None)
+        if not jobInfo:
+            LOG_WARN('doShareCommission: unknow job', srcGbId, gmVal.job)
+            return
+        
+        if not self._checkHasPermission(srcGbId, GA_AI_DD.datas.guildDividend):
+            LOG_WARN('doShareCommission: no dividend permission', srcGbId, gmVal.job)
+            return
+
+        tenureReq = G_GCD.datas['guild_dividendTime']['value'] * 86400
+        totalDeduct = 0
+        playerList = []
+        bonusNumList = []
+
+        for val in shareList:
+            playerGbId = val['playerGbId']
+            bonusNum = val['bonusNum']
+            gmVal = self.members.get(playerGbId)
+            
+            if not gmVal:
+                LOG_WARN('doShareCommission: member not in guild', playerGbId)
+                return
+            
+            jobInfo = GA_AD.datas.get(gmVal.job, None)
+            if not jobInfo:
+                LOG_WARN('doShareCommission: unknow job 1', playerGbId, gmVal.job)
+                return
+            
+            if not self._checkHasPermission(playerGbId, GA_AI_DD.datas.guildRevenue):
+                LOG_WARN('doShareCommission: no revenue', playerGbId, gmVal.job)
+                continue
+
+            if gmVal.commissionCumTenure < tenureReq:
+                box.onMessagePre(G_GCD.datas['guild_lackSufficientTermMsg']['value'], [])
+                return
+
+            playerList.append(playerGbId)
+            bonusNumList.append(bonusNum)
+            totalDeduct += bonusNum
+
+        if totalDeduct <= 0:
+            return
+
+        if totalDeduct > self.guildCommission:
+            LOG_WARN('doShareCommission: guildCommission insufficient', totalDeduct, self.guildCommission)
+            return
+        
+        self.guildCommission -= totalDeduct
+
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_GUILD_COMMISSION
+        itemId = gameconst.ItemIdEnum.BIND_MONEY
+        itemName = IDID.datas[itemId]['name']
+        leaderName = self.members[self.leaderGbId].name
+        for i, playerGbId in enumerate(playerList):
+            gmVal = self.members.get(playerGbId)
+            if not gmVal:
+                continue
+            awardVal = dropAward.MailAttachVal()
+            awardVal.addWealthByItemId(itemId, bonusNumList[i])
+            mailAssistor.sendMailToPlayers([playerGbId],
+                                          G_GCD.datas['guild_dividendConversionGoldMail']['value'],
+                                          extraAttach=awardVal,
+                                          despArgs=(leaderName, itemName),
+                                          srcType=srcType, opUUID=opUUID)
+        
+        box.client.onGuildCommissionChanged(self.guildCommission)
+        box.client.onShareCommissionResult(True)
+
+    def _resetCommissionGoldDaily(self, *args):
+        for gmVal in self.members.values():
+            gmVal.commissionGoldDaily = 0
+
+    def _commissionWeeklyCalc(self, totalPoints):
+        LOG_INFO('_commissionWeeklyCalc: 1 ', totalPoints, self.guildStatData)
+        if totalPoints <= 0:
+            return
+        guildPoints = 0
+        for point in self.guildStatData.values():
+            guildPoints += point
+        ratio = guildPoints/totalPoints
+        totalGold = 0
+        for _gmVal in self.members.values():
+            totalGold += _gmVal.commissionGold
+            _gmVal.commissionGold = 0
+            _gmVal.commissionGoldDaily = 0
+        oldGuildCommission = self.guildCommission
+        addGuildCommission = math.floor(totalGold * ratio)
+        self.guildCommission = oldGuildCommission + addGuildCommission
+        self.guildStatData.clear()
+        self.totalCommissionGold = 0
+        self.gamePlayScoreCurrent = 0
+        LOG_INFO('_commissionWeeklyCalc: 2 ', totalPoints, guildPoints, ratio, totalGold, oldGuildCommission, addGuildCommission)
 
     def getJunxuQiXieLevel(self):
         data = self.junXuArchitecture.toJunXuArchitectureSavedDict()
@@ -3007,6 +3166,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         box.client.onGetGuildIronMine(self.guildIronMine)
 
     def onMineWarWin(self, isWin):
+        # 占领了矿区, 累计积分
+        if isWin:
+            self.statGuildData(gameconst.GuildGamePlayType.MIN_WAR_AERA_OCCUPY)
+
         oldMaxGuildUnionNum = self.maxGuildUnionNum
         if not isWin:
             self.maxGuildUnionNum = G_GCD.datas['guild_unionNum']['value']
@@ -3073,3 +3236,183 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                                                                 None,
                                                                 '',
                                                                 ())
+    
+    def statGuildData(self, dataType):
+        LOG_INFO('guild: statGuildData: 1', dataType, self.guildStatData)
+        pointsCfgDatas = G_GCD.datas['guild_gameplayPoints']['value']
+        currentPoints = None
+        for pointCfgData in pointsCfgDatas:
+            pointType, currentPoints = pointCfgData
+            if pointType == dataType:
+                break
+        if not(currentPoints is None):
+            totalPoints = self.guildStatData.get(dataType, 0)
+            self.guildStatData[dataType] = totalPoints + currentPoints
+            self.gamePlayScoreCurrent += currentPoints
+        LOG_INFO('guild: statGuildData: 2', dataType, self.guildStatData)
+
+    def _updateCommissionTenure(self):
+        curTime = utils.curTS()
+        for _gmVal in self.members.values():
+            if _gmVal.job not in gameconst.GUILD_MANAGE_POSITIONS:
+                continue
+            if _gmVal.jobPositionTime <= 0:
+                continue
+            elapsedTime = int((curTime - _gmVal.jobPositionTime) // 60)
+            if elapsedTime > 0:
+                _gmVal.commissionCumTenure += elapsedTime
+                # 时间往前推进
+                _gmVal.jobPositionTime += elapsedTime * 60
+
+    def doGetGuildGamePlayData(self, playerBox, gamePlayScoreLimit):
+        playerBox.client.onGetGuildGamePlayData(self.totalCommissionGold, self.gamePlayScoreCurrent, gamePlayScoreLimit)
+
+    def _initMics(self):
+        self.guildMicsSwitch = 0
+        self.guildMicsGBIDDict = {}
+
+    def _getMicsBlockList(self):
+        res = []
+        for _gbID, _stat in self.guildMicsGBIDDict.items():
+            if _stat == gameconst.GuildMicsMemberStat.BLOCK:
+                res.append(_gbID)
+        return res
+
+    def broadcastMemberMics(self, func, args):
+        for _gmVal in self.members.values():
+            if utils.checkBoxOffline(_gmVal.box):
+                continue
+            
+            if _gmVal.gbId in self.guildMicsGBIDDict:
+                getattr(_gmVal.box.client, func)(*args)
+
+    def _getGuildMicsMembersStatus(self):
+        onList = []
+        offList = []
+        blockList = []
+        for _gbID, _stat in self.guildMicsGBIDDict.items():
+            if _stat == gameconst.GuildMicsMemberStat.OPEN:
+                onList.append(_gbID)
+            elif _stat == gameconst.GuildMicsMemberStat.OFF:
+                offList.append(_gbID)
+            else:
+                blockList.append(_gbID)
+        return onList, offList, blockList
+    
+    def doSyncAllGuildMemberMicsStatus(self):
+        onList, offList, blockList = self._getGuildMicsMembersStatus()
+        self.broadcastMemberClient('onSyncAllGuildMemberMicsStatus', (self.guildUUID, onList, offList, blockList))
+
+    def onSetGuildMicsSwitch(self, gbID, mode):
+        if mode not in gameconst.GuildMicsSwitch.VALID_TYPE:
+            LOG_ERR("onSetGuildMicsSwitch: mode not in VALID_TYPE", self.guildUUID, mode)
+            return
+        if mode == self.guildMicsSwitch:
+            LOG_ERR("onSetGuildMicsSwitch: mode is same as current", self.guildUUID, mode)
+            return
+        oldMode = self.guildMicsSwitch
+        self.guildMicsSwitch = mode
+        if mode == gameconst.GuildMicsSwitch.OFF:
+            for _gbID, _stat in self.guildMicsGBIDDict.items():
+                if _stat == gameconst.GuildMicsMemberStat.OPEN:
+                    self.guildMicsGBIDDict[_gbID] = gameconst.GuildMicsMemberStat.OFF
+        elif mode == gameconst.GuildMicsSwitch.LEADER:
+            for _gbID, _stat in self.guildMicsGBIDDict.items():
+                if not self._checkHasPermission(_gbID, GA_AI_DD.datas.guildChatMicMode):
+                    if _stat == gameconst.GuildMicsMemberStat.OPEN:
+                        self.guildMicsGBIDDict[_gbID] = gameconst.GuildMicsMemberStat.OFF
+        
+        self.broadcastMemberClient('onSwitchGuildMicsMode', (self.guildUUID, gbID, oldMode, mode))
+
+    def onAvatarEnterMics(self, gbID):
+        if gbID in self.guildMicsGBIDDict:            # 已在列表中（杀进程重登等），仍然回包并复位为收听状态
+            LOG_WARN("onAvatarEnterMics: gbID already in guildMicsGBIDDict, reset and resync", self.guildUUID, gbID)
+            self.guildMicsGBIDDict[gbID] = gameconst.GuildMicsMemberStat.OFF
+            self.doSyncAllGuildMemberMicsStatus()
+            return
+        self.guildMicsGBIDDict[gbID] = gameconst.GuildMicsMemberStat.OFF
+        self.doSyncAllGuildMemberMicsStatus()
+    
+    def onAvatarLeaveMics(self, gbID):
+        if gbID not in self.guildMicsGBIDDict:
+            LOG_ERR("onAvatarLeaveMics: gbID not in guildMicsGBIDDict", self.guildUUID, gbID)
+            return
+        self.guildMicsGBIDDict.pop(gbID)
+        self.doSyncAllGuildMemberMicsStatus()
+
+    def getGuildMicsMembers(self, box):
+        onList, offList, blockList = self._getGuildMicsMembersStatus()
+        box.client.onSyncAllGuildMemberMicsStatus(self.guildUUID, onList, offList, blockList)
+
+    def onAvatarChangeGuildMics(self, gbID, isOn):
+        if gbID not in self.guildMicsGBIDDict:
+            LOG_ERR("onAvatarChangeGuildMics: gbID not in guildMicsGBIDDict", self.guildUUID, gbID)
+            return
+        _stat = gameconst.GuildMicsMemberStat.OPEN if isOn else gameconst.GuildMicsMemberStat.OFF
+        if self.guildMicsGBIDDict[gbID] == _stat:
+            LOG_ERR("onAvatarChangeGuildMics: gbID is same as current", self.guildUUID, gbID, _stat)
+            return
+        
+        if _stat == gameconst.GuildMicsMemberStat.BLOCK:
+            LOG_ERR("onAvatarChangeGuildMics: gbID is block", self.guildUUID, gbID, _stat)
+            return
+        
+        if isOn:
+            if self.guildMicsSwitch == gameconst.GuildMicsSwitch.LEADER:
+                if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildMicrophone):
+                    LOG_ERR("onAvatarChangeGuildMics: gbID has no leader misc permission", self.guildUUID, gbID)
+                    return
+            elif self.guildMicsSwitch == gameconst.GuildMicsSwitch.OFF:
+                LOG_ERR("onAvatarChangeGuildMics: gbID is off", self.guildUUID, gbID)
+                return
+
+        self.guildMicsGBIDDict[gbID] = _stat
+        self.broadcastMemberMics('onAvatarChangeGuildMics', (self.guildUUID, gbID, _stat))
+
+    def changeMicsBlock(self, gbID, targetGBID, isBlock):
+        if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildChatMuteMode):
+            LOG_ERR("changeMicsBlock: gbID has no permission", self.guildUUID, gbID)
+            return
+        
+        if targetGBID not in self.guildMicsGBIDDict:
+            LOG_ERR("changeMicsBlock: targetGBID not in guildMicsGBIDDict", self.guildUUID, targetGBID)
+            return
+        
+        if isBlock:
+            self.guildMicsGBIDDict[targetGBID] = gameconst.GuildMicsMemberStat.BLOCK
+            self.broadcastMemberMics('onBlockGuildMemberMics', (gbID, self.guildUUID, targetGBID))
+        elif self.guildMicsGBIDDict[targetGBID] == gameconst.GuildMicsMemberStat.BLOCK:
+            self.guildMicsGBIDDict[targetGBID] = gameconst.GuildMicsMemberStat.OFF
+            self.broadcastMemberMics('onUnblockGuildMemberMics', (self.guildUUID, targetGBID))
+
+    def changeMicsBlockAll(self, gbID, isBlock):
+        if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildChatMuteMode):
+            LOG_ERR("changeMicsBlockAll: gbID has no permission", self.guildUUID, gbID)
+            return
+        
+        for _gbID, _stat in self.guildMicsGBIDDict.items():
+            if isBlock:
+                self.guildMicsGBIDDict[_gbID] = gameconst.GuildMicsMemberStat.BLOCK
+            elif _stat == gameconst.GuildMicsMemberStat.BLOCK:
+                self.guildMicsGBIDDict[_gbID] = gameconst.GuildMicsMemberStat.OFF
+        
+        if isBlock:
+            self.broadcastMemberMics('onBlockAllGuildMemberMics', (gbID, self.guildUUID))
+        else:
+            self.broadcastMemberMics('onUnblockAllGuildMemberMics', (gbID, self.guildUUID))
+
+    def inviteGuildMics(self, gbID, targetGBID):
+        if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildChatInvitation):
+            LOG_ERR("inviteGuildMics: gbID has no permission", self.guildUUID, gbID)
+            return
+        
+        if targetGBID not in self.members:
+            LOG_ERR("inviteGuildMics: targetGBID not in members", self.guildUUID, targetGBID)
+            return
+        
+        _gmVal = self.members.get(targetGBID)
+        if utils.checkBoxOffline(_gmVal.box):
+            LOG_ERR("inviteGuildMics: targetGBID is offline", self.guildUUID, targetGBID)
+            return
+        
+        _gmVal.box.client.onInviteGuildMics(gbID)

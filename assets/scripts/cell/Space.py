@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import zlib
-import random
-
 import KBEngine
 from KBEDebug import *
 
@@ -10,18 +7,13 @@ import formula
 import gameconst
 import gameengine
 import utils
-import os
-import json
-import gametimer
 import gameconfig
 import gameconst
 
 import iCell
 import iFubenSpace
 import iTimer
-import iEntityRefresh
 import gameglobal
-import ResMgr
 import kbeUtils
 import iEntityLoader
 import iGroupEntityLoader
@@ -32,14 +24,12 @@ class SpaceEntityGenerateMixin(object):
     def removeEntById(self, gameEntityId):
         gameEntityId = int(gameEntityId)
 
-        for _, _en in KBEngine.entities.items():
-            if not hasattr(_en, 'gameEntityId'):
+        for _, _ent in KBEngine.entities.items():
+            if not hasattr(_ent, 'gameEntityId'):
                 continue
 
-            if _en.gameEntityId == gameEntityId:
-                _en.safeDestroy()
-                # do we need multi gameEntityId in single space?
-                # break
+            if _ent.gameEntityId == gameEntityId:
+                _ent.safeDestroy()
 
 
 class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader, iGroupEntityLoader.IGroupEntityLoader, iFubenSpace.IFubenSpace):
@@ -102,9 +92,9 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
         direction = (float(direction[0]), float(direction[1]), float(direction[2]))
         LOG_DBG('createCellLocally~~~~~~~~~~', pos, direction)
         properties['spaceNo'] = self.spaceNo
-        entity = KBEngine.createEntity(entType, self.spaceID, pos, direction, properties)
-        LOG_DBG('after createCellLocally~~~~~~~~~~', entity)
-        return entity
+        _entity = KBEngine.createEntity(entType, self.spaceID, pos, direction, properties)
+        LOG_DBG('after createCellLocally~~~~~~~~~~', _entity)
+        return _entity
 
     def onDestroy(self):
         super(Space, self).onDestroy()
@@ -127,20 +117,6 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
     def calculateSpawnTime(self):
         # space only have default spawnspan
         return 0
-
-    def homeEntityProxyCall(self, entId, func, args):
-        if entId not in KBEngine.entities:
-            return
-
-        ent = KBEngine.entities[entId]
-        if hasattr(ent, func):
-            getattr(ent, func)(*args)
-
-    def setHomeCompByteMap(self, box, x, z, height, width, byteMap):
-        LOG_DBG('ckz: setHomeCompByteMap', x, z, height, width)
-        byteMap = bytes(byteMap)
-        KBEngine.addLayerOneTilesFromBytes(self.spaceID, x, z, height, width, byteMap)
-        box.onHomeByteMapSet(self.spaceNo)
 
     def updateSpaceWeight(self, spaceWeight):
         LOG_INFO('updateSpaceWeight', self.spaceID, spaceWeight)

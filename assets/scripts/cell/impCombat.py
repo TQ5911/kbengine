@@ -218,7 +218,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if not killer:
             return False
 
-        if killer.pkModel == gameconst.PKModel.ATTACK:
+        if killer.pkModel == gameconst.PKModelEnum.ATTACK:
             return True
 
         if not self.guildUUID:
@@ -344,7 +344,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         LogTrackingMgr.LogTrackingMgr.Common_Death(
             self.gbId,
             self.clientDistinctIdCell, 
-            self.gbId,
             _mapId,
             _killerGbId,
             killer.__class__.__name__ if killer else '',
@@ -543,7 +542,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if not self.hasState(gameconst.StateEnum.Death):
             return
 
-        self.onEffectEventCall('onDeadLater', killerId, self.id, effectEventCtx.EE_DEFAULT_CONTEXT)
+        self.onEffectEventCall('onDeadLater', killerId, self.id, effectEventCtx.EE_DEFAULT_CTX)
 
     def enterFightingState(self):
         if not self.hasBuff(64000067):
@@ -650,6 +649,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
             elif formula.inWonderLandScene(self.spaceNo):
                 self.addWonderLandRewardRecord([{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
+
+            elif formula.inAbyssScene(self.spaceNo):
+                self.addAbyssRewardRecord([{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
 
         if totalExpVal > 0:
             self._modifyExp(totalExpVal, opUUID, src, detail)
@@ -818,20 +820,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         buffList = buffData['buffs']
         for buffId, buffMap in self.buffMgrDic.items():
             for buffSrcKey, buffVal in buffMap.items():
-                '''
-                data = {
-                    'tStartTime': buffVal.tStartTime,
-                    'attNum': buffVal.attNum,
-                    'skillNum': buffVal.skillNum,
-                    'beatNum': buffVal.beatNum
-                }
-                '''
                 buffInfo = {
                     'buffId': buffId,
-                    #'buffSrcKey': buffSrcKey,
                     'level': buffVal.level,
-                    #'releaseId': 0,
-                    #'data': data
+                    'duration': buffVal.getBuffRemainTime()
                 }
                 buffList.append(buffInfo)
         return buffData
@@ -894,7 +886,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return False
 
         realSkillVal, _ = skill.getRealSkillVal(self)
-        if realSkillVal.hasSkillTag(gameconst.SkillTag.Casting):
+        if realSkillVal.hasSkillTag(gameconst.SkillTagEnum.Casting):
             return False
 
         _target = KBEngine.entities.get(targetID)
@@ -1252,7 +1244,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @utils.isMyself
     def clientResetSkill(self, exposed, skillId):
         LOG_DBG("clientResetSkill", skillId)
-        if not utils.hasSkillTagById(skillId, gameconst.SkillTag.revolveSkill):
+        if not utils.hasSkillTagById(skillId, gameconst.SkillTagEnum.revolveSkill):
             LOG_WARN("clientResetSkill skill is not revolveSkill", skillId)
             return
 
@@ -1366,6 +1358,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
+    @gamedecorator.crossServer
     def dropAndDeath(self, exposed):
         if self.isDie():
             return
@@ -1379,29 +1372,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             box.onScheduleEnemyPosInfoResult(self.gbId, True, (self.spaceNo,))
         else:
             box.onGetEnemyPosInfoResult(self.gbId, True, (self.spaceNo,))
-
-    def addUltraSkillPower(self, addVal, context = None):
-        if addVal <= 0:
-            return
-
-        _ultSkillId = C_CDD.datas[self.school]['ult']
-        # 处理下大招被铭文给替换的情况
-        newSkillId, _ = self.glyphEquipData.getInscriptionSrcSkillId(_ultSkillId)
-        if not self.hasSkill(newSkillId):
-            return
-
-        ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
-        # 技能那边调过来的，带着上下文数据
-        host = self.getAvatar()
-        if host:
-            sourceSkillId = host.getSourceSkillId(context)
-            ret, datas = host.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE)
-            if ret:
-                if len(datas) == 1:
-                    extraAddValue = datas[0]
-                    addVal += extraAddValue
-                    LOG_DBG("in addUltraSkillPower, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, datas)
-        self.ultraSkillPower = min(ultimatePowerMax, self.ultraSkillPower + addVal)
 
     def setSummonSlotIdx(self, slotIdx):
         LOG_INFO('cell setSummonSlotIdx set', slotIdx, self.summonSlotIdx)
@@ -1443,36 +1413,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         else:
             self.cellFlags = utils.breset(self.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
             return False
-
-    def changeSkillCDStatus(self, skillId, status):
-        LOG_INFO('changeSkillCDStatus, ', skillId, status)
-        if status not in gameconst.SkillCDStatus.VALID:
-            LOG_ERR('changeSkillCDStatus, invalid status, ', skillId, status)
-            return False
-        # 这里可能打完怪触发任务结束把技能移除了
-        skill = self.skillDic.doGetSkill(skillId, False)
-        if not skill:
-            LOG_WARN('changeSkillCDStatus, no skill, ', skillId, status)
-            return False
-        
-        if not utils.hasSkillTagById(skillId, gameconst.SkillTag.changeCDStatusSkill):
-            LOG_ERR('changeSkillCDStatus, no skill cd status change, no tag,', skillId, status, gameconst.SkillTag.changeCDStatusSkill)
-            return False
-        
-        if status == skill.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT):
-            LOG_WARN('changeSkillCDStatus, skill cd status change, same status,', skillId, status)
-            return True
-        
-        skill.setTempData(self, gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, status)
-        if status == gameconst.SkillCDStatus.ENABLED:
-            # 重新进入cd
-            skill.doEnterCDTime(self)
-            # 刷新时间置零，通知客户端启用技能
-            self.client.onSetAddSkillCd(skill.skillId, float(skill.getCDDur(self)), float(skill.tNextCast), False, skill.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), skill.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), skill.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not skill.isSkillCDStatusFrozen())
-        elif status == gameconst.SkillCDStatus.DISABLED:
-            # 刷新时间置零，通知客户端禁用技能
-            pass
-        return True
 
     def enterFlyingState(self):
         LOG_DBG('enterFlyingState, 1')

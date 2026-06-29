@@ -130,7 +130,7 @@ class bountyItem(userType.UserSingleType):
         self.hunterName = dataDict['hunterName']
         self.hunterSchool = dataDict['hunterSchool']
     
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'uuid': self.uuid,
             'timestamp': self.timestamp,
@@ -163,13 +163,13 @@ class bountyItem(userType.UserSingleType):
 
     def toSyncDict(self):
         syncDict = {}
-        syncDict['baseInfo'] = self.toSavedDict()
+        syncDict['baseInfo'] = self.toStreamSavedDic()
         syncDict['preyOnline'] = self.preyOnline
         return syncDict
 
     def toClientDict(self):
         clientDict = {}
-        clientDict['baseInfo'] = self.toSavedDict()
+        clientDict['baseInfo'] = self.toStreamSavedDic()
         clientDict['preyOnline'] = self.preyOnline
         clientDict['preyLevel'] = self.preyLevel
         clientDict['preyScore'] = self.preyScore
@@ -188,15 +188,15 @@ class bountyInfo(userType.UserDictType):
             bounty.initFromDict(item)
             self[bounty.uuid] = bounty
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         bountyList = []
         for item in self.values():
-            bountyList.append(item.toSavedDict())
+            bountyList.append(item.toStreamSavedDic())
 
         dataDict = {
             'bountyList': bountyList,
         }
-        #LOG_DBG('bountyInfo::toSavedDict', dataDict)
+        #LOG_DBG('bountyInfo::toStreamSavedDic', dataDict)
         return dataDict
 
     def toSyncDict(self):
@@ -217,7 +217,7 @@ class bountyInstance(object):
         return bountyInstance
     
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
     
     def isSameType(self, obj):
         return type(obj) is bountyInfo
@@ -263,7 +263,7 @@ class hunterRankItem(userType.UserSingleType):
         self.failedCnt[gameconst.BountyRankSubType.WEEK] = dataDict['failedCntWeek']
         self.lastUpdateTimestamp = dataDict['lastUpdateTimestamp']
     
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'hunterGbId': self.hunterGbId,
             'hunterName': self.hunterName,
@@ -279,7 +279,7 @@ class hunterRankItem(userType.UserSingleType):
 
     def toSyncDict(self):
         syncDict = {}
-        syncDict['baseInfo'] = self.toSavedDict()
+        syncDict['baseInfo'] = self.toStreamSavedDic()
         return syncDict
 
     def toClientDictBySubType(self, subType):
@@ -321,15 +321,15 @@ class hunterRankInfo(userType.UserDictType):
             hunterRank.initFromDict(rankItem)
             self[hunterRank.hunterGbId] = hunterRank
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         hunterRankList = []
         for rankItem in self.values():
-            hunterRankList.append(rankItem.toSavedDict())
+            hunterRankList.append(rankItem.toStreamSavedDic())
 
         dataDict = {
             'hunterRankList': hunterRankList,
         }
-        #LOG_DBG('hunterRankInfo::toSavedDict', dataDict)
+        #LOG_DBG('hunterRankInfo::toStreamSavedDic', dataDict)
         return dataDict
 
     def toSyncDict(self):
@@ -350,7 +350,7 @@ class hunterRankInstance(object):
         return hunterRankInstance
     
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
     
     def isSameType(self, obj):
         return type(obj) is hunterRankInfo

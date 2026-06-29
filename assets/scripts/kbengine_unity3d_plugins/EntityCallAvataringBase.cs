@@ -41,6 +41,15 @@ namespace KBEngine
 			type = ENTITYCALL_TYPE.ENTITYCALL_TYPE_CELL;
 		}
 
+		public void breakAwayStuck()
+		{
+			Bundle pBundle = newCall("breakAwayStuck", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void clientRemoveState(Byte arg1)
 		{
 			Bundle pBundle = newCall("clientRemoveState", 0);
@@ -54,6 +63,56 @@ namespace KBEngine
 		public void clientSetState(Byte arg1)
 		{
 			Bundle pBundle = newCall("clientSetState", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void jump(Byte arg1, UInt32 arg2)
+		{
+			Bundle pBundle = newCall("jump", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint32(arg2);
+			sendCall(null);
+		}
+
+		public void offline(Byte arg1)
+		{
+			Bundle pBundle = newCall("offline", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void reqPlayEmote(UInt16 arg1)
+		{
+			Bundle pBundle = newCall("reqPlayEmote", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint16(arg1);
+			sendCall(null);
+		}
+
+		public void reqStopPlayEmote()
+		{
+			Bundle pBundle = newCall("reqStopPlayEmote", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void setShowCompleteNum(Byte arg1)
+		{
+			Bundle pBundle = newCall("setShowCompleteNum", 0);
 			if(pBundle == null)
 				return;
 

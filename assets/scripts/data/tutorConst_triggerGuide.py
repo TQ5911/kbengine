@@ -42,6 +42,9 @@ datas = _tools.RODict({
     24100502: _tools.RODict({
         "conditionArgs": "",
     }),
+    24100503: _tools.RODict({
+        "conditionArgs": "",
+    }),
     24100601: _tools.RODict({
         "conditionArgs": "",
     }),

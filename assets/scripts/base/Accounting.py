@@ -10,6 +10,7 @@ import gametimer
 import gameconst
 import gameconfig
 import gameengine
+import gameglobal
 import gamedecorator
 import utils
 
@@ -34,6 +35,8 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         self.delayDestroyTimer = 0
         self.avataringID = 0
         self.lastLoginResult = 0
+        self.age = gameconst.LEGAL_AGE_OF_MAJORITY
+        self.otherData = {}
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -59,11 +62,23 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
     def onClientEnabled(self, chn):
         LOG_INFO("Accounting::onClientEnabled~", chn)
         if not gameconfig.interfaceEnableLogin():
+            LOG_ERROR("Accounting::onClientEnabled interfaceEnableLogin is False.")
             self.destroySelf()
             return
 
+        self._parseClientDatas()
+        if self.isMinorAccount():
+            LOG_INFO("Accounting::onClientEnabled isMinorAccount", self.accountName, self.age)
+            gameglobal.localMinorAccountCache[self.accountName] = self
+            if gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT:
+                LOG_INFO("Accounting::onClientEnabled minor in prohibit time", self.accountName)
+                self.client.onLoginWaitMapResult(gameconst.WaitMapLoginResult.ANTI_ADDICTION)
+                self.destroySelf()
+                return
+
         stub = gameengine.getGlobalBase('WaitMapSpaceStub')
         if not stub:
+            LOG_ERROR("Accounting::onClientEnabled WaitMapSpaceStub not found.")
             self.destroySelf()
             return
         
@@ -78,8 +93,41 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         self.lastLoginResult = code
         self.client.onLoginWaitMapResult(code)
 
+        if code == gameconst.WaitMapLoginResult.OK:
+            self.minorAccountConstraintTip()
+
         # 接下来客户端会调用 queryAvataringCharacter 获取角色外观
         # 然后通过 createAvataring 创建选定外观的角色
+
+    def _parseClientDatas(self):
+        """解析客户端登录数据，提取年龄等信息。"""
+        clientDatas = self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL)
+        if not isinstance(clientDatas, tuple):
+            return
+
+        loginJsonData = clientDatas[0]
+        if not loginJsonData:
+            return
+
+        try:
+            if loginJsonData.decode('utf-8') == 'bots':
+                return
+            clientDataDict = json.loads(loginJsonData.decode('utf-8'))
+            self.otherData = clientDataDict.get('otherData', {})
+            self.age = self.otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
+        except Exception as e:
+            LOG_ERR('Accounting::_parseClientDatas failed:', self.accountName, e)
+
+    def isMinorAccount(self):
+        """是否未成年人账号。"""
+        return utils.isMinorAccount(self.age)
+
+    def minorAccountConstraintTip(self):
+        """向未成年人客户端下发下一时段切换时间戳。"""
+        if self.accountName not in gameglobal.localMinorAccountCache:
+            return
+        LOG_INFO("Accounting::minorAccountConstraintTip", self.accountName, gameglobal.antiAddictionData)
+        self.client.minorAccountConstraintTip(gameglobal.antiAddictionData[1])
 
     # 获取外观
     @gamedecorator.limitcall(1)
@@ -93,6 +141,7 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         ctx.loadCharacterData()
 
     def _onCharacterDataLoaded(self, waitMapCharacters):
+        LOG_DBG('Accounting::_onCharacterDataLoaded~', waitMapCharacters)
         self.client.onGetAvataringCharacter(waitMapCharacters)
 
     # 创建角色，进入地图
@@ -104,23 +153,23 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             return
 
         if self.avataring:
-            if self.avataring.gbID == gbid:
-                LOG_INFO('Avataring::createAvataring avatar exist.')
-                self.giveClientTo(
-                    self.avataring,
-                    gameconst.ClientCallChannel.MAIN_CHANNEL,
-                    gameconst.ClientCallChannel.MAIN_CHANNEL,
-                )
-                return
+            # if self.avataring.gbID == gbid:
+            #     LOG_INFO('Avataring::createAvataring avatar exist.')
+            #     self.giveClientTo(
+            #         self.avataring,
+            #         gameconst.ClientCallChannel.MAIN_CHANNEL,
+            #         gameconst.ClientCallChannel.MAIN_CHANNEL,
+            #     )
+            #     return
             
-            # 换角色了，先把之前的角色踢掉
+            # 先把之前的角色踢掉
             self.avataring.kickAvataring(gameconst.OFFLINE_REASON_SELECT_CHARACTER)
 
         ap = appearance.Appearance(weapon, breast, outfit, face)
         avataring = KBEngine.createEntityLocally('Avataring', {
             'accountingID': self.id,
-            'gbID': gbid,
-            'gbId': gbid,
+            'gbID': gbid if gbid else KBEngine.genUUID64(),
+            'gbId': gbid if gbid else KBEngine.genUUID64(),
             'name': name,
             'school': school,
             'sex': sex,
@@ -137,12 +186,17 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             gameconst.ClientCallChannel.MAIN_CHANNEL,
         )
 
-    # 客户端主动离开等待服
+    # 客户端主动下线
     @gamedecorator.limitcall(1)
     def accountOffline(self, exposed):
         LOG_INFO('Accounting::accountOffline~', self.accountName)
         if self.avataring:
             self.avataring.kickAvataring(gameconst.OFFLINE_REASON_MANNUALLY)
+        self.destroySelf()
+
+    # 客户端角色主动下线
+    def avatarOffline(self, reason):
+        LOG_INFO('Accounting::avatarOffline~', reason)
         self.destroySelf()
 
     def onClientDeath(self, chn):
@@ -161,11 +215,20 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
 
         self.destroy(deleteFromDB=False, writeToDB=True)
 
+    def destroyAccount(self, reason=gameconst.OFFLINE_REASON_DESTORY):
+        """防沉迷等强制下线入口：先踢 Avataring，再销毁 Accounting。"""
+        LOG_INFO('Accounting::destroyAccount:', reason, self.accountName)
+        if self.avataring:
+            self.avataring.kickAvataring(reason)
+        self.destroySelf(reason)
+
     def onDestroy(self):
         LOG_INFO('Accounting::onDestroy~')
         if self.delayDestroyTimer:
             self.cancelTimerCB(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNTING)
             self.delayDestroyTimer = 0
+
+        gameglobal.localMinorAccountCache.pop(self.accountName, None)
 
         stub = gameengine.getGlobalBase('WaitMapSpaceStub', reportErr=False)
         stub and stub.onPlayerLogout(self.accountName)

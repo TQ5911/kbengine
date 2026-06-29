@@ -48,14 +48,14 @@ class IMultiStaticSpacePlayer(object):
         if not _linePlayers:
             return 0
 
-        return len(_linePlayers) + len(_linePlayers.pendingEnterPlayers)
+        return len(_linePlayers) + len(_linePlayers.pendingEnterPlayersDic)
 
     def canSpaceEnter(self, spaceNo):
         _linePlayers = self.allLines.get(spaceNo)
         if not _linePlayers:
             return True
 
-        _curNum = len(_linePlayers) + len(_linePlayers.pendingEnterPlayers)
+        _curNum = len(_linePlayers) + len(_linePlayers.pendingEnterPlayersDic)
         return _curNum < self.maxEnterNum
 
     def addPendingEnterPlayer(self, spaceNo, gbId):
@@ -104,7 +104,7 @@ class IMultiStaticSpacePlayer(object):
         _isLeader = False
         _linePlayers = self.allLines.get(_playerVal.curSpaceNo)
         if _playerVal.teamUUID:
-            _isLeader = _linePlayers.teamPlayers.get(_playerVal.teamUUID, {}).get(gbId, False)
+            _isLeader = _linePlayers.teamPlayersDic.get(_playerVal.teamUUID, {}).get(gbId, False)
 
         _linePlayers.doRemoveLinePlayer(None, gbId)
 

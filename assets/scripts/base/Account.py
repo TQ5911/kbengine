@@ -174,7 +174,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
-        elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
+        elif userArg == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
         elif userArg == gametimer.CHECK_CHAR_EXPIRE:
             self.checkAuthCharExpire()
@@ -411,9 +411,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self.createAvatarGenerateGbId(props)
 
     def _checkSexSchoolValid(self, sex, school):
-        for data in CRDD.datas.values():
-            if data['charID'] == school and data['sex'] == sex:
-                return bool(data['isOpen'])
+        for _data in CRDD.datas.values():
+            if _data['charID'] == school and _data['sex'] == sex:
+                return bool(_data['isOpen'])
 
         return False
 
@@ -900,7 +900,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.operatingSystem = _clientDatas.get('operatingSystem', '')
             self.channelId = _clientDatas.get('channelId', 0)
             self.webToken = _clientDatas.get('token', '')
-            self.clientDistinctId = 'clientTODO'
+            self.clientDistinctId = _clientDatas.get('distinct_id', '')
+            self.deviceId = _clientDatas.get('deviceId', '')
             if 'banPostTime' in _clientDatas\
                     and 'banPostReason' in _clientDatas\
                     and self.loginCount == 1:
@@ -987,11 +988,16 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             _cVal.setAuthDbId(0, 0)
             _changeList.append(_cVal)
             if self.isAuthHost(_cVal.gbId):
+                gamesql.resetExpireAuth(self.databaseID, _now, self._onClearAfterReset)
                 continue
 
             self.characters.removeCharacter(_cVal.gbId)
 
         return _changeList
+
+    def _onClearAfterReset(self, ret, num, insertId, err):
+        if err:
+            LOG_ERR('_onClearAfterReset', err)
 
     def sendHotfix(self):
         if gameconfig.hotfixVersion():
@@ -1413,6 +1419,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             avatar.coin,
             avatar.getTempMiscProp(gameconst.EntityPropsEnum.cellMapId, 0),
         )
+        avatar.logUserSet(1)
 
 # ---------------------------- switch avatar server start ----------------------------
     def onAvatarSwitchServer(self, avatar):
@@ -1881,6 +1888,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         return self.characters.get(gbId)
 
     def addOtherCharVal(self, gbId, charVal):
+        LOG_DBG('addOtherCharVal', gbId, charVal)
         self.characters.addByCharObj(gbId, charVal)
 
     def onSetAccountCompSuccess(self):
@@ -1908,12 +1916,13 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.client.onCharInfoChange(_cVal)
 
     def onAvatarAuthExpire(self, gbId):
-        _cVal = self.characters.get(gbId)
-        if not _cVal:
-            LOG_ERR('onAvatarAuthExpire not find character', gbId)
-            return
-
-        _cVal.setAuthDbId(0, 0)
+        pass
+        # _cVal = self.characters.get(gbId)
+        # if not _cVal:
+        #     LOG_ERR('onAvatarAuthExpire not find character', gbId)
+        #     return
+        #
+        # _cVal.setAuthDbId(0, 0)
 
     def retrySelectOnForceLogin(self, gbId, isForceHost):
         if self.accountStatus != AccountStatus.avatarLoading:
@@ -1973,22 +1982,22 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             LOG_ERR('setPersistentMiscProp: propId must be int')
             return
 
-        self.tempMiscPropsBase[propId] = value
+        self.baseTempMiscProps[propId] = value
 
     def getTempMiscProp(self, propId, default=None):
-        return self.tempMiscPropsBase.get(propId, default)
+        return self.baseTempMiscProps.get(propId, default)
 
     def popTempMiscProp(self, propId, default=None):
-        return self.tempMiscPropsBase.pop(propId, default)
+        return self.baseTempMiscProps.pop(propId, default)
 
     def hasTempMiscProp(self, propId):
-        return propId in self.tempMiscPropsBase
+        return propId in self.baseTempMiscProps
 
     def setDefaultPersistentMiscProp(self, propId, value):
         if self.hasPersistentMiscProp(propId):
-            return self.miscPropsBase[propId]
+            return self.baseMiscProps[propId]
 
-        self.miscPropsBase[propId] = value
+        self.baseMiscProps[propId] = value
         return value
 
     def setPersistentMiscProp(self, propId, value):
@@ -1996,16 +2005,16 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             LOG_ERR('setPersistentMiscProp: propId must be int')
             return
 
-        self.miscPropsBase[propId] = value
+        self.baseMiscProps[propId] = value
 
     def getPersistentMiscProp(self, propId, default=None):
-        return self.miscPropsBase.get(propId, default)
+        return self.baseMiscProps.get(propId, default)
 
     def popPersistentMiscProp(self, propId, default=None):
-        return self.miscPropsBase.pop(propId, default)
+        return self.baseMiscProps.pop(propId, default)
 
     def hasPersistentMiscProp(self, propId):
-        return propId in self.miscPropsBase
+        return propId in self.baseMiscProps
 
     def kickAccountGm(self, msgId):
         LOG_DBG('kickAccountGm')

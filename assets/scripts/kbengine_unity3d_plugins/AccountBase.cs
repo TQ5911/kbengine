@@ -24,7 +24,6 @@ namespace KBEngine
 		public UInt64 phone = 0;
 		public virtual void onPhoneChanged(UInt64 oldValue) {}
 
-		public virtual void minorAccountConstraintTip(UInt64 arg1) {} 
 		public virtual void onAvatarDetailInAccount(UInt64 arg1, Int32 arg2, UInt32 arg3, string arg4, Int32 arg5) {} 
 		public virtual void onAvatarOfflineTime(UInt64 arg1, UInt32 arg2) {} 
 		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 

@@ -58,8 +58,8 @@ class ImpAvatarPet(object):
         return gameconst.UseItemEnum.PENDING
 
     def useLingShouEggItem(self, opUUID, ctx):
-        pendingUseId = self.setPendingUseId(opUUID, ctx)
-        self.base.useLingShouEggItemBase(pendingUseId, gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN, opUUID)
+        _pendingUseId = self.setPendingUseId(opUUID, ctx)
+        self.base.useLingShouEggItemBase(_pendingUseId, gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN, opUUID)
         return gameconst.UseItemEnum.PENDING
 
     @staticmethod

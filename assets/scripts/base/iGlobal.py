@@ -2,46 +2,35 @@
 from KBEDebug import *
 import gameengine
 import gameglobal
-import gamebase
-import gameconst
 import gamesql
-import _pickle as cPickle
 
 class IGlobal(object):
 
-    @classmethod
-    def classname(cls):
-        return cls.__name__
-
     def onGlobalBase(self, ok, globalName='', recordDbid=False):
         if ok == False:
-            print('fail to create base:', self.classname())
+            LOG_WARN('fail to create base:', self.classname())
             self.doEntireDestroy(False, False)
             return
 
-        LOG_INFO('onGlobalBase', self.classname(), globalName)
+        LOG_INFO('onGlobalBase', globalName, self.classname())
         if globalName:
             gameengine.setGlobalData(globalName, self)
         else:
             gameengine.setGlobalData(self.classname(), self)
-        #sgameengine.getGlobalBase('BaseStub').halfPrepare(self.classname())
-
-        self._doRegGlobalBase()
 
         self.canBeDestroyed = False
 
         if recordDbid:
             self.writeToDB(self._onWriteToDB)
-        return
 
-    #global对象base注册完成后的回调函数
-    def _doRegGlobalBase(self):
-        pass
+    @classmethod
+    def classname(cls):
+        return cls.__name__
 
     def _onWriteToDB(self, ok, entity):
         LOG_DBG('in _onWriteToDB:', entity, entity.databaseID)
         if not ok:
-            LOG_ERR('zt: fail to write DB:',self.classname(), self.id)
+            LOG_ERR('zt: fail to write DB:', self.id, self.classname())
         else:
             gamesql.recordEntityDBID(self.classname(), self.databaseID)
 

@@ -774,12 +774,12 @@ class ImpTeam(object):
             _isFailed, _cbArgs, _baseArgs = self._checkCreateRaidWithTeamMemberConditions(*args)
 
         if _isFailed or not bothComp or beginComp==gameconst.BASE:
-            captain.cell.onCheckResultFromMember(checkType, self.gbId, _cbArgs)
+            captain.cell.checkResultFromMember(checkType, self.gbId, _cbArgs)
         else:
             self.base.checkedBaseByTeam(captain, checkType, bothComp, beginComp, _baseArgs)
 
     #每个队员base、cell上条件检查完成后通知队长检查结果的回调
-    def onCheckResultFromMember(self, checkType, memberGbId, args):
+    def checkResultFromMember(self, checkType, memberGbId, args):
         if checkType==gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_TEAM_DUEL:
             self._onCheckedMemberEnterDuel(memberGbId, *args)
         elif checkType == gameconst.CheckMemberReasonEnum.CHECK_MEMBER_FOR_RAID_DUNGEON_CREATE:
@@ -1127,7 +1127,7 @@ class ImpTeam(object):
             LOG_WARN('   in reqTeamAutoMatch, not captain')
             return
 
-        gameengine.getTeamStub(self.teamId).teamPrepareAutoMatch(self.teamId, self.guildUUID)
+        gameengine.getTeamStub(self.teamId).teamPrepareAutoMatch(self.teamId)
         return
 
     @gamedecorator.checkGameconfigEnable('team')
@@ -1291,7 +1291,7 @@ class ImpTeam(object):
         if not self.checkBaseTeamCond(teamTarget, minScore, minLevel):
             return
 
-        gameengine.getTeamStub(self.teamId).setTeamTarget(self.gbId, self.teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, self.guildUUID)
+        gameengine.getTeamStub(self.teamId).setTeamTarget(self.gbId, self.teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         return
 
     @gamedecorator.checkGameconfigEnable('team')

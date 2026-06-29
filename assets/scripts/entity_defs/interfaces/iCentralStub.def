@@ -1,9 +1,9 @@
 <root>
     <Properties>
-        <centralServerDic>
+        <centralServerDict>
             <Type>          PY_DICT             </Type>
             <Flags>         BASE                </Flags>
-        </centralServerDic>
+        </centralServerDict>
 
         <csClients>
             <Type>          PY_DICT             </Type>

@@ -25,15 +25,12 @@ import random
 
 
 class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
-    def __init__(self):
+    def __init__(self, **kwargs):
         iGlobal.IGlobal.__init__(self)
         iBaseNoCell.IBaseNoCell.__init__(self)
         iTimer.ITimer.__init__(self)
 
-        self.gmClient = {}
-
-    def doNext(self):
-        self._fullPrepare()
+        self.gmClientDic = {}
 
     def _fullPrepare(self):
         self.pyAddTimer(1, 1, gametimer.ADMIN_STUB_ASYNC_TICK)
@@ -41,6 +38,9 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL,
                         gametimer.ADMIN_STUB_ACTIVE_TICK)
+
+    def doNext(self):
+        self._fullPrepare()
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
@@ -54,42 +54,42 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def gmCenterClosed(self):
         LOG_DBG('in AdminStub.gmCenterClosed')
-        self.gmClient = {}
+        self.gmClientDic = {}
 
     def popGmClient(self, tag):
-        self.gmClient.pop(tag, None)
+        self.gmClientDic.pop(tag, None)
 
     def _connectGmCenter(self):
         if not gameconfig.enableAdminServer():
             return
 
-        hostList = gameconfig.gmHostList()
-        for host in hostList:
-            key = '{}:{}'.format(host['addr'], host['port'])
-            client = self.gmClient.get(key, None)
+        _hostList = gameconfig.gmHostList()
+        for host in _hostList:
+            _key = '{}:{}'.format(host['addr'], host['port'])
+            client = self.gmClientDic.get(_key, None)
             if client and client.channel.dispatcher: continue
 
             addr, port = host['addr'], int(host['port'])
             LOG_INFO('connect admincenter:', addr, port)
-            self.gmClient[key] = AdminStubService(self, (addr, port))
+            self.gmClientDic[_key] = AdminStubService(self, (addr, port))
 
     def _checkGmCenterActive(self):
         if not gameconfig.enableAdminServer():
             return
 
-        for client in self.gmClient.values():
-            if client and client.channel.dispatcher:
-                client.serviceStub.activeTick(None, Void(), None)
+        for _client in self.gmClientDic.values():
+            if _client and _client.channel.dispatcher:
+                _client.serviceStub.activeTick(None, Void(), None)
 
     def doReplyCommand(self, tag, account, cmdUUID, message, success):
-        client = self.gmClient.get(tag, None)
-        if client and client.channel.dispatcher:
+        _client = self.gmClientDic.get(tag, None)
+        if _client and _client.channel.dispatcher:
             cmdResult = CommandResult()
             cmdResult.account = account
-            cmdResult.uuid = cmdUUID
             cmdResult.resultCode = success
+            cmdResult.uuid = cmdUUID
             cmdResult.result = message
-            client.serviceStub.doReplyCommand(None, cmdResult, None)
+            _client.serviceStub.doReplyCommand(None, cmdResult, None)
 
     def replyHttpCommand(self, tag, cmdUUID, result, retErrMsg, resultObj):
         LOG_DBG('in AdminStub.replyHttpCommand ', tag, cmdUUID, result, retErrMsg, resultObj)
@@ -104,7 +104,7 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('replyHttpCommand: result to json err')
             a={}
             bodyBytes = json.dumps(a).encode('utf-8')
-        client = self.gmClient.get(tag, None)
+        client = self.gmClientDic.get(tag, None)
         if client and client.channel.dispatcher:
             resp = HttpAPICommandResponse()
             resp.uuid = cmdUUID
@@ -114,12 +114,12 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             client.serviceStub.replyHttpCommand(None, resp, None)
 
     def sendGmCenterPeek(self, url, callback, message, timeoutSec = 1):
-        key, client = random.choice(list(self.gmClient.items()))
+        key, client = random.choice(list(self.gmClientDic.items()))
         if client and client.channel.dispatcher:  # 有效的client
             hostList = gameconfig.gmHostList()
-            for host in hostList:
-                if '{}:{}'.format(host['addr'], host['port']) == key:  # 对应的http端口
-                    urlBase = 'http://{}:{}'.format(host['addr'], host['httpApi'])
+            for _host in hostList:
+                if '{}:{}'.format(_host['addr'], _host['port']) == key:  # 对应的http端口
+                    urlBase = 'http://{}:{}'.format(_host['addr'], _host['httpApi'])
                     KBEngine.urlopenv2(urlBase + url, callback, method='POST',
                            postData=message,
                            headers={'Content-Type': 'application/octet-stream'},
@@ -151,18 +151,18 @@ class AdminStubService(GameServer):
     # adminStub: callback obj
     # address: tuple of (ip, port)
     def __init__(self, adminStub, address):
-        self.tag = '{}:{}'.format(address[0], address[1])
         self.adminStub = adminStub
+        self.tag = '{}:{}'.format(address[0], address[1])
         self.channel = RpcChannel.RpcChannel(self)
         self.serviceStub = Admin_Stub(self.channel)
 
         self.channel.connect(address)
 
-    def on_connected(self):
-        self._reportServerId()
-
     def on_disconnected(self):
         self.adminStub.popGmClient(self.tag)
+
+    def on_connected(self):
+        self._reportServerId()
 
     def _reportServerId(self):
         request = ServerInfoMessage()
@@ -172,14 +172,14 @@ class AdminStubService(GameServer):
 
         self.serviceStub.registerServer(None, request, None)
 
-    def doCommand(self, rpc_controller, request, done):
+    def doCommand(self, _, request, done):
         if not gameconfig.enableOutsideCommand():
             return
 
-        account = request.account
+        _account = request.account
         command = request.command
         cmdUUID = request.uuid
-        agent = gmCommand.GMAgent(self.adminStub, self.tag, account, gmGroup.MANAGER_GROUP_GOD, cmdUUID)
+        agent = gmCommand.GMAgent(self.adminStub, self.tag, _account, gmGroup.MANAGER_GROUP_GOD, cmdUUID)
 
         gmCommand.doCommandOutside(agent, command, 'from gmt')
 

@@ -211,11 +211,11 @@ def chooseGoodBaseApp():
 
 
 def getSpaceBase(spaceNo):
-    return KBEngine.globalData[gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(spaceNo)]
+    return KBEngine.globalData[gameconst.GLOBALDATA_KEY_SPACE_TO_BASE + ':' + str(spaceNo)]
 
 
 def hasSpaceBase(spaceNo):
-    return KBEngine.globalData.has_key(gameconst.GLOBALDATA_KEY_SPACE_TO_ITS_BASE + ':' + str(spaceNo))
+    return KBEngine.globalData.has_key(gameconst.GLOBALDATA_KEY_SPACE_TO_BASE + ':' + str(spaceNo))
 
 
 def getSpaceEntity(spaceNo):

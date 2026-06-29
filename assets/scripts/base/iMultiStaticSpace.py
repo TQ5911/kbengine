@@ -87,13 +87,6 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         _spaceVal = self.staticSpaces[spaceNo]
         _spaceVal.lineSpaceBox.cell.doLoadEntities(_spaceVal.spaceMgrBoxCell.id)
 
-    def loadSingleEntity(self, spaceNo, clsName, needCreateBase, pos, direction, props):
-        # LOG_DBG("--- iLineSpaceStub loadSingleEntity", spaceNo, clsName, pos, direction, props)
-        _spaceVal = self.staticSpaces[spaceNo]
-        props['spaceMgrId'] = _spaceVal.spaceMgrBoxCell.id
-
-        self.createCellEntityInSpace(spaceNo, clsName, pos, direction, props)
-
     def onLoadGroupEntities(self, info):
         spaceNoList = list(self.staticSpaces.keys())
         LOG_DBG("IMultiStaticSpace::onLoadGroupEntities", info, spaceNoList)

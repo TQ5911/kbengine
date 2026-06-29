@@ -67,44 +67,51 @@ FRIEND_AVATAR_INIT_STR_NGRAM = """
 
 
 class ElasticUtils(object):
-    indexName = str(gameconfig.serverId()) + '_' + 'friend_ik'
-    typeName = '_doc'
+    INDEX_NAME = str(gameconfig.serverId()) + '_' + 'friend_ik'
+    TYPE_NAME = '_doc'
 
     @staticmethod
-    @functools.lru_cache(4)
+    @functools.lru_cache(10)
     def getRequestHeaders(user='', authStr='', isWithJson=False):
-        headers = {}
+        _headers = {}
         if authStr:
-            userpass = '{}:{}'.format(user, authStr) if user else authStr
-            auth = base64.b64encode(userpass.encode('utf-8')).decode('utf-8')
+            _userpass = '{}:{}'.format(user, authStr) if user else authStr
+            auth = base64.b64encode(_userpass.encode('utf-8')).decode('utf-8')
 
-            headers['Authorization'] = 'Basic {}'.format(auth)
+            _headers['Authorization'] = 'Basic {}'.format(auth)
 
         if isWithJson:
-            headers['Content-Type'] = 'application/json'
+            _headers['Content-Type'] = 'application/json'
 
-        return headers
-
-    @staticmethod
-    def methodGETHeaders():
-        return ElasticUtils.getRequestHeaders(gameconfig.elasticUser(), gameconfig.elasticAuth())
+        return _headers
 
     @staticmethod
     def methodPOSTHeaders():
         return ElasticUtils.getRequestHeaders(gameconfig.elasticUser(), gameconfig.elasticAuth(), True)
 
     @staticmethod
-    def join(*args):
-        return '/'.join(args)
+    def methodGETHeaders():
+        return ElasticUtils.getRequestHeaders(gameconfig.elasticUser(), gameconfig.elasticAuth())
 
     @staticmethod
     def uriBase():
-        return ''.join(('http://', gameconfig.elasticServer(), ':', str(gameconfig.elasticPort())))
+        _host = gameconfig.elasticServer()
+        _port = str(gameconfig.elasticPort())
+        return ''.join((
+            'http://', 
+            _host,
+            ':', 
+            _port,
+        ))
+
+    @staticmethod
+    def join(*args):
+        return '/'.join(args)
 
     @classmethod
     def init(cls, func, timeoutSec = 1):
         data = FRIEND_AVATAR_INIT_STR_NGRAM
-        uri = cls.join(cls.uriBase(), cls.indexName)
+        uri = cls.join(cls.uriBase(), cls.INDEX_NAME)
         KBEngine.urlopenv2(uri, func, method='PUT',
                            postData=data.encode('utf-8'),
                            headers=cls.methodPOSTHeaders(),
@@ -112,18 +119,20 @@ class ElasticUtils(object):
 
     @classmethod
     def checkInitSuccess(cls, func, timeoutSec = 1):
-        url = cls.join(cls.uriBase(), cls.indexName)
+        url = cls.join(cls.uriBase(), cls.INDEX_NAME)
         KBEngine.urlopenv2(url, func, method='GET',
                            headers=cls.methodGETHeaders(),
                            timeoutSec=timeoutSec)
 
     @classmethod
     def addAvatarElasticInfo(cls, name, gbId, obId, timeoutSec = 1):
-        data = {'name': name,
-                'gbId': gbId}
+        data = {
+            'name': name,
+            'gbId': gbId,
+        }
 
         data = json.dumps(data)
-        uri = cls.join(cls.uriBase(), cls.indexName, cls.typeName, str(obId))
+        uri = cls.join(cls.uriBase(), cls.INDEX_NAME, cls.TYPE_NAME, str(obId))
 
         def _func(httpcode, data, headers, success, url):
             LOG_DBG('ckz: elastic add:', httpcode, data, headers, success, url)
@@ -135,7 +144,7 @@ class ElasticUtils(object):
 
     @classmethod
     def deleteById(cls, dbId, timeoutSec=1):
-        uri = cls.join(cls.uriBase(), cls.indexName, cls.typeName, str(dbId))
+        uri = cls.join(cls.uriBase(), cls.INDEX_NAME, cls.TYPE_NAME, str(dbId))
 
         def _func(*args):
             LOG_DBG('delete:', *args)
@@ -146,34 +155,34 @@ class ElasticUtils(object):
 
     @classmethod
     def indexAvatarObId(cls, obId, callback, failedFunc, timeoutSec = 1):
-        uri = cls.join(cls.uriBase(), cls.indexName, cls.typeName, obId) + '?pretty=true'
+        uri = cls.join(cls.uriBase(), cls.INDEX_NAME, cls.TYPE_NAME, obId) + '?pretty=true'
 
-        def _func(httpcode, data, headers, success, url):
+        def _innerFunc(httpcode, data, headers, success, url):
             if not (httpcode == 200 and success):
                 failedFunc()
                 return
 
             try:
-                jsonData = json.loads(data)
-                callback(True, jsonData)
+                _jsonData = json.loads(data)
+                callback(True, _jsonData)
             except Exception as e:
                 LOG_WARN('indexAvatarObId failed:', e)
                 failedFunc()
 
-        KBEngine.urlopenv2(uri, _func, method='GET',
+        KBEngine.urlopenv2(uri, _innerFunc, method='GET',
             headers=cls.methodGETHeaders(),
             timeoutSec=timeoutSec)
 
     @classmethod
-    def reqSearchAvatarName(cls, name, callback, failedFunc, timeoutSec=1):
-        data = {
+    def reqSearchAvatarName(cls, roleName, callback, failedFunc, timeoutSec=1):
+        _data = {
             'query': {
                 'bool': {
                     'should': [
                         {
                             'match': {
                                 'name': {
-                                    'query': name,
+                                    'query': roleName,
                                     'operator': 'and'
                                 }
                             }
@@ -181,7 +190,7 @@ class ElasticUtils(object):
                         {
                             'match': {
                                 'name.raw': {
-                                    'query': name,
+                                    'query': roleName,
                                     'operator': 'and'
                                 }
                             }
@@ -191,8 +200,8 @@ class ElasticUtils(object):
             },
             'size': 50
         }
-        data = json.dumps(data)
-        uri = cls.join(cls.uriBase(), cls.indexName, cls.typeName, '_search')
+        _data = json.dumps(_data)
+        uri = cls.join(cls.uriBase(), cls.INDEX_NAME, cls.TYPE_NAME, '_search')
 
         def _func(httpcode, data, headers, success, url):
             if not (httpcode == 200 and success):
@@ -200,20 +209,27 @@ class ElasticUtils(object):
                 return
 
             try:
-                jsonData = json.loads(data)
-                hits = jsonData['hits']['hits']
+                _jsonData = json.loads(data)
+                hits = _jsonData['hits']['hits']
                 callback(hits)
             except Exception as e:
                 LOG_WARN('reqSearchAvatarName:', e)
                 failedFunc('search avatar meet exception', e)
 
-        KBEngine.urlopenv2(uri, _func, method='POST', postData=data.encode('utf-8'), headers=cls.methodPOSTHeaders(), timeoutSec=timeoutSec)
+        KBEngine.urlopenv2(
+            uri, 
+            _func, 
+            method='POST', 
+            postData=_data.encode('utf-8'), 
+            headers=cls.methodPOSTHeaders(), 
+            timeoutSec=timeoutSec,
+        )
 
     @staticmethod
     def _getRetData(data):
-        retData = data['_source']
-        retData['obId'] = int(data['_id'])
-        return retData
+        _retData = data['_source']
+        _retData['obId'] = int(data['_id'])
+        return _retData
 
     @classmethod
     def searchAvatarByName(cls, name, cb):
@@ -251,50 +267,15 @@ class ElasticUtils(object):
 
         cb(retList)
 
-    # 按照名字分词搜索部分
-    # @classmethod
-    # def _searchAvatarByName(cls, name, curList, cb):
-    #     def _userInfoCB(retList):
-    #         sendList = []
-    #         for fcVal in retList:
-    #             retData = retDict[fcVal.gbId]
-    #             retData['school'] = fcVal.school
-    #             retData['level'] = fcVal.level
-    #             retData['sex'] = fcVal.sex
-    #             sendList.append(retData)
-    #
-    #         box.onGetSearchFriendResult(sendList)
-    #
-    #     def addTimerCB(hits):
-    #         for data in hits:
-    #             retData = cls._getRetData(data)
-    #             if name not in retData['name']:
-    #                 continue
-    #
-    #             retData['gbId'] = int(retData['gbId'])
-    #
-    #             retDict[retData['gbId']] = retData
-    #
-    #         if not retDict:
-    #             box.onGetSearchFriendResult([])
-    #             return
-    #
-    #         redisUtils.RedisUtils.getUsersInfo(list(retDict.keys()), _userInfoCB)
-    #
-    #     cls.reqSearchAvatarName(name, addTimerCB, failedFunc)
 
-    # idip按照名字分词搜索部分
-    @classmethod
-    def searchAvatarByFuzzyName(cls,fuzzyName,func,failedFunc):
-        cls.reqSearchAvatarName(fuzzyName, functools.partial(searchAvatarByFuzzyNameAfter, cls,func), failedFunc)
 
 def searchAvatarByFuzzyNameAfter(cls,func,hits):
-    retDict = {}
+    _retDict = {}
     for data in hits:
         retData = cls._getRetData(data)
-        retDict[retData['gbId']] = retData
+        _retDict[retData['gbId']] = retData
 
-    redisUtils.RedisUtils.getUsersInfo(list(retDict.keys()), functools.partial(getFuzzyNameUserInfo,func))
+    redisUtils.RedisUtils.getUsersInfo(list(_retDict.keys()), functools.partial(getFuzzyNameUserInfo,func))
 
 def getFuzzyNameUserInfo(func,retList):
     func(retList)

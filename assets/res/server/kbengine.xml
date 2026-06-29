@@ -30,6 +30,7 @@
         <tapTapBindPhoneReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/third/send-code </tapTapBindPhoneReqUrl>
         <tapTapBindPhoneVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/third/bind-phone/verify-code </tapTapBindPhoneVerifyUrl>
         <reportUrl> https://test.api.hzyunxingu.cn/user/api/v1/role-report/submit </reportUrl>
+        <queryRechargeUrl> https://test.api.hzyunxingu.cn/user/api/order/v1/cumulative_recharge </queryRechargeUrl>
 
         <appVersion> 0.0.0.0 </appVersion>
         <patchVersion> 0.0.0.0 </patchVersion>

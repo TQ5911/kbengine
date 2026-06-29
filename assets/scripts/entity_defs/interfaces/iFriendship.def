@@ -158,9 +158,9 @@
             <Arg>           ENTITYCALL              </Arg>
         </sendMyDetailInfoBase>
 
-        <onGetAvatarInterInfoBase>
+        <doGetAvatarInterInfoBase>
             <Arg>           ENTITYCALL              </Arg>
-        </onGetAvatarInterInfoBase>
+        </doGetAvatarInterInfoBase>
 
         <onRecvAuthRole>
             <Arg>           PLAYER_GBID             </Arg>

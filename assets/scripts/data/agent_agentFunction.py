@@ -159,10 +159,25 @@ datas = _tools.RODict({
         "functionID": 29,
         "isControl": 0,
         "isOpen": 1,
+    }),
+    30: _tools.RODict({
+        "functionID": 30,
+        "isControl": 0,
+        "isOpen": 0,
+    }),
+    31: _tools.RODict({
+        "functionID": 31,
+        "isControl": 1,
+        "isOpen": 0,
+    }),
+    32: _tools.RODict({
+        "functionID": 32,
+        "isControl": 1,
+        "isOpen": 0,
     })
 })
 minKey = 1
-maxKey = 29
+maxKey = 32
 
 
 UIBusinessPanel = 1
@@ -194,3 +209,6 @@ UIEquipClassPage = 26
 UIEquipRunePage = 27
 UIEquipBlessPage = 28
 UlEquipSoul = 29
+UIAbyssPanel = 30
+Rental = 31
+KillOrder = 32

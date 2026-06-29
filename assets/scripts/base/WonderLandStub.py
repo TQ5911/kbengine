@@ -116,7 +116,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             return
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
-            _playerVal.playerStatus = linePlayers.LinePlayerVal.IN_LINE
+            _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
             if _playerVal.curSpaceNo != spaceNo:
                 LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))

@@ -3,7 +3,6 @@ import sys
 import os
 import ast,symtable
 import re
-import inspect
 import astor
 import const
 
@@ -14,16 +13,21 @@ def prettySource(items):
     res = ''.join(items)
     return res
 
+def _attrLeftName(node):
+    while isinstance(node, ast.Attribute):
+        node = node.value
+    return node.id if isinstance(node, ast.Name) else None
+
 class MethodInfo(object):
     def __init__(self, component, moduleName, clsName, methodName):
+        self.inModuleNameData = moduleName
         self.compoent = component
-        self.inModuleName = moduleName
         self.classname = clsName
         self.name = methodName
         self.sourceLines = None
-        self.sourceCode = ''
-        self.symtable = None
+        self.sourceCodeData = ''
         self.codePath = ''
+        self.symtable = None
         self.decratorMods = set()
 
         self.replaceDecorator = {}
@@ -40,62 +44,70 @@ class MethodInfo(object):
         return True
 
     def init(self):
-        if self.compoent == const.BASEAPP:
-            pathList = const.BASE_PATH
-        elif self.compoent == const.CELLAPP:
+        if self.compoent == const.CELLAPP:
             pathList = const.CELL_PATH
+        elif self.compoent == const.BASEAPP:
+            pathList = const.BASE_PATH
         else:
             pathList = const.INTERFACE_PATH
 
-        for folder in pathList:
-            testPath = os.path.join(folder, '{}.py'.format(self.inModuleName))
-            if os.path.exists(testPath):
-                self.codePath = testPath
+        for _folder in pathList:
+            _testPath = os.path.join(_folder, '{}.py'.format(self.inModuleNameData))
+            if os.path.exists(_testPath):
+                self.codePath = _testPath
                 break
 
         with open(self.codePath, 'r', encoding='utf-8') as fScript:
-            script = fScript.read()
-            scriptAst = ast.parse(script)
-            for node in scriptAst.body:
+            _script = fScript.read()
+            scriptAst = ast.parse(_script)
+            for _node in scriptAst.body:
                 if self.checkClassValid():#class member function
-                    if isinstance(node, ast.ClassDef) and node.name==self.classname:
-                        for cNode in node.body:
-                            if isinstance(cNode, ast.FunctionDef) and cNode.name==self.name:
-                                self.sourceCode = astor.to_source(cNode, pretty_source=prettySource)
-                                self.sourceLines = [line+'\n' for line in self.sourceCode.split('\n')]
-                                self.symtable = symtable.symtable(self.sourceCode, 'string', 'exec')
+                    if isinstance(_node, ast.ClassDef) and _node.name==self.classname:
+                        for _cNode in _node.body:
+                            if isinstance(_cNode, ast.FunctionDef) and _cNode.name==self.name:
+                                self.sourceCodeData = astor.to_source(_cNode, pretty_source=prettySource)
+                                self.sourceLines = [_line+'\n' for _line in self.sourceCodeData.split('\n')]
+                                self.symtable = symtable.symtable(self.sourceCodeData, 'string', 'exec')
                                 break
                         break
                 else:#module function
-                    if isinstance(node, ast.FunctionDef) and node.name==self.name:
-                        self.sourceCode = astor.to_source(node, pretty_source=prettySource)
-                        self.sourceLines = [line+'\n' for line in self.sourceCode.split('\n')]
-                        self.symtable = symtable.symtable(self.sourceCode, 'string', 'exec')
+                    if isinstance(_node, ast.FunctionDef) and _node.name==self.name:
+                        self.sourceCodeData = astor.to_source(_node, pretty_source=prettySource)
+                        self.sourceLines = [_line+'\n' for _line in self.sourceCodeData.split('\n')]
+                        self.symtable = symtable.symtable(self.sourceCodeData, 'string', 'exec')
 
-            if not self.sourceCode:
+            if not self.sourceCodeData:
                 if self.classname:
-                    print('method not found: {}.{}.{}'.format(self.inModuleName, self.classname, self.name))
+                    print('method not found: {}.{}.{}'.format(self.inModuleNameData, self.classname, self.name))
                 else:
-                    print('method not found: {}.{}'.format(self.inModuleName, self.name))
+                    print('method not found: {}.{}'.format(self.inModuleNameData, self.name))
                 exit(-1)
 
 
-        methodAst = ast.parse(self.sourceCode)
+        methodAst = ast.parse(self.sourceCodeData)
 
-        for node in methodAst.body:
-            if isinstance(node, ast.FunctionDef):
-                for decInfo in node.decorator_list:
+        for _node in methodAst.body:
+            if isinstance(_node, ast.FunctionDef):
+                for decInfo in _node.decorator_list:
                     if isinstance(decInfo, ast.Name):
-                        self.decratorMods.add(self.inModuleName)
-                        self.replaceDecorator['@'+decInfo.id] = '@{}.{}'.format(self.inModuleName, decInfo.id)
+                        self.decratorMods.add(self.inModuleNameData)
+                        self.replaceDecorator['@'+decInfo.id] = '@{}.{}'.format(self.inModuleNameData, decInfo.id)
                     elif isinstance(decInfo, ast.Call):
-                        self.decratorMods.add(decInfo.func.value.id)
+                        self.decratorMods.add(_attrLeftName(decInfo.func))
+                        for arg in decInfo.args:
+                            name = _attrLeftName(arg)
+                            if name:
+                                self.decratorMods.add(name)
+                        for kw in decInfo.keywords:
+                            name = _attrLeftName(kw.value)
+                            if name:
+                                self.decratorMods.add(name)
                     else:
                         self.decratorMods.add(decInfo.value.id)
 
     def replaceSymbol(self, old, new):
-        for i, line in enumerate(self.sourceLines):
-            self.sourceLines[i] = re.sub(r'\b{}\b'.format(old), new, line)
+        for i, _line in enumerate(self.sourceLines):
+            self.sourceLines[i] = re.sub(r'\b{}\b'.format(old), new, _line)
 
-        self.sourceCode = '\n'.join(self.sourceLines)
+        self.sourceCodeData = '\n'.join(self.sourceLines)
 

@@ -227,6 +227,10 @@ datas = _tools.RODict({
         "key": "auctionPublicityTag",
         "value": "<color=#b35b00>公示中</color>",
     }),
+    "auctionSoulSale": _tools.RODict({
+        "key": "auctionSoulSale",
+        "value": 1,
+    }),
     "auctionSoulScoreRule": _tools.RODict({
         "key": "auctionSoulScoreRule",
         "value": ((1, 1), (2, 3), (3, 5), (4, 8)),
@@ -266,5 +270,17 @@ datas = _tools.RODict({
     "rentalInitShelfNum": _tools.RODict({
         "key": "rentalInitShelfNum",
         "value": 10,
+    }),
+    "redeemA": _tools.RODict({
+        "key": "redeemA",
+        "value": 54482017,
+    }),
+    "redeemB": _tools.RODict({
+        "key": "redeemB",
+        "value": 54482005,
+    }),
+    "redeemC": _tools.RODict({
+        "key": "redeemC",
+        "value": 54482018,
     })
 })

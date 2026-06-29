@@ -1746,7 +1746,7 @@ def _handlePlayerChooseType(posType, spaceMgr, monsterEntity=None,
             and posType == gameconst.DungeonFlowPlayerChooseEnum.RAND_IN_MONSTER_HATRED_LIST:
         _eids = monsterEntity\
             .aiController\
-            .hateDict\
+            .hateDic\
             .pickRandomHatredTargetIds(
                 number=number, 
                 minRange=range_min_, 
@@ -1758,7 +1758,7 @@ def _handlePlayerChooseType(posType, spaceMgr, monsterEntity=None,
             and posType == gameconst.DungeonFlowPlayerChooseEnum.RAND_IN_MONSTER_HATRED_LIST_EXCEPT_HIGHEST:
         _eids = monsterEntity\
             .aiController\
-            .hateDict\
+            .hateDic\
             .pickRandomHatredTargetIds(
                 exceptHighest=exceptHighestHate, 
                 number=number, 
@@ -1768,7 +1768,7 @@ def _handlePlayerChooseType(posType, spaceMgr, monsterEntity=None,
         _processEnts(_eids)
     elif monsterEntity and monsterEntity.aiController and \
             posType == gameconst.DungeonFlowPlayerChooseEnum.MONSTER_HATRED_LIST_MONSTER:
-        _eids = monsterEntity.aiController.hateDict.pickMaxHaterdMonsterTarget()
+        _eids = monsterEntity.aiController.hateDic.pickMaxHaterdMonsterTarget()
         _processEnts(_eids)
     else:
         return False, '_handlePlayerChooseType::posType not allowed', _entities
@@ -2744,7 +2744,7 @@ def handleClearEntityHate(event, srcE, ctx, **referenceArgument):
     for gid in entityGIDs:
         gidTag = 'gid_{}'.format(gid)
         for _ent in spaceMgr.listEntitiesByTag(gidTag):
-            _ent and _ent.aiController and _ent.aiController.hateDict.clearHate(_ent)
+            _ent and _ent.aiController and _ent.aiController.hateDic.clearHate(_ent)
 
 
 def handleForceSelectEntityTarget(event, srcE, ctx, **referenceArgument):
@@ -2998,12 +2998,12 @@ def handleEntityStartRouting(event, srcE, ctx, **refParams):
             userData['moveAni'] = _newMoveAni
 
         if escortDistance > 0:
-            escortLeaveDistance = round(escortDistance * 1.5) + 1
+            escortLeaveDis = round(escortDistance * 1.5) + 1
         else:
-            escortLeaveDistance = 0
+            escortLeaveDis = 0
 
         _ret = _ent.setRoute(pathID, escortDistance=escortDistance,
-                                    escortLeaveDistance=escortLeaveDistance,
+                                    escortLeaveDis=escortLeaveDis,
                                     speedOverwrite=userData)
         if not _ret:
             LOG_WARN("handleEntityStartRouting:: set route failed")

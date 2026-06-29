@@ -4008,13 +4008,13 @@ datas = _tools.RODict({
     43002214: _tools.RODict({
         "ID": 43002214,
         "version": 0,
-        "levelDisplay": "成岁探宝",
+        "levelDisplay": "闰余探宝",
         "isOpen": 1,
         "openLevel": 1,
-        "preAch": 0,
+        "preAch": 43002213,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (1, 1001),
+        "targetParam": (6, 1005),
         "reward": 40021286,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4022,13 +4022,13 @@ datas = _tools.RODict({
     43002215: _tools.RODict({
         "ID": 43002215,
         "version": 0,
-        "levelDisplay": "律吕探宝",
+        "levelDisplay": "成岁探宝",
         "isOpen": 1,
         "openLevel": 1,
-        "preAch": 43002214,
+        "preAch": 0,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (2, 1001),
+        "targetParam": (1, 1001),
         "reward": 40021287,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4036,13 +4036,13 @@ datas = _tools.RODict({
     43002216: _tools.RODict({
         "ID": 43002216,
         "version": 0,
-        "levelDisplay": "调阳探宝",
+        "levelDisplay": "律吕探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002215,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1001),
+        "targetParam": (2, 1001),
         "reward": 40021288,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4050,13 +4050,13 @@ datas = _tools.RODict({
     43002217: _tools.RODict({
         "ID": 43002217,
         "version": 0,
-        "levelDisplay": "云腾探宝",
+        "levelDisplay": "调阳探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002216,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1001),
+        "targetParam": (3, 1001),
         "reward": 40021289,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4064,13 +4064,13 @@ datas = _tools.RODict({
     43002218: _tools.RODict({
         "ID": 43002218,
         "version": 0,
-        "levelDisplay": "致雨探宝",
+        "levelDisplay": "云腾探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002217,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1001),
+        "targetParam": (4, 1001),
         "reward": 40021290,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4078,13 +4078,13 @@ datas = _tools.RODict({
     43002219: _tools.RODict({
         "ID": 43002219,
         "version": 0,
-        "levelDisplay": "露结探宝",
+        "levelDisplay": "致雨探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002218,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1001),
+        "targetParam": (5, 1001),
         "reward": 40021291,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4092,19 +4092,33 @@ datas = _tools.RODict({
     43002220: _tools.RODict({
         "ID": 43002220,
         "version": 0,
-        "levelDisplay": "为霜探宝",
+        "levelDisplay": "露结探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002219,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1001),
+        "targetParam": (6, 1001),
         "reward": 40021292,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002221: _tools.RODict({
         "ID": 43002221,
+        "version": 0,
+        "levelDisplay": "为霜探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002220,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1001),
+        "reward": 40021293,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002222: _tools.RODict({
+        "ID": 43002222,
         "version": 0,
         "levelDisplay": "金生探宝",
         "isOpen": 1,
@@ -4113,20 +4127,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1030),
-        "reward": 40021293,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002222: _tools.RODict({
-        "ID": 43002222,
-        "version": 0,
-        "levelDisplay": "丽水探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002221,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1030),
         "reward": 40021294,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4134,13 +4134,13 @@ datas = _tools.RODict({
     43002223: _tools.RODict({
         "ID": 43002223,
         "version": 0,
-        "levelDisplay": "玉出探宝",
+        "levelDisplay": "丽水探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002222,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1030),
+        "targetParam": (2, 1030),
         "reward": 40021295,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4148,13 +4148,13 @@ datas = _tools.RODict({
     43002224: _tools.RODict({
         "ID": 43002224,
         "version": 0,
-        "levelDisplay": "昆冈探宝",
+        "levelDisplay": "玉出探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002223,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1030),
+        "targetParam": (3, 1030),
         "reward": 40021296,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4162,13 +4162,13 @@ datas = _tools.RODict({
     43002225: _tools.RODict({
         "ID": 43002225,
         "version": 0,
-        "levelDisplay": "剑号探宝",
+        "levelDisplay": "昆冈探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002224,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1030),
+        "targetParam": (4, 1030),
         "reward": 40021297,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4176,13 +4176,13 @@ datas = _tools.RODict({
     43002226: _tools.RODict({
         "ID": 43002226,
         "version": 0,
-        "levelDisplay": "巨阙探宝",
+        "levelDisplay": "剑号探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002225,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1030),
+        "targetParam": (5, 1030),
         "reward": 40021298,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4190,19 +4190,33 @@ datas = _tools.RODict({
     43002227: _tools.RODict({
         "ID": 43002227,
         "version": 0,
-        "levelDisplay": "珠称探宝",
+        "levelDisplay": "巨阙探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002226,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1030),
+        "targetParam": (6, 1030),
         "reward": 40021299,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002228: _tools.RODict({
         "ID": 43002228,
+        "version": 0,
+        "levelDisplay": "珠称探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002227,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1030),
+        "reward": 40021300,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002229: _tools.RODict({
+        "ID": 43002229,
         "version": 0,
         "levelDisplay": "夜光探宝",
         "isOpen": 1,
@@ -4211,20 +4225,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1031),
-        "reward": 40021300,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002229: _tools.RODict({
-        "ID": 43002229,
-        "version": 0,
-        "levelDisplay": "果珍探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002228,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1031),
         "reward": 40021301,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4232,13 +4232,13 @@ datas = _tools.RODict({
     43002230: _tools.RODict({
         "ID": 43002230,
         "version": 0,
-        "levelDisplay": "李柰探宝",
+        "levelDisplay": "果珍探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002229,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1031),
+        "targetParam": (2, 1031),
         "reward": 40021302,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4246,13 +4246,13 @@ datas = _tools.RODict({
     43002231: _tools.RODict({
         "ID": 43002231,
         "version": 0,
-        "levelDisplay": "菜重探宝",
+        "levelDisplay": "李柰探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002230,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1031),
+        "targetParam": (3, 1031),
         "reward": 40021303,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4260,13 +4260,13 @@ datas = _tools.RODict({
     43002232: _tools.RODict({
         "ID": 43002232,
         "version": 0,
-        "levelDisplay": "芥姜探宝",
+        "levelDisplay": "菜重探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002231,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1031),
+        "targetParam": (4, 1031),
         "reward": 40021304,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4274,13 +4274,13 @@ datas = _tools.RODict({
     43002233: _tools.RODict({
         "ID": 43002233,
         "version": 0,
-        "levelDisplay": "海咸探宝",
+        "levelDisplay": "芥姜探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002232,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1031),
+        "targetParam": (5, 1031),
         "reward": 40021305,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4288,19 +4288,33 @@ datas = _tools.RODict({
     43002234: _tools.RODict({
         "ID": 43002234,
         "version": 0,
-        "levelDisplay": "河淡探宝",
+        "levelDisplay": "海咸探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002233,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1031),
+        "targetParam": (6, 1031),
         "reward": 40021306,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002235: _tools.RODict({
         "ID": 43002235,
+        "version": 0,
+        "levelDisplay": "河淡探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002234,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1031),
+        "reward": 40021307,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002236: _tools.RODict({
+        "ID": 43002236,
         "version": 0,
         "levelDisplay": "鳞潜探宝",
         "isOpen": 1,
@@ -4309,20 +4323,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1032),
-        "reward": 40021307,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002236: _tools.RODict({
-        "ID": 43002236,
-        "version": 0,
-        "levelDisplay": "羽翔探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002235,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1032),
         "reward": 40021308,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4330,13 +4330,13 @@ datas = _tools.RODict({
     43002237: _tools.RODict({
         "ID": 43002237,
         "version": 0,
-        "levelDisplay": "龙师探宝",
+        "levelDisplay": "羽翔探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002236,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1032),
+        "targetParam": (2, 1032),
         "reward": 40021309,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4344,13 +4344,13 @@ datas = _tools.RODict({
     43002238: _tools.RODict({
         "ID": 43002238,
         "version": 0,
-        "levelDisplay": "火帝探宝",
+        "levelDisplay": "龙师探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002237,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1032),
+        "targetParam": (3, 1032),
         "reward": 40021310,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4358,13 +4358,13 @@ datas = _tools.RODict({
     43002239: _tools.RODict({
         "ID": 43002239,
         "version": 0,
-        "levelDisplay": "鸟官探宝",
+        "levelDisplay": "火帝探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002238,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1032),
+        "targetParam": (4, 1032),
         "reward": 40021311,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4372,13 +4372,13 @@ datas = _tools.RODict({
     43002240: _tools.RODict({
         "ID": 43002240,
         "version": 0,
-        "levelDisplay": "人皇探宝",
+        "levelDisplay": "鸟官探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002239,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1032),
+        "targetParam": (5, 1032),
         "reward": 40021312,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4386,19 +4386,33 @@ datas = _tools.RODict({
     43002241: _tools.RODict({
         "ID": 43002241,
         "version": 0,
-        "levelDisplay": "始制探宝",
+        "levelDisplay": "人皇探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002240,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1032),
+        "targetParam": (6, 1032),
         "reward": 40021313,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002242: _tools.RODict({
         "ID": 43002242,
+        "version": 0,
+        "levelDisplay": "始制探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002241,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1032),
+        "reward": 40021314,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002243: _tools.RODict({
+        "ID": 43002243,
         "version": 0,
         "levelDisplay": "文字探宝",
         "isOpen": 1,
@@ -4407,20 +4421,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1035),
-        "reward": 40021314,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002243: _tools.RODict({
-        "ID": 43002243,
-        "version": 0,
-        "levelDisplay": "乃服探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002242,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1035),
         "reward": 40021315,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4428,13 +4428,13 @@ datas = _tools.RODict({
     43002244: _tools.RODict({
         "ID": 43002244,
         "version": 0,
-        "levelDisplay": "衣裳探宝",
+        "levelDisplay": "乃服探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002243,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1035),
+        "targetParam": (2, 1035),
         "reward": 40021316,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4442,13 +4442,13 @@ datas = _tools.RODict({
     43002245: _tools.RODict({
         "ID": 43002245,
         "version": 0,
-        "levelDisplay": "推位探宝",
+        "levelDisplay": "衣裳探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002244,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1035),
+        "targetParam": (3, 1035),
         "reward": 40021317,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4456,13 +4456,13 @@ datas = _tools.RODict({
     43002246: _tools.RODict({
         "ID": 43002246,
         "version": 0,
-        "levelDisplay": "让国探宝",
+        "levelDisplay": "推位探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002245,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1035),
+        "targetParam": (4, 1035),
         "reward": 40021318,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4470,13 +4470,13 @@ datas = _tools.RODict({
     43002247: _tools.RODict({
         "ID": 43002247,
         "version": 0,
-        "levelDisplay": "有虞探宝",
+        "levelDisplay": "让国探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002246,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1035),
+        "targetParam": (5, 1035),
         "reward": 40021319,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4484,19 +4484,33 @@ datas = _tools.RODict({
     43002248: _tools.RODict({
         "ID": 43002248,
         "version": 0,
-        "levelDisplay": "陶唐探宝",
+        "levelDisplay": "有虞探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002247,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1035),
+        "targetParam": (6, 1035),
         "reward": 40021320,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002249: _tools.RODict({
         "ID": 43002249,
+        "version": 0,
+        "levelDisplay": "陶唐探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002248,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1035),
+        "reward": 40021321,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002250: _tools.RODict({
+        "ID": 43002250,
         "version": 0,
         "levelDisplay": "吊民探宝",
         "isOpen": 1,
@@ -4505,20 +4519,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1011),
-        "reward": 40021321,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002250: _tools.RODict({
-        "ID": 43002250,
-        "version": 0,
-        "levelDisplay": "伐罪探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002249,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1011),
         "reward": 40021322,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4526,13 +4526,13 @@ datas = _tools.RODict({
     43002251: _tools.RODict({
         "ID": 43002251,
         "version": 0,
-        "levelDisplay": "周发探宝",
+        "levelDisplay": "伐罪探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002250,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1011),
+        "targetParam": (2, 1011),
         "reward": 40021323,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4540,13 +4540,13 @@ datas = _tools.RODict({
     43002252: _tools.RODict({
         "ID": 43002252,
         "version": 0,
-        "levelDisplay": "殷汤探宝",
+        "levelDisplay": "周发探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002251,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1011),
+        "targetParam": (3, 1011),
         "reward": 40021324,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4554,13 +4554,13 @@ datas = _tools.RODict({
     43002253: _tools.RODict({
         "ID": 43002253,
         "version": 0,
-        "levelDisplay": "坐朝探宝",
+        "levelDisplay": "殷汤探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002252,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1011),
+        "targetParam": (4, 1011),
         "reward": 40021325,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4568,13 +4568,13 @@ datas = _tools.RODict({
     43002254: _tools.RODict({
         "ID": 43002254,
         "version": 0,
-        "levelDisplay": "问道探宝",
+        "levelDisplay": "坐朝探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002253,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1011),
+        "targetParam": (5, 1011),
         "reward": 40021326,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4582,19 +4582,33 @@ datas = _tools.RODict({
     43002255: _tools.RODict({
         "ID": 43002255,
         "version": 0,
-        "levelDisplay": "垂拱探宝",
+        "levelDisplay": "问道探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002254,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1011),
+        "targetParam": (6, 1011),
         "reward": 40021327,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002256: _tools.RODict({
         "ID": 43002256,
+        "version": 0,
+        "levelDisplay": "垂拱探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002255,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1011),
+        "reward": 40021328,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002257: _tools.RODict({
+        "ID": 43002257,
         "version": 0,
         "levelDisplay": "平章探宝",
         "isOpen": 1,
@@ -4603,20 +4617,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1020),
-        "reward": 40021328,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002257: _tools.RODict({
-        "ID": 43002257,
-        "version": 0,
-        "levelDisplay": "爱育探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002256,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1020),
         "reward": 40021329,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4624,13 +4624,13 @@ datas = _tools.RODict({
     43002258: _tools.RODict({
         "ID": 43002258,
         "version": 0,
-        "levelDisplay": "黎首探宝",
+        "levelDisplay": "爱育探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002257,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1020),
+        "targetParam": (2, 1020),
         "reward": 40021330,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4638,13 +4638,13 @@ datas = _tools.RODict({
     43002259: _tools.RODict({
         "ID": 43002259,
         "version": 0,
-        "levelDisplay": "臣伏探宝",
+        "levelDisplay": "黎首探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002258,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1020),
+        "targetParam": (3, 1020),
         "reward": 40021331,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4652,13 +4652,13 @@ datas = _tools.RODict({
     43002260: _tools.RODict({
         "ID": 43002260,
         "version": 0,
-        "levelDisplay": "戎羌探宝",
+        "levelDisplay": "臣伏探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002259,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1020),
+        "targetParam": (4, 1020),
         "reward": 40021332,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4666,13 +4666,13 @@ datas = _tools.RODict({
     43002261: _tools.RODict({
         "ID": 43002261,
         "version": 0,
-        "levelDisplay": "遐迩探宝",
+        "levelDisplay": "戎羌探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002260,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1020),
+        "targetParam": (5, 1020),
         "reward": 40021333,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4680,19 +4680,33 @@ datas = _tools.RODict({
     43002262: _tools.RODict({
         "ID": 43002262,
         "version": 0,
-        "levelDisplay": "一体探宝",
+        "levelDisplay": "遐迩探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002261,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1020),
+        "targetParam": (6, 1020),
         "reward": 40021334,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002263: _tools.RODict({
         "ID": 43002263,
+        "version": 0,
+        "levelDisplay": "一体探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002262,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1020),
+        "reward": 40021335,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002264: _tools.RODict({
+        "ID": 43002264,
         "version": 0,
         "levelDisplay": "率宾探宝",
         "isOpen": 1,
@@ -4701,20 +4715,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1021),
-        "reward": 40021335,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002264: _tools.RODict({
-        "ID": 43002264,
-        "version": 0,
-        "levelDisplay": "归王探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002263,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1021),
         "reward": 40021336,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4722,13 +4722,13 @@ datas = _tools.RODict({
     43002265: _tools.RODict({
         "ID": 43002265,
         "version": 0,
-        "levelDisplay": "鸣凤探宝",
+        "levelDisplay": "归王探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002264,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1021),
+        "targetParam": (2, 1021),
         "reward": 40021337,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4736,13 +4736,13 @@ datas = _tools.RODict({
     43002266: _tools.RODict({
         "ID": 43002266,
         "version": 0,
-        "levelDisplay": "在竹探宝",
+        "levelDisplay": "鸣凤探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002265,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1021),
+        "targetParam": (3, 1021),
         "reward": 40021338,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4750,13 +4750,13 @@ datas = _tools.RODict({
     43002267: _tools.RODict({
         "ID": 43002267,
         "version": 0,
-        "levelDisplay": "白驹探宝",
+        "levelDisplay": "在竹探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002266,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1021),
+        "targetParam": (4, 1021),
         "reward": 40021339,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4764,13 +4764,13 @@ datas = _tools.RODict({
     43002268: _tools.RODict({
         "ID": 43002268,
         "version": 0,
-        "levelDisplay": "食场探宝",
+        "levelDisplay": "白驹探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002267,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1021),
+        "targetParam": (5, 1021),
         "reward": 40021340,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4778,19 +4778,33 @@ datas = _tools.RODict({
     43002269: _tools.RODict({
         "ID": 43002269,
         "version": 0,
-        "levelDisplay": "化被探宝",
+        "levelDisplay": "食场探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002268,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1021),
+        "targetParam": (6, 1021),
         "reward": 40021341,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002270: _tools.RODict({
         "ID": 43002270,
+        "version": 0,
+        "levelDisplay": "化被探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002269,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1021),
+        "reward": 40021342,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002271: _tools.RODict({
+        "ID": 43002271,
         "version": 0,
         "levelDisplay": "草木探宝",
         "isOpen": 1,
@@ -4799,20 +4813,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1024),
-        "reward": 40021342,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002271: _tools.RODict({
-        "ID": 43002271,
-        "version": 0,
-        "levelDisplay": "赖及探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002270,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1024),
         "reward": 40021343,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4820,13 +4820,13 @@ datas = _tools.RODict({
     43002272: _tools.RODict({
         "ID": 43002272,
         "version": 0,
-        "levelDisplay": "万方探宝",
+        "levelDisplay": "赖及探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002271,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1024),
+        "targetParam": (2, 1024),
         "reward": 40021344,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4834,13 +4834,13 @@ datas = _tools.RODict({
     43002273: _tools.RODict({
         "ID": 43002273,
         "version": 0,
-        "levelDisplay": "盖此探宝",
+        "levelDisplay": "万方探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002272,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1024),
+        "targetParam": (3, 1024),
         "reward": 40021345,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4848,13 +4848,13 @@ datas = _tools.RODict({
     43002274: _tools.RODict({
         "ID": 43002274,
         "version": 0,
-        "levelDisplay": "身发探宝",
+        "levelDisplay": "盖此探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002273,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1024),
+        "targetParam": (4, 1024),
         "reward": 40021346,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4862,13 +4862,13 @@ datas = _tools.RODict({
     43002275: _tools.RODict({
         "ID": 43002275,
         "version": 0,
-        "levelDisplay": "四大探宝",
+        "levelDisplay": "身发探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002274,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1024),
+        "targetParam": (5, 1024),
         "reward": 40021347,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4876,19 +4876,33 @@ datas = _tools.RODict({
     43002276: _tools.RODict({
         "ID": 43002276,
         "version": 0,
-        "levelDisplay": "五常探宝",
+        "levelDisplay": "四大探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002275,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1024),
+        "targetParam": (6, 1024),
         "reward": 40021348,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002277: _tools.RODict({
         "ID": 43002277,
+        "version": 0,
+        "levelDisplay": "五常探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002276,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1024),
+        "reward": 40021349,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002278: _tools.RODict({
+        "ID": 43002278,
         "version": 0,
         "levelDisplay": "恭惟探宝",
         "isOpen": 1,
@@ -4897,20 +4911,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1027),
-        "reward": 40021349,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002278: _tools.RODict({
-        "ID": 43002278,
-        "version": 0,
-        "levelDisplay": "鞠养探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002277,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1027),
         "reward": 40021350,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4918,13 +4918,13 @@ datas = _tools.RODict({
     43002279: _tools.RODict({
         "ID": 43002279,
         "version": 0,
-        "levelDisplay": "岂敢探宝",
+        "levelDisplay": "鞠养探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002278,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1027),
+        "targetParam": (2, 1027),
         "reward": 40021351,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4932,13 +4932,13 @@ datas = _tools.RODict({
     43002280: _tools.RODict({
         "ID": 43002280,
         "version": 0,
-        "levelDisplay": "毁伤探宝",
+        "levelDisplay": "岂敢探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002279,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1027),
+        "targetParam": (3, 1027),
         "reward": 40021352,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4946,13 +4946,13 @@ datas = _tools.RODict({
     43002281: _tools.RODict({
         "ID": 43002281,
         "version": 0,
-        "levelDisplay": "女慕探宝",
+        "levelDisplay": "毁伤探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002280,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1027),
+        "targetParam": (4, 1027),
         "reward": 40021353,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4960,13 +4960,13 @@ datas = _tools.RODict({
     43002282: _tools.RODict({
         "ID": 43002282,
         "version": 0,
-        "levelDisplay": "贞洁探宝",
+        "levelDisplay": "女慕探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002281,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1027),
+        "targetParam": (5, 1027),
         "reward": 40021354,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -4974,19 +4974,33 @@ datas = _tools.RODict({
     43002283: _tools.RODict({
         "ID": 43002283,
         "version": 0,
-        "levelDisplay": "男效探宝",
+        "levelDisplay": "贞洁探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002282,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1027),
+        "targetParam": (6, 1027),
         "reward": 40021355,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002284: _tools.RODict({
         "ID": 43002284,
+        "version": 0,
+        "levelDisplay": "男效探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002283,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1027),
+        "reward": 40021356,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002285: _tools.RODict({
+        "ID": 43002285,
         "version": 0,
         "levelDisplay": "才良探宝",
         "isOpen": 1,
@@ -4995,20 +5009,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1004),
-        "reward": 40021356,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002285: _tools.RODict({
-        "ID": 43002285,
-        "version": 0,
-        "levelDisplay": "知过探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002284,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1004),
         "reward": 40021357,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5016,13 +5016,13 @@ datas = _tools.RODict({
     43002286: _tools.RODict({
         "ID": 43002286,
         "version": 0,
-        "levelDisplay": "必改探宝",
+        "levelDisplay": "知过探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002285,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (3, 1004),
+        "targetParam": (2, 1004),
         "reward": 40021358,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5030,13 +5030,13 @@ datas = _tools.RODict({
     43002287: _tools.RODict({
         "ID": 43002287,
         "version": 0,
-        "levelDisplay": "得能探宝",
+        "levelDisplay": "必改探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002286,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1004),
+        "targetParam": (3, 1004),
         "reward": 40021359,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5044,13 +5044,13 @@ datas = _tools.RODict({
     43002288: _tools.RODict({
         "ID": 43002288,
         "version": 0,
-        "levelDisplay": "莫忘探宝",
+        "levelDisplay": "得能探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002287,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1004),
+        "targetParam": (4, 1004),
         "reward": 40021360,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5058,19 +5058,47 @@ datas = _tools.RODict({
     43002289: _tools.RODict({
         "ID": 43002289,
         "version": 0,
-        "levelDisplay": "罔谈探宝",
+        "levelDisplay": "莫忘探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002288,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1004),
+        "targetParam": (5, 1004),
         "reward": 40021361,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002290: _tools.RODict({
         "ID": 43002290,
+        "version": 0,
+        "levelDisplay": "罔谈探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002289,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1004),
+        "reward": 40021362,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002291: _tools.RODict({
+        "ID": 43002291,
+        "version": 0,
+        "levelDisplay": "罔谈探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002290,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1004),
+        "reward": 40021363,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002292: _tools.RODict({
+        "ID": 43002292,
         "version": 0,
         "levelDisplay": "彼短探宝",
         "isOpen": 1,
@@ -5079,34 +5107,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1010),
-        "reward": 40021362,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002291: _tools.RODict({
-        "ID": 43002291,
-        "version": 0,
-        "levelDisplay": "靡恃探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002290,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1010),
-        "reward": 40021363,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002292: _tools.RODict({
-        "ID": 43002292,
-        "version": 0,
-        "levelDisplay": "己长探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002291,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (3, 1010),
         "reward": 40021364,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5114,13 +5114,13 @@ datas = _tools.RODict({
     43002293: _tools.RODict({
         "ID": 43002293,
         "version": 0,
-        "levelDisplay": "信使探宝",
+        "levelDisplay": "靡恃探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002292,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1010),
+        "targetParam": (2, 1010),
         "reward": 40021365,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5128,13 +5128,13 @@ datas = _tools.RODict({
     43002294: _tools.RODict({
         "ID": 43002294,
         "version": 0,
-        "levelDisplay": "可复探宝",
+        "levelDisplay": "己长探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002293,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1010),
+        "targetParam": (3, 1010),
         "reward": 40021366,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5142,13 +5142,13 @@ datas = _tools.RODict({
     43002295: _tools.RODict({
         "ID": 43002295,
         "version": 0,
-        "levelDisplay": "器欲探宝",
+        "levelDisplay": "信使探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002294,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1010),
+        "targetParam": (4, 1010),
         "reward": 40021367,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5156,19 +5156,47 @@ datas = _tools.RODict({
     43002296: _tools.RODict({
         "ID": 43002296,
         "version": 0,
-        "levelDisplay": "难量探宝",
+        "levelDisplay": "可复探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002295,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1010),
+        "targetParam": (5, 1010),
         "reward": 40021368,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002297: _tools.RODict({
         "ID": 43002297,
+        "version": 0,
+        "levelDisplay": "器欲探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002296,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1010),
+        "reward": 40021369,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002298: _tools.RODict({
+        "ID": 43002298,
+        "version": 0,
+        "levelDisplay": "难量探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002297,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1010),
+        "reward": 40021370,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002299: _tools.RODict({
+        "ID": 43002299,
         "version": 0,
         "levelDisplay": "墨悲探宝",
         "isOpen": 1,
@@ -5177,34 +5205,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1120),
-        "reward": 40021369,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002298: _tools.RODict({
-        "ID": 43002298,
-        "version": 0,
-        "levelDisplay": "丝染探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002297,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1120),
-        "reward": 40021370,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002299: _tools.RODict({
-        "ID": 43002299,
-        "version": 0,
-        "levelDisplay": "诗赞探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002298,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (3, 1120),
         "reward": 40021371,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5212,13 +5212,13 @@ datas = _tools.RODict({
     43002300: _tools.RODict({
         "ID": 43002300,
         "version": 0,
-        "levelDisplay": "羔羊探宝",
+        "levelDisplay": "丝染探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002299,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (4, 1120),
+        "targetParam": (2, 1120),
         "reward": 40021372,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5226,13 +5226,13 @@ datas = _tools.RODict({
     43002301: _tools.RODict({
         "ID": 43002301,
         "version": 0,
-        "levelDisplay": "景行探宝",
+        "levelDisplay": "诗赞探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002300,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1120),
+        "targetParam": (3, 1120),
         "reward": 40021373,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5240,19 +5240,61 @@ datas = _tools.RODict({
     43002302: _tools.RODict({
         "ID": 43002302,
         "version": 0,
-        "levelDisplay": "维贤探宝",
+        "levelDisplay": "羔羊探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002301,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1120),
+        "targetParam": (4, 1120),
         "reward": 40021374,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002303: _tools.RODict({
         "ID": 43002303,
+        "version": 0,
+        "levelDisplay": "景行探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002302,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (5, 1120),
+        "reward": 40021375,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002304: _tools.RODict({
+        "ID": 43002304,
+        "version": 0,
+        "levelDisplay": "维贤探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002303,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1120),
+        "reward": 40021376,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002305: _tools.RODict({
+        "ID": 43002305,
+        "version": 0,
+        "levelDisplay": "维贤探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002304,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1120),
+        "reward": 40021377,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002306: _tools.RODict({
+        "ID": 43002306,
         "version": 0,
         "levelDisplay": "克念探宝",
         "isOpen": 1,
@@ -5261,48 +5303,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1121),
-        "reward": 40021375,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002304: _tools.RODict({
-        "ID": 43002304,
-        "version": 0,
-        "levelDisplay": "作圣探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002303,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1121),
-        "reward": 40021376,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002305: _tools.RODict({
-        "ID": 43002305,
-        "version": 0,
-        "levelDisplay": "德建探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002304,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (3, 1121),
-        "reward": 40021377,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002306: _tools.RODict({
-        "ID": 43002306,
-        "version": 0,
-        "levelDisplay": "名立探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002305,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (4, 1121),
         "reward": 40021378,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5310,13 +5310,13 @@ datas = _tools.RODict({
     43002307: _tools.RODict({
         "ID": 43002307,
         "version": 0,
-        "levelDisplay": "形端探宝",
+        "levelDisplay": "作圣探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002306,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1121),
+        "targetParam": (2, 1121),
         "reward": 40021379,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5324,13 +5324,13 @@ datas = _tools.RODict({
     43002308: _tools.RODict({
         "ID": 43002308,
         "version": 0,
-        "levelDisplay": "表正探宝",
+        "levelDisplay": "德建探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002307,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1121),
+        "targetParam": (3, 1121),
         "reward": 40021380,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5338,19 +5338,61 @@ datas = _tools.RODict({
     43002309: _tools.RODict({
         "ID": 43002309,
         "version": 0,
-        "levelDisplay": "空谷探宝",
+        "levelDisplay": "名立探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002308,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1121),
+        "targetParam": (4, 1121),
         "reward": 40021381,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002310: _tools.RODict({
         "ID": 43002310,
+        "version": 0,
+        "levelDisplay": "形端探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002309,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (5, 1121),
+        "reward": 40021382,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002311: _tools.RODict({
+        "ID": 43002311,
+        "version": 0,
+        "levelDisplay": "表正探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002310,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1121),
+        "reward": 40021383,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002312: _tools.RODict({
+        "ID": 43002312,
+        "version": 0,
+        "levelDisplay": "空谷探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002311,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1121),
+        "reward": 40021384,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002313: _tools.RODict({
+        "ID": 43002313,
         "version": 0,
         "levelDisplay": "传声探宝",
         "isOpen": 1,
@@ -5359,48 +5401,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1123),
-        "reward": 40021382,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002311: _tools.RODict({
-        "ID": 43002311,
-        "version": 0,
-        "levelDisplay": "虚堂探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002310,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1123),
-        "reward": 40021383,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002312: _tools.RODict({
-        "ID": 43002312,
-        "version": 0,
-        "levelDisplay": "习听探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002311,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (3, 1123),
-        "reward": 40021384,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002313: _tools.RODict({
-        "ID": 43002313,
-        "version": 0,
-        "levelDisplay": "祸因探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002312,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (4, 1123),
         "reward": 40021385,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5408,13 +5408,13 @@ datas = _tools.RODict({
     43002314: _tools.RODict({
         "ID": 43002314,
         "version": 0,
-        "levelDisplay": "恶积探宝",
+        "levelDisplay": "虚堂探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002313,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1123),
+        "targetParam": (2, 1123),
         "reward": 40021386,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5422,13 +5422,13 @@ datas = _tools.RODict({
     43002315: _tools.RODict({
         "ID": 43002315,
         "version": 0,
-        "levelDisplay": "福缘探宝",
+        "levelDisplay": "习听探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002314,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1123),
+        "targetParam": (3, 1123),
         "reward": 40021387,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5436,19 +5436,61 @@ datas = _tools.RODict({
     43002316: _tools.RODict({
         "ID": 43002316,
         "version": 0,
-        "levelDisplay": "善庆探宝",
+        "levelDisplay": "祸因探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002315,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1123),
+        "targetParam": (4, 1123),
         "reward": 40021388,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
     43002317: _tools.RODict({
         "ID": 43002317,
+        "version": 0,
+        "levelDisplay": "恶积探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002316,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (5, 1123),
+        "reward": 40021389,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002318: _tools.RODict({
+        "ID": 43002318,
+        "version": 0,
+        "levelDisplay": "福缘探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002317,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1123),
+        "reward": 40021390,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002319: _tools.RODict({
+        "ID": 43002319,
+        "version": 0,
+        "levelDisplay": "善庆探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002318,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1123),
+        "reward": 40021391,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002320: _tools.RODict({
+        "ID": 43002320,
         "version": 0,
         "levelDisplay": "尺璧探宝",
         "isOpen": 1,
@@ -5457,48 +5499,6 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 26,
         "targetParam": (1, 1124),
-        "reward": 40021389,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002318: _tools.RODict({
-        "ID": 43002318,
-        "version": 0,
-        "levelDisplay": "非宝探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002317,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (2, 1124),
-        "reward": 40021390,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002319: _tools.RODict({
-        "ID": 43002319,
-        "version": 0,
-        "levelDisplay": "寸阴探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002318,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (3, 1124),
-        "reward": 40021391,
-        "achPoint": 5,
-        "finishMessage": (58000024,)
-    }),
-    43002320: _tools.RODict({
-        "ID": 43002320,
-        "version": 0,
-        "levelDisplay": "是竞探宝",
-        "isOpen": 1,
-        "openLevel": 1,
-        "preAch": 43002319,
-        "shuPreAch": 0,
-        "targetType": 26,
-        "targetParam": (4, 1124),
         "reward": 40021392,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5506,13 +5506,13 @@ datas = _tools.RODict({
     43002321: _tools.RODict({
         "ID": 43002321,
         "version": 0,
-        "levelDisplay": "资父探宝",
+        "levelDisplay": "非宝探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002320,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (5, 1124),
+        "targetParam": (2, 1124),
         "reward": 40021393,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5520,13 +5520,13 @@ datas = _tools.RODict({
     43002322: _tools.RODict({
         "ID": 43002322,
         "version": 0,
-        "levelDisplay": "事君探宝",
+        "levelDisplay": "寸阴探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002321,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (6, 1124),
+        "targetParam": (3, 1124),
         "reward": 40021394,
         "achPoint": 5,
         "finishMessage": (58000024,)
@@ -5534,14 +5534,56 @@ datas = _tools.RODict({
     43002323: _tools.RODict({
         "ID": 43002323,
         "version": 0,
-        "levelDisplay": "曰严探宝",
+        "levelDisplay": "是竞探宝",
         "isOpen": 1,
         "openLevel": 1,
         "preAch": 43002322,
         "shuPreAch": 0,
         "targetType": 26,
-        "targetParam": (7, 1124),
+        "targetParam": (4, 1124),
         "reward": 40021395,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002324: _tools.RODict({
+        "ID": 43002324,
+        "version": 0,
+        "levelDisplay": "资父探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002323,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (5, 1124),
+        "reward": 40021396,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002325: _tools.RODict({
+        "ID": 43002325,
+        "version": 0,
+        "levelDisplay": "事君探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002324,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (6, 1124),
+        "reward": 40021397,
+        "achPoint": 5,
+        "finishMessage": (58000024,)
+    }),
+    43002326: _tools.RODict({
+        "ID": 43002326,
+        "version": 0,
+        "levelDisplay": "曰严探宝",
+        "isOpen": 1,
+        "openLevel": 1,
+        "preAch": 43002325,
+        "shuPreAch": 0,
+        "targetType": 26,
+        "targetParam": (7, 1124),
+        "reward": 40021398,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5555,7 +5597,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1002),
-        "reward": 40021396,
+        "reward": 40021399,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5569,7 +5611,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1002),
-        "reward": 40021397,
+        "reward": 40021400,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5583,7 +5625,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1002),
-        "reward": 40021398,
+        "reward": 40021401,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5597,7 +5639,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1001),
-        "reward": 40021399,
+        "reward": 40021402,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5611,7 +5653,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1001),
-        "reward": 40021400,
+        "reward": 40021403,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5625,7 +5667,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1001),
-        "reward": 40021401,
+        "reward": 40021404,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5639,7 +5681,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1030),
-        "reward": 40021402,
+        "reward": 40021405,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5653,7 +5695,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1030),
-        "reward": 40021403,
+        "reward": 40021406,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5667,7 +5709,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1030),
-        "reward": 40021404,
+        "reward": 40021407,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5681,7 +5723,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1031),
-        "reward": 40021405,
+        "reward": 40021408,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5695,7 +5737,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1031),
-        "reward": 40021406,
+        "reward": 40021409,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5709,7 +5751,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1031),
-        "reward": 40021407,
+        "reward": 40021410,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5723,7 +5765,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1032),
-        "reward": 40021408,
+        "reward": 40021411,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5737,7 +5779,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1032),
-        "reward": 40021409,
+        "reward": 40021412,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5751,7 +5793,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1032),
-        "reward": 40021410,
+        "reward": 40021413,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5765,7 +5807,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1035),
-        "reward": 40021411,
+        "reward": 40021414,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5779,7 +5821,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1035),
-        "reward": 40021412,
+        "reward": 40021415,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5793,7 +5835,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1035),
-        "reward": 40021413,
+        "reward": 40021416,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5807,7 +5849,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1011),
-        "reward": 40021414,
+        "reward": 40021417,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5821,7 +5863,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1011),
-        "reward": 40021415,
+        "reward": 40021418,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5835,7 +5877,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1011),
-        "reward": 40021416,
+        "reward": 40021419,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5849,7 +5891,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1020),
-        "reward": 40021417,
+        "reward": 40021420,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5863,7 +5905,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1020),
-        "reward": 40021418,
+        "reward": 40021421,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5877,7 +5919,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1020),
-        "reward": 40021419,
+        "reward": 40021422,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5891,7 +5933,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1021),
-        "reward": 40021420,
+        "reward": 40021423,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5905,7 +5947,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1021),
-        "reward": 40021421,
+        "reward": 40021424,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5919,7 +5961,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1021),
-        "reward": 40021422,
+        "reward": 40021425,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5933,7 +5975,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1024),
-        "reward": 40021423,
+        "reward": 40021426,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5947,7 +5989,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1024),
-        "reward": 40021424,
+        "reward": 40021427,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5961,7 +6003,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1024),
-        "reward": 40021425,
+        "reward": 40021428,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5975,7 +6017,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1027),
-        "reward": 40021426,
+        "reward": 40021429,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -5989,7 +6031,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1027),
-        "reward": 40021427,
+        "reward": 40021430,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6003,7 +6045,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1027),
-        "reward": 40021428,
+        "reward": 40021431,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6017,7 +6059,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1004),
-        "reward": 40021429,
+        "reward": 40021432,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6031,7 +6073,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1004),
-        "reward": 40021430,
+        "reward": 40021433,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6045,7 +6087,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1004),
-        "reward": 40021431,
+        "reward": 40021434,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6059,7 +6101,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1010),
-        "reward": 40021432,
+        "reward": 40021435,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6073,7 +6115,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1010),
-        "reward": 40021433,
+        "reward": 40021436,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6087,7 +6129,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1010),
-        "reward": 40021434,
+        "reward": 40021437,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6101,7 +6143,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1120),
-        "reward": 40021435,
+        "reward": 40021438,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6115,7 +6157,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1120),
-        "reward": 40021436,
+        "reward": 40021439,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6129,7 +6171,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1120),
-        "reward": 40021437,
+        "reward": 40021440,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6143,7 +6185,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1121),
-        "reward": 40021438,
+        "reward": 40021441,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6157,7 +6199,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1121),
-        "reward": 40021439,
+        "reward": 40021442,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6171,7 +6213,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1121),
-        "reward": 40021440,
+        "reward": 40021443,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6185,7 +6227,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1123),
-        "reward": 40021441,
+        "reward": 40021444,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6199,7 +6241,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1123),
-        "reward": 40021442,
+        "reward": 40021445,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6213,7 +6255,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1123),
-        "reward": 40021443,
+        "reward": 40021446,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6227,7 +6269,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (1, 1124),
-        "reward": 40021444,
+        "reward": 40021447,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6241,7 +6283,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (2, 1124),
-        "reward": 40021445,
+        "reward": 40021448,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6255,7 +6297,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 27,
         "targetParam": (3, 1124),
-        "reward": 40021446,
+        "reward": 40021449,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6269,7 +6311,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (1,),
-        "reward": 40021447,
+        "reward": 40021450,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6283,7 +6325,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (10,),
-        "reward": 40021448,
+        "reward": 40021451,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6297,7 +6339,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (20,),
-        "reward": 40021449,
+        "reward": 40021452,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6311,7 +6353,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (30,),
-        "reward": 40021450,
+        "reward": 40021453,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6325,7 +6367,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (50,),
-        "reward": 40021451,
+        "reward": 40021454,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6339,7 +6381,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (70,),
-        "reward": 40021452,
+        "reward": 40021455,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6353,7 +6395,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (100,),
-        "reward": 40021453,
+        "reward": 40021456,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6367,7 +6409,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (200,),
-        "reward": 40021454,
+        "reward": 40021457,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6381,7 +6423,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (300,),
-        "reward": 40021455,
+        "reward": 40021458,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6395,7 +6437,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (500,),
-        "reward": 40021456,
+        "reward": 40021459,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6409,7 +6451,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (750,),
-        "reward": 40021457,
+        "reward": 40021460,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6423,7 +6465,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (1000,),
-        "reward": 40021458,
+        "reward": 40021461,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6437,7 +6479,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (1250,),
-        "reward": 40021459,
+        "reward": 40021462,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6451,7 +6493,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (1500,),
-        "reward": 40021460,
+        "reward": 40021463,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6465,7 +6507,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (1750,),
-        "reward": 40021461,
+        "reward": 40021464,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6479,7 +6521,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (2000,),
-        "reward": 40021462,
+        "reward": 40021465,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6493,7 +6535,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (2500,),
-        "reward": 40021463,
+        "reward": 40021466,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6507,7 +6549,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (3000,),
-        "reward": 40021464,
+        "reward": 40021467,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6521,7 +6563,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (3500,),
-        "reward": 40021465,
+        "reward": 40021468,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6535,7 +6577,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (4000,),
-        "reward": 40021466,
+        "reward": 40021469,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6549,7 +6591,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (4500,),
-        "reward": 40021467,
+        "reward": 40021470,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6563,7 +6605,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (5000,),
-        "reward": 40021468,
+        "reward": 40021471,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6577,7 +6619,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (5500,),
-        "reward": 40021469,
+        "reward": 40021472,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6591,7 +6633,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (6000,),
-        "reward": 40021470,
+        "reward": 40021473,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6605,7 +6647,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (6500,),
-        "reward": 40021471,
+        "reward": 40021474,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6619,7 +6661,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (7000,),
-        "reward": 40021472,
+        "reward": 40021475,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6633,7 +6675,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (1, 1),
-        "reward": 40021473,
+        "reward": 40021476,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6647,7 +6689,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (3, 1),
-        "reward": 40021474,
+        "reward": 40021477,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6661,7 +6703,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (5, 1),
-        "reward": 40021475,
+        "reward": 40021478,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6675,7 +6717,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (1, 2),
-        "reward": 40021476,
+        "reward": 40021479,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6689,7 +6731,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (3, 2),
-        "reward": 40021477,
+        "reward": 40021480,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6703,7 +6745,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (5, 2),
-        "reward": 40021478,
+        "reward": 40021481,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6717,7 +6759,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (8, 2),
-        "reward": 40021479,
+        "reward": 40021482,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6731,7 +6773,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (10, 2),
-        "reward": 40021480,
+        "reward": 40021483,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6745,7 +6787,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (1, 3),
-        "reward": 40021481,
+        "reward": 40021484,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6759,7 +6801,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (3, 3),
-        "reward": 40021482,
+        "reward": 40021485,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6773,7 +6815,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (5, 3),
-        "reward": 40021483,
+        "reward": 40021486,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6787,7 +6829,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (8, 3),
-        "reward": 40021484,
+        "reward": 40021487,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6801,7 +6843,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (10, 3),
-        "reward": 40021485,
+        "reward": 40021488,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6815,7 +6857,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (1, 4),
-        "reward": 40021486,
+        "reward": 40021489,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6829,7 +6871,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (2, 4),
-        "reward": 40021487,
+        "reward": 40021490,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6843,7 +6885,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (3, 4),
-        "reward": 40021488,
+        "reward": 40021491,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6857,7 +6899,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (5, 4),
-        "reward": 40021489,
+        "reward": 40021492,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6871,7 +6913,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (8, 4),
-        "reward": 40021490,
+        "reward": 40021493,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6885,7 +6927,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 14,
         "targetParam": (10, 4),
-        "reward": 40021491,
+        "reward": 40021494,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6899,7 +6941,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 13,
         "targetParam": (1,),
-        "reward": 40021492,
+        "reward": 40021495,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6913,7 +6955,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 13,
         "targetParam": (2,),
-        "reward": 40021493,
+        "reward": 40021496,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6927,7 +6969,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 13,
         "targetParam": (3,),
-        "reward": 40021494,
+        "reward": 40021497,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6941,7 +6983,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 13,
         "targetParam": (4,),
-        "reward": 40021495,
+        "reward": 40021498,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6955,7 +6997,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 13,
         "targetParam": (5,),
-        "reward": 40021496,
+        "reward": 40021499,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6969,7 +7011,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (2, 2),
-        "reward": 40021497,
+        "reward": 40021500,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6983,7 +7025,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (5, 2),
-        "reward": 40021498,
+        "reward": 40021501,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -6997,7 +7039,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (10, 2),
-        "reward": 40021499,
+        "reward": 40021502,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7011,7 +7053,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (20, 2),
-        "reward": 40021500,
+        "reward": 40021503,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7025,7 +7067,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (30, 2),
-        "reward": 40021501,
+        "reward": 40021504,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7039,7 +7081,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (50, 2),
-        "reward": 40021502,
+        "reward": 40021505,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7053,7 +7095,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (100, 2),
-        "reward": 40021503,
+        "reward": 40021506,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7067,7 +7109,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (200, 2),
-        "reward": 40021504,
+        "reward": 40021507,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7081,7 +7123,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (300, 2),
-        "reward": 40021505,
+        "reward": 40021508,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7095,7 +7137,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (500, 2),
-        "reward": 40021506,
+        "reward": 40021509,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7109,7 +7151,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (1, 3),
-        "reward": 40021507,
+        "reward": 40021510,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7123,7 +7165,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (2, 3),
-        "reward": 40021508,
+        "reward": 40021511,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7137,7 +7179,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (3, 3),
-        "reward": 40021509,
+        "reward": 40021512,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7151,7 +7193,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (4, 3),
-        "reward": 40021510,
+        "reward": 40021513,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7165,7 +7207,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (5, 3),
-        "reward": 40021511,
+        "reward": 40021514,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7179,7 +7221,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (6, 3),
-        "reward": 40021512,
+        "reward": 40021515,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7193,7 +7235,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (7, 3),
-        "reward": 40021513,
+        "reward": 40021516,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7207,7 +7249,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (8, 3),
-        "reward": 40021514,
+        "reward": 40021517,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7221,7 +7263,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (9, 3),
-        "reward": 40021515,
+        "reward": 40021518,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7235,7 +7277,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 4,
         "targetParam": (10, 3),
-        "reward": 40021516,
+        "reward": 40021519,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7249,7 +7291,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (1, 2),
-        "reward": 40021517,
+        "reward": 40021520,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7263,7 +7305,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (2, 2),
-        "reward": 40021518,
+        "reward": 40021521,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7277,7 +7319,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (3, 2),
-        "reward": 40021519,
+        "reward": 40021522,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7291,7 +7333,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (5, 2),
-        "reward": 40021520,
+        "reward": 40021523,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7305,7 +7347,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (7, 2),
-        "reward": 40021521,
+        "reward": 40021524,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7319,7 +7361,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (10, 2),
-        "reward": 40021522,
+        "reward": 40021525,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7333,7 +7375,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (15, 2),
-        "reward": 40021523,
+        "reward": 40021526,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7347,7 +7389,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (20, 2),
-        "reward": 40021524,
+        "reward": 40021527,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7361,7 +7403,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (25, 2),
-        "reward": 40021525,
+        "reward": 40021528,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7375,7 +7417,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (30, 2),
-        "reward": 40021526,
+        "reward": 40021529,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7389,7 +7431,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (1, 3),
-        "reward": 40021527,
+        "reward": 40021530,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7403,7 +7445,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (2, 3),
-        "reward": 40021528,
+        "reward": 40021531,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7417,7 +7459,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (3, 3),
-        "reward": 40021529,
+        "reward": 40021532,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7431,7 +7473,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (5, 3),
-        "reward": 40021530,
+        "reward": 40021533,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7445,7 +7487,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (7, 3),
-        "reward": 40021531,
+        "reward": 40021534,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7459,7 +7501,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (10, 3),
-        "reward": 40021532,
+        "reward": 40021535,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7473,7 +7515,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (15, 3),
-        "reward": 40021533,
+        "reward": 40021536,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7487,7 +7529,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (20, 3),
-        "reward": 40021534,
+        "reward": 40021537,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7501,7 +7543,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (1, 4),
-        "reward": 40021535,
+        "reward": 40021538,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7515,7 +7557,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (2, 4),
-        "reward": 40021536,
+        "reward": 40021539,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7529,7 +7571,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (3, 4),
-        "reward": 40021537,
+        "reward": 40021540,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7543,7 +7585,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (4, 4),
-        "reward": 40021538,
+        "reward": 40021541,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7557,7 +7599,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (5, 4),
-        "reward": 40021539,
+        "reward": 40021542,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7571,7 +7613,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (6, 4),
-        "reward": 40021540,
+        "reward": 40021543,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7585,7 +7627,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 8,
         "targetParam": (7, 4),
-        "reward": 40021541,
+        "reward": 40021544,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7599,7 +7641,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (1,),
-        "reward": 40021542,
+        "reward": 40021545,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7613,7 +7655,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (3,),
-        "reward": 40021543,
+        "reward": 40021546,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7627,7 +7669,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (5,),
-        "reward": 40021544,
+        "reward": 40021547,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7641,7 +7683,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (10,),
-        "reward": 40021545,
+        "reward": 40021548,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7655,7 +7697,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (20,),
-        "reward": 40021546,
+        "reward": 40021549,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7669,7 +7711,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (30,),
-        "reward": 40021547,
+        "reward": 40021550,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7683,7 +7725,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (50,),
-        "reward": 40021548,
+        "reward": 40021551,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7697,7 +7739,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (75,),
-        "reward": 40021549,
+        "reward": 40021552,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7711,7 +7753,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (100,),
-        "reward": 40021550,
+        "reward": 40021553,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7725,7 +7767,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (200,),
-        "reward": 40021551,
+        "reward": 40021554,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7739,7 +7781,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (400,),
-        "reward": 40021552,
+        "reward": 40021555,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7753,7 +7795,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (600,),
-        "reward": 40021553,
+        "reward": 40021556,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7767,7 +7809,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (1000,),
-        "reward": 40021554,
+        "reward": 40021557,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7781,7 +7823,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (1500,),
-        "reward": 40021555,
+        "reward": 40021558,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7795,7 +7837,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (2000,),
-        "reward": 40021556,
+        "reward": 40021559,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7809,7 +7851,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (2500,),
-        "reward": 40021557,
+        "reward": 40021560,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7823,7 +7865,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (3000,),
-        "reward": 40021558,
+        "reward": 40021561,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7837,7 +7879,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (3500,),
-        "reward": 40021559,
+        "reward": 40021562,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7851,7 +7893,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (4000,),
-        "reward": 40021560,
+        "reward": 40021563,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7865,7 +7907,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (4500,),
-        "reward": 40021561,
+        "reward": 40021564,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7879,7 +7921,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (5000,),
-        "reward": 40021562,
+        "reward": 40021565,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7893,7 +7935,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (6000,),
-        "reward": 40021563,
+        "reward": 40021566,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7907,7 +7949,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (7000,),
-        "reward": 40021564,
+        "reward": 40021567,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7921,7 +7963,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (8000,),
-        "reward": 40021565,
+        "reward": 40021568,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7935,7 +7977,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (9000,),
-        "reward": 40021566,
+        "reward": 40021569,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7949,7 +7991,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (10000,),
-        "reward": 40021567,
+        "reward": 40021570,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7963,7 +8005,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (12500,),
-        "reward": 40021568,
+        "reward": 40021571,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7977,7 +8019,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (15000,),
-        "reward": 40021569,
+        "reward": 40021572,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -7991,7 +8033,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (20000,),
-        "reward": 40021570,
+        "reward": 40021573,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8005,7 +8047,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 9,
         "targetParam": (25000,),
-        "reward": 40021571,
+        "reward": 40021574,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8019,7 +8061,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1,),
-        "reward": 40021572,
+        "reward": 40021575,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8033,7 +8075,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (3,),
-        "reward": 40021573,
+        "reward": 40021576,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8047,7 +8089,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (5,),
-        "reward": 40021574,
+        "reward": 40021577,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8061,7 +8103,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (10,),
-        "reward": 40021575,
+        "reward": 40021578,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8075,7 +8117,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (15,),
-        "reward": 40021576,
+        "reward": 40021579,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8089,7 +8131,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (20,),
-        "reward": 40021577,
+        "reward": 40021580,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8103,7 +8145,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (35,),
-        "reward": 40021578,
+        "reward": 40021581,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8117,7 +8159,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (50,),
-        "reward": 40021579,
+        "reward": 40021582,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8131,7 +8173,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (75,),
-        "reward": 40021580,
+        "reward": 40021583,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8145,7 +8187,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (100,),
-        "reward": 40021581,
+        "reward": 40021584,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8159,7 +8201,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (150,),
-        "reward": 40021582,
+        "reward": 40021585,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8173,7 +8215,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (200,),
-        "reward": 40021583,
+        "reward": 40021586,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8187,7 +8229,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (250,),
-        "reward": 40021584,
+        "reward": 40021587,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8201,7 +8243,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (300,),
-        "reward": 40021585,
+        "reward": 40021588,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8215,7 +8257,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (400,),
-        "reward": 40021586,
+        "reward": 40021589,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8229,7 +8271,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (500,),
-        "reward": 40021587,
+        "reward": 40021590,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8243,7 +8285,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (600,),
-        "reward": 40021588,
+        "reward": 40021591,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8257,7 +8299,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (700,),
-        "reward": 40021589,
+        "reward": 40021592,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8271,7 +8313,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (800,),
-        "reward": 40021590,
+        "reward": 40021593,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8285,7 +8327,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (900,),
-        "reward": 40021591,
+        "reward": 40021594,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8299,7 +8341,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1000,),
-        "reward": 40021592,
+        "reward": 40021595,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8313,7 +8355,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1100,),
-        "reward": 40021593,
+        "reward": 40021596,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8327,7 +8369,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1200,),
-        "reward": 40021594,
+        "reward": 40021597,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8341,7 +8383,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1300,),
-        "reward": 40021595,
+        "reward": 40021598,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8355,7 +8397,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1400,),
-        "reward": 40021596,
+        "reward": 40021599,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8369,7 +8411,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1500,),
-        "reward": 40021597,
+        "reward": 40021600,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8383,7 +8425,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (1750,),
-        "reward": 40021598,
+        "reward": 40021601,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8397,7 +8439,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (2000,),
-        "reward": 40021599,
+        "reward": 40021602,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8411,7 +8453,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (2500,),
-        "reward": 40021600,
+        "reward": 40021603,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8425,7 +8467,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 10,
         "targetParam": (3000,),
-        "reward": 40021601,
+        "reward": 40021604,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8439,7 +8481,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1,),
-        "reward": 40021602,
+        "reward": 40021605,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8453,7 +8495,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (3,),
-        "reward": 40021603,
+        "reward": 40021606,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8467,7 +8509,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (5,),
-        "reward": 40021604,
+        "reward": 40021607,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8481,7 +8523,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (10,),
-        "reward": 40021605,
+        "reward": 40021608,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8495,7 +8537,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (15,),
-        "reward": 40021606,
+        "reward": 40021609,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8509,7 +8551,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (20,),
-        "reward": 40021607,
+        "reward": 40021610,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8523,7 +8565,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (35,),
-        "reward": 40021608,
+        "reward": 40021611,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8537,7 +8579,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (50,),
-        "reward": 40021609,
+        "reward": 40021612,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8551,7 +8593,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (75,),
-        "reward": 40021610,
+        "reward": 40021613,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8565,7 +8607,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (100,),
-        "reward": 40021611,
+        "reward": 40021614,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8579,7 +8621,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (125,),
-        "reward": 40021612,
+        "reward": 40021615,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8593,7 +8635,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (150,),
-        "reward": 40021613,
+        "reward": 40021616,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8607,7 +8649,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (175,),
-        "reward": 40021614,
+        "reward": 40021617,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8621,7 +8663,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (200,),
-        "reward": 40021615,
+        "reward": 40021618,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8635,7 +8677,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (225,),
-        "reward": 40021616,
+        "reward": 40021619,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8649,7 +8691,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (250,),
-        "reward": 40021617,
+        "reward": 40021620,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8663,7 +8705,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (300,),
-        "reward": 40021618,
+        "reward": 40021621,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8677,7 +8719,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (350,),
-        "reward": 40021619,
+        "reward": 40021622,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8691,7 +8733,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (400,),
-        "reward": 40021620,
+        "reward": 40021623,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8705,7 +8747,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (500,),
-        "reward": 40021621,
+        "reward": 40021624,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8719,7 +8761,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (600,),
-        "reward": 40021622,
+        "reward": 40021625,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8733,7 +8775,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (700,),
-        "reward": 40021623,
+        "reward": 40021626,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8747,7 +8789,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (800,),
-        "reward": 40021624,
+        "reward": 40021627,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8761,7 +8803,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (900,),
-        "reward": 40021625,
+        "reward": 40021628,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8775,7 +8817,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1000,),
-        "reward": 40021626,
+        "reward": 40021629,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8789,7 +8831,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1100,),
-        "reward": 40021627,
+        "reward": 40021630,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8803,7 +8845,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1200,),
-        "reward": 40021628,
+        "reward": 40021631,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8817,7 +8859,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1300,),
-        "reward": 40021629,
+        "reward": 40021632,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8831,7 +8873,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1400,),
-        "reward": 40021630,
+        "reward": 40021633,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8845,7 +8887,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 44,
         "targetParam": (1500,),
-        "reward": 40021631,
+        "reward": 40021634,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8859,7 +8901,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (10,),
-        "reward": 40021632,
+        "reward": 40021635,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8873,7 +8915,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (20,),
-        "reward": 40021633,
+        "reward": 40021636,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8887,7 +8929,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (50,),
-        "reward": 40021634,
+        "reward": 40021637,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8901,7 +8943,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (100,),
-        "reward": 40021635,
+        "reward": 40021638,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8915,7 +8957,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (200,),
-        "reward": 40021636,
+        "reward": 40021639,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8929,7 +8971,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (300,),
-        "reward": 40021637,
+        "reward": 40021640,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8943,7 +8985,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (500,),
-        "reward": 40021638,
+        "reward": 40021641,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8957,7 +8999,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (750,),
-        "reward": 40021639,
+        "reward": 40021642,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8971,7 +9013,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (1000,),
-        "reward": 40021640,
+        "reward": 40021643,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8985,7 +9027,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (2000,),
-        "reward": 40021641,
+        "reward": 40021644,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -8999,7 +9041,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (3000,),
-        "reward": 40021642,
+        "reward": 40021645,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9013,7 +9055,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (4000,),
-        "reward": 40021643,
+        "reward": 40021646,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9027,7 +9069,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (5000,),
-        "reward": 40021644,
+        "reward": 40021647,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9041,7 +9083,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (7500,),
-        "reward": 40021645,
+        "reward": 40021648,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9055,7 +9097,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (10000,),
-        "reward": 40021646,
+        "reward": 40021649,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9069,7 +9111,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (12500,),
-        "reward": 40021647,
+        "reward": 40021650,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9083,7 +9125,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (15000,),
-        "reward": 40021648,
+        "reward": 40021651,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9097,7 +9139,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 43,
         "targetParam": (20000,),
-        "reward": 40021649,
+        "reward": 40021652,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9111,7 +9153,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (1,),
-        "reward": 40021650,
+        "reward": 40021653,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9125,7 +9167,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (2,),
-        "reward": 40021651,
+        "reward": 40021654,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9139,7 +9181,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (3,),
-        "reward": 40021652,
+        "reward": 40021655,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9153,7 +9195,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (5,),
-        "reward": 40021653,
+        "reward": 40021656,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9167,7 +9209,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (7,),
-        "reward": 40021654,
+        "reward": 40021657,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9181,7 +9223,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (10,),
-        "reward": 40021655,
+        "reward": 40021658,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9195,7 +9237,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (15,),
-        "reward": 40021656,
+        "reward": 40021659,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9209,7 +9251,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (20,),
-        "reward": 40021657,
+        "reward": 40021660,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9223,7 +9265,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (25,),
-        "reward": 40021658,
+        "reward": 40021661,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9237,7 +9279,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (30,),
-        "reward": 40021659,
+        "reward": 40021662,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9251,7 +9293,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (35,),
-        "reward": 40021660,
+        "reward": 40021663,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9265,7 +9307,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (40,),
-        "reward": 40021661,
+        "reward": 40021664,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9279,7 +9321,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (50,),
-        "reward": 40021662,
+        "reward": 40021665,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9293,7 +9335,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (60,),
-        "reward": 40021663,
+        "reward": 40021666,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9307,7 +9349,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (70,),
-        "reward": 40021664,
+        "reward": 40021667,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9321,7 +9363,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (80,),
-        "reward": 40021665,
+        "reward": 40021668,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9335,7 +9377,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (90,),
-        "reward": 40021666,
+        "reward": 40021669,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9349,7 +9391,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 7,
         "targetParam": (100,),
-        "reward": 40021667,
+        "reward": 40021670,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9363,7 +9405,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (1,),
-        "reward": 40021668,
+        "reward": 40021671,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9377,7 +9419,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (2,),
-        "reward": 40021669,
+        "reward": 40021672,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9391,7 +9433,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (3,),
-        "reward": 40021670,
+        "reward": 40021673,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9405,7 +9447,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (5,),
-        "reward": 40021671,
+        "reward": 40021674,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9419,7 +9461,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (7,),
-        "reward": 40021672,
+        "reward": 40021675,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9433,7 +9475,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (10,),
-        "reward": 40021673,
+        "reward": 40021676,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9447,7 +9489,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (15,),
-        "reward": 40021674,
+        "reward": 40021677,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9461,7 +9503,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (20,),
-        "reward": 40021675,
+        "reward": 40021678,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9475,7 +9517,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (25,),
-        "reward": 40021676,
+        "reward": 40021679,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9489,7 +9531,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 30,
         "targetParam": (30,),
-        "reward": 40021677,
+        "reward": 40021680,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9503,7 +9545,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 6,
         "targetParam": (1,),
-        "reward": 40021678,
+        "reward": 40021681,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9517,7 +9559,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (1, 1),
-        "reward": 40021679,
+        "reward": 40021682,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9531,7 +9573,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (2, 1),
-        "reward": 40021680,
+        "reward": 40021683,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9545,7 +9587,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (3, 1),
-        "reward": 40021681,
+        "reward": 40021684,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9559,7 +9601,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (4, 1),
-        "reward": 40021682,
+        "reward": 40021685,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9573,7 +9615,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (5, 1),
-        "reward": 40021683,
+        "reward": 40021686,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9587,7 +9629,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (6, 1),
-        "reward": 40021684,
+        "reward": 40021687,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9601,7 +9643,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (7, 1),
-        "reward": 40021685,
+        "reward": 40021688,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9615,7 +9657,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (8, 1),
-        "reward": 40021686,
+        "reward": 40021689,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9629,7 +9671,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (10, 1),
-        "reward": 40021687,
+        "reward": 40021690,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9643,7 +9685,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (12, 1),
-        "reward": 40021688,
+        "reward": 40021691,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9657,7 +9699,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (14, 1),
-        "reward": 40021689,
+        "reward": 40021692,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9671,7 +9713,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (16, 1),
-        "reward": 40021690,
+        "reward": 40021693,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9685,7 +9727,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (18, 1),
-        "reward": 40021691,
+        "reward": 40021694,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9699,7 +9741,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (20, 1),
-        "reward": 40021692,
+        "reward": 40021695,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9713,7 +9755,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (25, 1),
-        "reward": 40021693,
+        "reward": 40021696,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9727,7 +9769,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (30, 1),
-        "reward": 40021694,
+        "reward": 40021697,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9741,7 +9783,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (35, 1),
-        "reward": 40021695,
+        "reward": 40021698,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9755,7 +9797,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (40, 1),
-        "reward": 40021696,
+        "reward": 40021699,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9769,7 +9811,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (45, 1),
-        "reward": 40021697,
+        "reward": 40021700,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9783,7 +9825,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (50, 1),
-        "reward": 40021698,
+        "reward": 40021701,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9797,7 +9839,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (60, 1),
-        "reward": 40021699,
+        "reward": 40021702,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9811,7 +9853,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (70, 1),
-        "reward": 40021700,
+        "reward": 40021703,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9825,7 +9867,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (80, 1),
-        "reward": 40021701,
+        "reward": 40021704,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9839,7 +9881,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (90, 1),
-        "reward": 40021702,
+        "reward": 40021705,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9853,7 +9895,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 47,
         "targetParam": (100, 1),
-        "reward": 40021703,
+        "reward": 40021706,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9867,7 +9909,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (2500,),
-        "reward": 40021704,
+        "reward": 40021707,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9881,7 +9923,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (5000,),
-        "reward": 40021705,
+        "reward": 40021708,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9895,7 +9937,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (7500,),
-        "reward": 40021706,
+        "reward": 40021709,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9909,7 +9951,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (10000,),
-        "reward": 40021707,
+        "reward": 40021710,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9923,7 +9965,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (12500,),
-        "reward": 40021708,
+        "reward": 40021711,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9937,7 +9979,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (15000,),
-        "reward": 40021709,
+        "reward": 40021712,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9951,7 +9993,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (17500,),
-        "reward": 40021710,
+        "reward": 40021713,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9965,7 +10007,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (20000,),
-        "reward": 40021711,
+        "reward": 40021714,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9979,7 +10021,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (30000,),
-        "reward": 40021712,
+        "reward": 40021715,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -9993,7 +10035,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (40000,),
-        "reward": 40021713,
+        "reward": 40021716,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10007,7 +10049,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (50000,),
-        "reward": 40021714,
+        "reward": 40021717,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10021,7 +10063,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (75000,),
-        "reward": 40021715,
+        "reward": 40021718,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10035,7 +10077,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (100000,),
-        "reward": 40021716,
+        "reward": 40021719,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10049,7 +10091,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (125000,),
-        "reward": 40021717,
+        "reward": 40021720,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10063,7 +10105,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (150000,),
-        "reward": 40021718,
+        "reward": 40021721,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10077,7 +10119,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (175000,),
-        "reward": 40021719,
+        "reward": 40021722,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10091,7 +10133,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (200000,),
-        "reward": 40021720,
+        "reward": 40021723,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10105,7 +10147,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (300000,),
-        "reward": 40021721,
+        "reward": 40021724,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10119,7 +10161,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (500000,),
-        "reward": 40021722,
+        "reward": 40021725,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10133,7 +10175,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (750000,),
-        "reward": 40021723,
+        "reward": 40021726,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10147,7 +10189,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (1000000,),
-        "reward": 40021724,
+        "reward": 40021727,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10161,7 +10203,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (1250000,),
-        "reward": 40021725,
+        "reward": 40021728,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10175,7 +10217,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (1500000,),
-        "reward": 40021726,
+        "reward": 40021729,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10189,7 +10231,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (1750000,),
-        "reward": 40021727,
+        "reward": 40021730,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10203,7 +10245,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (2000000,),
-        "reward": 40021728,
+        "reward": 40021731,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10217,7 +10259,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (3000000,),
-        "reward": 40021729,
+        "reward": 40021732,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10231,7 +10273,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (4000000,),
-        "reward": 40021730,
+        "reward": 40021733,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10245,7 +10287,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 46,
         "targetParam": (5000000,),
-        "reward": 40021731,
+        "reward": 40021734,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10259,7 +10301,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (50,),
-        "reward": 40021732,
+        "reward": 40021735,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10273,7 +10315,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (100,),
-        "reward": 40021733,
+        "reward": 40021736,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10287,7 +10329,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (250,),
-        "reward": 40021734,
+        "reward": 40021737,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10301,7 +10343,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (500,),
-        "reward": 40021735,
+        "reward": 40021738,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10315,7 +10357,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (1000,),
-        "reward": 40021736,
+        "reward": 40021739,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10329,7 +10371,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (2000,),
-        "reward": 40021737,
+        "reward": 40021740,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10343,7 +10385,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (3000,),
-        "reward": 40021738,
+        "reward": 40021741,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10357,7 +10399,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (5000,),
-        "reward": 40021739,
+        "reward": 40021742,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10371,7 +10413,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (7500,),
-        "reward": 40021740,
+        "reward": 40021743,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10385,7 +10427,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (10000,),
-        "reward": 40021741,
+        "reward": 40021744,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10399,7 +10441,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (20000,),
-        "reward": 40021742,
+        "reward": 40021745,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10413,7 +10455,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (30000,),
-        "reward": 40021743,
+        "reward": 40021746,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10427,7 +10469,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (50000,),
-        "reward": 40021744,
+        "reward": 40021747,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10441,7 +10483,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (75000,),
-        "reward": 40021745,
+        "reward": 40021748,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10455,7 +10497,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (100000,),
-        "reward": 40021746,
+        "reward": 40021749,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10469,7 +10511,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (200000,),
-        "reward": 40021747,
+        "reward": 40021750,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10483,7 +10525,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (300000,),
-        "reward": 40021748,
+        "reward": 40021751,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10497,7 +10539,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (500000,),
-        "reward": 40021749,
+        "reward": 40021752,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10511,7 +10553,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (750000,),
-        "reward": 40021750,
+        "reward": 40021753,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10525,7 +10567,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (1000000,),
-        "reward": 40021751,
+        "reward": 40021754,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10539,7 +10581,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (1250000,),
-        "reward": 40021752,
+        "reward": 40021755,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10553,7 +10595,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (1500000,),
-        "reward": 40021753,
+        "reward": 40021756,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10567,7 +10609,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (1750000,),
-        "reward": 40021754,
+        "reward": 40021757,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10581,7 +10623,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (2000000,),
-        "reward": 40021755,
+        "reward": 40021758,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10595,7 +10637,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (2500000,),
-        "reward": 40021756,
+        "reward": 40021759,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10609,7 +10651,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (3000000,),
-        "reward": 40021757,
+        "reward": 40021760,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10623,7 +10665,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (3500000,),
-        "reward": 40021758,
+        "reward": 40021761,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10637,7 +10679,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (4000000,),
-        "reward": 40021759,
+        "reward": 40021762,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10651,7 +10693,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (4500000,),
-        "reward": 40021760,
+        "reward": 40021763,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10665,7 +10707,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 19,
         "targetParam": (5000000,),
-        "reward": 40021761,
+        "reward": 40021764,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10679,7 +10721,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86060115,),
-        "reward": 40021762,
+        "reward": 40021765,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10693,7 +10735,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86060125,),
-        "reward": 40021763,
+        "reward": 40021766,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10707,7 +10749,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010040,),
-        "reward": 40021764,
+        "reward": 40021767,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10721,7 +10763,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010233,),
-        "reward": 40021765,
+        "reward": 40021768,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10735,7 +10777,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010021,),
-        "reward": 40021766,
+        "reward": 40021769,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10749,7 +10791,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010197,),
-        "reward": 40021767,
+        "reward": 40021770,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10763,7 +10805,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010391,),
-        "reward": 40021768,
+        "reward": 40021771,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10777,7 +10819,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010257,),
-        "reward": 40021769,
+        "reward": 40021772,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10791,7 +10833,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010129,),
-        "reward": 40021770,
+        "reward": 40021773,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10805,7 +10847,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010151,),
-        "reward": 40021771,
+        "reward": 40021774,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10819,7 +10861,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 21,
         "targetParam": (86010170,),
-        "reward": 40021772,
+        "reward": 40021775,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10833,7 +10875,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (5,),
-        "reward": 40021773,
+        "reward": 40021776,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10847,7 +10889,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (10,),
-        "reward": 40021774,
+        "reward": 40021777,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10861,7 +10903,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (25,),
-        "reward": 40021775,
+        "reward": 40021778,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10875,7 +10917,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (50,),
-        "reward": 40021776,
+        "reward": 40021779,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10889,7 +10931,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (75,),
-        "reward": 40021777,
+        "reward": 40021780,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10903,7 +10945,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (100,),
-        "reward": 40021778,
+        "reward": 40021781,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10917,7 +10959,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (200,),
-        "reward": 40021779,
+        "reward": 40021782,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10931,7 +10973,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (300,),
-        "reward": 40021780,
+        "reward": 40021783,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10945,7 +10987,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (500,),
-        "reward": 40021781,
+        "reward": 40021784,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10959,7 +11001,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (750,),
-        "reward": 40021782,
+        "reward": 40021785,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10973,7 +11015,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (1000,),
-        "reward": 40021783,
+        "reward": 40021786,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -10987,7 +11029,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (1250,),
-        "reward": 40021784,
+        "reward": 40021787,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11001,7 +11043,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (1500,),
-        "reward": 40021785,
+        "reward": 40021788,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11015,7 +11057,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (1750,),
-        "reward": 40021786,
+        "reward": 40021789,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11029,7 +11071,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 22,
         "targetParam": (2000,),
-        "reward": 40021787,
+        "reward": 40021790,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11043,7 +11085,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1, 32000004),
-        "reward": 40021788,
+        "reward": 40021791,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11057,7 +11099,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (2, 32000004),
-        "reward": 40021789,
+        "reward": 40021792,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11071,7 +11113,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (3, 32000004),
-        "reward": 40021790,
+        "reward": 40021793,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11085,7 +11127,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (5, 32000004),
-        "reward": 40021791,
+        "reward": 40021794,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11099,7 +11141,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (7, 32000004),
-        "reward": 40021792,
+        "reward": 40021795,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11113,7 +11155,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (10, 32000004),
-        "reward": 40021793,
+        "reward": 40021796,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11127,7 +11169,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (15, 32000004),
-        "reward": 40021794,
+        "reward": 40021797,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11141,7 +11183,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (20, 32000004),
-        "reward": 40021795,
+        "reward": 40021798,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11155,7 +11197,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (35, 32000004),
-        "reward": 40021796,
+        "reward": 40021799,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11169,7 +11211,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (50, 32000004),
-        "reward": 40021797,
+        "reward": 40021800,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11183,7 +11225,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (75, 32000004),
-        "reward": 40021798,
+        "reward": 40021801,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11197,7 +11239,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (100, 32000004),
-        "reward": 40021799,
+        "reward": 40021802,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11211,7 +11253,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (150, 32000004),
-        "reward": 40021800,
+        "reward": 40021803,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11225,7 +11267,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (200, 32000004),
-        "reward": 40021801,
+        "reward": 40021804,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11239,7 +11281,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (250, 32000004),
-        "reward": 40021802,
+        "reward": 40021805,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11253,7 +11295,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (300, 32000004),
-        "reward": 40021803,
+        "reward": 40021806,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11267,7 +11309,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (350, 32000004),
-        "reward": 40021804,
+        "reward": 40021807,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11281,7 +11323,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (400, 32000004),
-        "reward": 40021805,
+        "reward": 40021808,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11295,7 +11337,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (450, 32000004),
-        "reward": 40021806,
+        "reward": 40021809,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11309,7 +11351,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (500, 32000004),
-        "reward": 40021807,
+        "reward": 40021810,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11323,7 +11365,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (550, 32000004),
-        "reward": 40021808,
+        "reward": 40021811,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11337,7 +11379,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (600, 32000004),
-        "reward": 40021809,
+        "reward": 40021812,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11351,7 +11393,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (700, 32000004),
-        "reward": 40021810,
+        "reward": 40021813,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11365,7 +11407,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (800, 32000004),
-        "reward": 40021811,
+        "reward": 40021814,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11379,7 +11421,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1000, 32000004),
-        "reward": 40021812,
+        "reward": 40021815,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11393,7 +11435,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1200, 32000004),
-        "reward": 40021813,
+        "reward": 40021816,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11407,7 +11449,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1500, 32000004),
-        "reward": 40021814,
+        "reward": 40021817,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11421,7 +11463,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1, 32000001),
-        "reward": 40021815,
+        "reward": 40021818,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11435,7 +11477,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (2, 32000001),
-        "reward": 40021816,
+        "reward": 40021819,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11449,7 +11491,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (3, 32000001),
-        "reward": 40021817,
+        "reward": 40021820,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11463,7 +11505,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (4, 32000001),
-        "reward": 40021818,
+        "reward": 40021821,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11477,7 +11519,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (5, 32000001),
-        "reward": 40021819,
+        "reward": 40021822,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11491,7 +11533,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (7, 32000001),
-        "reward": 40021820,
+        "reward": 40021823,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11505,7 +11547,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (10, 32000001),
-        "reward": 40021821,
+        "reward": 40021824,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11519,7 +11561,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (15, 32000001),
-        "reward": 40021822,
+        "reward": 40021825,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11533,7 +11575,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (20, 32000001),
-        "reward": 40021823,
+        "reward": 40021826,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11547,7 +11589,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (25, 32000001),
-        "reward": 40021824,
+        "reward": 40021827,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11561,7 +11603,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (30, 32000001),
-        "reward": 40021825,
+        "reward": 40021828,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11575,7 +11617,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (40, 32000001),
-        "reward": 40021826,
+        "reward": 40021829,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11589,7 +11631,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (50, 32000001),
-        "reward": 40021827,
+        "reward": 40021830,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11603,7 +11645,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (60, 32000001),
-        "reward": 40021828,
+        "reward": 40021831,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11617,7 +11659,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (70, 32000001),
-        "reward": 40021829,
+        "reward": 40021832,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11631,7 +11673,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (80, 32000001),
-        "reward": 40021830,
+        "reward": 40021833,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11645,7 +11687,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (100, 32000001),
-        "reward": 40021831,
+        "reward": 40021834,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11659,7 +11701,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (150, 32000001),
-        "reward": 40021832,
+        "reward": 40021835,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11673,7 +11715,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (200, 32000001),
-        "reward": 40021833,
+        "reward": 40021836,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11687,7 +11729,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (250, 32000001),
-        "reward": 40021834,
+        "reward": 40021837,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11701,7 +11743,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (300, 32000001),
-        "reward": 40021835,
+        "reward": 40021838,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11715,7 +11757,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (350, 32000001),
-        "reward": 40021836,
+        "reward": 40021839,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11729,7 +11771,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (400, 32000001),
-        "reward": 40021837,
+        "reward": 40021840,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11743,7 +11785,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (500, 32000001),
-        "reward": 40021838,
+        "reward": 40021841,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11757,7 +11799,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (600, 32000001),
-        "reward": 40021839,
+        "reward": 40021842,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11771,7 +11813,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (700, 32000001),
-        "reward": 40021840,
+        "reward": 40021843,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11785,7 +11827,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (800, 32000001),
-        "reward": 40021841,
+        "reward": 40021844,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11799,7 +11841,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (100,),
-        "reward": 40021842,
+        "reward": 40021845,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11813,7 +11855,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (300,),
-        "reward": 40021843,
+        "reward": 40021846,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11827,7 +11869,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (500,),
-        "reward": 40021844,
+        "reward": 40021847,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11841,7 +11883,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (750,),
-        "reward": 40021845,
+        "reward": 40021848,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11855,7 +11897,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (1000,),
-        "reward": 40021846,
+        "reward": 40021849,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11869,7 +11911,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (2000,),
-        "reward": 40021847,
+        "reward": 40021850,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11883,7 +11925,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (3000,),
-        "reward": 40021848,
+        "reward": 40021851,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11897,7 +11939,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (5000,),
-        "reward": 40021849,
+        "reward": 40021852,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11911,7 +11953,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (7500,),
-        "reward": 40021850,
+        "reward": 40021853,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11925,7 +11967,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (10000,),
-        "reward": 40021851,
+        "reward": 40021854,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11939,7 +11981,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (20000,),
-        "reward": 40021852,
+        "reward": 40021855,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11953,7 +11995,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (30000,),
-        "reward": 40021853,
+        "reward": 40021856,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11967,7 +12009,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (50000,),
-        "reward": 40021854,
+        "reward": 40021857,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11981,7 +12023,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (75000,),
-        "reward": 40021855,
+        "reward": 40021858,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -11995,7 +12037,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (100000,),
-        "reward": 40021856,
+        "reward": 40021859,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12009,7 +12051,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (200000,),
-        "reward": 40021857,
+        "reward": 40021860,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12023,7 +12065,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (300000,),
-        "reward": 40021858,
+        "reward": 40021861,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12037,7 +12079,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (500000,),
-        "reward": 40021859,
+        "reward": 40021862,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12051,7 +12093,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (750000,),
-        "reward": 40021860,
+        "reward": 40021863,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12065,7 +12107,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (1000000,),
-        "reward": 40021861,
+        "reward": 40021864,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12079,7 +12121,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (1250000,),
-        "reward": 40021862,
+        "reward": 40021865,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12093,7 +12135,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (1500000,),
-        "reward": 40021863,
+        "reward": 40021866,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12107,7 +12149,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (2000000,),
-        "reward": 40021864,
+        "reward": 40021867,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12121,7 +12163,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (2500000,),
-        "reward": 40021865,
+        "reward": 40021868,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12135,7 +12177,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (3000000,),
-        "reward": 40021866,
+        "reward": 40021869,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12149,7 +12191,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (4000000,),
-        "reward": 40021867,
+        "reward": 40021870,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12163,7 +12205,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (5000000,),
-        "reward": 40021868,
+        "reward": 40021871,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12177,7 +12219,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (7500000,),
-        "reward": 40021869,
+        "reward": 40021872,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12191,7 +12233,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (10000000,),
-        "reward": 40021870,
+        "reward": 40021873,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12205,7 +12247,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (15000000,),
-        "reward": 40021871,
+        "reward": 40021874,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12219,7 +12261,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (20000000,),
-        "reward": 40021872,
+        "reward": 40021875,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12233,7 +12275,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (25000000,),
-        "reward": 40021873,
+        "reward": 40021876,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12247,7 +12289,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 3,
         "targetParam": (30000000,),
-        "reward": 40021874,
+        "reward": 40021877,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12261,7 +12303,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (1, (4, 5, 6)),
-        "reward": 40021875,
+        "reward": 40021878,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12275,7 +12317,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (2, (4, 5, 6)),
-        "reward": 40021876,
+        "reward": 40021879,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12289,7 +12331,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (3, (4, 5, 6)),
-        "reward": 40021877,
+        "reward": 40021880,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12303,7 +12345,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (5, (4, 5, 6)),
-        "reward": 40021878,
+        "reward": 40021881,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12317,7 +12359,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (10, (4, 5, 6)),
-        "reward": 40021879,
+        "reward": 40021882,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12331,7 +12373,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (15, (4, 5, 6)),
-        "reward": 40021880,
+        "reward": 40021883,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12345,7 +12387,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (20, (4, 5, 6)),
-        "reward": 40021881,
+        "reward": 40021884,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12359,7 +12401,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (30, (4, 5, 6)),
-        "reward": 40021882,
+        "reward": 40021885,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12373,7 +12415,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (40, (4, 5, 6)),
-        "reward": 40021883,
+        "reward": 40021886,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12387,7 +12429,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (50, (4, 5, 6)),
-        "reward": 40021884,
+        "reward": 40021887,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12401,7 +12443,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (75, (4, 5, 6)),
-        "reward": 40021885,
+        "reward": 40021888,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12415,7 +12457,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (100, (4, 5, 6)),
-        "reward": 40021886,
+        "reward": 40021889,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12429,7 +12471,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (150, (4, 5, 6)),
-        "reward": 40021887,
+        "reward": 40021890,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12443,7 +12485,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (200, (4, 5, 6)),
-        "reward": 40021888,
+        "reward": 40021891,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12457,7 +12499,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (250, (4, 5, 6)),
-        "reward": 40021889,
+        "reward": 40021892,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12471,7 +12513,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (300, (4, 5, 6)),
-        "reward": 40021890,
+        "reward": 40021893,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12485,7 +12527,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (350, (4, 5, 6)),
-        "reward": 40021891,
+        "reward": 40021894,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12499,7 +12541,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (400, (4, 5, 6)),
-        "reward": 40021892,
+        "reward": 40021895,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12513,7 +12555,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (450, (4, 5, 6)),
-        "reward": 40021893,
+        "reward": 40021896,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12527,7 +12569,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (500, (4, 5, 6)),
-        "reward": 40021894,
+        "reward": 40021897,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12541,7 +12583,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (550, (4, 5, 6)),
-        "reward": 40021895,
+        "reward": 40021898,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12555,7 +12597,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (600, (4, 5, 6)),
-        "reward": 40021896,
+        "reward": 40021899,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12569,7 +12611,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (650, (4, 5, 6)),
-        "reward": 40021897,
+        "reward": 40021900,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12583,7 +12625,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (700, (4, 5, 6)),
-        "reward": 40021898,
+        "reward": 40021901,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12597,7 +12639,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (750, (4, 5, 6)),
-        "reward": 40021899,
+        "reward": 40021902,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12611,7 +12653,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (800, (4, 5, 6)),
-        "reward": 40021900,
+        "reward": 40021903,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12625,7 +12667,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (850, (4, 5, 6)),
-        "reward": 40021901,
+        "reward": 40021904,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12639,7 +12681,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (900, (4, 5, 6)),
-        "reward": 40021902,
+        "reward": 40021905,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12653,7 +12695,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (950, (4, 5, 6)),
-        "reward": 40021903,
+        "reward": 40021906,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12667,7 +12709,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (1000, (4, 5, 6)),
-        "reward": 40021904,
+        "reward": 40021907,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12681,7 +12723,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (1250, (4, 5, 6)),
-        "reward": 40021905,
+        "reward": 40021908,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12695,7 +12737,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (1500, (4, 5, 6)),
-        "reward": 40021906,
+        "reward": 40021909,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12709,7 +12751,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (1750, (4, 5, 6)),
-        "reward": 40021907,
+        "reward": 40021910,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12723,7 +12765,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (2000, (4, 5, 6)),
-        "reward": 40021908,
+        "reward": 40021911,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12737,7 +12779,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (1, (7,)),
-        "reward": 40021909,
+        "reward": 40021912,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12751,7 +12793,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (2, (7,)),
-        "reward": 40021910,
+        "reward": 40021913,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12765,7 +12807,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (3, (7,)),
-        "reward": 40021911,
+        "reward": 40021914,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12779,7 +12821,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (4, (7,)),
-        "reward": 40021912,
+        "reward": 40021915,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12793,7 +12835,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (5, (7,)),
-        "reward": 40021913,
+        "reward": 40021916,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12807,7 +12849,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (6, (7,)),
-        "reward": 40021914,
+        "reward": 40021917,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12821,7 +12863,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (7, (7,)),
-        "reward": 40021915,
+        "reward": 40021918,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12835,7 +12877,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (8, (7,)),
-        "reward": 40021916,
+        "reward": 40021919,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12849,7 +12891,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (9, (7,)),
-        "reward": 40021917,
+        "reward": 40021920,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12863,7 +12905,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 28,
         "targetParam": (10, (7,)),
-        "reward": 40021918,
+        "reward": 40021921,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12877,7 +12919,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (1, True),
-        "reward": 40021919,
+        "reward": 40021922,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12891,7 +12933,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (2, True),
-        "reward": 40021920,
+        "reward": 40021923,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12905,7 +12947,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (3, True),
-        "reward": 40021921,
+        "reward": 40021924,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12919,7 +12961,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (4, True),
-        "reward": 40021922,
+        "reward": 40021925,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12933,7 +12975,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (5, True),
-        "reward": 40021923,
+        "reward": 40021926,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12947,7 +12989,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (7, True),
-        "reward": 40021924,
+        "reward": 40021927,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12961,7 +13003,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (10, True),
-        "reward": 40021925,
+        "reward": 40021928,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12975,7 +13017,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (15, True),
-        "reward": 40021926,
+        "reward": 40021929,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -12989,7 +13031,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (20, True),
-        "reward": 40021927,
+        "reward": 40021930,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13003,7 +13045,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 31,
         "targetParam": (30, True),
-        "reward": 40021928,
+        "reward": 40021931,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13017,7 +13059,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (1, 1),
-        "reward": 40021929,
+        "reward": 40021932,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13031,7 +13073,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (2, 1),
-        "reward": 40021930,
+        "reward": 40021933,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13045,7 +13087,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (3, 1),
-        "reward": 40021931,
+        "reward": 40021934,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13059,7 +13101,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (1, 2),
-        "reward": 40021932,
+        "reward": 40021935,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13073,7 +13115,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (2, 2),
-        "reward": 40021933,
+        "reward": 40021936,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13087,7 +13129,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (3, 2),
-        "reward": 40021934,
+        "reward": 40021937,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13101,7 +13143,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (1, 3),
-        "reward": 40021935,
+        "reward": 40021938,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13115,7 +13157,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (2, 3),
-        "reward": 40021936,
+        "reward": 40021939,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13129,7 +13171,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (3, 3),
-        "reward": 40021937,
+        "reward": 40021940,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13143,7 +13185,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (4, 3),
-        "reward": 40021938,
+        "reward": 40021941,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13157,7 +13199,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (5, 3),
-        "reward": 40021939,
+        "reward": 40021942,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13171,7 +13213,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (7, 3),
-        "reward": 40021940,
+        "reward": 40021943,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13185,7 +13227,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 33,
         "targetParam": (10, 3),
-        "reward": 40021941,
+        "reward": 40021944,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13199,7 +13241,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1, 32000002),
-        "reward": 40021942,
+        "reward": 40021945,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13213,7 +13255,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (2, 32000002),
-        "reward": 40021943,
+        "reward": 40021946,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13227,7 +13269,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (3, 32000002),
-        "reward": 40021944,
+        "reward": 40021947,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13241,7 +13283,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (5, 32000002),
-        "reward": 40021945,
+        "reward": 40021948,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13255,7 +13297,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (7, 32000002),
-        "reward": 40021946,
+        "reward": 40021949,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13269,7 +13311,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (10, 32000002),
-        "reward": 40021947,
+        "reward": 40021950,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13283,7 +13325,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (15, 32000002),
-        "reward": 40021948,
+        "reward": 40021951,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13297,7 +13339,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (20, 32000002),
-        "reward": 40021949,
+        "reward": 40021952,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13311,7 +13353,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (35, 32000002),
-        "reward": 40021950,
+        "reward": 40021953,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13325,7 +13367,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (50, 32000002),
-        "reward": 40021951,
+        "reward": 40021954,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13339,7 +13381,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (75, 32000002),
-        "reward": 40021952,
+        "reward": 40021955,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13353,7 +13395,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (100, 32000002),
-        "reward": 40021953,
+        "reward": 40021956,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13367,7 +13409,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (150, 32000002),
-        "reward": 40021954,
+        "reward": 40021957,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13381,7 +13423,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (200, 32000002),
-        "reward": 40021955,
+        "reward": 40021958,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13395,7 +13437,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (250, 32000002),
-        "reward": 40021956,
+        "reward": 40021959,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13409,7 +13451,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (300, 32000002),
-        "reward": 40021957,
+        "reward": 40021960,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13423,7 +13465,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (350, 32000002),
-        "reward": 40021958,
+        "reward": 40021961,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13437,7 +13479,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (400, 32000002),
-        "reward": 40021959,
+        "reward": 40021962,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13451,7 +13493,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (450, 32000002),
-        "reward": 40021960,
+        "reward": 40021963,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13465,7 +13507,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (500, 32000002),
-        "reward": 40021961,
+        "reward": 40021964,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13479,7 +13521,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (550, 32000002),
-        "reward": 40021962,
+        "reward": 40021965,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13493,7 +13535,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (600, 32000002),
-        "reward": 40021963,
+        "reward": 40021966,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13507,7 +13549,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (700, 32000002),
-        "reward": 40021964,
+        "reward": 40021967,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13521,7 +13563,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (800, 32000002),
-        "reward": 40021965,
+        "reward": 40021968,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13535,7 +13577,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1000, 32000002),
-        "reward": 40021966,
+        "reward": 40021969,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13549,7 +13591,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1200, 32000002),
-        "reward": 40021967,
+        "reward": 40021970,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13563,7 +13605,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1500, 32000002),
-        "reward": 40021968,
+        "reward": 40021971,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13577,7 +13619,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1, 32000003),
-        "reward": 40021969,
+        "reward": 40021972,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13591,7 +13633,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (2, 32000003),
-        "reward": 40021970,
+        "reward": 40021973,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13605,7 +13647,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (3, 32000003),
-        "reward": 40021971,
+        "reward": 40021974,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13619,7 +13661,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (5, 32000003),
-        "reward": 40021972,
+        "reward": 40021975,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13633,7 +13675,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (7, 32000003),
-        "reward": 40021973,
+        "reward": 40021976,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13647,7 +13689,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (10, 32000003),
-        "reward": 40021974,
+        "reward": 40021977,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13661,7 +13703,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (15, 32000003),
-        "reward": 40021975,
+        "reward": 40021978,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13675,7 +13717,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (20, 32000003),
-        "reward": 40021976,
+        "reward": 40021979,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13689,7 +13731,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (35, 32000003),
-        "reward": 40021977,
+        "reward": 40021980,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13703,7 +13745,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (50, 32000003),
-        "reward": 40021978,
+        "reward": 40021981,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13717,7 +13759,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (75, 32000003),
-        "reward": 40021979,
+        "reward": 40021982,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13731,7 +13773,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (100, 32000003),
-        "reward": 40021980,
+        "reward": 40021983,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13745,7 +13787,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (150, 32000003),
-        "reward": 40021981,
+        "reward": 40021984,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13759,7 +13801,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (200, 32000003),
-        "reward": 40021982,
+        "reward": 40021985,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13773,7 +13815,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (250, 32000003),
-        "reward": 40021983,
+        "reward": 40021986,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13787,7 +13829,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (300, 32000003),
-        "reward": 40021984,
+        "reward": 40021987,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13801,7 +13843,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (350, 32000003),
-        "reward": 40021985,
+        "reward": 40021988,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13815,7 +13857,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (400, 32000003),
-        "reward": 40021986,
+        "reward": 40021989,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13829,7 +13871,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (450, 32000003),
-        "reward": 40021987,
+        "reward": 40021990,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13843,7 +13885,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (500, 32000003),
-        "reward": 40021988,
+        "reward": 40021991,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13857,7 +13899,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (550, 32000003),
-        "reward": 40021989,
+        "reward": 40021992,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13871,7 +13913,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (600, 32000003),
-        "reward": 40021990,
+        "reward": 40021993,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13885,7 +13927,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (700, 32000003),
-        "reward": 40021991,
+        "reward": 40021994,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13899,7 +13941,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (800, 32000003),
-        "reward": 40021992,
+        "reward": 40021995,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13913,7 +13955,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1000, 32000003),
-        "reward": 40021993,
+        "reward": 40021996,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13927,7 +13969,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1200, 32000003),
-        "reward": 40021994,
+        "reward": 40021997,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13941,7 +13983,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 12,
         "targetParam": (1500, 32000003),
-        "reward": 40021995,
+        "reward": 40021998,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13955,7 +13997,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (1,),
-        "reward": 40021996,
+        "reward": 40021999,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13969,7 +14011,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (2,),
-        "reward": 40021997,
+        "reward": 40022000,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13983,7 +14025,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (3,),
-        "reward": 40021998,
+        "reward": 40022001,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -13997,7 +14039,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (5,),
-        "reward": 40021999,
+        "reward": 40022002,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14011,7 +14053,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (7,),
-        "reward": 40022000,
+        "reward": 40022003,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14025,7 +14067,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (10,),
-        "reward": 40022001,
+        "reward": 40022004,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14039,7 +14081,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (15,),
-        "reward": 40022002,
+        "reward": 40022005,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14053,7 +14095,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (20,),
-        "reward": 40022003,
+        "reward": 40022006,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14067,7 +14109,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (30,),
-        "reward": 40022004,
+        "reward": 40022007,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14081,7 +14123,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (40,),
-        "reward": 40022005,
+        "reward": 40022008,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14095,7 +14137,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (50,),
-        "reward": 40022006,
+        "reward": 40022009,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14109,7 +14151,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (60,),
-        "reward": 40022007,
+        "reward": 40022010,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14123,7 +14165,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (70,),
-        "reward": 40022008,
+        "reward": 40022011,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14137,7 +14179,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (80,),
-        "reward": 40022009,
+        "reward": 40022012,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14151,7 +14193,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (90,),
-        "reward": 40022010,
+        "reward": 40022013,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14165,7 +14207,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 32,
         "targetParam": (100,),
-        "reward": 40022011,
+        "reward": 40022014,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14179,7 +14221,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (1,),
-        "reward": 40022012,
+        "reward": 40022015,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14193,7 +14235,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (2,),
-        "reward": 40022013,
+        "reward": 40022016,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14207,7 +14249,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (3,),
-        "reward": 40022014,
+        "reward": 40022017,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14221,7 +14263,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (4,),
-        "reward": 40022015,
+        "reward": 40022018,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14235,7 +14277,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (5,),
-        "reward": 40022016,
+        "reward": 40022019,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14249,7 +14291,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (6,),
-        "reward": 40022017,
+        "reward": 40022020,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14263,7 +14305,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (7,),
-        "reward": 40022018,
+        "reward": 40022021,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14277,7 +14319,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (8,),
-        "reward": 40022019,
+        "reward": 40022022,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14291,7 +14333,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (9,),
-        "reward": 40022020,
+        "reward": 40022023,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14305,7 +14347,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 5,
         "targetParam": (10,),
-        "reward": 40022021,
+        "reward": 40022024,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14319,7 +14361,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (1,),
-        "reward": 40022022,
+        "reward": 40022025,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14333,7 +14375,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (3,),
-        "reward": 40022023,
+        "reward": 40022026,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14347,7 +14389,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (5,),
-        "reward": 40022024,
+        "reward": 40022027,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14361,7 +14403,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (7,),
-        "reward": 40022025,
+        "reward": 40022028,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14375,7 +14417,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (10,),
-        "reward": 40022026,
+        "reward": 40022029,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14389,7 +14431,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (15,),
-        "reward": 40022027,
+        "reward": 40022030,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14403,7 +14445,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (20,),
-        "reward": 40022028,
+        "reward": 40022031,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14417,7 +14459,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (30,),
-        "reward": 40022029,
+        "reward": 40022032,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14431,7 +14473,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (40,),
-        "reward": 40022030,
+        "reward": 40022033,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14445,7 +14487,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (50,),
-        "reward": 40022031,
+        "reward": 40022034,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14459,7 +14501,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (60,),
-        "reward": 40022032,
+        "reward": 40022035,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14473,7 +14515,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (70,),
-        "reward": 40022033,
+        "reward": 40022036,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14487,7 +14529,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (80,),
-        "reward": 40022034,
+        "reward": 40022037,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14501,7 +14543,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (90,),
-        "reward": 40022035,
+        "reward": 40022038,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14515,7 +14557,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (100,),
-        "reward": 40022036,
+        "reward": 40022039,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14529,7 +14571,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (125,),
-        "reward": 40022037,
+        "reward": 40022040,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14543,7 +14585,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (150,),
-        "reward": 40022038,
+        "reward": 40022041,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14557,7 +14599,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (175,),
-        "reward": 40022039,
+        "reward": 40022042,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14571,7 +14613,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (200,),
-        "reward": 40022040,
+        "reward": 40022043,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14585,7 +14627,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (225,),
-        "reward": 40022041,
+        "reward": 40022044,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14599,7 +14641,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (250,),
-        "reward": 40022042,
+        "reward": 40022045,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14613,7 +14655,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (275,),
-        "reward": 40022043,
+        "reward": 40022046,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14627,7 +14669,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (300,),
-        "reward": 40022044,
+        "reward": 40022047,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14641,7 +14683,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (325,),
-        "reward": 40022045,
+        "reward": 40022048,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14655,7 +14697,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (350,),
-        "reward": 40022046,
+        "reward": 40022049,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14669,7 +14711,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (375,),
-        "reward": 40022047,
+        "reward": 40022050,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14683,7 +14725,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (400,),
-        "reward": 40022048,
+        "reward": 40022051,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14697,7 +14739,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (425,),
-        "reward": 40022049,
+        "reward": 40022052,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14711,7 +14753,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (450,),
-        "reward": 40022050,
+        "reward": 40022053,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14725,7 +14767,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (475,),
-        "reward": 40022051,
+        "reward": 40022054,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14739,7 +14781,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (500,),
-        "reward": 40022052,
+        "reward": 40022055,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14753,7 +14795,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (525,),
-        "reward": 40022053,
+        "reward": 40022056,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14767,7 +14809,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (550,),
-        "reward": 40022054,
+        "reward": 40022057,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14781,7 +14823,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (575,),
-        "reward": 40022055,
+        "reward": 40022058,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14795,7 +14837,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 38,
         "targetParam": (600,),
-        "reward": 40022056,
+        "reward": 40022059,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14809,7 +14851,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 2000),
-        "reward": 40022057,
+        "reward": 40022060,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14823,7 +14865,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 1500),
-        "reward": 40022058,
+        "reward": 40022061,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14837,7 +14879,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 1000),
-        "reward": 40022059,
+        "reward": 40022062,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14851,7 +14893,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 750),
-        "reward": 40022060,
+        "reward": 40022063,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14865,7 +14907,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 500),
-        "reward": 40022061,
+        "reward": 40022064,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14879,7 +14921,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 300),
-        "reward": 40022062,
+        "reward": 40022065,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14893,7 +14935,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 200),
-        "reward": 40022063,
+        "reward": 40022066,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14907,7 +14949,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 100),
-        "reward": 40022064,
+        "reward": 40022067,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14921,7 +14963,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 75),
-        "reward": 40022065,
+        "reward": 40022068,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14935,7 +14977,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 50),
-        "reward": 40022066,
+        "reward": 40022069,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14949,7 +14991,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 30),
-        "reward": 40022067,
+        "reward": 40022070,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14963,7 +15005,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 20),
-        "reward": 40022068,
+        "reward": 40022071,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14977,7 +15019,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 10),
-        "reward": 40022069,
+        "reward": 40022072,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -14991,7 +15033,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 5),
-        "reward": 40022070,
+        "reward": 40022073,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15005,7 +15047,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (1, 3),
-        "reward": 40022071,
+        "reward": 40022074,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15019,7 +15061,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 2000),
-        "reward": 40022072,
+        "reward": 40022075,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15033,7 +15075,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 1500),
-        "reward": 40022073,
+        "reward": 40022076,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15047,7 +15089,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 1000),
-        "reward": 40022074,
+        "reward": 40022077,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15061,7 +15103,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 750),
-        "reward": 40022075,
+        "reward": 40022078,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15075,7 +15117,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 500),
-        "reward": 40022076,
+        "reward": 40022079,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15089,7 +15131,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 300),
-        "reward": 40022077,
+        "reward": 40022080,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15103,7 +15145,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 200),
-        "reward": 40022078,
+        "reward": 40022081,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15117,7 +15159,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 100),
-        "reward": 40022079,
+        "reward": 40022082,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15131,7 +15173,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 75),
-        "reward": 40022080,
+        "reward": 40022083,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15145,7 +15187,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 50),
-        "reward": 40022081,
+        "reward": 40022084,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15159,7 +15201,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 30),
-        "reward": 40022082,
+        "reward": 40022085,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15173,7 +15215,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 20),
-        "reward": 40022083,
+        "reward": 40022086,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15187,7 +15229,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 10),
-        "reward": 40022084,
+        "reward": 40022087,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15201,7 +15243,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 5),
-        "reward": 40022085,
+        "reward": 40022088,
         "achPoint": 5,
         "finishMessage": (58000024,)
     }),
@@ -15215,7 +15257,7 @@ datas = _tools.RODict({
         "shuPreAch": 0,
         "targetType": 24,
         "targetParam": (2, 3),
-        "reward": 40022086,
+        "reward": 40022089,
         "achPoint": 5,
         "finishMessage": (58000024,)
     })
@@ -15225,9 +15267,9 @@ maxKey = 43011215
 
 versionList = _tools.ROList([0])
 versionDict = _tools.RODict({
-    0: _tools.ROList([43001001, 43001002, 43001003, 43001004, 43001005, 43001006, 43001007, 43001008, 43001009, 43001010, 43001011, 43001012, 43001013, 43001014, 43001015, 43001016, 43001017, 43001018, 43001019, 43001020, 43001021, 43001022, 43001023, 43001024, 43001025, 43001026, 43001027, 43001028, 43001029, 43001030, 43001031, 43001032, 43001033, 43001034, 43001035, 43001036, 43001101, 43001102, 43001103, 43001104, 43001105, 43001106, 43001107, 43001108, 43001109, 43001110, 43001111, 43001112, 43001113, 43001114, 43001115, 43001116, 43001117, 43001118, 43001119, 43001120, 43001121, 43001122, 43001123, 43001124, 43001125, 43001126, 43001127, 43001128, 43001129, 43001130, 43001131, 43001132, 43001133, 43001134, 43001135, 43001136, 43001137, 43001138, 43001139, 43001140, 43001201, 43001202, 43001203, 43001204, 43001205, 43001206, 43001207, 43001208, 43001209, 43001210, 43001211, 43001212, 43001213, 43001214, 43001215, 43001216, 43001217, 43001218, 43001219, 43001220, 43001221, 43001222, 43001223, 43001301, 43001302, 43001303, 43001304, 43001305, 43001306, 43001307, 43001308, 43001309, 43001310, 43001401, 43001402, 43001403, 43001404, 43001405, 43001406, 43001407, 43001408, 43001409, 43001410, 43001411, 43001412, 43001413, 43001414, 43001415, 43001416, 43001417, 43001418, 43001419, 43001420, 43001421, 43001422, 43001423, 43001424, 43001425, 43001426, 43001427, 43001428, 43001429, 43001430, 43001431, 43001432, 43001433, 43001434, 43001435, 43001436, 43001437, 43001438, 43001439, 43001440, 43001601, 43001602, 43001603, 43001604, 43001605, 43001606, 43001607, 43001608, 43001609, 43001610, 43001611, 43001612, 43001613, 43001614, 43001615, 43001616, 43001617, 43001618, 43001701, 43001702, 43001703, 43001704, 43001705, 43001706, 43001707, 43001708, 43001709, 43001710, 43001711, 43001712, 43001713, 43001714, 43001715, 43001716, 43001717, 43001718, 43001719, 43001720, 43001721, 43001722, 43001723, 43001724, 43001725, 43001726, 43001727, 43001728, 43001729, 43001730, 43001801, 43001802, 43001803, 43001804, 43001805, 43001806, 43001807, 43001808, 43001809, 43001810, 43001811, 43001812, 43001813, 43001814, 43001815, 43001816, 43001817, 43001818, 43001819, 43001820, 43001821, 43001822, 43001823, 43001824, 43001825, 43001826, 43001827, 43001828, 43001829, 43001830, 43001901, 43001902, 43001903, 43001904, 43001905, 43001906, 43001907, 43001908, 43001909, 43001910, 43001911, 43001912, 43001913, 43001914, 43001915, 43001916, 43001917, 43001918, 43002001, 43002002, 43002003, 43002004, 43002005, 43002006, 43002007, 43002008, 43002009, 43002010, 43002011, 43002012, 43002013, 43002014, 43002015, 43002101, 43002102, 43002103, 43002104, 43002105, 43002106, 43002107, 43002108, 43002109, 43002110, 43002111, 43002112, 43002201, 43002202, 43002203, 43002204, 43002205, 43002206, 43002207, 43002208, 43002209, 43002210, 43002211, 43002212, 43002213, 43002214, 43002215, 43002216, 43002217, 43002218, 43002219, 43002220, 43002221, 43002222, 43002223, 43002224, 43002225, 43002226, 43002227, 43002228, 43002229, 43002230, 43002231, 43002232, 43002233, 43002234, 43002235, 43002236, 43002237, 43002238, 43002239, 43002240, 43002241, 43002242, 43002243, 43002244, 43002245, 43002246, 43002247, 43002248, 43002249, 43002250, 43002251, 43002252, 43002253, 43002254, 43002255, 43002256, 43002257, 43002258, 43002259, 43002260, 43002261, 43002262, 43002263, 43002264, 43002265, 43002266, 43002267, 43002268, 43002269, 43002270, 43002271, 43002272, 43002273, 43002274, 43002275, 43002276, 43002277, 43002278, 43002279, 43002280, 43002281, 43002282, 43002283, 43002284, 43002285, 43002286, 43002287, 43002288, 43002289, 43002290, 43002291, 43002292, 43002293, 43002294, 43002295, 43002296, 43002297, 43002298, 43002299, 43002300, 43002301, 43002302, 43002303, 43002304, 43002305, 43002306, 43002307, 43002308, 43002309, 43002310, 43002311, 43002312, 43002313, 43002314, 43002315, 43002316, 43002317, 43002318, 43002319, 43002320, 43002321, 43002322, 43002323, 43003201, 43003202, 43003203, 43003204, 43003205, 43003206, 43003207, 43003208, 43003209, 43003210, 43003211, 43003212, 43003213, 43003214, 43003215, 43003216, 43003217, 43003218, 43003219, 43003220, 43003221, 43003222, 43003223, 43003224, 43003225, 43003226, 43003227, 43003228, 43003229, 43003230, 43003231, 43003232, 43003233, 43003234, 43003235, 43003236, 43003237, 43003238, 43003239, 43003240, 43003241, 43003242, 43003243, 43003244, 43003245, 43003246, 43003247, 43003248, 43003249, 43003250, 43003251, 43004201, 43004202, 43004203, 43004204, 43004205, 43004206, 43004207, 43004208, 43004209, 43004210, 43004211, 43004212, 43004213, 43004214, 43004215, 43004216, 43004217, 43004218, 43004219, 43004220, 43004221, 43004222, 43004223, 43004224, 43004225, 43004226, 43004301, 43004302, 43004303, 43004304, 43004305, 43004306, 43004307, 43004308, 43004309, 43004310, 43004311, 43004312, 43004313, 43004314, 43004315, 43004316, 43004317, 43004318, 43004319, 43004401, 43004402, 43004403, 43004404, 43004405, 43004501, 43004502, 43004503, 43004504, 43004505, 43004506, 43004507, 43004508, 43004509, 43004510, 43004601, 43004602, 43004603, 43004604, 43004605, 43004606, 43004607, 43004608, 43004609, 43004610, 43004701, 43004702, 43004703, 43004704, 43004705, 43004706, 43004707, 43004708, 43004709, 43004710, 43004711, 43004712, 43004713, 43004714, 43004715, 43004716, 43004717, 43004718, 43004719, 43004720, 43004721, 43004722, 43004723, 43004724, 43004725, 43004801, 43004802, 43004803, 43004804, 43004805, 43004806, 43004807, 43004808, 43004809, 43004810, 43004811, 43004812, 43004813, 43004814, 43004815, 43004816, 43004817, 43004818, 43004819, 43004820, 43004821, 43004822, 43004823, 43004824, 43004825, 43004826, 43004827, 43004828, 43004829, 43004830, 43004901, 43004902, 43004903, 43004904, 43004905, 43004906, 43004907, 43004908, 43004909, 43004910, 43004911, 43004912, 43004913, 43004914, 43004915, 43004916, 43004917, 43004918, 43004919, 43004920, 43004921, 43004922, 43004923, 43004924, 43004925, 43004926, 43004927, 43004928, 43004929, 43004930, 43005001, 43005002, 43005003, 43005004, 43005005, 43005006, 43005007, 43005008, 43005009, 43005010, 43005011, 43005012, 43005013, 43005014, 43005015, 43005016, 43005017, 43005018, 43005019, 43005020, 43005021, 43005022, 43005023, 43005024, 43005025, 43005026, 43005027, 43005028, 43005029, 43005030, 43005101, 43005102, 43005103, 43005104, 43005105, 43005106, 43005107, 43005108, 43005109, 43005110, 43005111, 43005112, 43005113, 43005114, 43005115, 43005116, 43005117, 43005118, 43005201, 43005202, 43005203, 43005204, 43005205, 43005206, 43005207, 43005208, 43005209, 43005210, 43005211, 43005212, 43005213, 43005214, 43005215, 43005216, 43005217, 43005218, 43005301, 43005302, 43005303, 43005304, 43005305, 43005306, 43005307, 43005308, 43005309, 43005310, 43005401, 43005501, 43005502, 43005503, 43005504, 43005505, 43005506, 43005507, 43005508, 43005509, 43005510, 43005511, 43005512, 43005513, 43005514, 43005515, 43005516, 43005517, 43005518, 43005519, 43005520, 43005521, 43005522, 43005523, 43005524, 43005525, 43005601, 43005602, 43005603, 43005604, 43005605, 43005606, 43005607, 43005608, 43005609, 43005610, 43005611, 43005612, 43005613, 43005614, 43005615, 43005616, 43005617, 43005618, 43005619, 43005620, 43005621, 43005622, 43005623, 43005624, 43005625, 43005626, 43005627, 43005628, 43005701, 43005702, 43005703, 43005704, 43005705, 43005706, 43005707, 43005708, 43005709, 43005710, 43005711, 43005712, 43005713, 43005714, 43005715, 43005716, 43005717, 43005718, 43005719, 43005720, 43005721, 43005722, 43005723, 43005724, 43005725, 43005726, 43005727, 43005728, 43005729, 43005730, 43006701, 43006702, 43006703, 43006704, 43006705, 43006706, 43006707, 43006708, 43006709, 43006710, 43006711, 43006901, 43006902, 43006903, 43006904, 43006905, 43006906, 43006907, 43006908, 43006909, 43006910, 43006911, 43006912, 43006913, 43006914, 43006915, 43007701, 43007702, 43007703, 43007704, 43007705, 43007706, 43007707, 43007708, 43007709, 43007710, 43007711, 43007712, 43007713, 43007714, 43007715, 43007716, 43007717, 43007718, 43007719, 43007720, 43007721, 43007722, 43007723, 43007724, 43007725, 43007726, 43007727, 43007801, 43007802, 43007803, 43007804, 43007805, 43007806, 43007807, 43007808, 43007809, 43007810, 43007811, 43007812, 43007813, 43007814, 43007815, 43007816, 43007817, 43007818, 43007819, 43007820, 43007821, 43007822, 43007823, 43007824, 43007825, 43007826, 43007827, 43007901, 43007902, 43007903, 43007904, 43007905, 43007906, 43007907, 43007908, 43007909, 43007910, 43007911, 43007912, 43007913, 43007914, 43007915, 43007916, 43007917, 43007918, 43007919, 43007920, 43007921, 43007922, 43007923, 43007924, 43007925, 43007926, 43007927, 43007928, 43007929, 43007930, 43007931, 43007932, 43007933, 43008001, 43008002, 43008003, 43008004, 43008005, 43008006, 43008007, 43008008, 43008009, 43008010, 43008011, 43008012, 43008013, 43008014, 43008015, 43008016, 43008017, 43008018, 43008019, 43008020, 43008021, 43008022, 43008023, 43008024, 43008025, 43008026, 43008027, 43008028, 43008029, 43008030, 43008031, 43008032, 43008033, 43008034, 43008101, 43008102, 43008103, 43008104, 43008105, 43008106, 43008107, 43008108, 43008109, 43008110, 43008301, 43008302, 43008303, 43008304, 43008305, 43008306, 43008307, 43008308, 43008309, 43008310, 43008401, 43008402, 43008403, 43008501, 43008502, 43008503, 43008601, 43008602, 43008603, 43008604, 43008605, 43008606, 43008607, 43008801, 43008802, 43008803, 43008804, 43008805, 43008806, 43008807, 43008808, 43008809, 43008810, 43008811, 43008812, 43008813, 43008814, 43008815, 43008816, 43008817, 43008818, 43008819, 43008820, 43008821, 43008822, 43008823, 43008824, 43008825, 43008826, 43008827, 43008901, 43008902, 43008903, 43008904, 43008905, 43008906, 43008907, 43008908, 43008909, 43008910, 43008911, 43008912, 43008913, 43008914, 43008915, 43008916, 43008917, 43008918, 43008919, 43008920, 43008921, 43008922, 43008923, 43008924, 43008925, 43008926, 43008927, 43009001, 43009002, 43009003, 43009004, 43009005, 43009006, 43009007, 43009008, 43009009, 43009010, 43009011, 43009012, 43009013, 43009014, 43009015, 43009016, 43010001, 43010002, 43010003, 43010004, 43010005, 43010006, 43010007, 43010008, 43010009, 43010010, 43010101, 43010102, 43010103, 43010104, 43010105, 43010106, 43010107, 43010108, 43010109, 43010110, 43010111, 43010112, 43010113, 43010114, 43010115, 43010116, 43010117, 43010118, 43010119, 43010120, 43010121, 43010122, 43010123, 43010124, 43010125, 43010126, 43010127, 43010128, 43010129, 43010130, 43010131, 43010132, 43010133, 43010134, 43010135, 43011101, 43011102, 43011103, 43011104, 43011105, 43011106, 43011107, 43011108, 43011109, 43011110, 43011111, 43011112, 43011113, 43011114, 43011115, 43011201, 43011202, 43011203, 43011204, 43011205, 43011206, 43011207, 43011208, 43011209, 43011210, 43011211, 43011212, 43011213, 43011214, 43011215]),
+    0: _tools.ROList([43001001, 43001002, 43001003, 43001004, 43001005, 43001006, 43001007, 43001008, 43001009, 43001010, 43001011, 43001012, 43001013, 43001014, 43001015, 43001016, 43001017, 43001018, 43001019, 43001020, 43001021, 43001022, 43001023, 43001024, 43001025, 43001026, 43001027, 43001028, 43001029, 43001030, 43001031, 43001032, 43001033, 43001034, 43001035, 43001036, 43001101, 43001102, 43001103, 43001104, 43001105, 43001106, 43001107, 43001108, 43001109, 43001110, 43001111, 43001112, 43001113, 43001114, 43001115, 43001116, 43001117, 43001118, 43001119, 43001120, 43001121, 43001122, 43001123, 43001124, 43001125, 43001126, 43001127, 43001128, 43001129, 43001130, 43001131, 43001132, 43001133, 43001134, 43001135, 43001136, 43001137, 43001138, 43001139, 43001140, 43001201, 43001202, 43001203, 43001204, 43001205, 43001206, 43001207, 43001208, 43001209, 43001210, 43001211, 43001212, 43001213, 43001214, 43001215, 43001216, 43001217, 43001218, 43001219, 43001220, 43001221, 43001222, 43001223, 43001301, 43001302, 43001303, 43001304, 43001305, 43001306, 43001307, 43001308, 43001309, 43001310, 43001401, 43001402, 43001403, 43001404, 43001405, 43001406, 43001407, 43001408, 43001409, 43001410, 43001411, 43001412, 43001413, 43001414, 43001415, 43001416, 43001417, 43001418, 43001419, 43001420, 43001421, 43001422, 43001423, 43001424, 43001425, 43001426, 43001427, 43001428, 43001429, 43001430, 43001431, 43001432, 43001433, 43001434, 43001435, 43001436, 43001437, 43001438, 43001439, 43001440, 43001601, 43001602, 43001603, 43001604, 43001605, 43001606, 43001607, 43001608, 43001609, 43001610, 43001611, 43001612, 43001613, 43001614, 43001615, 43001616, 43001617, 43001618, 43001701, 43001702, 43001703, 43001704, 43001705, 43001706, 43001707, 43001708, 43001709, 43001710, 43001711, 43001712, 43001713, 43001714, 43001715, 43001716, 43001717, 43001718, 43001719, 43001720, 43001721, 43001722, 43001723, 43001724, 43001725, 43001726, 43001727, 43001728, 43001729, 43001730, 43001801, 43001802, 43001803, 43001804, 43001805, 43001806, 43001807, 43001808, 43001809, 43001810, 43001811, 43001812, 43001813, 43001814, 43001815, 43001816, 43001817, 43001818, 43001819, 43001820, 43001821, 43001822, 43001823, 43001824, 43001825, 43001826, 43001827, 43001828, 43001829, 43001830, 43001901, 43001902, 43001903, 43001904, 43001905, 43001906, 43001907, 43001908, 43001909, 43001910, 43001911, 43001912, 43001913, 43001914, 43001915, 43001916, 43001917, 43001918, 43002001, 43002002, 43002003, 43002004, 43002005, 43002006, 43002007, 43002008, 43002009, 43002010, 43002011, 43002012, 43002013, 43002014, 43002015, 43002101, 43002102, 43002103, 43002104, 43002105, 43002106, 43002107, 43002108, 43002109, 43002110, 43002111, 43002112, 43002201, 43002202, 43002203, 43002204, 43002205, 43002206, 43002207, 43002208, 43002209, 43002210, 43002211, 43002212, 43002213, 43002214, 43002215, 43002216, 43002217, 43002218, 43002219, 43002220, 43002221, 43002222, 43002223, 43002224, 43002225, 43002226, 43002227, 43002228, 43002229, 43002230, 43002231, 43002232, 43002233, 43002234, 43002235, 43002236, 43002237, 43002238, 43002239, 43002240, 43002241, 43002242, 43002243, 43002244, 43002245, 43002246, 43002247, 43002248, 43002249, 43002250, 43002251, 43002252, 43002253, 43002254, 43002255, 43002256, 43002257, 43002258, 43002259, 43002260, 43002261, 43002262, 43002263, 43002264, 43002265, 43002266, 43002267, 43002268, 43002269, 43002270, 43002271, 43002272, 43002273, 43002274, 43002275, 43002276, 43002277, 43002278, 43002279, 43002280, 43002281, 43002282, 43002283, 43002284, 43002285, 43002286, 43002287, 43002288, 43002289, 43002290, 43002291, 43002292, 43002293, 43002294, 43002295, 43002296, 43002297, 43002298, 43002299, 43002300, 43002301, 43002302, 43002303, 43002304, 43002305, 43002306, 43002307, 43002308, 43002309, 43002310, 43002311, 43002312, 43002313, 43002314, 43002315, 43002316, 43002317, 43002318, 43002319, 43002320, 43002321, 43002322, 43002323, 43002324, 43002325, 43002326, 43003201, 43003202, 43003203, 43003204, 43003205, 43003206, 43003207, 43003208, 43003209, 43003210, 43003211, 43003212, 43003213, 43003214, 43003215, 43003216, 43003217, 43003218, 43003219, 43003220, 43003221, 43003222, 43003223, 43003224, 43003225, 43003226, 43003227, 43003228, 43003229, 43003230, 43003231, 43003232, 43003233, 43003234, 43003235, 43003236, 43003237, 43003238, 43003239, 43003240, 43003241, 43003242, 43003243, 43003244, 43003245, 43003246, 43003247, 43003248, 43003249, 43003250, 43003251, 43004201, 43004202, 43004203, 43004204, 43004205, 43004206, 43004207, 43004208, 43004209, 43004210, 43004211, 43004212, 43004213, 43004214, 43004215, 43004216, 43004217, 43004218, 43004219, 43004220, 43004221, 43004222, 43004223, 43004224, 43004225, 43004226, 43004301, 43004302, 43004303, 43004304, 43004305, 43004306, 43004307, 43004308, 43004309, 43004310, 43004311, 43004312, 43004313, 43004314, 43004315, 43004316, 43004317, 43004318, 43004319, 43004401, 43004402, 43004403, 43004404, 43004405, 43004501, 43004502, 43004503, 43004504, 43004505, 43004506, 43004507, 43004508, 43004509, 43004510, 43004601, 43004602, 43004603, 43004604, 43004605, 43004606, 43004607, 43004608, 43004609, 43004610, 43004701, 43004702, 43004703, 43004704, 43004705, 43004706, 43004707, 43004708, 43004709, 43004710, 43004711, 43004712, 43004713, 43004714, 43004715, 43004716, 43004717, 43004718, 43004719, 43004720, 43004721, 43004722, 43004723, 43004724, 43004725, 43004801, 43004802, 43004803, 43004804, 43004805, 43004806, 43004807, 43004808, 43004809, 43004810, 43004811, 43004812, 43004813, 43004814, 43004815, 43004816, 43004817, 43004818, 43004819, 43004820, 43004821, 43004822, 43004823, 43004824, 43004825, 43004826, 43004827, 43004828, 43004829, 43004830, 43004901, 43004902, 43004903, 43004904, 43004905, 43004906, 43004907, 43004908, 43004909, 43004910, 43004911, 43004912, 43004913, 43004914, 43004915, 43004916, 43004917, 43004918, 43004919, 43004920, 43004921, 43004922, 43004923, 43004924, 43004925, 43004926, 43004927, 43004928, 43004929, 43004930, 43005001, 43005002, 43005003, 43005004, 43005005, 43005006, 43005007, 43005008, 43005009, 43005010, 43005011, 43005012, 43005013, 43005014, 43005015, 43005016, 43005017, 43005018, 43005019, 43005020, 43005021, 43005022, 43005023, 43005024, 43005025, 43005026, 43005027, 43005028, 43005029, 43005030, 43005101, 43005102, 43005103, 43005104, 43005105, 43005106, 43005107, 43005108, 43005109, 43005110, 43005111, 43005112, 43005113, 43005114, 43005115, 43005116, 43005117, 43005118, 43005201, 43005202, 43005203, 43005204, 43005205, 43005206, 43005207, 43005208, 43005209, 43005210, 43005211, 43005212, 43005213, 43005214, 43005215, 43005216, 43005217, 43005218, 43005301, 43005302, 43005303, 43005304, 43005305, 43005306, 43005307, 43005308, 43005309, 43005310, 43005401, 43005501, 43005502, 43005503, 43005504, 43005505, 43005506, 43005507, 43005508, 43005509, 43005510, 43005511, 43005512, 43005513, 43005514, 43005515, 43005516, 43005517, 43005518, 43005519, 43005520, 43005521, 43005522, 43005523, 43005524, 43005525, 43005601, 43005602, 43005603, 43005604, 43005605, 43005606, 43005607, 43005608, 43005609, 43005610, 43005611, 43005612, 43005613, 43005614, 43005615, 43005616, 43005617, 43005618, 43005619, 43005620, 43005621, 43005622, 43005623, 43005624, 43005625, 43005626, 43005627, 43005628, 43005701, 43005702, 43005703, 43005704, 43005705, 43005706, 43005707, 43005708, 43005709, 43005710, 43005711, 43005712, 43005713, 43005714, 43005715, 43005716, 43005717, 43005718, 43005719, 43005720, 43005721, 43005722, 43005723, 43005724, 43005725, 43005726, 43005727, 43005728, 43005729, 43005730, 43006701, 43006702, 43006703, 43006704, 43006705, 43006706, 43006707, 43006708, 43006709, 43006710, 43006711, 43006901, 43006902, 43006903, 43006904, 43006905, 43006906, 43006907, 43006908, 43006909, 43006910, 43006911, 43006912, 43006913, 43006914, 43006915, 43007701, 43007702, 43007703, 43007704, 43007705, 43007706, 43007707, 43007708, 43007709, 43007710, 43007711, 43007712, 43007713, 43007714, 43007715, 43007716, 43007717, 43007718, 43007719, 43007720, 43007721, 43007722, 43007723, 43007724, 43007725, 43007726, 43007727, 43007801, 43007802, 43007803, 43007804, 43007805, 43007806, 43007807, 43007808, 43007809, 43007810, 43007811, 43007812, 43007813, 43007814, 43007815, 43007816, 43007817, 43007818, 43007819, 43007820, 43007821, 43007822, 43007823, 43007824, 43007825, 43007826, 43007827, 43007901, 43007902, 43007903, 43007904, 43007905, 43007906, 43007907, 43007908, 43007909, 43007910, 43007911, 43007912, 43007913, 43007914, 43007915, 43007916, 43007917, 43007918, 43007919, 43007920, 43007921, 43007922, 43007923, 43007924, 43007925, 43007926, 43007927, 43007928, 43007929, 43007930, 43007931, 43007932, 43007933, 43008001, 43008002, 43008003, 43008004, 43008005, 43008006, 43008007, 43008008, 43008009, 43008010, 43008011, 43008012, 43008013, 43008014, 43008015, 43008016, 43008017, 43008018, 43008019, 43008020, 43008021, 43008022, 43008023, 43008024, 43008025, 43008026, 43008027, 43008028, 43008029, 43008030, 43008031, 43008032, 43008033, 43008034, 43008101, 43008102, 43008103, 43008104, 43008105, 43008106, 43008107, 43008108, 43008109, 43008110, 43008301, 43008302, 43008303, 43008304, 43008305, 43008306, 43008307, 43008308, 43008309, 43008310, 43008401, 43008402, 43008403, 43008501, 43008502, 43008503, 43008601, 43008602, 43008603, 43008604, 43008605, 43008606, 43008607, 43008801, 43008802, 43008803, 43008804, 43008805, 43008806, 43008807, 43008808, 43008809, 43008810, 43008811, 43008812, 43008813, 43008814, 43008815, 43008816, 43008817, 43008818, 43008819, 43008820, 43008821, 43008822, 43008823, 43008824, 43008825, 43008826, 43008827, 43008901, 43008902, 43008903, 43008904, 43008905, 43008906, 43008907, 43008908, 43008909, 43008910, 43008911, 43008912, 43008913, 43008914, 43008915, 43008916, 43008917, 43008918, 43008919, 43008920, 43008921, 43008922, 43008923, 43008924, 43008925, 43008926, 43008927, 43009001, 43009002, 43009003, 43009004, 43009005, 43009006, 43009007, 43009008, 43009009, 43009010, 43009011, 43009012, 43009013, 43009014, 43009015, 43009016, 43010001, 43010002, 43010003, 43010004, 43010005, 43010006, 43010007, 43010008, 43010009, 43010010, 43010101, 43010102, 43010103, 43010104, 43010105, 43010106, 43010107, 43010108, 43010109, 43010110, 43010111, 43010112, 43010113, 43010114, 43010115, 43010116, 43010117, 43010118, 43010119, 43010120, 43010121, 43010122, 43010123, 43010124, 43010125, 43010126, 43010127, 43010128, 43010129, 43010130, 43010131, 43010132, 43010133, 43010134, 43010135, 43011101, 43011102, 43011103, 43011104, 43011105, 43011106, 43011107, 43011108, 43011109, 43011110, 43011111, 43011112, 43011113, 43011114, 43011115, 43011201, 43011202, 43011203, 43011204, 43011205, 43011206, 43011207, 43011208, 43011209, 43011210, 43011211, 43011212, 43011213, 43011214, 43011215]),
 })
 sonAchieveDic = _tools.RODict({})
 level2AchieveDic = _tools.RODict({
-    1: _tools.ROList([43001001, 43001002, 43001003, 43001004, 43001005, 43001006, 43001007, 43001008, 43001009, 43001010, 43001011, 43001012, 43001013, 43001014, 43001015, 43001016, 43001017, 43001018, 43001019, 43001020, 43001021, 43001022, 43001023, 43001024, 43001025, 43001026, 43001027, 43001028, 43001029, 43001030, 43001031, 43001032, 43001033, 43001034, 43001035, 43001036, 43001101, 43001102, 43001103, 43001104, 43001105, 43001106, 43001107, 43001108, 43001109, 43001110, 43001111, 43001112, 43001113, 43001114, 43001115, 43001116, 43001117, 43001118, 43001119, 43001120, 43001121, 43001122, 43001123, 43001124, 43001125, 43001126, 43001127, 43001128, 43001129, 43001130, 43001131, 43001132, 43001133, 43001134, 43001135, 43001136, 43001137, 43001138, 43001139, 43001140, 43001201, 43001202, 43001203, 43001204, 43001205, 43001206, 43001207, 43001208, 43001209, 43001210, 43001211, 43001212, 43001213, 43001214, 43001215, 43001216, 43001217, 43001218, 43001219, 43001220, 43001221, 43001222, 43001223, 43001301, 43001302, 43001303, 43001304, 43001305, 43001306, 43001307, 43001308, 43001309, 43001310, 43001401, 43001402, 43001403, 43001404, 43001405, 43001406, 43001407, 43001408, 43001409, 43001410, 43001411, 43001412, 43001413, 43001414, 43001415, 43001416, 43001417, 43001418, 43001419, 43001420, 43001421, 43001422, 43001423, 43001424, 43001425, 43001426, 43001427, 43001428, 43001429, 43001430, 43001431, 43001432, 43001433, 43001434, 43001435, 43001436, 43001437, 43001438, 43001439, 43001440, 43001601, 43001602, 43001603, 43001604, 43001605, 43001606, 43001607, 43001608, 43001609, 43001610, 43001611, 43001612, 43001613, 43001614, 43001615, 43001616, 43001617, 43001618, 43001701, 43001702, 43001703, 43001704, 43001705, 43001706, 43001707, 43001708, 43001709, 43001710, 43001711, 43001712, 43001713, 43001714, 43001715, 43001716, 43001717, 43001718, 43001719, 43001720, 43001721, 43001722, 43001723, 43001724, 43001725, 43001726, 43001727, 43001728, 43001729, 43001730, 43001801, 43001802, 43001803, 43001804, 43001805, 43001806, 43001807, 43001808, 43001809, 43001810, 43001811, 43001812, 43001813, 43001814, 43001815, 43001816, 43001817, 43001818, 43001819, 43001820, 43001821, 43001822, 43001823, 43001824, 43001825, 43001826, 43001827, 43001828, 43001829, 43001830, 43001901, 43001902, 43001903, 43001904, 43001905, 43001906, 43001907, 43001908, 43001909, 43001910, 43001911, 43001912, 43001913, 43001914, 43001915, 43001916, 43001917, 43001918, 43002001, 43002002, 43002003, 43002004, 43002005, 43002006, 43002007, 43002008, 43002009, 43002010, 43002011, 43002012, 43002013, 43002014, 43002015, 43002101, 43002102, 43002103, 43002104, 43002105, 43002106, 43002107, 43002108, 43002109, 43002110, 43002111, 43002112, 43002201, 43002202, 43002203, 43002204, 43002205, 43002206, 43002207, 43002208, 43002209, 43002210, 43002211, 43002212, 43002213, 43002214, 43002215, 43002216, 43002217, 43002218, 43002219, 43002220, 43002221, 43002222, 43002223, 43002224, 43002225, 43002226, 43002227, 43002228, 43002229, 43002230, 43002231, 43002232, 43002233, 43002234, 43002235, 43002236, 43002237, 43002238, 43002239, 43002240, 43002241, 43002242, 43002243, 43002244, 43002245, 43002246, 43002247, 43002248, 43002249, 43002250, 43002251, 43002252, 43002253, 43002254, 43002255, 43002256, 43002257, 43002258, 43002259, 43002260, 43002261, 43002262, 43002263, 43002264, 43002265, 43002266, 43002267, 43002268, 43002269, 43002270, 43002271, 43002272, 43002273, 43002274, 43002275, 43002276, 43002277, 43002278, 43002279, 43002280, 43002281, 43002282, 43002283, 43002284, 43002285, 43002286, 43002287, 43002288, 43002289, 43002290, 43002291, 43002292, 43002293, 43002294, 43002295, 43002296, 43002297, 43002298, 43002299, 43002300, 43002301, 43002302, 43002303, 43002304, 43002305, 43002306, 43002307, 43002308, 43002309, 43002310, 43002311, 43002312, 43002313, 43002314, 43002315, 43002316, 43002317, 43002318, 43002319, 43002320, 43002321, 43002322, 43002323, 43003201, 43003202, 43003203, 43003204, 43003205, 43003206, 43003207, 43003208, 43003209, 43003210, 43003211, 43003212, 43003213, 43003214, 43003215, 43003216, 43003217, 43003218, 43003219, 43003220, 43003221, 43003222, 43003223, 43003224, 43003225, 43003226, 43003227, 43003228, 43003229, 43003230, 43003231, 43003232, 43003233, 43003234, 43003235, 43003236, 43003237, 43003238, 43003239, 43003240, 43003241, 43003242, 43003243, 43003244, 43003245, 43003246, 43003247, 43003248, 43003249, 43003250, 43003251, 43004201, 43004202, 43004203, 43004204, 43004205, 43004206, 43004207, 43004208, 43004209, 43004210, 43004211, 43004212, 43004213, 43004214, 43004215, 43004216, 43004217, 43004218, 43004219, 43004220, 43004221, 43004222, 43004223, 43004224, 43004225, 43004226, 43004301, 43004302, 43004303, 43004304, 43004305, 43004306, 43004307, 43004308, 43004309, 43004310, 43004311, 43004312, 43004313, 43004314, 43004315, 43004316, 43004317, 43004318, 43004319, 43004401, 43004402, 43004403, 43004404, 43004405, 43004501, 43004502, 43004503, 43004504, 43004505, 43004506, 43004507, 43004508, 43004509, 43004510, 43004601, 43004602, 43004603, 43004604, 43004605, 43004606, 43004607, 43004608, 43004609, 43004610, 43004701, 43004702, 43004703, 43004704, 43004705, 43004706, 43004707, 43004708, 43004709, 43004710, 43004711, 43004712, 43004713, 43004714, 43004715, 43004716, 43004717, 43004718, 43004719, 43004720, 43004721, 43004722, 43004723, 43004724, 43004725, 43004801, 43004802, 43004803, 43004804, 43004805, 43004806, 43004807, 43004808, 43004809, 43004810, 43004811, 43004812, 43004813, 43004814, 43004815, 43004816, 43004817, 43004818, 43004819, 43004820, 43004821, 43004822, 43004823, 43004824, 43004825, 43004826, 43004827, 43004828, 43004829, 43004830, 43004901, 43004902, 43004903, 43004904, 43004905, 43004906, 43004907, 43004908, 43004909, 43004910, 43004911, 43004912, 43004913, 43004914, 43004915, 43004916, 43004917, 43004918, 43004919, 43004920, 43004921, 43004922, 43004923, 43004924, 43004925, 43004926, 43004927, 43004928, 43004929, 43004930, 43005001, 43005002, 43005003, 43005004, 43005005, 43005006, 43005007, 43005008, 43005009, 43005010, 43005011, 43005012, 43005013, 43005014, 43005015, 43005016, 43005017, 43005018, 43005019, 43005020, 43005021, 43005022, 43005023, 43005024, 43005025, 43005026, 43005027, 43005028, 43005029, 43005030, 43005101, 43005102, 43005103, 43005104, 43005105, 43005106, 43005107, 43005108, 43005109, 43005110, 43005111, 43005112, 43005113, 43005114, 43005115, 43005116, 43005117, 43005118, 43005201, 43005202, 43005203, 43005204, 43005205, 43005206, 43005207, 43005208, 43005209, 43005210, 43005211, 43005212, 43005213, 43005214, 43005215, 43005216, 43005217, 43005218, 43005301, 43005302, 43005303, 43005304, 43005305, 43005306, 43005307, 43005308, 43005309, 43005310, 43005401, 43005501, 43005502, 43005503, 43005504, 43005505, 43005506, 43005507, 43005508, 43005509, 43005510, 43005511, 43005512, 43005513, 43005514, 43005515, 43005516, 43005517, 43005518, 43005519, 43005520, 43005521, 43005522, 43005523, 43005524, 43005525, 43005601, 43005602, 43005603, 43005604, 43005605, 43005606, 43005607, 43005608, 43005609, 43005610, 43005611, 43005612, 43005613, 43005614, 43005615, 43005616, 43005617, 43005618, 43005619, 43005620, 43005621, 43005622, 43005623, 43005624, 43005625, 43005626, 43005627, 43005628, 43005701, 43005702, 43005703, 43005704, 43005705, 43005706, 43005707, 43005708, 43005709, 43005710, 43005711, 43005712, 43005713, 43005714, 43005715, 43005716, 43005717, 43005718, 43005719, 43005720, 43005721, 43005722, 43005723, 43005724, 43005725, 43005726, 43005727, 43005728, 43005729, 43005730, 43006701, 43006702, 43006703, 43006704, 43006705, 43006706, 43006707, 43006708, 43006709, 43006710, 43006711, 43006901, 43006902, 43006903, 43006904, 43006905, 43006906, 43006907, 43006908, 43006909, 43006910, 43006911, 43006912, 43006913, 43006914, 43006915, 43007701, 43007702, 43007703, 43007704, 43007705, 43007706, 43007707, 43007708, 43007709, 43007710, 43007711, 43007712, 43007713, 43007714, 43007715, 43007716, 43007717, 43007718, 43007719, 43007720, 43007721, 43007722, 43007723, 43007724, 43007725, 43007726, 43007727, 43007801, 43007802, 43007803, 43007804, 43007805, 43007806, 43007807, 43007808, 43007809, 43007810, 43007811, 43007812, 43007813, 43007814, 43007815, 43007816, 43007817, 43007818, 43007819, 43007820, 43007821, 43007822, 43007823, 43007824, 43007825, 43007826, 43007827, 43007901, 43007902, 43007903, 43007904, 43007905, 43007906, 43007907, 43007908, 43007909, 43007910, 43007911, 43007912, 43007913, 43007914, 43007915, 43007916, 43007917, 43007918, 43007919, 43007920, 43007921, 43007922, 43007923, 43007924, 43007925, 43007926, 43007927, 43007928, 43007929, 43007930, 43007931, 43007932, 43007933, 43008001, 43008002, 43008003, 43008004, 43008005, 43008006, 43008007, 43008008, 43008009, 43008010, 43008011, 43008012, 43008013, 43008014, 43008015, 43008016, 43008017, 43008018, 43008019, 43008020, 43008021, 43008022, 43008023, 43008024, 43008025, 43008026, 43008027, 43008028, 43008029, 43008030, 43008031, 43008032, 43008033, 43008034, 43008101, 43008102, 43008103, 43008104, 43008105, 43008106, 43008107, 43008108, 43008109, 43008110, 43008301, 43008302, 43008303, 43008304, 43008305, 43008306, 43008307, 43008308, 43008309, 43008310, 43008401, 43008402, 43008403, 43008501, 43008502, 43008503, 43008601, 43008602, 43008603, 43008604, 43008605, 43008606, 43008607, 43008801, 43008802, 43008803, 43008804, 43008805, 43008806, 43008807, 43008808, 43008809, 43008810, 43008811, 43008812, 43008813, 43008814, 43008815, 43008816, 43008817, 43008818, 43008819, 43008820, 43008821, 43008822, 43008823, 43008824, 43008825, 43008826, 43008827, 43008901, 43008902, 43008903, 43008904, 43008905, 43008906, 43008907, 43008908, 43008909, 43008910, 43008911, 43008912, 43008913, 43008914, 43008915, 43008916, 43008917, 43008918, 43008919, 43008920, 43008921, 43008922, 43008923, 43008924, 43008925, 43008926, 43008927, 43009001, 43009002, 43009003, 43009004, 43009005, 43009006, 43009007, 43009008, 43009009, 43009010, 43009011, 43009012, 43009013, 43009014, 43009015, 43009016, 43010001, 43010002, 43010003, 43010004, 43010005, 43010006, 43010007, 43010008, 43010009, 43010010, 43010101, 43010102, 43010103, 43010104, 43010105, 43010106, 43010107, 43010108, 43010109, 43010110, 43010111, 43010112, 43010113, 43010114, 43010115, 43010116, 43010117, 43010118, 43010119, 43010120, 43010121, 43010122, 43010123, 43010124, 43010125, 43010126, 43010127, 43010128, 43010129, 43010130, 43010131, 43010132, 43010133, 43010134, 43010135, 43011101, 43011102, 43011103, 43011104, 43011105, 43011106, 43011107, 43011108, 43011109, 43011110, 43011111, 43011112, 43011113, 43011114, 43011115, 43011201, 43011202, 43011203, 43011204, 43011205, 43011206, 43011207, 43011208, 43011209, 43011210, 43011211, 43011212, 43011213, 43011214, 43011215]),
+    1: _tools.ROList([43001001, 43001002, 43001003, 43001004, 43001005, 43001006, 43001007, 43001008, 43001009, 43001010, 43001011, 43001012, 43001013, 43001014, 43001015, 43001016, 43001017, 43001018, 43001019, 43001020, 43001021, 43001022, 43001023, 43001024, 43001025, 43001026, 43001027, 43001028, 43001029, 43001030, 43001031, 43001032, 43001033, 43001034, 43001035, 43001036, 43001101, 43001102, 43001103, 43001104, 43001105, 43001106, 43001107, 43001108, 43001109, 43001110, 43001111, 43001112, 43001113, 43001114, 43001115, 43001116, 43001117, 43001118, 43001119, 43001120, 43001121, 43001122, 43001123, 43001124, 43001125, 43001126, 43001127, 43001128, 43001129, 43001130, 43001131, 43001132, 43001133, 43001134, 43001135, 43001136, 43001137, 43001138, 43001139, 43001140, 43001201, 43001202, 43001203, 43001204, 43001205, 43001206, 43001207, 43001208, 43001209, 43001210, 43001211, 43001212, 43001213, 43001214, 43001215, 43001216, 43001217, 43001218, 43001219, 43001220, 43001221, 43001222, 43001223, 43001301, 43001302, 43001303, 43001304, 43001305, 43001306, 43001307, 43001308, 43001309, 43001310, 43001401, 43001402, 43001403, 43001404, 43001405, 43001406, 43001407, 43001408, 43001409, 43001410, 43001411, 43001412, 43001413, 43001414, 43001415, 43001416, 43001417, 43001418, 43001419, 43001420, 43001421, 43001422, 43001423, 43001424, 43001425, 43001426, 43001427, 43001428, 43001429, 43001430, 43001431, 43001432, 43001433, 43001434, 43001435, 43001436, 43001437, 43001438, 43001439, 43001440, 43001601, 43001602, 43001603, 43001604, 43001605, 43001606, 43001607, 43001608, 43001609, 43001610, 43001611, 43001612, 43001613, 43001614, 43001615, 43001616, 43001617, 43001618, 43001701, 43001702, 43001703, 43001704, 43001705, 43001706, 43001707, 43001708, 43001709, 43001710, 43001711, 43001712, 43001713, 43001714, 43001715, 43001716, 43001717, 43001718, 43001719, 43001720, 43001721, 43001722, 43001723, 43001724, 43001725, 43001726, 43001727, 43001728, 43001729, 43001730, 43001801, 43001802, 43001803, 43001804, 43001805, 43001806, 43001807, 43001808, 43001809, 43001810, 43001811, 43001812, 43001813, 43001814, 43001815, 43001816, 43001817, 43001818, 43001819, 43001820, 43001821, 43001822, 43001823, 43001824, 43001825, 43001826, 43001827, 43001828, 43001829, 43001830, 43001901, 43001902, 43001903, 43001904, 43001905, 43001906, 43001907, 43001908, 43001909, 43001910, 43001911, 43001912, 43001913, 43001914, 43001915, 43001916, 43001917, 43001918, 43002001, 43002002, 43002003, 43002004, 43002005, 43002006, 43002007, 43002008, 43002009, 43002010, 43002011, 43002012, 43002013, 43002014, 43002015, 43002101, 43002102, 43002103, 43002104, 43002105, 43002106, 43002107, 43002108, 43002109, 43002110, 43002111, 43002112, 43002201, 43002202, 43002203, 43002204, 43002205, 43002206, 43002207, 43002208, 43002209, 43002210, 43002211, 43002212, 43002213, 43002214, 43002215, 43002216, 43002217, 43002218, 43002219, 43002220, 43002221, 43002222, 43002223, 43002224, 43002225, 43002226, 43002227, 43002228, 43002229, 43002230, 43002231, 43002232, 43002233, 43002234, 43002235, 43002236, 43002237, 43002238, 43002239, 43002240, 43002241, 43002242, 43002243, 43002244, 43002245, 43002246, 43002247, 43002248, 43002249, 43002250, 43002251, 43002252, 43002253, 43002254, 43002255, 43002256, 43002257, 43002258, 43002259, 43002260, 43002261, 43002262, 43002263, 43002264, 43002265, 43002266, 43002267, 43002268, 43002269, 43002270, 43002271, 43002272, 43002273, 43002274, 43002275, 43002276, 43002277, 43002278, 43002279, 43002280, 43002281, 43002282, 43002283, 43002284, 43002285, 43002286, 43002287, 43002288, 43002289, 43002290, 43002291, 43002292, 43002293, 43002294, 43002295, 43002296, 43002297, 43002298, 43002299, 43002300, 43002301, 43002302, 43002303, 43002304, 43002305, 43002306, 43002307, 43002308, 43002309, 43002310, 43002311, 43002312, 43002313, 43002314, 43002315, 43002316, 43002317, 43002318, 43002319, 43002320, 43002321, 43002322, 43002323, 43002324, 43002325, 43002326, 43003201, 43003202, 43003203, 43003204, 43003205, 43003206, 43003207, 43003208, 43003209, 43003210, 43003211, 43003212, 43003213, 43003214, 43003215, 43003216, 43003217, 43003218, 43003219, 43003220, 43003221, 43003222, 43003223, 43003224, 43003225, 43003226, 43003227, 43003228, 43003229, 43003230, 43003231, 43003232, 43003233, 43003234, 43003235, 43003236, 43003237, 43003238, 43003239, 43003240, 43003241, 43003242, 43003243, 43003244, 43003245, 43003246, 43003247, 43003248, 43003249, 43003250, 43003251, 43004201, 43004202, 43004203, 43004204, 43004205, 43004206, 43004207, 43004208, 43004209, 43004210, 43004211, 43004212, 43004213, 43004214, 43004215, 43004216, 43004217, 43004218, 43004219, 43004220, 43004221, 43004222, 43004223, 43004224, 43004225, 43004226, 43004301, 43004302, 43004303, 43004304, 43004305, 43004306, 43004307, 43004308, 43004309, 43004310, 43004311, 43004312, 43004313, 43004314, 43004315, 43004316, 43004317, 43004318, 43004319, 43004401, 43004402, 43004403, 43004404, 43004405, 43004501, 43004502, 43004503, 43004504, 43004505, 43004506, 43004507, 43004508, 43004509, 43004510, 43004601, 43004602, 43004603, 43004604, 43004605, 43004606, 43004607, 43004608, 43004609, 43004610, 43004701, 43004702, 43004703, 43004704, 43004705, 43004706, 43004707, 43004708, 43004709, 43004710, 43004711, 43004712, 43004713, 43004714, 43004715, 43004716, 43004717, 43004718, 43004719, 43004720, 43004721, 43004722, 43004723, 43004724, 43004725, 43004801, 43004802, 43004803, 43004804, 43004805, 43004806, 43004807, 43004808, 43004809, 43004810, 43004811, 43004812, 43004813, 43004814, 43004815, 43004816, 43004817, 43004818, 43004819, 43004820, 43004821, 43004822, 43004823, 43004824, 43004825, 43004826, 43004827, 43004828, 43004829, 43004830, 43004901, 43004902, 43004903, 43004904, 43004905, 43004906, 43004907, 43004908, 43004909, 43004910, 43004911, 43004912, 43004913, 43004914, 43004915, 43004916, 43004917, 43004918, 43004919, 43004920, 43004921, 43004922, 43004923, 43004924, 43004925, 43004926, 43004927, 43004928, 43004929, 43004930, 43005001, 43005002, 43005003, 43005004, 43005005, 43005006, 43005007, 43005008, 43005009, 43005010, 43005011, 43005012, 43005013, 43005014, 43005015, 43005016, 43005017, 43005018, 43005019, 43005020, 43005021, 43005022, 43005023, 43005024, 43005025, 43005026, 43005027, 43005028, 43005029, 43005030, 43005101, 43005102, 43005103, 43005104, 43005105, 43005106, 43005107, 43005108, 43005109, 43005110, 43005111, 43005112, 43005113, 43005114, 43005115, 43005116, 43005117, 43005118, 43005201, 43005202, 43005203, 43005204, 43005205, 43005206, 43005207, 43005208, 43005209, 43005210, 43005211, 43005212, 43005213, 43005214, 43005215, 43005216, 43005217, 43005218, 43005301, 43005302, 43005303, 43005304, 43005305, 43005306, 43005307, 43005308, 43005309, 43005310, 43005401, 43005501, 43005502, 43005503, 43005504, 43005505, 43005506, 43005507, 43005508, 43005509, 43005510, 43005511, 43005512, 43005513, 43005514, 43005515, 43005516, 43005517, 43005518, 43005519, 43005520, 43005521, 43005522, 43005523, 43005524, 43005525, 43005601, 43005602, 43005603, 43005604, 43005605, 43005606, 43005607, 43005608, 43005609, 43005610, 43005611, 43005612, 43005613, 43005614, 43005615, 43005616, 43005617, 43005618, 43005619, 43005620, 43005621, 43005622, 43005623, 43005624, 43005625, 43005626, 43005627, 43005628, 43005701, 43005702, 43005703, 43005704, 43005705, 43005706, 43005707, 43005708, 43005709, 43005710, 43005711, 43005712, 43005713, 43005714, 43005715, 43005716, 43005717, 43005718, 43005719, 43005720, 43005721, 43005722, 43005723, 43005724, 43005725, 43005726, 43005727, 43005728, 43005729, 43005730, 43006701, 43006702, 43006703, 43006704, 43006705, 43006706, 43006707, 43006708, 43006709, 43006710, 43006711, 43006901, 43006902, 43006903, 43006904, 43006905, 43006906, 43006907, 43006908, 43006909, 43006910, 43006911, 43006912, 43006913, 43006914, 43006915, 43007701, 43007702, 43007703, 43007704, 43007705, 43007706, 43007707, 43007708, 43007709, 43007710, 43007711, 43007712, 43007713, 43007714, 43007715, 43007716, 43007717, 43007718, 43007719, 43007720, 43007721, 43007722, 43007723, 43007724, 43007725, 43007726, 43007727, 43007801, 43007802, 43007803, 43007804, 43007805, 43007806, 43007807, 43007808, 43007809, 43007810, 43007811, 43007812, 43007813, 43007814, 43007815, 43007816, 43007817, 43007818, 43007819, 43007820, 43007821, 43007822, 43007823, 43007824, 43007825, 43007826, 43007827, 43007901, 43007902, 43007903, 43007904, 43007905, 43007906, 43007907, 43007908, 43007909, 43007910, 43007911, 43007912, 43007913, 43007914, 43007915, 43007916, 43007917, 43007918, 43007919, 43007920, 43007921, 43007922, 43007923, 43007924, 43007925, 43007926, 43007927, 43007928, 43007929, 43007930, 43007931, 43007932, 43007933, 43008001, 43008002, 43008003, 43008004, 43008005, 43008006, 43008007, 43008008, 43008009, 43008010, 43008011, 43008012, 43008013, 43008014, 43008015, 43008016, 43008017, 43008018, 43008019, 43008020, 43008021, 43008022, 43008023, 43008024, 43008025, 43008026, 43008027, 43008028, 43008029, 43008030, 43008031, 43008032, 43008033, 43008034, 43008101, 43008102, 43008103, 43008104, 43008105, 43008106, 43008107, 43008108, 43008109, 43008110, 43008301, 43008302, 43008303, 43008304, 43008305, 43008306, 43008307, 43008308, 43008309, 43008310, 43008401, 43008402, 43008403, 43008501, 43008502, 43008503, 43008601, 43008602, 43008603, 43008604, 43008605, 43008606, 43008607, 43008801, 43008802, 43008803, 43008804, 43008805, 43008806, 43008807, 43008808, 43008809, 43008810, 43008811, 43008812, 43008813, 43008814, 43008815, 43008816, 43008817, 43008818, 43008819, 43008820, 43008821, 43008822, 43008823, 43008824, 43008825, 43008826, 43008827, 43008901, 43008902, 43008903, 43008904, 43008905, 43008906, 43008907, 43008908, 43008909, 43008910, 43008911, 43008912, 43008913, 43008914, 43008915, 43008916, 43008917, 43008918, 43008919, 43008920, 43008921, 43008922, 43008923, 43008924, 43008925, 43008926, 43008927, 43009001, 43009002, 43009003, 43009004, 43009005, 43009006, 43009007, 43009008, 43009009, 43009010, 43009011, 43009012, 43009013, 43009014, 43009015, 43009016, 43010001, 43010002, 43010003, 43010004, 43010005, 43010006, 43010007, 43010008, 43010009, 43010010, 43010101, 43010102, 43010103, 43010104, 43010105, 43010106, 43010107, 43010108, 43010109, 43010110, 43010111, 43010112, 43010113, 43010114, 43010115, 43010116, 43010117, 43010118, 43010119, 43010120, 43010121, 43010122, 43010123, 43010124, 43010125, 43010126, 43010127, 43010128, 43010129, 43010130, 43010131, 43010132, 43010133, 43010134, 43010135, 43011101, 43011102, 43011103, 43011104, 43011105, 43011106, 43011107, 43011108, 43011109, 43011110, 43011111, 43011112, 43011113, 43011114, 43011115, 43011201, 43011202, 43011203, 43011204, 43011205, 43011206, 43011207, 43011208, 43011209, 43011210, 43011211, 43011212, 43011213, 43011214, 43011215]),
 })

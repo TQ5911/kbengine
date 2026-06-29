@@ -48,21 +48,21 @@ datas = _tools.RODict({
         "type": 1,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     1202: _tools.RODict({
         "ID": 1202,
         "type": 1,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     1203: _tools.RODict({
         "ID": 1203,
         "type": 1,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     1204: _tools.RODict({
         "ID": 1204,
@@ -76,21 +76,21 @@ datas = _tools.RODict({
         "type": 1,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     1302: _tools.RODict({
         "ID": 1302,
         "type": 1,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     1303: _tools.RODict({
         "ID": 1303,
         "type": 1,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     1304: _tools.RODict({
         "ID": 1304,
@@ -104,21 +104,21 @@ datas = _tools.RODict({
         "type": 1,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     1402: _tools.RODict({
         "ID": 1402,
         "type": 1,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     1403: _tools.RODict({
         "ID": 1403,
         "type": 1,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     1404: _tools.RODict({
         "ID": 1404,
@@ -160,21 +160,21 @@ datas = _tools.RODict({
         "type": 2,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     2202: _tools.RODict({
         "ID": 2202,
         "type": 2,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     2203: _tools.RODict({
         "ID": 2203,
         "type": 2,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     2204: _tools.RODict({
         "ID": 2204,
@@ -188,21 +188,21 @@ datas = _tools.RODict({
         "type": 2,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     2302: _tools.RODict({
         "ID": 2302,
         "type": 2,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     2303: _tools.RODict({
         "ID": 2303,
         "type": 2,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     2304: _tools.RODict({
         "ID": 2304,
@@ -216,21 +216,21 @@ datas = _tools.RODict({
         "type": 2,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     2402: _tools.RODict({
         "ID": 2402,
         "type": 2,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     2403: _tools.RODict({
         "ID": 2403,
         "type": 2,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     2404: _tools.RODict({
         "ID": 2404,
@@ -272,21 +272,21 @@ datas = _tools.RODict({
         "type": 3,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     3202: _tools.RODict({
         "ID": 3202,
         "type": 3,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     3203: _tools.RODict({
         "ID": 3203,
         "type": 3,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     3204: _tools.RODict({
         "ID": 3204,
@@ -300,21 +300,21 @@ datas = _tools.RODict({
         "type": 3,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     3302: _tools.RODict({
         "ID": 3302,
         "type": 3,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     3303: _tools.RODict({
         "ID": 3303,
         "type": 3,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     3304: _tools.RODict({
         "ID": 3304,
@@ -328,21 +328,21 @@ datas = _tools.RODict({
         "type": 3,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     3402: _tools.RODict({
         "ID": 3402,
         "type": 3,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     3403: _tools.RODict({
         "ID": 3403,
         "type": 3,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     3404: _tools.RODict({
         "ID": 3404,
@@ -384,21 +384,21 @@ datas = _tools.RODict({
         "type": 4,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     4202: _tools.RODict({
         "ID": 4202,
         "type": 4,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     4203: _tools.RODict({
         "ID": 4203,
         "type": 4,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     4204: _tools.RODict({
         "ID": 4204,
@@ -412,21 +412,21 @@ datas = _tools.RODict({
         "type": 4,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     4302: _tools.RODict({
         "ID": 4302,
         "type": 4,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     4303: _tools.RODict({
         "ID": 4303,
         "type": 4,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     4304: _tools.RODict({
         "ID": 4304,
@@ -440,21 +440,21 @@ datas = _tools.RODict({
         "type": 4,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     4402: _tools.RODict({
         "ID": 4402,
         "type": 4,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     4403: _tools.RODict({
         "ID": 4403,
         "type": 4,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     4404: _tools.RODict({
         "ID": 4404,
@@ -496,21 +496,21 @@ datas = _tools.RODict({
         "type": 5,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     5202: _tools.RODict({
         "ID": 5202,
         "type": 5,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     5203: _tools.RODict({
         "ID": 5203,
         "type": 5,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     5204: _tools.RODict({
         "ID": 5204,
@@ -524,21 +524,21 @@ datas = _tools.RODict({
         "type": 5,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     5302: _tools.RODict({
         "ID": 5302,
         "type": 5,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     5303: _tools.RODict({
         "ID": 5303,
         "type": 5,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     5304: _tools.RODict({
         "ID": 5304,
@@ -552,21 +552,21 @@ datas = _tools.RODict({
         "type": 5,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     5402: _tools.RODict({
         "ID": 5402,
         "type": 5,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     5403: _tools.RODict({
         "ID": 5403,
         "type": 5,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     5404: _tools.RODict({
         "ID": 5404,
@@ -608,21 +608,21 @@ datas = _tools.RODict({
         "type": 6,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     6202: _tools.RODict({
         "ID": 6202,
         "type": 6,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     6203: _tools.RODict({
         "ID": 6203,
         "type": 6,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     6204: _tools.RODict({
         "ID": 6204,
@@ -636,21 +636,21 @@ datas = _tools.RODict({
         "type": 6,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     6302: _tools.RODict({
         "ID": 6302,
         "type": 6,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     6303: _tools.RODict({
         "ID": 6303,
         "type": 6,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     6304: _tools.RODict({
         "ID": 6304,
@@ -664,21 +664,21 @@ datas = _tools.RODict({
         "type": 6,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     6402: _tools.RODict({
         "ID": 6402,
         "type": 6,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     6403: _tools.RODict({
         "ID": 6403,
         "type": 6,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     6404: _tools.RODict({
         "ID": 6404,
@@ -720,21 +720,21 @@ datas = _tools.RODict({
         "type": 7,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     7202: _tools.RODict({
         "ID": 7202,
         "type": 7,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     7203: _tools.RODict({
         "ID": 7203,
         "type": 7,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     7204: _tools.RODict({
         "ID": 7204,
@@ -748,21 +748,21 @@ datas = _tools.RODict({
         "type": 7,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     7302: _tools.RODict({
         "ID": 7302,
         "type": 7,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     7303: _tools.RODict({
         "ID": 7303,
         "type": 7,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     7304: _tools.RODict({
         "ID": 7304,
@@ -776,21 +776,21 @@ datas = _tools.RODict({
         "type": 7,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     7402: _tools.RODict({
         "ID": 7402,
         "type": 7,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     7403: _tools.RODict({
         "ID": 7403,
         "type": 7,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     7404: _tools.RODict({
         "ID": 7404,
@@ -832,21 +832,21 @@ datas = _tools.RODict({
         "type": 8,
         "quality": 2,
         "level": 1,
-        "costCurrency": ((30000013, 6000),)
+        "costCurrency": ((30000013, 2000),)
     }),
     8202: _tools.RODict({
         "ID": 8202,
         "type": 8,
         "quality": 2,
         "level": 2,
-        "costCurrency": ((30000013, 9000),)
+        "costCurrency": ((30000013, 3000),)
     }),
     8203: _tools.RODict({
         "ID": 8203,
         "type": 8,
         "quality": 2,
         "level": 3,
-        "costCurrency": ((30000013, 12000),)
+        "costCurrency": ((30000013, 4000),)
     }),
     8204: _tools.RODict({
         "ID": 8204,
@@ -860,21 +860,21 @@ datas = _tools.RODict({
         "type": 8,
         "quality": 3,
         "level": 1,
-        "costCurrency": ((30000013, 120000),)
+        "costCurrency": ((30000013, 40000),)
     }),
     8302: _tools.RODict({
         "ID": 8302,
         "type": 8,
         "quality": 3,
         "level": 2,
-        "costCurrency": ((30000013, 180000),)
+        "costCurrency": ((30000013, 60000),)
     }),
     8303: _tools.RODict({
         "ID": 8303,
         "type": 8,
         "quality": 3,
         "level": 3,
-        "costCurrency": ((30000013, 240000),)
+        "costCurrency": ((30000013, 80000),)
     }),
     8304: _tools.RODict({
         "ID": 8304,
@@ -888,21 +888,21 @@ datas = _tools.RODict({
         "type": 8,
         "quality": 4,
         "level": 1,
-        "costCurrency": ((30000013, 3000000),)
+        "costCurrency": ((30000013, 1000000),)
     }),
     8402: _tools.RODict({
         "ID": 8402,
         "type": 8,
         "quality": 4,
         "level": 2,
-        "costCurrency": ((30000013, 4500000),)
+        "costCurrency": ((30000013, 1500000),)
     }),
     8403: _tools.RODict({
         "ID": 8403,
         "type": 8,
         "quality": 4,
         "level": 3,
-        "costCurrency": ((30000013, 6000000),)
+        "costCurrency": ((30000013, 2000000),)
     }),
     8404: _tools.RODict({
         "ID": 8404,

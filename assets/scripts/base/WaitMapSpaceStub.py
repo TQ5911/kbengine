@@ -3,16 +3,16 @@ import random
 import KBEngine
 from KBEDebug import *
 
+import gameglobal
 import iGlobal
 import iBaseNoCell
 import iTimer
 import gametimer
 import gameconfig
 import gameconst
-import gameengine
-import formula
 
 import utils
+import redisUtils
 
 
 class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
@@ -24,6 +24,8 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
 
     def doNext(self):
         LOG_INFO('WaitMapSpaceStub::doNext~')
+        self._waitMapReportTimer = self.pyAddTimer(10, 10, gametimer.TIMER_ID_REPORT_WAITMAP_STATUS)
+
         cellAppCount = gameconfig.cellAppCount()
         baseMapId = gameconst.MapIdDef.mapWaitingServer
         for i in range(cellAppCount):
@@ -39,6 +41,14 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
                 },
                 lambda spaceBox, spaceNo=spaceNo: self._onCreateWaitMapSpace(spaceBox, spaceNo)
             )
+
+    def onTimer(self, tid, userArg):
+        if utils.isBelongTimerTag(userArg):
+            self._onTimerCallback(tid)
+        elif userArg == gametimer.TIMER_ID_REPORT_WAITMAP_STATUS:
+            self._reportWaitMapStatus()
+        else:
+            self._onTimerTrigger(tid, userArg)
 
     def _onCreateWaitMapSpace(self, spaceBox, spaceNo):
         LOG_INFO("WaitMapSpaceStub::_onCreateWaitMapSpace~", spaceNo)
@@ -60,8 +70,8 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
             accounting.accountingLoginResult(gameconst.WaitMapLoginResult.OK)
             return
 
-        accountLimit = 2000
-        if len(self.loginAccount) > accountLimit:
+        accountLimit = gameconfig.waitMapMaxOnline()
+        if len(self.loginAccount) >= accountLimit:
             accounting.accountingLoginResult(gameconst.WaitMapLoginResult.ACCOUNT_LIMIT)
             return
         
@@ -73,12 +83,11 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
 
     def enterWaitMap(self, gbid, avataring):
         LOG_INFO("WaitMapSpaceStub::enterWaitMap~", gbid)
-        spaceNo = self.spaceFinder.preEnterSpace(gbid, avataring)
-        spaceNo and avataring.onEnterWaitMapSpace(spaceNo)
+        spaceNo, spaceBox = self.spaceFinder.enterSpace(gbid, avataring)
+        if not spaceNo or not spaceBox:
+            return
 
-    def doEnterWaitMap(self, gbid, spaceNo):
-        LOG_INFO("WaitMapSpaceStub::doEnterWaitMap~", gbid, spaceNo)
-        self.spaceFinder.enterSpace(spaceNo, gbid)
+        avataring.onEnterWaitMapSpace(spaceNo, spaceBox)
 
     def onPlayerLeave(self, gbid, spaceNo):
         self.spaceFinder.leaveSpace(gbid, spaceNo)
@@ -86,6 +95,25 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
     def onPlayerLogout(self, accountName):
         LOG_INFO('WaitMapSpaceStub::opPlayerLogout~', accountName)
         self.loginAccount.pop(accountName, None)
+
+    def _reportWaitMapStatus(self):
+        serverId = gameconfig.serverId()
+        actual = len(self.loginAccount)
+        freeNum = max(0, gameconfig.waitMapMaxOnline() - actual)
+        nowTs = utils.curTS()
+        LOG_DBG('WaitMapSpaceStub::_reportWaitMapStatus', serverId, actual, freeNum, nowTs)
+
+        # 心跳保活：zset member=serverId, score=当前时间戳
+        gameglobal.localBaseApp.getRedisClient().add(
+            gameconst.RedisKey.WAITMAP_HEARTBEAT_KEY,
+            {serverId: nowTs}
+        )
+
+        # 空闲人数：每 10s 快照一次，不实时更新
+        redisUtils.RedisUtils.cmdSet(
+            gameconst.RedisKey.WAITMAP_FREE_PREFIX + str(serverId),
+            str(freeNum)
+        )
 
 class WaitSpaceFinder(object):
     def __init__(self, stub):
@@ -114,8 +142,8 @@ class WaitSpaceFinder(object):
     def spaceGone(self, spaceNo):
         self.spaces.pop(spaceNo, None)
 
-    def preEnterSpace(self, gbid, avataring):
-        cellMaxPlayerNum = 2000
+    def enterSpace(self, gbid, avataring):
+        cellMaxPlayerNum = gameconfig.maxCellAvatarCount()
         # 线性填充
         for i in range(0, cellMaxPlayerNum, 50):
             for spaceNo, spaceInfo in self.spaces.items():
@@ -131,25 +159,14 @@ class WaitSpaceFinder(object):
                 spaceBox = spaceInfo['spaceBox']
                 if not spaceBox:
                     LOG_ERR('WaitSpaceFinder::enterSpace no space box:', spaceNo)
-                    return 0
+                    return 0, None
 
-                return spaceNo
+                return spaceNo, spaceBox
 
         LOG_ERR('WaitSpaceFinder::enterSpace no ready space yet.')
-        return 0
-
-    def enterSpace(self, spaceNo, gbid):
-        if spaceNo not in self.spaces:
-            LOG_ERR('WaitSpaceFinder::enterSpace no space:', spaceNo)
-            return
-        
-        player = self.spaces[spaceNo]['avataring'].get(gbid, None)
-        space = self.spaces[spaceNo]['spaceBox']
-        if space and player:
-            space.createCellNearSelf(player['box'])
-
+        return 0, None
 
     def leaveSpace(self, spaceNo, gbid):
         if spaceNo not in self.spaces:
             return
-        self.spaces[spaceNo]['avataring'].discard(gbid)
+        self.spaces[spaceNo]['avataring'].pop(gbid, None)

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from KBEDebug import *
 import KBEngine
 
@@ -13,7 +13,7 @@ class Creation(iBaseWithCell.IBaseWithCell, iFubenSpace.IFubenSpace):
 
         return
 
-    def onLoseCell(self, reason=gameconst.OnLoseCellReason.DEFAULT):
+    def onLoseCell(self, reason=gameconst.OnLoseCellReasonEnum.DEFAULT):
         if self.isDestroyed:
             return
 

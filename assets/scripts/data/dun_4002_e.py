@@ -1149,7 +1149,11 @@ datas ={
     "entityID": [
       40028043
     ],
-    "transition": {}
+    "transition": {
+      "finished": [
+        1204
+      ]
+    }
   },
   "1205": {
     "type": "taskFinished",
@@ -1164,7 +1168,7 @@ datas ={
   },
   "1206": {
     "type": "castCinemaPlay",
-    "cinemaPlayID": 98000001,
+    "cinemaPlayID": 98010026,
     "transition": {
       "finished": [
         1232
@@ -1265,7 +1269,7 @@ datas ={
   },
   "1212": {
     "type": "castCinemaPlay",
-    "cinemaPlayID": 98000001,
+    "cinemaPlayID": 98010027,
     "transition": {
       "finished": [
         1235
@@ -1424,8 +1428,8 @@ datas ={
   },
   "1232": {
     "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98000001,
-    "exitTime": 5.0,
+    "cinemaPlayID": 98010026,
+    "exitTime": 3.0,
     "transition": {
       "finished": [
         1207,
@@ -1436,8 +1440,8 @@ datas ={
   },
   "1235": {
     "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98000001,
-    "exitTime": 5.0,
+    "cinemaPlayID": 98010027,
+    "exitTime": 10.0,
     "transition": {
       "finished": [
         1211
@@ -1483,7 +1487,7 @@ datas ={
     "num": 1,
     "lv": "8",
     "initState": 0,
-    "hp": 6000,
+    "hp": 3500,
     "minAtk": 0,
     "maxAtk": 0,
     "ifSetBoss": 0,
@@ -1790,5 +1794,13 @@ datas ={
         1143
       ]
     }
+  },
+  "1204": {
+    "type": "createRebornPos",
+    "entityID": [
+      40028044
+    ],
+    "num": 1,
+    "transition": {}
   }
 }

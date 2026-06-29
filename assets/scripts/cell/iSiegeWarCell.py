@@ -75,7 +75,7 @@ class ISiegeWarCell(object):
             LOG_WARN('ISiegeWarCell::leaveSiegeWarSpace: spaceNo not line: {}'.format(self.spaceNo))
             return
 
-        self._leaveSiegeWarSpace(gameconst.DungeonSrcEnum.FROM_CLIENT)
+        self._leaveSiegeWarSpace(gameconst.DunSrcEnum.FROM_CLIENT)
 
     def onSiegeWarKickout(self):
         if not formula.inSiegeWarScene(self.spaceNo):
@@ -86,7 +86,7 @@ class ISiegeWarCell(object):
             return
 
         LOG_INFO('ISiegeWarCell::onSiegeWarKickout: ', self.spaceNo, self.cellCrossServerState)
-        self._leaveSiegeWarSpace(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
+        self._leaveSiegeWarSpace(gameconst.DunSrcEnum.FROM_TIME_OUT)
 
     def _leaveSiegeWarSpace(self, srcId):
         _src = dungeonSrc.BasicDungeonSrc(srcId=srcId)

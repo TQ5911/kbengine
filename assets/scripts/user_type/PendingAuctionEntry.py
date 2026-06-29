@@ -10,7 +10,7 @@ class PendingAuctionEntry(userType.UserSingleType):
         self.dealTime = dealTime
         self.isSettled = isSettled
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'auctionItemUUID': self.auctionItemUUID,
             'amount': self.amount,
@@ -25,7 +25,7 @@ class PendingAuctionEntryMgr(object):
         return obj
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is PendingAuctionEntry

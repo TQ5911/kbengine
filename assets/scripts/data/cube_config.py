@@ -23,13 +23,13 @@ datas = _tools.RODict({
         "ID": "cubeNumCoin",
         "value": 100,
     }),
-    "cubeNumCoinCost": _tools.RODict({
-        "ID": "cubeNumCoinCost",
-        "value": ((1, 30000021, 50), (2, 30000001, 100)),
-    }),
     "cubeNumCoinDailyLimit": _tools.RODict({
         "ID": "cubeNumCoinDailyLimit",
         "value": 2,
+    }),
+    "cubeNumCoinCost": _tools.RODict({
+        "ID": "cubeNumCoinCost",
+        "value": ((1, 30000021, 50), (2, 30000001, 100)),
     }),
     "cubeNumItem": _tools.RODict({
         "ID": "cubeNumItem",
@@ -322,6 +322,14 @@ datas = _tools.RODict({
     "cube_innerDemonTime": _tools.RODict({
         "ID": "cube_innerDemonTime",
         "value": 300,
+    }),
+    "cube_innerDemonCD": _tools.RODict({
+        "ID": "cube_innerDemonCD",
+        "value": 60,
+    }),
+    "cube_innerDemonCDMsg": _tools.RODict({
+        "ID": "cube_innerDemonCDMsg",
+        "value": 54003430,
     }),
     "cube_prayFreeVerb": _tools.RODict({
         "ID": "cube_prayFreeVerb",

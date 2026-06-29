@@ -55,6 +55,14 @@ datas = _tools.RODict({
         "ID": "itemID_guildExp",
         "value": 30000008,
     }),
+    "itemID_guildCommission": _tools.RODict({
+        "ID": "itemID_guildCommission",
+        "value": 30000023,
+    }),
+    "itemID_unionMoney": _tools.RODict({
+        "ID": "itemID_unionMoney",
+        "value": 30000022,
+    }),
     "itemID_equipSpirit": _tools.RODict({
         "ID": "itemID_equipSpirit",
         "value": 30000002,

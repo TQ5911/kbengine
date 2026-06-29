@@ -344,7 +344,7 @@ class IDuelCell(object):
             return
 
         _duelFlag.setFinishReason(gameconst.DuelFinishReason.THIRD_DAMAGE)
-        if self.pkModel == gameconst.PKModel.PEACE and not self.inRedName():
-            self._setPKModel(gameconst.PKModel.JUSTICE, False, False)
+        if self.pkModel == gameconst.PKModelEnum.PEACE and not self.inRedName():
+            self._setPKModel(gameconst.PKModelEnum.JUSTICE, False, False)
         _duelFlag.onAvatarDuelFailed(self.id)
 

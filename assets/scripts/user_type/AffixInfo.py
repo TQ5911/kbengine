@@ -131,13 +131,13 @@ class AffixAdjustType(object):
 
 
 def genFixedAffix(iLevel, affixId, rate):
-    affixData = AFAFD.datas.get(affixId)
-    levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
-    affixLv = min(max(math.ceil(iLevel/levelGap), 1), affixData['maxLevel'])
-    affixObj = Affix(affixId, affixLv=affixLv)
+    _affixData = AFAFD.datas.get(affixId)
+    _levelGap = _affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
+    _affixLv = min(max(math.ceil(iLevel/_levelGap), 1), _affixData['maxLevel'])
+    _affixObj = Affix(affixId, affixLv=_affixLv)
 
-    affixValFloorList = affixData['floor'](affixLv)
-    affixValCeilList = affixData['ceiling'](affixLv)
+    affixValFloorList = _affixData['floor'](_affixLv)
+    affixValCeilList = _affixData['ceiling'](_affixLv)
     if not affixValFloorList or not affixValCeilList:
         return
 
@@ -151,14 +151,14 @@ def genFixedAffix(iLevel, affixId, rate):
         affixVals.append(val)
         break
 
-    affixObj.affixVal = affixVals[0]
+    _affixObj.affixVal = affixVals[0]
 
-    return affixObj
+    return _affixObj
 
 def genRandomAffix(affixId, iLevel, val, isGlyph):
     affixData = AFAFD.datas.get(affixId)
-    levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
-    affixLv = min(max(math.ceil(iLevel/levelGap), 1), affixData['maxLevel'])
+    _levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
+    affixLv = min(max(math.ceil(iLevel/_levelGap), 1), affixData['maxLevel'])
 
     # 铭文类型
     if isGlyph:
@@ -170,8 +170,8 @@ def genRandomAffix(affixId, iLevel, val, isGlyph):
 
 def genOneAffix(iLevel, affixId):
     affixData = AFAFD.datas.get(affixId)
-    levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
-    affixLv = min(max(math.ceil(iLevel/levelGap), 1), affixData['maxLevel'])
+    _levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
+    affixLv = min(max(math.ceil(iLevel/_levelGap), 1), affixData['maxLevel'])
     affixObj = Affix(affixId, affixLv=affixLv)
 
     affixValFloorList = affixData['floor'](affixLv)
@@ -181,11 +181,11 @@ def genOneAffix(iLevel, affixId):
     affixVals = []
     for floorVal, ceilVal in zip(affixValFloorList, affixValCeilList):
         if isinstance(floorVal, int) and isinstance(ceilVal, int):
-            val = random.randint(floorVal, ceilVal)
+            _val = random.randint(floorVal, ceilVal)
         else:
-            val = random.uniform(floorVal, ceilVal)
-            val = round(val, 4)
-        affixVals.append(val)
+            _val = random.uniform(floorVal, ceilVal)
+            _val = round(_val, 4)
+        affixVals.append(_val)
         break
 
     affixObj.affixVal = affixVals[0]
@@ -193,8 +193,8 @@ def genOneAffix(iLevel, affixId):
 
 def genBlessAffix(iLevel, affixId):
     affixData = AFAFD.datas.get(affixId)
-    levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
-    affixLv = min(max(math.ceil(iLevel / levelGap), 1), affixData['maxLevel'])
+    _levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
+    affixLv = min(max(math.ceil(iLevel / _levelGap), 1), affixData['maxLevel'])
     affixObj = Affix(affixId, affixLv=affixLv)
     return affixObj
 
@@ -206,15 +206,14 @@ def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, at
         gameengine.panicStack('applyAffixPropEffectToAvatar, afx end idx error:', attrValList, afxValStartIdx, afxValEndIdx)
         return
 
-    for idx, attrName in enumerate(attrNameList):
-        valueIdx = afxValStartIdx+idx
+    for _idx, attrName in enumerate(attrNameList):
+        valueIdx = afxValStartIdx+_idx
         if afxValEndIdx == -1:
-            val = attrValList[valueIdx] if valueIdx < valNum else attrValList[afxValEndIdx]
+            _val = attrValList[valueIdx] if valueIdx < valNum else attrValList[afxValEndIdx]
         else:
-            val = attrValList[valueIdx] if valueIdx < afxValEndIdx else attrValList[afxValEndIdx]
-        affixItem.recordAffixAddSingleProp(attrName, val)
-        owner.addProp(attrName, val, attrSrcType)
-    return
+            _val = attrValList[valueIdx] if valueIdx < afxValEndIdx else attrValList[afxValEndIdx]
+        affixItem.recordAffixAddSingleProp(attrName, _val)
+        owner.addProp(attrName, _val, attrSrcType)
 
 def removeAffixEffectFromAvatar(owner, affixItem, baseAttrAddValDic, attrSrcType):
     LOG_INFO('in removeAffixEffectFromAvatar')

@@ -28,7 +28,7 @@ class GlyphData(userType.UserSingleType):
         for replacedSkillId, sourceSkillId in self.replacedSkillIdx.items():
             self.sourceSkillIdx[sourceSkillId] = replacedSkillId
     
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         data = {
             'inscriptionEffects' : self.inscriptionEffects,
             'inscriptionRecords' : self.inscriptionRecords,

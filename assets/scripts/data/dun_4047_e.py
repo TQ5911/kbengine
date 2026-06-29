@@ -36,7 +36,7 @@ datas ={
       40470015
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "28",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -62,7 +62,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1047
+        1047,
+        1064
       ]
     }
   },
@@ -88,7 +89,9 @@ datas ={
     "transition": {
       "finished": [
         1049,
-        1056
+        1056,
+        1060,
+        1065
       ]
     }
   },
@@ -114,7 +117,9 @@ datas ={
     "transition": {
       "finished": [
         1051,
-        1057
+        1057,
+        1061,
+        1066
       ]
     }
   },
@@ -140,7 +145,9 @@ datas ={
     "transition": {
       "finished": [
         1053,
-        1058
+        1058,
+        1062,
+        1067
       ]
     }
   },
@@ -166,7 +173,9 @@ datas ={
     "transition": {
       "finished": [
         1055,
-        1059
+        1059,
+        1063,
+        1068
       ]
     }
   },
@@ -206,6 +215,87 @@ datas ={
     "type": "removeCollection",
     "entityID": [
       40478006
+    ],
+    "transition": {}
+  },
+  "1060": {
+    "type": "createNPC",
+    "entityID": [
+      40474003
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1061": {
+    "type": "createNPC",
+    "entityID": [
+      40474004
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1062": {
+    "type": "createNPC",
+    "entityID": [
+      40474005
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1063": {
+    "type": "createNPC",
+    "entityID": [
+      40474006
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1064": {
+    "type": "createNPC",
+    "entityID": [
+      40474007,
+      40474008,
+      40474009,
+      40474010
+    ],
+    "num": 0,
+    "lv": "0",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1065": {
+    "type": "removeNPC",
+    "entityID": [
+      40474007
+    ],
+    "transition": {}
+  },
+  "1066": {
+    "type": "removeNPC",
+    "entityID": [
+      40474008
+    ],
+    "transition": {}
+  },
+  "1067": {
+    "type": "removeNPC",
+    "entityID": [
+      40474009
+    ],
+    "transition": {}
+  },
+  "1068": {
+    "type": "removeNPC",
+    "entityID": [
+      40474010
     ],
     "transition": {}
   }

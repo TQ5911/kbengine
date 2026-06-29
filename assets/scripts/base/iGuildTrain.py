@@ -41,13 +41,13 @@ class IGuildTrain(object):
         self.resetGuildTrainAndGetBackMoney({}, AAC_AAC_DD.datas.BONUS_SRC_GUILDTRAIN_RESET, True)
 
     def resetGuildTrainAndGetBackMoney(self, context, src, isSyncCell=False):
-        trainInfo = list(self.trainDic.items())
-        trainInfo = sorted(trainInfo, key=lambda x: x[1])
+        _trainInfo = list(self.trainDic.items())
+        _trainInfo = sorted(_trainInfo, key=lambda x: x[1])
 
-        sumCont = 0
+        _sumCont = 0
         sumCoin = 0
 
-        for trainId, level in trainInfo:
+        for trainId, level in _trainInfo:
             if level == 0:
                 continue
 
@@ -56,16 +56,16 @@ class IGuildTrain(object):
             while curLevel < level:
                 curLevel += 1
                 data = GT_GTUD.datas[curLevel]
-                sumCont += data['upgradeContributionCost']
+                _sumCont += data['upgradeContributionCost']
                 sumCoin += data['upgradeCoinCost']
 
-        award = dropAward.AwardVal(coin=sumCoin, guildContrib=sumCont)
+        award = dropAward.AwardVal(coin=sumCoin, guildContrib=_sumCont)
         if 'uuid' in context:
-            opUUID = context['uuid']
+            _opUUID = context['uuid']
         else:
-            opUUID = KBEngine.genUUID64()
+            _opUUID = KBEngine.genUUID64()
 
-        self.addWealth(src, award, opUUID, None)
+        self.addWealth(src, award, _opUUID, None)
         oldTrain = self.trainDic.copy()
         self.trainDic = {}
 
@@ -76,7 +76,7 @@ class IGuildTrain(object):
             self.gbID,
             self.accountEntity.clientDistinctId, 
             self.gbID,
-            opUUID,
+            _opUUID,
         )
 
     def _checkCanUpgradeTrainLevel(self, trainId, targetLevel, gtuData):
@@ -182,15 +182,15 @@ class IGuildTrain(object):
         src = AAC_AAC_DD.datas.BONUS_SRC_GUILD_TRAIN_UPGRADE
         self.guildBoxBase.modifyGuildMoney(delta, opUUID, src, None)
 
+    def sendGuildTrains(self):
+        _data = [{
+            'trainId': trainId,
+            'level': _level,
+        } for trainId, _level in self.trainDic.items()]
+        self.client.onGuildTrainsInit(_data)
+
     def _calcGuildTrainGuildMoney(self, upgradeCoinCost):
         return int(upgradeCoinCost * G_GCD.datas['guildTrainCost2GuildFundPercentage']['value'] // 100)
-
-    def sendGuildTrains(self):
-        data = [{
-            'trainId': trainId,
-            'level': level
-        } for trainId, level in self.trainDic.items()]
-        self.client.onGuildTrainsInit(data)
 
     def _calcGuildTrainScore(self):
         score = 0
@@ -206,33 +206,33 @@ class IGuildTrain(object):
 
         return score
 
-    def gmAddGuildTrainLevel(self, trainId, targetLevel):
+    def gmAddGuildTrainLevel(self, trainId, targetLv):
         maxLevel = max(GT_GTUD.datas.keys())
-        targetLevel = min(maxLevel, targetLevel)
+        targetLv = min(maxLevel, targetLv)
         if trainId:
-            curLevel = self.trainDic.get(trainId, 0)
-            if curLevel >= targetLevel:
+            _curLevel = self.trainDic.get(trainId, 0)
+            if _curLevel >= targetLv:
                 return
 
-            self.trainDic[trainId] = targetLevel
-            self.cell.gmAddGuildTrainLevelCell(trainId, curLevel, targetLevel)
-            data = [{
+            self.trainDic[trainId] = targetLv
+            self.cell.gmAddGuildTrainLevelCell(trainId, _curLevel, targetLv)
+            _data = [{
                 'trainId': trainId,
-                'level': targetLevel
+                'level': targetLv
             }]
-            self.client.onUpdateGuildTrains(data)
+            self.client.onUpdateGuildTrains(_data)
         else:
-            for tId in GT_GTD.datas:
-                curLevel = self.trainDic.get(tId, 0)
-                if curLevel >= targetLevel:
+            for _tId in GT_GTD.datas:
+                _curLevel = self.trainDic.get(_tId, 0)
+                if _curLevel >= targetLv:
                     continue
 
-                self.trainDic[tId] = targetLevel
-                self.cell.gmAddGuildTrainLevelCell(tId, curLevel, targetLevel)
-                data = [{
-                    'trainId': tId,
-                    'level': targetLevel
+                self.trainDic[_tId] = targetLv
+                self.cell.gmAddGuildTrainLevelCell(_tId, _curLevel, targetLv)
+                _data = [{
+                    'trainId': _tId,
+                    'level': targetLv
                 }]
-                self.client.onUpdateGuildTrains(data)
+                self.client.onUpdateGuildTrains(_data)
 
         self.cell.onUpdateGuildTrainScore(self._calcGuildTrainScore())

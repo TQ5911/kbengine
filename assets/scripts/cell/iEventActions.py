@@ -542,7 +542,7 @@ class IEventActions(object):
 
         fixDir = None
         isSetState = True
-        if not skill.hasSkillTag(gameconst.SkillTag.Casting):
+        if not skill.hasSkillTag(gameconst.SkillTagEnum.Casting):
 
             category = SSD.datas[skillID].get('category')
             if targetEnt and targetEnt.id != self.id and category == gameconst.SkillCategory.CATEGORY_CAST_SKILL_WITH_ACTION:
@@ -586,7 +586,7 @@ class IEventActions(object):
 
         delta = arg1
 
-        if not targetEnt or targetEnt.isDie():
+        if not targetEnt or targetEnt.isDie() or not targetEnt.IsAvatar:
             return
 
         if targetEnt:
@@ -607,7 +607,7 @@ class IEventActions(object):
 
         delta = formula.round2(arg1 * targetEnt.getProp("fullMp"))
 
-        if not targetEnt or targetEnt.isDie():
+        if not targetEnt or targetEnt.isDie() or not targetEnt.IsAvatar:
             return
 
         if targetEnt:
@@ -1009,10 +1009,10 @@ class IEventActions(object):
 
         if not _dstPosition:
             arr = context.skillArgs
-            percent = arr[3]
-            direction = Math.Vector3(arr[0], arr[1], arr[2])
-            direction.normalise()
-            _dstPosition = self.position + direction * percent * context.skillObj.getRange(self, context.skillId, context.skillObj.skillLv)
+            _percent = arr[3]
+            _direction = Math.Vector3(arr[0], arr[1], arr[2])
+            _direction.normalise()
+            _dstPosition = self.position + _direction * _percent * context.skillObj.getRange(self, context.skillId, context.skillObj.skillLv)
         if _dist <= 0:
             _dist = sMath.distance2D(_dstPosition, targetEnt.position)
         else:
@@ -1160,7 +1160,7 @@ class IEventActions(object):
         # 非闪避技能，不设置闪避状态
         #【【战斗】自动战斗下，法师来回移动下释放移形换影，小概率位移失效，见附件】
         # https://www.tapd.cn/tapd_fe/59721401/bug/detail/1159721401001009436
-        if utils.hasSkillTagById(skillVal.skillId, gameconst.SkillTag.DodgeSkill):
+        if utils.hasSkillTagById(skillVal.skillId, gameconst.SkillTagEnum.DodgeSkill):
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Dodging)):
                 self.cancelController('Movement')
                 self.setState(gameconst.StateEnum.Dodging)
@@ -1209,9 +1209,9 @@ class IEventActions(object):
         if targetEnt.hasCreepTag(gameconst.CREEP_TAG_ANTI_TAUNT):
             return
 
-        maxHateEntId, maxHate = targetEnt.aiController.hateDict.getMaxHatredTarget()
+        maxHateEntId, maxHate = targetEnt.aiController.hateDic.getMaxHatredTarget()
         maxHateVal = maxHate.currentHate if maxHate else 0
-        myHate = targetEnt.aiController.hateDict.getHate(self.id)
+        myHate = targetEnt.aiController.hateDic.getHate(self.id)
         myHateVal = myHate.currentHate if myHate else 0
 
         if tauntType==1:
@@ -1222,7 +1222,7 @@ class IEventActions(object):
         _tauntHateVal = min(_tauntHateVal, gameconst.INT32_MAX)
 
         LOG_DBG('taunt targetEnt', targetEnt.id, _tauntHateVal, tauntType, maxHateEntId, maxHate, myHateVal)
-        targetEnt.aiController.hateDict.setHate(self.id, _tauntHateVal)
+        targetEnt.aiController.hateDic.setHate(self.id, _tauntHateVal)
         if tauntTime :
             targetEnt.aiController.tmpForceTargetId = self.id
             if targetEnt.aiController.tauntTimerId :
@@ -1314,7 +1314,8 @@ class IEventActions(object):
         _opUUID = KBEngine.genUUID64()
         _src = AA_AA_DD.datas.BONUS_SRC_EXP_ACTION
         _detail = gameclass.AwardDetailCls()
-        self._addExp(expVal, _opUUID, _src, _detail)
+        if self.IsAvatar:
+            self._addExp(expVal, _opUUID, _src, _detail)
 
     def interactArenaKing(self):
         if not formula.inCubeScene(self.spaceNo):
@@ -1350,4 +1351,5 @@ class IEventActions(object):
         LOG_DBG('challengeInnerDemon', src, extra)
         self.applyLeaveTeam(self.id)
         self.leaveRaid(self.id)
+        self.setPersistentMiscProp(gameconst.EntityPropsEnum.innerDemonCDTimestamp, utils.curTS() + cube_config.datas['cube_innerDemonCD']['value'])
         self._enterSingleDungeon(dungeonNo, src, extra)

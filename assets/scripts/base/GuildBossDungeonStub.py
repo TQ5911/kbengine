@@ -45,26 +45,26 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         # teamStub.destroyTeamDungeonDelay args list
         needDestroyList = []
         realDestroyList = []
-        for spaceNo, sVal in self.spaces.items():
-            if sVal.nDestoryCnt>3:
+        for spaceNo, _sVal in self.spaces.items():
+            if _sVal.nDestoryCnt>3:
                 LOG_ERR('_checkDungeonSpaceDestroy: cannot destory space', spaceNo)
                 continue
 
-            if sVal.markCreate:
+            if _sVal.markCreate:
                 # new dungeon, skip destroy once
-                sVal.markCreate = False
+                _sVal.markCreate = False
                 continue
 
-            if sVal.markDestroy:
-                if sVal.markDestroy < now:
-                    realDestroyList.append((spaceNo, sVal.spaceUUID, 'time destory'))
+            if _sVal.markDestroy:
+                if _sVal.markDestroy < now:
+                    realDestroyList.append((spaceNo, _sVal.spaceUUID, 'time destory'))
                 continue
 
             # extra kwargs in `team.TeamDungeonSpaceCacheVal.isDungeonSpaceCanBeDestoried`
-            extraInfo = {'tCreate': sVal.tCreate,
-                         'tState': sVal.state}
+            extraInfo = {'tCreate': _sVal.tCreate,
+                         'tState': _sVal.state}
 
-            needDestroyList.append((sVal.guildUUID,
+            needDestroyList.append((_sVal.guildUUID,
                                     self.dungeonNo,
                                     spaceNo,
                                     'delay timeout destory',
@@ -74,7 +74,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             self.destoryDungeonSpace(*rArgs)
 
     def onDungeonSpaceGone(self, spaceNo, reason):
-        if reason == gameconst.OnLoseCellReason.CELLAPP_DEATH:
+        if reason == gameconst.OnLoseCellReasonEnum.CELLAPP_DEATH:
             LOG_ERR("GuildBossDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
             if spaceNo in self.spaces:
                 sVal = self.spaces[spaceNo]

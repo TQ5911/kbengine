@@ -292,7 +292,7 @@ class IMineWarCell(object):
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleportAnchor,
+            gameconst.CastEnum.teleportAnchor,
             '_teleportToMineWarFlag',
             (destMapId, dstPos),
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)

@@ -368,7 +368,7 @@ class IAICombatUnit(SkillManager.SkillManager):
     def getRace(self):
         return self.getCreepData().get('race', 0)
 
-    def getDefenderAI(self):
+    def getDefenderAIName(self):
         return self.getCreepData().get('AI', 0)
 
     def getAttackAI(self):
@@ -406,7 +406,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         if eventId == gameconst.AI_EVENT_ENENY_ENTER_TRAP:
             target = KBEngine.entities.get(args[0])
             if target and not self.isVisible(target) and target.id not in self.unVisibleList and \
-                self.aiController and not self.aiController.hateDict.isInHateList(target.id):
+                self.aiController and not self.aiController.hateDic.isInHateList(target.id):
                 self.unVisibleList.append(target.id)
                 self.checkUnVisibleTimer()
 
@@ -473,7 +473,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         if hasattr(self, 'routeState'):
             return self.routeState 
         else:
-            return gameconst.RouteState.ROUTE_STATE_IDLE
+            return gameconst.RouteStateEnum.ROUTE_STATE_IDLE
 
     def navigateToPosition(self, pos, distance=0, userData=None):
         navController = self.scriptNavigate(pos, self.speed, distance, userData=userData)
@@ -700,7 +700,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
     def removeHate(self, targetId):
         if self.aiController:
-            self.aiController.hateDict.removeHate(targetId)
+            self.aiController.hateDic.removeHate(targetId)
 
     def onBeDamaged(self, dmgSrcEntityId, damageVal, absorbVal, sr_c=None, srcId=None):
         _skillHateRatio = 1

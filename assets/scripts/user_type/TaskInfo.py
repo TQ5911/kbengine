@@ -1525,12 +1525,23 @@ class TaskInfo(userType.UserSingleType):
         # 进入副本的奖励
         if dataUtils.getTaskFieldVal(taskData, 'AbanHasRewardInst'):
             self._rewardEnterDungeon(owner, taskId, dataUtils.getTaskFieldVal(taskData, 'AbanRewardInstance'))
+        else:
+            self._quitTaskRewardLeaveDungeon(owner, taskData, taskId, gameconst.ClaimTaskSrcEnum.TASK_SRC_QUIT_TASK_REWARD_LEAVE_DUNGEON)
         #奖励发放任务
         self._rewardNewTask(owner, dataUtils.getTaskFieldVal(taskData, 'AbanRewardTaskID'))
         # 检查是否有事件需要处理
         owner.doTaskEvent(gameconst.EventActionSrc.SRC_QUIT_TASK, taskId,
                           dataUtils.getTaskFieldVal(taskData, 'AbanRewardEventName'),
                           dataUtils.getTaskFieldVal(taskData, 'AbanRewardEventParam'))
+
+    def _quitTaskRewardLeaveDungeon(self, owner, taskData, taskId, claimSrc):
+        if dataUtils.getTaskFieldVal(taskData, 'AbanRewardLeaveInstance'):
+            leaveDungeonNo = dataUtils.getTaskFieldVal(taskData, 'AbanRewardLevInsID')
+            if not leaveDungeonNo:
+                LOG_WARN('in _quitTaskRewardLeaveDungeon, no leaveDungeonNo:', taskId, leaveDungeonNo)
+                return
+            LOG_INFO('_quitTaskRewardLeaveDungeon, leave dungeonNo:', taskId)
+            owner.cell.onTaskRwdLeaveDungeon(taskId, leaveDungeonNo, claimSrc)
 
     def _rewardLeaveDungeon(self, owner, taskData, taskId, claimSrc):
         if dataUtils.getTaskFieldVal(taskData, 'FinRewardLeaveInstance'):

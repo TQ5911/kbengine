@@ -20,7 +20,7 @@ class ApplyJoinPlayerVal(userType.UserSingleType):
         self.applySource = applySource
         self.score = score
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'level': self.level,
             'gbId': self.gbId,
@@ -80,7 +80,7 @@ class TeamMemberCacheVal(userType.UserSingleType):
             'joinType': self.joinType
         }
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'playerGbId': self.playerGbId,
             'playerName': self.playerName,
@@ -147,7 +147,7 @@ class TeamDungeonCache(userType.UserDictType):
         for _v in self.values():
             _v.reloadScript()
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {'dungeons': [_i for _i in self.values()]}
 
     def addDungeonCache(self, dungeonNo, spaceNo, spaceUUID):
@@ -223,11 +223,11 @@ class TeamDungeonSpaceCacheVal(userType.UserSingleType):
     def _lateReload(self):
         self.founders.reloadScript()
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'spaceNo': self.spaceNo,
             'dungeonNo': self.dungeonNo,
-            'founders': [i.toSavedDict() for i in self.founders.values()],
+            'founders': [i.toStreamSavedDic() for i in self.founders.values()],
             'spaceUUID': self.spaceUUID,
         }
 
@@ -301,7 +301,7 @@ class TeamDungeonFounderVal(userType.UserSingleType):
         for _k, _v in dataDic.items():
             setattr(self, _k, _v)
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'playerGbId': self.playerGbId,
             'spaceNo': self.spaceNo,
@@ -472,7 +472,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                                                             bOnline, spaceNo, position, hp, fullHp, score=score, \
                                                             mountState=mountState, isDead=isDead, openId=openId, joinType=joinType)
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         savedDict = {
             'teamTarget': self.teamTarget, 
             'teamId': self.teamId, 
@@ -480,7 +480,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             'teamMinScore': self.teamMinScore, 
             'teamMinLv':self.teamMinLv,  
             'teamCaptainGbId': self.teamCaptainGbId,
-            'teamMemberList': [i.toSavedDict() for i in self.teamPlayerDict.values()],
+            'teamMemberList': [i.toStreamSavedDic() for i in self.teamPlayerDict.values()],
             'teamDungeonList': [_ for _ in self.teamDungeonDict.values()],
             'teamHonorPKMatchTime': self.teamHonorPKMatchTime, 
             'isSilent':self.isSilent,
@@ -916,13 +916,12 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             return gbId
         return -1
 
-    def startAutoMatch(self, guildUUID):
+    def startAutoMatch(self):
         if self.isTeamFull():
             self.fetchCaptainBox().onMessagePre(TMMCD.datas['teamMatch_fullMsg']['value'], [])
             return
         self.teamAutoMatchTime = utils.curTS()
         _teamInfoDic = self._getTeamMatchInfoDic()
-        _teamInfoDic['guildUUID'] = guildUUID
         gameengine.getGlobalBase('TeamMatchStub').teamAutoMatch(_teamInfoDic)
         self.broadcastToAllMembersClient('onTeamAutoMatch', (self.teamAutoMatchTime, ))
         return
@@ -1218,7 +1217,7 @@ class PlayerTeamMemberCacheVal(userType.UserSingleType):
         self.score = score
         self.joinType = joinType
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         return {
             'playerGbId': self.playerGbId,
             'playerBox': self.playerBox,
@@ -1373,7 +1372,7 @@ class TeamCacheValInPlayer(userType.UserSingleType):
             pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, spaceNo, mountState, score)
             self.teamPlayerDict[playerGbId] = pVal
 
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         savedDict = {
             'teamTarget': self.teamTarget, 
             'teamId': self.teamId, 
@@ -1382,7 +1381,7 @@ class TeamCacheValInPlayer(userType.UserSingleType):
 
         for gbId in self.teamPlayerDict:
             teamMemberObj = self.teamPlayerDict[gbId]
-            teamMemberDic = teamMemberObj.toSavedDict()
+            teamMemberDic = teamMemberObj.toStreamSavedDic()
             savedDict['teamMemberList'].append(teamMemberDic)
 
         return savedDict

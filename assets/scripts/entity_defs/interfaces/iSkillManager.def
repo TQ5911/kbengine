@@ -877,10 +877,6 @@
             <Arg>           SKILLID        </Arg>
             <Arg>           BOOL           </Arg>
         </removeSkill>
-
-        <changeMorphPreAddSkill>
-            <Arg>          MORPH_STATE  </Arg>
-        </changeMorphPreAddSkill>
     </CellMethods>
 
     <ClientMethods>

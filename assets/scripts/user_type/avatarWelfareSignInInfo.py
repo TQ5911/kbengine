@@ -18,7 +18,7 @@ class welfareSignInInfo(userType.UserSTSoleType):
         self.welfareSignInData = dataDic['welfareSignInData']
         return self
     
-    def toSavedDict(self):
+    def toStreamSavedDic(self):
         dic = {'welfareSignInDay': self.welfareSignInDay,
                'welfareLastSignInTimestamp': self.welfareLastSignInTimestamp,
                'welfareSignInData': self.welfareSignInData}

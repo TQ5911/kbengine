@@ -13,8 +13,8 @@ import formula
 import LogTrackingMgr
 import gamedecorator
 
-import PKData_PKData as PKD
-import message_Message_def as MMD
+import PKData_PKData as PKD_PKDD
+import message_Message_def as M_M_DD
 import gamePlay_gamePlay as GPGP
 import PKData_moralValueEffect as PKMVE
 import duel_config as D_CD
@@ -28,7 +28,7 @@ class ImpAvatarPK(object):
         current = utils.curTS()
         self.redNameKillTime = {
             k: v for k, v in self.redNameKillTime.items()
-            if abs(current - v) <= PKD.datas['defeatRedPlayerCDTime']['value']
+            if abs(current - v) <= PKD_PKDD.datas['defeatRedPlayerCDTime']['value']
         }
         LOG_DBG('redNameKillTime on init', self.redNameKillTime)
 
@@ -52,14 +52,14 @@ class ImpAvatarPK(object):
         return False
 
     def showPkModelMsg(self, pkModel):
-        if pkModel == gameconst.PKModel.PEACE:
-            self.showMsg(PKD.datas['PK_changeToPeaceMode_msgID']['value'], [])
-        elif pkModel == gameconst.PKModel.JUSTICE:
-            self.showMsg(PKD.datas['PK_changeToShaneMode_msgID']['value'], [])
-        elif pkModel == gameconst.PKModel.ATTACK:
-            self.showMsg(PKD.datas['PK_changeToAttackMode_msgID']['value'], [])
-        elif pkModel == gameconst.PKModel.ENEMY:
-            self.showMsg(PKD.datas['PK_changeToHostilityMode_msgID']['value'], [])
+        if pkModel == gameconst.PKModelEnum.PEACE:
+            self.showMsg(PKD_PKDD.datas['PK_changeToPeaceMode_msgID']['value'], [])
+        elif pkModel == gameconst.PKModelEnum.JUSTICE:
+            self.showMsg(PKD_PKDD.datas['PK_changeToShaneMode_msgID']['value'], [])
+        elif pkModel == gameconst.PKModelEnum.ATTACK:
+            self.showMsg(PKD_PKDD.datas['PK_changeToAttackMode_msgID']['value'], [])
+        elif pkModel == gameconst.PKModelEnum.ENEMY:
+            self.showMsg(PKD_PKDD.datas['PK_changeToHostilityMode_msgID']['value'], [])
 
     @utils.isMyself
     @gamedecorator.crossServer
@@ -69,15 +69,15 @@ class ImpAvatarPK(object):
         self.syncMethodCallToLocalServerCell('_switchPKModel', (model,))
 
     def _switchPKModel(self, model):
-        if utils.curTS() < self.tSwitchPKModel + PKD.datas['modeCd']['value']:
-            self.base.onMessagePre(MMD.datas.modeCdmsg, [])
+        if utils.curTS() < self.tSwitchPKModel + PKD_PKDD.datas['modeCd']['value']:
+            self.base.onMessagePre(M_M_DD.datas.modeCdmsg, [])
             return
 
         if formula.inDuelScene(self.spaceNo):
             self.showMsg(D_CD.datas['duel_forbitSwitchMode']['value'], [])
             return
 
-        if not gameconst.PKModel.PEACE <= model <= gameconst.PKModel.MAX_PK:
+        if not gameconst.PKModelEnum.PEACE <= model <= gameconst.PKModelEnum.MAX_PK:
             gameengine.panicStack("switchPKModel:: pk model error")
             return
         
@@ -93,7 +93,7 @@ class ImpAvatarPK(object):
 
         ret = self.setPKModel(model)
 
-        if self.pkModel != gameconst.PKModel.PEACE:
+        if self.pkModel != gameconst.PKModelEnum.PEACE:
             for _target in self.entitiesInRange(gameconst.DEFAULT_AOI):
                 self.checkAttachmentEntityRelationType(_target)
 
@@ -105,93 +105,29 @@ class ImpAvatarPK(object):
     @utils.isMyself
     def setPKProtect(self, exposed, protectType, isSet):
         LOG_DBG('setPKProtect', protectType, isSet)
-        if not (gameconst.PKProtectType.TEAM <= protectType <= gameconst.PKProtectType.UNION):
+        if not (gameconst.PKProtectEnum.TEAM <= protectType <= gameconst.PKProtectEnum.UNION):
             return
 
         if isSet:
-            newVal = self.pkProtect | (1 << protectType)
+            _newVal = self.pkProtect | (1 << protectType)
         else:
-            newVal = self.pkProtect & (~(1 << protectType))
+            _newVal = self.pkProtect & (~(1 << protectType))
 
-        self.pkProtect = newVal
+        self.pkProtect = _newVal
         self.resetAllTargetTypeCache()
 
     @utils.isMyself
-    def declareWarToAvatar(self, exposed, targetId):
-        if targetId == self.id:
-            return
+    def declareWarToAvatar(self, _, targetId):
+        pass
 
-        if self.level <= PKD.datas['noviceProtection']['value']:
-            return
-
-        if self.inPKSafeArea():
-            self.showMsg(MMD.datas.gerenxuanzhan_safeArea, [])
-            return
-
-        target = KBEngine.entities.get(targetId, None)
-        if not target or not target.IsAvatar or target.level <= PKD.datas['noviceProtection']['value']:
-            return
-
-        if target.inPKSafeArea():
-            self.showMsg(MMD.datas.gerenxuanzhan_safeArea, [])
-            return
-
-        gbId = target.gbId
-        now = utils.curTS()
-        self.base.declareWarFlow({
-            'GameSvrId': None,
-            'dtEventTime': None,
-            'vGameAppid': None,
-            'targetId':targetId,
-            'targetName':target.name,
-        })
-        if gbId in self.challengeAvatars:
-            self.challengeAvatars[gbId] = now
-        else:
-            self.challengeAvatars[gbId] = now
-            self.addTimerCB(60, '_checkRemoveChallengeAvatar', (gbId,), gametimer.TIMER_TAG_CHECK_REMOVE_CHALLENGE_AVATAR)
-            self.client.onAddChallengeAvatar([gbId])
-
-            if len(self.challengeAvatars) > 50:
-                removeGbId = 0
-                minTime = now
-                for gbId, time in self.challengeAvatars.items():
-                    if time < minTime:
-                        removeGbId = gbId
-                        minTime = time
-
-                self._removeChallengeAvatar(removeGbId)
-                self.client.onRemoveChallengeAvatar(removeGbId)
-
-            self.resetTargetTypeCache([target])
-            if target in self.entitiesInView(True):
-                self.reCheckRelationType(target)
-                target.reCheckRelationType(self)
-
-    def _removeChallengeAvatar(self, gbId):
-        self.challengeAvatars.pop(gbId)
-        self.resetAllTargetTypeCache()
-
-    def _checkRemoveChallengeAvatar(self, gbId):
-        challengeTime = self.challengeAvatars.get(gbId, 0)
-        if not challengeTime:
-            return
-
-        expireTime = utils.curTS() - challengeTime
-        if expireTime >= 60:
-            self._removeChallengeAvatar(gbId)
-            self.client.onRemoveChallengeAvatar(gbId)
-        else:
-            self.addTimerCB(60-expireTime, '_checkRemoveChallengeAvatar', (gbId,), gametimer.TIMER_TAG_CHECK_REMOVE_CHALLENGE_AVATAR)
-
-    def hasPKProtect(self, protectType):
-        if self.pkProtect & (1 << protectType):
+    def hasPKProtect(self, protectTp):
+        if self.pkProtect & (1 << protectTp):
             return True
         else:
             return False
 
     def inRedName(self):
-        redNameValue = PKD.datas['redNameValue']['value']
+        redNameValue = PKD_PKDD.datas['redNameValue']['value']
         return self.moralValue <= redNameValue
 
     def inPKSafeArea(self):
@@ -214,7 +150,7 @@ class ImpAvatarPK(object):
 
     def increaseMoralValue(self, delta, srcType):
         LOG_DBG('increaseMoralValue', delta)
-        upperLimitOfMoralValues = PKD.datas['upperLimitOfMoralValues']['value']
+        upperLimitOfMoralValues = PKD_PKDD.datas['upperLimitOfMoralValues']['value']
         if self.moralValue >= upperLimitOfMoralValues:
             return
 
@@ -244,7 +180,7 @@ class ImpAvatarPK(object):
     # -1 代表完全消除
     def reduceMoralValue(self, delta, srcType):
         LOG_DBG('reduceMoralValue', delta)
-        lowerLimitOfMoralValues = PKD.datas['lowerLimitOfMoralValues']['value']
+        lowerLimitOfMoralValues = PKD_PKDD.datas['lowerLimitOfMoralValues']['value']
         if self.moralValue <= lowerLimitOfMoralValues:
             return gameconst.UseItemEnum.FALSE
 
@@ -257,7 +193,7 @@ class ImpAvatarPK(object):
             self.moralValue = 0
             self.resetAllTargetTypeCache()
         else:
-            lowerLimitOfMoralValues = PKD.datas['lowerLimitOfMoralValues']['value']
+            lowerLimitOfMoralValues = PKD_PKDD.datas['lowerLimitOfMoralValues']['value']
             self.moralValue = max(lowerLimitOfMoralValues, self.moralValue - delta)
 
         _oldLevel = self.moralLevel
@@ -305,7 +241,7 @@ class ImpAvatarPK(object):
         if self.inPKSafeArea():
             return
 
-        if self.pkModel == gameconst.PKModel.ATTACK:
+        if self.pkModel == gameconst.PKModelEnum.ATTACK:
             if self.inRedName() or target.inRedName():
                 return
 
@@ -315,7 +251,7 @@ class ImpAvatarPK(object):
             if target.hasBuff(gameconst.SIEGEWAR_WANTED_BUFF):
                 return False
 
-            _isCurGrey = utils.curTS() - self.tGreyNameStart <= PKD.datas['grayNameDuration']['value']
+            _isCurGrey = utils.curTS() - self.tGreyNameStart <= PKD_PKDD.datas['grayNameDuration']['value']
             self.tGreyNameStart = utils.curTS()
             if not _isCurGrey:
                 # 如果本来就是灰名这里还清缓存，一是没必要，二是太耗了
@@ -325,11 +261,11 @@ class ImpAvatarPK(object):
         if self.inRedName():
             return False
 
-        return self.tGreyNameStart and utils.curTS() - self.tGreyNameStart <= PKD.datas['grayNameDuration']['value']
+        return self.tGreyNameStart and utils.curTS() - self.tGreyNameStart <= PKD_PKDD.datas['grayNameDuration']['value']
 
     def _backToPeaceModel(self):
         LOG_DBG('_backToPeaceModel')
-        self.setPKModel(gameconst.PKModel.PEACE)
+        self.setPKModel(gameconst.PKModelEnum.PEACE)
         self.backPeaceTimer = 0
 
     # 触发反击状态
@@ -341,14 +277,14 @@ class ImpAvatarPK(object):
             if self.backPeaceTimer or self.inRedName():
                 return False
 
-            if self.pkModel == gameconst.PKModel.ENEMY:
+            if self.pkModel == gameconst.PKModelEnum.ENEMY:
                 return False
 
-            if self.pkModel == gameconst.PKModel.ATTACK:
+            if self.pkModel == gameconst.PKModelEnum.ATTACK:
                 return False
 
             target = utils.getEntityRealEntity(releaseRole)
-            if target.pkModel != gameconst.PKModel.ATTACK and self.gbId not in target.challengeAvatars:
+            if target.pkModel != gameconst.PKModelEnum.ATTACK:
                 #只有被杀戮模式或者个人宣战的玩家攻击才会自动切成仗剑模式
                 return False
 
@@ -356,10 +292,10 @@ class ImpAvatarPK(object):
 
         if _triggerDefend():
             LOG_DBG('checkBeAttackByAvatarPK trigger defend')
-            ret = self.setPKModel(gameconst.PKModel.JUSTICE)
+            ret = self.setPKModel(gameconst.PKModelEnum.JUSTICE)
             if not ret:
                 return
-            self.backPeaceTimer = self.addTimerCB(PKD.datas['fightBackTime']['value'], '_backToPeaceModel', (),
+            self.backPeaceTimer = self.addTimerCB(PKD_PKDD.datas['fightBackTime']['value'], '_backToPeaceModel', (),
                                                  gametimer.TIMER_TAG_BACK_TO_PEACE_MODEL, 'backPeaceTimer')
 
     def ifMoral(self):
@@ -367,7 +303,7 @@ class ImpAvatarPK(object):
         return _ifMoral == gameconst.MoralType.MORAL_COULD_CHANGE
 
     def isMoralValueChanged(self, target):
-        if self.pkModel == gameconst.PKModel.ENEMY:
+        if self.pkModel == gameconst.PKModelEnum.ENEMY:
             if utils.getGuildRelation(self.guildUUID, target.guildUUID) == gameconst.GuildRelationType.ENEMY:
                 return False
 
@@ -406,17 +342,17 @@ class ImpAvatarPK(object):
             if not self.isRedNameTarget(target) :
                 return False
 
-            if abs(self.level - target.level) > PKD.datas['differenceInPlayerLv']['value'] :
+            if abs(self.level - target.level) > PKD_PKDD.datas['differenceInPlayerLv']['value'] :
                 return False
 
             current = utils.curTS()
-            if abs(current - self.redNameKillTime.get(target.id, 0)) < PKD.datas['defeatRedPlayerCDTime']['value']:
+            if abs(current - self.redNameKillTime.get(target.id, 0)) < PKD_PKDD.datas['defeatRedPlayerCDTime']['value']:
                 return False
 
             return True
 
         if checkRedTarget():
-            formulaId = PKD.datas['defeatRedPlayerMoralValues']['value']
+            formulaId = PKD_PKDD.datas['defeatRedPlayerMoralValues']['value']
             increaseMoralValue = utils.calcFormulaValue(formulaId, (self.moralValue,))
             self.increaseMoralValue(increaseMoralValue, gameconst.MORAL_SRC_TYPE_KILL_PLAYER)
             self.redNameKillTime[target.id] = utils.curTS()
@@ -425,26 +361,26 @@ class ImpAvatarPK(object):
         if not self.isMoralValueChanged(target):
             return
 
-        value = PKD.datas['deductingMoralValues']['value']
+        value = PKD_PKDD.datas['deductingMoralValues']['value']
         self.reduceMoralValue(value, gameconst.MORAL_SRC_TYPE_KILL_PLAYER)
 
     def inPKProtect(self, target):
-        if self.hasPKProtect(gameconst.PKProtectType.TEAM) and self.isInTeam(target.gbId):
+        if self.hasPKProtect(gameconst.PKProtectEnum.TEAM) and self.isInTeam(target.gbId):
             return True
 
-        if self.hasPKProtect(gameconst.PKProtectType.GUILD) and self.guildUUID and self.guildUUID == target.guildUUID:
+        if self.hasPKProtect(gameconst.PKProtectEnum.GUILD) and self.guildUUID and self.guildUUID == target.guildUUID:
             return True
 
-        if self.hasPKProtect(gameconst.PKProtectType.GROUP) and self.raidId and self.raidId == target.raidId:
+        if self.hasPKProtect(gameconst.PKProtectEnum.GROUP) and self.raidId and self.raidId == target.raidId:
             return True
 
-        if self.hasPKProtect(gameconst.PKProtectType.UNION) and utils.getGuildRelation(self.guildUUID, target.guildUUID) == gameconst.GuildRelationType.UNION:
+        if self.hasPKProtect(gameconst.PKProtectEnum.UNION) and utils.getGuildRelation(self.guildUUID, target.guildUUID) == gameconst.GuildRelationType.UNION:
             return True
 
         return False
 
     def checkIncMoralValueOnKillMonster(self, monsterLv):
         levelDelta = abs(self.level - monsterLv)
-        if levelDelta <= PKD.datas['differenceInMonsterLv']['value'] and self.moralValue < 0:
-            increasingMoralValues = PKD.datas['increasingMoralValues']['value']
+        if levelDelta <= PKD_PKDD.datas['differenceInMonsterLv']['value'] and self.moralValue < 0:
+            increasingMoralValues = PKD_PKDD.datas['increasingMoralValues']['value']
             self.increaseMoralValue(increasingMoralValues, gameconst.MORAL_SRC_TYPE_KILL_MONSTER)

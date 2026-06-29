@@ -16,10 +16,11 @@ import GuildJoinCondInfo
 import redisUtils
 import gameglobal
 import gameengine
+import iCycleEvent
+
 import LogTrackingMgr
 import guild_guildConst as G_GCD
 import _pickle as cPickle
-
 
 class GuildCacheVal(userType.UserSingleType):
     def __init__(self, guildUUID, guildName, desc, guildBox, memberCnt, guildLevel,
@@ -50,11 +51,15 @@ class GuildCacheVal(userType.UserSingleType):
         }
 
 
-class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
+class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     def __init__(self):
+        iCycleEvent.ICycleEventMixin.__init__(self)
         self.guildDic = {}
         self.addTimerCB(0.1, '_loadGuildEntity', (), gametimer.TIMER_TAG_LOAD_GUILD_ENTITY)
         utils.subscribe(gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, self, 'onGuildUnionChangeToLog')
+
+        # 帮会佣金周结算
+        self.registerWeekEvent('_commissionWeeklyCalc')
 
     def _loadGuildEntity(self):
         gamesql.loadAllGuildEntityInfo(self._onLoadGuildEntity)
@@ -337,3 +342,26 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             _opr,
             endTime
         )
+
+    def statGuildData(self, dataType):
+        LOG_INFO("GuildStub::statGuildData:", self.guildStatData)
+        if dataType not in gameconst.GuildDataType.VALID_TYPE:
+            return
+        self.guildStatData[dataType] = self.guildStatData.get(dataType, 0) + 1
+        self.gamePlayScoreLimit += 1
+
+    def _commissionWeeklyCalc(self, *args):
+        LOG_INFO("GuildStub::_commissionWeeklyCalc:", self.guildStatData)
+        totalPoints = 0
+        if totalPoints > 0:
+            for point in self.guildStatData.values():
+                totalPoints += point
+            self.broadcastToAllGuild('_commissionWeeklyCalc', totalPoints)
+        self.guildStatData.clear()
+        self.gamePlayScoreLimit = 0
+
+    def doGetGamePlayScoreLimit(self, gbId, playerBox, guildBox):
+        guildBox.doSendGuildClientData(gbId, playerBox, self.gamePlayScoreLimit)
+
+    def doGetGuildGamePlayData(self, playerBox, guildBox):
+        guildBox.doGetGuildGamePlayData(playerBox, self.gamePlayScoreLimit)

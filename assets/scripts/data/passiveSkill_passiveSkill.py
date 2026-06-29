@@ -3012,7 +3012,7 @@ datas = _tools.RODict({
         "removeAction": _87020060_remove,
         "propList": _tools.ROList([['adjCopper', 0.05]]),
         "desBuff": None,
-        "score": 0
+        "score": 150
     }),
     87020061: _tools.RODict({
         "ID": 87020061,

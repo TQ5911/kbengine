@@ -34,7 +34,7 @@ class CollectionCheckInnerDemon(object):
         self.collectionId = collectionId
 
     def checkCell(self, avatarCell):
-        return avatarCell.cubeQuota.calcLeftTime() > 0
+        return avatarCell.checkChallengeInnerDemonCD() and avatarCell.cubeQuota.calcLeftTime() > 0
 
     def checkBase(self, avatarBase):
         return avatarBase.checkInnerDemonRewardCnt()

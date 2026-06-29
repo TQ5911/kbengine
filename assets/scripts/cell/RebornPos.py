@@ -25,13 +25,6 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
 
     def __init__(self):
         iCell.ICell.__init__(self)
-        # try:
-        #     # raise error if fail to init engine airwall
-        #     self.addEngineAirWall()
-        # except:
-        #     LOG_ERR('RebornPos.__init__:: add Engine airwall failed')
-        #     import traceback
-        #     traceback.print_exc()
 
         spaceMgr = self.spaceMgr
         if formula.inDungeonScene(self.spaceNo):
@@ -68,8 +61,8 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
             data = utils.getDunModuleData(self.spaceNo // gameconst.SPACE_NO_HOME_INTERVAL)
 
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
-        props = data[str(gid)]['Props']
-        return int(props['MPosX']), int(props['MPosZ'])
+        _props = data[str(gid)]['Props']
+        return int(_props['MPosX']), int(_props['MPosZ'])
 
     def onTimer(self, tid, userData):
         self._onTimerTrigger(tid, userData)
@@ -78,10 +71,10 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         else:
             super(RebornPos, self).onTimer(tid, userData)
 
-    def onGetWitness(self):
+    def onLoseWitness(self):
         pass
 
-    def onLoseWitness(self):
+    def onGetWitness(self):
         pass
 
     def _preSafeDestory(self):

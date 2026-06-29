@@ -34,7 +34,7 @@ datas ={
       40370012
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "23",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -70,7 +70,7 @@ datas ={
       40370013
     ],
     "num": 0,
-    "lv": "0",
+    "lv": "23",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -135,18 +135,15 @@ datas ={
     "transition": {}
   },
   "1052": {
-    "type": "collBeCollected",
-    "entityID": [
-      40378003
-    ],
-    "usePrototypeID": 0,
-    "infLoop": 1,
+    "type": "taskFinished",
+    "taskID": 86010359,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
         1050,
-        1054
+        1054,
+        1055
       ]
     }
   },
@@ -154,6 +151,13 @@ datas ={
     "type": "removeNPC",
     "entityID": [
       40374001
+    ],
+    "transition": {}
+  },
+  "1055": {
+    "type": "removeCollection",
+    "entityID": [
+      40378003
     ],
     "transition": {}
   }

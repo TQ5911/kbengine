@@ -243,7 +243,7 @@ class IComplexTeleport(object):
 
             _judgeLeaveSrc = options.get('judgeLeaveSrc')
             if not (self.canNewbieLeaveCurDungeon() or\
-                    (_judgeLeaveSrc and _judgeLeaveSrc.srcId in gameconst.DungeonSrcEnum.COLL_FROM_TASK)):
+                    (_judgeLeaveSrc and _judgeLeaveSrc.srcId in gameconst.DunSrcEnum.COLL_FROM_TASK)):
                 return gameclass.ResultBool(False, gameconst.CompleteTeleportLeaveFailReason.PLAYER_IN_NEWBIEDUN)
 
             return gameclass.ResultBool(canLeaveFromSingleDungeon, gameconst.CompleteTeleportLeaveFailReason.ARGS_DEFINED)
@@ -442,7 +442,7 @@ class IComplexTeleport(object):
         return self._commonNeedCast(
             C_C_DD.datas.teleportCast,
             gameconst.StateEnum.Teleporting,
-            gameconst.CastType.teleport,
+            gameconst.CastEnum.teleport,
             callbackFn, callbackArgs,
             **kwargs)
 
@@ -1267,12 +1267,22 @@ class IComplexTeleport(object):
 
         _extra = context['cube']
         _type = _extra.get('enterCubeType')
+        floor = _extra.get('floor', 0)
 
         if _type == gameconst.ENTER_CUBE_DEDUCT_TIMES:
             _dur = cube_config.datas['cubeNumTime']['value'] * 60
             self.cubeQuota.addCubeLeftTime(self, _dur)
-            self.base.afterEnterCubeDeductTimes()
+            self.base.afterEnterCubeDeductTimes({'floor': floor})
             self.base.activityComplete(cube_config.datas['cubeActID']['value'])
+        elif _type == gameconst.ENTER_CUBE_HAS_LEFT_TIME and floor:
+            LogTrackingMgr.LogTrackingMgr.cube_enter(
+                self.gbId,
+                self.clientDistinctIdCell,
+                floor,
+                utils.curTS(),
+                0,
+                0,
+            )
 
         if not formula.inCubeScene(fromSpaceNo):
             self.base.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, cube_config.datas['cubeActID']['value'], 1)
@@ -1349,6 +1359,14 @@ class IComplexTeleport(object):
             gameconst.CUBE_EVENT_EXIT,
             self.cubeQuota.calcLeftTime(),
         )
+        _src = context['src']
+        if _src.srcId:
+            LogTrackingMgr.LogTrackingMgr.cube_leave(
+                self.gbId,
+                self.clientDistinctIdCell,
+                utils.curTS(),
+                _src.srcId,
+            )
         return True
     # ----------------------------------------------------------------------
 
@@ -1377,10 +1395,21 @@ class IComplexTeleport(object):
 
         gameengine.getWonderLandStubBySpaceNo(toSpaceNo).onEnterWonderLandSuccess(self.gbId, toSpaceNo)
 
-        if context.get('enterType') == gameconst.WONDER_LAND_ENTER_TYPE_TICKET:
+        enterType = context.get('enterType')
+        floor = context.get('floor', 0)
+        if enterType == gameconst.WONDER_LAND_ENTER_TYPE_TICKET:
             self.wonderLandQuota.addWonderLandLeftTime(self, WL_CD.datas['wonderLandNumTime']['value'] * 60)
-            self.base.afterEnterWonderLandDeductTimes()
+            self.base.afterEnterWonderLandDeductTimes({'floor': floor})
             self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
+        elif enterType == gameconst.WONDER_LAND_ENTER_TYPE_LEFT_TIME and floor:
+            LogTrackingMgr.LogTrackingMgr.wonderland_enter(
+                self.gbId,
+                self.clientDistinctIdCell,
+                floor,
+                utils.curTS(),
+                0,
+                0,
+            )
 
         self.base.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, WL_CD.datas['wonderLandActID']['value'], 1)
         self._dealWithWonderLandTimer(fromSpaceNo, toSpaceNo)
@@ -1436,6 +1465,14 @@ class IComplexTeleport(object):
             gameconst.WONDER_LAND_EVENT_EXIT,
             self.wonderLandQuota.calcLeftTime(),
         )
+        _src = context['src']
+        if _src.srcId:
+            LogTrackingMgr.LogTrackingMgr.wonderland_leave(
+                self.gbId,
+                self.clientDistinctIdCell,
+                utils.curTS(),
+                _src.srcId,
+            )
         return True
     # ----------------------------------------------------------------------
 

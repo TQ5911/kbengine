@@ -18,5 +18,17 @@ datas = _tools.RODict({
     "currencyExchangeLack": _tools.RODict({
         "ID": "currencyExchangeLack",
         "value": 54003130,
+    }),
+    "insuffExchange": _tools.RODict({
+        "ID": "insuffExchange",
+        "value": 54000362,
+    }),
+    "insuffRecharge": _tools.RODict({
+        "ID": "insuffRecharge",
+        "value": 54000363,
+    }),
+    "insuffExchangeID": _tools.RODict({
+        "ID": "insuffExchangeID",
+        "value": 9,
     })
 })

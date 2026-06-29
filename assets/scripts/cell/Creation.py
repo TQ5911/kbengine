@@ -125,11 +125,11 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             if skillId > 0:
                 skillData = SSD.datas.get(skillId, None)
                 if skillData:
-                    scopeParam = skillData.get('scopeParam', None)
-                    if scopeParam:
-                        scopeParam = eval(scopeParam) if isinstance(scopeParam, (str, bytes)) else scopeParam
-                        if type(scopeParam) not in (list, tuple):
-                            scopeParam = (scopeParam,)
+                    _scopeParam = skillData.get('scopeParam', None)
+                    if _scopeParam:
+                        _scopeParam = eval(_scopeParam) if isinstance(_scopeParam, (str, bytes)) else _scopeParam
+                        if type(_scopeParam) not in (list, tuple):
+                            _scopeParam = (_scopeParam,)
                         ret, datas = _hostEnt.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
                         if ret:
                             if len(datas) == 1:

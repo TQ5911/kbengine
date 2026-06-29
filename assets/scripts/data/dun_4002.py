@@ -5279,5 +5279,30 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1
     }
+  },
+  "40028044": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "RebornPos",
+    "ClassNameType": 7,
+    "CustomID": "",
+    "Dir": 273.1996,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 40028044,
+    "Name": "\u590d\u6d3b\u70b9",
+    "PosX": 244.175,
+    "PosY": 90.28409,
+    "PosZ": 348.4427,
+    "Props": {
+      "MapEntityType": 0,
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
   }
 }

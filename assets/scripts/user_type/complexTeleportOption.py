@@ -22,30 +22,30 @@ class ComplexTeleportOpt(userType.UserSingleType):
         self._teleportType = teleportType
 
     def __str__(self):
-        return '{classname}(' \
-               'beforeEnterFirst={beforeEnterFirst}, ' \
-               'afterLeaveFirst={afterLeaveFirst}, ' \
-               'teleportType={teleportType})'.format(
-                    classname=self.__class__.__name__,
-                    beforeEnterFirst=self._beforeEnterFirst,
-                    afterLeaveFirst=self._afterLeaveFirst,
-                    teleportType=self._teleportType)
-
-    @property
-    def beforeEnterFirst(self):
-        return bool(self._beforeEnterFirst)
+        return '{}(' \
+               'beforeEnterFirst={}, ' \
+               'afterLeaveFirst={}, ' \
+               'teleportType={})'.format(
+                    self.__class__.__name__,
+                    self._beforeEnterFirst,
+                    self._afterLeaveFirst,
+                    self._teleportType)
 
     @property
     def beforeLeaveFirst(self):
         return not bool(self._beforeEnterFirst)
 
     @property
-    def afterEnterFirst(self):
-        return not bool(self._afterLeaveFirst)
+    def beforeEnterFirst(self):
+        return bool(self._beforeEnterFirst)
 
     @property
     def afterLeaveFirst(self):
         return bool(self._afterLeaveFirst)
+
+    @property
+    def afterEnterFirst(self):
+        return not bool(self._afterLeaveFirst)
 
     @property
     def teleportType(self):

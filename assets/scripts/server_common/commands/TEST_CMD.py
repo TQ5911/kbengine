@@ -246,7 +246,7 @@ def getPetItemList():
     for itemId, itemData in ID.datas.items():
         itemType = itemData.get('type', None)
         subType = itemData.get('subType', None)
-        if itemType == gameconst.ItemType.LingShou and subType == gameconst.ItemSubType.LingShouEgg and (itemData.get('indexID', None) in PD.datas):
+        if itemType == gameconst.ItemEnum.LingShou and subType == gameconst.ItemSubEnum.LingShouEgg and (itemData.get('indexID', None) in PD.datas):
             petItemListValid.append(itemId)
     return petItemListValid
 
@@ -442,13 +442,13 @@ def activeMount(su, player, itemId=0):
             return False, '执行失败，物品不存在'
         itemType = itemData.get('type', None)
         itemSubType = itemData.get('subType', None)
-        if itemType != gameconst.ItemType.Normal or itemSubType != mountSubType:
+        if itemType != gameconst.ItemEnum.Normal or itemSubType != mountSubType:
             return False, '执行失败，物品不是坐骑激活道具'
     else:
         # 如果没有指定itemId，随机选择一个坐骑激活道具
         itemIds = []
         for id, data in ID.datas.items():
-            if data.get('type') == gameconst.ItemType.Normal and data.get('subType') == mountSubType:
+            if data.get('type') == gameconst.ItemEnum.Normal and data.get('subType') == mountSubType:
                 itemIds.append(id)
         itemId = random.choice(itemIds) if itemIds else 0
     if not itemId:
@@ -554,7 +554,7 @@ def delEntBuff(su, ent,buffid):
 def delAllEntBuff(su, ent):
     if not hasattr(ent, 'buffMgrDic'):
         return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 buffMgrDic 方法', {})
-    ent.removeAllBuff()
+    ent.doRemoveAllBuff()
     return su.onCommandResult(0, 'ok,已删除实体上所有buff', {})
     
 @gm_cmd('$getEntScoreinfo', (Str('entlist'),), RALL, gameconst.CELL, '获取实体战力信息', ALLSIDE, GOD_GROUPS)
@@ -1558,7 +1558,7 @@ def _gmFinishCollect(player, collectId):
         for collectGridID in range(equipment_len + prop_len):
             player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
         player.cell.onCollectAward([collectId], 0)
-        player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toSavedDict()])
+        player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toStreamSavedDic()])
     return True, 'command success'
 
 @gm_cmd('$gmFinishCollect', (Player("gbId or Id"), Int('collectId')), RARG(0), gameconst.BASE, '完成收集系统', ALLSIDE, GOD_GROUPS)
@@ -1566,6 +1566,14 @@ def gmFinishCollect(su, player, collectId):
     if player is None:
         return False, '执行失败'
     return _gmFinishCollect(player, collectId)
+
+@gm_cmd('$gmFinishAllCollect', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '完成所有收集系统', ALLSIDE, GOD_GROUPS)
+def gmFinishAllCollect(su, player):
+    if player is None:
+        return False, '执行失败'
+    for collectId in PDETAIL.datas:
+        _gmFinishCollect(player, collectId)
+    return True, 'command success'
 
 @gm_cmd('$gmUnlockAllMeridian', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '经脉升至满级', ALLSIDE, GOD_GROUPS)
 def gmUnlockAllMeridian(su,player):

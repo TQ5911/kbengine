@@ -91,6 +91,7 @@
         </addWonderLandDurationFailedRewindTimes>
 
         <afterEnterWonderLandDeductTimes>
+            <Arg>           PY_DICT         </Arg>
         </afterEnterWonderLandDeductTimes>
 
         <onLogonEnterWonderLandGetSpaceBox>

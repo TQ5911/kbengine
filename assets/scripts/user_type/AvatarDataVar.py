@@ -6,15 +6,14 @@ import value_value as VLVLD
 import gameengine
 import dataUtils
 import gameconst
-import itemData_itemData as IDIDD
 
 
 def getAvatarBaseAttrVarValue(owner, varId):
-    attrName = VLVLD.datas[varId]['charProp']
-    value = getattr(owner, attrName, None)
-    if value is None:
-        gameengine.panicStack('getAvatarBaseAttrVarValue error, no this attr:', varId, attrName)
-    return value
+    _attrName = VLVLD.datas[varId]['charProp']
+    _value = getattr(owner, _attrName, None)
+    if _value is None:
+        gameengine.panicStack('getAvatarBaseAttrVarValue error, no this attr:', varId, _attrName)
+    return _value
 
 
 def getVarValueFromAvatarDic(owner, varId):

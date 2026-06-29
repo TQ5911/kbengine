@@ -80,11 +80,11 @@ class KillRecordListVal(userType.UserSingleType):
     def toEnemyRecordListSavedDict(self):
         return {
             'gbId': self.gbId,
-            'name': self.name,
             'school': self.school,
-            'level': self.level,
+            'name': self.name,
             'sex': self.sex,
-            'recordList': [record.toEnemyRecordSavedDict() for record in self.recordList]
+            'level': self.level,
+            'recordList': [record.toEnemyRecordSavedDict() for record in self.recordList],
         }
 
 
@@ -94,8 +94,8 @@ class RelationEnemyVal(userType.UserSingleType):
         self.gbId = gbId
         self.name = name
         self.school = school
-        self.level = level
         self.sex = sex
+        self.level = level
         self.offlineTime = offlineTime
         self.addTime = addTime
         self.lastFindSpaceNo = lastFindSpaceNo
@@ -134,10 +134,10 @@ class RelationEnemyVal(userType.UserSingleType):
 
     def toRelationEnemySavedDict(self):
         return {
-            'gbId': self.gbId,
             'name': self.name,
-            'school': self.school,
+            'gbId': self.gbId,
             'level': self.level,
+            'school': self.school,
             'score': self.score,
             'offlineTime': self.offlineTime,
             'addTime': self.addTime,

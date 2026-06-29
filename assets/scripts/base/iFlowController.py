@@ -1,24 +1,24 @@
 # coding: utf-8
 from KBEDebug import *
-import KBEngine
 
 
 class IFlowController(object):
 
+    def flowCtrlOnTaskFailed(self, taskId):
+        self.cell.flowCtrlOnTaskFailed(taskId)
+
     def flowCtrlOnTaskComplete(self, taskId):
         self.cell.flowCtrlOnTaskComplete(taskId)
 
-    def flowCtrlOnTaskFailed(self, taskId):
-        self.cell.flowCtrlOnTaskFailed(taskId)
+    def flowCtrlDunMonsterReleaseComplete(self, monsterGIDs):
+        self.cell.flowCtrlDunMonsterReleaseComplete(monsterGIDs)
 
     def flowCtrlOnTaskInProgress(self, taskId):
         self.cell.flowCtrlOnTaskInProgress(taskId)
 
-    def flowCtrlDungeonMonsterReleaseComplete(self, monsterGIDs):
-        self.cell.flowCtrlDungeonMonsterReleaseComplete(monsterGIDs)
+    def flowCtrlDunMonsterKillNumIncByMonsterId(self, monsterId, newNumber, newTotalNumber):
+        self.cell.flowCtrlDunMonsterKillNumIncByMonsterId(monsterId, newNumber, newTotalNumber)
 
-    def flowCtrlDungeonMonsterKillNumIncreased(self, monsterGID, newNumber, newTotalNumber):
-        self.cell.flowCtrlDungeonMonsterKillNumIncreased(monsterGID, newNumber, newTotalNumber)
+    def flowCtrlDunMonsterKillNumInc(self, monsterGID, newNumber, newTotalNumber):
+        self.cell.flowCtrlDunMonsterKillNumInc(monsterGID, newNumber, newTotalNumber)
 
-    def flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(self, monsterId, newNumber, newTotalNumber):
-        self.cell.flowCtrlDungeonMonsterKillNumIncreasedByCreepbaseId(monsterId, newNumber, newTotalNumber)

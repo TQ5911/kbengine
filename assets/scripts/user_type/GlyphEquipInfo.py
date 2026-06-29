@@ -10,7 +10,7 @@ class GlyphDataInfo(object):
         return glyphData
 
     def getDictFromObj(self, obj):
-        return obj.toSavedDict()
+        return obj.toStreamSavedDic()
 
     def isSameType(self, obj):
         return type(obj) is GlyphData.GlyphData

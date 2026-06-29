@@ -67,7 +67,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             self._kickoutPlayer(_spaceNo)
 
     def onDungeonSpaceGone(self, spaceNo, reason):
-        if reason == gameconst.OnLoseCellReason.CELLAPP_DEATH:
+        if reason == gameconst.OnLoseCellReasonEnum.CELLAPP_DEATH:
             LOG_ERR("SingleDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
             if spaceNo in self.spaces:
                 sVal = self.spaces[spaceNo]
@@ -231,12 +231,12 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             LOG_ERR('wl: enterDungeonSpaceSuccess cannot find space:', spaceNo)
             return
 
-        fVal = self.founders.getFounderVal(playerGbId, extra['spaceUUID'])
-        if not fVal:
+        _fVal = self.founders.getFounderVal(playerGbId, extra['spaceUUID'])
+        if not _fVal:
             LOG_ERR('wl: enterDungeonSpaceSuccess cannot find founder', spaceNo, playerGbId, playerBox.id)
             return
 
-        fVal.onAvatarEnter(playerGbId)
+        _fVal.onAvatarEnter(playerGbId)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
         LOG_INFO('wl :leaveDungeonSpaceSucc', spaceNo, playerBox, playerGbId, teamUUID, extra)

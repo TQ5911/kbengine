@@ -6,25 +6,17 @@ import gameconst
 import gameengine
 
 import dropAward
-import dungeonSrc
-import dungeonPlayMode
 
-import taskdata as TSKD
-import taskDesc_taskDesc as TSK_DESC
-import message_Message_def as MMD
-import gamePlay_gamePlay as DDL
-import itemData_itemData as IID
+import gamePlay_gamePlay as GP_GPD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import formula
-import dataUtils
 import gameclass
 
 
 class DungeonSheetMixin(object):
 
     def _getParamBydungeonNo(self, dungeonNo, pName):
-        if dungeonNo in DDL.datas:
-            prm = DDL.datas[dungeonNo]
+        if dungeonNo in GP_GPD.datas:
+            prm = GP_GPD.datas[dungeonNo]
             if pName in prm:
                 return prm[pName]
 
@@ -44,7 +36,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
     # ===========================================
     # GOODMAN CARD METHOD
 
-    def getCurrentActRewardStatus(self, srcId=gameconst.DungeonSrcEnum.DEFAULT, playMode=gameconst.DungeonPlayModeEnum.UNKNOWN):
+    def getCurrentActRewardStatus(self, srcId=gameconst.DunSrcEnum.DEFAULT, playMode=gameconst.DungeonPlayModeEnum.UNKNOWN):
         LOG_INFO('getCurrentActRewardStatus::', srcId, playMode)
         actId, canGetReward = 0, False
 
@@ -56,54 +48,57 @@ class ImpTeamDungeon(DungeonSheetMixin):
 
     # ===========================================
 
-    def checkCaptainTeamDungeonConditions(self, dungeonNo, teamUUID, extra):
-        checkBox, _ = self._checkCaptainTeamDungeonConditions(dungeonNo, extra)
+    def checkCaptainTeamDungeonConditions(self, dungeonNo, teamUUID, extraData):
+        checkBox, _ = self._checkCaptainTeamDungeonConditions(dungeonNo, extraData)
 
-        _src, _dunPlayMode = extra.get('src'), extra.get('dungeonPlayMode')
+        _src = extraData.get('src')
+        _dunPlayMode = extraData.get('dungeonPlayMode')
         _actId, _canGetReward = self.getCurrentActRewardStatus(
-            _src.srcId if _src else gameconst.DungeonSrcEnum.DEFAULT,
+            _src.srcId if _src else gameconst.DunSrcEnum.DEFAULT,
             _dunPlayMode.playMode if _dunPlayMode else gameconst.DungeonPlayModeEnum.UNKNOWN)
-        extra['goodManArgs'] = (_actId, _canGetReward)
+        extraData['goodManArgs'] = (_actId, _canGetReward)
 
         if _dunPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
             if not _canGetReward:
-                _extra = {'reason': gameconst.TeamDunCheckCondErrno.REWARD_NUM_CHECK_FAIL,
-                          'name': self.getRoleCacheAttr('name', '')}
+                extraData = {
+                    'reason': gameconst.TeamDunCheckCondErrno.REWARD_NUM_CHECK_FAIL,
+                    'name': self.getRoleCacheAttr('name', ''),
+                }
                 checkBox = False
 
         if checkBox:
-            return self.cell.onCheckCaptainTeamDungeonConditionsSucceed(dungeonNo, extra)
+            return self.cell.onCheckCaptainTeamDungeonConditionsSucceed(dungeonNo, extraData)
         else:
-            return self.cell.onCheckCaptainTeamDungeonConditionsFailed(dungeonNo, {}, extra)
+            return self.cell.onCheckCaptainTeamDungeonConditionsFailed(dungeonNo, {}, extraData)
 
     def _checkCaptainTeamDungeonConditions(self, dungeonNo, extra):
         return True, 'OK'
 
     def checkMemberTeamDungeonConditions(self, dungeonNo, teamUUID, captainBox, extra):
-        checkBox, reason = self._checkMemberTeamDungeonConditions(dungeonNo, extra)
+        _checkBox, reason = self._checkMemberTeamDungeonConditions(dungeonNo, extra)
 
         dungeonPlayMode = extra.get('dungeonPlayMode')
 
         _src, _dunPlayMode = extra.get('src'), dungeonPlayMode
         _actId, _canGetReward = self.getCurrentActRewardStatus(
-            _src.srcId if _src else gameconst.DungeonSrcEnum.DEFAULT,
+            _src.srcId if _src else gameconst.DunSrcEnum.DEFAULT,
             _dunPlayMode.playMode if _dunPlayMode else gameconst.DungeonPlayModeEnum.UNKNOWN)
         extra['goodManArgs'] = (_actId, _canGetReward)
 
         if _dunPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
             if not _canGetReward:
                 reason = 'rewardNum'
-                checkBox = False
+                _checkBox = False
 
-        if checkBox:
+        if _checkBox:
             return self.cell.onCheckMemberTeamDungeonConditionsSucceed(dungeonNo, extra)
         else:
             if reason == 'rewardNum':
-                reasonDic = {'rewardNum': _canGetReward}
+                _reasonDic = {'rewardNum': _canGetReward}
             else:
-                reasonDic = {}
+                _reasonDic = {}
             return self.cell.onCheckMemberTeamDungeonConditionsFailed(
-                dungeonNo, reasonDic, extra)
+                dungeonNo, _reasonDic, extra)
 
     def _checkMemberTeamDungeonConditions(self, dungeonNo, extra):
         if self.isTeamMemberSkipCheck(dungeonNo):
@@ -113,17 +108,17 @@ class ImpTeamDungeon(DungeonSheetMixin):
 
     def useItemAndEnterTeamDungeon(self, needDic, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
         LOG_INFO('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
-                  spaceMgrBox, extra)
-        deductWealthVal = dropAward.DeductWealthVal()
-        deductWealthVal.addWealthByItemDict(needDic)
-        if not self.canDeductWealth(deductWealthVal):
+                  extra, spaceMgrBox)
+        _deductWealthVal = dropAward.DeductWealthVal()
+        _deductWealthVal.addWealthByItemDict(needDic)
+        if not self.canDeductWealth(_deductWealthVal):
             LOG_ERR('Enter teamDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
             return
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_ENTER_DUNGEON
         detail = gameclass.AwardDetailCls(spaceNo=spaceNo)
-        self.deductWealth(src, deductWealthVal, opUUID, detail)
+        self.deductWealth(src, _deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterTeamDungeon(
             gameconst.BagOPStat.OPERATE_BAG_STAT_OK, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
         

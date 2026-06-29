@@ -72,6 +72,7 @@ class IEmote(object):
         self.suspendAutoCombat(gameconst.SuspendAutoCombatReasonEnum.PlayEmote)
         self.allClients.onStartPlayEmote(emoteId)
 
+    @gamedecorator.checkGameconfigEnable('posture')
     @gamedecorator.crossServer
     @utils.isMyself
     def reqStopPlayEmote(self, exposed):

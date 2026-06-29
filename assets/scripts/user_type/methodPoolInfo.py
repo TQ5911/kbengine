@@ -6,28 +6,28 @@ import methodPool
 class MethodPoolInfo(object):
 
     def createObjFromDict(self, dict):
-        mp = methodPool.MethodPool()
+        _mp = methodPool.MethodPool()
 
         for i, methodName in enumerate(dict['methodName']):
-            mp[methodName] = dict['callTime'][i]
+            _mp[methodName] = dict['callTime'][i]
 
-        return mp
+        return _mp
+
+    def isSameType(self, obj):
+        return type(obj) is methodPool.MethodPool
 
     def getDictFromObj(self, obj):
-        mVals = {'methodName': [], 'callTime': [], }
+        _mVals = {'methodName': [], 'callTime': [], }
 
         now = utils.curTS()
         for methodName, callTime in obj.items():
             if callTime <= now:
                 continue
 
-            mVals['methodName'].append(methodName)
-            mVals['callTime'].append(callTime)
+            _mVals['methodName'].append(methodName)
+            _mVals['callTime'].append(callTime)
 
-        return mVals
-
-    def isSameType(self, obj):
-        return type(obj) is methodPool.MethodPool
+        return _mVals
 
 
 instance = MethodPoolInfo()

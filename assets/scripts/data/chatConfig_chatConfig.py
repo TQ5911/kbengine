@@ -231,16 +231,16 @@ datas = _tools.RODict({
         "ID": "teamChat_switchUnavailable",
         "value": 54001604,
     }),
-    "teamChat_micModeSwitch": _tools.RODict({
-        "ID": "teamChat_micModeSwitch",
+    "teamChat_micModeSwitchOn": _tools.RODict({
+        "ID": "teamChat_micModeSwitchOn",
         "value": 54001605,
     }),
-    "teamChat_teamMuteSwitch": _tools.RODict({
-        "ID": "teamChat_teamMuteSwitch",
+    "teamChat_teamMuteSwitchOn": _tools.RODict({
+        "ID": "teamChat_teamMuteSwitchOn",
         "value": 54001606,
     }),
-    "teamChat_personalMuteSwitch": _tools.RODict({
-        "ID": "teamChat_personalMuteSwitch",
+    "teamChat_personalMuteSwitchOn": _tools.RODict({
+        "ID": "teamChat_personalMuteSwitchOn",
         "value": 54001607,
     }),
     "teamChat_voiceVolumeMuteMsg": _tools.RODict({
@@ -318,5 +318,65 @@ datas = _tools.RODict({
     "voiceChat_micSwitch": _tools.RODict({
         "ID": "voiceChat_micSwitch",
         "value": 54001618,
+    }),
+    "teamChat_micModeSwitchOff": _tools.RODict({
+        "ID": "teamChat_micModeSwitchOff",
+        "value": 54001619,
+    }),
+    "teamChat_teamMuteSwitchOff": _tools.RODict({
+        "ID": "teamChat_teamMuteSwitchOff",
+        "value": 54001621,
+    }),
+    "teamChat_personalMuteSwitchOff": _tools.RODict({
+        "ID": "teamChat_personalMuteSwitchOff",
+        "value": 54001622,
+    }),
+    "guildChat_numberMax": _tools.RODict({
+        "ID": "guildChat_numberMax",
+        "value": 15,
+    }),
+    "guildChat_numberMaxMsg": _tools.RODict({
+        "ID": "guildChat_numberMaxMsg",
+        "value": 54001623,
+    }),
+    "chat_voiceExchange": _tools.RODict({
+        "ID": "chat_voiceExchange",
+        "value": 54001624,
+    }),
+    "chat_voiceError": _tools.RODict({
+        "ID": "chat_voiceError",
+        "value": 54001625,
+    }),
+    "chat_voicePermission": _tools.RODict({
+        "ID": "chat_voicePermission",
+        "value": 54001626,
+    }),
+    "buyTranssion": _tools.RODict({
+        "ID": "buyTranssion",
+        "value": "Openinterface,UIPayStorePanel,1",
+    }),
+    "voiceChat_teamChannelName": _tools.RODict({
+        "ID": "voiceChat_teamChannelName",
+        "value": "队伍语音",
+    }),
+    "voiceChat_raidChannelName": _tools.RODict({
+        "ID": "voiceChat_raidChannelName",
+        "value": "团队语音",
+    }),
+    "voiceChat_guildChannelName": _tools.RODict({
+        "ID": "voiceChat_guildChannelName",
+        "value": "帮会语音",
+    }),
+    "freeModeName": _tools.RODict({
+        "ID": "freeModeName",
+        "value": "自由模式",
+    }),
+    "leaderModeName": _tools.RODict({
+        "ID": "leaderModeName",
+        "value": "权限模式",
+    }),
+    "forbindModeName": _tools.RODict({
+        "ID": "forbindModeName",
+        "value": "全员禁音",
     })
 })

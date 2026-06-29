@@ -8,7 +8,7 @@ import sMath
 import utils
 import formula
 
-import gamePlay_gamePlay as DDID
+import gamePlay_gamePlay as GP_GPD
 
 
 @functools.lru_cache(128)
@@ -18,7 +18,7 @@ def isPlayerInMap(position, mapInfo):
 
 class ImpDungeonCommon(object):
 
-    DEFAULT_EXIT_COUNT = 10
+    DEFAULT_EXIT_COUNT_NUM = 10
 
     def _getMapInfoByDungeonNo(self, dungeonNo):
         try:
@@ -31,14 +31,14 @@ class ImpDungeonCommon(object):
         dunSData = utils.getDunStructModData(dungeonNo)
         if 'MapInfo' not in dunSData:
             return ()
-        mapInfo, *_ = dunSData['MapInfo'].values()
-        _rawPoints = mapInfo['Props']['Points']
+        _mapInfo, *_ = dunSData['MapInfo'].values()
+        _rawPoints = _mapInfo['Props']['Points']
         return tuple(tuple(p) for p in _rawPoints)
 
     def _getEntranceByDungeonNo(self, dungeonNo):
-        dunSData = utils.getDunStructModData(dungeonNo)
-        if 'BornPos' in dunSData:
-            d, *_ = dunSData['BornPos'].values()
+        _dunSData = utils.getDunStructModData(dungeonNo)
+        if 'BornPos' in _dunSData:
+            d, *_ = _dunSData['BornPos'].values()
             return formula.bornPosFromDunData(d)
 
     def _getEntranceDirByDungeonNo(self, dungeonNo):
@@ -51,20 +51,11 @@ class ImpDungeonCommon(object):
         if pName == 'entrance':
             return self._getEntranceByDungeonNo(dungeonNo)
 
-        if dungeonNo in DDID.datas:
-            prm = DDID.datas[dungeonNo]
+        if dungeonNo in GP_GPD.datas:
+            prm = GP_GPD.datas[dungeonNo]
             if pName in prm:
                 return prm[pName]
 
     def _isPlayerInMap(self, mapInfo):
-        # minX, maxX = set(i[0] for i in mapInfo)
-        # minY, maxY = set(i[2] for i in mapInfo)
-        #
-        # posX, _, posY = self.position
-        #
-        # if minX <= posX <= maxX and minY <= posY <= maxY:
-        #     return True
-        #
-        # return False
         return isPlayerInMap(tuple(self.position), mapInfo)
 
