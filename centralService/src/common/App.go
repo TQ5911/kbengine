@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"reflect"
 	"runtime"
+	"runtime/debug"
 	"runtime/pprof"
 	"sync"
 )
@@ -61,6 +63,28 @@ func (self *App) Stop() {
 }
 
 func Run(app IApp) {
+	if app == nil {
+		appLog.Error("common.Run: app interface is nil, server instance returned nil. exiting")
+		ExitProgram(1)
+		return
+	}
+	v := reflect.ValueOf(app)
+	if v.Kind() == reflect.Ptr && v.IsNil() {
+		appLog.Errorf("common.Run: server instance is a typed-nil %s, initialization likely failed. exiting", v.Type().String())
+		ExitProgram(1)
+		return
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			appLog.Errorf("========== SERVER PANIC ==========")
+			appLog.Errorf("panic: %v", r)
+			appLog.Errorf("stack trace:\n%s", string(debug.Stack()))
+			appLog.Errorf("==================================")
+			ExitProgram(1)
+		}
+	}()
+
 	app.Start()
 	services := app.GetServices()
 

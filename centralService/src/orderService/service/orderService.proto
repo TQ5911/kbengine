@@ -32,6 +32,7 @@ message OrderRequest
   int32 itemCount = 6;
   double price = 7;
   bool addToSafe = 8;
+  string roleName = 9;
 }
 
 message OrderResponse

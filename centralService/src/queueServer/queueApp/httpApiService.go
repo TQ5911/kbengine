@@ -21,16 +21,18 @@ type HttpService struct {
 }
 
 type QueueReply struct {
-	QueueId        uint32 `json:"queueId"`
-	State          uint8  `json:"state"`
-	ServerId       uint32 `json:"serverId"`
-	ServerHost     string `json:"serverHost"`
-	WaitTime       uint64 `json:"waitTime"`
-	ServerOpenTime int64  `json:"serverOpenTime"`
+	QueueId        uint32         `json:"queueId"`
+	State          uint8          `json:"state"`
+	ServerId       uint32         `json:"serverId"`
+	ServerHost     string         `json:"serverHost"`
+	WaitTime       uint64         `json:"waitTime"`
+	ServerOpenTime int64          `json:"serverOpenTime"`
+	WaitMapServers map[string]int `json:"waitMapServers"`
 }
 
 func (self *HttpService) doQueueReply(w http.ResponseWriter, queueId uint32, state uint8, serverId uint32, serverHost string, waitTime uint64,
 	serverOpenTime int64,
+	waitMapServers map[string]int,
 ) {
 	response := QueueReply{}
 	response.QueueId = queueId
@@ -39,6 +41,7 @@ func (self *HttpService) doQueueReply(w http.ResponseWriter, queueId uint32, sta
 	response.ServerHost = serverHost
 	response.WaitTime = waitTime
 	response.ServerOpenTime = serverOpenTime
+	response.WaitMapServers = waitMapServers
 	data, err := json.Marshal(response)
 	if err != nil {
 		appLog.Error("handleStartQueue json response failed", err.Error())
@@ -73,7 +76,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	//白名单直接放行
 	if _, ok := userTagTypeSet["0"]; ok {
 		appLog.Info("account is white list, no need queue", accountNameStr, serverId)
-		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
 		return
 	}
 
@@ -83,7 +86,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		openTimeI64, err := strconv.ParseInt(openTime, 10, 64)
 		if err == nil && openTimeI64 > time.Now().Unix() {
 			appLog.Info("server not open", accountNameStr, serverId)
-			self.doQueueReply(w, 0, uint8(clientService.QueueReply_BEFORE_OPENTIME), serverId, serverHost, 0, openTimeI64-time.Now().Unix())
+			self.doQueueReply(w, 0, uint8(clientService.QueueReply_BEFORE_OPENTIME), serverId, serverHost, 0, openTimeI64-time.Now().Unix(), nil)
 			return
 		}
 	} else {
@@ -95,7 +98,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	if err == nil {
 		appLog.Warn("server maintenance ", serverOpenState, accountNameStr, serverId)
 		if serverOpenState == "0" {
-			self.doQueueReply(w, 0, uint8(clientService.QueueReply_MAINTENANCE), serverId, serverHost, 0, 0)
+			self.doQueueReply(w, 0, uint8(clientService.QueueReply_MAINTENANCE), serverId, serverHost, 0, 0, nil)
 			return
 		}
 	} else {
@@ -105,7 +108,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	//用户是绿通，免排队
 	if _, ok := userTagTypeSet["3"]; ok {
 		appLog.Info("account is green code, no need queue", accountNameStr, serverId)
-		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
 		return
 	}
 
@@ -113,7 +116,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	onlineNum, err := redis.Int(conn.Do("get", "g:normal_online_num"+serverIdStr))
 	if err != nil {
 		appLog.Warn("handleStartQueue request invalid serverId:\n", serverId, self.app.gameServers, err.Error())
-		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_FAILED), serverId, serverHost, 0, 0)
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_FAILED), serverId, serverHost, 0, 0, nil)
 		return
 	}
 
@@ -132,7 +135,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	} else {
 		if lastServerId == int(serverId) {
 			appLog.Info("handleStartQueue account is still online, no need queue", accountNameStr, serverId)
-			self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
+			self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
 			return
 		}
 	}
@@ -175,7 +178,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	//当前无需排队
 	if onlineNum < MaxOnlineNum && (hasGetTokenNoUse || gameServer.limiter.Allow()) {
 		appLog.Info("queue success")
-		self.doQueueReply(w, 1, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0)
+		self.doQueueReply(w, 1, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
 		return
 	} else {
 		VIPFlag := false
@@ -190,7 +193,11 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		self.app.addClient(client)
 
 		client.SetQueueId(self.app.enQueue(serverId, accountName, VIPFlag))
-		self.doQueueReply(w, uint32(client.GetQueueId()), uint8(clientService.QueueReply_QUEUE_IN_PROCESS), serverId, client.GetServerHost(), client.GetWaitTime(), 0)
+
+		// 进入排队时返回存活等待服列表（客户端自行选择）
+		waitMapServers, _ := self.app.waitMapServerMgr.GetAliveFreeServers()
+
+		self.doQueueReply(w, uint32(client.GetQueueId()), uint8(clientService.QueueReply_QUEUE_IN_PROCESS), serverId, client.GetServerHost(), client.GetWaitTime(), 0, waitMapServers)
 	}
 }
 
@@ -218,6 +225,7 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 			response.ServerId = serverId
 			response.ServerHost = client.GetServerHost()
 			response.WaitTime = 0
+			response.WaitMapServers = nil
 			data, err := json.Marshal(response)
 			if err != nil {
 				appLog.Error("handleGetQueueInfo json response failed", err.Error())
@@ -234,6 +242,7 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 			response.ServerId = serverId
 			response.ServerHost = client.GetServerHost()
 			response.WaitTime = client.GetWaitTime()
+			response.WaitMapServers, _ = self.app.waitMapServerMgr.GetAliveFreeServers()
 			data, err := json.Marshal(response)
 			if err != nil {
 				appLog.Error("handleGetQueueInfo json response failed", err.Error())

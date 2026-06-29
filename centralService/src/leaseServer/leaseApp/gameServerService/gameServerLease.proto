@@ -171,6 +171,8 @@ message LeaseMySaleItem {
     uint32 leaseDay = 4;
     string itemData = 5;
     uint32 returnEndTime = 6;
+    uint32 status = 7;       // 2=上架中, 6=已过期
+    uint32 saleEndTime = 8;  // 上架截止时间
 }
 
 message LeaseMySaleListReq {

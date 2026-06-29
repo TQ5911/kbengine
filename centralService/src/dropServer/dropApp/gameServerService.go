@@ -1157,18 +1157,15 @@ func (gss *GameServerService) CheckDropReturnExpire(in *gameServerService.CheckD
 			}
 
 			if holderGbId > 0 {
-				ownerReturnCacheData, ok := ownerReturnCacheDatas[holderGbId]
-				if !ok || !slices.Contains(ownerReturnCacheData.UniqueIds, uniqueId) {
-					holderReturnCacheData, ok := holderReturnCacheDatas[holderGbId]
-					if !ok {
-						holderReturnCacheData = &gameServerService.NotifyRemoveEquipCacheData{
-							UniqueIds: make([]uint64, 0),
-						}
-						holderReturnCacheDatas[holderGbId] = holderReturnCacheData
+				holderReturnCacheData, ok := holderReturnCacheDatas[holderGbId]
+				if !ok {
+					holderReturnCacheData = &gameServerService.NotifyRemoveEquipCacheData{
+						UniqueIds: make([]uint64, 0),
 					}
-					holderReturnCacheData.ServerId = holderServerId
-					holderReturnCacheData.UniqueIds = append(holderReturnCacheData.UniqueIds, uniqueId)
+					holderReturnCacheDatas[holderGbId] = holderReturnCacheData
 				}
+				holderReturnCacheData.ServerId = holderServerId
+				holderReturnCacheData.UniqueIds = append(holderReturnCacheData.UniqueIds, uniqueId)
 			}
 		}
 
@@ -1295,13 +1292,13 @@ func (gss *GameServerService) CheckDropReturnExpire(in *gameServerService.CheckD
 			for gbId, data := range takerDatas {
 				gss._notifyDropTypeChanges(data.ServerId, data.UniqueIds, data.DropTypes, nil, gbId)
 			}
-			// 6.给原主人发送装备变更数据
-			for gbId, data := range ownerReturnCacheDatas {
-				gss._notifyDropTypeChanges(data.ServerId, data.UniqueIds, data.DropTypes, nil, gbId)
-			}
-			// 7.给持有人发送移除装备
+			// 6.给持有人发送移除装备
 			for gbId, data := range holderReturnCacheDatas {
 				gss._notifyRemoveEquip(data.ServerId, gbId, data.UniqueIds)
+			}
+			// 7.给原主人发送装备变更数据
+			for gbId, data := range ownerReturnCacheDatas {
+				gss._notifyDropTypeChanges(data.ServerId, data.UniqueIds, data.DropTypes, nil, gbId)
 			}
 
 			// 8.广播指定服, 清理创生物

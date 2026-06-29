@@ -50,6 +50,9 @@ func (self *GameServerService) DoOnOthersBase(in *gameServerService.OthersBaseRe
 		return nil, errors.New(fmt.Sprint("cannot find other baseapp", in.ServerId, in.ComponentId))
 	}
 
+	//记录流量统计：按来源服务器和目标服务器分别累加请求数和字节数
+	self.app.recordTraffic(in.ServerId, in.DstServerId, uint64(len(in.MemoryStream)))
+
 	othersBaseRequest := gameServerService.OthersBaseRequest{ServerId: in.ServerId, DstServerId: in.DstServerId, ComponentId: in.ComponentId, MemoryStream: in.MemoryStream}
 	otherBaseApp.GetClientEndPoint().(*gameServerService.GameServerClient).OnRemoteCallFromOthersBase(&othersBaseRequest)
 
@@ -58,5 +61,17 @@ func (self *GameServerService) DoOnOthersBase(in *gameServerService.OthersBaseRe
 
 func (self *GameServerService) ActiveTick(in *gameServerService.Void) (*gameServerService.Void, error) {
 	_, err := self.GetClientEndPoint().(*gameServerService.GameServerClient).ActiveTickCallback(&gameServerService.Void{})
+	return nil, err
+}
+
+func (self *GameServerService) GetTrafficStats(in *gameServerService.Void) (*gameServerService.Void, error) {
+	stats := self.app.getTrafficStatsSnapshot()
+	_, err := self.GetClientEndPoint().(*gameServerService.GameServerClient).GetTrafficStatsCallback(stats)
+	return nil, err
+}
+
+func (self *GameServerService) ResetTrafficStats(in *gameServerService.Void) (*gameServerService.Void, error) {
+	self.app.resetTrafficStats()
+	_, err := self.GetClientEndPoint().(*gameServerService.GameServerClient).ResetTrafficStatsCallback(&gameServerService.ResetTrafficStatsResult{Success: true})
 	return nil, err
 }

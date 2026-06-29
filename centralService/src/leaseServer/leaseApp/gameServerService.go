@@ -409,6 +409,7 @@ func (gs *GameServerService) GetMySaleList(in *gameServerService.LeaseMySaleList
 		resp := replyMySaleListRespPool.Get().(*gameServerService.LeaseMySaleListResp)
 		resp.PlayerGBID = in.PlayerGBID
 		for _, item := range items {
+			saleEndTime := uint32(item.AddTime + int64(gs.app.leaseMgr.auctionConst.RentalAutoUnlist)*3600)
 			resp.Items = append(resp.Items, &gameServerService.LeaseMySaleItem{
 				UniqueId:      item.UniqueId,
 				ItemId:        item.ItemId,
@@ -416,6 +417,8 @@ func (gs *GameServerService) GetMySaleList(in *gameServerService.LeaseMySaleList
 				LeaseDay:      item.LeaseDay,
 				ReturnEndTime: item.ReturnEndTime,
 				ItemData:      item.ItemData,
+				Status:        uint32(item.Status),
+				SaleEndTime:   saleEndTime,
 			})
 		}
 		_, err := gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyMySaleList(resp)

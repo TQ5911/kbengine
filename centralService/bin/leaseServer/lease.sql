@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS lease_market (
 	lease_bind_gold BIGINT NOT NULL DEFAULT 0 COMMENT '出租方获得绑定金',
 	lease_tax BIGINT NOT NULL DEFAULT 0 COMMENT '平台税金（从租金中扣除）',
 	item_data MEDIUMTEXT NOT NULL COMMENT '装备序列化 JSON 数据，包含租赁状态和属性',
-	lease_status TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '订单状态 1=预上架 2=上架中 3=已租出 4=已下架 5=预锁定',
+	lease_status TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '订单状态 1=预上架 2=上架中 3=已租出 4=已下架 5=预锁定 6=已过期',
 	create_time INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '记录创建时间',
 	update_time INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '记录更新时间',
 	PRIMARY KEY (id),

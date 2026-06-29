@@ -10,9 +10,10 @@ type MysqlConfig struct {
 
 // RedisConfig Redis 连接配置
 type RedisConfig struct {
-	Addr   string // Redis 地址，格式 host:port
-	Passwd string // 密码（无密码时为空）
-	Db     string // 数据库编号（字符串形式）
+	Addr     string // Redis 地址，格式 host:port
+	Username string // 用户名（为空时走纯密码鉴权）
+	Passwd   string // 密码（无密码时为空）
+	Db       string // 数据库编号（字符串形式）
 }
 
 // RateLimitConfig 限流配置

@@ -8,9 +8,10 @@ type MYSQLConfig struct {
 }
 
 type REDISConfig struct {
-	Addr   string
-	Passwd string
-	Db     string
+	Addr     string
+	Username string
+	Passwd   string
+	Db       string
 }
 
 type AppConfig struct {

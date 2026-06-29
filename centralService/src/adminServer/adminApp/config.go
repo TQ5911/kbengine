@@ -3,9 +3,10 @@ package adminApp
 import "strconv"
 
 type REDISConfig struct {
-	Addr   string
-	Passwd string
-	Db     string
+	Addr     string
+	Username string
+	Passwd   string
+	Db       string
 }
 
 type AdminConfig struct {

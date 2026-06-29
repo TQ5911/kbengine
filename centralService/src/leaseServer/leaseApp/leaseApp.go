@@ -6,7 +6,7 @@ import (
 	cmap "centralService/src/common/concurrent_map"
 	gameServerService "centralService/src/leaseServer/leaseApp/gameServerService"
 	"centralService/src/trpc"
-
+	"container/heap"
 	"database/sql"
 	"fmt"
 	"math"
@@ -36,6 +36,7 @@ const (
 	LEASE_STATUS_LEASED   // 已租出
 	LEASE_STATUS_CANCELED // 已下架（下架后延迟删除）
 	LEASE_STATUS_PRE_LOCK // 预锁定（临时状态）
+	LEASE_STATUS_EXPIRED  // 已自动下架（等待取回）
 )
 
 const (
@@ -51,6 +52,7 @@ const (
 	LEASE_DB_ERROR
 	LEASE_RATE_LIMIT
 	LEASE_SELF_LEASE
+	LEASE_SHELF_FULL
 )
 
 const (
@@ -124,6 +126,20 @@ func (a *LeaseMarketItem) checkSetStatus(from, to uint8) bool {
 	return true
 }
 
+// checkSetStatusAny 原子 check-and-set：当状态为 from 列表中的任意一个时，才将其改为 to，并返回原状态
+func (a *LeaseMarketItem) checkSetStatusAny(from []uint8, to uint8) (uint8, bool) {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	for _, f := range from {
+		if a.Status == f {
+			old := a.Status
+			a.Status = to
+			return old, true
+		}
+	}
+	return a.Status, false
+}
+
 // resetLeaseStatus 将状态重置为 on_sale
 func (a *LeaseMarketItem) resetLeaseStatus() {
 	a.mu.Lock()
@@ -161,6 +177,33 @@ func uint64Shard(key uint64) uint32 {
 	return uint32(key) ^ uint32(key>>32)
 }
 
+// ==================== 过期调度器 ====================
+
+// expireEntry 过期调度条目
+type expireEntry struct {
+	uniqueId uint64
+	expireAt int64
+}
+
+// expireHeap 按过期时间排序的最小堆
+type expireHeap []expireEntry
+
+func (h expireHeap) Len() int           { return len(h) }
+func (h expireHeap) Less(i, j int) bool { return h[i].expireAt < h[j].expireAt }
+func (h expireHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *expireHeap) Push(x interface{}) {
+	*h = append(*h, x.(expireEntry))
+}
+
+func (h *expireHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}
+
 // ==================== LeaseMgr ====================
 
 // LeaseMgr 租赁市场内存管理器
@@ -177,9 +220,16 @@ type LeaseMgr struct {
 	cfgMu        sync.RWMutex
 	gearBaseMap  map[uint32]*GearBaseItem // gearBase 配置，用于商店分类过滤
 	auctionConst *AuctionConstConfig      // 拍卖行常量配置（租赁服务复用）
+
+	// 过期调度器（集中式最小堆）
+	expireHeap *expireHeap
+	expireMu   sync.Mutex
+	expireWake chan struct{}
 }
 
 func NewLeaseMgr(db *sql.DB, redisPool *redis.Pool, gearBaseMap map[uint32]*GearBaseItem, auctionConst *AuctionConstConfig) *LeaseMgr {
+	h := &expireHeap{}
+	heap.Init(h)
 	return &LeaseMgr{
 		db:            db,
 		items:         cmap.NewWithCustomShardingFunction[uint64, *LeaseMarketItem](uint64Shard),
@@ -188,20 +238,124 @@ func NewLeaseMgr(db *sql.DB, redisPool *redis.Pool, gearBaseMap map[uint32]*Gear
 		redisPool:     redisPool,
 		gearBaseMap:   gearBaseMap,
 		auctionConst:  auctionConst,
+		expireHeap:    h,
+		expireWake:    make(chan struct{}, 1),
 	}
 }
 
 func (lm *LeaseMgr) loadFromDB() error {
 	return lm.dbLoadItems(func(item *LeaseMarketItem) error {
-		// 上架状态
-		if item.Status == LEASE_STATUS_ON_SALE {
+		switch item.Status {
+		case LEASE_STATUS_ON_SALE:
 			lm.items.Set(item.UniqueId, item)
-			lm._addToItemIdIndex(item)
+			lm._addToPlayerIdIndex(item)
+
+			expireAt := item.AddTime + int64(lm.auctionConst.RentalAutoUnlist)*3600
+			if expireAt <= time.Now().Unix() {
+				// 已经过期，直接置为 EXPIRED
+				if item.checkSetStatus(LEASE_STATUS_ON_SALE, LEASE_STATUS_EXPIRED) {
+					lm._removeFromItemIdIndex(item)
+					if err := lm.dbSetItemExpiredCAS(item, uint32(time.Now().Unix())); err != nil {
+						appLog.Errorw("loadFromDB set expired failed", "uniqueId", item.UniqueId, "err", err)
+					}
+				}
+			} else {
+				lm._addToItemIdIndex(item)
+				lm.pushExpire(item.UniqueId, expireAt)
+			}
+		case LEASE_STATUS_EXPIRED:
+			// 已过期未取回，保留在玩家索引中
+			lm.items.Set(item.UniqueId, item)
 			lm._addToPlayerIdIndex(item)
 		}
 		// 租出状态不再加载到内存，由 Avatar 端自行管理到期
 		return nil
 	})
+}
+
+// ==================== 玩家上架数量 ====================
+
+// getPlayerOnSaleCount 通过 playerIdIndex 统计玩家当前上架中（ON_SALE）和自动下架待取回（EXPIRED）的物品数量
+func (lm *LeaseMgr) getPlayerOnSaleCount(playerGbId uint64) int32 {
+	t, ok := lm.playerIdIndex.Get(playerGbId)
+	if !ok {
+		return 0
+	}
+
+	t.mu.RLock()
+	count := int32(t.tree.Len())
+	t.mu.RUnlock()
+	return count
+}
+
+// ==================== 过期调度器 ====================
+
+func (lm *LeaseMgr) pushExpire(uniqueId uint64, expireAt int64) {
+	lm.expireMu.Lock()
+	heap.Push(lm.expireHeap, expireEntry{uniqueId: uniqueId, expireAt: expireAt})
+	lm.expireMu.Unlock()
+
+	select {
+	case lm.expireWake <- struct{}{}:
+	default:
+	}
+}
+
+func (lm *LeaseMgr) startExpireScheduler() {
+	for {
+		lm.expireMu.Lock()
+		now := time.Now().Unix()
+
+		for lm.expireHeap.Len() > 0 {
+			top := (*lm.expireHeap)[0]
+			if top.expireAt > now {
+				break
+			}
+			heap.Pop(lm.expireHeap)
+			lm.expireMu.Unlock()
+			lm.processExpire(top.uniqueId)
+			lm.expireMu.Lock()
+		}
+
+		var wait time.Duration
+		if lm.expireHeap.Len() > 0 {
+			wait = time.Duration((*lm.expireHeap)[0].expireAt-now) * time.Second
+			if wait < 0 {
+				wait = 0
+			}
+		} else {
+			wait = time.Hour
+		}
+		lm.expireMu.Unlock()
+
+		timer := time.NewTimer(wait)
+		select {
+		case <-timer.C:
+		case <-lm.expireWake:
+			if !timer.Stop() {
+				<-timer.C
+			}
+		}
+	}
+}
+
+func (lm *LeaseMgr) processExpire(uniqueId uint64) {
+	appLog.Infow("processExpire", "uniqueId", uniqueId)
+	item, ok := lm.items.Get(uniqueId)
+	if !ok {
+		return
+	}
+
+	if !item.checkSetStatus(LEASE_STATUS_ON_SALE, LEASE_STATUS_EXPIRED) {
+		return
+	}
+
+	lm._removeFromItemIdIndex(item)
+
+	now := uint32(time.Now().Unix())
+	if err := lm.dbSetItemExpiredCAS(item, now); err != nil {
+		appLog.Errorw("processExpire db failed", "uniqueId", uniqueId, "err", err)
+	}
 }
 
 func (lm *LeaseMgr) _getItemIdBtree(itemId uint32) *LockedBTree {
@@ -255,6 +409,11 @@ func (lm *LeaseMgr) _removeFromPlayerIdIndex(item *LeaseMarketItem) {
 // ==================== 核心操作 ====================
 
 func (lm *LeaseMgr) addItemPrepare(item *LeaseMarketItem) int {
+	limit := int32(lm.auctionConst.RentalInitShelfNum)
+	if lm.getPlayerOnSaleCount(item.LessorGbId) >= limit {
+		return LEASE_SHELF_FULL
+	}
+
 	now := time.Now().Unix()
 	item.AddTime = now
 	item.Status = LEASE_STATUS_PREPARE
@@ -282,6 +441,10 @@ func (lm *LeaseMgr) addItemCommit(uniqueId uint64) int {
 
 	lm._addToItemIdIndex(item)
 	lm._addToPlayerIdIndex(item)
+
+	expireAt := item.AddTime + int64(lm.auctionConst.RentalAutoUnlist)*3600
+	appLog.Debugw("addItemCommit expireAt", "uniqueId", item.UniqueId, "expireAt", expireAt)
+	lm.pushExpire(item.UniqueId, expireAt)
 
 	return LEASE_OK
 }
@@ -418,20 +581,26 @@ func (lm *LeaseMgr) cancelItem(uniqueId uint64, playerGBID uint64) (*LeaseMarket
 		return nil, LEASE_NOT_FOUND
 	}
 
-	if !item.checkSetStatus(LEASE_STATUS_ON_SALE, LEASE_STATUS_CANCELED) {
-		return item, LEASE_STATUS_ERROR
-	}
-
+	// lessor 不会变，先判断 owner，不需要加锁
 	if item.LessorGbId != playerGBID {
-		item.Status = LEASE_STATUS_ON_SALE
 		return item, LEASE_NOT_OWNER
 	}
 
+	oldStatus, ok := item.checkSetStatusAny(
+		[]uint8{LEASE_STATUS_ON_SALE, LEASE_STATUS_EXPIRED},
+		LEASE_STATUS_CANCELED,
+	)
+	if !ok {
+		return item, LEASE_STATUS_ERROR
+	}
+
 	now := uint32(time.Now().Unix())
-	if err := lm.dbCancelItem(item, now); err != nil {
+	if err := lm.dbCancelItemCAS(item, now, oldStatus); err != nil {
 		appLog.Errorw("cancelItem db error", "uniqueId", item.UniqueId, "err", err)
-		// 写库失败，这里重新回滚到上架状态
-		item.Status = LEASE_STATUS_ON_SALE
+		// 写库失败，回滚到原来的状态
+		item.mu.Lock()
+		item.Status = oldStatus
+		item.mu.Unlock()
 		return item, LEASE_DB_ERROR
 	}
 
@@ -532,7 +701,7 @@ func (lm *LeaseMgr) getMySaleList(playerGBID uint64) []*LeaseMarketItem {
 	t.mu.RLock()
 	items := make([]*LeaseMarketItem, 0, t.tree.Len())
 	t.tree.Ascend(func(item *LeaseMarketItem) bool {
-		if item.Status != LEASE_STATUS_ON_SALE {
+		if item.Status != LEASE_STATUS_ON_SALE && item.Status != LEASE_STATUS_EXPIRED {
 			return true
 		}
 		items = append(items, item)
@@ -580,34 +749,16 @@ func NewLeaseApp() *LeaseApp {
 	appLog.Info("create redis pool...")
 	var redisPool *redis.Pool
 	if LeaseConfig.RedisServer.Addr != "" {
-		redisPool = &redis.Pool{
+		redisPool = common.NewRedisPool(common.RedisPoolOptions{
+			ServerName:  "lease",
+			Addr:        LeaseConfig.RedisServer.Addr,
+			Username:    LeaseConfig.RedisServer.Username,
+			Password:    LeaseConfig.RedisServer.Passwd,
+			Db:          LeaseConfig.RedisServer.Db,
 			MaxIdle:     16,
 			MaxActive:   100,
 			IdleTimeout: 100,
-			Wait:        true,
-			Dial: func() (redis.Conn, error) {
-				c, err := redis.Dial("tcp", LeaseConfig.RedisServer.Addr)
-				if err != nil {
-					appLog.Error("conn redis failed,", err)
-					return nil, err
-				}
-				if LeaseConfig.RedisServer.Passwd != "" {
-					if _, err := c.Do("AUTH", LeaseConfig.RedisServer.Passwd); err != nil {
-						appLog.Error("conn redis failed,", err)
-						c.Close()
-						return nil, err
-					}
-				}
-				if LeaseConfig.RedisServer.Db != "" {
-					if _, err := c.Do("SELECT", LeaseConfig.RedisServer.Db); err != nil {
-						appLog.Error("conn redis failed,", err)
-						c.Close()
-						return nil, err
-					}
-				}
-				return c, nil
-			},
-		}
+		})
 	}
 
 	appLog.Info("load config...")
@@ -658,9 +809,12 @@ func (la *LeaseApp) Start() {
 		la.Stop()
 	})
 
-	go la.StartDebugService(LeaseConfig.AddressForDebug)
+	SafeGo(func() {
+		la.StartDebugService(LeaseConfig.AddressForDebug)
+	})
 
-	// 租赁到期归还逻辑已下放到 Avatar 端，Go 服不再维护定时器
+	// 启动上架过期调度器（租赁到期归还仍由 Avatar 端处理）
+	SafeGo(la.leaseMgr.startExpireScheduler)
 }
 
 func (la *LeaseApp) Stop() {

@@ -35,18 +35,19 @@ type LoginAction func(*QueueApp) error
 
 type QueueApp struct {
 	common.App
-	gameServers     map[uint32]*GameServerService
-	channelToHost   map[uuid.UUID]*GameServerService
-	serversLock     *sync.RWMutex
-	gameClients     map[string]*QueueClientService
-	channelToClient map[uuid.UUID]*QueueClientService
-	clientsLock     *sync.RWMutex
-	actions         chan LoginAction
-	serverQueues    map[uint32]*Queue
-	serverVIPQueues map[uint32]*Queue
-	queuesLock      *sync.RWMutex
-	httpServer      *HttpService
-	redisPool       *redis.Pool
+	gameServers      map[uint32]*GameServerService
+	channelToHost    map[uuid.UUID]*GameServerService
+	serversLock      *sync.RWMutex
+	gameClients      map[string]*QueueClientService
+	channelToClient  map[uuid.UUID]*QueueClientService
+	clientsLock      *sync.RWMutex
+	actions          chan LoginAction
+	serverQueues     map[uint32]*Queue
+	serverVIPQueues  map[uint32]*Queue
+	queuesLock       *sync.RWMutex
+	httpServer       *HttpService
+	redisPool        *redis.Pool
+	waitMapServerMgr *WaitMapServerMgr
 }
 
 func NewQueueApp() *QueueApp {
@@ -58,36 +59,35 @@ func NewQueueApp() *QueueApp {
 	serverQueues := make(map[uint32]*Queue)
 	serverVIPQueues := make(map[uint32]*Queue)
 
-	redisPool := &redis.Pool{
-		MaxIdle:     16,  //最大空闲连接数
-		MaxActive:   100, //与数据库的最大链接数，0表示没有限制
-		IdleTimeout: 100, //最大空闲时间
-		Wait:        true,
-		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", QueueConfig.RedisServer.Addr)
-			if err != nil {
-				fmt.Println("conn redis failed,", err)
-				return nil, err
-			}
-			if QueueConfig.RedisServer.Passwd != "" {
-				if _, err := c.Do("AUTH", QueueConfig.RedisServer.Passwd); err != nil {
-					c.Close()
-					return nil, err
-				}
-			}
+	redisPool := common.NewRedisPool(common.RedisPoolOptions{
+		ServerName:  "queue",
+		Addr:        QueueConfig.RedisServer.Addr,
+		Username:    QueueConfig.RedisServer.Username,
+		Password:    QueueConfig.RedisServer.Passwd,
+		Db:          QueueConfig.RedisServer.Db,
+		MaxIdle:     16,
+		MaxActive:   100,
+		IdleTimeout: 100,
+	})
+	waitMapServerMgr := NewWaitMapServerMgr(nil)
 
-			if QueueConfig.RedisServer.Db != "" {
-				if _, err := c.Do("SELECT", QueueConfig.RedisServer.Db); err != nil {
-					c.Close()
-					return nil, err
-				}
-			}
-			return c, nil
-		},
+	app := QueueApp{
+		common.App{AppName: "QueueApp"},
+		gameServers,
+		channelToHost,
+		new(sync.RWMutex),
+		gameClients,
+		channelToClient,
+		new(sync.RWMutex),
+		actions,
+		serverQueues,
+		serverVIPQueues,
+		new(sync.RWMutex),
+		nil,
+		redisPool,
+		waitMapServerMgr,
 	}
-
-	app := QueueApp{common.App{AppName: "QueueApp"},
-		gameServers, channelToHost, new(sync.RWMutex), gameClients, channelToClient, new(sync.RWMutex), actions, serverQueues, serverVIPQueues, new(sync.RWMutex), nil, redisPool}
+	app.waitMapServerMgr.app = &app
 
 	return &app
 }
@@ -108,7 +108,7 @@ func (self *QueueApp) Start() {
 		self.Stop()
 	}()
 
-	self.httpServer = &HttpService{self}
+	self.httpServer = &HttpService{app: self}
 	go self.StartDebugService(QueueConfig.AddressForDebug)
 	self.httpServer.startHttpServer(QueueConfig.HttpServer)
 }

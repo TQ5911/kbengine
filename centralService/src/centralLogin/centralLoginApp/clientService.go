@@ -995,7 +995,17 @@ func (self *LoginClientService) _loginByThird(body map[string] interface{}, chan
 	self.resetThirdData()
 	if generalAccessTokenResponse.Code != 200 {
 		appLog.Warn(fmt.Sprintf("_loginByThird respBody false: %d, %s, %s", generalAccessTokenResponse.Code, generalAccessTokenResponse.Message, generalAccessTokenResponse.Timestamp))
-		*loginResult = clientService.LoginReply_LoginResult(generalAccessTokenResponse.Code)
+		data := map[string]interface{}{
+			"message": string(generalAccessTokenResponse.Message),
+		}
+		otherJsonData, _err := json.Marshal(data)
+		if _err != nil {
+			appLog.Warn("_loginByThird otherJsonData marshalIndent error", _err)
+			*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
+		} else {
+			self.otherJsonData = string(otherJsonData)
+			*loginResult = clientService.LoginReply_LoginResult(generalAccessTokenResponse.Code)
+		}
 		generalAccessTokenResponse.Success = false
 	} else {
 		appLog.Info(fmt.Sprintf("_loginByThird respBody true: %s, %t, %s, %s, %t, %s, %s, %s, %t, %s, %d, %s,", generalAccessTokenResponse.Data.GameId, generalAccessTokenResponse.Data.TokenRefreshed,
@@ -1021,6 +1031,7 @@ func (self *LoginClientService) _loginByThird(body map[string] interface{}, chan
 			data := map[string]interface{}{
 				"age":   uint32(age),
 				"phone": uint64(phone),
+				"message": string(generalAccessTokenResponse.Message),
 				"si": common.RandString(SESSIONID_STR_LEN),
 			}
 			otherJsonData, _err := json.Marshal(data)

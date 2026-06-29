@@ -41,32 +41,16 @@ func NewAdminApp() *AdminApp {
 	channelMap := make(map[uuid.UUID]uint32)
 	accountCmds := make(map[string]chan *gsmanager.HttpAPICommandResponse)
 
-	redisPool := &redis.Pool{
-		MaxIdle:     16,  //最大空闲连接数
-		MaxActive:   16,  //与数据库的最大链接数，0表示没有限制
-		IdleTimeout: 100, //最大空闲时间
-		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", adminConfig.RedisServer.Addr)
-			if err != nil {
-				fmt.Println("conn redis failed,", err)
-				return nil, err
-			}
-			if adminConfig.RedisServer.Passwd != "" {
-				if _, err := c.Do("AUTH", adminConfig.RedisServer.Passwd); err != nil {
-					c.Close()
-					return nil, err
-				}
-			}
-
-			if adminConfig.RedisServer.Db != "" {
-				if _, err := c.Do("SELECT", adminConfig.RedisServer.Db); err != nil {
-					c.Close()
-					return nil, err
-				}
-			}
-			return c, nil
-		},
-	}
+	redisPool := common.NewRedisPool(common.RedisPoolOptions{
+		ServerName:  "admin",
+		Addr:        adminConfig.RedisServer.Addr,
+		Username:    adminConfig.RedisServer.Username,
+		Password:    adminConfig.RedisServer.Passwd,
+		Db:          adminConfig.RedisServer.Db,
+		MaxIdle:     16,
+		MaxActive:   16,
+		IdleTimeout: 100,
+	})
 
 	return &AdminApp{common.App{AppName: "adminServer"}, nil, nil, nil, redisPool,
 		gameServers, channelMap, accountCmds, new(sync.RWMutex), new(sync.RWMutex), new(sync.RWMutex)}

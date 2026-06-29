@@ -1,6 +1,7 @@
 package Router
 
 import (
+	"centralService/src/appLog"
 	"centralService/src/common"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -8,6 +9,7 @@ import (
 	gameServerService "centralService/src/router/routerApp/gameServerService"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"syscall"
 	"centralService/src/trpc"
 )
@@ -22,6 +24,12 @@ const(
 
 type LoginAction func (*RouterApp) error
 
+//单个服务器维度的流量统计
+type serverTrafficStat struct {
+	requestCount uint64
+	byteCount    uint64
+}
+
 type RouterApp struct
 {
 	common.App
@@ -30,6 +38,13 @@ type RouterApp struct
 	serversLock *sync.RWMutex
 	actions chan LoginAction
 	gameBaseAppsList map[uint32] []uint32
+
+	//流量统计：分别按来源服务器和目标服务器统计
+	sourceTraffic map[uint32] *serverTrafficStat
+	destTraffic   map[uint32] *serverTrafficStat
+	trafficLock   *sync.RWMutex
+	totalRequests uint64
+	totalBytes    uint64
 }
 
 func NewRouterApp() *RouterApp{
@@ -37,9 +52,12 @@ func NewRouterApp() *RouterApp{
 	channelToHost := make(map[uuid.UUID] *GameServerService)
 	actions := make(chan LoginAction, 10)
 	gameBaseAppsList :=make(map[uint32] []uint32)
+	sourceTraffic := make(map[uint32] *serverTrafficStat)
+	destTraffic := make(map[uint32] *serverTrafficStat)
 
 	app := RouterApp{common.App{AppName:"RouterApp"},
-		gameServers, channelToHost,  new(sync.RWMutex), actions, gameBaseAppsList}
+		gameServers, channelToHost,  new(sync.RWMutex), actions, gameBaseAppsList,
+		sourceTraffic, destTraffic, new(sync.RWMutex), 0, 0}
 
 	return  &app
 }
@@ -141,4 +159,73 @@ func (self *RouterApp) getOtherBaseApp(serverId uint32, componentId uint32) *Gam
 		return gs
 	}
 	return nil
+}
+
+//记录一次转发的流量统计
+func (self *RouterApp) recordTraffic(sourceServerId uint32, destServerId uint32, byteCount uint64) {
+	atomic.AddUint64(&self.totalRequests, 1)
+	atomic.AddUint64(&self.totalBytes, byteCount)
+
+	self.trafficLock.Lock()
+	defer self.trafficLock.Unlock()
+
+	srcStat, ok := self.sourceTraffic[sourceServerId]
+	if !ok {
+		srcStat = &serverTrafficStat{}
+		self.sourceTraffic[sourceServerId] = srcStat
+	}
+	srcStat.requestCount++
+	srcStat.byteCount += byteCount
+
+	dstStat, ok := self.destTraffic[destServerId]
+	if !ok {
+		dstStat = &serverTrafficStat{}
+		self.destTraffic[destServerId] = dstStat
+	}
+	dstStat.requestCount++
+	dstStat.byteCount += byteCount
+}
+
+//获取当前流量统计的快照
+func (self *RouterApp) getTrafficStatsSnapshot() *gameServerService.TrafficStats {
+	self.trafficLock.RLock()
+	defer self.trafficLock.RUnlock()
+
+	stats := &gameServerService.TrafficStats{
+		SourceTraffic: make([]*gameServerService.ServerTrafficEntry, 0, len(self.sourceTraffic)),
+		DestTraffic:   make([]*gameServerService.ServerTrafficEntry, 0, len(self.destTraffic)),
+		TotalRequests: atomic.LoadUint64(&self.totalRequests),
+		TotalBytes:    atomic.LoadUint64(&self.totalBytes),
+	}
+
+	for serverId, st := range self.sourceTraffic {
+		stats.SourceTraffic = append(stats.SourceTraffic, &gameServerService.ServerTrafficEntry{
+			ServerId:     serverId,
+			RequestCount: st.requestCount,
+			ByteCount:    st.byteCount,
+		})
+	}
+
+	for serverId, st := range self.destTraffic {
+		stats.DestTraffic = append(stats.DestTraffic, &gameServerService.ServerTrafficEntry{
+			ServerId:     serverId,
+			RequestCount: st.requestCount,
+			ByteCount:    st.byteCount,
+		})
+	}
+
+	return stats
+}
+
+//重置所有流量统计
+func (self *RouterApp) resetTrafficStats() {
+	self.trafficLock.Lock()
+	defer self.trafficLock.Unlock()
+
+	self.sourceTraffic = make(map[uint32] *serverTrafficStat)
+	self.destTraffic = make(map[uint32] *serverTrafficStat)
+	atomic.StoreUint64(&self.totalRequests, 0)
+	atomic.StoreUint64(&self.totalBytes, 0)
+
+	appLog.Info("router traffic stats reset")
 }

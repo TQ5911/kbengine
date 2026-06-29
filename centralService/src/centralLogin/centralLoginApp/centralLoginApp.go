@@ -75,32 +75,16 @@ func NewCentralLoginApp() *CentralLoginApp {
 		return nil
 	}
 
-	redisPool := &redis.Pool{
-		MaxIdle:     16,  //最大空闲连接数
-		MaxActive:   100, //与数据库的最大链接数，0表示没有限制
-		IdleTimeout: 100, //最大空闲时间
-		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", LoginConfig.RedisServer.Addr)
-			if err != nil {
-				fmt.Println("conn redis failed,", err)
-				return nil, err
-			}
-			if LoginConfig.RedisServer.Passwd != "" {
-				if _, err := c.Do("AUTH", LoginConfig.RedisServer.Passwd); err != nil {
-					c.Close()
-					return nil, err
-				}
-			}
-
-			if LoginConfig.RedisServer.Db != "" {
-				if _, err := c.Do("SELECT", LoginConfig.RedisServer.Db); err != nil {
-					c.Close()
-					return nil, err
-				}
-			}
-			return c, nil
-		},
-	}
+	redisPool := common.NewRedisPool(common.RedisPoolOptions{
+		ServerName:  "centralLogin",
+		Addr:        LoginConfig.RedisServer.Addr,
+		Username:    LoginConfig.RedisServer.Username,
+		Password:    LoginConfig.RedisServer.Passwd,
+		Db:          LoginConfig.RedisServer.Db,
+		MaxIdle:     16,
+		MaxActive:   100,
+		IdleTimeout: 100,
+	})
 
 	app := CentralLoginApp{common.App{AppName: "CentralLoginApp"},
 		gameServers, channelToHost, new(sync.RWMutex), gameClients, channelToClient, new(sync.RWMutex), actions, nil, db, redisPool}

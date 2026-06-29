@@ -1,1 +1,1 @@
-go build -o ../../bin/queue/queue main.go
+go build -o ../../bin/queueServer/queueServer main.go

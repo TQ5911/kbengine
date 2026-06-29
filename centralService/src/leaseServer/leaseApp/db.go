@@ -2,6 +2,7 @@ package LeaseApp
 
 import (
 	"centralService/src/appLog"
+	"fmt"
 	"time"
 )
 
@@ -13,8 +14,8 @@ func (lm *LeaseMgr) dbLoadItems(cb func(*LeaseMarketItem) error) error {
 			return_owner_server_id, return_time, return_reason, lease_days, lessor_gbid,
 			lessor_server_id, lessee_gbid, lessee_server_id, price_per_day, lease_start_time,
 			lease_end_time, lease_cost, lease_gold, lease_bind_gold, lease_tax, item_data,
-			lease_status, create_time FROM lease_market WHERE lease_status = ? AND id > ? LIMIT ?`,
-			LEASE_STATUS_ON_SALE, lastId, batchSize)
+			lease_status, create_time FROM lease_market WHERE lease_status IN (?, ?) AND id > ? LIMIT ?`,
+			LEASE_STATUS_ON_SALE, LEASE_STATUS_EXPIRED, lastId, batchSize)
 		if err != nil {
 			return err
 		}
@@ -96,12 +97,30 @@ func (lm *LeaseMgr) dbLeaseItemCommit(item *LeaseMarketItem, now uint32) error {
 	return err
 }
 
-func (lm *LeaseMgr) dbCancelItem(item *LeaseMarketItem, now uint32) error {
-	_, err := lm.db.Exec("UPDATE lease_market SET lease_status=?, update_time=? WHERE unique_id=?", item.Status, now, item.UniqueId)
-	return err
+func (lm *LeaseMgr) dbCancelItemCAS(item *LeaseMarketItem, now uint32, oldStatus uint8) error {
+	result, err := lm.db.Exec(
+		"UPDATE lease_market SET lease_status=?, update_time=? WHERE unique_id=? AND lease_status=?",
+		item.Status, now, item.UniqueId, oldStatus,
+	)
+	if err != nil {
+		return err
+	}
+	if affected, _ := result.RowsAffected(); affected == 0 {
+		return fmt.Errorf("dbCancelItemCAS failed, uniqueId=%d, oldStatus=%d", item.UniqueId, oldStatus)
+	}
+	return nil
 }
 
-func (lm *LeaseMgr) dbProcessReturn(item *LeaseMarketItem, now int64) error {
-	_, err := lm.db.Exec("UPDATE lease_market SET lease_status=?, update_time=? WHERE unique_id=?", item.Status, now, item.UniqueId)
-	return err
+func (lm *LeaseMgr) dbSetItemExpiredCAS(item *LeaseMarketItem, now uint32) error {
+	result, err := lm.db.Exec(
+		"UPDATE lease_market SET lease_status=?, update_time=? WHERE unique_id=? AND lease_status=?",
+		LEASE_STATUS_EXPIRED, now, item.UniqueId, LEASE_STATUS_ON_SALE,
+	)
+	if err != nil {
+		return err
+	}
+	if affected, _ := result.RowsAffected(); affected == 0 {
+		return fmt.Errorf("dbSetItemExpiredCAS failed, uniqueId=%d", item.UniqueId)
+	}
+	return nil
 }

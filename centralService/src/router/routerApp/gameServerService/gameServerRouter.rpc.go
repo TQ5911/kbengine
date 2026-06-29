@@ -27,6 +27,20 @@ func RouterServer_ActiveTick_Handler(endPoint prpc.IEndPoint, dec func(interface
     }
     return endPoint.(IRouterServerInterface).ActiveTick(in)
 }
+func RouterServer_GetTrafficStats_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(Void)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IRouterServerInterface).GetTrafficStats(in)
+}
+func RouterServer_ResetTrafficStats_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(Void)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IRouterServerInterface).ResetTrafficStats(in)
+}
 var RouterServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "RouterGameServer.RouterServer",
     Methods: []prpc.MethodDesc{
@@ -44,6 +58,16 @@ var RouterServerServiceDesc = prpc.ServiceDesc{
             MethodName:  "ActiveTick",
             MethodIndex: 2,
             Handler:     RouterServer_ActiveTick_Handler,
+        },
+        {
+            MethodName:  "GetTrafficStats",
+            MethodIndex: 3,
+            Handler:     RouterServer_GetTrafficStats_Handler,
+        },
+        {
+            MethodName:  "ResetTrafficStats",
+            MethodIndex: 4,
+            Handler:     RouterServer_ResetTrafficStats_Handler,
         },
     },
 }
@@ -71,10 +95,20 @@ func (self *RouterServerClient) ActiveTick(in *Void) (*Void, error) {
     err := self.Channel.CallMethod(&RouterServerServiceDesc.Methods[2], in)
     return &Void{}, err
 }
+func (self *RouterServerClient) GetTrafficStats(in *Void) (*Void, error) {
+    err := self.Channel.CallMethod(&RouterServerServiceDesc.Methods[3], in)
+    return &Void{}, err
+}
+func (self *RouterServerClient) ResetTrafficStats(in *Void) (*Void, error) {
+    err := self.Channel.CallMethod(&RouterServerServiceDesc.Methods[4], in)
+    return &Void{}, err
+}
 type IRouterServerInterface interface {
     RegisterBaseapp(*BaseAppInfo) (*Void, error)
     DoOnOthersBase(*OthersBaseRequest) (*Void, error)
     ActiveTick(*Void) (*Void, error)
+    GetTrafficStats(*Void) (*Void, error)
+    ResetTrafficStats(*Void) (*Void, error)
 }
 
 func GameServer_OnRemoteCallFromOthersBase_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
@@ -91,6 +125,20 @@ func GameServer_ActiveTickCallback_Handler(endPoint prpc.IEndPoint, dec func(int
     }
     return endPoint.(IGameServerInterface).ActiveTickCallback(in)
 }
+func GameServer_GetTrafficStatsCallback_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(TrafficStats)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).GetTrafficStatsCallback(in)
+}
+func GameServer_ResetTrafficStatsCallback_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(ResetTrafficStatsResult)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).ResetTrafficStatsCallback(in)
+}
 var GameServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "RouterGameServer.GameServer",
     Methods: []prpc.MethodDesc{
@@ -103,6 +151,16 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             MethodName:  "ActiveTickCallback",
             MethodIndex: 1,
             Handler:     GameServer_ActiveTickCallback_Handler,
+        },
+        {
+            MethodName:  "GetTrafficStatsCallback",
+            MethodIndex: 2,
+            Handler:     GameServer_GetTrafficStatsCallback_Handler,
+        },
+        {
+            MethodName:  "ResetTrafficStatsCallback",
+            MethodIndex: 3,
+            Handler:     GameServer_ResetTrafficStatsCallback_Handler,
         },
     },
 }
@@ -126,8 +184,18 @@ func (self *GameServerClient) ActiveTickCallback(in *Void) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[1], in)
     return &Void{}, err
 }
+func (self *GameServerClient) GetTrafficStatsCallback(in *TrafficStats) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[2], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) ResetTrafficStatsCallback(in *ResetTrafficStatsResult) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[3], in)
+    return &Void{}, err
+}
 type IGameServerInterface interface {
     OnRemoteCallFromOthersBase(*OthersBaseRequest) (*Void, error)
     ActiveTickCallback(*Void) (*Void, error)
+    GetTrafficStatsCallback(*TrafficStats) (*Void, error)
+    ResetTrafficStatsCallback(*ResetTrafficStatsResult) (*Void, error)
 }
 

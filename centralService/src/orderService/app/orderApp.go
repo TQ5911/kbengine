@@ -24,7 +24,7 @@ import (
 	cmap "centralService/src/common/concurrent_map"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/go-redis/redis"
+	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
@@ -50,6 +50,7 @@ type MysqlConfig struct {
 
 type RedisConfig struct {
 	Addr     string
+	Username string
 	Password string
 	Db       int
 }
@@ -83,7 +84,7 @@ type GameServerInfo struct {
 
 type OrderApp struct {
 	common.App
-	redis         *redis.Client
+	redisPool     *redis.Pool
 	db            *sql.DB
 	httpService   *HttpCommandService
 	gameServers   map[uint32]map[uint32]*GameServerInfo
@@ -174,21 +175,23 @@ func NewOrderApp() *OrderApp {
 		return nil
 	}
 
-	redisCli := redis.NewClient(&redis.Options{
-		Addr:     OrderServiceConfig.Redis.Addr,
-		Password: OrderServiceConfig.Redis.Password,
-		DB:       OrderServiceConfig.Redis.Db,
+	redisCli := common.NewRedisPool(common.RedisPoolOptions{
+		ServerName:  "orderService",
+		Addr:        OrderServiceConfig.Redis.Addr,
+		Username:    OrderServiceConfig.Redis.Username,
+		Password:    OrderServiceConfig.Redis.Password,
+		Db:          strconv.Itoa(OrderServiceConfig.Redis.Db),
+		MaxIdle:     16,
+		MaxActive:   100,
+		IdleTimeout: 100,
 	})
-
-	_, err = redisCli.Ping().Result()
-	if err != nil {
-		appLog.Error("redis connect err", err.Error())
+	if redisCli == nil {
 		return nil
 	}
 
 	app := OrderApp{
 		App:           common.App{AppName: OrderServiceConfig.ServerName},
-		redis:         redisCli,
+		redisPool:     redisCli,
 		db:            db,
 		serversMutex:  &sync.RWMutex{},
 		gameServers:   make(map[uint32]map[uint32]*GameServerInfo),
@@ -302,20 +305,24 @@ func (mg *OrderApp) GetOrderService(serverId uint32, compId uint32) *OrderServic
 
 func (mg *OrderApp) doAcquireOrderLock(outTradeNo string) (bool, error) {
 	lockKey := GetOrderLockKey(outTradeNo)
-	ret, err := mg.redis.SetNX(lockKey, 1, Order_Lock_Time*time.Second).Result()
+	conn := mg.redisPool.Get()
+	defer conn.Close()
+	_, err := conn.Do("SET", lockKey, 1, "NX", "EX", Order_Lock_Time)
+	if err == redis.ErrNil {
+		return false, nil
+	}
 	if err != nil {
 		return false, err
 	}
-	return ret, nil
+	return true, nil
 }
 
 func (mg *OrderApp) doReleaseOrderLock(outTradeNo string) error {
 	lockKey := GetOrderLockKey(outTradeNo)
-	_, err := mg.redis.Del(lockKey).Result()
-	if err != nil {
-		return err
-	}
-	return nil
+	conn := mg.redisPool.Get()
+	defer conn.Close()
+	_, err := conn.Do("DEL", lockKey)
+	return err
 }
 
 func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w http.ResponseWriter) {
@@ -380,7 +387,7 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 		return
 	}
 	// 查询订单状态
-	sql := "select orderProcessStatus, serverId, userRoleId, productCode, buyNum from `orderData` where `OutTradeNo` = ?"
+	sql := "select orderProcessStatus, serverId, userRoleId, productCode, buyNum, roleName from `orderData` where `OutTradeNo` = ?"
 	stmt, err := mg.db.Prepare(sql)
 	if err != nil {
 		appLog.Errorf("ProcessOrder mysql prepare error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
@@ -406,8 +413,9 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 	gbId := 0
 	itemId := 0
 	itemCount := 0
+	roleName := ""
 	for rows.Next() {
-		err = rows.Scan(&orderProcessStatus, &serverId, &gbId, &itemId, &itemCount)
+		err = rows.Scan(&orderProcessStatus, &serverId, &gbId, &itemId, &itemCount, &roleName)
 		if err != nil {
 			appLog.Errorf("ProcessOrder mysql scan error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
 			errMsg := "mysql error"
@@ -425,7 +433,7 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 			responseBytes := svc._buildErrResponse(SUCCESS, errMsg)
 			svc.sendIDIPResponse(w, 200, responseBytes)
 		} else if orderProcessStatus == 0 {
-			mg.SendToGameServer(order, svc, w, createTime.Unix(), int32(itemId), int32(itemCount), order.PayableAmount, uint64(gbId), uint32(serverId))
+			mg.SendToGameServer(order, svc, w, createTime.Unix(), int32(itemId), int32(itemCount), order.PayableAmount, uint64(gbId), uint32(serverId), roleName)
 		}
 		return
 	}
@@ -463,25 +471,26 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 		svc.sendIDIPResponse(w, 200, responseBytes)
 	}
 
-	mg.SendToGameServer(order, svc, w, createTime.Unix(), order.ProductCode, int32(order.BuyNum), order.PayableAmount, uint64(order.UserRoleId), uint32(order.ServerId))
+	mg.SendToGameServer(order, svc, w, createTime.Unix(), order.ProductCode, int32(order.BuyNum), order.PayableAmount, uint64(order.UserRoleId), uint32(order.ServerId), order.RoleName)
 
 	appLog.Debugf("ProcessOrder success, outTradeNo: %v", order.OutTradeNo)
 	return
 }
 
-func (mg *OrderApp) SendToGameServer(order *OrderData, svc *HttpCommandService, w http.ResponseWriter, createTime int64, itemId int32, itemCount int32, itemPrice float32, gbId uint64, serverId uint32) {
+func (mg *OrderApp) SendToGameServer(order *OrderData, svc *HttpCommandService, w http.ResponseWriter, createTime int64, itemId int32, itemCount int32, itemPrice float32, gbId uint64, serverId uint32, roleName string) {
 	orderService := mg.GetOrderService(uint32(serverId), 0)
 	if orderService != nil {
-		respose := &service.OrderRequest{}
-		respose.ServerId = order.ServerId
-		respose.OutTradeNo = order.OutTradeNo
-		respose.CreateTime = createTime
-		respose.ItemId = int32(itemId)
-		respose.ItemCount = int32(itemCount)
-		respose.GbId = int64(gbId)
-		respose.Price = float64(itemPrice)
-		respose.AddToSafe = order.AddToSafe == 1
-		_, err := orderService.GetClientEndPoint().(service.IGameServerInterface).NotifyOrder(respose)
+		response := &service.OrderRequest{}
+		response.ServerId = order.ServerId
+		response.OutTradeNo = order.OutTradeNo
+		response.CreateTime = createTime
+		response.ItemId = int32(itemId)
+		response.ItemCount = int32(itemCount)
+		response.GbId = int64(gbId)
+		response.Price = float64(itemPrice)
+		response.AddToSafe = order.AddToSafe == 1
+		response.RoleName = roleName
+		_, err := orderService.GetClientEndPoint().(service.IGameServerInterface).NotifyOrder(response)
 		if err != nil {
 			appLog.Errorf("ProcessOrder send order to game error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
 			errMsg := "game server error"
